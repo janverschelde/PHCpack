@@ -65,7 +65,7 @@ package body Standard_Matrix_Series_Solvers is
     lead : constant Standard_Complex_Matrices.Link_to_Matrix := A.cff(0);
     nrows : constant integer32 := lead'last(1);
     ncols : constant integer32 := lead'last(2);
-    b0 : Standard_Complex_Vectors.Vector(1..nrows) := b.cff(0).all;
+    b0 : constant Standard_Complex_Vectors.Vector(1..nrows) := b.cff(0).all;
     x0 : Standard_Complex_Vectors.Vector(1..ncols);
     rsd,dum,dum2,dum3 : Standard_Complex_Vectors.Vector(1..nrows);
     wrk : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols);
@@ -86,21 +86,21 @@ package body Standard_Matrix_Series_Solvers is
                 b : in Standard_Dense_Vector_Series.Vector;
                 S : out Standard_Complex_Vectors.Vector;
                 U,V : out Standard_Complex_Matrices.Matrix;
-                info : out integer32;
+                info : out integer32; rcond : out double_float;
                 x : out Standard_Dense_Vector_Series.Vector ) is
 
     lead : constant Standard_Complex_Matrices.Link_to_Matrix := A.cff(0);
     n : constant integer32 := lead'last(1);
     p : constant integer32 := lead'last(2);
     wrk : Standard_Complex_Matrices.Matrix(1..n,1..p) := lead.all;
-    mm : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
     e : Standard_Complex_Vectors.Vector(1..p);
     job : constant integer32 := 11;
-    b0 : Standard_Complex_Vectors.Vector(1..n) := b.cff(0).all;
+    b0 : constant Standard_Complex_Vectors.Vector(1..n) := b.cff(0).all;
     x0 : Standard_Complex_Vectors.Vector(1..p);
 
   begin
     SVD(wrk,n,p,S,e,U,V,job,info);
+    rcond := Inverse_Condition_Number(S);
     x0 := Solve(U,V,S,b0);
     x.cff(0) := new Standard_Complex_Vectors.Vector'(x0);
     x.deg := 0;
@@ -142,7 +142,6 @@ package body Standard_Matrix_Series_Solvers is
                 b : in Standard_Dense_Vector_Series.Vector;
                 a0qr : in Standard_Complex_Matrices.Matrix;
                 qraux : in Standard_Complex_Vectors.Vector;
-                ipvt : in Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 x : in out Standard_Dense_Vector_Series.Vector ) is
 
@@ -172,6 +171,38 @@ package body Standard_Matrix_Series_Solvers is
     x.deg := x.deg + 1;
     x.cff(x.deg) := new Standard_Complex_Vectors.Vector'(wx);
   end Solve_Next_by_QRLS;
+
+  procedure Solve_Next_by_SVD
+              ( A : in Standard_Dense_Matrix_Series.Matrix;
+                b : in Standard_Dense_Vector_Series.Vector;
+                S : in Standard_Complex_Vectors.Vector;
+                U,V : in Standard_Complex_Matrices.Matrix;
+                x : in out Standard_Dense_Vector_Series.Vector ) is
+
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Matrices;
+
+    idx : integer32 := x.deg+1;
+    Aidx : Standard_Complex_Matrices.Link_to_Matrix := A.cff(idx);
+    nrows : constant integer32 := Aidx'last(1);
+    ncols : constant integer32 := Aidx'last(2);
+    wA : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols) := Aidx.all;
+    wb : Standard_Complex_Vectors.Vector(1..nrows) := b.cff(idx).all;
+    wx : Standard_Complex_Vectors.Vector(1..ncols) := x.cff(0).all;
+
+  begin
+    wb := wb - wA*wx;
+    for k in 1..x.deg loop
+      idx := idx - 1;
+      Aidx := A.cff(idx);
+      wA := Aidx.all;
+      wx := x.cff(k).all;
+      wb := wb - wA*wx;
+    end loop;
+    wx := Solve(U,V,S,wb);
+    x.deg := x.deg + 1;
+    x.cff(x.deg) := new Standard_Complex_Vectors.Vector'(wx);
+  end Solve_Next_by_SVD;
 
   procedure Solve_by_lufac
               ( A : in Standard_Dense_Matrix_Series.Matrix;
@@ -227,9 +258,32 @@ package body Standard_Matrix_Series_Solvers is
     Solve_Lead_by_QRLS(A,b,lwrk,qraux,ipvt,info,x);
     if info = 0 then
       for k in 1..b.deg loop
-        Solve_Next_by_QRLS(A,b,lwrk,qraux,ipvt,info,x);
+        Solve_Next_by_QRLS(A,b,lwrk,qraux,info,x);
       end loop;
     end if;
   end Solve_by_QRLS;
+
+  procedure Solve_by_SVD
+              ( A : in Standard_Dense_Matrix_Series.Matrix;
+                b : in Standard_Dense_Vector_Series.Vector;
+                info : out integer32; rcond : out double_float;
+                x : out Standard_Dense_Vector_Series.Vector ) is
+
+    nrows : constant integer32 := A.cff(0)'last(1);
+    ncols : constant integer32 := A.cff(0)'last(2);
+    mm : constant integer32
+       := Standard_Complex_Singular_Values.Min0(nrows+1,ncols);
+    S : Standard_Complex_Vectors.Vector(1..mm);
+    U : Standard_Complex_Matrices.Matrix(1..nrows,1..nrows);
+    V : Standard_Complex_Matrices.Matrix(1..ncols,1..ncols);
+
+  begin
+    Solve_Lead_by_SVD(A,b,S,U,V,info,rcond,x);
+    if 1.0 + rcond /= 1.0 then
+      for k in 1..b.deg loop
+        Solve_Next_by_SVD(A,b,S,U,V,x);
+      end loop;
+    end if;
+  end Solve_by_SVD;
 
 end Standard_Matrix_Series_Solvers;

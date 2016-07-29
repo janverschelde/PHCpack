@@ -1,3 +1,6 @@
+Fri 29 Jul 2016 : SVD solver in standard_matrix_series_solvers,
+  tested by ts_serlin.
+
 Thu 28 Jul 2016 : added SVD to solve the lead coefficient in
   standard_matrix_series_solvers.
 

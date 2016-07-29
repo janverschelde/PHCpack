@@ -105,7 +105,7 @@ package Standard_Matrix_Series_Solvers is
                 b : in Standard_Dense_Vector_Series.Vector;
                 S : out Standard_Complex_Vectors.Vector;
                 U,V : out Standard_Complex_Matrices.Matrix;
-                info : out integer32;
+                info : out integer32; rcond : out double_float;
                 x : out Standard_Dense_Vector_Series.Vector );
 
   -- DESCRIPTION :
@@ -141,6 +141,8 @@ package Standard_Matrix_Series_Solvers is
   --            and the elements of e on its super diagonal (ctrans(u) is the
   --            conjugate-transpose of u), thus the singular values of x 
   --            and b are the same;
+  --   rcond    is the outcome of Inverse_Condition_Number(S),
+  --            the inverse condition number based on the singular values;
   --   x        x.cff(0) is the constant coefficient of the solution
   --            and x.deg = 0, provided info = 0,
   --            if info /= 0, then x.deg = -1 and x.cff(0) is undefined.
@@ -178,7 +180,6 @@ package Standard_Matrix_Series_Solvers is
                 b : in Standard_Dense_Vector_Series.Vector;
                 a0qr : in Standard_Complex_Matrices.Matrix;
                 qraux : in Standard_Complex_Vectors.Vector;
-                ipvt : in Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 x : in out Standard_Dense_Vector_Series.Vector );
 
@@ -191,17 +192,43 @@ package Standard_Matrix_Series_Solvers is
 
   -- ON ENTRY :
   --   A        the coefficient matrix as a matrix series;
-  --   b        the right hand side as a vector series.
+  --   b        the right hand side as a vector series;
   --   a0qr     the QR decomposition of the leading coefficient of A,
   --            as output of Solve_Lead_by_QRLS;
   --   qraux    information to recover the orthogonal part,
   --            as output of Solve_Lead_by_QRLS;
-  --   ipvt     pivoting information if that was requested,
-  --            as output of Solve_Lead_by_QRLS;
+  --   x        previously computed coefficients of the solution,
+  --            at the very least, x.cff(0) must be defined.
 
   -- ON RETURN :
   --   info     is zero of nonsingular, otherwise, a nonzero info
   --            indicates a singular matrix;
+  --   x        computed coefficient at x.deg+1 with respect to input.
+
+  procedure Solve_Next_by_SVD
+              ( A : in Standard_Dense_Matrix_Series.Matrix;
+                b : in Standard_Dense_Vector_Series.Vector;
+                S : in Standard_Complex_Vectors.Vector;
+                U,V : in Standard_Complex_Matrices.Matrix;
+                x : in out Standard_Dense_Vector_Series.Vector );
+
+  -- DESCRIPTION :
+  --   Applies the SVD decomposition of the lead coefficient of A
+  --   to compute the next coefficient of the solution series A*x = b.
+
+  -- REQUIRED :
+  --   All coefficients up to x.deg are defined.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrix as a matrix series;
+  --   b        the right hand side as a vector series;
+  --   S        singular values of the lead coefficient of A,
+  --            computed by Solve_Lead_by_SVD;
+  --   U,V      computed by Solve_Lead_by_SVD;
+  --   x        previously computed coefficients of the solution,
+  --            at the very least, x.cff(0) must be defined.
+
+  -- ON RETURN :
   --   x        computed coefficient at x.deg+1 with respect to input.
 
   procedure Solve_by_lufac
@@ -260,8 +287,8 @@ package Standard_Matrix_Series_Solvers is
                 x : out Standard_Dense_Vector_Series.Vector );
 
   -- DESCRIPTION :
-  --   Solves the linear system A*x = b, using QR decomposition of the
-  --   leading coefficient matrix of A and least squares solving.
+  --   Solves the linear system A*x = b, using the QR decomposition of the
+  --   leading coefficient matrix of A for least squares solving.
 
   -- REQUIRED :
   --   A.deg >= 0 and b.deg >= 0.
@@ -276,5 +303,29 @@ package Standard_Matrix_Series_Solvers is
   --            if info = 0, then the system is regular;
   --   x        all coefficients of the solution series up to b.deg,
   --            provided info = 0.
+
+  procedure Solve_by_SVD
+              ( A : in Standard_Dense_Matrix_Series.Matrix;
+                b : in Standard_Dense_Vector_Series.Vector;
+                info : out integer32; rcond : out double_float;
+                x : out Standard_Dense_Vector_Series.Vector );
+
+  -- DESCRIPTION :
+  --   Solves the linear system A*x = b, using the SVD of the
+  --   leading coefficient matrix of A for least squares solving.
+
+  -- REQUIRED :
+  --   A.deg >= 0 and b.deg >= 0.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrix as a matrix series;
+  --   b        the right hand side as a vector series.
+
+  -- ON RETURN :
+  --   info     see the output of Solve_Lead_by_SVD;
+  --   rcond    inverse condition number computed from the singular
+  --            values of the lead coefficient of A;
+  --   x        all coefficients of the solution series up to b.deg,
+  --            provided rcond /= 0.0.
 
 end Standard_Matrix_Series_Solvers;

@@ -8,19 +8,15 @@ with Double_Double_Numbers;               use Double_Double_Numbers;
 with Double_Double_Numbers_io;            use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                 use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;              use Quad_Double_Numbers_io;
-with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
-with Standard_Complex_Matrices;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;         use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
-with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;         use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vector_Norms;
-with QuadDobl_Complex_Matrices;
 with Standard_Random_Series;
 with Standard_Dense_Series_Vectors;
 with Standard_Dense_Series_Vectors_io;    use Standard_Dense_Series_Vectors_io;
@@ -158,10 +154,10 @@ procedure ts_serlin is
        := Standard_Dense_Matrix_Series.Create(sA); 
     sx : constant Standard_Dense_Series_Vectors.Vector(1..m)
        := Standard_Random_Series.Random_Series_Vector(1,m,d);
-    xs : Standard_Dense_Vector_Series.Vector
+    xs : constant Standard_Dense_Vector_Series.Vector
        := Standard_Dense_Vector_Series.Create(sx);
     sb : constant Standard_Dense_Series_Vectors.Vector(1..n) := sA*sx;
-    bs : Standard_Dense_Vector_Series.Vector
+    bs : constant Standard_Dense_Vector_Series.Vector
        := Standard_Dense_Vector_Series.Create(sb);
     ys : Standard_Dense_Vector_Series.Vector;
     ans : character;
@@ -175,12 +171,18 @@ procedure ts_serlin is
     put_line("The right hand side vector b :"); put_line(sb);
     put_line("The coefficients of the vector series b :"); put(bs);
     if n > m then
-      Solve_by_QRLS(As,bs,info,ys);
-      put("info : "); put(info,1); new_line;
+      new_line;
+      put("Solve with SVD ? (y/n) "); Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Solve_by_SVD(As,bs,info,rcond,ys);
+        put("rcond : "); put(rcond,3); new_line;
+      else
+        Solve_by_QRLS(As,bs,info,ys);
+        put("info : "); put(info,1); new_line;
+      end if;
     else
       new_line;
-      put("Condition number wanted ? (y/n) ");
-      Ask_Yes_or_No(ans);
+      put("Condition number wanted ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'y' then
         Solve_by_lufco(As,bs,rcond,ys);
         put("rcond : "); put(rcond,3); new_line;
@@ -221,10 +223,10 @@ procedure ts_serlin is
        := DoblDobl_Dense_Matrix_Series.Create(sA); 
     sx : constant DoblDobl_Dense_Series_Vectors.Vector(1..m)
        := DoblDobl_Random_Series.Random_Series_Vector(1,m,d);
-    xs : DoblDobl_Dense_Vector_Series.Vector
+    xs : constant DoblDobl_Dense_Vector_Series.Vector
        := DoblDobl_Dense_Vector_Series.Create(sx);
     sb : constant DoblDobl_Dense_Series_Vectors.Vector(1..n) := sA*sx;
-    bs : DoblDobl_Dense_Vector_Series.Vector
+    bs : constant DoblDobl_Dense_Vector_Series.Vector
        := DoblDobl_Dense_Vector_Series.Create(sb);
     ys : DoblDobl_Dense_Vector_Series.Vector;
     ans : character;
@@ -284,10 +286,10 @@ procedure ts_serlin is
        := QuadDobl_Dense_Matrix_Series.Create(sA); 
     sx : constant QuadDobl_Dense_Series_Vectors.Vector(1..m)
        := QuadDobl_Random_Series.Random_Series_Vector(1,m,d);
-    xs : QuadDobl_Dense_Vector_Series.Vector
+    xs : constant QuadDobl_Dense_Vector_Series.Vector
        := QuadDobl_Dense_Vector_Series.Create(sx);
     sb : constant QuadDobl_Dense_Series_Vectors.Vector(1..n) := sA*sx;
-    bs : QuadDobl_Dense_Vector_Series.Vector
+    bs : constant QuadDobl_Dense_Vector_Series.Vector
        := QuadDobl_Dense_Vector_Series.Create(sb);
     ys : QuadDobl_Dense_Vector_Series.Vector;
     ans : character;
