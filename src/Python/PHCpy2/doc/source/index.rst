@@ -12,6 +12,7 @@ phcpy Documentation Contents
    :maxdepth: 2
 
    welcome
+   appolonius
    blackbox
    pathtrack
    posdimsols
@@ -20,6 +21,6 @@ phcpy Documentation Contents
    newtopes
    dashboard
    phcbwulf
-   modphcpy2c2
+   modphcpy2c3
    about
    indices

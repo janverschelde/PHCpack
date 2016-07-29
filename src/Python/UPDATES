@@ -1,5 +1,6 @@
 Fri 29 Jul 2016 : more symmetric perturbed instance in appolonius.py,
-  in the examples folders of PHCpy2 and PHCpy3.
+  in the examples folders of PHCpy2 and PHCpy3.  In the doc/source folders
+  of PHCpy, added the circle problem of Appolonius as a use case.
 
 Thu 28 Jul 2016 : updated appolonius.py in PHCpy2 with a special case,
   with more refactoring and generalized setup.

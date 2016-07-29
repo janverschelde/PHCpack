@@ -12,6 +12,7 @@ phcpy Documentation Contents
    :maxdepth: 2
 
    welcome
+   appolonius
    blackbox
    pathtrack
    posdimsols
