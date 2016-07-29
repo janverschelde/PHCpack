@@ -240,8 +240,15 @@ procedure ts_serlin is
     put_line("The right hand side vector b :"); put_line(sb);
     put_line("The coefficients of the vector series b :"); put(bs);
     if n > m then
-      Solve_by_QRLS(As,bs,info,ys);
-      put("info : "); put(info,1); new_line;
+      new_line;
+      put("Solve with SVD ? (y/n) "); Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Solve_by_SVD(As,bs,info,rcond,ys);
+        put("rcond : "); put(rcond,3); new_line;
+      else
+        Solve_by_QRLS(As,bs,info,ys);
+        put("info : "); put(info,1); new_line;
+      end if;
     else
       new_line;
       put("Condition number wanted ? (y/n) ");
@@ -303,8 +310,15 @@ procedure ts_serlin is
     put_line("The right hand side vector b :"); put_line(sb);
     put_line("The coefficients of the vector series b :"); put(bs);
     if n > m then
-      Solve_by_QRLS(As,bs,info,ys);
-      put("info : "); put(info,1); new_line;
+      new_line;
+      put("Solve with SVD ? (y/n) "); Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Solve_by_SVD(As,bs,info,rcond,ys);
+        put("rcond : "); put(rcond,3); new_line;
+      else
+        Solve_by_QRLS(As,bs,info,ys);
+        put("info : "); put(info,1); new_line;
+      end if;
     else
       new_line;
       put("Condition number wanted ? (y/n) ");
