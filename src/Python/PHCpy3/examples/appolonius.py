@@ -157,6 +157,29 @@ def solve_special_problem():
         outcircles = makecircles(plt, sols, color='red')
         plotcircles(plt, incircles + outcircles, -2, 4, -2, 3)
 
+def solve_perturbed_problem():
+    """
+    Solves a small perturbation of a special configuration of three circles,
+    where the three circles are mutually touching each other.
+    Defines a list of polynomial systems, solves each system
+    and extract those real solutions with positive radius.
+    The given circles are plotted as blue disks,
+    while the solution circles are plotted in red.
+    """
+    from math import sqrt
+    height = sqrt(3)
+    syst = polynomials(2, 0.95, 1, height, 0.95)
+    sols = solve4circles(syst)
+    print('the solution list :')
+    print(sols)
+    ans = input('Continue with matplotlib ? (y/n) ')
+    if ans == 'y':
+        import matplotlib.pyplot as plt
+        crcdata = [((0, 0), 1), ((2, 0), 0.95), ((1, height), 0.95)]
+        incircles = makecircles(plt, crcdata, disk=True, color='blue')
+        outcircles = makecircles(plt, sols, color='red')
+        plotcircles(plt, incircles + outcircles, -2.5, 5, -2.5, 5)
+
 def main():
     """
     Solves a general and a special instance of the circle problem
@@ -166,6 +189,8 @@ def main():
     solve_general_problem()
     print('solving a special instance of the Appolonius circle problem')
     solve_special_problem()
+    print('solving a perturbed instance of the Appolonius circle problem')
+    solve_perturbed_problem()
 
 if __name__=="__main__":
     main()
