@@ -1,6 +1,7 @@
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with Standard_Complex_QR_Least_Squares;  use Standard_Complex_QR_Least_Squares;
+with Standard_Complex_Singular_Values;   use Standard_Complex_Singular_Values;
 
 package body Standard_Matrix_Series_Solvers is
 
@@ -79,6 +80,31 @@ package body Standard_Matrix_Series_Solvers is
     x.cff(0) := new Standard_Complex_Vectors.Vector'(x0);
     x.deg := 0;
   end Solve_Lead_by_QRLS;
+
+  procedure Solve_Lead_by_SVD
+              ( A : in Standard_Dense_Matrix_Series.Matrix;
+                b : in Standard_Dense_Vector_Series.Vector;
+                S : out Standard_Complex_Vectors.Vector;
+                U,V : out Standard_Complex_Matrices.Matrix;
+                info : out integer32;
+                x : out Standard_Dense_Vector_Series.Vector ) is
+
+    lead : constant Standard_Complex_Matrices.Link_to_Matrix := A.cff(0);
+    n : constant integer32 := lead'last(1);
+    p : constant integer32 := lead'last(2);
+    wrk : Standard_Complex_Matrices.Matrix(1..n,1..p) := lead.all;
+    mm : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
+    e : Standard_Complex_Vectors.Vector(1..p);
+    job : constant integer32 := 11;
+    b0 : Standard_Complex_Vectors.Vector(1..n) := b.cff(0).all;
+    x0 : Standard_Complex_Vectors.Vector(1..p);
+
+  begin
+    SVD(wrk,n,p,S,e,U,V,job,info);
+    x0 := Solve(U,V,S,b0);
+    x.cff(0) := new Standard_Complex_Vectors.Vector'(x0);
+    x.deg := 0;
+  end Solve_Lead_by_SVD;
 
   procedure Solve_Next_by_lusolve
               ( A : in Standard_Dense_Matrix_Series.Matrix;
