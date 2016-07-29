@@ -111,7 +111,7 @@ def plotcircles(plt, circles, xa, xb, ya, yb):
     for circle in circles:
         axs.add_artist(circle)
     plt.axis([xa, xb, ya, yb])
-    plt.show()
+    fig.show() # plt.show()
     ans = input('hit enter to continue')
 
 def solve_general_problem():
@@ -168,17 +168,17 @@ def solve_perturbed_problem():
     """
     from math import sqrt
     height = sqrt(3)
-    syst = polynomials(2, 0.95, 1, height, 0.95)
+    syst = polynomials(2.05, 1, 1.025, height+0.025, 1)
     sols = solve4circles(syst)
     print('the solution list :')
     print(sols)
     ans = input('Continue with matplotlib ? (y/n) ')
     if ans == 'y':
         import matplotlib.pyplot as plt
-        crcdata = [((0, 0), 1), ((2, 0), 0.95), ((1, height), 0.95)]
+        crcdata = [((0, 0), 1), ((2.05, 0), 1), ((1.025, height+0.025), 1)]
         incircles = makecircles(plt, crcdata, disk=True, color='blue')
         outcircles = makecircles(plt, sols, color='red')
-        plotcircles(plt, incircles + outcircles, -2.5, 5, -2.5, 5)
+        plotcircles(plt, incircles + outcircles, -2, 4, -2, 4)
 
 def main():
     """

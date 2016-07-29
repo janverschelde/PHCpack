@@ -12,7 +12,7 @@ of the circle which touches the three given circles.
 The condition on the center of the touching circle is that its distance
 to the center of the given circle is either the difference or the sum of
 the radii of both circles.  So we arrive at eight polynomial systems.
-This Python 3 script solves the systems with phcpy and then prints those
+This Python 2 script solves the systems with phcpy and then prints those
 solution circles that have a positive radius.
 With matplotlib, the given circles and the solutions are plotted.
 """
@@ -58,12 +58,12 @@ def solve4circles(syst, verbose=True):
     for eqs in syst:
         eqscnt = eqscnt + 1
         if verbose:
-            print('solving system', eqscnt, ':')
+            print 'solving system', eqscnt, ':'
             for pol in eqs:
-                print(pol)
+                print pol
         sols = solve(eqs, silent=True)
         if verbose:
-            print('system', eqscnt, 'has', len(sols), 'solutions')
+            print 'system', eqscnt, 'has', len(sols), 'solutions'
         for sol in sols:
             if is_real(sol, 1.0e-8):
                 soldic = strsol2dict(sol)
@@ -73,9 +73,9 @@ def solve4circles(syst, verbose=True):
                     rad = soldic['r'].real
                     result.append((ctr, rad))
                     if verbose:
-                        print('solution circle', circle)
-                        print('center =', ctr)
-                        print('radius =', rad)
+                        print 'solution circle', circle
+                        print 'center =', ctr
+                        print 'radius =', rad
     return result
 
 def makecircles(plt, data, color, disk=False, verbose=True):
@@ -87,7 +87,7 @@ def makecircles(plt, data, color, disk=False, verbose=True):
     result = []
     for (center, radius) in data:
         if verbose:
-            print('circle with center', center, 'and radius', radius)
+            print 'circle with center', center, 'and radius', radius
         if disk:
             crc = plt.Circle(center, radius, edgecolor=color, \
                  facecolor=color) #, linewidth=2)
@@ -111,8 +111,8 @@ def plotcircles(plt, circles, xa, xb, ya, yb):
     for circle in circles:
         axs.add_artist(circle)
     plt.axis([xa, xb, ya, yb])
-    plt.show()
-    ans = input('hit enter to continue')
+    fig.show() # plt.show()
+    ans = raw_input('hit enter to continue')
 
 def solve_general_problem():
     """
@@ -124,9 +124,9 @@ def solve_general_problem():
     """
     syst = polynomials(2, 2.0/3, 1, 1, 1.0/3)
     sols = solve4circles(syst)
-    print('the solution list :')
-    print(sols)
-    ans = input('Continue with matplotlib ? (y/n) ')
+    print 'the solution list :'
+    print sols
+    ans = raw_input('Continue with matplotlib ? (y/n) ')
     if ans == 'y':
         import matplotlib.pyplot as plt
         crcdata = [((0, 0), 1), ((2, 0), 2.0/3), ((1, 1), 1.0/3)]
@@ -147,9 +147,9 @@ def solve_special_problem():
     height = sqrt(3)
     syst = polynomials(2, 1, 1, height, 1)
     sols = solve4circles(syst)
-    print('the solution list :')
-    print(sols)
-    ans = input('Continue with matplotlib ? (y/n) ')
+    print 'the solution list :'
+    print sols
+    ans = raw_input('Continue with matplotlib ? (y/n) ')
     if ans == 'y':
         import matplotlib.pyplot as plt
         crcdata = [((0, 0), 1), ((2, 0), 1), ((1, height), 1)]
@@ -168,28 +168,28 @@ def solve_perturbed_problem():
     """
     from math import sqrt
     height = sqrt(3)
-    syst = polynomials(2, 0.95, 1, height, 0.95)
+    syst = polynomials(2.05, 1, 1.025, height+0.025, 1)
     sols = solve4circles(syst)
-    print('the solution list :')
-    print(sols)
-    ans = input('Continue with matplotlib ? (y/n) ')
+    print 'the solution list :'
+    print sols
+    ans = raw_input('Continue with matplotlib ? (y/n) ')
     if ans == 'y':
         import matplotlib.pyplot as plt
-        crcdata = [((0, 0), 1), ((2, 0), 0.95), ((1, height), 0.95)]
+        crcdata = [((0, 0), 1), ((2.05, 0), 1), ((1.025, height+0.025), 1)]
         incircles = makecircles(plt, crcdata, disk=True, color='blue')
         outcircles = makecircles(plt, sols, color='red')
-        plotcircles(plt, incircles + outcircles, -2.5, 5, -2.5, 5)
+        plotcircles(plt, incircles + outcircles, -2, 4, -2, 4)
 
 def main():
     """
     Solves a general and a special instance of the circle problem
     of Appolonius.
     """
-    print('solving a general instance of the Appolonius circle problem')
+    print 'solving a general instance of the Appolonius circle problem'
     solve_general_problem()
-    print('solving a special instance of the Appolonius circle problem')
+    print 'solving a special instance of the Appolonius circle problem'
     solve_special_problem()
-    print('solving a perturbed instance of the Appolonius circle problem')
+    print 'solving a perturbed instance of the Appolonius circle problem'
     solve_perturbed_problem()
 
 if __name__=="__main__":

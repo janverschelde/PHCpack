@@ -1,3 +1,6 @@
+Fri 29 Jul 2016 : more symmetric perturbed instance in appolonius.py,
+  in the examples folders of PHCpy2 and PHCpy3.
+
 Thu 28 Jul 2016 : updated appolonius.py in PHCpy2 with a special case,
   with more refactoring and generalized setup.
   Added in PHCpy3 the appolonius.py script for version 3 of Python.
