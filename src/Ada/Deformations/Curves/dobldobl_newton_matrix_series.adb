@@ -1,6 +1,5 @@
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Double_Double_Numbers;             use Double_Double_Numbers;
 with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
 with DoblDobl_Dense_Series;
 with DoblDobl_Dense_Series_io;
@@ -15,7 +14,7 @@ with DoblDobl_Series_Poly_SysFun;
 
 package body DoblDobl_Newton_Matrix_Series is
 
--- ONE NEWTON STEP :
+-- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Step
               ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
@@ -118,6 +117,113 @@ package body DoblDobl_Newton_Matrix_Series is
     LU_Newton_Step(file,p,jp,degree,x,info);
     DoblDobl_Series_Jaco_Matrices.Clear(jp);
   end LU_Newton_Step;
+
+-- ONE NEWTON STEP WITH LU WITH CONDITION NUMBER ESTIMATE :
+
+  procedure LU_Newton_Step
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                rcond : out double_double ) is
+
+    dx : DoblDobl_Dense_Series_Vectors.Vector(x'range);
+    px : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    jm : DoblDobl_Dense_Series_Matrices.Matrix(p'range,x'range);
+    xp,xd : DoblDobl_Dense_Vector_Series.Vector;
+    mj : DoblDobl_Dense_Matrix_Series.Matrix;
+    one : constant double_double := create(1.0);
+
+  begin
+    px := DoblDobl_Series_Poly_SysFun.Eval(p,x);
+    DoblDobl_Dense_Series_Vectors.Min(px);
+    Series_and_Polynomials.Set_degree(px,degree);
+    jm := DoblDobl_Series_Jaco_Matrices.Eval(jp,x);
+    Series_and_Polynomials.Set_degree(jm,degree);
+    mj := DoblDobl_Dense_Matrix_Series.Create(jm);
+    xp := DoblDobl_Dense_Vector_Series.Create(px);
+    Solve_by_lufco(mj,xp,rcond,xd);
+    if one + rcond /= one then
+      dx := DoblDobl_Dense_Vector_Series.Create(xd);
+      DoblDobl_Dense_Series_Vectors.Add(x,dx);
+    end if;
+    DoblDobl_Dense_Matrix_Series.Clear(mj);
+    DoblDobl_Dense_Vector_Series.Clear(xp);
+    DoblDobl_Dense_Vector_Series.Clear(xd);
+  end LU_Newton_Step;
+
+  procedure LU_Newton_Step
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                rcond : out double_double ) is
+
+    jp : DoblDobl_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DoblDobl_Series_Jaco_Matrices.Create(p);
+
+  begin
+    LU_Newton_Step(p,jp,degree,x,rcond);
+    DoblDobl_Series_Jaco_Matrices.Clear(jp);
+  end LU_Newton_Step;
+
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                rcond : out double_double ) is
+
+    dx : DoblDobl_Dense_Series_Vectors.Vector(x'range);
+    px : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    jm : DoblDobl_Dense_Series_Matrices.Matrix(p'range,x'range);
+    xp,xd : DoblDobl_Dense_Vector_Series.Vector;
+    mj : DoblDobl_Dense_Matrix_Series.Matrix;
+    one : constant double_double := create(1.0);
+
+  begin
+    px := DoblDobl_Series_Poly_SysFun.Eval(p,x);
+    put_line(file,"The evaluated series :");
+    for i in px'range loop
+      DoblDobl_Dense_Series_io.put(file,px(i)); new_line(file);
+    end loop;
+    DoblDobl_Dense_Series_Vectors.Min(px);
+    Series_and_Polynomials.Set_degree(px,degree);
+    jm := DoblDobl_Series_Jaco_Matrices.Eval(jp,x);
+    Series_and_Polynomials.Set_degree(jm,degree);
+    mj := DoblDobl_Dense_Matrix_Series.Create(jm);
+    xp := DoblDobl_Dense_Vector_Series.Create(px);
+    Solve_by_lufco(mj,xp,rcond,xd);
+    put(file,"LUfco rcond : "); put(file,rcond,3); new_line(file);
+    if one + rcond /= one then
+      dx := DoblDobl_Dense_Vector_Series.Create(xd);
+      put_line(file,"The update to the series :");
+      for i in dx'range loop
+        DoblDobl_Dense_Series_io.put(file,dx(i)); new_line(file);
+      end loop;
+      DoblDobl_Dense_Series_Vectors.Add(x,dx);
+    end if;
+    DoblDobl_Dense_Matrix_Series.Clear(mj);
+    DoblDobl_Dense_Vector_Series.Clear(xp);
+    DoblDobl_Dense_Vector_Series.Clear(xd);
+  end LU_Newton_Step;
+
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                rcond : out double_double ) is
+
+    jp : DoblDobl_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DoblDobl_Series_Jaco_Matrices.Create(p);
+
+  begin
+    LU_Newton_Step(file,p,jp,degree,x,rcond);
+    DoblDobl_Series_Jaco_Matrices.Clear(jp);
+  end LU_Newton_Step;
+
+-- ONE NEWTON STEP WITH QR :
 
   procedure QR_Newton_Step
               ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
@@ -257,7 +363,7 @@ package body DoblDobl_Newton_Matrix_Series is
     DoblDobl_Series_Jaco_Matrices.Clear(jp);
   end QR_Newton_Step;
 
--- MANY NEWTON STEPS :
+-- MANY NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Steps
               ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
@@ -327,6 +433,83 @@ package body DoblDobl_Newton_Matrix_Series is
     LU_Newton_Steps(file,p,jp,degree,nbrit,x,info);
     DoblDobl_Series_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
+
+-- MANY NEWTON STEPS WITH LU WITH CONDITION NUMBER ESTIMATE :
+
+  procedure LU_Newton_Steps
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                rcond : out double_double ) is
+
+    one : constant double_double := create(1.0);
+
+  begin
+    for i in 1..nbrit loop
+      LU_Newton_Step(p,jp,degree,x,rcond);
+      exit when (one + rcond = one); -- stop if Jacobian matrix is singular
+      exit when (i = nbrit); -- do not double degree after last step
+      degree := 2*degree;
+      if degree > DoblDobl_Dense_Series.max_deg
+       then degree := DoblDobl_Dense_Series.max_deg;
+      end if;
+    end loop;
+  end LU_Newton_Steps;
+
+  procedure LU_Newton_Steps
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                rcond : out double_double ) is
+
+    jp : DoblDobl_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DoblDobl_Series_Jaco_Matrices.Create(p);
+
+  begin
+    LU_Newton_Steps(p,jp,degree,nbrit,x,rcond);
+    DoblDobl_Series_Jaco_Matrices.Clear(jp);
+  end LU_Newton_Steps;
+
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                rcond : out double_double ) is
+
+    one : constant double_double := create(1.0);
+
+  begin
+    for i in 1..nbrit loop
+      put(file,"LU Newton step "); put(file,i,1); put_line(file," :");
+      LU_Newton_Step(file,p,jp,degree,x,rcond);
+      exit when (one + rcond = one); -- stop if Jacobian matrix is singular
+      exit when (i = nbrit); -- do not double degree after last step
+      degree := 2*degree;
+      if degree > DoblDobl_Dense_Series.max_deg
+       then degree := DoblDobl_Dense_Series.max_deg;
+      end if;
+    end loop;
+  end LU_Newton_Steps;
+
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                rcond : out double_double ) is
+
+    jp : DoblDobl_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DoblDobl_Series_Jaco_Matrices.Create(p);
+
+  begin
+    LU_Newton_Steps(file,p,jp,degree,nbrit,x,rcond);
+    DoblDobl_Series_Jaco_Matrices.Clear(jp);
+  end LU_Newton_Steps;
+
+-- MANY NEWTON STEPS WITH QR :
 
   procedure QR_Newton_Steps
               ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
