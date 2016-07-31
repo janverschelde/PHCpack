@@ -1,5 +1,5 @@
 Sat 30 Jul 2016 : added test procedures to ts_sernew to test the SVD
-  Newton methods on matrix series.
+  Newton methods on matrix series.  To power_series_methods, added SVD Newton.
 
 Fri 29 Jul 2016 : extended *newton_matrix_series* with SVD_newton methods.
 
