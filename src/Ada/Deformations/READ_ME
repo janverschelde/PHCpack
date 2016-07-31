@@ -1,9 +1,10 @@
-Homotopies, Newton's method and path trackers in PHCv2.4.13
+Homotopies, Newton's method and path trackers in PHCv2.4.23
 
 This directory was newly created in version 2.3.75, collecting the
 directories Homotopy, Newton, and Continuation.  The directory Continuation
 was further subdivided into End_Games, Trackers, Sweep, and Continuation.
-The directory Curves was added in version 2.3.79.
+The directory Curves was added in version 2.3.79 and upgraded with
+Newton methods on matrix series in version 2.4.23.
 
    Deformations         : 2. homotopies, Newton's method & path trackers
       |-- Solutions     : 2.1. solutions of systems and homotopies

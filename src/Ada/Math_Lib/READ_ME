@@ -1,4 +1,4 @@
-Mathematical library in PHCpack version 2.4.20
+Mathematical library in PHCpack version 2.4.23
 
 The mathematical library contains general tools that are not specific
 for polynomial homotopy continuation.
@@ -16,7 +16,8 @@ for the new polynomial evaluation and differentiation routines.
 In v2.3.71, code from Vectors and Matrices was redistributed into the 
 directories Divisors and Reduction.  Tasking was moved in version 2.3.78.
 The latest major change in 2.3.98 is a seperate directory Circuits for the
-code for algorithmic differentation.
+code for algorithmic differentation.  The directory Series was added in
+version 2.4.21 and improved with linearization in version 2.3.23.
 
   Math_Lib             : 1. general mathematical library
      |-- Numbers       : 1.1. number representations
