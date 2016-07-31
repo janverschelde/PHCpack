@@ -63,19 +63,19 @@ procedure mainseries ( precision : in character;
     Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
     new_line;
-    if nq = dim then
-      put_line("LU Newton will be applied.  See the output file ...");
+   -- if nq = dim then
+   --   put_line("LU Newton will be applied.  See the output file ...");
+   --   new_line;
+   --   tstart(timer);
+   --   Run_LU_Newton(file,nbrit,srp,srv,verbose);
+   --   tstop(timer);
+   -- else
+      put_line("SVD Newton will be applied.  See the output file ...");
       new_line;
       tstart(timer);
-      Run_LU_Newton(file,nbrit,srp,srv,verbose);
+      Run_SVD_Newton(file,nbrit,srp,srv,verbose);
       tstop(timer);
-    else
-      put_line("QR Newton will be applied.  See the output file ...");
-      new_line;
-      tstart(timer);
-      Run_QR_Newton(file,nbrit,srp,srv,verbose);
-      tstop(timer);
-    end if;
+   -- end if;
     Standard_Series_Poly_Systems.Clear(srp);
     new_line(file);
     print_times(file,timer,"power series Newton in double precision");
@@ -117,19 +117,19 @@ procedure mainseries ( precision : in character;
     Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
     new_line;
-    if nq = dim then
-      put_line("LU Newton will be applied.  See the output file ...");
+   -- if nq = dim then
+   --   put_line("LU Newton will be applied.  See the output file ...");
+   --   new_line;
+   --   tstart(timer);
+   --   Run_LU_Newton(file,nbrit,srp,srv,verbose);
+   --   tstop(timer);
+   -- else
+      put_line("SVD Newton will be applied.  See the output file ...");
       new_line;
       tstart(timer);
-      Run_LU_Newton(file,nbrit,srp,srv,verbose);
+      Run_SVD_Newton(file,nbrit,srp,srv,verbose);
       tstop(timer);
-    else
-      put_line("QR Newton will be applied.  See the output file ...");
-      new_line;
-      tstart(timer);
-      Run_QR_Newton(file,nbrit,srp,srv,verbose);
-      tstop(timer);
-    end if;
+   -- end if;
     DoblDobl_Series_Poly_Systems.Clear(srp);
     new_line(file);
     print_times(file,timer,"power series Newton in double double precision");
@@ -171,19 +171,19 @@ procedure mainseries ( precision : in character;
     Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
     new_line;
-    if nq = dim then
-      put_line("LU Newton will be applied.  See the output file ...");
+   -- if nq = dim then
+   --   put_line("LU Newton will be applied.  See the output file ...");
+   --   new_line;
+   --   tstart(timer);
+   --   Run_LU_Newton(file,nbrit,srp,srv,verbose);
+   --   tstop(timer);
+   -- else
+      put_line("SVD Newton will be applied.  See the output file ...");
       new_line;
       tstart(timer);
-      Run_LU_Newton(file,nbrit,srp,srv,verbose);
+      Run_SVD_Newton(file,nbrit,srp,srv,verbose);
       tstop(timer);
-    else
-      put_line("QR Newton will be applied.  See the output file ...");
-      new_line;
-      tstart(timer);
-      Run_QR_Newton(file,nbrit,srp,srv,verbose);
-      tstop(timer);
-    end if;
+   -- end if;
     QuadDobl_Series_Poly_Systems.Clear(srp);
     new_line(file);
     print_times(file,timer,"power series Newton in quad double precision");

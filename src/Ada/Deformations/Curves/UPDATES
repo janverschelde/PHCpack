@@ -1,3 +1,6 @@
+Sun 31 Jul 2016 : extended power_series_methods to return rcond with LU.
+  Modified mainseries.adb so SVD_Newton is always applied.
+
 Sat 30 Jul 2016 : added test procedures to ts_sernew to test the SVD
   Newton methods on matrix series.  To power_series_methods, added SVD Newton.
 
