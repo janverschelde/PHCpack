@@ -1,4 +1,4 @@
-phcpy 0.5.0 offers a simple Python interface to PHCv2.4.21
+phcpy 0.5.2 offers a simple Python interface to PHCv2.4.23
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -57,6 +57,8 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.5.2 : 2016-07-31 : added use case on the circle problem of Appolonius
+0.5.1 : 2016-07-22 : fixed makefile for .so files on Mac OS X
 0.5.0 : 2016-07-01 : series module to run Newton's method on power series
 0.4.9 : 2016-06-15 : improved documentation for the dashboard module
 0.4.8 : 2016-06-03 : new module dashboard to prototype GUI with Tkinter

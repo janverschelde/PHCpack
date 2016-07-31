@@ -1,3 +1,6 @@
+Sun 31 Jul 2016 : prepared setup.py, __init__.py, and conf.py for version
+  0.5.2 of phcpy for python2 and python3.
+
 Fri 29 Jul 2016 : more symmetric perturbed instance in appolonius.py,
   in the examples folders of PHCpy2 and PHCpy3.  In the doc/source folders
   of PHCpy, added the circle problem of Appolonius as a use case.
