@@ -1,3 +1,5 @@
+Tue 2 Aug 2016 : refactored the fourbar.py scripts, with functions.
+
 Mon 1 Aug 2016 : added fourbar.py to PHCpy2/examples and PHCpy3/examples
   to prepare another use case, to design a 4-bar mechanism.
   Made a first version of fourbar.rst in the Sphinx documentation.
