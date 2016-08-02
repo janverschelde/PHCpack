@@ -22,6 +22,6 @@ phcpy Documentation Contents
    newtopes
    dashboard
    phcbwulf
-   modphcpy2c3
+   modphcpy2c2
    about
    indices
