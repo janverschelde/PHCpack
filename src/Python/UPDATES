@@ -1,3 +1,6 @@
+Mon 1 Aug 2016 : added fourbar.py to PHCpy2/examples and PHCpy3/examples
+  to prepare another use case, to design a 4-bar mechanism.
+
 Sun 31 Jul 2016 : prepared setup.py, __init__.py, and conf.py for version
   0.5.2 of phcpy for python2 and python3.
 

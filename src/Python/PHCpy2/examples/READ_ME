@@ -17,5 +17,6 @@ pierisystems : generate hypersurface Pieri intersection conditions
 randlrhom    : generate and enumerate random Schubert problems
              : for the Littlewood-Richardson homotopies (lrhom)
 runcyc10d    : script to run the GPU accelerated path trackers
-appolonius   : solves the circle problem of Appolonius, basic case study
+appolonius   : solves the circle problem of Appolonius, a use case
+fourbar      : design of a 4-bar mechanism, another use case
 -------------------------------------------------------------------------------

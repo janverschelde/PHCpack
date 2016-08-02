@@ -18,5 +18,6 @@ randlrhom    : generate and enumerate random Schubert problems
              : for the Littlewood-Richardson homotopies (lrhom)
 runcyc10d    : script to run the GPU accelerated path trackers
 lrhomprob    : problems in G(4,8) to test Littlewood-Richardson homotopies
-appolonius   : solves the circle problem of Appolonius
+appolonius   : solves the circle problem of Appolonius, a use case
+fourbar      : design of a 4-bar mechanism, another use case
 -------------------------------------------------------------------------------
