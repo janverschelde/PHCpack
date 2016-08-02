@@ -13,6 +13,7 @@ phcpy Documentation Contents
 
    welcome
    appolonius
+   fourbar
    blackbox
    pathtrack
    posdimsols
