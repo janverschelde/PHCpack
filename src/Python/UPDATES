@@ -1,5 +1,6 @@
 Tue 2 Aug 2016 : refactored the fourbar.py scripts, with functions.
   Fixed the toctree of the PHCpy2 Sphinx documentation source, in index.rst.
+  Added a mathematical description of the equations to fourbar.rst.
 
 Mon 1 Aug 2016 : added fourbar.py to PHCpy2/examples and PHCpy3/examples
   to prepare another use case, to design a 4-bar mechanism.

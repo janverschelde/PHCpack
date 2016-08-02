@@ -11,6 +11,63 @@ The equations are generated with ``sympy``.
 The system is taken from a paper by A.P. Morgan and C.W. Wampler
 on **Solving a Planar Four-Bar Design Using Continuation**, published in
 the *Journal of Mechanical Design*, volume 112, pages 544-550, 1990.
+The formulation of the equations follows the notation of the problem 
+statement in the second section of the paper.
+
+The first pivot point is fixed at the origin and the coordinates of the
+other fixed pivot point are in :math:`a = (a_1, a_2)`.
+The coordinates of the five precision points are denoted by
+:math:`d_0, d_1, d_2, d_3,` and :math:`d_4`.
+All vectors are column vectors and the superscript :math:`T` denotes
+the transpose.  The planar rotation matrices are defined by
+
+.. math::
+
+   R_j = \left[
+           \begin{array}{rr}
+              c_j & -s_j \\
+              s_j & c_j
+           \end{array}
+         \right], \quad j = 1, 2, 3, 4,
+
+where :math:`c_j` and :math:`s_j` are respectively the cosines
+and sines of the rotation angles.  The first four equations express
+the relationship between cosines and sines in the identities
+
+.. math::
+
+   c_j^2 + s_j^2 - 1 = 0, \quad j = 1, 2, 3, 4.
+
+The second group of equations involves the vector :math:`x = (x_1, x_2)`
+of variables.  
+The first bar in the mechanism is between the pivots.
+The line segment between the first pivot at :math:`(0, 0)`
+and :math:`x` represents the second bar in the 4-bar mechanism.
+
+.. math::
+
+   \left[ d^T_j R_j - d^T_0 \right] x
+   + \frac{1}{2} \left[ d^T_j d_j - d^T_0 d_0 \right] = 0,
+   \quad j = 1, 2, 3, 4.
+
+The third bar in the mechanism is represented between :math:`x`
+and :math:`y = (y_1, y_2)` and the fourth bar connects :math:`y`
+and the second pivot at :math:`a`.
+The third group of equations involving :math:`y` is defined by
+
+.. math::
+
+  \left[ \left( d^T_j - a^T \right) R_j
+       - \left( d^T_0 - a^T \right) \right] y
+  + \left[ \frac{1}{2} \left( d^T_j d_j - d^T_0 d_0 \right)
+           - a^T \left( d_j - d_0 \right) \right], \quad j = 1, 2, 3, 4.
+
+So we end up with a system of twelve equations in twelve unknowns:
+:math:`c_1, s_1, c_2, s_2, c_3, s_3, c_4, s_4, x_1, x_2, y_1, y_2`
+and ten parameters, the coordinates of the precision points
+:math:`d_0, d_1, d_2, d_3`, and :math:`d_4`.
+The coordinates of the second fixed pivot point :math:`a`
+are typically set to be :math:`(1, 0)`.
 
 a general configuration
 -----------------------
