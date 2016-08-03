@@ -32,7 +32,7 @@ def polynomials(d0,d1,d2,d3,d4,a):
     c1x = 0.5*(d1.transpose()*d1 - d0.transpose()*d0)
     c2x = 0.5*(d2.transpose()*d2 - d0.transpose()*d0)
     c3x = 0.5*(d3.transpose()*d3 - d0.transpose()*d0)
-    c4x = 0.5*(d3.transpose()*d4 - d0.transpose()*d0)
+    c4x = 0.5*(d4.transpose()*d4 - d0.transpose()*d0)
     e1x = (d1.transpose()*R1 - d0.transpose())*X + c1x
     e2x = (d2.transpose()*R2 - d0.transpose())*X + c2x
     e3x = (d3.transpose()*R3 - d0.transpose())*X + c3x
@@ -58,14 +58,14 @@ def polynomials(d0,d1,d2,d3,d4,a):
     s7, s8 = str(e3y[0]) + ';', str(e4y[0]) + ';'
     return [p1, p2, p3, p4, s1, s2, s3, s4, s5, s6, s7, s8]
 
-def main():
+def solve_general():
     """
     Defines the pivot and generates random coordinates,
     uniformly distributed in [-1, +1], for the five points
     through which the coupler must pass.
     Calls the blackbox solver to solve the system.
+    In each run, the number of computed solutions should be 36.
     """
-    # the five precision points are random points
     from random import uniform as u
     pt0 = Matrix(2, 1, lambda i,j: u(-1,+1))
     pt1 = Matrix(2, 1, lambda i,j: u(-1,+1))
@@ -84,6 +84,37 @@ def main():
     for sol in sols:
         print sol
     print 'computed', len(sols), 'solutions'
+
+def straight_line():
+    """
+    This function solves an instance where the five precision
+    points lie on a line.  The coordinates are taken from Problem 7
+    of the paper by A.P. Morgan and C.W. Wampler.
+    """
+    pt0 = Matrix([[ 0.50], [ 1.06]])
+    pt1 = Matrix([[-0.83], [-0.27]])
+    pt2 = Matrix([[-0.34], [ 0.22]])
+    pt3 = Matrix([[-0.13], [ 0.43]])
+    pt4 = Matrix([[ 0.22], [ 0.78]])
+    piv = Matrix([[1], [0]])
+    equ = polynomials(pt0,pt1,pt2,pt3,pt4,piv)
+    print 'the polynomial system :'
+    for pol in equ:
+        print pol
+    from phcpy.solver import solve
+    sols = solve(equ)
+    print 'the solutions :'
+    for sol in sols:
+        print sol
+    print 'computed', len(sols), 'solutions'
+
+def main():
+    """
+    Solves a general instance of the design problem first,
+    for randomly generated coordinates of the precision points.
+    """
+    solve_general()
+    straight_line()
 
 if __name__ == "__main__":
     main()
