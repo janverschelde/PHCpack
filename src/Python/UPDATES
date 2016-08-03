@@ -1,3 +1,5 @@
+Wed 3 Aug 2016 : start of postprocessing in the python2 fourbar.py script.
+
 Tue 2 Aug 2016 : refactored the fourbar.py scripts, with functions.
   Fixed the toctree of the PHCpy2 Sphinx documentation source, in index.rst.
   Added a mathematical description of the equations to fourbar.rst.

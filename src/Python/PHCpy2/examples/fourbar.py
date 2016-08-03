@@ -85,12 +85,40 @@ def solve_general():
         print sol
     print 'computed', len(sols), 'solutions'
 
-def straight_line():
+def angles(soldic):
+    """
+    Given a solution dictionary, extracts the angles from
+    the four cosines and sines of the angles.
+    Returns None if the angles are not ordered increasingly.
+    Otherwise, returns the sequence of ordered angles.
+    """
+    from math import acos, asin
+    c1v, s1v = soldic['c1'].real, soldic['s1'].real
+    c2v, s2v = soldic['c2'].real, soldic['s2'].real
+    c3v, s3v = soldic['c3'].real, soldic['s3'].real
+    c4v, s4v = soldic['c4'].real, soldic['s4'].real
+    ac1, as1 = acos(c1v), asin(s1v)
+    ac2, as2 = acos(c2v), asin(s2v)
+    ac3, as3 = acos(c3v), asin(s3v)
+    ac4, as4 = acos(c4v), asin(s4v)
+    ordered = (ac1 < ac2) and (ac2 < ac3) and (ac3 < ac4)
+    if ordered:
+        print ac1, ac2, ac3, ac4, 'ordered angles'
+        return (ac1, ac2, ac3, ac4)
+    ordered = (as1 < as2) and (as2 < as3) and (as3 < as4)
+    if ordered:
+        print as1, as2, as3, as4, 'ordered angles'
+        return (as1, as2, as3, as4)
+    return None
+
+def straight_line(verbose=True):
     """
     This function solves an instance where the five precision
     points lie on a line.  The coordinates are taken from Problem 7
     of the paper by A.P. Morgan and C.W. Wampler.
+    Returns a list of solution dictionaries for the real solutions.
     """
+    from phcpy.solutions import strsol2dict, is_real
     pt0 = Matrix([[ 0.50], [ 1.06]])
     pt1 = Matrix([[-0.83], [-0.27]])
     pt2 = Matrix([[-0.34], [ 0.22]])
@@ -98,15 +126,23 @@ def straight_line():
     pt4 = Matrix([[ 0.22], [ 0.78]])
     piv = Matrix([[1], [0]])
     equ = polynomials(pt0,pt1,pt2,pt3,pt4,piv)
-    print 'the polynomial system :'
-    for pol in equ:
-        print pol
+    if verbose:
+        print 'the polynomial system :'
+        for pol in equ:
+            print pol
     from phcpy.solver import solve
     sols = solve(equ)
-    print 'the solutions :'
+    if verbose:
+        print 'the solutions :'
+        for sol in sols:
+            print sol
+        print 'computed', len(sols), 'solutions'
+    result = []
     for sol in sols:
-        print sol
-    print 'computed', len(sols), 'solutions'
+        if is_real(sol, 1.0e-8):
+            soldic = strsol2dict(sol)
+            result.append(soldic)
+    return result
 
 def main():
     """
@@ -114,7 +150,22 @@ def main():
     for randomly generated coordinates of the precision points.
     """
     solve_general()
-    straight_line()
+    sols = straight_line()
+    print 'the real solutions :'
+    for sol in sols:
+        # print sol
+        (x1v, x2v) = (sol['x1'].real, sol['x2'].real)
+        (y1v, y2v) = (sol['y1'].real, sol['y2'].real)
+        print 'x = ', x1v, x2v
+        print 'y = ', y1v, y2v
+    print 'computed', len(sols), 'real solutions'
+    for sol in sols:
+        agl = angles(sol)
+        if agl != None:
+            (x1v, x2v) = (sol['x1'].real, sol['x2'].real)
+            (y1v, y2v) = (sol['y1'].real, sol['y2'].real)
+            print 'x = ', x1v, x2v
+            print 'y = ', y1v, y2v
 
 if __name__ == "__main__":
     main()
