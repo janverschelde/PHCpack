@@ -11,9 +11,19 @@ The equations are generated with ``sympy``.
 The system is taken from a paper by A.P. Morgan and C.W. Wampler
 on **Solving a Planar Four-Bar Design Using Continuation**, published in
 the *Journal of Mechanical Design*, volume 112, pages 544-550, 1990.
-The formulation of the equations follows the notation of the problem 
-statement in the second section of the paper.
+In the figure with caption :ref:`fig4barline`, the precision points are
+taken from Problem 7 in the paper.
 
+.. _fig4barline:
+
+.. figure:: ./fbarline.png
+    :align: center
+
+    A straight line design of a 4-bar mechanism.
+
+For the
+formulation of the equations we follow the notation of the problem 
+statement in the second section of the paper by Morgan and Wampler.
 The first pivot point is fixed at the origin and the coordinates of the
 other fixed pivot point are in :math:`a = (a_1, a_2)`.
 The coordinates of the five precision points are denoted by

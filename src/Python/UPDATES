@@ -1,3 +1,6 @@
+Thu 4 Aug 2016 : added picture of a straight line 4-bar design to the
+  documentation, to introduce the design problem.
+
 Wed 3 Aug 2016 : start of postprocessing in the python2 fourbar.py script.
 
 Tue 2 Aug 2016 : refactored the fourbar.py scripts, with functions.
