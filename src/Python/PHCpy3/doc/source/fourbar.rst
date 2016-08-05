@@ -22,8 +22,16 @@ taken from Problem 7 in the paper.
 
     A straight line design of a 4-bar mechanism.
 
-For the
-formulation of the equations we follow the notation of the problem 
+The first plot in the figure with caption :ref:`fig4barline`,
+at the top leftmost corner shows the five precision points,
+labeled with the numbers 0, 1, 2, 3, and 4.
+The two white triangles in each plot represent the fixed pivots.
+The next five plots show one position of the 4-bar mechanism.
+Each position passes through one of the prescribed precision points.
+The rotation angles and the coordinates for ``x`` and ``y`` for the
+initial position are obtained as solutions of a polynomial system.
+
+For the formulation of the equations we follow the notation of the problem 
 statement in the second section of the paper by Morgan and Wampler.
 The first pivot point is fixed at the origin and the coordinates of the
 other fixed pivot point are in :math:`a = (a_1, a_2)`.
@@ -197,3 +205,32 @@ Then, at last, we run the blackbox solver:
 
 For any general choice of precision points,
 the number of solutions should always be the same, that is: 36.
+
+visualization of a straight line design
+---------------------------------------
+
+Of special interest are those 4-bar mechanisms where the five
+precision points are on a line, as such mechanisms can be applied
+to translate circular into linear motion or otherwise.
+
+The coordinates of the following five precision points are
+copied from Problem 7 of the paper by Morgan and Wampler:
+
+::
+
+    pt0 = Matrix([[ 0.50], [ 1.06]])
+    pt1 = Matrix([[-0.83], [-0.27]])
+    pt2 = Matrix([[-0.34], [ 0.22]])
+    pt3 = Matrix([[-0.13], [ 0.43]])
+    pt4 = Matrix([[ 0.22], [ 0.78]])
+
+These are the coordinates shown in the figure
+with caption :ref:`fig4barline`
+There are 33 solutions to the polynomial system formulated in the
+same fashion as in the previous section.  
+Of those 33 solutions, 15 are real.
+Only real solutions can lead to valid designs.
+Not every real solution leads to a valid design.
+One condition is that the four angles computed from the cosine
+and sine coordinates must be ordered, so that the precision points
+are reached the same order as they are listed in the input.
