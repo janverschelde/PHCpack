@@ -1,6 +1,8 @@
 Thu 4 Aug 2016 : added picture of a straight line 4-bar design to the
   documentation, to introduce the design problem.  Added more text to
   the fourbar.rst files, with an extra section about the straight line.
+  Added the matplotlib visualization to the fourbar.py scripts in the
+  PHCpy2/examples and PHCpy3/examples directories.
 
 Wed 3 Aug 2016 : start of postprocessing in the python2 fourbar.py script.
 
