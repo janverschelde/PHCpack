@@ -234,3 +234,10 @@ Not every real solution leads to a valid design.
 One condition is that the four angles computed from the cosine
 and sine coordinates must be ordered, so that the precision points
 are reached the same order as they are listed in the input.
+
+.. _fig4barcoupler:
+
+.. figure:: ./fbarcoupler.png
+    :align: center
+
+    Part of the coupler curve of a straight line 4-bar mechanism.

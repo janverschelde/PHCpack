@@ -1,4 +1,7 @@
-Thu 4 Aug 2016 : added picture of a straight line 4-bar design to the
+Fri 5 Aug 2016 : added a picture of part of the coupler curve for the
+  straight line 4-bar mechanism.
+
+Thu 4 Aug 2016 : added a picture of a straight line 4-bar design to the
   documentation, to introduce the design problem.  Added more text to
   the fourbar.rst files, with an extra section about the straight line.
   Added the matplotlib visualization to the fourbar.py scripts in the
