@@ -1,5 +1,6 @@
 Fri 5 Aug 2016 : added a picture of part of the coupler curve for the
-  straight line 4-bar mechanism.
+  straight line 4-bar mechanism.  Added matplotlib code to the fourbar.py
+  scripts in the PHCpy2/examples and PHCpy3/examples directories.
 
 Thu 4 Aug 2016 : added a picture of a straight line 4-bar design to the
   documentation, to introduce the design problem.  Added more text to
