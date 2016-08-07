@@ -1,3 +1,6 @@
+Sat 6 Aug 2016 : added reference to the script appolonius.py in the examples
+  folders in PHCpy2 and PHCpy3.
+
 Fri 5 Aug 2016 : added a picture of part of the coupler curve for the
   straight line 4-bar mechanism.  Added matplotlib code to the fourbar.py
   scripts in the PHCpy2/examples and PHCpy3/examples directories.

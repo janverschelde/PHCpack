@@ -245,3 +245,7 @@ What is printed defines the large perturbation of the unit circle:
     y : -1.98660887619915E-01  -1.37048859215045E-114
     r :  1.36735854321414E+00   2.43642416382302E-114
    == err :  3.322E-16 = rco :  5.942E-03 = res :  1.388E-15 =
+
+The script ``appolonius.py`` in the source code distribution in
+the ``examples`` folder of ``PHCpy2`` or ``PHCpy3`` is a self contained
+script which solves the three instances of the problem of Appolonius.
