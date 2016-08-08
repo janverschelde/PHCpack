@@ -235,9 +235,18 @@ One condition is that the four angles computed from the cosine
 and sine coordinates must be ordered, so that the precision points
 are reached the same order as they are listed in the input.
 
+In the figure
+with caption :ref:`fig4barcoupler`,
+the *coupler curve* for the straight line mechanism is shown.
+This coupler curve is traced by the tip of the triangle moved
+by the 4-bar mechanism.
+The ``matplotlib`` code is available in the script ``fourbar.py``
+in the ``examples`` folder of the source code for the Python 2
+and Python 3 distributions.
+
 .. _fig4barcoupler:
 
 .. figure:: ./fbarcoupler.png
     :align: center
 
-    Part of the coupler curve of a straight line 4-bar mechanism.
+    The coupler curve of a straight line 4-bar mechanism.

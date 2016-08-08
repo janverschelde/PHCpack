@@ -1,6 +1,7 @@
 Sun 7 Aug 2016 : added a picture with the complete coupler curve of the
   straight line 4-bar mechanism to the PHCpy2 and PHCpy3 documentation.
   Updated the scripts fourbar.py in PHCpy2/examples and PHCpy3/examples.
+  Adjusted the documentation is fourbar.rst in PHCpy2/doc and PHCpy3/doc.
 
 Sat 6 Aug 2016 : added reference to the script appolonius.py in the examples
   folders in PHCpy2 and PHCpy3.
