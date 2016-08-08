@@ -255,13 +255,13 @@ def plotpoints2(points):
     xpt = [a for (a, b) in points]
     ypt = [b for (a, b) in points]
     plt.plot(xpt, ypt, 'ro')
-    plt.text(xpt[0] - 0.01, ypt[0] + 0.08, "0")
-    plt.text(xpt[1] - 0.01, ypt[1] + 0.08, "1")
-    plt.text(xpt[2] - 0.01, ypt[2] + 0.08, "2")
-    plt.text(xpt[3] - 0.01, ypt[3] + 0.08, "3")
-    plt.text(xpt[4] - 0.01, ypt[4] + 0.08, "4")
+    plt.text(xpt[0] + 0.01, ypt[0] + 0.06, "0")
+    plt.text(xpt[1] - 0.03, ypt[1] + 0.06, "1")
+    plt.text(xpt[2] - 0.01, ypt[2] + 0.06, "2")
+    plt.text(xpt[3] - 0.01, ypt[3] + 0.06, "3")
+    plt.text(xpt[4] - 0.01, ypt[4] + 0.06, "4")
     plt.plot([0, 1], [0, 0], 'w^') # pivots marked by white triangles
-    plt.axis([-1.0, 1.2, -0.5, 1.5])
+    plt.axis([-1.2, 1.2, -1.0, 1.5])
 
 def plotbar2(fig, points, idx, x, y):
     """
@@ -279,38 +279,12 @@ def plotbar2(fig, points, idx, x, y):
         (yp0, yp1) = (y[0] + xpt[idx], y[1] + ypt[idx])
         plt.plot([xp0, yp0], [xp1, yp1], 'go')
         plt.plot([xp0, yp0], [xp1, yp1], 'g')
-        plt.text(xp0 - 0.04, xp1 - 0.22, "x")
-        plt.text(yp0 - 0.04, yp1 - 0.22, "y")
+        plt.text(xp0 - 0.04, xp1 - 0.12, "x")
+        plt.text(yp0 - 0.04, yp1 - 0.12, "y")
         plt.plot([0, xp0], [0, xp1], 'g')
         plt.plot([yp0, 1], [yp1, 0], 'g')
         plt.plot([xp0, xpt[idx]], [xp1, ypt[idx]], 'b')
         plt.plot([yp0, xpt[idx]], [yp1, ypt[idx]], 'b')
-
-def rotate(x, y, a):
-    """
-    Applies a planar rotation defined by the angle a
-    to the points x and y.
-    """
-    from sympy.matrices import Matrix
-    from math import cos, sin
-    rot = Matrix([[cos(a), -sin(a)], [sin(a), cos(a)]])
-    xmt = Matrix([[x[0]], [x[1]]])
-    ymt = Matrix([[y[0]], [y[1]]])
-    rxm = rot*xmt
-    rym = rot*ymt
-    rox = (rxm[0], rxm[1])
-    roy = (rym[0], rym[1])
-    return (rox, roy)
-
-def ycrank(pt0, y):
-    """
-    In pt0 are the coordinates of the first precision point
-    and in y the coordinates of the solution design.
-    Returns the length of the point y to the second pivot (1, 0).
-    """
-    (yp0, yp1) = (y[0] + pt0[0], y[1] + pt0[1])
-    result = sqrt((yp0 - 1)**2 + yp1**2)
-    return result
 
 def lenbar(pt0, x, y):
     """
@@ -333,15 +307,18 @@ def coupler(x, y, xr, yr):
     A = -2*x[0] + 2*y[0]
     B = -2*x[1] + 2*y[1]
     C = x[0]**2 + x[1]**2 - xr**2 - y[0]**2 - y[1]**2 + yr**2
+    fail = True
     if A + 1.0 != 1.0: # eliminate z1
         (alpha, beta) = (-C/A, -B/A)
         a = beta**2 + 1 
         b = 2*alpha*beta - 2*x[1] - 2*x[0]*beta
         c = alpha**2 + x[0]**2 + x[1]**2 - xr**2 - 2*x[0]*alpha
-        disc = sqrt(b**2 - 4*a*c)
-        z2 = (-b + disc)/(2*a)
-        z1 = alpha + beta*z2
-    else:
+        if b**2 - 4*a*c >= 0:
+            fail = False
+            disc = sqrt(b**2 - 4*a*c)
+            z2 = (-b + disc)/(2*a)
+            z1 = alpha + beta*z2
+    if fail:
         (alpha, beta) = (-C/B, -A/B)
         a = beta**2 + 1 
         b = 2*alpha*beta - 2*y[1] - 2*y[0]*beta
@@ -349,6 +326,7 @@ def coupler(x, y, xr, yr):
         disc = sqrt(b**2 - 4*a*c)
         z1 = (-b + disc)/(2*a)
         z2 = alpha + beta*z1
+        dxz = sqrt((x[0]-z1)**2 + (x[1]-z2)**2)
     return (z1, z2)
 
 def xcrank(pt0, x):
@@ -358,60 +336,104 @@ def xcrank(pt0, x):
     This function computes the length of the crank
     and its initial angle with respect to the first point.
     """
-    from math import atan, cos, sin
+    from math import atan
     (xp0, xp1) = (x[0] + pt0[0], x[1] + pt0[1])
     crklen = sqrt(xp0**2 + xp1**2)
     crkagl = atan(xp1/xp0)
-    cx = crklen*cos(crkagl)
+    return (crklen, crkagl)
+
+def ycrank(pt0, y):
+    """
+    In pt0 are the coordinates of the first precision point
+    and in y the coordinates of the solution design.
+    This function computes the length of the crank
+    and its initial angle with respect to the first point.
+    """
+    from math import cos, sin, acos, pi
+    (yp0, yp1) = (y[0] + pt0[0], y[1] + pt0[1])
+    crklen = sqrt((yp0 - 1)**2 + yp1**2)
+    crkagl = acos((yp0-1)/crklen)
+    if yp1 < 0:
+        dlt = pi - crkagl
+        crkagl = pi + dlt
+    cx = 1 + crklen*cos(crkagl)
     cy = crklen*sin(crkagl)
     return (crklen, crkagl)
 
-def ypos(x1, x2, dxy, rad):
+def xpos(y1, y2, dxy, rad):
     """
-    Given in x1 and x2 are the coordinates of the point x,
+    Given in y1 and y2 are the coordinates of the point y,
     in dxy is the distance between the points x and y,
-    and rad is the distance between y and (1, 0).
-    The coordinates of the point y are returned in a tuple.
+    and rad is the distance between x and (1, 0).
+    The coordinates of the point x are returned in a tuple.
     """
-    A = -2*x1 + 2 # coefficient with y1
-    B = -2*x2     # coefficient with y2
-    C = x1**2 + x2**2 - dxy**2 - 1 + rad**2 # constant
-    if x2 + 1.0 != 1.0: # eliminate y2
+    A = -2*y1  # coefficient with y1
+    B = -2*y2  # coefficient with y2
+    C = y1**2 + y2**2 - dxy**2 + rad**2 # constant
+    fail = True
+    if abs(y2) < 1.0e-8:
+        x1 = -C/A
+        x2sqr = rad**2 - x1**2
+        x2 = sqrt(x2sqr)
+        fail = False
+    else: # eliminate x2
         (alpha, beta) = (-C/B, -A/B)
-        (a, b, c) = (1+beta**2, 2*alpha*beta-2, 1-rad**2+alpha**2) 
-        disc = sqrt(b**2 - 4*a*c)
-        if x2 > 0:
-            y1 = (-b - disc)/(2*a)
-        else:
-            y1 = (-b + disc)/(2*a)
-        y2 = alpha + beta*y1
-    else:       # eliminate y1
-        (alpha, beta) = (-C/A, -B/A)
-        (a, b, c) = (1+beta**2, 2*alpha*beta-2, 1-rad**2+alpha**2-2*alpha) 
-        disc = sqrt(b**2 - 4*a*c)
-        y2 = (-b - disc)/(2*a)
-        y1 = alpha + beta*y2
-    return (y1, y2)
+        (a, b, c) = (1+beta**2, 2*alpha*beta, alpha**2 - rad**2) 
+        b4ac = b**2 - 4*a*c
+        disc = sqrt(b4ac)
+        x1m = (-b - disc)/(2*a)
+        x2m = alpha + beta*x1m
+        x1p = (-b + disc)/(2*a)
+        x2p = alpha + beta*x1p
+    return ((x1m, x2m), (x1p, x2p))
 
 def plotcrank(crk, agl, dxy, rad, xrd, yrd):
     """
-    Plots several positions of the crank.
+    Plots several positions of the crank.  On input are:
+    crk : length of the crank from the point y to (1, 0),
+    agl : start angle,
+    rad : length of the crank from (0, 0) to the point x,
+    xrd : length from the point x to the coupler point,
+    yrd : length from the point y to the coupler point.
     """
     from math import sin, cos, pi
-    (xz, yz) = ([], [])
-    b = agl+1.05
-    for k in range(78):
-        (x1, x2) = (crk*cos(b), crk*sin(b))
-        (y1, y2) = ypos(x1, x2, dxy, rad)
-        (z1, z2) = coupler([x1, x2], [y1, y2], xrd, yrd)
-        xz.append(z1)
-        yz.append(z2)
-        b = b - 0.04
-    plt.plot(xz, yz, 'b')
+    (xzm, yzm) = ([], [])
+    (xzp, yzp) = ([], [])
+    nbr = 205
+    inc = (pi+0.11763)/nbr
+    b = agl - 2.558 # 125
+    for k in range(nbr):
+        (y1, y2) = (1 + crk*cos(b), crk*sin(b))
+        (xm, xp) = xpos(y1, y2, dxy, rad)
+        (x1m, x2m) = xm 
+        (x1p, x2p) = xp
+        (z1m, z2m) = coupler([x1m, x2m], [y1, y2], xrd, yrd)
+        (z1p, z2p) = coupler([x1p, x2p], [y1, y2], xrd, yrd)
+        xzm.append(z1m)
+        yzm.append(z2m)
+        xzp.append(z1p)
+        yzp.append(z2p)
+        if k < 0: # selective plot
+            plt.plot([0, x1m], [0, x2m], 'g')
+            plt.plot([x1m, y1], [x2m, y2], 'g')
+            plt.plot([y1, 1], [y2, 0], 'g')
+            dyp = sqrt((y1-1)**2 + y2**2)
+            dyx = sqrt((x1m-y1)**2 + (x2m-y2)**2)
+            print('dxy =', dxy, 'dyp =', dyp)
+        if k < 0:
+            print('y2 =', y2)
+            plt.plot([x1m, z1m], [x2m, z2m], 'b')
+            plt.plot([y1, z1m], [y2, z2m], 'b')
+            plt.plot([x1p, z1p], [x2p, z2p], 'b')
+            plt.plot([y1, z1p], [y2, z2p], 'b')
+        b = b + inc
+    plt.plot(xzp[:1]+xzm[:102]+xzp[102:], \
+             yzp[:1]+yzm[:102]+yzp[102:], 'r')
+    plt.plot(xzp[:102]+xzm[102:], yzp[:102]+yzm[102:], 'r')
 
 def plotcoupler():
     """
-    Plots part of the coupler curve for a straight line 4-bar mechanism.
+    Plots the coupler curve for a straight line 4-bar mechanism.
     """
     pt0 = ( 0.50,  1.06)
     pt1 = (-0.83, -0.27)
@@ -422,14 +444,14 @@ def plotcoupler():
     ags = [1.44734213756, 0.928413708131, 0.751699211109, 0.387116282208]
     x =  (-0.0877960434509, -0.851386907516)
     y =  (0.235837391307, -1.41899202704)
-    (xcrk, agl) = xcrank(pt0, x)
-    ycrk = ycrank(pt0, y)
+    (xcrk, xagl) = xcrank(pt0, x)
+    (ycrk, yagl) = ycrank(pt0, y)
     dxy = lenbar(pt0, x, y) 
     fig = plt.figure()
     fig.add_subplot(111, aspect='equal')
     xrd = sqrt(x[0]**2 + x[1]**2) # distance from x to pt0
     yrd = sqrt(y[0]**2 + y[1]**2) # distance from y to pt0
-    plotcrank(xcrk, agl, dxy, ycrk, xrd, yrd)
+    plotcrank(ycrk, yagl, dxy, xcrk, xrd, yrd)
     plotbar2(fig, points, 0, x, y)
     fig.show()
     input('hit enter to exit')
