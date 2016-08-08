@@ -12,8 +12,7 @@ phcpy Documentation Contents
    :maxdepth: 2
 
    welcome
-   appolonius
-   fourbar
+   usecases
    blackbox
    pathtrack
    posdimsols

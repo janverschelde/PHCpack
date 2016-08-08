@@ -1,5 +1,5 @@
 the circle problem of Appolonius
-================================
+--------------------------------
 
 The circle problem of Appolonius asks to find all circles tangent
 to three given circles.  
@@ -17,11 +17,10 @@ tangent to the three input circles are displayed in red.
 This problem can be reformulated into that
 of solving eight polynomial systems.  The number eight equals
 the number of solutions to this problem.
-This chapter presents a *use case* for phcpy.
-The plots are generated with ``matplotlib``.
+The plots are generated with version 1.5.1 of ``matplotlib``.
 
 a general configuration
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Without loss of generality, we may fix the first given circle on input
 as the unit circle, centered at the origin and with radius one.
@@ -156,7 +155,7 @@ radii :math:`1`, :math:`2/3`, and :math:`1/3` happens by two function calls:
     sols = solve4circles(syst)
 
 a special configuration
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 A special configuration of the input circles is when they
 mutually touch each other, as shown in the figure
@@ -205,7 +204,7 @@ In what is printed, we recognize the first input circle:
 Observe the ``m : 2`` which indicates the multiplicity of the solution.
 
 a perturbed configuration
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To see why we have to count some solutions of the special
 configuration twice, consider the figure

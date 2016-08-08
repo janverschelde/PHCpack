@@ -1,5 +1,5 @@
 the circle problem of Appolonius
-================================
+--------------------------------
 
 The circle problem of Appolonius asks to find all circles tangent
 to three given circles.  
@@ -17,11 +17,10 @@ tangent to the three input circles are displayed in red.
 This problem can be reformulated into that
 of solving eight polynomial systems.  The number eight equals
 the number of solutions to this problem.
-This chapter presents a *use case* for phcpy.
-The plots are generated with ``matplotlib``.
+The plots are generated with version 1.5.1 of ``matplotlib``.
 
 a general configuration
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Without loss of generality, we may fix the first given circle on input
 as the unit circle, centered at the origin and with radius one.
@@ -111,12 +110,12 @@ and solves the systems.  The valid solutions are extracted and returned.
        for eqs in syst:
            eqscnt = eqscnt + 1
            if verbose:
-               print 'solving system', eqscnt, ':'
+               print('solving system', eqscnt, ':')
                for pol in eqs:
-                   print pol
+                   print(pol)
            sols = solve(eqs, silent=True)
            if verbose:
-               print 'system', eqscnt, 'has', len(sols), 'solutions'
+               print('system', eqscnt, 'has', len(sols), 'solutions')
            for sol in sols:
                if is_real(sol, 1.0e-8):
                    soldic = strsol2dict(sol)
@@ -126,9 +125,9 @@ and solves the systems.  The valid solutions are extracted and returned.
                        rad = soldic['r'].real
                        result.append((ctr, rad))
                        if verbose:
-                           print 'solution circle', circle
-                           print 'center =', ctr
-                           print 'radius =', rad
+                           print('solution circle', circle)
+                           print('center =', ctr)
+                           print('radius =', rad)
        return result
 
 The code for the function ``solve4circles`` has two important statements:
@@ -156,7 +155,7 @@ radii :math:`1`, :math:`2/3`, and :math:`1/3` happens by two function calls:
     sols = solve4circles(syst)
 
 a special configuration
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 A special configuration of the input circles is when they
 mutually touch each other, as shown in the figure
@@ -188,7 +187,7 @@ session in an interactive Python shell:
    h = sqrt(3)
    p = polynomials(2, 1, 1, h, 1)
    sols = solve(p[3], silent=True)
-   print sols[0]
+   print(sols[0])
 
 In what is printed, we recognize the first input circle:
 
@@ -205,7 +204,7 @@ In what is printed, we recognize the first input circle:
 Observe the ``m : 2`` which indicates the multiplicity of the solution.
 
 a perturbed configuration
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To see why we have to count some solutions of the special
 configuration twice, consider the figure
@@ -232,7 +231,7 @@ as follows:
    h = sqrt(3)
    p = polynomials(2.05, 1, 1.025, h+0.025, 1)
    sols = solve(p[3], silent=True)
-   print sols[0]
+   print(sols[0])
 
 What is printed defines the large perturbation of the unit circle:
 

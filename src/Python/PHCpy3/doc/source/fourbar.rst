@@ -1,13 +1,12 @@
 the design of a 4-bar mechanism
-===============================
+-------------------------------
 
 Given two pivot points and five precision points for the coupler,
 the design problem asks to determine the lengths of the bars that
 allow the coupler to pass through the given precision points.
 
-This chapter presents a *use case* for phcpy.
-The equations are generated with ``sympy``
-and the plots are made with ``matplotlib``.
+The equations are generated with version 1.0 of ``sympy``
+and the plots are made with version 1.5.1 of ``matplotlib``.
 
 The system is taken from a paper by A.P. Morgan and C.W. Wampler
 on **Solving a Planar Four-Bar Design Using Continuation**, published in
@@ -89,7 +88,7 @@ The coordinates of the second fixed pivot point :math:`a`
 are typically set to be :math:`(1, 0)`.
 
 a general configuration
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 For a general configuration, we generate 5 points,
 with coordinates uniformly distributed in the interval :math:`[-1, +1]`.
@@ -207,7 +206,7 @@ For any general choice of precision points,
 the number of solutions should always be the same, that is: 36.
 
 visualization of a straight line design
----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Of special interest are those 4-bar mechanisms where the five
 precision points are on a line, as such mechanisms can be applied
