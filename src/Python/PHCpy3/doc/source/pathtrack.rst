@@ -230,10 +230,15 @@ because we arrived at the end of the path.
 To test whether at the end of a path, it suffices to check
 whether the value for t equals one.
 
-The image below plots the real parts of the four paths.
+The real parts of the four paths are shown in :numref:`figplotpaths`
 Three of the paths converge to the triple solution (1,2).
 
-.. image:: ./plotpaths.png
+.. _figplotpaths:
+
+.. figure:: ./plotpaths.png
+    :align: center
+
+    The real parts of four solution paths.
 
 The code used to make the plot (using matplotlib) is below:
 
@@ -508,12 +513,19 @@ tuples \ :math:`(1, 0)` and \ :math:`(-1,0)`.
 
 Geometrically, as the horizontal line moves up, the two solutions
 (the intersection points on the circle and the line), move closer
-to each other to join at a *quadratic turning point*.
-At the left of the picture below we see the line transversally intersecting
-the circle at a perfect right angle.  At the right, the two distinct
+to each other to join at a *quadratic turning point*,
+shown in :numref:`figcircleline`.
+At the left picture of :numref:`figcircleline` we see the line transversally 
+intersecting the circle at a perfect right angle.  
+At the right picture of :numref:`figcircleline`, the two distinct
 solutions have merged into one point where the line is tangent to the circle.
 
-.. image:: ./circles.png
+.. _figcircleline:
+
+.. figure:: ./circles.png
+    :align: center
+
+    Two complex conjugated solutions meet at a quadratic turning point.
 
 The tracking of solution paths in a real sweep homotopy will stop
 at the first singular point it encounters.  
