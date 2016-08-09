@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Symbol_Table;                       use Symbol_Table;
+with Standard_Complex_Vectors;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 
 package Standard_Complex_Solutions_io is
@@ -35,6 +36,9 @@ package Standard_Complex_Solutions_io is
   -- DESCRIPTION :
   --   Reads a solution, skipping lines where exceptions happen.
 
+  procedure put_vector ( v : in Standard_Complex_Vectors.Vector );
+  procedure put_vector ( file : in file_type; 
+                         v : in Standard_Complex_Vectors.Vector );
   procedure put_vector ( s : in Solution );
   procedure put_vector ( file : in file_type; s : in Solution );
 

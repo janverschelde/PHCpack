@@ -373,6 +373,30 @@ package body Standard_Complex_Solutions_io is
 
 -- OUTPUT OF A SOLUTION VECTOR :
 
+  procedure put_vector ( v : in Standard_Complex_Vectors.Vector ) is
+  begin
+    put_vector(Standard_Output,v);
+  end put_vector;
+
+  procedure put_vector ( file : in file_type;
+                         v : in Standard_Complex_Vectors.Vector ) is
+
+    n : constant integer32 := v'last;
+
+  begin
+    if Symbol_Table.Number < natural32(n) then
+      for i in v'range loop
+        put(file," x"); put(file,i,1); put(file," : ");
+        put(file,v(i)); new_line(file);
+      end loop;
+    else
+      for i in v'range loop
+        put(file,' '); put_symbol(file,natural32(i)); put(file," : ");
+        put(file,v(i)); new_line(file);
+      end loop;
+    end if;
+  end put_vector;
+
   procedure put_vector ( s : in Solution ) is
   begin
     put_vector(Standard_Output,s);
@@ -380,17 +404,7 @@ package body Standard_Complex_Solutions_io is
 
   procedure put_vector ( file : in file_type; s : in Solution ) is
   begin
-    if Symbol_Table.Number < natural32(s.n) then
-      for i in s.v'range loop
-        put(file," x"); put(file,i,1); put(file," : ");
-        put(file,s.v(i)); new_line(file);
-      end loop;
-    else
-      for i in s.v'range loop
-        put(file,' '); put_symbol(file,natural32(i)); put(file," : ");
-        put(file,s.v(i)); new_line(file);
-      end loop;
-    end if;
+    put_vector(file,s.v);
   end put_vector;
 
   procedure put_diagnostics ( s : in Solution ) is

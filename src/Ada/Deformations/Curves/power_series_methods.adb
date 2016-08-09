@@ -3,6 +3,8 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Standard_Complex_Vectors;
+with Standard_Complex_Solutions_io;
 with Standard_Series_Poly_SysFun;
 with DoblDobl_Series_Poly_SysFun;
 with QuadDobl_Series_Poly_SysFun;
@@ -832,6 +834,15 @@ package body Power_Series_Methods is
       if verbose then
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
+        declare
+          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          sol : Standard_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          Standard_Complex_Solutions_io.put_vector(file,sol);
+        end;
       end if;
       Run_SVD_Newton(file,nbrit,p,v(i).all,rcond,verbose);
     end loop;
