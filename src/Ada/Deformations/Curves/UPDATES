@@ -1,4 +1,5 @@
-Mon 8 Aug 2016 : added a put_vector to power_series_methods.adb.
+Mon 8 Aug 2016 : added a put_vector to power_series_methods.adb,
+  also for the dobldobl and quaddobl versions, and not only for SVD.
 
 Sun 31 Jul 2016 : extended power_series_methods to return rcond with LU.
   Modified mainseries.adb so SVD_Newton is always applied.
