@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions;         use DoblDobl_Complex_Solutions;
 
 package DoblDobl_Complex_Solutions_io is
@@ -15,6 +16,9 @@ package DoblDobl_Complex_Solutions_io is
   -- DESCRIPTION :
   --   The input must contain the solution vector.
 
+  procedure put_vector ( v : in DoblDobl_Complex_Vectors.Vector );
+  procedure put_vector ( file : in file_type; 
+                         v : in DoblDobl_Complex_Vectors.Vector );
   procedure put_vector ( s : in Solution );
   procedure put_vector ( file : in file_type; s : in Solution );
 
