@@ -16,7 +16,7 @@ one button for the user to call the blackbox solver, and then two labels
 to document the functionality of the text widgets.
 
 A screen shot of a basic interface to the blackbox solver is shown
-in the figure with caption :ref:`figlaunchsolver`
+in :numref:`figlaunchsolver`.
 
 .. _figlaunchsolver:
 
@@ -56,8 +56,7 @@ the cyclic 5-roots problem.
     >>> from phcpy.dashboard import scrollsols
     >>> scrollsols(sols)
 
-The window that then pops up in shown in the figure 
-with caption :ref:`figc5scrollsols`
+The window that then pops up in shown in :numref:`figc5scrollsols`.
 Note that, because of different choices of random constants,
 the first solution will most likely be different at each run.
 
@@ -75,7 +74,7 @@ Solutions have coordinates in the complex plane.
 As in the case of the cyclic 5-roots problem,
 a plot of one of the coordinates in the complex plane
 reveals the pattern of the distribution in the roots,
-see the figure with caption :ref:`figc5x0plot`
+see :numref:`figc5x0plot`.
 
 .. _figc5x0plot:
 
