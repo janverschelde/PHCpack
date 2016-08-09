@@ -1,6 +1,7 @@
 Tue 9 Aug 2016 : fixed numbering of the figures in appolonius.rst and
   fourbar.rst to correspond better to LaTeX conventions.
-  Also fixed the numbering of figures in dashboard.rst and in pathtrack.rst.
+  Also fixed the numbering of figures in dashboard.rst, in pathtrack.rst,
+  and in the modphcpy2c2.rst, modphcpy2c3.rst documentation files.
 
 Mon 8 Aug 2016 : merged the use cases into one chapter in the Sphinx doc.
 

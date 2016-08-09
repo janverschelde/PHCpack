@@ -2,7 +2,8 @@ the module phcpy.phcpy2c2
 =========================
 
 The Python scripts in the package phcpy call the wrappers
-for the C interface to PHCpack.  Below is the list of all
+for the C interface to the Ada code in PHCpack.  
+Below is the list of all
 functions exported by the shared object file phcpy2c2.so.
 The source code provides more detailed documentation.
 
@@ -11,9 +12,14 @@ design of the Python to C interface
 
 The design of phcpy depends on PHClib, a library of various
 collections of C functions, originally developed for message passing
-with the MPI library.  This design is sketched in the figure below:
+with the MPI library.  This design is sketched in :numref:`figdesign`.
 
-.. image:: ./figdesign.png
+.. _figdesign:
+
+.. figure:: ./figdesign.png
+    :align: center
+
+    The design of phcpy through the C interface to Ada code.
 
 PHClib interfaces to the Ada routines through one single
 Ada procedure ``use_c2phc.adb``.
