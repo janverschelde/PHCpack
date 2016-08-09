@@ -11,7 +11,7 @@ and the plots are made with version 1.5.1 of ``matplotlib``.
 The system is taken from a paper by A.P. Morgan and C.W. Wampler
 on **Solving a Planar Four-Bar Design Using Continuation**, published in
 the *Journal of Mechanical Design*, volume 112, pages 544-550, 1990.
-In the figure with caption :ref:`fig4barline`, the precision points are
+In :numref:`fig4barline`, the precision points are
 taken from Problem 7 in the paper.
 
 .. _fig4barline:
@@ -21,7 +21,7 @@ taken from Problem 7 in the paper.
 
     A straight line design of a 4-bar mechanism.
 
-The first plot in the figure with caption :ref:`fig4barline`,
+The first plot in :numref:`fig4barline`,
 at the top leftmost corner shows the five precision points,
 labeled with the numbers 0, 1, 2, 3, and 4.
 The two white triangles in each plot represent the fixed pivots.
@@ -223,8 +223,7 @@ copied from Problem 7 of the paper by Morgan and Wampler:
     pt3 = Matrix([[-0.13], [ 0.43]])
     pt4 = Matrix([[ 0.22], [ 0.78]])
 
-These are the coordinates shown in the figure
-with caption :ref:`fig4barline`
+These are the coordinates shown in :numref:`fig4barline`.
 There are 33 solutions to the polynomial system formulated in the
 same fashion as in the previous section.  
 Of those 33 solutions, 15 are real.
@@ -234,8 +233,7 @@ One condition is that the four angles computed from the cosine
 and sine coordinates must be ordered, so that the precision points
 are reached the same order as they are listed in the input.
 
-In the figure
-with caption :ref:`fig4barcoupler`,
+In :numref:`fig4barcoupler`,
 the *coupler curve* for the straight line mechanism is shown.
 This coupler curve is traced by the tip of the triangle moved
 by the 4-bar mechanism.

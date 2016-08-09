@@ -1,3 +1,6 @@
+Tue 9 Aug 2016 : fixed numbering of the figures in appolonius.rst and
+  fourbar.rst to correspond better to LaTeX conventions.
+
 Mon 8 Aug 2016 : merged the use cases into one chapter in the Sphinx doc.
 
 Sun 7 Aug 2016 : added a picture with the complete coupler curve of the

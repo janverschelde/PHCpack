@@ -3,7 +3,7 @@ the circle problem of Appolonius
 
 The circle problem of Appolonius asks to find all circles tangent
 to three given circles.  
-In the figure with caption :ref:`figappolgeneral`,
+In :numref:`figappolgeneral`,
 the input circles are shown as blue disks and the eight circles
 tangent to the three input circles are displayed in red.
 
@@ -158,8 +158,7 @@ a special configuration
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 A special configuration of the input circles is when they
-mutually touch each other, as shown in the figure
-with caption :ref:`figappolspecial`
+mutually touch each other, as shown in :numref:`figappolspecial`.
 
 .. _figappolspecial:
 
@@ -207,8 +206,7 @@ a perturbed configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To see why we have to count some solutions of the special
-configuration twice, consider the figure
-with caption :ref:`figappolperturbed`
+configuration twice, consider :numref:`figappolperturbed`
 
 .. _figappolperturbed:
 

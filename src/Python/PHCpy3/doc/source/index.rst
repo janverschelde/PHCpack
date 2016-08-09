@@ -9,7 +9,7 @@ phcpy Documentation Contents
 ============================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    welcome
    usecases

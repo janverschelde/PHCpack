@@ -1,17 +1,18 @@
 the design of a 4-bar mechanism
--------------------------------
+===============================
 
 Given two pivot points and five precision points for the coupler,
 the design problem asks to determine the lengths of the bars that
 allow the coupler to pass through the given precision points.
 
-The equations are generated with version 1.0 of ``sympy``
-and the plots are made with version 1.5.1 of ``matplotlib``.
+This chapter presents a *use case* for phcpy.
+The equations are generated with ``sympy``
+and the plots are made with ``matplotlib``.
 
 The system is taken from a paper by A.P. Morgan and C.W. Wampler
 on **Solving a Planar Four-Bar Design Using Continuation**, published in
 the *Journal of Mechanical Design*, volume 112, pages 544-550, 1990.
-In the figure with caption :ref:`fig4barline`, the precision points are
+In :numref:`fig4barline`, the precision points are
 taken from Problem 7 in the paper.
 
 .. _fig4barline:
@@ -21,7 +22,7 @@ taken from Problem 7 in the paper.
 
     A straight line design of a 4-bar mechanism.
 
-The first plot in the figure with caption :ref:`fig4barline`,
+The first plot in :numref:`fig4barline`,
 at the top leftmost corner shows the five precision points,
 labeled with the numbers 0, 1, 2, 3, and 4.
 The two white triangles in each plot represent the fixed pivots.
@@ -88,7 +89,7 @@ The coordinates of the second fixed pivot point :math:`a`
 are typically set to be :math:`(1, 0)`.
 
 a general configuration
-^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------
 
 For a general configuration, we generate 5 points,
 with coordinates uniformly distributed in the interval :math:`[-1, +1]`.
@@ -206,7 +207,7 @@ For any general choice of precision points,
 the number of solutions should always be the same, that is: 36.
 
 visualization of a straight line design
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------------------
 
 Of special interest are those 4-bar mechanisms where the five
 precision points are on a line, as such mechanisms can be applied
@@ -223,8 +224,7 @@ copied from Problem 7 of the paper by Morgan and Wampler:
     pt3 = Matrix([[-0.13], [ 0.43]])
     pt4 = Matrix([[ 0.22], [ 0.78]])
 
-These are the coordinates shown in the figure
-with caption :ref:`fig4barline`
+These are the coordinates shown in :numref:`fig4barline`.
 There are 33 solutions to the polynomial system formulated in the
 same fashion as in the previous section.  
 Of those 33 solutions, 15 are real.
@@ -234,8 +234,7 @@ One condition is that the four angles computed from the cosine
 and sine coordinates must be ordered, so that the precision points
 are reached the same order as they are listed in the input.
 
-In the figure
-with caption :ref:`fig4barcoupler`,
+In :numref:`fig4barcoupler`,
 the *coupler curve* for the straight line mechanism is shown.
 This coupler curve is traced by the tip of the triangle moved
 by the 4-bar mechanism.
