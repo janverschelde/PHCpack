@@ -1,3 +1,5 @@
+Wed 10 Aug 2016 : added names_of_variables() function to the solver module.
+
 Tue 9 Aug 2016 : fixed numbering of the figures in appolonius.rst and
   fourbar.rst to correspond better to LaTeX conventions.
   Also fixed the numbering of figures in dashboard.rst, in pathtrack.rst,

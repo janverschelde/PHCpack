@@ -76,6 +76,16 @@ def number_of_symbols(pols):
     inpols = ''.join(pols)
     return py2c_scan_for_symbols(len(inpols), inpols)
 
+def names_of_variables(pols):
+    """
+    Returns a list of strings with the names of all variables
+    that occur in the list of polynomials (given as strings) in pols.
+    """
+    _ = number_of_symbols(pols) # initializes the symbol table
+    from phcpy.phcpy2c2 import py2c_syscon_string_of_symbols as sts
+    smb = sts()
+    return smb.split()
+
 def is_square(pols):
     """
     Given in the list pols are string representations of Laurent polynomials.
