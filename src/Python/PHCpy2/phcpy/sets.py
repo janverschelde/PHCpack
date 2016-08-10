@@ -443,6 +443,80 @@ def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
         print 'wrong argument for precision'
         return None
 
+def is_slackvar(var):
+    """
+    Given in var is a string with a variable name.
+    Returns True if the variable name starts with 'zz',
+    followed by a number.  Returns False otherwise.
+    """
+    if len(var) <= 2: # too short to be a slack variable
+        return False
+    elif var[:2] != 'zz': # a slack variable starts with zz
+        return False
+    else:
+        rest = var[2:]
+        return rest.isdigit()
+
+def is_signed(pol):
+    """
+    Given in pol is the string representation of a polynomial.
+    Returns True if the first nonspace character in the string pol
+    is either '+' or '-'.  Returns False otherwise.
+    """
+    wrk = pol.lstrip()
+    if len(wrk) == 0: # all characters in pol are spaces
+        return False
+    else:
+        return (wrk[0] == '+' or wrk[0] == '-')
+
+def is_member(wsys, gpts, dim, solpt, evatol=1.0e-6, memtol=1.0e-6, \
+    verbose=True, precision='d'):
+    """
+    This function wraps the membertest where the point is a solution,
+    given in solpt.  All other parameters have the same meaning as
+    in the function membertest.
+    """
+    from phcpy.solutions import strsol2dict, variables
+    from phcpy.solver import names_of_variables
+    soldc = strsol2dict(solpt)
+    svars = variables(soldc)
+    pvars = names_of_variables(wsys)
+    if verbose:
+        print 'variables in solution :', svars
+        print 'variables in system   :', pvars
+    (ordvar, solval) = ('', [])
+    for var in svars:
+        if not is_slackvar(var): # skip the slack variables
+            if var not in pvars:
+                print 'Error: mismatch of variables names.'
+                return None
+            ordvar = ordvar + '+' + var + '-' + var
+            solval.append(soldc[var].real)
+            if precision == 'dd':
+                solval.append(0.0)
+            elif precision == 'qd':
+                solval.append(0.0)
+                solval.append(0.0)
+                solval.append(0.0)
+            solval.append(soldc[var].imag)
+            if precision == 'dd':
+                solval.append(0.0)
+            elif precision == 'qd':
+                solval.append(0.0)
+                solval.append(0.0)
+                solval.append(0.0)
+    if verbose:
+        print 'order of the variables :', ordvar
+        print 'values in the point :', solval
+    wpol0 = wsys[0]
+    if is_signed(wpol0):
+        newpol0 = ordvar + wpol0
+    else:
+        newpol0 = ordvar + '+' + wpol0
+    newsys = [newpol0] + wsys[1:]
+    return membertest(newsys, gpts, dim, solval, evatol, memtol, \
+                      verbose, precision)
+
 def test_member(prc='d'):
     """
     To test the membership, we take the twisted cubic.
@@ -469,6 +543,21 @@ def test_member(prc='d'):
                     2, 0, 0, 0, 0, 0, 0, 0, ]
     print membertest(twiste1, twtsols, 1, inpoint, precision=prc)
     print membertest(twiste1, twtsols, 1, outpoint, precision=prc)
+
+def test_ismember(prc='d'):
+    """
+    To test the membertest wrapper, we take the twisted cubic again.
+    """
+    from phcpy.solver import solve
+    from phcpy.solutions import make_solution
+    twisted = ['x^2 - y;', 'x^3 - z;']
+    twiste1 = embed(3, 1, twisted)
+    twtsols = solve(twiste1, precision=prc)
+    for sol in twtsols:
+        print sol
+    print(is_member(twiste1, twtsols, 1, twtsols[0], precision=prc))
+    outsol = make_solution(['x', 'y', 'z'], [1, 2, 3])
+    print(is_member(twiste1, twtsols, 1, outsol, precision=prc))
 
 def standard_decomposition(deg):
     """
