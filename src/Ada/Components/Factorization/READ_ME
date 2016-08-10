@@ -1,10 +1,10 @@
-Factorization into Irreducible Components with PHCv2.4.13
+Factorization into Irreducible Components with PHCv2.4.24
 
 This directory is entirely new in release 2.1.  Changes in release 2.2:
 * random polynomials are now in Math_Lib/Polynomials;
 * black_box_factorization has been added.
 Monodromy in intrinsic coordinates was added in release 2.3.
-A seventh option was added to mainfac (phc -f) in release 3.4.48.
+A seventh option was added to mainfac (phc -f) in release 2.3.48.
 
 There are three algorithms to decompose a pure dimensional solution set
 into irreducible components:

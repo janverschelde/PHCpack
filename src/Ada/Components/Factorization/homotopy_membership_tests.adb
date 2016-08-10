@@ -183,9 +183,11 @@ package body Homotopy_Membership_Tests is
       exit when found;
       tmp := Standard_Complex_Solutions.Tail_Of(tmp);
     end loop;
-    if found
-     then put_line("  Point lies on a solution component.");
-     else put_line("  Point does not lie on a solution component.");
+    if verbose then
+      if found
+       then put_line("  Point lies on a solution component.");
+       else put_line("  Point does not lie on a solution component.");
+      end if;
     end if;
     Standard_Complex_Solutions.Clear(newsols);
   end Homotopy_Membership_Test;
@@ -232,9 +234,11 @@ package body Homotopy_Membership_Tests is
       exit when found;
       tmp := DoblDobl_Complex_Solutions.Tail_Of(tmp);
     end loop;
-    if found
-     then put_line("  Point lies on a solution component.");
-     else put_line("  Point does not lie on a solution component.");
+    if verbose then
+      if found
+       then put_line("  Point lies on a solution component.");
+       else put_line("  Point does not lie on a solution component.");
+      end if;
     end if;
     DoblDobl_Complex_Solutions.Clear(newsols);
   end Homotopy_Membership_Test;
@@ -281,9 +285,11 @@ package body Homotopy_Membership_Tests is
       exit when found;
       tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
     end loop;
-    if found
-     then put_line("  Point lies on a solution component.");
-     else put_line("  Point does not lie on a solution component.");
+    if verbose then
+      if found
+       then put_line("  Point lies on a solution component.");
+       else put_line("  Point does not lie on a solution component.");
+      end if;
     end if;
     QuadDobl_Complex_Solutions.Clear(newsols);
   end Homotopy_Membership_Test;

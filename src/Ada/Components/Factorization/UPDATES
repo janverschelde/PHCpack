@@ -1,3 +1,6 @@
+Wed 10 Aug 2016 : made homotopy_membership_tests.adb completely silent if
+  the verbose variable is set to false.
+
 Fri 18 Mar 2016 : updated sensitivity_of_factorization.adb for change in
   driver to the continuation procedures.
 
