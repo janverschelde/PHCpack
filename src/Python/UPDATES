@@ -1,6 +1,7 @@
 Wed 10 Aug 2016 : added names_of_variables() function to the solver module.
   To the module sets, fixed a bug in the python3 version for the membership
   test, added a wrapper to the membertest to given points as solutions.
+  New scripts touchcircle.py in PHCpy2/examples and PHCpy3/examples.
 
 Tue 9 Aug 2016 : fixed numbering of the figures in appolonius.rst and
   fourbar.rst to correspond better to LaTeX conventions.
