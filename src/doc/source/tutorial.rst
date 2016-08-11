@@ -134,9 +134,15 @@ Interfaces for C and C++ programmers require the compilation
 of the source code.  For Python, a shared object file needs
 to exist for the particular architecture.
 
-A diagram of the interfaces to PHCpack and phc is depicted below:
+A diagram of the interfaces to PHCpack and phc is depicted
+in :numref:`figintdesign`. 
 
-.. image:: ./honeyface.png
+.. _figintdesign:
+
+.. figure:: ./honeyface.png
+    :align: center
+
+    Interfaces either require the source code or only the executable.
 
 The interfaces PHCpack.m2, PHCmaple, PHClab, shown to the right
 of the antidiagonal require only the executable version phc.

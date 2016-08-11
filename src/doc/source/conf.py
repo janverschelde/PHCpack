@@ -182,6 +182,9 @@ latex_elements = {
 
 # Additional stuff for the LaTeX preamble.
 #'preamble': '',
+
+# chapter headings
+'fncychap': '\\usepackage[Sonny]{fncychap}',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
@@ -211,6 +214,8 @@ latex_documents = [
 # If false, no module index is generated.
 #latex_domain_indices = True
 
+# numbering of figures
+numfig = True
 
 # -- Options for manual page output --------------------------------------------
 
