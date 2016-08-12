@@ -154,6 +154,7 @@ def drop_variable_from_polynomials(pols, svar):
     Removes the variable with symbol in the string svar
     from the list pols of strings that represented
     polynomials in several variables.
+    Note that the system in pols must be square.
     """
     from phcpy.phcpy2c2 import py2c_syscon_standard_drop_variable_by_name
     from phcpy.phcpy2c2 import py2c_syscon_remove_symbol_name
@@ -945,6 +946,19 @@ def test_factor():
     fac = factor(1, wsys, wsols)
     print fac
 
+def top_diagonal_dimension(kdm, dim1, dim2):
+    """
+    Returns the number of slack variables at the top in the cascade of
+    diagonal homotopies to intersect two sets of dimension dim1 and dim2,
+    where dim1 >= dim2 and kdm is the dimension before the embedding.
+    Typically, kdm is the number of equations in the first witness set
+    minus dim1.
+    """
+    if dim1 + dim2 < kdm:
+        return dim2
+    else:
+        return kdm - dim1
+
 def standard_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     """
     Defines a diagonal homotopy to intersect the witness sets defined
@@ -1221,7 +1235,8 @@ def quaddobl_start_diagonal_cascade(gamma=0, tasks=0):
     sols = load_quaddobl_solutions()
     return (tsys, sols)
 
-def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
+def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
+    tasks=0, verbose=True):
     """
     Runs the diagonal homotopies in standard double precision
     to intersect two witness sets stored in (sys1, sols1) and
@@ -1229,35 +1244,68 @@ def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     The ambient dimension equals dim.
     Multitasking is available, and is activated by the tasks parameter.
     Returns the last system in the cascade and its solutions.
+    If verbose, then the solver runs in interactive mode, printing
+    intermediate results to screen and prompting the user to continue.
     """
     from phcpy.phcpy2c2 import py2c_standard_collapse_diagonal
     from phcpy.interface import store_standard_solutions as storesols
     from phcpy.interface import load_standard_solutions as loadsols
     from phcpy.interface import load_standard_system as loadsys
     from phcpy.phcpy2c2 import py2c_extrinsic_top_diagonal_dimension
+    from phcpy.solutions import filter_vanishing
     topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
-    print 'the top dimension :', topdim
+    kdm = len(sys1) - dm1
+    topdiagdim = top_diagonal_dimension(kdm, dm1, dm2)
+    if verbose:
+        print 'the top dimension :', topdim, 'dim :', dim
+        print 'number of slack variables at the top :', topdiagdim 
     standard_diagonal_homotopy(dm1, sys1, sols1, dm2, sys2, sols2)
-    print 'defining the start solutions'
+    if verbose:
+        print 'defining the start solutions'
     standard_diagonal_cascade_solutions(dm1, dm2)
-    print 'starting the diagonal cascade'
+    if verbose:
+        print 'starting the diagonal cascade'
     (topsys, startsols) = standard_start_diagonal_cascade()
-    print 'the system solved in the start of the cascade :'
-    for pol in topsys:
-        print pol
-    print 'the solutions after starting the diagonal cascade :'
-    for sol in startsols:
-        print sol
-    endsols = standard_double_cascade_step(topsys, startsols)
-    print 'after running one cascade step :'
-    for sol in endsols:
-        print sol
-    storesols(len(topsys), endsols)
-    py2c_standard_collapse_diagonal(topdim - 2*dim, 0)
+    if verbose:
+        print 'the system solved in the start of the cascade :'
+        for pol in topsys:
+            print pol
+        print 'the solutions after starting the diagonal cascade :'
+        for sol in startsols:
+            print sol
+        raw_input('hit enter to continue')
+    for k in range(topdiagdim, 0, -1):
+        endsols = standard_double_cascade_step(topsys, startsols)
+        if verbose:
+            print 'after running cascade step %d :' % k
+            for sol in endsols:
+                print sol
+        endsolsf1 = filter_vanishing(endsols, 1.0e-8)
+        if verbose:
+            print 'computed', len(endsolsf1), 'solutions'
+            raw_input('hit enter to continue')
+        slack = 'zz' + str(k)
+        nbvar = len(topsys)
+        endsolsf2 = drop_coordinate_from_solutions(endsolsf1, nbvar, slack)
+        if verbose:
+            print 'after dropping the slack coordinate from the solutions :'
+            for sol in endsolsf2:
+                print sol
+            raw_input('hit enter to continue')
+        nextsys = drop_variable_from_polynomials(topsys, slack)
+        if verbose:
+            print 'after dropping the variable', slack, 'from the system :'
+            for pol in nextsys:
+                print pol
+        (topsys, startsols) = (nextsys[:-1], endsolsf2)
+    storesols(len(topsys), startsols)
+    # py2c_standard_collapse_diagonal(topdim - 2*dim, 0)
+    py2c_standard_collapse_diagonal(0, 0)
     result = (loadsys(), loadsols())
     return result
 
-def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
+def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
+    tasks=0, verbose=True):
     """
     Runs the diagonal homotopies in double double precision
     to intersect two witness sets stored in (sys1, sols1) and
@@ -1265,35 +1313,68 @@ def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     The ambient dimension equals dim.
     Multitasking is available, and is activated by the tasks parameter.
     Returns the last system in the cascade and its solutions.
+    If verbose, then the solver runs in interactive mode, printing
+    intermediate results to screen and prompting the user to continue.
     """
     from phcpy.phcpy2c2 import py2c_dobldobl_collapse_diagonal
     from phcpy.interface import store_dobldobl_solutions as storesols
     from phcpy.interface import load_dobldobl_solutions as loadsols
     from phcpy.interface import load_dobldobl_system as loadsys
     from phcpy.phcpy2c2 import py2c_extrinsic_top_diagonal_dimension
+    from phcpy.solutions import filter_vanishing
     topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
-    print 'the top dimension :', topdim
+    kdm = len(sys1) - dm1
+    topdiagdim = top_diagonal_dimension(kdm, dm1, dm2)
+    if verbose:
+        print 'the top dimension :', topdim, 'dim :', dim
+        print 'number of slack variables at the top :', topdiagdim 
     dobldobl_diagonal_homotopy(dm1, sys1, sols1, dm2, sys2, sols2)
-    print 'defining the start solutions'
+    if verbose:
+        print 'defining the start solutions'
     dobldobl_diagonal_cascade_solutions(dm1, dm2)
-    print 'starting the diagonal cascade'
+    if verbose:
+        print 'starting the diagonal cascade'
     (topsys, startsols) = dobldobl_start_diagonal_cascade()
-    print 'the system solved in the start of the cascade :'
-    for pol in topsys:
-        print pol
-    print 'the solutions after starting the diagonal cascade :'
-    for sol in startsols:
-        print sol
-    endsols = double_double_cascade_step(topsys, startsols)
-    print 'after running one cascade step :'
-    for sol in endsols:
-        print sol
-    storesols(len(topsys), endsols)
-    py2c_dobldobl_collapse_diagonal(topdim - 2*dim, 0)
+    if verbose:
+        print 'the system solved in the start of the cascade :'
+        for pol in topsys:
+            print pol
+        print 'the solutions after starting the diagonal cascade :'
+        for sol in startsols:
+            print sol
+        raw_input('hit enter to continue')
+    for k in range(topdiagdim, 0, -1):
+        endsols = double_double_cascade_step(topsys, startsols)
+        if verbose:
+            print 'after running cascade step %d :' % k
+            for sol in endsols:
+                print sol
+        endsolsf1 = filter_vanishing(endsols, 1.0e-8)
+        if verbose:
+            print 'computed', len(endsolsf1), 'solutions'
+            raw_input('hit enter to continue')
+        slack = 'zz' + str(k)
+        nbvar = len(topsys)
+        endsolsf2 = drop_coordinate_from_solutions(endsolsf1, nbvar, slack)
+        if verbose:
+            print 'after dropping the slack coordinate from the solutions :'
+            for sol in endsolsf2:
+                print sol
+            raw_input('hit enter to continue')
+        nextsys = drop_variable_from_polynomials(topsys, slack)
+        if verbose:
+            print 'after dropping the variable', slack, 'from the system :'
+            for pol in nextsys:
+                print pol
+        (topsys, startsols) = (nextsys[:-1], endsolsf2)
+    storesols(len(topsys), startsols)
+    # py2c_dobldobl_collapse_diagonal(topdim - 2*dim, 0)
+    py2c_dobldobl_collapse_diagonal(0, 0)
     result = (loadsys(), loadsols())
     return result
 
-def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
+def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
+    tasks=0, verbose=True):
     """
     Runs the diagonal homotopies in quad double precision
     to intersect two witness sets stored in (sys1, sols1) and
@@ -1301,35 +1382,68 @@ def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     The ambient dimension equals dim.
     Multitasking is available, and is activated by the tasks parameter.
     Returns the last system in the cascade and its solutions.
+    If verbose, then the solver runs in interactive mode, printing
+    intermediate results to screen and prompting the user to continue.
     """
     from phcpy.phcpy2c2 import py2c_quaddobl_collapse_diagonal
     from phcpy.interface import store_quaddobl_solutions as storesols
     from phcpy.interface import load_quaddobl_solutions as loadsols
     from phcpy.interface import load_quaddobl_system as loadsys
     from phcpy.phcpy2c2 import py2c_extrinsic_top_diagonal_dimension
+    from phcpy.solutions import filter_vanishing
     topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
-    print 'the top dimension :', topdim
+    kdm = len(sys1) - dm1
+    topdiagdim = top_diagonal_dimension(kdm, dm1, dm2)
+    if verbose:
+        print 'the top dimension :', topdim, 'dim :', dim
+        print 'number of slack variables at the top :', topdiagdim 
     quaddobl_diagonal_homotopy(dm1, sys1, sols1, dm2, sys2, sols2)
-    print 'defining the start solutions'
+    if verbose:
+        print 'defining the start solutions'
     quaddobl_diagonal_cascade_solutions(dm1, dm2)
-    print 'starting the diagonal cascade'
+    if verbose:
+        print 'starting the diagonal cascade'
     (topsys, startsols) = quaddobl_start_diagonal_cascade()
-    print 'the system solved in the start of the cascade :'
-    for pol in topsys:
-        print pol
-    print 'the solutions after starting the diagonal cascade :'
-    for sol in startsols:
-        print sol
-    endsols = quad_double_cascade_step(topsys, startsols)
-    print 'after running one cascade step :'
-    for sol in endsols:
-        print sol
-    storesols(len(topsys), endsols)
-    py2c_quaddobl_collapse_diagonal(topdim - 2*dim, 0)
+    if verbose:
+        print 'the system solved in the start of the cascade :'
+        for pol in topsys:
+            print pol
+        print 'the solutions after starting the diagonal cascade :'
+        for sol in startsols:
+            print sol
+        raw_input('hit enter to continue')
+    for k in range(topdiagdim, 0, -1):
+        endsols = quad_double_cascade_step(topsys, startsols)
+        if verbose:
+            print 'after running cascade step %d :' % k
+            for sol in endsols:
+                print sol
+        endsolsf1 = filter_vanishing(endsols, 1.0e-8)
+        if verbose:
+            print 'computed', len(endsolsf1), 'solutions'
+            raw_input('hit enter to continue')
+        slack = 'zz' + str(k)
+        nbvar = len(topsys)
+        endsolsf2 = drop_coordinate_from_solutions(endsolsf1, nbvar, slack)
+        if verbose:
+            print 'after dropping the slack coordinate from the solutions :'
+            for sol in endsolsf2:
+                print sol
+            raw_input('hit enter to continue')
+        nextsys = drop_variable_from_polynomials(topsys, slack)
+        if verbose:
+            print 'after dropping the variable', slack, 'from the system :'
+            for pol in nextsys:
+                print pol
+        (topsys, startsols) = (nextsys[:-1], endsolsf2)
+    storesols(len(topsys), startsols)
+    # py2c_quaddobl_collapse_diagonal(topdim - 2*dim, 0)
+    py2c_quaddobl_collapse_diagonal(0, 0)
     result = (loadsys(), loadsols())
     return result
 
-def diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0, prc='d'):
+def diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0, \
+    prc='d', verbose=True):
     """
     Runs the diagonal homotopies to intersect two witness sets stored in
     (sys1, sols1) and (sys2, sols2), of respective dimensions dim1 and dim2.
@@ -1342,13 +1456,13 @@ def diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0, prc='d'):
     """
     if(prc == 'd'):
         return standard_diagonal_solver\
-                   (dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks)
+                   (dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks, verbose)
     elif(prc == 'dd'):
         return dobldobl_diagonal_solver\
-                   (dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks)
+                   (dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks, verbose)
     elif(prc == 'qd'):
         return quaddobl_diagonal_solver\
-                   (dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks)
+                   (dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks, verbose)
     else:
         print 'wrong argument for precision'
         return None
