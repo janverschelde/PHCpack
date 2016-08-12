@@ -254,6 +254,28 @@ def filter_zero_coordinates(sols, varname, tol, oper):
                 result.append(sol)
     return result
 
+def is_vanishing(sol, tol):
+    """
+    Given in sol is a solution string and 
+    tol is the tolerance on the residual.
+    Returns True if the residual of sol
+    is less than or equal to tol.
+    Returns False otherwise.
+    """
+    dgn = diagnostics(sol)
+    return (dgn[2] <= tol)
+
+def filter_vanishing(sols, tol):
+    """
+    Returns the list of solutions that have a residual
+    less than or equal to the given tolerance in tol.
+    """
+    result = []
+    for sol in sols:
+        if is_vanishing(sol, tol):
+            result.append(sol)
+    return result
+
 def test():
     """
     Generates a random trinomial system,
