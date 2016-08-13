@@ -1,3 +1,6 @@
+Sat 13 Aug 2016 : extended the documentation for the use case on computing
+  tangent lines to a circle.
+
 Fri 12 Aug 2016 : added is_vanishing() and filter_vanishing() functions
   to the solutions module.  The diagonal solver in the module sets is
   extended with a multi staged cascade.  Updated the touchcircle?.py

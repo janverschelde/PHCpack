@@ -77,4 +77,105 @@ the slope ``1`` in a solution string, called ``point``.
    ismb = is_member(embpols, embsols, 1, point)
 
 The call to ``is_member`` returns a boolean value,
-which should be ``True`` for this point.
+so ``ismb`` should hold the value ``True`` for this point.
+
+defining the equations for the singular locus
+---------------------------------------------
+
+The two tangent lines to the circle are two special solutions.
+At any other line through the origin, the line intersects the
+circle at two distinct complex solutions, but at the tangent lines,
+the two intersection points collide into a double solution.
+At a double solution, the Jacobian matrix of the system no longer
+has full rank.  Instead of using the determinant of the matrix of
+all first order partial derivatives, the equations we use express
+that there is a nonzero combination of the columns of the Jacobian
+matrix which yields the zero vector.
+
+The equations for the singular locus are defined by the
+function ``jacobian``.  For the circle centered at ``(3, 2)``,
+the polynomial equations are obtained as follows:
+
+::
+
+    pols = jacobian(3, 2)
+    for pol in pols:
+        print(pol)
+
+What is printed is
+
+::
+
+    2*(x-3.000000000000000e+00)*L1 + 2*(y-2.000000000000000e+00)*L2;
+    -s*L1 + L2;
+    (-0.94944388496-0.313936791907*i) +(0.253472461117-0.967342602936*i)*L1 \
+    +(-0.209901989746-0.97772243234*i)*L2;
+
+In the first equation we recognize the two partial derivatives
+of :math:`(x-3)^2 + (y-2)^2`, multiplied with the multipliers
+``L1`` and ``L2``.  The second equation is derived 
+from :math:`y - s x = 0`.
+If we have a nonzero combination of the columns of the Jacobian matrix
+which yields the zero vector, then any nonzero multiple of the multipliers
+also defines such a nonzero combination.
+The last equation is a linear equation in the multipliers only,
+requires that the multipliers are nonzero, and at the same time
+fixing one combination among all nonzero multiples.
+
+The definition of the function ``jacobian`` depends on another
+function which returns a linear equation with random coefficients.
+
+::
+
+   def jacobian(a, b):
+       """
+       For the circle centered at (a, b),
+       returns the equations which define the points
+       where the Jacobian matrix is singular,
+       as a random linear combination of the columns.
+       Random complex coefficients are generated to
+       scale the multiplier variables.
+       """
+       eq1 = '2*(x-%.15e)*L1 + 2*(y-%.15e)*L2;' % (a, b)
+       eq2 = '-s*L1 + L2;'
+       eq3 = random_hyperplane(['L1', 'L2'])
+       return [eq1, eq2, eq3]
+
+To avoid badly scaled coefficients, the complex numbers are generated
+on the unit circle, but the function ``random_complex`` below.
+
+::
+
+   def random_complex():
+       """
+       Returns a random complex number on the unit circle.
+       """
+       from math import cos, sin, pi
+       from random import uniform
+       theta = uniform(0, 2*pi)
+       return complex(cos(theta), sin(theta))
+
+The imaginary unit in Python is represented by ``j``
+whereas for phcpy, the imaginary unit is represented by ``i`` and ``I``.
+Therefore, the function ``random_hyperplane`` replaces the ``j`` by ``i``.
+
+::
+
+   def random_hyperplane(vars):
+       """
+       Returns a linear equation in the variables in
+       the list vars, with random complex coefficients.
+       """
+       cf0 = str(random_complex())
+       tf0 = cf0.replace('j', '*i')
+       result = tf0
+       for var in vars:
+           cff = str(random_complex())
+           tcf = cff.replace('j', '*i')
+           result = result + '+' + tcf + '*' + var
+       return result + ';'
+
+The function ``jacobian(3, 2)`` returned three equations in the
+two coordinates ``x``, ``y``, the slope ``s``, 
+the multipliers ``L1``, and ``L2``; five variables in total.
+In five dimensional space, three equations define a two dimensional set.
