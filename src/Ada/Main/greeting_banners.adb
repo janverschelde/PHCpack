@@ -4,7 +4,7 @@ package body Greeting_Banners is
 
   function Version return string is
 
-    res : constant string := "PHCv2.4.23 released 2016-07-31";
+    res : constant string := "PHCv2.4.24 released 2016-08-13";
 
   begin
     return res;

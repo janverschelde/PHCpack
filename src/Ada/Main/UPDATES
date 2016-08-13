@@ -1,3 +1,5 @@
+Sat 13 Aug 2016 : updated greeting_banners for version 2.4.24.
+
 Sun 31 Jul 2016 : updated greeting_banners for version 2.4.23.
 
 Fri 22 Jul 2016 : added '\0' character to the strings in mainfeed.adb,
