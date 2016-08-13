@@ -2,6 +2,7 @@ Fri 12 Aug 2016 : added is_vanishing() and filter_vanishing() functions
   to the solutions module.  The diagonal solver in the module sets is
   extended with a multi staged cascade.  Updated the touchcircle?.py
   scripts in the examples folders of PHCpy2 and PHCpy3.
+  Started the description of the documentation of this new use case.
 
 Wed 10 Aug 2016 : added names_of_variables() function to the solver module.
   To the module sets, fixed a bug in the python3 version for the membership
