@@ -57,13 +57,14 @@ def make_witness_set(pols, verbose=True):
             print(sol)
     return (embpols, embsols)
 
-def membership_test(witsys, witsols, point, verbose=True):
+def membership_test(witsys, witsols, verbose=True):
     """
     Given a witness sets in the tuple witset,
     runs a membership test on a solution.
     """
     from phcpy.solutions import make_solution
     from phcpy.sets import is_member
+    point = make_solution(['x', 'y', 's'], [2, 2, 1])
     print('testing the point\n', point)
     ismb = is_member(witsys, witsols, 1, point, verbose=False)
     if ismb:
@@ -95,31 +96,26 @@ def circle_line_set():
     for sol in embsols:
         print(sol)
     print('degree of the set :', len(embsols))
-    for sol in spsols:
-        membership_test(embsyst, embsols, sol)
+    membership_test(embsyst, embsols)
     return (embsyst, embsols)
 
 def random_complex():
     """
-    Returns a random complex number on the hunit circle.
+    Returns a random complex number on the unit circle.
     """
     from math import cos, sin, pi
     from random import uniform
     theta = uniform(0, 2*pi)
     return complex(cos(theta), sin(theta))
 
-def random_hyperplane(vars, homogeneous=False):
+def random_hyperplane(vars):
     """
     Returns a linear equation in the variables
     in the list vars, with random complex coefficients.
-    If homogeneous, then there is no constant coefficient.
     """
-    if homogeneous:
-        result = ''
-    else:
-        cf0 = str(random_complex())
-        tf0 = cf0.replace('j', '*i')
-        result = tf0
+    cf0 = str(random_complex())
+    tf0 = cf0.replace('j', '*i')
+    result = tf0
     for var in vars:
         cff = str(random_complex())
         tcf = cff.replace('j', '*i')
