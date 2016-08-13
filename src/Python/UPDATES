@@ -1,7 +1,9 @@
 Sat 13 Aug 2016 : extended the documentation for the use case on computing
   tangent lines to a circle.  Made corrections to the touchcircle.py scripts
   in the PHCpy2/examples and PHCpy3/examples folders.
-  Completed the documentation for this use case.
+  Completed the documentation for this use case.  Prepared setup.py,
+  phcpy/__init__.py and doc/source/conf.py for version 0.5.3, in the
+  PHCpy2 and PHCpy3 folders.
 
 Fri 12 Aug 2016 : added is_vanishing() and filter_vanishing() functions
   to the solutions module.  The diagonal solver in the module sets is
