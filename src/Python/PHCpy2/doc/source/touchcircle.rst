@@ -179,3 +179,116 @@ The function ``jacobian(3, 2)`` returned three equations in the
 two coordinates ``x``, ``y``, the slope ``s``, 
 the multipliers ``L1``, and ``L2``; five variables in total.
 In five dimensional space, three equations define a two dimensional set.
+
+For a numerical representation of this two dimensional set,
+two random linear equations are added with the ``embed`` function
+and the generic points are computed with the blackbox solver
+as done in the code snippet below.
+
+::
+
+    from phcpy.sets import embed
+    from phcpy.solver import solve
+    embpols = embed(5, 2, pols)
+    embsols = solve(embpols)
+
+The number of generic points equals three.
+
+intersecting two algebraic sets
+-------------------------------
+
+We have two algebraic sets:
+
+1. The set of all lines through the origin intersecting a fixed circle.
+   The degree of this set is four.
+
+2. The set of all intersection points of a line through the origin
+   and a fixed circle where the Jacobian matrix is singular.
+   The degree of this set is three.
+
+Before we can intersect the two algebraic sets, we have to ensure that
+their ambient space is the same.  The first set involves only the
+variables ``x``, ``y``, and ``s``, but not the multiplier variables
+``L1`` and ``L2`` which occur in the second algebraic set.
+Therefore, to each generic point in the first one dimensional set
+we add two values for ``L1`` and ``L2`` and two corresponding linear
+equations.  So, the one dimensional set is upgraded to a three
+dimensional sets in the same five dimensional space in where the
+second two dimensional set lives.  Because we can choose any values
+for ``L1`` and ``L2`` in this upgrade of the first set, the dimension
+of the first set increase from one to three.
+
+Add two variable names ``L1`` and ``L2``, both with values one
+and two slack variables ``zz2`` and ``zz3`` with zero values
+is done by the function ``extend_solutions``.
+
+::
+
+   def extend_solutions(sols):
+       """
+       To each solution in sols, adds L1 and L2 with values 1,
+       and zz2 and zz3 with values zero.
+       """
+       from phcpy.solutions import make_solution, coordinates
+       result = []
+       for sol in sols:
+           (vars, vals) = coordinates(sol)
+           vars = vars + ['L1', 'L2', 'zz2', 'zz3']
+           vals = vals + [1, 1, 0, 0]
+           extsol = make_solution(vars, vals)
+           result.append(extsol)
+       return result
+
+The function is called in the function ``extend`` which upgrades
+the first set from a one dimensional to a three dimensional set,
+raising its ambient space from a 3-space to the 5-space where the
+second set lives.
+
+::
+
+   def extend(pols, sols):
+       """
+       Extends the witness set with two free variables
+       L1 and L2, addition two linear equations,
+       and two slack variables zz2 and zz3.
+       """
+       vars = ['zz2', 'zz3']
+       eq1 = 'zz2;'
+       eq2 = 'zz3;'
+       eq3 = 'L1 - 1;'
+       eq4 = 'L2 - 1;'
+       extpols = pols[:-1] + [eq1, eq2, eq3, eq4, pols[-1]]
+       extsols = extend_solutions(sols)
+       return (extpols, extsols)
+
+Note that the order of the equations is important.
+The linear equations that cut down the positive dimensional solutions
+to isolated points must occur at the end of the list of polynomials.
+
+Also the order of the variables matters.
+To ensure that the names of the variables line up in the same order
+for both lists of polynomials, the first polynomial for both sets is
+prepended with the string ``x-x+y-y+s-s+L1-L1+L2-L2``.
+
+The relevant code snippet to intersect two sets with diagonal homotopies
+is shown below.
+
+::
+
+    from phcpy.sets import diagonal_solver as diagsolve
+    result = diagsolve(dim, w1d, w1eqs, w1sols, w2d, w2eqs, w2sols)
+    (eqs, sols) = result
+
+The polynomials and the corresponding generic points
+for the first set are in ``w1eqs`` and ``w1sols`` respectively,
+for the second set they are in ``w2eqs`` and ``w2sols``.
+The dimensions of the two sets are in ``w1d`` and ``w2d``
+(which respectively equal three and two)
+and the ambient dimension (five) is given in ``dim``.
+
+The number of solutions in list ``sols`` returned by the diagonal solver
+equals two, defining the two tangent lines shown at the right 
+of :numref:`figtouchcircle`.
+
+The complete script which computes this use case in in the ``examples``
+folder in the ``Python/PHCpy2`` directory of the source code.
