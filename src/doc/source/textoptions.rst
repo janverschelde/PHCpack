@@ -1,5 +1,6 @@
+**********************************
 Text Options of the Executable phc
-==================================
+**********************************
 
 Text options of ``phc`` do not compute anything,
 but provide text information about ``phc``.
@@ -8,14 +9,14 @@ While the regular options of ``phc`` start with a single dash ``-``,
 the text options are double dashed, they start with ``--``.
 
 phc --version : displays the current version string
----------------------------------------------------
+===================================================
 
 Typing at the command prompt ``phc --version`` displays
 the :index:`version string` which includes the current :index:`version number`
 and the :index:`release date`.
 
 phc --license : writes the license to screen
---------------------------------------------
+============================================
 
 The output of
 
@@ -33,7 +34,7 @@ is
    the Free Software Foundation.
 
 phc --help : writes helpful information to screen
--------------------------------------------------
+=================================================
 
 Typing at the command prompt ``phc --help`` provides some 
 :index:`help` to get started with the quickest use, that is:

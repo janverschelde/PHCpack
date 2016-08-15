@@ -1,10 +1,12 @@
+****************
 A Short Tutorial
-================
+****************
 
 This section provides a quick getting started guide.
 
 Downloading and installing
---------------------------
+==========================
+
 Executable versions of the program for various machine architectures
 and operating systems are available via
 <http://www.math.uic.edu/~jan/download.html>.
@@ -51,7 +53,7 @@ source code provides makefiles for Linux, Mac OS X, and Windows
 operating systems.
 
 Input formats
--------------
+=============
 
 A lot of examples are contained in the database of Demo systems,
 which can be downloaded in zipped and tarred format from the above web site.
@@ -109,7 +111,7 @@ Note that we replaced the logical e variable by f.
 We save this input in the file with name ``multilin``.
 
 A very simple Maple interface
------------------------------
+=============================
 
 The software is developed for command line interactions.
 Because there is no interpreter provided with PHCpack,
@@ -150,7 +152,7 @@ The other interfaces PHClib, PHCmpi, and phcpy are tied
 to the source code.
 
 Calling the blackbox solver
----------------------------
+===========================
 
 The blackbox solver works reasonably well to approximate all isolated
 solutions of a polynomial system.  On the system we saved earlier in
@@ -199,7 +201,7 @@ decimal places.  The last number represents the residual, the magnitude
 of the vector evaluated at the root.
 
 Running the program in full mode
---------------------------------
+================================
 
 If we just type in /tmp/phc without any option, we run the program
 in full mode and will pass through all the main menus.
@@ -231,7 +233,7 @@ multilin\_start (only used for backup).
 Now we continue just as before.
 
 Running the program in toolbox mode
------------------------------------
+===================================
 
 Skipping the preconditioning stage (scaling and reduction),
 we can compute root counts and construct start systems via the option ``-r``,
@@ -249,7 +251,7 @@ a cheater's homotopy, performing a kind of coefficient-parameter
 polynomial continuation.
 
 Dealing with components of solutions
-------------------------------------
+====================================
 
 Consider the system of adjacent minors, we previously saved 
 as ``adjmin4``.  We first must construct a suitable embedding

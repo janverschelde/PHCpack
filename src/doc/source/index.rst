@@ -5,8 +5,9 @@
 
 .. _contents:
 
+******************************
 PHCpack Documentation Contents
-==============================
+******************************
 
 .. toctree::
    :maxdepth: 2

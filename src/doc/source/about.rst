@@ -1,11 +1,12 @@
+*************
 About PHCpack
-=============
+*************
 
 This section points to phcpy, a scripting interface to PHCpack.
 The development has a long history and owes a lot to many people.
 
 Project History
----------------
+===============
 
 The software originated in the development of new homotopy algorithms
 to solve polynomial systems.  The main novelty of the first release
@@ -59,7 +60,7 @@ blackbox solver and the path trackers,
 enabling the solution of polynomial systems in the cloud.
 
 phcpy: An Application Programming Interface to PHCpack
-------------------------------------------------------
+======================================================
 
 Because code development on PHCpack has taken a very long time,
 looking at the code may be a bit too overwhelming at first.
@@ -74,7 +75,7 @@ In contrast, the scripting interface replaces the files with persistent
 objects and instead of selecting options from menus, the user runs scripts.
 
 References
-----------
+==========
 
 PHCpack relies for its fast mixed volume computation on MixedVol
 and on QDlib for its double double and quad double arithmetic.
@@ -169,7 +170,7 @@ Pointers to the literature are mentioned below.
    *ACM Communications in Computer Algebra*, 49(4):130-133, 2015.
 
 Users
------
+=====
 
 To demonstrate the relevance of the software, the first version
 of the software was released with a collection of about eighty 
@@ -740,7 +741,7 @@ So we have to end quoting Bernd Sturmfels:
 *polynomial systems are for everyone.*
 
 Acknowledgments
----------------
+===============
 
 This material is based upon work supported by the 
 National Science Foundation under Grants No. 9804846, 0105739, 0134611,

@@ -1,12 +1,13 @@
+*****************************
 Options of the Executable phc
-=============================
+*****************************
 
 For many small to moderate size problems,
 the most convenient way to get an answer of phc is to
 call the blackbox solver with the option -b.
 
 phc -0 : random numbers with fixed seed for repeatable runs    
------------------------------------------------------------
+===========================================================
 
 Many homotopy algorithms generate random constants.
 With each run, the current time is used to generate
@@ -82,7 +83,7 @@ the outcome of a coin toss after the coin toss and not before the coin toss.
 Therefore phc -0 should be used only for debugging purposes.
 
 phc -a : solving polynomial systems equation-by-equation       
---------------------------------------------------------
+========================================================
 
 The equation-by-equation solver applies the diagonal homotopies
 to intersect the solution set of the current set of polynomials
@@ -144,7 +145,7 @@ can be called explicitly at each level with the option ``-c``.
 The alternative *top down* way is available in ``phc -c`` as well.
 
 phc -b : batch or blackbox processing                         
--------------------------------------
+=====================================
 
 As a simple example of the input format for ``phc -b``,
 consider the following three lines
@@ -226,7 +227,7 @@ including the positive dimensional ones, consider the options
 ``-a``, ``-c``, and ``-f``.
 
 phc -c : irreducible decomposition for solution components     
-----------------------------------------------------------
+==========================================================
 
 In a numerical irreducible decomposition, positive dimensional
 solution sets are represented by a set of generic points that
@@ -274,7 +275,7 @@ For sparse polynomial systems,
 monomial maps are much more efficient data structures than witness sets.
 
 phc -d : linear and nonlinear reduction w.r.t. the total degree
----------------------------------------------------------------
+===============================================================
 
 Degree bounds for the number of isolated solution often overshoot
 the actual number of solution because of relationships between the
@@ -307,7 +308,7 @@ Nonlinear reduction attempts to replace higher degree
 polynomials in the system by S-polynomials.
 
 phc -e : SAGBI/Pieri/Littlewood-Richardson homotopies  
------------------------------------------------------
+=====================================================
 
 Numerical Schubert calculus is the development of numerical
 homotopy algorithms to solve Schubert problems.  
@@ -365,7 +366,7 @@ Since version 2.3.95, a more complete implementation of the
 Littlewood-Richardson homotopies is available.
 
 phc -f : factor a pure dimensional solution set into irreducibles
------------------------------------------------------------------
+=================================================================
 
 The ``f`` in ``-f`` is the ``f`` of factor and filter.
 
@@ -394,7 +395,7 @@ Another option in the menu of ``phc -f`` gives access to a
 tropical method to detect a common factor of two Laurent polynomials.
 
 phc -g : check the format of an input polynomial system
--------------------------------------------------------
+=======================================================
 
 The purpose of ``phc -g`` is to check whether a given input
 system has the right syntax.  A related option is ``phc -o``.
@@ -444,7 +445,7 @@ complex coefficients, e.g.: ``(1.e-3 + 3/7*I)*x^2*y``
 or for grouping factors, e.g.: ``3.14*(x+y)*(x-1)^4``.
 
 phc -h : writes helpful information to screen
----------------------------------------------
+=============================================
 
 The information written by ``phc -h`` is the condensed version
 of this document.  For every option, some helpful information
@@ -456,7 +457,7 @@ Typing ``phc -h -h`` displays the list of all available options.
 Instead of ``-h``, one can also type ``--help``.
 
 phc -k : realization of dynamic output feedback placing poles  
--------------------------------------------------------------
+=============================================================
 
 The homotopies in numerical Schubert calculus (see the option -e)
 solve the output pole placement problem in linear systems control.
@@ -471,7 +472,7 @@ The computation of output feedback laws is an application
 of the Pieri homotopies, available via ``phc -e``.
 
 phc -l : witness set for hypersurface cutting with random line 
---------------------------------------------------------------
+==============================================================
 
 A hypersurface defined by a polynomial in several variables is
 cut with one general line.  The number of points on the hypersurface
@@ -511,7 +512,7 @@ will give two generic points on the sphere,
 computed in quad double precision.
 
 phc -m : mixed volume computation via lift+prune and MixedVol  
--------------------------------------------------------------
+=============================================================
 
 The menu choices of ``phc -m`` are a subset of the menu of ``phc -r``.
 The focus on ``phc -m`` is on mixed volumes.  For polynomial systems
@@ -616,7 +617,7 @@ the mixed volume computation by the MixedVol algorithm
 in a heterogenous pipelined application of :index:`multitasking`.
 
 phc -o : writes the symbol table of an input system
----------------------------------------------------
+===================================================
 
 Running ``phc -o`` with as input argument a polynomial system
 writes the symbols for the variables in the order in which they
@@ -662,7 +663,7 @@ and the first four monomials ``x + y - x - y`` will initialize the
 symbol table with the names x and y, in that order.
 
 phc -p : polynomial continuation in one parameter
--------------------------------------------------
+=================================================
 
 We distinguish between two types of homotopies.
 In an :index:`artificial parameter homotopy`, the user is 
@@ -818,7 +819,7 @@ are given as overconstrained systems and every convex linear
 combination between target and start system admits solutions.
 
 phc -q : tracking solution paths with incremental read/write   
-------------------------------------------------------------
+============================================================
 
 For huge polynomial systems, all solutions may not fit in memory.
 The jumpstarting method for a polynomial homotopy
@@ -856,7 +857,7 @@ Options 5 and 6 deal with positive dimensional solution sets,
 see ``phc -c``.
 
 phc -r : root counting and construction of start systems       
---------------------------------------------------------
+========================================================
 
 The :index:`root count` determines the number of solution paths that
 are tracked in a homotopy connecting the input system with
@@ -936,7 +937,7 @@ To use the start system with ``phc -p``, the user must ask to compute
 all start solutions with ``-r``.
 
 phc -s : equation and variable scaling on system and solutions 
---------------------------------------------------------------
+==============================================================
 
 A system is badly scaled if the difference in magnitude between
 the coefficients is large.  In a badly scaled system we observe
@@ -1032,7 +1033,7 @@ To transform the solutions, choose the third option of the second
 menu of ``phc -s``.
 
 phc -t : tasking for tracking paths using multiple threads     
-----------------------------------------------------------
+==========================================================
 
 The problem of tracking a number of solution paths can be viewed
 as a :index:`pleasingly parallel` problem, because the paths can
@@ -1125,7 +1126,7 @@ to solve random coefficient start systems with polyhedral homotopies
 with multiple tasks.
 
 phc -u : Newton's method for power series solution
---------------------------------------------------
+==================================================
 
 The application of Newton's method over the field of truncated power
 series in double, double double, or quad double precision,
@@ -1175,7 +1176,7 @@ and giving to the blackbox solver ``phc -b`` a file with contents:
 The output of ``phc -b`` will have the point ``(0,0,2)`` for ``s=0``.
 
 phc -v : verification, refinement and purification of solutions
----------------------------------------------------------------
+===============================================================
 
 While solution paths do in general not become singular or diverge,
 at the end of the paths, solutions may turn out to be singular
@@ -1260,7 +1261,7 @@ With ``phc -v`` one can do the following tasks:
    when applying Newton's method.
 
 phc -w : witness set intersection using diagonal homotopies    
------------------------------------------------------------
+===========================================================
 
 This option wraps the diagonal homotopies to intersect two witness sets,
 see the option ``-c`` for more choices in the algorithms.
@@ -1292,7 +1293,7 @@ of the sphere and the cylinder are in the file ``quartic_w1``
 which represents a witness set.
 
 phc -x : convert solutions from PHCpack into Python dictionary 
---------------------------------------------------------------
+==============================================================
 
 To work with solution lists in :index:`Python` scripts, running ``phc -x``
 converts a solution list in PHCpack format to a list of dictionaries.
@@ -1378,7 +1379,7 @@ The keys in the dictionary are the same as the left hand sides in the
 equations in the Maple format, see ``phc -z``.
 
 phc -y : sample points from an algebraic set, given witness set
----------------------------------------------------------------
+===============================================================
 
 The points on a positive dimensional solution set are fixed by
 the position of hyperplanes that define a linear space of the
@@ -1399,8 +1400,8 @@ and answering two questions with parameter settings
 contains diagnostics of the run and a new witness set is
 in the file ``new_sphere_w2``.
 
-phc -z : strip phc output solution lists into Maple format     
-----------------------------------------------------------
+phc -z : strip phc output solution lists into Maple format
+==========================================================
 
 Parsing solution lists in PHCpack format can be a bit tedious.
 Therefore, the ``phc -z`` defines a simpler format,
