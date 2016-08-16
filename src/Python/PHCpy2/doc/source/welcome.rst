@@ -1,5 +1,6 @@
+*********************************
 welcome to phcpy's documentation!
-=================================
+*********************************
 
 This documentation describes a collection of Python modules
 to compute solutions of polynomial systems using PHCpack.
@@ -17,7 +18,7 @@ In its present state, working with phcpy will require persistence
 and plenty of patience.
 
 what is phcpy?
---------------
+==============
 
 The main executable phc (polynomial homotopy continuation)
 defined by the source code in PHCpack is a menu driven
@@ -41,7 +42,7 @@ at least for those programmers familiar
 with the Python scripting language.
 
 installing phcpy
-----------------
+================
 
 The source for PHCpack can be downloaded from
 <http://www.math.uic.edu/~jan/download.html>
@@ -135,7 +136,7 @@ Below is a step-by-step installation procedure.
    ``python3 setup.py install`` as superuser or as sudoer.
 
 about this document
--------------------
+===================
 
 This document arose as an exercise in exploring restructured text and Sphinx.
 All good software document consists of four items: an installation guide,
