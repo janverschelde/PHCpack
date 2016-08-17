@@ -1,3 +1,5 @@
+Tue 16 Aug 2016 : added an introductory paragraph to the use cases.
+
 Sat 13 Aug 2016 : extended the documentation for the use case on computing
   tangent lines to a circle.  Made corrections to the touchcircle.py scripts
   in the PHCpy2/examples and PHCpy3/examples folders.
