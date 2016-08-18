@@ -1,3 +1,6 @@
+Thu 18 Aug 2016 : verification of the four lines problem with determinants
+  on numpy matrices, updated fourlines.py scripts for python 2 and 3.
+
 Wed 17 Aug 2016 : fixed bug in schubert.py of PHCpy2/phcpy and PHCpy3/phcpy,
   the pieri_root_count must return the root_count; added verbose option.
   Added the start of another use case in the examples folders.
