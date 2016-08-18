@@ -30,19 +30,28 @@ def solution_plane(rows, cols, sol):
         result[i-1][j-1] = value
     return result
 
-def verify_determinants(inps, sols):
+def verify_determinants(inps, sols, verbose=True):
     """
     Verifies the intersection conditions with determinants,
     concatenating the planes in inps with those in the sols.
     Both inps and sols are lists of numpy arrays.
+    Returns the sum of the absolute values of all determinants.
+    If verbose, then for all solutions in sols, the computed
+    determinants are printed to screen.
     """
     from numpy.linalg import det
+    checksum = 0
     for sol in sols:
+        if verbose:
+            print 'checking solution\n', sol
         for plane in inps:
             cat = concatenate([plane, sol], axis=-1)
             mat = matrix(cat)
             dcm = det(mat)
-            print 'the determinant :', dcm
+            if verbose:
+                print 'the determinant :', dcm
+            checksum = checksum + abs(dcm)
+    return checksum
 
 def solve_general(mdim, pdim, qdeg):
     """
@@ -58,10 +67,27 @@ def solve_general(mdim, pdim, qdeg):
     from phcpy.schubert import run_pieri_homotopies
     dim = mdim*pdim + qdeg*(mdim+pdim)
     ranplanes = [random_complex_matrix(mdim+pdim, mdim) for _ in range(0, dim)]
-    (pols, sols) = run_pieri_homotopies(mdim, pdim, qdeg, ranplanes)
+    (pols, sols) = run_pieri_homotopies(mdim, pdim, qdeg, ranplanes, \
+        verbose=False)
     inplanes = [array(plane) for plane in ranplanes]
     outplanes = [solution_plane(mdim+pdim, pdim, sol) for sol in sols]
-    return (inplanes, outplanes)
+    return (inplanes, outplanes, pols, sols)
+
+def solve_real(mdim, pdim, start, sols):
+    """
+    Solves a real instance of Pieri problem, for input planes
+    of dimension mdim osculating a rational normal curve.
+    On return are the planes of dimension pdim.
+    """
+    from phcpy.schubert import real_osculating_planes
+    from phcpy.schubert import make_pieri_system
+    from phcpy.trackers import track
+    oscplanes = real_osculating_planes(mdim, pdim, 0)
+    target = make_pieri_system(mdim, pdim, 0, oscplanes, False)
+    rtsols = track(target, start, sols)
+    inplanes = [array(plane) for plane in oscplanes]
+    outplanes = [solution_plane(mdim+pdim, pdim, sol) for sol in rtsols]
+    return (inplanes, outplanes, target, rtsols)
 
 def main():
     """
@@ -72,14 +98,26 @@ def main():
     (mdim, pdim, deg) = (2, 2, 0)
     pcnt = pieri_root_count(mdim, pdim, deg, False)
     print 'The Pieri root count :', pcnt
-    (inp, otp) = solve_general(mdim, pdim, deg)
+    print 'Solving a general case ...'
+    (inp, otp, pols, sols) = solve_general(mdim, pdim, deg)
     print('The input planes :')
     for plane in inp:
         print(plane)
     print('The solution planes :')
     for plane in otp:
         print(plane)
-    verify_determinants(inp, otp)
+    check = verify_determinants(inp, otp)
+    print 'Sum of absolute values of determinants :', check
+    raw_input('Hit enter to continue.')
+    (oscp, otp2, pols2, sols2) = solve_real(mdim, pdim, pols, sols)
+    print 'The input planes :'
+    for plane in oscp:
+        print plane
+    print 'The solution planes :'
+    for plane in otp2:
+        print plane
+    check = verify_determinants(oscp, otp2)
+    print 'Sum of absolute values of determinants :', check
 
 if __name__ == "__main__":
     main()
