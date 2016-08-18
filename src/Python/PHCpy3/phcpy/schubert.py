@@ -14,7 +14,7 @@ def prompt_for_dimensions():
     qdeg = input('give the degree of the solution maps : ')
     return (int(mdim), int(pdim), int(qdeg))
 
-def pieri_root_count(mdim, pdim, qdeg):
+def pieri_root_count(mdim, pdim, qdeg, verbose=True):
     """
     Computes the number of pdim-plane producing maps of
     degree qdeg that meet mdim-planes at mdim*pdim + qdeg*(mdim+pdim) points.
@@ -22,10 +22,12 @@ def pieri_root_count(mdim, pdim, qdeg):
     from phcpy.phcpy2c3 import py2c_schubert_pieri_count
     from phcpy.phcpy2c3 import py2c_schubert_localization_poset
     root_count = py2c_schubert_pieri_count(mdim, pdim, qdeg)
-    print('Pieri root count for', (mdim, pdim, qdeg), 'is', root_count)
-    poset = py2c_schubert_localization_poset(mdim, pdim, qdeg)
-    print('the localization poset :')
-    print(poset)
+    if verbose:
+        print('Pieri root count for', (mdim, pdim, qdeg), 'is', root_count)
+        poset = py2c_schubert_localization_poset(mdim, pdim, qdeg)
+        print('the localization poset :')
+        print(poset)
+    return root_count
 
 def resolve_schubert_conditions(ndim, kdim, brackets, verbose=True):
     """

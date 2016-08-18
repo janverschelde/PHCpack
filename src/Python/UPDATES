@@ -1,3 +1,6 @@
+Wed 17 Aug 2016 : fixed bug in schubert.py of PHCpy2/phcpy and PHCpy3/phcpy,
+  the pieri_root_count must return the root_count; added verbose option.
+
 Tue 16 Aug 2016 : added an introductory paragraph to the use cases.
 
 Sat 13 Aug 2016 : extended the documentation for the use case on computing
