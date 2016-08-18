@@ -278,7 +278,7 @@ def points_to_string(pts):
             result = result + ' ' + ('%.17e' % yre)
     return result
 
-def run_pieri_homotopies(mdim, pdim, qdeg, planes, *pts):
+def run_pieri_homotopies(mdim, pdim, qdeg, planes, verbose=True, *pts):
     """
     Computes the number of pdim-plane producing maps of degree qdeg
     that meet mdim-planes at mdim*pdim + qdeq*(mdim+pdim) points.
@@ -291,7 +291,8 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, *pts):
     from phcpy.phcpy2c3 import py2c_solcon_length_standard_solution_string
     from phcpy.phcpy2c3 import py2c_solcon_write_standard_solution_string
     root_count = py2c_schubert_pieri_count(mdim, pdim, qdeg)
-    print('Pieri root count for', (mdim, pdim, qdeg), 'is', root_count)
+    if verbose:
+        print('Pieri root count for', (mdim, pdim, qdeg), 'is', root_count)
     strplanes = planes_to_string(planes)
     # print 'length of input data :', len(strplanes)
     if(qdeg > 0):
@@ -300,8 +301,9 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, *pts):
     else:
         strpts = ''
     # print 'calling py2c_pieri_homotopies ...'
-    print('passing %d characters for (m, p, q) = (%d,%d,%d)' \
-         % (len(strplanes), mdim, pdim, qdeg))
+    if verbose:
+        print('passing %d characters for (m, p, q) = (%d, %d, %d)' \
+            % (len(strplanes), mdim, pdim, qdeg))
     py2c_schubert_pieri_homotopies(mdim, pdim, qdeg, \
         len(strplanes), strplanes, strpts)
     # print 'making the system ...'
@@ -312,19 +314,21 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, *pts):
     else:
         for i in range(1, mdim*pdim+qdeg*(mdim+pdim)+1):
             pols.append(py2c_syscon_load_standard_polynomial(i))
-    print('the system :')
-    for poly in pols:
-        print(poly)
-    print('root count :', root_count)
+    if verbose:
+        print('the system :')
+        for poly in pols:
+            print(poly)
+        print('root count :', root_count)
     nbsols = py2c_solcon_number_of_standard_solutions()
     sols = []
     for k in range(1, nbsols+1):
         lns = py2c_solcon_length_standard_solution_string(k)
         sol = py2c_solcon_write_standard_solution_string(k, lns)
         sols.append(sol)
-    print('the solutions :')
-    for solution in sols:
-        print(solution)
+    if verbose:
+        print('the solutions :')
+        for solution in sols:
+            print(solution)
     return (pols, sols)
 
 def verify(pols, sols):
@@ -460,7 +464,8 @@ def test_pieri():
         print('interpolation points :')
         for point in points:
             print(point)
-        (system, sols) = run_pieri_homotopies(mdim, pdim, qdeg, planes, points)
+        (system, sols) = run_pieri_homotopies(mdim, pdim, qdeg, planes, \
+            True, points)
     else:
         (system, sols) = run_pieri_homotopies(mdim, pdim, qdeg, planes)
     print('evaluation of the solutions :')
