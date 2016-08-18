@@ -20,4 +20,5 @@ runcyc10d    : script to run the GPU accelerated path trackers
 appolonius   : solves the circle problem of Appolonius, a use case
 fourbar      : design of a 4-bar mechanism, another use case
 touchcircle  : tangent lines to a circle, another use case
+fourlines    : two lines meet four general lines, another use case
 -------------------------------------------------------------------------------
