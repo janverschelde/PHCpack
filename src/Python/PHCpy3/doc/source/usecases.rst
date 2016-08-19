@@ -35,4 +35,5 @@ For these specific instances, singular solutions are likely to occur.
 
    appolonius
    fourbar
+   fourlines
    touchcircle
