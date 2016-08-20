@@ -1,3 +1,6 @@
+Fri 19 Aug 2016 : extracted the points from the lines in fourlines.py
+  and computed the range of the coordinates needed for the plot.
+
 Thu 18 Aug 2016 : verification of the four lines problem with determinants
   on numpy matrices, updated fourlines.py scripts for python 2 and 3.
   Added a verbose option to the run_pieri_homotopies function of schubert.

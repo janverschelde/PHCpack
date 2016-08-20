@@ -89,6 +89,80 @@ def solve_real(mdim, pdim, start, sols):
     outplanes = [solution_plane(mdim+pdim, pdim, sol) for sol in rtsols]
     return (inplanes, outplanes, target, rtsols)
 
+def input_generators(plane):
+    """
+    Given in plane is a numpy matrix, with in its columns
+    the coordinates of the points which span a line, in 4-space.
+    The first coordinate must not be zero.
+    Returns the affine representation of the line,
+    after dividing each generator by its first coordinate.
+    """
+    pone = list(plane[:,0])
+    ptwo = list(plane[:,1])
+    aone = [x/pone[0] for x in pone]
+    atwo = [x/ptwo[0] for x in ptwo]
+    return (aone[1:], atwo[1:])
+
+def output_generators(plane):
+    """
+    Given in plane is a numpy matrix, with in its columns
+    the coordinates of the points which span a line, in 4-space.
+    The solution planes follow the localization pattern
+    1, *, *, 0 for the first point and 0, 1, *, * for
+    the second point, which means that the second point
+    in standard projective coordinates lies at infinity.
+    For the second generator, the sum of the points is taken.
+    The imaginary part of each coordinate is omitted.
+    """
+    pone = list(plane[:,0])
+    ptwo = list(plane[:,1])
+    aone = [x.real for x in pone]
+    atwo = [x.real + y.real for (x, y) in zip(pone, ptwo)]
+    return (aone[1:], atwo[1:])
+
+def boxrange(inlines, outlines):
+    """
+    Returns a list of three lists with the [min, max]
+    values of each coordinate of each generator in the lists
+    inlines and outlines.
+    """
+    fst = inlines[0][0]
+    result = {'xmin': fst[0], 'xmax': fst[0], \
+              'ymin': fst[1], 'ymax': fst[1], \
+              'zmin': fst[2], 'zmax': fst[2]} 
+    pts = [x for (x, y) in inlines] + [y for (x, y) in inlines] \
+        + [x for (x, y) in outlines] + [y for (x, y) in outlines]
+    print 'the points :\n', pts 
+    for point in pts:
+        print 'checking point', point
+        result['xmin'] = min(result['xmin'], point[0])
+        result['ymin'] = min(result['ymin'], point[1])
+        result['zmin'] = min(result['zmin'], point[2])
+        result['xmax'] = max(result['xmax'], point[0])
+        result['ymax'] = max(result['ymax'], point[1])
+        result['zmax'] = max(result['zmax'], point[2])
+    return ((result['xmin'], result['xmax']), \
+            (result['ymin'], result['ymax']), \
+            (result['zmin'], result['zmax']))
+
+def show_planes(ipl, opl):
+    """
+    Shows the input and the output planes.
+    """
+    (inlines, outlines) = ([], [])
+    for plane in ipl:
+        inlines.append(input_generators(plane))
+    for plane in opl:
+        outlines.append(output_generators(plane))
+    print 'The generators of the input lines :'
+    for line in inlines:
+        print line
+    print 'The generators of the output lines :'
+    for line in outlines:
+        print line
+    brg = boxrange(inlines, outlines)
+    print 'the range:', brg
+
 def main():
     """
     We start with the formalism of the root count,
@@ -118,6 +192,7 @@ def main():
         print plane
     check = verify_determinants(oscp, otp2)
     print 'Sum of absolute values of determinants :', check
+    show_planes(oscp, otp2)
 
 if __name__ == "__main__":
     main()
