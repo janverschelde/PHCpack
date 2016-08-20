@@ -3,8 +3,11 @@ Given four lines in general position,
 there are two lines which meet all four given lines.
 With Pieri homotopies we can solve this Schubert problem.
 For the verification of the intersection conditions, numpy is used.
+The plots are made with matplotlib.
 """
 from numpy import zeros, array, concatenate, matrix
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 def indices(name):
     """
@@ -125,6 +128,7 @@ def boxrange(inlines, outlines):
     Returns a list of three lists with the [min, max]
     values of each coordinate of each generator in the lists
     inlines and outlines.
+    The ranges are adjusted for the particular real case.
     """
     fst = inlines[0][0]
     result = {'xmin': fst[0], 'xmax': fst[0], \
@@ -134,16 +138,109 @@ def boxrange(inlines, outlines):
         + [x for (x, y) in outlines] + [y for (x, y) in outlines]
     print 'the points :\n', pts 
     for point in pts:
-        print 'checking point', point
         result['xmin'] = min(result['xmin'], point[0])
         result['ymin'] = min(result['ymin'], point[1])
         result['zmin'] = min(result['zmin'], point[2])
         result['xmax'] = max(result['xmax'], point[0])
         result['ymax'] = max(result['ymax'], point[1])
         result['zmax'] = max(result['zmax'], point[2])
-    return ((result['xmin'], result['xmax']), \
-            (result['ymin'], result['ymax']), \
-            (result['zmin'], result['zmax']))
+    return ((result['xmin']+3, result['xmax']-3), \
+            (result['ymin']+8, result['ymax']-11), \
+            (result['zmin']+3, result['zmax']-5))
+
+def inbox(point, lims):
+    """
+    Returns true if the coordinates of the point
+    are in the box defined by the 3-tuple lims
+    which contain the minima and maxima for the coordinates.
+    """
+    tol = 1.0e-8 # this is essential for roundoff
+    (xlim, ylim, zlim) = lims
+    if point[0] < xlim[0] - tol:
+        return False
+    elif point[0] > xlim[1] + tol:
+        return False
+    elif point[1] < ylim[0] - tol:
+        return False
+    elif point[1] > ylim[1] + tol:
+        return False
+    elif point[2] < zlim[0] - tol:
+        return False
+    elif point[2] > zlim[1] + tol:
+        return False
+    else:
+        return True
+
+def equal(pt1, pt2):
+    """
+    Returns true if the all coordinates of pt1 and pt2
+    match up to a tolerance of 1.0e-10.
+    """
+    tol = 1.0e-8
+    if abs(pt1[0] - pt2[0]) > tol:
+        return False
+    elif abs(pt1[1] - pt2[1]) > tol:
+        return False
+    elif abs(pt1[2] - pt2[2]) > tol:
+        return False
+    return True
+
+def isin(points, pnt):
+    """
+    Returns true if pnt belongs to the list points.
+    """
+    if len(points) == 0:
+        return False
+    else:
+        for point in points:
+            if equal(point, pnt):
+                return True
+        return False;
+
+def plot_line(axs, line, lims, color):
+    """
+    Plots the line defined as a tuple of two points,
+    using the axis object in axs.
+    The 3-tuple lims contains three lists with limits [min, max]
+    for the x, y, and z coordinates.
+    """
+    (fst, snd) = line
+    axs.set_xlabel('x')
+    axs.set_ylabel('y')
+    axs.set_zlabel('z')
+    axs.set_xlim(lims[0])
+    axs.set_ylim(lims[1])
+    axs.set_zlim(lims[2])
+    dir = (fst[0] - snd[0], fst[1] - snd[1], fst[2] - snd[2])
+    result = []
+    for k in range(3):
+        fac = (lims[k][1]-fst[k])/dir[k]
+        pnt = (fst[0] + fac*dir[0], fst[1] + fac*dir[1], fst[2] + fac*dir[2])
+        if inbox(pnt, lims):
+            if not isin(result, pnt): result.append(pnt)
+    for k in range(3):
+        fac = (lims[k][0]-fst[k])/dir[k]
+        pnt = (fst[0] + fac*dir[0], fst[1] + fac*dir[1], fst[2] + fac*dir[2])
+        if inbox(pnt, lims):
+            if not isin(result, pnt): result.append(pnt)
+    (one, two) = (result[0], result[1])
+    # axs.plot([fst[0], snd[0]], [fst[1], snd[1]], [fst[2], snd[2]], 'bo')
+    # axs.plot([one[0], two[0]], [one[1], two[1]], [one[2], two[2]], 'ro')
+    axs.plot([one[0], two[0]], [one[1], two[1]], [one[2], two[2]], color)
+
+def plot_lines(inlines, outlines, lims):
+    """
+    Generates coordinates of the points in a random line
+    and then plots this line.
+    """
+    fig = plt.figure()
+    axs = fig.add_subplot(111, projection='3d')
+    for line in inlines:
+        plot_line(axs, line, lims, 'b')
+    for line in outlines:
+        plot_line(axs, line, lims, 'r')
+    axs.view_init(azim=5, elev=20)
+    plt.show()
 
 def show_planes(ipl, opl):
     """
@@ -162,6 +259,7 @@ def show_planes(ipl, opl):
         print line
     brg = boxrange(inlines, outlines)
     print 'the range:', brg
+    plot_lines(inlines, outlines, brg)
 
 def main():
     """
@@ -183,6 +281,8 @@ def main():
     check = verify_determinants(inp, otp)
     print 'Sum of absolute values of determinants :', check
     raw_input('Hit enter to continue.')
+    from random import seed
+    seed(400)
     (oscp, otp2, pols2, sols2) = solve_real(mdim, pdim, pols, sols)
     print 'The input planes :'
     for plane in oscp:

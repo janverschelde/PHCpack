@@ -1,3 +1,7 @@
+Sat 20 Aug 2016 : added matplotlib plots to show the four given lines
+  and the two lines that meet them, added to the fourlines.py scripts
+  in the PHCpy2/examples and PHCpy3/examples directories.
+
 Fri 19 Aug 2016 : extracted the points from the lines in fourlines.py
   and computed the range of the coordinates needed for the plot.
 
