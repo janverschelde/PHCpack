@@ -3,6 +3,15 @@ lines meeting four given lines
 
 Consider as given four lines, our problem is to compute all
 lines which meet the four given lines in a point.
+In :numref:`figfourlines`, the four given lines are shown in blue
+while the lines that meet those four lines are drawn in red.
+
+.. _figfourlines:
+
+.. figure:: ./figfourlines.png
+    :align: center
+
+    Two red lines meet four blue lines in a point.
 
 A line in projective 3-space is represented by two points,
 stored in the columns of a 4-by-2 matrix.
@@ -152,3 +161,56 @@ and corresponding solutions of a general instance.
 
 The code for the ``main()`` is similar as when calling
 ``solve_general()``, as shown above at the end of the previous section.
+
+The points which span the planes are in projective 3-space,
+represented by four coordinates.  
+In projective space, the coordinates belong to equivalence classes
+and all nonzero multiples of the four coordinates represented the
+same point.  To map the points in affine space, 
+all coordinates are divided by the first coordinate.
+After this division, the first coordinate equals one and is omitted.
+This mapping is done by the function ``input_generators``.
+
+::
+
+   def input_generators(plane):
+       """
+       Given in plane is a numpy matrix, with in its columns
+       the coordinates of the points which span a line, in 4-space.
+       The first coordinate must not be zero.
+       Returns the affine representation of the line,
+       after dividing each generator by its first coordinate.
+       """
+       pone = list(plane[:,0])
+       ptwo = list(plane[:,1])
+       aone = [x/pone[0] for x in pone]
+       atwo = [x/ptwo[0] for x in ptwo]
+       return (aone[1:], atwo[1:])
+
+The solutions of the Pieri homotopies are represented in a so-called
+localization pattern, where the second point has its first coordinate
+equal to zero.  To map to affine 3-space, the second point is the sum
+of the two generators.  The function ``output_generators`` below
+computes this mapping.
+
+::
+
+   def output_generators(plane):
+       """
+       Given in plane is a numpy matrix, with in its columns
+       the coordinates of the points which span a line, in 4-space.
+       The solution planes follow the localization pattern
+       1, *, *, 0 for the first point and 0, 1, *, * for
+       the second point, which means that the second point
+       in standard projective coordinates lies at infinity.
+       For the second generator, the sum of the points is taken.
+       The imaginary part of each coordinate is omitted.
+       """
+       pone = list(plane[:,0])
+       ptwo = list(plane[:,1])
+       aone = [x.real for x in pone]
+       atwo = [x.real + y.real for (x, y) in zip(pone, ptwo)]
+       return (aone[1:], atwo[1:])
+
+The complete script is available in the directory ``examples``
+of the source code for phcpy.
