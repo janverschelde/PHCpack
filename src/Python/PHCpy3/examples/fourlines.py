@@ -232,10 +232,11 @@ def plot_line(axs, line, lims, color):
     # axs.plot([one[0], two[0]], [one[1], two[1]], [one[2], two[2]], 'ro')
     axs.plot([one[0], two[0]], [one[1], two[1]], [one[2], two[2]], color)
 
-def plot_lines(inlines, outlines, lims):
+def plot_lines(inlines, outlines, points, lims):
     """
     Generates coordinates of the points in a random line
-    and then plots this line.
+    and then plots this line.  The intersection points are
+    in the list points and limits for the bounding box in lims
     """
     fig = plt.figure()
     axs = fig.add_subplot(111, projection='3d')
@@ -243,8 +244,53 @@ def plot_lines(inlines, outlines, lims):
         plot_line(axs, line, lims, 'b')
     for line in outlines:
         plot_line(axs, line, lims, 'r')
+    for point in points:
+        axs.plot([point[0]], [point[1]], [point[2]], 'ro')
     axs.view_init(azim=5, elev=20)
     plt.show()
+
+def intersection_point(apl, bpl, check=True):
+    """
+    Given in apl the two points that define a line
+    and in bpl the two points that define another line,
+    returns the intersection point.
+    If check, then additional tests are done
+    and the outcome of the tests is written to screen.
+    """
+    from numpy.linalg import solve
+    (apt, bpt) = apl
+    (cpt, dpt) = bpl
+    mat = array([[apt[0], bpt[0], -cpt[0]], \
+                 [apt[1], bpt[1], -cpt[1]], \
+                 [apt[2], bpt[2], -cpt[2]]])
+    rhs = array([[dpt[0]], [dpt[1]], [dpt[2]]])
+    sol = solve(mat, rhs)
+    cff = list(sol[:,0])
+    csm = cff[0] + cff[1]
+    result = ((cff[0]*apt[0] + cff[1]*bpt[0])/csm, \
+              (cff[0]*apt[1] + cff[1]*bpt[1])/csm, \
+              (cff[0]*apt[2] + cff[1]*bpt[2])/csm)
+    if check:
+        csm = cff[2] + 1.0
+        verify = ((cff[2]*cpt[0] + dpt[0])/csm, \
+                  (cff[2]*cpt[1] + dpt[1])/csm, \
+                  (cff[2]*cpt[2] + dpt[2])/csm)
+        print('the solution :\n', result)
+        print('the solution verified :\n', verify)
+        res = matrix(rhs) - matrix(mat)*matrix(sol)
+        print('the residual :\n', res)
+    return result
+
+def intersection_points(ipl, opl):
+    """
+    Returns the list of intersection points between
+    the input planes in ipl and the output planes in opl.
+    """
+    result = []
+    for inplane in ipl:
+        for outplane in opl:
+            result.append(intersection_point(inplane, outplane))
+    return result
 
 def show_planes(ipl, opl):
     """
@@ -263,7 +309,11 @@ def show_planes(ipl, opl):
         print(line)
     brg = boxrange(inlines, outlines)
     print('the range:', brg)
-    plot_lines(inlines, outlines, brg)
+    intpts = intersection_points(inlines, outlines)
+    print('the intersection points :')
+    for point in intpts:
+        print(point)
+    plot_lines(inlines, outlines, intpts, brg)
 
 def main():
     """

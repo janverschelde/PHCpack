@@ -46,13 +46,13 @@ def verify_determinants(inps, sols, verbose=True):
     checksum = 0
     for sol in sols:
         if verbose:
-            print 'checking solution\n', sol
+            print('checking solution\n', sol)
         for plane in inps:
             cat = concatenate([plane, sol], axis=-1)
             mat = matrix(cat)
             dcm = det(mat)
             if verbose:
-                print 'the determinant :', dcm
+                print('the determinant :', dcm)
             checksum = checksum + abs(dcm)
     return checksum
 
@@ -64,7 +64,11 @@ def solve_general(mdim, pdim, qdeg):
     where p = pdim and m = mdim on input.
     For the problem of computing the two lines which meet
     four general lines, mdim = 2, pdim = 2, and qdeg = 0.
-    Returns the number of solutions computed.
+    Returns a tuple with four lists.
+    The first two lists contain matrices with the input planes
+    and the solution planes respectively.
+    The third list is the list of polynomials solved
+    and the last list is the solution list.
     """
     from phcpy.schubert import random_complex_matrix
     from phcpy.schubert import run_pieri_homotopies
@@ -136,7 +140,7 @@ def boxrange(inlines, outlines):
               'zmin': fst[2], 'zmax': fst[2]} 
     pts = [x for (x, y) in inlines] + [y for (x, y) in inlines] \
         + [x for (x, y) in outlines] + [y for (x, y) in outlines]
-    print 'the points :\n', pts 
+    print('the points :\n', pts)
     for point in pts:
         result['xmin'] = min(result['xmin'], point[0])
         result['ymin'] = min(result['ymin'], point[1])
@@ -228,10 +232,11 @@ def plot_line(axs, line, lims, color):
     # axs.plot([one[0], two[0]], [one[1], two[1]], [one[2], two[2]], 'ro')
     axs.plot([one[0], two[0]], [one[1], two[1]], [one[2], two[2]], color)
 
-def plot_lines(inlines, outlines, lims):
+def plot_lines(inlines, outlines, points, lims):
     """
     Generates coordinates of the points in a random line
-    and then plots this line.
+    and then plots this line.  The intersection points are
+    in the list points and limits for the bounding box in lims
     """
     fig = plt.figure()
     axs = fig.add_subplot(111, projection='3d')
@@ -239,8 +244,53 @@ def plot_lines(inlines, outlines, lims):
         plot_line(axs, line, lims, 'b')
     for line in outlines:
         plot_line(axs, line, lims, 'r')
+    for point in points:
+        axs.plot([point[0]], [point[1]], [point[2]], 'ro')
     axs.view_init(azim=5, elev=20)
     plt.show()
+
+def intersection_point(apl, bpl, check=True):
+    """
+    Given in apl the two points that define a line
+    and in bpl the two points that define another line,
+    returns the intersection point.
+    If check, then additional tests are done
+    and the outcome of the tests is written to screen.
+    """
+    from numpy.linalg import solve
+    (apt, bpt) = apl
+    (cpt, dpt) = bpl
+    mat = array([[apt[0], bpt[0], -cpt[0]], \
+                 [apt[1], bpt[1], -cpt[1]], \
+                 [apt[2], bpt[2], -cpt[2]]])
+    rhs = array([[dpt[0]], [dpt[1]], [dpt[2]]])
+    sol = solve(mat, rhs)
+    cff = list(sol[:,0])
+    csm = cff[0] + cff[1]
+    result = ((cff[0]*apt[0] + cff[1]*bpt[0])/csm, \
+              (cff[0]*apt[1] + cff[1]*bpt[1])/csm, \
+              (cff[0]*apt[2] + cff[1]*bpt[2])/csm)
+    if check:
+        csm = cff[2] + 1.0
+        verify = ((cff[2]*cpt[0] + dpt[0])/csm, \
+                  (cff[2]*cpt[1] + dpt[1])/csm, \
+                  (cff[2]*cpt[2] + dpt[2])/csm)
+        print('the solution :\n', result)
+        print('the solution verified :\n', verify)
+        res = matrix(rhs) - matrix(mat)*matrix(sol)
+        print('the residual :\n', res)
+    return result
+
+def intersection_points(ipl, opl):
+    """
+    Returns the list of intersection points between
+    the input planes in ipl and the output planes in opl.
+    """
+    result = []
+    for inplane in ipl:
+        for outplane in opl:
+            result.append(intersection_point(inplane, outplane))
+    return result
 
 def show_planes(ipl, opl):
     """
@@ -251,15 +301,19 @@ def show_planes(ipl, opl):
         inlines.append(input_generators(plane))
     for plane in opl:
         outlines.append(output_generators(plane))
-    print 'The generators of the input lines :'
+    print('The generators of the input lines :')
     for line in inlines:
-        print line
-    print 'The generators of the output lines :'
+        print(line)
+    print('The generators of the output lines :')
     for line in outlines:
-        print line
+        print(line)
     brg = boxrange(inlines, outlines)
-    print 'the range:', brg
-    plot_lines(inlines, outlines, brg)
+    print('the range:', brg)
+    intpts = intersection_points(inlines, outlines)
+    print('the intersection points :')
+    for point in intpts:
+        print(point)
+    plot_lines(inlines, outlines, intpts, brg)
 
 def main():
     """
@@ -269,8 +323,8 @@ def main():
     from phcpy.schubert import pieri_root_count
     (mdim, pdim, deg) = (2, 2, 0)
     pcnt = pieri_root_count(mdim, pdim, deg, False)
-    print 'The Pieri root count :', pcnt
-    print 'Solving a general case ...'
+    print('The Pieri root count :', pcnt)
+    print('Solving a general case ...')
     (inp, otp, pols, sols) = solve_general(mdim, pdim, deg)
     print('The input planes :')
     for plane in inp:
@@ -279,19 +333,19 @@ def main():
     for plane in otp:
         print(plane)
     check = verify_determinants(inp, otp)
-    print 'Sum of absolute values of determinants :', check
-    raw_input('Hit enter to continue.')
+    print('Sum of absolute values of determinants :', check)
+    input('Hit enter to continue.')
     from random import seed
     seed(400)
     (oscp, otp2, pols2, sols2) = solve_real(mdim, pdim, pols, sols)
-    print 'The input planes :'
+    print('The input planes :')
     for plane in oscp:
-        print plane
-    print 'The solution planes :'
+        print(plane)
+    print('The solution planes :')
     for plane in otp2:
-        print plane
+        print(plane)
     check = verify_determinants(oscp, otp2)
-    print 'Sum of absolute values of determinants :', check
+    print('Sum of absolute values of determinants :', check)
     show_planes(oscp, otp2)
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 Sun 21 Aug 2016 : updated the documentation fourlines.rst and figfourlines.png
   so that the intersection points are marked on the plot.
+  Updated the fourlines.py scripts in PHCpy2/examples and PHCpy3/examples.
 
 Sat 20 Aug 2016 : added matplotlib plots to show the four given lines
   and the two lines that meet them, added to the fourlines.py scripts
