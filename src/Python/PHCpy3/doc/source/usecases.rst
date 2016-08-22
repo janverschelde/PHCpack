@@ -21,13 +21,17 @@ In all cases, there are three stages:
    solutions.  To process the solutions we convert the string 
    representations into Python dictionaries.
 
+The use cases illustrate how phcpy fits with Python's computational
+ecosystem, in particular with sympy, numpy, and matplotlib.
 In all use cases, plots of the solutions are made with matplotlib.
 To formulate the polynomial equations we may use sympy,
 as illustrated in the design of 4-bar mechanisms.
+In the problem of the four lines, the intersection conditions
+are verified with numpy.
 
 In all use cases, we distinguish between general instances of a problem
-(where the numbers for the parameters are chosen at random),
-and specific instances of the problem.
+(where the numbers for the parameters are chosen at random and/or complex),
+and specific (mostly real) instances of the problem.
 For these specific instances, singular solutions are likely to occur.
 
 .. toctree::
