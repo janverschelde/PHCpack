@@ -12,6 +12,7 @@ while the lines that meet those four lines are drawn in red.
     :align: center
 
     Two red lines meet four blue lines in a point.
+    Their intersection points are marked by red disks.
 
 A line in projective 3-space is represented by two points,
 stored in the columns of a 4-by-2 matrix.
