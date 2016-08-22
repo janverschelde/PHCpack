@@ -465,24 +465,3 @@ coefficients, we may have to perform the scaling in higher precision,
 such as available in the functions
 ``dobldobl_scale_system`` and ``quaddobl_scale_system``,
 respectively with double double and quad double arithmetic.
-
-functions in the module solver
-------------------------------
-
-The documentation strings of the functions
-exported by the module ``solver`` of the package phcpy are listed below.
-
-.. automodule:: solver
-   :members:
-
-functions in the module solutions
----------------------------------
-
-The documentation strings of the functions
-exported by the module ``solutions`` are listed below.
-The script **test()** runs when typing **python solutions.py**
-at the command prompt.
-
-.. automodule:: solutions
-   :members:
-

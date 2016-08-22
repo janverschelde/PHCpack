@@ -88,9 +88,3 @@ The plot appears in a canvas widget, in the GUI launched
 by the function ``plotcoordinate(sols, idx)`` where ``sols``
 is the list of solutions and ``idx`` an index to a coordinate
 of the solutions.
-
-functions in the module dashboard
----------------------------------
-
-.. automodule:: dashboard
-   :members:

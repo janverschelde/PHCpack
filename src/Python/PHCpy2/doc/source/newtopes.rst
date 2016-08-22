@@ -77,7 +77,7 @@ consider the example in the session below:
 
    >>> from phcpy.polytopes import random_points as rp
    >>> points = rp(3,10,-9,9)
-   >>> for point in points: print point
+   >>> for point in points: print(point)
    ... 
    (5, 9, -5)
    (0, 0, 1)
@@ -92,7 +92,7 @@ consider the example in the session below:
    >>> from phcpy.polytopes import convex_hull as ch
    >>> facets = ch(3, points)
    computed 12 facets
-   >>> for facet in facets: print facet
+   >>> for facet in facets: print(facet)
    ... 
    (-597, [90, -65, -6], [4, 5, 6], [1, 2, 3])
    (-84, [1, 11, 14], [4, 8, 5], [7, 11, 0])
@@ -237,7 +237,7 @@ of two binomials in three variables:
    >>> from phcpy.maps import binomial_solver
    >>> from phcpy.maps import solve_binomials
    >>> maps = solve_binomials(3,f)
-   >>> for map in maps: print map
+   >>> for map in maps: print(map)
    ... 
    ['x - 0', 'y - (1+0j)*t1**1', 'z - (1+0j)*t2**1', 'dimension = 2', 'degree = 1']
    ['x - (1+0j)*t1**1', 'y - (1+0j)*t1**2', 'z - (1+0j)*t1**3', 'dimension = 1', 'degree = 3']
@@ -254,22 +254,3 @@ truncated power series.
 The module ``series`` exports functions to compute power series solutions
 in double, double double, and quad double precision.
 The function ``test()`` of the ``series`` module provides an example.
-
-functions in the module polytopes
----------------------------------
-
-.. automodule:: polytopes
-   :members:
-
-functions in the module maps
-----------------------------
-
-.. automodule:: maps
-   :members:
-
-functions in the module series
-------------------------------
-
-.. automodule:: maps
-   :members:
-

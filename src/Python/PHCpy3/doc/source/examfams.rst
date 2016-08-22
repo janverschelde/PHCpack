@@ -45,19 +45,6 @@ If we want to solve the system defined by f, we continue the above session as
 
 The example session continues in the description of the module solutions.
 
-functions in the module examples
---------------------------------
-
-The documentation strings of the functions that
-return the polynomials of the example systems as strings of characters
-are listed below.
-The regression test is exported by the function **test()**
-of the module ``examples``.
-
-.. automodule:: examples
-   :members:
-
-
 the cyclic n-roots problem
 --------------------------
 
@@ -73,9 +60,3 @@ One such noteworthy family is the cyclic n-roots problem:
    x0*x1 + x1*x2 + x2*x3 + x3*x0;
    x0*x1*x2 + x1*x2*x3 + x2*x3*x0 + x3*x0*x1;
    x0*x1*x2*x3 - 1;
-
-functions in the module families
---------------------------------
-
-.. automodule:: families
-   :members:

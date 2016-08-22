@@ -23,4 +23,5 @@ phcpy Documentation Contents
    phcbwulf
    modphcpy2c2
    about
+   refman
    indices

@@ -133,21 +133,3 @@ then we can do the following:
 
 With these primitive operations in phcpy2c2 we can bypass the writing
 and the parsing to strings.
-
-functions in the module interface
----------------------------------
-
-.. automodule:: interface
-   :members:
-
-functions in the module phcpy2c2
---------------------------------
-
-The module ``phcpy2c2`` wraps the C functions in the C interface to PHCpack.
-The C interface to PHCpack was developed in the application of message passing
-(MPI) to run the path trackers on distributed memory multiprocessing computers.
-All functions documented below have their counterpart in C 
-that are therefore then also directly accessible from C programs.
-
-.. automodule:: phcpy2c2
-   :members:

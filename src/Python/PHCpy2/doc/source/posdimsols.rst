@@ -438,9 +438,3 @@ method to compute a witness set for the intersection:
    ...     print pol
    >>> for sol in quapts:
    ...     print sol
-
-functions in the module
------------------------
-
-.. automodule:: sets
-   :members:

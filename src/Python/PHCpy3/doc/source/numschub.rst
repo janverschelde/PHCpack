@@ -134,9 +134,3 @@ continuing the session from above:
 
 The Littlewood-Richardson homotopies computed two solutions of a system
 of 13 equations in 3 unknowns.
-
-functions in the module schubert
---------------------------------
-
-.. automodule:: schubert
-   :members:
