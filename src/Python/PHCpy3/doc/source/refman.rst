@@ -1,5 +1,6 @@
+****************
 Reference Manual
-================
+****************
 
 This chapter contains the documentation of the modules in the package,
 mostly automatically generated from the documentation strings in the
@@ -7,6 +8,10 @@ module and of the functions exported by each module.
 The order of the sections in this chapter follows the order of
 the previous chapters.  The first section on the function in the
 solver module corresponds with chapter 3, on a blackbox solver.
+The section headings correspond to the earlier chapter headings.
+
+a blackbox solver for isolated solutions
+========================================
 
 functions in the module solver
 ------------------------------
@@ -27,6 +32,9 @@ at the command prompt.
 
 .. automodule:: solutions
    :members:
+
+path trackers and sweep homotopies
+==================================
 
 functions in the module trackers
 --------------------------------
@@ -65,11 +73,17 @@ The functions exported by the module ``tropisms`` are listed below.
 .. automodule:: tropisms
    :members:
 
+positive dimensional solution sets
+==================================
+
 functions in the module sets
 ----------------------------
 
 .. automodule:: sets
    :members:
+
+some interesting families and examples
+======================================
 
 functions in the module examples
 --------------------------------
@@ -89,11 +103,17 @@ functions in the module families
 .. automodule:: families
    :members:
 
+numerical Schubert calculus
+===========================
+
 functions in the module schubert
 --------------------------------
 
 .. automodule:: schubert
    :members:
+
+Newton polytopes and monomial maps
+==================================
 
 functions in the module polytopes
 ---------------------------------
@@ -113,11 +133,17 @@ functions in the module series
 .. automodule:: series
    :members:
 
+a graphical user interface
+==========================
+
 functions in the module dashboard
 ---------------------------------
 
 .. automodule:: dashboard
    :members:
+
+the module phcpy.phcpy2c3
+=========================
 
 functions in the module interface
 ---------------------------------

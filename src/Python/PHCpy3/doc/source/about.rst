@@ -1,10 +1,11 @@
+***********
 about phcpy
-===========
+***********
 
 This section describes some milestones in the development history.
 
 project history
----------------
+===============
 
 The Python interface to PHCpack got to a first start when
 Kathy Piret met William Stein at the software for algebraic geometry
@@ -41,7 +42,7 @@ the sets.py module provides the key ingredients for a numerical
 irreducible decomposition.
 
 references
-----------
+==========
 
 1. T. Gao, T. Y. Li, M. Wu:
    **Algorithm 846: MixedVol: a software package for mixed-volume 
@@ -86,10 +87,10 @@ references
 
 8. J. Verschelde and X. Yu:
    **Polynomial Homotopy Continuation on GPUs.**
-   *ACM Communications in Computer Algebra*, 49(4):130-133, 2015.
+   *ACM Communications in Computer Algebra*, to appear.
 
 acknowledgments
----------------
+===============
 
 This material is based upon work supported by the 
 National Science Foundation under Grants 1115777 and 1440534.

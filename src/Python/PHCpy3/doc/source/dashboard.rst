@@ -1,5 +1,6 @@
+**************************
 a graphical user interface
-==========================
+**************************
 
 As a programmers interface, phcpy was developed in a Terminal window,
 of 80 characters wide and 40 lines long.  Python comes with Tkinter,
@@ -8,7 +9,7 @@ The goal of the module **dashboard**
 is to develop a graphical user interface to the methods of phcpy.
 
 solving with a click of a button
---------------------------------
+================================
 
 A very basic graphical user interface to the blackbox solver consists
 of two text widgets: one for the input and another for the output;
@@ -38,7 +39,7 @@ then the input text widget is empty and the user must enter
 the polynomials in the system.
 
 scrolling a list of solutions
------------------------------
+=============================
 
 The blackbox solver **solve** of **phcpy.solver** returns a list of strings.
 In the command line mode, we can print the solutions, one after the other.
@@ -68,7 +69,7 @@ the first solution will most likely be different at each run.
     Scrolling the solutions of the cyclic 5-roots system.
 
 making a coordinate plot of solutions
--------------------------------------
+=====================================
 
 Solutions have coordinates in the complex plane.
 As in the case of the cyclic 5-roots problem,
