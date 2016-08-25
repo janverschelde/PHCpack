@@ -1,3 +1,6 @@
+Wed 24 Aug 2016 : corrected the refman.rst in the PHCpy2/doc/source and
+  applied proper chapter headings for the Python 2 version.
+
 Tue 23 Aug 2016 : used proper chapter headings for the phcpy documentation,
   as needed to restructure the reference manual.
 
