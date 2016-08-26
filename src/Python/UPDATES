@@ -1,3 +1,6 @@
+Thu 25 Aug 2016 : added text to the end of the reference manual of phcpy,
+  both for Python 2 and Python 3.
+
 Wed 24 Aug 2016 : corrected the refman.rst in the PHCpy2/doc/source and
   applied proper chapter headings for the Python 2 version.
 

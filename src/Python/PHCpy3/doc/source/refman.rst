@@ -145,8 +145,16 @@ functions in the module dashboard
 the module phcpy.phcpy2c3
 =========================
 
+Almost all computations in phcpy are done with compiled code,
+provided in one object.
+
 functions in the module interface
 ---------------------------------
+
+Polynomial systems and solutions are passed through as strings.
+The coefficients of the polynomials and coordinates of the solutions
+are evaluated in standard double, double double, quad double precision,
+or arbitrary multiprecision.
 
 .. automodule:: interface
    :members:
