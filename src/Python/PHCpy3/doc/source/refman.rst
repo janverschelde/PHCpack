@@ -13,6 +13,10 @@ The section headings correspond to the earlier chapter headings.
 a blackbox solver for isolated solutions
 ========================================
 
+The most essential two modules to solve polynomial systems are
+the blackbox solver in the ``solver`` module and the tools to parse
+the computed solutions with the functions in the module ``solutions``.
+
 functions in the module solver
 ------------------------------
 
@@ -35,6 +39,22 @@ at the command prompt.
 
 path trackers and sweep homotopies
 ==================================
+
+In the path tracking, we distinguish between paths defined by
+
+1. homotopies with sufficiently random complex numbers,
+   which then are free of singular solutions, except perhaps at the end; and
+
+2. homotopies with real coefficients and real parameters,
+   which most likely may contain singularities.
+
+Functions to track solution paths
+defined by complex artificial parameter homotopies 
+are exported by the module ``trackers`` while ``sweepers``
+exports path trackers for real natural parameter homotopies.
+The module ``tuning`` helps to manage the tolerances of
+in the ``trackers`` module.
+Access to polyhedral end games is provided by the ``tropisms`` module.
 
 functions in the module trackers
 --------------------------------
