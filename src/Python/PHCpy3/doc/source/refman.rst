@@ -135,14 +135,29 @@ functions in the module schubert
 Newton polytopes and monomial maps
 ==================================
 
+The Newton polytope of a polynomial is spanned by the exponents 
+of monomials which occur with nonzero coefficient in the polynomial.
+
 functions in the module polytopes
 ---------------------------------
+
+Given a polynomial, its support is the set of exponents of monomials
+which occur with nonzero coefficient.  The convex hull of the support
+of a polynomial is the Newton polytope of the polynomial.
+For a polynomial system, the mixed volume of the Newton polytopes of
+the polynomials in the systems gives a generically sharp upper bound
+on the number of isolated solutions (not in coordinate planes)
+of the polynomial system.
 
 .. automodule:: polytopes
    :members:
 
 functions in the module maps
 ----------------------------
+
+A binomial system is a system where every equation has exactly two
+monomials with nonzero coefficient. 
+The solution set of a binomial system is a set of monomial maps.
 
 .. automodule:: maps
    :members:
