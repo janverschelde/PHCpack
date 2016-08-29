@@ -105,6 +105,9 @@ functions in the module sets
 some interesting families and examples
 ======================================
 
+One of the motivations for phcpy was to perform regression tests
+on the blackbox solver.
+
 functions in the module examples
 --------------------------------
 
@@ -125,6 +128,9 @@ functions in the module families
 
 numerical Schubert calculus
 ===========================
+
+The module schubert exports Pieri homotopies
+and Littlewood-Richardson homotopies to solve Schubert problems.
 
 functions in the module schubert
 --------------------------------
