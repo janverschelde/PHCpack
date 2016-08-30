@@ -177,6 +177,10 @@ functions in the module series
 a graphical user interface
 ==========================
 
+With Tkinter we can develop a graphical user interface.
+The module exports some possible development for a GUI
+to solve polynomial systems and to process solutions.
+
 functions in the module dashboard
 ---------------------------------
 
