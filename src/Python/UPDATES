@@ -1,4 +1,7 @@
-Tue 31 Aug 2016 : added line in refman.rst concerning the sets module.
+Wed 31 Aug 2016 : prepared release 0.5.4, with the setup.py, conf.py, and
+  the __init__.py files for Python 2 and 3.
+
+Tue 30 Aug 2016 : added line in refman.rst concerning the sets module.
 
 Mon 29 Aug 2016 : one more update in refman.rst in the doc folder of PHCpy3.
 

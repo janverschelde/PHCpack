@@ -14,10 +14,10 @@ from distutils.sysconfig import get_python_lib
 setup(
     name = 'PHCpy' ,
     author = 'Jan Verschelde' ,
-    author_email = 'jan@math.uic.edu' ,
+    author_email = 'janv@uic.edu' ,
     description = 'a package for Polynomial Homotopy Continuation' ,
     url = 'https://github.com/janverschelde/PHCpack' ,
-    version = '0.5.3' ,
+    version = '0.5.4' ,
     packages = ['phcpy'] ,
     py_modules = ['phcpy/interface', 'phcpy/solver', 'phcpy/solutions', \
         'phcpy/trackers', 'phcpy/sweepers', 'phcpy/tuning', 'phcpy/tropisms', \
