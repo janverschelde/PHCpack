@@ -96,6 +96,9 @@ The functions exported by the module ``tropisms`` are listed below.
 positive dimensional solution sets
 ==================================
 
+Numerical representations of positive dimensional solution sets
+are computed by the functions exported by the module sets.
+
 functions in the module sets
 ----------------------------
 
