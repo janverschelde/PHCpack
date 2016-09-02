@@ -1,8 +1,8 @@
 """
-The module phcwulf.py exports routines to send and receive lists
+The module server.py exports routines to send and receive lists
 of strings through sockets.  These strings represent either polynomials
 or solutions as data interchanges between a client and a server.
-A simple illustration of the use of phcwulf is to solve many
+A simple illustration of the use of server is to solve many
 polynomial systems over a client/server network.
 The interactive main program starts up a multithreaded server.
 The server generates a list of random polynomial systems which
