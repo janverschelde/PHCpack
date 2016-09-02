@@ -1,4 +1,5 @@
-Mon 1 Sep 2016 : renamed the phcwulf.py module to server.py in PHCpy2.
+Mon 1 Sep 2016 : renamed the phcwulf.py module to server.py in PHCpy2
+  and also in PHCpy3.
 
 Wed 31 Aug 2016 : prepared release 0.5.4, with the setup.py, conf.py, and
   the __init__.py files for Python 2 and 3.
