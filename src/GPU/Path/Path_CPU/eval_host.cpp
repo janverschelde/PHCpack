@@ -1032,26 +1032,29 @@ void CPUInstHomMon::eval_base ( CT** deg_table, CT* coef )
 
 void CPUInstHomMon::print()
 {
-	std::cout << "level = " << level << std::endl;
-	for(int i=0; i<level; i++){
-		std::cout << i << " " << n_mon_level[i] << std::endl;
-	}
-
-	std::cout << "n_mon = " << n_mon << std::endl;
-	//Print monomial with position
-	for(int i=0; i<n_mon; i++){
-		int tmp_n = mon_pos[mon_pos_start[i]];
-		int tmp_exp_start = mon_exp[mon_pos_start[i]];
-		std::cout << i << " n = " << tmp_n << ": ";
-		for(int j=0; j<tmp_n; j++){
-			std::cout << mon_pos[mon_pos_start[i]+j+1] << ", ";
-		}
-		std::cout << " exp_start = " << tmp_exp_start << ": ";
-		for(int j=0; j<tmp_n; j++){
-			std::cout << mon_exp[mon_pos_start[i]+j+1] << ", ";
-		}
-		std::cout << " mon_pos_start = " << mon_pos_start[i] << std::endl;
-	}
+   std::cout << "level = " << level << std::endl;
+   for(int i=0; i<level; i++)
+   {
+      std::cout << i << " " << n_mon_level[i] << std::endl;
+   }
+   std::cout << "n_mon = " << n_mon << std::endl;
+   // Print monomial with position
+   for(int i=0; i<n_mon; i++)
+   {
+      int tmp_n = mon_pos[mon_pos_start[i]];
+      int tmp_exp_start = mon_exp[mon_pos_start[i]];
+      std::cout << i << " n = " << tmp_n << ": ";
+      for(int j=0; j<tmp_n; j++)
+      {
+         std::cout << mon_pos[mon_pos_start[i]+j+1] << ", ";
+      }
+      std::cout << " exp_start = " << tmp_exp_start << ": ";
+      for(int j=0; j<tmp_n; j++)
+      {
+         std::cout << mon_exp[mon_pos_start[i]+j+1] << ", ";
+      }
+      std::cout << " mon_pos_start = " << mon_pos_start[i] << std::endl;
+   }
 }
 
 void CPUInstHomMonBlock::init ( CPUInstHomMon& orig, int BS, int verbose )
@@ -1078,91 +1081,103 @@ void CPUInstHomMonBlock::init ( CPUInstHomMon& orig, int BS, int verbose )
       }
    }
 
-//	std::cout << "mon single" << std::endl;
-//	for(int i=0; i<n_mon_single; i++){
-//		std::cout << i << " " << mon_single_pos_block[2*i] \
-//				  << " " << mon_single_pos_block[2*i+1] << std::endl;
-//	}
+   // std::cout << "mon single" << std::endl;
+   // for(int i=0; i<n_mon_single; i++){
+   //    std::cout << i << " " << mon_single_pos_block[2*i] \
+   //              << " " << mon_single_pos_block[2*i+1] << std::endl;
+   // }
 
-	n_mon -= n_mon_single;
-
-
-	NB = (n_mon-1)/BS + 1;
-	max_var_block = new unsigned short[NB];
-	for(int i=0; i<n_mon; i++){
-		int bidx = i/BS;
-		int tidx = i - bidx*BS;
-		unsigned short n_var = orig.mon_pos[orig.mon_pos_start[i+n_mon_single]];
-		if(tidx == 0){
-			max_var_block[bidx] = n_var;
-		}
-		else{
-			if(n_var > max_var_block[bidx]){
-				max_var_block[bidx] = n_var;
-			}
-		}
-	}
-
-	mon_pos_start_block = new int[NB];
-
-	mon_pos_block_size = 2*n_mon_single;
-	for(int i=0; i<NB; i++){
-		mon_pos_start_block[i] = mon_pos_block_size;
-		mon_pos_block_size += BS*(max_var_block[i]+1);
-		//std::cout << "max_var_block[" << i << "] = " << max_var_block[i] \
-				  << " start = " << mon_pos_start_block[i] << std::endl;
-	}
+   n_mon -= n_mon_single;
+   NB = (n_mon-1)/BS + 1;
+   max_var_block = new unsigned short[NB];
+   for(int i=0; i<n_mon; i++)
+   {
+      int bidx = i/BS;
+      int tidx = i - bidx*BS;
+      unsigned short n_var = orig.mon_pos[orig.mon_pos_start[i+n_mon_single]];
+      if(tidx == 0)
+      {
+         max_var_block[bidx] = n_var;
+      }
+      else
+      {
+         if(n_var > max_var_block[bidx])
+         {
+            max_var_block[bidx] = n_var;
+         }
+      }
+   }
+   mon_pos_start_block = new int[NB];
+   mon_pos_block_size = 2*n_mon_single;
+   for(int i=0; i<NB; i++)
+   {
+      mon_pos_start_block[i] = mon_pos_block_size;
+      mon_pos_block_size += BS*(max_var_block[i]+1);
+      // std::cout << "max_var_block[" << i << "] = " << max_var_block[i] \
+      //           << " start = " << mon_pos_start_block[i] << std::endl;
+   }
    if(verbose > 0)
    {
       std::cout << "mon_pos_block_size = " << mon_pos_block_size << std::endl;
    }
    mon_pos_block = new unsigned short[mon_pos_block_size];
-
-	unsigned short* tmp_mon_pos_block = mon_pos_block;
-	for(int i=0; i<n_mon; i++){
-		if(orig.mon_pos[orig.mon_pos_start[i]]==1){
-			*tmp_mon_pos_block++ = 1;
-			*tmp_mon_pos_block++ = orig.mon_pos[orig.mon_pos_start[i]+1];
-		}
-	}
-
-	unsigned short* tmp_mon_pos = orig.mon_pos+orig.mon_pos_start[n_mon_single];
-	for(int i=0; i<NB; i++){
-		unsigned short* tmp_mon_pos_block = mon_pos_block + mon_pos_start_block[i];
-		for(int j=0; j<BS; j++){
-			int mon_idx = i*BS+j;
-			if(mon_idx<n_mon){
-				unsigned short n_var = *tmp_mon_pos++;
-				//std::cout << i << " " << j << " " << n_var << std::endl;
-				tmp_mon_pos_block[j] = n_var;
-				for(int k=0; k<n_var; k++){
-					//std::cout << i << " " << j << " " << k << std::endl;
-					tmp_mon_pos_block[(k+1)*BS+j] = *tmp_mon_pos++;
-				}
-			}
-		}
-	}
+   unsigned short* tmp_mon_pos_block = mon_pos_block;
+   for(int i=0; i<n_mon; i++)
+   {
+      if(orig.mon_pos[orig.mon_pos_start[i]]==1)
+      {
+         *tmp_mon_pos_block++ = 1;
+         *tmp_mon_pos_block++ = orig.mon_pos[orig.mon_pos_start[i]+1];
+      }
+   }
+   unsigned short* tmp_mon_pos = orig.mon_pos+orig.mon_pos_start[n_mon_single];
+   for(int i=0; i<NB; i++)
+   {
+      unsigned short* tmp_mon_pos_block = mon_pos_block 
+         + mon_pos_start_block[i];
+      for(int j=0; j<BS; j++)
+      {
+         int mon_idx = i*BS+j;
+         if(mon_idx<n_mon)
+         {
+            unsigned short n_var = *tmp_mon_pos++;
+            // std::cout << i << " " << j << " " << n_var << std::endl;
+            tmp_mon_pos_block[j] = n_var;
+            for(int k=0; k<n_var; k++)
+            {
+               // std::cout << i << " " << j << " " << k << std::endl;
+               tmp_mon_pos_block[(k+1)*BS+j] = *tmp_mon_pos++;
+            }
+         }
+      }
+   }
 }
 
-void CPUInstHomMonBlock::print(){
-	std::cout << "BS = " << BS << std::endl;
-	std::cout << "NB = " << NB << std::endl;
-	for(int i=0; i<NB; i++){
-		std::cout << "BS " << i << " n_var = " << max_var_block[i] \
-				  << " start = " << mon_pos_start_block[i] << std::endl;
-		unsigned short* tmp_mon_pos_block = mon_pos_block + mon_pos_start_block[i];
-		for(int j=0; j<BS; j++){
-			int mon_idx = i*BS+j;
-			if(mon_idx<n_mon){
-				unsigned short n_var = tmp_mon_pos_block[j];
-				std::cout << mon_idx << " n_var=" << n_var;
-				for(int k=0; k<n_var; k++){
-					std::cout << " " << tmp_mon_pos_block[(k+1)*BS+j];
-				}
-				std::cout << std::endl;
-			}
-		}
-	}
+void CPUInstHomMonBlock::print()
+{
+   std::cout << "BS = " << BS << std::endl;
+   std::cout << "NB = " << NB << std::endl;
+   for(int i=0; i<NB; i++)
+   {
+      std::cout << "BS " << i << " n_var = " << max_var_block[i] \
+                << " start = " << mon_pos_start_block[i] << std::endl;
+      unsigned short* tmp_mon_pos_block = mon_pos_block
+         + mon_pos_start_block[i];
+      for(int j=0; j<BS; j++)
+      {
+         int mon_idx = i*BS+j;
+         if(mon_idx<n_mon)
+         {
+            unsigned short n_var = tmp_mon_pos_block[j];
+            std::cout << mon_idx << " n_var=" << n_var;
+            for(int k=0; k<n_var; k++)
+            {
+               std::cout << " " << tmp_mon_pos_block[(k+1)*BS+j];
+            }
+            std::cout << std::endl;
+         }
+      }
+   }
 }
 
 void CPUInstHomSumBlock::init
@@ -1315,105 +1330,119 @@ void CPUInstHomSumBlock::init
    }
    int** sum_pos_start_matrix = new int*[n_eq];
    int* sum_pos_start_matrix_tmp = sum_pos_start_loc;
-   for(int i=0; i<n_eq; i++){
-		sum_pos_start_matrix[i] = sum_pos_start_matrix_tmp;
-		sum_pos_start_matrix_tmp += dim+1;
-	}
-
-	sum_pos = new int[sum_pos_size];
-	for(int i=0; i<sum_pos_size; i++){
-		sum_pos[i] = 0;
-	}
-
-	for(int i=0; i<n_eq; i++){
-		for(int j=0; j<dim+1; j++){
-			int tmp_n = n_sums[i][j];
-			if(tmp_n > 0){
-				int tmp_start = n_sums_start[tmp_n];
-				//std::cout << i << " " << j << " " << "tmp_start = " << tmp_start << std::endl;
-				sum_pos[tmp_start] = tmp_n;
-				sum_pos_start_matrix[i][j] = tmp_start+1;
-				sum_pos[tmp_start+tmp_n+1] = j*n_eq + i;
-				//sum_pos[tmp_start+tmp_n+1] = i*(dim+1) + j;
-				n_sums_start[tmp_n] += tmp_n+2;
-			}
-		}
-	}
-
-	/*for(int i=0; i<n_eq; i++){
-		for(int j=0; j<dim+1; j++){
-			std::cout << sum_pos_start[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}*/
-
-	tmp_hom_monset = hom_monset;
-	for(int i=0; i<tmp_hom_monset->get_n_mon(); i++){
-		int tmp_eq_idx = tmp_hom_monset->get_eq_idx(i);
-		sum_pos[sum_pos_start_matrix[tmp_eq_idx][dim]] = i;
-		sum_pos_start_matrix[tmp_eq_idx][dim]++;
-	}
-
-	tmp_hom_monset = hom_monset+1;
-	int mon_idx = 0;
-	for(int i=1; i<n_monset; i++){
-		//std::cout << *tmp_hom_monset;
-		for(int j=0; j<tmp_hom_monset->get_n_mon(); j++){
-			int n_var = tmp_hom_monset->get_n();
-			int tmp_pos;
-			int bidx;
-			int tidx;
-			int tmp_start_block;
-			int tmp_mon_idx;
-			if(n_var < 2){
-				tmp_pos = mon_pos_start[mon_idx]+n_constant;
-			}
-			else{
-				tmp_mon_idx = mon_idx - n_mon_single;
-				bidx = tmp_mon_idx/warp_size;
-				tidx = tmp_mon_idx - bidx*warp_size;
-				tmp_start_block = mon_pos_start_block[bidx];
-				//std::cout << "mon_idx = " << mon_idx \
-						  << " tmp_mon_idx = " << tmp_mon_idx \
-						  << " bidx = " << bidx \
-						  << " tidx = " << tidx\
-						  << " mon_pos_start_block[bidx] = "\
-						  << mon_pos_start_block[bidx] << std::endl;
-				tmp_start_block = tmp_start_block + n_constant;
-				tmp_pos = tmp_start_block + tidx;
-			}
-			int tmp_eq_idx = tmp_hom_monset->get_eq_idx(j);
-			// Value
-			sum_pos[sum_pos_start_matrix[tmp_eq_idx][dim]] = tmp_pos;
-			tmp_pos++;
-			sum_pos_start_matrix[tmp_eq_idx][dim]++;
-			n_sums[tmp_eq_idx][dim] += 1;
-			// Derivative
-			for(int k=0; k<n_var; k++){
-				if(n_var < 2){
-					/*std::cout << "   mon pos=" \
-							  << tmp_pos;
-					std::cout << " tmp_eq_idx=" << tmp_eq_idx;
-					std::cout << " get_pos(k)=" << tmp_hom_monset->get_pos(k) << std::endl;*/
-					sum_pos[sum_pos_start_matrix[tmp_eq_idx][tmp_hom_monset->get_pos(k)]] = tmp_pos;
-					tmp_pos++;
-				}
-				else{
-					/*std::cout << "   mon pos=" \
-							  << tmp_start_block+(k+1)*warp_size+tidx \
-							  << " tmp_start_block=" <<tmp_start_block ;
-					std::cout << " tmp_eq_idx=" << tmp_eq_idx;
-					std::cout << " get_pos(k)=" << tmp_hom_monset->get_pos(k) << std::endl;*/
-					sum_pos[sum_pos_start_matrix[tmp_eq_idx][tmp_hom_monset->get_pos(k)]] = \
-							tmp_start_block+(k+1)*warp_size+tidx;
-				}
-				sum_pos_start_matrix[tmp_eq_idx][tmp_hom_monset->get_pos(k)]++;
-			}
+   for(int i=0; i<n_eq; i++)
+   {
+      sum_pos_start_matrix[i] = sum_pos_start_matrix_tmp;
+      sum_pos_start_matrix_tmp += dim+1;
+   }
+   sum_pos = new int[sum_pos_size];
+   for(int i=0; i<sum_pos_size; i++)
+   {
+      sum_pos[i] = 0;
+   }
+   for(int i=0; i<n_eq; i++)
+   {
+      for(int j=0; j<dim+1; j++)
+      {
+         int tmp_n = n_sums[i][j];
+         if(tmp_n > 0)
+         {
+            int tmp_start = n_sums_start[tmp_n];
+            // std::cout << i << " " << j << " " << "tmp_start = "
+            //           << tmp_start << std::endl;
+            sum_pos[tmp_start] = tmp_n;
+            sum_pos_start_matrix[i][j] = tmp_start+1;
+            sum_pos[tmp_start+tmp_n+1] = j*n_eq + i;
+            // sum_pos[tmp_start+tmp_n+1] = i*(dim+1) + j;
+            n_sums_start[tmp_n] += tmp_n+2;
+         }
+      }
+   }
+   /*for(int i=0; i<n_eq; i++)
+     {
+        for(int j=0; j<dim+1; j++)
+        {
+           std::cout << sum_pos_start[i][j] << " ";
+        }
+        std::cout << std::endl;
+     }*/
+   tmp_hom_monset = hom_monset;
+   for(int i=0; i<tmp_hom_monset->get_n_mon(); i++)
+   {
+      int tmp_eq_idx = tmp_hom_monset->get_eq_idx(i);
+      sum_pos[sum_pos_start_matrix[tmp_eq_idx][dim]] = i;
+      sum_pos_start_matrix[tmp_eq_idx][dim]++;
+   }
+   tmp_hom_monset = hom_monset+1;
+   int mon_idx = 0;
+   for(int i=1; i<n_monset; i++)
+   {
+      // std::cout << *tmp_hom_monset;
+      for(int j=0; j<tmp_hom_monset->get_n_mon(); j++)
+      {
+         int n_var = tmp_hom_monset->get_n();
+         int tmp_pos;
+         int bidx;
+         int tidx;
+         int tmp_start_block;
+         int tmp_mon_idx;
+         if(n_var < 2)
+         {
+            tmp_pos = mon_pos_start[mon_idx]+n_constant;
+         }
+         else
+         {
+            tmp_mon_idx = mon_idx - n_mon_single;
+            bidx = tmp_mon_idx/warp_size;
+            tidx = tmp_mon_idx - bidx*warp_size;
+            tmp_start_block = mon_pos_start_block[bidx];
+            // std::cout << "mon_idx = " << mon_idx \
+            //           << " tmp_mon_idx = " << tmp_mon_idx \
+            //           << " bidx = " << bidx \
+            //           << " tidx = " << tidx\
+            //           << " mon_pos_start_block[bidx] = "\
+            //           << mon_pos_start_block[bidx] << std::endl;
+            tmp_start_block = tmp_start_block + n_constant;
+            tmp_pos = tmp_start_block + tidx;
+         }
+         int tmp_eq_idx = tmp_hom_monset->get_eq_idx(j);
+         // Value
+         sum_pos[sum_pos_start_matrix[tmp_eq_idx][dim]] = tmp_pos;
+         tmp_pos++;
+         sum_pos_start_matrix[tmp_eq_idx][dim]++;
+         n_sums[tmp_eq_idx][dim] += 1;
+         // Derivative
+         for(int k=0; k<n_var; k++)
+         {
+            if(n_var < 2)
+            {
+               /*std::cout << "   mon pos=" \
+                            << tmp_pos;
+                 std::cout << " tmp_eq_idx=" << tmp_eq_idx;
+                 std::cout << " get_pos(k)="
+                           << tmp_hom_monset->get_pos(k) << std::endl;*/
+               sum_pos[sum_pos_start_matrix[tmp_eq_idx]
+                      [tmp_hom_monset->get_pos(k)]] = tmp_pos;
+               tmp_pos++;
+            }
+            else
+            {
+               /*std::cout << "   mon pos=" \
+                           << tmp_start_block+(k+1)*warp_size+tidx \
+                           << " tmp_start_block=" <<tmp_start_block ;
+                 std::cout << " tmp_eq_idx=" << tmp_eq_idx;
+                 std::cout << " get_pos(k)="
+                           << tmp_hom_monset->get_pos(k) << std::endl;*/
+               sum_pos[sum_pos_start_matrix[tmp_eq_idx]
+                  [tmp_hom_monset->get_pos(k)]] = \
+                  tmp_start_block+(k+1)*warp_size+tidx;
+            }
+            sum_pos_start_matrix[tmp_eq_idx][tmp_hom_monset->get_pos(k)]++;
+         }
          mon_idx++;
       }
       tmp_hom_monset++;
    }
-
    delete[] n_sums;
    delete[] n_sums_loc;
    delete[] n_sums_count;
@@ -1421,7 +1450,6 @@ void CPUInstHomSumBlock::init
    delete[] sum_pos_start_loc;
    delete[] sum_pos_start_matrix;
 }
-
 
 void CPUInstHomSumBlock::eval ( CT* sum, CT* matrix )
 {
@@ -1446,18 +1474,21 @@ void CPUInstHomSumBlock::eval ( CT* sum, CT* matrix )
 
 void CPUInstHomSumBlock::print()
 {
-	std::cout << "n_sum = " << n_sum << std::endl;
-	std::cout << "sum_pos_size = " << sum_pos_size << std::endl;
-	for(int i=0; i<n_sum; i++){
-		int tmp_start = sum_pos_start[i];
-		int* tmp_pos = sum_pos+tmp_start;
-		int tmp_n = *(tmp_pos++);
-		std::cout << "i = " << i << " n = " << tmp_n << ", ";
-		for(int j=0; j<tmp_n; j++){
-			std::cout << *tmp_pos++ << " ";
-		}
-		std::cout << "   sum_pos_start = " << tmp_start << " output = " << *tmp_pos++ << std::endl;
-	}
+   std::cout << "n_sum = " << n_sum << std::endl;
+   std::cout << "sum_pos_size = " << sum_pos_size << std::endl;
+   for(int i=0; i<n_sum; i++)
+   {
+      int tmp_start = sum_pos_start[i];
+      int* tmp_pos = sum_pos+tmp_start;
+      int tmp_n = *(tmp_pos++);
+      std::cout << "i = " << i << " n = " << tmp_n << ", ";
+      for(int j=0; j<tmp_n; j++)
+      {
+         std::cout << *tmp_pos++ << " ";
+      }
+      std::cout << "   sum_pos_start = " << tmp_start << " output = "
+                << *tmp_pos++ << std::endl;
+   }
 }
 
 void CPUInstHomSum::init
@@ -1655,63 +1686,70 @@ void CPUInstHomSum::init
        sum_pos_start_matrix[i] = sum_pos_start_matrix_tmp;
        sum_pos_start_matrix_tmp += dim+1;
     }
+    sum_pos = new int[sum_pos_size];
+    for(int i=0; i<sum_pos_size; i++)
+    {
+       sum_pos[i] = 0;
+    }
+    for(int i=0; i<n_eq; i++)
+    {
+       for(int j=0; j<dim+1; j++)
+       {
+          int tmp_n = n_sums[i][j];
+          if(tmp_n > 0)
+          {
+             int tmp_start = n_sums_start[tmp_n];
+             // std::cout << i << " " << j << " " 
+             //           << "tmp_start = " << tmp_start << std::endl;
+             sum_pos[tmp_start] = tmp_n;
+             sum_pos_start_matrix[i][j] = tmp_start+1;
+             sum_pos[tmp_start+tmp_n+1] = j*n_eq + i;
+             // sum_pos[tmp_start+tmp_n+1] = i*(dim+1) + j;
+             n_sums_start[tmp_n] += tmp_n+2;
+          }
+       }
+    }
+    /*for(int i=0; i<n_eq; i++)
+      {
+         for(int j=0; j<dim+1; j++)
+         {
+            std::cout << sum_pos_start_matrix[i][j] << " ";
+         }
+         std::cout << std::endl;
+      }*/
 
-	sum_pos = new int[sum_pos_size];
-	for(int i=0; i<sum_pos_size; i++){
-		sum_pos[i] = 0;
-	}
-
-	for(int i=0; i<n_eq; i++){
-		for(int j=0; j<dim+1; j++){
-			int tmp_n = n_sums[i][j];
-			if(tmp_n > 0){
-				int tmp_start = n_sums_start[tmp_n];
-				//std::cout << i << " " << j << " " << "tmp_start = " << tmp_start << std::endl;
-				sum_pos[tmp_start] = tmp_n;
-				sum_pos_start_matrix[i][j] = tmp_start+1;
-				sum_pos[tmp_start+tmp_n+1] = j*n_eq + i;
-				//sum_pos[tmp_start+tmp_n+1] = i*(dim+1) + j;
-				n_sums_start[tmp_n] += tmp_n+2;
-			}
-		}
-	}
-
-	/*for(int i=0; i<n_eq; i++){
-		for(int j=0; j<dim+1; j++){
-			std::cout << sum_pos_start_matrix[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}*/
-
-	tmp_hom_monset = hom_monset;
-	for(int i=0; i<tmp_hom_monset->get_n_mon(); i++){
-		int tmp_eq_idx = tmp_hom_monset->get_eq_idx(i);
-		sum_pos[sum_pos_start_matrix[tmp_eq_idx][dim]] = i;
-		sum_pos_start_matrix[tmp_eq_idx][dim]++;
-	}
-
-	tmp_hom_monset = hom_monset+1;
-	int mon_idx = 0;
-	for(int i=1; i<n_monset; i++){
-		//std::cout << *tmp_hom_monset;
-		for(int j=0; j<tmp_hom_monset->get_n_mon(); j++){
-			int tmp_pos = mon_pos_start[mon_idx++]+n_constant;
-			int tmp_eq_idx = tmp_hom_monset->get_eq_idx(j);
-			// Value
-			sum_pos[sum_pos_start_matrix[tmp_eq_idx][dim]] = tmp_pos;
-			tmp_pos++;
-			sum_pos_start_matrix[tmp_eq_idx][dim]++;
-			n_sums[tmp_eq_idx][dim] += 1;
-			// Derivative
-			for(int k=0; k<tmp_hom_monset->get_n(); k++){
-				sum_pos[sum_pos_start_matrix[tmp_eq_idx][tmp_hom_monset->get_pos(k)]] = tmp_pos;
-				tmp_pos++;
-				sum_pos_start_matrix[tmp_eq_idx][tmp_hom_monset->get_pos(k)]++;
-			}
+    tmp_hom_monset = hom_monset;
+    for(int i=0; i<tmp_hom_monset->get_n_mon(); i++)
+    {
+       int tmp_eq_idx = tmp_hom_monset->get_eq_idx(i);
+       sum_pos[sum_pos_start_matrix[tmp_eq_idx][dim]] = i;
+       sum_pos_start_matrix[tmp_eq_idx][dim]++;
+    }
+    tmp_hom_monset = hom_monset+1;
+    int mon_idx = 0;
+    for(int i=1; i<n_monset; i++)
+    {
+       // std::cout << *tmp_hom_monset;
+       for(int j=0; j<tmp_hom_monset->get_n_mon(); j++)
+       {
+          int tmp_pos = mon_pos_start[mon_idx++]+n_constant;
+          int tmp_eq_idx = tmp_hom_monset->get_eq_idx(j);
+          // Value
+          sum_pos[sum_pos_start_matrix[tmp_eq_idx][dim]] = tmp_pos;
+          tmp_pos++;
+          sum_pos_start_matrix[tmp_eq_idx][dim]++;
+          n_sums[tmp_eq_idx][dim] += 1;
+          // Derivative
+          for(int k=0; k<tmp_hom_monset->get_n(); k++)
+          {
+             sum_pos[sum_pos_start_matrix[tmp_eq_idx]
+                    [tmp_hom_monset->get_pos(k)]] = tmp_pos;
+             tmp_pos++;
+             sum_pos_start_matrix[tmp_eq_idx][tmp_hom_monset->get_pos(k)]++;
+          }
       }
       tmp_hom_monset++;
    }
-
    delete[] n_sums;
    delete[] n_sums_loc;
    delete[] n_sums_count;
@@ -1750,16 +1788,19 @@ void CPUInstHomSum::eval ( CT* sum, CT* matrix )
 
 void CPUInstHomSum::print()
 {
-	std::cout << "n_sum = " << n_sum << std::endl;
-	std::cout << "sum_pos_size = " << sum_pos_size << std::endl;
-	for(int i=0; i<n_sum; i++){
-		int tmp_start = sum_pos_start[i];
-		int* tmp_pos = sum_pos+tmp_start;
-		int tmp_n = *(tmp_pos++);
-		std::cout << "sum_idx = " << i << " n = " << tmp_n << ", ";
-		for(int j=0; j<tmp_n; j++){
-			//std::cout << *tmp_pos++ << " ";
-		}
-		std::cout << "   sum_pos_start = " << tmp_start << " output = " << sum_pos[tmp_start+tmp_n+1] << std::endl;
-	}
+   std::cout << "n_sum = " << n_sum << std::endl;
+   std::cout << "sum_pos_size = " << sum_pos_size << std::endl;
+   for(int i=0; i<n_sum; i++)
+   {
+      int tmp_start = sum_pos_start[i];
+      int* tmp_pos = sum_pos+tmp_start;
+      int tmp_n = *(tmp_pos++);
+      std::cout << "sum_idx = " << i << " n = " << tmp_n << ", ";
+      for(int j=0; j<tmp_n; j++)
+      {
+         // std::cout << *tmp_pos++ << " ";
+      }
+      std::cout << "   sum_pos_start = " << tmp_start 
+                << " output = " << sum_pos[tmp_start+tmp_n+1] << std::endl;
+   }
 }
