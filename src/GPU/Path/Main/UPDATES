@@ -1,3 +1,6 @@
+Sun 4 Sep 2016 : fixes in ada_test_dd.cpp and ada_test_qd.cpp for
+  the g++ Apple LLVM version 7.3.0.
+
 Mon 14 Dec 2015 : name changes in solcon changed ada_test.cpp.
 
 Tue 22 Sep 2015 : name changes in syscon caused change in ada_test.cpp.

@@ -123,8 +123,11 @@ void ada_read_sols ( PolySys& start_sys, PolySolSet& sols )
    for(int sol_idx=1; sol_idx<len+1; sol_idx++)
    {
       int mm,k,pos;
-      T1 dd_sol[2*dim];
+      // T1 dd_sol[2*dim];
+      T1* dd_sol;
       T1 t_real,t_imag,err,rco,res;
+
+      dd_sol = (T1*)calloc(2*dim, sizeof(T1));
 
       solcon_retrieve_next_dobldobl_solution(dim,&k,&mm,sol);
       //solcon_retrieve_solution(dim,sol_idx,&mm,sol);
