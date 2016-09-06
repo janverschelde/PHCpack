@@ -124,6 +124,7 @@ int write_inner_products ( int n, int r, int k )
    int fail,i,j,kk;
    int nl[r];
    double normal[n],point[n],prod,minprod;
+   char ch;
 
    fail = celcon_get_inner_normal(n,k,normal);
    if (fail==1)
@@ -132,6 +133,8 @@ int write_inner_products ( int n, int r, int k )
    {
       printf("inner normal for cell %d :\n", k);
       for(i=0;i<n;i++) printf("%.15le\n", normal[i]);
+      printf("Hit enter to continue.");
+      scanf("%c",&ch);
       printf("\ncomputing the inner products with all points ...\n");
       fail = celcon_length_of_supports(&r,nl);
       for(i=0;i<r;i++)
@@ -158,6 +161,7 @@ int query_cell ( int n, int r, int *cellnb )
 {
    int k,fail,*b,i,j,mv,nl[r],kk;
    double *c,normal[n],pt[n];
+   char ch;
 
    printf("Give a cell number : "); scanf("%d", &k);
 
@@ -172,6 +176,9 @@ int query_cell ( int n, int r, int *cellnb )
       fail = celcon_number_of_points_in_cell(k,r,nl);
       printf("number of points in supports :");
       for(i=0;i<r;i++) printf(" %d",nl[i]); printf("\n");
+      scanf("%c",&ch); /* get previous new line symbol */
+      printf("Hit enter to continue.");
+      scanf("%c",&ch); /* catch new line symbol */
       printf("points in the supports :\n");
       for(i=0;i<r;i++)
       {
@@ -184,6 +191,8 @@ int query_cell ( int n, int r, int *cellnb )
       }
       fail = celcon_mixed_volume(k,&mv);
       printf("mixed volume : %d\n",mv);
+      printf("Hit enter to continue.");
+      scanf("%c",&ch); /* catch new line symbol */
       {
          int cl[1+r+2*n];
          double inner_normal[n];
@@ -202,6 +211,8 @@ int query_cell ( int n, int r, int *cellnb )
             printf(" | ");
          }
          printf("\n");
+         printf("Hit enter to continue.");
+         scanf("%c",&ch); /* catch new line symbol */
       }
    }
    return fail;
