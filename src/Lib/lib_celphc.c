@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "phcpack.h"
-#include "solcon.h"
 #include "syscon.h"
 #include "celcon.h"
 
@@ -32,12 +31,14 @@ int write_inner_products ( int n, int r, int k );
  *    with the inner normal to the k-th mixed cell.
  *    The ambient dimension is n and r is the number of different supports. */
 
-int query_cell ( int n, int r, int *cellnb );
+int query_cell ( int n, int r, int *cellnb, int tosolve );
 /*
  * DESCRIPTION :
- *   prompts the user for a cell number and lists the cell,
+ *   Prompts the user for a cell number and lists the cell,
  *   where r is the number of different supports;
  *   returns 0 if no failure occurred, otherwise 1 is returned.
+ *   If tosolve = 1, then the start system corresponding to the cell is
+ *   solve, otherwise (if tosolve /= 1), there is no solving.
  *   The number of the cell that was queried is in cellnb on return. */
 
 int show_mixture ( int dim, int *r );
@@ -157,13 +158,19 @@ int write_inner_products ( int n, int r, int k )
    return fail;
 }
 
-int query_cell ( int n, int r, int *cellnb )
+int query_cell ( int n, int r, int *cellnb, int tosolve )
 {
-   int k,fail,*b,i,j,mv,nl[r],kk;
+   int k,fail,*b,i,j,mv,nl[r],kk,mvcell;
    double *c,normal[n],pt[n];
    char ch;
 
    printf("Give a cell number : "); scanf("%d", &k);
+
+   if(tosolve == 1)
+   {
+      fail = celcon_create_random_coefficient_system();
+      fail = celcon_create_polyhedral_homotopy();
+   }
 
    fail = celcon_get_inner_normal(n,k,normal);
    if (fail==1)
@@ -193,6 +200,13 @@ int query_cell ( int n, int r, int *cellnb )
       printf("mixed volume : %d\n",mv);
       printf("Hit enter to continue.");
       scanf("%c",&ch); /* catch new line symbol */
+      if(tosolve == 1)
+      {
+         fail = celcon_solve_start_system(k,&mvcell);
+         printf("The number of solutions : %d\n", mvcell);
+         printf("Hit enter to continue.");
+         scanf("%c",&ch); /* catch new line symbol */
+      }
       {
          int cl[1+r+2*n];
          double inner_normal[n];
@@ -258,6 +272,6 @@ void read_and_retrieve ( void )
    fail = show_mixture(dim,&r);
 
    fail = write_lifted_supports(dim);
-   fail = query_cell(dim,r,&cell);
+   fail = query_cell(dim,r,&cell,1);
    fail = write_inner_products(dim,r,cell);
 }
