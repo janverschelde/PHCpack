@@ -1,3 +1,6 @@
+Wed 7 Sep 2016 : to celcon, added functions to copy the start solutions from
+  the cell container to the solutions container.
+
 Tue 6 Sep 2016 : added solving of start system to lib_celphc.c.
 
 Mon 5 Sep 2016 : modified lib_celphc.c with prompts to hit enter to continue.

@@ -366,21 +366,39 @@ int celcon_track_quaddobl_solution_path ( int k, int i, int otp );
  * REQUIRED :
  *   The start system corresponding to the k-th mixed cell is solved. */
 
+int celcon_copy_start_standard_solution_to_container ( int k, int i );
+/*
+ * DESCRIPTION :
+ *   Copies the i-th start solution corresponding to the k-th mixed cell
+ *   to the container for solutions in standard double precision. */
+
+int celcon_copy_start_dobldobl_solution_to_container ( int k, int i );
+/*
+ * DESCRIPTION :
+ *   Copies the i-th start solution corresponding to the k-th mixed cell
+ *   to the container for solutions in double double precision. */
+
+int celcon_copy_start_quaddobl_solution_to_container ( int k, int i );
+/*
+ * DESCRIPTION :
+ *   Copies the i-th start solution corresponding to the k-th mixed cell
+ *   to the container for solutions in quad double precision. */
+
 int celcon_copy_target_solution_to_container ( int k, int i );
 /*
- * DECRIPTION :
+ * DESCRIPTION :
  *   Copies the i-th target solution corresponding to the k-th mixed cell
  *   to the container for solutions in standard double precision. */
 
 int celcon_copy_target_dobldobl_solution_to_container ( int k, int i );
 /*
- * DECRIPTION :
+ * DESCRIPTION :
  *   Copies the i-th target solution corresponding to the k-th mixed cell
  *   to the container for solutions in double double precision. */
 
 int celcon_copy_target_quaddobl_solution_to_container ( int k, int i );
 /*
- * DECRIPTION :
+ * DESCRIPTION :
  *   Copies the i-th target solution corresponding to the k-th mixed cell
  *   to the container for solutions in quad double precision. */
 

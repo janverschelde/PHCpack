@@ -339,6 +339,30 @@ int celcon_track_quaddobl_solution_path ( int k, int i, int otp )
    return fail;
 }
 
+int celcon_copy_start_standard_solution_to_container ( int k, int i )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(597,&k,&i,c);
+   return fail;
+}
+
+int celcon_copy_start_dobldobl_solution_to_container ( int k, int i )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(598,&k,&i,c);
+   return fail;
+}
+
+int celcon_copy_start_quaddobl_solution_to_container ( int k, int i )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(599,&k,&i,c);
+   return fail;
+}
+
 int celcon_copy_target_solution_to_container ( int k, int i )
 {
    int fail;
