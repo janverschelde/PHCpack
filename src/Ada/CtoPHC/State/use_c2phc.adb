@@ -2499,6 +2499,10 @@ function use_c2phc ( job : integer32;
       when 580..589 => return use_giftwrap(job-579,a,b,c);
      -- scaling systems and solutions :
       when 590..596 => return use_scaling(job-589,a,b,c);
+     -- copy start solutions from cell container to solutions container
+      when 597 => return use_celcon(48,a,b,c); -- standard start solution
+      when 598 => return use_celcon(49,a,b,c); -- dobldobl start solution
+      when 599 => return use_celcon(50,a,b,c); -- quaddobl start solution
      -- size limits of string representations of polynomials
       when 600..607 => return use_syscon(job-520,a,b,c);
      -- run the sweep homotopy :

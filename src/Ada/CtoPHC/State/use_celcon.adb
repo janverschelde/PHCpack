@@ -632,6 +632,48 @@ function use_celcon ( job : integer32;
     return 0;
   end Job44;
 
+  function Job48 return integer32 is -- copy start solution to st container
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    k : constant natural32 := natural32(va(va'first));
+    i : constant natural32 := natural32(vb(vb'first));
+    ls : Standard_Complex_Solutions.Link_to_Solution;
+
+  begin
+    ls := Cells_Container.Retrieve_Standard_Start_Solution(k,i);
+    Standard_Solutions_Container.Append(ls.all);
+    return 0;
+  end Job48;
+
+  function Job49 return integer32 is -- copy start solution to dd container
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    k : constant natural32 := natural32(va(va'first));
+    i : constant natural32 := natural32(vb(vb'first));
+    ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    ls := Cells_Container.Retrieve_DoblDobl_Start_Solution(k,i);
+    DoblDobl_Solutions_Container.Append(ls.all);
+    return 0;
+  end Job49;
+
+  function Job50 return integer32 is -- copy start solution to qd container
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    k : constant natural32 := natural32(va(va'first));
+    i : constant natural32 := natural32(vb(vb'first));
+    ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    ls := Cells_Container.Retrieve_QuadDobl_Start_Solution(k,i);
+    QuadDobl_Solutions_Container.Append(ls.all);
+    return 0;
+  end Job50;
+
   function Job25 return integer32 is -- permute system in st container 
 
     mixsub : constant Mixed_Subdivision := Cells_Container.Retrieve;
@@ -870,6 +912,7 @@ function use_celcon ( job : integer32;
       when 45 => return Job45; -- permute quaddobl target system
       when 46 => return Job46; -- mixed volume computation
       when 47 => return Job47; -- initialize number of distinct supports
+      when 48 => return Job48; -- copy start solution to st container
       when others => put_line("invalid operation"); return 1;
     end case;
   exception

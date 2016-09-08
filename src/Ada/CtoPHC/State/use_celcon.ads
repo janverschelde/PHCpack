@@ -144,6 +144,15 @@ function use_celcon ( job : integer32;
 --                   double complex polynomial and Laurent systems based on
 --                   the induced permutation of the supports.
 --
+-- MOVING START SOLUTIONS TO CONTAINER :
+--
+--   job      = 48 : copy i-th start solution of the k-th cell to the
+--                   standard solutions container, on entry: a = k and b = i;
+--            = 49 : copy i-th start solution of the k-th cell to the
+--                   dobldobl solutions container, on entry: a = k and b = i;
+--            = 50 : copy i-th start solution of the k-th cell to the
+--                   quaddobl solutions container, on entry: a = k and b = i.
+--
 -- MIXED VOLUME CALCULATOR :
 --
 --   job      = 46 : returns in a the mixed volume of the points stored

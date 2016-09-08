@@ -1,3 +1,6 @@
+Wed 7 Sep 2016 : added jobs to move start solutions from the cells container
+  to the solutions container, in use_celcon and use_c2phc.
+
 Fri 1 Jul 2016 : added size jobs to use_syspool and use_c2phc.
 
 Thu 30 Jun 2016 : added call to quaddobl Run_Newton in use_series.adb.

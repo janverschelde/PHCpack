@@ -977,6 +977,15 @@ function use_c2phc ( job : integer32;
 --                 double complex polynomial and Laurent systems based on
 --                 the induced permutation of the supports.
 --
+-- MOVING START SOLUTIONS TO CONTAINER :
+--
+--   job   = 597 : copy i-th start solution of the k-th cell to the
+--                 standard solutions container, on entry: a = k and b = i;
+--         = 598 : copy i-th start solution of the k-th cell to the
+--                 dobldobl solutions container, on entry: a = k and b = i;
+--         = 599 : copy i-th start solution of the k-th cell to the
+--                 quaddobl solutions container, on entry: a = k and b = i.
+--
 --   job   = 109 : stores a random polynomial system in the container
 --                 for systems with standard complex coefficients,
 --                 the parameters on input should be as follows:
