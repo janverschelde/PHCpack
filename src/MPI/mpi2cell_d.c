@@ -244,15 +244,15 @@ void distribute_cells ( int myid, int np, int nspt, int dim, int *mysolnb )
               MPI_Recv(labels,labSize,MPI_INT,0,SEND_SUPP,com,&status) ;
               MPI_Recv(normal,dim,MPI_DOUBLE,0,SEND_NORMAL,com,&status) ;
               fail = celcon_append_mixed_cell(dim,nspt,labSize,labels,normal);
-              fail = celcon_create_polyhedral_homotopy();
-              fail = celcon_solve_start_system(sn,&R);
+              fail = celcon_standard_polyhedral_homotopy();
+              fail = celcon_solve_standard_start_system(sn,&R);
            }
            else
               st++;
             
-           fail = celcon_track_solution_path(sn,m[1],0);
+           fail = celcon_track_standard_solution_path(sn,m[1],0);
            fail = solcon_clear_standard_solutions();
-           fail = celcon_copy_target_solution_to_container(sn,st);
+           fail = celcon_copy_target_standard_solution_to_container(sn,st);
            fail = solcon_retrieve_standard_solution(n,1,&mult,sol);
            MPI_Send(&mult,1,MPI_INT,0,SEND_MUL,com);
            MPI_Send(sol,2*n+5,MPI_DOUBLE,0,SEND_SOL,com);
@@ -276,17 +276,17 @@ void distribute_cells ( int myid, int np, int nspt, int dim, int *mysolnb )
               MPI_Recv(normal,dim,MPI_DOUBLE,0,SEND_NORMAL,com,&status) ;
               if(v>0) printf("worker %d receives label\n",myid);
               fail = celcon_append_mixed_cell(dim,nspt,labSize,labels,normal);
-              fail = celcon_create_polyhedral_homotopy();
-              fail = celcon_solve_start_system(sn,&R);
+              fail = celcon_standard_polyhedral_homotopy();
+              fail = celcon_solve_standard_start_system(sn,&R);
            }
            if(m[0] != nbcell)
            {
               R=m[1];
               for(j=1;j<=m[1];j++)
               {
-                 fail = celcon_track_solution_path(sn,j,0);
+                 fail = celcon_track_standard_solution_path(sn,j,0);
                  fail = solcon_clear_standard_solutions();  
-                 fail = celcon_copy_target_solution_to_container(sn,j);
+                 fail = celcon_copy_target_standard_solution_to_container(sn,j);
                  fail = solcon_retrieve_standard_solution(n,1,&mult,sol);
                  MPI_Send(&mult,1,MPI_INT,0,SEND_MUL,MPI_COMM_WORLD);
                  MPI_Send(sol,2*n+5,MPI_DOUBLE,0,SEND_SOL,MPI_COMM_WORLD);
@@ -295,9 +295,9 @@ void distribute_cells ( int myid, int np, int nspt, int dim, int *mysolnb )
            else
 	   {
               R=0; st++;
-              fail = celcon_track_solution_path(sn,m[1],0);
+              fail = celcon_track_standard_solution_path(sn,m[1],0);
               fail = solcon_clear_standard_solutions();
-              fail = celcon_copy_target_solution_to_container(sn,st);
+              fail = celcon_copy_target_standard_solution_to_container(sn,st);
               fail = solcon_retrieve_standard_solution(n,1,&mult,sol);
               MPI_Send(&mult,1,MPI_INT,0,SEND_MUL,MPI_COMM_WORLD);
               MPI_Send(sol,2*n+5,MPI_DOUBLE,0,SEND_SOL,MPI_COMM_WORLD);

@@ -1,3 +1,6 @@
+Fri 9 Sep 2016 : updates in mpi2cell_d.c and mpi2cell_s.c because of
+  renamings of functions in celcon.
+
 Thu 8 Sep 2016 : because of renaming of functions in celcon,
   changes in parallel_cells.c, mpi2cell_d.c and mpi2cell_s.c.
 
