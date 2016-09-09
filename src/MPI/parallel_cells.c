@@ -74,15 +74,16 @@ void system_broadcast ( int myid, int n )
 
    if(myid == 0)
    {
-      fail = celcon_create_random_coefficient_system(); 
-   /* if(v>1) fail = celcon_write_random_coefficient_system(); */
-      fail = celcon_copy_into_systems_container();
+      fail = celcon_standard_random_coefficient_system(); 
+   /* if(v>1) fail = celcon_write_standard_random_coefficient_system(); */
+      fail = celcon_copy_into_standard_systems_container();
    }
    dimension_broadcast(myid,&n);
    monomials_broadcast(myid,n);
    if(myid != 0)
    {
-      fail = celcon_copy_from_systems_container();
-   /* if(v>1) if(myid==1) fail = celcon_write_random_coefficient_system(); */
+      fail = celcon_copy_from_standard_systems_container();
+   /* if(v>1) if(myid==1)
+         fail = celcon_write_standard_random_coefficient_system(); */
    }
 }

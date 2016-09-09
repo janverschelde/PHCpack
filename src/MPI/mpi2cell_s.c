@@ -234,7 +234,7 @@ void distribute_cells ( int myid, int np, int nspt, int dim, int *nbpaths )
       }
       if(v>0) printf("****************************************************\n");
       printf("writing random coefficient system and its solutions to file\n");
-      fail = celcon_write_random_coefficient_system();
+      fail = celcon_write_standard_random_coefficient_system();
       fail = solcon_write_solution_dimensions_to_defined_output_file(nbsols,n);
       cnt = 0;
       for(k=1; k<=nbsols; k++)

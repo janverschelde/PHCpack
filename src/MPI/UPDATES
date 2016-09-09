@@ -1,3 +1,6 @@
+Thu 8 Sep 2016 : because of renaming of functions in celcon,
+  changes in parallel_cells.c, mpi2cell_d.c and mpi2cell_s.c.
+
 Thu 23 Jun 2016 : instead of store_gamma in parallel_monodromy.c,
   must use store_standard_gamma.
 
