@@ -168,7 +168,7 @@ int query_cell ( int n, int r, int *cellnb, int tosolve )
 
    if(tosolve == 1)
    {
-      fail = celcon_create_random_coefficient_system();
+      fail = celcon_standard_random_coefficient_system();
       fail = celcon_create_polyhedral_homotopy();
    }
 

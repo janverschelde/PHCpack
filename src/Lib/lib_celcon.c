@@ -380,9 +380,9 @@ void read_cells_and_create_start_system ( void )
    fail = celcon_dimension_of_points(&dim);
    printf("dimension of the lifted points : %d\n",dim);
    fail = show_mixture(dim,&r);
-   fail = celcon_create_random_coefficient_system();
+   fail = celcon_standard_random_coefficient_system();
    printf("The random coefficient start system :\n");
-   fail = celcon_write_random_coefficient_system();
+   fail = celcon_write_standard_random_coefficient_system();
    fail = celcon_create_polyhedral_homotopy();
 
    fail = celcon_number_of_cells(&len);
@@ -409,7 +409,7 @@ void solve_standard_start_system ( int len )
 
    printf("creating a random coefficient system ...\n");
 
-   fail = celcon_create_random_coefficient_system();
+   fail = celcon_standard_random_coefficient_system();
    fail = celcon_create_polyhedral_homotopy();
 
    printf("solving the binomial start systems ...\n");
@@ -448,7 +448,7 @@ void solve_standard_start_system ( int len )
          fail = celcon_copy_target_solution_to_container(k,i);
    }
    printf("writing random coefficient system and its solutions to file ...\n");
-   fail = celcon_write_random_coefficient_system();
+   fail = celcon_write_standard_random_coefficient_system();
    fail = solcon_write_standard_solutions();
 }
 

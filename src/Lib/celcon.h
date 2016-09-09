@@ -171,7 +171,7 @@ int celcon_retrieve_mixed_cell
  *   normal    coordinates of the inner normal to the cell,
  *             of dimension n. */
 
-int celcon_create_random_coefficient_system ( void );
+int celcon_standard_random_coefficient_system ( void );
 /*
  * DESCRIPTION :
  *   Creates a random coefficient system using the type of mixture
@@ -192,7 +192,7 @@ int celcon_quaddobl_random_coefficient_system ( void );
  *   and the supports in the cells container.
  *   The coefficients are complex numbers in quad double precision. */
 
-int celcon_read_random_coefficient_system ( void );
+int celcon_read_standard_random_coefficient_system ( void );
 /*
  * DESCRIPTION :
  *   Prompts the user for a random coefficient system 
@@ -213,22 +213,25 @@ int celcon_read_quaddobl_random_coefficient_system ( void );
  *   with coefficients as complex numbers in quad double precision
  *   and stores it into the cells container. */
 
-int celcon_write_random_coefficient_system ( void );
+int celcon_write_standard_random_coefficient_system ( void );
 /*
  * DESCRIPTION :
- *   Writes the random coefficient system to standard output. */
+ *   Writes the random coefficient system, with coefficients in
+ *   standard double precision, to standard output. */
 
 int celcon_write_dobldobl_random_coefficient_system ( void );
 /*
  * DESCRIPTION :
- *   Writes the random coefficient system to standard output. */
+ *   Writes the random coefficient system, with coefficients in
+ *   double double precision, to standard output. */
 
 int celcon_write_quaddobl_random_coefficient_system ( void );
 /*
  * DESCRIPTION :
- *   Writes the random coefficient system to standard output. */
+ *   Writes the random coefficient system, with coefficients in
+ *   quad double precision, to standard output. */
 
-int celcon_copy_into_systems_container ( void );
+int celcon_copy_into_standard_systems_container ( void );
 /*
  * DESCRIPTION :
  *   Copies the random coefficient system from the cells container
@@ -246,7 +249,7 @@ int celcon_copy_into_quaddobl_systems_container ( void );
  *   Copies the random coefficient system from the cells container
  *   into the systems container for quad double precision. */
 
-int celcon_copy_from_systems_container ( void );
+int celcon_copy_from_standard_systems_container ( void );
 /*
  * DESCRIPTION :
  *    Copies the system from the systems container as a random coefficient

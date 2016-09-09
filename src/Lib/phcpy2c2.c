@@ -3402,7 +3402,7 @@ static PyObject *py2c_celcon_standard_random_coefficient_system
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = celcon_create_random_coefficient_system();
+   fail = celcon_standard_random_coefficient_system();
 
    return Py_BuildValue("i",fail);
 }
@@ -3438,7 +3438,7 @@ static PyObject *py2c_celcon_copy_into_standard_systems_container
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = celcon_copy_into_systems_container();
+   fail = celcon_copy_into_standard_systems_container();
 
    return Py_BuildValue("i",fail);
 }

@@ -1,3 +1,6 @@
+Thu 8 Sep 2016 : made naming of function calls in celcon more uniform,
+  which caused changes in lib_celcon, lib_celphc, phcpy2c2.c and phcpy2c3.c.
+
 Wed 7 Sep 2016 : to celcon, added functions to copy the start solutions from
   the cell container to the solutions container.
 

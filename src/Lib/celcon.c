@@ -141,7 +141,7 @@ int celcon_retrieve_mixed_cell
    return fail;
 }
 
-int celcon_create_random_coefficient_system ( void )
+int celcon_standard_random_coefficient_system ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -165,7 +165,7 @@ int celcon_quaddobl_random_coefficient_system ( void )
    return fail;
 }
 
-int celcon_read_random_coefficient_system ( void )
+int celcon_read_standard_random_coefficient_system ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -189,7 +189,7 @@ int celcon_read_quaddobl_random_coefficient_system ( void )
    return fail;
 }
 
-int celcon_write_random_coefficient_system ( void )
+int celcon_write_standard_random_coefficient_system ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -213,7 +213,7 @@ int celcon_write_quaddobl_random_coefficient_system ( void )
    return fail;
 }
 
-int celcon_copy_into_systems_container ( void )
+int celcon_copy_into_standard_systems_container ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -237,7 +237,7 @@ int celcon_copy_into_quaddobl_systems_container ( void )
    return fail;
 }
 
-int celcon_copy_from_systems_container ( void )
+int celcon_copy_from_standard_systems_container ( void )
 {
    int *a,*b,fail;
    double *c;
