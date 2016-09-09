@@ -1,3 +1,6 @@
+Fri 9 Sep 2016 : completed uniform consistent renaming in celcon,
+  with the proper changes in lib_celcon, lib_celphc, and phcpy2c?.c.
+
 Thu 8 Sep 2016 : made naming of function calls in celcon more uniform,
   which caused changes in lib_celcon, lib_celphc, phcpy2c2.c and phcpy2c3.c.
 

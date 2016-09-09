@@ -3474,7 +3474,7 @@ static PyObject *py2c_celcon_standard_polyhedral_homotopy
   
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = celcon_create_polyhedral_homotopy();
+   fail = celcon_standard_polyhedral_homotopy();
 
    return Py_BuildValue("i",fail);
 }
@@ -3510,7 +3510,7 @@ static PyObject *py2c_celcon_solve_standard_start_system
 
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = celcon_solve_start_system(k,&nb);
+   fail = celcon_solve_standard_start_system(k,&nb);
 
    return Py_BuildValue("i",nb);
 }
@@ -3546,7 +3546,7 @@ static PyObject *py2c_celcon_track_standard_solution_path
 
    initialize();
    if(!PyArg_ParseTuple(args,"iii",&k,&i,&otp)) return NULL;
-   fail = celcon_track_solution_path(k,i,otp);
+   fail = celcon_track_standard_solution_path(k,i,otp);
 
    return Py_BuildValue("i",fail);
 }
@@ -3582,7 +3582,7 @@ static PyObject *py2c_celcon_copy_target_standard_solution_to_container
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&k,&i)) return NULL;
-   fail = celcon_copy_target_solution_to_container(k,i);
+   fail = celcon_copy_target_standard_solution_to_container(k,i);
 
    return Py_BuildValue("i",fail);
 }
@@ -3618,7 +3618,7 @@ static PyObject *py2c_celcon_permute_standard_system
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = celcon_permute_system();
+   fail = celcon_permute_standard_system();
 
    return Py_BuildValue("i",fail);
 }

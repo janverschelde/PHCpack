@@ -261,7 +261,7 @@ int celcon_copy_from_quaddobl_systems_container ( void )
    return fail;
 }
 
-int celcon_create_polyhedral_homotopy ( void )
+int celcon_standard_polyhedral_homotopy ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -285,7 +285,7 @@ int celcon_quaddobl_polyhedral_homotopy ( void )
    return fail;
 }
 
-int celcon_solve_start_system ( int k, int *mv )
+int celcon_solve_standard_start_system ( int k, int *mv )
 {
    int fail;
    double *c;
@@ -309,7 +309,7 @@ int celcon_solve_quaddobl_start_system ( int k, int *mv )
    return fail;
 }
 
-int celcon_track_solution_path ( int k, int i, int otp )
+int celcon_track_standard_solution_path ( int k, int i, int otp )
 {
    int b[2],fail;
    double *c;
@@ -363,7 +363,7 @@ int celcon_copy_start_quaddobl_solution_to_container ( int k, int i )
    return fail;
 }
 
-int celcon_copy_target_solution_to_container ( int k, int i )
+int celcon_copy_target_standard_solution_to_container ( int k, int i )
 {
    int fail;
    double *c;
@@ -387,7 +387,7 @@ int celcon_copy_target_quaddobl_solution_to_container ( int k, int i )
    return fail;
 }
 
-int celcon_permute_system ( void )
+int celcon_permute_standard_system ( void )
 {
    int *a,*b,fail;
    double *c;

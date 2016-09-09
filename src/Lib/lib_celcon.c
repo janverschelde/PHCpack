@@ -383,14 +383,14 @@ void read_cells_and_create_start_system ( void )
    fail = celcon_standard_random_coefficient_system();
    printf("The random coefficient start system :\n");
    fail = celcon_write_standard_random_coefficient_system();
-   fail = celcon_create_polyhedral_homotopy();
+   fail = celcon_standard_polyhedral_homotopy();
 
    fail = celcon_number_of_cells(&len);
    while (ans == 'y')
    {
       printf("Give a number to a mixed cell (<= %d) : ", len);
       scanf("%d",&k);
-      fail = celcon_solve_start_system(k,&nbsols);
+      fail = celcon_solve_standard_start_system(k,&nbsols);
       printf(" -> found %d start solutions from cell %d\n",nbsols,k);
       fail = celcon_mixed_volume(k,&mv);
       if (nbsols == mv)
@@ -410,13 +410,13 @@ void solve_standard_start_system ( int len )
    printf("creating a random coefficient system ...\n");
 
    fail = celcon_standard_random_coefficient_system();
-   fail = celcon_create_polyhedral_homotopy();
+   fail = celcon_standard_polyhedral_homotopy();
 
    printf("solving the binomial start systems ...\n");
    tnb = 0; tmv = 0;
    for(k=1; k<=len; k++)
    {
-      fail = celcon_solve_start_system(k,&nb);
+      fail = celcon_solve_standard_start_system(k,&nb);
       printf(" -> found %d start solutions from cell %d\n",nb,k);
       fail = celcon_mixed_volume(k,&mv);
       if (nb == mv)
@@ -437,7 +437,7 @@ void solve_standard_start_system ( int len )
       for(i=1; i<=mv; i++)
       {
          printf("Tracking path %d corresponding to cell %d ...\n",i,k);
-         fail = celcon_track_solution_path(k,i,0);
+         fail = celcon_track_standard_solution_path(k,i,0);
       }
    }
    printf("copying the target solutions to the solution container ...\n");
@@ -445,7 +445,7 @@ void solve_standard_start_system ( int len )
    {
       fail = celcon_mixed_volume(k,&mv);
       for(i=1; i<=mv; i++)
-         fail = celcon_copy_target_solution_to_container(k,i);
+         fail = celcon_copy_target_standard_solution_to_container(k,i);
    }
    printf("writing random coefficient system and its solutions to file ...\n");
    fail = celcon_write_standard_random_coefficient_system();

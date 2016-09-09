@@ -267,7 +267,7 @@ int celcon_copy_from_quaddobl_systems_container ( void );
  *    Copies the system from the systems container as a random coefficient
  *    system (in quad double precision) into the cells container. */
 
-int celcon_create_polyhedral_homotopy ( void );
+int celcon_standard_polyhedral_homotopy ( void );
 /*
  * DESCRIPTION :
  *   Based on the lifting and the random coefficient system,
@@ -303,7 +303,7 @@ int celcon_quaddobl_polyhedral_homotopy ( void );
  * REQUIRED :
  *   The lifted supports and the random coefficient system are defined. */
 
-int celcon_solve_start_system ( int k, int *mv );
+int celcon_solve_standard_start_system ( int k, int *mv );
 /*
  * DESCRIPTION :
  *   Solves the start system corresponding to the k-th mixed cell,
@@ -336,7 +336,7 @@ int celcon_solve_quaddobl_start_system ( int k, int *mv );
  * REQUIRED :
  *   The creation of the polyhedral homotopy terminated successfully. */
 
-int celcon_track_solution_path ( int k, int i, int otp );
+int celcon_track_standard_solution_path ( int k, int i, int otp );
 /*
  * DESCRIPTION :
  *   Tracks a solution path starting at the i-th solution of the k-th cell,
@@ -387,7 +387,7 @@ int celcon_copy_start_quaddobl_solution_to_container ( int k, int i );
  *   Copies the i-th start solution corresponding to the k-th mixed cell
  *   to the container for solutions in quad double precision. */
 
-int celcon_copy_target_solution_to_container ( int k, int i );
+int celcon_copy_target_standard_solution_to_container ( int k, int i );
 /*
  * DESCRIPTION :
  *   Copies the i-th target solution corresponding to the k-th mixed cell
@@ -405,7 +405,7 @@ int celcon_copy_target_quaddobl_solution_to_container ( int k, int i );
  *   Copies the i-th target solution corresponding to the k-th mixed cell
  *   to the container for solutions in quad double precision. */
 
-int celcon_permute_system ( void );
+int celcon_permute_standard_system ( void );
 /*
  * DESCRIPTION :
  *   Permutes the systems in the container for polynomial and Laurent systems

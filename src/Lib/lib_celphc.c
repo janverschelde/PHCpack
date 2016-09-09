@@ -169,7 +169,7 @@ int query_cell ( int n, int r, int *cellnb, int tosolve )
    if(tosolve == 1)
    {
       fail = celcon_standard_random_coefficient_system();
-      fail = celcon_create_polyhedral_homotopy();
+      fail = celcon_standard_polyhedral_homotopy();
    }
 
    fail = celcon_get_inner_normal(n,k,normal);
@@ -202,7 +202,7 @@ int query_cell ( int n, int r, int *cellnb, int tosolve )
       scanf("%c",&ch); /* catch new line symbol */
       if(tosolve == 1)
       {
-         fail = celcon_solve_start_system(k,&mvcell);
+         fail = celcon_solve_standard_start_system(k,&mvcell);
          printf("The number of solutions : %d\n", mvcell);
          printf("Hit enter to continue.");
          scanf("%c",&ch); /* catch new line symbol */
