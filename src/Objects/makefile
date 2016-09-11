@@ -902,10 +902,13 @@ ts_mva:
 
 # Test programs for the Puiseux library :
 
-test_puiseux: ts_degcurve
+test_puiseux: ts_degcurve ts_puiseux
 
 ts_degcurve:
 	make -f $(MAKEFILE) ts_degcurve
+
+ts_puiseux:
+	make -f $(MAKEFILE) ts_puiseux
 
 # Test programs for the Schubert library :
 

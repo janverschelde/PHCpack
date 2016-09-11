@@ -969,6 +969,10 @@ ts_degcurve:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_degcurve.adb \
                  -o $(BIN)/ts_degcurve
 
+ts_puiseux:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_puiseux.adb \
+                 -o $(BIN)/ts_puiseux
+
 # Test programs for SAGBI library in numerical Schubert calculus :
 
 ts_subsets:
