@@ -44,6 +44,16 @@ package Drivers_for_Static_Lifting is
   --   mixsub    if compmisu, then nonfine mixed cells are refined;
   --   mv        sum of the volume of all mixed cells.
 
+  procedure Integer_Create_Mixed_Cells
+              ( file : in file_type; n : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                report : in boolean;
+                lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision );
+
+  -- DESCRIPTION :
+  --   The pruning algorithm will be applied to compute the mixed cells.
+
   procedure Floating_Volume_Computation
                ( n : in integer32; mix : in Standard_Integer_Vectors.Vector;
                  mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;

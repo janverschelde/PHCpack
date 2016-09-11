@@ -1,3 +1,6 @@
+Sat 10 Sep 2016 : moved a procedure from the body to the specification in
+  drivers_for_static_lifting.
+
 Tue 10 May 2016 : fixed stable_polyhedral_continuation.adb to track paths
   defined by semi-mixed stable cells.  Also fixed for dd/qd arithmetic.
   

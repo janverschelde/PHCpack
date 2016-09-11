@@ -169,9 +169,9 @@ package body Drivers_for_Static_Lifting is
   end Write_Cardinalities;
 
   procedure Integer_Create_Mixed_Cells
-             ( file : in file_type; n : in integer32; mix : in Vector;
+             ( file : in file_type; n : in integer32;
+               mix : in Standard_Integer_Vectors.Vector;
                report : in boolean;
-              -- mixpts : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision ) is
 
