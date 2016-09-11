@@ -74,11 +74,6 @@ package body Drivers_for_Static_Lifting is
                 mix : in out Standard_Integer_Vectors.Link_to_Vector;
                 permsys : in out Poly_Sys ) is
 
-  -- DESCRIPTION :
-  --   Computes the type of mixture and permutes if necessary,
-  --   the equations in the polynomial system.
-  --   The type of mixture is written to the output file.
-
     perm : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
@@ -105,11 +100,6 @@ package body Drivers_for_Static_Lifting is
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 mix : in out Standard_Integer_Vectors.Link_to_Vector;
                 permsys : in out Laur_Sys ) is
-
-  -- DESCRIPTION :
-  --   Computes the type of mixture and permutes if necessary,
-  --   the equations in the Laurent polynomial system.
-  --   The type of mixture is written to the output file.
 
     perm : Standard_Integer_Vectors.Link_to_Vector;
 
@@ -167,6 +157,25 @@ package body Drivers_for_Static_Lifting is
       put(file," : "); put(file,card(i),1); new_line(file);
     end loop;
   end Write_Cardinalities;
+
+  procedure Integer_Create_Mixed_Cells
+             ( n : in integer32;
+               mix : in Standard_Integer_Vectors.Vector;
+               lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+               mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision ) is
+
+    use Integer_Faces_of_Polytope;
+    afa : Array_of_Faces(mix'range);
+    nbsucc,nbfail : Standard_Floating_Vectors.Vector(mix'range)
+                  := (mix'range => 0.0);
+    timer : timing_widget;
+
+  begin
+    for i in afa'range loop
+      afa(i) := Create_Lower(mix(i),n+1,lifted(i));
+    end loop;
+    Create_CS(n,mix,afa,lifted,nbsucc,nbfail,mixsub);
+  end Integer_Create_Mixed_Cells;
 
   procedure Integer_Create_Mixed_Cells
              ( file : in file_type; n : in integer32;
@@ -282,6 +291,21 @@ package body Drivers_for_Static_Lifting is
     new_line(file);
     print_times(file,timer,"Pruning for Mixed Cells.");
   end Floating_Create_Mixed_Cells;
+
+  procedure Integer_Volume_Computation
+              ( n : in integer32; mix : in Standard_Integer_Vectors.Vector;
+                compmisu : in boolean;
+                lifpts : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision;
+                mv : out natural32 ) is
+  begin
+    if not compmisu then
+      Mixed_Volume(n,mix,mixsub,mv);
+    else
+      mixsub := Integer_Mixed_Subdivisions.Create(lifpts,mixsub);
+      Mixed_Volume(n,mix,mixsub,mv);
+    end if;
+  end Integer_Volume_Computation;
 
   procedure Integer_Volume_Computation
               ( file : in file_type;

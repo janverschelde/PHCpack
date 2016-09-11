@@ -1,3 +1,6 @@
+Sun 11 Sep 2016 : added silent versions to drivers_for_static_lifting,
+  of the drivers to compute and refine the mixed cell configuration.
+
 Sat 10 Sep 2016 : moved a procedure from the body to the specification in
   drivers_for_static_lifting.
 

@@ -18,6 +18,47 @@ package Drivers_for_Static_Lifting is
   -- DESCRIPTION :
   --   Displays information on static lifting on screen.
 
+  procedure Compute_Mixture 
+              ( file : in file_type; n : in integer32; compmix : in boolean;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                mix : in out Standard_Integer_Vectors.Link_to_Vector;
+                permsys : in out Poly_Sys );
+  procedure Compute_Mixture 
+              ( file : in file_type; n : in integer32; compmix : in boolean;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                mix : in out Standard_Integer_Vectors.Link_to_Vector;
+                permsys : in out Laur_Sys );
+
+  -- DESCRIPTION :
+  --   Computes the type of mixture and permutes if necessary,
+  --   the equations in the (Laurent) polynomial system p.
+  --   The type of mixture is written to the output file.
+
+  procedure Integer_Volume_Computation
+               ( n : in integer32; mix : in Standard_Integer_Vectors.Vector;
+                 compmisu : in boolean;
+                 lifpts : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                 mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision;
+                 mv : out natural32 );
+
+  -- DESCRIPTION :
+  --   Computes the volumes of the mixed cells in mixsub.
+  --   If some cells are not fine yet, then they will be refined.
+  --   This silent version does not write any output.
+
+  -- ON ENTRY :
+  --   n         ambient dimension, length of the point vectors;
+  --   mix       type of mixture;
+  --   compmisu  true if the mixed-cell configuration was computed,
+  --             false if the user provided the mixed-cell configuration;
+  --   lifpts    lifted points;
+  --   mixsub    a regular mixed-cell configuration,
+  --             induced by integer-valued lifting.
+
+  -- ON RETURN :
+  --   mixsub    if compmisu, then nonfine mixed cells are refined;
+  --   mv        sum of the volume of all mixed cells.
+
   procedure Integer_Volume_Computation
                ( file : in file_type;
                  n : in integer32; mix : in Standard_Integer_Vectors.Vector;
@@ -45,6 +86,16 @@ package Drivers_for_Static_Lifting is
   --   mv        sum of the volume of all mixed cells.
 
   procedure Integer_Create_Mixed_Cells
+              ( n : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision );
+
+  -- DESCRIPTION :
+  --   The pruning algorithm will be applied to compute the mixed cells.
+  --   No output is written.
+
+  procedure Integer_Create_Mixed_Cells
               ( file : in file_type; n : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
                 report : in boolean;
@@ -53,6 +104,7 @@ package Drivers_for_Static_Lifting is
 
   -- DESCRIPTION :
   --   The pruning algorithm will be applied to compute the mixed cells.
+  --   Output is written to file.
 
   procedure Floating_Volume_Computation
                ( n : in integer32; mix : in Standard_Integer_Vectors.Vector;
