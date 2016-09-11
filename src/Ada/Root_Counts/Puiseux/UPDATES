@@ -1,3 +1,6 @@
+Sun 11 Sep 2016 : extended ts_puiseux.adb with silent versions of the
+  tropisms computations.
+
 Sat 10 Sep 2016 : new ts_puiseux.adb to develop the Newton-Puiseux algorithm.
 
 Sun 30 Dec 2012 : ts_degcurve.adb no longer compiled, fixed.
