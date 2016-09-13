@@ -1,3 +1,6 @@
+Mon 12 Sep 2016 : added computation of solutions of the initial forms
+  to ts_puiseux.
+
 Sun 11 Sep 2016 : extended ts_puiseux.adb with silent versions of the
   tropisms computations.
 

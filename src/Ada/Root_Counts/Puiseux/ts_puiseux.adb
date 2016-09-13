@@ -4,15 +4,21 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Arrays_of_Integer_Vector_Lists;    use Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io; use Arrays_of_Integer_Vector_Lists_io;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
+with Standard_Complex_Laur_SysFun;      use Standard_Complex_Laur_SysFun;
+with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Supports_of_Polynomial_Systems;    use Supports_of_Polynomial_Systems;
 with Integer_Mixed_Subdivisions;        use Integer_Mixed_Subdivisions;
 with Drivers_for_Static_Lifting;        use Drivers_for_Static_Lifting;
+with Black_Box_Solvers;                 use Black_Box_Solvers;
 
 procedure ts_puiseux is
 
@@ -71,6 +77,45 @@ procedure ts_puiseux is
     end if;
   end Tropisms;
 
+  procedure Initials
+              ( p : in Laur_Sys; mic : in Mixed_Cell ) is
+
+    q : Laur_Sys(p'range) := Select_Terms(p,mic.pts.all);
+    idx : constant integer32 := p'last+1;
+    one : constant Complex_Number := Create(1.0);
+    s : Laur_Sys(q'range) := Eval(q,one,idx);
+    sols : Solution_List;
+    rc : natural32;
+
+  begin
+    put_line("The initial form system with t :"); put(q);
+    put_line("The initial form system with t = 1 :"); put(s);
+    Solve(s,false,rc,sols);
+    put("Computed "); put(Length_Of(sols),1); put_line(" solutions.");
+    put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end Initials;
+
+  procedure Initials
+              ( p : in Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                mv : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Solves all initial form systems defined by the cells in mcc.
+
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+
+  begin
+    for k in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+      put("Tropism "); put(k,1); put(" is ");
+      put(mic.nor); new_line;
+      Initials(p,mic);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Initials;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -97,6 +142,7 @@ procedure ts_puiseux is
       Tropisms(lp.all,cells,mixvol);
       put("The number of tropisms : "); put(Length_Of(cells),1); new_line;
       put("The number of series : "); put(mixvol,1); new_line;
+      Initials(lp.all,cells,mixvol);
     end if;
   end Main;
 
