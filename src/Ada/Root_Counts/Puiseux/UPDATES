@@ -1,3 +1,8 @@
+Wed 14 Sep 2016 : small documentation changes in ts_puiseux.
+
+Tue 13 Sep 2016 : refactored some code in ts_puiseux to prepare for
+  more general code.
+
 Mon 12 Sep 2016 : added computation of solutions of the initial forms
   to ts_puiseux.
 

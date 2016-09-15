@@ -25,17 +25,21 @@ procedure ts_puiseux is
 -- DESCRIPTION :
 --   Development of the Newton-Puiseux algorithm.
 
-  procedure Tropisms
-              ( p : in Laur_Sys;
+  procedure Mixed_Cell_Tropisms
+              ( sup : in out Array_of_Lists;
                 mcc : out Mixed_Subdivision;
                 mv : out natural32 ) is
 
   -- DESCRIPTION :
   --   Given a system of n Laurent polynomials in n+1 variables,
   --   computes the tropisms, where the last variable is the parameter.
+  --   The tropisms are computed via a regular mixed cell configuration,
+  --   induced by the lifting defined by the last variable.
+  --   As the lifting may differ, even if several supports would be the same,
+  --   the type of mixed is assumed to be fully mixed.
 
   -- ON ENTRY :
-  --   p        n Laurent polynomials in n+1 variables.
+  --   sup      a list of n supports in n+1 variables.
 
   -- ON RETURN :
   --   mcc      a mixed cell configuration induced by the lifting
@@ -45,8 +49,7 @@ procedure ts_puiseux is
     ans : character;
     report : boolean;
     file : file_type;
-    sup : Array_of_Lists(p'range) := Create(p);
-    dim : constant integer32 := p'last;
+    dim : constant integer32 := sup'last;
     mix : Standard_Integer_Vectors.Vector(1..dim);
 
   begin
@@ -58,9 +61,9 @@ procedure ts_puiseux is
       new_line;
       put_line("Reading the name of the output file ...");
       Read_Name_and_Create_File(file);
-      put(file,dim,1); put(file," ");
-      put(file,dim+1,1); new_line(file);
-      put(file,p);
+     -- put(file,dim,1); put(file," ");
+     -- put(file,dim+1,1); new_line(file);
+     -- put(file,p);
       new_line(file);
       put_line(file,"THE SUPPORTS : ");
       put(file,sup);
@@ -75,16 +78,21 @@ procedure ts_puiseux is
       Integer_Create_Mixed_Cells(dim,mix,sup,mcc);
       Integer_Volume_Computation(dim,mix,true,sup,mcc,mv);
     end if;
-  end Tropisms;
+  end Mixed_Cell_Tropisms;
 
   procedure Initials
-              ( p : in Laur_Sys; mic : in Mixed_Cell ) is
+              ( p : in Laur_Sys; mic : in Mixed_Cell;
+                sols : out Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Calls the blackbox solver on the subsystem of p
+  --   supported by the points that span the mixed cell mic.
+  --   The solutions are in the list sols on return.
 
     q : Laur_Sys(p'range) := Select_Terms(p,mic.pts.all);
     idx : constant integer32 := p'last+1;
     one : constant Complex_Number := Create(1.0);
     s : Laur_Sys(q'range) := Eval(q,one,idx);
-    sols : Solution_List;
     rc : natural32;
 
   begin
@@ -108,10 +116,14 @@ procedure ts_puiseux is
 
   begin
     for k in 1..Length_Of(mcc) loop
-      mic := Head_Of(tmp);
-      put("Tropism "); put(k,1); put(" is ");
-      put(mic.nor); new_line;
-      Initials(p,mic);
+      declare
+        mic : Mixed_Cell := Head_Of(tmp);
+        sols : Solution_List;
+      begin
+        put("Tropism "); put(k,1); put(" is ");
+        put(mic.nor); new_line;
+        Initials(p,mic,sols);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
   end Initials;
@@ -139,7 +151,11 @@ procedure ts_puiseux is
     if nv /= nq+1 then
       put(nv,1); put(" /= "); put(nq,1); put(" + 1");
     else
-      Tropisms(lp.all,cells,mixvol);
+      declare
+        sup : Array_of_Lists(lp'range) := Create(lp.all);
+      begin
+        Mixed_Cell_Tropisms(sup,cells,mixvol);
+      end;
       put("The number of tropisms : "); put(Length_Of(cells),1); new_line;
       put("The number of series : "); put(mixvol,1); new_line;
       Initials(lp.all,cells,mixvol);
