@@ -80,7 +80,7 @@ procedure ts_puiseux is
     end if;
   end Mixed_Cell_Tropisms;
 
-  procedure Initials
+  procedure Initial_Coefficients
               ( p : in Laur_Sys; mic : in Mixed_Cell;
                 sols : out Solution_List ) is
 
@@ -101,7 +101,7 @@ procedure ts_puiseux is
     Solve(s,false,rc,sols);
     put("Computed "); put(Length_Of(sols),1); put_line(" solutions.");
     put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-  end Initials;
+  end Initial_Coefficients;
 
   procedure Initials
               ( p : in Laur_Sys;
@@ -122,7 +122,7 @@ procedure ts_puiseux is
       begin
         put("Tropism "); put(k,1); put(" is ");
         put(mic.nor); new_line;
-        Initials(p,mic,sols);
+        Initial_Coefficients(p,mic,sols);
       end;
       tmp := Tail_Of(tmp);
     end loop;
