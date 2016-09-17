@@ -1,3 +1,6 @@
+Fri 16 Sep 2016 : added a test to mainroco.adb to check if the system
+  is square, because root counting is not defined for nonsquare systems.
+
 Wed 31 Aug 2016 : updated greeting_banners for version 2.4.25.
 
 Sat 13 Aug 2016 : updated greeting_banners for version 2.4.24.
