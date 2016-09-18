@@ -26,7 +26,8 @@ procedure ts_puiseux is
 --   Development of the Newton-Puiseux algorithm.
 
   procedure Mixed_Cell_Tropisms
-              ( sup : in out Array_of_Lists;
+              ( report : in boolean;
+                sup : in out Array_of_Lists;
                 mcc : out Mixed_Subdivision;
                 mv : out natural32 ) is
 
@@ -39,6 +40,7 @@ procedure ts_puiseux is
   --   the type of mixed is assumed to be fully mixed.
 
   -- ON ENTRY :
+  --   report   if intermediate output has to be written to screen;
   --   sup      a list of n supports in n+1 variables.
 
   -- ON RETURN :
@@ -46,38 +48,56 @@ procedure ts_puiseux is
   --            defined by the last exponent in each monomial of p;
   --   mv       the mixed volume of the cells in mcc.
 
-    ans : character;
-    report : boolean;
-    file : file_type;
     dim : constant integer32 := sup'last;
     mix : Standard_Integer_Vectors.Vector(1..dim);
 
   begin
-    new_line;
-    put("Do you want intermediate output to file ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    report := (ans = 'y');
-    if report then
-      new_line;
-      put_line("Reading the name of the output file ...");
-      Read_Name_and_Create_File(file);
-     -- put(file,dim,1); put(file," ");
-     -- put(file,dim+1,1); new_line(file);
-     -- put(file,p);
-      new_line(file);
-      put_line(file,"THE SUPPORTS : ");
-      put(file,sup);
-    else
-      put_line("The supports : "); put(sup);
+    if report
+     then put_line("The supports : "); put(sup);
     end if;
     mix := (mix'range => 1);
     if report then
-      Integer_Create_Mixed_Cells(file,dim,mix,false,sup,mcc);
-      Integer_Volume_Computation(file,dim,mix,true,sup,mcc,mv);
+      Integer_Create_Mixed_Cells(standard_output,dim,mix,false,sup,mcc);
+      Integer_Volume_Computation(standard_output,dim,mix,true,sup,mcc,mv);
     else
       Integer_Create_Mixed_Cells(dim,mix,sup,mcc);
       Integer_Volume_Computation(dim,mix,true,sup,mcc,mv);
     end if;
+  end Mixed_Cell_Tropisms;
+
+  procedure Mixed_Cell_Tropisms
+              ( file : in file_type;
+                sup : in out Array_of_Lists;
+                mcc : out Mixed_Subdivision;
+                mv : out natural32 ) is
+
+  -- DESCRIPTION :
+  --   Given a system of n Laurent polynomials in n+1 variables,
+  --   computes the tropisms, where the last variable is the parameter.
+  --   The tropisms are computed via a regular mixed cell configuration,
+  --   induced by the lifting defined by the last variable.
+  --   As the lifting may differ, even if several supports would be the same,
+  --   the type of mixed is assumed to be fully mixed.
+
+  -- ON ENTRY :
+  --   file     for intermediate output;
+  --   sup      a list of n supports in n+1 variables.
+
+  -- ON RETURN :
+  --   mcc      a mixed cell configuration induced by the lifting
+  --            defined by the last exponent in each monomial of p;
+  --   mv       the mixed volume of the cells in mcc.
+
+    dim : constant integer32 := sup'last;
+    mix : Standard_Integer_Vectors.Vector(1..dim);
+
+  begin
+    new_line(file);
+    put_line(file,"THE SUPPORTS : ");
+    put(file,sup);
+    mix := (mix'range => 1);
+    Integer_Create_Mixed_Cells(file,dim,mix,false,sup,mcc);
+    Integer_Volume_Computation(file,dim,mix,true,sup,mcc,mv);
   end Mixed_Cell_Tropisms;
 
   procedure Initial_Coefficients
@@ -128,6 +148,42 @@ procedure ts_puiseux is
     end loop;
   end Initials;
 
+  procedure Pretropisms
+              ( p : Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user if output to a file is wanted
+  --   and then launches the pretropisms computation.
+
+    sup : Array_of_Lists(p'range) := Create(p);
+    ans : character;
+    report : boolean;
+    file : file_type;
+    cells : Mixed_Subdivision;
+    mixvol : natural32;
+
+  begin
+    new_line;
+    put("Do you want intermediate output to file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    report := (ans = 'y');
+    if report then
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(file);
+      Mixed_Cell_Tropisms(file,sup,cells,mixvol);
+    else
+      new_line;
+      put("Do you want intermediate output to screen ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      report := (ans = 'y');
+      Mixed_Cell_Tropisms(report,sup,cells,mixvol);
+    end if;
+    put("The number of tropisms : "); put(Length_Of(cells),1); new_line;
+    put("The number of series : "); put(mixvol,1); new_line;
+    Initials(p,cells,mixvol);
+  end Pretropisms;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -136,8 +192,6 @@ procedure ts_puiseux is
 
     lp : Link_to_Laur_Sys;
     nq,nv : integer32;
-    cells : Mixed_Subdivision;
-    mixvol : natural32;
 
   begin
     new_line;
@@ -148,17 +202,9 @@ procedure ts_puiseux is
     new_line;
     put("Number of polynomials : "); put(nq,1); new_line;
     put("Number of variables : "); put(nv,1); new_line;
-    if nv /= nq+1 then
-      put(nv,1); put(" /= "); put(nq,1); put(" + 1");
-    else
-      declare
-        sup : Array_of_Lists(lp'range) := Create(lp.all);
-      begin
-        Mixed_Cell_Tropisms(sup,cells,mixvol);
-      end;
-      put("The number of tropisms : "); put(Length_Of(cells),1); new_line;
-      put("The number of series : "); put(mixvol,1); new_line;
-      Initials(lp.all,cells,mixvol);
+    if nv /= nq+1
+     then put(nv,1); put(" /= "); put(nq,1); put(" + 1");
+     else Pretropisms(lp.all);
     end if;
   end Main;
 
