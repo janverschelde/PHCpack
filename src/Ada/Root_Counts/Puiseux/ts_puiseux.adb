@@ -1,24 +1,27 @@
-with text_io;                           use text_io;
-with Communications_with_User;          use Communications_with_User;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
-with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
-with Arrays_of_Integer_Vector_Lists;    use Arrays_of_Integer_Vector_Lists;
-with Arrays_of_Integer_Vector_Lists_io; use Arrays_of_Integer_Vector_Lists_io;
-with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
-with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
-with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
-with Standard_Complex_Laur_SysFun;      use Standard_Complex_Laur_SysFun;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
-with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
-with Supports_of_Polynomial_Systems;    use Supports_of_Polynomial_Systems;
-with Integer_Mixed_Subdivisions;        use Integer_Mixed_Subdivisions;
-with Drivers_for_Static_Lifting;        use Drivers_for_Static_Lifting;
-with Black_Box_Solvers;                 use Black_Box_Solvers;
+with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
+with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
+with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
+with Standard_Complex_Laurentials;       use Standard_Complex_Laurentials;
+with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
+with Standard_Complex_Laur_SysFun;       use Standard_Complex_Laur_SysFun;
+with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
+with Standard_Integer32_Transformations; use Standard_Integer32_Transformations;
+with Standard_Integer_Transformations_io;
+with Transforming_Laurent_Systems;       use Transforming_Laurent_Systems;
+with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
+with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
+with Black_Box_Solvers;                  use Black_Box_Solvers;
 
 procedure ts_puiseux is
 
@@ -123,6 +126,41 @@ procedure ts_puiseux is
     put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
   end Initial_Coefficients;
 
+  function Pivot ( v : Standard_Integer_Vectors.Vector ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the first index k in v for which v(k) /= 0.
+
+  begin
+    for k in v'range loop
+      if v(k) /= 0
+       then return k;
+      end if;
+    end loop;
+    return v'last+1;
+  end Pivot;
+
+  procedure Transform_Coordinates
+              ( p : in Laur_Sys;
+                v : in Standard_Integer_Vectors.Vector;
+                q : out Laur_Sys; report : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Applies the unimodular coordinate transformation defined by v
+  --   to the system p, the result is in the system q.
+
+    i : constant integer32 := Pivot(v);
+    t : Transfo := Build_Transfo(v,i);
+
+  begin
+    q := Transform(t,p);
+    if report then
+      put("The transformation defined by "); put(v); put_line(" :");
+      Standard_Integer_Transformations_io.put(t);
+      put_line("The transformed system : "); put_line(q);
+    end if;
+  end Transform_Coordinates;
+
   procedure Initials
               ( p : in Laur_Sys;
                 mcc : in Mixed_Subdivision;
@@ -133,6 +171,7 @@ procedure ts_puiseux is
 
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
+    tvp : Laur_Sys(p'range);
 
   begin
     for k in 1..Length_Of(mcc) loop
@@ -143,6 +182,7 @@ procedure ts_puiseux is
         put("Tropism "); put(k,1); put(" is ");
         put(mic.nor); new_line;
         Initial_Coefficients(p,mic,sols);
+        Transform_Coordinates(p,mic.nor.all,tvp,true);
       end;
       tmp := Tail_Of(tmp);
     end loop;
