@@ -10,6 +10,7 @@ with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Standard_Complex_Laurentials;       use Standard_Complex_Laurentials;
+with Standard_Complex_Laurentials_io;    use Standard_Complex_Laurentials_io;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Laur_SysFun;       use Standard_Complex_Laur_SysFun;
@@ -140,6 +141,46 @@ procedure ts_puiseux is
     return v'last+1;
   end Pivot;
 
+  procedure Shift ( p : in out Poly; verbose : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Multiplies the monomials in p so that all monomials have 
+  --   nonnegative exponents.
+
+    mindeg : constant Degrees := Minimal_Degrees(p);
+    t : Term;
+
+  begin
+    if verbose then
+      put("The minimal degrees : ");
+      put(Standard_Integer_Vectors.Vector(mindeg.all)); new_line;
+      put_line("The polynomial before the shift :");
+      put(p); new_line;
+    end if;
+    t.cf := Create(1.0);
+    t.dg := new Standard_Integer_Vectors.Vector(mindeg'range);
+    for i in mindeg'range loop
+      t.dg(i) := -mindeg(i);
+    end loop;
+    Mul(p,t);
+    if verbose then
+      put_line("The polynomial after the shift :");
+      put(p); new_line;
+    end if;
+  end Shift;
+
+  procedure Shift ( p : in out Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Multiplies the polynomials in p so that all monomials in p
+  --   have nonnegative exponents.
+
+  begin
+    for i in p'range loop
+      Shift(p(i),true);
+    end loop;
+  end Shift;
+
   procedure Transform_Coordinates
               ( p : in Laur_Sys;
                 v : in Standard_Integer_Vectors.Vector;
@@ -154,6 +195,7 @@ procedure ts_puiseux is
 
   begin
     q := Transform(t,p);
+    Shift(q);
     if report then
       put("The transformation defined by "); put(v); put_line(" :");
       Standard_Integer_Transformations_io.put(t);
