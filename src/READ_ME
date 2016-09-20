@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.25 contains
+The public distribution for PHCpack version 2.4.26 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -27,6 +27,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.26 on 2016-09-20 : check in phc -r on square system
 release 2.4.25 on 2016-08-31 : another use case for phcpy and better docs
 release 2.4.24 on 2016-08-13 : improved documentation with phcpy use cases
 release 2.4.23 on 2016-07-31 : improved phc -u with linearization
