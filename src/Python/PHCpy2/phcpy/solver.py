@@ -174,16 +174,16 @@ def quaddobl_solve(pols, silent=False, tasks=0):
     py2c_solve_quaddobl_Laurent_system(silent, tasks)
     return load_quaddobl_solutions()
 
-def solve_checkin(pols):
+def solve_checkin(pols, msg):
     """
     Checks whether the system defined by the list of strings in pols
-    is square.  If so, True is returned.  Otherwise, an error message
-    is printed to help the user.
+    is square.  If so, True is returned.  Otherwise, the error message
+    in the string msg is printed to help the user.
     """
     if is_square(pols):
         return True
     else:
-        print 'The blackbox solver accepts only square systems,'
+        print msg
         dim = number_of_symbols(pols)
         neq = len(pols)
         print 'got %d polynomials in %d variables.' % (neq, dim)
@@ -203,7 +203,8 @@ def solve(pols, silent=False, tasks=0, precision='d', checkin=True):
     If checkin (by default), the input pols is checked for being square.
     """
     if checkin:
-        if not solve_checkin(pols):
+        errmsg = 'The blackbox solver accepts only square systems,'
+        if not solve_checkin(pols, errmsg):
             return None
     if(precision == 'd'):
         return standard_solve(pols, silent, tasks)
@@ -427,15 +428,22 @@ def total_degree(pols):
     store_standard_system(pols)
     return py2c_syscon_total_degree()
 
-def total_degree_start_system(pols):
+def total_degree_start_system(pols, checkin=True):
     """
     Returns the system and solutions of the total degree start system
     for the polynomials represented by the strings in the list pols.
+    If checkin, then the list pols is tested to see if pols defines
+    a square polynomial system.  If the input system is not square,
+    then an error message is printed and None is returned.
     """
     from phcpy.phcpy2c2 import py2c_syscon_number_of_standard_polynomials
     from phcpy.phcpy2c2 import py2c_syscon_string_of_symbols
     from phcpy.phcpy2c2 import py2c_syscon_degree_of_standard_polynomial
     from phcpy.interface import store_standard_system
+    if checkin:
+        errmsg = 'Start systems are defined only for square systems,'
+        if not solve_checkin(pols, errmsg):
+            return None
     store_standard_system(pols)
     dim = py2c_syscon_number_of_standard_polynomials()
     svars = py2c_syscon_string_of_symbols()
@@ -478,7 +486,7 @@ def m_partition_bezout_number(pols, partition):
     store_standard_system(pols)
     return py2c_product_m_partition_Bezout_number(len(partition), partition)
 
-def m_homogeneous_start_system(pols, partition):
+def m_homogeneous_start_system(pols, partition, checkin=True):
     """
     For an m-homogeneous Bezout number of a polynomial system defined by
     a partition of the set of unknowns, one can define a linear-product
@@ -489,11 +497,18 @@ def m_homogeneous_start_system(pols, partition):
     This function returns a linear-product start system with random
     coefficients and its solutions for the given polynomials in pols
     and the partition.
+    If checkin, then the list pols is tested to see if pols defines
+    a square polynomial system.  If the input system is not square,
+    then an error message is printed and None is returned.
     """
     from phcpy.phcpy2c2 import py2c_product_m_homogeneous_start_system
     from phcpy.phcpy2c2 import py2c_product_solve_linear_product_system
     from phcpy.interface import store_standard_system, load_standard_system
     from phcpy.interface import load_standard_solutions
+    if checkin:
+        errmsg = 'Start systems are defined only for square systems,'
+        if not solve_checkin(pols, errmsg):
+            return None
     store_standard_system(pols)
     py2c_product_m_homogeneous_start_system(len(partition), partition)
     result = load_standard_system()
@@ -522,17 +537,24 @@ def linear_product_root_count(pols, silent=False):
         print 'the root count :', root_count
     return root_count
 
-def random_linear_product_system(pols, tosolve=True):
+def random_linear_product_system(pols, tosolve=True, checkin=True):
     """
     Given in pols a list of string representations of polynomials,
     returns a random linear-product system based on a supporting
     set structure and its solutions as well (if tosolve).
+    If checkin, then the list pols is tested to see if pols defines
+    a square polynomial system.  If the input system is not square,
+    then an error message is printed and None is returned.
     """
     from phcpy.phcpy2c2 import py2c_product_supporting_set_structure
     from phcpy.phcpy2c2 import py2c_product_random_linear_product_system
     from phcpy.phcpy2c2 import py2c_product_solve_linear_product_system
     from phcpy.interface import store_standard_system, load_standard_system
     from phcpy.interface import load_standard_solutions
+    if checkin:
+        errmsg = 'Start systems are defined only for square systems,'
+        if not solve_checkin(pols, errmsg):
+            return None
     store_standard_system(pols)
     py2c_product_supporting_set_structure()
     py2c_product_random_linear_product_system()
