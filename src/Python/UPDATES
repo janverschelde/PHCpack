@@ -1,5 +1,6 @@
 Tue 20 Sep 2016 : added checkin parameters to the start system constructors
   in solver.py to test whether the input system is square.
+  Updated the __init__.py, conf.py, and setup.py for version 0.5.5.
 
 Mon 1 Sep 2016 : renamed the phcwulf.py module to server.py in PHCpy2
   and also in PHCpy3.
