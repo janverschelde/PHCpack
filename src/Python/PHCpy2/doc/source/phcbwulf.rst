@@ -8,5 +8,5 @@ to solve many random trinomials.
 functions in the module
 =======================
 
-.. automodule:: phcwulf
+.. automodule:: server
    :members:
