@@ -1,3 +1,5 @@
+Wed 21 Sep 2016 : refactored code in ts_puiseux.
+
 Mon 19 Sep 2016 : shifted transformed systems so no negative exponents
   occur in the transformated systems.
 

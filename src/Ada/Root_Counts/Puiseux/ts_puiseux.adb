@@ -231,18 +231,28 @@ procedure ts_puiseux is
   end Initials;
 
   procedure Pretropisms
-              ( p : Standard_Complex_Laur_Systems.Laur_Sys ) is
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                cells : out Mixed_Subdivision;
+                mixvol : out natural32 ) is
 
   -- DESCRIPTION :
   --   Prompts the user if output to a file is wanted
   --   and then launches the pretropisms computation.
 
+  -- ON ENTRY :
+  --   p        a square Laurent polynomial system,
+  --            the exponents of the last variable are considered
+  --            as the lifting for the regular mixed cell configuration.
+
+  -- ON RETURN :
+  --   cells    the mixed cell configuration defined by the exponents
+  --            of the last variable in p;
+  --   mixvol   the sum of the volumes of the mixed cells in cells.
+
     sup : Array_of_Lists(p'range) := Create(p);
     ans : character;
     report : boolean;
     file : file_type;
-    cells : Mixed_Subdivision;
-    mixvol : natural32;
 
   begin
     new_line;
@@ -263,7 +273,6 @@ procedure ts_puiseux is
     end if;
     put("The number of tropisms : "); put(Length_Of(cells),1); new_line;
     put("The number of series : "); put(mixvol,1); new_line;
-    Initials(p,cells,mixvol);
   end Pretropisms;
 
   procedure Main is
@@ -274,6 +283,8 @@ procedure ts_puiseux is
 
     lp : Link_to_Laur_Sys;
     nq,nv : integer32;
+    mcc : Mixed_Subdivision;
+    mv : natural32;
 
   begin
     new_line;
@@ -284,9 +295,11 @@ procedure ts_puiseux is
     new_line;
     put("Number of polynomials : "); put(nq,1); new_line;
     put("Number of variables : "); put(nv,1); new_line;
-    if nv /= nq+1
-     then put(nv,1); put(" /= "); put(nq,1); put(" + 1");
-     else Pretropisms(lp.all);
+    if nv /= nq+1 then
+      put(nv,1); put(" /= "); put(nq,1); put(" + 1");
+    else
+      Pretropisms(lp.all,mcc,mv);
+      Initials(lp.all,mcc,mv);
     end if;
   end Main;
 
