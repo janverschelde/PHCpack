@@ -4,9 +4,13 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
+with Standard_Complex_Vectors;
+with Standard_Complex_Vector_Norms;      use Standard_Complex_Vector_Norms;
 with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Standard_Complex_Laurentials;       use Standard_Complex_Laurentials;
@@ -106,23 +110,31 @@ procedure ts_puiseux is
 
   procedure Initial_Coefficients
               ( p : in Laur_Sys; mic : in Mixed_Cell;
-                sols : out Solution_List ) is
+                psub : out Laur_Sys; sols : out Solution_List ) is
 
   -- DESCRIPTION :
   --   Calls the blackbox solver on the subsystem of p
   --   supported by the points that span the mixed cell mic.
-  --   The solutions are in the list sols on return.
+  --
+  -- ON ENTRY :
+  --   p        system of n polynomials in n+1 variables;
+  --   mic      a mixed cell with inner normal computed with a lifting
+  --            equal to the exponent of the last variable in p.
+  --
+  -- ON RETURN :
+  --   psub     a square subsystem of p with the last variable removed;
+  --   sols     solutions to psub, as computed by the blackbox solver.
 
     q : Laur_Sys(p'range) := Select_Terms(p,mic.pts.all);
     idx : constant integer32 := p'last+1;
     one : constant Complex_Number := Create(1.0);
-    s : Laur_Sys(q'range) := Eval(q,one,idx);
     rc : natural32;
 
   begin
     put_line("The initial form system with t :"); put(q);
-    put_line("The initial form system with t = 1 :"); put(s);
-    Solve(s,false,rc,sols);
+    psub := Eval(q,one,idx);
+    put_line("The initial form system with t = 1 :"); put(psub);
+    Solve(psub,false,rc,sols);
     put("Computed "); put(Length_Of(sols),1); put_line(" solutions.");
     put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
   end Initial_Coefficients;
@@ -190,7 +202,7 @@ procedure ts_puiseux is
   --   Applies the unimodular coordinate transformation defined by v
   --   to the system p, the result is in the system q.
 
-    i : constant integer32 := Pivot(v);
+    i : constant integer32 := v'last; -- Pivot(v); -- stupid mistake!
     t : Transfo := Build_Transfo(v,i);
 
   begin
@@ -202,6 +214,57 @@ procedure ts_puiseux is
       put_line("The transformed system : "); put_line(q);
     end if;
   end Transform_Coordinates;
+
+  function Initial_Residual
+              ( p : in Laur_Sys;
+                sol : in Standard_Complex_Vectors.Vector )
+              return double_float is
+
+  -- DESCRIPTION :
+  --   Returns the residual of the solution extended with zero,
+  --   evaluated at p.
+
+    res : double_float := 0.0;
+    ext : Standard_Complex_Vectors.Vector(sol'first..sol'last+1);
+    eva : Standard_Complex_Vectors.Vector(p'range);
+
+  begin
+    ext(sol'range) := sol;
+    ext(sol'last+1) := Create(0.0);
+    eva := Eval(p,ext);
+    -- res := Norm(eva);
+    return res;
+  end Initial_Residual;
+
+  function Initial_Residuals
+              ( p : in Laur_Sys;
+                sols : in Solution_List;
+                report : in boolean ) return double_float is
+
+  -- DESCRIPTION :
+  --   Returns the accumulated sum of all residuals of the solutions,
+  --   extended with zero for the last coordinate.
+  --   If report, then the residuals are written to screen for each solution,
+  --   otherwise, this function remains silent.
+
+    res : double_float := 0.0;
+    eva : double_float;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+ 
+  begin
+    for k in 1..Length_Of(tmp) loop
+      ls := Head_Of(tmp);
+      eva := Initial_Residual(p,ls.v);
+      if report then
+        put("At solution "); put(k,1);
+        put(" : "); put(eva); new_line;
+      end if;
+      res := res + eva;
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Initial_Residuals;
 
   procedure Initials
               ( p : in Laur_Sys;
@@ -219,12 +282,16 @@ procedure ts_puiseux is
     for k in 1..Length_Of(mcc) loop
       declare
         mic : Mixed_Cell := Head_Of(tmp);
+        psub : Laur_Sys(p'range);
         sols : Solution_List;
+        res : double_float;
       begin
         put("Tropism "); put(k,1); put(" is ");
         put(mic.nor); new_line;
-        Initial_Coefficients(p,mic,sols);
+        Initial_Coefficients(p,mic,psub,sols);
         Transform_Coordinates(p,mic.nor.all,tvp,true);
+        res := Initial_Residuals(tvp,sols,true);
+        put("The residual :"); put(res,3); new_line;
       end;
       tmp := Tail_Of(tmp);
     end loop;

@@ -1,3 +1,6 @@
+Thu 22 Sep 2016 : added sanity check to evaluate the initial form solution
+  at the transformed polynomial system.
+
 Wed 21 Sep 2016 : refactored code in ts_puiseux.
 
 Mon 19 Sep 2016 : shifted transformed systems so no negative exponents
