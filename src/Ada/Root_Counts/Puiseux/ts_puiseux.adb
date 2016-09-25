@@ -109,7 +109,8 @@ procedure ts_puiseux is
   end Mixed_Cell_Tropisms;
 
   procedure Initial_Coefficients
-              ( p : in Laur_Sys; mic : in Mixed_Cell;
+              ( file : in file_type;
+                p : in Laur_Sys; mic : in Mixed_Cell;
                 psub : out Laur_Sys; sols : out Solution_List ) is
 
   -- DESCRIPTION :
@@ -117,6 +118,7 @@ procedure ts_puiseux is
   --   supported by the points that span the mixed cell mic.
   --
   -- ON ENTRY :
+  --   file     to write output to file;
   --   p        system of n polynomials in n+1 variables;
   --   mic      a mixed cell with inner normal computed with a lifting
   --            equal to the exponent of the last variable in p.
@@ -131,12 +133,52 @@ procedure ts_puiseux is
     rc : natural32;
 
   begin
-    put_line("The initial form system with t :"); put(q);
+    put_line(file,"The initial form system with t :"); put(file,q);
     psub := Eval(q,one,idx);
-    put_line("The initial form system with t = 1 :"); put(psub);
+    put_line(file,"The initial form system with t = 1 :"); put(file,psub);
     Solve(psub,false,rc,sols);
-    put("Computed "); put(Length_Of(sols),1); put_line(" solutions.");
-    put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    put(file,"Computed ");
+    put(file,Length_Of(sols),1); put_line(file," solutions.");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end Initial_Coefficients;
+
+  procedure Initial_Coefficients
+              ( p : in Laur_Sys; mic : in Mixed_Cell;
+                psub : out Laur_Sys; sols : out Solution_List;
+                report : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Calls the blackbox solver on the subsystem of p
+  --   supported by the points that span the mixed cell mic.
+  --
+  -- ON ENTRY :
+  --   p        system of n polynomials in n+1 variables;
+  --   mic      a mixed cell with inner normal computed with a lifting
+  --            equal to the exponent of the last variable in p;
+  --   report   if true, then output is written to screen.
+  --
+  -- ON RETURN :
+  --   psub     a square subsystem of p with the last variable removed;
+  --   sols     solutions to psub, as computed by the blackbox solver.
+
+    q : Laur_Sys(p'range) := Select_Terms(p,mic.pts.all);
+    idx : constant integer32 := p'last+1;
+    one : constant Complex_Number := Create(1.0);
+    rc : natural32;
+
+  begin
+    if report then
+      put_line("The initial form system with t :"); put(q);
+    end if;
+    psub := Eval(q,one,idx);
+    if report then
+      put_line("The initial form system with t = 1 :"); put(psub);
+    end if;
+    Solve(psub,false,rc,sols);
+    if report then
+      put("Computed "); put(Length_Of(sols),1); put_line(" solutions.");
+      put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
   end Initial_Coefficients;
 
   function Pivot ( v : Standard_Integer_Vectors.Vector ) return integer32 is
@@ -181,7 +223,7 @@ procedure ts_puiseux is
     end if;
   end Shift;
 
-  procedure Shift ( p : in out Laur_Sys ) is
+  procedure Shift ( p : in out Laur_Sys; verbose : in boolean ) is
 
   -- DESCRIPTION :
   --   Multiplies the polynomials in p so that all monomials in p
@@ -189,9 +231,32 @@ procedure ts_puiseux is
 
   begin
     for i in p'range loop
-      Shift(p(i),true);
+      Shift(p(i),verbose);
     end loop;
   end Shift;
+
+  procedure Transform_Coordinates
+              ( file : in file_type;
+                p : in Laur_Sys;
+                v : in Standard_Integer_Vectors.Vector;
+                q : out Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Applies the unimodular coordinate transformation defined by v
+  --   to the system p, the result is in the system q.
+  --   Output is written to file.
+
+    i : constant integer32 := v'last; -- Pivot(v); -- stupid mistake!
+    t : Transfo := Build_Transfo(v,i);
+
+  begin
+    q := Transform(t,p);
+    Shift(q);
+    put(file,"The transformation defined by ");
+    put(file,v); put_line(file," :");
+    Standard_Integer_Transformations_io.put(file,t);
+    put_line(file,"The transformed system : "); put_line(file,q);
+  end Transform_Coordinates;
 
   procedure Transform_Coordinates
               ( p : in Laur_Sys;
@@ -237,6 +302,32 @@ procedure ts_puiseux is
   end Initial_Residual;
 
   function Initial_Residuals
+              ( file : in file_type; p : in Laur_Sys;
+                sols : in Solution_List ) return double_float is
+
+  -- DESCRIPTION :
+  --   Returns the accumulated sum of all residuals of the solutions,
+  --   extended with zero for the last coordinate.
+  --   The residuals are written to file for each solution.
+
+    res : double_float := 0.0;
+    eva : double_float;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+ 
+  begin
+    for k in 1..Length_Of(tmp) loop
+      ls := Head_Of(tmp);
+      eva := Initial_Residual(p,ls.v);
+      put(file,"At solution "); put(file,k,1);
+      put(file," : "); put(file,eva); new_line(file);
+      res := res + eva;
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Initial_Residuals;
+
+  function Initial_Residuals
               ( p : in Laur_Sys;
                 sols : in Solution_List;
                 report : in boolean ) return double_float is
@@ -267,12 +358,22 @@ procedure ts_puiseux is
   end Initial_Residuals;
 
   procedure Initials
-              ( p : in Laur_Sys;
+              ( file : in file_type;
+                p : in Laur_Sys;
                 mcc : in Mixed_Subdivision;
                 mv : in natural32 ) is
 
   -- DESCRIPTION :
   --   Solves all initial form systems defined by the cells in mcc.
+
+  -- ON ENTRY :
+  --   file     to write output;
+  --   p        a Laurent system of n equations in n+1 variables,
+  --            where the last variable is the lifting;
+  --   mcc      regular mixed cell configuration defined by the
+  --            lower hull of the supports of p;
+  --   mv       the mixed volume gives a generically sharp upper
+  --            bound on the number of initial coefficients.
 
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
@@ -286,62 +387,104 @@ procedure ts_puiseux is
         sols : Solution_List;
         res : double_float;
       begin
-        put("Tropism "); put(k,1); put(" is ");
-        put(mic.nor); new_line;
-        Initial_Coefficients(p,mic,psub,sols);
-        Transform_Coordinates(p,mic.nor.all,tvp,true);
-        res := Initial_Residuals(tvp,sols,true);
-        put("The residual :"); put(res,3); new_line;
+        put(file,"Tropism "); put(file,k,1); put(file," is ");
+        put(file,mic.nor); new_line(file);
+        Initial_Coefficients(file,p,mic,psub,sols);
+        Transform_Coordinates(file,p,mic.nor.all,tvp);
+        res := Initial_Residuals(file,tvp,sols);
+        put(file,"The residual :"); put(file,res,3); new_line(file);
       end;
       tmp := Tail_Of(tmp);
     end loop;
   end Initials;
 
-  procedure Pretropisms
-              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                cells : out Mixed_Subdivision;
-                mixvol : out natural32 ) is
+  procedure Initials
+              ( p : in Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                mv : in natural32; report : in boolean ) is
 
   -- DESCRIPTION :
-  --   Prompts the user if output to a file is wanted
-  --   and then launches the pretropisms computation.
+  --   Solves all initial form systems defined by the cells in mcc.
 
   -- ON ENTRY :
-  --   p        a square Laurent polynomial system,
-  --            the exponents of the last variable are considered
-  --            as the lifting for the regular mixed cell configuration.
+  --   p        a Laurent system of n equations in n+1 variables,
+  --            where the last variable is the lifting;
+  --   mcc      regular mixed cell configuration defined by the
+  --            lower hull of the supports of p;
+  --   mv       the mixed volume gives a generically sharp upper
+  --            bound on the number of initial coefficients;
+  --   report   if true, then output is written to screen.
 
-  -- ON RETURN :
-  --   cells    the mixed cell configuration defined by the exponents
-  --            of the last variable in p;
-  --   mixvol   the sum of the volumes of the mixed cells in cells.
-
-    sup : Array_of_Lists(p'range) := Create(p);
-    ans : character;
-    report : boolean;
-    file : file_type;
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+    tvp : Laur_Sys(p'range);
 
   begin
-    new_line;
-    put("Do you want intermediate output to file ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    report := (ans = 'y');
+    for k in 1..Length_Of(mcc) loop
+      declare
+        mic : Mixed_Cell := Head_Of(tmp);
+        psub : Laur_Sys(p'range);
+        sols : Solution_List;
+        res : double_float;
+      begin
+        if report then
+          put("Tropism "); put(k,1); put(" is ");
+          put(mic.nor); new_line;
+        end if;
+        Initial_Coefficients(p,mic,psub,sols,report);
+        Transform_Coordinates(p,mic.nor.all,tvp,report);
+        res := Initial_Residuals(tvp,sols,report);
+        if report then
+          put("The residual :"); put(res,3); new_line;
+        end if;
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Initials;
+
+  procedure Test ( file : in file_type; p : in Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the output information
+  --   and test the computation of the pretropisms and initial terms.
+  --   The output is written to file.
+
+    sup : Array_of_Lists(p'range) := Create(p);
+    mcc : Mixed_Subdivision;
+    mv : natural32;
+
+  begin
+    Mixed_Cell_Tropisms(file,sup,mcc,mv);
+    new_line(file);
+    put(file,"The number of pretropisms : ");
+    put(file,Length_Of(mcc),1); new_line(file);
+    put(file,"The number of series : ");
+    put(file,mv,1); new_line(file);
+    Initials(file,p,mcc,mv);
+  end Test;
+
+  procedure Test ( p : in Laur_Sys; report : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the output information
+  --   and test the computation of the pretropisms and initial terms.
+  --   The output is written to screen if report.
+
+    sup : Array_of_Lists(p'range) := Create(p);
+    mcc : Mixed_Subdivision;
+    mv : natural32;
+
+  begin
+    Mixed_Cell_Tropisms(report,sup,mcc,mv);
     if report then
       new_line;
-      put_line("Reading the name of the output file ...");
-      Read_Name_and_Create_File(file);
-      Mixed_Cell_Tropisms(file,sup,cells,mixvol);
-    else
-      new_line;
-      put("Do you want intermediate output to screen ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      report := (ans = 'y');
-      Mixed_Cell_Tropisms(report,sup,cells,mixvol);
+      put("The number of pretropisms : ");
+      put(Length_Of(mcc),1); new_line;
+      put("The number of series : "); put(mv,1); new_line;
     end if;
-    put("The number of tropisms : "); put(Length_Of(cells),1); new_line;
-    put("The number of series : "); put(mixvol,1); new_line;
-  end Pretropisms;
-
+    Initials(p,mcc,mv,report);
+  end Test;
+  
   procedure Main is
 
   -- DESCRIPTION :
@@ -350,8 +493,9 @@ procedure ts_puiseux is
 
     lp : Link_to_Laur_Sys;
     nq,nv : integer32;
-    mcc : Mixed_Subdivision;
-    mv : natural32;
+    ans : character;
+    report : boolean;
+    file : file_type;
 
   begin
     new_line;
@@ -365,8 +509,23 @@ procedure ts_puiseux is
     if nv /= nq+1 then
       put(nv,1); put(" /= "); put(nq,1); put(" + 1");
     else
-      Pretropisms(lp.all,mcc,mv);
-      Initials(lp.all,mcc,mv);
+      new_line;
+      put("Do you want intermediate output to file ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      report := (ans = 'y');
+      if report then
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(file);
+        put(file,natural32(nq),natural32(nv),lp.all);
+        Test(file,lp.all);
+      else
+        new_line;
+        put("Do you want intermediate output to screen ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        report := (ans = 'y');
+        Test(lp.all,report);
+      end if;
     end if;
   end Main;
 

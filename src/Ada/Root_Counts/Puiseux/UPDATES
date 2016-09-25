@@ -1,5 +1,7 @@
+Sat 24 Sep 2016 : better control of the output in ts_puiseux.
+
 Thu 22 Sep 2016 : added sanity check to evaluate the initial form solution
-  at the transformed polynomial system.
+  at the transformed polynomial system, in ts_puiseux.
 
 Wed 21 Sep 2016 : refactored code in ts_puiseux.
 
