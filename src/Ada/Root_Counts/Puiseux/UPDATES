@@ -1,5 +1,5 @@
 Sun 25 Sep 2016 : new package regular_solution_curves_series with code
-  extracted from ts_puiseux.
+  extracted from ts_puiseux.  Fixed bug in shift() call to procedure.
 
 Sat 24 Sep 2016 : better control of the output in ts_puiseux.
 

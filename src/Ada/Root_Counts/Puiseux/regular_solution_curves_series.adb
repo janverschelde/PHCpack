@@ -148,7 +148,7 @@ package body Regular_Solution_Curves_Series is
 
   begin
     q := Transform(t,p);
-    Shift(q);
+    Shift(q,true);
     put(file,"The transformation defined by ");
     put(file,v); put_line(file," :");
     Standard_Integer_Transformations_io.put(file,t);
@@ -165,7 +165,7 @@ package body Regular_Solution_Curves_Series is
 
   begin
     q := Transform(t,p);
-    Shift(q);
+    Shift(q,false);
     if report then
       put("The transformation defined by "); put(v); put_line(" :");
       Standard_Integer_Transformations_io.put(t);
