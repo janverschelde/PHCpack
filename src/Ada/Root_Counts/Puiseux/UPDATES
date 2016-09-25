@@ -1,3 +1,6 @@
+Sun 25 Sep 2016 : new package regular_solution_curves_series with code
+  extracted from ts_puiseux.
+
 Sat 24 Sep 2016 : better control of the output in ts_puiseux.
 
 Thu 22 Sep 2016 : added sanity check to evaluate the initial form solution

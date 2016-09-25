@@ -12,5 +12,6 @@ parallel_edges                    : looks for edges that are parallel
 tropisms_of_curves                : algorithms to compute tropisms
 ts_degcurve                       : interactive test program
 -------------------------------------------------------------------------------
+regular_solution_curves_series    : operations for series of solution curves
 ts_puiseux                        : development of Newton-Puiseux algorithm
 -------------------------------------------------------------------------------
