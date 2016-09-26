@@ -36,7 +36,7 @@ procedure ts_puiseux is
     put(file,Length_Of(mcc),1); new_line(file);
     put(file,"The number of series : ");
     put(file,mv,1); new_line(file);
-    Initials(file,p,mcc,mv);
+    Initials(file,p,mcc);
   end Test;
 
   procedure Test ( p : in Laur_Sys; report : in boolean ) is
@@ -58,7 +58,7 @@ procedure ts_puiseux is
       put(Length_Of(mcc),1); new_line;
       put("The number of series : "); put(mv,1); new_line;
     end if;
-    Initials(p,mcc,mv,report);
+    Initials(p,mcc,report);
   end Test;
   
   procedure Main is

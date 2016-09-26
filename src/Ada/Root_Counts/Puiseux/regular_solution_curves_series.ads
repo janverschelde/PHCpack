@@ -162,11 +162,24 @@ package Regular_Solution_Curves_Series is
   --   If report, then the residuals are written to screen for each solution,
   --   otherwise, this function remains silent.
 
+  procedure Initial
+              ( file : in file_type;
+                p : in Laur_Sys; mic : in Mixed_Cell );
+
+  -- DESCRIPTION :
+  --   Solves the initial form system defined by the mixed cell mic.
+
+  -- ON ENTRY :
+  --   file     to write output;
+  --   p        a Laurent system of n equations in n+1 variables,
+  --            where the last variable is the lifting;
+  --   mic      a mixed cell in the regular mixed cell configuration 
+  --            defined by the lower hull of the supports of p.
+
   procedure Initials
               ( file : in file_type;
                 p : in Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                mv : in natural32 );
+                mcc : in Mixed_Subdivision );
 
   -- DESCRIPTION :
   --   Solves all initial form systems defined by the cells in mcc.
@@ -176,14 +189,25 @@ package Regular_Solution_Curves_Series is
   --   p        a Laurent system of n equations in n+1 variables,
   --            where the last variable is the lifting;
   --   mcc      regular mixed cell configuration defined by the
-  --            lower hull of the supports of p;
-  --   mv       the mixed volume gives a generically sharp upper
-  --            bound on the number of initial coefficients.
+  --            lower hull of the supports of p.
+
+  procedure Initial
+              ( p : in Laur_Sys;
+                mic : in Mixed_Cell; report : in boolean );
+
+  -- DESCRIPTION :
+  --   Solves the initial form system defined by the mixed cell mic.
+
+  -- ON ENTRY :
+  --   p        a Laurent system of n equations in n+1 variables,
+  --            where the last variable is the lifting;
+  --   mic      cell in the regular mixed cell configuration defined
+  --            by the lower hull of the supports of p;
+  --   report   if true, then output is written to screen.
 
   procedure Initials
-              ( p : in Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                mv : in natural32; report : in boolean );
+              ( p : in Laur_Sys; mcc : in Mixed_Subdivision;
+                report : in boolean );
 
   -- DESCRIPTION :
   --   Solves all initial form systems defined by the cells in mcc.
@@ -193,8 +217,6 @@ package Regular_Solution_Curves_Series is
   --            where the last variable is the lifting;
   --   mcc      regular mixed cell configuration defined by the
   --            lower hull of the supports of p;
-  --   mv       the mixed volume gives a generically sharp upper
-  --            bound on the number of initial coefficients;
   --   report   if true, then output is written to screen.
 
 end Regular_Solution_Curves_Series;

@@ -235,63 +235,73 @@ package body Regular_Solution_Curves_Series is
     return res;
   end Initial_Residuals;
 
+  procedure Initial
+              ( file : in file_type;
+                p : in Laur_Sys; mic : in Mixed_Cell ) is
+
+    psub,tvp : Laur_Sys(p'range);
+    sols : Solution_List;
+    res : double_float;
+
+  begin
+    put(file,"-> pretropism ");
+    put(file,mic.nor); new_line(file);
+    Initial_Coefficients(file,p,mic,psub,sols);
+    Transform_Coordinates(file,p,mic.nor.all,tvp);
+    res := Initial_Residuals(file,tvp,sols);
+    put(file,"The residual :"); put(file,res,3); new_line(file);
+  end Initial;
+
+  procedure Initial
+              ( p : in Laur_Sys; mic : in Mixed_Cell;
+                report : in boolean ) is
+
+    psub,tvp : Laur_Sys(p'range);
+    sols : Solution_List;
+    res : double_float;
+
+  begin
+    if report then
+      put("-> pretropism "); put(mic.nor); new_line;
+    end if;
+    Initial_Coefficients(p,mic,psub,sols,report);
+    Transform_Coordinates(p,mic.nor.all,tvp,report);
+    res := Initial_Residuals(tvp,sols,report);
+    if report then
+      put("The residual :"); put(res,3); new_line;
+    end if;
+  end Initial;
+
   procedure Initials
               ( file : in file_type;
-                p : in Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                mv : in natural32 ) is
+                p : in Laur_Sys; mcc : in Mixed_Subdivision ) is
 
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
-    tvp : Laur_Sys(p'range);
 
   begin
     for k in 1..Length_Of(mcc) loop
-      declare
-        mic : Mixed_Cell := Head_Of(tmp);
-        psub : Laur_Sys(p'range);
-        sols : Solution_List;
-        res : double_float;
-      begin
-        put(file,"Tropism "); put(file,k,1); put(file," is ");
-        put(file,mic.nor); new_line(file);
-        Initial_Coefficients(file,p,mic,psub,sols);
-        Transform_Coordinates(file,p,mic.nor.all,tvp);
-        res := Initial_Residuals(file,tvp,sols);
-        put(file,"The residual :"); put(file,res,3); new_line(file);
-      end;
+      mic := Head_Of(tmp);
+      put(file,"Mixed cell "); put(file,k); put_line(file," :");
+      Initial(file,p,mic);
       tmp := Tail_Of(tmp);
     end loop;
   end Initials;
 
   procedure Initials
-              ( p : in Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                mv : in natural32; report : in boolean ) is
+              ( p : in Laur_Sys; mcc : in Mixed_Subdivision;
+                report : in boolean ) is
 
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
-    tvp : Laur_Sys(p'range);
 
   begin
     for k in 1..Length_Of(mcc) loop
-      declare
-        mic : Mixed_Cell := Head_Of(tmp);
-        psub : Laur_Sys(p'range);
-        sols : Solution_List;
-        res : double_float;
-      begin
-        if report then
-          put("Tropism "); put(k,1); put(" is ");
-          put(mic.nor); new_line;
-        end if;
-        Initial_Coefficients(p,mic,psub,sols,report);
-        Transform_Coordinates(p,mic.nor.all,tvp,report);
-        res := Initial_Residuals(tvp,sols,report);
-        if report then
-          put("The residual :"); put(res,3); new_line;
-        end if;
-      end;
+      mic := Head_Of(tmp);
+      if report then
+        put("Mixed cell "); put(k); put_line(" :");
+      end if;
+      Initial(p,mic,report);
       tmp := Tail_Of(tmp);
     end loop;
   end Initials;
