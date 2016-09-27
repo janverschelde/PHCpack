@@ -9,6 +9,7 @@ with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
+with Standard_Series_Poly_Systems;
 
 package Regular_Solution_Curves_Series is
 
@@ -200,6 +201,51 @@ package Regular_Solution_Curves_Series is
   -- ON RETURN :
   --   tsq      transformed and shifted polynomial system;
   --   sols     solutions of tsq for t = 0.
+
+  procedure Series
+              ( file : in file_type;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                xt0 : in Standard_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to p, starting at xt0,
+  --   writing output to file.
+
+  procedure Series
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                xt0 : in Standard_Complex_Vectors.Vector;
+                report : in boolean );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to p, starting at xt0,
+  --   writing output to screen if report is true.
+
+  procedure Series
+              ( file : in file_type;
+                p : in Poly_Sys; sols : in Solution_List;
+                report : in boolean );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to compute series solutions,
+  --   starting at the initial solutions in the list sols.
+
+  -- ON ENTRY :
+  --   file     to write output to;
+  --   p        system with solutions for t = 0;
+  --   sols     solutions of p for t = 0.
+
+  procedure Series
+              ( p : in Poly_Sys; sols : in Solution_List;
+                report : in boolean );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to compute series solutions,
+  --   starting at the initial solutions in the list sols.
+
+  -- ON ENTRY :
+  --   p        system with solutions for t = 0;
+  --   sols     solutions of p for t = 0;
+  --   report   flag to write output to screen.
 
   procedure Initials
               ( file : in file_type;

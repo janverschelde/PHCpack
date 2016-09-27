@@ -1,6 +1,6 @@
 Mon 26 Sep 2016 : refactoring code in regular_solution_curves_series,
   tested by ts_puiseux.  More output parameters in Initial() of the
-  regular_solution_curves_series.
+  regular_solution_curves_series.  Added Series() procedure.
 
 Sun 25 Sep 2016 : new package regular_solution_curves_series with code
   extracted from ts_puiseux.  Fixed bug in shift() call to procedure.

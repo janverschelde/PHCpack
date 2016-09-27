@@ -18,6 +18,7 @@ with Standard_Integer_Transformations_io;
 with Transforming_Laurent_Systems;       use Transforming_Laurent_Systems;
 with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Black_Box_Solvers;                  use Black_Box_Solvers;
+with Series_and_Polynomials;
 
 package body Regular_Solution_Curves_Series is
 
@@ -274,6 +275,57 @@ package body Regular_Solution_Curves_Series is
     end if;
     tsq := Positive_Laurent_Polynomial_System(tvp);
   end Initial;
+
+  procedure Series
+              ( file : in file_type;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                xt0 : in Standard_Complex_Vectors.Vector ) is
+  begin
+    null;
+  end Series;
+
+  procedure Series
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                xt0 : in Standard_Complex_Vectors.Vector;
+                report : in boolean ) is
+  begin
+    null;
+  end Series;
+
+  procedure Series
+              ( file : in file_type;
+                p : in Poly_Sys; sols : in Solution_List;
+                report : in boolean ) is
+
+    s : Standard_Series_Poly_Systems.Poly_Sys(p'range)
+      := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Series(file,s,ls.v);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Series;
+
+  procedure Series
+              ( p : in Poly_Sys; sols : in Solution_List;
+                report : in boolean ) is
+
+    s : Standard_Series_Poly_Systems.Poly_Sys(p'range)
+      := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Series(s,ls.v,report);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Series;
 
   procedure Initials
               ( file : in file_type;
