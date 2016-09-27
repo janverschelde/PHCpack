@@ -6,6 +6,7 @@ with Standard_Complex_Vectors;
 with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
 with Standard_Complex_Laurentials;       use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
 
@@ -164,7 +165,8 @@ package Regular_Solution_Curves_Series is
 
   procedure Initial
               ( file : in file_type;
-                p : in Laur_Sys; mic : in Mixed_Cell );
+                p : in Laur_Sys; mic : in Mixed_Cell;
+                tsq : out Poly_Sys; sols : out Solution_List );
 
   -- DESCRIPTION :
   --   Solves the initial form system defined by the mixed cell mic.
@@ -176,24 +178,14 @@ package Regular_Solution_Curves_Series is
   --   mic      a mixed cell in the regular mixed cell configuration 
   --            defined by the lower hull of the supports of p.
 
-  procedure Initials
-              ( file : in file_type;
-                p : in Laur_Sys;
-                mcc : in Mixed_Subdivision );
-
-  -- DESCRIPTION :
-  --   Solves all initial form systems defined by the cells in mcc.
-
-  -- ON ENTRY :
-  --   file     to write output;
-  --   p        a Laurent system of n equations in n+1 variables,
-  --            where the last variable is the lifting;
-  --   mcc      regular mixed cell configuration defined by the
-  --            lower hull of the supports of p.
+  -- ON RETURN :
+  --   tsq      transformed and shifted polynomial system;
+  --   sols     solutions of tsq for t = 0.
 
   procedure Initial
-              ( p : in Laur_Sys;
-                mic : in Mixed_Cell; report : in boolean );
+              ( p : in Laur_Sys; mic : in Mixed_Cell;
+                tsq : out Poly_Sys; sols : out Solution_List;
+                report : in boolean );
 
   -- DESCRIPTION :
   --   Solves the initial form system defined by the mixed cell mic.
@@ -204,6 +196,24 @@ package Regular_Solution_Curves_Series is
   --   mic      cell in the regular mixed cell configuration defined
   --            by the lower hull of the supports of p;
   --   report   if true, then output is written to screen.
+
+  -- ON RETURN :
+  --   tsq      transformed and shifted polynomial system;
+  --   sols     solutions of tsq for t = 0.
+
+  procedure Initials
+              ( file : in file_type;
+                p : in Laur_Sys; mcc : in Mixed_Subdivision );
+
+  -- DESCRIPTION :
+  --   Solves all initial form systems defined by the cells in mcc.
+
+  -- ON ENTRY :
+  --   file     to write output;
+  --   p        a Laurent system of n equations in n+1 variables,
+  --            where the last variable is the lifting;
+  --   mcc      regular mixed cell configuration defined by the
+  --            lower hull of the supports of p.
 
   procedure Initials
               ( p : in Laur_Sys; mcc : in Mixed_Subdivision;

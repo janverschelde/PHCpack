@@ -10,6 +10,7 @@ with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Standard_Complex_Laurentials_io;    use Standard_Complex_Laurentials_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Laur_SysFun;       use Standard_Complex_Laur_SysFun;
+with Standard_Laur_Poly_Convertors;      use Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Standard_Integer32_Transformations; use Standard_Integer32_Transformations;
@@ -237,10 +238,10 @@ package body Regular_Solution_Curves_Series is
 
   procedure Initial
               ( file : in file_type;
-                p : in Laur_Sys; mic : in Mixed_Cell ) is
+                p : in Laur_Sys; mic : in Mixed_Cell;
+                tsq : out Poly_Sys; sols : out Solution_List ) is
 
     psub,tvp : Laur_Sys(p'range);
-    sols : Solution_List;
     res : double_float;
 
   begin
@@ -250,14 +251,15 @@ package body Regular_Solution_Curves_Series is
     Transform_Coordinates(file,p,mic.nor.all,tvp);
     res := Initial_Residuals(file,tvp,sols);
     put(file,"The residual :"); put(file,res,3); new_line(file);
+    tsq := Positive_Laurent_Polynomial_System(tvp);
   end Initial;
 
   procedure Initial
               ( p : in Laur_Sys; mic : in Mixed_Cell;
+                tsq : out Poly_Sys; sols : out Solution_List;
                 report : in boolean ) is
 
     psub,tvp : Laur_Sys(p'range);
-    sols : Solution_List;
     res : double_float;
 
   begin
@@ -270,6 +272,7 @@ package body Regular_Solution_Curves_Series is
     if report then
       put("The residual :"); put(res,3); new_line;
     end if;
+    tsq := Positive_Laurent_Polynomial_System(tvp);
   end Initial;
 
   procedure Initials
@@ -283,7 +286,12 @@ package body Regular_Solution_Curves_Series is
     for k in 1..Length_Of(mcc) loop
       mic := Head_Of(tmp);
       put(file,"Mixed cell "); put(file,k); put_line(file," :");
-      Initial(file,p,mic);
+      declare
+        q : Poly_Sys(p'range);
+        qsols : Solution_List;
+      begin
+        Initial(file,p,mic,q,qsols);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
   end Initials;
@@ -301,7 +309,12 @@ package body Regular_Solution_Curves_Series is
       if report then
         put("Mixed cell "); put(k); put_line(" :");
       end if;
-      Initial(p,mic,report);
+      declare
+        q : Poly_Sys(p'range);
+        qsols : Solution_List;
+      begin
+        Initial(p,mic,q,qsols,report);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
   end Initials;
