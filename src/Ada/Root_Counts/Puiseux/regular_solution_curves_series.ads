@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
@@ -205,25 +206,28 @@ package Regular_Solution_Curves_Series is
   procedure Series
               ( file : in file_type;
                 p : in Standard_Series_Poly_Systems.Poly_Sys;
-                xt0 : in Standard_Complex_Vectors.Vector );
+                xt0 : in Standard_Complex_Vectors.Vector;
+                nit : in integer32 );
 
   -- DESCRIPTION :
   --   Applies Newton's method to p, starting at xt0,
+  --   using as many iterations as the value of nit,
   --   writing output to file.
 
   procedure Series
               ( p : in Standard_Series_Poly_Systems.Poly_Sys;
                 xt0 : in Standard_Complex_Vectors.Vector;
-                report : in boolean );
+                nit : in integer32; report : in boolean );
 
   -- DESCRIPTION :
   --   Applies Newton's method to p, starting at xt0,
+  --   using as many iterations as the value of nit,
   --   writing output to screen if report is true.
 
   procedure Series
               ( file : in file_type;
                 p : in Poly_Sys; sols : in Solution_List;
-                report : in boolean );
+                nit : in integer32 );
 
   -- DESCRIPTION :
   --   Applies Newton's method to compute series solutions,
@@ -232,11 +236,12 @@ package Regular_Solution_Curves_Series is
   -- ON ENTRY :
   --   file     to write output to;
   --   p        system with solutions for t = 0;
-  --   sols     solutions of p for t = 0.
+  --   sols     solutions of p for t = 0;
+  --   nit      number of iterations of Newton's method.
 
   procedure Series
               ( p : in Poly_Sys; sols : in Solution_List;
-                report : in boolean );
+                nit : in integer32; report : in boolean );
 
   -- DESCRIPTION :
   --   Applies Newton's method to compute series solutions,
@@ -245,34 +250,42 @@ package Regular_Solution_Curves_Series is
   -- ON ENTRY :
   --   p        system with solutions for t = 0;
   --   sols     solutions of p for t = 0;
+  --   nit      number of iterations of Newton's method;
   --   report   flag to write output to screen.
 
-  procedure Initials
+  procedure Series
               ( file : in file_type;
-                p : in Laur_Sys; mcc : in Mixed_Subdivision );
+                p : in Laur_Sys; mcc : in Mixed_Subdivision;
+                nit : in integer32 );
 
   -- DESCRIPTION :
-  --   Solves all initial form systems defined by the cells in mcc.
+  --   Solves all initial form systems defined by the cells in mcc
+  --   and computes series developments for the solution curves,
+  --   writing output to file.
 
   -- ON ENTRY :
   --   file     to write output;
   --   p        a Laurent system of n equations in n+1 variables,
   --            where the last variable is the lifting;
   --   mcc      regular mixed cell configuration defined by the
-  --            lower hull of the supports of p.
+  --            lower hull of the supports of p;
+  --   nit      number of Newton steps per solution series.
 
-  procedure Initials
+  procedure Series
               ( p : in Laur_Sys; mcc : in Mixed_Subdivision;
-                report : in boolean );
+                nit : in integer32; report : in boolean );
 
   -- DESCRIPTION :
-  --   Solves all initial form systems defined by the cells in mcc.
+  --   Solves all initial form systems defined by the cells in mcc
+  --   and computes series developments for the solution curves,
+  --   writing output to screen if the report flag is true.
 
   -- ON ENTRY :
   --   p        a Laurent system of n equations in n+1 variables,
   --            where the last variable is the lifting;
   --   mcc      regular mixed cell configuration defined by the
   --            lower hull of the supports of p;
+  --   nit      number of Newton steps per solution series;
   --   report   if true, then output is written to screen.
 
 end Regular_Solution_Curves_Series;

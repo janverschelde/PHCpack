@@ -1,6 +1,5 @@
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
@@ -18,7 +17,10 @@ with Standard_Integer_Transformations_io;
 with Transforming_Laurent_Systems;       use Transforming_Laurent_Systems;
 with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Black_Box_Solvers;                  use Black_Box_Solvers;
+with Standard_Dense_Series;
+with Standard_Dense_Series_Vectors;
 with Series_and_Polynomials;
+with Standard_Newton_Matrix_Series;
 
 package body Regular_Solution_Curves_Series is
 
@@ -279,23 +281,47 @@ package body Regular_Solution_Curves_Series is
   procedure Series
               ( file : in file_type;
                 p : in Standard_Series_Poly_Systems.Poly_Sys;
-                xt0 : in Standard_Complex_Vectors.Vector ) is
+                xt0 : in Standard_Complex_Vectors.Vector;
+                nit : in integer32 ) is
+
+    use Standard_Newton_Matrix_Series;
+
+    s : Standard_Dense_Series_Vectors.Vector(p'range);
+    info : integer32;
+    deg : integer32 := 1; -- doubles in every step
+
   begin
-    null;
+    for i in s'range loop
+      s(i) := Standard_Dense_Series.Create(xt0(i));
+    end loop;
+    LU_Newton_Steps(file,p,deg,nit,s,info);
   end Series;
 
   procedure Series
               ( p : in Standard_Series_Poly_Systems.Poly_Sys;
                 xt0 : in Standard_Complex_Vectors.Vector;
-                report : in boolean ) is
+                nit : in integer32; report : in boolean ) is
+
+    use Standard_Newton_Matrix_Series;
+
+    s : Standard_Dense_Series_Vectors.Vector(p'range);
+    info : integer32;
+    deg : integer32 := 1; -- doubles in every step
+
   begin
-    null;
+    for i in s'range loop
+      s(i) := Standard_Dense_Series.Create(xt0(i));
+    end loop;
+    if report 
+     then LU_Newton_Steps(standard_output,p,deg,nit,s,info);
+     else LU_Newton_Steps(p,deg,nit,s,info);
+    end if;
   end Series;
 
   procedure Series
               ( file : in file_type;
                 p : in Poly_Sys; sols : in Solution_List;
-                report : in boolean ) is
+                nit : in integer32 ) is
 
     s : Standard_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
@@ -305,14 +331,14 @@ package body Regular_Solution_Curves_Series is
   begin
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
-      Series(file,s,ls.v);
+      Series(file,s,ls.v,nit);
       tmp := Tail_Of(tmp);
     end loop;
   end Series;
 
   procedure Series
               ( p : in Poly_Sys; sols : in Solution_List;
-                report : in boolean ) is
+                nit : in integer32; report : in boolean ) is
 
     s : Standard_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
@@ -322,14 +348,15 @@ package body Regular_Solution_Curves_Series is
   begin
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
-      Series(s,ls.v,report);
+      Series(s,ls.v,nit,report);
       tmp := Tail_Of(tmp);
     end loop;
   end Series;
 
-  procedure Initials
+  procedure Series
               ( file : in file_type;
-                p : in Laur_Sys; mcc : in Mixed_Subdivision ) is
+                p : in Laur_Sys; mcc : in Mixed_Subdivision;
+                nit : in integer32 ) is
 
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
@@ -343,14 +370,15 @@ package body Regular_Solution_Curves_Series is
         qsols : Solution_List;
       begin
         Initial(file,p,mic,q,qsols);
+        Series(file,q,qsols,nit);
       end;
       tmp := Tail_Of(tmp);
     end loop;
-  end Initials;
+  end Series;
 
-  procedure Initials
+  procedure Series
               ( p : in Laur_Sys; mcc : in Mixed_Subdivision;
-                report : in boolean ) is
+                nit : in integer32; report : in boolean ) is
 
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
@@ -366,9 +394,10 @@ package body Regular_Solution_Curves_Series is
         qsols : Solution_List;
       begin
         Initial(p,mic,q,qsols,report);
+        Series(q,qsols,nit,report);
       end;
       tmp := Tail_Of(tmp);
     end loop;
-  end Initials;
+  end Series;
 
 end Regular_Solution_Curves_Series;
