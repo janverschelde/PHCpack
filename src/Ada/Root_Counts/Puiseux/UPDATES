@@ -1,5 +1,5 @@
 Tue 27 Sep 2016 : linked in Newton's method to regular_solution_curves_series,
-  tested by ts_puiseux.
+  tested by ts_puiseux.  Added a symbolic output of the series.
 
 Mon 26 Sep 2016 : refactoring code in regular_solution_curves_series,
   tested by ts_puiseux.  More output parameters in Initial() of the

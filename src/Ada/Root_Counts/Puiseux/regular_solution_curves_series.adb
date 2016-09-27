@@ -20,6 +20,7 @@ with Black_Box_Solvers;                  use Black_Box_Solvers;
 with Standard_Dense_Series;
 with Standard_Dense_Series_Vectors;
 with Series_and_Polynomials;
+with Series_and_Polynomials_io;
 with Standard_Newton_Matrix_Series;
 
 package body Regular_Solution_Curves_Series is
@@ -110,6 +111,27 @@ package body Regular_Solution_Curves_Series is
     end if;
   end Initial_Coefficients;
 
+  procedure Shift ( file : in file_type; p : in out Poly ) is
+
+    mindeg : constant Degrees := Minimal_Degrees(p);
+    t : Term;
+
+  begin
+    put(file,"The minimal degrees : ");
+    put(file,Standard_Integer_Vectors.Vector(mindeg.all));
+    new_line(file);
+    put_line(file,"The polynomial before the shift :");
+    put(file,p); new_line(file);
+    t.cf := Create(1.0);
+    t.dg := new Standard_Integer_Vectors.Vector(mindeg'range);
+    for i in mindeg'range loop
+      t.dg(i) := -mindeg(i);
+    end loop;
+    Mul(p,t);
+    put_line(file,"The polynomial after the shift :");
+    put(file,p); new_line(file);
+  end Shift;
+
   procedure Shift ( p : in out Poly; verbose : in boolean ) is
 
     mindeg : constant Degrees := Minimal_Degrees(p);
@@ -134,6 +156,13 @@ package body Regular_Solution_Curves_Series is
     end if;
   end Shift;
 
+  procedure Shift ( file : in file_type; p : in out Laur_Sys ) is
+  begin
+    for i in p'range loop
+      Shift(file,p(i));
+    end loop;
+  end Shift;
+
   procedure Shift ( p : in out Laur_Sys; verbose : in boolean ) is
   begin
     for i in p'range loop
@@ -152,7 +181,7 @@ package body Regular_Solution_Curves_Series is
 
   begin
     q := Transform(t,p);
-    Shift(q,true);
+    Shift(q,false);
     put(file,"The transformation defined by ");
     put(file,v); put_line(file," :");
     Standard_Integer_Transformations_io.put(file,t);
@@ -295,6 +324,8 @@ package body Regular_Solution_Curves_Series is
       s(i) := Standard_Dense_Series.Create(xt0(i));
     end loop;
     LU_Newton_Steps(file,p,deg,nit,s,info);
+    put_line(file,"The solution series : ");
+    Series_and_Polynomials_io.put(file,s);
   end Series;
 
   procedure Series
@@ -312,9 +343,12 @@ package body Regular_Solution_Curves_Series is
     for i in s'range loop
       s(i) := Standard_Dense_Series.Create(xt0(i));
     end loop;
-    if report 
-     then LU_Newton_Steps(standard_output,p,deg,nit,s,info);
-     else LU_Newton_Steps(p,deg,nit,s,info);
+    if report then
+      LU_Newton_Steps(standard_output,p,deg,nit,s,info);
+      put_line("The solution series : ");
+      Series_and_Polynomials_io.put(s);
+    else
+      LU_Newton_Steps(p,deg,nit,s,info);
     end if;
   end Series;
 

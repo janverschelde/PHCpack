@@ -109,12 +109,19 @@ package Regular_Solution_Curves_Series is
   --   psub     a square subsystem of p with the last variable removed;
   --   sols     solutions to psub, as computed by the blackbox solver.
 
+  procedure Shift ( file : in file_type; p : in out Poly );
+  procedure Shift ( file : in file_type; p : in out Laur_Sys );
+
+  -- DESCRIPTION :
+  --   Multiplies the monomials in p so that all monomials have 
+  --   nonnegative exponents.  Output is written to file.
+
   procedure Shift ( p : in out Poly; verbose : in boolean );
   procedure Shift ( p : in out Laur_Sys; verbose : in boolean );
 
   -- DESCRIPTION :
   --   Multiplies the monomials in p so that all monomials have 
-  --   nonnegative exponents.
+  --   nonnegative exponents.  If verbose, the output is written to screen.
 
   procedure Transform_Coordinates
               ( file : in file_type;
