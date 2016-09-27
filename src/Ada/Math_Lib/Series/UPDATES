@@ -1,3 +1,5 @@
+Tue 27 Sep 2016 : fixed type error in *_dense_vector_series.ads.
+
 Fri 29 Jul 2016 : SVD solver in standard_matrix_series_solvers, tested by 
   ts_serlin.  Added SVD solvers in double double and quad double precision 
   to {dobldobl,quaddobl}_matrix_series_solvers, with tests in ts_serlin.

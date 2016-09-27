@@ -16,7 +16,7 @@ package Standard_Dense_Vector_Series is
 
   type Vector is record
     deg : integer32; -- the last power in the series
-                     -- the eror is of order deg+1
+                     -- the error is of order deg+1
     cff : Standard_Complex_VecVecs.VecVec(0..Standard_Dense_Series.max_deg);
      -- only coefficients in the range 0..deg are defined
      -- all vectors in cff have the same range
