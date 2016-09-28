@@ -448,6 +448,67 @@ package body Regular_Solution_Curves_Series is
     end loop;
   end Shift;
 
+  function Transform ( t : Standard_Complex_Laurentials.Term;
+                       v : Standard_Integer_Vectors.Vector )
+                     return Standard_Complex_Laurentials.Term is
+
+  -- DESCRIPTION :
+  --   Transforms the monomial defined by t, using the inner normal in v.
+
+    res : Standard_Complex_Laurentials.Term;
+
+  begin
+    put("v = "); put(v); new_line;
+    put("t.dg before :"); 
+    put(Standard_Integer_Vectors.Vector(t.dg.all)); new_line;
+    res.cf := t.cf;
+    res.dg := new Standard_Integer_Vectors.Vector'(t.dg.all);
+    res.dg(res.dg'last) := 0;
+    for k in res.dg'range loop
+      res.dg(res.dg'last) := res.dg(res.dg'last) + v(k)*t.dg(k);
+    end loop;
+    put("t.dg after :"); 
+    put(Standard_Integer_Vectors.Vector(res.dg.all)); new_line;
+    return res;
+  end Transform;
+
+  function Transform ( p : Standard_Complex_Laurentials.Poly;
+                       v : Standard_Integer_Vectors.Vector )
+                     return Standard_Complex_Laurentials.Poly is
+
+    res : Standard_Complex_Laurentials.Poly
+        := Standard_Complex_Laurentials.Null_Poly;
+
+    procedure Monomial ( t : in Standard_Complex_Laurentials.Term;
+                         c : out boolean ) is
+   
+      rt : Standard_Complex_Laurentials.Term := Transform(t,v);
+
+    begin
+      Standard_Complex_Laurentials.Add(res,rt);
+      c := true;
+    end Monomial;
+    procedure Monomials is
+      new Standard_Complex_Laurentials.Visiting_Iterator(Monomial);
+
+  begin
+    Monomials(p);
+    return res;
+  end Transform;
+
+  function Transform ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                       v : Standard_Integer_Vectors.Vector )
+                     return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    res : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+
+  begin
+    for k in p'range loop
+      res(k) := Transform(p(k),v);
+    end loop;
+    return res;
+  end Transform;
+
   procedure Transform_Coordinates
               ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -455,10 +516,11 @@ package body Regular_Solution_Curves_Series is
                 q : out Standard_Complex_Laur_Systems.Laur_Sys ) is
 
     i : constant integer32 := v'last;
-    t : Transfo := Build_Transfo(v,i);
+    t : Transfo := Create(v,i); -- := Rotate(v,i); -- Build_Transfo(v,i);
 
   begin
-    q := Transform(t,p);
+   -- q := Transform(t,p);
+    q := Transform(p,v);
     Shift(q,false);
     put(file,"The transformation defined by ");
     put(file,v); put_line(file," :");
@@ -473,10 +535,11 @@ package body Regular_Solution_Curves_Series is
                 report : in boolean ) is
 
     i : constant integer32 := v'last;
-    t : Transfo := Build_Transfo(v,i);
+    t : Transfo := Create(v,i); -- Rotate(v,i); -- Build_Transfo(v,i);
 
   begin
-    q := Transform(t,p);
+   -- q := Transform(t,p);
+    q := Transform(p,v);
     Shift(q,false);
     if report then
       put("The transformation defined by "); put(v); put_line(" :");
@@ -498,7 +561,7 @@ package body Regular_Solution_Curves_Series is
     ext(sol'range) := sol;
     ext(sol'last+1) := Standard_Complex_Numbers.Create(0.0);
     eva := Eval(p,ext);
-    -- res := Norm(eva);
+    res := Norm2(eva);
     return res;
   end Initial_Residual;
 
