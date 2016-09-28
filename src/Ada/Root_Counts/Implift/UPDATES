@@ -1,3 +1,6 @@
+Tue 27 Sep 2016 : in supports_of_polynomial_systems, added select_terms 
+  functions for systems with double double and quad double coefficients.
+
 Tue 28 Jun 2016 : added ts_tropelim to run a unimodular transformation that
   eliminates the first variable of those monomials supported on the face
   defined by a tropism.

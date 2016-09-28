@@ -119,14 +119,27 @@ package Supports_of_Polynomial_Systems is
                         return Standard_Complex_Laurentials.Poly;
 
   function Select_Terms ( p : DoblDobl_Complex_Polynomials.Poly;
+                          s : Lists_of_Integer_Vectors.List )
+                        return DoblDobl_Complex_Polynomials.Poly;
+  function Select_Terms ( p : DoblDobl_Complex_Polynomials.Poly;
                           s : Lists_of_Floating_Vectors.List )
                         return DoblDobl_Complex_Polynomials.Poly;
   function Select_Terms ( p : DoblDobl_Complex_Laurentials.Poly;
+                          s : Lists_of_Integer_Vectors.List )
+                        return DoblDobl_Complex_Laurentials.Poly;
+  function Select_Terms ( p : DoblDobl_Complex_Laurentials.Poly;
                           s : Lists_of_Floating_Vectors.List )
                         return DoblDobl_Complex_Laurentials.Poly;
+
+  function Select_Terms ( p : QuadDobl_Complex_Polynomials.Poly;
+                          s : Lists_of_Integer_Vectors.List )
+                        return QuadDobl_Complex_Polynomials.Poly;
   function Select_Terms ( p : QuadDobl_Complex_Polynomials.Poly;
                           s : Lists_of_Floating_Vectors.List )
                         return QuadDobl_Complex_Polynomials.Poly;
+  function Select_Terms ( p : QuadDobl_Complex_Laurentials.Poly;
+                          s : Lists_of_Integer_Vectors.List )
+                        return QuadDobl_Complex_Laurentials.Poly;
   function Select_Terms ( p : QuadDobl_Complex_Laurentials.Poly;
                           s : Lists_of_Floating_Vectors.List )
                         return QuadDobl_Complex_Laurentials.Poly;
@@ -185,6 +198,9 @@ package Supports_of_Polynomial_Systems is
                         return Standard_Complex_Laur_Systems.Laur_Sys;
 
   function Select_Terms ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                          s : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+                        return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Select_Terms ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                           s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
                         return DoblDobl_Complex_Poly_Systems.Poly_Sys;
   function Select_Terms ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -195,10 +211,16 @@ package Supports_of_Polynomial_Systems is
                           s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
                         return DoblDobl_Complex_Laur_Systems.Laur_Sys;
   function Select_Terms ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                          s : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+                        return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  function Select_Terms ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
                           m : Standard_Integer_Vectors.Vector;
                           s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
                         return DoblDobl_Complex_Laur_Systems.Laur_Sys;
 
+  function Select_Terms ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                          s : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+                        return QuadDobl_Complex_Poly_Systems.Poly_Sys;
   function Select_Terms ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                           s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
                         return QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -208,6 +230,9 @@ package Supports_of_Polynomial_Systems is
                         return QuadDobl_Complex_Poly_Systems.Poly_Sys;
   function Select_Terms ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                           s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return QuadDobl_Complex_Laur_Systems.Laur_Sys;
+  function Select_Terms ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                          s : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
                         return QuadDobl_Complex_Laur_Systems.Laur_Sys;
   function Select_Terms ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                           m : Standard_Integer_Vectors.Vector;
