@@ -2,15 +2,25 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Complex_Vector_Norms;      use Standard_Complex_Vector_Norms;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Standard_Complex_Laurentials_io;    use Standard_Complex_Laurentials_io;
+with DoblDobl_Complex_Laurentials_io;    use DoblDobl_Complex_Laurentials_io;
+with QuadDobl_Complex_Laurentials_io;    use QuadDobl_Complex_Laurentials_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Laur_SysFun;       use Standard_Complex_Laur_SysFun;
 with Standard_Laur_Poly_Convertors;      use Standard_Laur_Poly_Convertors;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
+with DoblDobl_Complex_Laur_SysFun;       use DoblDobl_Complex_Laur_SysFun;
+with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
+with QuadDobl_Complex_Laur_SysFun;       use QuadDobl_Complex_Laur_SysFun;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Standard_Integer32_Transformations; use Standard_Integer32_Transformations;
 with Standard_Integer_Transformations_io;
@@ -68,10 +78,16 @@ package body Regular_Solution_Curves_Series is
 
   procedure Initial_Coefficients
               ( file : in file_type;
-                p : in Laur_Sys; mic : in Mixed_Cell;
-                psub : out Laur_Sys; sols : out Solution_List ) is
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                psub : out Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
 
-    q : Laur_Sys(p'range) := Select_Terms(p,mic.pts.all);
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
+
+    q : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
+      := Select_Terms(p,mic.pts.all);
     idx : constant integer32 := p'last+1;
     one : constant Complex_Number := Create(1.0);
     rc : natural32;
@@ -87,11 +103,17 @@ package body Regular_Solution_Curves_Series is
   end Initial_Coefficients;
 
   procedure Initial_Coefficients
-              ( p : in Laur_Sys; mic : in Mixed_Cell;
-                psub : out Laur_Sys; sols : out Solution_List;
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                psub : out Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
                 report : in boolean ) is
 
-    q : Laur_Sys(p'range) := Select_Terms(p,mic.pts.all);
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
+
+    q : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
+      := Select_Terms(p,mic.pts.all);
     idx : constant integer32 := p'last+1;
     one : constant Complex_Number := Create(1.0);
     rc : natural32;
@@ -111,7 +133,124 @@ package body Regular_Solution_Curves_Series is
     end if;
   end Initial_Coefficients;
 
-  procedure Shift ( file : in file_type; p : in out Poly ) is
+  procedure Initial_Coefficients
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                psub : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+
+    q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+      := Select_Terms(p,mic.pts.all);
+    idx : constant integer32 := p'last+1;
+    one : constant Complex_Number := Create(integer32(1));
+    rc : natural32;
+
+  begin
+    put_line(file,"The initial form system with t :"); put(file,q);
+    psub := Eval(q,one,idx);
+    put_line(file,"The initial form system with t = 1 :"); put(file,psub);
+    Solve(psub,false,rc,sols);
+    put(file,"Computed ");
+    put(file,Length_Of(sols),1); put_line(file," solutions.");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end Initial_Coefficients;
+
+  procedure Initial_Coefficients
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                psub : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                report : in boolean ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+
+    q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+      := Select_Terms(p,mic.pts.all);
+    idx : constant integer32 := p'last+1;
+    one : constant Complex_Number := Create(integer32(1));
+    rc : natural32;
+
+  begin
+    if report then
+      put_line("The initial form system with t :"); put(q);
+    end if;
+    psub := Eval(q,one,idx);
+    if report then
+      put_line("The initial form system with t = 1 :"); put(psub);
+    end if;
+    Solve(psub,false,rc,sols);
+    if report then
+      put("Computed "); put(Length_Of(sols),1); put_line(" solutions.");
+      put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+  end Initial_Coefficients;
+
+  procedure Initial_Coefficients
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                psub : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+
+    q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+      := Select_Terms(p,mic.pts.all);
+    idx : constant integer32 := p'last+1;
+    one : constant Complex_Number := Create(integer32(1));
+    rc : natural32;
+
+  begin
+    put_line(file,"The initial form system with t :"); put(file,q);
+    psub := Eval(q,one,idx);
+    put_line(file,"The initial form system with t = 1 :"); put(file,psub);
+    Solve(psub,false,rc,sols);
+    put(file,"Computed ");
+    put(file,Length_Of(sols),1); put_line(file," solutions.");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end Initial_Coefficients;
+
+  procedure Initial_Coefficients
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                psub : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                report : in boolean ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+
+    q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+      := Select_Terms(p,mic.pts.all);
+    idx : constant integer32 := p'last+1;
+    one : constant Complex_Number := Create(integer32(1));
+    rc : natural32;
+
+  begin
+    if report then
+      put_line("The initial form system with t :"); put(q);
+    end if;
+    psub := Eval(q,one,idx);
+    if report then
+      put_line("The initial form system with t = 1 :"); put(psub);
+    end if;
+    Solve(psub,false,rc,sols);
+    if report then
+      put("Computed "); put(Length_Of(sols),1); put_line(" solutions.");
+      put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+  end Initial_Coefficients;
+
+  procedure Shift ( file : in file_type;
+                    p : in out Standard_Complex_Laurentials.Poly ) is
+
+    use Standard_Complex_Laurentials;
 
     mindeg : constant Degrees := Minimal_Degrees(p);
     t : Term;
@@ -122,7 +261,7 @@ package body Regular_Solution_Curves_Series is
     new_line(file);
     put_line(file,"The polynomial before the shift :");
     put(file,p); new_line(file);
-    t.cf := Create(1.0);
+    t.cf := Standard_Complex_Numbers.Create(1.0);
     t.dg := new Standard_Integer_Vectors.Vector(mindeg'range);
     for i in mindeg'range loop
       t.dg(i) := -mindeg(i);
@@ -132,7 +271,58 @@ package body Regular_Solution_Curves_Series is
     put(file,p); new_line(file);
   end Shift;
 
-  procedure Shift ( p : in out Poly; verbose : in boolean ) is
+  procedure Shift ( file : in file_type;
+                    p : in out DoblDobl_Complex_Laurentials.Poly ) is
+
+    use DoblDobl_Complex_Laurentials;
+
+    mindeg : constant Degrees := Minimal_Degrees(p);
+    t : Term;
+
+  begin
+    put(file,"The minimal degrees : ");
+    put(file,Standard_Integer_Vectors.Vector(mindeg.all));
+    new_line(file);
+    put_line(file,"The polynomial before the shift :");
+    put(file,p); new_line(file);
+    t.cf := DoblDobl_Complex_Numbers.Create(integer32(1));
+    t.dg := new Standard_Integer_Vectors.Vector(mindeg'range);
+    for i in mindeg'range loop
+      t.dg(i) := -mindeg(i);
+    end loop;
+    Mul(p,t);
+    put_line(file,"The polynomial after the shift :");
+    put(file,p); new_line(file);
+  end Shift;
+
+  procedure Shift ( file : in file_type;
+                    p : in out QuadDobl_Complex_Laurentials.Poly ) is
+
+    use QuadDobl_Complex_Laurentials;
+
+    mindeg : constant Degrees := Minimal_Degrees(p);
+    t : Term;
+
+  begin
+    put(file,"The minimal degrees : ");
+    put(file,Standard_Integer_Vectors.Vector(mindeg.all));
+    new_line(file);
+    put_line(file,"The polynomial before the shift :");
+    put(file,p); new_line(file);
+    t.cf := QuadDobl_Complex_Numbers.Create(integer32(1));
+    t.dg := new Standard_Integer_Vectors.Vector(mindeg'range);
+    for i in mindeg'range loop
+      t.dg(i) := -mindeg(i);
+    end loop;
+    Mul(p,t);
+    put_line(file,"The polynomial after the shift :");
+    put(file,p); new_line(file);
+  end Shift;
+
+  procedure Shift ( p : in out Standard_Complex_Laurentials.Poly;
+                    verbose : in boolean ) is
+
+    use Standard_Complex_Laurentials;
 
     mindeg : constant Degrees := Minimal_Degrees(p);
     t : Term;
@@ -144,7 +334,7 @@ package body Regular_Solution_Curves_Series is
       put_line("The polynomial before the shift :");
       put(p); new_line;
     end if;
-    t.cf := Create(1.0);
+    t.cf := Standard_Complex_Numbers.Create(1.0);
     t.dg := new Standard_Integer_Vectors.Vector(mindeg'range);
     for i in mindeg'range loop
       t.dg(i) := -mindeg(i);
@@ -156,14 +346,102 @@ package body Regular_Solution_Curves_Series is
     end if;
   end Shift;
 
-  procedure Shift ( file : in file_type; p : in out Laur_Sys ) is
+  procedure Shift ( p : in out DoblDobl_Complex_Laurentials.Poly;
+                    verbose : in boolean ) is
+
+    use DoblDobl_Complex_Laurentials;
+
+    mindeg : constant Degrees := Minimal_Degrees(p);
+    t : Term;
+
+  begin
+    if verbose then
+      put("The minimal degrees : ");
+      put(Standard_Integer_Vectors.Vector(mindeg.all)); new_line;
+      put_line("The polynomial before the shift :");
+      put(p); new_line;
+    end if;
+    t.cf := DoblDobl_Complex_Numbers.Create(integer32(1));
+    t.dg := new Standard_Integer_Vectors.Vector(mindeg'range);
+    for i in mindeg'range loop
+      t.dg(i) := -mindeg(i);
+    end loop;
+    Mul(p,t);
+    if verbose then
+      put_line("The polynomial after the shift :");
+      put(p); new_line;
+    end if;
+  end Shift;
+
+  procedure Shift ( p : in out QuadDobl_Complex_Laurentials.Poly;
+                    verbose : in boolean ) is
+
+    use QuadDobl_Complex_Laurentials;
+
+    mindeg : constant Degrees := Minimal_Degrees(p);
+    t : Term;
+
+  begin
+    if verbose then
+      put("The minimal degrees : ");
+      put(Standard_Integer_Vectors.Vector(mindeg.all)); new_line;
+      put_line("The polynomial before the shift :");
+      put(p); new_line;
+    end if;
+    t.cf := QuadDobl_Complex_Numbers.Create(integer32(1));
+    t.dg := new Standard_Integer_Vectors.Vector(mindeg'range);
+    for i in mindeg'range loop
+      t.dg(i) := -mindeg(i);
+    end loop;
+    Mul(p,t);
+    if verbose then
+      put_line("The polynomial after the shift :");
+      put(p); new_line;
+    end if;
+  end Shift;
+
+  procedure Shift ( file : in file_type;
+                    p : in out Standard_Complex_Laur_Systems.Laur_Sys ) is
   begin
     for i in p'range loop
       Shift(file,p(i));
     end loop;
   end Shift;
 
-  procedure Shift ( p : in out Laur_Sys; verbose : in boolean ) is
+  procedure Shift ( file : in file_type;
+                    p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    for i in p'range loop
+      Shift(file,p(i));
+    end loop;
+  end Shift;
+
+  procedure Shift ( file : in file_type;
+                    p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    for i in p'range loop
+      Shift(file,p(i));
+    end loop;
+  end Shift;
+
+  procedure Shift ( p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                    verbose : in boolean ) is
+  begin
+    for i in p'range loop
+      Shift(p(i),verbose);
+    end loop;
+  end Shift;
+
+  procedure Shift ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    verbose : in boolean ) is
+  begin
+    for i in p'range loop
+      Shift(p(i),verbose);
+    end loop;
+  end Shift;
+
+  procedure Shift ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    verbose : in boolean ) is
   begin
     for i in p'range loop
       Shift(p(i),verbose);
@@ -172,9 +450,9 @@ package body Regular_Solution_Curves_Series is
 
   procedure Transform_Coordinates
               ( file : in file_type;
-                p : in Laur_Sys;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 v : in Standard_Integer_Vectors.Vector;
-                q : out Laur_Sys ) is
+                q : out Standard_Complex_Laur_Systems.Laur_Sys ) is
 
     i : constant integer32 := v'last;
     t : Transfo := Build_Transfo(v,i);
@@ -189,9 +467,10 @@ package body Regular_Solution_Curves_Series is
   end Transform_Coordinates;
 
   procedure Transform_Coordinates
-              ( p : in Laur_Sys;
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 v : in Standard_Integer_Vectors.Vector;
-                q : out Laur_Sys; report : in boolean ) is
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                report : in boolean ) is
 
     i : constant integer32 := v'last;
     t : Transfo := Build_Transfo(v,i);
@@ -207,7 +486,7 @@ package body Regular_Solution_Curves_Series is
   end Transform_Coordinates;
 
   function Initial_Residual
-              ( p : in Laur_Sys;
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sol : in Standard_Complex_Vectors.Vector )
               return double_float is
 
@@ -217,15 +496,19 @@ package body Regular_Solution_Curves_Series is
 
   begin
     ext(sol'range) := sol;
-    ext(sol'last+1) := Create(0.0);
+    ext(sol'last+1) := Standard_Complex_Numbers.Create(0.0);
     eva := Eval(p,ext);
     -- res := Norm(eva);
     return res;
   end Initial_Residual;
 
   function Initial_Residuals
-              ( file : in file_type; p : in Laur_Sys;
-                sols : in Solution_List ) return double_float is
+              ( file : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List )
+              return double_float is
+
+    use Standard_Complex_Solutions;
 
     res : double_float := 0.0;
     eva : double_float;
@@ -245,9 +528,11 @@ package body Regular_Solution_Curves_Series is
   end Initial_Residuals;
 
   function Initial_Residuals
-              ( p : in Laur_Sys;
-                sols : in Solution_List;
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
                 report : in boolean ) return double_float is
+
+    use Standard_Complex_Solutions;
 
     res : double_float := 0.0;
     eva : double_float;
@@ -270,10 +555,12 @@ package body Regular_Solution_Curves_Series is
 
   procedure Initial
               ( file : in file_type;
-                p : in Laur_Sys; mic : in Mixed_Cell;
-                tsq : out Poly_Sys; sols : out Solution_List ) is
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                tsq : out Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
 
-    psub,tvp : Laur_Sys(p'range);
+    psub,tvp : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     res : double_float;
 
   begin
@@ -287,11 +574,13 @@ package body Regular_Solution_Curves_Series is
   end Initial;
 
   procedure Initial
-              ( p : in Laur_Sys; mic : in Mixed_Cell;
-                tsq : out Poly_Sys; sols : out Solution_List;
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                tsq : out Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
                 report : in boolean ) is
 
-    psub,tvp : Laur_Sys(p'range);
+    psub,tvp : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     res : double_float;
 
   begin
@@ -354,8 +643,11 @@ package body Regular_Solution_Curves_Series is
 
   procedure Series
               ( file : in file_type;
-                p : in Poly_Sys; sols : in Solution_List;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
                 nit : in integer32 ) is
+
+    use Standard_Complex_Solutions;
 
     s : Standard_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
@@ -371,8 +663,11 @@ package body Regular_Solution_Curves_Series is
   end Series;
 
   procedure Series
-              ( p : in Poly_Sys; sols : in Solution_List;
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
                 nit : in integer32; report : in boolean ) is
+
+    use Standard_Complex_Solutions;
 
     s : Standard_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
@@ -389,7 +684,8 @@ package body Regular_Solution_Curves_Series is
 
   procedure Series
               ( file : in file_type;
-                p : in Laur_Sys; mcc : in Mixed_Subdivision;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
                 nit : in integer32 ) is
 
     tmp : Mixed_Subdivision := mcc;
@@ -400,8 +696,8 @@ package body Regular_Solution_Curves_Series is
       mic := Head_Of(tmp);
       put(file,"Mixed cell "); put(file,k); put_line(file," :");
       declare
-        q : Poly_Sys(p'range);
-        qsols : Solution_List;
+        q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
+        qsols : Standard_Complex_Solutions.Solution_List;
       begin
         Initial(file,p,mic,q,qsols);
         Series(file,q,qsols,nit);
@@ -411,7 +707,8 @@ package body Regular_Solution_Curves_Series is
   end Series;
 
   procedure Series
-              ( p : in Laur_Sys; mcc : in Mixed_Subdivision;
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
                 nit : in integer32; report : in boolean ) is
 
     tmp : Mixed_Subdivision := mcc;
@@ -424,8 +721,8 @@ package body Regular_Solution_Curves_Series is
         put("Mixed cell "); put(k); put_line(" :");
       end if;
       declare
-        q : Poly_Sys(p'range);
-        qsols : Solution_List;
+        q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
+        qsols : Standard_Complex_Solutions.Solution_List;
       begin
         Initial(p,mic,q,qsols,report);
         Series(q,qsols,nit,report);
