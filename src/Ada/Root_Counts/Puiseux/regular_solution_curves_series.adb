@@ -22,9 +22,6 @@ with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
-with Standard_Integer32_Transformations; use Standard_Integer32_Transformations;
-with Standard_Integer_Transformations_io;
-with Transforming_Laurent_Systems;       use Transforming_Laurent_Systems;
 with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Black_Box_Solvers;                  use Black_Box_Solvers;
 with Standard_Dense_Series;
@@ -448,27 +445,58 @@ package body Regular_Solution_Curves_Series is
     end loop;
   end Shift;
 
+  function Transform ( d,v : Standard_Integer_Vectors.Vector )
+                     return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(d'range);
+
+  begin
+    res(res'last) := 0;
+    for k in res'range loop
+      res(res'last) := res(res'last) + v(k)*d(k);
+    end loop;
+    return res;
+  end Transform;
+
   function Transform ( t : Standard_Complex_Laurentials.Term;
                        v : Standard_Integer_Vectors.Vector )
                      return Standard_Complex_Laurentials.Term is
 
-  -- DESCRIPTION :
-  --   Transforms the monomial defined by t, using the inner normal in v.
-
     res : Standard_Complex_Laurentials.Term;
+    rdg : Standard_Integer_Vectors.Vector(t.dg'range)
+        := Transform(Standard_Integer_Vectors.Vector(t.dg.all),v);
 
   begin
-    put("v = "); put(v); new_line;
-    put("t.dg before :"); 
-    put(Standard_Integer_Vectors.Vector(t.dg.all)); new_line;
     res.cf := t.cf;
-    res.dg := new Standard_Integer_Vectors.Vector'(t.dg.all);
-    res.dg(res.dg'last) := 0;
-    for k in res.dg'range loop
-      res.dg(res.dg'last) := res.dg(res.dg'last) + v(k)*t.dg(k);
-    end loop;
-    put("t.dg after :"); 
-    put(Standard_Integer_Vectors.Vector(res.dg.all)); new_line;
+    res.dg := new Standard_Integer_Vectors.Vector'(rdg);
+    return res;
+  end Transform;
+
+  function Transform ( t : DoblDobl_Complex_Laurentials.Term;
+                       v : Standard_Integer_Vectors.Vector )
+                     return DoblDobl_Complex_Laurentials.Term is
+
+    res : DoblDobl_Complex_Laurentials.Term;
+    rdg : Standard_Integer_Vectors.Vector(t.dg'range)
+        := Transform(Standard_Integer_Vectors.Vector(t.dg.all),v);
+
+  begin
+    res.cf := t.cf;
+    res.dg := new Standard_Integer_Vectors.Vector'(rdg);
+    return res;
+  end Transform;
+
+  function Transform ( t : QuadDobl_Complex_Laurentials.Term;
+                       v : Standard_Integer_Vectors.Vector )
+                     return QuadDobl_Complex_Laurentials.Term is
+
+    res : QuadDobl_Complex_Laurentials.Term;
+    rdg : Standard_Integer_Vectors.Vector(t.dg'range)
+        := Transform(Standard_Integer_Vectors.Vector(t.dg.all),v);
+
+  begin
+    res.cf := t.cf;
+    res.dg := new Standard_Integer_Vectors.Vector'(rdg);
     return res;
   end Transform;
 
@@ -496,6 +524,54 @@ package body Regular_Solution_Curves_Series is
     return res;
   end Transform;
 
+  function Transform ( p : DoblDobl_Complex_Laurentials.Poly;
+                       v : Standard_Integer_Vectors.Vector )
+                     return DoblDobl_Complex_Laurentials.Poly is
+
+    res : DoblDobl_Complex_Laurentials.Poly
+        := DoblDobl_Complex_Laurentials.Null_Poly;
+
+    procedure Monomial ( t : in DoblDobl_Complex_Laurentials.Term;
+                         c : out boolean ) is
+   
+      rt : DoblDobl_Complex_Laurentials.Term := Transform(t,v);
+
+    begin
+      DoblDobl_Complex_Laurentials.Add(res,rt);
+      c := true;
+    end Monomial;
+    procedure Monomials is
+      new DoblDobl_Complex_Laurentials.Visiting_Iterator(Monomial);
+
+  begin
+    Monomials(p);
+    return res;
+  end Transform;
+
+  function Transform ( p : QuadDobl_Complex_Laurentials.Poly;
+                       v : Standard_Integer_Vectors.Vector )
+                     return QuadDobl_Complex_Laurentials.Poly is
+
+    res : QuadDobl_Complex_Laurentials.Poly
+        := QuadDobl_Complex_Laurentials.Null_Poly;
+
+    procedure Monomial ( t : in QuadDobl_Complex_Laurentials.Term;
+                         c : out boolean ) is
+   
+      rt : QuadDobl_Complex_Laurentials.Term := Transform(t,v);
+
+    begin
+      QuadDobl_Complex_Laurentials.Add(res,rt);
+      c := true;
+    end Monomial;
+    procedure Monomials is
+      new QuadDobl_Complex_Laurentials.Visiting_Iterator(Monomial);
+
+  begin
+    Monomials(p);
+    return res;
+  end Transform;
+
   function Transform ( p : Standard_Complex_Laur_Systems.Laur_Sys;
                        v : Standard_Integer_Vectors.Vector )
                      return Standard_Complex_Laur_Systems.Laur_Sys is
@@ -509,22 +585,62 @@ package body Regular_Solution_Curves_Series is
     return res;
   end Transform;
 
+  function Transform ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                       v : Standard_Integer_Vectors.Vector )
+                     return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+
+  begin
+    for k in p'range loop
+      res(k) := Transform(p(k),v);
+    end loop;
+    return res;
+  end Transform;
+
+  function Transform ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                       v : Standard_Integer_Vectors.Vector )
+                     return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+
+  begin
+    for k in p'range loop
+      res(k) := Transform(p(k),v);
+    end loop;
+    return res;
+  end Transform;
+
   procedure Transform_Coordinates
               ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 v : in Standard_Integer_Vectors.Vector;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys ) is
-
-    i : constant integer32 := v'last;
-    t : Transfo := Create(v,i); -- := Rotate(v,i); -- Build_Transfo(v,i);
-
   begin
-   -- q := Transform(t,p);
     q := Transform(p,v);
     Shift(q,false);
-    put(file,"The transformation defined by ");
-    put(file,v); put_line(file," :");
-    Standard_Integer_Transformations_io.put(file,t);
+    put_line(file,"The transformed system : "); put_line(file,q);
+  end Transform_Coordinates;
+
+  procedure Transform_Coordinates
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                v : in Standard_Integer_Vectors.Vector;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    q := Transform(p,v);
+    Shift(q,false);
+    put_line(file,"The transformed system : "); put_line(file,q);
+  end Transform_Coordinates;
+
+  procedure Transform_Coordinates
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                v : in Standard_Integer_Vectors.Vector;
+                q : out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    q := Transform(p,v);
+    Shift(q,false);
     put_line(file,"The transformed system : "); put_line(file,q);
   end Transform_Coordinates;
 
@@ -533,17 +649,36 @@ package body Regular_Solution_Curves_Series is
                 v : in Standard_Integer_Vectors.Vector;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 report : in boolean ) is
-
-    i : constant integer32 := v'last;
-    t : Transfo := Create(v,i); -- Rotate(v,i); -- Build_Transfo(v,i);
-
   begin
-   -- q := Transform(t,p);
     q := Transform(p,v);
     Shift(q,false);
     if report then
-      put("The transformation defined by "); put(v); put_line(" :");
-      Standard_Integer_Transformations_io.put(t);
+      put_line("The transformed system : "); put_line(q);
+    end if;
+  end Transform_Coordinates;
+
+  procedure Transform_Coordinates
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                v : in Standard_Integer_Vectors.Vector;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                report : in boolean ) is
+  begin
+    q := Transform(p,v);
+    Shift(q,false);
+    if report then
+      put_line("The transformed system : "); put_line(q);
+    end if;
+  end Transform_Coordinates;
+
+  procedure Transform_Coordinates
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                v : in Standard_Integer_Vectors.Vector;
+                q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                report : in boolean ) is
+  begin
+    q := Transform(p,v);
+    Shift(q,false);
+    if report then
       put_line("The transformed system : "); put_line(q);
     end if;
   end Transform_Coordinates;

@@ -1,5 +1,5 @@
 Wed 28 Sep 2016 : fixed bug in coordinate transformation in the
-  regular_solution_curves_series.
+  regular_solution_curves_series.  More support for dd and qd.
 
 Tue 27 Sep 2016 : linked in Newton's method to regular_solution_curves_series,
   tested by ts_puiseux.  Added a symbolic output of the series.

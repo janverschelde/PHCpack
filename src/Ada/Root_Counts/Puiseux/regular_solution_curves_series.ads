@@ -179,11 +179,69 @@ package Regular_Solution_Curves_Series is
   --   Multiplies the monomials in p so that all monomials have 
   --   nonnegative exponents.  If verbose, the output is written to screen.
 
+  function Transform ( d,v : Standard_Integer_Vectors.Vector )
+                     return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Transforms the degrees in d, using the inner normal in v.
+
+  function Transform ( t : Standard_Complex_Laurentials.Term;
+                       v : Standard_Integer_Vectors.Vector )
+                     return Standard_Complex_Laurentials.Term;
+  function Transform ( t : DoblDobl_Complex_Laurentials.Term;
+                       v : Standard_Integer_Vectors.Vector )
+                     return DoblDobl_Complex_Laurentials.Term;
+  function Transform ( t : QuadDobl_Complex_Laurentials.Term;
+                       v : Standard_Integer_Vectors.Vector )
+                     return QuadDobl_Complex_Laurentials.Term;
+
+  -- DESCRIPTION :
+  --   Transforms the monomial defined by t, using the inner normal in v,
+  --   for coefficients in double, double double, or quad double precision.
+
+  function Transform ( p : Standard_Complex_Laurentials.Poly;
+                       v : Standard_Integer_Vectors.Vector )
+                     return Standard_Complex_Laurentials.Poly;
+  function Transform ( p : DoblDobl_Complex_Laurentials.Poly;
+                       v : Standard_Integer_Vectors.Vector )
+                     return DoblDobl_Complex_Laurentials.Poly;
+  function Transform ( p : QuadDobl_Complex_Laurentials.Poly;
+                       v : Standard_Integer_Vectors.Vector )
+                     return QuadDobl_Complex_Laurentials.Poly;
+
+  -- DESCRIPTION :
+  --   Transforms the polynomial p, using the inner normal in v,
+  --   for coefficients in double, double double, or quad double precision.
+
+  function Transform ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                       v : Standard_Integer_Vectors.Vector )
+                     return Standard_Complex_Laur_Systems.Laur_Sys;
+  function Transform ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                       v : Standard_Integer_Vectors.Vector )
+                     return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  function Transform ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                       v : Standard_Integer_Vectors.Vector )
+                     return QuadDobl_Complex_Laur_Systems.Laur_Sys;
+
+  -- DESCRIPTION :
+  --   Transforms the system p, using the inner normal in v,
+  --   for coefficients in double, double double, or quad double precision.
+
   procedure Transform_Coordinates
               ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 v : in Standard_Integer_Vectors.Vector;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys );
+  procedure Transform_Coordinates
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                v : in Standard_Integer_Vectors.Vector;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys );
+  procedure Transform_Coordinates
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                v : in Standard_Integer_Vectors.Vector;
+                q : out QuadDobl_Complex_Laur_Systems.Laur_Sys );
 
   -- DESCRIPTION :
   --   Applies the unimodular coordinate transformation defined by v
@@ -195,10 +253,21 @@ package Regular_Solution_Curves_Series is
                 v : in Standard_Integer_Vectors.Vector;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 report : in boolean );
+  procedure Transform_Coordinates
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                v : in Standard_Integer_Vectors.Vector;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                report : in boolean );
+  procedure Transform_Coordinates
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                v : in Standard_Integer_Vectors.Vector;
+                q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                report : in boolean );
 
   -- DESCRIPTION :
   --   Applies the unimodular coordinate transformation defined by v
   --   to the system p, the result is in the system q.
+  --   If report, then output is written to screen.
 
   function Initial_Residual
               ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
