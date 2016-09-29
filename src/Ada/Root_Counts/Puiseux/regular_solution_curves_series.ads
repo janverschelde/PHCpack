@@ -4,19 +4,25 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;
+with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems;
-with Standard_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
 with Standard_Series_Poly_Systems;
+with DoblDobl_Series_Poly_Systems;
+with QuadDobl_Series_Poly_Systems;
 
 package Regular_Solution_Curves_Series is
 
@@ -273,15 +279,33 @@ package Regular_Solution_Curves_Series is
               ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sol : in Standard_Complex_Vectors.Vector )
               return double_float;
+  function Initial_Residual
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sol : in DoblDobl_Complex_Vectors.Vector )
+              return double_float;
+  function Initial_Residual
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sol : in QuadDobl_Complex_Vectors.Vector )
+              return double_float;
 
   -- DESCRIPTION :
   --   Returns the residual of the solution extended with zero,
-  --   evaluated at p.
+  --   evaluated at p, in double, double double, or quad double precision.
 
   function Initial_Residuals
               ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List )
+              return double_float;
+  function Initial_Residuals
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List )
+              return double_float;
+  function Initial_Residuals
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List )
               return double_float;
 
   -- DESCRIPTION :
@@ -292,6 +316,14 @@ package Regular_Solution_Curves_Series is
   function Initial_Residuals
               ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
+                report : in boolean ) return double_float;
+  function Initial_Residuals
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                report : in boolean ) return double_float;
+  function Initial_Residuals
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
                 report : in boolean ) return double_float;
 
   -- DESCRIPTION :
@@ -306,6 +338,18 @@ package Regular_Solution_Curves_Series is
                 mic : in Mixed_Cell;
                 tsq : out Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Initial
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                tsq : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Initial
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                tsq : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Solves the initial form system defined by the mixed cell mic.
@@ -327,6 +371,18 @@ package Regular_Solution_Curves_Series is
                 tsq : out Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 report : in boolean );
+  procedure Initial
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                tsq : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                report : in boolean );
+  procedure Initial
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                tsq : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                report : in boolean );
 
   -- DESCRIPTION :
   --   Solves the initial form system defined by the mixed cell mic.
@@ -347,6 +403,16 @@ package Regular_Solution_Curves_Series is
                 p : in Standard_Series_Poly_Systems.Poly_Sys;
                 xt0 : in Standard_Complex_Vectors.Vector;
                 nit : in integer32 );
+  procedure Series
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                xt0 : in DoblDobl_Complex_Vectors.Vector;
+                nit : in integer32 );
+  procedure Series
+              ( file : in file_type;
+                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                xt0 : in QuadDobl_Complex_Vectors.Vector;
+                nit : in integer32 );
 
   -- DESCRIPTION :
   --   Applies Newton's method to p, starting at xt0,
@@ -356,6 +422,14 @@ package Regular_Solution_Curves_Series is
   procedure Series
               ( p : in Standard_Series_Poly_Systems.Poly_Sys;
                 xt0 : in Standard_Complex_Vectors.Vector;
+                nit : in integer32; report : in boolean );
+  procedure Series
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                xt0 : in DoblDobl_Complex_Vectors.Vector;
+                nit : in integer32; report : in boolean );
+  procedure Series
+              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                xt0 : in QuadDobl_Complex_Vectors.Vector;
                 nit : in integer32; report : in boolean );
 
   -- DESCRIPTION :
@@ -367,6 +441,16 @@ package Regular_Solution_Curves_Series is
               ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
+                nit : in integer32 );
+  procedure Series
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                nit : in integer32 );
+  procedure Series
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
                 nit : in integer32 );
 
   -- DESCRIPTION :
@@ -383,6 +467,14 @@ package Regular_Solution_Curves_Series is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 nit : in integer32; report : in boolean );
+  procedure Series
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                nit : in integer32; report : in boolean );
+  procedure Series
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                nit : in integer32; report : in boolean );
 
   -- DESCRIPTION :
   --   Applies Newton's method to compute series solutions,
@@ -397,6 +489,16 @@ package Regular_Solution_Curves_Series is
   procedure Series
               ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                nit : in integer32 );
+  procedure Series
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                nit : in integer32 );
+  procedure Series
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 mcc : in Mixed_Subdivision;
                 nit : in integer32 );
 
@@ -415,6 +517,14 @@ package Regular_Solution_Curves_Series is
 
   procedure Series
               ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                nit : in integer32; report : in boolean );
+  procedure Series
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                nit : in integer32; report : in boolean );
+  procedure Series
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 mcc : in Mixed_Subdivision;
                 nit : in integer32; report : in boolean );
 

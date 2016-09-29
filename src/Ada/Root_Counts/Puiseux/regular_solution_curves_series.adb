@@ -2,11 +2,15 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Complex_Vector_Norms;      use Standard_Complex_Vector_Norms;
+with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Standard_Complex_Laurentials_io;    use Standard_Complex_Laurentials_io;
 with DoblDobl_Complex_Laurentials_io;    use DoblDobl_Complex_Laurentials_io;
@@ -16,8 +20,10 @@ with Standard_Complex_Laur_SysFun;       use Standard_Complex_Laur_SysFun;
 with Standard_Laur_Poly_Convertors;      use Standard_Laur_Poly_Convertors;
 with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Laur_SysFun;       use DoblDobl_Complex_Laur_SysFun;
+with DoblDobl_Laur_Poly_Convertors;      use DoblDobl_Laur_Poly_Convertors;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Laur_SysFun;       use QuadDobl_Complex_Laur_SysFun;
+with QuadDobl_Laur_Poly_Convertors;      use QuadDobl_Laur_Poly_Convertors;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
@@ -26,9 +32,15 @@ with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Black_Box_Solvers;                  use Black_Box_Solvers;
 with Standard_Dense_Series;
 with Standard_Dense_Series_Vectors;
+with DoblDobl_Dense_Series;
+with DoblDobl_Dense_Series_Vectors;
+with QuadDobl_Dense_Series;
+with QuadDobl_Dense_Series_Vectors;
 with Series_and_Polynomials;
 with Series_and_Polynomials_io;
 with Standard_Newton_Matrix_Series;
+with DoblDobl_Newton_Matrix_Series;
+with QuadDobl_Newton_Matrix_Series;
 
 package body Regular_Solution_Curves_Series is
 
@@ -700,6 +712,42 @@ package body Regular_Solution_Curves_Series is
     return res;
   end Initial_Residual;
 
+  function Initial_Residual
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sol : in DoblDobl_Complex_Vectors.Vector )
+              return double_float is
+
+    res : double_double;
+    ext : DoblDobl_Complex_Vectors.Vector(sol'first..sol'last+1);
+    eva : DoblDobl_Complex_Vectors.Vector(p'range);
+    zero : constant double_double := create(0.0);
+
+  begin
+    ext(sol'range) := sol;
+    ext(sol'last+1) := DoblDobl_Complex_Numbers.Create(zero);
+    eva := Eval(p,ext);
+    res := Norm2(eva);
+    return hi_part(res);
+  end Initial_Residual;
+
+  function Initial_Residual
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sol : in QuadDobl_Complex_Vectors.Vector )
+              return double_float is
+
+    res : quad_double;
+    ext : QuadDobl_Complex_Vectors.Vector(sol'first..sol'last+1);
+    eva : QuadDobl_Complex_Vectors.Vector(p'range);
+    zero : constant quad_double := create(0.0);
+
+  begin
+    ext(sol'range) := sol;
+    ext(sol'last+1) := QuadDobl_Complex_Numbers.Create(zero);
+    eva := Eval(p,ext);
+    res := Norm2(eva);
+    return hihi_part(res);
+  end Initial_Residual;
+
   function Initial_Residuals
               ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -731,6 +779,108 @@ package body Regular_Solution_Curves_Series is
                 report : in boolean ) return double_float is
 
     use Standard_Complex_Solutions;
+
+    res : double_float := 0.0;
+    eva : double_float;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+ 
+  begin
+    for k in 1..Length_Of(tmp) loop
+      ls := Head_Of(tmp);
+      eva := Initial_Residual(p,ls.v);
+      if report then
+        put("At solution "); put(k,1);
+        put(" : "); put(eva); new_line;
+      end if;
+      res := res + eva;
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Initial_Residuals;
+
+  function Initial_Residuals
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List )
+              return double_float is
+
+    use DoblDobl_Complex_Solutions;
+
+    res : double_float := 0.0;
+    eva : double_float;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+ 
+  begin
+    for k in 1..Length_Of(tmp) loop
+      ls := Head_Of(tmp);
+      eva := Initial_Residual(p,ls.v);
+      put(file,"At solution "); put(file,k,1);
+      put(file," : "); put(file,eva); new_line(file);
+      res := res + eva;
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Initial_Residuals;
+
+  function Initial_Residuals
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                report : in boolean ) return double_float is
+
+    use DoblDobl_Complex_Solutions;
+
+    res : double_float := 0.0;
+    eva : double_float;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+ 
+  begin
+    for k in 1..Length_Of(tmp) loop
+      ls := Head_Of(tmp);
+      eva := Initial_Residual(p,ls.v);
+      if report then
+        put("At solution "); put(k,1);
+        put(" : "); put(eva); new_line;
+      end if;
+      res := res + eva;
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Initial_Residuals;
+
+  function Initial_Residuals
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List )
+              return double_float is
+
+    use QuadDobl_Complex_Solutions;
+
+    res : double_float := 0.0;
+    eva : double_float;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+ 
+  begin
+    for k in 1..Length_Of(tmp) loop
+      ls := Head_Of(tmp);
+      eva := Initial_Residual(p,ls.v);
+      put(file,"At solution "); put(file,k,1);
+      put(file," : "); put(file,eva); new_line(file);
+      res := res + eva;
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Initial_Residuals;
+
+  function Initial_Residuals
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                report : in boolean ) return double_float is
+
+    use QuadDobl_Complex_Solutions;
 
     res : double_float := 0.0;
     eva : double_float;
@@ -794,6 +944,92 @@ package body Regular_Solution_Curves_Series is
     tsq := Positive_Laurent_Polynomial_System(tvp);
   end Initial;
 
+  procedure Initial
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                tsq : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    psub,tvp : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    res : double_float;
+
+  begin
+    put(file,"-> pretropism ");
+    put(file,mic.nor); new_line(file);
+    Initial_Coefficients(file,p,mic,psub,sols);
+    Transform_Coordinates(file,p,mic.nor.all,tvp);
+    res := Initial_Residuals(file,tvp,sols);
+    put(file,"The residual :"); put(file,res,3); new_line(file);
+    tsq := Positive_Laurent_Polynomial_System(tvp);
+  end Initial;
+
+  procedure Initial
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                tsq : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                report : in boolean ) is
+
+    psub,tvp : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    res : double_float;
+
+  begin
+    if report then
+      put("-> pretropism "); put(mic.nor); new_line;
+    end if;
+    Initial_Coefficients(p,mic,psub,sols,report);
+    Transform_Coordinates(p,mic.nor.all,tvp,report);
+    res := Initial_Residuals(tvp,sols,report);
+    if report then
+      put("The residual :"); put(res,3); new_line;
+    end if;
+    tsq := Positive_Laurent_Polynomial_System(tvp);
+  end Initial;
+
+  procedure Initial
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                tsq : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    psub,tvp : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    res : double_float;
+
+  begin
+    put(file,"-> pretropism ");
+    put(file,mic.nor); new_line(file);
+    Initial_Coefficients(file,p,mic,psub,sols);
+    Transform_Coordinates(file,p,mic.nor.all,tvp);
+    res := Initial_Residuals(file,tvp,sols);
+    put(file,"The residual :"); put(file,res,3); new_line(file);
+    tsq := Positive_Laurent_Polynomial_System(tvp);
+  end Initial;
+
+  procedure Initial
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mic : in Mixed_Cell;
+                tsq : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                report : in boolean ) is
+
+    psub,tvp : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    res : double_float;
+
+  begin
+    if report then
+      put("-> pretropism "); put(mic.nor); new_line;
+    end if;
+    Initial_Coefficients(p,mic,psub,sols,report);
+    Transform_Coordinates(p,mic.nor.all,tvp,report);
+    res := Initial_Residuals(tvp,sols,report);
+    if report then
+      put("The residual :"); put(res,3); new_line;
+    end if;
+    tsq := Positive_Laurent_Polynomial_System(tvp);
+  end Initial;
+
   procedure Series
               ( file : in file_type;
                 p : in Standard_Series_Poly_Systems.Poly_Sys;
@@ -829,6 +1065,96 @@ package body Regular_Solution_Curves_Series is
   begin
     for i in s'range loop
       s(i) := Standard_Dense_Series.Create(xt0(i));
+    end loop;
+    if report then
+      LU_Newton_Steps(standard_output,p,deg,nit,s,info);
+      put_line("The solution series : ");
+      Series_and_Polynomials_io.put(s);
+    else
+      LU_Newton_Steps(p,deg,nit,s,info);
+    end if;
+  end Series;
+
+  procedure Series
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                xt0 : in DoblDobl_Complex_Vectors.Vector;
+                nit : in integer32 ) is
+
+    use DoblDobl_Newton_Matrix_Series;
+
+    s : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    info : integer32;
+    deg : integer32 := 1; -- doubles in every step
+
+  begin
+    for i in s'range loop
+      s(i) := DoblDobl_Dense_Series.Create(xt0(i));
+    end loop;
+    LU_Newton_Steps(file,p,deg,nit,s,info);
+    put_line(file,"The solution series : ");
+    Series_and_Polynomials_io.put(file,s);
+  end Series;
+
+  procedure Series
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                xt0 : in DoblDobl_Complex_Vectors.Vector;
+                nit : in integer32; report : in boolean ) is
+
+    use DoblDobl_Newton_Matrix_Series;
+
+    s : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    info : integer32;
+    deg : integer32 := 1; -- doubles in every step
+
+  begin
+    for i in s'range loop
+      s(i) := DoblDobl_Dense_Series.Create(xt0(i));
+    end loop;
+    if report then
+      LU_Newton_Steps(standard_output,p,deg,nit,s,info);
+      put_line("The solution series : ");
+      Series_and_Polynomials_io.put(s);
+    else
+      LU_Newton_Steps(p,deg,nit,s,info);
+    end if;
+  end Series;
+
+  procedure Series
+              ( file : in file_type;
+                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                xt0 : in QuadDobl_Complex_Vectors.Vector;
+                nit : in integer32 ) is
+
+    use QuadDobl_Newton_Matrix_Series;
+
+    s : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+    info : integer32;
+    deg : integer32 := 1; -- doubles in every step
+
+  begin
+    for i in s'range loop
+      s(i) := QuadDobl_Dense_Series.Create(xt0(i));
+    end loop;
+    LU_Newton_Steps(file,p,deg,nit,s,info);
+    put_line(file,"The solution series : ");
+    Series_and_Polynomials_io.put(file,s);
+  end Series;
+
+  procedure Series
+              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                xt0 : in QuadDobl_Complex_Vectors.Vector;
+                nit : in integer32; report : in boolean ) is
+
+    use QuadDobl_Newton_Matrix_Series;
+
+    s : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+    info : integer32;
+    deg : integer32 := 1; -- doubles in every step
+
+  begin
+    for i in s'range loop
+      s(i) := QuadDobl_Dense_Series.Create(xt0(i));
     end loop;
     if report then
       LU_Newton_Steps(standard_output,p,deg,nit,s,info);
@@ -882,6 +1208,88 @@ package body Regular_Solution_Curves_Series is
 
   procedure Series
               ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                nit : in integer32 ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    s : DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
+      := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Series(file,s,ls.v,nit);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Series;
+
+  procedure Series
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                nit : in integer32; report : in boolean ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    s : DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
+      := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Series(s,ls.v,nit,report);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Series;
+
+  procedure Series
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                nit : in integer32 ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    s : QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
+      := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Series(file,s,ls.v,nit);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Series;
+
+  procedure Series
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                nit : in integer32; report : in boolean ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    s : QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
+      := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Series(s,ls.v,nit,report);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Series;
+
+  procedure Series
+              ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 mcc : in Mixed_Subdivision;
                 nit : in integer32 ) is
@@ -921,6 +1329,104 @@ package body Regular_Solution_Curves_Series is
       declare
         q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
         qsols : Standard_Complex_Solutions.Solution_List;
+      begin
+        Initial(p,mic,q,qsols,report);
+        Series(q,qsols,nit,report);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Series;
+
+  procedure Series
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                nit : in integer32 ) is
+
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+
+  begin
+    for k in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+      put(file,"Mixed cell "); put(file,k); put_line(file," :");
+      declare
+        q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+        qsols : DoblDobl_Complex_Solutions.Solution_List;
+      begin
+        Initial(file,p,mic,q,qsols);
+        Series(file,q,qsols,nit);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Series;
+
+  procedure Series
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                nit : in integer32; report : in boolean ) is
+
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+
+  begin
+    for k in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+      if report then
+        put("Mixed cell "); put(k); put_line(" :");
+      end if;
+      declare
+        q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+        qsols : DoblDobl_Complex_Solutions.Solution_List;
+      begin
+        Initial(p,mic,q,qsols,report);
+        Series(q,qsols,nit,report);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Series;
+
+  procedure Series
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                nit : in integer32 ) is
+
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+
+  begin
+    for k in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+      put(file,"Mixed cell "); put(file,k); put_line(file," :");
+      declare
+        q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+        qsols : QuadDobl_Complex_Solutions.Solution_List;
+      begin
+        Initial(file,p,mic,q,qsols);
+        Series(file,q,qsols,nit);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Series;
+
+  procedure Series
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                nit : in integer32; report : in boolean ) is
+
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+
+  begin
+    for k in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+      if report then
+        put("Mixed cell "); put(k); put_line(" :");
+      end if;
+      declare
+        q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+        qsols : QuadDobl_Complex_Solutions.Solution_List;
       begin
         Initial(p,mic,q,qsols,report);
         Series(q,qsols,nit,report);
