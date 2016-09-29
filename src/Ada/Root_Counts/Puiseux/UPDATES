@@ -1,3 +1,6 @@
+Thu 29 Sep 2016 : ts_puiseux has drivers for double doubles and quad doubles.
+  Bug fix in regular_solution_curves_series.adb.
+
 Wed 28 Sep 2016 : fixed bug in coordinate transformation in the
   regular_solution_curves_series.  More support for dd and qd.
 

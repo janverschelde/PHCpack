@@ -460,7 +460,7 @@ package body Regular_Solution_Curves_Series is
   function Transform ( d,v : Standard_Integer_Vectors.Vector )
                      return Standard_Integer_Vectors.Vector is
 
-    res : Standard_Integer_Vectors.Vector(d'range);
+    res : Standard_Integer_Vectors.Vector(d'range) := d;
 
   begin
     res(res'last) := 0;
@@ -663,7 +663,7 @@ package body Regular_Solution_Curves_Series is
                 report : in boolean ) is
   begin
     q := Transform(p,v);
-    Shift(q,false);
+    Shift(q,report);
     if report then
       put_line("The transformed system : "); put_line(q);
     end if;
@@ -676,7 +676,7 @@ package body Regular_Solution_Curves_Series is
                 report : in boolean ) is
   begin
     q := Transform(p,v);
-    Shift(q,false);
+    Shift(q,report);
     if report then
       put_line("The transformed system : "); put_line(q);
     end if;
@@ -689,7 +689,7 @@ package body Regular_Solution_Curves_Series is
                 report : in boolean ) is
   begin
     q := Transform(p,v);
-    Shift(q,false);
+    Shift(q,report);
     if report then
       put_line("The transformed system : "); put_line(q);
     end if;
