@@ -20,8 +20,14 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
+with Standard_Dense_Series_Vectors;
+with Standard_Dense_Series_VecVecs;
 with Standard_Series_Poly_Systems;
+with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Dense_Series_VecVecs;
 with DoblDobl_Series_Poly_Systems;
+with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Dense_Series_VecVecs;
 with QuadDobl_Series_Poly_Systems;
 
 package Regular_Solution_Curves_Series is
@@ -398,60 +404,64 @@ package Regular_Solution_Curves_Series is
   --   tsq      transformed and shifted polynomial system;
   --   sols     solutions of tsq for t = 0.
 
-  procedure Series
-              ( file : in file_type;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                xt0 : in Standard_Complex_Vectors.Vector;
-                nit : in integer32 );
-  procedure Series
-              ( file : in file_type;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                xt0 : in DoblDobl_Complex_Vectors.Vector;
-                nit : in integer32 );
-  procedure Series
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                xt0 : in QuadDobl_Complex_Vectors.Vector;
-                nit : in integer32 );
+  function Series ( file : file_type;
+                    p : Standard_Series_Poly_Systems.Poly_Sys;
+                    xt0 : Standard_Complex_Vectors.Vector;
+                    nit : integer32 )
+                  return Standard_Dense_Series_Vectors.Vector;
+  function Series ( file : file_type;
+                    p : DoblDobl_Series_Poly_Systems.Poly_Sys;
+                    xt0 : DoblDobl_Complex_Vectors.Vector;
+                    nit : integer32 )
+                  return DoblDobl_Dense_Series_Vectors.Vector;
+  function Series ( file : file_type;
+                    p : QuadDobl_Series_Poly_Systems.Poly_Sys;
+                    xt0 : QuadDobl_Complex_Vectors.Vector;
+                    nit : integer32 )
+                  return QuadDobl_Dense_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Applies Newton's method to p, starting at xt0,
   --   using as many iterations as the value of nit,
   --   writing output to file.
+  --   The vector on returns contains the truncated series
+  --   expansion for the solution with leading coefficients xt0.
 
-  procedure Series
-              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
-                xt0 : in Standard_Complex_Vectors.Vector;
-                nit : in integer32; report : in boolean );
-  procedure Series
-              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                xt0 : in DoblDobl_Complex_Vectors.Vector;
-                nit : in integer32; report : in boolean );
-  procedure Series
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                xt0 : in QuadDobl_Complex_Vectors.Vector;
-                nit : in integer32; report : in boolean );
+  function Series ( p : Standard_Series_Poly_Systems.Poly_Sys;
+                    xt0 : Standard_Complex_Vectors.Vector;
+                    nit : integer32; report : boolean )
+                  return Standard_Dense_Series_Vectors.Vector;
+  function Series ( p : DoblDobl_Series_Poly_Systems.Poly_Sys;
+                    xt0 : DoblDobl_Complex_Vectors.Vector;
+                    nit : integer32; report : boolean )
+                  return DoblDobl_Dense_Series_Vectors.Vector;
+  function Series ( p : QuadDobl_Series_Poly_Systems.Poly_Sys;
+                    xt0 : QuadDobl_Complex_Vectors.Vector;
+                    nit : integer32; report : boolean )
+                  return QuadDobl_Dense_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Applies Newton's method to p, starting at xt0,
   --   using as many iterations as the value of nit,
   --   writing output to screen if report is true.
+  --   The vector on returns contains the truncated series
+  --   expansion for the solution with leading coefficients xt0.
 
-  procedure Series
-              ( file : in file_type;
-                p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                sols : in Standard_Complex_Solutions.Solution_List;
-                nit : in integer32 );
-  procedure Series
-              ( file : in file_type;
-                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in DoblDobl_Complex_Solutions.Solution_List;
-                nit : in integer32 );
-  procedure Series
-              ( file : in file_type;
-                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in QuadDobl_Complex_Solutions.Solution_List;
-                nit : in integer32 );
+  function Series ( file : file_type;
+                    p : Standard_Complex_Poly_Systems.Poly_Sys;
+                    sols : Standard_Complex_Solutions.Solution_List;
+                    nit : integer32 )
+                  return Standard_Dense_Series_VecVecs.VecVec;
+  function Series ( file : file_type;
+                    p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : DoblDobl_Complex_Solutions.Solution_List;
+                    nit : integer32 )
+                  return DoblDobl_Dense_Series_VecVecs.VecVec;
+  function Series ( file : file_type;
+                    p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : QuadDobl_Complex_Solutions.Solution_List;
+                    nit : integer32 )
+                  return QuadDobl_Dense_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Applies Newton's method to compute series solutions,
@@ -463,18 +473,21 @@ package Regular_Solution_Curves_Series is
   --   sols     solutions of p for t = 0;
   --   nit      number of iterations of Newton's method.
 
-  procedure Series
-              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                sols : in Standard_Complex_Solutions.Solution_List;
-                nit : in integer32; report : in boolean );
-  procedure Series
-              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in DoblDobl_Complex_Solutions.Solution_List;
-                nit : in integer32; report : in boolean );
-  procedure Series
-              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in QuadDobl_Complex_Solutions.Solution_List;
-                nit : in integer32; report : in boolean );
+  -- ON RETURN :
+  --   The sequence of series with leading coefficients in sols.
+
+  function Series ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                    sols : Standard_Complex_Solutions.Solution_List;
+                    nit : integer32; report : boolean )
+                  return Standard_Dense_Series_VecVecs.VecVec;
+  function Series ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : DoblDobl_Complex_Solutions.Solution_List;
+                    nit : integer32; report : boolean )
+                  return DoblDobl_Dense_Series_VecVecs.VecVec;
+  function Series ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : QuadDobl_Complex_Solutions.Solution_List;
+                    nit : integer32; report : boolean )
+                  return QuadDobl_Dense_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Applies Newton's method to compute series solutions,
@@ -485,6 +498,9 @@ package Regular_Solution_Curves_Series is
   --   sols     solutions of p for t = 0;
   --   nit      number of iterations of Newton's method;
   --   report   flag to write output to screen.
+
+  -- ON RETURN :
+  --   The sequence of series with leading coefficients in sols.
 
   procedure Series
               ( file : in file_type;

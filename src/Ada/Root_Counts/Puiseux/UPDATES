@@ -1,3 +1,6 @@
+Fri 30 Sep 2016 : in regular_solution_curves_series, turned procedures into
+  function to return the computed series developments.
+
 Thu 29 Sep 2016 : ts_puiseux has drivers for double doubles and quad doubles.
   Bug fix in regular_solution_curves_series.adb.
 

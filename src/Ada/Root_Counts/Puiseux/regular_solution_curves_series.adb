@@ -31,11 +31,11 @@ with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Black_Box_Solvers;                  use Black_Box_Solvers;
 with Standard_Dense_Series;
-with Standard_Dense_Series_Vectors;
+with Standard_Dense_Series_VecVecs;
 with DoblDobl_Dense_Series;
-with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Dense_Series_VecVecs;
 with QuadDobl_Dense_Series;
-with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Dense_Series_VecVecs;
 with Series_and_Polynomials;
 with Series_and_Polynomials_io;
 with Standard_Newton_Matrix_Series;
@@ -1030,269 +1030,322 @@ package body Regular_Solution_Curves_Series is
     tsq := Positive_Laurent_Polynomial_System(tvp);
   end Initial;
 
-  procedure Series
-              ( file : in file_type;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                xt0 : in Standard_Complex_Vectors.Vector;
-                nit : in integer32 ) is
+  function Series ( file : file_type;
+                    p : Standard_Series_Poly_Systems.Poly_Sys;
+                    xt0 : Standard_Complex_Vectors.Vector;
+                    nit : integer32 )
+                  return Standard_Dense_Series_Vectors.Vector is
 
     use Standard_Newton_Matrix_Series;
 
-    s : Standard_Dense_Series_Vectors.Vector(p'range);
+    res : Standard_Dense_Series_Vectors.Vector(p'range);
     info : integer32;
     deg : integer32 := 1; -- doubles in every step
 
   begin
-    for i in s'range loop
-      s(i) := Standard_Dense_Series.Create(xt0(i));
+    for i in res'range loop
+      res(i) := Standard_Dense_Series.Create(xt0(i));
     end loop;
-    LU_Newton_Steps(file,p,deg,nit,s,info);
+    LU_Newton_Steps(file,p,deg,nit,res,info);
     put_line(file,"The solution series : ");
-    Series_and_Polynomials_io.put(file,s);
+    Series_and_Polynomials_io.put(file,res);
+    return res;
   end Series;
 
-  procedure Series
-              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
-                xt0 : in Standard_Complex_Vectors.Vector;
-                nit : in integer32; report : in boolean ) is
+  function Series ( p : Standard_Series_Poly_Systems.Poly_Sys;
+                    xt0 : Standard_Complex_Vectors.Vector;
+                    nit : integer32; report : boolean )
+                  return Standard_Dense_Series_Vectors.Vector is
 
     use Standard_Newton_Matrix_Series;
 
-    s : Standard_Dense_Series_Vectors.Vector(p'range);
+    res : Standard_Dense_Series_Vectors.Vector(p'range);
     info : integer32;
     deg : integer32 := 1; -- doubles in every step
 
   begin
-    for i in s'range loop
-      s(i) := Standard_Dense_Series.Create(xt0(i));
+    for i in res'range loop
+      res(i) := Standard_Dense_Series.Create(xt0(i));
     end loop;
     if report then
-      LU_Newton_Steps(standard_output,p,deg,nit,s,info);
+      LU_Newton_Steps(standard_output,p,deg,nit,res,info);
       put_line("The solution series : ");
-      Series_and_Polynomials_io.put(s);
+      Series_and_Polynomials_io.put(res);
     else
-      LU_Newton_Steps(p,deg,nit,s,info);
+      LU_Newton_Steps(p,deg,nit,res,info);
     end if;
+    return res;
   end Series;
 
-  procedure Series
-              ( file : in file_type;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                xt0 : in DoblDobl_Complex_Vectors.Vector;
-                nit : in integer32 ) is
+  function Series ( file : file_type;
+                    p : DoblDobl_Series_Poly_Systems.Poly_Sys;
+                    xt0 : DoblDobl_Complex_Vectors.Vector;
+                    nit : integer32 )
+                  return DoblDobl_Dense_Series_Vectors.Vector is
 
     use DoblDobl_Newton_Matrix_Series;
 
-    s : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    res : DoblDobl_Dense_Series_Vectors.Vector(p'range);
     info : integer32;
     deg : integer32 := 1; -- doubles in every step
 
   begin
-    for i in s'range loop
-      s(i) := DoblDobl_Dense_Series.Create(xt0(i));
+    for i in res'range loop
+      res(i) := DoblDobl_Dense_Series.Create(xt0(i));
     end loop;
-    LU_Newton_Steps(file,p,deg,nit,s,info);
+    LU_Newton_Steps(file,p,deg,nit,res,info);
     put_line(file,"The solution series : ");
-    Series_and_Polynomials_io.put(file,s);
+    Series_and_Polynomials_io.put(file,res);
+    return res;
   end Series;
 
-  procedure Series
-              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                xt0 : in DoblDobl_Complex_Vectors.Vector;
-                nit : in integer32; report : in boolean ) is
+  function Series ( p : DoblDobl_Series_Poly_Systems.Poly_Sys;
+                    xt0 : DoblDobl_Complex_Vectors.Vector;
+                    nit : integer32; report : boolean )
+                  return DoblDobl_Dense_Series_Vectors.Vector is
 
     use DoblDobl_Newton_Matrix_Series;
 
-    s : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    res : DoblDobl_Dense_Series_Vectors.Vector(p'range);
     info : integer32;
     deg : integer32 := 1; -- doubles in every step
 
   begin
-    for i in s'range loop
-      s(i) := DoblDobl_Dense_Series.Create(xt0(i));
+    for i in res'range loop
+      res(i) := DoblDobl_Dense_Series.Create(xt0(i));
     end loop;
     if report then
-      LU_Newton_Steps(standard_output,p,deg,nit,s,info);
+      LU_Newton_Steps(standard_output,p,deg,nit,res,info);
       put_line("The solution series : ");
-      Series_and_Polynomials_io.put(s);
+      Series_and_Polynomials_io.put(res);
     else
-      LU_Newton_Steps(p,deg,nit,s,info);
+      LU_Newton_Steps(p,deg,nit,res,info);
     end if;
+    return res;
   end Series;
 
-  procedure Series
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                xt0 : in QuadDobl_Complex_Vectors.Vector;
-                nit : in integer32 ) is
+  function Series ( file : file_type;
+                    p : QuadDobl_Series_Poly_Systems.Poly_Sys;
+                    xt0 : QuadDobl_Complex_Vectors.Vector;
+                    nit : integer32 )
+                  return QuadDobl_Dense_Series_Vectors.Vector is
 
     use QuadDobl_Newton_Matrix_Series;
 
-    s : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+    res : QuadDobl_Dense_Series_Vectors.Vector(p'range);
     info : integer32;
     deg : integer32 := 1; -- doubles in every step
 
   begin
-    for i in s'range loop
-      s(i) := QuadDobl_Dense_Series.Create(xt0(i));
+    for i in res'range loop
+      res(i) := QuadDobl_Dense_Series.Create(xt0(i));
     end loop;
-    LU_Newton_Steps(file,p,deg,nit,s,info);
+    LU_Newton_Steps(file,p,deg,nit,res,info);
     put_line(file,"The solution series : ");
-    Series_and_Polynomials_io.put(file,s);
+    Series_and_Polynomials_io.put(file,res);
+    return res;
   end Series;
 
-  procedure Series
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                xt0 : in QuadDobl_Complex_Vectors.Vector;
-                nit : in integer32; report : in boolean ) is
+  function Series ( p : QuadDobl_Series_Poly_Systems.Poly_Sys;
+                    xt0 : QuadDobl_Complex_Vectors.Vector;
+                    nit : integer32; report : boolean )
+                  return QuadDobl_Dense_Series_Vectors.Vector is
 
     use QuadDobl_Newton_Matrix_Series;
 
-    s : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+    res : QuadDobl_Dense_Series_Vectors.Vector(p'range);
     info : integer32;
     deg : integer32 := 1; -- doubles in every step
 
   begin
-    for i in s'range loop
-      s(i) := QuadDobl_Dense_Series.Create(xt0(i));
+    for i in res'range loop
+      res(i) := QuadDobl_Dense_Series.Create(xt0(i));
     end loop;
     if report then
-      LU_Newton_Steps(standard_output,p,deg,nit,s,info);
+      LU_Newton_Steps(standard_output,p,deg,nit,res,info);
       put_line("The solution series : ");
-      Series_and_Polynomials_io.put(s);
+      Series_and_Polynomials_io.put(res);
     else
-      LU_Newton_Steps(p,deg,nit,s,info);
+      LU_Newton_Steps(p,deg,nit,res,info);
     end if;
+    return res;
   end Series;
 
-  procedure Series
-              ( file : in file_type;
-                p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                sols : in Standard_Complex_Solutions.Solution_List;
-                nit : in integer32 ) is
+  function Series ( file : file_type;
+                    p : Standard_Complex_Poly_Systems.Poly_Sys;
+                    sols : Standard_Complex_Solutions.Solution_List;
+                    nit : integer32 )
+                  return Standard_Dense_Series_VecVecs.VecVec is
 
     use Standard_Complex_Solutions;
 
+    len : constant integer32 := integer32(Length_Of(sols));
+    res : Standard_Dense_Series_VecVecs.VecVec(1..len);
     s : Standard_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
 
   begin
-    while not Is_Null(tmp) loop
+    for k in res'range loop
       ls := Head_Of(tmp);
-      Series(file,s,ls.v,nit);
+      declare
+        sersol : Standard_Dense_Series_Vectors.Vector(p'range);
+      begin
+        sersol := Series(file,s,ls.v,nit);
+        res(k) := new Standard_Dense_Series_Vectors.Vector'(sersol);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                sols : in Standard_Complex_Solutions.Solution_List;
-                nit : in integer32; report : in boolean ) is
+  function Series ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                    sols : Standard_Complex_Solutions.Solution_List;
+                    nit : integer32; report : boolean )
+                  return Standard_Dense_Series_VecVecs.VecVec is
 
     use Standard_Complex_Solutions;
 
+    len : constant integer32 := integer32(Length_Of(sols));
+    res : Standard_Dense_Series_VecVecs.VecVec(1..len);
     s : Standard_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
 
   begin
-    while not Is_Null(tmp) loop
+    for k in res'range loop
       ls := Head_Of(tmp);
-      Series(s,ls.v,nit,report);
+      declare
+        sersol : Standard_Dense_Series_Vectors.Vector(p'range);
+      begin
+        sersol := Series(s,ls.v,nit,report);
+        res(k) := new Standard_Dense_Series_Vectors.Vector'(sersol);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( file : in file_type;
-                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in DoblDobl_Complex_Solutions.Solution_List;
-                nit : in integer32 ) is
+  function Series ( file : file_type;
+                    p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : DoblDobl_Complex_Solutions.Solution_List;
+                    nit : integer32 )
+                  return DoblDobl_Dense_Series_VecVecs.VecVec is
 
     use DoblDobl_Complex_Solutions;
 
+    len : constant integer32 := integer32(Length_Of(sols));
+    res : DoblDobl_Dense_Series_VecVecs.VecVec(1..len);
     s : DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
 
   begin
-    while not Is_Null(tmp) loop
+    for k in res'range loop
       ls := Head_Of(tmp);
-      Series(file,s,ls.v,nit);
+      declare
+        sersol : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+      begin
+        sersol := Series(file,s,ls.v,nit);
+        res(k) := new DoblDobl_Dense_Series_Vectors.Vector'(sersol);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in DoblDobl_Complex_Solutions.Solution_List;
-                nit : in integer32; report : in boolean ) is
+  function Series ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : DoblDobl_Complex_Solutions.Solution_List;
+                    nit : integer32; report : boolean )
+                  return DoblDobl_Dense_Series_VecVecs.VecVec is
 
     use DoblDobl_Complex_Solutions;
 
+    len : constant integer32 := integer32(Length_Of(sols));
+    res : DoblDobl_Dense_Series_VecVecs.VecVec(1..len);
     s : DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
 
   begin
-    while not Is_Null(tmp) loop
+    for k in res'range loop
       ls := Head_Of(tmp);
-      Series(s,ls.v,nit,report);
+      declare
+        sersol : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+      begin
+        sersol := Series(s,ls.v,nit,report);
+        res(k) := new DoblDobl_Dense_Series_Vectors.Vector'(sersol);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( file : in file_type;
-                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in QuadDobl_Complex_Solutions.Solution_List;
-                nit : in integer32 ) is
+  function Series ( file : file_type;
+                    p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : QuadDobl_Complex_Solutions.Solution_List;
+                    nit : integer32 )
+                  return QuadDobl_Dense_Series_VecVecs.VecVec is
 
     use QuadDobl_Complex_Solutions;
 
+    len : constant integer32 := integer32(Length_Of(sols));
+    res : QuadDobl_Dense_Series_VecVecs.VecVec(1..len);
     s : QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
 
   begin
-    while not Is_Null(tmp) loop
+    for k in res'range loop
       ls := Head_Of(tmp);
-      Series(file,s,ls.v,nit);
+      declare
+        sersol : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+      begin
+        sersol := Series(file,s,ls.v,nit);
+        res(k) := new QuadDobl_Dense_Series_Vectors.Vector'(sersol);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in QuadDobl_Complex_Solutions.Solution_List;
-                nit : in integer32; report : in boolean ) is
+  function Series ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : QuadDobl_Complex_Solutions.Solution_List;
+                    nit : integer32; report : boolean )
+                  return QuadDobl_Dense_Series_VecVecs.VecVec is
 
     use QuadDobl_Complex_Solutions;
 
+    len : constant integer32 := integer32(Length_Of(sols));
+    res : QuadDobl_Dense_Series_VecVecs.VecVec(1..len);
     s : QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
 
   begin
-    while not Is_Null(tmp) loop
+    for k in res'range loop
       ls := Head_Of(tmp);
-      Series(s,ls.v,nit,report);
+      declare
+        sersol : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+      begin
+        sersol := Series(s,ls.v,nit,report);
+        res(k) := new QuadDobl_Dense_Series_Vectors.Vector'(sersol);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( file : in file_type;
-                p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32 ) is
+  procedure Series ( file : in file_type;
+                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                     mcc : in Mixed_Subdivision;
+                     nit : in integer32 ) is
 
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
@@ -1306,7 +1359,13 @@ package body Regular_Solution_Curves_Series is
         qsols : Standard_Complex_Solutions.Solution_List;
       begin
         Initial(file,p,mic,q,qsols);
-        Series(file,q,qsols,nit);
+        declare
+          len : constant integer32
+              := integer32(Standard_Complex_Solutions.Length_Of(qsols));
+          srs : Standard_Dense_Series_VecVecs.VecVec(1..len);
+        begin
+          srs := Series(file,q,qsols,nit);
+        end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
@@ -1331,7 +1390,13 @@ package body Regular_Solution_Curves_Series is
         qsols : Standard_Complex_Solutions.Solution_List;
       begin
         Initial(p,mic,q,qsols,report);
-        Series(q,qsols,nit,report);
+        declare
+          len : constant integer32
+              := integer32(Standard_Complex_Solutions.Length_Of(qsols));
+          srs : Standard_Dense_Series_VecVecs.VecVec(1..len);
+        begin
+          srs := Series(q,qsols,nit,report);
+        end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
@@ -1355,7 +1420,13 @@ package body Regular_Solution_Curves_Series is
         qsols : DoblDobl_Complex_Solutions.Solution_List;
       begin
         Initial(file,p,mic,q,qsols);
-        Series(file,q,qsols,nit);
+        declare
+          len : constant integer32
+              := integer32(DoblDobl_Complex_Solutions.Length_Of(qsols));
+          srs : DoblDobl_Dense_Series_VecVecs.VecVec(1..len);
+        begin
+          srs := Series(file,q,qsols,nit);
+        end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
@@ -1380,7 +1451,13 @@ package body Regular_Solution_Curves_Series is
         qsols : DoblDobl_Complex_Solutions.Solution_List;
       begin
         Initial(p,mic,q,qsols,report);
-        Series(q,qsols,nit,report);
+        declare
+          len : constant integer32
+              := integer32(DoblDobl_Complex_Solutions.Length_Of(qsols));
+          srs : DoblDobl_Dense_Series_VecVecs.VecVec(1..len);
+        begin
+          srs := Series(q,qsols,nit,report);
+        end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
@@ -1404,7 +1481,13 @@ package body Regular_Solution_Curves_Series is
         qsols : QuadDobl_Complex_Solutions.Solution_List;
       begin
         Initial(file,p,mic,q,qsols);
-        Series(file,q,qsols,nit);
+        declare
+          len : constant integer32
+              := integer32(QuadDobl_Complex_Solutions.Length_Of(qsols));
+          srs : QuadDobl_Dense_Series_VecVecs.VecVec(1..len);
+        begin
+          srs := Series(file,q,qsols,nit);
+        end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
@@ -1429,7 +1512,13 @@ package body Regular_Solution_Curves_Series is
         qsols : QuadDobl_Complex_Solutions.Solution_List;
       begin
         Initial(p,mic,q,qsols,report);
-        Series(q,qsols,nit,report);
+        declare
+          len : constant integer32
+              := integer32(QuadDobl_Complex_Solutions.Length_Of(qsols));
+          srs : QuadDobl_Dense_Series_VecVecs.VecVec(1..len);
+        begin
+          srs := Series(q,qsols,nit,report);
+        end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
