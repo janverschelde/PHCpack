@@ -17,6 +17,9 @@ with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
+with Standard_Dense_Series_VecVecs;
+with DoblDobl_Dense_Series_VecVecs;
+with QuadDobl_Dense_Series_VecVecs;
 with Regular_Solution_Curves_Series;     use Regular_Solution_Curves_Series;
 
 procedure ts_puiseux is
@@ -29,13 +32,12 @@ procedure ts_puiseux is
   procedure Tropisms_by_Mixed_Cells
               ( file : in file_type; 
                 sup : in out Array_of_Lists;
-                mcc : out Mixed_Subdivision ) is
+                mcc : out Mixed_Subdivision; mv : out natural32 ) is
 
   -- DESCRIPTION :
   --   Computes a regular mixed cell configuration for
   --   the supports in sup, with some writing to file.
-
-    mv : natural32;
+  --   The mixed volume is in mv.
 
   begin
     Mixed_Cell_Tropisms(file,sup,mcc,mv);
@@ -48,14 +50,13 @@ procedure ts_puiseux is
 
   procedure Tropisms_by_Mixed_Cells
               ( sup : in out Array_of_Lists;
-                mcc : out Mixed_Subdivision;
+                mcc : out Mixed_Subdivision; mv : out natural32;
                 report : in boolean ) is
 
   -- DESCRIPTION :
   --   Computes a regular mixed cell configuration for
   --   the supports in sup, with some writing to screen if report.
-
-    mv : natural32;
+  --   The mixed volume is in mv.
 
   begin
     Mixed_Cell_Tropisms(report,sup,mcc,mv);
@@ -78,11 +79,16 @@ procedure ts_puiseux is
 
     sup : Array_of_Lists(p'range) := Create(p);
     mcc : Mixed_Subdivision;
+    mv : natural32;
     nit : constant integer32 := 7;
 
   begin
-    Tropisms_by_Mixed_Cells(file,sup,mcc);
-    Series(file,p,mcc,nit);
+    Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
+    declare
+      s : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    begin
+      s := Series(file,p,mcc,mv,nit);
+    end;
   end Standard_Test;
 
   procedure DoblDobl_Test
@@ -96,11 +102,16 @@ procedure ts_puiseux is
 
     sup : Array_of_Lists(p'range) := Create(p);
     mcc : Mixed_Subdivision;
+    mv : natural32;
     nit : constant integer32 := 7;
 
   begin
-    Tropisms_by_Mixed_Cells(file,sup,mcc);
-    Series(file,p,mcc,nit);
+    Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
+    declare
+      s : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    begin
+      s := Series(file,p,mcc,mv,nit);
+    end;
   end DoblDobl_Test;
 
   procedure QuadDobl_Test
@@ -114,11 +125,16 @@ procedure ts_puiseux is
 
     sup : Array_of_Lists(p'range) := Create(p);
     mcc : Mixed_Subdivision;
+    mv : natural32;
     nit : constant integer32 := 7;
 
   begin
-    Tropisms_by_Mixed_Cells(file,sup,mcc);
-    Series(file,p,mcc,nit);
+    Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
+    declare
+      s : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    begin
+      s := Series(file,p,mcc,mv,nit);
+    end;
   end QuadDobl_Test;
 
   procedure Standard_Test 
@@ -133,11 +149,16 @@ procedure ts_puiseux is
 
     sup : Array_of_Lists(p'range) := Create(p);
     mcc : Mixed_Subdivision;
+    mv : natural32;
     nit : constant integer32 := 7;
 
   begin
-    Tropisms_by_Mixed_Cells(sup,mcc,report);
-    Series(p,mcc,nit,report);
+    Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
+    declare
+      s : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    begin
+      s := Series(p,mcc,mv,nit,report);
+    end;
   end Standard_Test;
 
   procedure DoblDobl_Test 
@@ -152,11 +173,16 @@ procedure ts_puiseux is
 
     sup : Array_of_Lists(p'range) := Create(p);
     mcc : Mixed_Subdivision;
+    mv : natural32;
     nit : constant integer32 := 7;
 
   begin
-    Tropisms_by_Mixed_Cells(sup,mcc,report);
-    Series(p,mcc,nit,report);
+    Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
+    declare
+      s : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    begin
+      s := Series(p,mcc,mv,nit,report);
+    end;
   end DoblDobl_Test;
 
   procedure QuadDobl_Test 
@@ -171,11 +197,16 @@ procedure ts_puiseux is
 
     sup : Array_of_Lists(p'range) := Create(p);
     mcc : Mixed_Subdivision;
+    mv : natural32;
     nit : constant integer32 := 7;
 
   begin
-    Tropisms_by_Mixed_Cells(sup,mcc,report);
-    Series(p,mcc,nit,report);
+    Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
+    declare
+      s : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    begin
+      s := Series(p,mcc,mv,nit,report);
+    end;
   end QuadDobl_Test;
 
   function Prompt_for_Precision return character is

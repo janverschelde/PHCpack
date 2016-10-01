@@ -502,21 +502,46 @@ package Regular_Solution_Curves_Series is
   -- ON RETURN :
   --   The sequence of series with leading coefficients in sols.
 
-  procedure Series
-              ( file : in file_type;
-                p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32 );
-  procedure Series
-              ( file : in file_type;
-                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32 );
-  procedure Series
-              ( file : in file_type;
-                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32 );
+  procedure Concat ( sto : in out Standard_Dense_Series_VecVecs.VecVec;
+                     idx : in out integer32;
+                     sfrom : in Standard_Dense_Series_VecVecs.VecVec );
+  procedure Concat ( sto : in out DoblDobl_Dense_Series_VecVecs.VecVec;
+                     idx : in out integer32;
+                     sfrom : in DoblDobl_Dense_Series_VecVecs.VecVec );
+  procedure Concat ( sto : in out QuadDobl_Dense_Series_VecVecs.VecVec;
+                     idx : in out integer32;
+                     sfrom : in QuadDobl_Dense_Series_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Concatenates the series in sfrom to the series in sto,
+  --   incrementing the index idx with each added series.
+
+  -- REQUIRED : idx + sfrom'last <= sto'last.
+
+  -- ON ENTRY :
+  --   sto      vector of series vectors up to idx;
+  --   idx      index of the last valid entry in sto;
+  --   sfrom    series to be concatenated to sto.
+
+  -- ON RETURN :
+  --   sto      updated vector of series vectors up to idx;
+  --   idx      updated index of the last valid entry in sto;
+
+  function Series ( file : file_type;
+                    p : Standard_Complex_Laur_Systems.Laur_Sys;
+                    mcc : Mixed_Subdivision; mv : natural32;
+                    nit : integer32 )
+                  return Standard_Dense_Series_VecVecs.VecVec;
+  function Series ( file : file_type;
+                    p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    mcc : Mixed_Subdivision; mv : natural32;
+                    nit : integer32 )
+                  return DoblDobl_Dense_Series_VecVecs.VecVec;
+  function Series ( file : file_type;
+                    p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    mcc : Mixed_Subdivision; mv : natural32;
+                    nit : integer32 )
+                  return QuadDobl_Dense_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Solves all initial form systems defined by the cells in mcc
@@ -529,20 +554,24 @@ package Regular_Solution_Curves_Series is
   --            where the last variable is the lifting;
   --   mcc      regular mixed cell configuration defined by the
   --            lower hull of the supports of p;
+  --   mv       the mixed volume of the supports of p;
   --   nit      number of Newton steps per solution series.
 
-  procedure Series
-              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32; report : in boolean );
-  procedure Series
-              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32; report : in boolean );
-  procedure Series
-              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32; report : in boolean );
+  -- ON RETURN :
+  --   A sequence of mv series in the range 1..mv.
+
+  function Series ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                    mcc : Mixed_Subdivision; mv : natural32;
+                    nit : integer32; report : boolean )
+                  return Standard_Dense_Series_VecVecs.VecVec;
+  function Series ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    mcc : Mixed_Subdivision; mv : natural32;
+                    nit : integer32; report : boolean )
+                  return DoblDobl_Dense_Series_VecVecs.VecVec;
+  function Series ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    mcc : Mixed_Subdivision; mv : natural32;
+                    nit : integer32; report : boolean )
+                  return QuadDobl_Dense_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Solves all initial form systems defined by the cells in mcc
@@ -554,7 +583,11 @@ package Regular_Solution_Curves_Series is
   --            where the last variable is the lifting;
   --   mcc      regular mixed cell configuration defined by the
   --            lower hull of the supports of p;
+  --   mv       the mixed volume of the supports of p;
   --   nit      number of Newton steps per solution series;
   --   report   if true, then output is written to screen.
+
+  -- ON RETURN :
+  --   A sequence of mv series in the range 1..mv.
 
 end Regular_Solution_Curves_Series;

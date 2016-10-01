@@ -1342,11 +1342,44 @@ package body Regular_Solution_Curves_Series is
     return res;
   end Series;
 
-  procedure Series ( file : in file_type;
-                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                     mcc : in Mixed_Subdivision;
-                     nit : in integer32 ) is
+  procedure Concat ( sto : in out Standard_Dense_Series_VecVecs.VecVec;
+                     idx : in out integer32;
+                     sfrom : in Standard_Dense_Series_VecVecs.VecVec ) is
+  begin
+    for k in sfrom'range loop
+      idx := idx + 1;
+      sto(idx) := sfrom(k);
+    end loop;
+  end Concat;
 
+  procedure Concat ( sto : in out DoblDobl_Dense_Series_VecVecs.VecVec;
+                     idx : in out integer32;
+                     sfrom : in DoblDobl_Dense_Series_VecVecs.VecVec ) is
+  begin
+    for k in sfrom'range loop
+      idx := idx + 1;
+      sto(idx) := sfrom(k);
+    end loop;
+  end Concat;
+
+  procedure Concat ( sto : in out QuadDobl_Dense_Series_VecVecs.VecVec;
+                     idx : in out integer32;
+                     sfrom : in QuadDobl_Dense_Series_VecVecs.VecVec ) is
+  begin
+    for k in sfrom'range loop
+      idx := idx + 1;
+      sto(idx) := sfrom(k);
+    end loop;
+  end Concat;
+
+  function Series ( file : in file_type;
+                    p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    mcc : in Mixed_Subdivision; mv : in natural32;
+                    nit : in integer32 ) 
+                  return Standard_Dense_Series_VecVecs.VecVec is
+
+    res : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    idx : integer32 := 0;
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
 
@@ -1365,17 +1398,21 @@ package body Regular_Solution_Curves_Series is
           srs : Standard_Dense_Series_VecVecs.VecVec(1..len);
         begin
           srs := Series(file,q,qsols,nit);
+          Concat(res,idx,srs);
         end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32; report : in boolean ) is
+  function Series ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                    mcc : Mixed_Subdivision; mv : natural32;
+                    nit : integer32; report : boolean )
+                  return Standard_Dense_Series_VecVecs.VecVec is
 
+    res : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    idx : integer32 := 0;
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
 
@@ -1396,18 +1433,22 @@ package body Regular_Solution_Curves_Series is
           srs : Standard_Dense_Series_VecVecs.VecVec(1..len);
         begin
           srs := Series(q,qsols,nit,report);
+          Concat(res,idx,srs);
         end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( file : in file_type;
-                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32 ) is
+  function Series ( file : in file_type;
+                    p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    mcc : in Mixed_Subdivision; mv : in natural32;
+                    nit : in integer32 )
+                  return DoblDobl_Dense_Series_VecVecs.VecVec is
 
+    res : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    idx : integer32 := 0;
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
 
@@ -1426,17 +1467,21 @@ package body Regular_Solution_Curves_Series is
           srs : DoblDobl_Dense_Series_VecVecs.VecVec(1..len);
         begin
           srs := Series(file,q,qsols,nit);
+          Concat(res,idx,srs);
         end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32; report : in boolean ) is
+  function Series ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    mcc : Mixed_Subdivision; mv : natural32;
+                    nit : integer32; report : boolean )
+                  return DoblDobl_Dense_Series_VecVecs.VecVec is
 
+    res : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    idx : integer32 := 0;
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
 
@@ -1457,18 +1502,22 @@ package body Regular_Solution_Curves_Series is
           srs : DoblDobl_Dense_Series_VecVecs.VecVec(1..len);
         begin
           srs := Series(q,qsols,nit,report);
+          Concat(res,idx,srs);
         end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( file : in file_type;
-                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32 ) is
+  function Series ( file : file_type;
+                    p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    mcc : Mixed_Subdivision; mv : natural32;
+                    nit : integer32 )
+                  return QuadDobl_Dense_Series_VecVecs.VecVec is
 
+    res : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    idx : integer32 := 0;
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
 
@@ -1487,17 +1536,21 @@ package body Regular_Solution_Curves_Series is
           srs : QuadDobl_Dense_Series_VecVecs.VecVec(1..len);
         begin
           srs := Series(file,q,qsols,nit);
+          Concat(res,idx,srs);
         end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
-  procedure Series
-              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                mcc : in Mixed_Subdivision;
-                nit : in integer32; report : in boolean ) is
+  function Series ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    mcc : Mixed_Subdivision; mv : natural32;
+                    nit : integer32; report : boolean ) 
+                  return QuadDobl_Dense_Series_VecVecs.VecVec is
 
+    res : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+    idx : integer32 := 0;
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
 
@@ -1518,10 +1571,12 @@ package body Regular_Solution_Curves_Series is
           srs : QuadDobl_Dense_Series_VecVecs.VecVec(1..len);
         begin
           srs := Series(q,qsols,nit,report);
+          Concat(res,idx,srs);
         end;
       end;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
   end Series;
 
 end Regular_Solution_Curves_Series;
