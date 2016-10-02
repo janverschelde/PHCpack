@@ -1,3 +1,6 @@
+Sun 2 Oct 2016 : added weighted Eval() in standard_dense_series
+  and standard_series_vector_functions.
+
 Tue 27 Sep 2016 : fixed type error in *_dense_vector_series.ads.
 
 Fri 29 Jul 2016 : SVD solver in standard_matrix_series_solvers, tested by 

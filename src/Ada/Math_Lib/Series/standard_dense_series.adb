@@ -1,3 +1,6 @@
+with Standard_Mathematical_Functions;
+with Standard_Complex_Numbers_Polar;
+
 package body Standard_Dense_Series is
 
 -- CREATORS :
@@ -519,6 +522,42 @@ package body Standard_Dense_Series is
       pwt := pwt*t;
     end loop;
     res := res + s.cff(s.deg)*pwt;
+    return res;
+  end Eval;
+
+  function Eval ( s : Series; t : double_float;
+                  a,b : integer32 ) return Complex_Number is
+
+    use Standard_Mathematical_Functions;
+
+    pow : constant double_float := double_float(a)/double_float(b);
+    pwt : double_float := t**pow;
+    res : Complex_Number := s.cff(0)*pwt;
+
+  begin
+    for i in 1..(s.deg-1) loop
+      pwt := pwt*t;
+      res := res + s.cff(i)*pwt;
+    end loop;
+    res := res + s.cff(s.deg)*pwt*t;
+    return res;
+  end Eval;
+
+  function Eval ( s : Series; t : Complex_Number;
+                  a,b : integer32 ) return Complex_Number is
+
+    use Standard_Complex_Numbers_Polar;
+
+    pow : constant double_float := double_float(a)/double_float(b);
+    pwt : Complex_Number := Polar_Exponentiation(t,pow);
+    res : Complex_Number := s.cff(0)*pwt;
+
+  begin
+    for i in 1..(s.deg-1) loop
+      pwt := pwt*t;
+      res := res + s.cff(i)*pwt;
+    end loop;
+    res := res + s.cff(s.deg)*pwt*t;
     return res;
   end Eval;
 
