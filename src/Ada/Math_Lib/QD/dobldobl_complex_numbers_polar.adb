@@ -33,4 +33,36 @@ package body DoblDobl_Complex_Numbers_Polar is
     return Create(COS(arg),SIN(arg))*tmp;
   end Root;
 
+  function Polar_Exponentiation
+             ( x : Complex_Number; e : integer32 ) return Complex_Number is
+
+    r : constant double_double := Radius(x);
+    a : constant double_double := Angle(x);
+    s : constant double_double := r**integer(e);
+    dd_e : constant double_double := create(e);
+    b : constant double_double := a*dd_e;
+    re : constant double_double := s*COS(b);
+    im : constant double_double := s*SIN(b);
+    res : constant Complex_Number := Create(re,im);
+
+  begin
+    return res;
+  end Polar_Exponentiation;
+
+  function Polar_Exponentiation
+             ( x : Complex_Number; e : double_double )
+             return Complex_Number is
+
+    r : constant double_double := Radius(x);
+    a : constant double_double := Angle(x);
+    s : constant double_double := r**e;
+    b : constant double_double := a*e;
+    re : constant double_double := s*COS(b);
+    im : constant double_double := s*SIN(b);
+    res : constant Complex_Number := Create(re,im);
+
+  begin
+    return res;
+  end Polar_Exponentiation;
+
 end DoblDobl_Complex_Numbers_Polar;

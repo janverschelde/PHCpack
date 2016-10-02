@@ -1,4 +1,4 @@
-Quad double arithmetic for PHCv2.4.21
+Quad double arithmetic for PHCv2.4.27
 
 This directory was added to version 2.3.55 of PHCpack, departing from
 a standalone C version of a part of the QD software library.

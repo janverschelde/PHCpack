@@ -33,4 +33,35 @@ package body QuadDobl_Complex_Numbers_Polar is
     return Create(COS(arg),SIN(arg))*tmp;
   end Root;
 
+  function Polar_Exponentiation
+             ( x : Complex_Number; e : integer32 ) return Complex_Number is
+
+    r : constant quad_double := Radius(x);
+    a : constant quad_double := Angle(x);
+    s : constant quad_double := r**integer(e);
+    dd_e : constant quad_double := create(e);
+    b : constant quad_double := a*dd_e;
+    re : constant quad_double := s*COS(b);
+    im : constant quad_double := s*SIN(b);
+    res : constant Complex_Number := Create(re,im);
+
+  begin
+    return res;
+  end Polar_Exponentiation;
+
+  function Polar_Exponentiation
+             ( x : Complex_Number; e : quad_double ) return Complex_Number is
+
+    r : constant quad_double := Radius(x);
+    a : constant quad_double := Angle(x);
+    s : constant quad_double := r**e;
+    b : constant quad_double := a*e;
+    re : constant quad_double := s*COS(b);
+    im : constant quad_double := s*SIN(b);
+    res : constant Complex_Number := Create(re,im);
+
+  begin
+    return res;
+  end Polar_Exponentiation;
+
 end QuadDobl_Complex_Numbers_Polar;

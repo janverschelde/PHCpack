@@ -1,3 +1,6 @@
+Sun 2 Oct 2016 : to {dobldobl,quaddobl}_complex_numbers_polar, added
+  polar_exponentiation, for double double and quad double exponents.
+
 Mon 27 Jun 2016 : bug fix in division of double double by complex number
   in dobldobl_complex_numbers.adb.
 
