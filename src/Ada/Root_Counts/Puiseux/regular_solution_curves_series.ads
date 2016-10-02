@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -88,6 +89,12 @@ package Regular_Solution_Curves_Series is
   --   mcc      a mixed cell configuration induced by the lifting
   --            defined by the last exponent in each monomial of p;
   --   mv       the mixed volume of the cells in mcc.
+
+  function Tropisms ( mcc : Mixed_Subdivision )
+                    return Standard_Integer_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the normals to the cells in the cell configuration mcc.
 
   procedure Initial_Coefficients
               ( file : in file_type;

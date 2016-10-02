@@ -85,6 +85,23 @@ package body Regular_Solution_Curves_Series is
     Integer_Volume_Computation(file,dim,mix,true,sup,mcc,mv);
   end Mixed_Cell_Tropisms;
 
+  function Tropisms ( mcc : Mixed_Subdivision )
+                    return Standard_Integer_VecVecs.VecVec is
+
+    len : constant integer32 := integer32(Length_Of(mcc));
+    res : Standard_Integer_VecVecs.VecVec(1..len);
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+
+  begin
+    for k in res'range loop
+      mic := Head_Of(tmp);
+      res(k) := new Standard_Integer_Vectors.Vector'(mic.nor.all);
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Tropisms;
+
   procedure Initial_Coefficients
               ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;

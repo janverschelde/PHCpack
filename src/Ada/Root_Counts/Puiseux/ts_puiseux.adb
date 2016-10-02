@@ -13,6 +13,8 @@ with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Integer_Vectors;
+with Standard_Integer_VecVecs;
 with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vector_Norms;
@@ -95,15 +97,16 @@ procedure ts_puiseux is
   function Standard_Residual
               ( p : Standard_Complex_Laur_Systems.Laur_Sys;
                 s : Standard_Dense_Series_Vectors.Vector;
+                w : Standard_Integer_Vectors.Vector;
                 t : double_float ) return double_float is
 
   -- DESCRIPTION :
   --   Returns the residual of the evaluation of s at t in p,
-  --   or ||p(s(t),t)||.
+  --   or ||p(s(t),t)||, with weights for the exponents in w.
 
     res : double_float := 0.0;
     x : constant Standard_Complex_Vectors.Vector(s'range)
-      := Standard_Series_Vector_Functions.Eval(s,t);
+      := Standard_Series_Vector_Functions.Eval(s,w,t);
     xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
     y : Standard_Complex_Vectors.Vector(p'range);
 
@@ -165,11 +168,13 @@ procedure ts_puiseux is
               ( file : file_type;
                 p : Standard_Complex_Laur_Systems.Laur_Sys;
                 s : Standard_Dense_Series_VecVecs.VecVec;
+                w : Standard_Integer_VecVecs.VecVec;
                 t : double_float ) return double_float is
 
   -- DESCRIPTION :
   --   Computes the residuals of the series in s at t,
-  --   evaluated in p, computed in standard double precision.
+  --   evaluated in p, with weights for the exponents in w,
+  --   computed in standard double precision.
   --   Output is written to file.
   --   Returns the sum of the residuals.
 
@@ -178,7 +183,7 @@ procedure ts_puiseux is
 
   begin
     for k in s'range loop
-      res := Standard_Residual(p,s(k).all,t);
+      res := Standard_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
       put(file,k,1); put(file," : ");
       put(file,res,3); new_line(file);
@@ -192,12 +197,14 @@ procedure ts_puiseux is
   function Standard_Residuals
               ( p : Standard_Complex_Laur_Systems.Laur_Sys;
                 s : Standard_Dense_Series_VecVecs.VecVec;
+                w : Standard_Integer_VecVecs.VecVec;
                 t : double_float; report : in boolean )
               return double_float is
 
   -- DESCRIPTION :
   --   Computes the residuals of the series in s at t,
-  --   evaluated in p, computed in standard double precision.
+  --   evaluated in p, with weights for the exponents in w,
+  --   computed in standard double precision.
   --   Output is written to screen if report.
   --   Returns the sum of the residuals.
 
@@ -206,7 +213,7 @@ procedure ts_puiseux is
 
   begin
     for k in s'range loop
-      res := Standard_Residual(p,s(k).all,t);
+      res := Standard_Residual(p,s(k).all,w(k).all,t);
       if report then
         put("Residual at series "); put(k,1); put(" : ");
         put(res,3); new_line;
@@ -356,11 +363,12 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
       s : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
       r : double_float;
     begin
       s := Series(file,p,mcc,mv,nit);
       put_line(file,"Evaluating series at 0.1 ...");
-      r := Standard_Residuals(file,p,s,0.1);
+      r := Standard_Residuals(file,p,s,w,0.1);
     end;
   end Standard_Test;
 
@@ -437,13 +445,14 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
       s : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
       r : double_float;
     begin
       s := Series(p,mcc,mv,nit,report);
       if report
        then put_line("Evaluating the series at 0.1 ...");
       end if;
-      r := Standard_Residuals(p,s,0.1,report);
+      r := Standard_Residuals(p,s,w,0.1,report);
     end;
   end Standard_Test;
 
