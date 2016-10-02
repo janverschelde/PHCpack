@@ -4,21 +4,45 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
+with Standard_Complex_Vectors;
+with Standard_Complex_Vector_Norms;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vector_Norms;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
+with Standard_Complex_Laur_SysFun;
 with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
+with DoblDobl_Complex_Laur_SysFun;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
+with QuadDobl_Complex_Laur_SysFun;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
+with Standard_Dense_Series_Vectors;
+with Standard_Series_Vector_Functions;
 with Standard_Dense_Series_VecVecs;
+with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Series_Vector_Functions;
 with DoblDobl_Dense_Series_VecVecs;
+with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Series_Vector_Functions;
 with QuadDobl_Dense_Series_VecVecs;
 with Regular_Solution_Curves_Series;     use Regular_Solution_Curves_Series;
 
@@ -68,6 +92,252 @@ procedure ts_puiseux is
     end if;
   end Tropisms_by_Mixed_Cells;
 
+  function Standard_Residual
+              ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                s : Standard_Dense_Series_Vectors.Vector;
+                t : double_float ) return double_float is
+
+  -- DESCRIPTION :
+  --   Returns the residual of the evaluation of s at t in p,
+  --   or ||p(s(t),t)||.
+
+    res : double_float := 0.0;
+    x : constant Standard_Complex_Vectors.Vector(s'range)
+      := Standard_Series_Vector_Functions.Eval(s,t);
+    xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
+    y : Standard_Complex_Vectors.Vector(p'range);
+
+  begin
+    xt(x'range) := x;
+    xt(xt'last) := Standard_Complex_Numbers.Create(t);
+    y := Standard_Complex_Laur_SysFun.Eval(p,xt);
+    res := Standard_Complex_Vector_Norms.Norm2(y);
+    return res;
+  end Standard_Residual;
+
+  function DoblDobl_Residual
+              ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                s : DoblDobl_Dense_Series_Vectors.Vector;
+                t : double_double ) return double_double is
+
+  -- DESCRIPTION :
+  --   Returns the residual of the evaluation of s at t in p,
+  --   or ||p(s(t),t)||.
+
+    res : double_double := create(0.0);
+    x : constant DoblDobl_Complex_Vectors.Vector(s'range)
+      := DoblDobl_Series_Vector_Functions.Eval(s,t);
+    xt : DoblDobl_Complex_Vectors.Vector(x'first..x'last+1);
+    y : DoblDobl_Complex_Vectors.Vector(p'range);
+
+  begin
+    xt(x'range) := x;
+    xt(xt'last) := DoblDobl_Complex_Numbers.Create(t);
+    y := DoblDobl_Complex_Laur_SysFun.Eval(p,xt);
+    res := DoblDobl_Complex_Vector_Norms.Norm2(y);
+    return res;
+  end DoblDobl_Residual;
+
+  function QuadDobl_Residual
+              ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                s : QuadDobl_Dense_Series_Vectors.Vector;
+                t : quad_double ) return quad_double is
+
+  -- DESCRIPTION :
+  --   Returns the residual of the evaluation of s at t in p,
+  --   or ||p(s(t),t)||.
+
+    res : quad_double := create(0.0);
+    x : constant QuadDobl_Complex_Vectors.Vector(s'range)
+      := QuadDobl_Series_Vector_Functions.Eval(s,t);
+    xt : QuadDobl_Complex_Vectors.Vector(x'first..x'last+1);
+    y : QuadDobl_Complex_Vectors.Vector(p'range);
+
+  begin
+    xt(x'range) := x;
+    xt(xt'last) := QuadDobl_Complex_Numbers.Create(t);
+    y := QuadDobl_Complex_Laur_SysFun.Eval(p,xt);
+    res := QuadDobl_Complex_Vector_Norms.Norm2(y);
+    return res;
+  end QuadDobl_Residual;
+
+  function Standard_Residuals
+              ( file : file_type;
+                p : Standard_Complex_Laur_Systems.Laur_Sys;
+                s : Standard_Dense_Series_VecVecs.VecVec;
+                t : double_float ) return double_float is
+
+  -- DESCRIPTION :
+  --   Computes the residuals of the series in s at t,
+  --   evaluated in p, computed in standard double precision.
+  --   Output is written to file.
+  --   Returns the sum of the residuals.
+
+    sum : double_float := 0.0;
+    res : double_float;
+
+  begin
+    for k in s'range loop
+      res := Standard_Residual(p,s(k).all,t);
+      put(file,"Residual at series ");
+      put(file,k,1); put(file," : ");
+      put(file,res,3); new_line(file);
+      sum := sum + res;
+    end loop;
+    put(file,"Sum of all residuals : ");
+    put(file,sum,3); new_line(file);
+    return sum;
+  end Standard_Residuals;
+
+  function Standard_Residuals
+              ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                s : Standard_Dense_Series_VecVecs.VecVec;
+                t : double_float; report : in boolean )
+              return double_float is
+
+  -- DESCRIPTION :
+  --   Computes the residuals of the series in s at t,
+  --   evaluated in p, computed in standard double precision.
+  --   Output is written to screen if report.
+  --   Returns the sum of the residuals.
+
+    sum : double_float := 0.0;
+    res : double_float;
+
+  begin
+    for k in s'range loop
+      res := Standard_Residual(p,s(k).all,t);
+      if report then
+        put("Residual at series "); put(k,1); put(" : ");
+        put(res,3); new_line;
+      end if;
+      sum := sum + res;
+    end loop;
+    if report then
+      put("Sum of all residuals : ");
+      put(sum,3); new_line;
+    end if;
+    return sum;
+  end Standard_Residuals;
+
+  function DoblDobl_Residuals
+              ( file : file_type;
+                p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                s : DoblDobl_Dense_Series_VecVecs.VecVec;
+                t : double_double ) return double_double is
+
+  -- DESCRIPTION :
+  --   Computes the residuals of the series in s at t,
+  --   evaluated in p, in double double precision.
+  --   Output is written to file.
+  --   Returns the sum of the residuals.
+
+    sum : double_double := create(0.0);
+    res : double_double;
+
+  begin
+    for k in s'range loop
+      res := DoblDobl_Residual(p,s(k).all,t);
+      put(file,"Residual at series ");
+      put(file,k,1); put(file," : ");
+      put(file,res,3); new_line(file);
+      sum := sum + res;
+    end loop;
+    put(file,"Sum of all residuals : ");
+    put(file,sum,3); new_line(file);
+    return sum;
+  end DoblDobl_Residuals;
+
+  function DoblDobl_Residuals
+              ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                s : DoblDobl_Dense_Series_VecVecs.VecVec;
+                t : double_double; report : in boolean )
+              return double_double is
+
+  -- DESCRIPTION :
+  --   Computes the residuals of the series in s at t,
+  --   evaluated in p, computed in double double precision.
+  --   Output is written to screen if report.
+  --   Returns the sum of the residuals.
+
+    sum : double_double := create(0.0);
+    res : double_double;
+
+  begin
+    for k in s'range loop
+      res := DoblDobl_Residual(p,s(k).all,t);
+      if report then
+        put("Residual at series "); put(k,1); put(" : ");
+        put(res,3); new_line;
+      end if;
+      sum := sum + res;
+    end loop;
+    if report then
+      put("Sum of all residuals : ");
+      put(sum,3); new_line;
+    end if;
+    return sum;
+  end DoblDobl_Residuals;
+
+  function QuadDobl_Residuals
+              ( file : file_type;
+                p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                s : QuadDobl_Dense_Series_VecVecs.VecVec;
+                t : quad_double ) return quad_double is
+
+  -- DESCRIPTION :
+  --   Computes the residuals of the series in s at t,
+  --   evaluated in p, in quad double precision.
+  --   Output is written to file.
+  --   Returns the sum of the residuals.
+
+    sum : quad_double := create(0.0);
+    res : quad_double;
+
+  begin
+    for k in s'range loop
+      res := QuadDobl_Residual(p,s(k).all,t);
+      put(file,"Residual at series ");
+      put(file,k,1); put(file," : ");
+      put(file,res,3); new_line(file);
+      sum := sum + res;
+    end loop;
+    put(file,"Sum of all residuals : ");
+    put(file,sum,3); new_line(file);
+    return sum;
+  end QuadDobl_Residuals;
+
+  function QuadDobl_Residuals
+              ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                s : QuadDobl_Dense_Series_VecVecs.VecVec;
+                t : quad_double; report : in boolean )
+              return quad_double is
+
+  -- DESCRIPTION :
+  --   Computes the residuals of the series in s at t,
+  --   evaluated in p, computed in quad double precision.
+  --   Output is written to screen if report.
+  --   Returns the sum of the residuals.
+
+    sum : quad_double := create(0.0);
+    res : quad_double;
+
+  begin
+    for k in s'range loop
+      res := QuadDobl_Residual(p,s(k).all,t);
+      if report then
+        put("Residual at series "); put(k,1); put(" : ");
+        put(res,3); new_line;
+      end if;
+      sum := sum + res;
+    end loop;
+    if report then
+      put("Sum of all residuals : ");
+      put(sum,3); new_line;
+    end if;
+    return sum;
+  end QuadDobl_Residuals;
+
   procedure Standard_Test
               ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
@@ -86,8 +356,11 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
       s : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      r : double_float;
     begin
       s := Series(file,p,mcc,mv,nit);
+      put_line(file,"Evaluating series at 0.1 ...");
+      r := Standard_Residuals(file,p,s,0.1);
     end;
   end Standard_Test;
 
@@ -109,8 +382,12 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
       s : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      t : constant double_double := create(0.1);
+      r : double_double;
     begin
       s := Series(file,p,mcc,mv,nit);
+      put_line(file,"Evaluating series at 0.1 ...");
+      r := DoblDobl_Residuals(file,p,s,t);
     end;
   end DoblDobl_Test;
 
@@ -132,8 +409,12 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
       s : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      t : constant quad_double := create(0.1);
+      r : quad_double;
     begin
       s := Series(file,p,mcc,mv,nit);
+      put_line(file,"Evaluating series at 0.1 ...");
+      r := QuadDobl_Residuals(file,p,s,t);
     end;
   end QuadDobl_Test;
 
@@ -156,8 +437,13 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
       s : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      r : double_float;
     begin
       s := Series(p,mcc,mv,nit,report);
+      if report
+       then put_line("Evaluating the series at 0.1 ...");
+      end if;
+      r := Standard_Residuals(p,s,0.1,report);
     end;
   end Standard_Test;
 
@@ -180,8 +466,14 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
       s : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      t : constant double_double := create(0.1);
+      r : double_double;
     begin
       s := Series(p,mcc,mv,nit,report);
+      if report
+       then put_line("Evaluating the series at 0.1 ...");
+      end if;
+      r := DoblDobl_Residuals(p,s,t,report);
     end;
   end DoblDobl_Test;
 
@@ -204,8 +496,14 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
       s : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      t : constant quad_double := create(0.1);
+      r : quad_double;
     begin
       s := Series(p,mcc,mv,nit,report);
+      if report
+       then put_line("Evaluating the series at 0.1 ...");
+      end if;
+      r := QuadDobl_Residuals(p,s,t,report);
     end;
   end QuadDobl_Test;
 

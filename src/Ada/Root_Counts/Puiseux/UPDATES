@@ -1,3 +1,5 @@
+Sat 1 Oct 2016 : added residual computation to ts_puiseux.adb.
+
 Fri 30 Sep 2016 : in regular_solution_curves_series, turned procedures into
   function to return the computed series developments.  The functions in 
   regular_solution_curves_series return vectors of vectors of series.
