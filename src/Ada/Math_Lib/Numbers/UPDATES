@@ -1,3 +1,6 @@
+Sun 2 Oct 2016 : to standard_complex_numbers_polar added the function
+  polar_exponentiation with a float as a power.
+
 Tue 7 Jun 2016 : fixed bug in {standard,generic}_complex_numbers.adb,
   in the division of a double with a complex number.
 

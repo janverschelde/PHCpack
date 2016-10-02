@@ -40,6 +40,22 @@ package body Standard_Complex_Numbers_Polar is
     return res;
   end Polar_Exponentiation;
 
+  function Polar_Exponentiation
+             ( x : Complex_Number; e : double_float )
+             return Complex_Number is
+
+    r : constant double_float := Radius(x);
+    a : constant double_float := Angle(x);
+    s : constant double_float := r**e;
+    b : constant double_float := a*e;
+    re : constant double_float := s*COS(b);
+    im : constant double_float := s*SIN(b);
+    res : constant Complex_Number := Create(re,im);
+
+  begin
+    return res;
+  end Polar_Exponentiation;
+
   function Polar_Exponentiation_of_Unit
              ( x : Complex_Number; e : integer32 ) return Complex_Number is
 

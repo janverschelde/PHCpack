@@ -25,6 +25,8 @@ package Standard_Complex_Numbers_Polar is
 
   function Polar_Exponentiation
              ( x : Complex_Number; e : integer32 ) return Complex_Number;
+  function Polar_Exponentiation
+             ( x : Complex_Number; e : double_float ) return Complex_Number;
 
   -- DESCRIPTION :
   --   Returns x^e via polar coordinates of x.
