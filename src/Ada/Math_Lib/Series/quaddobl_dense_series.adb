@@ -1,3 +1,6 @@
+with QuadDobl_Mathematical_Functions;
+with QuadDobl_Complex_Numbers_Polar;
+
 package body QuadDobl_Dense_Series is
 
 -- CREATORS :
@@ -563,6 +566,46 @@ package body QuadDobl_Dense_Series is
       pwt := pwt*t;
     end loop;
     res := res + s.cff(s.deg)*pwt;
+    return res;
+  end Eval;
+
+  function Eval ( s : Series; t : quad_double;
+                  a,b : integer32 ) return Complex_Number is
+
+    use QuadDobl_Mathematical_Functions;
+
+    qd_a : constant quad_double := create(a);
+    qd_b : constant quad_double := create(b);
+    pow : constant quad_double := qd_a/qd_b;
+    pwt : quad_double := t**pow;
+    res : Complex_Number := s.cff(0)*pwt;
+
+  begin
+    for i in 1..(s.deg-1) loop
+      pwt := pwt*t;
+      res := res + s.cff(i)*pwt;
+    end loop;
+    res := res + s.cff(s.deg)*pwt*t;
+    return res;
+  end Eval;
+
+  function Eval ( s : Series; t : Complex_Number;
+                  a,b : integer32 ) return Complex_Number is
+
+    use QuadDobl_Complex_Numbers_Polar;
+
+    qd_a : constant quad_double := create(a);
+    qd_b : constant quad_double := create(b);
+    pow : constant quad_double := qd_a/qd_b;
+    pwt : Complex_Number := Polar_Exponentiation(t,pow);
+    res : Complex_Number := s.cff(0)*pwt;
+
+  begin
+    for i in 1..(s.deg-1) loop
+      pwt := pwt*t;
+      res := res + s.cff(i)*pwt;
+    end loop;
+    res := res + s.cff(s.deg)*pwt*t;
     return res;
   end Eval;
 

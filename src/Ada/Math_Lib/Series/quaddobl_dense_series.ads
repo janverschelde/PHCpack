@@ -271,6 +271,18 @@ package QuadDobl_Dense_Series is
   --   Returns the value c(0) + c(1)*t + .. + c(s.deg)*t**s.deg,
   --   where c abbreviates the coefficient vector s.cff.
 
+  function Eval ( s : Series; t : quad_double;
+                  a,b : integer32 ) return Complex_Number;
+  function Eval ( s : Series; t : Complex_Number;
+                  a,b : integer32 ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Evaluates the series using a as the numerator and b as the
+  --   numerator of the power for t, so the series starts with
+  --   c(0)*t**(a/b) + c(1)*t**((1+a)/b) + ...
+
+  -- REQUIRED : b /= 0 and t /= 0.0 if a < 0.
+
   procedure Filter ( s : in out Series; tol : in double_float );
 
   -- DESCRIPTION :

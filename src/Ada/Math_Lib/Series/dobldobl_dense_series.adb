@@ -1,3 +1,6 @@
+with DoblDobl_Mathematical_Functions;
+with DoblDobl_Complex_Numbers_Polar;
+
 package body DoblDobl_Dense_Series is
 
 -- CREATORS :
@@ -544,6 +547,46 @@ package body DoblDobl_Dense_Series is
       pwt := pwt*t;
     end loop;
     res := res + s.cff(s.deg)*pwt;
+    return res;
+  end Eval;
+
+  function Eval ( s : Series; t : double_double;
+                  a,b : integer32 ) return Complex_Number is
+
+    use DoblDobl_Mathematical_Functions;
+
+    dd_a : constant double_double := create(a);
+    dd_b : constant double_double := create(b);
+    pow : constant double_double := dd_a/dd_b;
+    pwt : double_double := t**pow;
+    res : Complex_Number := s.cff(0)*pwt;
+
+  begin
+    for i in 1..(s.deg-1) loop
+      pwt := pwt*t;
+      res := res + s.cff(i)*pwt;
+    end loop;
+    res := res + s.cff(s.deg)*pwt*t;
+    return res;
+  end Eval;
+
+  function Eval ( s : Series; t : Complex_Number;
+                  a,b : integer32 ) return Complex_Number is
+
+    use DoblDobl_Complex_Numbers_Polar;
+
+    dd_a : constant double_double := create(a);
+    dd_b : constant double_double := create(b);
+    pow : constant double_double := dd_a/dd_b;
+    pwt : Complex_Number := Polar_Exponentiation(t,pow);
+    res : Complex_Number := s.cff(0)*pwt;
+
+  begin
+    for i in 1..(s.deg-1) loop
+      pwt := pwt*t;
+      res := res + s.cff(i)*pwt;
+    end loop;
+    res := res + s.cff(s.deg)*pwt*t;
     return res;
   end Eval;
 
