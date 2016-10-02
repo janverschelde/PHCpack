@@ -121,6 +121,7 @@ procedure ts_puiseux is
   function DoblDobl_Residual
               ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 s : DoblDobl_Dense_Series_Vectors.Vector;
+                w : Standard_Integer_Vectors.Vector;
                 t : double_double ) return double_double is
 
   -- DESCRIPTION :
@@ -129,7 +130,7 @@ procedure ts_puiseux is
 
     res : double_double := create(0.0);
     x : constant DoblDobl_Complex_Vectors.Vector(s'range)
-      := DoblDobl_Series_Vector_Functions.Eval(s,t);
+      := DoblDobl_Series_Vector_Functions.Eval(s,w,t);
     xt : DoblDobl_Complex_Vectors.Vector(x'first..x'last+1);
     y : DoblDobl_Complex_Vectors.Vector(p'range);
 
@@ -144,6 +145,7 @@ procedure ts_puiseux is
   function QuadDobl_Residual
               ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 s : QuadDobl_Dense_Series_Vectors.Vector;
+                w : Standard_Integer_Vectors.Vector;
                 t : quad_double ) return quad_double is
 
   -- DESCRIPTION :
@@ -152,7 +154,7 @@ procedure ts_puiseux is
 
     res : quad_double := create(0.0);
     x : constant QuadDobl_Complex_Vectors.Vector(s'range)
-      := QuadDobl_Series_Vector_Functions.Eval(s,t);
+      := QuadDobl_Series_Vector_Functions.Eval(s,w,t);
     xt : QuadDobl_Complex_Vectors.Vector(x'first..x'last+1);
     y : QuadDobl_Complex_Vectors.Vector(p'range);
 
@@ -231,11 +233,13 @@ procedure ts_puiseux is
               ( file : file_type;
                 p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 s : DoblDobl_Dense_Series_VecVecs.VecVec;
+                w : Standard_Integer_VecVecs.VecVec;
                 t : double_double ) return double_double is
 
   -- DESCRIPTION :
   --   Computes the residuals of the series in s at t,
-  --   evaluated in p, in double double precision.
+  --   evaluated in p, with weights for the exponents in w,
+  --   computed in double double precision.
   --   Output is written to file.
   --   Returns the sum of the residuals.
 
@@ -244,7 +248,7 @@ procedure ts_puiseux is
 
   begin
     for k in s'range loop
-      res := DoblDobl_Residual(p,s(k).all,t);
+      res := DoblDobl_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
       put(file,k,1); put(file," : ");
       put(file,res,3); new_line(file);
@@ -258,12 +262,14 @@ procedure ts_puiseux is
   function DoblDobl_Residuals
               ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 s : DoblDobl_Dense_Series_VecVecs.VecVec;
+                w : Standard_Integer_VecVecs.VecVec;
                 t : double_double; report : in boolean )
               return double_double is
 
   -- DESCRIPTION :
   --   Computes the residuals of the series in s at t,
-  --   evaluated in p, computed in double double precision.
+  --   evaluated in p, with weights for the exponents in w,
+  --   computed in double double precision.
   --   Output is written to screen if report.
   --   Returns the sum of the residuals.
 
@@ -272,7 +278,7 @@ procedure ts_puiseux is
 
   begin
     for k in s'range loop
-      res := DoblDobl_Residual(p,s(k).all,t);
+      res := DoblDobl_Residual(p,s(k).all,w(k).all,t);
       if report then
         put("Residual at series "); put(k,1); put(" : ");
         put(res,3); new_line;
@@ -290,6 +296,7 @@ procedure ts_puiseux is
               ( file : file_type;
                 p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 s : QuadDobl_Dense_Series_VecVecs.VecVec;
+                w : Standard_Integer_VecVecs.VecVec;
                 t : quad_double ) return quad_double is
 
   -- DESCRIPTION :
@@ -303,7 +310,7 @@ procedure ts_puiseux is
 
   begin
     for k in s'range loop
-      res := QuadDobl_Residual(p,s(k).all,t);
+      res := QuadDobl_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
       put(file,k,1); put(file," : ");
       put(file,res,3); new_line(file);
@@ -317,6 +324,7 @@ procedure ts_puiseux is
   function QuadDobl_Residuals
               ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 s : QuadDobl_Dense_Series_VecVecs.VecVec;
+                w : Standard_Integer_VecVecs.VecVec;
                 t : quad_double; report : in boolean )
               return quad_double is
 
@@ -331,7 +339,7 @@ procedure ts_puiseux is
 
   begin
     for k in s'range loop
-      res := QuadDobl_Residual(p,s(k).all,t);
+      res := QuadDobl_Residual(p,s(k).all,w(k).all,t);
       if report then
         put("Residual at series "); put(k,1); put(" : ");
         put(res,3); new_line;
@@ -390,12 +398,13 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
       s : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
       t : constant double_double := create(0.1);
       r : double_double;
     begin
       s := Series(file,p,mcc,mv,nit);
       put_line(file,"Evaluating series at 0.1 ...");
-      r := DoblDobl_Residuals(file,p,s,t);
+      r := DoblDobl_Residuals(file,p,s,w,t);
     end;
   end DoblDobl_Test;
 
@@ -417,12 +426,13 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
       s : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
       t : constant quad_double := create(0.1);
       r : quad_double;
     begin
       s := Series(file,p,mcc,mv,nit);
       put_line(file,"Evaluating series at 0.1 ...");
-      r := QuadDobl_Residuals(file,p,s,t);
+      r := QuadDobl_Residuals(file,p,s,w,t);
     end;
   end QuadDobl_Test;
 
@@ -475,6 +485,7 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
       s : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
       t : constant double_double := create(0.1);
       r : double_double;
     begin
@@ -482,7 +493,7 @@ procedure ts_puiseux is
       if report
        then put_line("Evaluating the series at 0.1 ...");
       end if;
-      r := DoblDobl_Residuals(p,s,t,report);
+      r := DoblDobl_Residuals(p,s,w,t,report);
     end;
   end DoblDobl_Test;
 
@@ -505,6 +516,7 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
       s : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
       t : constant quad_double := create(0.1);
       r : quad_double;
     begin
@@ -512,7 +524,7 @@ procedure ts_puiseux is
       if report
        then put_line("Evaluating the series at 0.1 ...");
       end if;
-      r := QuadDobl_Residuals(p,s,t,report);
+      r := QuadDobl_Residuals(p,s,w,t,report);
     end;
   end QuadDobl_Test;
 

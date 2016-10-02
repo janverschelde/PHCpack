@@ -1,5 +1,6 @@
 Sun 2 Oct 2016 : added Tropism() function to extract the normals of a mixed
   subdivision in regular_solution_curves_series, tested in ts_puiseux.
+  Added double double and quad double residual eval test to ts_puiseux.
 
 Sat 1 Oct 2016 : added residual computation to ts_puiseux.adb.
 
