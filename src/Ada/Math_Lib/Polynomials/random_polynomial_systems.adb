@@ -88,7 +88,8 @@ package body Random_Polynomial_Systems is
   end Save_System_to_File;
 
   procedure Standard_Generate_and_Show
-              ( n,d,m,c : in natural32; e : in integer32 ) is
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
     s : Standard_Complex_Poly_Systems.Poly_Sys(1..e);
     ans : character;
@@ -117,10 +118,12 @@ package body Random_Polynomial_Systems is
       end;
     end loop;
     Save_System_to_File(s);
+    lp := new Standard_Complex_Poly_Systems.Poly_Sys'(s);
   end Standard_Generate_and_Show;
 
   procedure DoblDobl_Generate_and_Show
-              ( n,d,m,c : in natural32; e : in integer32 ) is
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
     s : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..e);
     ans : character;
@@ -149,10 +152,12 @@ package body Random_Polynomial_Systems is
       end;
     end loop;
     Save_System_to_File(s);
+    lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(s);
   end DoblDobl_Generate_and_Show;
 
   procedure QuadDobl_Generate_and_Show
-              ( n,d,m,c : in natural32; e : in integer32 ) is
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
     s : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..e);
     ans : character;
@@ -181,10 +186,12 @@ package body Random_Polynomial_Systems is
       end;
     end loop;
     Save_System_to_File(s);
+    lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(s);
   end QuadDobl_Generate_and_Show;
 
   procedure Multprec_Generate_and_Show
-              ( n,d,m,c : in natural32; e : in integer32 ) is
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out Multprec_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
     s : Multprec_Complex_Poly_Systems.Poly_Sys(1..e);
     ans : character;
@@ -213,6 +220,7 @@ package body Random_Polynomial_Systems is
       end;
     end loop;
     Save_System_to_File(s);
+    lp := new Multprec_Complex_Poly_Systems.Poly_Sys'(s);
   end Multprec_Generate_and_Show;
 
 end Random_Polynomial_Systems;

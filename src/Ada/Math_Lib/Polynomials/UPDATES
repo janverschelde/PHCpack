@@ -1,5 +1,6 @@
 Mon 3 Oct 2016 : factored a new package random_polynomial_systems out of
-  the test procedure ts_randpoly.
+  the test procedure ts_randpoly.  Added an additional parameter to return
+  the generated systems in random_polynomial_systems.
 
 Tue 28 Jun 2016 : writing in standard_complex_polynomials_io.adb crashed
   at a call to Sum(t.dg) at the input polynomial x + (-1-2*i)*y.

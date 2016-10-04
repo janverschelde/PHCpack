@@ -5,6 +5,10 @@ with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Symbol_Table;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with Multprec_Complex_Poly_Systems;
 with Random_Polynomial_Systems;         use Random_Polynomial_Systems;
 
 procedure ts_randpoly is
@@ -44,15 +48,32 @@ procedure ts_randpoly is
       put_line("  3. multiprecision coefficients.");
       put("Type 0, 1, 2, or 3 to make a choice : ");
       Ask_Alternative(ans,"0123");
-      if ans = '0' then
-        Standard_Generate_and_Show(n,d,m,c,e);
-      elsif ans = '1' then
-        DoblDobl_Generate_and_Show(n,d,m,c,e);
-      elsif ans = '2' then
-        QuadDobl_Generate_and_Show(n,d,m,c,e);
-      else
-        Multprec_Generate_and_Show(n,d,m,c,e);
-      end if;
+      case ans is
+        when '0' =>
+          declare
+            lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+          begin
+            Standard_Generate_and_Show(n,d,m,c,e,lp);
+          end;
+        when '1' => 
+          declare
+            lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+          begin
+            DoblDobl_Generate_and_Show(n,d,m,c,e,lp);
+          end;
+        when '2' =>
+          declare
+            lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+          begin
+            QuadDobl_Generate_and_Show(n,d,m,c,e,lp);
+          end;
+        when others =>
+          declare
+            lp : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
+          begin
+            Multprec_Generate_and_Show(n,d,m,c,e,lp);
+          end;
+      end case;
    -- end loop;
   end Main;
 

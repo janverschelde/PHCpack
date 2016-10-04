@@ -26,40 +26,24 @@ package Random_Polynomial_Systems is
   --   and writes the system to file.
 
   procedure Standard_Generate_and_Show
-              ( n,d,m,c : in natural32; e : in integer32 );
-
-  -- DESCRIPTION :
-  --   Given in n the number of variables, in d the largest degree,
-  --   in m the maximum number of monomials (or 0 for dense), and in c
-  --   the type of coefficients, then this procedure will generate a
-  --   random polynomial with standard complex coefficients and show it.
-  --   The number of polynomials equals e.
-
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure DoblDobl_Generate_and_Show
-              ( n,d,m,c : in natural32; e : in integer32 );
-
-  -- DESCRIPTION :
-  --   Given in n the number of variables, in d the largest degree,
-  --   in m the maximum number of monomials (or 0 for dense), and in c
-  --   the type of coefficients, then this procedure will generate a
-  --   random polynomial with standard complex coefficients and show it.
-
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure QuadDobl_Generate_and_Show
-              ( n,d,m,c : in natural32; e : in integer32 );
-
-  -- DESCRIPTION :
-  --   Given in n the number of variables, in d the largest degree,
-  --   in m the maximum number of monomials (or 0 for dense), and in c
-  --   the type of coefficients, then this procedure will generate a
-  --   random polynomial with standard complex coefficients and show it.
-
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Multprec_Generate_and_Show
-              ( n,d,m,c : in natural32; e : in integer32 );
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out Multprec_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Given in n the number of variables, in d the largest degree,
   --   in m the maximum number of monomials (or 0 for dense), and in c
   --   the type of coefficients, then this procedure will generate a
-  --   random polynomial with standard complex coefficients and show it.
+  --   random polynomial with complex coefficients, in double, double double,
+  --   quad double, or quad double precision.
+  --   The procedure is interactive, the result is returned in lp.
 
 end Random_Polynomial_Systems;
