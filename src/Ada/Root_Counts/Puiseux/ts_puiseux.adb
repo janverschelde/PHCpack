@@ -22,18 +22,26 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vector_Norms;
+with Symbol_Table;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Laur_SysFun;
+with Standard_Complex_Poly_Systems;
+with Standard_Poly_Laur_Convertors;      use Standard_Poly_Laur_Convertors;
 with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Laur_SysFun;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Poly_Laur_Convertors;      use DoblDobl_Poly_Laur_Convertors;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Laur_SysFun;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Poly_Laur_Convertors;      use QuadDobl_Poly_Laur_Convertors;
+with Random_Polynomial_Systems;          use Random_Polynomial_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
@@ -613,7 +621,103 @@ procedure ts_puiseux is
     put("Number of polynomials : "); put(nq,1); new_line;
     put("Number of variables : "); put(nv,1); new_line;
   end QuadDobl_Read;
+
+  procedure Standard_Test
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nq,nv : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the kind of output (to file or to screen)
+  --   and then computes the power series in standard double precision.
+  --   The number of polynomials is in nq and
+  --   the number of variables is in nv.
+
+    ans : character;
+    report : boolean;
+    file : file_type;
+
+  begin
+    new_line;
+    put("Do you want intermediate output to file ? (y/n) ");
+    Ask_Yes_or_No(ans); report := (ans = 'y');
+    if report then
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(file);
+      put(file,natural32(nq),natural32(nv),p);
+      Standard_Test(file,p);
+    else
+      new_line;
+      put("Do you want intermediate output to screen ? (y/n) ");
+      Ask_Yes_or_No(ans); report := (ans = 'y');
+      Standard_Test(p,report);
+    end if;
+  end Standard_Test;
+
+  procedure DoblDobl_Test
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                nq,nv : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the kind of output (to file or to screen)
+  --   and then computes the power series in double double precision.
+  --   The number of polynomials is in nq and
+  --   the number of variables is in nv.
+
+    ans : character;
+    report : boolean;
+    file : file_type;
   
+  begin
+    new_line;
+    put("Do you want intermediate output to file ? (y/n) ");
+    Ask_Yes_or_No(ans); report := (ans = 'y');
+    if report then
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(file);
+      put(file,natural32(nq),natural32(nv),p);
+      DoblDobl_Test(file,p);
+    else
+      new_line;
+      put("Do you want intermediate output to screen ? (y/n) ");
+      Ask_Yes_or_No(ans); report := (ans = 'y');
+      DoblDobl_Test(p,report);
+    end if;
+  end DoblDobl_Test;
+
+  procedure QuadDobl_Test
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                nq,nv : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the kind of output (to file or to screen)
+  --   and then computes the power series in quad double precision.
+  --   The number of polynomials is in nq and
+  --   the number of variables is in nv.
+
+    ans : character;
+    report : boolean;
+    file : file_type;
+  
+  begin
+    new_line;
+    put("Do you want intermediate output to file ? (y/n) ");
+    Ask_Yes_or_No(ans); report := (ans = 'y');
+    if report then
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(file);
+      put(file,natural32(nq),natural32(nv),p);
+      QuadDobl_Test(file,p);
+    else
+      new_line;
+      put("Do you want intermediate output to screen ? (y/n) ");
+      Ask_Yes_or_No(ans); report := (ans = 'y');
+      QuadDobl_Test(p,report);
+    end if;
+  end QuadDobl_Test;
+
   procedure Standard_Main is
 
   -- DESCRIPTION :
@@ -623,30 +727,12 @@ procedure ts_puiseux is
 
     lp : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
     nq,nv : integer32;
-    ans : character;
-    report : boolean;
-    file : file_type;
 
   begin
     Standard_Read(lp,nq,nv);
-    if nv /= nq+1 then
-      put(nv,1); put(" /= "); put(nq,1); put(" + 1");
-    else
-      new_line;
-      put("Do you want intermediate output to file ? (y/n) ");
-      Ask_Yes_or_No(ans); report := (ans = 'y');
-      if report then
-        new_line;
-        put_line("Reading the name of the output file ...");
-        Read_Name_and_Create_File(file);
-        put(file,natural32(nq),natural32(nv),lp.all);
-        Standard_Test(file,lp.all);
-      else
-        new_line;
-        put("Do you want intermediate output to screen ? (y/n) ");
-        Ask_Yes_or_No(ans); report := (ans = 'y');
-        Standard_Test(lp.all,report);
-      end if;
+    if nv /= nq+1
+     then put(nv,1); put(" /= "); put(nq,1); put(" + 1");
+     else Standard_Test(lp.all,nq,nv);
     end if;
   end Standard_Main;
   
@@ -659,30 +745,12 @@ procedure ts_puiseux is
 
     lp : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
     nq,nv : integer32;
-    ans : character;
-    report : boolean;
-    file : file_type;
 
   begin
     DoblDobl_Read(lp,nq,nv);
-    if nv /= nq+1 then
-      put(nv,1); put(" /= "); put(nq,1); put(" + 1");
-    else
-      new_line;
-      put("Do you want intermediate output to file ? (y/n) ");
-      Ask_Yes_or_No(ans); report := (ans = 'y');
-      if report then
-        new_line;
-        put_line("Reading the name of the output file ...");
-        Read_Name_and_Create_File(file);
-        put(file,natural32(nq),natural32(nv),lp.all);
-        DoblDobl_Test(file,lp.all);
-      else
-        new_line;
-        put("Do you want intermediate output to screen ? (y/n) ");
-        Ask_Yes_or_No(ans); report := (ans = 'y');
-        DoblDobl_Test(lp.all,report);
-      end if;
+    if nv /= nq+1 
+     then put(nv,1); put(" /= "); put(nq,1); put(" + 1");
+     else DoblDobl_Test(lp.all,nq,nv);
     end if;
   end DoblDobl_Main;
   
@@ -695,32 +763,104 @@ procedure ts_puiseux is
 
     lp : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
     nq,nv : integer32;
-    ans : character;
-    report : boolean;
-    file : file_type;
 
   begin
     QuadDobl_Read(lp,nq,nv);
-    if nv /= nq+1 then
-      put(nv,1); put(" /= "); put(nq,1); put(" + 1");
-    else
-      new_line;
-      put("Do you want intermediate output to file ? (y/n) ");
-      Ask_Yes_or_No(ans); report := (ans = 'y');
-      if report then
-        new_line;
-        put_line("Reading the name of the output file ...");
-        Read_Name_and_Create_File(file);
-        put(file,natural32(nq),natural32(nv),lp.all);
-        QuadDobl_Test(file,lp.all);
-      else
-        new_line;
-        put("Do you want intermediate output to screen ? (y/n) ");
-        Ask_Yes_or_No(ans); report := (ans = 'y');
-        QuadDobl_Test(lp.all,report);
-      end if;
+    if nv /= nq+1 
+     then put(nv,1); put(" /= "); put(nq,1); put(" + 1");
+     else QuadDobl_Test(lp.all,nq,nv);
     end if;
   end QuadDobl_Main;
+
+  procedure Standard_Random_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the parameters to generate a system
+  --   with random coefficients in standard double precision.
+  --   The series are computed for the generated system.
+
+    n,d,m,c : natural32 := 0;
+    e : integer32 := 0;
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+    use Standard_Complex_Laurentials;
+
+  begin
+    new_line;
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    put("Give the maximal degree : "); get(d);
+    put("Give number of monomials (0 for dense): "); get(m);
+    e := integer32(n) - 1;
+    Standard_Generate_and_Show(n,d,m,c,e,lp);
+    declare
+      q : Standard_Complex_Laur_Systems.Laur_Sys(lp'range)
+        := Polynomial_to_Laurent_System(lp.all);
+      nv : constant integer32 := integer32(Number_of_Unknowns(q(q'first)));
+    begin
+      Standard_Test(q,q'last,nv);
+    end;
+  end Standard_Random_Test;
+
+  procedure DoblDobl_Random_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the parameters to generate a system
+  --   with random coefficients in double double precision.
+  --   The series are computed for the generated system.
+
+    n,d,m,c : natural32 := 0;
+    e : integer32 := 0;
+    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+    use DoblDobl_Complex_Laurentials;
+
+  begin
+    new_line;
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    put("Give the maximal degree : "); get(d);
+    put("Give number of monomials (0 for dense): "); get(m);
+    e := integer32(n) - 1;
+    DoblDobl_Generate_and_Show(n,d,m,c,e,lp);
+    declare
+      q : DoblDobl_Complex_Laur_Systems.Laur_Sys(lp'range)
+        := Polynomial_to_Laurent_System(lp.all);
+      nv : constant integer32 := integer32(Number_of_Unknowns(q(q'first)));
+    begin
+      DoblDobl_Test(q,q'last,nv);
+    end;
+  end DoblDobl_Random_Test;
+
+  procedure QuadDobl_Random_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the parameters to generate a system
+  --   with random coefficients in quad double precision.
+  --   The series are computed for the generated system.
+
+    n,d,m,c : natural32 := 0;
+    e : integer32 := 0;
+    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+    use QuadDobl_Complex_Laurentials;
+
+  begin
+    new_line;
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    put("Give the maximal degree : "); get(d);
+    put("Give number of monomials (0 for dense): "); get(m);
+    e := integer32(n) - 1;
+    QuadDobl_Generate_and_Show(n,d,m,c,e,lp);
+    declare
+      q : QuadDobl_Complex_Laur_Systems.Laur_Sys(lp'range)
+        := Polynomial_to_Laurent_System(lp.all);
+      nv : constant integer32 := integer32(Number_of_Unknowns(q(q'first)));
+    begin
+      QuadDobl_Test(q,q'last,nv);
+    end;
+  end QuadDobl_Random_Test;
 
   procedure Main is
 
@@ -729,14 +869,27 @@ procedure ts_puiseux is
   --   and then launches the proper main driver.
 
     prc : constant character := Prompt_for_Precision;
+    ans : character;
 
   begin
-    case prc is
-      when '0' => Standard_Main;
-      when '1' => DoblDobl_Main;
-      when '2' => QuadDobl_Main;
-      when others => null;
-    end case;
+    new_line;
+    put("Generate a random polynomial system ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      case prc is
+        when '0' => Standard_Random_Test;
+        when '1' => DoblDobl_Random_Test;
+        when '2' => QuadDobl_Random_Test;
+        when others => null;
+      end case;
+    else
+      case prc is
+        when '0' => Standard_Main;
+        when '1' => DoblDobl_Main;
+        when '2' => QuadDobl_Main;
+        when others => null;
+      end case;
+    end if;
   end Main;
 
 begin
