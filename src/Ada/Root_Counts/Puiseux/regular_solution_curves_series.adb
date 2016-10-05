@@ -1,6 +1,4 @@
-with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
@@ -31,11 +29,8 @@ with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Black_Box_Solvers;                  use Black_Box_Solvers;
 with Standard_Dense_Series;
-with Standard_Dense_Series_VecVecs;
 with DoblDobl_Dense_Series;
-with DoblDobl_Dense_Series_VecVecs;
 with QuadDobl_Dense_Series;
-with QuadDobl_Dense_Series_VecVecs;
 with Series_and_Polynomials;
 with Series_and_Polynomials_io;
 with Standard_Newton_Matrix_Series;
@@ -112,7 +107,7 @@ package body Regular_Solution_Curves_Series is
     use Standard_Complex_Numbers;
     use Standard_Complex_Solutions;
 
-    q : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
+    q : constant Standard_Complex_Laur_Systems.Laur_Sys(p'range)
       := Select_Terms(p,mic.pts.all);
     idx : constant integer32 := p'last+1;
     one : constant Complex_Number := Create(1.0);
@@ -138,7 +133,7 @@ package body Regular_Solution_Curves_Series is
     use Standard_Complex_Numbers;
     use Standard_Complex_Solutions;
 
-    q : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
+    q : constant Standard_Complex_Laur_Systems.Laur_Sys(p'range)
       := Select_Terms(p,mic.pts.all);
     idx : constant integer32 := p'last+1;
     one : constant Complex_Number := Create(1.0);
@@ -169,7 +164,7 @@ package body Regular_Solution_Curves_Series is
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Solutions;
 
-    q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+    q : constant DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range)
       := Select_Terms(p,mic.pts.all);
     idx : constant integer32 := p'last+1;
     one : constant Complex_Number := Create(integer32(1));
@@ -195,7 +190,7 @@ package body Regular_Solution_Curves_Series is
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Solutions;
 
-    q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+    q : constant DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range)
       := Select_Terms(p,mic.pts.all);
     idx : constant integer32 := p'last+1;
     one : constant Complex_Number := Create(integer32(1));
@@ -226,7 +221,7 @@ package body Regular_Solution_Curves_Series is
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Solutions;
 
-    q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+    q : constant QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range)
       := Select_Terms(p,mic.pts.all);
     idx : constant integer32 := p'last+1;
     one : constant Complex_Number := Create(integer32(1));
@@ -252,7 +247,7 @@ package body Regular_Solution_Curves_Series is
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Solutions;
 
-    q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+    q : constant QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range)
       := Select_Terms(p,mic.pts.all);
     idx : constant integer32 := p'last+1;
     one : constant Complex_Number := Create(integer32(1));
@@ -283,8 +278,7 @@ package body Regular_Solution_Curves_Series is
 
   begin
     put(file,"The minimal degrees : ");
-    put(file,Standard_Integer_Vectors.Vector(mindeg.all));
-    new_line(file);
+    put(file,mindeg.all); new_line(file);
     put_line(file,"The polynomial before the shift :");
     put(file,p); new_line(file);
     t.cf := Standard_Complex_Numbers.Create(1.0);
@@ -307,8 +301,7 @@ package body Regular_Solution_Curves_Series is
 
   begin
     put(file,"The minimal degrees : ");
-    put(file,Standard_Integer_Vectors.Vector(mindeg.all));
-    new_line(file);
+    put(file,mindeg.all); new_line(file);
     put_line(file,"The polynomial before the shift :");
     put(file,p); new_line(file);
     t.cf := DoblDobl_Complex_Numbers.Create(integer32(1));
@@ -331,8 +324,7 @@ package body Regular_Solution_Curves_Series is
 
   begin
     put(file,"The minimal degrees : ");
-    put(file,Standard_Integer_Vectors.Vector(mindeg.all));
-    new_line(file);
+    put(file,mindeg.all); new_line(file);
     put_line(file,"The polynomial before the shift :");
     put(file,p); new_line(file);
     t.cf := QuadDobl_Complex_Numbers.Create(integer32(1));
@@ -355,8 +347,7 @@ package body Regular_Solution_Curves_Series is
 
   begin
     if verbose then
-      put("The minimal degrees : ");
-      put(Standard_Integer_Vectors.Vector(mindeg.all)); new_line;
+      put("The minimal degrees : "); put(mindeg.all); new_line;
       put_line("The polynomial before the shift :");
       put(p); new_line;
     end if;
@@ -382,8 +373,7 @@ package body Regular_Solution_Curves_Series is
 
   begin
     if verbose then
-      put("The minimal degrees : ");
-      put(Standard_Integer_Vectors.Vector(mindeg.all)); new_line;
+      put("The minimal degrees : "); put(mindeg.all); new_line;
       put_line("The polynomial before the shift :");
       put(p); new_line;
     end if;
@@ -409,8 +399,7 @@ package body Regular_Solution_Curves_Series is
 
   begin
     if verbose then
-      put("The minimal degrees : ");
-      put(Standard_Integer_Vectors.Vector(mindeg.all)); new_line;
+      put("The minimal degrees : "); put(mindeg.all); new_line;
       put_line("The polynomial before the shift :");
       put(p); new_line;
     end if;
@@ -492,8 +481,8 @@ package body Regular_Solution_Curves_Series is
                      return Standard_Complex_Laurentials.Term is
 
     res : Standard_Complex_Laurentials.Term;
-    rdg : Standard_Integer_Vectors.Vector(t.dg'range)
-        := Transform(Standard_Integer_Vectors.Vector(t.dg.all),v);
+    rdg : constant Standard_Integer_Vectors.Vector(t.dg'range)
+        := Transform(t.dg.all,v);
 
   begin
     res.cf := t.cf;
@@ -506,8 +495,8 @@ package body Regular_Solution_Curves_Series is
                      return DoblDobl_Complex_Laurentials.Term is
 
     res : DoblDobl_Complex_Laurentials.Term;
-    rdg : Standard_Integer_Vectors.Vector(t.dg'range)
-        := Transform(Standard_Integer_Vectors.Vector(t.dg.all),v);
+    rdg : constant Standard_Integer_Vectors.Vector(t.dg'range)
+        := Transform(t.dg.all,v);
 
   begin
     res.cf := t.cf;
@@ -520,8 +509,8 @@ package body Regular_Solution_Curves_Series is
                      return QuadDobl_Complex_Laurentials.Term is
 
     res : QuadDobl_Complex_Laurentials.Term;
-    rdg : Standard_Integer_Vectors.Vector(t.dg'range)
-        := Transform(Standard_Integer_Vectors.Vector(t.dg.all),v);
+    rdg : constant Standard_Integer_Vectors.Vector(t.dg'range)
+        := Transform(t.dg.all,v);
 
   begin
     res.cf := t.cf;
@@ -539,7 +528,7 @@ package body Regular_Solution_Curves_Series is
     procedure Monomial ( t : in Standard_Complex_Laurentials.Term;
                          c : out boolean ) is
    
-      rt : Standard_Complex_Laurentials.Term := Transform(t,v);
+      rt : constant Standard_Complex_Laurentials.Term := Transform(t,v);
 
     begin
       Standard_Complex_Laurentials.Add(res,rt);
@@ -563,7 +552,7 @@ package body Regular_Solution_Curves_Series is
     procedure Monomial ( t : in DoblDobl_Complex_Laurentials.Term;
                          c : out boolean ) is
    
-      rt : DoblDobl_Complex_Laurentials.Term := Transform(t,v);
+      rt : constant DoblDobl_Complex_Laurentials.Term := Transform(t,v);
 
     begin
       DoblDobl_Complex_Laurentials.Add(res,rt);
@@ -587,7 +576,7 @@ package body Regular_Solution_Curves_Series is
     procedure Monomial ( t : in QuadDobl_Complex_Laurentials.Term;
                          c : out boolean ) is
    
-      rt : QuadDobl_Complex_Laurentials.Term := Transform(t,v);
+      rt : constant QuadDobl_Complex_Laurentials.Term := Transform(t,v);
 
     begin
       QuadDobl_Complex_Laurentials.Add(res,rt);
@@ -1198,7 +1187,7 @@ package body Regular_Solution_Curves_Series is
 
     len : constant integer32 := integer32(Length_Of(sols));
     res : Standard_Dense_Series_VecVecs.VecVec(1..len);
-    s : Standard_Series_Poly_Systems.Poly_Sys(p'range)
+    s : constant Standard_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
@@ -1226,7 +1215,7 @@ package body Regular_Solution_Curves_Series is
 
     len : constant integer32 := integer32(Length_Of(sols));
     res : Standard_Dense_Series_VecVecs.VecVec(1..len);
-    s : Standard_Series_Poly_Systems.Poly_Sys(p'range)
+    s : constant Standard_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
@@ -1255,7 +1244,7 @@ package body Regular_Solution_Curves_Series is
 
     len : constant integer32 := integer32(Length_Of(sols));
     res : DoblDobl_Dense_Series_VecVecs.VecVec(1..len);
-    s : DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
+    s : constant DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
@@ -1283,7 +1272,7 @@ package body Regular_Solution_Curves_Series is
 
     len : constant integer32 := integer32(Length_Of(sols));
     res : DoblDobl_Dense_Series_VecVecs.VecVec(1..len);
-    s : DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
+    s : constant DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
@@ -1312,7 +1301,7 @@ package body Regular_Solution_Curves_Series is
 
     len : constant integer32 := integer32(Length_Of(sols));
     res : QuadDobl_Dense_Series_VecVecs.VecVec(1..len);
-    s : QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
+    s : constant QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
@@ -1340,7 +1329,7 @@ package body Regular_Solution_Curves_Series is
 
     len : constant integer32 := integer32(Length_Of(sols));
     res : QuadDobl_Dense_Series_VecVecs.VecVec(1..len);
-    s : QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
+    s : constant QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
       := Series_and_Polynomials.System_to_Series_System(p,p'last+1);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;

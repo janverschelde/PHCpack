@@ -42,7 +42,6 @@ with QuadDobl_Complex_Laur_SysFun;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Poly_Laur_Convertors;      use QuadDobl_Poly_Laur_Convertors;
 with Random_Polynomial_Systems;          use Random_Polynomial_Systems;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
 with Standard_Dense_Series_Vectors;

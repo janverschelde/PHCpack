@@ -1,3 +1,6 @@
+Tue 4 Oct 2016 : edits in regular_solution_curves_series.adb and ts_puiseux
+  because of compiler warnings.
+
 Mon 3 Oct 2016 : added random test to ts_puiseux.adb.
 
 Sun 2 Oct 2016 : added Tropism() function to extract the normals of a mixed
