@@ -1,5 +1,6 @@
 Wed 5 Oct 2016 : more output statements added to ts_puiseux.
   Added mixed volume to Tropisms() in regular_solution_curves_series.
+  To ts_puiseux, added printing of the tropism before residual.
 
 Tue 4 Oct 2016 : edits in regular_solution_curves_series.adb and ts_puiseux
   because of compiler warnings.

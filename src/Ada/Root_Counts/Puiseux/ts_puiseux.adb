@@ -14,6 +14,7 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs;
 with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
 with Standard_Complex_Vectors;
@@ -196,6 +197,7 @@ procedure ts_puiseux is
     for k in s'range loop
       put(file,"-> at the series "); put(file,k); put_line(file," : ");
       Series_and_Polynomials_io.put(file,s(k).all);
+      put(file,"with tropism "); put(file,w(k)); new_line(file);
       res := Standard_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
       put(file,k,1); put(file," : ");
@@ -232,6 +234,7 @@ procedure ts_puiseux is
       if report then
         put("-> at the series "); put(k); put_line(" : ");
         Series_and_Polynomials_io.put(s(k).all);
+        put("with tropism "); put(w(k)); new_line;
       end if;
       res := Standard_Residual(p,s(k).all,w(k).all,t);
       if report then
@@ -269,6 +272,7 @@ procedure ts_puiseux is
     for k in s'range loop
       put(file,"-> at the series "); put(file,k); put_line(file," : ");
       Series_and_Polynomials_io.put(file,s(k).all);
+      put(file,"with tropism "); put(file,w(k)); new_line(file);
       res := DoblDobl_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
       put(file,k,1); put(file," : ");
@@ -305,6 +309,7 @@ procedure ts_puiseux is
       if report then
         put("-> at the series "); put(k); put_line(" : ");
         Series_and_Polynomials_io.put(s(k).all);
+        put("with tropism "); put(w(k)); new_line;
       end if;
       res := DoblDobl_Residual(p,s(k).all,w(k).all,t);
       if report then
@@ -341,6 +346,7 @@ procedure ts_puiseux is
     for k in s'range loop
       put(file,"-> at the series "); put(file,k); put_line(file," : ");
       Series_and_Polynomials_io.put(file,s(k).all);
+      put(file,"with tropism "); put(file,w(k)); new_line(file);
       res := QuadDobl_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
       put(file,k,1); put(file," : ");
@@ -376,6 +382,7 @@ procedure ts_puiseux is
       if report then
         put("-> at the series "); put(k); put_line(" : ");
         Series_and_Polynomials_io.put(s(k).all);
+        put("with tropism "); put(w(k)); new_line;
       end if;
       res := QuadDobl_Residual(p,s(k).all,w(k).all,t);
       if report then
