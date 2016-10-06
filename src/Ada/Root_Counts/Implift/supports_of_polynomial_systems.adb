@@ -851,6 +851,24 @@ package body Supports_of_Polynomial_Systems is
   end Select_Terms;
 
   function Select_Terms ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                          m : Standard_Integer_Vectors.Vector;
+                          s : Arrays_of_Integer_Vector_Lists.Array_of_Lists ) 
+                        return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+    ind : integer32 := 0;
+
+  begin
+    for i in m'range loop
+      for j in 1..m(i) loop
+        ind := ind + 1;
+        res(ind) := Select_Terms(p(ind),s(i));
+      end loop;
+    end loop;
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                           s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
                         return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
@@ -938,6 +956,24 @@ package body Supports_of_Polynomial_Systems is
   begin
     for i in p'range loop
       res(i) := Select_Terms(p(i),s(i));
+    end loop;
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                          m : Standard_Integer_Vectors.Vector;
+                          s : Arrays_of_Integer_Vector_Lists.Array_of_Lists ) 
+                        return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+    ind : integer32 := 0;
+
+  begin
+    for i in m'range loop
+      for j in 1..m(i) loop
+        ind := ind + 1;
+        res(ind) := Select_Terms(p(ind),s(i));
+      end loop;
     end loop;
     return res;
   end Select_Terms;

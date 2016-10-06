@@ -1,3 +1,5 @@
+Thu 6 Oct 2016 : added two functions in supports_of_polynomial_systems.
+
 Tue 27 Sep 2016 : in supports_of_polynomial_systems, added select_terms 
   functions for systems with double double and quad double coefficients.
 
