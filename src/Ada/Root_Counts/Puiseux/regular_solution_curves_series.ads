@@ -90,11 +90,15 @@ package Regular_Solution_Curves_Series is
   --            defined by the last exponent in each monomial of p;
   --   mv       the mixed volume of the cells in mcc.
 
-  function Tropisms ( mcc : Mixed_Subdivision )
+  function Tropisms ( mcc : Mixed_Subdivision; mixvol : natural32 )
                     return Standard_Integer_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns the normals to the cells in the cell configuration mcc.
+  --   The sum of the mixed volumes of all cells in mcc equals mixvol
+  --   and 1..mixvol is the range of the vector on return.
+  --   If the mixed cell has mixed volume mv, then mv copies of its
+  --   inner normal are in the vector on return.
 
   procedure Initial_Coefficients
               ( file : in file_type;

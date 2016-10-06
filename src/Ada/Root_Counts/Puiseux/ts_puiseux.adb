@@ -409,7 +409,7 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
       s : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
-      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       r : double_float;
     begin
       s := Series(file,p,mcc,mv,nit);
@@ -438,7 +438,7 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
       s : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
-      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       t : constant double_double := create(0.1);
       r : double_double;
     begin
@@ -468,7 +468,7 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
       s : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
-      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       t : constant quad_double := create(0.1);
       r : quad_double;
     begin
@@ -499,7 +499,7 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
       s : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
-      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       r : double_float;
     begin
       s := Series(p,mcc,mv,nit,report);
@@ -532,7 +532,7 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
       s : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
-      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       t : constant double_double := create(0.1);
       r : double_double;
     begin
@@ -566,7 +566,7 @@ procedure ts_puiseux is
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
       s : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
-      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc);
+      w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       t : constant quad_double := create(0.1);
       r : quad_double;
     begin

@@ -26,6 +26,7 @@ with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
+with Mixed_Volume_Computation;
 with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Black_Box_Solvers;                  use Black_Box_Solvers;
 with Standard_Dense_Series;
@@ -80,18 +81,28 @@ package body Regular_Solution_Curves_Series is
     Integer_Volume_Computation(file,dim,mix,true,sup,mcc,mv);
   end Mixed_Cell_Tropisms;
 
-  function Tropisms ( mcc : Mixed_Subdivision )
+  function Tropisms ( mcc : Mixed_Subdivision; mixvol : natural32 )
                     return Standard_Integer_VecVecs.VecVec is
 
-    len : constant integer32 := integer32(Length_Of(mcc));
+    use Mixed_Volume_Computation;
+
+    len : constant integer32 := integer32(mixvol);
     res : Standard_Integer_VecVecs.VecVec(1..len);
     tmp : Mixed_Subdivision := mcc;
     mic : Mixed_Cell;
+    dim : constant integer32 := Head_Of(mcc).nor'last-1;
+    mix : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => 1);
+    idx : integer32 := 0;
+    mv : natural32;
 
   begin
-    for k in res'range loop
+    while not Is_Null(tmp) loop
       mic := Head_Of(tmp);
-      res(k) := new Standard_Integer_Vectors.Vector'(mic.nor.all);
+      mv := Mixed_Volume(dim,mix,mic);
+      for i in 1..mv loop
+        idx := idx + 1;
+        res(idx) := new Standard_Integer_Vectors.Vector'(mic.nor.all);
+      end loop;
       tmp := Tail_Of(tmp);
     end loop;
     return res;
