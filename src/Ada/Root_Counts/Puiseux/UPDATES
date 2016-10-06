@@ -1,3 +1,5 @@
+Wed 5 Oct 2016 : more output statements added to ts_puiseux.
+
 Tue 4 Oct 2016 : edits in regular_solution_curves_series.adb and ts_puiseux
   because of compiler warnings.
 

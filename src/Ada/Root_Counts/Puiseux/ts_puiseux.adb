@@ -53,6 +53,7 @@ with DoblDobl_Dense_Series_VecVecs;
 with QuadDobl_Dense_Series_Vectors;
 with QuadDobl_Series_Vector_Functions;
 with QuadDobl_Dense_Series_VecVecs;
+with Series_and_Polynomials_io;
 with Regular_Solution_Curves_Series;     use Regular_Solution_Curves_Series;
 
 procedure ts_puiseux is
@@ -191,7 +192,10 @@ procedure ts_puiseux is
     res : double_float;
 
   begin
+    put_line(file,"The system p :"); put(file,p);
     for k in s'range loop
+      put(file,"-> at the series "); put(file,k); put_line(file," : ");
+      Series_and_Polynomials_io.put(file,s(k).all);
       res := Standard_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
       put(file,k,1); put(file," : ");
@@ -221,7 +225,14 @@ procedure ts_puiseux is
     res : double_float;
 
   begin
+    if report
+     then put_line("The system p :"); put(p);
+    end if;
     for k in s'range loop
+      if report then
+        put("-> at the series "); put(k); put_line(" : ");
+        Series_and_Polynomials_io.put(s(k).all);
+      end if;
       res := Standard_Residual(p,s(k).all,w(k).all,t);
       if report then
         put("Residual at series "); put(k,1); put(" : ");
@@ -254,7 +265,10 @@ procedure ts_puiseux is
     res : double_double;
 
   begin
+    put_line(file,"The system p :"); put(file,p);
     for k in s'range loop
+      put(file,"-> at the series "); put(file,k); put_line(file," : ");
+      Series_and_Polynomials_io.put(file,s(k).all);
       res := DoblDobl_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
       put(file,k,1); put(file," : ");
@@ -284,7 +298,14 @@ procedure ts_puiseux is
     res : double_double;
 
   begin
+    if report
+     then put_line("The system p :"); put(p);
+    end if;
     for k in s'range loop
+      if report then
+        put("-> at the series "); put(k); put_line(" : ");
+        Series_and_Polynomials_io.put(s(k).all);
+      end if;
       res := DoblDobl_Residual(p,s(k).all,w(k).all,t);
       if report then
         put("Residual at series "); put(k,1); put(" : ");
@@ -316,7 +337,10 @@ procedure ts_puiseux is
     res : quad_double;
 
   begin
+    put_line(file,"The system p :"); put(file,p);
     for k in s'range loop
+      put(file,"-> at the series "); put(file,k); put_line(file," : ");
+      Series_and_Polynomials_io.put(file,s(k).all);
       res := QuadDobl_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
       put(file,k,1); put(file," : ");
@@ -345,7 +369,14 @@ procedure ts_puiseux is
     res : quad_double;
 
   begin
+    if report
+     then put_line("The system p :"); put(p);
+    end if;
     for k in s'range loop
+      if report then
+        put("-> at the series "); put(k); put_line(" : ");
+        Series_and_Polynomials_io.put(s(k).all);
+      end if;
       res := QuadDobl_Residual(p,s(k).all,w(k).all,t);
       if report then
         put("Residual at series "); put(k,1); put(" : ");
@@ -384,6 +415,8 @@ procedure ts_puiseux is
       s := Series(file,p,mcc,mv,nit);
       put_line(file,"Evaluating series at 0.1 ...");
       r := Standard_Residuals(file,p,s,w,0.1);
+      put(file,"The reported sum of residuals : ");
+      put(file,r,3); new_line(file);
     end;
   end Standard_Test;
 
@@ -412,6 +445,8 @@ procedure ts_puiseux is
       s := Series(file,p,mcc,mv,nit);
       put_line(file,"Evaluating series at 0.1 ...");
       r := DoblDobl_Residuals(file,p,s,w,t);
+      put(file,"The reported sum of residuals : ");
+      put(file,r,3); new_line(file);
     end;
   end DoblDobl_Test;
 
@@ -440,6 +475,8 @@ procedure ts_puiseux is
       s := Series(file,p,mcc,mv,nit);
       put_line(file,"Evaluating series at 0.1 ...");
       r := QuadDobl_Residuals(file,p,s,w,t);
+      put(file,"The reported sum of residuals : ");
+      put(file,r,3); new_line(file);
     end;
   end QuadDobl_Test;
 
@@ -470,6 +507,9 @@ procedure ts_puiseux is
        then put_line("Evaluating the series at 0.1 ...");
       end if;
       r := Standard_Residuals(p,s,w,0.1,report);
+      if report
+       then put("The reported sum of residuals : "); put(r,3); new_line;
+      end if;
     end;
   end Standard_Test;
 
@@ -501,6 +541,9 @@ procedure ts_puiseux is
        then put_line("Evaluating the series at 0.1 ...");
       end if;
       r := DoblDobl_Residuals(p,s,w,t,report);
+      if report
+       then put("The reported sum of residuals : "); put(r,3); new_line;
+      end if;
     end;
   end DoblDobl_Test;
 
@@ -532,6 +575,9 @@ procedure ts_puiseux is
        then put_line("Evaluating the series at 0.1 ...");
       end if;
       r := QuadDobl_Residuals(p,s,w,t,report);
+      if report
+       then put("The reported sum of residuals : "); put(r,3); new_line;
+      end if;
     end;
   end QuadDobl_Test;
 
@@ -778,7 +824,8 @@ procedure ts_puiseux is
   --   with random coefficients in standard double precision.
   --   The series are computed for the generated system.
 
-    n,d,m,c : natural32 := 0;
+    n,d,m : natural32 := 0;
+    c : constant natural32 := 0;
     e : integer32 := 0;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 
@@ -793,7 +840,7 @@ procedure ts_puiseux is
     e := integer32(n) - 1;
     Standard_Generate_and_Show(n,d,m,c,e,lp);
     declare
-      q : Standard_Complex_Laur_Systems.Laur_Sys(lp'range)
+      q : constant Standard_Complex_Laur_Systems.Laur_Sys(lp'range)
         := Polynomial_to_Laurent_System(lp.all);
       nv : constant integer32 := integer32(Number_of_Unknowns(q(q'first)));
     begin
@@ -808,7 +855,8 @@ procedure ts_puiseux is
   --   with random coefficients in double double precision.
   --   The series are computed for the generated system.
 
-    n,d,m,c : natural32 := 0;
+    n,d,m : natural32 := 0;
+    c : constant natural32 := 0;
     e : integer32 := 0;
     lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 
@@ -823,7 +871,7 @@ procedure ts_puiseux is
     e := integer32(n) - 1;
     DoblDobl_Generate_and_Show(n,d,m,c,e,lp);
     declare
-      q : DoblDobl_Complex_Laur_Systems.Laur_Sys(lp'range)
+      q : constant DoblDobl_Complex_Laur_Systems.Laur_Sys(lp'range)
         := Polynomial_to_Laurent_System(lp.all);
       nv : constant integer32 := integer32(Number_of_Unknowns(q(q'first)));
     begin
@@ -838,7 +886,8 @@ procedure ts_puiseux is
   --   with random coefficients in quad double precision.
   --   The series are computed for the generated system.
 
-    n,d,m,c : natural32 := 0;
+    n,d,m : natural32 := 0;
+    c : constant natural32 := 0;
     e : integer32 := 0;
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 
@@ -853,7 +902,7 @@ procedure ts_puiseux is
     e := integer32(n) - 1;
     QuadDobl_Generate_and_Show(n,d,m,c,e,lp);
     declare
-      q : QuadDobl_Complex_Laur_Systems.Laur_Sys(lp'range)
+      q : constant QuadDobl_Complex_Laur_Systems.Laur_Sys(lp'range)
         := Polynomial_to_Laurent_System(lp.all);
       nv : constant integer32 := integer32(Number_of_Unknowns(q(q'first)));
     begin
