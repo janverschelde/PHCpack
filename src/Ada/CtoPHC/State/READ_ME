@@ -1,4 +1,4 @@
-Calling PHCpack from C as a state machine in PHCv2.4.26
+Calling PHCpack from C as a state machine in PHCv2.4.27
 
 This directory was created in release 2.3 as subdirectory to CtoPHC.
 The idea for using PHCpack as a state machine originated from the need
@@ -74,6 +74,7 @@ ts_use_c2fac                     : C testing operations in use_c2fac
 use_c2mbt                        : homotopy membership test jobs for in C
 ------------------------------------------------------------------------------
 cells_container                  : manages mixed-cell configurations
+integer_cells_container          : integer lifting valued cells container
 ts_celcon                        : tests the cells container
 use_celcon                       : Ada gateway to the cells container
 ts_use_celcon.c                  : C routine to test the cells container
