@@ -319,4 +319,30 @@ package body Integer_Lifting_Utilities is
     return max;
   end Lower_Lifting;
 
+  function Lifted_Supports
+             ( r : integer32; mixsub : Mixed_Subdivision ) 
+             return Array_of_Lists is
+
+    res,res_last : Array_of_Lists(1..r);
+    tmp : Mixed_Subdivision := mixsub;
+    mic : Mixed_Cell;
+    ptr : List;
+    ls : Link_to_Vector;
+
+  begin
+    while not Is_Null(tmp) loop
+      mic := Head_Of(tmp);
+      for i in res'range loop
+        ptr := mic.pts(i);
+        while not Is_Null(ptr) loop
+          ls := Head_Of(ptr);
+          Append_Diff(res(i),res_last(i),ls.all);
+          ptr := Tail_Of(ptr);
+        end loop;
+      end loop;
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Lifted_Supports;
+
 end Integer_Lifting_Utilities;

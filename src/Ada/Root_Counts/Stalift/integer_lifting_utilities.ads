@@ -141,4 +141,13 @@ package Integer_Lifting_Utilities is
   --   Stops when the lower bound equals the lifting value of the point
   --   equals the lifting of the point given on entry.
 
+  function Lifted_Supports ( r : integer32; mixsub : Mixed_Subdivision )
+                           return Array_of_Lists;
+
+  -- DESCRIPTION :
+  --   Returns an array of lists of range 1..r with the lifted supports
+  --   for all points in the given mixed subdivision.
+
+  -- REQUIRED : r = c.pts'last for all cells c in mixsub.
+
 end Integer_Lifting_Utilities;

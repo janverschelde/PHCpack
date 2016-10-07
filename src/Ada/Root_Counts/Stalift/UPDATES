@@ -1,3 +1,6 @@
+Thu 6 Oct 2016 : added a function to integer_lifting_utilities to extract the
+  supports from a mixed-cell configuration.
+
 Sun 11 Sep 2016 : added silent versions to drivers_for_static_lifting,
   of the drivers to compute and refine the mixed cell configuration.
 
