@@ -530,16 +530,16 @@ package body Standard_Dense_Series is
 
     use Standard_Mathematical_Functions;
 
-    pow : constant double_float := double_float(a)/double_float(b);
+    pow : double_float := double_float(a)/double_float(b);
     pwt : double_float := t**pow;
     res : Complex_Number := s.cff(0)*pwt;
 
   begin
-    for i in 1..(s.deg-1) loop
-      pwt := pwt*t;
+    for i in 1..s.deg loop
+      pow := double_float(a+i)/double_float(b);
+      pwt := t**pow;
       res := res + s.cff(i)*pwt;
     end loop;
-    res := res + s.cff(s.deg)*pwt*t;
     return res;
   end Eval;
 
@@ -548,16 +548,16 @@ package body Standard_Dense_Series is
 
     use Standard_Complex_Numbers_Polar;
 
-    pow : constant double_float := double_float(a)/double_float(b);
+    pow : double_float := double_float(a)/double_float(b);
     pwt : Complex_Number := Polar_Exponentiation(t,pow);
     res : Complex_Number := s.cff(0)*pwt;
 
   begin
-    for i in 1..(s.deg-1) loop
-      pwt := pwt*t;
+    for i in 1..s.deg loop
+      pow := double_float(a+i)/double_float(b);
+      pwt := Polar_Exponentiation(t,pow);
       res := res + s.cff(i)*pwt;
     end loop;
-    res := res + s.cff(s.deg)*pwt*t;
     return res;
   end Eval;
 
