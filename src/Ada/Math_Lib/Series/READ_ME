@@ -13,6 +13,8 @@ file name                        : short description
 ------------------------------------------------------------------------------
 standard_truncated_series        : defines basic operations on power series
 ts_pstrunc                       : tests proof-of-concept power series
+binomial_coefficients            : export binomial() function
+ts_bincff                        : test on binomial coefficients
 standard_dense_series            : dense power series, standard coefficients
 dobldobl_dense_series            : dense series in double double precision
 quaddobl_dense_series            : dense series in quad double precision
