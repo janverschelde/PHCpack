@@ -1,5 +1,5 @@
-with DoblDobl_Mathematical_Functions;
 with DoblDobl_Complex_Numbers_Polar;
+with Binomial_Coefficients;
 
 package body DoblDobl_Dense_Series is
 
@@ -137,7 +137,7 @@ package body DoblDobl_Dense_Series is
       end loop;
       return true;
     else
-      return DoblDobl_Dense_Series.Equal(t,s);
+      return DoblDobl_Dense_Series.Equal(s=>t,t=>s);
     end if;
   end Equal;
 
@@ -553,8 +553,6 @@ package body DoblDobl_Dense_Series is
   function Eval ( s : Series; t : double_double;
                   a,b : integer32 ) return Complex_Number is
 
-    use DoblDobl_Mathematical_Functions;
-
     dd_a : double_double := create(a);
     dd_b : constant double_double := create(b);
     pow : double_double := dd_a/dd_b;
@@ -606,22 +604,13 @@ package body DoblDobl_Dense_Series is
 
 -- SHIFT OPERATORS :
 
-  function binomial ( n,k : integer32 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Returns the binomial coefficient n choose k.
-
-    res : integer32 := 1;
-
-  begin
-    return res;
-  end binomial;
-
   function Shift ( s : Series; c : double_double ) return Series is
 
     res : Series;
     bcf : double_double;
     sgn : integer32;
+
+    use Binomial_Coefficients;
 
   begin
     res.deg := s.deg;
@@ -644,6 +633,8 @@ package body DoblDobl_Dense_Series is
     bcf : double_double;
     rcf : Complex_Number;
     sgn : integer32;
+
+    use Binomial_Coefficients;
 
   begin
     res.deg := s.deg;

@@ -1,6 +1,7 @@
 Fri 7 Oct 2016 : fixed bug in Eval() in *_dense_series with additional
   exponents a and b.  Isolated computation of binomial coefficient in a
   new package binomial_coefficients, tested by ts_bincff.
+  Used binomial_coefficients in *_dense_series.adb package bodies.
 
 Sun 2 Oct 2016 : added weighted Eval() in standard_dense_series
   and standard_series_vector_functions.  Added double double and quad double

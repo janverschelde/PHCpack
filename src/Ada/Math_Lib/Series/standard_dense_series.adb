@@ -1,5 +1,6 @@
 with Standard_Mathematical_Functions;
 with Standard_Complex_Numbers_Polar;
+with Binomial_Coefficients;
 
 package body Standard_Dense_Series is
 
@@ -113,7 +114,7 @@ package body Standard_Dense_Series is
       end loop;
       return true;
     else
-      return Standard_Dense_Series.Equal(t,s);
+      return Standard_Dense_Series.Equal(s=>t,t=>s);
     end if;
   end Equal;
 
@@ -572,22 +573,13 @@ package body Standard_Dense_Series is
 
 -- SHIFT OPERATORS :
 
-  function binomial ( n,k : integer32 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Returns the binomial coefficient n choose k.
-
-    res : integer32 := 1;
-
-  begin
-    return res;
-  end binomial;
-
   function Shift ( s : Series; c : double_float ) return Series is
 
     res : Series;
     bcf : double_float;
     sgn : integer32;
+
+    use Binomial_Coefficients;
 
   begin
     res.deg := s.deg;
@@ -610,6 +602,8 @@ package body Standard_Dense_Series is
     bcf : double_float;
     rcf : Complex_Number;
     sgn : integer32;
+
+    use Binomial_Coefficients;
 
   begin
     res.deg := s.deg;
