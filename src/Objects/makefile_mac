@@ -43,9 +43,9 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
 GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
-# GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
@@ -482,6 +482,10 @@ ts_giftwcon:
 ts_pstrunc:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pstrunc.adb \
               -o $(BIN)/ts_pstrunc
+
+ts_bincff:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_bincff.adb \
+              -o $(BIN)/ts_bincff
 
 ts_series:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_series.adb \

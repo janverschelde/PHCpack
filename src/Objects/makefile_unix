@@ -464,6 +464,9 @@ ts_giftwrap:
 ts_pstrunc:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pstrunc.adb -o $(BIN)/ts_pstrunc
 
+ts_bincff:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_bincff.adb -o $(BIN)/ts_bincff
+
 ts_series:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_series.adb -o $(BIN)/ts_series
 

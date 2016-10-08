@@ -441,11 +441,14 @@ ts_giftwrap:
 
 # Test programs for Math_Lib/Series :
 
-test_series: ts_pstrunc ts_series ts_servec ts_sermat ts_serpol ts_sersys \
-             ts_serlin
+test_series: ts_pstrunc ts_bincff ts_series ts_servec ts_sermat ts_serpol \
+             ts_sersys ts_serlin
 
 ts_pstrunc:
 	make -f $(MAKEFILE) ts_pstrunc
+
+ts_bincff:
+	make -f $(MAKEFILE) ts_bincff
 
 ts_series:
 	make -f $(MAKEFILE) ts_series
