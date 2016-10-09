@@ -1,3 +1,6 @@
+Sat 8 Oct 2016 : new package regular_newton_puiseux with code extracted
+  from ts_puiseux.
+
 Wed 5 Oct 2016 : more output statements added to ts_puiseux.
   Added mixed volume to Tropisms() in regular_solution_curves_series.
   To ts_puiseux, added printing of the tropism before residual.
