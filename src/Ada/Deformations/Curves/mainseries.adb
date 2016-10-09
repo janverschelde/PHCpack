@@ -24,6 +24,7 @@ with QuadDobl_Series_Poly_Systems;
 with Series_and_Polynomials;
 with Series_and_Solutions;
 with Power_Series_Methods;              use Power_Series_Methods;
+with Regular_Newton_Puiseux;
 
 procedure mainseries ( precision : in character;
                        infilename,outfilename : in string ) is
@@ -47,7 +48,7 @@ procedure mainseries ( precision : in character;
     use Standard_Complex_Solutions;
 
     len : constant integer32 := integer32(Length_Of(s));
-    dim : constant integer32 := Head_Of(s).n - 1;
+    -- dim : constant integer32 := Head_Of(s).n - 1;
     srv : constant Standard_Dense_Series_VecVecs.VecVec(1..len)
         := Series_and_Solutions.Create(s,idx);
     srp : Standard_Series_Poly_Systems.Poly_Sys(p'range)
@@ -101,7 +102,7 @@ procedure mainseries ( precision : in character;
     use DoblDobl_Complex_Solutions;
 
     len : constant integer32 := integer32(Length_Of(s));
-    dim : constant integer32 := Head_Of(s).n - 1;
+   -- dim : constant integer32 := Head_Of(s).n - 1;
     srv : constant DoblDobl_Dense_Series_VecVecs.VecVec(1..len)
         := Series_and_Solutions.Create(s,idx);
     srp : DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
@@ -155,7 +156,7 @@ procedure mainseries ( precision : in character;
     use QuadDobl_Complex_Solutions;
 
     len : constant integer32 := integer32(Length_Of(s));
-    dim : constant integer32 := Head_Of(s).n - 1;
+   -- dim : constant integer32 := Head_Of(s).n - 1;
     srv : constant QuadDobl_Dense_Series_VecVecs.VecVec(1..len)
         := Series_and_Solutions.Create(s,idx);
     srp : QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
@@ -324,7 +325,7 @@ procedure mainseries ( precision : in character;
   --   Prompts the user to select the working precision
   --   if precision /= '0' and then launches the corresponding procedure.
 
-    prc : character;
+    prc,ans : character;
 
   begin
     if precision = '0' then
@@ -335,25 +336,55 @@ procedure mainseries ( precision : in character;
       put_line("  2. quad double precision.");
       put("Type 0, 1, or 2 to select the working precision : ");
       Ask_Alternative(prc,"012");
-      case prc is
-        when '0' => Standard_Main;
-        when '1' => DoblDobl_Main;
-        when '2' => QuadDobl_Main;
-        when others => null;
-      end case;
+      new_line;
+      put("Is system in normal position, for unit tropism ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        case prc is
+          when '0' => Standard_Main;
+          when '1' => DoblDobl_Main;
+          when '2' => QuadDobl_Main;
+          when others => null;
+        end case;
+      else
+        case prc is
+          when '0' => Regular_Newton_Puiseux.Standard_Main;
+          when '1' => Regular_Newton_Puiseux.DoblDobl_Main;
+          when '2' => Regular_Newton_Puiseux.QuadDobl_Main;
+          when others => null;
+        end case;
+      end if;
     else
-      case precision is
-        when '1' =>
-          put_line("The working precision is double precision");
-          Standard_Main;
-        when '2' =>
-          put_line("The working precision is double double precision.");
-          DoblDobl_Main;
-        when '4' =>
-          put_line("The working precision is quad double precision.");
-          QuadDobl_Main;
-        when others => null;
-      end case;
+      new_line;
+      put("Is system in normal position, for unit tropism ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        case precision is
+          when '1' =>
+            put_line("The working precision is double precision");
+            Standard_Main;
+          when '2' =>
+            put_line("The working precision is double double precision.");
+            DoblDobl_Main;
+          when '4' =>
+            put_line("The working precision is quad double precision.");
+            QuadDobl_Main;
+          when others => null;
+        end case;
+      else
+        case precision is
+          when '1' =>
+            put_line("The working precision is double precision");
+            Regular_Newton_Puiseux.Standard_Main;
+          when '2' =>
+            put_line("The working precision is double double precision.");
+            Regular_Newton_Puiseux.DoblDobl_Main;
+          when '4' =>
+            put_line("The working precision is quad double precision.");
+            Regular_Newton_Puiseux.QuadDobl_Main;
+          when others => null;
+        end case;
+      end if;
     end if;
   end Main;
 

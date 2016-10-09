@@ -1,3 +1,6 @@
+Sat 8 Oct 2016 : to mainseries.adb added call to Newton-Puiseux method
+  for regular solution series.
+
 Mon 8 Aug 2016 : added a put_vector to power_series_methods.adb,
   also for the dobldobl and quaddobl versions, and not only for SVD.
 
