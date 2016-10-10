@@ -1,4 +1,3 @@
-with text_io;                            use text_io;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -216,7 +215,7 @@ package body Series_and_Trackers is
                 sol : in out Standard_Complex_Solutions.Solution ) is
 
     wrk : Standard_Series_Poly_Systems.Poly_Sys(hom'range);
-    nit : integer32 := 3;
+    nit : constant integer32 := 3;
     srv : Standard_Dense_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Dense_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
@@ -259,7 +258,7 @@ package body Series_and_Trackers is
                 sol : in out DoblDobl_Complex_Solutions.Solution ) is
 
     wrk : DoblDobl_Series_Poly_Systems.Poly_Sys(hom'range);
-    nit : integer32 := 4;
+    nit : constant integer32 := 4;
     srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Dense_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
@@ -305,7 +304,7 @@ package body Series_and_Trackers is
                 sol : in out Quaddobl_Complex_Solutions.Solution ) is
 
     wrk : QuadDobl_Series_Poly_Systems.Poly_Sys(hom'range);
-    nit : integer32 := 4;
+    nit : constant integer32 := 4;
     srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Dense_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
@@ -353,7 +352,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : Standard_Series_Poly_Systems.Poly_Sys(hom'range);
-    nit : integer32 := 4;
+    nit : constant integer32 := 4;
     srv : Standard_Dense_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Dense_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
@@ -408,7 +407,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : DoblDobl_Series_Poly_Systems.Poly_Sys(hom'range);
-    nit : integer32 := 4;
+    nit : constant integer32 := 4;
     srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Dense_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
@@ -467,7 +466,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : QuadDobl_Series_Poly_Systems.Poly_Sys(hom'range);
-    nit : integer32 := 4;
+    nit : constant integer32 := 4;
     srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Dense_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
