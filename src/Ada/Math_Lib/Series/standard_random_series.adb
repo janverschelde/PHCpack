@@ -5,7 +5,7 @@ package body Standard_Random_Series is
 
   function Random_Series ( degree : integer32 ) return Series is
 
-    cff : Standard_Complex_Vectors.Vector(0..degree)
+    cff : constant Standard_Complex_Vectors.Vector(0..degree)
         := Standard_Random_Vectors.Random_Vector(0,degree);
 
   begin

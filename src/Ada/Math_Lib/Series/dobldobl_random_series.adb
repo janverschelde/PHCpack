@@ -5,7 +5,7 @@ package body DoblDobl_Random_Series is
 
   function Random_Series ( degree : integer32 ) return Series is
 
-    cff : DoblDobl_Complex_Vectors.Vector(0..degree)
+    cff : constant DoblDobl_Complex_Vectors.Vector(0..degree)
         := DoblDobl_Random_Vectors.Random_Vector(0,degree);
 
   begin

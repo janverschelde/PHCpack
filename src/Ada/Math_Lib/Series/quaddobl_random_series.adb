@@ -5,7 +5,7 @@ package body QuadDobl_Random_Series is
 
   function Random_Series ( degree : integer32 ) return Series is
 
-    cff : QuadDobl_Complex_Vectors.Vector(0..degree)
+    cff : constant QuadDobl_Complex_Vectors.Vector(0..degree)
         := QuadDobl_Random_Vectors.Random_Vector(0,degree);
 
   begin

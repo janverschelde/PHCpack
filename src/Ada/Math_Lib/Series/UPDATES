@@ -1,3 +1,6 @@
+Sun 9 Oct 2016 : edited {standard,dobldobl,quaddobl}_random_series.adb 
+  for compiler warnings.
+
 Fri 7 Oct 2016 : fixed bug in Eval() in *_dense_series with additional
   exponents a and b.  Isolated computation of binomial coefficient in a
   new package binomial_coefficients, tested by ts_bincff.
