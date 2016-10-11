@@ -820,7 +820,7 @@ ts_drivimpl:
 
 test_static: ts_rndcff ts_supsub ts_conint ts_mixture ts_mixvol ts_mixlab \
              ts_jpmix ts_drivcrit ts_drivstal ts_mvasta ts_exptrack \
-             ts_stable ts_balance
+             ts_stable ts_balance ts_userlift
 
 ts_rndcff:
 	make -f $(MAKEFILE) ts_rndcff
@@ -860,6 +860,9 @@ ts_stable:
 
 ts_balance:
 	make -f $(MAKEFILE) ts_balance
+
+ts_userlift:
+	make -f $(MAKEFILE) ts_userlift
 
 # Test programs for the Root_Counts/Dynlift library :
 

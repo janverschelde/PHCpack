@@ -916,6 +916,10 @@ ts_balance:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_balance.adb \
               -o $(BIN)/ts_balance
 
+ts_userlift:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_userlift.adb \
+              -o $(BIN)/ts_userlift
+
 # Test programs for the Root_Counts/Dynlift library :
 
 ts_dyntri:
