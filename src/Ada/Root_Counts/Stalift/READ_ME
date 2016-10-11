@@ -42,6 +42,7 @@ integer_polyhedral_continuation   : polyhedral continuation by integer lifting
 mixed_volume_computation          : functions to compute mixed volumes
 ts_mixvol                         : mixed volume of supports
 bkk_bound_computations            : black-box mixed volumes and solvers
+ts_userlift                       : test user defined integer lifting
 -------------------------------------------------------------------------------
 floating_integer_convertors       : convertors integer<->floating data
 floating_mixed_subdivisions       : mixed subdivisions with floating lifting
