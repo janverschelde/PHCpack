@@ -3,6 +3,7 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
@@ -12,10 +13,15 @@ with Integer_Lifting_Utilities;
 with Arrays_of_Floating_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io;
+with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Supports_of_Polynomial_Systems;
 with Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;     use Floating_Mixed_Subdivisions_io;
 with Integer_Mixed_Subdivisions;
 with Integer_Mixed_Subdivisions_io;      use Integer_Mixed_Subdivisions_io;
+with Mixed_Volume_Computation;
+with Drivers_for_Lifting_Functions;
 with Cells_Container;
 with Integer_Cells_Container;
 
@@ -379,6 +385,68 @@ procedure ts_celcon is
     end loop;
   end Integer_Read_and_Construct;
 
+  procedure Lift_and_Prune
+              ( p : in Poly_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                mcc : out Integer_Mixed_Subdivisions.Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Extracts the supports and computes the mixture.
+
+    use Arrays_of_Integer_Vector_Lists;
+
+    sup : Array_of_Lists(p'range)
+        := Supports_of_Polynomial_Systems.Create(p);
+    perms : Standard_Integer_Vectors.Link_to_Vector;
+    r : integer32;
+
+    use Drivers_for_Lifting_Functions;
+
+  begin
+    Mixed_Volume_Computation.Compute_Mixture(sup,mix,perms);
+    r := mix'last;
+    put("Number of distinct supports : "); put(r,1); new_line;
+    declare
+      mixsup : constant Array_of_Lists(mix'range)
+             := Mixed_Volume_Computation.Typed_Lists(mix.all,sup);
+      lifsup : Array_of_Lists(mix'range);
+      lifted : Link_to_Array_of_Lists;
+    begin
+      for k in mixsup'range loop
+        lifsup(k) := Read_Integer_Lifting(mixsup(k));
+      end loop;
+      lifted := new Array_of_Lists'(lifsup);
+      put_line("The lifted supports : ");
+      Arrays_of_Integer_Vector_Lists_io.put(lifsup);
+      Integer_Cells_Container.Initialize(mix);
+      Integer_Cells_Container.Initialize(lifted);
+      Integer_Cells_Container.Make_Subdivision;
+      mcc := Integer_Cells_Container.Retrieve;
+    end;
+  end Lift_and_Prune;
+
+  procedure Integer_Make_Subdivision is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system,
+  --   extracts the supports, computes the type of mixture,
+  --   and asks the user for a lifting for each point.
+
+    lp : Link_to_Poly_Sys;
+    mcc : Integer_Mixed_Subdivisions.Mixed_Subdivision;
+    mix : Standard_Integer_Vectors.Link_to_Vector;
+    n,mv : natural32;
+
+  begin
+    put_line("Reading a polynomial system ...");
+    get(lp);
+    Lift_and_Prune(lp.all,mix,mcc);
+    put_line("The mixed cell configuration :");
+    n := natural32(lp'last);
+    Integer_Mixed_Subdivisions_io.put(n,mix.all,mcc,mv);
+    put("The mixed volume : "); put(mv,1); new_line;
+  end Integer_Make_Subdivision;
+
   procedure Integer_Test is
 
   -- DESCRIPTION :
@@ -390,13 +458,17 @@ procedure ts_celcon is
     new_line;
     put_line("Choose one of the following : ");
     put_line("  1. initialize cells container and test retrievals;");
-    put_line("  2. selectively append cells to the cells container.");
-    put("Type 1 or 2 to make your choice : "); Ask_Alternative(ans,"12");
+    put_line("  2. selectively append cells to the cells container;");
+    put_line("  3. give polynomial system and make a subdivision.");
+    put("Type 1, 2, or 3 to make your choice : ");
+    Ask_Alternative(ans,"123");
     new_line;
-    if ans = '1'
-     then Integer_Read_and_Initialize;
-     else Integer_Read_and_Construct;
-    end if;
+    case ans is
+      when '1' => Integer_Read_and_Initialize;
+      when '2' => Integer_Read_and_Construct;
+      when '3' => Integer_Make_Subdivision;
+      when others => null;
+    end case;
     Integer_Test_Retrievals;
     Integer_Cells_Container.Clear;
   end Integer_Test;

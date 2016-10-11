@@ -48,6 +48,14 @@ package Integer_Cells_Container is
   -- DESCRIPTION :
   --   Initializes the container with a mixed-cell configuration.
 
+  procedure Make_Subdivision;
+
+  -- DESCRIPTION :
+  --   After the initialization of the lifted supports,
+  --   the mixed cell configuration is computed.
+  --   If no mixture is defined, then the supports are
+  --   assumed to be fully mixed.
+
   procedure Generate_Random_Standard_Coefficient_System;
   procedure Generate_Random_DoblDobl_Coefficient_System;
   procedure Generate_Random_QuadDobl_Coefficient_System;
@@ -102,6 +110,13 @@ package Integer_Cells_Container is
   --   Returns 0 if the container is empty, otherwise the
   --   dimension of lifted points in the cells are returned.
   --   This dimension is the length of the lifted points.
+
+  function Dimension_of_Supports return natural32;
+
+  -- DESCRIPTION :
+  --   Returns 0 if the lifted supports are not defined.
+  --   Otherwise, returns the dimension of the supports
+  --   before the lifting was applied.
 
   function Type_of_Mixture return Standard_Integer_Vectors.Link_to_Vector;
 

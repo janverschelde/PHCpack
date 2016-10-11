@@ -44,6 +44,7 @@ with QuadDobl_Simpomial_Solvers;
 with Floating_Polyhedral_Continuation;   use Floating_Polyhedral_Continuation;
 with DoblDobl_Polyhedral_Continuation;   use DoblDobl_Polyhedral_Continuation;
 with QuadDobl_Polyhedral_Continuation;   use QuadDobl_Polyhedral_Continuation;
+with Drivers_for_Static_Lifting;
 with Black_Mixed_Volume_Computations;
 with PHCpack_Operations;
 
@@ -133,6 +134,10 @@ package body Integer_Cells_Container is
   begin
     if lifsup /= null then
       Deep_Clear(lifsup);
+      if lifsup = null then
+        lifsup := new Array_of_Lists(1..integer32(nbr));
+        lifsup_last := new Array_of_Lists(1..integer32(nbr));
+      end if;
       lifsup_last := null;
     end if;
   end Initialize_Supports;
@@ -162,6 +167,31 @@ package body Integer_Cells_Container is
   begin
     cells := mcc;
   end Initialize;
+
+  procedure Make_Subdivision is
+
+    use Standard_Integer_Vectors;
+    use Drivers_for_Static_Lifting;
+
+  begin
+    if lifsup /= null then
+      if mix = null then
+        declare
+          dim : constant integer32 := integer32(Dimension_of_Supports);
+          mixtype : constant Standard_Integer_Vectors.Vector(1..dim)
+                  := (1..dim => 1);
+        begin
+          Integer_Create_Mixed_Cells(dim,mixtype,lifsup.all,cells);
+        end;
+      else
+        declare
+          dim : constant integer32 := integer32(Dimension_of_Supports);
+        begin
+          Integer_Create_Mixed_Cells(dim,mix.all,lifsup.all,cells);
+        end;
+      end if;
+    end if;
+  end Make_Subdivision;
 
   procedure Generate_Random_Standard_Coefficient_System is
 
@@ -442,6 +472,23 @@ package body Integer_Cells_Container is
       end if;
     end if;
   end Dimension;
+
+  function Dimension_of_Supports return natural32 is
+
+    res : natural32 := 0;
+    pts : List;
+    lpt : Standard_Integer_Vectors.Link_to_Vector;
+
+  begin
+    if lifsup /= null then
+      pts := lifsup(lifsup'first);
+      if not Is_Null(pts) then
+        lpt := Head_Of(pts);
+        res := natural32(lpt'last) - 1;
+      end if;
+    end if;
+    return res;
+  end Dimension_of_Supports;
 
   function Type_of_Mixture return Standard_Integer_Vectors.Link_to_Vector is
   begin
@@ -930,29 +977,12 @@ package body Integer_Cells_Container is
     Clear(s);
   end Track_QuadDobl_Solution_Path;
 
-  function Dimension_of_Supports return natural32 is
-
-  -- DESCRIPTION :
-  --   Returns 0 if there is no first point in lifsup,
-  --   otherwise returns the dimenion of the points in lifsup.
-
-    res : natural32 := 0;
-
-  begin
-    if lifsup /= null then
-      if not Is_Null(lifsup(lifsup'first)) then
-        res := natural32(Head_Of(lifsup(lifsup'first))'last);
-      end if;
-    end if;
-    return res;
-  end Dimension_of_Supports;
-
   function Mixed_Volume return natural32 is
 
     use Black_Mixed_Volume_Computations;
 
     res : natural32 := 0;
-    n : constant natural32 := Dimension_of_Supports-1;
+    n : constant natural32 := Dimension_of_Supports;
     q : Standard_Complex_Laur_Systems.Laur_Sys(1..integer32(n))
       := Random_Coefficient_Systems.Create(n,mix.all,lifsup.all);
     perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
