@@ -1,3 +1,6 @@
+Tue 11 Oct 2016 : new collection of functions in intcelcon to interface with
+  the containers of regular cells induced by an integer lifting function.
+
 Fri 9 Sep 2016 : completed uniform consistent renaming in celcon,
   with the proper changes in lib_celcon, lib_celphc, and phcpy2c?.c.
 
