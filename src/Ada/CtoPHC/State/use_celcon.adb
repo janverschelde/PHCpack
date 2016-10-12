@@ -913,6 +913,8 @@ function use_celcon ( job : integer32;
       when 46 => return Job46; -- mixed volume computation
       when 47 => return Job47; -- initialize number of distinct supports
       when 48 => return Job48; -- copy start solution to st container
+      when 49 => return Job49; -- copy start solution to dd container
+      when 50 => return Job50; -- copy start solution to qd container
       when others => put_line("invalid operation"); return 1;
     end case;
   exception
