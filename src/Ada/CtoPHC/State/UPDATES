@@ -2,6 +2,7 @@ Tue 11 Oct 2016 : extended integer_cells_container with a make_subdivision
   procedure, tested by ts_celcon, for user defined integer lifting.
   Added jobs 49 to 50 to the case of use_celcon.adb.
   New jobs in use_celcon.adb to interface to integer_cells_container.
+  Added job codes to use_c2phc, to export to the C interface.
 
 Thu 6 Oct 2016 : new package integer_cells_container, tested by ts_celcon.
   Extended ts_celcon.adb with more tests.

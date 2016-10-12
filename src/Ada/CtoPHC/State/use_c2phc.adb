@@ -14,7 +14,6 @@ with Standard_Floating_Vectors;
 with Arrays_of_Floating_Vector_Lists;
 with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Polynomials;
-with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
@@ -57,7 +56,6 @@ with Multprec_Root_Refiners;
 with Standard_Deflation_Methods;
 with DoblDobl_Deflation_Methods;
 with QuadDobl_Deflation_Methods;
-with Drivers_to_Deflate_Singularities;
 with Verification_of_Solutions;
 with Floating_Mixed_Subdivisions;
 with Black_Mixed_Volume_Computations;
@@ -1210,7 +1208,8 @@ function use_c2phc ( job : integer32;
         := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
     s : constant String(1..integer(nbc)) := C_Integer_Array_to_String(nbc,v_b);
     cnt : constant natural := String_Splitters.Count_Delimiters(s,';');
-    ls : Array_of_Strings(1..integer(cnt)) := String_Splitters.Split(cnt,s,';');
+    ls : constant Array_of_Strings(1..integer(cnt))
+       := String_Splitters.Split(cnt,s,';');
     dim : natural32;
 
   begin
@@ -1534,7 +1533,6 @@ function use_c2phc ( job : integer32;
   function Job196 return integer32 is -- apply deflation as in main driver
 
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
-    use Drivers_to_Deflate_Singularities;
     use Interfaces.C;
 
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
@@ -1567,7 +1565,6 @@ function use_c2phc ( job : integer32;
   function Job249 return integer32 is -- deflation in double double precision
 
     use DoblDobl_Complex_Poly_Systems,DoblDobl_Complex_Solutions;
-    use Drivers_to_Deflate_Singularities;
     use Interfaces.C;
 
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
@@ -1600,7 +1597,6 @@ function use_c2phc ( job : integer32;
   function Job250 return integer32 is -- deflation in quad double precision
 
     use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Solutions;
-    use Drivers_to_Deflate_Singularities;
     use Interfaces.C;
 
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
@@ -2524,6 +2520,8 @@ function use_c2phc ( job : integer32;
       when 703 => return Job703; -- dobldobl Laurent poly blackbox solver
      -- container for numerically computed tropisms
       when 711..731 => return use_numbtrop(job-710,a,b,c);
+     -- integer mixed cell configurations
+      when 741..756 => return use_celcon(job-690,a,b,c);
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

@@ -911,6 +911,47 @@ function use_c2phc ( job : integer32;
 --         = 240 : initializes the number of different supports with
 --                 the value of a.
 --
+-- operations on cells induced by an integer valued lifting function :
+--
+--   job   = 741 : read an integer mixed-cell configuration from file,
+--                 and initializes the integer cells container;
+--         = 742 : writes the mixed-cell configuration in the container;
+--         = 743 : returns in a the number of cells in the container;
+--         = 744 : returns in a the dimension of the lifted points
+--                 in the container;
+--         = 745 : returns in a the number of different supports
+--                 and in b the number of occurrences of support;
+--         = 746 : returns in a the number of different supports
+--                 and in b the number of points in each support;
+--         = 747 : returns in c the point of support a on place b;
+--         = 748 : returns the inner normal in c for cell number in a;
+--         = 749 : returns in b the number of points of each support
+--                 in cell number a;
+--         = 750 : given in a the cell number and with b = (i,j),
+--                 returns in c the j-th point from the i-th list.
+--         = 751 : returns in b the mixed volume of the cell a;
+--         = 752 : sets the number of different supports to a[0],
+--                 and in b[i] the number of occurrences of the
+--                 (i+1)-th support list;
+--         = 753 : appends the point in c to the i-th support, i = a[0],
+--                 b[0] must contain the length of the point;
+--         = 754 : appends a mixed cell to the cells container,
+--                 a[0] = number of different supports, r = a[0],
+--                 a[1] = dimension of the lifted points, n = a[1],
+--                 a[2] = length of the vector b,
+--                 b[0] = total number of points in the cell,
+--                 b[k] = number of points in k-th support,
+--                 b[1+r+k] = label for the k-th point in cell,
+--                 c = coordinates for the inner normal to the cell;
+--         = 755 : clears the cell container;
+--         = 756 : retrieves a mixed cell from the cell container,
+--                 on entry: a[0] = number of the cell, on return
+--                 are b and c, like in job 13, i.e.:
+--                 b[0] = total number of points in the cell,
+--                 b[k] = number of points in k-th support,
+--                 b[1+r+k] = label for the k-th point in cell,
+--                 c = coordinates for the inner normal to the cell.
+--
 -- operations for polyhedral homotopy in double double precision :
 --
 --         = 460 : creates a random coefficient system, using the
