@@ -201,7 +201,9 @@ function use_celcon ( job : integer32;
 --                   b[0] = total number of points in the cell,
 --                   b[k] = number of points in k-th support,
 --                   b[1+r+k] = label for the k-th point in cell,
---                   c = coordinates for the inner normal to the cell.
+--                   c = coordinates for the inner normal to the cell;
+--            = 68 : makes the subdivision for the lifted points
+--                   and type of mixture stored in the container.
 
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong...

@@ -1343,6 +1343,7 @@ function use_celcon ( job : integer32;
       when 65 => return Job65; -- append mixed cell to container
       when 66 => Integer_Cells_Container.Clear; return 0;
       when 67 => return Job67; -- retrieve a mixed cell
+      when 68 => Integer_Cells_Container.Make_Subdivision; return 0;
       when others => put_line("invalid operation"); return 1;
     end case;
   exception

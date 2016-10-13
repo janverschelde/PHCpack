@@ -2521,7 +2521,7 @@ function use_c2phc ( job : integer32;
      -- container for numerically computed tropisms
       when 711..731 => return use_numbtrop(job-710,a,b,c);
      -- integer mixed cell configurations
-      when 741..756 => return use_celcon(job-690,a,b,c);
+      when 741..758 => return use_celcon(job-690,a,b,c);
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
