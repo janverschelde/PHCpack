@@ -1,3 +1,5 @@
+Wed 12 Oct 2016 : updates in intcelcon, tested by lib_celcon.
+
 Tue 11 Oct 2016 : new collection of functions in intcelcon to interface with
   the containers of regular cells induced by an integer lifting function.
 

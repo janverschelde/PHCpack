@@ -6,6 +6,7 @@
 #include "solcon.h"
 #include "syscon.h"
 #include "celcon.h"
+#include "intcelcon.h"
 
 int compute_mixed_volume ( void );
 /*
@@ -95,6 +96,18 @@ int prompt_for_precision ( void );
  *   prompts the user to select a precision level which is returned
  *   as an int: 0 for double, 1 for double double, and 2 for quad double */
 
+void test_intcelcon ( void );
+/*
+ * DESCRIPTION :
+ *   Interactive test on the operations in the containers for cells
+ *   in a subdivision induced by an integer valued lifting function. */
+
+void check_intcelcon ( int n, int r, int *mix );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for lifted points of size n,
+ *   to fill up r supports with type of mixture in mix. */
+
 int main ( void )
 {
    char ans;
@@ -108,8 +121,9 @@ int main ( void )
    printf("  1. read a mixed-cell configuration, test retrievals;\n");
    printf("  2. create a mixed-cell configuration interactively;\n");
    printf("  3. read a mixed-cell configuration and create start system;\n");
-   printf("  4. polyhedral homotopies solve a random coefficient system.\n");
-   printf("Type 1, 2, 3, or 4 to make your choice : "); 
+   printf("  4. polyhedral homotopies solve a random coefficient system;\n");
+   printf("  5. test operations on integer cells container.\n");
+   printf("Type 1, 2, 3, 4, or 5 to make your choice : "); 
    ans = getchar();
 
    if(ans == '0')
@@ -130,6 +144,11 @@ int main ( void )
    {
       scanf("%c",&ans);
       read_cells_and_solve_start_system();
+   }
+   else if(ans == '5')
+   {
+      scanf("%c",&ans);
+      test_intcelcon();
    }
    else
       printf("\nOption %c unknown.  Please come again.\n\n", ans);
@@ -587,4 +606,75 @@ int prompt_for_precision ( void )
    scanf("%d", &result);
 
    return result;
+}
+
+void test_intcelcon ( void )
+{
+   int n,r,i;
+
+   printf("\nTesting the integer cells container ...\n");
+   printf("-> give the size of the lifted points : ");
+   scanf("%d", &n);
+   printf("-> give the number of distinct supports : ");
+   scanf("%d", &r);
+   {
+      int smx;
+      int *mix;
+
+      mix = (int*) calloc(r, sizeof(int));
+
+      if(r == n-1)
+         for(i=0; i<r; i++) mix[i] = 1;
+      else
+      {
+         for(i=0; i<r; i++)
+         {
+            printf("-> give frequency of support %d : ", i+1);
+            scanf("%d",&mix[i]);
+         }
+      }
+      printf("The mixture : ");
+      for(i=0, smx=0; i<r; smx += mix[i++]) printf(" %d", mix[i]);
+      printf(" = %d", smx);
+      if(smx == n-1)
+      {
+         printf("  okay\n");
+         check_intcelcon(n,r,mix);
+      }
+      else
+         printf(" != %d\n",n-1);
+   }
+} 
+
+void check_intcelcon ( int n, int r, int *mix )
+{
+   int fail,retr,i,j,k,nb;
+   int retmix[n-1];
+
+   fail = intcelcon_initialize_supports(r);
+   printf("in check_intcelcon, mix = ");
+   for(i=0; i<r; i++) printf(" %d", mix[i]);
+   printf("\n");
+
+   fail = intcelcon_set_type_of_mixture(r,mix);
+   fail = intcelcon_type_of_mixture(&retr,retmix);
+
+   printf("The retrieved number of supports : %d.\n",retr);
+   printf("The retrieved mixture : ");
+   for(i=0; i<retr; i++) printf(" %d", retmix[i]);
+   printf("\n");
+
+   for(i=0; i<r; i++)
+   {
+      printf("How many lifted points for support %d ? ", i);
+      scanf("%d", &nb);
+      for(j=0; j<nb; j++)
+      {
+         int point[n];
+         
+         printf("Give point %d : ", j);
+         for(k=0; k<n; k++) scanf("%d", &point[k]);
+         fail = intcelcon_append_lifted_point(n,i,point);
+      }
+   }
 }

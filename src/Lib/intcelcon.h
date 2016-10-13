@@ -130,7 +130,7 @@ int intcelcon_append_lifted_point ( int n, int i, int *point );
  * DESCRIPTION :
  *   Appends the point (of dimension n) to the i-th support. */
 
-int celcon_append_mixed_cell
+int intcelcon_append_mixed_cell
  ( int n, int r, int k, int *labels, int *normal );
 /* 
  * DESCRIPTION :
@@ -147,7 +147,7 @@ int celcon_append_mixed_cell
  *   normal    coordinates of the inner normal to the cell,
  *             of dimension n. */
 
-int celcon_retrieve_mixed_cell
+int intcelcon_retrieve_mixed_cell
  ( int n, int r, int i, int *labels, int *normal );
 /*
  * DESCRIPTION :

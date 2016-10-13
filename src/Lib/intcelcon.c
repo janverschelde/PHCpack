@@ -115,7 +115,7 @@ int intcelcon_initialize_supports ( int nbr )
 
 int intcelcon_set_type_of_mixture ( int r, int *mix )
 {
-   int fail;
+   int fail,i;
    double *c;
    fail = _ada_use_c2phc(753,&r,mix,c);
    return fail;
