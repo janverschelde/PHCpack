@@ -49,8 +49,8 @@ int celcon_type_of_mixture ( int *r, int *mix );
 int celcon_length_of_supports ( int *r, int *length );
 /*
  * DESCRIPTION :
- *   Returns in r the number of different supports and in mix[i] the number
- *   of occurrences of the (i+1)-th support.  By default, call this routine
+ *   Returns in r the number of different supports and in length[i] the number
+ *   of points in the (i+1)-th support.  By default, call this routine
  *   with length[] the size of the dimension of the points minus one, as the
  *   size of length[] on entry must be as large as the number of supports. */
 
@@ -134,7 +134,8 @@ int celcon_set_type_of_mixture ( int r, int *mix );
 int celcon_append_lifted_point ( int n, int i, double *point );
 /*
  * DESCRIPTION :
- *   Appends the point (of dimension n) to the i-th support. */
+ *   Appends the point (of dimension n) to the i-th support.
+ *   Note that the first support has index 1 (not zero). */
 
 int celcon_append_mixed_cell
              ( int n, int r, int k, int *labels, double *normal );

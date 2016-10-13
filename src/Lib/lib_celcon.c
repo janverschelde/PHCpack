@@ -108,6 +108,12 @@ void check_intcelcon ( int n, int r, int *mix );
  *   Prompts the user for lifted points of size n,
  *   to fill up r supports with type of mixture in mix. */
 
+void write_integer_lifted_supports ( int n, int r, int *mix );
+/*
+ * DESCRIPTION :
+ *   Given r lifted supports of type of mixture in mix,
+ *   the n coordinates of each point are written to screen. */
+
 int main ( void )
 {
    char ans;
@@ -640,6 +646,7 @@ void test_intcelcon ( void )
       {
          printf("  okay\n");
          check_intcelcon(n,r,mix);
+         write_integer_lifted_supports(n,r,mix);
       }
       else
          printf(" != %d\n",n-1);
@@ -674,7 +681,33 @@ void check_intcelcon ( int n, int r, int *mix )
          
          printf("Give point %d : ", j);
          for(k=0; k<n; k++) scanf("%d", &point[k]);
-         fail = intcelcon_append_lifted_point(n,i,point);
+         fail = intcelcon_append_lifted_point(n,i+1,point);
+      }
+   }
+}
+
+void write_integer_lifted_supports ( int n, int r, int *mix )
+{
+   int fail,rr,i,j,k,m;
+   int nb[r];
+
+   fail = intcelcon_length_of_supports(&rr,nb);
+   printf("Number of different supports retrieved : %d.\n", rr);
+   printf("Length of each support :");
+   for(i=0; i<r; i++) printf(" %d", nb[i]);
+   printf("\n");
+
+   for(i=1; i<=r; i++)
+   {
+      printf("Points in support %d :\n", i);
+      for(j=1; j<=nb[i-1]; j++)
+      {
+         int point[n];
+
+         printf("-> point %d of %d :", j, nb[i-1]);
+         fail = intcelcon_get_lifted_point(n,i,j,point);
+         for(k=0; k<n; k++) printf(" %d", point[k]);
+         printf("\n");
       }
    }
 }

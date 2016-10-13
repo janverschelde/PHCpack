@@ -1,3 +1,7 @@
+Thu 13 Oct 2016 : fixed documentation of *length_of_supports in
+  celcon.h and intcelcon.h.  Fixed bug in intcelcon.c and tested
+  storing and retrieval of lifted points in lib_celcon.c.
+
 Wed 12 Oct 2016 : updates in intcelcon, tested by lib_celcon.
 
 Tue 11 Oct 2016 : new collection of functions in intcelcon to interface with

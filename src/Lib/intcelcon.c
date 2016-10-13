@@ -58,7 +58,7 @@ int intcelcon_get_lifted_point ( int n, int i, int j, int *point )
 
    fail = _ada_use_c2phc(747,&i,&j,fltpoint);
 
-   for(k=0; k<n; i++) point[k] = (int) fltpoint[k];
+   for(k=0; k<n; k++) point[k] = (int) fltpoint[k];
 
    return fail;
 }
