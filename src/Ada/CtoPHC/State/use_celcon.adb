@@ -1142,12 +1142,22 @@ function use_celcon ( job : integer32;
     end if;
   end Job61;
 
-  function Job62 return integer32 is -- sets type of mixture
+  function Job62 return integer32 is -- initialize #distinct supports
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nbr : constant natural32 := natural32(v_a(v_a'first));
+
+  begin
+    Integer_Cells_Container.Initialize_Supports(nbr);
+    return 0;
+  end Job62;
+
+  function Job63 return integer32 is -- sets type of mixture
 
     v : constant C_Integer_Array := C_intarrs.Value(a);
     r : constant integer32 := integer32(v(v'first));
-    mix : constant Standard_Integer_Vectors.Link_to_Vector
-        := new Standard_Integer_Vectors.Vector(1..r);
+    mix : Standard_Integer_Vectors.Vector(1..r);
+    lnkmix : Standard_Integer_Vectors.Link_to_Vector;
     r1 : constant Interfaces.C.size_t := Interfaces.C.size_t(r-1);
     mbv : constant C_Integer_Array(0..r1)
         := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(r));
@@ -1156,11 +1166,12 @@ function use_celcon ( job : integer32;
     for i in 0..r-1 loop
       mix(i+1) := integer32(mbv(Interfaces.C.size_t(i)));
     end loop;
-    Integer_Cells_Container.Initialize(mix);
+    lnkmix := new Standard_Integer_Vectors.Vector'(mix);
+    Integer_Cells_Container.Initialize(lnkmix);
     return 0;
-  end Job62;
+  end Job63;
 
-  function Job63 return integer32 is -- append point to a support
+  function Job64 return integer32 is -- append point to a support
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     vb : constant C_Integer_Array := C_intarrs.Value(b);
@@ -1180,9 +1191,9 @@ function use_celcon ( job : integer32;
      then return 1;
      else return 0;
     end if;
-  end Job63;
+  end Job64;
 
-  function Job64 return integer32 is -- append mixed cell to container
+  function Job65 return integer32 is -- append mixed cell to container
 
     va : constant C_Integer_Array
        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
@@ -1215,9 +1226,9 @@ function use_celcon ( job : integer32;
     end loop;
     Integer_Cells_Container.Append_Mixed_Cell(cnt,lab,x);
     return 0;
-  end Job64;
+  end Job65;
 
-  function Job66 return integer32 is -- retrieve a mixed cell
+  function Job67 return integer32 is -- retrieve a mixed cell
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
@@ -1254,7 +1265,7 @@ function use_celcon ( job : integer32;
       end;
       return 0;
     end if;
-  end Job66;
+  end Job67;
  
   function Handle_Jobs return integer32 is
   begin
@@ -1326,11 +1337,12 @@ function use_celcon ( job : integer32;
       when 59 => return Job59; -- return #elements in integer cell
       when 60 => return Job60; -- return point in a integer cell
       when 61 => return Job61; -- return mixed volume of a integer cell
-      when 62 => return Job62; -- set type of mixture
-      when 63 => return Job63; -- append point to a support
-      when 64 => return Job64; -- append mixed cell to container
-      when 65 => Integer_Cells_Container.Clear; return 0;
-      when 66 => return Job66; -- retrieve a mixed cell
+      when 62 => return Job62; -- set number of supports
+      when 63 => return Job63; -- set type of mixture
+      when 64 => return Job64; -- append point to a support
+      when 65 => return Job65; -- append mixed cell to container
+      when 66 => Integer_Cells_Container.Clear; return 0;
+      when 67 => return Job67; -- retrieve a mixed cell
       when others => put_line("invalid operation"); return 1;
     end case;
   exception

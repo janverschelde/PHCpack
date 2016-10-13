@@ -179,12 +179,14 @@ function use_celcon ( job : integer32;
 --            = 60 : given in a the cell number and with b = (i,j),
 --                   returns in c the j-th point from the i-th list.
 --            = 61 : returns in b the mixed volume of the cell a;
---            = 62 : sets the number of different supports to a[0],
+--            = 62 : initializes the number of different supports with
+--                   the value of a;
+--            = 63 : sets the number of different supports to a[0],
 --                   and in b[i] the number of occurrences of the
 --                   (i+1)-th support list;
---            = 63 : appends the point in c to the i-th support, i = a[0],
+--            = 64 : appends the point in c to the i-th support, i = a[0],
 --                   b[0] must contain the length of the point;
---            = 64 : appends a mixed cell to the cells container,
+--            = 65 : appends a mixed cell to the cells container,
 --                   a[0] = number of different supports, r = a[0],
 --                   a[1] = dimension of the lifted points, n = a[1],
 --                   a[2] = length of the vector b,
@@ -192,8 +194,8 @@ function use_celcon ( job : integer32;
 --                   b[k] = number of points in k-th support,
 --                   b[1+r+k] = label for the k-th point in cell,
 --                   c = coordinates for the inner normal to the cell;
---            = 65 : clears the cell container;
---            = 66 : retrieves a mixed cell from the cell container,
+--            = 66 : clears the cell container;
+--            = 67 : retrieves a mixed cell from the cell container,
 --                   on entry: a[0] = number of the cell, on return
 --                   are b and c, like in job 13, i.e.:
 --                   b[0] = total number of points in the cell,

@@ -1,3 +1,5 @@
+Wed 12 Oct 2016 : fixed job numbers in use_celcon, inserting a job.
+
 Tue 11 Oct 2016 : extended integer_cells_container with a make_subdivision
   procedure, tested by ts_celcon, for user defined integer lifting.
   Added jobs 49 to 50 to the case of use_celcon.adb.
