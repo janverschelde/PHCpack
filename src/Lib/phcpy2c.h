@@ -2509,6 +2509,86 @@ static PyObject *py2c_celcon_clear_container
  * DESCRIPTION :
  *   Deallocates the data in the cell container. */
 
+/* The wrapping of functions with prototypes in intcelcon.h follows. */
+
+static PyObject *py2c_intcelcon_read_mixed_cell_configuration
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name, reads a mixed-cell configuration,
+ *   which is then stored in the container. */
+
+static PyObject *py2c_intcelcon_write_mixed_cell_configuration
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the mixed-cell configuration in the container to screen. */
+
+static PyObject *py2c_intcelcon_number_of_cells
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of cells in the cell container. */
+
+static PyObject *py2c_intcelcon_type_of_mixture
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation of the type of mixture
+ *   of the support sets.  This string is the string representation
+ *   of a Python list of integers. */
+
+static PyObject *py2c_intcelcon_mixed_volume
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the mixed volume of the supports stored
+ *   in the cell container. */
+
+static PyObject *py2c_intcelcon_initialize_supports
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the cell container with the number of distinct supports,
+ *   this number is given as the one input parameter.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_intcelcon_set_type_of_mixture
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the type of mixture of the support sets.
+ *   On input are two parameters, an integer and a string:
+ *   1) the integer equals the number of distinct supports;
+ *   2) the string is a string representation of a Python list of integers,
+ *   there are as many integers as the value of the first parameter.
+ *   Each integer is a positive number, equal to the number of occurrences
+ *   of each support set. */
+
+static PyObject *py2c_intcelcon_append_lifted_point
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Appends a lifted point to the cells container.
+ *   There are three input parameters:
+ *   1) the dimension of the point;
+ *   2) the index of the support to where to append to; and
+ *   3) the string representation of the lifted point.
+ *   Returns the failure code, which equals zero when all went well. */
+
+static PyObject *py2c_intcelcon_make_subdivision
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Computes the mixed cells for the lifted points stored in the
+ *   container, with respect to the defined type of mixture. */
+
+static PyObject *py2c_intcelcon_clear_mixed_cell_configuration
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Clears the cells container. */
+
 /* The wrapping of functions with prototypes in scalers.h starts from here. */
 
 static PyObject *py2c_scale_standard_system

@@ -13,6 +13,7 @@
 #include "product.h"
 #include "lists_and_strings.h"
 #include "celcon.h"
+#include "intcelcon.h"
 #include "scalers.h"
 #include "numbtrop.h"
 #include "sweep.h"
@@ -3655,6 +3656,88 @@ static PyObject *py2c_celcon_clear_container
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    fail = celcon_clear_mixed_cell_configuration();
+
+   return Py_BuildValue("i",fail);
+}
+
+/* The wrapping of functions with prototypes in intcelcon.h follows. */
+
+static PyObject *py2c_intcelcon_read_mixed_cell_configuration
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_intcelcon_write_mixed_cell_configuration
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_intcelcon_number_of_cells
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_intcelcon_type_of_mixture
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_intcelcon_mixed_volume
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_intcelcon_initialize_supports
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_intcelcon_set_type_of_mixture
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_intcelcon_append_lifted_point
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_intcelcon_make_subdivision
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_intcelcon_clear_mixed_cell_configuration
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
 
    return Py_BuildValue("i",fail);
 }
@@ -7420,6 +7503,33 @@ static PyMethodDef phcpy2c_methods[] =
     "Permutes the systems in the container for polynomial and Laurent systems\n with quad double coefficients corresponding to the permutation\n used to compute the mixed-cell configuration.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_celcon_clear_container", py2c_celcon_clear_container, METH_VARARGS,
     "Deallocates the data in the cell container."},
+   {"py2c_intcelcon_read_mixed_cell_configuration",
+     py2c_intcelcon_read_mixed_cell_configuration, METH_VARARGS,
+    "Reads a mixed-cell configuration"},
+   {"py2c_intcelcon_write_mixed_cell_configuration",
+     py2c_intcelcon_write_mixed_cell_configuration, METH_VARARGS,
+    "Writes the mixed-cell configuration to screen."},
+   {"py2c_intcelcon_number_of_cells",
+     py2c_intcelcon_number_of_cells, METH_VARARGS,
+    "Returns the number of cells in the mixed subdivision by integer lifting."},
+   {"py2c_intcelcon_type_of_mixture",
+     py2c_intcelcon_type_of_mixture, METH_VARARGS,
+    "Returns the type of mixture for the integer cells container."},
+   {"py2c_intcelcon_mixed_volume",
+     py2c_intcelcon_mixed_volume, METH_VARARGS,
+    "Returns the mixed volume of a mixed cell."},
+   {"py2c_intcelcon_initialize_supports",
+     py2c_intcelcon_initialize_supports, METH_VARARGS,
+    "Initializes the supports with an integer valued lifting."},
+   {"py2c_intcelcon_set_type_of_mixture",
+     py2c_intcelcon_set_type_of_mixture, METH_VARARGS,
+    "Defines the type of mixture of the tuple of supports."},
+   {"py2c_intcelcon_make_subdivision",
+     py2c_intcelcon_make_subdivision, METH_VARARGS,
+    "Computes the cells in the regular subdivision induced by an integer\n valued lifting function."},
+   {"py2c_intcelcon_clear_mixed_cell_configuration",
+     py2c_intcelcon_clear_mixed_cell_configuration, METH_VARARGS,
+    "Deallocates the data in the integer cell container."},
    {"py2c_scale_standard_system", py2c_scale_standard_system, METH_VARARGS,
     "Applies scaling to the system in the standard systems container,\n with standard double precision arithmetic.  The system in the standard\n systems container is replaced by the scaled system.\n On entry is one integer, which should be either 0, 1, or 2:\n 0 for only scaling of the equations,\n 1 variable scaling without variability reduction,\n 2 variable scaling with variability reduction.\n On return is a tuple with the scaling coefficients (if mode > 0)\n and the estimated inverse condition number of the scaling problem."},
    {"py2c_scale_dobldobl_system", py2c_scale_dobldobl_system, METH_VARARGS,
