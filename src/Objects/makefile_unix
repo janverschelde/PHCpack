@@ -3034,6 +3034,7 @@ phcpy2c2.so:
 	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/celcon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/intcelcon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/scalers.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/sweep.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/numbtrop.c
@@ -3053,7 +3054,7 @@ phcpy2c2.so:
 	gnatlink -shared -C use_c2phc syscon.o solcon.o product.o celcon.o \
             lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
             next_track.o phcpy2c2.o unisolvers.o giftwrappers.o scalers.o \
-            sweep.o numbtrop.o series.o syspool.o \
+            intcelcon.o sweep.o numbtrop.o series.o syspool.o \
             -o ../Python/PHCpy2/phcpy/phcpy2c2.so -lm
 
 phcpy2c3.so:
@@ -3062,6 +3063,7 @@ phcpy2c3.so:
 	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/celcon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/intcelcon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/scalers.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/sweep.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/numbtrop.c
@@ -3080,7 +3082,7 @@ phcpy2c3.so:
 	gnatlink -shared -C use_c2phc syscon.o solcon.o product.o celcon.o \
             lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
             next_track.o phcpy2c3.o unisolvers.o giftwrappers.o scalers.o \
-            sweep.o numbtrop.o series.o syspool.o \
+            intcelcon.o sweep.o numbtrop.o series.o syspool.o \
             -o ../Python/PHCpy3/phcpy/phcpy2c3.so -lm
 
 phcpy2c.a:

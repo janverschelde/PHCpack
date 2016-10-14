@@ -2460,6 +2460,7 @@ phcpy2c2.so:
 	gcc -c -O2 $(PHCLib)/product.c
 	gcc -c -O2 $(PHCLib)/lists_and_strings.c
 	gcc -c -O2 $(PHCLib)/celcon.c
+	gcc -c -O2 $(PHCLib)/intcelcon.c
 	gcc -c -O2 $(PHCLib)/scalers.c
 	gcc -c -O2 $(PHCLib)/numbtrop.c
 	gcc -c -O2 $(PHCLib)/sweep.c
@@ -2478,8 +2479,8 @@ phcpy2c2.so:
 	gnatbind -n use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
-            solcon.o product.o lists_and_strings.o celcon.o scalers.o \
-            numbtrop.o sweep.o schubert.o syspool.o series.o \
+            solcon.o product.o lists_and_strings.o celcon.o intcelcon.o \
+            scalers.o numbtrop.o sweep.o schubert.o syspool.o series.o \
                  -o ../Python/PHCpy2/phcpy/phcpy2c2.so -framework Python
 
 phcpy2c3.so:
@@ -2488,6 +2489,7 @@ phcpy2c3.so:
 	gcc -c -O2 $(PHCLib)/product.c
 	gcc -c -O2 $(PHCLib)/lists_and_strings.c
 	gcc -c -O2 $(PHCLib)/celcon.c
+	gcc -c -O2 $(PHCLib)/intcelcon.c
 	gcc -c -O2 $(PHCLib)/scalers.c
 	gcc -c -O2 $(PHCLib)/sweep.c
 	gcc -c -O2 $(PHCLib)/numbtrop.c
@@ -2506,8 +2508,8 @@ phcpy2c3.so:
 	gnatbind -n use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
-            solcon.o product.o lists_and_strings.o celcon.o scalers.o \
-            sweep.o numbtrop.o schubert.o syspool.o series.o \
+            solcon.o product.o lists_and_strings.o celcon.o intcelcon.o \
+            scalers.o sweep.o numbtrop.o schubert.o syspool.o series.o \
                  -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
                  $(PYTHON3lib)/libpython3.5m.dylib
 
