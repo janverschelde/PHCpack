@@ -166,6 +166,12 @@ int intcelcon_retrieve_mixed_cell
  *   normal    coordinates of the inner normal to the cell,
  *             of dimension n. */
 
+int intcelcon_make_subdivision ( void );
+/*
+ * DESCRIPTION :
+ *   Computes the mixed cells for the lifted points stored in the
+ *   container, with respect to the defined type of mixture. */
+
 int intcelcon_clear_mixed_cell_configuration ( void );
 /*
  * DESCRIPTION :

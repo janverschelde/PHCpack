@@ -114,6 +114,13 @@ void write_integer_lifted_supports ( int n, int r, int *mix );
  *   Given r lifted supports of type of mixture in mix,
  *   the n coordinates of each point are written to screen. */
 
+void write_integer_mixed_cells ( int n );
+/*
+ * DESCRIPTION :
+ *   Writes the mixed cells in the regular subdivision
+ *   induced by an integer lifting, where n is the length
+ *   of the lifted points. */
+
 int main ( void )
 {
    char ans;
@@ -616,7 +623,7 @@ int prompt_for_precision ( void )
 
 void test_intcelcon ( void )
 {
-   int n,r,i;
+   int n,r,i,fail;
 
    printf("\nTesting the integer cells container ...\n");
    printf("-> give the size of the lifted points : ");
@@ -647,6 +654,9 @@ void test_intcelcon ( void )
          printf("  okay\n");
          check_intcelcon(n,r,mix);
          write_integer_lifted_supports(n,r,mix);
+         printf("computing the mixed cells ...\n");
+         fail = intcelcon_make_subdivision();
+         write_integer_mixed_cells(n);
       }
       else
          printf(" != %d\n",n-1);
@@ -710,4 +720,24 @@ void write_integer_lifted_supports ( int n, int r, int *mix )
          printf("\n");
       }
    }
+}
+
+void write_integer_mixed_cells ( int n )
+{
+   int nbcells,fail,i,j,mv,mixvol;
+   int normal[n];
+
+   fail = intcelcon_number_of_cells(&nbcells);
+   printf("The number of mixed cells : %d\n",nbcells);
+   mixvol = 0;
+   for(i=1; i<=nbcells; i++)
+   {
+      printf("Inner normal for cell %d :",i);
+      fail = intcelcon_get_inner_normal(n,i,normal);
+      for(j=0; j<n; j++) printf(" %d",normal[j]);
+      fail = intcelcon_mixed_volume(i,&mv);
+      printf(", volume : %d \n",mv);
+      mixvol = mixvol + mv;
+   }
+   printf("The mixed volume : %d.\n",mixvol);
 }

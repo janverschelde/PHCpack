@@ -162,6 +162,16 @@ int intcelcon_retrieve_mixed_cell
    return fail;
 }
 
+int intcelcon_make_subdivision ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(758,a,b,c);
+
+   return fail;
+}
+
 int intcelcon_clear_mixed_cell_configuration ( void )
 {
    int *a,*b,fail;
