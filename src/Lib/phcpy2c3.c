@@ -3662,13 +3662,17 @@ static PyObject *py2c_celcon_clear_container
    return Py_BuildValue("i",fail);
 }
 
-
 /* The wrapping of functions with prototypes in intcelcon.h follows. */
 
 static PyObject *py2c_intcelcon_read_mixed_cell_configuration
  ( PyObject *self, PyObject *args )
 {
    int fail = 0;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = intcelcon_read_mixed_cell_configuration();
 
    return Py_BuildValue("i",fail);
 }
@@ -3678,37 +3682,62 @@ static PyObject *py2c_intcelcon_write_mixed_cell_configuration
 {
    int fail = 0;
 
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = intcelcon_write_mixed_cell_configuration();
+
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_intcelcon_number_of_cells
  ( PyObject *self, PyObject *args )
 {
-   int fail = 0;
+   int fail,length;
 
-   return Py_BuildValue("i",fail);
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_number_of_cells(&length);
+
+   return Py_BuildValue("i",length);
 }
 
 static PyObject *py2c_intcelcon_type_of_mixture
  ( PyObject *self, PyObject *args )
 {
-   int fail = 0;
+   int fail,r,nbc;
+   int mix[64];
+   char strmix[256];
 
-   return Py_BuildValue("i",fail);
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+
+   fail = intcelcon_type_of_mixture(&r,mix);
+   nbc = intlist2str(r,mix,strmix);
+
+   return Py_BuildValue("s",strmix);
 }
 
 static PyObject *py2c_intcelcon_mixed_volume
  ( PyObject *self, PyObject *args )
 {
-   int fail = 0;
+   int fail,idx,mv;
 
-   return Py_BuildValue("i",fail);
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;
+   fail = intcelcon_mixed_volume(idx,&mv);
+
+   return Py_BuildValue("i",mv);
 }
 
 static PyObject *py2c_intcelcon_initialize_supports
  ( PyObject *self, PyObject *args )
 {
-   int fail = 0;
+   int fail,nbr;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&nbr)) return NULL;
+   fail = intcelcon_initialize_supports(nbr);
 
    return Py_BuildValue("i",fail);
 }
@@ -3716,16 +3745,38 @@ static PyObject *py2c_intcelcon_initialize_supports
 static PyObject *py2c_intcelcon_set_type_of_mixture
  ( PyObject *self, PyObject *args )
 {
-   int fail = 0;
+   int fail,r,cnt;
+   char *strmix;
 
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&r,&strmix)) return NULL;
+
+   cnt = itemcount(strmix);
+   {
+      int mix[cnt];
+
+      str2intlist(cnt,strmix,mix);
+      fail = intcelcon_set_type_of_mixture(r,mix);
+   }
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_intcelcon_append_lifted_point
  ( PyObject *self, PyObject *args )
 {
-   int fail = 0;
+   int fail,dim,ind,cnt;
+   char *strpoint;
 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&dim,&ind,&strpoint)) return NULL;
+
+   cnt = itemcount(strpoint);
+   {
+      int point[cnt];
+
+      str2intlist(cnt,strpoint,point);
+      fail = intcelcon_append_lifted_point(dim,ind,point);
+   }
    return Py_BuildValue("i",fail);
 }
 
@@ -3734,6 +3785,11 @@ static PyObject *py2c_intcelcon_make_subdivision
 {
    int fail = 0;
 
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = intcelcon_make_subdivision();
+
    return Py_BuildValue("i",fail);
 }
 
@@ -3741,6 +3797,11 @@ static PyObject *py2c_intcelcon_clear_mixed_cell_configuration
  ( PyObject *self, PyObject *args )
 {
    int fail = 0;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = intcelcon_clear_mixed_cell_configuration();
 
    return Py_BuildValue("i",fail);
 }

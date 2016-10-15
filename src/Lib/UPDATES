@@ -1,3 +1,5 @@
+Fri 14 Oct 2016 : defined interface functions in phcpy2c2.c and phcpy2c3.c.
+
 Thu 13 Oct 2016 : fixed documentation of *length_of_supports in
   celcon.h and intcelcon.h.  Fixed bug in intcelcon.c and tested
   storing and retrieval of lifted points in lib_celcon.c.
