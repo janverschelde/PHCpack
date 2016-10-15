@@ -3716,6 +3716,62 @@ static PyObject *py2c_intcelcon_type_of_mixture
    return Py_BuildValue("s",strmix);
 }
 
+static PyObject *py2c_intcelcon_length_of_supports
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   {
+      int dim,nbr,nbc;
+      int fail = intcelcon_dimension_of_points(&dim);
+      int lengths[dim];
+      char strlengths[8*dim];
+
+      fail = intcelcon_length_of_supports(&nbr,lengths);
+      nbc = intlist2str(nbr,lengths,strlengths);
+
+      return Py_BuildValue("s",strlengths);
+   }
+}
+
+static PyObject *py2c_intcelcon_get_lifted_point
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,sup,ind,nbc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&dim,&sup,&ind)) return NULL;
+   {
+      int liftedpoint[dim];
+      char strpoint[8*dim];
+
+      fail = intcelcon_get_lifted_point(dim,sup,ind,liftedpoint);
+      nbc = intlist2str(dim,liftedpoint,strpoint);
+
+      return Py_BuildValue("s",strpoint);
+   }
+}
+
+static PyObject *py2c_intcelcon_get_inner_normal
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,idx,nbc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&dim,&idx)) return NULL;
+   {
+      int normal[dim];
+      char strnormal[8*dim];
+
+      fail = intcelcon_get_inner_normal(dim,idx,normal);
+      nbc = intlist2str(dim,normal,strnormal);
+
+      return Py_BuildValue("s",strnormal);
+   }
+}
+
 static PyObject *py2c_intcelcon_mixed_volume
  ( PyObject *self, PyObject *args )
 {
@@ -7577,6 +7633,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_intcelcon_type_of_mixture",
      py2c_intcelcon_type_of_mixture, METH_VARARGS,
     "Returns the type of mixture for the integer cells container."},
+   {"py2c_intcelcon_length_of_supports",
+     py2c_intcelcon_length_of_supports, METH_VARARGS,
+    "Returns the string representation of a list of lengths of each support."},
+   {"py2c_intcelcon_get_lifted_point",
+     py2c_intcelcon_get_lifted_point, METH_VARARGS,
+    "Returns the string representation of the coordinates of a lifted point."},
+   {"py2c_intcelcon_get_inner_normal",
+     py2c_intcelcon_get_inner_normal, METH_VARARGS,
+    "Given on input the dimension of the lifted points and the\n index of the mixed cell of interest, returns the string\n representation of the inner normal of the mixed cell."},
    {"py2c_intcelcon_mixed_volume",
      py2c_intcelcon_mixed_volume, METH_VARARGS,
     "Returns the mixed volume of a mixed cell."},

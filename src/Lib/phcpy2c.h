@@ -2538,6 +2538,31 @@ static PyObject *py2c_intcelcon_type_of_mixture
  *   of the support sets.  This string is the string representation
  *   of a Python list of integers. */
 
+static PyObject *py2c_intcelcon_length_of_supports
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation of a list of integers where 
+ *   each integer contains the number of points in a support. */
+
+static PyObject *py2c_intcelcon_get_lifted_point
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On entry are three integer numbers: n, i, j, where n is the
+ *   length of a lifted point, i is the index of a support, and
+ *   j is the index of a point.  Note that both i and j start at
+ *   one instead of at zero.  Returns the string representation of
+ *   the n coordinates of the j-th point in the i-th lifted support. */
+
+static PyObject *py2c_intcelcon_get_inner_normal
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given on input the dimension of the lifted points and the
+ *   index of the mixed cell of interest, returns the string
+ *   representation of the inner normal of the mixed cell. */
+
 static PyObject *py2c_intcelcon_mixed_volume
  ( PyObject *self, PyObject *args );
 /*
