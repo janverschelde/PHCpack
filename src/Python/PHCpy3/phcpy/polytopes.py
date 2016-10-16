@@ -341,7 +341,71 @@ def test_convex_hull(dim=3, nbr=10, size=9):
                + '%d - %d + %d' % eultup \
                + ' = %d' % eulsum
         print(streul)
-        
+
+def integer_mixed_cells(mixture, points, verbose=True):
+    """
+    Given a tuple of lifted support sets, computes all mixed cells
+    in the regular subdivision defined by the integer lifting values
+    given as the last coordinate of every point in the lifted supports.
+    If verbose, then output is written to screen.
+    Returns the mixed volume as the sum of the volumes of the cells.
+    """
+    from ast import literal_eval
+    from phcpy.phcpy2c3 import py2c_intcelcon_set_type_of_mixture as setmix
+    from phcpy.phcpy2c3 import py2c_intcelcon_type_of_mixture as getmix
+    from phcpy.phcpy2c3 import py2c_intcelcon_initialize_supports as initsup
+    from phcpy.phcpy2c3 import py2c_intcelcon_append_lifted_point as applpt
+    from phcpy.phcpy2c3 import py2c_intcelcon_get_lifted_point as getlpt
+    from phcpy.phcpy2c3 import py2c_intcelcon_length_of_supports as lensup
+    from phcpy.phcpy2c3 import py2c_intcelcon_make_subdivision as makesub
+    from phcpy.phcpy2c3 import py2c_intcelcon_number_of_cells as nbrcells
+    from phcpy.phcpy2c3 import py2c_intcelcon_get_inner_normal as getnormal
+    from phcpy.phcpy2c3 import py2c_intcelcon_mixed_volume as mixvol
+    setmix(len(mixture), str(mixture))
+    if verbose:
+        print('the type of mixture stored :', getmix())
+    initsup(len(mixture))
+    for k in range(len(points)):
+        if verbose:
+            print('points', k, points[k])
+        for point in points[k]:
+            if verbose:
+                print('append lifted point :', point)
+            applpt(len(point), k+1, str(point))
+    lenpts = literal_eval(lensup())
+    if verbose:
+        dim = len(points[0][0])
+        print('lengths of supports :', lenpts)
+        for i in range(len(lenpts)):
+            print('lifted points in support', i, ':')
+            for j in range(lenpts[k]):
+                print(getlpt(dim,i+1,j+1))
+    makesub()
+    number = nbrcells()
+    totmv = 0
+    if verbose:
+        dim = len(points[0][0])
+        print('number of cells :', number)
+        for k in range(number):
+            print('cell', k+1, 'has normal :', getnormal(dim, k+1), end='')
+            mv = mixvol(k+1)
+            print(' mixed volume :', mv)
+            totmv = totmv + mv
+    else:
+        totmv = 0
+        for k in range(number):
+            totmv = totmv + mixvol(k+1)
+    return totmv;
+
+def test_integer_mixed_volume():
+    """
+    Tests mixed volume computation via integer valued lifting functions.
+    """
+    pts = ([[1, 0, 0, 1], [0, 1, 0, -1], [0, 0, 1, 2], [0, 0, 0, 0]], \
+           [[2, 0, 1, 2], [1, 1, 1, 0], [0, 1, 2, 4], [2, 1, 0, 0], \
+            [0, 0, 0, 3]]) 
+    mv = integer_mixed_cells([1, 2], pts) 
+    print('the mixed volume :', mv)
 
 def test_mixed_volume():
     """

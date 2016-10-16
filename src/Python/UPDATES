@@ -1,3 +1,7 @@
+Sat 15 Oct 2016 : added to polytopes.py in PHCpy2/phcpy and PHCpy3/phcpy
+  a function to compute the mixed cells in a regular subdivision induced
+  by an integer value lifting function.
+
 Tue 20 Sep 2016 : added checkin parameters to the start system constructors
   in solver.py to test whether the input system is square.
   Updated the __init__.py, conf.py, and setup.py for version 0.5.5.
