@@ -3775,6 +3775,32 @@ static PyObject *py2c_intcelcon_get_inner_normal
    }
 }
 
+static PyObject *py2c_intcelcon_number_of_points_in_cell
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx,nbr,nbc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&idx,&nbr)) return NULL;
+   {
+      int lengths[nbr];
+      char strlengths[8*nbr];
+
+      fail = intcelcon_number_of_points_in_cell(idx,lengths);
+      nbc = intlist2str(nbr,lengths,strlengths);
+
+      return Py_BuildValue("s",strlengths);
+   }
+}
+
+static PyObject *py2c_intcelcon_get_point_in_cell 
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
+
+   return Py_BuildValue("i", fail);
+}
+
 static PyObject *py2c_intcelcon_mixed_volume
  ( PyObject *self, PyObject *args )
 {
@@ -7648,6 +7674,12 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_intcelcon_get_inner_normal",
      py2c_intcelcon_get_inner_normal, METH_VARARGS,
     "Given on input the dimension of the lifted points and the\n index of the mixed cell of interest, returns the string\n representation of the inner normal of the mixed cell."},
+   {"py2c_intcelcon_number_of_points_in_cell",
+     py2c_intcelcon_number_of_points_in_cell, METH_VARARGS,
+    "Given are two integer numbers: the index to a cell\n (starting the count at one) and the number of different supports.\n On return is the string representation of the number of points\n which span each component of the mixed cell."},
+   {"py2c_intcelcon_get_point_in_cell",
+     py2c_intcelcon_get_point_in_cell, METH_VARARGS,
+    "Returns the string representation of the n coordinates of\n the k-th point from the j-th list of the i-th cell.\n On input are the four integers: n, i, j, k, respectively\n the length of the lifted vectors in the supports,\n the index to a cell in the container,\n the index to a support of the i-th cell, and\n the index to a point in the j-th support of the i-th cell."},
    {"py2c_intcelcon_mixed_volume",
      py2c_intcelcon_mixed_volume, METH_VARARGS,
     "Returns the mixed volume of a mixed cell."},

@@ -2563,6 +2563,27 @@ static PyObject *py2c_intcelcon_get_inner_normal
  *   index of the mixed cell of interest, returns the string
  *   representation of the inner normal of the mixed cell. */
 
+static PyObject *py2c_intcelcon_number_of_points_in_cell
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given is the index to a cell, starting the count at one.
+ *   The second integer on input is the number of distinct supports.
+ *   On return is the string representation of the number of points
+ *   which span each component of the mixed cell. */
+
+static PyObject *py2c_intcelcon_get_point_in_cell 
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation of the n coordinates of 
+ *   the k-th point from the j-th list of the i-th cell.
+ *   On input are the four integers: n, i, j, k, respectively
+ *   the length of the lifted vectors in the supports,
+ *   the index to a cell in the container,
+ *   the index to a support of the i-th cell, and
+ *   the index to a point in the j-th support of the i-th cell. */
+
 static PyObject *py2c_intcelcon_mixed_volume
  ( PyObject *self, PyObject *args );
 /*

@@ -45,7 +45,7 @@ int intcelcon_type_of_mixture ( int *r, int *mix )
 
 int intcelcon_length_of_supports ( int *r, int *length )
 {
-   int fail;
+   int fail,i;
    double *c;
    fail = _ada_use_c2phc(746,r,length,c);
    return fail;
@@ -75,7 +75,7 @@ int intcelcon_get_inner_normal ( int n, int i, int *normal )
    return fail;
 }
 
-int intcelcon_number_of_points_in_cell ( int i, int r, int *length )
+int intcelcon_number_of_points_in_cell ( int i, int *length )
 {
    int fail;
    double *c;

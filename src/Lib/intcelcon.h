@@ -81,18 +81,18 @@ int intcelcon_get_inner_normal ( int n, int i, int *normal );
  *   normal    coordinates of the inner normal to the i-th cell,
  *             of dimension n. */
 
-int intcelcon_number_of_points_in_cell ( int i, int r, int *length );
+int intcelcon_number_of_points_in_cell ( int i, int *length );
 /*
  * DESCRIPTION :
  *   Returns the number of points in each support of the i-th cell.
  *
  * ON ENTRY :
- *   i         index to a cell in the container;
- *   r         number of different supports.
+ *   i         index to a cell in the container.
  *
  * ON RETURN :
  *   length    length[j] is the number of points in the (j+1)-th list
- *             of the supports of cell i, of dimension r. */
+ *             of the supports of cell i, for j in 0..r-1,
+ *             where r equals the number of distinct supports. */
 
 int intcelcon_get_point_in_cell ( int n, int i, int j, int k, int *point );
 /*
