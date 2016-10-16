@@ -344,6 +344,29 @@ def test_convex_hull(dim=3, nbr=10, size=9):
                + '%d - %d + %d' % eultup \
                + ' = %d' % eulsum
         print streul
+
+def integer_mixed_cell(dim, nbr, idx, verbose=True):
+    """
+    Given are three integers and one boolean, respectively:
+    dim : the number of coordinates in the inner normal,
+    nbr : the number of distinct supports,
+    idx : the index to the cell (starts at one, instead of at zero), and
+    verbose : the verbose flag.
+    Returns the extracted data for the mixed cell with index idx.
+    If verbose, the data is written to screen.
+    """
+    from ast import literal_eval
+    from phcpy.phcpy2c2 import py2c_intcelcon_get_inner_normal as getnormal
+    from phcpy.phcpy2c2 import py2c_intcelcon_mixed_volume as mixvol
+    from phcpy.phcpy2c2 import py2c_intcelcon_number_of_points_in_cell as npts
+    normal = literal_eval(getnormal(dim, idx))
+    mv = mixvol(idx)
+    lenpts = literal_eval(npts(idx, nbr))
+    if verbose:
+        print 'inner normal :', normal
+        print 'mixed volume :', mv
+        print 'number of points :', lenpts
+    return (normal, mv, lenpts)
         
 def integer_mixed_cells(mixture, points, verbose=True):
     """
@@ -412,6 +435,9 @@ def test_integer_mixed_volume():
             [0, 0, 0, 3]]) 
     mv = integer_mixed_cells([1, 2], pts) 
     print 'the mixed volume :', mv
+    dim = len(pts[0][0])
+    firstcell = integer_mixed_cell(dim, len(pts), 1)
+    print 'the first cell :\n', firstcell
 
 def test_mixed_volume():
     """
