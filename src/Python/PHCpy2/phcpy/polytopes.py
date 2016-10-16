@@ -364,6 +364,7 @@ def integer_mixed_cells(mixture, points, verbose=True):
     from phcpy.phcpy2c2 import py2c_intcelcon_number_of_cells as nbrcells
     from phcpy.phcpy2c2 import py2c_intcelcon_get_inner_normal as getnormal
     from phcpy.phcpy2c2 import py2c_intcelcon_mixed_volume as mixvol
+    from phcpy.phcpy2c2 import py2c_intcelcon_write_mixed_cell_configuration
     setmix(len(mixture), str(mixture))
     if verbose:
         print 'the type of mixture stored :', getmix()
@@ -384,6 +385,8 @@ def integer_mixed_cells(mixture, points, verbose=True):
             for j in range(lenpts[k]):
                 print getlpt(dim,i+1,j+1)
     makesub()
+    if verbose:
+        py2c_intcelcon_write_mixed_cell_configuration()
     number = nbrcells()
     totmv = 0
     if verbose:
