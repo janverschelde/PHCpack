@@ -1,3 +1,6 @@
+--with Standard_Integer_Vectors_io;
+-- use Standard_Integer_Vectors_io;
+
 with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
 with Communications_with_User;          use Communications_with_User;
@@ -1127,16 +1130,21 @@ function use_celcon ( job : integer32;
     mic : Mixed_Cell;
     fail : boolean;
     mv : natural32;
-    n : constant integer32 := integer32(Cells_Container.Dimension)-1;
+    n : constant integer32 := integer32(Integer_Cells_Container.Dimension)-1;
 
     use Standard_Integer_Vectors;
 
   begin
+   -- put("The dimension : "); put(n,1); new_line;
+   -- put("retrieving mixed cell "); put(k,1); put_line(" ...");
     Integer_Cells_Container.Retrieve(k,mic,fail);
     if fail or mix = null then
+     -- put_line("failure!");
       return 1;
     else
+     -- put("The type of mixture :"); put(mix); new_line;
       Mixed_Volume(n,mix.all,mic,mv);
+     -- put("The mixed volume mv is "); put(mv,1); put_line(".");
       Assign(integer32(mv),b);
       return 0;
     end if;

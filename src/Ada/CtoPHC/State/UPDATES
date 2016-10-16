@@ -1,3 +1,6 @@
+Sun 16 Oct 2016 : bug fix in Job61 in use_celcon.adb with dimension
+  retrieved from Cells_Container instead of Integer_Cells_Container.
+
 Thu 13 Oct 2016 : added make subdivision job to use_celcon and use_c2phc.
 
 Wed 12 Oct 2016 : fixed job numbers in use_celcon, inserting a job.
