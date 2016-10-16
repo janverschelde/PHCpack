@@ -3724,10 +3724,13 @@ static PyObject *py2c_intcelcon_length_of_supports
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    {
-      int dim,nbr,nbc;
-      int fail = intcelcon_dimension_of_points(&dim);
-      int lengths[dim];
-      char strlengths[8*dim];
+      int dim,nbr,nbc,i;
+      int mix[64];
+
+      fail = intcelcon_type_of_mixture(&nbr,mix);
+
+      int lengths[nbr];
+      char strlengths[8*nbr];
 
       fail = intcelcon_length_of_supports(&nbr,lengths);
       nbc = intlist2str(nbr,lengths,strlengths);
@@ -7636,6 +7639,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_intcelcon_length_of_supports",
      py2c_intcelcon_length_of_supports, METH_VARARGS,
     "Returns the string representation of a list of lengths of each support."},
+   {"py2c_intcelcon_append_lifted_point",
+     py2c_intcelcon_append_lifted_point, METH_VARARGS,
+    "Appends a lifted point to the cells container.\n There are three input parameters:\n 1) the dimension of the point;\n 2) the index of the support to where to append to; and\n 3) the string representation of the lifted point.\n Returns the failure code, which equals zero when all went well."},
    {"py2c_intcelcon_get_lifted_point",
      py2c_intcelcon_get_lifted_point, METH_VARARGS,
     "Returns the string representation of the coordinates of a lifted point."},
