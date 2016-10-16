@@ -3697,7 +3697,7 @@ static PyObject *py2c_intcelcon_number_of_cells
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = celcon_number_of_cells(&length);
+   fail = intcelcon_number_of_cells(&length);
 
    return Py_BuildValue("i",length);
 }

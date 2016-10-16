@@ -1,5 +1,6 @@
 Sat 15 Oct 2016 : more functions added to phcpy2c.h and phcpy2c?.c.
-  Fixed bug in intcelcon_length_of_supports.
+  Fixed bug in intcelcon_length_of_supports.  
+  Bug fix in intcelcon_number_of_cells in both phcpy2c2.c and phcpy2c3.c.
 
 Fri 14 Oct 2016 : defined interface functions in phcpy2c2.c and phcpy2c3.c.
 
