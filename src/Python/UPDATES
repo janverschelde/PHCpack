@@ -1,5 +1,6 @@
 Sun 16 Oct 2016 : added writing of mixed cell configuration to polytopes.py,
   started adding a function to retrieve all data of a mixed cell.
+  Prepared release files for version 0.5.6 of phcpy.
 
 Sat 15 Oct 2016 : added to polytopes.py in PHCpy2/phcpy and PHCpy3/phcpy
   a function to compute the mixed cells in a regular subdivision induced
