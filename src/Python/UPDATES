@@ -1,5 +1,7 @@
 Sun 16 Oct 2016 : added writing of mixed cell configuration to polytopes.py,
   started adding a function to retrieve all data of a mixed cell.
+  The function integer_mixed_cell in the module polytopes.py returns all 
+  data of a mixed cell in a regular subdivision induced by an integer lifting.
   Prepared release files for version 0.5.6 of phcpy.
 
 Sat 15 Oct 2016 : added to polytopes.py in PHCpy2/phcpy and PHCpy3/phcpy

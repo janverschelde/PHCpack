@@ -359,6 +359,7 @@ def integer_mixed_cell(dim, nbr, idx, verbose=True):
     from phcpy.phcpy2c2 import py2c_intcelcon_get_inner_normal as getnormal
     from phcpy.phcpy2c2 import py2c_intcelcon_mixed_volume as mixvol
     from phcpy.phcpy2c2 import py2c_intcelcon_number_of_points_in_cell as npts
+    from phcpy.phcpy2c2 import py2c_intcelcon_get_point_in_cell as getpoint
     normal = literal_eval(getnormal(dim, idx))
     mv = mixvol(idx)
     lenpts = literal_eval(npts(idx, nbr))
@@ -366,7 +367,16 @@ def integer_mixed_cell(dim, nbr, idx, verbose=True):
         print 'inner normal :', normal
         print 'mixed volume :', mv
         print 'number of points :', lenpts
-    return (normal, mv, lenpts)
+    supp = [ [] for _ in range(nbr)]
+    for i in range(nbr):  # scan the i-th support
+        if verbose:
+            print 'points in support', i+1, ':'
+        for j in range(lenpts[i]): # get j-th point in i-th support
+            point = getpoint(dim, idx, i+1, j+1)
+            if verbose:
+                print eval(point)
+            supp[i].append(eval(point))
+    return (normal, mv, tuple(supp))
         
 def integer_mixed_cells(mixture, points, verbose=True):
     """
