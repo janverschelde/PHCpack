@@ -1,12 +1,13 @@
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;
-with Standard_Random_Numbers;           use Standard_Random_Numbers;
-with DoblDobl_Random_Numbers;           use DoblDobl_Random_Numbers;
-with QuadDobl_Random_Numbers;           use QuadDobl_Random_Numbers;
+with Standard_Natural_Matrices;
 with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with DoblDobl_Complex_Matrices_io;      use DoblDobl_Complex_Matrices_io;
 with QuadDobl_Complex_Matrices_io;      use QuadDobl_Complex_Matrices_io;

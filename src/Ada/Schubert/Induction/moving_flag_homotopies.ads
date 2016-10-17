@@ -1,12 +1,7 @@
 with text_io;                           use text_io;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vecvecs;
-with Standard_Natural_Matrices;
-with Standard_Complex_Numbers;
-with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
