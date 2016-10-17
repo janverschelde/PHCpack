@@ -3796,9 +3796,19 @@ static PyObject *py2c_intcelcon_number_of_points_in_cell
 static PyObject *py2c_intcelcon_get_point_in_cell 
  ( PyObject *self, PyObject *args )
 {
-   int fail = 0;
+   int fail,dim,idcel,idsup,idpnt,nbc;
 
-   return Py_BuildValue("i", fail);
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiii",&dim,&idcel,&idsup,&idpnt)) return NULL;
+   {
+      int point[dim];
+      char strpoint[8*dim];
+
+      fail = intcelcon_get_point_in_cell(dim,idcel,idsup,idpnt,point);
+      nbc = intlist2str(dim,point,strpoint);
+
+      return Py_BuildValue("s",strpoint);
+   }
 }
 
 static PyObject *py2c_intcelcon_mixed_volume
