@@ -1,4 +1,5 @@
 Mon 17 Oct 2016 : reshuffled with/use clauses in moving_flag_homotopies.
+  Fixed type error in moving_flag_continuation.adb.
 
 Thu 26 May 2016 : refactored code in wrapped_path_trackers.adb.
 

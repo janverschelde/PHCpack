@@ -735,7 +735,7 @@ package body Moving_Flag_Continuation is
         yh := Eval(sh,xt);
      -- put_line(file,"Value of the start solution at the squared homotopy :");
      -- put_line(file,yh);
-        res := Max_Norm(y);
+        res := Max_Norm(yh);
         put(file,"Residual of the start solution at the squared homotopy : ");
         put(file,res,3); new_line(file);
       end if;
