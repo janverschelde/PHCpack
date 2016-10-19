@@ -1,9 +1,22 @@
 -- an interface to the Littlewood-Richardson homotopies in PHCpack.
 -- Note that this package needs version 1.6.1 of PHCpack.m2.
 
+newPackage(
+  "LRhomotopies",
+  Version => "0.6", 
+  Date => "19 October 2016",
+  Authors => {
+    {Name => "Jan Verschelde", 
+     Email => "jan@math.uic.edu",
+     HomePage => "http://www.math.uic.edu/~jan"}},
+  Headline => "Interface to LR-homotopies in PHCpack"
+)
+
 export{"LRrule", "LRtriple", "parseTriplet", "wrapTriplet", "LRcheater"}
 
 debug needsPackage "PHCpack"
+
+-- the helper functions section starts here
 
 stripLeadingSpaces := (s) -> (
 -- 
@@ -61,7 +74,8 @@ makeRealRow := (line) -> (
 --   with the big E notation.  Returns a list of real numbers.
 --
   data := replace("E", "e", line);       -- replace the "E" by "e"
-  data = replace("e\\+00", "", data);    -- M2 does not want 2.3e+00"
+  data = replace("e\\+00", "", data);    -- M2 complaints at 2.3e+00
+  data = replace("e\\+", "e", data);     -- M2 complaints at 2.3e+01
   data = stripLeadingSpaces(data);       -- remove leading spaces
   data = stripTrailingSpaces(data);      -- remove trailing spaces
   data = replaceConsecutiveSpaces(data); -- exactly one space as separator
@@ -77,7 +91,8 @@ makeComplexRow := (line) -> (
 --   using the consecutive doubles as real and imaginary parts.
 --
   data := replace("E", "e", line);       -- replace the "E" by "e"
-  data = replace("e\\+00", "", data);    -- M2 does not want 2.3e+00"
+  data = replace("e\\+00", "", data);    -- M2 complaints at 2.3e+00
+  data = replace("e\\+", "e", data);     -- M2 complaints at 2.3e+01
   data = stripLeadingSpaces(data);       -- remove leading spaces
   data = stripTrailingSpaces(data);      -- remove trailing spaces
   data = replaceConsecutiveSpaces(data); -- exactly one space as separator
@@ -126,7 +141,7 @@ extractMovedFlag := (dim, data) -> (
     moved := select("MOVED", data#k);
     if #moved > 0 then
     (
-      subdata := {};
+      subdata := {}; row := 0;
       for i from 1 to dim do
       (
         row = k + i;
@@ -209,6 +224,51 @@ extractSolutionPlanes := (dim, data) -> (
   );
   return result
 );
+
+extractFixedFlags := (dim, nbr, data) -> (
+--
+-- DESCRIPTION :
+--   Extracts the fixed flags from the list of lines in data.
+--   Every flag has dim rows and their number equals nbr.
+--
+  result := {};
+  firstflag := makeComplexMatrix(dim, data);
+  result = append(result, firstflag);
+  current := dim; -- skip first dim rows and blank row
+  subdata := {};
+  for k from 1 to nbr-1 do
+  (
+    subdata = extractSubList(current, dim, data);
+    result = append(result, makeComplexMatrix(dim, subdata));
+    current = current + dim + 1;
+  );
+  return result
+);
+
+extractDimensions := (data) -> (
+--
+-- DESCRIPTION :
+--   On input in data are the lines of the output string of the first
+--   string returned by LRtriple. 
+--   On return is the dimension of the flags and the number of flags.
+--   This is a sanity check on the soundness on the output file.
+--
+  dim := 0; -- dimension of the flags
+  while #data#dim > 0 do dim = dim + 1; -- read till the first blank line
+
+  current := dim; -- at a blank line
+  nbr := 1;       -- found one fixed flag
+  while true do   -- count the blank lines till at moved flag
+  (
+    current = current + 1;
+    moved := select("MOVED", data#current);
+    if #moved > 0 then break;
+    if #data#current == 0 then nbr = nbr + 1;
+  );
+  return (dim, nbr)
+);
+
+-- end of the helper functions section
  
 LRruleIn = method();
 LRruleIn(ZZ,ZZ,Matrix) := (a,n,m) -> (
@@ -429,49 +489,6 @@ LRtriple(ZZ,Matrix) := (n,m) -> (
    result
 );
 
-parseFlag = method();
-parseFlag(String) := (f) -> (
---
--- DESCRIPTION :
---   Returns the matrix stored as a string in f
---   as a proper matrix object.
---
-   s := replace("E","e",f);
-   s = replace("e\\+","e",s); 
-   L := lines(s);
-   i := 0;
-   while i < #L do (
-      local line;     -- one line in the flag
-      local newline;  -- line with all double spaces removes
-      local listline; -- the line as a list
-      local stop;     -- stop condition
-      local vals;     -- real and imaginary values 
-      local cvals;    -- values of the flag as complex numbers
-      line = L_i;
-      if #line > 0 then (
-         stop = false;     -- first replace double by single spaces
-         newline = line;
-         while not stop do (
-            newline = replace("  "," ",line);
-            stop = (newline == line);
-            line = newline;
-         );
-         if newline_0 == " " then (
-            newline = substring(1, newline); -- bite off leading space
-         );
-         listline = separate(" ",newline);
-         vals = apply(listline, x-> value(x));
-         cvals = for i in 0..(#vals-1) list (
-            if odd i then continue; vals_i + vals_(i+1)*ii
-         );
-         if i == 0 then values := {cvals};
-         if i > 0 then values = values | {cvals};
-      );
-      i = i + 1;
-   );
-   matrix(values)
-);
-
 parseTriplet = method();
 parseTriplet(String,String,String) := (f,p,s) -> (
 --
@@ -483,15 +500,22 @@ parseTriplet(String,String,String) := (f,p,s) -> (
 --
    R := ringFromString(p);
    spR := systemFromString(p, R);
-   s = concatenate("THE SOLUTIONS :\n", s);
+   sdata := concatenate("THE SOLUTIONS :\n", s);
    PHCiptsolsFile := temporaryFileName() | "PHCsols";
    PHCoptsolsFile := temporaryFileName() | "PHCsols";
    stdio << "writing solutions to " << PHCiptsolsFile;
-   dataToFile(s,PHCiptsolsFile);
+   dataToFile(sdata,PHCiptsolsFile);
    stdio << "running phc -z ..." << endl;
    run(PHCexe|" -z " | PHCiptsolsFile | " "| PHCoptsolsFile);
    sols := parseSolutions(PHCoptsolsFile, R);
-   result := (R, spR, sols, parseFlag(f));
+   linesf := lines f;
+   (dim, nbr) := extractDimensions(linesf);
+   stdio << "the dimension : " << dim << endl; 
+   stdio << "the number of flags : " << nbr << endl; 
+   fixedFlags := extractFixedFlags(dim, nbr, linesf);
+   movedFlag := extractMovedFlag(dim, linesf);
+   solutionPlanes := extractSolutionPlanes(dim, linesf);
+   result := (R, spR, sols, fixedFlags, movedFlag, solutionPlanes);
    result
 );
 
@@ -572,3 +596,10 @@ LRcheater(ZZ,Matrix,String) := (n,m,w) -> (
    result
 );
 
+--##########################################################################--
+-- DOCUMENTATION
+--##########################################################################--
+
+beginDocumentation()
+
+load "./LRhomotopiesDoc.m2";
