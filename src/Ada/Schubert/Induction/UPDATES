@@ -1,3 +1,6 @@
+Tue 18 Oct 2016 : removed some unnecessary with clauses from
+  moving_flag_continuation.adb.
+
 Mon 17 Oct 2016 : reshuffled with/use clauses in moving_flag_homotopies.
   Fixed type error in moving_flag_continuation.adb.
 
