@@ -1,3 +1,6 @@
+Tue 18 Oct 2016 : updated LRhomotopies.m2 with functions to extract the
+  solution planes of the output.
+
 Tue 14 Oct 2015 : updated LRhomotopies.m2 for changes in phc -e.
 
 Thu 21 May 2015 : fixed bug in mixedVolume function of PHCpack.m2 which
