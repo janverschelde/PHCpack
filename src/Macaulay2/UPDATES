@@ -1,3 +1,6 @@
+Thu 20 Oct 2016 : in PHCpackDoc.m2, fixed the seeds for solveSystem in
+  some examples, to avoid unlucky choices.
+
 Wed 19 Oct 2016 : for testing purposes, turning LRhomotopies.m2 with its
   documentation in LRhomotopiesDoc.m2 into a standalone package.
   The generated generic flags and the solution planes are now returned
