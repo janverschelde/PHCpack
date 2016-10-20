@@ -1,8 +1,8 @@
 doc ///
   Key
-    "PHCpack LR-homotopies"
+    "LRhomotopies"
   Headline
-    interface to Littlewood-Richardson homotopies in PHCpack
+    interface to the Littlewood-Richardson homotopies in PHCpack
   Description
     Text
       Interfaces the functionality of the software {\tt PHCpack}
@@ -19,12 +19,7 @@ doc ///
 
     The current implementation resolves only one triple intersection
     condition (although the root count in LRrule is general).
-
-    The current output of the calculations consist of strings
-    and requires still parsing and independent verification
-    with proper Macaulay 2 arithmetic.
 ///;
-
 
 doc ///
   Key
@@ -75,7 +70,7 @@ doc ///
     LRtriple
     (LRtriple,ZZ,Matrix)
   Headline
-    calls phc -e to run one checker game for a triple Schubert intersection
+    runs the Littlewood-Richardson homotopies to solve a generic Schubert problem
   Usage
     (f,p,s) = LRtriple(n,m)
   Inputs
@@ -87,7 +82,7 @@ doc ///
       the intersection bracket must be taken.
   Outputs
     f:String
-      represents the fixed flag
+      represents the generic flags, the moved flags, and the solution planes
     p:String
       represents a polynomial system
     s:String
@@ -97,6 +92,9 @@ doc ///
       LRtriple applies the Littlewood-Richardson homotopies
       to solve a generic instance of a Schubert problem defined
       by three intersection conditions.
+
+      Use the method parseTriplet to parse the three strings f, p, and s
+      into proper Macaulay2 polynomials, solution lists, and complex matrices.
 
       The example below computes all 3-planes that satisfy [2 4 6]^3.
     Example
@@ -114,7 +112,7 @@ doc ///
   Headline
     Parses a flag, system, and solutions into Macaulay2 objects.
   Usage
-    (R, pols, sols, flag) = parseTriplet(f, p, s)
+    (R, pols, sols, fixedFlags, movedFlag, solutionPlanes) = parseTriplet(f, p, s)
   Inputs
     f:String
       represents the fixed flag
@@ -130,8 +128,12 @@ doc ///
       list of polynomial equations in the ring R
     sols:List
       list of solutions of the system pols
-    flag:Matrix
-      the flag as a matrix of complex numbers
+    fixedFlags:List
+      list of the fixed flags, as matrices of complex numbers
+    movedFlag:List
+      the moved flag, the flag not listed here is the identity matrix
+    solutionPlanes:List
+      list of complex matrices which store the solution planes
   Description
     Text
       The parseTriplet allows to process the output of LRtriple.
@@ -168,7 +170,7 @@ doc ///
       are wrapped into one string.
 ///;
 
-end; -- terminate reading because LRcheater does not work yet
+-- end; -- terminate reading because LRcheater does not work yet
 
 doc ///
   Key
@@ -204,14 +206,14 @@ doc ///
       m := matrix{{3, 2, 4, 6}};
       t := LRtriple(n,m);
       w := wrapTriplet(t);
-      result := LRcheater(n,m,w);
-      (rps, pols, sols, flag) = parseTriplet(result);
-      stdio << "real fixed flag :\n" << flag;
-      stdio << "polynomial system solved :\n" << pols;
-      stdio << "solutions :\n" << sols;
+      --result := LRcheater(n,m,w);
+      --(rps, pols, sols, flag) = parseTriplet(result);
+      --stdio << "real fixed flag :\n" << flag;
+      --stdio << "polynomial system solved :\n" << pols;
+      --stdio << "solutions :\n" << sols;
 ///;
 
-end  -- terminate reading
+end;  -- terminate reading
 
 Usage
    s = LRrule(N,M)
@@ -243,7 +245,7 @@ Description
       print LRcheater(N,M,w)
 Caveat
    The program "phc" built with version 2.4.02 (or higher)
-   of PHCpack needs to be executable on the computer.
+   of PHCpack needs to be present in the path on the computer.
    Executables for various platforms and source code for phc
    are available from the web page of the author.
 ///
