@@ -1,3 +1,6 @@
+Thu 20 Oct 2016 : renamed menu option in mainenum.adb and added checks on
+  the brackers in drivers_for_schubert_induction.
+
 Tue 18 Oct 2016 : removed some unnecessary with clauses from
   moving_flag_continuation.adb.
 

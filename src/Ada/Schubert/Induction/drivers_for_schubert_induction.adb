@@ -24,7 +24,6 @@ with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
-with Drivers_for_Poly_Continuation;
 with Brackets_io;                        use Brackets_io;
 with Bracket_Monomials_io;               use Bracket_Monomials_io;
 with Drivers_for_Pieri_Homotopies;       use Drivers_for_Pieri_Homotopies;
@@ -39,7 +38,6 @@ with QuadDobl_Solution_Posets;
 with Wrapped_Path_Trackers;
 with Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;
-with Moving_Flag_Continuation;
 with Checker_Poset_Deformations;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
 with Write_Seed_Number;
@@ -238,15 +236,71 @@ package body Drivers_for_Schubert_Induction is
     end loop;
   end Intersection_Conditions;
 
+  function Is_Valid_Bracket
+             ( n : natural32; b : Bracket;
+               verbose : boolean := true ) return boolean is
+  begin
+    for k in b'range loop
+      if b(k) < 1 then
+        if verbose then
+          put("Entry "); put(k,1); put(" in "); Brackets_io.put(b);
+          put_line(" < 1, invalid bracket.");
+        end if;
+        return false;
+      elsif b(k) > n then
+        if verbose then
+          put("Entry "); put(k,1); put(" in "); Brackets_io.put(b);
+          put(" > "); put(n,1); put_line(", invalid bracket.");
+        end if;
+        return false;
+      elsif k > b'first then
+        if b(k-1) >= b(k) then
+          if verbose then
+            put("Entry "); put(k-1,1); put(" in "); Brackets_io.put(b);
+            put(" >= entry "); put(k,1); put_line(", invalid bracket.");
+          end if;
+          return false;
+        end if;
+      end if;
+    end loop;
+    return true;
+  end Is_Valid_Bracket;
+
+  function Is_Valid_Intersection_Condition
+             ( n : natural32; bm : Bracket_Monomial;
+               verbose : boolean := true ) return boolean is
+
+    res : boolean := true;
+
+    procedure Verify ( b : in Bracket; continue : out boolean ) is
+    begin
+      continue := Is_Valid_Bracket(n,b);
+      if not continue
+       then res := false;
+      end if;
+    end Verify;
+    procedure enum is new Enumerate_Brackets(Verify);
+
+  begin
+    enum(bm);
+    return res;
+  end Is_Valid_Intersection_Condition;
+
   procedure Resolve_Intersection_Condition ( n : in natural32 ) is
 
     bm : Bracket_Monomial := Prompt_for_Bracket_Monomial;
     nbsols : Natural_Number;
+    isvalid : boolean;
 
   begin
     put("Your product : "); put(bm); new_line;
-    Create_Intersection_Poset(integer32(n),bm,nbsols);
-    Multprec_Natural_Numbers.Clear(nbsols);
+    isvalid := Is_Valid_Intersection_Condition(n,bm);
+    if not isvalid then
+      put_line("Your product is not a valid intersection condition.");
+    else
+      Create_Intersection_Poset(integer32(n),bm,nbsols);
+      Multprec_Natural_Numbers.Clear(nbsols);
+    end if;
     Clear(bm);
   end Resolve_Intersection_Condition;
 
@@ -1167,7 +1221,6 @@ package body Drivers_for_Schubert_Induction is
   --   Process the m conditions stored in conds on k-planes in n-space.
   --   Returns the intersection poset.
 
-    use Intersection_Posets;
     res : Intersection_Poset(m-1);
     p : constant Standard_Natural_Vectors.Vector(1..n)
       := Identity_Permutation(natural32(n));
@@ -1253,7 +1306,6 @@ package body Drivers_for_Schubert_Induction is
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
     use Standard_Solution_Posets;
-    use Intersection_Posets;
 
     monitor,report,verify,minrep,tosquare : boolean;
     outlvl : natural32 := 0;
@@ -1336,7 +1388,6 @@ package body Drivers_for_Schubert_Induction is
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
     use DoblDobl_Solution_Posets;
-    use Intersection_Posets;
 
     monitor,report,verify,minrep,tosquare : boolean;
     outlvl : natural32 := 0;
@@ -1419,7 +1470,6 @@ package body Drivers_for_Schubert_Induction is
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
     use QuadDobl_Solution_Posets;
-    use Intersection_Posets;
 
     monitor,report,verify,minrep,tosquare : boolean;
     outlvl : natural32 := 0;
@@ -1500,7 +1550,7 @@ package body Drivers_for_Schubert_Induction is
     file : file_type;
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    flags : Standard_Complex_VecMats.VecMat(1..nbc-2)
+    flags : constant Standard_Complex_VecMats.VecMat(1..nbc-2)
        -- := Random_Flags(n,nbc-2);
           := Prompt_for_Generic_Flags(n,nbc-2);
 
@@ -1518,7 +1568,7 @@ package body Drivers_for_Schubert_Induction is
     file : file_type;
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    flags : DoblDobl_Complex_VecMats.VecMat(1..nbc-2)
+    flags : constant DoblDobl_Complex_VecMats.VecMat(1..nbc-2)
        -- := Random_Flags(n,nbc-2);
           := Prompt_for_Generic_Flags(n,nbc-2);
 
@@ -1536,7 +1586,7 @@ package body Drivers_for_Schubert_Induction is
     file : file_type;
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    flags : QuadDobl_Complex_VecMats.VecMat(1..nbc-2)
+    flags : constant QuadDobl_Complex_VecMats.VecMat(1..nbc-2)
        -- := Random_Flags(n,nbc-2);
           := Prompt_for_Generic_Flags(n,nbc-2);
 
@@ -1577,29 +1627,34 @@ package body Drivers_for_Schubert_Induction is
     cnds : Standard_Natural_VecVecs.Link_to_VecVec;
     nbsols : Natural_Number;
     ans : character;
-    inpt : boolean;
+    isvalid,inpt : boolean;
     tol : double_float := 1.0E-5;
 
   begin
-    Intersection_Conditions(bm,rows,cols,cnds);
-    k := rows'last;
-    new_line;
-    put_line("MENU for Littlewood-Richardson homotopies :");
-    put_line("  0. solve a generic instance for random flags;");
-    put_line("  1. run a cheater's homotopy to other random flags;");
-    put_line("  2. solve a specific instance via cheater to given flags.");
-    put("Type 0, 1, or 2 to select from menu : ");
-    Ask_Alternative(ans,"012");
-    if ans = '0' then
-      Resolve_Schubert_Problem(n,k,bm);
+    isvalid := Is_Valid_Intersection_Condition(natural32(n),bm);
+    if not isvalid then
+      put_line("Your product is not a valid intersection condition.");
     else
+      Intersection_Conditions(bm,rows,cols,cnds);
+      k := rows'last;
       new_line;
-      put_line("resolving the intersection conditions ...");
-      Create_Intersection_Poset(n,bm,nbsols);
-      put("Number of isolated solutions : "); put(nbsols); new_line;
-      if nbsols > 0 then
-        inpt := (ans = '2');
-        Run_Cheater_Flag_Homotopy(n,k,rows.all,cols.all,cnds,inpt);
+      put_line("MENU for Littlewood-Richardson homotopies :");
+      put_line("  0. solve a generic instance for random flags;");
+      put_line("  1. run a cheater's homotopy to other random flags;");
+      put_line("  2. solve a specific instance via cheater to given flags.");
+      put("Type 0, 1, or 2 to select from menu : ");
+      Ask_Alternative(ans,"012");
+      if ans = '0' then
+        Resolve_Schubert_Problem(n,k,bm);
+      else
+        new_line;
+        put_line("resolving the intersection conditions ...");
+        Create_Intersection_Poset(n,bm,nbsols);
+        put("Number of isolated solutions : "); put(nbsols); new_line;
+        if nbsols > 0 then
+          inpt := (ans = '2');
+          Run_Cheater_Flag_Homotopy(n,k,rows.all,cols.all,cnds,inpt);
+        end if;
       end if;
     end if;
     Clear(bm);

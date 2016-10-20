@@ -84,6 +84,29 @@ package Drivers_for_Schubert_Induction is
   -- ON RETURN :
   --   finsum   the final sum of solutions.
 
+  function Is_Valid_Bracket
+             ( n : natural32; b : Bracket;
+               verbose : boolean := true ) return boolean;
+
+  -- DESCRIPTION :
+  --   A bracket is valid if all its entries are in the range 1..n
+  --   and if its entries are strictly monotone increasing.
+  --   If verbose, then the offending bracket with the reason for
+  --   it not being valid are shown. 
+  --   Returns true if the bracket if valid, returns false otherwise.
+
+  function Is_Valid_Intersection_Condition
+             ( n : natural32; bm : Bracket_Monomial;
+               verbose : boolean := true ) return boolean;
+
+  -- DESCRIPTION :
+  --   A bracket monomial is a valid intersection condition if
+  --   (1) the entries in each bracket in bm lie between 1 and n; and
+  --   (2) the entries in each bracket are monotone increasing.  
+  --   If verbose, then error messages are written to screen.
+  --   Returns true if bm represents a valid intersection condition,
+  --   returns false otherwise.
+
   procedure Resolve_Intersection_Condition ( n : in natural32 );
 
   -- DESCRIPTION :

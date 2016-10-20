@@ -19,7 +19,7 @@ begin
   put_line("  1. SAGBI for intersection hypersurface conditions;");
   put_line("  2. Pieri for hypersurface and general co-dimensions;");
   put_line("  3. Pieri to compute maps of degree q that produce p-planes;");
-  put_line("  4. Resolve a general Schubert intersection condition;");
+  put_line("  4. Count solutions to a general Schubert intersection problem;");
   put_line("  5. Compute solutions to Schubert intersection conditions."); 
   put("Type 1, 2, 3, 4, or 5 to select : "); Ask_Alternative(ans,"12345");
   new_line;
