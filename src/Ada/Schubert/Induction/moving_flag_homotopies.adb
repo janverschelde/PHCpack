@@ -1599,14 +1599,17 @@ package body Moving_Flag_Homotopies is
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
     nv : constant integer32 := integer32(Degree_of_Freedom(locmap));
-    x,xt : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    x,xt,mfxt : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
     flag : constant Standard_Complex_Poly_Matrices.Matrix(1..n,1..n)
          := Cheater_Homotopy_Flag(nv,start,target);
+    mf : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Setup_Flag_Homotopies.Moved_Flag(n);
 
   begin
     x := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,locmap);
     xt := Standard_Embed_Polynomials.Add_Variables(x,1);
-    sc := Numeric_Schubert_Conditions.Expand(n,k,nq,cond,xt,flag);
+    mfxt := Setup_Flag_Homotopies.Moving_Flag(mf,xt);
+    sc := Numeric_Schubert_Conditions.Expand(n,k,nq,cond,mfxt,flag);
     f := new Poly_Sys'(Filter_Zero_Equations(sc));
   end Flag_Conditions;
 
@@ -1626,14 +1629,17 @@ package body Moving_Flag_Homotopies is
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
     nv : constant integer32 := integer32(Degree_of_Freedom(locmap));
-    x,xt : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    x,xt,mfxt : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
     flag : constant DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..n)
          := Cheater_Homotopy_Flag(nv,start,target);
+    mf : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Setup_Flag_Homotopies.Moved_Flag(n);
 
   begin
     x := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,locmap);
     xt := DoblDobl_Embed_Polynomials.Add_Variables(x,1);
-    sc := Numeric_Schubert_Conditions.Expand(n,k,nq,cond,xt,flag);
+    mfxt := Setup_Flag_Homotopies.Moving_Flag(mf,xt);
+    sc := Numeric_Schubert_Conditions.Expand(n,k,nq,cond,mfxt,flag);
     f := new Poly_Sys'(Filter_Zero_Equations(sc));
   end Flag_Conditions;
 
@@ -1653,14 +1659,17 @@ package body Moving_Flag_Homotopies is
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
     nv : constant integer32 := integer32(Degree_of_Freedom(locmap));
-    x,xt : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    x,xt,mfxt : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
     flag : constant QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..n)
          := Cheater_Homotopy_Flag(nv,start,target);
+    mf : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Setup_Flag_Homotopies.Moved_Flag(n);
 
   begin
     x := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,locmap);
     xt := QuadDobl_Embed_Polynomials.Add_Variables(x,1);
-    sc := Numeric_Schubert_Conditions.Expand(n,k,nq,cond,xt,flag);
+    mfxt := Setup_Flag_Homotopies.Moving_Flag(mf,xt);
+    sc := Numeric_Schubert_Conditions.Expand(n,k,nq,cond,mfxt,flag);
     f := new Poly_Sys'(Filter_Zero_Equations(sc));
   end Flag_Conditions;
 
