@@ -1120,6 +1120,8 @@ package body Drivers_for_Schubert_Induction is
    -- a,b : Standard_Complex_Matrices.Matrix(1..n,1..n);
 
   begin
+    put_line(file,"The start flag :"); put(file,stf);
+    put_line(file,"The target flag :"); put(file,tgf);
    -- b1(nv+1) := Create(1.0);
    -- for i in flagpols'range(1) loop
    --   for j in flagpols'range(2) loop
@@ -1130,9 +1132,10 @@ package body Drivers_for_Schubert_Induction is
    -- put_line(file,"the start flags : ");  put(file,a);
    -- put_line(file,"the target flags : "); put(file,b);
     Setup_Flag_Homotopies.Add_t_Symbol;
+    put_line("Defining the cheater's homotopy ...");
     Moving_Flag_Homotopies.Flag_Conditions(n,k,q,rows,cols,cnd,stf,tgf,hom);
-   -- put_line(file,"the cheater's homotopy : ");
-   -- put_line(file,hom.all);
+    put_line(file,"the cheater's homotopy : ");
+    put_line(file,hom.all);
     declare
      -- sth : constant Poly_Sys(hom'range)
      --     := Standard_Complex_Poly_SysFun.Eval(hom.all,Create(0.0),nv+1);

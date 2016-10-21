@@ -1406,7 +1406,6 @@ package body Moving_Flag_Homotopies is
    -- nf := nf*nt;
   end Moving_Flag_Homotopy;
 
-
   procedure Moving_Flag_Homotopy
              ( file : in file_type; n,k : in integer32;
                q,p,rows,cols : in Standard_Natural_Vectors.Vector;
