@@ -1,3 +1,6 @@
+Fri 21 Oct 2016 : fixed Flag_Conditions in moving_flag_homotopies.adb,
+  which caused a crash in the Cheater's homotopy.
+
 Thu 20 Oct 2016 : renamed menu option in mainenum.adb and added checks on
   the brackers in drivers_for_schubert_induction.
   Added extra output to drivers_for_schubert_induction.adb to isolated the

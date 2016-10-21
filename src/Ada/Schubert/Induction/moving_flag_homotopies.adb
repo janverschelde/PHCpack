@@ -11,8 +11,6 @@ with Standard_Natural_Matrices;
 with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with DoblDobl_Complex_Matrices_io;      use DoblDobl_Complex_Matrices_io;
 with QuadDobl_Complex_Matrices_io;      use QuadDobl_Complex_Matrices_io;
-with Symbol_Table;
-with Matrix_Indeterminates;
 with Standard_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials;
@@ -1597,7 +1595,7 @@ package body Moving_Flag_Homotopies is
     nq : constant integer32
        := integer32(Symbolic_Schubert_Conditions.Number_of_Equations
                       (natural32(n),cond));
-    sc : Poly_Sys(1..n);
+    sc : Poly_Sys(1..nq); -- Poly_Sys(1..n);
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
     nv : constant integer32 := integer32(Degree_of_Freedom(locmap));
@@ -1624,7 +1622,7 @@ package body Moving_Flag_Homotopies is
     nq : constant integer32
        := integer32(Symbolic_Schubert_Conditions.Number_of_Equations
                       (natural32(n),cond));
-    sc : Poly_Sys(1..n);
+    sc : Poly_Sys(1..nq); -- used to be n ??
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
     nv : constant integer32 := integer32(Degree_of_Freedom(locmap));
@@ -1651,7 +1649,7 @@ package body Moving_Flag_Homotopies is
     nq : constant integer32
        := integer32(Symbolic_Schubert_Conditions.Number_of_Equations
                       (natural32(n),cond));
-    sc : Poly_Sys(1..n);
+    sc : Poly_Sys(1..nq);
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
     nv : constant integer32 := integer32(Degree_of_Freedom(locmap));
