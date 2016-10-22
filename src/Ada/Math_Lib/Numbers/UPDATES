@@ -1,3 +1,6 @@
+Sat 22 Oct 2016 : added random number generators with given seed to 
+  standard_random_numbers to produce independent random sequences.
+
 Sun 2 Oct 2016 : to standard_complex_numbers_polar added the function
   polar_exponentiation with a float as a power.
 

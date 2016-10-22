@@ -7,7 +7,6 @@ package body Standard_Random_Numbers is
   m : constant integer32 := 2147483647;
   pid : constant integer := Process_Id;
   pid32 : constant integer32 := integer32(pid);
- -- pid : constant integer := 186;  -- way to fix the seed
   initial_seed : integer32 := pid32;
   seed : integer32 := initial_seed;
 
@@ -44,6 +43,32 @@ package body Standard_Random_Numbers is
     return integer64(f); -- rounding the result to integer number
   end Random;
 
+  procedure Random_Integer_Number
+              ( seed : in out integer32; lower,upper : in integer32;
+                i : out integer32 ) is
+
+    f : double_float;
+
+  begin
+    Random_Double_Float(seed,f); -- f is in [-1,+1]
+    f := 0.5*(double_float(upper-lower)*f + double_float(lower+upper));
+                                         -- f in [lower,upper]
+    i := integer32(f); -- rounding the result to integer number
+  end Random_Integer_Number;
+
+  procedure Random_Integer_Number
+              ( seed : in out integer32; lower,upper : in integer64;
+                i : out integer64 ) is
+
+    f : double_float;
+
+  begin
+    Random_Double_Float(seed,f); -- f is in [-1,+1]
+    f := 0.5*(double_float(upper-lower)*f + double_float(lower+upper));
+                                         -- f in [lower,upper]
+    i := integer64(f); -- rounding the result to integer number
+  end Random_Integer_Number;
+
   function Random return double_float is
 
     x : double_float;
@@ -54,20 +79,50 @@ package body Standard_Random_Numbers is
     x := 2.0 * x - 1.0;
     return x;
   end Random;
+
+  procedure Random_Double_Float 
+              ( seed : in out integer32; f : out double_float ) is
+  begin
+    seed := a*seed mod m;
+    f := double_float(seed)/double_float(m);
+    f := 2.0 * f - 1.0;
+  end Random_Double_Float;
   
   function Random return Complex_Number is
   begin
     return Create(Random,Random);
   end Random;
 
+  procedure Random_Complex_Number
+              ( seed : in out integer32; c : out Complex_Number ) is
+
+    cre,cim : double_float;
+
+  begin
+    Random_Double_Float(seed,cre);
+    Random_Double_Float(seed,cim);
+    c := Create(cre,cim);
+  end Random_Complex_Number;
+
   function Random ( modulus : double_float ) return Complex_Number is
+
+    arg : constant double_float := PI*Random;  -- in [-pi,+pi]
+
+  begin
+    return Create(modulus*COS(arg),modulus*SIN(arg));
+  end Random;
+
+  procedure Random_Complex_Number
+              ( seed : in out integer32; modulus : in double_float;
+                c : out Complex_Number ) is
 
     arg : double_float;
 
   begin
-    arg := PI*Random;  -- in [-pi,+pi]
-    return Create(modulus*COS(arg),modulus*SIN(arg));
-  end Random;
+    Random_Double_Float(seed,arg);
+    arg := PI*arg; -- in [-pi, +pi]
+    c := Create(modulus*COS(arg),modulus*SIN(arg));
+  end Random_Complex_Number;
 
   function Random1 return Complex_Number is
 
@@ -77,6 +132,17 @@ package body Standard_Random_Numbers is
     arg := PI*Random;  -- in [-pi,+pi]
     return Create(COS(arg),SIN(arg));
   end Random1;
+
+  procedure Random1_Complex_Number
+              ( seed : in out integer32; c : out Complex_Number ) is
+
+    arg : double_float; 
+
+  begin
+    Random_Double_Float(seed,arg);
+    arg := PI*arg;  -- in [-pi,+pi]
+    c := Create(COS(arg),SIN(arg));
+  end Random1_Complex_Number;
 
   function Random_Magnitude ( m : natural32 ) return double_float is
 
