@@ -17,6 +17,16 @@ package body QuadDobl_Random_Numbers is
     return res;
   end Random;
 
+  procedure Random_Quad_Double
+              ( seed : in out integer32; f : out quad_double ) is
+
+    rdf : double_float;
+
+  begin
+    Standard_Random_Numbers.Random_Double_Float(seed,rdf);
+    f := Create(rdf);
+  end Random_Quad_Double;
+
   function Random_Magnitude ( m : natural32 ) return quad_double is
 
     res : quad_double := Random;
@@ -40,6 +50,17 @@ package body QuadDobl_Random_Numbers is
     return res;
   end Random;
 
+  procedure Random_Complex_Number
+              ( seed : in out integer32; c : out Complex_Number ) is
+
+    rpc,ipc : quad_double;
+
+  begin
+    Random_Quad_Double(seed,rpc);
+    Random_Quad_Double(seed,ipc);
+    c := Create(rpc,ipc);
+  end Random_Complex_Number;
+
   function Random1 return Complex_Number is
 
     res : Complex_Number;
@@ -53,6 +74,19 @@ package body QuadDobl_Random_Numbers is
     res := create(cs,sn);
     return res;
   end Random1;
+
+  procedure Random1_Complex_Number
+              ( seed : in out integer32; c : out Complex_Number ) is
+
+    arg,cs,sn : quad_double;
+
+  begin
+    Random_Quad_Double(seed,arg);
+    arg := arg*Quad_Double_Constants.pi;
+    cs := QuadDobl_Mathematical_Functions.cos(arg);
+    sn := QuadDobl_Mathematical_Functions.sin(arg);
+    c := create(cs,sn);
+  end Random1_Complex_Number;
 
   function Random_Magnitude ( m : natural32 ) return Complex_Number is
 

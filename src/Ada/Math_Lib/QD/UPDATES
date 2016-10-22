@@ -1,3 +1,6 @@
+Sat 22 Oct 2016 : to *dobl_random_numbers added random number generators
+  with given seeds to produce independent sequences of random numbers.
+
 Sun 2 Oct 2016 : to {dobldobl,quaddobl}_complex_numbers_polar, added
   polar_exponentiation, for double double and quad double exponents.
 

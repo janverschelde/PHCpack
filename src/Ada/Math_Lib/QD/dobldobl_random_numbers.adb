@@ -16,6 +16,16 @@ package body DoblDobl_Random_Numbers is
     return res;
   end Random;
 
+  procedure Random_Double_Double
+              ( seed : in out integer32; f : out double_double ) is
+
+    rdf : double_float;
+
+  begin
+    Standard_Random_Numbers.Random_Double_Float(seed,rdf);
+    f := Create(rdf);
+  end Random_Double_Double;
+
   function Random_Magnitude ( m : natural32 ) return double_double is
 
     res : double_double := Random;
@@ -39,6 +49,17 @@ package body DoblDobl_Random_Numbers is
     return res;
   end Random;
 
+  procedure Random_Complex_Number
+              ( seed : in out integer32; c : out Complex_Number ) is
+
+    rpc,ipc : double_double;
+
+  begin
+    Random_Double_Double(seed,rpc);
+    Random_Double_Double(seed,ipc);
+    c := Create(rpc,ipc);
+  end Random_Complex_Number;
+
   function Random1 return Complex_Number is
 
     res : Complex_Number;
@@ -52,6 +73,19 @@ package body DoblDobl_Random_Numbers is
     res := create(cs,sn);
     return res;
   end Random1;
+
+  procedure Random1_Complex_Number
+              ( seed : in out integer32; c : out Complex_Number ) is
+
+    arg,cs,sn : double_double;
+
+  begin
+    Random_Double_Double(seed,arg);
+    arg := arg*Double_Double_Constants.pi;
+    cs := DoblDobl_Mathematical_Functions.cos(arg);
+    sn := DoblDobl_Mathematical_Functions.sin(arg);
+    c := create(cs,sn);
+  end Random1_Complex_Number;
 
   function Random_Magnitude ( m : natural32 ) return Complex_Number is
 
