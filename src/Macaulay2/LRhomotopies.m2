@@ -3,16 +3,17 @@
 
 newPackage(
   "LRhomotopies",
-  Version => "0.6", 
-  Date => "19 October 2016",
+  Version => "0.7", 
+  Date => "21 October 2016",
   Authors => {
     {Name => "Jan Verschelde", 
      Email => "jan@math.uic.edu",
      HomePage => "http://www.math.uic.edu/~jan"}},
-  Headline => "Interface to LR-homotopies in PHCpack"
+  Headline => "Interface to the Littlewood-Richardson homotopies in PHCpack"
 )
 
-export{"LRrule", "LRtriple", "parseTriplet", "wrapTriplet", "LRcheater"}
+export{"LRrule", "LRtriple", "parseTriplet", "luckySeed", 
+       "higherWorkingPrecision", "wrapTriplet", "LRcheater"}
 
 debug needsPackage "PHCpack"
 
@@ -448,37 +449,62 @@ SchubertSystemFromFile(String) := (name) -> (
    result
 );
 
-LRtriple = method();
-LRtriple(ZZ,Matrix) := (n,m) -> (
+LRtriple = method(TypicalValue => Sequence,
+  Options => {higherWorkingPrecision => 0, luckySeed => -1});
+LRtriple(ZZ,Matrix) := opt -> (n,m) -> (
 --
 -- DESCRIPTION :
---   Solves one checker game for a triple Schubert intersection.
+--   Solves several checker games, each checker game involes
+--   a triple Schubert intersection.
 --
 -- ON ENTRY :
 --   n         ambient dimension;
 --   m         matrix with in rows the intersection conditions,
 --             the first element of each row is the number of times
---             the intersection bracket must be taken.
+--             the intersection bracket must be taken;
+-- OPTIONS :
+--   The option higherWorkingPrecision allow to set the working precision
+--   to double double or quad double precision.  The values are
+--   0 : the default working precision is double precision,
+--   1 : double double precision, and
+--   2 : quad double precision.
+--   The option luckySeed controls the seed for the random number generator,
+--   which ensures reproducible results, and in case of numerical problems,
+--   lucky values which give correct results.
 -- 
 -- ON RETURN :
---   (f,r,p,s) a sequence with the result of the Schubert problem:
+--   (r,f,p,s) a sequence with the result of the Schubert problem:
 --   r         the polynomial ring for the symbols of the variables
 --             representing the solutions in the matrix representations,
 --   f         a string representation of a fixed flag,
 --   p         the polynomial system solved,
 --   s         a string with solutions to the polynomial system.
 --
+   if not member(opt.higherWorkingPrecision,{0,1,2}) then
+     error "The working precision must be set to 0, 1, or 2.";
+
    d := LRruleIn(5,n,m);  -- option 5 of phc -e
    PHCinputFile := temporaryFileName() | "PHCip";
    PHCoutputFile := temporaryFileName() | "PHCout";
    PHCsessionFile := temporaryFileName() | "PHCses";
    PHCsolutions := temporaryFileName() | "PHCsolutions";
    d = concatenate(d,"\n0\n");  -- solve a generic instance for random flags
-   d = concatenate(d,"0\n");  -- standard double precision
+   if opt.higherWorkingPrecision == 0 then
+   (
+     d = concatenate(d,"0\n");  -- standard double precision
+   )
+   else if opt.higherWorkingPrecision == 1 then
+   (
+     d = concatenate(d,"1\n");  -- double double precision
+   )
+   else
+   (
+     d = concatenate(d,"2\n");  -- quad double precision
+   );
    d = concatenate(d,"0\n");  -- generate random flags
    d = concatenate(d,PHCoutputFile,"\n");
    d = concatenate(d,"0\n");  -- no intermediate output written to file
-   d = concatenate(d,"n\n");  -- use an efficient problem formulation
+   d = concatenate(d,"y\n");  -- use an efficient problem formulation
    d = concatenate(d,"y\n");  -- square the overdetermined homotopies
    d = concatenate(d,"0\n");  -- do not change default continuation parameters
    d = concatenate(d,"0\n");  -- no intermediate output during continuation
@@ -487,7 +513,15 @@ LRtriple(ZZ,Matrix) := (n,m) -> (
    dataToFile(d,PHCinputFile);
    stdio << "running phc -e, session output to " << PHCsessionFile << endl;
    stdio << "                writing output to " << PHCoutputFile << endl;
-   run("phc -e < " | PHCinputFile | " > " | PHCsessionFile);
+   if opt.luckySeed == -1 then
+     run("phc -e < " | PHCinputFile | " > " | PHCsessionFile)
+   else
+   (
+     cmdphc := "phc -e -0" | opt.luckySeed | " < " | PHCinputFile; 
+     cmdphc = cmdphc | " > " | PHCsessionFile;
+     stdio << "running " << cmdphc;
+     run(cmdphc)
+   );
    run("phc -z " | PHCoutputFile | " " | PHCsolutions);
    stdio << "opening output file " << PHCsolutions << endl;
   -- stdio << endl << "extracting fixed flags, polynomial system, solutions";

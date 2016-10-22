@@ -1,3 +1,6 @@
+Fri 21 Oct 2016 : added luckySeed and higherWorkingPrecision to the
+  LRhomotopies.m2 package, documented in LRhomotopiesDoc.m2.
+
 Thu 20 Oct 2016 : in PHCpackDoc.m2, fixed the seeds for solveSystem in
   some examples, to avoid unlucky choices.
 
