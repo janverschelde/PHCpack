@@ -15,6 +15,15 @@ package body Standard_Random_Vectors is
     return res;
   end Random_Vector;
 
+  procedure Random_Vector
+              ( seed : in out integer32; low,upp : in integer32;
+                v : out Standard_Integer_Vectors.Vector ) is
+  begin
+    for i in v'range loop
+      Random_Integer_Number(seed,low,upp,v(i));
+    end loop;
+  end Random_Vector;
+
   function Random_Vector ( first,last : integer32; low,upp : integer64 )
                          return Standard_Integer64_Vectors.Vector is
 
@@ -27,6 +36,15 @@ package body Standard_Random_Vectors is
     return res;
   end Random_Vector;
 
+  procedure Random_Vector
+              ( seed : in out integer32; low,upp : in integer64;
+                v : out Standard_Integer64_Vectors.Vector ) is
+  begin
+    for i in v'range loop
+      Random_Integer_Number(seed,low,upp,v(i));
+    end loop;
+  end Random_Vector;
+
   function Random_Vector ( first,last : integer32 )
                          return Standard_Floating_Vectors.Vector is
 
@@ -37,6 +55,15 @@ package body Standard_Random_Vectors is
       res(i) := Random;
     end loop;
     return res;
+  end Random_Vector;
+
+  procedure Random_Vector
+              ( seed : in out integer32;
+                v : out Standard_Floating_Vectors.Vector ) is
+  begin
+    for i in v'range loop
+      Random_Double_Float(seed,v(i));
+    end loop;
   end Random_Vector;
 
   function Random_Vector ( first,last : integer32; m : natural32 )
@@ -66,6 +93,15 @@ package body Standard_Random_Vectors is
       res(i) := Random1;
     end loop;
     return res;
+  end Random_Vector;
+
+  procedure Random_Vector
+              ( seed : in out integer32;
+                v : out Standard_Complex_Vectors.Vector ) is
+  begin
+    for i in v'range loop
+      Random1_Complex_Number(seed,v(i));
+    end loop;
   end Random_Vector;
 
   function Random_Vector ( first,last : integer32; m : natural32 )

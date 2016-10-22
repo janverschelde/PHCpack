@@ -14,6 +14,15 @@ package body QuadDobl_Random_Vectors is
     return res;
   end Random_Vector;
 
+  procedure Random_Vector
+              ( seed : in out integer32;
+                v : out Quad_Double_Vectors.Vector ) is
+  begin
+    for i in v'range loop
+      QuadDobl_Random_Numbers.Random_Quad_Double(seed,v(i));
+    end loop;
+  end Random_Vector;
+
   function Random_Vector ( first,last : integer32; m : natural32 )
                          return Quad_Double_Vectors.Vector is
 
@@ -36,6 +45,15 @@ package body QuadDobl_Random_Vectors is
       res(i) := QuadDobl_Random_Numbers.Random1;
     end loop;
     return res;
+  end Random_Vector;
+
+  procedure Random_Vector
+              ( seed : in out integer32;
+                v : out QuadDobl_Complex_Vectors.Vector ) is
+  begin
+    for i in v'range loop
+      QuadDobl_Random_Numbers.Random_Complex_Number(seed,v(i));
+    end loop;
   end Random_Vector;
 
   function Random_Vector ( first,last : integer32; m : natural32 )

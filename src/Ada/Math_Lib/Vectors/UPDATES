@@ -1,3 +1,7 @@
+Sat 22 Oct 2016 : to standard_random_vectors added random generator generators
+  with given seed to procedure independent sequences.
+  Did the same to dobldobl_random_vectors and quaddobl_random_vectors.
+
 Mon 15 Jun 2015 : new package varbprec_vecvec_conversions to convert various
   types of vectors of vectors, for various levels of precision.
 
