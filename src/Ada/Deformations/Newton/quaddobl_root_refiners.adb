@@ -723,13 +723,13 @@ package body QuadDobl_Root_Refiners is
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     for i in sa'range loop
       nb := 0;
       sa(i).res := Sum_Norm(Eval(f,sa(i).v));
@@ -766,13 +766,13 @@ package body QuadDobl_Root_Refiners is
     refs_last : Solution_List;
     nb : natural32;
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     for i in sa'range loop
       nb := 0;
       sa(i).res := Sum_Norm(Eval(f,sa(i).v));
@@ -811,13 +811,13 @@ package body QuadDobl_Root_Refiners is
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     for i in sa'range loop
       nb := 0;
       sa(i).res := Sum_Norm(Eval(f,sa(i).v));
@@ -854,13 +854,13 @@ package body QuadDobl_Root_Refiners is
     refs_last : Solution_List;
     nb : natural32;
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     for i in sa'range loop
       nb := 0;
       sa(i).res := Sum_Norm(Eval(f,sa(i).v));
@@ -904,14 +904,14 @@ package body QuadDobl_Root_Refiners is
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..60)
                       := QuadDobl_Condition_Tables.Create(60); 
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
     initres : quad_double;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
@@ -972,14 +972,14 @@ package body QuadDobl_Root_Refiners is
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..60)
                       := QuadDobl_Condition_Tables.Create(60); 
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
     initres : quad_double;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
@@ -1042,14 +1042,14 @@ package body QuadDobl_Root_Refiners is
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..60)
                       := QuadDobl_Condition_Tables.Create(60); 
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
     initres : quad_double;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
@@ -1110,14 +1110,14 @@ package body QuadDobl_Root_Refiners is
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..60)
                       := QuadDobl_Condition_Tables.Create(60); 
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
     initres : quad_double;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
@@ -1326,14 +1326,14 @@ package body QuadDobl_Root_Refiners is
     merge : boolean := false; -- to merge clustered solutions
     nb,numb,nbdef : natural32 := 0;
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nbvar);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nbvar);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
     initres : quad_double;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin
@@ -1419,14 +1419,14 @@ package body QuadDobl_Root_Refiners is
     refs_last : Solution_List;
     nb,numb,nbdef : natural32 := 0;
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nbvar);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nbvar);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
     initres : quad_double;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin
@@ -1519,14 +1519,14 @@ package body QuadDobl_Root_Refiners is
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
                       := QuadDobl_Condition_Tables.Create(30); 
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nbvar);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nbvar);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
     initres : quad_double;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin
@@ -1636,14 +1636,14 @@ package body QuadDobl_Root_Refiners is
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
                       := QuadDobl_Condition_Tables.Create(30); 
     fail,infty : boolean;
-    h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nbvar);
-    h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,nbvar);
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
     initres : quad_double;
 
   begin
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin

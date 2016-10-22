@@ -926,13 +926,13 @@ package body Standard_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(n);
     merge : boolean := false; -- to merge clustered solutions
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin
@@ -1001,13 +1001,13 @@ package body Standard_Root_Refiners is
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     n : constant integer32 := Head_Of(sols).n;
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     for i in sa'range loop
       numb := 0;
       sa(i).res := Sum_Norm(p(sa(i).v));
@@ -1049,13 +1049,13 @@ package body Standard_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(n);
     merge : boolean := false;  -- flag to merge clustered solutions
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin
@@ -1132,13 +1132,13 @@ package body Standard_Root_Refiners is
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     refsols_last : Solution_List;
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     for i in sa'range loop
       numb := 0;
       sa(i).res := Sum_Norm(Eval(p_eval,sa(i).v));
@@ -1172,13 +1172,13 @@ package body Standard_Root_Refiners is
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     refsols_last : Solution_List;
     n : constant integer32 := Head_Of(sols).n;
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     for i in sa'range loop
       numb := 0;
       sa(i).res := Sum_Norm(p(sa(i).v));
@@ -1229,13 +1229,13 @@ package body Standard_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(n);
     merge : boolean := false;  -- flag to merge clustered solutions
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
    -- put_line("in this reporting root refiner ...");
     if deflate then
       declare
@@ -1345,13 +1345,13 @@ package body Standard_Root_Refiners is
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(nbtot)) := Create(sols);
     initres : Standard_Floating_Vectors.Vector(sa'range);
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :"); new_line(file);
     put(file,nbtot,1); put(file," "); put(file,n,1); new_line(file);
@@ -1414,13 +1414,13 @@ package body Standard_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(n);
     merge : boolean := false;  -- to merge clustered solutions
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin
@@ -1533,13 +1533,13 @@ package body Standard_Root_Refiners is
     refsols_last : Solution_List;
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :"); new_line(file);
     put(file,nbtot,1); put(file," "); put(file,n,1); new_line(file);
@@ -1600,13 +1600,13 @@ package body Standard_Root_Refiners is
     sa : Solution_Array(1..integer32(nbtot)) := Create(sols);
     initres : Standard_Floating_Vectors.Vector(sa'range);
     refsols_last : Solution_List;
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,n);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :"); new_line(file);
     put(file,nbtot,1); put(file," "); put(file,n,1); new_line(file);
@@ -1807,13 +1807,13 @@ package body Standard_Root_Refiners is
     merge : boolean := false; -- to merge clustered solutions
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nbvar);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nbvar);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin
@@ -1899,13 +1899,13 @@ package body Standard_Root_Refiners is
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     refsols_last : Solution_List;
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nbvar);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nbvar);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin
@@ -1985,13 +1985,13 @@ package body Standard_Root_Refiners is
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     refsols_last : Solution_List;
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     for i in sa'range loop
       numb := 0;
       sa(i).res := Sum_Norm(Eval(p_eval,sa(i).v));
@@ -2047,13 +2047,13 @@ package body Standard_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(nbvar);
     merge : boolean := false; -- to merge clustered solutions
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nbvar);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nbvar);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin
@@ -2171,13 +2171,13 @@ package body Standard_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(nbvar);
     merge : boolean := false; -- to merge clustered solutions
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nbvar);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nbvar);
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
       declare
       begin
@@ -2289,13 +2289,13 @@ package body Standard_Root_Refiners is
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
     tolrnk : constant double_float := tolsing*100.0;
-    h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
-    h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv); 
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
 
   begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :"); new_line(file);
     put(file,nbtot,1); put(file," "); put(file,nv,1); new_line(file);

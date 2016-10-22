@@ -1,3 +1,7 @@
+Sat 22 Oct 2016 : in standard_root_refiners.adb used independent sequences
+  of random numbers for the point lists in the frequency tables.
+  Did the same for dobldobl_root_refiners.adb and quaddobl_root_refiners.adb.
+
 Sat 26 Mar 2016 : moved documentations of the specifications from adb to ads
   in drivers_to_deflate_singularities.
 
