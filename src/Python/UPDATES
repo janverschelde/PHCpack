@@ -1,3 +1,6 @@
+Sun 23 Oct 2016 : added paragraph in newtopes.rst about the alternative to
+  mixed_volume, about the integer_mixed_cells function.
+
 Sun 16 Oct 2016 : added writing of mixed cell configuration to polytopes.py,
   started adding a function to retrieve all data of a mixed cell.
   The function integer_mixed_cell in the module polytopes.py returns all 

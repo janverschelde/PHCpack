@@ -219,6 +219,13 @@ generating another polytope:
    >>> mv([1, 2],(p1, p2))
    3961
 
+The ``mixed_volume`` function executes and Ada translation of
+MixedVol, ACM TOMS Algorithm 846 of 2005.
+This algorithm generates random floating point values to lift the
+points in the supports.  
+The function ``integer_mixed_cells`` allows the user to specify integer 
+lifting values as the last coordinate of the points in the supports.
+
 solving binomial systems
 ========================
 
