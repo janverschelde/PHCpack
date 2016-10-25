@@ -1,3 +1,6 @@
+Mon 24 Oct 2016 : fixed call to Resolve in ts_lrhom.adb to include the
+  option of squaring overdetermined homotopies.
+
 Fri 21 Oct 2016 : fixed Flag_Conditions in moving_flag_homotopies.adb,
   which caused a crash in the Cheater's homotopy.
   Added the moved_flag to the setting up of cheater's homotopy in

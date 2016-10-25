@@ -322,7 +322,7 @@ procedure ts_lrhom is
     sols : Solution_List;
     tol : constant double_float := 1.0E-6;
     ans : character;
-    monitor_games,report,verify,minrep : boolean;
+    monitor_games,report,verify,minrep,tosqr : boolean;
     timer : Timing_Widget;
 
   begin
@@ -339,6 +339,9 @@ procedure ts_lrhom is
     put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
     minrep := (ans = 'y');
+    put("Square the overdetermined homotopies ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    tosqr := (ans = 'y');
     new_line;
     put("Diagnostic verification needed ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -364,7 +367,7 @@ procedure ts_lrhom is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     Resolve(file,monitor_games,report,n,k,tol,ips,sps,
-            verify,minrep,conds,flags,sols);
+            verify,minrep,tosqr,conds,flags,sols);
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
     new_line(file);
