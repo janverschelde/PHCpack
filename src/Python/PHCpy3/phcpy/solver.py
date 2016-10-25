@@ -51,15 +51,22 @@ def real_random_trinomials(sys):
     return result
 
 def random_system(dim, nbrmon, deg, cff):
-    """
+    r"""
     Generates a random polynomial system based on the following:
-    dim : number of equations and variables,
-    nbrmon : maximum number of monomials per equation,
-    deg : upper bound on the degree of the monomials,
-    cff : type of coefficients, must be 0, 1, or 2,
-    if 0, then random complex numbers on the unit circle,
-    if 1, then coefficients are one (or integer multiples of one),
-    if 2, then coefficients are floats in [-1,+1].
+
+    1. dim : number of equations and variables,
+
+    2. nbrmon : maximum number of monomials per equation,
+
+    3. deg : upper bound on the degree of the monomials,
+
+    4. cff : type of coefficients, must be 0, 1, or 2,
+
+       if 0, then random complex numbers on the unit circle,
+
+       if 1, then coefficients are one (or integer multiples of one),
+
+       if 2, then coefficients are floats in [-1,+1].
     """
     from phcpy.phcpy2c3 import py2c_syscon_random_system
     from phcpy.interface import load_standard_system
@@ -191,15 +198,19 @@ def solve_checkin(pols, msg):
         print('to solve polynomial systems that are not square.')
 
 def solve(pols, silent=False, tasks=0, precision='d', checkin=True):
-    """
+    r"""
     Calls the blackbox solver.  On input in pols is a list of strings.
     By default, the solver will print to screen the computed root counts.
     To make the solver silent, set the flag silent to True.
     The number of tasks for multithreading is given by tasks.
     Three levels of precision are supported:
-    d  : standard double precision (1.1e-15 or 2^(-53)),
-    dd : double double precision (4.9e-32 or 2^(-104)),
-    qd : quad double precision (1.2e-63 or 2^(-209)).
+
+    1. d  : standard double precision (1.1e-15 or 2^(-53)),
+
+    2. dd : double double precision (4.9e-32 or 2^(-104)),
+
+    3. qd : quad double precision (1.2e-63 or 2^(-209)).
+
     If checkin (by default), the input pols is checked for being square.
     """
     if checkin:
@@ -216,15 +227,19 @@ def solve(pols, silent=False, tasks=0, precision='d', checkin=True):
         print('wrong level of precision, use d, dd, or qd')
 
 def newton_step(system, solutions, precision='d', decimals=100):
-    """
+    r"""
     Applies one Newton step to the solutions of the system.
     For each solution, prints its last line of diagnostics.
     Four levels of precision are supported:
-    d  : standard double precision (1.1e-15 or 2^(-53)),
-    dd : double double precision (4.9e-32 or 2^(-104)),
-    qd : quad double precision (1.2e-63 or 2^(-209)).
-    mp : arbitrary precision, where the number of decimal places
-    in the working precision is determined by decimals.
+
+    1. d  : standard double precision (1.1e-15 or 2^(-53)),
+
+    2. dd : double double precision (4.9e-32 or 2^(-104)),
+
+    3. qd : quad double precision (1.2e-63 or 2^(-209)).
+
+    4. mp : arbitrary precision, where the number of decimal places
+       in the working precision is determined by decimals.
     """
     dim = number_of_symbols(system)
     if(precision == 'd'):
@@ -272,15 +287,19 @@ def newton_step(system, solutions, precision='d', decimals=100):
     return result
 
 def newton_laurent_step(system, solutions, precision='d', decimals=100):
-    """
+    r"""
     Applies one Newton step to the solutions of the Laurent system.
     For each solution, prints its last line of diagnostics.
     Four levels of precision are supported:
-    d  : standard double precision (1.1e-15 or 2^(-53)),
-    dd : double double precision (4.9e-32 or 2^(-104)),
-    qd : quad double precision (1.2e-63 or 2^(-209)).
-    mp : arbitrary precision, where the number of decimal places
-    in the working precision is determined by decimals.
+
+    1. d  : standard double precision (1.1e-15 or 2^(-53)),
+
+    2. dd : double double precision (4.9e-32 or 2^(-104)),
+
+    3. qd : quad double precision (1.2e-63 or 2^(-209)).
+
+    4. mp : arbitrary precision, where the number of decimal places
+            in the working precision is determined by decimals.
     """
     dim = number_of_symbols(system)
     if(precision == 'd'):
@@ -328,14 +347,17 @@ def newton_laurent_step(system, solutions, precision='d', decimals=100):
     return result
 
 def newton_steps(system, solutions, accuracy=8, maxsteps=4, maxprec=256):
-    """
+    r"""
     Runs a sequence of variable precision Newton steps to approximate
     solutions accurate up to a specified number of decimal places.
     In addition to the system and solutions, there are three parameters:
-    accuracy : number of decimal places wanted to be accurate,
-    maxsteps : maximum number of Newton steps,
-    maxprec : maximum number of decimal places in the precision used
-    to estimate the condition numbers.
+
+    1. accuracy : number of decimal places wanted to be accurate,
+
+    2. maxsteps : maximum number of Newton steps,
+
+    3. maxprec : maximum number of decimal places in the precision used
+       to estimate the condition numbers.
     """
     from phcpy.phcpy2c3 import py2c_varbprec_Newton_Laurent_steps as vmpnewt
     from phcpy.interface import store_multprec_solutions
@@ -351,16 +373,22 @@ def newton_steps(system, solutions, accuracy=8, maxsteps=4, maxprec=256):
 
 def standard_deflate(system, solutions, maxitr=3, maxdef=3, \
     tolerr=1.0e-8, tolres=1.0e-8, tolrnk=1.0e-6):
-    """
+    r"""
     The deflation method augments the given system with
     derivatives to restore the quadratic convergence of
     Newton's method at isolated singular solutions,
     in standard double precision.  The numerical parameters are
-    1) maxitr : the maximum number of iterations per root,
-    2) maxdef : the maximum number of deflations per root,
-    3) tolerr : tolerance on the forward error on each root,
-    4) tolres : tolerance on the backward error on each root,
-    5) tolres : tolerance on the numerical rank of the Jacobian matrices.
+
+    1. maxitr : the maximum number of iterations per root,
+
+    2. maxdef : the maximum number of deflations per root,
+
+    3. tolerr : tolerance on the forward error on each root,
+
+    4. tolres : tolerance on the backward error on each root,
+
+    5. tolres : tolerance on the numerical rank of the Jacobian matrices.
+
     After application of deflation, the new approximations are returned.
     """
     from phcpy.phcpy2c3 import py2c_standard_deflate
@@ -376,16 +404,22 @@ def standard_deflate(system, solutions, maxitr=3, maxdef=3, \
 
 def dobldobl_deflate(system, solutions, maxitr=3, maxdef=3, \
     tolerr=1.0e-8, tolres=1.0e-8, tolrnk=1.0e-6):
-    """
+    r"""
     The deflation method augments the given system with
     derivatives to restore the quadratic convergence of
     Newton's method at isolated singular solutions,
     in double double precision.  The numerical parameters are
-    1) maxitr : the maximum number of iterations per root,
-    2) maxdef : the maximum number of deflations per root,
-    3) tolerr : tolerance on the forward error on each root,
-    4) tolres : tolerance on the backward error on each root,
-    5) tolres : tolerance on the numerical rank of the Jacobian matrices.
+
+    1. maxitr : the maximum number of iterations per root,
+
+    2. maxdef : the maximum number of deflations per root,
+
+    3. tolerr : tolerance on the forward error on each root,
+
+    4. tolres : tolerance on the backward error on each root,
+
+    5. tolres : tolerance on the numerical rank of the Jacobian matrices.
+
     After application of deflation, the new approximations are returned.
     """
     from phcpy.phcpy2c3 import py2c_dobldobl_deflate
@@ -401,16 +435,22 @@ def dobldobl_deflate(system, solutions, maxitr=3, maxdef=3, \
 
 def quaddobl_deflate(system, solutions, maxitr=3, maxdef=3, \
     tolerr=1.0e-8, tolres=1.0e-8, tolrnk=1.0e-6):
-    """
+    r"""
     The deflation method augments the given system with
     derivatives to restore the quadratic convergence of
     Newton's method at isolated singular solutions,
     in quad double precision.  The numerical parameters are
-    1) maxitr : the maximum number of iterations per root,
-    2) maxdef : the maximum number of deflations per root,
-    3) tolerr : tolerance on the forward error on each root,
-    4) tolres : tolerance on the backward error on each root,
-    5) tolres : tolerance on the numerical rank of the Jacobian matrices.
+
+    1. maxitr : the maximum number of iterations per root,
+
+    2. maxdef : the maximum number of deflations per root,
+
+    3. tolerr : tolerance on the forward error on each root,
+
+    4. tolres : tolerance on the backward error on each root,
+
+    5. tolres : tolerance on the numerical rank of the Jacobian matrices.
+
     After application of deflation, the new approximations are returned.
     """
     from phcpy.phcpy2c3 import py2c_quaddobl_deflate
@@ -721,14 +761,17 @@ def quaddobl_random_coefficient_system(silent=False):
     return (result, sols)
 
 def random_coefficient_system(silent=False, precision='d'):
-    """
+    r"""
     Runs the polyhedral homotopies and returns a random coefficient
     system based on the contents of the cell container.
     For this to work, the mixed_volume function must be called first.
     Three levels of precision are supported:
-    d  : standard double precision (1.1e-15 or 2^(-53)),
-    dd : double double precision (4.9e-32 or 2^(-104)),
-    qd : quad double precision (1.2e-63 or 2^(-209)).
+
+    1. d  : standard double precision (1.1e-15 or 2^(-53)),
+
+    2. dd : double double precision (4.9e-32 or 2^(-104)),
+
+    3. qd : quad double precision (1.2e-63 or 2^(-209)).
     """
     if(precision == 'd'):
         return standard_random_coefficient_system(silent)
@@ -833,17 +876,21 @@ def multprec_usolve(pol, mxi, eps, decimals):
     return (nit, rts)
 
 def usolve(pol, mxi, eps, precision='d', decimals=100):
-    """
+    r"""
     Applies the method of Durand-Kerner (aka Weierstrass)
     to the polynomial in the string pol.
     The maximum number of iterations is in mxi,
     the requirement on the accuracy in eps.
     Four levels of precision are supported:
-    d  : standard double precision (1.1e-15 or 2^(-53)),
-    dd : double double precision (4.9e-32 or 2^(-104)),
-    qd : quad double precision (1.2e-63 or 2^(-209)).
-    mp : arbitrary precision, where the number of decimal places
-    in the working precision is determined by decimals.
+
+    1. d  : standard double precision (1.1e-15 or 2^(-53)),
+
+    2. dd : double double precision (4.9e-32 or 2^(-104)),
+
+    3. qd : quad double precision (1.2e-63 or 2^(-209)).
+
+    4. mp : arbitrary precision, where the number of decimal places
+       in the working precision is determined by decimals.
     """
     if(precision == 'd'):
         return standard_usolve(pol, mxi, eps)
