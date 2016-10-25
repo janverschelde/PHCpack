@@ -30,9 +30,9 @@ def random_trinomials():
     return [one, two]
 
 def real_random_trinomials(sys):
-    """
+    r"""
     On input in sys are two random trinonials with complex coefficients,
-    in the format what random_trinomials() returns.
+    in the format what **random_trinomials()** returns.
     On return is a list of two real random trinomials with the same
     monomial structure but with random real coefficients in [-1,+1].
     """
@@ -54,13 +54,13 @@ def random_system(dim, nbrmon, deg, cff):
     r"""
     Generates a random polynomial system based on the following:
 
-    1. dim : number of equations and variables,
+    *dim*: number of equations and variables,
 
-    2. nbrmon : maximum number of monomials per equation,
+    *nbrmon*: maximum number of monomials per equation,
 
-    3. deg : upper bound on the degree of the monomials,
+    *deg*: upper bound on the degree of the monomials,
 
-    4. cff : type of coefficients, must be 0, 1, or 2,
+    *cff*: type of coefficients, must be 0, 1, or 2,
 
        if 0, then random complex numbers on the unit circle,
 
@@ -74,9 +74,9 @@ def random_system(dim, nbrmon, deg, cff):
     return load_standard_system()
 
 def number_of_symbols(pols):
-    """
+    r"""
     Returns the number of symbols used as variables in the polynomials
-    in the list pols.  This function helps to determine whether a system
+    in the list *pols*.  This function helps to determine whether a system
     is square (that is: has as many equations as unknowns) or not.
     """
     from phcpy.phcpy2c2 import py2c_scan_for_symbols
@@ -84,9 +84,9 @@ def number_of_symbols(pols):
     return py2c_scan_for_symbols(len(inpols), inpols)
 
 def names_of_variables(pols):
-    """
+    r"""
     Returns a list of strings with the names of all variables
-    that occur in the list of polynomials (given as strings) in pols.
+    that occur in the list of polynomials (given as strings) in *pols*.
     """
     _ = number_of_symbols(pols) # initializes the symbol table
     from phcpy.phcpy2c2 import py2c_syscon_string_of_symbols as sts
@@ -94,8 +94,8 @@ def names_of_variables(pols):
     return smb.split()
 
 def is_square(pols):
-    """
-    Given in the list pols are string representations of Laurent polynomials.
+    r"""
+    Given in the list *pols* are string representations of Laurent polynomials.
     A system is square if it has as many unknowns as equations.
     Returns True if the system is square, False otherwise.
     """
@@ -104,11 +104,12 @@ def is_square(pols):
     return nbrvar == nbreqs
 
 def standard_solve(pols, silent=False, tasks=0):
-    """
-    Calls the blackbox solver.  On input in pols is a list of strings.
+    r"""
+    Calls the blackbox solver.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
-    To make the solver silent, set the flag silent to True.
-    The number of tasks for multithreading is given by tasks.
+    To make the solver silent, set the flag *silent* to True.
+    The number of tasks for multithreading is given by *tasks*.
+    The default zero value for *tasks* indicates no multithreading.
     The solving happens in standard double precision arithmetic.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_standard_Laurent_system
@@ -130,11 +131,12 @@ def standard_solve(pols, silent=False, tasks=0):
     return load_standard_solutions()
 
 def dobldobl_solve(pols, silent=False, tasks=0):
-    """
-    Calls the blackbox solver.  On input in pols is a list of strings.
+    r"""
+    Calls the blackbox solver.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
-    To make the solver silent, set the flag silent to True.
-    The number of tasks for multithreading is given by tasks.
+    To make the solver silent, set the flag *silent* to True.
+    The number of tasks for multithreading is given by *tasks*.
+    The default zero value for *tasks* indicates no multithreading.
     The solving happens in double double precision arithmetic.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_dobldobl_Laurent_system
@@ -156,11 +158,12 @@ def dobldobl_solve(pols, silent=False, tasks=0):
     return load_dobldobl_solutions()
 
 def quaddobl_solve(pols, silent=False, tasks=0):
-    """
-    Calls the blackbox solver.  On input in pols is a list of strings.
+    r"""
+    Calls the blackbox solver.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
-    To make the solver silent, set the flag silent to True.
-    The number of tasks for multithreading is given by tasks.
+    To make the solver silent, set the flag *silent* to True.
+    The number of tasks for multithreading is given by *tasks*.
+    The default zero value for *tasks* indicates no multithreading.
     The solving happens in quad double precision arithmetic.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_quaddobl_Laurent_system
@@ -182,10 +185,10 @@ def quaddobl_solve(pols, silent=False, tasks=0):
     return load_quaddobl_solutions()
 
 def solve_checkin(pols, msg):
-    """
-    Checks whether the system defined by the list of strings in pols
+    r"""
+    Checks whether the system defined by the list of strings in *pols*
     is square.  If so, True is returned.  Otherwise, the error message
-    in the string msg is printed to help the user.
+    in the string *msg* is printed to help the user.
     """
     if is_square(pols):
         return True
@@ -199,19 +202,20 @@ def solve_checkin(pols, msg):
 
 def solve(pols, silent=False, tasks=0, precision='d', checkin=True):
     r"""
-    Calls the blackbox solver.  On input in pols is a list of strings.
+    Calls the blackbox solver.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
-    To make the solver silent, set the flag silent to True.
-    The number of tasks for multithreading is given by tasks.
+    To make the solver silent, set the flag *silent* to True.
+    The number of tasks for multithreading is given by *tasks*.
+    The default zero value for *tasks* indicates no multithreading.
     Three levels of precision are supported:
 
-    1. d  : standard double precision (1.1e-15 or 2^(-53)),
+    *d*: standard double precision (1.1e-15 or 2^(-53)),
 
-    2. dd : double double precision (4.9e-32 or 2^(-104)),
+    *dd*: double double precision (4.9e-32 or 2^(-104)),
 
-    3. qd : quad double precision (1.2e-63 or 2^(-209)).
+    *qd*: quad double precision (1.2e-63 or 2^(-209)).
 
-    If checkin (by default), the input pols is checked for being square.
+    If *checkin* (by default), the input *pols* is checked for being square.
     """
     if checkin:
         errmsg = 'The blackbox solver accepts only square systems,'
@@ -232,14 +236,14 @@ def newton_step(system, solutions, precision='d', decimals=100):
     For each solution, prints its last line of diagnostics.
     Four levels of precision are supported:
 
-    1. d  : standard double precision (1.1e-15 or 2^(-53)),
+    *d*: standard double precision (1.1e-15 or 2^(-53)),
 
-    2. dd : double double precision (4.9e-32 or 2^(-104)),
+    *dd*: double double precision (4.9e-32 or 2^(-104)),
 
-    3. qd : quad double precision (1.2e-63 or 2^(-209)).
+    *qd*: quad double precision (1.2e-63 or 2^(-209)).
 
-    4. mp : arbitrary precision, where the number of decimal places
-       in the working precision is determined by decimals.
+    *mp*: arbitrary precision, where the number of decimal places
+    in the working precision is determined by decimals.
     """
     dim = number_of_symbols(system)
     if(precision == 'd'):
@@ -288,14 +292,14 @@ def newton_laurent_step(system, solutions, precision='d', decimals=100):
     For each solution, prints its last line of diagnostics.
     Four levels of precision are supported:
 
-    1. d  : standard double precision (1.1e-15 or 2^(-53)),
+    *d*: standard double precision (1.1e-15 or 2^(-53)),
 
-    2. dd : double double precision (4.9e-32 or 2^(-104)),
+    *dd*: double double precision (4.9e-32 or 2^(-104)),
 
-    3. qd : quad double precision (1.2e-63 or 2^(-209)).
+    *qd*: quad double precision (1.2e-63 or 2^(-209)).
 
-    4. mp : arbitrary precision, where the number of decimal places
-       in the working precision is determined by decimals.
+    *mp*: arbitrary precision, where the number of decimal places
+    in the working precision is determined by decimals.
     """
     dim = number_of_symbols(system)
     if(precision == 'd'):
@@ -344,12 +348,12 @@ def newton_steps(system, solutions, accuracy=8, maxsteps=4, maxprec=256):
     solutions accurate up to a specified number of decimal places.
     In addition to the system and solutions, there are three parameters:
 
-    1. accuracy : number of decimal places wanted to be accurate,
+    *accuracy*: number of decimal places wanted to be accurate,
 
-    2. maxsteps : maximum number of Newton steps,
+    *maxsteps*: maximum number of Newton steps,
 
-    3. maxprec : maximum number of decimal places in the precision used
-       to estimate the condition numbers.
+    *maxprec*: maximum number of decimal places in the precision used
+    to estimate the condition numbers.
     """
     from phcpy.phcpy2c2 import py2c_varbprec_Newton_Laurent_steps as vmpnewt
     from phcpy.interface import store_multprec_solutions
@@ -371,15 +375,15 @@ def standard_deflate(system, solutions, maxitr=3, maxdef=3, \
     Newton's method at isolated singular solutions,
     in standard double precision.  The numerical parameters are
 
-    1. maxitr : the maximum number of iterations per root,
+    *maxitr*: the maximum number of iterations per root,
 
-    2. maxdef : the maximum number of deflations per root,
+    *maxdef*: the maximum number of deflations per root,
 
-    3. tolerr : tolerance on the forward error on each root,
+    *tolerr*: tolerance on the forward error on each root,
 
-    4. tolres : tolerance on the backward error on each root,
+    *tolres*: tolerance on the backward error on each root,
 
-    5. tolres : tolerance on the numerical rank of the Jacobian matrices.
+    *tolrnk*: tolerance on the numerical rank of the Jacobian matrices.
 
     After application of deflation, the new approximations are returned.
     """
@@ -402,15 +406,15 @@ def dobldobl_deflate(system, solutions, maxitr=3, maxdef=3, \
     Newton's method at isolated singular solutions,
     in double double precision.  The numerical parameters are
 
-    1. maxitr : the maximum number of iterations per root,
+    *maxitr*: the maximum number of iterations per root,
 
-    2. maxdef : the maximum number of deflations per root,
+    *maxdef*: the maximum number of deflations per root,
 
-    3. tolerr : tolerance on the forward error on each root,
+    *tolerr*: tolerance on the forward error on each root,
 
-    4. tolres : tolerance on the backward error on each root,
+    *tolres*: tolerance on the backward error on each root,
 
-    5. tolres : tolerance on the numerical rank of the Jacobian matrices.
+    *tolrnk*: tolerance on the numerical rank of the Jacobian matrices.
 
     After application of deflation, the new approximations are returned.
     """
@@ -433,15 +437,15 @@ def quaddobl_deflate(system, solutions, maxitr=3, maxdef=3, \
     Newton's method at isolated singular solutions,
     in quad double precision.  The numerical parameters are
 
-    1. maxitr : the maximum number of iterations per root,
+    *maxitr*: the maximum number of iterations per root,
 
-    2. maxdef : the maximum number of deflations per root,
+    *maxdef*: the maximum number of deflations per root,
 
-    3. tolerr : tolerance on the forward error on each root,
+    *tolerr*: tolerance on the forward error on each root,
 
-    4. tolres : tolerance on the backward error on each root,
+    *tolres*: tolerance on the backward error on each root,
 
-    5. tolres : tolerance on the numerical rank of the Jacobian matrices.
+    *tolrnk*: tolerance on the numerical rank of the Jacobian matrices.
 
     After application of deflation, the new approximations are returned.
     """
@@ -457,8 +461,8 @@ def quaddobl_deflate(system, solutions, maxitr=3, maxdef=3, \
     return result
 
 def total_degree(pols):
-    """
-    Given in pols a list of string representations of polynomials,
+    r"""
+    Given in *pols* a list of string representations of polynomials,
     returns the product of the degrees of the polynomials,
     the so-called total degree which bounds the number of
     isolated solutions of the polynomial system.
@@ -469,10 +473,10 @@ def total_degree(pols):
     return py2c_syscon_total_degree()
 
 def total_degree_start_system(pols, checkin=True):
-    """
+    r"""
     Returns the system and solutions of the total degree start system
-    for the polynomials represented by the strings in the list pols.
-    If checkin, then the list pols is tested to see if pols defines
+    for the polynomials represented by the strings in the list *pols*.
+    If checkin, then the list *pols* is tested to see if *pols* defines
     a square polynomial system.  If the input system is not square,
     then an error message is printed and None is returned.
     """
@@ -496,8 +500,8 @@ def total_degree_start_system(pols, checkin=True):
     return (result, solve(result))
 
 def m_homogeneous_bezout_number(pols):
-    """
-    Given in pols a list of string representations of polynomials,
+    r"""
+    Given in *pols* a list of string representations of polynomials,
     in as many variables as the elements in the list,
     this function applies a heuristic to generate a partition of the
     set of unknowns to exploit the product structure of the system.
@@ -513,12 +517,12 @@ def m_homogeneous_bezout_number(pols):
     return result
 
 def m_partition_bezout_number(pols, partition):
-    """
+    r"""
     There are as many m-homogeneous Bezout numbers as there are
     partitions of the set of unknowns of a polynomial system.
-    Given in pols the string representations of a polynomial system
+    Given in *pols* the string representations of a polynomial system
     in as many variables as equations, and a string representation of
-    a partition of the set of unknowns, this function returns the
+    a *partition* of the set of unknowns, this function returns the
     m-homogeneous Bezout number corresponding to the given partition.
     """
     from phcpy.phcpy2c2 import py2c_product_m_partition_Bezout_number
@@ -527,7 +531,7 @@ def m_partition_bezout_number(pols, partition):
     return py2c_product_m_partition_Bezout_number(len(partition), partition)
 
 def m_homogeneous_start_system(pols, partition, checkin=True):
-    """
+    r"""
     For an m-homogeneous Bezout number of a polynomial system defined by
     a partition of the set of unknowns, one can define a linear-product
     system that has exactly as many regular solutions as the Bezount number.
@@ -535,9 +539,9 @@ def m_homogeneous_start_system(pols, partition, checkin=True):
     homotopy to compute all isolated solutions of any polynomial system
     with the same m-homogeneous structure.
     This function returns a linear-product start system with random
-    coefficients and its solutions for the given polynomials in pols
-    and the partition.
-    If checkin, then the list pols is tested to see if pols defines
+    coefficients and its solutions for the given polynomials in *pols*
+    and the *partition*.
+    If *checkin*, then the list *pols* is tested to see if *pols* defines
     a square polynomial system.  If the input system is not square,
     then an error message is printed and None is returned.
     """
@@ -557,8 +561,8 @@ def m_homogeneous_start_system(pols, partition, checkin=True):
     return (result, sols)
 
 def linear_product_root_count(pols, silent=False):
-    """
-    Given in pols a list of string representations of polynomials,
+    r"""
+    Given in *pols( a list of string representations of polynomials,
     returns a linear-product root count based on a supporting
     set structure of the polynomials in pols.  This root count is
     an upper bound for the number of isolated solutions.
@@ -578,11 +582,11 @@ def linear_product_root_count(pols, silent=False):
     return root_count
 
 def random_linear_product_system(pols, tosolve=True, checkin=True):
-    """
-    Given in pols a list of string representations of polynomials,
+    r"""
+    Given in *pols* a list of string representations of polynomials,
     returns a random linear-product system based on a supporting
-    set structure and its solutions as well (if tosolve).
-    If checkin, then the list pols is tested to see if pols defines
+    set structure and its solutions as well (if *tosolve*).
+    If *checkin*, then the list *pols* is tested to see if *pols* defines
     a square polynomial system.  If the input system is not square,
     then an error message is printed and None is returned.
     """
@@ -606,12 +610,12 @@ def random_linear_product_system(pols, tosolve=True, checkin=True):
     return (result, sols)
 
 def mixed_volume(pols, stable=False):
-    """
-    Given in pols a list of string representations of polynomials,
+    r"""
+    Given in *pols* a list of string representations of polynomials,
     this function returns the mixed volume of the system.
     This is an interface to Algorithm 846: MixedVol of ACM TOMS,
     developed by Tangan Gao, T.Y. Li, Mengnien Wu, and Li Xing.
-    If the option stable is set to True, then on return is a tuple
+    If the option *stable* is set to True, then on return is a tuple
     containing the mixed volume and the stable mixed volume.
     The mixed volume counts the solutions with all their coordinates
     nonzero, the stable mixed volume counts all affine roots.
@@ -634,11 +638,11 @@ def mixed_volume(pols, stable=False):
         return py2c_mixed_volume(stable)
 
 def standard_random_coefficient_system(silent=False):
-    """
+    r"""
     Runs the polyhedral homotopies and returns a random coefficient
     system based on the contents of the cell container,
     in standard double precision arithmetic.
-    For this to work, the mixed_volume function must be called first.
+    For this to work, the function **mixed_volume()** must be called first.
     """
     from phcpy.phcpy2c2 import py2c_celcon_standard_random_coefficient_system
     from phcpy.phcpy2c2 import py2c_celcon_copy_into_standard_systems_container
@@ -673,11 +677,11 @@ def standard_random_coefficient_system(silent=False):
     return (result, sols)
 
 def dobldobl_random_coefficient_system(silent=False):
-    """
+    r"""
     Runs the polyhedral homotopies and returns a random coefficient
     system based on the contents of the cell container,
     in double double precision arithmetic.
-    For this to work, the mixed_volume function must be called first.
+    For this to work, the function **mixed_volume()** must be called first.
     """
     from phcpy.phcpy2c2 import py2c_celcon_dobldobl_random_coefficient_system
     from phcpy.phcpy2c2 import py2c_celcon_copy_into_dobldobl_systems_container
@@ -712,11 +716,11 @@ def dobldobl_random_coefficient_system(silent=False):
     return (result, sols)
 
 def quaddobl_random_coefficient_system(silent=False):
-    """
+    r"""
     Runs the polyhedral homotopies and returns a random coefficient
     system based on the contents of the cell container,
     in quad double precision arithmetic.
-    For this to work, the mixed_volume function must be called first.
+    For this to work, the function **mixed_volume()** must be called first.
     """
     from phcpy.phcpy2c2 import py2c_celcon_quaddobl_random_coefficient_system
     from phcpy.phcpy2c2 import py2c_celcon_copy_into_quaddobl_systems_container
@@ -754,14 +758,14 @@ def random_coefficient_system(silent=False, precision='d'):
     r"""
     Runs the polyhedral homotopies and returns a random coefficient
     system based on the contents of the cell container.
-    For this to work, the mixed_volume function must be called first.
+    For this to work, the function **mixed_volume()** must be called first.
     Three levels of precision are supported:
 
-    1. d  : standard double precision (1.1e-15 or 2^(-53)),
+    *d*: standard double precision (1.1e-15 or 2^(-53)),
 
-    2. dd : double double precision (4.9e-32 or 2^(-104)),
+    *dd*: double double precision (4.9e-32 or 2^(-104)),
 
-    3. qd : quad double precision (1.2e-63 or 2^(-209)).
+    *qd*: quad double precision (1.2e-63 or 2^(-209)).
     """
     if(precision == 'd'):
         return standard_random_coefficient_system(silent)
@@ -773,8 +777,8 @@ def random_coefficient_system(silent=False, precision='d'):
         print 'wrong value for precision'
 
 def permute_standard_system(pols):
-    """
-    Permutes the equations in the list of polynomials in pols
+    r"""
+    Permutes the equations in the list of polynomials in *pols*
     with coefficients in standard double precision,
     along the permutation used in the mixed volume computation.
     """
@@ -785,8 +789,8 @@ def permute_standard_system(pols):
     return load_standard_system()
 
 def permute_dobldobl_system(pols):
-    """
-    Permutes the equations in the list of polynomials in pols
+    r"""
+    Permutes the equations in the list of polynomials in *pols*
     with coefficients in double double precision,
     along the permutation used in the mixed volume computation.
     """
@@ -797,8 +801,8 @@ def permute_dobldobl_system(pols):
     return load_dobldobl_system()
 
 def permute_quaddobl_system(pols):
-    """
-    Permutes the equations in the list of polynomials in pols
+    r"""
+    Permutes the equations in the list of polynomials in *pols*
     with coefficients in quad double precision,
     along the permutation used in the mixed volume computation.
     """
@@ -809,11 +813,11 @@ def permute_quaddobl_system(pols):
     return load_quaddobl_system()
 
 def standard_usolve(pol, mxi, eps):
-    """
+    r"""
     Applies the method of Durand-Kerner (aka Weierstrass)
-    to the polynomial in the string pol, in standard double precision
-    The maximum number of iterations is in mxi,
-    the requirement on the accuracy in eps.
+    to the polynomial in the string *pol*, in standard double precision
+    The maximum number of iterations is in *mxi*,
+    the requirement on the accuracy in *eps*.
     """
     from phcpy.phcpy2c2 import py2c_usolve_standard
     from phcpy.interface import store_standard_system, load_standard_solutions
@@ -823,11 +827,11 @@ def standard_usolve(pol, mxi, eps):
     return (nit, rts)
 
 def dobldobl_usolve(pol, mxi, eps):
-    """
+    r"""
     Applies the method of Durand-Kerner (aka Weierstrass)
-    to the polynomial in the string pol, in double double precision
-    The maximum number of iterations is in mxi,
-    the requirement on the accuracy in eps.
+    to the polynomial in the string *pol*, in double double precision
+    The maximum number of iterations is in *mxi*,
+    the requirement on the accuracy in *eps*.
     """
     from phcpy.phcpy2c2 import py2c_usolve_dobldobl
     from phcpy.interface import store_dobldobl_system, load_dobldobl_solutions
@@ -837,11 +841,11 @@ def dobldobl_usolve(pol, mxi, eps):
     return (nit, rts)
 
 def quaddobl_usolve(pol, mxi, eps):
-    """
+    r"""
     Applies the method of Durand-Kerner (aka Weierstrass)
-    to the polynomial in the string pol, in quad double precision
-    The maximum number of iterations is in mxi,
-    the requirement on the accuracy in eps.
+    to the polynomial in the string *pol*, in quad double precision
+    The maximum number of iterations is in *mxi*,
+    the requirement on the accuracy in *eps*.
     """
     from phcpy.phcpy2c2 import py2c_usolve_quaddobl
     from phcpy.interface import store_quaddobl_system, load_quaddobl_solutions
@@ -851,12 +855,12 @@ def quaddobl_usolve(pol, mxi, eps):
     return (nit, rts)
 
 def multprec_usolve(pol, mxi, eps, decimals):
-    """
+    r"""
     Applies the method of Durand-Kerner (aka Weierstrass)
-    to the polynomial in the string pol, in arbitrary multiprecision,
-    the number of decimal places in the precision is in decimals.
-    The maximum number of iterations is in mxi,
-    the requirement on the accuracy in eps.
+    to the polynomial in the string *pol*, in arbitrary multiprecision,
+    the number of decimal places in the precision is in *decimals*.
+    The maximum number of iterations is in *mxi*,
+    the requirement on the accuracy in *eps*.
     """
     from phcpy.phcpy2c2 import py2c_usolve_multprec
     from phcpy.interface import store_multprec_system, load_multprec_solutions
@@ -868,19 +872,19 @@ def multprec_usolve(pol, mxi, eps, decimals):
 def usolve(pol, mxi, eps, precision='d', decimals=100):
     r"""
     Applies the method of Durand-Kerner (aka Weierstrass)
-    to the polynomial in the string pol.
-    The maximum number of iterations is in mxi,
-    the requirement on the accuracy in eps.
+    to the polynomial in the string *pol*.
+    The maximum number of iterations is in *mxi*,
+    the requirement on the accuracy in *eps*.
     Four levels of precision are supported:
 
-    1. d  : standard double precision (1.1e-15 or 2^(-53)),
+    *d*: standard double precision (1.1e-15 or 2^(-53)),
 
-    2. dd : double double precision (4.9e-32 or 2^(-104)),
+    *dd*: double double precision (4.9e-32 or 2^(-104)),
 
-    3. qd : quad double precision (1.2e-63 or 2^(-209)).
+    *qd*: quad double precision (1.2e-63 or 2^(-209)).
 
-    4. mp : arbitrary precision, where the number of decimal places
-       in the working precision is determined by decimals.
+    *mp*: arbitrary precision, where the number of decimal places
+    in the working precision is determined by *decimals*.
     """
     if(precision == 'd'):
         return standard_usolve(pol, mxi, eps)
@@ -915,9 +919,9 @@ def test_usolve():
         print root
 
 def standard_scale_system(pols):
-    """
+    r"""
     Applies equation and variable scaling in standard double precision
-    to the polynomials in the list pols.
+    to the polynomials in the list *pols*.
     On return is the list of scaled polynomials and the scaling coefficients.
     """
     from phcpy.interface import store_standard_system, load_standard_system
@@ -928,9 +932,9 @@ def standard_scale_system(pols):
     return (spol, cffs)
 
 def dobldobl_scale_system(pols):
-    """
+    r"""
     Applies equation and variable scaling in double double precision
-    to the polynomials in the list pols.
+    to the polynomials in the list *pols*.
     On return is the list of scaled polynomials and the scaling coefficients.
     """
     from phcpy.interface import store_dobldobl_system, load_dobldobl_system
@@ -941,9 +945,9 @@ def dobldobl_scale_system(pols):
     return (spol, cffs)
 
 def quaddobl_scale_system(pols):
-    """
+    r"""
     Applies equation and variable scaling in quad double precision
-    to the polynomials in the list pols.
+    to the polynomials in the list *pols*.
     On return is the list of scaled polynomials and the scaling coefficients.
     """
     from phcpy.interface import store_quaddobl_system, load_quaddobl_system
@@ -954,11 +958,11 @@ def quaddobl_scale_system(pols):
     return (spol, cffs)
 
 def standard_scale_solutions(nvar, sols, cffs):
-    """
-    Scales the solutions in the list sols using the coefficients in cffs,
+    r"""
+    Scales the solutions in the list *sols* using the coefficients in *cffs*,
     using standard double precision arithmetic.
-    The number of variables is given in the parameter nvar.
-    If the sols are the solution of the polynomials in the output of
+    The number of variables is given in the parameter *nvar*.
+    If the *sols* are the solutions of the polynomials in the output of
     standard_scale_system(pols), then the solutions on return will be
     solutions of the original polynomials in the list pols.
     """
@@ -970,11 +974,11 @@ def standard_scale_solutions(nvar, sols, cffs):
     return load_standard_solutions()
 
 def dobldobl_scale_solutions(nvar, sols, cffs):
-    """
-    Scales the solutions in the list sols using the coefficients in cffs,
+    r"""
+    Scales the solutions in the list *sols* using the coefficients in *cffs*,
     using double double precision arithmetic.
-    The number of variables is given in the parameter nvar.
-    If the sols are the solution of the polynomials in the output of
+    The number of variables is given in the parameter *nvar*.
+    If the *sols* are the solutions of the polynomials in the output of
     dobldobl_scale_system(pols), then the solutions on return will be
     solutions of the original polynomials in the list pols.
     """
@@ -986,11 +990,11 @@ def dobldobl_scale_solutions(nvar, sols, cffs):
     return load_dobldobl_solutions()
 
 def quaddobl_scale_solutions(nvar, sols, cffs):
-    """
-    Scales the solutions in the list sols using the coefficients in cffs,
+    r"""
+    Scales the solutions in the list *sols* using the coefficients in *cffs*,
     using quad double precision arithmetic.
-    The number of variables is given in the parameter nvar.
-    If the sols are the solution of the polynomials in the output of
+    The number of variables is given in the parameter *nvar*.
+    If the *sols* are the solution of the polynomials in the output of
     quaddobl_scale_system(pols), then the solutions on return will be
     solutions of the original polynomials in the list pols.
     """
@@ -1183,14 +1187,14 @@ def test_solver():
     # for sol in sols: print sol
 
 def test_deflate():
-    """
+    r"""
     Applies the deflation method to a system used as example in
     the paper by T. Ojika on Modified deflation algorithm for
     the solution of singular problems. I. A system of nonlinear
     algebraic equations, which appeared in
     J. Math. Anal. Appl. 123, 199-221, 1987.
     The approximate solutions were computed via homotopy continuation.
-    The "solve" automatically deflates.
+    The function **solve()** deflates automatically.
     """
     pols = [ 'x**2+y-3;', 'x+0.125*y**2-1.5;']
     sols = [ \
