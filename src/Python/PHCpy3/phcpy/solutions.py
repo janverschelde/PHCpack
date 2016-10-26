@@ -1,11 +1,12 @@
 """
-module to convert list of PHCpack solution strings into dictionaries
+The module solutions exports functions to convert list of 
+PHCpack solution strings into Python dictionaries.
 """
 
 def diagnostics(sol):
-    """
-    Extracts the diagnostics (err,rco,res)
-    from the PHCpack string solution in sol and
+    r"""
+    Extracts the diagnostics (err, rco, res)
+    from the PHCpack string solution in *sol* and
     returns a triplet of three floats.
     """
     from ast import literal_eval
@@ -22,8 +23,8 @@ def diagnostics(sol):
     return (val_err, val_rco, val_res)
 
 def str2complex(scn):
-    """
-    The string scn contains a complex number,
+    r"""
+    The string *scn* contains a complex number,
     the real and imaginary part separated by spaces.
     On return is the Python complex number.
     """
@@ -35,9 +36,9 @@ def str2complex(scn):
     return complex(literal_eval(realpart), literal_eval(imagpart))
 
 def coordinates(sol):
-    """
+    r"""
     Returns the coordinates of the solution
-    in the PHCpack solution string sol,
+    in the PHCpack solution string *sol*,
     as a tuple of two lists: (names, values).
     The list names contains the strings of the variable names.
     The list values contains the complex values for the
@@ -59,10 +60,10 @@ def coordinates(sol):
     return (vard, vals)
 
 def endmultiplicity(sol):
-    """
+    r"""
     Returns the value of t at the end
     and the multiplicity as (t,m)
-    for the PHCpack solution string sol.
+    for the PHCpack solution string *sol*.
     """
     from ast import literal_eval
     data = sol.split("the solution for t :")
@@ -75,8 +76,8 @@ def endmultiplicity(sol):
     return (tval, mval)
 
 def strsol2dict(sol):
-    """
-    Converts the solution in the string sol
+    r"""
+    Converts the solution in the string *sol*
     into a dictionary format.
     """
     result = {}
@@ -93,8 +94,8 @@ def strsol2dict(sol):
     return result
 
 def variables(dsol):
-    """
-    Given the dictionary format of a solution,
+    r"""
+    Given the dictionary format of a solution in *dsol*,
     returns the list of variables.
     """
     solkeys = list(dsol.keys())
@@ -106,9 +107,9 @@ def variables(dsol):
     return solkeys
 
 def evaluate_polynomial(pol, dsol):
-    """
-    Evaluates the polynomial pol at the solution
-    dictionary dsol by string substitution.
+    r"""
+    Evaluates the polynomial *pol* at the solution
+    dictionary *dsol* by string substitution.
     """
     from ast import literal_eval
     varsd = variables(dsol)
@@ -126,9 +127,9 @@ def evaluate_polynomial(pol, dsol):
     return eval(result)
 
 def evaluate(pols, dsol):
-    """
-    Evaluates a list of polynomials given as string in pols
-    at the solution in dictionary format in dsol.
+    r"""
+    Evaluates a list of polynomials given as string in *pols*
+    at the solution in dictionary format in *dsol*.
     """
     result = []
     for pol in pols:
@@ -136,16 +137,19 @@ def evaluate(pols, dsol):
     return result
 
 def make_solution(sol, vals):
-    """
+    r"""
     Makes the string representation in PHCpack format
-    with in sol a list of strings for the variables names
-    and in vals a list of complex values for the coordinates.
-    For example: s = make_solution(['x','y'],[1,2])
+    with in *sol* a list of strings for the variables names
+    and in *vals* a list of complex values for the coordinates.
+    For example: 
+
+    s = make_solution(['x','y'],[1,2])
+
     returns the string s to represent the solution with
     coordinates 1 and 2 for the variables x and y.
     Applying the function coordinates on the result of
     make_solution returns the tuple of arguments given
-    on input to make_solution.
+    on input to **make_solution()**.
     """
     result = 't : 0.0 0.0\nm : 1\n'
     result = result + 'the solution for t :\n'
@@ -165,10 +169,10 @@ def make_solution(sol, vals):
     return result
 
 def is_real(sol, tol):
-    """
-    Returns True if the solution in sol is real with respect
-    to the given tolerance tol: if the absolute value of the imaginary
-    part of all coordinates are less than tol.
+    r"""
+    Returns True if the solution in *sol* is real with respect
+    to the given tolerance *tol*: if the absolute value of the imaginary
+    part of all coordinates are less than *tol*.
     """
     (vars, vals) = coordinates(sol)
     for value in vals:
@@ -177,17 +181,22 @@ def is_real(sol, tol):
     return True
 
 def filter_real(sols, tol, oper):
-    """
-    Filters the real solutions in sols.
+    r"""
+    Filters the real solutions in *sols*.
     The input parameters are
-    (1) sols is a list of solution strings in PHCpack format,
-    (2) tol is the tolerance on the absolute value of the
-    imaginary parts of the coordinates of the solution.
-    (3) oper is either 'select' or 'remove'
-    if oper == 'select' then solutions that are considered real
-    are selected and in the list on return,
-    if oper == 'remove' then solutions that are considered real
-    are in the list on return.
+
+    1. *sols* is a list of solution strings in PHCpack format,
+
+    2. *tol* is the tolerance on the absolute value of the
+       imaginary parts of the coordinates of the solution.
+
+    3. *oper* is either 'select' or 'remove'
+
+       if *oper* == 'select' then solutions that are considered real
+       are selected and in the list on return,
+
+       if *oper* == 'remove' then solutions that are considered real
+       are in the list on return.
     """
     result = []
     for sol in sols:
@@ -201,19 +210,24 @@ def filter_real(sols, tol, oper):
     return result
 
 def filter_regular(sols, tol, oper):
-    """
-    Filters solutions in sols for the estimate of
+    r"""
+    Filters solutions in *sols* for the estimate of
     the inverse of the condition number.
     The input parameters are
-    (1) sols is a list of solution strings in PHCpack format,
-    (2) tol is the tolerance on the value for the estimate rco
-    for the inverse of the condition number to decide whether
-    a solution is singular (if rco < tol) or not.
-    (3) oper is either 'select' or 'remove'
-    if oper == 'select' then solutions with value rco > tol
-    are selected and in the list on return,
-    if oper == 'remove' then solutions with value rco <= tol
-    are in the list on return.
+
+    1. *sols* is a list of solution strings in PHCpack format,
+
+    2. *tol* is the tolerance on the value for the estimate rco
+       for the inverse of the condition number to decide whether
+       a solution is singular (if rco < *tol*) or not.
+
+    3. *oper* is either 'select' or 'remove'
+
+       if *oper* == 'select' then solutions with value rco > *tol*
+       are selected and in the list on return,
+
+       if *oper* == 'remove' then solutions with value rco <= *tol*
+       are in the list on return.
     """
     result = []
     for sol in sols:
@@ -227,21 +241,27 @@ def filter_regular(sols, tol, oper):
     return result
 
 def filter_zero_coordinates(sols, varname, tol, oper):
-    """
-    Filters the solutions in sols for variables
+    r"""
+    Filters the solutions in *sols* for variables
     that have a value less than the tolerance.
     The input parameters are
-    (1) sols is a list of solution strings in PHCpack format,
-    (2) varname is a string with the name of the variable,
-    (3) tol is the tolerance to decide whether a complex
-    number equals zero or not, and
-    (4) oper is either 'select' or 'remove'
-    if oper == 'select' then solutions with value for the
-    variable v that is less than tol are selected and
-    in the list on return,
-    if oper == 'remove' then solutions with value for the
-    variable v that is less than tol are removed and
-    not in the list on return.
+
+    1. *sols* is a list of solution strings in PHCpack format,
+
+    2. *varname* is a string with the name of the variable,
+
+    3. *tol* is the tolerance to decide whether a complex
+       number equals zero or not, and
+
+    4. *oper* is either 'select' or 'remove'
+
+       if *oper* == 'select' then solutions with value for the
+       variable v that is less than *tol* are selected and
+       in the list on return,
+
+       if *oper* == 'remove' then solutions with value for the
+       variable v that is less than *tol* are removed and
+       not in the list on return.
     """
     result = []
     for sol in sols:
@@ -255,20 +275,20 @@ def filter_zero_coordinates(sols, varname, tol, oper):
     return result
 
 def is_vanishing(sol, tol):
-    """
-    Given in sol is a solution string and 
-    tol is the tolerance on the residual.
-    Returns True if the residual of sol
-    is less than or equal to tol.
+    r"""
+    Given in *sol* is a solution string and 
+    *tol* is the tolerance on the residual.
+    Returns True if the residual of *sol*
+    is less than or equal to *tol*.
     Returns False otherwise.
     """
     dgn = diagnostics(sol)
     return (dgn[2] <= tol)
 
 def filter_vanishing(sols, tol):
-    """
-    Returns the list of solutions that have a residual
-    less than or equal to the given tolerance in tol.
+    r"""
+    Returns the list of solutions in *sols* that have a residual
+    less than or equal to the given tolerance in *tol*.
     """
     result = []
     for sol in sols:

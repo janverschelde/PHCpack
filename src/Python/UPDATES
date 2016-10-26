@@ -2,6 +2,7 @@ Tue 25 Oct 2016 : used raw strings in the solver.py documentation strings
   which turns out better in the generated Sphinx documentation.
   Added restructured text is the documentation strings for solver.py.
   To blackbox.rst, added an illustration of make_solution.
+  The documentation strings in solutions.py use restructured text.
 
 Sun 23 Oct 2016 : added paragraph in newtopes.rst about the alternative to
   mixed_volume, about the integer_mixed_cells function.
