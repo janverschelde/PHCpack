@@ -15,9 +15,10 @@ def prompt_for_dimensions():
     return (int(mdim), int(pdim), int(qdeg))
 
 def pieri_root_count(mdim, pdim, qdeg, verbose=True):
-    """
-    Computes the number of pdim-plane producing maps of
-    degree qdeg that meet mdim-planes at mdim*pdim + qdeg*(mdim+pdim) points.
+    r"""
+    Computes the number of *pdim*-plane producing maps of
+    degree *qdeg* that meet *mdim*-planes
+    at mdim*pdim + qdeg*(mdim+pdim) points.
     """
     from phcpy.phcpy2c2 import py2c_schubert_pieri_count
     from phcpy.phcpy2c2 import py2c_schubert_localization_poset
@@ -30,11 +31,11 @@ def pieri_root_count(mdim, pdim, qdeg, verbose=True):
     return root_count
 
 def resolve_schubert_conditions(ndim, kdim, brackets, verbose=True):
-    """
+    r"""
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
-    The brackets is a list of brackets.  A bracket is a list
-    of as many natural numbers (in the range 1..ndim) as kdim.
+    The *brackets* is a list of brackets.  A bracket is a list
+    of as many natural numbers (in the range 1..*ndim*) as *kdim*.
     On return is the formal root count, which is sharp for general flags.
     and the coordinates of the flags, stored row wise in a list
     of real and imaginary parts.
@@ -51,19 +52,24 @@ def resolve_schubert_conditions(ndim, kdim, brackets, verbose=True):
 
 def standard_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     verbose=True, vrfcnd=False, minrep=True, tosqr=False, outputfilename=''):
-    """
+    r"""
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
-    The parameters ndim and kdim give values for n and k respectively.
-    The parameter brackets is a list of brackets.  A bracket is a list
-    of as many natural numbers (in the range 1..ndim) as kdim.
+    The parameters *ndim* and *kdim* give values for n and k respectively.
+    The parameter *brackets* is a list of brackets.  A bracket is a list
+    of as many natural numbers (in the range 1..*ndim*) as *kdim*.
     The Littlewood-Richardson homotopies compute k-planes that
     meet the flags at spaces of dimensions prescribed by the brackets,
     in standard double precision.  Four options are passed as Booleans:
-    verbose : for adding extra output during computations,
-    vrfcnd : for extra diagnostic verification of Schubert conditions,
-    minrep : for a minimial representation of the problem formulation,
-    tosqr : to square the overdetermined systems.
+
+    *verbose*: for adding extra output during computations,
+
+    *vrfcnd*: for extra diagnostic verification of Schubert conditions,
+
+    *minrep*: for a minimial representation of the problem formulation,
+
+    *tosqr*: to square the overdetermined systems.
+
     On return is a 4-tuple.  The first item of the tuple is the
     formal root count, sharp for general flags, then as second
     item the coordinates of the flags.  The coordinates of the
@@ -97,19 +103,24 @@ def standard_littlewood_richardson_homotopies(ndim, kdim, brackets, \
 
 def dobldobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     verbose=True, vrfcnd=False, minrep=True, tosqr=False, outputfilename=''):
-    """
+    r"""
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
-    The parameters ndim and kdim give values for n and k respectively.
-    The parameter brackets is a list of brackets.  A bracket is a list
-    of as many natural numbers (in the range 1..ndim) as kdim.
+    The parameters *ndim* and *kdim* give values for n and k respectively.
+    The parameter *brackets* is a list of brackets.  A bracket is a list
+    of as many natural numbers (in the range 1..*ndim*) as *kdim*.
     The Littlewood-Richardson homotopies compute k-planes that
     meet the flags at spaces of dimensions prescribed by the brackets,
     in double double precision.  Four options are passed as Booleans:
-    verbose : for adding extra output during computations,
-    vrfcnd : for extra diagnostic verification of Schubert conditions,
-    minrep : for a minimial representation of the problem formulation,
-    tosqr : to square the overdetermined systems.
+
+    *verbose*: for adding extra output during computations,
+
+    *vrfcnd*: for extra diagnostic verification of Schubert conditions,
+
+    *minrep*: for a minimial representation of the problem formulation,
+
+    *tosqr*: to square the overdetermined systems.
+
     On return is a 4-tuple.  The first item of the tuple is the
     formal root count, sharp for general flags, then as second
     item the coordinates of the flags.  The coordinates of the
@@ -143,19 +154,24 @@ def dobldobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
 
 def quaddobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     verbose=True, vrfcnd=False, minrep=True, tosqr=False, outputfilename=''):
-    """
+    r"""
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
-    The parameters ndim and kdim give values for n and k respectively.
+    The parameters *ndim* and *kdim* give values for n and k respectively.
     The parameter brackets is a list of brackets.  A bracket is a list
-    of as many natural numbers (in the range 1..ndim) as kdim.
+    of as many natural numbers (in the range 1..*ndim*) as *kdim*.
     The Littlewood-Richardson homotopies compute k-planes that
     meet the flags at spaces of dimensions prescribed by the brackets,
     in quad double precision.  Four options are passed as Booleans:
-    verbose : for adding extra output during computations,
-    vrfcnd : for extra diagnostic verification of Schubert conditions,
-    minrep : for a minimial representation of the problem formulation,
-    tosqr : to square the overdetermined systems.
+
+    *verbose*: for adding extra output during computations,
+
+    *vrfcnd*: for extra diagnostic verification of Schubert conditions,
+
+    *minrep*: for a minimial representation of the problem formulation,
+
+    *tosqr*: to square the overdetermined systems.
+
     On return is a 4-tuple.  The first item of the tuple is the
     formal root count, sharp for general flags, then as second
     item the coordinates of the flags.  The coordinates of the
@@ -190,19 +206,24 @@ def quaddobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
 def littlewood_richardson_homotopies(ndim, kdim, brackets, \
     verbose=True, vrfcnd=False, minrep=True, tosqr=False, \
     precision='d', outputfilename=''):
-    """
+    r"""
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
-    The parameters ndim and kdim give values for n and k respectively.
-    The parameter brackets is a list of brackets.  A bracket is a list
-    of as many natural numbers (in the range 1..ndim) as kdim.
+    The parameters *ndim* and *kdim* give values for n and k respectively.
+    The parameter *brackets* is a list of brackets.  A bracket is a list
+    of as many natural numbers (in the range 1..*ndim*) as *kdim*.
     The Littlewood-Richardson homotopies compute k-planes that
     meet the flags at spaces of dimensions prescribed by the brackets.
     Four options are passed as Booleans:
-    verbose : for adding extra output during computations,
-    vrfcnd : for extra diagnostic verification of Schubert conditions,
-    minrep : for a minimial representation of the problem formulation,
-    tosqr : to square the overdetermined systems.
+
+    *verbose*: for adding extra output during computations,
+
+    *vrfcnd*: for extra diagnostic verification of Schubert conditions,
+
+    *minrep*: for a minimial representation of the problem formulation,
+
+    *tosqr*: to square the overdetermined systems.
+
     On return is a 4-tuple.  The first item of the tuple is the
     formal root count, sharp for general flags, then as second
     item the coordinates of the flags.  The coordinates of the
@@ -224,10 +245,10 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
         print 'wrong level of precision, use d, dd, or qd'
 
 def random_complex_matrix(nbrows, nbcols):
-    """
-    Returns a random nbrows-by-nbcols matrix
+    r"""
+    Returns a random *nbrows*-by-*nbcols* matrix
     with randomly generated complex coefficients
-    on the unit circle, as a list of rows.
+    on the unit circle, as a list of *rows*.
     """
     from math import pi, sin, cos
     from random import uniform as u
@@ -249,9 +270,9 @@ def random_complex_matrices(nbr, nbrows, nbcols):
     return result
 
 def planes_to_string(planes):
-    """
+    r"""
     Returns one long string with all numbers
-    in planes, a list of lists of rows.
+    in *planes*, a list of lists of rows.
     The numbers are the real and imaginary parts,
     separated by space.
     """
@@ -265,8 +286,8 @@ def planes_to_string(planes):
     return result
 
 def points_to_string(pts):
-    """
-    Returns one long string with all numbers in pts,
+    r"""
+    Returns one long string with all numbers in *pts*,
     as sequences of real and imaginary parts,
     every number is separated by one space.
     """
@@ -279,10 +300,10 @@ def points_to_string(pts):
     return result
 
 def run_pieri_homotopies(mdim, pdim, qdeg, planes, verbose=True, *pts):
-    """
-    Computes the number of pdim-plane producing maps of degree qdeg
-    that meet mdim-planes at mdim*pdim + qdeq*(mdim+pdim) points.
-    For qdeg = 0, there are no interpolation points.
+    r"""
+    Computes the number of *pdim*-plane producing maps of degree q*deg*
+    that meet *mdim*-planes at mdim*pdim + qdeq*(mdim+pdim) points.
+    For *qdeg* = 0, there are no interpolation points in *pts*.
     """
     from phcpy.phcpy2c2 import py2c_schubert_pieri_count
     from phcpy.phcpy2c2 import py2c_schubert_pieri_homotopies
@@ -332,9 +353,9 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, verbose=True, *pts):
     return (pols, sols)
 
 def verify(pols, sols):
-    """
-    Verifies whether the solutions in sols
-    satisfy the polynomials of the system in pols.
+    r"""
+    Verifies whether the solutions in *sols*
+    satisfy the polynomials of the system in *pols*.
     """
     from phcpy.solutions import strsol2dict, evaluate
     dictsols = [strsol2dict(sol) for sol in sols]
@@ -346,9 +367,11 @@ def verify(pols, sols):
     print 'the total check sum :', checksum
 
 def real_osculating_planes(mdim, pdim, qdeg):
-    """
-    Returns m*p + qdeg*(m+p) real m-planes osculating
+    r"""
+    Returns m*p + q*(m+p) real m-planes osculating
     a rational normal curves.
+    The values for m, p, and q are provided respectively
+    by *mdim*, *pdim*, and *qdeg*.
     """
     from phcpy.phcpy2c2 import py2c_schubert_osculating_planes
     dim = mdim*pdim + qdeg*(mdim+pdim)
@@ -376,9 +399,9 @@ def real_osculating_planes(mdim, pdim, qdeg):
     return planes
 
 def make_pieri_system(mdim, pdim, qdeg, planes, is_real=False):
-    """
-    Makes the polynomial system defined by the mdim-planes
-    in the list planes.
+    r"""
+    Makes the polynomial system defined by the *mdim*-planes
+    in the list *planes*.
     """
     from phcpy.phcpy2c2 import py2c_schubert_pieri_system
     from phcpy.phcpy2c2 import py2c_syscon_load_standard_polynomial
@@ -397,10 +420,10 @@ def make_pieri_system(mdim, pdim, qdeg, planes, is_real=False):
     return result
 
 def cheater(mdim, pdim, qdeg, start, startsols):
-    """
-    Generates a random Pieri problem of dimensions (mdim,pdim,qdeg)
+    r"""
+    Generates a random Pieri problem of dimensions (*mdim, pdim, qdeg*)
     and solves it with a Cheater's homotopy, starting from
-    the Pieri system in start, at the solutions in startsols.
+    the Pieri system in *start*, at the solutions in *startsols*.
     """
     dim = mdim*pdim + qdeg*(mdim+pdim)
     planes = [random_complex_matrix(mdim+pdim, mdim) for _ in range(0, dim)]
@@ -413,10 +436,10 @@ def cheater(mdim, pdim, qdeg, start, startsols):
     verify(pols, sols)
 
 def osculating_input(mdim, pdim, qdeg, start, startsols):
-    """
-    Generates real mdim-planes osculating a rational normal curve
-    and solves this Pieri problem using the system in start,
-    with corresponding solutions in startsols.
+    r"""
+    Generates real *mdim*-planes osculating a rational normal curve
+    and solves this Pieri problem using the system in *start*,
+    with corresponding solutions in *startsols*.
     """
     target_planes = real_osculating_planes(mdim, pdim, qdeg)
     # print 'real osculating planes :', target_planes

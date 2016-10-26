@@ -13,17 +13,19 @@ and the settings of the tolerances is handled by the tuning module.
 """
 
 def standard_double_track(target, start, sols, gamma=0, tasks=0):
-    """
+    r"""
     Does path tracking with standard double precision.
     On input are a target system, a start system with solutions,
     optionally: a (random) gamma constant and the number of tasks.
-    The target is a list of strings representing the polynomials
+    The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
-    The start is a list of strings representing the polynomials
+    The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in sols.
-    The sols is a list of strings representing start solutions.
-    By default, a random gamma constant is generated,
-    otherwise gamma must be a nonzero complex constant.
+    The *sols* is a list of strings representing start solutions.
+    By default, a random *gamma* constant is generated,
+    otherwise *gamma* must be a nonzero complex constant.
+    The number of tasks in the multithreading is defined by *tasks*.
+    The default zero value for *tasks* indicates no multithreading.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -57,19 +59,19 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     return load_standard_solutions()
 
 def ade_double_track(target, start, sols, gamma=0, verbose=1):
-    """
-    Does path tracking with algorithm differentiation,
+    r"""
+    Does path tracking with algorithmic differentiation,
     in standard double precision.
     On input are a target system, a start system with solutions.
-    The target is a list of strings representing the polynomials
+    The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
-    The start is a list of strings representing the polynomials
+    The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in sols.
-    The sols is a list of strings representing start solutions.
+    The *sols* is a list of strings representing start solutions.
     On return are the string representations of the solutions
     computed at the end of the paths.
-    If gamma on input equals zero, then a random complex number is generated,
-    otherwise the real and imaginary parts of gamma are used.
+    If *gamma* on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of *gamma* are used.
     """
     from phcpy.phcpy2c3 import py2c_copy_standard_container_to_target_system
     from phcpy.phcpy2c3 import py2c_copy_standard_container_to_start_system
@@ -99,19 +101,19 @@ def ade_double_track(target, start, sols, gamma=0, verbose=1):
     return load_standard_solutions()
 
 def gpu_double_track(target, start, sols, gamma=0, verbose=1):
-    """
+    r"""
     GPU accelerated path tracking with algorithm differentiation,
     in standard double precision.
     On input are a target system, a start system with solutions.
-    The target is a list of strings representing the polynomials
+    The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
-    The start is a list of strings representing the polynomials
+    The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in sols.
-    The sols is a list of strings representing start solutions.
+    The *sols* is a list of strings representing start solutions.
     On return are the string representations of the solutions
     computed at the end of the paths.
-    If gamma on input equals zero, then a random complex number is generated,
-    otherwise the real and imaginary parts of gamma are used.
+    If *gamma* on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of *gamma* are used.
     """
     from phcpy.phcpy2c3 import py2c_copy_standard_container_to_target_system
     from phcpy.phcpy2c3 import py2c_copy_standard_container_to_start_system
@@ -141,17 +143,19 @@ def gpu_double_track(target, start, sols, gamma=0, verbose=1):
     return load_standard_solutions()
 
 def double_double_track(target, start, sols, gamma=0, tasks=0):
-    """
+    r"""
     Does path tracking in double double precision.
     On input are a target system, a start system with solutions,
     optionally a (random) gamma constant and the number of tasks.
-    The target is a list of strings representing the polynomials
+    The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
-    The start is a list of strings representing the polynomials
+    The *start* is a list of strings representing the polynomials
     of the start system with known solutions in sols.
-    The sols is a list of strings representing start solutions.
-    By default, a random gamma constant is generated,
-    otherwise gamma must be a nonzero complex constant.
+    The *sols* is a list of strings representing start solutions.
+    By default, a random *gamma* constant is generated,
+    otherwise *gamma* must be a nonzero complex constant.
+    The number of tasks in the multithreading is defined by *tasks*.
+    The default zero value for *tasks* indicates no multithreading.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -186,19 +190,19 @@ def double_double_track(target, start, sols, gamma=0, tasks=0):
     return load_dobldobl_solutions()
 
 def ade_double_double_track(target, start, sols, gamma=0, verbose=1):
-    """
-    Does path tracking with algorithm differentiation,
+    r"""
+    Does path tracking with algorithmic differentiation,
     in double double precision.
     On input are a target system, a start system with solutions.
-    The target is a list of strings representing the polynomials
+    The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
-    The start is a list of strings representing the polynomials
+    The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in sols.
-    The sols is a list of strings representing start solutions.
+    The *sols* is a list of strings representing start solutions.
     On return are the string representations of the solutions
     computed at the end of the paths.
-    If gamma on input equals zero, then a random complex number is generated,
-    otherwise the real and imaginary parts of gamma are used.
+    If *gamma* on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of *gamma* are used.
     """
     from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_target_system
     from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_start_system
@@ -228,19 +232,19 @@ def ade_double_double_track(target, start, sols, gamma=0, verbose=1):
     return load_dobldobl_solutions()
 
 def gpu_double_double_track(target, start, sols, gamma=0, verbose=1):
-    """
-    GPU accelerated path tracking with algorithm differentiation,
+    r"""
+    GPU accelerated path tracking with algorithmic differentiation,
     in double double precision.
     On input are a target system, a start system with solutions.
-    The target is a list of strings representing the polynomials
+    The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
-    The start is a list of strings representing the polynomials
+    The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in sols.
-    The sols is a list of strings representing start solutions.
+    The *sols* is a list of strings representing start solutions.
     On return are the string representations of the solutions
     computed at the end of the paths.
-    If gamma on input equals zero, then a random complex number is generated,
-    otherwise the real and imaginary parts of gamma are used.
+    If *gamma* on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of *gamma* are used.
     """
     from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_target_system
     from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_start_system
@@ -270,17 +274,19 @@ def gpu_double_double_track(target, start, sols, gamma=0, verbose=1):
     return load_dobldobl_solutions()
 
 def quad_double_track(target, start, sols, gamma=0, tasks=0):
-    """
+    r"""
     Does path tracking with quad double precision.
     On input are a target system, a start system with solutions,
     optionally a (random) gamma constant and the number of tasks.
-    The target is a list of strings representing the polynomials
+    The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
-    The start is a list of strings representing the polynomials
+    The *start* is a list of strings representing the polynomials
     of the start system with known solutions in sols.
-    The sols is a list of strings representing start solutions.
-    By default, a random gamma constant is generated,
-    otherwise gamma must be a nonzero complex constant.
+    The *sols* is a list of strings representing start solutions.
+    By default, a random *gamma* constant is generated,
+    otherwise *gamma* must be a nonzero complex constant.
+    The number of tasks in the multithreading is defined by *tasks*.
+    The default zero value for *tasks* indicates no multithreading.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -314,19 +320,19 @@ def quad_double_track(target, start, sols, gamma=0, tasks=0):
     return load_quaddobl_solutions()
 
 def ade_quad_double_track(target, start, sols, gamma=0, verbose=1):
-    """
-    Does path tracking with algorithm differentiation,
+    r"""
+    Does path tracking with algorithmic differentiation,
     in quad double precision.
     On input are a target system, a start system with solutions.
-    The target is a list of strings representing the polynomials
+    The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
-    The start is a list of strings representing the polynomials
+    The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in sols.
-    The sols is a list of strings representing start solutions.
+    The *sols* is a list of strings representing start solutions.
     On return are the string representations of the solutions
     computed at the end of the paths.
-    If gamma on input equals zero, then a random complex number is generated,
-    otherwise the real and imaginary parts of gamma are used.
+    If *gamma* on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of *gamma* are used.
     """
     from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_target_system
     from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_start_system
@@ -356,19 +362,19 @@ def ade_quad_double_track(target, start, sols, gamma=0, verbose=1):
     return load_quaddobl_solutions()
 
 def gpu_quad_double_track(target, start, sols, gamma=0, verbose=1):
-    """
-    GPU accelerated path tracking with algorithm differentiation,
+    r"""
+    GPU accelerated path tracking with algorithmic differentiation,
     in quad double precision.
     On input are a target system, a start system with solutions.
-    The target is a list of strings representing the polynomials
+    The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
-    The start is a list of strings representing the polynomials
+    The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in sols.
-    The sols is a list of strings representing start solutions.
+    The *sols* is a list of strings representing start solutions.
     On return are the string representations of the solutions
     computed at the end of the paths.
-    If gamma on input equals zero, then a random complex number is generated,
-    otherwise the real and imaginary parts of gamma are used.
+    If *gamma* on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of *gamma* are used.
     """
     from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_target_system
     from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_start_system
@@ -398,19 +404,19 @@ def gpu_quad_double_track(target, start, sols, gamma=0, verbose=1):
     return load_quaddobl_solutions()
 
 def multiprecision_track(target, start, sols, gamma=0, decimals=80):
-    """
+    r"""
     Does path tracking with multiprecision.
     On input are a target system, a start system with solutions,
-    and optionally a (random) gamma constant.
-    The target is a list of strings representing the polynomials
+    and optionally a (random) *gamma* constant.
+    The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
-    The start is a list of strings representing the polynomials
+    The *start* is a list of strings representing the polynomials
     of the start system with known solutions in sols.
-    The sols is a list of strings representing start solutions.
-    By default, a random gamma constant is generated,
-    otherwise gamma must be a nonzero complex constant.
+    The *sols* is a list of strings representing start solutions.
+    By default, a random *gamma* constant is generated,
+    otherwise *gamma* must be a nonzero complex constant.
     The number of decimal places in the working precision is
-    given by the value of decimals.
+    given by the value of *decimals*.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -443,24 +449,29 @@ def multiprecision_track(target, start, sols, gamma=0, decimals=80):
     return load_multprec_solutions()
 
 def track(target, start, sols, precision='d', decimals=80, gamma=0, tasks=0):
-    """
+    r"""
     Runs the path trackers to track solutions in sols
     at the start system in start to the target system
     in the target list using the current settings of
     the numerical continuation parameters as tuned by
     the function tune_track_parameters() of the tuning module.
-    Three levels of precision are supported:
-    d  : standard double precision (1.1e-15 or 2^(-53)),
-    dd : double double precision (4.9e-32 or 2^(-104)),
-    qd : quad double precision (1.2e-63 or 2^(-209)).
-    mp : arbitrary multiprecision, with as many decimal places
-    in the working precision as the value of decimals.
+    Four levels of precision are supported:
+
+    1. *d*: standard double precision (1.1e-15 or 2^(-53)),
+
+    2. *dd*: double double precision (4.9e-32 or 2^(-104)),
+
+    3. *qd*: quad double precision (1.2e-63 or 2^(-209)).
+
+    4. *mp*: arbitrary multiprecision, with as many decimal places
+       in the working precision as the value of *decimals*.
+
     The next to last parameter is optional.  By default,
-    a random complex number will be used for gamma,
-    otherwise, gamma can be any nonzero complex number.
-    The last parameter equals the number of tasks.
-    By default, for tasks equal to 0 there is no multitasking.
-    For positive values of tasks, the multitasking could give
+    a random complex number will be used for *gamma*,
+    otherwise, *gamma* can be any nonzero complex number.
+    The last parameter equals the number of *tasks*.
+    By default, for *tasks* equal to 0 there is no multitasking.
+    For positive values of *tasks*, the multitasking could give
     a speedup of up to the number of tasks, depending how may
     cores are available on the processor.
     """
@@ -477,10 +488,10 @@ def track(target, start, sols, precision='d', decimals=80, gamma=0, tasks=0):
         return None
 
 def initialize_standard_tracker(target, start, fixedgamma=True):
-    """
-    Initializes a path tracker with a generator for a target
-    and start system given in standard double precision.
-    If fixedgamma, then gamma will be a fixed default value,
+    r"""
+    Initializes a path tracker with a generator for a *target*
+    and *start* system given in standard double precision.
+    If *fixedgamma*, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
     from phcpy.phcpy2c3 import py2c_copy_standard_container_to_target_system
@@ -497,10 +508,10 @@ def initialize_standard_tracker(target, start, fixedgamma=True):
         return py2c_initialize_standard_homotopy(0)
 
 def initialize_dobldobl_tracker(target, start, fixedgamma=True):
-    """
-    Initializes a path tracker with a generator for a target
-    and start system given in double double precision.
-    If fixedgamma, then gamma will be a fixed default value,
+    r"""
+    Initializes a path tracker with a generator for a *target*
+    and *start* system given in double double precision.
+    If *fixedgamma*, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
     from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_target_system
@@ -517,10 +528,10 @@ def initialize_dobldobl_tracker(target, start, fixedgamma=True):
         return py2c_initialize_dobldobl_homotopy(0)
 
 def initialize_quaddobl_tracker(target, start, fixedgamma=True):
-    """
-    Initializes a path tracker with a generator for a target
-    and start system given in quad double precision.
-    If fixedgamma, then gamma will be a fixed default value,
+    r"""
+    Initializes a path tracker with a generator for a *target*
+    and *start* system given in quad double precision.
+    If *fixedgamma*, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
     from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_target_system
@@ -537,12 +548,12 @@ def initialize_quaddobl_tracker(target, start, fixedgamma=True):
         return py2c_initialize_quaddobl_homotopy(0)
 
 def initialize_multprec_tracker(target, start, fixedgamma=True, decimals=100):
-    """
-    Initializes a path tracker with a generator for a target
-    and start system given in arbitrary multiprecision, with
-    the number of decimal places in the working precision
-    given by the value of decimals.
-    If fixedgamma, then gamma will be a fixed default value,
+    r"""
+    Initializes a path tracker with a generator for a *target*
+    and *start* system given in arbitrary multiprecision,
+    with the number of decimal places in the working precision
+    given by the value of *decimals*.
+    If *fixedgamma*, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
     from phcpy.phcpy2c3 import py2c_copy_multprec_container_to_target_system
@@ -559,11 +570,11 @@ def initialize_multprec_tracker(target, start, fixedgamma=True, decimals=100):
         return py2c_initialize_multprec_homotopy(0, decimals)
 
 def initialize_varbprec_tracker(target, start, fixedgamma=True):
-    """
-    Initializes a path tracker in variable precision with a target
-    and start system, given as lists of string representations of
+    r"""
+    Initializes a path tracker in variable precision with a *target*
+    and *start* system, given as lists of string representations of
     multivariate polynomials.
-    If fixedgamma, then gamma will be a fixed default value,
+    If *fixedgamma*, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
     from phcpy.phcpy2c3 import py2c_initialize_varbprec_homotopy
@@ -581,10 +592,10 @@ def initialize_varbprec_tracker(target, start, fixedgamma=True):
         return py2c_initialize_varbprec_homotopy(0, nct, tgtsys, ncs, strsys)
 
 def initialize_standard_solution(nvar, sol):
-    """
+    r"""
     A standard double precision path tracker with a generator is
-    initialized with a start solution sol in a number of
-    variables equal to the value of nvar.
+    initialized with a start solution *sol* in a number of
+    variables equal to the value of *nvar*.
     """
     from phcpy.phcpy2c3 import py2c_initialize_standard_solution
     from phcpy.interface import store_standard_solutions
@@ -592,10 +603,10 @@ def initialize_standard_solution(nvar, sol):
     return py2c_initialize_standard_solution(1)
 
 def initialize_dobldobl_solution(nvar, sol):
-    """
+    r"""
     A double double precision path tracker with a generator is
-    initialized with a start solution sol in a number of
-    variables equal to the value of nvar.
+    initialized with a start solution *sol* in a number of
+    variables equal to the value of *nvar*.
     """
     from phcpy.phcpy2c3 import py2c_initialize_dobldobl_solution
     from phcpy.interface import store_dobldobl_solutions
@@ -603,10 +614,10 @@ def initialize_dobldobl_solution(nvar, sol):
     return py2c_initialize_dobldobl_solution(1)
 
 def initialize_quaddobl_solution(nvar, sol):
-    """
+    r"""
     A quad double precision path tracker with a generator is
-    initialized with a start solution sol in a number of
-    variables equal to the value of nvar.
+    initialized with a start solution *sol* in a number of
+    variables equal to the value of *nvar*.
     """
     from phcpy.phcpy2c3 import py2c_initialize_quaddobl_solution
     from phcpy.interface import store_quaddobl_solutions
@@ -614,10 +625,10 @@ def initialize_quaddobl_solution(nvar, sol):
     return py2c_initialize_quaddobl_solution(1)
 
 def initialize_multprec_solution(nvar, sol):
-    """
+    r"""
     A multiprecision path tracker with a generator is
-    initialized with a start solution sol in a number of
-    variables equal to the value of nvar.
+    initialized with a start solution *sol* in a number of
+    variables equal to the value of *nvar*.
     """
     from phcpy.phcpy2c3 import py2c_initialize_multprec_solution
     from phcpy.interface import store_multprec_solutions
@@ -625,19 +636,19 @@ def initialize_multprec_solution(nvar, sol):
     return py2c_initialize_multprec_solution(1)
 
 def initialize_varbprec_solution(nvar, sol):
-    """
+    r"""
     A variable precision path tracker with a generator is
-    initialized with a start solution sol in a number of
-    variables equal to the value of nvar.
+    initialized with a start solution *sol* in a number of
+    variables equal to the value of *nvar*.
     """
     from phcpy.phcpy2c3 import py2c_initialize_varbprec_solution
     return py2c_initialize_varbprec_solution(nvar, len(sol), sol)
 
 def next_standard_solution():
-    """
+    r"""
     Returns the next solution on a path tracked with standard
     double precision arithmetic, provided the functions
-    initialize_standard_tracker() and initialize_standard_solution()
+    **initialize_standard_tracker()** and **initialize_standard_solution()**
     have been executed properly.
     """
     from phcpy.phcpy2c3 import py2c_next_standard_solution
@@ -649,10 +660,10 @@ def next_standard_solution():
     return sol
 
 def next_dobldobl_solution():
-    """
+    r"""
     Returns the next solution on a path tracked with double
     double precision arithmetic, provided the functions
-    initialize_dobldobl_tracker() and initialize_dobldobl_solution()
+    **initialize_dobldobl_tracker()** and **initialize_dobldobl_solution()**
     have been executed properly.
     """
     from phcpy.phcpy2c3 import py2c_next_dobldobl_solution
@@ -664,10 +675,10 @@ def next_dobldobl_solution():
     return sol
 
 def next_quaddobl_solution():
-    """
+    r"""
     Returns the next solution on a path tracked with quad
     double precision arithmetic, provided the functions
-    initialize_quaddobl_tracker() and initialize_quaddobl_solution()
+    **initialize_quaddobl_tracker()** and **initialize_quaddobl_solution()**
     have been executed properly.
     """
     from phcpy.phcpy2c3 import py2c_next_quaddobl_solution
@@ -679,10 +690,10 @@ def next_quaddobl_solution():
     return sol
 
 def next_multprec_solution():
-    """
+    r"""
     Returns the next solution on a path tracked with arbitrary
     multiprecision arithmetic, provided the functions
-    initialize_multprec_tracker() and initialize_multprec_solution()
+    **initialize_multprec_tracker()** and **initialize_multprec_solution()**
     have been executed properly.
     """
     from phcpy.phcpy2c3 import py2c_next_multprec_solution
@@ -694,15 +705,19 @@ def next_multprec_solution():
     return sol
 
 def next_varbprec_solution(wanted, maxprec, maxit, verbose):
-    """
+    r"""
     Returns the next solution on a path tracked with variable
     precision arithmetic, provided the functions
-    initialize_varbprec_tracker() and initialize_varbprec_solution()
+    **initialize_varbprec_tracker()** and **initialize_varbprec_solution()**
     have been executed properly.  The four input parameters are
-    wanted : the number of correct decimal places in the solution,
-    maxprec : upper bound on the number of decimal places in the precision,
-    maxit : maximum number of iterations, and
-    verbose : flag to indicate if intermediate output is wanted.
+
+    1. *wanted*: the number of correct decimal places in the solution,
+
+    2. *maxprec*: upper bound on the number of decimal places in the precision,
+
+    3. *maxit*: maximum number of iterations, and
+
+    4. *verbose*: flag to indicate if intermediate output is wanted.
     """
     from phcpy.phcpy2c3 import py2c_next_varbprec_solution
     sol = py2c_next_varbprec_solution(wanted, maxprec, maxit, verbose)
