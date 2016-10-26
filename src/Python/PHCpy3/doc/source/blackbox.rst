@@ -228,6 +228,47 @@ and ``filter_real`` (on a list of solutions).
 The functions ``filter_regular`` and ``filter_zero_coordinates``
 operate in a manner similar as ``filter_real.``
 
+Another application of ``make_solution`` is to turn the solution
+at the end of path (with value 1.0 for ``t``) to a solution which
+can serve at the start of another path (with value 0.0 for ``t``).
+This is illustrated in the session below.
+We start by solving a simple system.
+
+::
+
+   >>> from phcpy.solver import solve
+   >>> p = ['x**2 - 3*y + 1;', 'x*y - 3;']
+   >>> s = solve(p, silent=True)
+   >>> print(s[0])
+   t :  1.00000000000000E+00   1.14297839516487E+00
+   m : 1
+   the solution for t :
+    x :  1.92017512134718E+00   0.00000000000000E+00
+    y :  1.56235749888022E+00   9.27337524477545E-124
+   == err :  2.738E-16 = rco :  2.976E-01 = res :  4.441E-16 =
+
+Then we import the functions ``coordinates`` and ``make_solution``
+of the module ``solutions``.
+
+::
+
+   >>> from phcpy.solutions import coordinates, make_solution
+   >>> (names, values) = coordinates(s[0])
+   >>> names
+   ['x', 'y']
+   >>> values
+   [(1.92017512134718+0j), (1.56235749888022+9.27337524477545e-124j)]
+   >>> s0 = make_solution(names, values)
+   >>> print(s0)
+   t : 0.0 0.0
+   m : 1
+   the solution for t :
+    x : 1.920175121347180E+00  0.000000000000000E+00
+    y : 1.562357498880220E+00  9.273375244775450E-124
+   == err : 0.0 = rco : 1.0 = res : 0.0 ==
+
+Observe that also the diagnostics are set to the defaults.
+
 reproducible runs with fixed seeds
 ==================================
 
