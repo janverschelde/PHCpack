@@ -1,3 +1,5 @@
+Wed 26 Oct 2016 : wrong end of comment symbol fixed in dd_test.c.
+
 Sat 22 Oct 2016 : to *dobl_random_numbers added random number generators
   with given seeds to produce independent sequences of random numbers.
 

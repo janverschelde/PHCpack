@@ -15,7 +15,7 @@ int basic_test ( void );
 int add_sub_of_pi_e();
 /*
  * DESCRIPTION :
- *   Test on pi + e - pi. /*
+ *   Test on pi + e - pi. */
 
 int div_sqr_of_pi ( void );
 /*
