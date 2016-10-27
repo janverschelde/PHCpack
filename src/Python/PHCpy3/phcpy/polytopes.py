@@ -3,10 +3,10 @@ This module exports routines of PHCpack to work with Newton polytopes.
 """
 
 def random_points(dim, nbr, low, upp):
-    """
+    r"""
     Generates a list of random integer points.
-    Returns a list of nbr points in dimension dim,
-    with integer coordinates in the range low..upp.
+    Returns a list of *nbr* points of dimension *dim*,
+    with integer coordinates in the range from *low* to *upp*.
     """
     from random import randint
     result = []
@@ -17,11 +17,11 @@ def random_points(dim, nbr, low, upp):
     return result
 
 def support(nvr, pol):
-    """
+    r"""
     The support of a multivariate polynomial is a set of exponents
     of the monomials that appear with nonzero coefficient.
-    Given in nvr the number of variables and in pol a string
-    representation of a polynomial in nvr variables,
+    Given in *nvr* the number of variables and in *pol* a string
+    representation of a polynomial in *nvr* variables,
     returns the support of the polynomial as a list of tuples.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_standard_Laurent_system
@@ -50,9 +50,9 @@ def support(nvr, pol):
         return result
 
 def initial_form(pols, normal):
-    """
-    Returns the initial form of the polynomials in pols
-    with respect to the inner normal with coordinates in normal.
+    r"""
+    Returns the initial form of the polynomials in *pols*
+    with respect to the inner normal with coordinates in *normal*.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_standard_Laurent_system
     from phcpy.phcpy2c3 \
@@ -74,11 +74,11 @@ def initial_form(pols, normal):
     return result
 
 def initial_support(points, normal):
-    """
-    Returns the list of elements in points that make the minimal inner
-    product with the given normal, as the second element in a tuple.
+    r"""
+    Returns the list of elements in *points* that make the minimal inner
+    product with the given *normal(, as the second element in a tuple.
     The first element is the value of that minimal inner product.
-    Every tuple in points must have the same length as normal.
+    Every tuple in *points* must have the same length as *normal*.
     """
     inprod = lambda x, y: sum([a*b for (a, b) in zip(x, y)])
     vals = [inprod(point, normal) for point in points]
@@ -88,12 +88,12 @@ def initial_support(points, normal):
     return (minv, result)
 
 def planar_hull_checkout(vertices, normals, verbose=True):
-    """
-    Given a list of vertices and a list of normals as output
+    r"""
+    Given a list of *vertices* and a list of *normals* as output
     of a convex hull algorithm in the plane, this function checks
     whether the initial support of every normal consists of
     exactly two points that appear with consecutive indices
-    (modulo the length of the list) in the list of vertices.
+    (modulo the length of the list) in the list of *vertices*.
     Return True if the checks pass, False otherwise.
     """
     allpts = []
@@ -129,10 +129,10 @@ def planar_hull_checkout(vertices, normals, verbose=True):
         return False
 
 def convex_hull_checkin(dim, points):
-    """
+    r"""
     Checks whether the input arguments satisfy the requirements:
-    points is a list of tuples that each contain as many integer
-    numbers as the value of dim.
+    *points* is a list of tuples that each contain as many integer
+    numbers as the value of *dim*.
     Returns True if the requirements are satisfied,
     returns False otherwise.
     """
@@ -154,9 +154,9 @@ def convex_hull_checkin(dim, points):
     return True
 
 def convex_hull_checkout(dim, points, facets, verbose=True):
-    """
-    Checks whether for each facet in the list of facets,
-    the facet is supported on the points defined by the
+    r"""
+    Checks whether for each facet in the list of *facets*,
+    the facet is supported on the *points* defined by the
     computed inner normal and the minimal value.
     Returns True if the check passes, returns False otherwise.
     """
@@ -189,8 +189,8 @@ def convex_hull_checkout(dim, points, facets, verbose=True):
     return True
 
 def vertices_in_facets(facets):
-    """
-    Given the list of facets, returns the list of indices
+    r"""
+    Given the list of *facets*, returns the list of indices
     to the vertices, to the points that span the facets.
     """
     result = []
@@ -202,8 +202,8 @@ def vertices_in_facets(facets):
     return result
 
 def edges_in_facets(facets):
-    """
-    Given the the list of facets, returns the list of tuples
+    r"""
+    Given the the list of *facets*, returns the list of tuples
     of indices to the point that span the edges of the facets. 
     """
     result = []
@@ -223,12 +223,13 @@ def edges_in_facets(facets):
     return result
 
 def planar_convex_hull(points, checkin=True, checkout=True):
-    """
+    r"""
     The convex hull of a point configuration in the plane
-    consists of an ordered list of vertex points, ordered
+    consists of an ordered list of vertex *points*, ordered
     such that any two consecutive points span an edge,
     with the list of corresponding inner normals.
-    If checkin (by default), the type of the input is checked.
+    If *checkin* (by default), the type of the input is checked.
+    If *checkout* (by default), the output is checked.
     """
     if checkin:
         if not convex_hull_checkin(2, points):
@@ -244,10 +245,11 @@ def planar_convex_hull(points, checkin=True, checkout=True):
     return hull
 
 def convex_hull(dim, points, checkin=True, checkout=True):
-    """
+    r"""
     Returns the list of facets of the convex hull of the points,
-    given in points.  The dimension of the ambient space is in dim.
-    If checkin (by default), the type of the input is checked.
+    given in *points*.  The dimension of the ambient space is in *dim*.
+    If *checkin* (by default), the type of the input is checked.
+    If *checkout* (by default), the output is checked.
     """
     if checkin:
         if not convex_hull_checkin(dim, points):
@@ -276,13 +278,13 @@ def convex_hull(dim, points, checkin=True, checkout=True):
     return result
 
 def mixed_volume(mixture, points):
-    """
-    Returns the mixed volume of the tuple in points.
-    Both mixture and points have the same length.
-    The list mixture counts the number of times each support
-    in points should be counted.
+    r"""
+    Returns the mixed volume of the tuple in *points*.
+    Both *mixture* and *points* have the same length.
+    The list *mixture* counts the number of times each support
+    in *points* should be counted.
     For example, to compute the volume of a three dimensional polytope,
-    the mixture is [3].  In general, the mixture determines the powers
+    the *mixture* is [3].  In general, the *mixture* determines the powers
     of the unknowns in the Minkowski polynomial of which the computed
     mixed volume is its coefficient.
     """
@@ -301,13 +303,13 @@ def mixed_volume(mixture, points):
     return mixvol()
 
 def test_planar_hull(nbr=7, size=9):
-    """
+    r"""
     Generates a random point configuration in the plane
     and then computes its convex hull.
     By default, the number of points equals 7,
-    in general it is the value of the parameter nbr.
+    in general it is the value of the parameter *nbr*.
     The range of the coordinates in the point is defined
-    by the value of size, as -size..size.
+    by the value of *size*, from -*size* to *size*.
     """
     pts = random_points(2, nbr, -size, size)
     print('the points :', pts)
@@ -316,13 +318,13 @@ def test_planar_hull(nbr=7, size=9):
     print('inner normals :', normals)
 
 def test_convex_hull(dim=3, nbr=10, size=9):
-    """
+    r"""
     Generates a random point configuration in 3-space by default
-    (although also dim = 4 works) and then computes its convex hull.
+    (although also *dim* = 4 works) and then computes its convex hull.
     By default, 10 points are generated, while in general,
-    the number of points in the configurations equals nbr.
+    the number of points in the configurations equals *nbr*.
     The range of the coordinates in the point is defined
-    by the value of size, as -size..size.
+    by the value of *size*, from -*size* to *size*.
     """
     pts = random_points(dim, nbr, -size, size)
     print('the points :', pts)
@@ -343,13 +345,18 @@ def test_convex_hull(dim=3, nbr=10, size=9):
         print(streul)
 
 def integer_mixed_cell(dim, nbr, idx, verbose=True):
-    """
+    r"""
     Given are three integers and one boolean, respectively:
-    dim : the number of coordinates in the inner normal,
-    nbr : the number of distinct supports,
-    idx : the index to the cell (starts at one, instead of at zero), and
-    verbose : the verbose flag.
-    Returns the extracted data for the mixed cell with index idx.
+
+    *dim*: the number of coordinates in the inner normal,
+
+    *nbr*: the number of distinct supports,
+
+    *idx*: the index to the cell (starts at one, instead of at zero), and
+
+    *verbose*: the verbose flag.
+
+    Returns the extracted data for the mixed cell with index *idx*.
     If verbose, the data is written to screen.
     """
     from ast import literal_eval
@@ -376,11 +383,11 @@ def integer_mixed_cell(dim, nbr, idx, verbose=True):
     return (normal, mv, tuple(supp))
         
 def integer_mixed_cells(mixture, points, verbose=True):
-    """
-    Given a tuple of lifted support sets, computes all mixed cells
+    r"""
+    Given a tuple of lifted support sets in *points*, computes all mixed cells
     in the regular subdivision defined by the integer lifting values
     given as the last coordinate of every point in the lifted supports.
-    If verbose, then output is written to screen.
+    If *verbose*, then output is written to screen.
     Returns the mixed volume as the sum of the volumes of the cells.
     """
     from ast import literal_eval
