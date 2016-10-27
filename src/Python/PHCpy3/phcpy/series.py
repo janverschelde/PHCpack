@@ -4,13 +4,23 @@ Newton's method in double, double double, or quad double precision.
 """
 
 def standard_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
-    """
+    r"""
+    Computes series in standard double precision for the polynomials
+    in *pols*, where the leading coefficients are the solutions in *sols*.
     On entry are the following five parameters:
-    pols : a list of string representations of polynomials,
-    sols : a list of solutions of the polynomials in pols,
-    idx : index of the series parameter, by default equals 1,
-    nbr : number of steps with Newton's method,
-    verbose : whether to write intermediate output to screen or not.
+
+    *pols*: a list of string representations of polynomials,
+
+    *sols*: a list of solutions of the polynomials in pols,
+
+    *idx*: index of the series parameter, by default equals 1,
+
+    *nbr*: number of steps with Newton's method,
+
+    *verbose*: whether to write intermediate output to screen or not.
+
+    On return is a list of lists of strings.  Each lists of strings
+    represents the series solution for the variables in the list *pols*.
     """
     from phcpy.solver import number_of_symbols
     from phcpy.interface import store_standard_solutions
@@ -41,17 +51,23 @@ def standard_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     return result
 
 def dobldobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
-    """
+    r"""
     Computes series in double double precision for the polynomials
-    in pols, where the leading coefficients are the solutions in sols.
+    in *pols*, where the leading coefficients are the solutions in *sols*.
     On entry are the following five parameters:
-    pols : a list of string representations of polynomials,
-    sols : a list of solutions of the polynomials in pols,
-    idx : index of the series parameter, by default equals 1,
-    nbr : number of steps with Newton's method,
-    verbose : whether to write intermediate output to screen or not.
+
+    *pols*: a list of string representations of polynomials,
+
+    *sols*: a list of solutions of the polynomials in pols,
+
+    *idx*: index of the series parameter, by default equals 1,
+
+    *nbr*: number of steps with Newton's method,
+
+    *verbose*: whether to write intermediate output to screen or not.
+
     On return is a list of lists of strings.  Each lists of strings
-    represents the series solution for the variables in the list pols.
+    represents the series solution for the variables in the list *pols*.
     """
     from phcpy.solver import number_of_symbols
     from phcpy.interface import store_dobldobl_solutions
@@ -84,15 +100,21 @@ def dobldobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
 def quaddobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     """
     Computes series in quad double precision for the polynomials
-    in pols, where the leading coefficients are the solutions in sols.
+    in *pols*, where the leading coefficients are the solutions in *sols*.
     On entry are the following five parameters:
-    pols : a list of string representations of polynomials,
-    sols : a list of solutions of the polynomials in pols,
-    idx : index of the series parameter, by default equals 1,
-    nbr : number of steps with Newton's method,
-    verbose : whether to write intermediate output to screen or not.
+
+    *pols*: a list of string representations of polynomials,
+
+    *sols*: a list of solutions of the polynomials in pols,
+
+    *idx*: index of the series parameter, by default equals 1,
+
+    *nbr*: number of steps with Newton's method,
+
+    *verbose*: whether to write intermediate output to screen or not.
+
     On return is a list of lists of strings.  Each lists of strings
-    represents the series solution for the variables in the list pols.
+    represents the series solution for the variables in the list *pols*.
     """
     from phcpy.solver import number_of_symbols
     from phcpy.interface import store_quaddobl_solutions

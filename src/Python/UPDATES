@@ -1,7 +1,7 @@
 Wed 26 Oct 2016 : added restructured text in the documentation strings of
   the module interface.  For Python3, improved the documentation strings
   for the modules tuning and sets with restructured text and did the same
-  for the Python3 modules polytopes and tropisms.
+  for the Python3 modules polytopes, tropisms, and series.
 
 Tue 25 Oct 2016 : used raw strings in the solver.py documentation strings
   which turns out better in the generated Sphinx documentation.
