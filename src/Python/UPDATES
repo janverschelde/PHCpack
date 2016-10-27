@@ -1,3 +1,6 @@
+Thu 27 Oct 2016 : restructured text added in the documentation strings
+  of maps of PHCpy3 and of the modules tuning and series of PHCpy2.
+
 Wed 26 Oct 2016 : added restructured text in the documentation strings of
   the module interface.  For Python3, improved the documentation strings
   for the modules tuning and sets with restructured text and did the same

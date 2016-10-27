@@ -3,10 +3,10 @@ This module allows to work with monomial maps, defined by binomial systems.
 """
 
 def is_binomial_system(silent=True):
-    """
+    r"""
     Returns True if the system stored in the Laurent systems
     container is a binomial system, returns False otherwise.
-    if not silent, then the number of terms in each Laurent
+    if not *silent*, then the number of terms in each Laurent
     polynomial is written to screen.
     """
     from phcpy.phcpy2c3 import py2c_syscon_number_of_standard_Laurentials
@@ -28,9 +28,9 @@ def is_binomial_system(silent=True):
     return True
 
 def store_laurent_system(nbvar, pols):
-    """
-    Given in pols a list of string representing Laurent polynomials
-    into the systems container.  The number of variables equals nbvar.
+    r"""
+    Given in *pols* a list of string representing Laurent polynomials
+    into the systems container.  The number of variables equals *nbvar*.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_standard_Laurent_system
     from phcpy.phcpy2c3 \
@@ -46,10 +46,10 @@ def store_laurent_system(nbvar, pols):
         py2c_syscon_store_standard_Laurential(nbchar, nbvar, ind+1, pol)
 
 def monomial_map_strings(dim, ind, nbvar):
-    """
+    r"""
     Returns the list of strings representing the components of
-    the monomial map of dimension dim, with index ind, and
-    where the number of variables equals nbvar.
+    the monomial map of dimension *dim*, with index *ind*, and
+    where the number of variables equals *nbvar*.
     """
     from phcpy.phcpy2c3 import py2c_mapcon_coefficients_of_map
     from phcpy.phcpy2c3 import py2c_mapcon_exponents_of_map
@@ -81,9 +81,9 @@ def monomial_map_strings(dim, ind, nbvar):
     return result
 
 def write_monomial_map(dim, ind, nbvar):
-    """
-    Write the monomial map of dimension dim and of index ind,
-    with number of variables equal to nbvar.
+    r"""
+    Write the monomial map of dimension *dim* and of index *ind*,
+    with number of variables equal to *nbvar*.
     """
     str_map = monomial_map_strings(dim, ind, nbvar)
     print(str_map)
@@ -91,11 +91,11 @@ def write_monomial_map(dim, ind, nbvar):
         print(str_var)
 
 def monomial_map_solutions(nbvar, with_degree=True):
-    """
+    r"""
     Returns the list of lists of strings,
     each list of strings representing a monomial map
     stored in the container.
-    The number of variables equals nbvar.
+    The number of variables equals *nbvar*.
     """
     from phcpy.phcpy2c3 import py2c_mapcon_top_dimension
     from phcpy.phcpy2c3 import py2c_mapcon_number_of_maps
@@ -114,8 +114,9 @@ def monomial_map_solutions(nbvar, with_degree=True):
     return result
 
 def write_monomial_maps(nbvar):
-    """
+    r"""
     Writes the maps stored in the container.
+    The number of variables is given in *nbvar*.
     """
     from phcpy.phcpy2c3 import py2c_mapcon_top_dimension
     from phcpy.phcpy2c3 import py2c_mapcon_number_of_maps
@@ -132,15 +133,15 @@ def write_monomial_maps(nbvar):
             print('degree of map', ind, ':', degmap)
 
 def solve_binomials(nbvar, pols, silent=True, puretopdim=False):
-    """
-    If the system given in pols as a list of strings in as many
-    variables as the value of nbvar is a binomial system
+    r"""
+    If the system given in *pols* as a list of strings in as many
+    variables as the value of *nbvar* is a binomial system
     (that is: it has exactly two monomials with a nonzero coefficient
     in every equation), then this function will return monomial maps
     to represent the solution sets.
-    By default, silent is True and no additional output is written.
+    By default, *silent* is True and no additional output is written.
     If only the expected pure top dimensional solution sets are of interest,
-    then switch the default puretopdim to True for faster results.
+    then switch the default *puretopdim* to True for faster results.
     The expected top dimension equals the number of variables minus
     the number of equations.
     """
