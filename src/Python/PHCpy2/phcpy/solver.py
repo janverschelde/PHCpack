@@ -562,7 +562,7 @@ def m_homogeneous_start_system(pols, partition, checkin=True):
 
 def linear_product_root_count(pols, silent=False):
     r"""
-    Given in *pols( a list of string representations of polynomials,
+    Given in *pols* a list of string representations of polynomials,
     returns a linear-product root count based on a supporting
     set structure of the polynomials in pols.  This root count is
     an upper bound for the number of isolated solutions.
