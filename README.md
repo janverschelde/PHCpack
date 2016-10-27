@@ -19,3 +19,6 @@ under Grants No. 9804846, 0105739, 0134611, 0410036, 0713018, 1115777,
 and 1440534.
 Any opinions, findings, and conclusions or recommendations expressed in this material
 are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
+
+Executable versions of the code for Linux, MacOS X, and Windows are
+available at <http://www.math.uic.edu/~jan/download.html>.
