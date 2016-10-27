@@ -22,3 +22,14 @@ are those of the author(s) and do not necessarily reflect the views of the Natio
 
 Executable versions of the code for Linux, MacOS X, and Windows are
 available at <http://www.math.uic.edu/~jan/download.html>.
+Other links:
+
+* The documentation of PHCpack in html format is
+  at <http://www.math.uic.edu/~jan/phcpack_doc_html>
+  and its pdf version is
+  at <http://www.math.uic.edu/~jan/PHCpack.pdf>.
+
+* The documentation of phcpy in html format is
+  at <http://www.math.uic.edu/~jan/phcpy_doc_html>
+  and its pdf version is
+  at <http://www.math.uic.edu/~jan/phcpydoc.pdf>.
