@@ -5,13 +5,13 @@ to the interface functions which store the data.
 """
 
 def store_standard_system(polsys, **nbvar):
-    """
-    Stores the polynomials represented by the list of strings in polsys into
+    r"""
+    Stores the polynomials represented by the list of strings in *polsys* into
     the container for systems with coefficients in standard double precision.
-    The number of variables is an optional argument given in nbvar.
-    If nbvar is omitted, then the system is assumed to be square.
+    The number of variables is an optional argument given in *nbvar*.
+    If *nbvar* is omitted, then the system is assumed to be square.
     Otherwise, suppose the number of variables equals 2 and pols is the list
-    of polynomials, then the call store_standard_system(pols, nbvar=2)
+    of polynomials, then the call **store_standard_system(pols, nbvar=2)**
     will store the polynomials in pols in the standard systems container.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_standard_system
@@ -34,13 +34,13 @@ def store_standard_system(polsys, **nbvar):
     return fail
 
 def store_dobldobl_system(polsys, **nbvar):
-    """
-    Stores the polynomials represented by the list of strings in polsys
+    r"""
+    Stores the polynomials represented by the list of strings in *polsys*
     into the systems container for double double arithmetic.
-    The number of variables is an optional argument given in nbvar.
-    If nbvar is omitted, then the system is assumed to be square.
+    The number of variables is an optional argument given in *nbvar*.
+    If *nbvar* is omitted, then the system is assumed to be square.
     Otherwise, suppose the number of variables equals 2 and pols is the list
-    of polynomials, then the call store_dobldobl_system(pols, nbvar=2)
+    of polynomials, then the call **store_dobldobl_system(pols, nbvar=2)**
     will store the polynomials in pols in the dobldobl systems container.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_dobldobl_system
@@ -63,13 +63,13 @@ def store_dobldobl_system(polsys, **nbvar):
     return fail
 
 def store_quaddobl_system(polsys, **nbvar):
-    """
-    Stores the polynomials represented by the list of strings in polsys
+    r"""
+    Stores the polynomials represented by the list of strings in *polsys*
     into the systems container for quad double arithmetic.
-    The number of variables is an optional argument given in nbvar.
-    If nbvar is omitted, then the system is assumed to be square.
+    The number of variables is an optional argument given in *nbvar*.
+    If *nbvar* is omitted, then the system is assumed to be square.
     Otherwise, suppose the number of variables equals 2 and pols is the list
-    of polynomials, then the call store_quaddobl_system(pols, nbvar=2)
+    of polynomials, then the call **store_quaddobl_system(pols, nbvar=2)**
     will store the polynomials in pols in the quaddobl systems container.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_quaddobl_system
@@ -92,15 +92,15 @@ def store_quaddobl_system(polsys, **nbvar):
     return fail
 
 def store_multprec_system(polsys, decimals, **nbvar):
-    """
-    Stores the polynomials represented by the list of strings in polsys
+    r"""
+    Stores the polynomials represented by the list of strings in *polsys*
     into the systems container for multiprecision arithmetic.
-    The parameter decimals equals the number of decimal places
-    in the working precision for the parsing of the strings in polsys.
-    The number of variables is an optional argument given in nbvar.
-    If nbvar is omitted, then the system is assumed to be square.
+    The parameter *decimals* equals the number of decimal places
+    in the working precision for the parsing of the strings in *polsys*.
+    The number of variables is an optional argument given in *nbvar*.
+    If *nbvar* is omitted, then the system is assumed to be square.
     Otherwise, suppose the number of variables equals 2 and pols is the list of
-    polynomials, then the call store_multprec_system(pols, nbvar=2)
+    polynomials, then the call **store_multprec_system(pols, nbvar=2)**
     will store the polynomials in pols in the multiprecision systems container.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_multprec_system
@@ -177,13 +177,13 @@ def load_multprec_system():
     return result
 
 def store_standard_laurent_system(polsys, **nbvar):
-    """
+    r"""
     Stores the Laurent polynomials represented by the list of
-    strings in polsys into the container for systems
+    strings in *polsys* into the container for systems
     with coefficients in standard double precision.
-    If nbvar is omitted, then the system is assumed to be square.
+    If *nbvar* is omitted, then the system is assumed to be square.
     Otherwise, suppose the number of variables equals 2 and pols is the list
-    of polynomials, then store_standard_laurent_system(pols, nbvar=2)
+    of polynomials, then **store_standard_laurent_system(pols, nbvar=2)**
     stores the polynomials in pols in the standard Laurent systems container.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_standard_Laurent_system
@@ -206,13 +206,13 @@ def store_standard_laurent_system(polsys, **nbvar):
     return fail
 
 def store_dobldobl_laurent_system(polsys, **nbvar):
-    """
+    r"""
     Stores the Laurent polynomials represented by the list of
-    strings in polsys into the container for systems
+    strings in *polsys* into the container for systems
     with coefficients in double double precision.
-    If nbvar is omitted, then the system is assumed to be square.
+    If *nbvar* is omitted, then the system is assumed to be square.
     Otherwise, suppose the number of variables equals 2 and pols is the list
-    of polynomials, then store_dobldobl_laurent_system(pols, nbvar=2)
+    of polynomials, then **store_dobldobl_laurent_system(pols, nbvar=2)**
     stores the polynomials in pols in the dobldobl Laurent systems container.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_dobldobl_Laurent_system
@@ -235,13 +235,13 @@ def store_dobldobl_laurent_system(polsys, **nbvar):
     return fail
 
 def store_quaddobl_laurent_system(polsys, **nbvar):
-    """
+    r"""
     Stores the Laurent polynomials represented by the list
-    of strings in polsys into the container for systems
+    of strings in *polsys* into the container for systems
     with coefficients in quad double precision.
-    If nbvar is omitted, then the system is assumed to be square.
+    If *nbvar* is omitted, then the system is assumed to be square.
     Otherwise, suppose the number of variables equals 2 and pols is the list
-    of polynomials, then store_quaddobl_laurent_system(pols, nbvar=2)
+    of polynomials, then **store_quaddobl_laurent_system(pols, nbvar=2)**
     stores the polynomials in pols in the quaddobl Laurent systems container.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_quaddobl_Laurent_system
@@ -264,15 +264,15 @@ def store_quaddobl_laurent_system(polsys, **nbvar):
     return fail
 
 def store_multprec_laurent_system(polsys, decimals, **nbvar):
-    """
+    r"""
     Stores the Laurent polynomials represented by the list
-    of strings in polsys into the container for systems
+    of strings in *polsys* into the container for systems
     with coefficients in multiprecision.
-    The parameter decimals equals the number of decimal places
-    in the working precision for the parsing of the strings in polsys.
-    If nbvar is omitted, then the system is assumed to be square.
+    The parameter *decimals* equals the number of decimal places
+    in the working precision for the parsing of the strings in *polsys*.
+    If *nbvar* is omitted, then the system is assumed to be square.
     Otherwise, suppose the number of variables equals 2 and pols is the list
-    of polynomials, then store_multprec_laurent_system(pols, nbvar=2)
+    of polynomials, then **store_multprec_laurent_system(pols, nbvar=2)**
     stores the polynomials in pols in the multprec Laurent systems container.
     """
     from phcpy.phcpy2c3 import py2c_syscon_clear_multprec_Laurent_system
@@ -349,11 +349,11 @@ def load_multprec_laurent_system():
     return result
 
 def store_standard_solutions(nvar, sols):
-    """
-    Stores the solutions in the list sols, represented as strings
+    r"""
+    Stores the solutions in the list *sols*, represented as strings
     in PHCpack format into the container for solutions
     with standard double precision.
-    The number nvar equals the number of variables.
+    The number *nvar* equals the number of variables.
     """
     from phcpy.phcpy2c3 import py2c_solcon_clear_standard_solutions
     from phcpy.phcpy2c3 import py2c_solcon_append_standard_solution_string
@@ -366,11 +366,11 @@ def store_standard_solutions(nvar, sols):
     return fail
 
 def store_dobldobl_solutions(nvar, sols):
-    """
-    Stores the solutions in the list sols, represented as strings
+    r"""
+    Stores the solutions in the list *sols*, represented as strings
     in PHCpack format into the solution container for processing
     with complex double double arithmetic.
-    The number nvar equals the number of variables.
+    The number *nvar* equals the number of variables.
     """
     from phcpy.phcpy2c3 import py2c_solcon_clear_dobldobl_solutions
     from phcpy.phcpy2c3 import py2c_solcon_append_dobldobl_solution_string
@@ -383,11 +383,11 @@ def store_dobldobl_solutions(nvar, sols):
     return fail
 
 def store_quaddobl_solutions(nvar, sols):
-    """
-    Stores the solutions in the list sols, represented as strings
+    r"""
+    Stores the solutions in the list *sols*, represented as strings
     in PHCpack format into the solution container for processing
     with complex quad double arithmetic.
-    The number n equals the number of variables.
+    The number *nvar* equals the number of variables.
     """
     from phcpy.phcpy2c3 import py2c_solcon_clear_quaddobl_solutions
     from phcpy.phcpy2c3 import py2c_solcon_append_quaddobl_solution_string
@@ -400,11 +400,11 @@ def store_quaddobl_solutions(nvar, sols):
     return fail
 
 def store_multprec_solutions(nvar, sols):
-    """
-    Stores the solutions in the list sols, represented as strings
+    r"""
+    Stores the solutions in the list *sols*, represented as strings
     in PHCpack format into the solution container for processing
     with complex multiprecision arithmetic.
-    The number n equals the number of variables.
+    The number *nvar* equals the number of variables.
     """
     from phcpy.phcpy2c3 import py2c_solcon_clear_multprec_solutions
     from phcpy.phcpy2c3 import py2c_solcon_append_multprec_solution_string
