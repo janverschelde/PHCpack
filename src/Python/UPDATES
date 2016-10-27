@@ -1,5 +1,6 @@
 Wed 26 Oct 2016 : added restructured text in the documentation strings of
-  the module interface.
+  the module interface.  For Python3, improved the documentation strings
+  for the modules tuning and sets with restructured text.
 
 Tue 25 Oct 2016 : used raw strings in the solver.py documentation strings
   which turns out better in the generated Sphinx documentation.
