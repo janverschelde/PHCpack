@@ -178,6 +178,12 @@ The solution set of a binomial system is a set of monomial maps.
 .. automodule:: maps
    :members:
 
+functions in the module series
+------------------------------
+
+.. automodule:: series
+   :members:
+
 a graphical user interface
 ==========================
 
