@@ -98,11 +98,25 @@ The functions exported by the module ``tropisms`` are listed below.
 positive dimensional solution sets
 ==================================
 
+Numerical representations of positive dimensional solution sets
+are called witness sets and are
+computed by the functions exported by the module sets.
+Cascades of homotopies compute generic points on each component
+of all dimensions.
+In a numerical irreducible decomposition, all equidimensional solution
+sets are factored into irreducible components.
+
 functions in the module sets
 ----------------------------
 
 .. automodule:: sets
    :members:
+
+some interesting families and examples
+======================================
+
+One of the motivations for phcpy was to perform regression tests
+on the blackbox solver.
 
 functions in the module examples
 --------------------------------
@@ -125,6 +139,9 @@ functions in the module families
 numerical Schubert calculus
 ===========================
 
+The module schubert exports Pieri homotopies
+and Littlewood-Richardson homotopies to solve Schubert problems.
+
 functions in the module schubert
 --------------------------------
 
@@ -134,8 +151,19 @@ functions in the module schubert
 Newton polytopes and monomial maps
 ==================================
 
+The Newton polytope of a polynomial is spanned by the exponents 
+of monomials which occur with nonzero coefficient in the polynomial.
+
 functions in the module polytopes
 ---------------------------------
+
+Given a polynomial, its support is the set of exponents of monomials
+which occur with nonzero coefficient.  The convex hull of the support
+of a polynomial is the Newton polytope of the polynomial.
+For a polynomial system, the mixed volume of the Newton polytopes of
+the polynomials in the systems gives a generically sharp upper bound
+on the number of isolated solutions (not in coordinate planes)
+of the polynomial system.
 
 .. automodule:: polytopes
    :members:
@@ -143,11 +171,19 @@ functions in the module polytopes
 functions in the module maps
 ----------------------------
 
+A binomial system is a system where every equation has exactly two
+monomials with nonzero coefficient. 
+The solution set of a binomial system is a set of monomial maps.
+
 .. automodule:: maps
    :members:
 
 a graphical user interface
 ==========================
+
+With Tkinter we can develop a graphical user interface.
+The module exports some possible development for a GUI
+to solve polynomial systems and to process solutions.
 
 functions in the module dashboard
 ---------------------------------

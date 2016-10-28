@@ -99,7 +99,12 @@ positive dimensional solution sets
 ==================================
 
 Numerical representations of positive dimensional solution sets
-are computed by the functions exported by the module sets.
+are called witness sets and are
+computed by the functions exported by the module sets.
+Cascades of homotopies compute generic points on each component
+of all dimensions.
+In a numerical irreducible decomposition, all equidimensional solution
+sets are factored into irreducible components.
 
 functions in the module sets
 ----------------------------

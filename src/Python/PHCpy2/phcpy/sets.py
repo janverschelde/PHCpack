@@ -4,11 +4,11 @@ positive dimensional solution sets of polynomial systems.
 """
 
 def standard_embed(nvar, topdim, pols):
-    """
-    Given in pols a list of strings representing polynomials in nvar
+    r"""
+    Given in *pols* a list of strings representing polynomials in *nvar*
     variables, with coefficients in standard double precision,
-    this function returns an embedding of pols of dimension topdim.
-    The topdim is the top dimension which equals the expected highest
+    this function returns an embedding of *pols* of dimension *topdim*.
+    The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_standard_system
@@ -35,11 +35,11 @@ def standard_embed(nvar, topdim, pols):
     return result
 
 def dobldobl_embed(nvar, topdim, pols):
-    """
-    Given in pols a list of strings that represent polynomials in nvar
+    r"""
+    Given in *pols* a list of strings that represent polynomials in *nvar*
     variables, with coefficients in double double precision,
-    this function returns an embedding of pols of dimension topdim.
-    The topdim is the top dimension which equals the expected highest
+    this function returns an embedding of *pols* of dimension *topdim*.
+    The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_dobldobl_system
@@ -66,11 +66,11 @@ def dobldobl_embed(nvar, topdim, pols):
     return result
 
 def quaddobl_embed(nvar, topdim, pols):
-    """
-    Given in pols a list of strings that represent polynomials in nvar
+    r"""
+    Given in *pols* a list of strings that represent polynomials in n*var*
     variables, with coefficients in quad double precision,
-    this function returns an embedding of pols of dimension topdim.
-    The topdim is the top dimension which equals the expected highest
+    this function returns an embedding of *pols* of dimension *topdim*.
+    The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_quaddobl_system
@@ -97,10 +97,11 @@ def quaddobl_embed(nvar, topdim, pols):
     return result
 
 def embed(nvar, topdim, pols, precision='d'):
-    """
-    Given in pols a list of strings that represent polynomials in nvar
-    variables, this function returns an embedding of pols of dimension topdim.
-    The topdim is the top dimension which equals the expected highest
+    r"""
+    Given in *pols* a list of strings that represent polynomials in *nvar*
+    variables, this function returns an embedding 
+    of *pols* of dimension *topdim*.
+    The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     The default precision of the coefficients is 'd', for standard double
     precision.  For double double and quad double precision, set the value
@@ -117,13 +118,13 @@ def embed(nvar, topdim, pols, precision='d'):
         return None
 
 def witness_set_of_hypersurface(nvar, hpol, precision='d'):
-    """
-    Given in hpol the string representation of a polynomial
-    in nvar variables (ending with a semicolon),
+    r"""
+    Given in *hpol* the string representation of a polynomial
+    in *nvar* variables (ending with a semicolon),
     on return is an embedded system and its solutions
-    which represents a witness set for hpol.
+    which represents a witness set for *hpol*.
     The number of solutions on return should equal
-    the degree of the polynomial in hpol.
+    the degree of the polynomial in *hpol*.
     Three different precisions are supported, by default double ('d'),
     or otherwise double double ('dd') or quad double ('qd').
     """
@@ -150,11 +151,11 @@ def witness_set_of_hypersurface(nvar, hpol, precision='d'):
         return None
 
 def drop_variable_from_polynomials(pols, svar):
-    """
-    Removes the variable with symbol in the string svar
-    from the list pols of strings that represented
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represented
     polynomials in several variables.
-    Note that the system in pols must be square.
+    Note that the system in *pols* must be square.
     """
     from phcpy.phcpy2c2 import py2c_syscon_standard_drop_variable_by_name
     from phcpy.phcpy2c2 import py2c_syscon_remove_symbol_name
@@ -165,10 +166,10 @@ def drop_variable_from_polynomials(pols, svar):
     return load_standard_system()
 
 def drop_coordinate_from_solutions(sols, nbvar, svar):
-    """
-    Removes the variable with symbol in the string svar
-    from the list sols of strings that represent solutions
-    in nbvar variables.
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *sols* of strings that represent solutions
+    in *nbvar* variables.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
     from phcpy.phcpy2c2 import py2c_solcon_standard_drop_coordinate_by_name
@@ -182,11 +183,13 @@ def drop_coordinate_from_solutions(sols, nbvar, svar):
     return load_standard_solutions()
 
 def standard_double_cascade_step(embsys, esols, tasks=0):
-    """
-    Given in embsys an embedded polynomial system and
-    solutions with nonzero slace variables in esols,
+    r"""
+    Given in *embsys* an embedded polynomial system and
+    solutions with nonzero slack variables in *esols*,
     does one step in the homotopy cascade,
     with standard double precision arithmetic.
+    The number of tasks in multithreaded path tracking is given by *tasks*.
+    The default zero value of *tasks* indicates no multithreading.
     The list on return contains witness points on
     lower dimensional solution components.
     """
@@ -210,11 +213,13 @@ def standard_double_cascade_step(embsys, esols, tasks=0):
     return load_standard_solutions()
 
 def double_double_cascade_step(embsys, esols, tasks=0):
-    """
-    Given in embsys an embedded polynomial system and
-    solutions with nonzero slace variables in esols,
+    r"""
+    Given in *embsys* an embedded polynomial system and
+    solutions with nonzero slack variables in *esols*,
     does one step in the homotopy cascade,
     with double double precision arithmetic.
+    The number of tasks in multithreaded path tracking is given by *tasks*.
+    The default zero value of *tasks* indicates no multithreading.
     The list on return contains witness points on
     lower dimensional solution components.
     """
@@ -238,11 +243,13 @@ def double_double_cascade_step(embsys, esols, tasks=0):
     return load_dobldobl_solutions()
 
 def quad_double_cascade_step(embsys, esols, tasks=0):
-    """
-    Given in embsys an embedded polynomial system and
-    solutions with nonzero slace variables in esols,
+    r"""
+    Given in *embsys* an embedded polynomial system and
+    solutions with nonzero slace variables in *esols*,
     does one step in the homotopy cascade,
     with quad double precision arithmetic.
+    The number of tasks in multithreaded path tracking is given by *tasks*.
+    The default zero value of *tasks* indicates no multithreading.
     The list on return contains witness points on
     lower dimensional solution components.
     """
@@ -266,13 +273,19 @@ def quad_double_cascade_step(embsys, esols, tasks=0):
     return load_quaddobl_solutions()
 
 def cascade_step(embsys, esols, precision='d', tasks=0):
-    """
-    Given in embsys an embedded polynomial system and
-    solutions with nonzero slack variables in esols,
+    r"""
+    Given in *embsys* an embedded polynomial system and
+    solutions with nonzero slack variables in *esols*,
     does one step in the homotopy cascade, with precision
-    'd'  : standard double precision (1.1e-15 or 2^(-53)),
-    'dd' : double double precision (4.9e-32 or 2^(-104)),
-    'qd' : quad double precision (1.2e-63 or 2^(-209)).
+
+    *d*: standard double precision (1.1e-15 or 2^(-53)),
+
+    *dd*: double double precision (4.9e-32 or 2^(-104)),
+
+    *qd*: quad double precision (1.2e-63 or 2^(-209)).
+
+    The number of tasks in multithreaded path tracking is given by *tasks*.
+    The default zero value of *tasks* indicates no multithreading.
     The list on return contains witness points on
     lower dimensional solution components.
     """
@@ -338,16 +351,16 @@ def test_cascade():
 
 def standard_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
-    """
-    Applies the homotopy membership test for a point to belong to
-    a witness set of dimension dim, given by an embedding polynomial
-    system in wsys, with corresponding generic points in gpts.
-    The coordinates of the test point are given in the list point,
+    r"""
+    Applies the homotopy membership test for a *point* to belong to
+    a witness set of dimension *dim*, given by an embedding polynomial
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
-    coordinate of the point.  By default, verbose is True.
+    coordinate of the point.  By default, *verbose* is True.
     Calculations happen in standard double precision.
-    The default values for the evaluation (evatol) and the membership
-    (memtol) allow for singular values at the end points of the paths
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
     """
     from phcpy.interface import store_standard_system as storesys
@@ -363,16 +376,16 @@ def standard_membertest(wsys, gpts, dim, point, \
 
 def dobldobl_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
-    """
-    Applies the homotopy membership test for a point to belong to
-    a witness set of dimension dim, given by an embedding polynomial
-    system in wsys, with corresponding generic points in gpts.
-    The coordinates of the test point are given in the list point,
+    r"""
+    Applies the homotopy membership test for a *point* to belong to
+    a witness set of dimension *dim*, given by an embedding polynomial
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
-    coordinate of the point.  By default, verbose is True.
+    coordinate of the point.  By default, *verbose* is True.
     Calculations happen in double double precision.
-    The default values for the evaluation (evatol) and the membership
-    (memtol) allow for singular values at the end points of the paths
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
     """
     from phcpy.interface import store_dobldobl_system as storesys
@@ -388,16 +401,16 @@ def dobldobl_membertest(wsys, gpts, dim, point, \
 
 def quaddobl_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
-    """
-    Applies the homotopy membership test for a point to belong to
-    a witness set of dimension dim, given by an embedding polynomial
-    system in wsys, with corresponding generic points in gpts.
-    The coordinates of the test point are given in the list point,
+    r"""
+    Applies the homotopy membership test for a *point* to belong to
+    a witness set of dimension *dim*, given by an embedding polynomial
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
-    coordinate of the point.  By default, verbose is True.
+    coordinate of the point.  By default, *verbose* is True.
     Calculations happen in quad double precision.
-    The default values for the evaluation (evatol) and the membership
-    (memtol) allow for singular values at the end points of the paths
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
     """
     from phcpy.interface import store_quaddobl_system as storesys
@@ -413,23 +426,23 @@ def quaddobl_membertest(wsys, gpts, dim, point, \
 
 def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
     verbose=True, precision='d'):
-    """
-    Applies the homotopy membership test for a point to belong to
-    a witness set of dimension dim, given by an embedding polynomial
-    system in wsys, with corresponding generic points in gpts.
-    The coordinates of the test point are given in the list point,
+    r"""
+    Applies the homotopy membership test for a *point* to belong to
+    a witness set of dimension *dim*, given by an embedding polynomial
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
-    coordinate of the point.  By default, verbose is True, and the
+    coordinate of the point.  By default, *verbose* is True, and the
     working precision is double 'd'.  Other levels of precision are
     double double precision 'dd' and quad double precision 'qd'.
-    There are two tolerances: evatol is the tolerance on the residual
+    There are two tolerances: *evatol* is the tolerance on the residual
     of the evaluation of the polynomial equations at the test point.
-    If the residual of the evalution is not less than evatol,
+    If the residual of the evalution is not less than *evatol*,
     then the membertest returns False.  Otherwise, the homotopy
-    membership test is called and the memtol is used to compare
+    membership test is called and the *memtol* is used to compare
     the coordinates of the point with the newly computed generic points.
     If there is a match between the coordinates within the given
-    tolerance memtol, then True is returned.
+    tolerance *memtol*, then True is returned.
     """
     if(precision == 'd'):
         return standard_membertest(wsys, gpts, dim, point, \
@@ -445,8 +458,8 @@ def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
         return None
 
 def is_slackvar(var):
-    """
-    Given in var is a string with a variable name.
+    r"""
+    Given in *var* is a string with a variable name.
     Returns True if the variable name starts with 'zz',
     followed by a number.  Returns False otherwise.
     """
@@ -459,9 +472,9 @@ def is_slackvar(var):
         return rest.isdigit()
 
 def is_signed(pol):
-    """
-    Given in pol is the string representation of a polynomial.
-    Returns True if the first nonspace character in the string pol
+    r"""
+    Given in *pol* is the string representation of a polynomial.
+    Returns True if the first nonspace character in the string *pol*
     is either '+' or '-'.  Returns False otherwise.
     """
     wrk = pol.lstrip()
@@ -472,9 +485,9 @@ def is_signed(pol):
 
 def is_member(wsys, gpts, dim, solpt, evatol=1.0e-6, memtol=1.0e-6, \
     verbose=True, precision='d'):
-    """
+    r"""
     This function wraps the membertest where the point is a solution,
-    given in solpt.  All other parameters have the same meaning as
+    given in *solpt*.  All other parameters have the same meaning as
     in the function membertest.
     """
     from phcpy.solutions import strsol2dict, variables
@@ -625,12 +638,12 @@ def decomposition(deg, precision='d'):
         return None
 
 def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
-    """
+    r"""
     Applies the monodromy breakup algorithm in standard double precision
     to factor the d-dimensional algebraic set represented by the
-    embedded system e and its solutions esols.
-    If verbose is False, then no output is written.
-    If nbloops equals zero, then the user is prompted to give
+    embedded system *embsys* and its solutions *esols*.
+    If *verbose* is False, then no output is written.
+    If *nbloops* equals zero, then the user is prompted to give
     the maximum number of loops.
     """
     from phcpy.phcpy2c2 import py2c_factor_set_standard_to_mute
@@ -710,12 +723,12 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
         py2c_factor_restore_standard_solutions()
 
 def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
-    """
+    r"""
     Applies the monodromy breakup algorithm in double double precision
     to factor the d-dimensional algebraic set represented by the embedded
-    system e and its solutions esols.
-    If verbose is False, then no output is written.
-    If nbloops equals zero, then the user is prompted to give
+    system *embsys* and its solutions *esols*.
+    If *verbose* is False, then no output is written.
+    If *nbloops* equals zero, then the user is prompted to give
     the maximum number of loops.
     """
     from phcpy.phcpy2c2 import py2c_factor_set_dobldobl_to_mute
@@ -795,12 +808,12 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
         py2c_factor_restore_dobldobl_solutions()
 
 def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
-    """
+    r"""
     Applies the monodromy breakup algorithm in quad double precision
     to factor the d-dimensional algebraic set represented by the embedded
-    system e and its solutions esols.
-    If verbose is False, then no output is written.
-    If nbloops equals zero, then the user is prompted to give
+    system *embsys* and its solutions *esols*.
+    If *verbose* is False, then no output is written.
+    If *nbloops* equals zero, then the user is prompted to give
     the maximum number of loops.
     """
     from phcpy.phcpy2c2 import py2c_factor_set_quaddobl_to_mute
@@ -880,11 +893,11 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
         py2c_factor_restore_quaddobl_solutions()
 
 def monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0, prec='d'):
-    """
+    r"""
     Applies the monodromy breakup algorithm to factor the d-dimensional
-    set represented by the embedded system e and its solutions esols.
-    If verbose is False, then no output is written.
-    If nbloops equals zero, then the user is prompted to give
+    set represented by the embedded system *embsys* and its solutions *esols*.
+    If *verbose* is False, then no output is written.
+    If *nbloops* equals zero, then the user is prompted to give
     the maximum number of loops.
     Three different levels of precision are supported: double precision 'd'
     (for the value for prec) is the default, the two other precisions are
@@ -900,11 +913,11 @@ def monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0, prec='d'):
         print 'wrong argument for precision'
 
 def factor(dim, witsys, witsols, verbose=True, nbloops=20, precision='d'):
-    """
+    r"""
     Applies monodromy to factor an equidimensional algebraic set,
-    given as a witness sets, with the embedded polynomials in witsys,
-    and corresponding generic points in witsols.
-    The dimension of the algebraic set is given in dim.
+    given as a witness sets, with the embedded polynomials in *witsys*,
+    and corresponding generic points in *witsols*.
+    The dimension of the algebraic set is given in *dim*.
     The default precision is double 'd'.  Other valid values for precision
     are 'dd' for double double, or 'qd' for quad double.
     """
@@ -947,12 +960,12 @@ def test_factor():
     print fac
 
 def top_diagonal_dimension(kdm, dim1, dim2):
-    """
+    r"""
     Returns the number of slack variables at the top in the cascade of
-    diagonal homotopies to intersect two sets of dimension dim1 and dim2,
-    where dim1 >= dim2 and kdm is the dimension before the embedding.
-    Typically, kdm is the number of equations in the first witness set
-    minus dim1.
+    diagonal homotopies to intersect two sets of dimension *dim1* and *dim2*,
+    where *dim1* >= *dim2* and *kdm* is the dimension before the embedding.
+    Typically, *kdm* is the number of equations in the first witness set
+    minus *dim1*.
     """
     if dim1 + dim2 < kdm:
         return dim2
@@ -960,10 +973,10 @@ def top_diagonal_dimension(kdm, dim1, dim2):
         return kdm - dim1
 
 def standard_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
-    """
+    r"""
     Defines a diagonal homotopy to intersect the witness sets defined
-    by (sys1, esols1) and (sys2, esols2), respectively of dimensions
-    dim1 and dim2.  The systems sys1 and sys2 are assumed to be square
+    by (*sys1*, *esols1*) and (*sys2*, *esols2*), respectively of dimensions
+    *dim1* and *dim2*.  The systems *sys1* and *sys2* are assumed to be square
     and with as many slack variables as the dimension of the solution sets.
     The data is stored in standard double precision.
     """
@@ -1004,10 +1017,10 @@ def standard_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     py2c_diagonal_symbols_doubler(nbsymbs-dim1, dim1, len(symbols), symbols)
 
 def dobldobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
-    """
+    r"""
     Defines a diagonal homotopy to intersect the witness sets defined
-    by (sys1, esols1) and (sys2, esols2), respectively of dimensions
-    dim1 and dim2.  The systems sys1 and sys2 are assumed to be square
+    by (*sys1*, *esols1*) and (*sys2*, *esols2*), respectively of dimensions
+    *dim1* and *dim2*.  The systems *sys1* and *sys2* are assumed to be square
     and with as many slack variables as the dimension of the solution sets.
     The data is stored in double double precision.
     """
@@ -1048,10 +1061,10 @@ def dobldobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     py2c_diagonal_symbols_doubler(nbsymbs-dim1, dim1, len(symbols), symbols)
 
 def quaddobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
-    """
+    r"""
     Defines a diagonal homotopy to intersect the witness sets defined
-    by (sys1, esols1) and (sys2, esols2), respectively of dimensions
-    dim1 and dim2.  The systems sys1 and sys2 are assumed to be square
+    by (*sys1*, *esols1*) and (*sys2*, *esols2*), respectively of dimensions
+    *dim1* and *dim2*.  The systems *sys1* and *sys2* are assumed to be square
     and with as many slack variables as the dimension of the solution sets.
     The data is stored in quad double precision.
     """
@@ -1092,10 +1105,10 @@ def quaddobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     py2c_diagonal_symbols_doubler(nbsymbs-dim1, dim1, len(symbols), symbols)
 
 def standard_diagonal_cascade_solutions(dim1, dim2):
-    """
+    r"""
     Defines the start solutions in the cascade to start the diagonal
-    homotopy to intersect a set of dimension dim1 with another set
-    of dimension dim2, in standard double precision.  For this to work,
+    homotopy to intersect a set of dimension *dim1* with another set
+    of dimension *dim2*, in standard double precision.  For this to work,
     standard_diagonal_homotopy must have been executed successfully.
     """
     from phcpy.phcpy2c2 import py2c_standard_diagonal_cascade_solutions
@@ -1105,10 +1118,10 @@ def standard_diagonal_cascade_solutions(dim1, dim2):
         py2c_standard_diagonal_cascade_solutions(dim2, dim1)
 
 def dobldobl_diagonal_cascade_solutions(dim1, dim2):
-    """
+    r"""
     Defines the start solutions in the cascade to start the diagonal
-    homotopy to intersect a set of dimension dim1 with another set
-    of dimension dim2, in double double precision.  For this to work,
+    homotopy to intersect a set of dimension *dim1* with another set
+    of dimension *dim2*, in double double precision.  For this to work,
     dobldobl_diagonal_homotopy must have been executed successfully.
     """
     from phcpy.phcpy2c2 import py2c_dobldobl_diagonal_cascade_solutions
@@ -1120,8 +1133,8 @@ def dobldobl_diagonal_cascade_solutions(dim1, dim2):
 def quaddobl_diagonal_cascade_solutions(dim1, dim2):
     """
     Defines the start solutions in the cascade to start the diagonal
-    homotopy to intersect a set of dimension dim1 with another set
-    of dimension dim2, in quad double precision.  For this to work,
+    homotopy to intersect a set of dimension *dim1* with another set
+    of dimension *dim2*, in quad double precision.  For this to work,
     quaddobl_diagonal_homotopy must have been executed successfully.
     """
     from phcpy.phcpy2c2 import py2c_quaddobl_diagonal_cascade_solutions
@@ -1131,13 +1144,13 @@ def quaddobl_diagonal_cascade_solutions(dim1, dim2):
         py2c_quaddobl_diagonal_cascade_solutions(dim2, dim1)
 
 def standard_start_diagonal_cascade(gamma=0, tasks=0):
-    """
+    r"""
     Does the path tracking to start a diagonal cascade in standard double
     precision.  For this to work, the functions standard_diagonal_homotopy
     and standard_diagonal_cascade_solutions must be executed successfully.
-    If gamma equals 0 on input, then a random gamma constant is generated,
-    otherwise, the given complex gamma will be used in the homotopy.
-    Multitasking is available, and activated by the tasks parameter.
+    If *gamma* equals 0 on input, then a random gamma constant is generated,
+    otherwise, the given complex *gamma* will be used in the homotopy.
+    Multitasking is available, and activated by the *tasks* parameter.
     Returns the target (system and its corresponding) solutions.
     """
     from phcpy.phcpy2c2 import py2c_create_standard_homotopy
@@ -1166,13 +1179,13 @@ def standard_start_diagonal_cascade(gamma=0, tasks=0):
     return (tsys, sols)
 
 def dobldobl_start_diagonal_cascade(gamma=0, tasks=0):
-    """
+    r"""
     Does the path tracking to start a diagonal cascade in double double
     precision.  For this to work, the functions dobldobl_diagonal_homotopy
     and dobldobl_diagonal_cascade_solutions must be executed successfully.
-    If gamma equals 0 on input, then a random gamma constant is generated,
-    otherwise, the given complex gamma will be used in the homotopy.
-    Multitasking is available, and activated by the tasks parameter.
+    If *gamma* equals 0 on input, then a random *gamma* constant is generated,
+    otherwise, the given complex *gamma* will be used in the homotopy.
+    Multitasking is available, and activated by the *tasks* parameter.
     Returns the target (system and its corresponding) solutions.
     """
     from phcpy.phcpy2c2 import py2c_create_dobldobl_homotopy
@@ -1201,13 +1214,13 @@ def dobldobl_start_diagonal_cascade(gamma=0, tasks=0):
     return (tsys, sols)
 
 def quaddobl_start_diagonal_cascade(gamma=0, tasks=0):
-    """
+    r"""
     Does the path tracking to start a diagonal cascade in quad double
     precision.  For this to work, the functions quaddobl_diagonal_homotopy
     and quaddobl_diagonal_cascade_solutions must be executed successfully.
-    If gamma equals 0 on input, then a random gamma constant is generated,
-    otherwise, the given complex gamma will be used in the homotopy.
-    Multitasking is available, and is activated by the tasks parameter.
+    If *gamma* equals 0 on input, then a random *gamma* constant is generated,
+    otherwise, the given complex *gamma* will be used in the homotopy.
+    Multitasking is available, and is activated by the *tasks* parameter.
     Returns the target (system and its corresponding) solutions.
     """
     from phcpy.phcpy2c2 import py2c_create_quaddobl_homotopy
@@ -1237,14 +1250,14 @@ def quaddobl_start_diagonal_cascade(gamma=0, tasks=0):
 
 def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
     tasks=0, verbose=True):
-    """
+    r"""
     Runs the diagonal homotopies in standard double precision
-    to intersect two witness sets stored in (sys1, sols1) and
-    (sys2, sols2), of respective dimensions dm1 and dm2.
-    The ambient dimension equals dim.
-    Multitasking is available, and is activated by the tasks parameter.
+    to intersect two witness sets stored in (*sys1*, *sols1*) and
+    (*sys2*, *sols2*), of respective dimensions *dm1* and *dm2*.
+    The ambient dimension equals *dim*.
+    Multitasking is available, and is activated by the *tasks* parameter.
     Returns the last system in the cascade and its solutions.
-    If verbose, then the solver runs in interactive mode, printing
+    If *verbose*, then the solver runs in interactive mode, printing
     intermediate results to screen and prompting the user to continue.
     """
     from phcpy.phcpy2c2 import py2c_standard_collapse_diagonal
@@ -1306,14 +1319,14 @@ def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
 
 def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
     tasks=0, verbose=True):
-    """
+    r"""
     Runs the diagonal homotopies in double double precision
-    to intersect two witness sets stored in (sys1, sols1) and
-    (sys2, sols2), of respective dimensions dm1 and dm2.
-    The ambient dimension equals dim.
-    Multitasking is available, and is activated by the tasks parameter.
+    to intersect two witness sets stored in (*sys1*, *sols1*) and
+    (*sys2*, *sols2*), of respective dimensions *dm1* and *dm2*.
+    The ambient dimension equals *dim*.
+    Multitasking is available, and is activated by the *tasks* parameter.
     Returns the last system in the cascade and its solutions.
-    If verbose, then the solver runs in interactive mode, printing
+    If *verbose*, then the solver runs in interactive mode, printing
     intermediate results to screen and prompting the user to continue.
     """
     from phcpy.phcpy2c2 import py2c_dobldobl_collapse_diagonal
@@ -1375,14 +1388,14 @@ def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
 
 def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
     tasks=0, verbose=True):
-    """
+    r"""
     Runs the diagonal homotopies in quad double precision
-    to intersect two witness sets stored in (sys1, sols1) and
-    (sys2, sols2), of respective dimensions dm1 and dm2.
-    The ambient dimension equals dim.
-    Multitasking is available, and is activated by the tasks parameter.
+    to intersect two witness sets stored in (*sys1*, *sols1*) and
+    (*sys2*, *sols2*), of respective dimensions *dm1* and *dm2*.
+    The ambient dimension equals *dim*.
+    Multitasking is available, and is activated by the *tasks* parameter.
     Returns the last system in the cascade and its solutions.
-    If verbose, then the solver runs in interactive mode, printing
+    If *verbose*, then the solver runs in interactive mode, printing
     intermediate results to screen and prompting the user to continue.
     """
     from phcpy.phcpy2c2 import py2c_quaddobl_collapse_diagonal
@@ -1444,12 +1457,13 @@ def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
 
 def diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0, \
     prc='d', verbose=True):
-    """
+    r"""
     Runs the diagonal homotopies to intersect two witness sets stored in
-    (sys1, sols1) and (sys2, sols2), of respective dimensions dim1 and dim2.
-    The ambient dimension equals dim.
-    Multitasking is available, and is activated by the tasks parameter.
-    The precision is set by the parameter prc, which takes the default
+    (*sys1*, *sols1*) and (*sys2*, *sols2*),
+    of respective dimensions *dim1* and *dim2*.
+    The ambient dimension equals *dim*.
+    Multitasking is available, and is activated by the *tasks* parameter.
+    The precision is set by the parameter *prc*, which takes the default
     value 'd' for standard double, 'dd' for double double, or 'qd' for
     quad double precision.
     Returns the last system in the cascade and its solutions.
