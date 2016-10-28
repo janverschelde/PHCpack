@@ -13,6 +13,10 @@ The section headings correspond to the earlier chapter headings.
 a blackbox solver for isolated solutions
 ========================================
 
+The two most essential modules to solve polynomial systems
+are the ``solver`` module, which exports the blackbox solver,
+and the ``solutions`` module, to parse the computed solutions.
+
 functions in the module solver
 ------------------------------
 
