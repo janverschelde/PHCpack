@@ -40,6 +40,24 @@ at the command prompt.
 path trackers and sweep homotopies
 ==================================
 
+In the path tracking, we distinguish between paths defined by
+
+1. homotopies with sufficiently random complex numbers,
+   which then are free of singular solutions, except perhaps at the end; and
+
+2. homotopies with real coefficients and real parameters,
+   which most likely may contain singularities.
+
+Functions to track solution paths
+defined by complex artificial parameter homotopies 
+are exported by the module ``trackers`` 
+while the module ``sweepers``
+exports path trackers for real natural parameter homotopies.
+The module ``tuning`` helps to manage the tolerances of
+the function to track the solution paths
+in the ``trackers`` module.
+Access to polyhedral end games is provided by the ``tropisms`` module.
+
 functions in the module trackers
 --------------------------------
    

@@ -50,9 +50,11 @@ In the path tracking, we distinguish between paths defined by
 
 Functions to track solution paths
 defined by complex artificial parameter homotopies 
-are exported by the module ``trackers`` while ``sweepers``
+are exported by the module ``trackers`` 
+while the module ``sweepers``
 exports path trackers for real natural parameter homotopies.
 The module ``tuning`` helps to manage the tolerances of
+the function to track the solution paths
 in the ``trackers`` module.
 Access to polyhedral end games is provided by the ``tropisms`` module.
 
