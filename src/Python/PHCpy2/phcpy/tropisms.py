@@ -4,16 +4,21 @@ tropisms in double, double double, or quad double precision.
 """
 
 def standard_initialize(nbt, dim, wnd, dir, err):
-    """
+    r"""
     Initializes the direction vectors computed in double precision,
     along with estimates for their winding numbers and errors.
     On entry are the following five parameters:
-    nbt : the number of direction vectors;
-    dim : the number of coordinates in each vector;
-    wnd : a list of integer values for the winding numbers, as many as nbt;
-    dir : a list of lists of doubles with the coordinates of the directions,
-    each inner list has dim doubles and nbt vectors are given;
-    err : a list of nbt doubles.
+
+    *nbt*: the number of direction vectors;
+
+    *dim*: the number of coordinates in each vector;
+
+    *wnd*: a list of integer values for the winding numbers, as many as *nbt*;
+
+    *dir*: a list of lists of doubles with the coordinates of the directions,
+    each inner list has *dim* doubles and *nbt* vectors are given;
+
+    *err*: a list of *nbt* doubles.
     """
     from phcpy.phcpy2c2 import py2c_numbtrop_standard_initialize as store
     flat = []
@@ -23,16 +28,21 @@ def standard_initialize(nbt, dim, wnd, dir, err):
     store(nbt, dim, str(data))
 
 def dobldobl_initialize(nbt, dim, wnd, dir, err):
-    """
+    r"""
     Initializes the direction vectors computed in double double precision,
     along with estimates for their winding numbers and errors.
     On entry are the following five parameters:
-    nbt : the number of direction vectors;
-    dim : the number of coordinates in each vector;
-    wnd : a list of integer values for the winding numbers, as many as nbt;
-    dir : a list of lists of double doubles with the coordinates of the 
-    directions, each inner list has dim double doubles and nbt vectors;
-    err : a list of nbt double doubles.
+
+    *nbt*: the number of direction vectors;
+
+    *dim*: the number of coordinates in each vector;
+
+    *wnd*: a list of integer values for the winding numbers, as many as *nbt*;
+
+    *dir*: a list of lists of double doubles with the coordinates of the 
+    directions, each inner list has *dim* double doubles and *nbt* vectors;
+
+    *err*: a list of nbt double doubles.
     """
     from phcpy.phcpy2c2 import py2c_numbtrop_dobldobl_initialize as store
     flat = []
@@ -42,16 +52,21 @@ def dobldobl_initialize(nbt, dim, wnd, dir, err):
     store(nbt, dim, str(data))
 
 def quaddobl_initialize(nbt, dim, wnd, dir, err):
-    """
+    r"""
     Initializes the direction vectors computed in quad double precision,
     along with estimates for their winding numbers and errors.
     On entry are the following five parameters:
-    nbt : the number of direction vectors;
-    dim : the number of coordinates in each vector;
-    wnd : a list of integer values for the winding numbers, as many as nbt;
-    dir : a list of lists of quad doubles with the coordinates of the 
-    directions, each inner list has dim quad doubles and nbt vectors;
-    err : a list of nbt quad doubles.
+
+    *nbt*: the number of direction vectors;
+
+    *dim*: the number of coordinates in each vector;
+
+    *wnd*: a list of integer values for the winding numbers, as many as *nbt*;
+
+    *dir*: a list of lists of quad doubles with the coordinates of the 
+    directions, each inner list has *dim* quad doubles and *nbt* vectors;
+
+    *err*: a list of nbt quad doubles.
     """
     from phcpy.phcpy2c2 import py2c_numbtrop_quaddobl_initialize as store
     flat = []
@@ -103,8 +118,8 @@ def quaddobl_dimension():
     return get_dim()
 
 def standard_retrieve(nbt, dim):
-    """
-    Given on input the number of tropisms in nbt and the dimension in dim,
+    r"""
+    Given on input the number of tropisms in *nbt* and the dimension in *dim*,
     returns a tuple of three lists: the winding numbers, coordinates of
     the direction vectors, and the errrors; in standard double precision.
     """
@@ -120,8 +135,8 @@ def standard_retrieve(nbt, dim):
     return (wnd, dirs, err)
 
 def dobldobl_retrieve(nbt, dim):
-    """
-    Given on input the number of tropisms in nbt and the dimension in dim,
+    r"""
+    Given on input the number of tropisms in *nbt* and the dimension in *dim*,
     returns a tuple of three lists: the winding numbers, coordinates of
     the direction vectors, and the errrors; in double double precision.
     """
@@ -137,8 +152,8 @@ def dobldobl_retrieve(nbt, dim):
     return (wnd, dirs, err)
 
 def quaddobl_retrieve(nbt, dim):
-    """
-    Given on input the number of tropisms in nbt and the dimension in dim,
+    r"""
+    Given on input the number of tropisms in *nbt* and the dimension in *dim*,
     returns a tuple of three lists: the winding numbers, coordinates of
     the direction vectors, and the errrors; in quad double precision.
     """
@@ -154,10 +169,10 @@ def quaddobl_retrieve(nbt, dim):
     return (wnd, dirs, err)
 
 def retrieve_standard_tropism(dim, idx):
-    """
+    r"""
     Returns the winding number, coordinates of the direction, and its error,
-    stored in double precision, of dimension dim, and index idx.
-    The index must be in the range 1..standard_size().
+    stored in double precision, of dimension *dim*, and index *idx*.
+    The index *idx* must be in the range 1..standard_size().
     Observe that the index counter starts at one and not at zero.
     """
     from ast import literal_eval
@@ -170,10 +185,10 @@ def retrieve_standard_tropism(dim, idx):
     return (wnd, dir, err)
 
 def retrieve_dobldobl_tropism(dim, idx):
-    """
+    r"""
     Returns the winding number, coordinates of the direction, and its error,
-    stored in double precision, of dimension dim, and index idx.
-    The index must be in the range 1..dobldobl_size().
+    stored in double precision, of dimension *dim*, and index *idx*.
+    The index *idx* must be in the range 1..dobldobl_size().
     Observe that the index counter starts at one and not at zero.
     """
     from ast import literal_eval
@@ -186,10 +201,10 @@ def retrieve_dobldobl_tropism(dim, idx):
     return (wnd, dir, err)
 
 def retrieve_quaddobl_tropism(dim, idx):
-    """
+    r"""
     Returns the winding number, coordinates of the direction, and its error,
-    stored in double precision, of dimension dim, and index idx.
-    The index must be in the range 1..quaddobl_size().
+    stored in double precision, of dimension *dim*, and index *idx*.
+    The index *idx* must be in the range 1..quaddobl_size().
     Observe that the index counter starts at one and not at zero.
     """
     from ast import literal_eval
@@ -202,11 +217,11 @@ def retrieve_quaddobl_tropism(dim, idx):
     return (wnd, dir, err)
 
 def store_standard_tropism(dim, idx, wnd, dir, err):
-    """
+    r"""
     Stores the tropism, given in standard double precision,
-    with dim doubles as coordinates in the list dir, the error in err,
-    and the winding number wnd, at position idx.
-    The index idx must be in the range 1..standard_size().
+    with *dim* doubles as coordinates in the list *dir*, the error in *err*,
+    and the winding number *wnd*, at position *idx*.
+    The index *idx* must be in the range 1..standard_size().
     """
     from phcpy.phcpy2c2 import py2c_numbtrop_store_standard_tropism as store
     data = [x for x in dir]
@@ -215,11 +230,11 @@ def store_standard_tropism(dim, idx, wnd, dir, err):
     store(dim, idx, wnd, strdata)
 
 def store_dobldobl_tropism(dim, idx, wnd, dir, err):
-    """
+    r"""
     Stores the tropism, given in standard double precision,
-    with dim doubles as coordinates in the list dir, the error in err,
-    and the winding number wnd, at position idx.
-    The index idx must be in the range 1..dobldobl_size().
+    with *dim* doubles as coordinates in the list *dir*, the error in *err*,
+    and the winding number *wnd*, at position *idx*.
+    The index *idx* must be in the range 1..dobldobl_size().
     """
     from phcpy.phcpy2c2 import py2c_numbtrop_store_dobldobl_tropism as store
     data = [x for x in dir]
@@ -228,11 +243,11 @@ def store_dobldobl_tropism(dim, idx, wnd, dir, err):
     store(dim, idx, wnd, strdata)
 
 def store_quaddobl_tropism(dim, idx, wnd, dir, err):
-    """
+    r"""
     Stores the tropism, given in standard double precision,
-    with dim doubles as coordinates in the list dir, the error in err,
-    and the winding number wnd, at position idx.
-    The index idx must be in the range 1..quaddobl_size().
+    with *dim* doubles as coordinates in the list *dir*, the error in *err*,
+    and the winding number *wnd*, at position *idx*.
+    The index *idx* must be in the range 1..quaddobl_size().
     """
     from phcpy.phcpy2c2 import py2c_numbtrop_store_quaddobl_tropism as store
     data = [x for x in dir]
