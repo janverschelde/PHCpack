@@ -67,7 +67,7 @@ def dobldobl_complex_sweep(pols, sols, nvar, pars, start, target):
     must be the same and be equal to the value of *nvar*.
     The list of symbols in *pars* contains the names of the variables
     in the polynomials *pols* that serve as parameters.
-    The size of the lists *pars, *start*, and *target* must be same.
+    The size of the lists *pars*, *start*, and *target* must be same.
     """
     from phcpy.interface import store_dobldobl_solutions as storesols
     from phcpy.interface import store_dobldobl_system as storesys
@@ -95,7 +95,7 @@ def dobldobl_complex_sweep(pols, sols, nvar, pars, start, target):
 
 def quaddobl_complex_sweep(pols, sols, nvar, pars, start, target):
     r"""
-    For the polynomials in the list of strings p*ols*
+    For the polynomials in the list of strings *pols*
     and the solutions in *sols* for the values in the list *start*,
     a sweep through the parameter space will be performed
     in quad double precision to the target values of
@@ -148,7 +148,7 @@ def standard_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     for the variable lambda.
     The sweep stops when the target value for s is reached
     or when a singular solution is encountered.
-    Computations happend in standard double precision.
+    Computations happen in standard double precision.
     """
     from phcpy.interface import store_standard_solutions as storesols
     from phcpy.interface import store_standard_system as storesys
@@ -187,6 +187,7 @@ def dobldobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     at s = 1, the natural parameter lambda has the value L[1].
 
     Thus: as s moves from 0 to 1, lambda goes from L[0] to L[1].
+
     All solutions in the list *sols* must have then the value L[0]
     for the variable lambda.
     The sweep stops when the target value for s is reached
@@ -232,6 +233,7 @@ def quaddobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     at s = 1, the natural parameter lambda has the value L[1].
 
     Thus: as s moves from 0 to 1, lambda goes from L[0] to L[1].
+
     All solutions in the list sols must have then the value L[0]
     for the variable lambda.
     The sweep stops when the target value for s is reached

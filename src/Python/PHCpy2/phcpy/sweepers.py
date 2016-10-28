@@ -22,7 +22,7 @@ volume 234, number 4, pages 1228-1237, 2010.
 def standard_complex_sweep(pols, sols, nvar, pars, start, target):
     r"""
     For the polynomials in the list of strings *pols*
-    and the solutions in sols for the values in the list *start*,
+    and the solutions in *sols* for the values in the list *start*,
     a sweep through the parameter space will be performed
     in standard double precision to the target values of
     the parameters in the list *target*.
@@ -58,8 +58,8 @@ def standard_complex_sweep(pols, sols, nvar, pars, start, target):
 
 def dobldobl_complex_sweep(pols, sols, nvar, pars, start, target):
     r"""
-    For the polynomials in the list of strings pols
-    and the solutions in sols for the values in the list *start*,
+    For the polynomials in the list of strings *pols*
+    and the solutions in *sols* for the values in the list *start*,
     a sweep through the parameter space will be performed
     in double double precision to the target values of
     the parameters in the list *target*.
@@ -96,7 +96,7 @@ def dobldobl_complex_sweep(pols, sols, nvar, pars, start, target):
 def quaddobl_complex_sweep(pols, sols, nvar, pars, start, target):
     r"""
     For the polynomials in the list of strings *pols*
-    and the solutions in sols for the values in the list *start*,
+    and the solutions in *sols* for the values in the list *start*,
     a sweep through the parameter space will be performed
     in quad double precision to the target values of
     the parameters in the list *target*.
@@ -143,6 +143,7 @@ def standard_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     at s = 1, the natural parameter lambda has the value L[1].
 
     Thus: as s moves from 0 to 1, lambda goes from L[0] to L[1].
+
     All solutions in the list *sols* must have then the value L[0]
     for the variable lambda.
     The sweep stops when the target value for s is reached
@@ -186,6 +187,7 @@ def dobldobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     at s = 1, the natural parameter lambda has the value L[1].
 
     Thus: as s moves from 0 to 1, lambda goes from L[0] to L[1].
+
     All solutions in the list *sols* must have then the value L[0]
     for the variable lambda.
     The sweep stops when the target value for s is reached
@@ -231,6 +233,7 @@ def quaddobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     at s = 1, the natural parameter lambda has the value L[1].
 
     Thus: as s moves from 0 to 1, lambda goes from L[0] to L[1].
+
     All solutions in the list *sols* must have then the value L[0]
     for the variable lambda.
     The sweep stops when the target value for s is reached
