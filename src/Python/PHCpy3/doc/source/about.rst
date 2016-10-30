@@ -39,7 +39,9 @@ location of singularities along the solution paths were exported
 in the module sweepers.py in version 0.3.3 of phcpy.
 With the addition of a homotopy membership test in verion 0.3.7,
 the sets.py module provides the key ingredients for a numerical
-irreducible decomposition.
+irreducible decomposition.  
+Version 0.5.0 introduced Newton's method on power series.
+Use cases were added to the documentation in versions 0.5.2, 0.5.3, and 0.5.4.
 
 references
 ==========
