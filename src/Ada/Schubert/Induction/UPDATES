@@ -1,3 +1,5 @@
+Sun 30 Oct 2016 : added multitasking to wrapped_path_trackers.
+
 Mon 24 Oct 2016 : fixed call to Resolve in ts_lrhom.adb to include the
   option of squaring overdetermined homotopies.
 

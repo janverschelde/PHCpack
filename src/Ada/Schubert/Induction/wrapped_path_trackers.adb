@@ -16,6 +16,7 @@ with Standard_IncFix_Continuation;
 with DoblDobl_IncFix_Continuation;
 with QuadDobl_IncFix_Continuation;
 with Drivers_for_Poly_Continuation;
+with Multitasking_Continuation;         use Multitasking_Continuation;
 
 package body Wrapped_Path_Trackers is
 
@@ -581,5 +582,156 @@ package body Wrapped_Path_Trackers is
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 12"); raise;
   end Call_Path_Trackers;
+
+-- MULTITASKED TRACKING OF MANY PATHS WITHOUT OUTPUT :
+
+  procedure Multitasked_Path_Trackers
+              ( nv,nt : in integer32;
+                h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out Standard_Complex_Solutions.Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    nbequ : constant integer32 := h'last;
+
+  begin
+    Standard_Homotopy.Create(h,nv+1);
+    if nbequ = nv then -- square homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt);
+    else      -- overdetermined homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt,nbq=>nbequ);
+    end if;
+    Update(sols,xtsols);
+    Standard_Homotopy.Clear;
+  exception -- adding this exception handler caused no longer exception ...
+    when others => put_line("exception in Call Path Trackers 7"); raise;
+  end Multitasked_Path_Trackers;
+
+  procedure Multitasked_Path_Trackers
+              ( nv,nt : in integer32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    nbequ : constant integer32 := h'last;
+
+  begin
+    DoblDobl_Homotopy.Create(h,nv+1);
+    if nbequ = nv then -- square homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt);
+    else      -- overdetermined homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt,nbq=>nbequ);
+    end if;
+    Update(sols,xtsols);
+    DoblDobl_Homotopy.Clear;
+  exception -- adding this exception handler caused no longer exception ...
+    when others => put_line("exception in Call Path Trackers 8"); raise;
+  end Multitasked_Path_Trackers;
+
+  procedure Multitasked_Path_Trackers
+              ( nv,nt : in integer32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    nbequ : constant integer32 := h'last;
+
+  begin
+    QuadDobl_Homotopy.Create(h,nv+1);
+    if nbequ = nv then -- square homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt);
+    else      -- overdetermined homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt,nbq=>nbequ);
+    end if;
+    Update(sols,xtsols);
+    QuadDobl_Homotopy.Clear;
+  exception -- adding this exception handler caused no longer exception ...
+    when others => put_line("exception in Call Path Trackers 9"); raise;
+  end Multitasked_Path_Trackers;
+
+-- MULTITASKED TRACKING OF MANY PATHS WITH OUTPUT TO FILE :
+
+  procedure Multitasked_Path_Trackers
+              ( file : in file_type; nv,nt : in integer32;
+                h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out Standard_Complex_Solutions.Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions;
+
+    nbequ : constant integer32 := h'last;
+
+  begin
+    Standard_Homotopy.Create(h,nv+1);
+    if nbequ = nv then -- square homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt);
+    else      -- overdetermined homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt,nbq=>nbequ);
+    end if;
+   -- put_line(file,"In Call_Path_Trackers ...");
+    put(file,"Number of solutions in sols   : ");
+    put(file,Length_Of(sols),1); new_line(file);
+    put(file,"Number of solutions in xtsols : ");
+    put(file,Length_Of(xtsols),1); new_line(file);
+    Update(sols,xtsols);
+    Standard_Homotopy.Clear;
+  exception -- adding this exception handler caused no longer exception ...
+    when others => put_line("exception in Call Path Trackers 10"); raise;
+  end Multitasked_Path_Trackers;
+
+  procedure Multitasked_Path_Trackers
+              ( file : in file_type; nv,nt : in integer32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    nbequ : constant integer32 := h'last;
+
+  begin
+    DoblDobl_Homotopy.Create(h,nv+1);
+    if nbequ = nv then -- square homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt);
+    else      -- overdetermined homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt,nbq=>nbequ);
+    end if;
+   -- put_line(file,"In Call_Path_Trackers ...");
+    put(file,"Number of solutions in sols   : ");
+    put(file,Length_Of(sols),1); new_line(file);
+    put(file,"Number of solutions in xtsols : ");
+    put(file,Length_Of(xtsols),1); new_line(file);
+    Update(sols,xtsols);
+    DoblDobl_Homotopy.Clear;
+  exception -- adding this exception handler caused no longer exception ...
+    when others => put_line("exception in Call Path Trackers 11"); raise;
+  end Multitasked_Path_Trackers;
+
+  procedure Multitasked_Path_Trackers
+              ( file : in file_type; nv,nt : in integer32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    nbequ : constant integer32 := h'last;
+
+  begin
+    QuadDobl_Homotopy.Create(h,nv+1);
+    if nbequ = nv then -- square homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt);
+    else      -- overdetermined homotopy
+      Silent_Multitasking_Path_Tracker(xtsols,nt,nbq=>nbequ);
+    end if;
+   -- put_line(file,"In Call_Path_Trackers ...");
+    put(file,"Number of solutions in sols   : ");
+    put(file,Length_Of(sols),1); new_line(file);
+    put(file,"Number of solutions in xtsols : ");
+    put(file,Length_Of(xtsols),1); new_line(file);
+    Update(sols,xtsols);
+    QuadDobl_Homotopy.Clear;
+  exception -- adding this exception handler caused no longer exception ...
+    when others => put_line("exception in Call Path Trackers 12"); raise;
+  end Multitasked_Path_Trackers;
 
 end Wrapped_Path_Trackers;

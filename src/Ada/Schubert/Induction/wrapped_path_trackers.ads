@@ -188,4 +188,76 @@ package Wrapped_Path_Trackers is
   --            last component of vectors in xtsols to be equal to one;
   --   sols     standard representation of the solutions.
 
+-- MULTITASKED TRACKING OF MANY PATHS WITHOUT OUTPUT :
+
+  procedure Multitasked_Path_Trackers
+              ( nv,nt : in integer32;
+                h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out Standard_Complex_Solutions.Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Multitasked_Path_Trackers
+              ( nv,nt : in integer32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Multitasked_Path_Trackers
+              ( nv,nt : in integer32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Tracks one path starting at the solution in xt,
+  --   as defined by the homotopy h, without output,
+  --   in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   nv       number of variables in the ambient space;
+  --   nt       number of tasks for the multitasked path trackers;
+  --   h        homotopy in nv+1 variables;
+  --   xtsols   start solutions with their last component equal to zero,
+  --            satisfies the homotopy h (upto tolerance).
+
+  -- ON RETURN :
+  --   xtsols   solutions at the end of the path, tracked to the
+  --            last component of vectors in xtsols to be equal to one;
+  --   sols     standard representation of the solutions.
+
+-- MULTITASKED TRACKING OF MANY PATHS WITH OUTPUT TO FILE :
+
+  procedure Multitasked_Path_Trackers
+              ( file : in file_type; nv,nt : in integer32;
+                h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out Standard_Complex_Solutions.Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Multitasked_Path_Trackers
+              ( file : in file_type; nv,nt : in integer32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Multitasked_Path_Trackers
+              ( file : in file_type; nv,nt : in integer32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Tracks paths starting at the solution in xtsols,
+  --   as defined by the homotopy h, 
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file     output file for intermediate results and diagnostics,
+  --            if omitted, then there is no intermediate output;
+  --   nv       number of variables in the ambient space;
+  --   nt       number of tasks for the multitasked path trackers;
+  --   h        homotopy in nv+1 variables;
+  --   xtsols   start solutions with their last component equal to zero,
+  --            satisfies the homotopy h (upto tolerance).
+
+  -- ON RETURN :
+  --   xtsols   solutions at the end of the path, tracked to the
+  --            last component of vectors in xtsols to be equal to one;
+  --   sols     standard representation of the solutions.
+
 end Wrapped_Path_Trackers;
