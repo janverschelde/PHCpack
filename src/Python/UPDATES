@@ -1,3 +1,5 @@
+Mon 31 Oct 2016 : prepared files for release 0.5.7 of phcpy.
+
 Thu 27 Oct 2016 : restructured text added in the documentation strings
   of maps of PHCpy3 and of the modules tuning and series of PHCpy2.
   For Python2 modules trackers, sweepers, and tropisms, added documentation

@@ -1,4 +1,4 @@
-phcpy 0.5.6 offers a simple Python interface to PHCv2.4.27
+phcpy 0.5.7 offers a simple Python interface to PHCv2.4.28
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -57,6 +57,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.5.7 : 2016-10-31 : improved reference manual with restructured text
 0.5.6 : 2016-10-16 : compute mixed cell configuration for integer lifting
 0.5.5 : 2016-09-20 : checkin parameters for start system constructors
 0.5.4 : 2016-08-31 : another use case and reference manual in documentation
