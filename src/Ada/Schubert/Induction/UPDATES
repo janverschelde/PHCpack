@@ -1,3 +1,6 @@
+Tue 1 Nov 2016 : upgraded moving_flag_continuation to use multitasking,
+  added stubs to checker_poset_deformations.adb.
+
 Sun 30 Oct 2016 : added multitasking to wrapped_path_trackers.
 
 Mon 24 Oct 2016 : fixed call to Resolve in ts_lrhom.adb to include the

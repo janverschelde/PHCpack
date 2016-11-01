@@ -67,19 +67,19 @@ package Moving_Flag_Continuation is
   --            or if the path tracker failed to reach a solution.
 
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32;
+              ( file : in file_type; nv : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
                 fail : out boolean );
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32;
+              ( file : in file_type; nv : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
                 fail : out boolean );
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32;
+              ( file : in file_type; nv : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
@@ -87,14 +87,14 @@ package Moving_Flag_Continuation is
 
   -- DESCRIPTION :
   --   Tracks a path for the next move in the checker poset,
-  --   given a homotopy with last variable (with index n+1) the 
+  --   given a homotopy with last variable (with index nv+1) the 
   --   continuation parameter and one start solution,
   --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file     output file for intermediate results and diagnostics;
-  --   n        number of variables in the ambient space;
-  --   h        homotopy in n+1 variables;
+  --   nv       number of variables in the ambient space;
+  --   h        homotopy in nv+1 variables;
   --   tosqr    true if the overdetermined homotopy will be squared up, or
   --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure.
@@ -105,19 +105,19 @@ package Moving_Flag_Continuation is
   --            or if the path tracker failed to reach a solution.
 
   procedure Track_Next_Move
-              ( n : in integer32;
+              ( nv,nt : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean );
   procedure Track_Next_Move
-              ( n : in integer32;
+              ( nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 fail : out boolean );
   procedure Track_Next_Move
-              ( n : in integer32;
+              ( nv,nt : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
@@ -125,13 +125,14 @@ package Moving_Flag_Continuation is
 
   -- DESCRIPTION :
   --   Tracks a path for the next move in the checker poset,
-  --   given a homotopy with last variable (with index n+1) the 
+  --   given a homotopy with last variable (with index nv+1) the 
   --   continuation parameter and a start solution, without output,
   --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
-  --   n        number of variables in the ambient space;
-  --   h        homotopy in n+1 variables;
+  --   nv       number of variables in the ambient space;
+  --   nt       number of tasks, if zero, then no multitasking;
+  --   h        homotopy in nv+1 variables;
   --   tosqr    true if the overdetermined homotopy will be squared up, or
   --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
@@ -143,22 +144,19 @@ package Moving_Flag_Continuation is
   --            or if the path tracker failed to reach a solution.
 
   procedure Track_Next_Move
-              ( file : in file_type;
-                n : in integer32;
+              ( file : in file_type; nv,nt : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean );
   procedure Track_Next_Move
-              ( file : in file_type;
-                n : in integer32;
+              ( file : in file_type; nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 fail : out boolean );
   procedure Track_Next_Move
-              ( file : in file_type;
-                n : in integer32;
+              ( file : in file_type; nv,nt : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
@@ -173,8 +171,9 @@ package Moving_Flag_Continuation is
   -- ON ENTRY :
   --   file     output file for intermediate results and diagnostics,
   --            if omitted, then no output is written to file;
-  --   n        number of variables in the ambient space;
-  --   h        homotopy in n+1 variables;
+  --   nv       number of variables in the ambient space;
+  --   nt       number of tasks, if zero, then no multitasking;
+  --   h        homotopy in nv+1 variables;
   --   tosqr    true if the overdetermined homotopy will be squared up, or
   --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
@@ -567,7 +566,7 @@ package Moving_Flag_Continuation is
   --   fail     true if no longer a solution, false otherwise.
 
   procedure Stay_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -576,7 +575,7 @@ package Moving_Flag_Continuation is
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
   procedure Stay_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -585,7 +584,7 @@ package Moving_Flag_Continuation is
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
   procedure Stay_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -605,6 +604,7 @@ package Moving_Flag_Continuation is
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
   --   ind      index of the move, if 0 then ls will be a first solution;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   q        parent permutation in the poset used for target;
   --   p        current permutation in the poset used for start;
   --   qr       position of the rows of the white checkers with q;
@@ -626,7 +626,7 @@ package Moving_Flag_Continuation is
   --   fail     true if sols contains no longer a solution, false otherwise.
 
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -635,7 +635,7 @@ package Moving_Flag_Continuation is
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -644,7 +644,7 @@ package Moving_Flag_Continuation is
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -665,6 +665,7 @@ package Moving_Flag_Continuation is
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
   --   ind      index of the move, if 0 then ls will be a first solution;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   q        parent permutation in the poset used for target;
   --   p        current permutation in the poset used for start;
   --   qr       position of the rows of the white checkers with q;
@@ -747,7 +748,7 @@ package Moving_Flag_Continuation is
   --   fail     true if no longer a solution, false otherwise.
 
   procedure Swap_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -756,7 +757,7 @@ package Moving_Flag_Continuation is
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
   procedure Swap_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -765,7 +766,7 @@ package Moving_Flag_Continuation is
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
   procedure Swap_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -788,6 +789,7 @@ package Moving_Flag_Continuation is
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
   --   ind      index of the move, if 0 then ls will be a first solution;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   q        parent permutation in the poset used for target;
   --   p        current permutation in the poset used for start;
   --   qr       position of the rows of the white checkers with q;
@@ -808,7 +810,7 @@ package Moving_Flag_Continuation is
   --   fail     true if sols contains no longer a solution, false otherwise.
 
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -817,7 +819,7 @@ package Moving_Flag_Continuation is
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -826,7 +828,7 @@ package Moving_Flag_Continuation is
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -848,6 +850,7 @@ package Moving_Flag_Continuation is
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
   --   ind      index of the move, if 0 then ls will be a first solution;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   q        parent permutation in the poset used for target;
   --   p        current permutation in the poset used for start;
   --   qr       position of the rows of the white checkers with q;

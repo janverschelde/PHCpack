@@ -359,11 +359,11 @@ package body Checker_Poset_Deformations is
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
              mf,vf,sols,tol,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Stay_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Swap_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -458,11 +458,11 @@ package body Checker_Poset_Deformations is
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
              mf,vf,sols,tol,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Stay_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Swap_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -557,11 +557,11 @@ package body Checker_Poset_Deformations is
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
              mf,vf,sols,tol,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Stay_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Swap_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -628,10 +628,10 @@ package body Checker_Poset_Deformations is
           Trivial_Stay
             (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Stay_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
-          Swap_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Swap_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -696,10 +696,10 @@ package body Checker_Poset_Deformations is
           Trivial_Stay
             (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Stay_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
-          Swap_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Swap_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -764,10 +764,10 @@ package body Checker_Poset_Deformations is
           Trivial_Stay
             (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Stay_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
-          Swap_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Swap_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then

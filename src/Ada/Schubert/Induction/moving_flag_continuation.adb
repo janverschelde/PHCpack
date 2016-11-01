@@ -251,7 +251,7 @@ package body Moving_Flag_Continuation is
   end Track_First_Move;
 
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32;
+              ( file : in file_type; nv : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
@@ -261,10 +261,10 @@ package body Moving_Flag_Continuation is
     use Standard_Complex_Poly_SysFun;
     use Standard_Complex_Solutions;
 
-    xt : Standard_Complex_Vectors.Vector(1..n+1);
+    xt : Standard_Complex_Vectors.Vector(1..nv+1);
     y : Standard_Complex_Vectors.Vector(h'range);
     res : double_float;
-    sh : Poly_Sys(1..n);
+    sh : Poly_Sys(1..nv);
     yh : Standard_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
@@ -286,7 +286,7 @@ package body Moving_Flag_Continuation is
     put(file,res,3); new_line(file);
     fail := (res > tolsing);
     if tosqr then
-      sh := Square(n,h);
+      sh := Square(nv,h);
       yh := Eval(sh,xt);
      -- put_line(file,"Value of the start solution at the squared homotopy :");
      -- put_line(file,yh);
@@ -299,10 +299,10 @@ package body Moving_Flag_Continuation is
       put_line(file,"-> residual too high, abort path tracking");
     else
       sols := Create(xt);
-      sh0 := Eval(sh,Standard_Complex_Numbers.Create(0.0),n+1);
+      sh0 := Eval(sh,Standard_Complex_Numbers.Create(0.0),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
-      Call_Path_Trackers(file,n,sh,xt,sol);
+      Call_Path_Trackers(file,nv,sh,xt,sol);
       put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -316,7 +316,7 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32;
+              ( file : in file_type; nv : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
@@ -326,10 +326,10 @@ package body Moving_Flag_Continuation is
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Solutions;
 
-    xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
+    xt : DoblDobl_Complex_Vectors.Vector(1..nv+1);
     y : DoblDobl_Complex_Vectors.Vector(h'range);
     res : double_double;
-    sh : Poly_Sys(1..n);
+    sh : Poly_Sys(1..nv);
     yh : DoblDobl_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
@@ -350,7 +350,7 @@ package body Moving_Flag_Continuation is
     put(file,res,3); new_line(file);
     fail := (res > tolsing);
     if tosqr then
-      sh := Square(n,h);
+      sh := Square(nv,h);
       yh := Eval(sh,xt);
      -- put_line(file,"Value of the start solution at the squared homotopy :");
      -- put_line(file,yh);
@@ -363,10 +363,10 @@ package body Moving_Flag_Continuation is
       put_line(file,"-> residual too high, abort path tracking");
     else
       sols := Create(xt);
-      sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(0)),n+1);
+      sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(0)),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
-      Call_Path_Trackers(file,n,sh,xt,sol);
+      Call_Path_Trackers(file,nv,sh,xt,sol);
       put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -380,7 +380,7 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32;
+              ( file : in file_type; nv : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
@@ -390,10 +390,10 @@ package body Moving_Flag_Continuation is
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Solutions;
 
-    xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
+    xt : QuadDobl_Complex_Vectors.Vector(1..nv+1);
     y : QuadDobl_Complex_Vectors.Vector(h'range);
     res : quad_double;
-    sh : Poly_Sys(1..n);
+    sh : Poly_Sys(1..nv);
     yh : QuadDobl_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
@@ -414,7 +414,7 @@ package body Moving_Flag_Continuation is
     put(file,res,3); new_line(file);
     fail := (res > tolsing);
     if tosqr then
-      sh := Square(n,h);
+      sh := Square(nv,h);
       yh := Eval(sh,xt);
      -- put_line(file,"Value of the start solution at the squared homotopy :");
      -- put_line(file,yh);
@@ -427,10 +427,10 @@ package body Moving_Flag_Continuation is
       put_line(file,"-> residual too high, abort path tracking");
     else
       sols := Create(xt);
-      sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(0)),n+1);
+      sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(0)),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
-      Call_Path_Trackers(file,n,sh,xt,sol);
+      Call_Path_Trackers(file,nv,sh,xt,sol);
       put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -444,7 +444,7 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32;
+              ( file : in file_type; nv,nt : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
@@ -454,10 +454,10 @@ package body Moving_Flag_Continuation is
     use Standard_Complex_Poly_SysFun;
     use Standard_Complex_Solutions;
 
-    xt : Standard_Complex_Vectors.Vector(1..n+1);
+    xt : Standard_Complex_Vectors.Vector(1..nv+1);
     y : Standard_Complex_Vectors.Vector(h'range);
     res : double_float;
-    sh : Poly_Sys(1..n);
+    sh : Poly_Sys(1..nv);
     yh : Standard_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     epsxa : constant double_float := 1.0E-12;
@@ -480,7 +480,7 @@ package body Moving_Flag_Continuation is
       xt(xt'last) := zero;
       y := Eval(h,xt);
       put(file,"The original homotopy has "); put(file,h'last,1);
-      put(file," equations in "); put(file,n,1); put(file," variables.");
+      put(file," equations in "); put(file,nv,1); put(file," variables.");
       new_line(file);
      -- put_line(file,h);
      -- put_line(file,"Value of the start solution at the original homotopy :");
@@ -490,7 +490,7 @@ package body Moving_Flag_Continuation is
       put(file,res,3); new_line(file);
       fail := (res > tolsing);
       if tosqr then
-        sh := Square(n,h);
+        sh := Square(nv,h);
         yh := Eval(sh,xt);
       -- put_line(file,"Value of the start solution at the squared homotopy :");
       -- put_line(file,yh);
@@ -506,7 +506,7 @@ package body Moving_Flag_Continuation is
       put_line(file,"-> residual too high, abort path tracking");
     else
       if tosqr then
-        sh0 := Eval(sh,zero,n+1);
+        sh0 := Eval(sh,zero,nv+1);
         Reporting_Root_Refiner
           (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,deflate,false);
         put(file,"Number of solutions in xtsols : ");
@@ -516,7 +516,7 @@ package body Moving_Flag_Continuation is
       end if;
       put_line(file,"Sharpening the roots on the original system ...");
       declare
-        h0 : Poly_Sys(h'range) := Eval(h,zero,n+1);
+        h0 : Poly_Sys(h'range) := Eval(h,zero,nv+1);
         h0fz : constant Poly_Sys := Filter_Zero_Equations(h0);
       begin
         numit := 0;
@@ -524,11 +524,17 @@ package body Moving_Flag_Continuation is
           (file,h0fz,xtsols,epsxa,epsfa,tolsing,numit,3,deflate,false);
       end;
       if tosqr then
-        Call_Path_Trackers(file,n,sh,xtsols,sols);
+        if nt > 0
+         then Multitasked_Path_Trackers(file,nv,nt,sh,xtsols,sols);
+         else Call_Path_Trackers(file,nv,sh,xtsols,sols);
+        end if;
         Clear(sh0);
-        sh0 := Eval(sh,one,n+1);
+        sh0 := Eval(sh,one,nv+1);
       else
-        Call_Path_Trackers(file,n,h,xtsols,sols);
+        if nt > 0 
+         then Multitasked_Path_Trackers(file,nv,nt,h,xtsols,sols);
+         else Call_Path_Trackers(file,nv,h,xtsols,sols);
+        end if;
       end if;
       tmp := xtsols;
       while not Is_Null(tmp) loop
@@ -562,7 +568,7 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32;
+              ( file : in file_type; nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
@@ -572,10 +578,10 @@ package body Moving_Flag_Continuation is
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Solutions;
 
-    xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
+    xt : DoblDobl_Complex_Vectors.Vector(1..nv+1);
     y : DoblDobl_Complex_Vectors.Vector(h'range);
     res : double_double;
-    sh : Poly_Sys(1..n);
+    sh : Poly_Sys(1..nv);
     yh : DoblDobl_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     epsxa : constant double_float := 1.0E-12;
@@ -600,14 +606,14 @@ package body Moving_Flag_Continuation is
      -- put_line(file,"Value of the start solution at the original homotopy :");
      -- put_line(file,y);
       put(file,"The original homotopy has "); put(file,h'last,1);
-      put(file," equations in "); put(file,n,1); put(file," variables.");
+      put(file," equations in "); put(file,nv,1); put(file," variables.");
       new_line(file);
       res := Max_Norm(y);
       put(file,"Residual of the start solution at the original homotopy : ");
       put(file,res,3); new_line(file);
       fail := (res > tolsing);
       if tosqr then
-        sh := Square(n,h);
+        sh := Square(nv,h);
         yh := Eval(sh,xt);
      -- put_line(file,"Value of the start solution at the squared homotopy :");
      -- put_line(file,yh);
@@ -623,7 +629,7 @@ package body Moving_Flag_Continuation is
       put_line(file,"-> residual too high, abort path tracking");
     else
       if tosqr then
-        sh0 := Eval(sh,zero,n+1);
+        sh0 := Eval(sh,zero,nv+1);
         Reporting_Root_Refiner
           (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,false);
         put(file,"Number of solutions in xtsols : ");
@@ -633,7 +639,7 @@ package body Moving_Flag_Continuation is
       end if;
       put_line(file,"Sharpening the roots on the original system ...");
       declare
-        h0 : Poly_Sys(h'range) := Eval(h,zero,n+1);
+        h0 : Poly_Sys(h'range) := Eval(h,zero,nv+1);
         h0fz : constant Poly_Sys := Filter_Zero_Equations(h0);
       begin
         numit := 0;
@@ -641,11 +647,17 @@ package body Moving_Flag_Continuation is
           (file,h0fz,xtsols,epsxa,epsfa,tolsing,numit,3,false);
       end;
       if tosqr then
-        Call_Path_Trackers(file,n,sh,xtsols,sols);
+        if nt > 0
+         then Multitasked_Path_Trackers(file,nv,nt,sh,xtsols,sols);
+         else Call_Path_Trackers(file,nv,sh,xtsols,sols);
+        end if;
         Clear(sh0);
-        sh0 := Eval(sh,one,n+1);
+        sh0 := Eval(sh,one,nv+1);
       else
-        Call_Path_Trackers(file,n,h,xtsols,sols);
+        if nt > 0
+         then Multitasked_Path_Trackers(file,nv,nt,h,xtsols,sols);
+         else Call_Path_Trackers(file,nv,h,xtsols,sols);
+        end if;
       end if;
       tmp := xtsols;
       while not Is_Null(tmp) loop
@@ -679,7 +691,7 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32;
+              ( file : in file_type; nv,nt : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
@@ -689,10 +701,10 @@ package body Moving_Flag_Continuation is
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Solutions;
 
-    xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
+    xt : QuadDobl_Complex_Vectors.Vector(1..nv+1);
     y : QuadDobl_Complex_Vectors.Vector(h'range);
     res : quad_double;
-    sh : Poly_Sys(1..n);
+    sh : Poly_Sys(1..nv);
     yh : QuadDobl_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     epsxa : constant double_float := 1.0E-12;
@@ -717,14 +729,14 @@ package body Moving_Flag_Continuation is
      -- put_line(file,"Value of the start solution at the original homotopy :");
      -- put_line(file,y);
       put(file,"The original homotopy has "); put(file,h'last,1);
-      put(file," equations in "); put(file,n,1); put(file," variables.");
+      put(file," equations in "); put(file,nv,1); put(file," variables.");
       new_line(file);
       res := Max_Norm(y);
       put(file,"Residual of the start solution at the original homotopy : ");
       put(file,res,3); new_line(file);
       fail := (res > tolsing);
       if tosqr then
-        sh := Square(n,h);
+        sh := Square(nv,h);
         yh := Eval(sh,xt);
      -- put_line(file,"Value of the start solution at the squared homotopy :");
      -- put_line(file,yh);
@@ -740,7 +752,7 @@ package body Moving_Flag_Continuation is
       put_line(file,"-> residual too high, abort path tracking");
     else
       if tosqr then
-        sh0 := Eval(sh,zero,n+1);
+        sh0 := Eval(sh,zero,nv+1);
         Reporting_Root_Refiner
           (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,false);
         put(file,"Number of solutions in xtsols : ");
@@ -750,7 +762,7 @@ package body Moving_Flag_Continuation is
       end if;
       put_line(file,"Sharpening the roots on the original system ...");
       declare
-        h0 : Poly_Sys(h'range) := Eval(h,zero,n+1);
+        h0 : Poly_Sys(h'range) := Eval(h,zero,nv+1);
         h0fz : constant Poly_Sys := Filter_Zero_Equations(h0);
       begin
         numit := 0;
@@ -758,11 +770,17 @@ package body Moving_Flag_Continuation is
           (file,h0fz,xtsols,epsxa,epsfa,tolsing,numit,3,false);
       end;
       if tosqr then
-        Call_Path_Trackers(file,n,sh,xtsols,sols);
+        if nt > 0
+         then Multitasked_Path_Trackers(file,nv,nt,sh,xtsols,sols);
+         else Call_Path_Trackers(file,nv,sh,xtsols,sols);
+        end if;
         Clear(sh0);
-        sh0 := Eval(sh,one,n+1);
+        sh0 := Eval(sh,one,nv+1);
       else
-        Call_Path_Trackers(file,n,h,xtsols,sols);
+        if nt > 0
+         then Multitasked_Path_Trackers(file,nv,nt,h,xtsols,sols);
+         else Call_Path_Trackers(file,nv,h,xtsols,sols);
+        end if;
       end if;
       tmp := xtsols;
       while not Is_Null(tmp) loop
@@ -796,7 +814,7 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
-              ( n : in integer32;
+              ( nv,nt : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
@@ -805,8 +823,8 @@ package body Moving_Flag_Continuation is
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
 
-    xt : Standard_Complex_Vectors.Vector(1..n+1);
-    sh : Poly_Sys(1..n);
+    xt : Standard_Complex_Vectors.Vector(1..nv+1);
+    sh : Poly_Sys(1..nv);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     xtsols,xt_sols_last : Solution_List;
@@ -823,10 +841,16 @@ package body Moving_Flag_Continuation is
     end loop;
     if not fail then
       if tosqr then
-        sh := Square(n,h);
-        Call_Path_Trackers(n,sh,xtsols,sols);
+        sh := Square(nv,h);
+        if nt > 0
+         then Multitasked_Path_Trackers(nv,nt,sh,xtsols,sols);
+         else Call_Path_Trackers(nv,sh,xtsols,sols);
+        end if;
       else
-        Call_Path_Trackers(n,h,xtsols,sols);
+        if nt > 0
+         then Multitasked_Path_Trackers(nv,nt,h,xtsols,sols);
+         else Call_Path_Trackers(nv,h,xtsols,sols);
+        end if;
       end if;
       tmp := xtsols;
       while not Is_Null(tmp) loop
@@ -849,7 +873,7 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
-              ( n : in integer32;
+              ( nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
@@ -858,8 +882,8 @@ package body Moving_Flag_Continuation is
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
 
-    xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
-    sh : Poly_Sys(1..n);
+    xt : DoblDobl_Complex_Vectors.Vector(1..nv+1);
+    sh : Poly_Sys(1..nv);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     xtsols,xt_sols_last : Solution_List;
@@ -876,10 +900,16 @@ package body Moving_Flag_Continuation is
     end loop;
     if not fail then
       if tosqr then
-        sh := Square(n,h);
-        Call_Path_Trackers(n,sh,xtsols,sols);
+        sh := Square(nv,h);
+        if nt > 0
+         then Multitasked_Path_Trackers(nv,nt,sh,xtsols,sols);
+         else Call_Path_Trackers(nv,sh,xtsols,sols);
+        end if;
       else
-        Call_Path_Trackers(n,h,xtsols,sols);
+        if nt > 0
+         then Multitasked_Path_Trackers(nv,nt,h,xtsols,sols);
+         else Call_Path_Trackers(nv,h,xtsols,sols);
+        end if;
       end if;
       tmp := xtsols;
       while not Is_Null(tmp) loop
@@ -902,7 +932,7 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
-              ( n : in integer32;
+              ( nv,nt : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
@@ -911,8 +941,8 @@ package body Moving_Flag_Continuation is
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
 
-    xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
-    sh : Poly_Sys(1..n);
+    xt : QuadDobl_Complex_Vectors.Vector(1..nv+1);
+    sh : Poly_Sys(1..nv);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     xtsols,xt_sols_last : Solution_List;
@@ -929,10 +959,16 @@ package body Moving_Flag_Continuation is
     end loop;
     if not fail then
       if tosqr then
-        sh := Square(n,h);
-        Call_Path_Trackers(n,sh,xtsols,sols);
+        sh := Square(nv,h);
+        if nt > 0
+         then Multitasked_Path_Trackers(nv,nt,sh,xtsols,sols);
+         else Call_Path_Trackers(nv,sh,xtsols,sols);
+        end if;
       else
-        Call_Path_Trackers(n,h,xtsols,sols);
+        if nt > 0
+         then Multitasked_Path_Trackers(nv,nt,h,xtsols,sols);
+         else Call_Path_Trackers(nv,h,xtsols,sols);
+        end if;
       end if;
       tmp := xtsols;
       while not Is_Null(tmp) loop
@@ -1868,7 +1904,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1901,7 +1937,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -1921,7 +1957,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1954,7 +1990,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -1974,7 +2010,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2007,7 +2043,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2027,7 +2063,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2052,7 +2088,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2065,7 +2101,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2090,7 +2126,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2103,7 +2139,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2128,7 +2164,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2315,7 +2351,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2347,7 +2383,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2371,7 +2407,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2403,7 +2439,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2427,7 +2463,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2459,7 +2495,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2483,7 +2519,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2511,7 +2547,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
@@ -2528,7 +2564,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2556,7 +2592,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
@@ -2573,7 +2609,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2601,7 +2637,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
