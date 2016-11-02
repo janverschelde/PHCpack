@@ -948,7 +948,7 @@ package body Resolve_Schubert_Problems is
   end Connect_Checker_Posets_to_Count;
 
   procedure Connect_Checker_Posets_to_Track
-              ( file : in file_type; n,k,level : in integer32;
+              ( file : in file_type; n,k,level,nt : in integer32;
                 tol : in double_float;
                 pl : in Poset_List;
                 snd : in Standard_Solution_Posets.Link_to_Solution_Node;
@@ -1031,7 +1031,7 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,0,node.ps,childconds,verify,minrep,tosqr,
+              (file,n,k,nt,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1057,7 +1057,7 @@ package body Resolve_Schubert_Problems is
   end Connect_Checker_Posets_to_Track;
 
   procedure Connect_Checker_Posets_to_Track
-              ( file : in file_type; n,k,level : in integer32;
+              ( file : in file_type; n,k,level,nt : in integer32;
                 tol : in double_float;
                 pl : in Poset_List;
                 snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
@@ -1140,7 +1140,7 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,0,node.ps,childconds,verify,minrep,tosqr,
+              (file,n,k,nt,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1166,7 +1166,7 @@ package body Resolve_Schubert_Problems is
   end Connect_Checker_Posets_to_Track;
 
   procedure Connect_Checker_Posets_to_Track
-              ( file : in file_type; n,k,level : in integer32;
+              ( file : in file_type; n,k,level,nt : in integer32;
                 tol : in double_float;
                 pl : in Poset_List;
                 snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
@@ -1249,7 +1249,7 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,0,node.ps,childconds,verify,minrep,tosqr,
+              (file,n,k,nt,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1275,7 +1275,7 @@ package body Resolve_Schubert_Problems is
   end Connect_Checker_Posets_to_Track;
 
   procedure Connect_Checker_Posets_to_Track
-              ( n,k,level : in integer32; tol : in double_float;
+              ( n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
                 snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
@@ -1333,7 +1333,7 @@ package body Resolve_Schubert_Problems is
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
-              (n,k,0,node.ps,childconds,minrep,tosqr,
+              (n,k,nt,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1352,7 +1352,7 @@ package body Resolve_Schubert_Problems is
   end Connect_Checker_Posets_to_Track;
 
   procedure Connect_Checker_Posets_to_Track
-              ( n,k,level : in integer32; tol : in double_float;
+              ( n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
                 snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in DoblDobl_Complex_Matrices.Link_to_Matrix;
@@ -1410,7 +1410,7 @@ package body Resolve_Schubert_Problems is
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
-              (n,k,0,node.ps,childconds,minrep,tosqr,
+              (n,k,nt,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1429,7 +1429,7 @@ package body Resolve_Schubert_Problems is
   end Connect_Checker_Posets_to_Track;
 
   procedure Connect_Checker_Posets_to_Track
-              ( n,k,level : in integer32; tol : in double_float;
+              ( n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
                 snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in QuadDobl_Complex_Matrices.Link_to_Matrix;
@@ -1487,7 +1487,7 @@ package body Resolve_Schubert_Problems is
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
-              (n,k,0,node.ps,childconds,minrep,tosqr,
+              (n,k,nt,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1569,7 +1569,7 @@ package body Resolve_Schubert_Problems is
 
   procedure Resolve
               ( file : in file_type; extopt,repcon : in boolean;
-                n,k : in integer32; tol : in double_float;
+                n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
@@ -1629,21 +1629,21 @@ package body Resolve_Schubert_Problems is
           if extopt or repcon then
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  verify,minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
-                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  verify,minrep,tosqr,conds,workf.all);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  minrep,tosqr,conds,workf.all);
             end if;
           end if;
@@ -1668,7 +1668,7 @@ package body Resolve_Schubert_Problems is
 
   procedure Resolve
               ( file : in file_type; extopt,repcon : in boolean;
-                n,k : in integer32; tol : in double_float;
+                n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
@@ -1728,21 +1728,21 @@ package body Resolve_Schubert_Problems is
           if extopt or repcon then
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  verify,minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
-                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  verify,minrep,tosqr,conds,workf.all);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  minrep,tosqr,conds,workf.all);
             end if;
           end if;
@@ -1767,7 +1767,7 @@ package body Resolve_Schubert_Problems is
 
   procedure Resolve
               ( file : in file_type; extopt,repcon : in boolean;
-                n,k : in integer32; tol : in double_float;
+                n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
@@ -1827,21 +1827,21 @@ package body Resolve_Schubert_Problems is
           if extopt or repcon then
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  verify,minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
-                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  verify,minrep,tosqr,conds,workf.all);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                  minrep,tosqr,conds,workf.all);
             end if;
           end if;
@@ -1865,7 +1865,7 @@ package body Resolve_Schubert_Problems is
   end Resolve;
 
   procedure Resolve
-              ( n,k : in integer32; tol : in double_float;
+              ( n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
@@ -1913,11 +1913,11 @@ package body Resolve_Schubert_Problems is
         if i > 1 then
           if i = 2 then -- use the original flags
             Connect_Checker_Posets_to_Track
-              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+              (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                minrep,tosqr,conds,flags);
           else
             Connect_Checker_Posets_to_Track
-              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+              (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                minrep,tosqr,conds,workf.all);
           end if;
         end if;
@@ -1937,7 +1937,7 @@ package body Resolve_Schubert_Problems is
   end Resolve;
 
   procedure Resolve
-              ( n,k : in integer32; tol : in double_float;
+              ( n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
@@ -1985,11 +1985,11 @@ package body Resolve_Schubert_Problems is
         if i > 1 then
           if i = 2 then -- use the original flags
             Connect_Checker_Posets_to_Track
-              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+              (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                minrep,tosqr,conds,flags);
           else
             Connect_Checker_Posets_to_Track
-              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+              (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                minrep,tosqr,conds,workf.all);
           end if;
         end if;
@@ -2009,7 +2009,7 @@ package body Resolve_Schubert_Problems is
   end Resolve;
 
   procedure Resolve
-              ( n,k : in integer32; tol : in double_float;
+              ( n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
@@ -2057,11 +2057,11 @@ package body Resolve_Schubert_Problems is
         if i > 1 then
           if i = 2 then -- use the original flags
             Connect_Checker_Posets_to_Track
-              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+              (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                minrep,tosqr,conds,flags);
           else
             Connect_Checker_Posets_to_Track
-              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+              (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
                minrep,tosqr,conds,workf.all);
           end if;
         end if;

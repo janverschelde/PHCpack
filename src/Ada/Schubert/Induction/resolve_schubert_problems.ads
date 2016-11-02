@@ -294,7 +294,7 @@ package Resolve_Schubert_Problems is
   --   nd       poset of the child.
 
   procedure Connect_Checker_Posets_to_Track
-              ( n,k,level : in integer32; tol : in double_float;
+              ( n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
                 snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
@@ -303,7 +303,7 @@ package Resolve_Schubert_Problems is
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
-              ( n,k,level : in integer32; tol : in double_float;
+              ( n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
                 snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in DoblDobl_Complex_Matrices.Link_to_Matrix;
@@ -312,7 +312,7 @@ package Resolve_Schubert_Problems is
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
-              ( n,k,level : in integer32; tol : in double_float;
+              ( n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
                 snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in QuadDobl_Complex_Matrices.Link_to_Matrix;
@@ -330,6 +330,7 @@ package Resolve_Schubert_Problems is
   --   n        the ambient dimension;
   --   k        dimension of the solution planes;
   --   level    level of the parent nodes in the list pl;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   pl       list of checker posets at some level of the parent nodes
   --            to the node nd in the intersection poset;
   --   snd      solution node that contains the poset of the child;
@@ -345,7 +346,7 @@ package Resolve_Schubert_Problems is
 
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type;
-                n,k,level : in integer32; tol : in double_float;
+                n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
                 snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
@@ -355,7 +356,7 @@ package Resolve_Schubert_Problems is
                 flags : in Standard_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type;
-                n,k,level : in integer32; tol : in double_float;
+                n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
                 snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in DoblDobl_Complex_Matrices.Link_to_Matrix;
@@ -365,7 +366,7 @@ package Resolve_Schubert_Problems is
                 flags : in DoblDobl_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type;
-                n,k,level : in integer32; tol : in double_float;
+                n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
                 snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in QuadDobl_Complex_Matrices.Link_to_Matrix;
@@ -384,6 +385,7 @@ package Resolve_Schubert_Problems is
   --   n        the ambient dimension;
   --   k        dimension of the solution planes;
   --   level    level of the parent nodes in the list pl;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   pl       list of checker posets at some level of the parent nodes
   --            to the node nd in the intersection poset;
   --   snd      solution node that contains the poset of the child;
@@ -426,7 +428,7 @@ package Resolve_Schubert_Problems is
 
   procedure Resolve
               ( file : in file_type; extopt,repcon : in boolean;
-                n,k : in integer32; tol : in double_float;
+                n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
@@ -435,7 +437,7 @@ package Resolve_Schubert_Problems is
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure Resolve
               ( file : in file_type; extopt,repcon : in boolean;
-                n,k : in integer32; tol : in double_float;
+                n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
@@ -444,7 +446,7 @@ package Resolve_Schubert_Problems is
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
   procedure Resolve
               ( file : in file_type; extopt,repcon : in boolean;
-                n,k : in integer32; tol : in double_float;
+                n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
@@ -470,6 +472,7 @@ package Resolve_Schubert_Problems is
   --            false if the path trackers have to stay mute;
   --   n        the ambient dimension;
   --   k        dimension of the solution plane;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   tol      tolerance on residual to decide failure in checker games;
   --   ips      an intersection poset built to resolve Schubert conditions;
   --   sps      an initialized solution poset corresponding to ips;
@@ -488,7 +491,7 @@ package Resolve_Schubert_Problems is
   --            this list must equal the formal root count.
 
   procedure Resolve
-              ( n,k : in integer32; tol : in double_float;
+              ( n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
@@ -496,7 +499,7 @@ package Resolve_Schubert_Problems is
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure Resolve
-              ( n,k : in integer32; tol : in double_float;
+              ( n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
@@ -504,7 +507,7 @@ package Resolve_Schubert_Problems is
                 flags : in DoblDobl_Complex_VecMats.VecMat;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
   procedure Resolve
-              ( n,k : in integer32; tol : in double_float;
+              ( n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
@@ -529,6 +532,7 @@ package Resolve_Schubert_Problems is
   --            false if the path trackers have to stay mute;
   --   n        the ambient dimension;
   --   k        dimension of the solution plane;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   tol      tolerance on residual to decide failure in checker games;
   --   ips      an intersection poset built to resolve Schubert conditions;
   --   sps      an initialized solution poset corresponding to ips;

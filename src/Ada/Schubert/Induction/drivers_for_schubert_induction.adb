@@ -1368,9 +1368,9 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,tol,ips,sps,minrep,tosquare,conds,flags,sols);
+      Resolve(n,k,0,tol,ips,sps,minrep,tosquare,conds,flags,sols);
     else
-      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,tosquare,
+      Resolve(file,monitor,report,n,k,0,tol,ips,sps,verify,minrep,tosquare,
               conds,flags,sols);
     end if;
     tstop(timer);
@@ -1450,9 +1450,9 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,tol,ips,sps,minrep,tosquare,conds,flags,sols);
+      Resolve(n,k,0,tol,ips,sps,minrep,tosquare,conds,flags,sols);
     else
-      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,tosquare,
+      Resolve(file,monitor,report,n,k,0,tol,ips,sps,verify,minrep,tosquare,
               conds,flags,sols);
     end if;
     tstop(timer);
@@ -1532,9 +1532,9 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,tol,ips,sps,minrep,tosquare,conds,flags,sols);
+      Resolve(n,k,0,tol,ips,sps,minrep,tosquare,conds,flags,sols);
     else
-      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,tosquare,
+      Resolve(file,monitor,report,n,k,0,tol,ips,sps,verify,minrep,tosquare,
               conds,flags,sols);
     end if;
     tstop(timer);
