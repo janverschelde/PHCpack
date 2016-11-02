@@ -278,7 +278,7 @@ package body Checker_Poset_Deformations is
   end Track_Path_in_Poset;
 
   procedure Track_Path_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -359,11 +359,11 @@ package body Checker_Poset_Deformations is
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
              mf,vf,sols,tol,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -377,7 +377,7 @@ package body Checker_Poset_Deformations is
   end Track_Path_in_Poset;
 
   procedure Track_Path_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -458,11 +458,11 @@ package body Checker_Poset_Deformations is
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
              mf,vf,sols,tol,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -476,7 +476,7 @@ package body Checker_Poset_Deformations is
   end Track_Path_in_Poset;
 
   procedure Track_Path_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -557,11 +557,11 @@ package body Checker_Poset_Deformations is
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
              mf,vf,sols,tol,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,0,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
+          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
                         cond,mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -575,7 +575,7 @@ package body Checker_Poset_Deformations is
   end Track_Path_in_Poset;
 
   procedure Track_Path_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -628,10 +628,10 @@ package body Checker_Poset_Deformations is
           Trivial_Stay
             (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Stay_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
-          Swap_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Swap_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -643,7 +643,7 @@ package body Checker_Poset_Deformations is
   end Track_Path_in_Poset;
 
   procedure Track_Path_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -696,10 +696,10 @@ package body Checker_Poset_Deformations is
           Trivial_Stay
             (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Stay_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
-          Swap_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Swap_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -711,7 +711,7 @@ package body Checker_Poset_Deformations is
   end Track_Path_in_Poset;
 
   procedure Track_Path_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -764,10 +764,10 @@ package body Checker_Poset_Deformations is
           Trivial_Stay
             (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Stay_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
-          Swap_Homotopy(n,k,ctr,ind,0,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Swap_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -779,7 +779,7 @@ package body Checker_Poset_Deformations is
   end Track_Path_in_Poset;
 
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -813,7 +813,7 @@ package body Checker_Poset_Deformations is
   end Track_All_Paths_in_Poset;
 
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -847,7 +847,7 @@ package body Checker_Poset_Deformations is
   end Track_All_Paths_in_Poset;
 
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -881,7 +881,7 @@ package body Checker_Poset_Deformations is
   end Track_All_Paths_in_Poset;
 
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -914,7 +914,7 @@ package body Checker_Poset_Deformations is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
-          (file,n,k,ps,nds,cnt,verify,minrep,tosqr,
+          (file,n,k,nt,ps,nds,cnt,verify,minrep,tosqr,
            cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
@@ -929,7 +929,7 @@ package body Checker_Poset_Deformations is
   end Track_All_Paths_in_Poset;
 
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -962,7 +962,7 @@ package body Checker_Poset_Deformations is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
-          (file,n,k,ps,nds,cnt,verify,minrep,tosqr,
+          (file,n,k,nt,ps,nds,cnt,verify,minrep,tosqr,
            cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
@@ -977,7 +977,7 @@ package body Checker_Poset_Deformations is
   end Track_All_Paths_in_Poset;
 
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1010,7 +1010,7 @@ package body Checker_Poset_Deformations is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
-          (file,n,k,ps,nds,cnt,verify,minrep,tosqr,
+          (file,n,k,nt,ps,nds,cnt,verify,minrep,tosqr,
            cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
@@ -1025,7 +1025,7 @@ package body Checker_Poset_Deformations is
   end Track_All_Paths_in_Poset;
 
   procedure Track_All_Paths_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1050,7 +1050,7 @@ package body Checker_Poset_Deformations is
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
         Track_Path_in_Poset
-          (n,k,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
+          (n,k,nt,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1064,7 +1064,7 @@ package body Checker_Poset_Deformations is
   end Track_All_Paths_in_Poset;
 
   procedure Track_All_Paths_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1089,7 +1089,7 @@ package body Checker_Poset_Deformations is
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
         Track_Path_in_Poset
-          (n,k,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
+          (n,k,nt,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1103,7 +1103,7 @@ package body Checker_Poset_Deformations is
   end Track_All_Paths_in_Poset;
 
   procedure Track_All_Paths_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1128,7 +1128,7 @@ package body Checker_Poset_Deformations is
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
         Track_Path_in_Poset
-          (n,k,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
+          (n,k,nt,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;

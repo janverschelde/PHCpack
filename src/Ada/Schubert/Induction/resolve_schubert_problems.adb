@@ -1031,7 +1031,7 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,node.ps,childconds,verify,minrep,tosqr,
+              (file,n,k,0,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1140,7 +1140,7 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,node.ps,childconds,verify,minrep,tosqr,
+              (file,n,k,0,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1249,7 +1249,7 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,node.ps,childconds,verify,minrep,tosqr,
+              (file,n,k,0,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1333,7 +1333,7 @@ package body Resolve_Schubert_Problems is
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
-              (n,k,node.ps,childconds,minrep,tosqr,
+              (n,k,0,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1410,7 +1410,7 @@ package body Resolve_Schubert_Problems is
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
-              (n,k,node.ps,childconds,minrep,tosqr,
+              (n,k,0,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1487,7 +1487,7 @@ package body Resolve_Schubert_Problems is
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
-              (n,k,node.ps,childconds,minrep,tosqr,
+              (n,k,0,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);

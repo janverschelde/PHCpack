@@ -1,5 +1,7 @@
 Tue 1 Nov 2016 : upgraded moving_flag_continuation to use multitasking,
-  added stubs to checker_poset_deformations.adb.
+  added stubs to checker_poset_deformations.adb.  Then replaced the stubs
+  in checker_poset_deformations and placed stubs in the package bodies
+  drivers_for_schubert_induction.adb and resolve_schubert_problems.adb.
 
 Sun 30 Oct 2016 : added multitasking to wrapped_path_trackers.
 

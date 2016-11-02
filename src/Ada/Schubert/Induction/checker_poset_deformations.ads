@@ -75,7 +75,7 @@ package Checker_Poset_Deformations is
   --            gives no solution, also true if tolerance is not met.
 
   procedure Track_Path_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -85,7 +85,7 @@ package Checker_Poset_Deformations is
                 sols : out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; unhappy : out boolean );
   procedure Track_Path_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -95,7 +95,7 @@ package Checker_Poset_Deformations is
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
                 tol : in double_float; unhappy : out boolean );
   procedure Track_Path_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -115,6 +115,7 @@ package Checker_Poset_Deformations is
   --   file     for intermediate output and diagnostics;
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   ps       checker poset for one game;
   --   path     path of nodes in the poset;
   --   count    number of the path;
@@ -136,7 +137,7 @@ package Checker_Poset_Deformations is
   --            and gives no solution, true also if tolerance is not met.
 
   procedure Track_Path_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -146,7 +147,7 @@ package Checker_Poset_Deformations is
                 sols : out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; unhappy : out boolean );
   procedure Track_Path_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -156,7 +157,7 @@ package Checker_Poset_Deformations is
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
                 tol : in double_float; unhappy : out boolean );
   procedure Track_Path_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -175,6 +176,7 @@ package Checker_Poset_Deformations is
   -- ON ENTRY :
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   ps       checker poset for one game;
   --   path     path of nodes in the poset;
   --   count    number of the path;
@@ -195,21 +197,21 @@ package Checker_Poset_Deformations is
   --            and gives no solution, true also if tolerance is not met.
 
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -225,6 +227,7 @@ package Checker_Poset_Deformations is
   --   file     for intermediate output and diagnostics;
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   ps       checker poset for one game;
   --   verify   flag to indicate if diagnostic verification is needed;
   --   minrep   to use a more efficient problem formulation;
@@ -237,7 +240,7 @@ package Checker_Poset_Deformations is
   --   sols     all solutions at the end of the paths.
 
   procedure Track_All_Paths_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -246,7 +249,7 @@ package Checker_Poset_Deformations is
                 start : in Standard_Complex_Solutions.Solution_List;
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure Track_All_Paths_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -255,7 +258,7 @@ package Checker_Poset_Deformations is
                 start : in DoblDobl_Complex_Solutions.Solution_List;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
   procedure Track_All_Paths_in_Poset
-              ( n,k : in integer32; ps : in Poset;
+              ( n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -274,6 +277,7 @@ package Checker_Poset_Deformations is
   -- ON ENTRY :
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   ps       checker poset for one game;
   --   child    conditions on the child for which the start solutions
   --            are provided and which should match leaves of ps;
@@ -289,7 +293,7 @@ package Checker_Poset_Deformations is
   --   sols     all solutions at the end of the paths.
 
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -298,7 +302,7 @@ package Checker_Poset_Deformations is
                 start : in Standard_Complex_Solutions.Solution_List;
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -307,7 +311,7 @@ package Checker_Poset_Deformations is
                 start : in DoblDobl_Complex_Solutions.Solution_List;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
   procedure Track_All_Paths_in_Poset
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
+              ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -328,6 +332,7 @@ package Checker_Poset_Deformations is
   --            if omitted, then there is no intermediate output;
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
+  --   nt       number of tasks, if zero, then no multitasking;
   --   ps       checker poset for one game;
   --   child    conditions on the child for which the start solutions
   --            are provided and which should match leaves of ps;

@@ -425,7 +425,7 @@ package body Drivers_for_Schubert_Induction is
     f : Link_to_Poly_Sys;
     mf : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
        := Setup_Flag_Homotopies.Moved_Flag(n);
-    locmap : Standard_Natural_Matrices.Matrix(1..n,1..k)
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
     dim : constant natural32
         := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
@@ -499,7 +499,7 @@ package body Drivers_for_Schubert_Induction is
     f : Link_to_Poly_Sys;
     mf : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
        := Setup_Flag_Homotopies.Moved_Flag(n);
-    locmap : Standard_Natural_Matrices.Matrix(1..n,1..k)
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
     dim : constant natural32
         := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
@@ -573,7 +573,7 @@ package body Drivers_for_Schubert_Induction is
     f : Link_to_Poly_Sys;
     mf : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
        := Setup_Flag_Homotopies.Moved_Flag(n);
-    locmap : Standard_Natural_Matrices.Matrix(1..n,1..k)
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
     dim : constant natural32
         := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
@@ -902,7 +902,7 @@ package body Drivers_for_Schubert_Induction is
     flags := Random_Flags(n,cnds'last);
     tstart(timer);
     Checker_Poset_Deformations.Track_All_Paths_in_Poset
-      (file,n,k,ps,verify,minrep,tosqr,cnds.all,flags,tol,sols);
+      (file,n,k,0,ps,verify,minrep,tosqr,cnds.all,flags,tol,sols);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"tracking all paths");
@@ -1132,7 +1132,6 @@ package body Drivers_for_Schubert_Induction is
    -- put_line(file,"the start flags : ");  put(file,a);
    -- put_line(file,"the target flags : "); put(file,b);
     Setup_Flag_Homotopies.Add_t_Symbol;
-    put_line("Defining the cheater's homotopy ...");
     Moving_Flag_Homotopies.Flag_Conditions(n,k,q,rows,cols,cnd,stf,tgf,hom);
     put_line(file,"the cheater's homotopy : ");
     put_line(file,hom.all);
@@ -1487,7 +1486,7 @@ package body Drivers_for_Schubert_Induction is
          := Bracket_to_Vector(cnd(cnd'first).all);
     cols : constant Standard_Natural_Vectors.Vector
          := Bracket_to_Vector(cnd(cnd'first+1).all);
-    conds : Standard_Natural_VecVecs.VecVec(1..nbc-2)
+    conds : constant Standard_Natural_VecVecs.VecVec(1..nbc-2)
           := Remaining_Intersection_Conditions(cnd);
     link2conds : constant Standard_Natural_VecVecs.Link_to_VecVec
                := new Standard_Natural_VecVecs.VecVec'(conds);
@@ -1631,7 +1630,7 @@ package body Drivers_for_Schubert_Induction is
     nbsols : Natural_Number;
     ans : character;
     isvalid,inpt : boolean;
-    tol : double_float := 1.0E-5;
+   -- tol : constant double_float := 1.0E-5;
 
   begin
     isvalid := Is_Valid_Intersection_Condition(natural32(n),bm);
