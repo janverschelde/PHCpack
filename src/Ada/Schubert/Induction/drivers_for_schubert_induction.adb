@@ -1300,6 +1300,39 @@ package body Drivers_for_Schubert_Induction is
     return res;
   end Remaining_Intersection_Conditions;            
 
+  procedure Prompt_for_Resolve_Options
+              ( outlvl : out natural32; nt : out integer32;
+                monitor,verify,minrep,tosquare : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the options of the resolve procedure.
+
+  -- ON RETURN :
+  --   outlvl   0, 1, or 2, if 0, then no intermediate output;
+  --   nt       number of tasks, if zero, then no multitasking;
+  --   monitor  flag to write output to monitor the progress;
+  --   verify   flag to perform additional verifications;
+  --   minrep   flag for an efficient problem formulation;
+  --   tosquare flag to square the overdetermined homotopies.
+
+    ans : character;
+
+  begin
+    outlvl := Prompt_for_Output_Level;
+    monitor := (outlvl > 0);
+    verify := (outlvl = 2);
+    new_line;
+    put("Use an efficient problem formulation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    minrep := (ans = 'y');
+    put("Square the overdetermined homotopies ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    tosquare := (ans = 'y');
+    put("Give the number of tasks (0 for no multitasking) : ");
+    nt := 0;
+    get(nt); skip_line; -- needed for the next option
+  end Prompt_for_Resolve_Options;
+
   procedure Resolve_Schubert_Problem
               ( file : in file_type;
                 n,k : in integer32; cnd : in Array_of_Brackets;
@@ -1311,7 +1344,7 @@ package body Drivers_for_Schubert_Induction is
 
     monitor,report,verify,minrep,tosquare : boolean;
     outlvl : natural32 := 0;
-    ans : character;
+    nt : integer32 := 0;
     nbc : constant integer32 := cnd'last;
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
     sps : Solution_Poset(ips.m) := Create(ips);
@@ -1346,16 +1379,7 @@ package body Drivers_for_Schubert_Induction is
       put(file,flags(i).all);
       new_line(file);
     end loop;
-    outlvl := Prompt_for_Output_Level;
-    monitor := (outlvl > 0);
-    verify := (outlvl = 2);
-    new_line;
-    put("Use an efficient problem formulation ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    minrep := (ans = 'y');
-    put("Square the overdetermined homotopies ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    tosquare := (ans = 'y');
+    Prompt_for_Resolve_Options(outlvl,nt,monitor,verify,minrep,tosquare);
     new_line(file);
     if minrep
      then put_line(file,"An efficient problem formulation will be used.");
@@ -1368,9 +1392,9 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,0,tol,ips,sps,minrep,tosquare,conds,flags,sols);
+      Resolve(n,k,nt,tol,ips,sps,minrep,tosquare,conds,flags,sols);
     else
-      Resolve(file,monitor,report,n,k,0,tol,ips,sps,verify,minrep,tosquare,
+      Resolve(file,monitor,report,n,k,nt,tol,ips,sps,verify,minrep,tosquare,
               conds,flags,sols);
     end if;
     tstop(timer);
@@ -1393,7 +1417,7 @@ package body Drivers_for_Schubert_Induction is
 
     monitor,report,verify,minrep,tosquare : boolean;
     outlvl : natural32 := 0;
-    ans : character;
+    nt : integer32 := 0;
     nbc : constant integer32 := cnd'last;
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
     sps : Solution_Poset(ips.m) := Create(ips);
@@ -1428,16 +1452,7 @@ package body Drivers_for_Schubert_Induction is
       put(file,flags(i).all);
       new_line(file);
     end loop;
-    outlvl := Prompt_for_Output_Level;
-    monitor := (outlvl > 0);
-    verify := (outlvl = 2);
-    new_line;
-    put("Use an efficient problem formulation ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    minrep := (ans = 'y');
-    put("Square the overdetermined homotopies ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    tosquare := (ans = 'y');
+    Prompt_for_Resolve_Options(outlvl,nt,monitor,verify,minrep,tosquare);
     new_line(file);
     if minrep
      then put_line(file,"An efficient problem formulation will be used.");
@@ -1450,9 +1465,9 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,0,tol,ips,sps,minrep,tosquare,conds,flags,sols);
+      Resolve(n,k,nt,tol,ips,sps,minrep,tosquare,conds,flags,sols);
     else
-      Resolve(file,monitor,report,n,k,0,tol,ips,sps,verify,minrep,tosquare,
+      Resolve(file,monitor,report,n,k,nt,tol,ips,sps,verify,minrep,tosquare,
               conds,flags,sols);
     end if;
     tstop(timer);
@@ -1475,7 +1490,7 @@ package body Drivers_for_Schubert_Induction is
 
     monitor,report,verify,minrep,tosquare : boolean;
     outlvl : natural32 := 0;
-    ans : character;
+    nt : integer32 := 0;
     nbc : constant integer32 := cnd'last;
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
     sps : Solution_Poset(ips.m) := Create(ips);
@@ -1510,16 +1525,7 @@ package body Drivers_for_Schubert_Induction is
       put(file,flags(i).all);
       new_line(file);
     end loop;
-    outlvl := Prompt_for_Output_Level;
-    monitor := (outlvl > 0);
-    verify := (outlvl = 2);
-    new_line;
-    put("Use an efficient problem formulation ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    minrep := (ans = 'y');
-    put("Square the overdetermined homotopies ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    tosquare := (ans = 'y');
+    Prompt_for_Resolve_Options(outlvl,nt,monitor,verify,minrep,tosquare);
     new_line(file);
     if minrep
      then put_line(file,"An efficient problem formulation will be used.");
@@ -1532,9 +1538,9 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,0,tol,ips,sps,minrep,tosquare,conds,flags,sols);
+      Resolve(n,k,nt,tol,ips,sps,minrep,tosquare,conds,flags,sols);
     else
-      Resolve(file,monitor,report,n,k,0,tol,ips,sps,verify,minrep,tosquare,
+      Resolve(file,monitor,report,n,k,nt,tol,ips,sps,verify,minrep,tosquare,
               conds,flags,sols);
     end if;
     tstop(timer);

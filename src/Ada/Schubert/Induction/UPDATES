@@ -1,5 +1,6 @@
 Wed 2 Nov 2016 : to resolve_schubert_problems, added multitasking,
   with adjusted calls in the drivers_for_schubert_induction.adb.
+  Prompted for the number of tasks in driver_for_schubert_induction.adb.
 
 Tue 1 Nov 2016 : upgraded moving_flag_continuation to use multitasking,
   added stubs to checker_poset_deformations.adb.  Then replaced the stubs
