@@ -1,3 +1,5 @@
+Thu 3 Nov 2016 : added default zero number of tasking in LRhomotopies.m2.
+
 Fri 21 Oct 2016 : added luckySeed and higherWorkingPrecision to the
   LRhomotopies.m2 package, documented in LRhomotopiesDoc.m2.
 
