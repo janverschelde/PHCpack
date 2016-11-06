@@ -1,3 +1,5 @@
+Sun 6 Nov 2016 : added rank computation via SVD to ts_serinv.adb.
+
 Sat 5 Nov 2016 : ts_serinv tests development of inverse of matrix series.
 
 Sun 9 Oct 2016 : edited {standard,dobldobl,quaddobl}_random_series.adb 
