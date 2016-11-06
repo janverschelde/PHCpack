@@ -1,3 +1,5 @@
+Sat 5 Nov 2016 : ts_serinv tests development of inverse of matrix series.
+
 Sun 9 Oct 2016 : edited {standard,dobldobl,quaddobl}_random_series.adb 
   for compiler warnings.
 
