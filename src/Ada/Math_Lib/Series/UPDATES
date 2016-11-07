@@ -1,3 +1,5 @@
+Mon 7 Nov 2016 : fixed number of rows in stacked matrix in ts_serinv.
+
 Sun 6 Nov 2016 : added rank computation via SVD to ts_serinv.adb.
 
 Sat 5 Nov 2016 : ts_serinv tests development of inverse of matrix series.

@@ -56,8 +56,9 @@ procedure ts_serinv is
   -- REQUIRED : s.cff(0) is not null.
 
     dim : constant integer32 := s.cff(0)'last(1);
-    deg : constant integer32 := s.deg+1;
-    res : Standard_Complex_Matrices.Matrix(1..dim*(deg+1),1..dim*deg);
+    rws : constant integer32 := (2*s.deg+1)*dim;
+    cls : constant integer32 := (s.deg+1)*dim;
+    res : Standard_Complex_Matrices.Matrix(1..rws,1..cls);
     mat : Standard_Complex_Matrices.Link_to_Matrix;
 
   begin
@@ -112,8 +113,8 @@ procedure ts_serinv is
   --   Tests the rank of the stacked coefficient matrix.
 
     dim : constant integer32 := s.cff(0)'last(1);
-    rws : constant integer32 := dim*(s.deg+2);
-    cls : constant integer32 := dim*(s.deg+1);
+    rws : constant integer32 := (2*s.deg+1)*dim;
+    cls : constant integer32 := (s.deg+1)*dim;
     cff : constant Standard_Complex_Matrices.Matrix(1..rws,1..cls)
         := Stack(s);
     rnk : integer32;
