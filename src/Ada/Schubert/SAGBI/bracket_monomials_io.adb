@@ -105,25 +105,30 @@ package body Bracket_Monomials_io is
   begin
     get(file,b);
     if b /= null then
-      bm := Create(b.all);
+     -- bm := Create(b.all);
       loop
         get(file,ch);
         if ch = ' '
          then Skip_Spaces(file,ch);
         end if;
+        if (ch = ';')
+         then Append(bm,b.all);
+        end if;
         exit when (ch = ';');
         if ch = '^' then
           get(file,ch);
           Read_Number(file,e,ch);
-          for i in 2..e loop
+          for i in 1..e loop
             Append(bm,b.all);
           end loop;
+        else
+          Append(bm,b.all);
         end if;
         exit when (ch = ';');
         Clear(b);
         get(file,b);
         exit when (b = null);
-        Append(bm,b.all);
+       -- Append(bm,b.all);
       end loop;
     end if;
   end get;
