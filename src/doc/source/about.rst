@@ -229,6 +229,10 @@ global optimization, and computational physics:
    commuting matrices**,
    *Applied Mathematics and Computation* 224(1): 564-580, 2013.
 
+#. Ada Boralevi, Jasper van Doornmalen, Jan Draisma, Michiel E. Hostenbach,
+   and Bor Plestenjak: **Uniform Determinantal Representations**.
+   arXiv:1607.04873v1 [math.ac] 17 Jul 2016
+
 #. Guy Bresler, Dustin Cartwright, David Tse:
    **Feasibility of Interference Alignment for the MIMO interference
    channel**.
@@ -656,9 +660,13 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-92. T. Gao and T.Y. Li:
-    **Mixed volume computation via linear programming**.
-    *Taiwanese Journal of Mathematics* 4(4): 599-619, 2000.
+93. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
+    and Jeff Sommars: **Solving polynomial systems via homotopy continuation
+    and monodromy**. arXiv:1609.08722v2 [math.AG] 2 Nov 2016
+
+#. T. Gao and T.Y. Li:
+   **Mixed volume computation via linear programming**.
+   *Taiwanese Journal of Mathematics* 4(4): 599-619, 2000.
 
 #. T. Gao and T.Y. Li:
    **Mixed volume computation for semi-mixed systems**.
@@ -714,7 +722,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-105. Bo Dong, Bo Yu, and Yan Yu:
+107. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -733,7 +741,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-108. B. Sturmfels:
+110. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
