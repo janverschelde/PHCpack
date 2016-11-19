@@ -1,3 +1,5 @@
+Sat 19 Nov 2016 : added PieriRootCount to LRhomotopies.m2.
+
 Tue 8 Nov 2016 : in LRhomotopies.m2 skipped the zero power of brackets
   in the LRrule.
 
