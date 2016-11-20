@@ -315,9 +315,17 @@ doc ///
     Text
       The example below computes the two lines that meet four given
       lines in 3-spaces.
+
+      To verify the first intersection condition,
+      we concatenate the first input plane with the first output plane.
+      The determinant of the concatenated matrix should have real and
+      imaginary parts of the same magnitude as the machine precision.
     Example
       (ipt, otp) := PieriHomotopies(2,2);
       print ipt
       print otp
+      in0 = ipt_0
+      out0 = otp_0
+      m = in0|out0
+      det m
 ///;
-

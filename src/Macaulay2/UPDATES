@@ -1,4 +1,6 @@
 Sun 20 Nov 2016 : changed the Verbose default from true to false.
+  Extended the documentation LRhomotopiesDoc.m2 with a test on the
+  first intersection condition computed by the PieriHomotopies method.
 
 Sat 19 Nov 2016 : added PieriRootCount to LRhomotopies.m2 and started the
   PieriHomotopies method; parsed the input and output planes.
