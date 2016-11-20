@@ -14,7 +14,7 @@ newPackage(
 
 export{"LRrule", "LRtriple", "parseTriplet", "luckySeed", 
        "higherWorkingPrecision", "wrapTriplet", "LRcheater",
-       "PieriRootCount"}
+       "PieriRootCount", "PieriHomotopies"}
 
 debug needsPackage "PHCpack"
 
@@ -715,6 +715,64 @@ PieriRootCount(ZZ, ZZ, ZZ) := o -> (m, p, q) -> (
       result = value nbrs_1
    );
    result
+);
+
+PieriHomotopies = method(TypicalValue => List,
+  Options => { Verbose => true });
+PieriHomotopies(ZZ, ZZ) := o -> (m, p) -> (
+--
+-- DESCRIPTION :
+--   Returns the p-planes which meet m*p generic m-planes 
+--   in a space of dimension m+p.
+--
+-- ON ENTRY :
+--   m         the dimension of the input planes;
+--   p         the dimension of the output planes,
+--             the ambient dimension is m+p.
+
+-- OPTION 
+--   Verbose   if true, then additional output is written to screen,
+--             if false, then the method remains silent.
+--
+-- ON RETURN :
+--   t         tuple with the input m-planes and the output p-planes.
+--
+   versionPHC := versionNumber(, Verbose=>o.Verbose);
+   result := 0;
+   if o.Verbose then
+      stdio << "Pieri homotopies for m = " << m << " and p = " << p << ".\n";
+   if #versionPHC#0 > 0 then
+   (
+      PHCinputFile := temporaryFileName() | "PHCinput";
+      PHCsessionFile := temporaryFileName() | "PHCsession";
+      PHCoutputFile := temporaryFileName() | "PHCoutput";
+      choices := toString(2); -- for q = 0
+      choices = concatenate(choices, "\n");
+      choices = concatenate(choices, toString(p), "\n"); -- dim output planes
+      choices = concatenate(choices, toString(m), "\n"); -- dim input planes
+      choices = concatenate(choices, "3", "\n"); -- mixed bottom/top poset
+      choices = concatenate(choices, "y", "\n"); -- yes to Pieri homotopies
+      choices = concatenate(choices, PHCoutputFile, "\n"); -- output file
+      choices = concatenate(choices, toString(m+p), "\n"); -- default
+      choices = concatenate(choices, "n", "\n"); -- no homotopies to file
+      choices = concatenate(choices, "0", "\n"); -- default test
+      choices = concatenate(choices, "0", "\n"); -- default tolerances
+      choices = concatenate(choices, "0", "\n"); -- no intermediate output
+      if o.Verbose then
+         stdio << "choices given to phc -e when prompted :\n"
+               << choices << endl;
+      if o.Verbose then
+         stdio << endl << "writing choices to file " << PHCinputFile << endl;
+      dataToFile(choices, PHCinputFile);
+      if o.Verbose then
+      (
+         stdio << "running phc -e, writing output of session to "
+               << PHCsessionFile << endl;
+         stdio << "running phc -e, writing output of Pieri homotopies to "
+               << PHCoutputFile << endl
+      );
+      run("phc -e < " | PHCinputFile | " > " | PHCsessionFile)
+   )
 );
 
 --##########################################################################--
