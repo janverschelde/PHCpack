@@ -720,7 +720,7 @@ LRcheater(ZZ,Matrix,String) := (n,m,w) -> (
    result
 );
 
-PieriRootCount = method(TypicalValue => List,
+PieriRootCount = method(TypicalValue => ZZ,
   Options => { Verbose => false });
 PieriRootCount(ZZ, ZZ, ZZ) := o -> (m, p, q) -> (
 --
