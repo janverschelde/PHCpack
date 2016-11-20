@@ -1,3 +1,5 @@
+Sun 20 Nov 2016 : changed the Verbose default from true to false.
+
 Sat 19 Nov 2016 : added PieriRootCount to LRhomotopies.m2 and started the
   PieriHomotopies method; parsed the input and output planes.
 
