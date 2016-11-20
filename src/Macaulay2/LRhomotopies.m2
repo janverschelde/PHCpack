@@ -227,6 +227,68 @@ extractSolutionPlanes := (dim, data) -> (
   return result
 );
 
+extractPieriSolutionPlanes := (dim, data) -> (
+--
+-- DESCRIPTTION :
+--   Given a list of lines in data.
+--   Searches for the line which contains the banner "SOLUTION PLANES"
+--   and then returns the matrix of as many rows as the value
+--   of dim, stores in the lines of data following the banner.
+--   The reading stops when there is a blank line instead of
+--   the first line with coefficient for another solution plane.
+--
+  result := {};
+  for k from 0 to #data-1 do
+  (
+    solplane := select("SOLUTION PLANES", data#k);
+    if #solplane > 0 then
+    (
+      subdata := extractSubList(k, dim, data);
+      result = append(result, makeComplexMatrix(dim, subdata));
+      current := k+dim+1;
+      while current+dim < #data-1 do
+      (   
+        subdata = extractSubList(current, dim, data);
+        if #subdata_0 == 0 then return result;
+        result = append(result, makeComplexMatrix(dim, subdata));
+        current = current + dim + 1;
+      )
+    )
+  );
+  return result
+);
+
+extractPieriInputPlanes := (dim, data) -> (
+--
+-- DESCRIPTTION :
+--   Given a list of lines in data.
+--   Searches for the line which contains the banner "input planes"
+--   and then returns the matrix of as many rows as the value
+--   of dim, stores in the lines of data following the banner.
+--   The reading stops when there is a blank line instead of
+--   the first line with coefficient for another input plane.
+--
+  result := {};
+  for k from 0 to #data-1 do
+  (
+    solplane := select("input planes", data#k);
+    if #solplane > 0 then
+    (
+      subdata := extractSubList(k, dim, data);
+      result = append(result, makeComplexMatrix(dim, subdata));
+      current := k+dim+1;
+      while current+dim < #data-1 do
+      (   
+        subdata = extractSubList(current, dim, data);
+        if #subdata_0 == 0 then return result;
+        result = append(result, makeComplexMatrix(dim, subdata));
+        current = current + dim + 1;
+      )
+    )
+  );
+  return result
+);
+
 extractFixedFlags := (dim, nbr, data) -> (
 --
 -- DESCRIPTION :
@@ -753,7 +815,7 @@ PieriHomotopies(ZZ, ZZ) := o -> (m, p) -> (
       choices = concatenate(choices, "3", "\n"); -- mixed bottom/top poset
       choices = concatenate(choices, "y", "\n"); -- yes to Pieri homotopies
       choices = concatenate(choices, PHCoutputFile, "\n"); -- output file
-      choices = concatenate(choices, toString(m+p), "\n"); -- default
+      choices = concatenate(choices, toString(m*p), "\n"); -- default
       choices = concatenate(choices, "n", "\n"); -- no homotopies to file
       choices = concatenate(choices, "0", "\n"); -- default test
       choices = concatenate(choices, "0", "\n"); -- default tolerances
@@ -771,8 +833,13 @@ PieriHomotopies(ZZ, ZZ) := o -> (m, p) -> (
          stdio << "running phc -e, writing output of Pieri homotopies to "
                << PHCoutputFile << endl
       );
-      run("phc -e < " | PHCinputFile | " > " | PHCsessionFile)
-   )
+      run("phc -e < " | PHCinputFile | " > " | PHCsessionFile);
+      soldata := get PHCoutputFile;
+      linesol := lines soldata;
+      result = (extractPieriInputPlanes(m+p, linesol),
+                extractPieriSolutionPlanes(m+p, linesol))
+   );
+   result
 );
 
 --##########################################################################--
