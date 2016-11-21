@@ -78,7 +78,7 @@ consider the example in the session below:
 
    >>> from phcpy.polytopes import random_points as rp
    >>> points = rp(3,10,-9,9)
-   >>> for point in points: print(point)
+   >>> for point in points: print point
    ... 
    (5, 9, -5)
    (0, 0, 1)
@@ -93,7 +93,7 @@ consider the example in the session below:
    >>> from phcpy.polytopes import convex_hull as ch
    >>> facets = ch(3, points)
    computed 12 facets
-   >>> for facet in facets: print(facet)
+   >>> for facet in facets: print facet
    ... 
    (-597, [90, -65, -6], [4, 5, 6], [1, 2, 3])
    (-84, [1, 11, 14], [4, 8, 5], [7, 11, 0])
@@ -245,7 +245,7 @@ of two binomials in three variables:
    >>> from phcpy.maps import binomial_solver
    >>> from phcpy.maps import solve_binomials
    >>> maps = solve_binomials(3,f)
-   >>> for map in maps: print(map)
+   >>> for map in maps: print map
    ... 
    ['x - 0', 'y - (1+0j)*t1**1', 'z - (1+0j)*t2**1', 'dimension = 2', 'degree = 1']
    ['x - (1+0j)*t1**1', 'y - (1+0j)*t1**2', 'z - (1+0j)*t1**3', 'dimension = 1', 'degree = 3']
@@ -262,3 +262,46 @@ truncated power series.
 The module ``series`` exports functions to compute power series solutions
 in double, double double, and quad double precision.
 The function ``test()`` of the ``series`` module provides an example.
+
+As example, we consider the Viviani curve and intersect the curve
+with a moving plane.  The parameter ``s`` defines the movement of
+the plane ``y = 0`` to the plane ``y = 1``, as in the setup below:
+
+::
+
+   >>> vivplane = ['(1-s)*y + s*(y-1);',
+   ... 'x^2 + y^2 + z^2 - 4;',
+   ... '(x-1)^2 + y^2 - 1;']
+   >>> vivs0 = vivplane + ['s;']
+   >>> from phcpy.solver import solve
+   >>> sols = solve(vivs0, silent=True)
+   >>> print sols[0]
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    s :  0.00000000000000E+00   0.00000000000000E+00
+    y :  0.00000000000000E+00   0.00000000000000E+00
+    x :  0.00000000000000E+00   0.00000000000000E+00
+    z :  2.00000000000000E+00   0.00000000000000E+00
+   == err :  0.000E+00 = rco :  3.186E-01 = res :  0.000E+00 =
+   >>> 
+
+It is important that the parameter ``s`` is the first symbol
+in the polynomials in the input (in the list ``vivplane`` above)
+for Newton's method to compute series solutions.
+In the session below, the output is formatted with continuation symbols.
+
+::
+
+   >>> from series import standard_newton_series
+   >>> sersols = standard_newton_series(vivplane, sols, verbose=False)
+   >>> sersols[0]
+   ['s;', '3.12500000000000E-02*s^8 + 6.25000000000000E-02*s^6 \
+   + 1.25000000000000E-01*s^4 + 5.00000000000000E-01*s^2;', \
+   ' - 2.07519531250000E-02*s^8 - 4.10156250000000E-02*s^6 \
+   - 7.81250000000000E-02*s^4 - 2.50000000000000E-01*s^2 + 2;']
+   >>>
+
+Starting at the solution for ``s = 0``, the series solution
+allows to predict the solution as the plane moves away from ``y = 0``
+towards ``y = 1``.

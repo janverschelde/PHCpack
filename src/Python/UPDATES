@@ -1,3 +1,6 @@
+Sun 20 Nov 2016 : improved the documentation, adding an example of the
+  computation of a power series solution.  Prepared release 0.5.8 of phcpy.
+
 Mon 31 Oct 2016 : prepared files for release 0.5.7 of phcpy.
 
 Thu 27 Oct 2016 : restructured text added in the documentation strings

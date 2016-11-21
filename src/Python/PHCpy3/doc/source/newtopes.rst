@@ -1,6 +1,6 @@
-**********************************
-Newton polytopes and monomial maps
-**********************************
+*************************************************
+Newton polytopes, monomial maps, and power series
+*************************************************
 
 The Newton polytopes of the polynomial system provide important
 information about the structure of the solution sets.
@@ -15,6 +15,12 @@ Although such binomial systems are very particular,
 because of their sparse structure, they can be solved much faster.
 The module **phcpy.maps** provides a Python interface to the
 solvers of binomial systems.
+
+The classical arithmetic can be extended to the field of truncated
+power series.  In this field, Newton's method computes power series
+solutions of polynomial systems.
+The module **phcpy.series** exports functions to compute power series
+with Newton's method.
 
 convex hulls of lattice polytopes
 =================================
@@ -247,3 +253,55 @@ of two binomials in three variables:
 
 In the output above we recognize the twisted cubic,
 the x-axis, and the yz-plane as the three solution sets.
+
+power series solutions
+======================
+
+Newton's method applies also to systems where the coefficients are
+truncated power series.
+The module ``series`` exports functions to compute power series solutions
+in double, double double, and quad double precision.
+The function ``test()`` of the ``series`` module provides an example.
+
+As example, we consider the Viviani curve and intersect the curve
+with a moving plane.  The parameter ``s`` defines the movement of
+the plane ``y = 0`` to the plane ``y = 1``, as in the setup below:
+
+::
+
+   >>> vivplane = ['(1-s)*y + s*(y-1);',
+   ... 'x^2 + y^2 + z^2 - 4;',
+   ... '(x-1)^2 + y^2 - 1;']
+   >>> vivs0 = vivplane + ['s;']
+   >>> from phcpy.solver import solve
+   >>> sols = solve(vivs0, silent=True)
+   >>> print(sols[0])
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    s :  0.00000000000000E+00   0.00000000000000E+00
+    y :  0.00000000000000E+00   0.00000000000000E+00
+    x :  0.00000000000000E+00   0.00000000000000E+00
+    z :  2.00000000000000E+00   0.00000000000000E+00
+   == err :  0.000E+00 = rco :  3.186E-01 = res :  0.000E+00 =
+   >>> 
+
+It is important that the parameter ``s`` is the first symbol
+in the polynomials in the input (in the list ``vivplane`` above)
+for Newton's method to compute series solutions.
+In the session below, the output is formatted with continuation symbols.
+
+::
+
+   >>> from series import standard_newton_series
+   >>> sersols = standard_newton_series(vivplane, sols, verbose=False)
+   >>> sersols[0]
+   ['s;', '3.12500000000000E-02*s^8 + 6.25000000000000E-02*s^6 \
+   + 1.25000000000000E-01*s^4 + 5.00000000000000E-01*s^2;', \
+   ' - 2.07519531250000E-02*s^8 - 4.10156250000000E-02*s^6 \
+   - 7.81250000000000E-02*s^4 - 2.50000000000000E-01*s^2 + 2;']
+   >>>
+
+Starting at the solution for ``s = 0``, the series solution
+allows to predict the solution as the plane moves away from ``y = 0``
+towards ``y = 1``.
