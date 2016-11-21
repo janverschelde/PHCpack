@@ -437,10 +437,10 @@ function use_c2lrhom ( job : integer32;
       end if;
       tstart(timer);
       if nbchar > 0 then
-        Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
+        Resolve(file,monitor,otp,n,k,0,tol,ips,sps,verify,minrep,tosquare,
                 cnds.all,flgs,sols);
       else
-        Resolve(n,k,tol,ips,sps,minrep,tosquare,cnds.all,flgs,sols);
+        Resolve(n,k,0,tol,ips,sps,minrep,tosquare,cnds.all,flgs,sols);
       end if;
       tstop(timer);
       if nbchar > 0 then
@@ -526,10 +526,10 @@ function use_c2lrhom ( job : integer32;
       end if;
       tstart(timer);
       if nbchar > 0 then
-        Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
+        Resolve(file,monitor,otp,n,k,0,tol,ips,sps,verify,minrep,tosquare,
                 cnds.all,flgs,sols);
       else
-        Resolve(n,k,tol,ips,sps,minrep,tosquare,cnds.all,flgs,sols);
+        Resolve(n,k,0,tol,ips,sps,minrep,tosquare,cnds.all,flgs,sols);
       end if;
       tstop(timer);
       if nbchar > 0 then
@@ -615,10 +615,10 @@ function use_c2lrhom ( job : integer32;
       end if;
       tstart(timer);
       if nbchar > 0 then
-        Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
+        Resolve(file,monitor,otp,n,k,0,tol,ips,sps,verify,minrep,tosquare,
                 cnds.all,flgs,sols);
       else
-        Resolve(n,k,tol,ips,sps,minrep,tosquare,cnds.all,flgs,sols);
+        Resolve(n,k,0,tol,ips,sps,minrep,tosquare,cnds.all,flgs,sols);
       end if;
       tstop(timer);
       if nbchar > 0 then
