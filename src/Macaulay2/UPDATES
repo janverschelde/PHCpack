@@ -1,3 +1,6 @@
+Mon 21 Nov 2016 : added functions to LRhomotopies.m2 to turn the value
+  of a string representation of a double double and quad double number.
+
 Sun 20 Nov 2016 : changed the Verbose default from true to false.
   Extended the documentation LRhomotopiesDoc.m2 with a test on the
   first intersection condition computed by the PieriHomotopies method.

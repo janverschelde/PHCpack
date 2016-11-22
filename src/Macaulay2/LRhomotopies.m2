@@ -69,11 +69,38 @@ replaceConsecutiveSpaces := (s) -> (
   )
 );
 
-makeRealRow := (line) -> (
+makeDoubleDouble := (strnbr) -> (
+--
+-- DESCRIPTION :
+--   Given in strnbr is the string representation of a number,
+--   in double double precision, which is 106 bits.
+--
+  parts := separate("e", strnbr);
+  nbr := concatenate(parts_0, "p106");
+  if #parts > 1 then
+     nbr = concatenate(nbr, "e", parts_1);
+  return value nbr
+);
+
+makeQuadDouble := (strnbr) -> (
+--
+-- DESCRIPTION :
+--   Given in strnbr is the string representation of a number,
+--   in double double precision, which is 212 bits.
+--
+  parts := separate("e", strnbr);
+  nbr := concatenate(parts_0, "p212");
+  if #parts > 1 then
+     nbr = concatenate(nbr, "e", parts_1);
+  return value nbr
+);
+
+makeRealDoubleRow := (line) -> (
 --
 -- DESCRIPTION :
 --   Given in line is a line of double numbers in scientific format,
---   with the big E notation.  Returns a list of real numbers.
+--   in double precision, with the big E notation.
+--   Returns a list of real numbers.
 --
   data := replace("E", "e", line);       -- replace the "E" by "e"
   data = replace("e\\+00", "", data);    -- M2 complaints at 2.3e+00
@@ -82,10 +109,10 @@ makeRealRow := (line) -> (
   data = stripTrailingSpaces(data);      -- remove trailing spaces
   data = replaceConsecutiveSpaces(data); -- exactly one space as separator
   nbrs := separate(" ", data);           -- separate the list
-  return apply(nbrs, x-> value(x));     -- list of doubles
+  return apply(nbrs, x-> value(x));      -- list of doubles
 );
 
-makeComplexRow := (line) -> (
+makeComplexDoubleRow := (line) -> (
 --
 -- DESCRIPTION :
 --   Given in line is a line of double numbers in scientific format,
@@ -104,7 +131,7 @@ makeComplexRow := (line) -> (
   return apply(twos, x-> x#0 + ii*x#1)   -- turn each pair into complex number
 );
 
-makeRealMatrix := (dim, data) -> (
+makeRealDoubleMatrix := (dim, data) -> (
 --
 -- DESCRIPTION :
 --   Returns a matrix with as many rows as the value of dim,
@@ -113,11 +140,11 @@ makeRealMatrix := (dim, data) -> (
   result := {};
   for k from 0 to dim-1 do
     if k < #data then
-      result = append(result, makeRealRow(data#k));
+      result = append(result, makeRealDoubleRow(data#k));
   return matrix(result)
 );
 
-makeComplexMatrix := (dim, data) -> (
+makeComplexDoubleMatrix := (dim, data) -> (
 --
 -- DESCRIPTION :
 --   Returns a matrix with as many rows as the value of dim,
@@ -126,7 +153,7 @@ makeComplexMatrix := (dim, data) -> (
   result := {};
   for k from 0 to dim-1 do
     if k < #data then
-      result = append(result, makeComplexRow(data#k));
+       result = append(result, makeComplexDoubleRow(data#k));
   return matrix(result)
 );
 
@@ -149,7 +176,7 @@ extractMovedFlag := (dim, data) -> (
         row = k + i;
         subdata = append(subdata, data#row);
       );
-      return makeRealMatrix(dim, subdata)
+      return makeRealDoubleMatrix(dim, subdata)
     )
   );
   return {}
@@ -175,7 +202,7 @@ extractSolutionPlane := (dim, data) -> (
         row = k + i;
         subdata = append(subdata, data#row);
       );
-      return makeComplexMatrix(dim, subdata)
+      return makeComplexDoubleMatrix(dim, subdata)
     )
   );
   return {}
