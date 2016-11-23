@@ -95,11 +95,12 @@ makeQuadDouble := (strnbr) -> (
   return value nbr
 );
 
-makeRealDoubleRow := (line) -> (
+makeRealDoubleRow := (line, prec) -> (
 --
 -- DESCRIPTION :
---   Given in line is a line of double numbers in scientific format,
---   in double precision, with the big E notation.
+--   Given in line is a line of floating-point numbers in scientific format,
+--   with the big E notation.  The value of prec must be 0, 1, or 2,
+--   respectively for double, double double, or quad double precision.
 --   Returns a list of real numbers.
 --
   data := replace("E", "e", line);       -- replace the "E" by "e"
@@ -109,15 +110,22 @@ makeRealDoubleRow := (line) -> (
   data = stripTrailingSpaces(data);      -- remove trailing spaces
   data = replaceConsecutiveSpaces(data); -- exactly one space as separator
   nbrs := separate(" ", data);           -- separate the list
-  return apply(nbrs, x-> value(x));      -- list of doubles
+  if prec == 0 then
+    return apply(nbrs, x -> value(x))    -- list of doubles
+  else if prec == 1 then
+    return apply(nbrs, x -> makeDoubleDouble(x))  -- list of double doubles
+  else
+    return apply(nbrs, x -> makeQuadDouble(x));   -- list of quad doubles
 );
 
-makeComplexDoubleRow := (line) -> (
+makeComplexDoubleRow := (line, prec) -> (
 --
 -- DESCRIPTION :
 --   Given in line is a line of double numbers in scientific format,
 --   with the big E notation.  Returns a list of complex numbers,
 --   using the consecutive doubles as real and imaginary parts.
+--   The value of prec must be 0, 1, or 2,
+--   respectively for double, double double, or quad double precision.
 --
   data := replace("E", "e", line);       -- replace the "E" by "e"
   data = replace("e\\+00", "", data);    -- M2 complaints at 2.3e+00
@@ -126,34 +134,43 @@ makeComplexDoubleRow := (line) -> (
   data = stripTrailingSpaces(data);      -- remove trailing spaces
   data = replaceConsecutiveSpaces(data); -- exactly one space as separator
   nbrs := separate(" ", data);           -- separate the list
-  vals := apply(nbrs, x-> value(x));     -- list of doubles
+  if prec == 0 then
+    vals := apply(nbrs, x -> value(x))   -- list of doubles
+  else if prec == 1 then
+    vals = apply(nbrs, x -> makeDoubleDouble(x)) -- list of double doubles
+  else
+    vals = apply(nbrs, x -> makeQuadDouble(x)); -- list of quad doubles
   twos := pack(2, vals);                 -- make list of pairs
-  return apply(twos, x-> x#0 + ii*x#1)   -- turn each pair into complex number
+  return apply(twos, x -> x#0 + ii*x#1)  -- turn each pair into complex number
 );
 
-makeRealDoubleMatrix := (dim, data) -> (
+makeRealDoubleMatrix := (dim, data, prec) -> (
 --
 -- DESCRIPTION :
 --   Returns a matrix with as many rows as the value of dim,
 --   taking the values on the lines in data.
+--   The value of prec must be 0, 1, or 2,
+--   respectively for double, double double, or quad double precision.
 --
   result := {};
   for k from 0 to dim-1 do
     if k < #data then
-      result = append(result, makeRealDoubleRow(data#k));
+      result = append(result, makeRealDoubleRow(data#k, prec));
   return matrix(result)
 );
 
-makeComplexDoubleMatrix := (dim, data) -> (
+makeComplexDoubleMatrix := (dim, data, prec) -> (
 --
 -- DESCRIPTION :
 --   Returns a matrix with as many rows as the value of dim,
 --   taking the values on the lines in data.
+--   The value of prec must be 0, 1, or 2,
+--   respectively for double, double double, or quad double precision.
 --
   result := {};
   for k from 0 to dim-1 do
     if k < #data then
-       result = append(result, makeComplexDoubleRow(data#k));
+      result = append(result, makeComplexDoubleRow(data#k, prec));
   return matrix(result)
 );
 
@@ -176,7 +193,7 @@ extractMovedFlag := (dim, data) -> (
         row = k + i;
         subdata = append(subdata, data#row);
       );
-      return makeRealDoubleMatrix(dim, subdata)
+      return makeRealDoubleMatrix(dim, subdata, 0)
     )
   );
   return {}
@@ -202,7 +219,7 @@ extractSolutionPlane := (dim, data) -> (
         row = k + i;
         subdata = append(subdata, data#row);
       );
-      return makeComplexDoubleMatrix(dim, subdata)
+      return makeComplexDoubleMatrix(dim, subdata, 0)
     )
   );
   return {}
@@ -241,12 +258,12 @@ extractSolutionPlanes := (dim, data) -> (
     if #solplane > 0 then
     (
       subdata := extractSubList(k, dim, data);
-      result = append(result, makeComplexMatrix(dim, subdata));
+      result = append(result, makeComplexDoubleMatrix(dim, subdata, 0));
       current := k+dim+1;
       while current+dim < #data-1 do
       (   
         subdata = extractSubList(current, dim, data);
-        result = append(result, makeComplexMatrix(dim, subdata));
+        result = append(result, makeComplexDoubleMatrix(dim, subdata, 0));
         current = current + dim + 1;
       )
     )
@@ -271,13 +288,13 @@ extractPieriSolutionPlanes := (dim, data) -> (
     if #solplane > 0 then
     (
       subdata := extractSubList(k, dim, data);
-      result = append(result, makeComplexMatrix(dim, subdata));
+      result = append(result, makeComplexDoubleMatrix(dim, subdata, 0));
       current := k+dim+1;
       while current+dim < #data-1 do
       (   
         subdata = extractSubList(current, dim, data);
         if #subdata_0 == 0 then return result;
-        result = append(result, makeComplexMatrix(dim, subdata));
+        result = append(result, makeComplexDoubleMatrix(dim, subdata, 0));
         current = current + dim + 1;
       )
     )
@@ -302,13 +319,13 @@ extractPieriInputPlanes := (dim, data) -> (
     if #solplane > 0 then
     (
       subdata := extractSubList(k, dim, data);
-      result = append(result, makeComplexMatrix(dim, subdata));
+      result = append(result, makeComplexDoubleMatrix(dim, subdata, 0));
       current := k+dim+1;
       while current+dim < #data-1 do
       (   
         subdata = extractSubList(current, dim, data);
         if #subdata_0 == 0 then return result;
-        result = append(result, makeComplexMatrix(dim, subdata));
+        result = append(result, makeComplexDoubleMatrix(dim, subdata, 0));
         current = current + dim + 1;
       )
     )
@@ -323,14 +340,14 @@ extractFixedFlags := (dim, nbr, data) -> (
 --   Every flag has dim rows and their number equals nbr.
 --
   result := {};
-  firstflag := makeComplexMatrix(dim, data);
+  firstflag := makeComplexDoubleMatrix(dim, data, 0);
   result = append(result, firstflag);
   current := dim; -- skip first dim rows and blank row
   subdata := {};
   for k from 1 to nbr-1 do
   (
     subdata = extractSubList(current, dim, data);
-    result = append(result, makeComplexMatrix(dim, subdata));
+    result = append(result, makeComplexDoubleMatrix(dim, subdata, 0));
     current = current + dim + 1;
   );
   return result

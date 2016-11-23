@@ -1,3 +1,6 @@
+Tue 22 Nov 2016 : added parameter to the helper functions in LRhomotopies.m2
+  to extract data in double, double double, or quad double precision.
+
 Mon 21 Nov 2016 : added functions to LRhomotopies.m2 to turn the value
   of a string representation of a double double and quad double number.
 
