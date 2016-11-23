@@ -336,6 +336,11 @@ global optimization, and computational physics:
    series-parallel manipulator**.
    *Robotics and Computer-Integrated Manufactoring* 29(6): 463-472, 2013.
 
+#. Jaime Gallardo-Alvarado, Mohammad H. Abedinnasab, and Daniel Lichtblau:
+   **Simplified Kinematics for a Parallel Manipulator Generator of the
+   Schoenflies Motion**.
+   *Journal of Mechanisms and Robotics* 8(6):061020-061020-10, 2016.
+
 #. Bertrand Haas:
    **A Simple Counterexample to Kouchnirenko's Conjecture**.
    *Beitraege zur Algebra und Geometrie/Contributions to Algebra
@@ -660,7 +665,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-93. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
+94. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
     and Jeff Sommars: **Solving polynomial systems via homotopy continuation
     and monodromy**. arXiv:1609.08722v2 [math.AG] 2 Nov 2016
 
@@ -722,7 +727,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-107. Bo Dong, Bo Yu, and Yan Yu:
+108. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -741,7 +746,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-110. B. Sturmfels:
+111. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
