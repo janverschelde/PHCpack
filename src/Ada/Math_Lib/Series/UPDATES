@@ -1,3 +1,6 @@
+Sat 26 Nov 2016 : to standard_random_series, added a function to generate
+  a random vector series.
+
 Mon 7 Nov 2016 : fixed number of rows in stacked matrix in ts_serinv.
 
 Sun 6 Nov 2016 : added rank computation via SVD to ts_serinv.adb.
