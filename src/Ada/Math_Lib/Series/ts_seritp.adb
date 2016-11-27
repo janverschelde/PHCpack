@@ -12,6 +12,7 @@ with Standard_Dense_Vector_Series_io;    use Standard_Dense_Vector_Series_io;
 with Standard_Random_Series;
 with Standard_Dense_Matrix_Series;
 with Standard_Dense_Matrix_Series_io;    use Standard_Dense_Matrix_Series_io;
+with Standard_Interpolating_Series;
 
 procedure ts_seritp is
 
@@ -71,8 +72,6 @@ procedure ts_seritp is
     use Standard_Complex_Matrices;
 
   begin
-    put("dim : "); put(dim,1); new_line;
-    put("deg : "); put(deg,1); new_line;
     if deg > Standard_Dense_Series.max_deg
      then res.deg := Standard_Dense_Series.max_deg;
      else res.deg := deg;
@@ -115,11 +114,19 @@ procedure ts_seritp is
         := Standard_Random_Series.Random_Vector_Series(1,dim,deg);
     rhs : constant Standard_Dense_Vector_Series.Vector
         := Multiply(mat,sol);
+    rnk : integer32;
 
   begin
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
+    rnk := Standard_Interpolating_Series.Full_Rank(mat);
+    if rnk = -1 then
+      put_line("The matrix series does not have full rank.");
+    else
+      put_line("The matrix series has full rank.");
+      put("The smallest degree for full rank : "); put(rnk,1); new_line;
+    end if;
   end Standard_Test;
 
   procedure Main is

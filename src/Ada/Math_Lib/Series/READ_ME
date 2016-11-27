@@ -80,6 +80,7 @@ standard_matrix_series_solvers   : linearization to solve a system of series
 dobldobl_matrix_series_solvers   : linearization in double double precision
 quaddobl_matrix_series_solvers   : linearization in quad double precision
 ts_serlin                        : test on matrix series solver
+standard_interpolating_series    : interpolation for linear series systems
 ts_seritp                        : test interpolation on linear series systems
 ------------------------------------------------------------------------------
 standard_series_polynomials      : polynomials with series as coefficients
