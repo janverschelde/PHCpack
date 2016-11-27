@@ -515,6 +515,10 @@ ts_serinv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serinv.adb \
               -o $(BIN)/ts_serinv
 
+ts_seritp:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_seritp.adb \
+              -o $(BIN)/ts_seritp
+
 # Test programs for the Deformations/Solutions library :
 
 ts_solfilt:
