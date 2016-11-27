@@ -1,3 +1,7 @@
+Sun 27 Nov 2016 : standard_interpolating_series tested by ts_seritp
+  computes by interpolation the solution of a linear system with matrix
+  series, with possible singular leading matrix coefficients.
+
 Sat 26 Nov 2016 : to standard_random_series, added a function to generate
   a random vector series.  New test program ts_seritp, to develop the
   solving of linear systems of series via interpolation.
