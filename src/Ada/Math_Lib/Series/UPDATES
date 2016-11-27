@@ -1,5 +1,6 @@
 Sat 26 Nov 2016 : to standard_random_series, added a function to generate
-  a random vector series.
+  a random vector series.  New test program ts_seritp, to develop the
+  solving of linear systems of series via interpolation.
 
 Mon 7 Nov 2016 : fixed number of rows in stacked matrix in ts_serinv.
 
