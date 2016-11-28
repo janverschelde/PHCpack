@@ -281,10 +281,8 @@ package body Standard_Interpolating_Series is
     dim : constant integer32 := rhs.cff(0)'last;
     t : constant Standard_Complex_Vectors.Vector(0..mat.deg)
       := Standard_Random_Vectors.Random_Vector(0,mat.deg);
-    m : Standard_Complex_VecMats.VecMat(t'range)
-      := Standard_Interpolating_Series.Sample(mat,t);
-    v : Standard_Complex_VecVecs.VecVec(t'range)
-      := Standard_Interpolating_Series.Sample(rhs,t);
+    m : Standard_Complex_VecMats.VecMat(t'range) := Sample(mat,t);
+    v : Standard_Complex_VecVecs.VecVec(t'range) := Sample(rhs,t);
     x : Standard_Complex_VecVecs.VecVec(t'range);
     r : Standard_Floating_Vectors.Vector(t'range);
     xt : Standard_Complex_VecVecs.VecVec(1..dim);
@@ -296,26 +294,26 @@ package body Standard_Interpolating_Series is
       put_line("The sample points :");
       put_line(t);
     end if;
-    x := Standard_Interpolating_Series.Solve_Linear_Systems(m,v);
-    r := Standard_Interpolating_Series.Residuals(m,v,x);
+    x := Solve_Linear_Systems(m,v);
+    r := Residuals(m,v,x);
     if verbose then
       put_line("The solutions to the interpolated linear systems :");
       put_line(x);
       put_line("The residuals of the solved sampled linear systems :");
       put_line(r);
     end if;
-    xt := Standard_Interpolating_Series.Transpose(x);
+    xt := Transpose(x);
     if verbose then
       put_line("The transposed solution vectors :");
       put_line(xt);
     end if;
-    vdm := Standard_Interpolating_Series.Vandermonde_Matrix(t);
-    cff := Standard_Interpolating_Series.Solve_Interpolation_Systems(vdm,xt);
+    vdm := Vandermonde_Matrix(t);
+    cff := Solve_Interpolation_Systems(vdm,xt);
     if verbose then
       put_line("The coefficients computed via interpolation :");
       put_line(cff);
     end if;
-    res := Standard_Interpolating_Series.Construct(cff);
+    res := Construct(cff);
     return res;
   end Interpolate;
 
