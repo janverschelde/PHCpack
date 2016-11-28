@@ -2,8 +2,11 @@ with text_io;                             use text_io;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
+with Standard_Random_Vectors;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors_io;        use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
+with Standard_Complex_VecVecs_io;         use Standard_Complex_VecVecs_io;
 with Standard_Complex_Vector_Norms;
 with Standard_Complex_Linear_Solvers;
 with Standard_Complex_Singular_Values;
@@ -267,5 +270,53 @@ package body Standard_Interpolating_Series is
     end loop;
     return res;
   end Construct;
+
+  function Interpolate
+             ( mat : Standard_Dense_Matrix_Series.Matrix;
+               rhs : Standard_Dense_Vector_Series.Vector;
+               verbose : boolean := true )
+             return Standard_Dense_Vector_Series.Vector is
+
+    res : Standard_Dense_Vector_Series.Vector;
+    dim : constant integer32 := rhs.cff(0)'last;
+    t : constant Standard_Complex_Vectors.Vector(0..mat.deg)
+      := Standard_Random_Vectors.Random_Vector(0,mat.deg);
+    m : Standard_Complex_VecMats.VecMat(t'range)
+      := Standard_Interpolating_Series.Sample(mat,t);
+    v : Standard_Complex_VecVecs.VecVec(t'range)
+      := Standard_Interpolating_Series.Sample(rhs,t);
+    x : Standard_Complex_VecVecs.VecVec(t'range);
+    r : Standard_Floating_Vectors.Vector(t'range);
+    xt : Standard_Complex_VecVecs.VecVec(1..dim);
+    vdm : Standard_Complex_Matrices.Matrix(1..mat.deg+1,1..mat.deg+1);
+    cff : Standard_Complex_VecVecs.VecVec(1..dim);
+
+  begin
+    if verbose then
+      put_line("The sample points :");
+      put_line(t);
+    end if;
+    x := Standard_Interpolating_Series.Solve_Linear_Systems(m,v);
+    r := Standard_Interpolating_Series.Residuals(m,v,x);
+    if verbose then
+      put_line("The solutions to the interpolated linear systems :");
+      put_line(x);
+      put_line("The residuals of the solved sampled linear systems :");
+      put_line(r);
+    end if;
+    xt := Standard_Interpolating_Series.Transpose(x);
+    if verbose then
+      put_line("The transposed solution vectors :");
+      put_line(xt);
+    end if;
+    vdm := Standard_Interpolating_Series.Vandermonde_Matrix(t);
+    cff := Standard_Interpolating_Series.Solve_Interpolation_Systems(vdm,xt);
+    if verbose then
+      put_line("The coefficients computed via interpolation :");
+      put_line(cff);
+    end if;
+    res := Standard_Interpolating_Series.Construct(cff);
+    return res;
+  end Interpolate;
 
 end Standard_Interpolating_Series;

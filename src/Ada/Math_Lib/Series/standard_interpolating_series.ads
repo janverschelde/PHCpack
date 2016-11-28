@@ -123,4 +123,17 @@ package Standard_Interpolating_Series is
   --   Takes the solutions of the interpolation systems in x
   --   and constructs the vector series.
 
+  function Interpolate
+             ( mat : Standard_Dense_Matrix_Series.Matrix;
+               rhs : Standard_Dense_Vector_Series.Vector;
+               verbose : boolean := true )
+             return Standard_Dense_Vector_Series.Vector;
+
+  -- DESCRIPTION :
+  --   Samples the matrix and vector series at random points
+  --   and solves the linear systems defined by the evaluated
+  --   coefficient matrices and right hand side vectors.
+  --   If verbose, then additional results and diagnostics
+  --   are written to screen.
+
 end Standard_Interpolating_Series;

@@ -110,59 +110,6 @@ procedure ts_seritp is
     return res;
   end Multiply;
 
-  function Interpolate
-             ( mat : in Standard_Dense_Matrix_Series.Matrix;
-               rhs : in Standard_Dense_Vector_Series.Vector;
-               verbose : in boolean := true )
-             return Standard_Dense_Vector_Series.Vector is
-
-  -- DESCRIPTION :
-  --   Samples the matrix and vector series at random points
-  --   and solves the linear systems defined by the evaluated
-  --   coefficient matrices and right hand side vectors.
-
-    res : Standard_Dense_Vector_Series.Vector;
-    dim : constant integer32 := rhs.cff(0)'last;
-    t : constant Standard_Complex_Vectors.Vector(0..mat.deg)
-      := Standard_Random_Vectors.Random_Vector(0,mat.deg);
-    m : Standard_Complex_VecMats.VecMat(t'range)
-      := Standard_Interpolating_Series.Sample(mat,t);
-    v : Standard_Complex_VecVecs.VecVec(t'range)
-      := Standard_Interpolating_Series.Sample(rhs,t);
-    x : Standard_Complex_VecVecs.VecVec(t'range);
-    r : Standard_Floating_Vectors.Vector(t'range);
-    xt : Standard_Complex_VecVecs.VecVec(1..dim);
-    vdm : Standard_Complex_Matrices.Matrix(1..mat.deg+1,1..mat.deg+1);
-    cff : Standard_Complex_VecVecs.VecVec(1..dim);
-
-  begin
-    if verbose then
-      put_line("The sample points :");
-      put_line(t);
-    end if;
-    x := Standard_Interpolating_Series.Solve_Linear_Systems(m,v);
-    r := Standard_Interpolating_Series.Residuals(m,v,x);
-    if verbose then
-      put_line("The solutions to the interpolated linear systems :");
-      put_line(x);
-      put_line("The residuals of the solved sampled linear systems :");
-      put_line(r);
-    end if;
-    xt := Standard_Interpolating_Series.Transpose(x);
-    if verbose then
-      put_line("The transposed solution vectors :");
-      put_line(xt);
-    end if;
-    vdm := Standard_Interpolating_Series.Vandermonde_Matrix(t);
-    cff := Standard_Interpolating_Series.Solve_Interpolation_Systems(vdm,xt);
-    if verbose then
-      put_line("The coefficients computed via interpolation :");
-      put_line(cff);
-    end if;
-    res := Standard_Interpolating_Series.Construct(cff);
-    return res;
-  end Interpolate;
-
   procedure Standard_Test ( deg,dim : integer32 ) is
 
   -- DESCRIPTION :
@@ -187,7 +134,7 @@ procedure ts_seritp is
     else
       put_line("The matrix series has full rank.");
       put("The smallest degree for full rank : "); put(rnk,1); new_line;
-      cff := Interpolate(mat,rhs);
+      cff := Standard_Interpolating_Series.Interpolate(mat,rhs);
       put_line("The computed solution :"); put(cff);
       put_line("The constructed solution :"); put(sol);
     end if;
