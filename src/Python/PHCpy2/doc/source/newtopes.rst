@@ -1,6 +1,5 @@
-*************************************************
 Newton polytopes, monomial maps, and power series
-*************************************************
+=================================================
 
 The Newton polytopes of the polynomial system provide important
 information about the structure of the solution sets.
@@ -23,7 +22,7 @@ The module **phcpy.series** exports functions to compute power series
 with Newton's method.
 
 convex hulls of lattice polytopes
-=================================
+---------------------------------
 
 The session below illustration the calculation of the convex hull
 of a configuration of seven points in the plane.
@@ -163,7 +162,7 @@ two facets we count every edge twice if we multiply the number of facets
 by three, so we have 36/2 = 18 edges.
 
 mixed volumes
-=============
+-------------
 
 The mixed volume of a tuple of Newton polytopes
 if defined as the coefficient in the expansion of the volume
@@ -227,7 +226,7 @@ The function ``integer_mixed_cells`` allows the user to specify integer
 lifting values as the last coordinate of the points in the supports.
 
 solving binomial systems
-========================
+------------------------
 
 The irreducible components of
 positive dimensional solution sets of binomial systems
@@ -255,7 +254,7 @@ In the output above we recognize the twisted cubic,
 the x-axis, and the yz-plane as the three solution sets.
 
 power series solutions
-======================
+----------------------
 
 Newton's method applies also to systems where the coefficients are
 truncated power series.

@@ -1,6 +1,5 @@
-***************************
 numerical Schubert calculus
-***************************
+===========================
 
 The module schubert.py exports the hypersurface and quantum
 Pieri homotopies to solve the following Schubert problem:
@@ -10,7 +9,7 @@ degree q that meet the given m-planes nontrivially at
 the interpolation points.
 
 Pieri homotopies
-================
+----------------
 
 The Pieri homotopies illustrates the homotopy approach.
 
@@ -66,7 +65,7 @@ runs an interactive session to solve instances that
 are fully real (in case q = 0).
 
 Littlewood-Richardson homotopies 
-================================
+--------------------------------
 
 With the Littlewood-Richardson homotopies 
 we can solve general Schubert problems.

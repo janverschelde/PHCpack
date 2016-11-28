@@ -1,6 +1,5 @@
-****************************************
 a blackbox solver for isolated solutions
-****************************************
+========================================
 
 The package phcpy depends on the shared object file phcpy2c.so.
 The module **phcpy.solver**
@@ -20,7 +19,7 @@ positive dimensional solution sets are exported by
 the module **phcpy.sets**.
 
 solving random trinomials
-=========================
+-------------------------
 
 Polynomials and solutions are represented as strings.
 Below is an illustration of a session with the blackbox solver
@@ -92,7 +91,7 @@ prints the computed root counts.  Other options of the solver are
    underdetermined polynomial systems.
 
 representations of solutions of polynomial systems 
-==================================================
+--------------------------------------------------
 
 Solutions of phcpy.solve are returned as lists of PHCpack
 solution strings.  The solutions module contains functions to
@@ -270,7 +269,7 @@ of the module ``solutions``.
 Observe that also the diagnostics are set to the defaults.
 
 reproducible runs with fixed seeds
-==================================
+----------------------------------
 
 The solver in PHCpack generates different random numbers with each run,
 which may very well cause the solutions to appear in a different order
@@ -298,7 +297,7 @@ To reproduce a computation, we can thus request the seed that was used
 to what was used before (with ``py2c_set_seed``).
 
 root counting methods
-=====================
+---------------------
 
 The performance of the solver is very sensitive to how accurately
 we can predict the number of solutions.  For dense polynomial systems,
@@ -349,7 +348,7 @@ Examples of the methods to construct start systems in phcpy
 are illustrated in the documentation for the module **phcpy.trackers**.
 
 Newton's method and deflation
-=============================
+-----------------------------
 
 Newton's method fails when the Jacobian matrix is singular
 (or close to singular) at a solution.  Below is a session
@@ -425,7 +424,7 @@ Increasing the value for the tolerance to ``1.0e-4`` leads to the
 deflation at the approximation for the solution.
 
 equation and variable scaling
-=============================
+-----------------------------
 
 Another source of numerical difficulties are systems
 that have extreme values as coefficients.

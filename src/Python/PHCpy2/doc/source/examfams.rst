@@ -1,6 +1,5 @@
-**************************************
 some interesting examples and families
-**************************************
+======================================
 
 PHCpack has been tested on many examples of polynomial systems
 taken from the research literature.
@@ -12,7 +11,7 @@ Polynomial systems often occur in families and are defined
 for any number of equations and variables.
 
 interactive regression testing
-==============================
+------------------------------
 
 An interactive use of examples.py at the Python prompt can go as follows:
 
@@ -49,7 +48,7 @@ If we want to solve the system defined by f, we continue the above session as
 The example session continues in the description of the module solutions.
 
 the cyclic n-roots problem
-==========================
+--------------------------
 
 One such noteworthy family is the cyclic n-roots problem:
 

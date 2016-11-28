@@ -1,12 +1,11 @@
-******************
-the module phcwulf
-******************
+the module server
+=================
 
-The file phcwulf defines a simple client/server interaction
+The file ``server`` defines a simple client/server interaction
 to solve many random trinomials.
 
 functions in the module
-=======================
+-----------------------
 
 .. automodule:: server
    :members:
