@@ -13,9 +13,10 @@ package body QuadDobl_Random_Series is
   end Random_Series;
 
   function Random_Series_Vector
-             ( first,last,degree : integer32 ) return Vector is
+             ( first,last,degree : integer32 )
+             return QuadDobl_Dense_Series_Vectors.Vector is
 
-    res : Vector(first..last);
+    res : QuadDobl_Dense_Series_Vectors.Vector(first..last);
 
   begin
     for k in res'range loop
@@ -23,6 +24,19 @@ package body QuadDobl_Random_Series is
     end loop;
     return res;
   end Random_Series_Vector;
+
+  function Random_Vector_Series
+             ( first,last,degree : integer32 )
+             return QuadDobl_Dense_Vector_Series.Vector is
+
+    rnd : QuadDobl_Dense_Series_Vectors.Vector(first..last)
+        := Random_Series_Vector(first,last,degree);
+    res : QuadDobl_Dense_Vector_Series.Vector
+        := QuadDobl_Dense_Vector_Series.Create(rnd); 
+
+  begin
+    return res;
+  end Random_Vector_Series;
 
   function Random_Series_VecVec
              ( vvfirst,vvlast,first,last,degree : integer32 ) return VecVec is
@@ -32,10 +46,10 @@ package body QuadDobl_Random_Series is
   begin
     for i in res'range loop
       declare
-        v : constant Vector(first..last)
+        v : constant QuadDobl_Dense_Series_Vectors.Vector(first..last)
           := Random_Series_Vector(first,last,degree);
       begin
-        res(i) := new Vector'(v);
+        res(i) := new QuadDobl_Dense_Series_Vectors.Vector'(v);
       end;
     end loop;
     return res;

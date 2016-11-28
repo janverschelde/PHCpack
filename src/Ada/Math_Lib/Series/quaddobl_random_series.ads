@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with QuadDobl_Dense_Series;              use QuadDobl_Dense_Series;
-with QuadDobl_Dense_Series_Vectors;      use QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Dense_Vector_Series;
 with QuadDobl_Dense_Series_VecVecs;      use QuadDobl_Dense_Series_VecVecs;
 with QuadDobl_Dense_Series_Matrices;     use QuadDobl_Dense_Series_Matrices;
 
@@ -18,7 +19,16 @@ package QuadDobl_Random_Series is
   --   on the unit circle on the complex plane.
 
   function Random_Series_Vector
-             ( first,last,degree : integer32 ) return Vector;
+             ( first,last,degree : integer32 )
+             return QuadDobl_Dense_Series_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns a vector of range first..last with random series
+  --   of the given degree.
+
+  function Random_Vector_Series
+             ( first,last,degree : integer32 )
+             return QuadDobl_Dense_Vector_Series.Vector;
 
   -- DESCRIPTION :
   --   Returns a vector of range first..last with random series
