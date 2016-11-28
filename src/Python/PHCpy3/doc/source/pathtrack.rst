@@ -1,6 +1,5 @@
-**********************************
 path trackers and sweep homotopies
-**********************************
+==================================
 
 Homotopy continuation methods are applied to solve a polynomial system.
 The module **phcpy.trackers** exports the path trackers of PHCpack.
@@ -28,7 +27,7 @@ The tracking of solution paths defined by a sweep homotopy apply
 arc length parameter continuation.
 
 a simple example
-================
+----------------
 
 The example session below illustrates the computation of the intersection
 of an ellipse with a parabola.  A homotopy method based on the total degree
@@ -126,7 +125,7 @@ For example:
    == err :  4.815E-35 = rco :  1.079E-01 = res :  0.000E+00 =
 
 fixing the gamma constant
-=========================
+-------------------------
 
 To avoid this side effect, *track* accepts a complex value
 as its last argument for the so-called gamma constant.
@@ -148,7 +147,7 @@ each time calling track with the same value for gamma,
 then all solutions will be found.
 
 give the next solution on a path
-================================
+--------------------------------
 
 The ``track`` function follows a solution path till the end.
 Often it could be useful to view all intermediate solutions
@@ -297,7 +296,7 @@ so rerunning the same code will generate other random constants
 and produce different plots.
 
 solving with polyhedral homotopies
-==================================
+----------------------------------
 
 Below is an interactive session to illustrate the solving 
 with polyhedral homotopies.
@@ -325,7 +324,7 @@ with polyhedral homotopies.
    == err :  1.938E-16 = rco :  5.402E-01 = res :  2.102E-15 =
 
 Newton's method at higher precision
-===================================
+-----------------------------------
 
 We can apply one Newton step with higher precision to improve
 the accuracy of the solutions.  Doubling the precision:
@@ -383,7 +382,7 @@ Looking at the values for *err* and *res* we see huge values
 for two solutions which are spurious.
 
 multitasked path tracking
-=========================
+-------------------------
 
 Last but certainly not least, consider the application of multitasking
 to path tracking.  On the benchmark problem of cyclic 7-roots:
@@ -442,7 +441,7 @@ The script is below:
    print('tracked', len(endsols), 'solution paths')
 
 GPU accelerated path tracking
-=============================
+-----------------------------
 
 The script below illustrates the call to the GPU accelerated path
 trackers.  As input, the location of a random coefficient system
@@ -489,7 +488,7 @@ cyclic 10-roots problem.
        print(sol)
 
 sweep homotopies
-================
+----------------
 
 A *sweep homotopy* is a family of polynomial systems with a least one
 natural parameter and one artificial parameter.
@@ -560,7 +559,7 @@ with corresponding values for ``x`` and ``y`` in the
 tuple \ :math:`(0, 1)`.
 
 real versus complex sweeps
-==========================
+--------------------------
 
 In a *complex sweep*, an addition random gamma constant is generated
 in the convex-linear combination between the sets of start and target
@@ -615,7 +614,7 @@ of complex random gamma constant in the convex combination between
 the start and target values of the parameters.
 
 tuning parameters, settings, and tolerances
-===========================================
+-------------------------------------------
 
 The default values of the numerical parameters were set based
 on computational experiences on a large, representative collection
@@ -627,7 +626,7 @@ The other functions in the module allow to get the values and to
 set the values of each parameter, setting, or tolerance.
 
 a polyhedral end game
-=====================
+---------------------
 
 In case the mixed volume is not a sharp root count,
 there are paths diverging to points with coordinates equal to zero,

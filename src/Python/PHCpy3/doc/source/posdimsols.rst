@@ -1,6 +1,5 @@
-**********************************
 positive dimensional solution sets
-**********************************
+==================================
 
 The module sets.py provides some functionality of PHCpack
 to work with positive dimensional solution sets.
@@ -35,7 +34,7 @@ with a homotopy membership test we can determine whether any given
 point belongs to any given factor in the decomposition.
 
 witness sets
-============
+------------
 
 A witness set is a data structure to represent a positive dimensional
 solution set.  A witness set consists of an embedding of the polynomial
@@ -108,7 +107,7 @@ that is: having as many equations as unknowns.
 Only solutions with zero slack variables matter.
 
 homotopy membership test
-========================
+------------------------
 
 Given a witness set and a point, with a homotopy we can decide
 whether the point belongs to the algebraic set represented by
@@ -230,7 +229,7 @@ To perform the membership test in quad double precision,
 invoke ``membertest`` with ``precision='qd'``.
 
 cascade of homotopies
-=====================
+---------------------
 
 With a cascade of homotopies, we separate generic points on one
 equidimensional component from another equidimensional component
@@ -330,7 +329,7 @@ To perform the filtering of the solutions properly, we apply
 a membership test.
 
 factoring into irreducibles
-===========================
+---------------------------
 
 A witness set consists of two parts.
 The first part of a witness set is a polynomial system with as many added
@@ -398,7 +397,7 @@ The witness set ``(w, s)`` should also have been computed in
 double double and quad double precision.
 
 diagonal homotopies
-===================
+-------------------
 
 Given two witness sets, with diagonal homotopies we can compute 
 generic points on the intersection of the algebraic sets represented

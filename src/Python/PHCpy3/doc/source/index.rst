@@ -13,15 +13,6 @@ phcpy Documentation Contents
 
    welcome
    usecases
-   blackbox
-   pathtrack
-   posdimsols
-   examfams
-   numschub
-   newtopes
-   dashboard
-   phcbwulf
-   modphcpy2c3
-   about
+   userman
    refman
    indices
