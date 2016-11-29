@@ -610,6 +610,7 @@ package body Drivers_for_Pieri_Homotopies is
     npaths : Standard_Natural_Vectors.Vector(1..target_level)
            := (1..target_level => 0);
     timings : Duration_Array(1..target_level) := (1..target_level => 0.0);
+    nocheater : boolean;
 
   begin
     put_line("The size of the deformation poset : ");
@@ -634,7 +635,7 @@ package body Drivers_for_Pieri_Homotopies is
        then planes(mp-1).all := First_Standard_Plane(m,p);
       end if;
     end if;
-    Driver_for_Input_Planes(file,m,p,target_planes); 
+    Driver_for_Input_Planes(file,m,p,target_planes,nocheater); 
     Matrix_Indeterminates.Initialize_Symbols(m+p,p);
     Add_t_Symbol;
     Set_Parameters(file,report);
@@ -652,11 +653,13 @@ package body Drivers_for_Pieri_Homotopies is
     print_times(file,timer,"Solving along the deformation poset");
     Write_Poset_Times(file,timer,
                       npaths(1..target_level),timings(1..target_level));
-    if deform_poset(target_level)(1) /= null then
-      new_line(file);
-      Solve_Hypersurface_Target_System
-        (file,m,p,planes,target_planes,index_poset,deform_poset,
-         target_level,report);
+    if not nocheater then
+      if deform_poset(target_level)(1) /= null then
+        new_line(file);
+        Solve_Hypersurface_Target_System
+          (file,m,p,planes,target_planes,index_poset,deform_poset,
+           target_level,report);
+      end if;
     end if;
   end Solve_Hypersurface_Deformation_Poset;
 
@@ -678,6 +681,7 @@ package body Drivers_for_Pieri_Homotopies is
     npaths : Standard_Natural_Vectors.Vector(1..target_level)
            := (1..target_level => 0);
     timings : Duration_Array(1..target_level) := (1..target_level => 0.0);
+    nocheater : boolean;
 
   begin
     put_line("The size of the deformation poset : ");
@@ -691,7 +695,7 @@ package body Drivers_for_Pieri_Homotopies is
     put("Do you want to have the homotopies on file ? (y/n) ");
     Ask_Yes_or_No(ans);
     outlog := (ans = 'y');
-    Driver_for_Input_Planes(file,m,p,k,target_planes);
+    Driver_for_Input_Planes(file,m,p,k,target_planes,nocheater);
     Matrix_Indeterminates.Initialize_Symbols(m+p,p);
     Add_t_Symbol;
     Set_Parameters(file,report);
@@ -709,11 +713,13 @@ package body Drivers_for_Pieri_Homotopies is
     print_times(file,timer,"Solving along the deformation poset");
     Write_Poset_Times(file,timer,
                       npaths(1..target_level),timings(1..target_level));
-    if deform_poset(target_level)(1) /= null then
-      new_line(file);
-      Solve_General_Target_System
-        (file,m,p,planes,target_planes,index_poset,deform_poset,
-         target_level,report);
+    if not nocheater then
+      if deform_poset(target_level)(1) /= null then
+        new_line(file);
+        Solve_General_Target_System
+          (file,m,p,planes,target_planes,index_poset,deform_poset,
+           target_level,report);
+      end if;
     end if;
   end Solve_General_Deformation_Poset;
 

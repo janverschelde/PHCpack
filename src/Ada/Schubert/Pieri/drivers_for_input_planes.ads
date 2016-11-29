@@ -119,7 +119,8 @@ package Drivers_for_Input_Planes is
 -- MAIN INTERACTIVE DRIVERS :
 
   procedure Driver_for_Input_Planes
-              ( file : in file_type; m,p : in natural32; planes : out VecMat );
+              ( file : in file_type; m,p : in natural32;
+                planes : out VecMat; nocheater : out boolean );
 
   -- DESCRIPTION :
   --   Generates m-planes as input to the hypersurface Pieri algorithm.
@@ -130,13 +131,17 @@ package Drivers_for_Input_Planes is
   --   p        dimension of the output planes, m+p = number of rows.
 
   -- ON RETURN :
-  --   planes   vector of range 1..m*p with m-planes in dimension m+p.
+  --   planes   vector of range 1..m*p with m-planes in dimension m+p,
+  --   nocheater is true if the user did not want a cheater homotopy,
+  --            in that case the value of planes is undefined.
 
   procedure Driver_for_Input_Planes
-              ( m,p : in natural32; k : in Bracket; planes : out VecMat );
+              ( m,p : in natural32; k : in Bracket; planes : out VecMat;
+                nocheater : out boolean );
   procedure Driver_for_Input_Planes
               ( file : in file_type;
-                m,p : in natural32; k : in Bracket; planes : out VecMat );
+                m,p : in natural32; k : in Bracket; planes : out VecMat;
+                nocheater : out boolean );
 
   -- DESCRIPTION :
   --   Generates m-planes as input to the general Pieri algorithm.
@@ -150,10 +155,13 @@ package Drivers_for_Input_Planes is
   -- ON RETURN :
   --   planes   vector of same range as k with (m+1-k(i))-planes in
   --            a space of dimension m+p.
+  --   nocheater is true if the user did not asks for a cheater homotopy,
+  --            in that case the values in planes are undefined.
 
   procedure Driver_for_Input_Planes
               ( file : in file_type; m,p,q : in natural32;
-                s : out Vector; planes : out VecMat );
+                s : out Vector; planes : out VecMat;
+                nocheater : out boolean );
 
   -- DESCRIPTION :
   --   Generates m-planes as input to the quantum Pieri algorithm.
@@ -168,5 +176,7 @@ package Drivers_for_Input_Planes is
   --   s        vector of range 1..m*p+q*(m+p) of interpolation points;
   --   planes   vector of range 1..m*p+q*(m+p) with m-planes in
   --            a space of dimension m+p, sampled at s-values.
+  --   nocheater is true if the user did not asks for a cheater homotopy,
+  --            in that case the values of s and planes are undefined.
 
 end Drivers_for_Input_Planes;

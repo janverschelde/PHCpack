@@ -396,47 +396,57 @@ package body Drivers_for_Input_Planes is
 
 -- MAIN INTERACTIVE DRIVERS :
 
-  function Select_Input_Choice return character is
+  function Select_Input_Choice ( hypersurface : boolean ) return character is
 
   -- DESCRIPTION :
   --   Displays the menu to obtain a choice for the kind of input.
+  --   If hypersurface, then the character on return is in 0..6,
+  --   otherwise the character on return is in 0..4.
 
     res : character;
 
   begin
     new_line;
     put_line("MENU for generating real input planes : ");
-    put_line("  0. Random real planes at equidistant interpolation points.");
-    put_line("  1. Generate input planes osculating a "
+    put_line("  0. Run only Pieri homotopies, no cheater homotopy.");
+    put_line("  1. Random real planes at equidistant interpolation points.");
+    put_line("  2. Generate input planes osculating a "
                                & "real rational normal curve.");
-    put_line("  2. Interactively give real s-values for the "
+    put_line("  3. Interactively give real s-values for the "
                                & "osculating input planes.");
-    put_line("  3. Give the name of the file with real input planes.");
-    put_line("  4.                           with complex input planes.");
-    put_line("  5. Test variant of Shapiro^2 conjecture.");
-    put("Type 0, 1, 2, 3, 4, or 5 to select : ");
-    Ask_Alternative(res,"012345");
+    put_line("  4. Give the name of the file with real input planes.");
+    if hypersurface then
+      put_line("  5.                           with complex input planes.");
+      put_line("  6. Test variant of Shapiro^2 conjecture.");
+      put("Type 0, 1, 2, 3, 4, 5, or 6 to select : ");
+      Ask_Alternative(res,"0123456");
+    else
+      Ask_Alternative(res,"01234");
+    end if;
     return res;
   end Select_Input_Choice;
 
   procedure Driver_for_Input_Planes
-              ( file : file_type; m,p : in natural32; planes : out VecMat ) is
+              ( file : file_type; m,p : in natural32; planes : out VecMat;
+                nocheater : out boolean ) is
 
-    input_choice : constant character := Select_Input_Choice;
+    input_choice : constant character := Select_Input_Choice(true);
     dim : constant natural32 := m*p;
     svals : Vector(1..integer32(dim));
 
   begin
+    nocheater := false;
     case input_choice is
-      when '0' => planes := Random_Real_Planes(m,p);
-      when '1' => planes := Osculating_Input_Planes(m,p);
-      when '2' => svals := Read_Interpolation_Points(dim);
+      when '0' => nocheater := true;
+      when '1' => planes := Random_Real_Planes(m,p);
+      when '2' => planes := Osculating_Input_Planes(m,p);
+      when '3' => svals := Read_Interpolation_Points(dim);
                   put_line(file,"The interpolation points : ");
                   put_line(file,svals);
                   planes := Osculating_Input_Planes(m,p,svals);
-      when '3' => planes := Read_Input_Planes(m,p);
-      when '4' => planes := Read_Complex_Input_Planes(m,p);
-      when '5' => svals := Read_Interpolation_Points(dim);
+      when '4' => planes := Read_Input_Planes(m,p);
+      when '5' => planes := Read_Complex_Input_Planes(m,p);
+      when '6' => svals := Read_Interpolation_Points(dim);
                   put_line(file,"The interpolation points : ");
                   put_line(file,svals);
                   planes := Complex_Osculating_Input_Planes(m,p,svals);
@@ -447,51 +457,60 @@ package body Drivers_for_Input_Planes is
   end Driver_for_Input_Planes;
 
   procedure Driver_for_Input_Planes
-              ( m,p : in natural32; k : in Bracket; planes : out VecMat ) is
+              ( m,p : in natural32; k : in Bracket; planes : out VecMat;
+                nocheater : out boolean ) is
 
-    input_choice : constant character := Select_Input_Choice;
+    input_choice : constant character := Select_Input_Choice(false);
     svals : Vector(k'range);
 
   begin
+    nocheater := false;
     case input_choice is
-      when '0' => planes := Random_Real_Planes(m,p,k);
-      when '1' => planes := Osculating_Input_Planes(m,p,k);
-      when '2' => svals := Read_Interpolation_Points(k'length);
+      when '0' => nocheater := true;
+      when '1' => planes := Random_Real_Planes(m,p,k);
+      when '2' => planes := Osculating_Input_Planes(m,p,k);
+      when '3' => svals := Read_Interpolation_Points(k'length);
                   planes := Osculating_Input_Planes(m,p,k,svals);
-      when '3' => planes := Read_Input_Planes(m,p,k);
+      when '4' => planes := Read_Input_Planes(m,p,k);
       when others => null;
     end case;
   end Driver_for_Input_Planes;
 
   procedure Driver_for_Input_Planes
               ( file : in file_type;
-                m,p : in natural32; k : in Bracket; planes : out VecMat ) is
+                m,p : in natural32; k : in Bracket; planes : out VecMat;
+                nocheater : out boolean ) is
   begin
-    Driver_for_Input_Planes(m,p,k,planes);
-    put_line(file,"The input planes (eventually after othogonalization) : ");
-    put(file,planes);
+    Driver_for_Input_Planes(m,p,k,planes,nocheater);
+    if not nocheater then
+      put_line(file,"The input planes (eventually after othogonalization) : ");
+      put(file,planes);
+    end if;
   end Driver_for_Input_Planes;
 
   procedure Driver_for_Input_Planes
               ( file : in file_type; m,p,q : in natural32;
-                s : out Vector; planes : out VecMat ) is
+                s : out Vector; planes : out VecMat;
+                nocheater : out boolean ) is
 
-    input_choice : constant character := Select_Input_Choice;
+    input_choice : constant character := Select_Input_Choice(false);
     dim : constant natural32 := m*p + q*(m+p);
     svals : Vector(1..integer32(dim));
 
   begin
+    nocheater := false;
     case input_choice is
-      when '0' => svals := Equidistant_Interpolation_Points(dim);
-                  s := svals;
-                  planes := Random_Real_Planes(m,p,q);
+      when '0' => nocheater := true;
       when '1' => svals := Equidistant_Interpolation_Points(dim);
                   s := svals;
-                  planes := Osculating_Input_Planes(m,p,q,svals);
-      when '2' => svals := Read_Interpolation_Points(dim);
+                  planes := Random_Real_Planes(m,p,q);
+      when '2' => svals := Equidistant_Interpolation_Points(dim);
                   s := svals;
                   planes := Osculating_Input_Planes(m,p,q,svals);
       when '3' => svals := Read_Interpolation_Points(dim);
+                  s := svals;
+                  planes := Osculating_Input_Planes(m,p,q,svals);
+      when '4' => svals := Read_Interpolation_Points(dim);
                   s := svals;
                   planes := Read_Input_Planes(m,p,q);
       when others => null;

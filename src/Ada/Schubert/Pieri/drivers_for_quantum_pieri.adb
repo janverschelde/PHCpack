@@ -245,13 +245,14 @@ package body Drivers_for_Quantum_Pieri is
     timer : Timing_Widget;
     npaths : Standard_Natural_Vectors.Vector(1..dim) := (1..dim => 0);
     timings : Duration_Array(1..dim) := (1..dim => 0.0);
+    nocheater : boolean;
 
   begin
     new_line;
     put("Do you want to have the homotopies on file ? (y/n) "); 
     Ask_Yes_or_No(ans);
     outlog := (ans = 'y');
-    Driver_for_Input_Planes(file,m,p,q,target_svals,target_planes);
+    Driver_for_Input_Planes(file,m,p,q,target_svals,target_planes,nocheater);
     Set_Parameters(file,report);
     tstart(timer);
     Solve(file,m+p,q,nb,deform_poset,root,input,svals,report,outlog,
@@ -260,12 +261,14 @@ package body Drivers_for_Quantum_Pieri is
     new_line(file);
     print_times(file,timer,"Solving along the deformation poset");
     Write_Poset_Times(file,timer,npaths,timings);
-    for i in target_svals'range loop
-      comp_target_svals(i) := Create(target_svals(i));
-    end loop;
-    Solve_Hypersurface_Target_System
-      (file,m,p,q,nb,svals,comp_target_svals,input,target_planes,
-       index_poset,deform_poset,report);
+    if not nocheater then
+      for i in target_svals'range loop
+        comp_target_svals(i) := Create(target_svals(i));
+      end loop;
+      Solve_Hypersurface_Target_System
+        (file,m,p,q,nb,svals,comp_target_svals,input,target_planes,
+         index_poset,deform_poset,report);
+    end if;
   end Solve_Deformation_Poset;
 
   procedure Hypersurface_Localization_Poset

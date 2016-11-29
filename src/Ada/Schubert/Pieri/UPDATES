@@ -1,3 +1,8 @@
+Tue 29 Nov 2016 : added extra zero option to drivers_for_input_planes
+  to skip the cheater homotopy stage in the Pieri homotopies.
+  This changed drivers_for_pieri_homotopies.adb and
+  drivers_for_quantum_pieri.adb.
+
 Sat 27 Feb 2016 : changes in pieri_continuation.adb for extra argument in the
   increment-and-fix continuation in standard double precision.  This changed
   drivers_for_quantum_pieri.adb and drivers_for_pieri_homotopies.adb.
