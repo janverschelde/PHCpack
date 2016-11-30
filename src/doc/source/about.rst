@@ -640,6 +640,12 @@ global optimization, and computational physics:
    of Homotopy Continuation**.
    *Applied Mechanics and Materials* 152-254: 1779-1784, 2012.
 
+#. Ke-hu Yang, Dan-ying Lu, Xiao-qing Kuang, and Wen-Shen Yu:
+   **Harmonic Elimination for Multilevel Converters with Unequal DC levels
+   by Using the Polynomial Homotopy Continuation Algorithm**.
+   In the Proceedings of the 35th Chinese Control Conference,
+   July 27-29, 2016, Chengdu, China, pages 9969-9973, IEEE.
+
 #. K. Yang and R. Orsi:
    **Static output feedback pole placement via a trust region approach**.
    *IEEE Transactions on Automatic Control* 52(11): 2146-2150, 2007.
@@ -665,7 +671,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-94. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
+95. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
     and Jeff Sommars: **Solving polynomial systems via homotopy continuation
     and monodromy**. arXiv:1609.08722v2 [math.AG] 2 Nov 2016
 
@@ -727,7 +733,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-108. Bo Dong, Bo Yu, and Yan Yu:
+109. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -746,7 +752,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-111. B. Sturmfels:
+112. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
