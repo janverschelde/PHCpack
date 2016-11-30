@@ -421,6 +421,7 @@ package body Drivers_for_Input_Planes is
       put("Type 0, 1, 2, 3, 4, 5, or 6 to select : ");
       Ask_Alternative(res,"0123456");
     else
+      put("Type 0, 1, 2, 3, or 4 to select : ");
       Ask_Alternative(res,"01234");
     end if;
     return res;
@@ -452,8 +453,10 @@ package body Drivers_for_Input_Planes is
                   planes := Complex_Osculating_Input_Planes(m,p,svals);
       when others => null;
     end case;
-    put_line(file,"The input planes (eventually after othogonalization) : ");
-    put(file,planes);
+    if not nocheater then
+      put_line(file,"THE INPUT PLANES (eventually after othogonalization) : ");
+      put(file,planes);
+    end if;
   end Driver_for_Input_Planes;
 
   procedure Driver_for_Input_Planes
@@ -483,7 +486,7 @@ package body Drivers_for_Input_Planes is
   begin
     Driver_for_Input_Planes(m,p,k,planes,nocheater);
     if not nocheater then
-      put_line(file,"The input planes (eventually after othogonalization) : ");
+      put_line(file,"THE INPUT PLANES (eventually after othogonalization) : ");
       put(file,planes);
     end if;
   end Driver_for_Input_Planes;
@@ -515,10 +518,12 @@ package body Drivers_for_Input_Planes is
                   planes := Read_Input_Planes(m,p,q);
       when others => null;
     end case;
-    put_line(file,"The interpolation points : ");
-    put_line(file,svals);
-    put_line(file,"The target planes : ");
-    put(file,planes);
+    if not nocheater then
+      put_line(file,"THE INTERPOLATION POINTS : ");
+      put_line(file,svals);
+      put_line(file,"THE TARGET PLANES : ");
+      put(file,planes);
+    end if;
   end Driver_for_Input_Planes;
 
 end Drivers_for_Input_Planes;

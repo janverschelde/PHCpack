@@ -12,6 +12,7 @@ with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
+with Standard_Complex_VecMats_io;        use Standard_Complex_VecMats_io;
 with Standard_Random_Numbers;            use Standard_Random_Numbers;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
 --with Standard_Matrix_Inversion;          use Standard_Matrix_Inversion;
@@ -653,7 +654,20 @@ package body Drivers_for_Pieri_Homotopies is
     print_times(file,timer,"Solving along the deformation poset");
     Write_Poset_Times(file,timer,
                       npaths(1..target_level),timings(1..target_level));
-    if not nocheater then
+    if nocheater then
+      new_line(file);
+      put_line(file,"THE INPUT PLANES : ");
+      put(file,planes);
+      new_line(file);
+      put_line(file,"THE SOLUTION PLANES : ");
+      declare
+        solplanes : constant VecMat := deform_poset(target_level)(1).all;
+      begin
+        put(file,solplanes);
+      end;
+     -- the statement below seems equivalent to the block above
+     -- Write_Solution_Planes(file,sols,locmap);
+    else
       if deform_poset(target_level)(1) /= null then
         new_line(file);
         Solve_Hypersurface_Target_System
@@ -713,7 +727,18 @@ package body Drivers_for_Pieri_Homotopies is
     print_times(file,timer,"Solving along the deformation poset");
     Write_Poset_Times(file,timer,
                       npaths(1..target_level),timings(1..target_level));
-    if not nocheater then
+    if nocheater then
+      new_line(file);
+      put_line(file,"THE INPUT PLANES :");
+      put(file,planes);
+      new_line(file);
+      put_line(file,"THE SOLUTION PLANES : ");
+      declare
+        solplanes : constant VecMat := deform_poset(target_level)(1).all;
+      begin
+        put(file,solplanes);
+      end;
+    else
       if deform_poset(target_level)(1) /= null then
         new_line(file);
         Solve_General_Target_System
