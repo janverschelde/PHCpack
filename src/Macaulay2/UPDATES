@@ -1,3 +1,6 @@
+Tue 29 Nov 2016 : fixed the extraction of the outcome of the PieriHomotopies
+  in LRhomotopies.m2.
+
 Tue 22 Nov 2016 : added parameter to the helper functions in LRhomotopies.m2
   to extract data in double, double double, or quad double precision.
 
