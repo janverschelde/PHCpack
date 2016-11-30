@@ -1,4 +1,5 @@
 Wed 30 Nov 2016 : updated greeting_banners for version 2.4.30.
+  Fixed phcpack.adb for changed prototypes of procedures.
 
 Sun 20 Nov 2016 : updated greeting_banners for version 2.4.29.
 

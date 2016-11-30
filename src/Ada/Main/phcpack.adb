@@ -232,7 +232,7 @@ package body PHCpack is
   begin
     Standard_Homotopy.Create(p,q,k,a);
     Continuation_Parameters.Tune(0);
-    Cont(sols,false,target);
+    Cont(sols,false,0,target);
     Standard_Homotopy.Clear;
   end Artificial_Parameter_Continuation;
 
@@ -250,7 +250,7 @@ package body PHCpack is
   begin
     Standard_Homotopy.Create(p,q,k,a);
     Continuation_Parameters.Tune(0);
-    Cont(file,sols,false,target);
+    Cont(file,sols,false,0,target);
     Standard_Homotopy.Clear;
   end Artificial_Parameter_Continuation;
 
