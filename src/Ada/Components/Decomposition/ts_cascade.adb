@@ -23,7 +23,7 @@ procedure ts_cascade is
     Ask_Alternative(ans,"12");
     case ans is
       when '1' => Driver_to_Square_and_Embed;
-      when '2' => Driver_to_Witness_Generate;
+      when '2' => Driver_to_Witness_Generate(0);
       when others => null;
     end case;
   end Main;
