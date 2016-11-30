@@ -1562,7 +1562,7 @@ test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_track lib_track_cpp lib_nxtsol lib_nxtsol_cpp \
           lib_sweep lib_sweep_cpp lib_nbrvar lib_nbrvar_cpp \
           lib_factor lib_factor_cpp lib_member lib_member_cpp \
-          lib_pieri lib_pieri_cpp lib_numbtrop lib_numbrop_cpp \
+          lib_pieri lib_pieri_cpp lib_numbtrop lib_numbtrop_cpp \
           lib_lrhom lib_lrhom_cpp phc_solve phc_solve_cpp \
           lib_usolve lib_usolve_cpp lib_giftwrap lib_giftwrap_cpp ts_list2str \
           lib_adepath_d lib_adepath_dd lib_adepath_qd
