@@ -2075,10 +2075,12 @@ lib_celcon_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/celcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/intcelcon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_celcon.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o celcon.o \
-                    lib_celcon.o -o $(BIN)/lib_celcon -lm --LINK=g++
+                    intcelcon.o lib_celcon.o -o $(BIN)/lib_celcon -lm \
+                 --LINK=g++
 
 lib_celphc:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
