@@ -32,10 +32,12 @@ package body Series_and_Predictors is
                 srv : out Standard_Dense_Series_Vectors.Vector;
                 eva : out Standard_Dense_Series_Vectors.Vector ) is
 
+    info : integer32;
+
   begin
     srv := Series_and_Solutions.Create(sol,0);
     if hom'last = sol'last then
-      Run_LU_Newton(nit,hom,srv);
+      Run_LU_Newton(nit,hom,srv,info);
     else
       Run_QR_Newton(nit,hom,srv);
     end if;
@@ -49,10 +51,12 @@ package body Series_and_Predictors is
                 srv : out DoblDobl_Dense_Series_Vectors.Vector;
                 eva : out DoblDobl_Dense_Series_Vectors.Vector ) is
 
+    info : integer32;
+
   begin
     srv := Series_and_Solutions.Create(sol,0);
     if hom'last = sol'last then
-      Run_LU_Newton(nit,hom,srv);
+      Run_LU_Newton(nit,hom,srv,info);
     else
       Run_QR_Newton(nit,hom,srv);
     end if;
@@ -66,10 +70,12 @@ package body Series_and_Predictors is
                 srv : out QuadDobl_Dense_Series_Vectors.Vector;
                 eva : out QuadDobl_Dense_Series_Vectors.Vector ) is
 
+    info : integer32;
+
   begin
     srv := Series_and_Solutions.Create(sol,0);
     if hom'last = sol'last then
-      Run_LU_Newton(nit,hom,srv);
+      Run_LU_Newton(nit,hom,srv,info);
     else
       Run_QR_Newton(nit,hom,srv);
     end if;
@@ -84,6 +90,8 @@ package body Series_and_Predictors is
                 eva : out Standard_Dense_Series_Vectors.Vector;
                 verbose : in boolean := false ) is
 
+    info : integer32;
+
   begin
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
@@ -95,10 +103,10 @@ package body Series_and_Predictors is
     end if;
     if hom'last = sol'last then
       if not verbose then
-        Run_LU_Newton(nit,hom,srv);
+        Run_LU_Newton(nit,hom,srv,info);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(file,nit,hom,srv,true);
+        Run_LU_Newton(file,nit,hom,srv,info,true);
       end if;
     else
       if not verbose then
@@ -123,6 +131,8 @@ package body Series_and_Predictors is
                 eva : out DoblDobl_Dense_Series_Vectors.Vector;
                 verbose : in boolean := false ) is
 
+    info : integer32;
+
   begin
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
@@ -134,10 +144,10 @@ package body Series_and_Predictors is
     end if;
     if hom'last = sol'last then
       if not verbose then
-        Run_LU_Newton(nit,hom,srv);
+        Run_LU_Newton(nit,hom,srv,info);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(file,nit,hom,srv,true);
+        Run_LU_Newton(file,nit,hom,srv,info,true);
       end if;
     else
       if not verbose then
@@ -162,6 +172,8 @@ package body Series_and_Predictors is
                 eva : out QuadDobl_Dense_Series_Vectors.Vector;
                 verbose : in boolean := false ) is
 
+    info : integer32;
+
   begin
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
@@ -173,10 +185,10 @@ package body Series_and_Predictors is
     end if;
     if hom'last = sol'last then
       if not verbose then
-        Run_LU_Newton(nit,hom,srv);
+        Run_LU_Newton(nit,hom,srv,info);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(file,nit,hom,srv,true);
+        Run_LU_Newton(file,nit,hom,srv,info,true);
       end if;
     else
       if not verbose then

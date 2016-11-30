@@ -1,3 +1,5 @@
+Wed 30 Nov 2016 : fixed compilation error in series_and_predictors.adb.
+
 Sun 9 Oct 2016 : edits in series_and_trackers.adb for compiler warnings.
 
 Sat 8 Oct 2016 : to mainseries.adb added call to Newton-Puiseux method
