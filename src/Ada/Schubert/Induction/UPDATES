@@ -1,3 +1,5 @@
+Wed 30 Nov 2016 : added nt parameter in call to resolve in ts_lrhom.adb.
+
 Wed 2 Nov 2016 : to resolve_schubert_problems, added multitasking,
   with adjusted calls in the drivers_for_schubert_induction.adb.
   Prompted for the number of tasks in driver_for_schubert_induction.adb.

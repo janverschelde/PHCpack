@@ -366,7 +366,7 @@ procedure ts_lrhom is
    -- new_line;
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
-    Resolve(file,monitor_games,report,n,k,tol,ips,sps,
+    Resolve(file,monitor_games,report,n,k,0,tol,ips,sps,
             verify,minrep,tosqr,conds,flags,sols);
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
