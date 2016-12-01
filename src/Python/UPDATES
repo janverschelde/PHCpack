@@ -1,3 +1,6 @@
+Thu 1 Dec 2016 : simplified the structure in welcome.rst, calling the
+  chapter Getting Started.
+
 Wed 30 Nov 2016 : prepared release 0.5.9 of phcpy.
 
 Mon 28 Nov 2016 : in PHCpy2/doc/source and PHCpy3/doc/source reorganized

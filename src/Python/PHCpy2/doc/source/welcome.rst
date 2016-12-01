@@ -1,6 +1,6 @@
-*********************************
-Welcome to phcpy's documentation!
-*********************************
+***************
+Getting Started
+***************
 
 This documentation describes a collection of Python modules
 to compute solutions of polynomial systems using PHCpack.
@@ -136,13 +136,10 @@ Below is a step-by-step installation procedure.
    ``python3 setup.py install`` as superuser or as sudoer.
 
 
-About phcpy
-===========
+project history
+===============
 
 This section describes some milestones in the development history.
-
-Project History
----------------
 
 The Python interface to PHCpack got to a first start when
 Kathy Piret met William Stein at the software for algebraic geometry
@@ -180,8 +177,8 @@ irreducible decomposition.
 Version 0.5.0 introduced Newton's method on power series.
 Use cases were added to the documentation in versions 0.5.2, 0.5.3, and 0.5.4.
 
-References
-----------
+references
+==========
 
 1. T. Gao, T. Y. Li, M. Wu:
    **Algorithm 846: MixedVol: a software package for mixed-volume 
@@ -228,8 +225,8 @@ References
    **Polynomial Homotopy Continuation on GPUs.**
    *ACM Communications in Computer Algebra*, 49(4):130-133, 2015.
 
-Acknowledgments
----------------
+acknowledgments
+===============
 
 This material is based upon work supported by the 
 National Science Foundation under Grants 1115777 and 1440534.
@@ -237,7 +234,7 @@ Any opinions, findings, and conclusions or recommendations expressed
 in this material are those of the author(s) and do not necessarily 
 reflect the views of the National Science Foundation. 
 
-About this document
+about this document
 ===================
 
 This document arose as an exercise in exploring restructured text and Sphinx.
