@@ -51,6 +51,13 @@ package Generic_Matrices is
   procedure Mul ( a : in Matrix; v : in out Vector );      -- v := a*v
   procedure Mul ( v : in out Vector; a : in Matrix );      -- v := a*v
 
+-- SCALING A MATRIX :
+
+  function "*" ( a : Matrix; x : number ) return Matrix;   -- return x*a
+  function "*" ( x : number; a : Matrix ) return Matrix;   -- return a*x
+
+  procedure Mul ( a : in out Matrix; x : in number );      -- a := a*x
+
 -- DESTRUCTORS :
 
   procedure Clear ( a : in out Matrix );

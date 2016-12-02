@@ -229,6 +229,38 @@ package body Generic_Matrices is
     end loop;
   end Mul;
 
+-- SCALING A MATRIX :
+
+  function "*" ( x : number; a : Matrix ) return Matrix is
+
+    res : Matrix(a'range(1),a'range(2));
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := x*a(i,j);
+      end loop;
+    end loop;
+    return res;
+  end "*";
+
+  function "*" ( a : Matrix; x : number ) return Matrix is
+
+    res : constant Matrix(a'range(1),a'range(2)) := a*x;
+
+  begin
+    return res;
+  end "*";
+
+  procedure Mul ( a : in out Matrix; x : in number ) is
+  begin
+    for i in a'range(1) loop
+      for j in a'range(2) loop
+        Mul(a(i,j),x);
+      end loop;
+    end loop;
+  end Mul;
+
 -- DESTRUCTORS :
 
   procedure Clear ( a : in out Matrix ) is

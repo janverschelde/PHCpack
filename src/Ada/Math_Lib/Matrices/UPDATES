@@ -1,3 +1,6 @@
+Fri 2 Dec 2016 : to generic_matrices, added multiplication of matrix 
+  by a scalar.
+
 Mon 15 Jun 2015 : new package matrix_to_vecvec_conversions with factored out
   code from ts_vvlu of the ../Reduction folder.
 
