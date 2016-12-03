@@ -137,6 +137,11 @@ package Standard_Interpolating_Series is
   --   If verbose, then additional results and diagnostics
   --   are written to screen.
 
+  function factorial ( k : integer32 ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns k! as a complex number to help the differentiation.
+
   function Diff ( m : Standard_Complex_VecMats.VecMat;
                   t : Complex_Number; pow,ord : integer32 )
                 return Standard_Complex_Matrices.Matrix;
@@ -158,7 +163,7 @@ package Standard_Interpolating_Series is
   --   coefficients of the Hermite interpolating polynomial at t.
   --   The order of the interpolation is determined by m'last.
   --   For i in m'range, the solution x(t) to m*x(t) = b will
-  --   agree with the i-th derivative at the value fort .
+  --   agree with the i-th derivative at the value for t.
 
   -- REQUIRED : m'first = 0.
 

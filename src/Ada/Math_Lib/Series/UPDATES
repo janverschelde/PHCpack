@@ -1,6 +1,7 @@
 Fri 2 Dec 2016 : added definition of coefficient matrix and right hand side
   vector for the linear system in the Hermite interpolation,
-  to the package standard_interpolating_series.
+  to the package standard_interpolating_series.  Made the corresponding
+  additions to {dobldobl,quaddobl}_interpolating_series.
 
 Sun 27 Nov 2016 : standard_interpolating_series tested by ts_seritp
   computes by interpolation the solution of a linear system with matrix

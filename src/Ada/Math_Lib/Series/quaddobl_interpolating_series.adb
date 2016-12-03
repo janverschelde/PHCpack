@@ -1,10 +1,11 @@
 with text_io;                             use text_io;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with Quad_Double_Numbers;                 use Quad_Double_Numbers;
 with QuadDobl_Random_Numbers;
 with QuadDobl_Random_Vectors;
 with Standard_Integer_Vectors;
-with Quad_Double_Vectors_io;            use Quad_Double_Vectors_io;
+with Quad_Double_Vectors_io;              use Quad_Double_Vectors_io;
 with QuadDobl_Complex_Vectors_io;         use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs_io;         use QuadDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Vector_Norms;
@@ -316,5 +317,140 @@ package body QuadDobl_Interpolating_Series is
     res := Construct(cff);
     return res;
   end Interpolate;
+
+  function factorial ( k : integer32 ) return Complex_Number is
+
+    fac : integer32 := 1;
+    qd_fac : quad_double;
+    res : Complex_Number;
+
+  begin
+    for i in 2..k loop
+      fac := i*fac;
+    end loop;
+    qd_fac := Quad_Double_Numbers.Create(fac);
+    res := Create(qd_fac);
+    return res;
+  end factorial;
+
+  function Diff ( m : QuadDobl_Complex_VecMats.VecMat;
+                  t : Complex_Number; pow,ord : integer32 )
+                return QuadDobl_Complex_Matrices.Matrix is
+
+    lm0 : QuadDobl_Complex_Matrices.Link_to_Matrix := m(0);
+    dim : constant integer32 := lm0'last(1);
+    res : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    npw : constant natural := natural(pow);
+    idx : integer32;
+    pwt,fac : Complex_Number;
+
+    use QuadDobl_Complex_Matrices;
+
+  begin
+    if ord = 0 then      -- evaluate
+      res := m(0).all;
+      if pow = 0 then
+        pwt := Create(integer32(1));
+      else
+        pwt := t**npw;
+        res := pwt*res;
+      end if;
+      for i in 1..m'last loop
+        pwt := pwt*t;
+        res := res + pwt*m(i).all;
+      end loop;
+    elsif pow = 0 then   -- differentiate, start at index ord
+      res := factorial(ord)*m(ord).all;
+      pwt := Create(integer32(1));
+      for j in ord+1..m'last loop
+        pwt := pwt*t;
+        fac := factorial(ord)/factorial(j-ord)*pwt;
+        res := res + fac*m(j).all;
+      end loop;
+    else  -- differentiate with multiplication of power of t
+      idx := ord-pow;
+      if idx < 0
+       then idx := 0;
+      end if;
+      res := m(idx).all;
+      if pow <= ord then
+        pwt := Create(integer32(1));
+        res := m(idx).all;
+      else
+        pwt := t**natural(pow-ord);
+        res := pwt*m(idx).all;
+      end if;
+      for i in idx+1..m'last loop
+        pwt := pwt*t;
+        res := res + pwt*m(i).all;
+      end loop;
+    end if;
+    return res;
+  end Diff;
+
+  function Hermite_Matrix
+             ( m : QuadDobl_Complex_VecMats.VecMat;
+               t : Complex_Number )
+             return QuadDobl_Complex_Matrices.Matrix is
+
+    lmt : constant QuadDobl_Complex_Matrices.Link_to_Matrix := m(0);
+    adim : constant integer32 := lmt'last(1);
+    rdim : constant integer32 := adim*(m'last+1);
+    res : QuadDobl_Complex_Matrices.Matrix(1..rdim,1..rdim);
+    wrk : QuadDobl_Complex_Matrices.Matrix(1..adim,1..adim);
+
+  begin
+    for col in m'range loop      -- columns are the powers of t
+      for row in m'range loop    -- rows are the differentiation orders
+        wrk := Diff(m,t,col,row);
+        for i in wrk'range(1) loop
+          for j in wrk'range(2) loop
+            res(row*adim+i,col*adim+j) := wrk(i,j);
+          end loop;
+        end loop;
+      end loop;
+    end loop;
+    return res;
+  end Hermite_Matrix;
+
+  function Hermite_Vector
+             ( v : QuadDobl_Complex_VecVecs.VecVec;
+               t : Complex_Number )
+             return QuadDobl_Complex_Vectors.Vector is
+
+    lv0 : constant QuadDobl_Complex_Vectors.Link_to_Vector := v(0);
+    adim : constant integer32 := lv0'last; 
+    rdim : constant integer32 := adim*(v'last+1);
+    res : QuadDobl_Complex_Vectors.Vector(1..rdim);
+    wrk : QuadDobl_Complex_Vectors.Vector(lv0'range);
+    pwt : Complex_Number := Create(integer32(1));
+    fac : Complex_Number;
+
+    use QuadDobl_Complex_Vectors;
+
+  begin
+    wrk := v(0).all;
+    for i in 1..v'last loop         -- evaluate at t
+      pwt := pwt*t;
+      wrk := wrk + pwt*v(i).all;
+    end loop;
+    for i in 1..adim loop
+      res(i) := wrk(i);
+    end loop;
+    for i in 1..v'last loop         -- the i-th derivative
+      wrk := factorial(i)*v(i).all;
+      pwt := Create(integer32(1));
+      for j in i+1..v'last loop
+        pwt := pwt*t;
+        fac := factorial(i)/factorial(j-i)*pwt;
+        wrk := wrk + fac*v(j).all;
+      end loop;
+      for j in 1..adim loop
+        res(i*adim+j) := wrk(j);
+      end loop;
+    end loop;
+    return res;
+  end Hermite_Vector;
+
 
 end QuadDobl_Interpolating_Series;

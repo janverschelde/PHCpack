@@ -319,9 +319,6 @@ package body Standard_Interpolating_Series is
 
   function factorial ( k : integer32 ) return Complex_Number is
 
-  -- DESCRIPTION :
-  --   Returns k! as a complex number to help the differentiation.
-
     fac : integer32 := 1;
     res : Complex_Number;
 

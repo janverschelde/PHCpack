@@ -137,4 +137,38 @@ package DoblDobl_Interpolating_Series is
   --   If verbose, then additional results and diagnostics
   --   are written to screen.
 
+  function Diff ( m : DoblDobl_Complex_VecMats.VecMat;
+                  t : Complex_Number; pow,ord : integer32 )
+                return DoblDobl_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the value of the derivative of the power series 
+  --   with coefficients in m, at t, where t is multiplied by t**pow,
+  --   and the order of the derivative equals ord. 
+  --   For pow = 0 and ord = 0, Diff(m,t,0,0) returns the value
+  --   of the series.
+
+  function Hermite_Matrix
+             ( m : DoblDobl_Complex_VecMats.VecMat;
+               t : Complex_Number )
+             return DoblDobl_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the coefficient matrix for the linear system for the
+  --   coefficients of the Hermite interpolating polynomial at t.
+  --   The order of the interpolation is determined by m'last.
+  --   For i in m'range, the solution x(t) to m*x(t) = b will
+  --   agree with the i-th derivative at the value for t.
+
+  -- REQUIRED : m'first = 0.
+
+  function Hermite_Vector
+             ( v : DoblDobl_Complex_VecVecs.VecVec;
+               t : Complex_Number )
+             return DoblDobl_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the right hand side vector corresponding to the Hermite
+  --   coefficient matrix to interpolate at t.
+
 end DoblDobl_Interpolating_Series;
