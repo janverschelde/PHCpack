@@ -10,6 +10,17 @@ package body Greeting_Banners is
     return res;
   end Version;
 
+  procedure How_to_Cite is
+  begin
+    put_line("To cite PHCpack in publications use:");
+    new_line;
+    put_line("Jan Verschelde:");
+    put_line("Algorithm 795: PHCpack: A general-purpose solver for polynomial");
+    put_line("systems by homotopy continuation.");
+    put_line
+      ("ACM Transactions on Mathematical Software, 25(2):251--276, 1999.");
+  end How_to_Cite;
+
   procedure show_help is
   begin
     put_line("PHC stands for Polynomial Homotopy Continuation,");

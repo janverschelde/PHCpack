@@ -822,6 +822,8 @@ procedure Dispatch is
       put_line("You can redistribute the code and/or modify it under");
       put_line("the GNU General Pulic License as published by");
       put_line("the Free Software Foundation.");
+    elsif arg = "--cite" then
+      Greeting_Banners.How_to_Cite;
     else
       put_line(arg & " is not recognized.");
     end if;

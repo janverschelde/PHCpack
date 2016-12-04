@@ -8,4 +8,5 @@ procedure ts_greet is
 
 begin
   put_line(Greeting_Banners.Version);
+  Greeting_Banners.How_to_Cite;
 end ts_greet;

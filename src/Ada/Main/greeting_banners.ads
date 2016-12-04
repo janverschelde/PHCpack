@@ -63,6 +63,11 @@ package Greeting_Banners is
   -- DESCRIPTION :
   --   Returns a string with the version number and release date.
 
+  procedure How_to_Cite;
+
+  -- DESCRIPTION :
+  --   Writes how to cite PHCpack in publications.
+
   procedure show_help;
 
   -- DESCRIPTION :
