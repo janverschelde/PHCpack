@@ -461,9 +461,9 @@ package body Standard_Interpolating_Series is
     dim : constant integer32 := mat.cff(0)'last(1);
     bigdim : constant integer32 := (deg+1)*dim;
     A : Standard_Complex_Matrices.Matrix(1..bigdim,1..bigdim)
-      := Hermite_Matrix(mat.cff,t);
+      := Hermite_Matrix(mat.cff(0..deg),t);
     b : Standard_Complex_Vectors.Vector(1..bigdim)
-      := Hermite_Vector(rhs.cff,t);
+      := Hermite_Vector(rhs.cff(0..deg),t);
     info : integer32;
     ipvt : Standard_Integer_Vectors.Vector(1..bigdim);
     wrk : Standard_Complex_Vectors.Vector(1..dim);
