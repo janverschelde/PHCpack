@@ -33,6 +33,20 @@ is
    the GNU General Pulic License as published by
    the Free Software Foundation.
 
+phc --cite : how to cite PHCpack
+================================
+
+Typing ``phc --cite`` at the command prompt displays
+
+::
+
+   To cite PHCpack in publications use:
+
+   Jan Verschelde:
+   Algorithm 795: PHCpack: A general-purpose solver for polynomial
+   systems by homotopy continuation.
+   ACM Transactions on Mathematical Software, 25(2):251--276, 1999.
+
 phc --help : writes helpful information to screen
 =================================================
 
