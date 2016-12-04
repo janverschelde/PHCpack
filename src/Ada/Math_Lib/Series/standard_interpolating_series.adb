@@ -373,14 +373,16 @@ package body Standard_Interpolating_Series is
       res := m(idx).all;
       if pow <= ord then
         pwt := Create(1.0);
-        res := m(idx).all;
+        res := factorial(pow+idx)*m(idx).all;
       else
         pwt := t**natural(pow-ord);
-        res := pwt*m(idx).all;
+        fac := factorial(pow+idx)/factorial(pow+idx-ord);
+        res := fac*pwt*m(idx).all;
       end if;
       for i in idx+1..m'last loop
         pwt := pwt*t;
-        res := res + pwt*m(i).all;
+        fac := factorial(pow+i)/factorial(pow+i-ord);
+        res := res + fac*pwt*m(i).all;
       end loop;
     end if;
     return res;
@@ -470,7 +472,7 @@ package body Standard_Interpolating_Series is
 
   begin
     if verbose then
-      put_line("The coefficient matrix :"); put(A);
+      put_line("The coefficient matrix :"); put(A,3);
       put_line("The right hand side vector :"); put_line(b);
     end if;
     Standard_Complex_Linear_Solvers.lufac(A,bigdim,ipvt,info);
@@ -481,7 +483,7 @@ package body Standard_Interpolating_Series is
     res.deg := deg;
     for k in 0..deg loop
       for i in 1..dim loop
-        wrk(i) := b(k*deg+i);
+        wrk(i) := b(k*dim+i);
       end loop;
       res.cff(k) := new Standard_Complex_Vectors.Vector'(wrk);
     end loop;
