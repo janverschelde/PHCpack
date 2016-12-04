@@ -401,6 +401,230 @@ procedure ts_seritp is
     end if;
   end QuadDobl_Test;
 
+  function Standard_Special_Matrix_Series
+             ( deg : integer32 ) 
+             return Standard_Dense_Matrix_Series.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns a special matrix series of degree equal to deg,
+  --   which has an infinite series as solution when the
+  --   right hand side vector is (1, 0).
+  --   The degree should be at least one.
+
+    res : Standard_Dense_Matrix_Series.Matrix;
+    wrk : Standard_Complex_Matrices.Matrix(1..2,1..2);
+
+  begin
+    res.deg := deg;
+    for i in wrk'range(1) loop
+      for j in wrk'range(2) loop
+        wrk(i,j) := Standard_Complex_Numbers.Create(0.0);
+      end loop;
+    end loop;
+    for k in 0..deg loop
+      res.cff(k) := new Standard_Complex_Matrices.Matrix'(wrk);
+    end loop;
+    res.cff(0)(1,1) := Standard_Complex_Numbers.Create(1.0);
+    res.cff(0)(1,2) := Standard_Complex_Numbers.Create(1.0);
+    res.cff(0)(2,2) := Standard_Complex_Numbers.Create(1.0);
+    res.cff(1)(2,1) := Standard_Complex_Numbers.Create(1.0);
+    return res;
+  end Standard_Special_Matrix_Series;
+
+  function DoblDobl_Special_Matrix_Series
+             ( deg : integer32 ) 
+             return DoblDobl_Dense_Matrix_Series.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns a special matrix series of degree equal to deg,
+  --   which has an infinite series as solution when the
+  --   right hand side vector is (1, 0).
+  --   The degree should be at least one.
+
+    res : DoblDobl_Dense_Matrix_Series.Matrix;
+    wrk : DoblDobl_Complex_Matrices.Matrix(1..2,1..2);
+
+  begin
+    res.deg := deg;
+    for i in wrk'range(1) loop
+      for j in wrk'range(2) loop
+        wrk(i,j) := DoblDobl_Complex_Numbers.Create(integer32(0));
+      end loop;
+    end loop;
+    for k in 0..deg loop
+      res.cff(k) := new DoblDobl_Complex_Matrices.Matrix'(wrk);
+    end loop;
+    res.cff(0)(1,1) := DoblDobl_Complex_Numbers.Create(integer32(1));
+    res.cff(0)(1,2) := DoblDobl_Complex_Numbers.Create(integer32(1));
+    res.cff(0)(2,2) := DoblDobl_Complex_Numbers.Create(integer32(1));
+    res.cff(1)(2,1) := DoblDobl_Complex_Numbers.Create(integer32(1));
+    return res;
+  end DoblDobl_Special_Matrix_Series;
+
+  function QuadDobl_Special_Matrix_Series
+             ( deg : integer32 ) 
+             return QuadDobl_Dense_Matrix_Series.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns a special matrix series of degree equal to deg,
+  --   which has an infinite series as solution when the
+  --   right hand side vector is (1, 0).
+  --   The degree should be at least one.
+
+    res : QuadDobl_Dense_Matrix_Series.Matrix;
+    wrk : QuadDobl_Complex_Matrices.Matrix(1..2,1..2);
+
+  begin
+    res.deg := deg;
+    for i in wrk'range(1) loop
+      for j in wrk'range(2) loop
+        wrk(i,j) := QuadDobl_Complex_Numbers.Create(integer32(0));
+      end loop;
+    end loop;
+    for k in 0..deg loop
+      res.cff(k) := new QuadDobl_Complex_Matrices.Matrix'(wrk);
+    end loop;
+    res.cff(0)(1,1) := QuadDobl_Complex_Numbers.Create(integer32(1));
+    res.cff(0)(1,2) := QuadDobl_Complex_Numbers.Create(integer32(1));
+    res.cff(0)(2,2) := QuadDobl_Complex_Numbers.Create(integer32(1));
+    res.cff(1)(2,1) := QuadDobl_Complex_Numbers.Create(integer32(1));
+    return res;
+  end QuadDobl_Special_Matrix_Series;
+
+  function Standard_Special_Vector_Series
+             ( deg : integer32 )
+             return Standard_Dense_Vector_Series.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a special right hand side series with degree equal to deg.
+
+    res : Standard_Dense_Vector_Series.Vector;
+    wrk : Standard_Complex_Vectors.Vector(1..2);
+
+  begin
+    for i in wrk'range loop
+      wrk(i) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
+    res.deg := deg;
+    for k in 0..deg loop
+      res.cff(k) := new Standard_Complex_Vectors.Vector'(wrk);
+    end loop;
+    res.cff(0)(1) := Standard_Complex_Numbers.Create(1.0);
+    return res;
+  end Standard_Special_Vector_Series;
+
+  function DoblDobl_Special_Vector_Series
+             ( deg : integer32 )
+             return DoblDobl_Dense_Vector_Series.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a special right hand side series with degree equal to deg.
+
+    res : DoblDobl_Dense_Vector_Series.Vector;
+    wrk : DoblDobl_Complex_Vectors.Vector(1..2);
+
+  begin
+    for i in wrk'range loop
+      wrk(i) := DoblDobl_Complex_Numbers.Create(integer32(0));
+    end loop;
+    res.deg := deg;
+    for k in 0..deg loop
+      res.cff(k) := new DoblDobl_Complex_Vectors.Vector'(wrk);
+    end loop;
+    res.cff(0)(1) := DoblDobl_Complex_Numbers.Create(integer32(1));
+    return res;
+  end DoblDobl_Special_Vector_Series;
+
+  function QuadDobl_Special_Vector_Series
+             ( deg : integer32 )
+             return QuadDobl_Dense_Vector_Series.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a special right hand side series with degree equal to deg.
+
+    res : QuadDobl_Dense_Vector_Series.Vector;
+    wrk : QuadDobl_Complex_Vectors.Vector(1..2);
+
+  begin
+    for i in wrk'range loop
+      wrk(i) := QuadDobl_Complex_Numbers.Create(integer32(0));
+    end loop;
+    res.deg := deg;
+    for k in 0..deg loop
+      res.cff(k) := new QuadDobl_Complex_Vectors.Vector'(wrk);
+    end loop;
+    res.cff(0)(1) := QuadDobl_Complex_Numbers.Create(integer32(1));
+    return res;
+  end QuadDobl_Special_Vector_Series;
+
+  procedure Standard_Hermite_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Applies Hermite interpolation on a special case,
+  --   in standard double precision.
+  --   The dimension will be assumed to be 2, no matter what dim is.
+
+    mat : constant Standard_Dense_Matrix_Series.Matrix
+        := Standard_Special_Matrix_Series(deg);
+    rhs : constant Standard_Dense_Vector_Series.Vector
+        := Standard_Special_Vector_Series(deg);
+    sol : Standard_Dense_Vector_Series.Vector;
+    t : Standard_Complex_Numbers.Complex_Number
+      := Standard_Complex_Numbers.Create(0.01);
+
+  begin
+    put_line("The special matrix series : "); put(mat);
+    put_line("The special vector series : "); put(rhs);
+    sol := Standard_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+    put_line("The solution : "); put(sol);
+  end Standard_Hermite_Test;
+
+  procedure DoblDobl_Hermite_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Applies Hermite interpolation on a special case,
+  --   in double double precision.
+  --   The dimension will be assumed to be 2, no matter what dim is.
+
+    mat : constant DoblDobl_Dense_Matrix_Series.Matrix
+        := DoblDobl_Special_Matrix_Series(deg);
+    rhs : constant DoblDobl_Dense_Vector_Series.Vector
+        := DoblDobl_Special_Vector_Series(deg);
+    sol : DoblDobl_Dense_Vector_Series.Vector;
+    ddt : double_double := Double_Double_Numbers.Create(0.01);
+    t : DoblDobl_Complex_Numbers.Complex_Number
+      := DoblDobl_Complex_Numbers.Create(ddt);
+
+  begin
+    put_line("The special matrix series : "); put(mat);
+    put_line("The special vector series : "); put(rhs);
+    sol := DoblDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+    put_line("The solution : "); put(sol);
+  end DoblDobl_Hermite_Test;
+
+  procedure QuadDobl_Hermite_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Applies Hermite interpolation on a special case,
+  --   in quad double precision.
+  --   The dimension will be assumed to be 2, no matter what dim is.
+
+    mat : constant QuadDobl_Dense_Matrix_Series.Matrix
+        := QuadDobl_Special_Matrix_Series(deg);
+    rhs : constant QuadDobl_Dense_Vector_Series.Vector
+        := QuadDobl_Special_Vector_Series(deg);
+    sol : QuadDobl_Dense_Vector_Series.Vector;
+    qdt : quad_double := Quad_Double_Numbers.Create(0.01);
+    t : QuadDobl_Complex_Numbers.Complex_Number
+      := QuadDobl_Complex_Numbers.Create(qdt);
+
+  begin
+    put_line("The special matrix series : "); put(mat);
+    put_line("The special vector series : "); put(rhs);
+    sol := QuadDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+    put_line("The solution : "); put(sol);
+  end QuadDobl_Hermite_Test;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -409,7 +633,7 @@ procedure ts_seritp is
   --   The dimension is the number of variables in the series.
 
     deg,dim : integer32 := 0;
-    ans : character;
+    ans,hrm : character;
 
   begin
     new_line;
@@ -423,12 +647,25 @@ procedure ts_seritp is
     put_line("  2. quad double precision.");
     put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(ans,"012");
-    case ans is
-      when '0' => Standard_Test(deg,dim);
-      when '1' => DoblDobl_Test(deg,dim);
-      when '2' => QuadDobl_Test(deg,dim);
-      when others => null;
-    end case;
+    new_line;
+    put("Hermite interpolation ? (y/n) ");
+    Ask_Yes_or_No(hrm);
+    new_line;
+    if hrm = 'y' then
+      case ans is
+        when '0' => Standard_Hermite_Test(deg,dim);
+        when '1' => DoblDobl_Hermite_Test(deg,dim);
+        when '2' => QuadDobl_Hermite_Test(deg,dim);
+        when others => null;
+      end case;
+    else
+      case ans is
+        when '0' => Standard_Test(deg,dim);
+        when '1' => DoblDobl_Test(deg,dim);
+        when '2' => QuadDobl_Test(deg,dim);
+        when others => null;
+      end case;
+    end if;
   end Main;
 
 begin

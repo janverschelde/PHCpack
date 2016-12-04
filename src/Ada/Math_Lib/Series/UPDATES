@@ -1,6 +1,7 @@
 Sat 3 Dec 2016 : added a Hermite_Interpolate function to the packages
   {standard,dobldobl,quaddobl}_interpolating_series.  Fixed bug in the
   selection of the coefficient vector, in the range 0..deg.
+  Add test procedures for Hermite interpolation to ts_seritp.
 
 Fri 2 Dec 2016 : added definition of coefficient matrix and right hand side
   vector for the linear system in the Hermite interpolation,
