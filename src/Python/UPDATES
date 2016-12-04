@@ -1,3 +1,6 @@
+Sat 3 Dec 2016 : added cite() function to the __init__.py of python2
+  and python3 versions of phcpy.
+
 Thu 1 Dec 2016 : simplified the structure in welcome.rst, calling the
   chapter Getting Started.
 

@@ -50,7 +50,7 @@ dashboard
    prototype of a graphical user interface with Tkinter.
 series
    Newton's method on truncated power series solutions.
-phcwulf
+server
    defines a simple client/server interaction to solve random trinomials.
 
 Calling the blackbox solver
@@ -89,6 +89,19 @@ each string represents a solution that makes the polynomials in f vanish.
 The module solutions offers function to evaluate the solutions
 in the polynomials given as strings.
 """
+def cite():
+    """
+    Displays the citation information for phcpy.
+    """
+    print """
+    To cite phcpy in publications use:
+
+    Jan Verschelde: Modernizing PHCpack through phcpy.
+    In Proceedings of the 6th European Conference on Python in Science
+    (EuroSciPy 2013), edited by Pierre de Buyl and Nelle Varoquaux,
+    pages 71-76, 2014, available at http://arxiv.org/abs/1310.0056.
+    """
+
 try:
     from phcpy2c2 import py2c_PHCpack_version_string
     print py2c_PHCpack_version_string() + ' works!'
