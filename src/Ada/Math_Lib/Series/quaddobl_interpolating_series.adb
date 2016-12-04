@@ -8,6 +8,7 @@ with Standard_Integer_Vectors;
 with Quad_Double_Vectors_io;              use Quad_Double_Vectors_io;
 with QuadDobl_Complex_Vectors_io;         use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs_io;         use QuadDobl_Complex_VecVecs_io;
+with QuadDobl_Complex_Matrices_io;        use QuadDobl_Complex_Matrices_io;
 with QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Singular_Values;
@@ -452,5 +453,42 @@ package body QuadDobl_Interpolating_Series is
     return res;
   end Hermite_Vector;
 
+  function Hermite_Interpolate
+             ( mat : QuadDobl_Dense_Matrix_Series.Matrix;
+               rhs : QuadDobl_Dense_Vector_Series.Vector;
+               t : Complex_Number; verbose : boolean := true )
+             return QuadDobl_Dense_Vector_Series.Vector is
+
+    res : QuadDobl_Dense_Vector_Series.Vector;
+    deg : constant integer32 := mat.deg;
+    dim : constant integer32 := mat.cff(0)'last(1);
+    bigdim : constant integer32 := (deg+1)*dim;
+    A : QuadDobl_Complex_Matrices.Matrix(1..bigdim,1..bigdim)
+      := Hermite_Matrix(mat.cff,t);
+    b : QuadDobl_Complex_Vectors.Vector(1..bigdim)
+      := Hermite_Vector(rhs.cff,t);
+    info : integer32;
+    ipvt : Standard_Integer_Vectors.Vector(1..bigdim);
+    wrk : QuadDobl_Complex_Vectors.Vector(1..dim);
+
+  begin
+    if verbose then
+      put_line("The coefficient matrix :"); put(A);
+      put_line("The right hand side vector :"); put_line(b);
+    end if;
+    QuadDobl_Complex_Linear_Solvers.lufac(A,bigdim,ipvt,info);
+    QuadDobl_Complex_Linear_Solvers.lusolve(A,bigdim,ipvt,b);
+    if verbose then
+      put_line("The solution vector :"); put_line(b);
+    end if;
+    res.deg := deg;
+    for k in 0..deg loop
+      for i in 1..dim loop
+        wrk(i) := b(k*deg+i);
+      end loop;
+      res.cff(k) := new QuadDobl_Complex_Vectors.Vector'(wrk);
+    end loop;
+    return res;
+  end Hermite_Interpolate;
 
 end QuadDobl_Interpolating_Series;

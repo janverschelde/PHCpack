@@ -171,4 +171,18 @@ package QuadDobl_Interpolating_Series is
   --   Returns the right hand side vector corresponding to the Hermite
   --   coefficient matrix to interpolate at t.
 
+  function Hermite_Interpolate
+             ( mat : QuadDobl_Dense_Matrix_Series.Matrix;
+               rhs : QuadDobl_Dense_Vector_Series.Vector;
+               t : Complex_Number; verbose : boolean := true )
+             return QuadDobl_Dense_Vector_Series.Vector;
+
+  -- DESCRIPTION :
+  --   Samples the matrix and vector series at t and solves
+  --   the linear system defined by the Hermite matrix and vector.
+  --   If verbose, then additional results and diagnostics
+  --   are written to screen.
+
+  -- REQUIRED : mat.deg = rhs.deg.
+
 end QuadDobl_Interpolating_Series;

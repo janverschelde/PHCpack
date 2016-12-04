@@ -1,3 +1,6 @@
+Sat 3 Dec 2016 : added a Hermite_Interpolate function to the packages
+  {standard,dobldobl,quaddobl}_interpolating_series. 
+
 Fri 2 Dec 2016 : added definition of coefficient matrix and right hand side
   vector for the linear system in the Hermite interpolation,
   to the package standard_interpolating_series.  Made the corresponding
