@@ -1,5 +1,6 @@
 Sun 4 Dec 2016 : fixed in standard_interpolating_series.adb the differentials
-  in the coefficients of the Hermite matrix.
+  in the coefficients of the Hermite matrix.  And made the same fixes in the
+  {dobldobl,quaddobl}_interpolating_series.adb.
 
 Sat 3 Dec 2016 : added a Hermite_Interpolate function to the packages
   {standard,dobldobl,quaddobl}_interpolating_series.  Fixed bug in the
