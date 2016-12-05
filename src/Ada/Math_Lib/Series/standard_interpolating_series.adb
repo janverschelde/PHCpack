@@ -1,6 +1,5 @@
 with text_io;                             use text_io;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
 with Standard_Random_Vectors;
 with Standard_Integer_Vectors;
@@ -53,6 +52,25 @@ package body Standard_Interpolating_Series is
     end loop;
     return res;
   end Eval;
+
+  function Rank ( A : Standard_Complex_Matrices.Matrix;
+                  tol : double_float ) return integer32 is
+
+    n : constant integer32 := A'last(1);
+    p : constant integer32 := A'last(2);
+    mm : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
+    s : Standard_Complex_Vectors.Vector(1..mm);
+    e : Standard_Complex_Vectors.Vector(1..p);
+    u : Standard_Complex_Matrices.Matrix(1..n,1..n);
+    v : Standard_Complex_Matrices.Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+    x : Standard_Complex_Matrices.Matrix(A'range(1),A'range(2)) := A;
+
+  begin
+    Standard_Complex_Singular_Values.SVD(x,n,p,s,e,u,v,job,info);
+    return Standard_Complex_Singular_Values.Rank(s,tol);
+  end Rank;
 
   function Full_Rank
              ( m : Standard_Dense_Matrix_Series.Matrix;
@@ -469,11 +487,19 @@ package body Standard_Interpolating_Series is
     info : integer32;
     ipvt : Standard_Integer_Vectors.Vector(1..bigdim);
     wrk : Standard_Complex_Vectors.Vector(1..dim);
+    rnk : integer32;
 
   begin
     if verbose then
       put_line("The coefficient matrix :"); put(A,3);
       put_line("The right hand side vector :"); put_line(b);
+      rnk := Rank(A,1.0e-8);
+      put("The rank of the Hermite matrix : "); put(rnk,1);
+      if bigdim > rnk then
+        put(" < "); put(bigdim,1); put_line("  rank deficient.");
+      else
+        put(" = "); put(bigdim,1); put_line("  okay.");
+      end if;
     end if;
     Standard_Complex_Linear_Solvers.lufac(A,bigdim,ipvt,info);
     Standard_Complex_Linear_Solvers.lusolve(A,bigdim,ipvt,b);

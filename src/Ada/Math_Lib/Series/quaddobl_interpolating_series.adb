@@ -1,6 +1,5 @@
 with text_io;                             use text_io;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Quad_Double_Numbers;                 use Quad_Double_Numbers;
 with QuadDobl_Random_Numbers;
 with QuadDobl_Random_Vectors;
@@ -54,6 +53,25 @@ package body QuadDobl_Interpolating_Series is
     end loop;
     return res;
   end Eval;
+
+  function Rank ( A : QuadDobl_Complex_Matrices.Matrix;
+                  tol : double_float ) return integer32 is
+
+    n : constant integer32 := A'last(1);
+    p : constant integer32 := A'last(2);
+    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    s : QuadDobl_Complex_Vectors.Vector(1..mm);
+    e : QuadDobl_Complex_Vectors.Vector(1..p);
+    u : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+    v : QuadDobl_Complex_Matrices.Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+    x : QuadDobl_Complex_Matrices.Matrix(A'range(1),A'range(2)) := A;
+
+  begin
+    QuadDobl_Complex_Singular_Values.SVD(x,n,p,s,e,u,v,job,info);
+    return QuadDobl_Complex_Singular_Values.Rank(s,tol);
+  end Rank;
 
   function Full_Rank
              ( m : QuadDobl_Dense_Matrix_Series.Matrix;
@@ -469,7 +487,7 @@ package body QuadDobl_Interpolating_Series is
       := Hermite_Matrix(mat.cff(0..deg),t);
     b : QuadDobl_Complex_Vectors.Vector(1..bigdim)
       := Hermite_Vector(rhs.cff(0..deg),t);
-    info : integer32;
+    info,rnk : integer32;
     ipvt : Standard_Integer_Vectors.Vector(1..bigdim);
     wrk : QuadDobl_Complex_Vectors.Vector(1..dim);
 
@@ -477,6 +495,13 @@ package body QuadDobl_Interpolating_Series is
     if verbose then
       put_line("The coefficient matrix :"); put(A,3);
       put_line("The right hand side vector :"); put_line(b);
+      rnk := Rank(A,1.0e-8);
+      put("The rank of the Hermite matrix : "); put(rnk,1);
+      if bigdim > rnk then
+        put(" < "); put(bigdim,1); put_line("  rank deficient.");
+      else
+        put(" = "); put(bigdim,1); put_line("  okay.");
+      end if;
     end if;
     QuadDobl_Complex_Linear_Solvers.lufac(A,bigdim,ipvt,info);
     QuadDobl_Complex_Linear_Solvers.lusolve(A,bigdim,ipvt,b);

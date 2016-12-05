@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;         use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;        use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;         use Standard_Complex_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
@@ -29,6 +30,12 @@ package Standard_Interpolating_Series is
 
   -- DESCRIPTION :
   --   Returns the matrix obtained by evaluating m at t.
+
+  function Rank ( A : Standard_Complex_Matrices.Matrix;
+                  tol : double_float ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the numerical rank of the matrix.
 
   function Full_Rank
              ( m : Standard_Dense_Matrix_Series.Matrix;

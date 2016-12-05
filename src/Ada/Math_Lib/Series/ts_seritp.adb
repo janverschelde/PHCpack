@@ -3,18 +3,25 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
-with Standard_Random_Vectors;
+with DoblDobl_Random_Numbers;
+with QuadDobl_Random_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Matrices;
+with Standard_Complex_Vector_Norms;
+with DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vector_Norms;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Matrices;
@@ -563,7 +570,11 @@ procedure ts_seritp is
   -- DESCRIPTION :
   --  Writes the differences between the series x and y.
 
+    use Standard_Complex_Vectors;
+
     deg : integer32;
+    dff : Standard_Complex_Vectors.Vector(x.cff(0)'range);
+    nrm : double_float;
 
   begin
     if x.deg <= y.deg
@@ -575,6 +586,65 @@ procedure ts_seritp is
       put_line(x.cff(k));
       put("y coefficient "); put(k,1); put_line(" :");
       put_line(y.cff(k));
+      dff := x.cff(k).all - y.cff(k).all;
+      nrm := Standard_Complex_Vector_Norms.Max_Norm(dff);
+      put("Max norm of the difference : "); put(nrm,3); new_line;
+    end loop;
+  end Write_Differences;
+
+  procedure Write_Differences
+              ( x,y : in DoblDobl_Dense_Vector_Series.Vector ) is
+
+  -- DESCRIPTION :
+  --  Writes the differences between the series x and y.
+
+    use DoblDobl_Complex_Vectors;
+
+    deg : integer32;
+    dff : DoblDobl_Complex_Vectors.Vector(x.cff(0)'range);
+    nrm : double_double;
+
+  begin
+    if x.deg <= y.deg
+     then deg := x.deg;
+     else deg := y.deg;
+    end if;
+    for k in 0..deg loop
+      put("x coefficient "); put(k,1); put_line(" :");
+      put_line(x.cff(k));
+      put("y coefficient "); put(k,1); put_line(" :");
+      put_line(y.cff(k));
+      dff := x.cff(k).all - y.cff(k).all;
+      nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(dff);
+      put("Max norm of the difference : "); put(nrm,3); new_line;
+    end loop;
+  end Write_Differences;
+
+  procedure Write_Differences
+              ( x,y : in QuadDobl_Dense_Vector_Series.Vector ) is
+
+  -- DESCRIPTION :
+  --  Writes the differences between the series x and y.
+
+    use QuadDobl_Complex_Vectors;
+
+    deg : integer32;
+    dff : QuadDobl_Complex_Vectors.Vector(x.cff(0)'range);
+    nrm : quad_double;
+
+  begin
+    if x.deg <= y.deg
+     then deg := x.deg;
+     else deg := y.deg;
+    end if;
+    for k in 0..deg loop
+      put("x coefficient "); put(k,1); put_line(" :");
+      put_line(x.cff(k));
+      put("y coefficient "); put(k,1); put_line(" :");
+      put_line(y.cff(k));
+      dff := x.cff(k).all - y.cff(k).all;
+      nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(dff);
+      put("Max norm of the difference : "); put(nrm,3); new_line;
     end loop;
   end Write_Differences;
 
@@ -584,23 +654,35 @@ procedure ts_seritp is
   --   Generates random data of a degree larger than deg
   --   for a problem of the given dimension dim.
 
-    mat : constant Standard_Dense_Matrix_Series.Matrix
+    use Standard_Complex_Numbers;
+
+    mat : Standard_Dense_Matrix_Series.Matrix
         := Standard_Random_Matrix_Series(2*deg,dim);
     sol : constant Standard_Dense_Vector_Series.Vector
         := Standard_Random_Series.Random_Vector_Series(1,dim,2*deg);
-    rhs : constant Standard_Dense_Vector_Series.Vector
-        := Standard_Multiply(mat,sol);
+    rhs : Standard_Dense_Vector_Series.Vector := Standard_Multiply(mat,sol);
+    rnd : constant Standard_Complex_Numbers.Complex_Number
+        := Standard_Random_Numbers.Random1;
     t : Standard_Complex_Numbers.Complex_Number
-      := Standard_Complex_Numbers.Create(0.01);
+      := Standard_Complex_Numbers.Create(0.0001)*rnd;
     x : Standard_Dense_Vector_Series.Vector;
+    rnk : integer32;
 
   begin
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    x := Standard_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
-    put_line("The computed solution :"); put(x);
-    Write_Differences(x,sol);
+    mat.deg := deg; rhs.deg := deg; -- truncate the degrees
+    rnk := Standard_Interpolating_Series.Full_Rank(mat);
+    if rnk = -1 then
+      put_line("The matrix series does not have full rank.");
+    else
+      put_line("The matrix series has full rank.");
+      put("The smallest degree for full rank : "); put(rnk,1); new_line;
+      x := Standard_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+      put_line("The computed solution :"); put(x);
+      Write_Differences(x,sol);
+    end if;
   end Standard_Random_Hermite_Test;
 
   procedure DoblDobl_Random_Hermite_Test ( deg,dim : integer32 ) is
@@ -609,23 +691,35 @@ procedure ts_seritp is
   --   Generates random data of a degree larger than deg
   --   for a problem of the given dimension dim.
 
-    mat : constant DoblDobl_Dense_Matrix_Series.Matrix
+    use DoblDobl_Complex_Numbers;
+
+    mat : DoblDobl_Dense_Matrix_Series.Matrix
         := DoblDobl_Random_Matrix_Series(2*deg,dim);
     sol : constant DoblDobl_Dense_Vector_Series.Vector
         := DoblDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
-    rhs : constant DoblDobl_Dense_Vector_Series.Vector
-        := DoblDobl_Multiply(mat,sol);
-    ddt : double_double := Double_Double_Numbers.Create(0.01);
+    rhs : DoblDobl_Dense_Vector_Series.Vector := DoblDobl_Multiply(mat,sol);
+    ddt : double_double := Double_Double_Numbers.Create(0.0001);
+    rnd : constant DoblDobl_Complex_Numbers.Complex_Number
+        := DoblDobl_Random_Numbers.Random1;
     t : DoblDobl_Complex_Numbers.Complex_Number
-      := DoblDobl_Complex_Numbers.Create(ddt);
+      := DoblDobl_Complex_Numbers.Create(ddt)*rnd;
     x : DoblDobl_Dense_Vector_Series.Vector;
+    rnk : integer32;
 
   begin
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    x := DoblDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
-    put_line("The computed solution :"); put(x);
+    mat.deg := deg; rhs.deg := deg; -- truncate the degrees
+    rnk := DoblDobl_Interpolating_Series.Full_Rank(mat);
+    if rnk = -1 then
+      put_line("The matrix series does not have full rank.");
+    else
+      put_line("The matrix series has full rank.");
+      x := DoblDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+      put_line("The computed solution :"); put(x);
+      Write_Differences(x,sol);
+    end if;
   end DoblDobl_Random_Hermite_Test;
 
   procedure QuadDobl_Random_Hermite_Test ( deg,dim : integer32 ) is
@@ -634,23 +728,35 @@ procedure ts_seritp is
   --   Generates random data of a degree larger than deg
   --   for a problem of the given dimension dim.
 
-    mat : constant QuadDobl_Dense_Matrix_Series.Matrix
+    use QuadDobl_Complex_Numbers;
+
+    mat : QuadDobl_Dense_Matrix_Series.Matrix
         := QuadDobl_Random_Matrix_Series(2*deg,dim);
     sol : constant QuadDobl_Dense_Vector_Series.Vector
         := QuadDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
-    rhs : constant QuadDobl_Dense_Vector_Series.Vector
-        := QuadDobl_Multiply(mat,sol);
-    qdt : quad_double := Quad_Double_Numbers.Create(0.01);
+    rhs : QuadDobl_Dense_Vector_Series.Vector := QuadDobl_Multiply(mat,sol);
+    rnd : constant QuadDobl_Complex_Numbers.Complex_Number
+        := QuadDobl_Random_Numbers.Random1;
+    qdt : quad_double := Quad_Double_Numbers.Create(0.0001);
     t : QuadDobl_Complex_Numbers.Complex_Number
-      := QuadDobl_Complex_Numbers.Create(qdt);
+      := QuadDobl_Complex_Numbers.Create(qdt)*rnd;
     x : QuadDobl_Dense_Vector_Series.Vector;
+    rnk : integer32;
 
   begin
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    x := QuadDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
-    put_line("The computed solution :"); put(x);
+    mat.deg := deg; rhs.deg := deg; -- truncate the degrees
+    rnk := QuadDobl_Interpolating_Series.Full_Rank(mat);
+    if rnk = -1 then
+      put_line("The matrix series does not have full rank.");
+    else
+      put_line("The matrix series has full rank.");
+      x := QuadDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+      put_line("The computed solution :"); put(x);
+      Write_Differences(x,sol);
+    end if;
   end QuadDobl_Random_Hermite_Test;
 
   procedure Standard_Special_Hermite_Test ( deg : integer32 ) is
