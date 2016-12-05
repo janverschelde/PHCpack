@@ -1,3 +1,5 @@
+Mon 5 Dec 2016 : added more tests to ts_seritp.adb.
+
 Sun 4 Dec 2016 : fixed in standard_interpolating_series.adb the differentials
   in the coefficients of the Hermite matrix.  And made the same fixes in the
   {dobldobl,quaddobl}_interpolating_series.adb.

@@ -557,12 +557,107 @@ procedure ts_seritp is
     return res;
   end QuadDobl_Special_Vector_Series;
 
-  procedure Standard_Hermite_Test ( deg,dim : integer32 ) is
+  procedure Write_Differences
+              ( x,y : in Standard_Dense_Vector_Series.Vector ) is
+
+  -- DESCRIPTION :
+  --  Writes the differences between the series x and y.
+
+    deg : integer32;
+
+  begin
+    if x.deg <= y.deg
+     then deg := x.deg;
+     else deg := y.deg;
+    end if;
+    for k in 0..deg loop
+      put("x coefficient "); put(k,1); put_line(" :");
+      put_line(x.cff(k));
+      put("y coefficient "); put(k,1); put_line(" :");
+      put_line(y.cff(k));
+    end loop;
+  end Write_Differences;
+
+  procedure Standard_Random_Hermite_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates random data of a degree larger than deg
+  --   for a problem of the given dimension dim.
+
+    mat : constant Standard_Dense_Matrix_Series.Matrix
+        := Standard_Random_Matrix_Series(2*deg,dim);
+    sol : constant Standard_Dense_Vector_Series.Vector
+        := Standard_Random_Series.Random_Vector_Series(1,dim,2*deg);
+    rhs : constant Standard_Dense_Vector_Series.Vector
+        := Standard_Multiply(mat,sol);
+    t : Standard_Complex_Numbers.Complex_Number
+      := Standard_Complex_Numbers.Create(0.01);
+    x : Standard_Dense_Vector_Series.Vector;
+
+  begin
+    put_line("The generated matrix series :"); put(mat);
+    put_line("The generated solution :"); put(sol);
+    put_line("The multiplied right hand side vector : "); put(rhs);
+    x := Standard_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+    put_line("The computed solution :"); put(x);
+    Write_Differences(x,sol);
+  end Standard_Random_Hermite_Test;
+
+  procedure DoblDobl_Random_Hermite_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates random data of a degree larger than deg
+  --   for a problem of the given dimension dim.
+
+    mat : constant DoblDobl_Dense_Matrix_Series.Matrix
+        := DoblDobl_Random_Matrix_Series(2*deg,dim);
+    sol : constant DoblDobl_Dense_Vector_Series.Vector
+        := DoblDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
+    rhs : constant DoblDobl_Dense_Vector_Series.Vector
+        := DoblDobl_Multiply(mat,sol);
+    ddt : double_double := Double_Double_Numbers.Create(0.01);
+    t : DoblDobl_Complex_Numbers.Complex_Number
+      := DoblDobl_Complex_Numbers.Create(ddt);
+    x : DoblDobl_Dense_Vector_Series.Vector;
+
+  begin
+    put_line("The generated matrix series :"); put(mat);
+    put_line("The generated solution :"); put(sol);
+    put_line("The multiplied right hand side vector : "); put(rhs);
+    x := DoblDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+    put_line("The computed solution :"); put(x);
+  end DoblDobl_Random_Hermite_Test;
+
+  procedure QuadDobl_Random_Hermite_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates random data of a degree larger than deg
+  --   for a problem of the given dimension dim.
+
+    mat : constant QuadDobl_Dense_Matrix_Series.Matrix
+        := QuadDobl_Random_Matrix_Series(2*deg,dim);
+    sol : constant QuadDobl_Dense_Vector_Series.Vector
+        := QuadDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
+    rhs : constant QuadDobl_Dense_Vector_Series.Vector
+        := QuadDobl_Multiply(mat,sol);
+    qdt : quad_double := Quad_Double_Numbers.Create(0.01);
+    t : QuadDobl_Complex_Numbers.Complex_Number
+      := QuadDobl_Complex_Numbers.Create(qdt);
+    x : QuadDobl_Dense_Vector_Series.Vector;
+
+  begin
+    put_line("The generated matrix series :"); put(mat);
+    put_line("The generated solution :"); put(sol);
+    put_line("The multiplied right hand side vector : "); put(rhs);
+    x := QuadDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+    put_line("The computed solution :"); put(x);
+  end QuadDobl_Random_Hermite_Test;
+
+  procedure Standard_Special_Hermite_Test ( deg : integer32 ) is
 
   -- DESCRIPTION :
   --   Applies Hermite interpolation on a special case,
-  --   in standard double precision.
-  --   The dimension will be assumed to be 2, no matter what dim is.
+  --   of dimension two, in standard double precision.
 
     mat : constant Standard_Dense_Matrix_Series.Matrix
         := Standard_Special_Matrix_Series(deg);
@@ -577,14 +672,13 @@ procedure ts_seritp is
     put_line("The special vector series : "); put(rhs);
     sol := Standard_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
     put_line("The solution : "); put(sol);
-  end Standard_Hermite_Test;
+  end Standard_Special_Hermite_Test;
 
-  procedure DoblDobl_Hermite_Test ( deg,dim : integer32 ) is
+  procedure DoblDobl_Special_Hermite_Test ( deg : integer32 ) is
 
   -- DESCRIPTION :
   --   Applies Hermite interpolation on a special case,
-  --   in double double precision.
-  --   The dimension will be assumed to be 2, no matter what dim is.
+  --   of dimension two, in double double precision.
 
     mat : constant DoblDobl_Dense_Matrix_Series.Matrix
         := DoblDobl_Special_Matrix_Series(deg);
@@ -600,14 +694,13 @@ procedure ts_seritp is
     put_line("The special vector series : "); put(rhs);
     sol := DoblDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
     put_line("The solution : "); put(sol);
-  end DoblDobl_Hermite_Test;
+  end DoblDobl_Special_Hermite_Test;
 
-  procedure QuadDobl_Hermite_Test ( deg,dim : integer32 ) is
+  procedure QuadDobl_Special_Hermite_Test ( deg : integer32 ) is
 
   -- DESCRIPTION :
   --   Applies Hermite interpolation on a special case,
-  --   in quad double precision.
-  --   The dimension will be assumed to be 2, no matter what dim is.
+  --   of dimension two, in quad double precision.
 
     mat : constant QuadDobl_Dense_Matrix_Series.Matrix
         := QuadDobl_Special_Matrix_Series(deg);
@@ -623,6 +716,63 @@ procedure ts_seritp is
     put_line("The special vector series : "); put(rhs);
     sol := QuadDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
     put_line("The solution : "); put(sol);
+  end QuadDobl_Special_Hermite_Test;
+
+  procedure Standard_Hermite_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   To test the Hermite interpolation, we have a special case
+  --   and the general case, tested on a randomly generated problem.
+  --   Hermite interpolation is applied in standard double precision.
+
+    ans : character;
+
+  begin
+    put("Test special case ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    if ans = 'y'
+     then Standard_Special_Hermite_Test(deg);
+     else Standard_Random_Hermite_Test(deg,dim);
+    end if;
+  end Standard_Hermite_Test;
+
+  procedure DoblDobl_Hermite_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   To test the Hermite interpolation, we have a special case
+  --   and the general case, tested on a randomly generated problem.
+  --   Hermite interpolation is applied in double double precision.
+
+    ans : character;
+
+  begin
+    put("Test special case ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    if ans = 'y'
+     then DoblDobl_Special_Hermite_Test(deg);
+     else DoblDobl_Random_Hermite_Test(deg,dim);
+    end if;
+  end DoblDobl_Hermite_Test;
+
+  procedure QuadDobl_Hermite_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   To test the Hermite interpolation, we have a special case
+  --   and the general case, tested on a randomly generated problem.
+  --   Hermite interpolation is applied in quad double precision.
+
+    ans : character;
+
+  begin
+    put("Test special case ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    if ans = 'y'
+     then QuadDobl_Special_Hermite_Test(deg);
+     else QuadDobl_Random_Hermite_Test(deg,dim);
+    end if;
   end QuadDobl_Hermite_Test;
 
   procedure Main is
@@ -650,7 +800,6 @@ procedure ts_seritp is
     new_line;
     put("Hermite interpolation ? (y/n) ");
     Ask_Yes_or_No(hrm);
-    new_line;
     if hrm = 'y' then
       case ans is
         when '0' => Standard_Hermite_Test(deg,dim);
@@ -659,6 +808,7 @@ procedure ts_seritp is
         when others => null;
       end case;
     else
+      new_line;
       case ans is
         when '0' => Standard_Test(deg,dim);
         when '1' => DoblDobl_Test(deg,dim);
