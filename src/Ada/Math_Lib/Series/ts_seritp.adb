@@ -664,7 +664,7 @@ procedure ts_seritp is
     rnd : constant Standard_Complex_Numbers.Complex_Number
         := Standard_Random_Numbers.Random1;
     t : Standard_Complex_Numbers.Complex_Number
-      := Standard_Complex_Numbers.Create(0.0001)*rnd;
+      := Standard_Complex_Numbers.Create(0.01)*rnd;
     x : Standard_Dense_Vector_Series.Vector;
     rnk : integer32;
 
@@ -698,7 +698,7 @@ procedure ts_seritp is
     sol : constant DoblDobl_Dense_Vector_Series.Vector
         := DoblDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
     rhs : DoblDobl_Dense_Vector_Series.Vector := DoblDobl_Multiply(mat,sol);
-    ddt : double_double := Double_Double_Numbers.Create(0.0001);
+    ddt : double_double := Double_Double_Numbers.Create(0.01);
     rnd : constant DoblDobl_Complex_Numbers.Complex_Number
         := DoblDobl_Random_Numbers.Random1;
     t : DoblDobl_Complex_Numbers.Complex_Number
@@ -737,7 +737,7 @@ procedure ts_seritp is
     rhs : QuadDobl_Dense_Vector_Series.Vector := QuadDobl_Multiply(mat,sol);
     rnd : constant QuadDobl_Complex_Numbers.Complex_Number
         := QuadDobl_Random_Numbers.Random1;
-    qdt : quad_double := Quad_Double_Numbers.Create(0.0001);
+    qdt : quad_double := Quad_Double_Numbers.Create(0.01);
     t : QuadDobl_Complex_Numbers.Complex_Number
       := QuadDobl_Complex_Numbers.Create(qdt)*rnd;
     x : QuadDobl_Dense_Vector_Series.Vector;

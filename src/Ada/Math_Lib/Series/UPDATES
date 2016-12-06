@@ -1,5 +1,6 @@
 Mon 5 Dec 2016 : added more tests to ts_seritp.adb, added rank computation
   of the Hermite matrix, with more tests, also for the dd/qd versions.
+  Set the magnitude for t at 0.01 in ts_seritp.
 
 Sun 4 Dec 2016 : fixed in standard_interpolating_series.adb the differentials
   in the coefficients of the Hermite matrix.  And made the same fixes in the
