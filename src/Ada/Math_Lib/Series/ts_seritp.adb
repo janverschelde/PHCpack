@@ -801,18 +801,80 @@ procedure ts_seritp is
     end loop;
   end Write_Differences;
 
-  procedure Standard_Random_Hermite_Test ( deg,dim : integer32 ) is
+  procedure Compare_Values
+              ( x,y : in Standard_Dense_Vector_Series.Vector;
+                t : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Evaluates x and y at t and writes their values.
+
+    xt : constant Standard_Complex_Vectors.Vector
+       := Standard_Dense_Vector_Series.Eval(x,t);
+    yt : constant Standard_Complex_Vectors.Vector
+       := Standard_Dense_Vector_Series.Eval(y,t);
+
+  begin
+    put("x evaluated at "); put(t); put_line(" :");
+    put_line(xt);
+    put("y evaluated at "); put(t); put_line(" :");
+    put_line(yt);
+  end Compare_Values;
+
+  procedure Compare_Values
+              ( x,y : in DoblDobl_Dense_Vector_Series.Vector;
+                t : in double_double ) is
+
+  -- DESCRIPTION :
+  --   Evaluates x and y at t and writes their values.
+
+    xt : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Dense_Vector_Series.Eval(x,t);
+    yt : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Dense_Vector_Series.Eval(y,t);
+
+  begin
+    put("x evaluated at "); put(t); put_line(" :");
+    put_line(xt);
+    put("y evaluated at "); put(t); put_line(" :");
+    put_line(yt);
+  end Compare_Values;
+
+  procedure Compare_Values
+              ( x,y : in QuadDobl_Dense_Vector_Series.Vector;
+                t : in quad_double ) is
+
+  -- DESCRIPTION :
+  --   Evaluates x and y at t and writes their values.
+
+    xt : constant QuadDobl_Complex_Vectors.Vector
+       := QuadDobl_Dense_Vector_Series.Eval(x,t);
+    yt : constant QuadDobl_Complex_Vectors.Vector
+       := QuadDobl_Dense_Vector_Series.Eval(y,t);
+
+  begin
+    put("x evaluated at "); put(t); put_line(" :");
+    put_line(xt);
+    put("y evaluated at "); put(t); put_line(" :");
+    put_line(yt);
+  end Compare_Values;
+
+  procedure Standard_Random_Hermite_Test
+              ( deg,dim : in integer32; laurent : in boolean ) is
 
   -- DESCRIPTION :
   --   Generates random data of a degree larger than deg
   --   for a problem of the given dimension dim.
+  --   If laurent, then Hermite-Laurent interpolation is used.
 
     use Standard_Complex_Numbers;
+    use Standard_Interpolating_Series;
 
     mat : Standard_Dense_Matrix_Series.Matrix
-        := Standard_Random_Matrix_Series(2*deg,dim);
+       -- := Standard_Random_Matrix_Series(2*deg,dim);
+        := Standard_Random_Matrix_Series(deg,dim);
     sol : constant Standard_Dense_Vector_Series.Vector
-        := Standard_Random_Series.Random_Vector_Series(1,dim,2*deg);
+       -- := Standard_Random_Series.Random_Vector_Series(1,dim,2*deg);
+        := Standard_Random_Series.Random_Vector_Series(1,dim,deg);
     rhs : Standard_Dense_Vector_Series.Vector := Standard_Multiply(mat,sol);
     rnd : constant Standard_Complex_Numbers.Complex_Number
         := Standard_Random_Numbers.Random1;
@@ -832,24 +894,33 @@ procedure ts_seritp is
     else
       put_line("The matrix series has full rank.");
       put("The smallest degree for full rank : "); put(rnk,1); new_line;
-      x := Standard_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+      if laurent 
+       then x := Hermite_Laurent_Interpolate(mat,rhs);
+       else x := Hermite_Interpolate(mat,rhs,t);
+      end if;
       put_line("The computed solution :"); put(x);
       Write_Differences(x,sol);
+      Compare_Values(x,sol,0.01);
     end if;
   end Standard_Random_Hermite_Test;
 
-  procedure DoblDobl_Random_Hermite_Test ( deg,dim : integer32 ) is
+  procedure DoblDobl_Random_Hermite_Test
+              ( deg,dim : in integer32; laurent : in boolean ) is
 
   -- DESCRIPTION :
   --   Generates random data of a degree larger than deg
   --   for a problem of the given dimension dim.
+  --   If laurent, then Hermite-Laurent interpolation will be applied.
 
     use DoblDobl_Complex_Numbers;
+    use DoblDobl_Interpolating_Series;
 
     mat : DoblDobl_Dense_Matrix_Series.Matrix
-        := DoblDobl_Random_Matrix_Series(2*deg,dim);
+       -- := DoblDobl_Random_Matrix_Series(2*deg,dim);
+        := DoblDobl_Random_Matrix_Series(deg,dim);
     sol : constant DoblDobl_Dense_Vector_Series.Vector
-        := DoblDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
+       -- := DoblDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
+        := DoblDobl_Random_Series.Random_Vector_Series(1,dim,deg);
     rhs : DoblDobl_Dense_Vector_Series.Vector := DoblDobl_Multiply(mat,sol);
     ddt : double_double := Double_Double_Numbers.Create(0.01);
     rnd : constant DoblDobl_Complex_Numbers.Complex_Number
@@ -857,6 +928,7 @@ procedure ts_seritp is
     t : DoblDobl_Complex_Numbers.Complex_Number
       := DoblDobl_Complex_Numbers.Create(ddt)*rnd;
     x : DoblDobl_Dense_Vector_Series.Vector;
+    evt : constant double_double := create(0.01);
     rnk : integer32;
 
   begin
@@ -869,24 +941,33 @@ procedure ts_seritp is
       put_line("The matrix series does not have full rank.");
     else
       put_line("The matrix series has full rank.");
-      x := DoblDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+      if laurent
+       then x := Hermite_Laurent_Interpolate(mat,rhs);
+       else x := Hermite_Interpolate(mat,rhs,t);
+      end if;
       put_line("The computed solution :"); put(x);
       Write_Differences(x,sol);
+      Compare_Values(x,sol,evt);
     end if;
   end DoblDobl_Random_Hermite_Test;
 
-  procedure QuadDobl_Random_Hermite_Test ( deg,dim : integer32 ) is
+  procedure QuadDobl_Random_Hermite_Test
+              ( deg,dim : in integer32; laurent : in boolean ) is
 
   -- DESCRIPTION :
   --   Generates random data of a degree larger than deg
   --   for a problem of the given dimension dim.
+  --   If laurent, then Hermite-Laurent interpolation is applied.
 
     use QuadDobl_Complex_Numbers;
+    use QuadDobl_Interpolating_Series;
 
     mat : QuadDobl_Dense_Matrix_Series.Matrix
-        := QuadDobl_Random_Matrix_Series(2*deg,dim);
+       -- := QuadDobl_Random_Matrix_Series(2*deg,dim);
+        := QuadDobl_Random_Matrix_Series(deg,dim);
     sol : constant QuadDobl_Dense_Vector_Series.Vector
-        := QuadDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
+       -- := QuadDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
+        := QuadDobl_Random_Series.Random_Vector_Series(1,dim,deg);
     rhs : QuadDobl_Dense_Vector_Series.Vector := QuadDobl_Multiply(mat,sol);
     rnd : constant QuadDobl_Complex_Numbers.Complex_Number
         := QuadDobl_Random_Numbers.Random1;
@@ -894,6 +975,7 @@ procedure ts_seritp is
     t : QuadDobl_Complex_Numbers.Complex_Number
       := QuadDobl_Complex_Numbers.Create(qdt)*rnd;
     x : QuadDobl_Dense_Vector_Series.Vector;
+    evt : constant quad_double := create(0.01);
     rnk : integer32;
 
   begin
@@ -906,9 +988,13 @@ procedure ts_seritp is
       put_line("The matrix series does not have full rank.");
     else
       put_line("The matrix series has full rank.");
-      x := QuadDobl_Interpolating_Series.Hermite_Interpolate(mat,rhs,t);
+      if laurent
+       then x := Hermite_Laurent_Interpolate(mat,rhs);
+       else x := Hermite_Interpolate(mat,rhs,t);
+      end if;
       put_line("The computed solution :"); put(x);
       Write_Differences(x,sol);
+      Compare_Values(x,sol,evt);
     end if;
   end QuadDobl_Random_Hermite_Test;
 
@@ -1066,7 +1152,7 @@ procedure ts_seritp is
        then Standard_Singular_Hermite_Test;
        else Standard_Special_Hermite_Test(deg);
       end if;
-     else Standard_Random_Hermite_Test(deg,dim);
+     else Standard_Random_Hermite_Test(deg,dim,lau='y');
     end if;
   end Standard_Hermite_Test;
 
@@ -1090,7 +1176,7 @@ procedure ts_seritp is
        then DoblDobl_Singular_Hermite_Test;
        else DoblDobl_Special_Hermite_Test(deg);
       end if;
-     else DoblDobl_Random_Hermite_Test(deg,dim);
+     else DoblDobl_Random_Hermite_Test(deg,dim,lau='y');
     end if;
   end DoblDobl_Hermite_Test;
 
@@ -1114,7 +1200,7 @@ procedure ts_seritp is
        then QuadDobl_Singular_Hermite_Test;
        else QuadDobl_Special_Hermite_Test(deg);
       end if;
-     else QuadDobl_Random_Hermite_Test(deg,dim);
+     else QuadDobl_Random_Hermite_Test(deg,dim,lau='y');
     end if;
   end QuadDobl_Hermite_Test;
 
