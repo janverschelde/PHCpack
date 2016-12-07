@@ -192,4 +192,38 @@ package DoblDobl_Interpolating_Series is
 
   -- REQUIRED : mat.deg = rhs.deg.
 
+  function Hermite_Laurent_Matrix
+             ( m : DoblDobl_Complex_VecMats.VecMat )
+             return DoblDobl_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the block structured coefficient matrix for the
+  --   Hermite-Laurent interpolation problem at t = 0,
+  --   using the coefficients in the vector of matrices m.
+  --   The matrix on return has as many columns as m(0)'last(2)*(m'last+1)
+  --   and as many rows as m(0)'last(1)*(2*m'last+1).
+
+  function Hermite_Laurent_Vector
+             ( v : DoblDobl_Complex_VecVecs.VecVec )
+             return DoblDobl_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the right hand side vector corresponding to the Hermite
+  --   coefficient matrix to apply Hermite-Laurent interpolation at t = 0.
+  --   The vector on return has v(0)'last*(2*v'last+1) elements.
+
+  function Hermite_Laurent_Interpolate
+             ( mat : DoblDobl_Dense_Matrix_Series.Matrix;
+               rhs : DoblDobl_Dense_Vector_Series.Vector;
+               verbose : boolean := true )
+             return DoblDobl_Dense_Vector_Series.Vector;
+
+  -- DESCRIPTION :
+  --   Applies Hermite-Laurent interpolation at t = 0,
+  --   as defined by the coefficients in mat and rhs.
+  --   If verbose, then additional results and diagnostics
+  --   are written to screen.
+
+  -- REQUIRED : mat.deg = rhs.deg.
+
 end DoblDobl_Interpolating_Series;
