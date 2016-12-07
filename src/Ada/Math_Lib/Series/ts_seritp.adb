@@ -568,7 +568,8 @@ procedure ts_seritp is
              return Standard_Dense_Matrix_Series.Matrix is
 
   -- DESCRIPTION :
-  --   Returns a singular matrix series of degree of degree one.
+  --   Returns a singular matrix series of degree of degree one,
+  --   in standard double precision.
 
     res : Standard_Dense_Matrix_Series.Matrix;
     wrk : Standard_Complex_Matrices.Matrix(1..2,1..2);
@@ -589,11 +590,64 @@ procedure ts_seritp is
     return res;
   end Standard_Singular_Matrix_Series;
 
+  function DoblDobl_Singular_Matrix_Series
+             return DoblDobl_Dense_Matrix_Series.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns a singular matrix series of degree of degree one,
+  --   in double double precision.
+
+    res : DoblDobl_Dense_Matrix_Series.Matrix;
+    wrk : DoblDobl_Complex_Matrices.Matrix(1..2,1..2);
+
+  begin
+    res.deg := 1;
+    for i in wrk'range(1) loop
+      for j in wrk'range(2) loop
+        wrk(i,j) := DoblDobl_Complex_Numbers.Create(integer32(0));
+      end loop;
+    end loop;
+    for k in 0..res.deg loop
+      res.cff(k) := new DoblDobl_Complex_Matrices.Matrix'(wrk);
+    end loop;
+    res.cff(0)(1,2) := DoblDobl_Complex_Numbers.Create(integer32(4));
+    res.cff(1)(1,1) := DoblDobl_Complex_Numbers.Create(integer32(4));
+    res.cff(1)(2,1) := DoblDobl_Complex_Numbers.Create(integer32(4));
+    return res;
+  end DoblDobl_Singular_Matrix_Series;
+
+  function QuadDobl_Singular_Matrix_Series
+             return QuadDobl_Dense_Matrix_Series.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns a singular matrix series of degree of degree one,
+  --   in quad double precision.
+
+    res : QuadDobl_Dense_Matrix_Series.Matrix;
+    wrk : QuadDobl_Complex_Matrices.Matrix(1..2,1..2);
+
+  begin
+    res.deg := 1;
+    for i in wrk'range(1) loop
+      for j in wrk'range(2) loop
+        wrk(i,j) := QuadDobl_Complex_Numbers.Create(integer32(0));
+      end loop;
+    end loop;
+    for k in 0..res.deg loop
+      res.cff(k) := new QuadDobl_Complex_Matrices.Matrix'(wrk);
+    end loop;
+    res.cff(0)(1,2) := QuadDobl_Complex_Numbers.Create(integer32(4));
+    res.cff(1)(1,1) := QuadDobl_Complex_Numbers.Create(integer32(4));
+    res.cff(1)(2,1) := QuadDobl_Complex_Numbers.Create(integer32(4));
+    return res;
+  end QuadDobl_Singular_Matrix_Series;
+
   function Standard_Singular_Vector_Series
              return Standard_Dense_Vector_Series.Vector is
 
   -- DESCRIPTION :
-  --   Returns a special right hand side series with degree equal to one.
+  --   Returns a special right hand side series with degree equal to one,
+  --   in standard double precision.
 
     res : Standard_Dense_Vector_Series.Vector;
     wrk : Standard_Complex_Vectors.Vector(1..2);
@@ -612,6 +666,56 @@ procedure ts_seritp is
     res.cff(1)(2) := Standard_Complex_Numbers.Create(0.0);
     return res;
   end Standard_Singular_Vector_Series;
+
+  function DoblDobl_Singular_Vector_Series
+             return DoblDobl_Dense_Vector_Series.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a special right hand side series with degree equal to one,
+  --   in double double precision.
+
+    res : DoblDobl_Dense_Vector_Series.Vector;
+    wrk : DoblDobl_Complex_Vectors.Vector(1..2);
+
+  begin
+    for i in wrk'range loop
+      wrk(i) := DoblDobl_Complex_Numbers.Create(integer32(0));
+    end loop;
+    res.deg := 1;
+    for k in 0..res.deg loop
+      res.cff(k) := new DoblDobl_Complex_Vectors.Vector'(wrk);
+    end loop;
+    res.cff(0)(1) := DoblDobl_Complex_Numbers.Create(integer32(1));
+    res.cff(0)(2) := DoblDobl_Complex_Numbers.Create(integer32(0));
+    res.cff(1)(1) := DoblDobl_Complex_Numbers.Create(integer32(0));
+    res.cff(1)(2) := DoblDobl_Complex_Numbers.Create(integer32(0));
+    return res;
+  end DoblDobl_Singular_Vector_Series;
+
+  function QuadDobl_Singular_Vector_Series
+             return QuadDobl_Dense_Vector_Series.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a special right hand side series with degree equal to one,
+  --   in quad double precision.
+
+    res : QuadDobl_Dense_Vector_Series.Vector;
+    wrk : QuadDobl_Complex_Vectors.Vector(1..2);
+
+  begin
+    for i in wrk'range loop
+      wrk(i) := QuadDobl_Complex_Numbers.Create(integer32(0));
+    end loop;
+    res.deg := 1;
+    for k in 0..res.deg loop
+      res.cff(k) := new QuadDobl_Complex_Vectors.Vector'(wrk);
+    end loop;
+    res.cff(0)(1) := QuadDobl_Complex_Numbers.Create(integer32(1));
+    res.cff(0)(2) := QuadDobl_Complex_Numbers.Create(integer32(0));
+    res.cff(1)(1) := QuadDobl_Complex_Numbers.Create(integer32(0));
+    res.cff(1)(2) := QuadDobl_Complex_Numbers.Create(integer32(0));
+    return res;
+  end QuadDobl_Singular_Vector_Series;
 
   procedure Write_Differences
               ( x,y : in Standard_Dense_Vector_Series.Vector ) is
@@ -829,29 +933,6 @@ procedure ts_seritp is
     put_line("The solution : "); put(sol);
   end Standard_Special_Hermite_Test;
 
-  procedure Standard_Singular_Hermite_Test is
-
-  -- DESCRIPTION :
-  --   Applies Hermite interpolation on a singular case,
-  --   of dimension two, in standard double precision.
-
-    mat : constant Standard_Dense_Matrix_Series.Matrix
-        := Standard_Singular_Matrix_Series;
-    rhs : constant Standard_Dense_Vector_Series.Vector
-        := Standard_Singular_Vector_Series;
-    sol,y : Standard_Dense_Vector_Series.Vector;
-
-    use Standard_Interpolating_Series;
-
-  begin
-    put_line("The singular matrix series : "); put(mat);
-    put_line("The singular vector series : "); put(rhs);
-    sol := Hermite_Laurent_Interpolate(mat,rhs);
-    put_line("The solution : "); put(sol);
-    y := Standard_Multiply(mat,sol);
-    put_line("The matrix multiplied with the solution :"); put(y);
-  end Standard_Singular_Hermite_Test;
-
   procedure DoblDobl_Special_Hermite_Test ( deg : integer32 ) is
 
   -- DESCRIPTION :
@@ -896,6 +977,75 @@ procedure ts_seritp is
     put_line("The solution : "); put(sol);
   end QuadDobl_Special_Hermite_Test;
 
+  procedure Standard_Singular_Hermite_Test is
+
+  -- DESCRIPTION :
+  --   Applies Hermite interpolation on a singular case,
+  --   of dimension two, in standard double precision.
+
+    mat : constant Standard_Dense_Matrix_Series.Matrix
+        := Standard_Singular_Matrix_Series;
+    rhs : constant Standard_Dense_Vector_Series.Vector
+        := Standard_Singular_Vector_Series;
+    sol,y : Standard_Dense_Vector_Series.Vector;
+
+    use Standard_Interpolating_Series;
+
+  begin
+    put_line("The singular matrix series : "); put(mat);
+    put_line("The singular vector series : "); put(rhs);
+    sol := Hermite_Laurent_Interpolate(mat,rhs);
+    put_line("The solution : "); put(sol);
+    y := Standard_Multiply(mat,sol);
+    put_line("The matrix multiplied with the solution :"); put(y);
+  end Standard_Singular_Hermite_Test;
+
+  procedure DoblDobl_Singular_Hermite_Test is
+
+  -- DESCRIPTION :
+  --   Applies Hermite interpolation on a singular case,
+  --   of dimension two, in double double precision.
+
+    mat : constant DoblDobl_Dense_Matrix_Series.Matrix
+        := DoblDobl_Singular_Matrix_Series;
+    rhs : constant DoblDobl_Dense_Vector_Series.Vector
+        := DoblDobl_Singular_Vector_Series;
+    sol,y : DoblDobl_Dense_Vector_Series.Vector;
+
+    use DoblDobl_Interpolating_Series;
+
+  begin
+    put_line("The singular matrix series : "); put(mat);
+    put_line("The singular vector series : "); put(rhs);
+    sol := Hermite_Laurent_Interpolate(mat,rhs);
+    put_line("The solution : "); put(sol);
+    y := DoblDobl_Multiply(mat,sol);
+    put_line("The matrix multiplied with the solution :"); put(y);
+  end DoblDobl_Singular_Hermite_Test;
+
+  procedure QuadDobl_Singular_Hermite_Test is
+
+  -- DESCRIPTION :
+  --   Applies Hermite interpolation on a singular case,
+  --   of dimension two, in double double precision.
+
+    mat : constant QuadDobl_Dense_Matrix_Series.Matrix
+        := QuadDobl_Singular_Matrix_Series;
+    rhs : constant QuadDobl_Dense_Vector_Series.Vector
+        := QuadDobl_Singular_Vector_Series;
+    sol,y : QuadDobl_Dense_Vector_Series.Vector;
+
+    use QuadDobl_Interpolating_Series;
+
+  begin
+    put_line("The singular matrix series : "); put(mat);
+    put_line("The singular vector series : "); put(rhs);
+    sol := Hermite_Laurent_Interpolate(mat,rhs);
+    put_line("The solution : "); put(sol);
+    y := QuadDobl_Multiply(mat,sol);
+    put_line("The matrix multiplied with the solution :"); put(y);
+  end QuadDobl_Singular_Hermite_Test;
+
   procedure Standard_Hermite_Test ( deg,dim : integer32 ) is
 
   -- DESCRIPTION :
@@ -927,14 +1077,19 @@ procedure ts_seritp is
   --   and the general case, tested on a randomly generated problem.
   --   Hermite interpolation is applied in double double precision.
 
-    ans : character;
+    lau,spc : character;
 
   begin
+    put("Apply Hermite-Laurent interpolation ? (y/n) ");
+    Ask_Yes_or_No(lau);
     put("Test special case ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    Ask_Yes_or_No(spc);
     new_line;
-    if ans = 'y'
-     then DoblDobl_Special_Hermite_Test(deg);
+    if spc = 'y' then
+      if lau = 'y'
+       then DoblDobl_Singular_Hermite_Test;
+       else DoblDobl_Special_Hermite_Test(deg);
+      end if;
      else DoblDobl_Random_Hermite_Test(deg,dim);
     end if;
   end DoblDobl_Hermite_Test;
@@ -946,14 +1101,19 @@ procedure ts_seritp is
   --   and the general case, tested on a randomly generated problem.
   --   Hermite interpolation is applied in quad double precision.
 
-    ans : character;
+    lau,spc : character;
 
   begin
+    put("Apply Hermite-Laurent interpolation ? (y/n) ");
+    Ask_Yes_or_No(lau);
     put("Test special case ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    Ask_Yes_or_No(spc);
     new_line;
-    if ans = 'y'
-     then QuadDobl_Special_Hermite_Test(deg);
+    if spc = 'y' then
+      if lau = 'y'
+       then QuadDobl_Singular_Hermite_Test;
+       else QuadDobl_Special_Hermite_Test(deg);
+      end if;
      else QuadDobl_Random_Hermite_Test(deg,dim);
     end if;
   end QuadDobl_Hermite_Test;
