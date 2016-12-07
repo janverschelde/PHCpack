@@ -200,7 +200,7 @@ package DoblDobl_Interpolating_Series is
   --   Returns the block structured coefficient matrix for the
   --   Hermite-Laurent interpolation problem at t = 0,
   --   using the coefficients in the vector of matrices m.
-  --   The matrix on return has as many columns as m(0)'last(2)*(m'last+1)
+  --   The matrix on return has as many columns as m(0)'last(2)*(2*m'last+1)
   --   and as many rows as m(0)'last(1)*(2*m'last+1).
 
   function Hermite_Laurent_Vector

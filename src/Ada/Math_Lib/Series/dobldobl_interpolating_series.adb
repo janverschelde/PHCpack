@@ -527,8 +527,10 @@ package body DoblDobl_Interpolating_Series is
     nbr : constant integer32 := lmt'last(1);
     nbc : constant integer32 := lmt'last(2);
     nrows : constant integer32 := nbr*(2*m'last+1);
-    ncols : constant integer32 := nbc*(m'last+1);
+    ncols : constant integer32 := nbc*(2*m'last+1);
     res : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
+    rowidx : constant integer32 := nbr*(m'last+1); 
+    colidx : constant integer32 := nbc*(m'last+1); 
 
   begin
     for i in 1..nrows loop
@@ -536,12 +538,22 @@ package body DoblDobl_Interpolating_Series is
         res(i,j) := Create(integer32(0));
       end loop;
     end loop;
-    for k in m'range loop
+    for k in m'range loop -- fill up to rowidx and colidx
       lmt := m(k);
       for L in m'range loop
         for i in lmt'range(1) loop
           for j in lmt'range(2) loop
             res((k+L)*nbr+i,L*nbc+j) := lmt(i,j);
+          end loop;
+        end loop;
+      end loop;
+    end loop;
+    for k in 0..m'last-1 loop
+      lmt := m(k);
+      for L in 0..m'last-1-k loop
+        for i in lmt'range(1) loop
+          for j in lmt'range(2) loop
+            res(rowidx+(k+L)*nbr+i,colidx+L*nbc+j) := lmt(i,j);
           end loop;
         end loop;
       end loop;
@@ -583,7 +595,7 @@ package body DoblDobl_Interpolating_Series is
     nbr : constant integer32 := mat.cff(0)'last(1);
     nbc : constant integer32 := mat.cff(0)'last(2);
     nrows : constant integer32 := nbr*(2*deg+1);
-    ncols : constant integer32 := nbc*(deg+1);
+    ncols : constant integer32 := nbc*(2*deg+1);
     A : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
       := Hermite_Laurent_Matrix(mat.cff(0..deg));
     b : DoblDobl_Complex_Vectors.Vector(1..nrows)
@@ -593,7 +605,7 @@ package body DoblDobl_Interpolating_Series is
     jpvt : Standard_Integer_Vectors.Vector(1..ncols) := (1..ncols => 0);
     sol : DoblDobl_Complex_Vectors.Vector(1..ncols);
     rsd,dum,dum2,dum3 : DoblDobl_Complex_Vectors.Vector(1..nrows);
-    info : integer32;
+    info,idx : integer32;
     wrk : DoblDobl_Complex_Vectors.Vector(1..nbc);
 
     use DoblDobl_Complex_QR_Least_Squares;
@@ -603,15 +615,16 @@ package body DoblDobl_Interpolating_Series is
       put_line("The coefficient matrix :"); put(A,3);
       put_line("The right hand side vector :"); put_line(b);
     end if;
-    QRD(A,qraux,jpvt,true);
+    QRD(A,qraux,jpvt,false);
     QRLS(A,nrows,ncols,qraux,b,dum,dum2,sol,rsd,dum3,110,info);
     if verbose then
       put_line("The least squares solution :"); put_line(sol);
     end if;
     res.deg := deg;
+    idx := nbc*deg; -- skip the negative degree entries
     for k in 0..res.deg loop
       for i in wrk'range loop
-        wrk(i) := sol(k*nbc+i);
+        wrk(i) := sol(idx+k*nbc+i);
       end loop;
       res.cff(k) := new DoblDobl_Complex_Vectors.Vector'(wrk);
     end loop;
