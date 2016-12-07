@@ -9,6 +9,7 @@ with Standard_Complex_VecVecs_io;         use Standard_Complex_VecVecs_io;
 with Standard_Complex_Matrices_io;        use Standard_Complex_Matrices_io;
 with Standard_Complex_Vector_Norms;
 with Standard_Complex_Linear_Solvers;
+with Standard_Complex_QR_Least_Squares;
 with Standard_Complex_Singular_Values;
 
 package body Standard_Interpolating_Series is
@@ -515,5 +516,104 @@ package body Standard_Interpolating_Series is
     end loop;
     return res;
   end Hermite_Interpolate;
+
+  function Hermite_Laurent_Matrix
+             ( m : Standard_Complex_VecMats.VecMat )
+             return Standard_Complex_Matrices.Matrix is
+
+    lmt : Standard_Complex_Matrices.Link_to_Matrix := m(0);
+    nbr : constant integer32 := lmt'last(1);
+    nbc : constant integer32 := lmt'last(2);
+    nrows : constant integer32 := nbr*(2*m'last+1);
+    ncols : constant integer32 := nbc*(m'last+1);
+    res : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols);
+
+  begin
+    for i in 1..nrows loop
+      for j in 1..ncols loop
+        res(i,j) := Create(0.0);
+      end loop;
+    end loop;
+    for k in m'range loop
+      lmt := m(k);
+      for L in m'range loop
+        for i in lmt'range(1) loop
+          for j in lmt'range(2) loop
+            res((k+L)*nrows+i,L*ncols+j) := lmt(i,j);
+          end loop;
+        end loop;
+      end loop;
+    end loop;
+    return res;
+  end Hermite_Laurent_Matrix;
+
+  function Hermite_Laurent_Vector
+             ( v : Standard_Complex_VecVecs.VecVec )
+             return Standard_Complex_Vectors.Vector is
+
+    lv : Standard_Complex_Vectors.Link_to_Vector := v(0);
+    nvr : constant integer32 := lv'last;
+    dim : constant integer32 := nvr*(2*v'last+1);
+    res : Standard_Complex_Vectors.Vector(1..dim);
+    idx : constant integer32 := nvr*v'last;
+
+  begin
+    for k in 1..idx loop
+      res(k) := Create(0.0);
+    end loop;
+    for k in v'range loop
+      lv := v(k);
+      for i in lv'range loop
+        res(k*nvr+i) := lv(i);
+      end loop;
+    end loop;
+    return res;
+  end Hermite_Laurent_Vector;
+
+  function Hermite_Laurent_Interpolate
+             ( mat : Standard_Dense_Matrix_Series.Matrix;
+               rhs : Standard_Dense_Vector_Series.Vector;
+               verbose : boolean := true )
+             return Standard_Dense_Vector_Series.Vector is
+
+    res : Standard_Dense_Vector_Series.Vector;
+    deg : constant integer32 := mat.deg;
+    nbr : constant integer32 := mat.cff(0)'last(1);
+    nbc : constant integer32 := mat.cff(0)'last(2);
+    nrows : constant integer32 := nbr*(2*deg+1);
+    ncols : constant integer32 := nbc*(deg+1);
+    A : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols)
+      := Hermite_Laurent_Matrix(mat.cff(0..deg));
+    b : Standard_Complex_Vectors.Vector(1..nrows)
+      := Hermite_Laurent_Vector(rhs.cff(0..deg));
+    qraux : Standard_Complex_Vectors.Vector(1..ncols)
+          := (1..ncols => Create(0.0));
+    jpvt : Standard_Integer_Vectors.Vector(1..ncols) := (1..ncols => 0);
+    sol : Standard_Complex_Vectors.Vector(1..ncols);
+    rsd,dum,dum2,dum3 : Standard_Complex_Vectors.Vector(1..nrows);
+    info : integer32;
+    wrk : Standard_Complex_Vectors.Vector(1..nbc);
+
+    use Standard_Complex_QR_Least_Squares;
+
+  begin
+    if verbose then
+      put_line("The coefficient matrix :"); put(A,3);
+      put_line("The right hand side vector :"); put_line(b);
+    end if;
+    QRD(A,qraux,jpvt,true);
+    QRLS(A,nrows,ncols,qraux,b,dum,dum2,sol,rsd,dum3,110,info);
+    if verbose then
+      put_line("The least squares solution :"); put_line(sol);
+    end if;
+    res.deg := deg;
+    for k in 0..res.deg loop
+      for i in wrk'range loop
+        wrk(i) := sol(k*nbc+i);
+      end loop;
+      res.cff(k) := new Standard_Complex_Vectors.Vector'(wrk);
+    end loop;
+    return res;
+  end Hermite_Laurent_Interpolate;
 
 end Standard_Interpolating_Series;
