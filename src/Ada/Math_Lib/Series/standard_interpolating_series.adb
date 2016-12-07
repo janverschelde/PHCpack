@@ -539,7 +539,7 @@ package body Standard_Interpolating_Series is
       for L in m'range loop
         for i in lmt'range(1) loop
           for j in lmt'range(2) loop
-            res((k+L)*nrows+i,L*ncols+j) := lmt(i,j);
+            res((k+L)*nbr+i,L*nbc+j) := lmt(i,j);
           end loop;
         end loop;
       end loop;
@@ -564,7 +564,7 @@ package body Standard_Interpolating_Series is
     for k in v'range loop
       lv := v(k);
       for i in lv'range loop
-        res(k*nvr+i) := lv(i);
+        res(idx+k*nvr+i) := lv(i);
       end loop;
     end loop;
     return res;

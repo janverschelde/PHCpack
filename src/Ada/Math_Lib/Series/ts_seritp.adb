@@ -564,6 +564,55 @@ procedure ts_seritp is
     return res;
   end QuadDobl_Special_Vector_Series;
 
+  function Standard_Singular_Matrix_Series
+             return Standard_Dense_Matrix_Series.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns a singular matrix series of degree of degree one.
+
+    res : Standard_Dense_Matrix_Series.Matrix;
+    wrk : Standard_Complex_Matrices.Matrix(1..2,1..2);
+
+  begin
+    res.deg := 1;
+    for i in wrk'range(1) loop
+      for j in wrk'range(2) loop
+        wrk(i,j) := Standard_Complex_Numbers.Create(0.0);
+      end loop;
+    end loop;
+    for k in 0..res.deg loop
+      res.cff(k) := new Standard_Complex_Matrices.Matrix'(wrk);
+    end loop;
+    res.cff(0)(1,2) := Standard_Complex_Numbers.Create(4.0);
+    res.cff(1)(1,1) := Standard_Complex_Numbers.Create(4.0);
+    res.cff(1)(2,1) := Standard_Complex_Numbers.Create(4.0);
+    return res;
+  end Standard_Singular_Matrix_Series;
+
+  function Standard_Singular_Vector_Series
+             return Standard_Dense_Vector_Series.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a special right hand side series with degree equal to one.
+
+    res : Standard_Dense_Vector_Series.Vector;
+    wrk : Standard_Complex_Vectors.Vector(1..2);
+
+  begin
+    for i in wrk'range loop
+      wrk(i) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
+    res.deg := 1;
+    for k in 0..res.deg loop
+      res.cff(k) := new Standard_Complex_Vectors.Vector'(wrk);
+    end loop;
+    res.cff(0)(1) := Standard_Complex_Numbers.Create(1.0);
+    res.cff(0)(2) := Standard_Complex_Numbers.Create(0.0);
+    res.cff(1)(1) := Standard_Complex_Numbers.Create(0.0);
+    res.cff(1)(2) := Standard_Complex_Numbers.Create(0.0);
+    return res;
+  end Standard_Singular_Vector_Series;
+
   procedure Write_Differences
               ( x,y : in Standard_Dense_Vector_Series.Vector ) is
 
@@ -780,6 +829,29 @@ procedure ts_seritp is
     put_line("The solution : "); put(sol);
   end Standard_Special_Hermite_Test;
 
+  procedure Standard_Singular_Hermite_Test is
+
+  -- DESCRIPTION :
+  --   Applies Hermite interpolation on a singular case,
+  --   of dimension two, in standard double precision.
+
+    mat : constant Standard_Dense_Matrix_Series.Matrix
+        := Standard_Singular_Matrix_Series;
+    rhs : constant Standard_Dense_Vector_Series.Vector
+        := Standard_Singular_Vector_Series;
+    sol,y : Standard_Dense_Vector_Series.Vector;
+
+    use Standard_Interpolating_Series;
+
+  begin
+    put_line("The singular matrix series : "); put(mat);
+    put_line("The singular vector series : "); put(rhs);
+    sol := Hermite_Laurent_Interpolate(mat,rhs);
+    put_line("The solution : "); put(sol);
+    y := Standard_Multiply(mat,sol);
+    put_line("The matrix multiplied with the solution :"); put(y);
+  end Standard_Singular_Hermite_Test;
+
   procedure DoblDobl_Special_Hermite_Test ( deg : integer32 ) is
 
   -- DESCRIPTION :
@@ -831,14 +903,19 @@ procedure ts_seritp is
   --   and the general case, tested on a randomly generated problem.
   --   Hermite interpolation is applied in standard double precision.
 
-    ans : character;
+    lau,spc : character;
 
   begin
-    put("Test special case ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    put("Apply Hermite-Laurent interpolation ? (y/n) ");
+    Ask_Yes_or_No(lau);
+    put("Test special or singular case ? (y/n) ");
+    Ask_Yes_or_No(spc);
     new_line;
-    if ans = 'y'
-     then Standard_Special_Hermite_Test(deg);
+    if spc = 'y' then
+      if lau = 'y'
+       then Standard_Singular_Hermite_Test;
+       else Standard_Special_Hermite_Test(deg);
+      end if;
      else Standard_Random_Hermite_Test(deg,dim);
     end if;
   end Standard_Hermite_Test;

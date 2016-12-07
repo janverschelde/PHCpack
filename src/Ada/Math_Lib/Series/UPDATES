@@ -1,5 +1,5 @@
 Tue 6 Dec 2016 : defined the Hermite-Laurent interpolation problem in
-  standard_interpolating_series.
+  standard_interpolating_series.  Added test on a singular case to ts_seritp.
 
 Mon 5 Dec 2016 : added more tests to ts_seritp.adb, added rank computation
   of the Hermite matrix, with more tests, also for the dd/qd versions.
