@@ -14,8 +14,6 @@ with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
-with Standard_Floating_Vectors;
-with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Matrices;
@@ -28,10 +26,6 @@ with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Matrices;
-with Standard_Complex_VecVecs;
-with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
-with Standard_Complex_VecMats;
-with Standard_Dense_Series;
 with Standard_Dense_Vector_Series;
 with Standard_Dense_Vector_Series_io;    use Standard_Dense_Vector_Series_io;
 with Standard_Random_Series;
@@ -39,12 +33,10 @@ with DoblDobl_Random_Series;
 with QuadDobl_Random_Series;
 with Standard_Dense_Matrix_Series;
 with Standard_Dense_Matrix_Series_io;    use Standard_Dense_Matrix_Series_io;
-with DoblDobl_Dense_Series;
 with DoblDobl_Dense_Vector_Series;
 with DoblDobl_Dense_Vector_Series_io;    use DoblDobl_Dense_Vector_Series_io;
 with DoblDobl_Dense_Matrix_Series;
 with DoblDobl_Dense_Matrix_Series_io;    use DoblDobl_Dense_Matrix_Series_io;
-with QuadDobl_Dense_Series;
 with QuadDobl_Dense_Vector_Series;
 with QuadDobl_Dense_Vector_Series_io;    use QuadDobl_Dense_Vector_Series_io;
 with QuadDobl_Dense_Matrix_Series;
@@ -52,112 +44,12 @@ with QuadDobl_Dense_Matrix_Series_io;    use QuadDobl_Dense_Matrix_Series_io;
 with Standard_Interpolating_Series;
 with DoblDobl_Interpolating_Series;
 with QuadDobl_Interpolating_Series;
+with Random_Matrix_Series;               use Random_Matrix_Series;
 
 procedure ts_seritp is
 
 -- DESCRIPTION :
 --   Development of solving linear systems of series with interpolation.
-
-  function Standard_Random_Matrix_Series
-             ( deg,dim : integer32 )
-             return Standard_Dense_Matrix_Series.Matrix is
-
-  -- DESCRIPTION :
-  --   Returns a random matrix series, with coefficients zero or one,
-  --   of the given degree deg and dimension dim.
-  --   The coefficients are stored in standard double precision.
-
-    res : Standard_Dense_Matrix_Series.Matrix;
-
-  begin
-    if deg > Standard_Dense_Series.max_deg
-     then res.deg := Standard_Dense_Series.max_deg;
-     else res.deg := deg;
-    end if;
-    for d in 0..res.deg loop
-      declare
-        mat : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
-        rnd : integer32;
-      begin
-        for i in 1..dim loop
-          for j in 1..dim loop
-            rnd := Standard_Random_Numbers.Random(0,1);
-            mat(i,j) := Standard_Complex_Numbers.Create(double_float(rnd));
-          end loop;
-        end loop;
-        res.cff(d) := new Standard_Complex_Matrices.Matrix'(mat);
-      end;
-    end loop;
-    return res;
-  end Standard_Random_Matrix_Series;
-
-  function DoblDobl_Random_Matrix_Series
-             ( deg,dim : integer32 )
-             return DoblDobl_Dense_Matrix_Series.Matrix is
-
-  -- DESCRIPTION :
-  --   Returns a random matrix series, with coefficients zero or one,
-  --   of the given degree deg and dimension dim.
-
-    res : DoblDobl_Dense_Matrix_Series.Matrix;
-
-  begin
-    if deg > DoblDobl_Dense_Series.max_deg
-     then res.deg := DoblDobl_Dense_Series.max_deg;
-     else res.deg := deg;
-    end if;
-    for d in 0..res.deg loop
-      declare
-        mat : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
-        rnd : integer32;
-        ddr : double_double;
-      begin
-        for i in 1..dim loop
-          for j in 1..dim loop
-            rnd := Standard_Random_Numbers.Random(0,1);
-            ddr := Double_Double_Numbers.Create(rnd);
-            mat(i,j) := DoblDobl_Complex_Numbers.Create(ddr);
-          end loop;
-        end loop;
-        res.cff(d) := new DoblDobl_Complex_Matrices.Matrix'(mat);
-      end;
-    end loop;
-    return res;
-  end DoblDobl_Random_Matrix_Series;
-
-  function QuadDobl_Random_Matrix_Series
-             ( deg,dim : integer32 )
-             return QuadDobl_Dense_Matrix_Series.Matrix is
-
-  -- DESCRIPTION :
-  --   Returns a random matrix series, with coefficients zero or one,
-  --   of the given degree deg and dimension dim.
-
-    res : QuadDobl_Dense_Matrix_Series.Matrix;
-
-  begin
-    if deg > QuadDobl_Dense_Series.max_deg
-     then res.deg := QuadDobl_Dense_Series.max_deg;
-     else res.deg := deg;
-    end if;
-    for d in 0..res.deg loop
-      declare
-        mat : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
-        rnd : integer32;
-        qdr : quad_double;
-      begin
-        for i in 1..dim loop
-          for j in 1..dim loop
-            rnd := Standard_Random_Numbers.Random(0,1);
-            qdr := Quad_Double_Numbers.Create(rnd);
-            mat(i,j) := QuadDobl_Complex_Numbers.Create(qdr);
-          end loop;
-        end loop;
-        res.cff(d) := new QuadDobl_Complex_Matrices.Matrix'(mat);
-      end;
-    end loop;
-    return res;
-  end QuadDobl_Random_Matrix_Series;
 
   procedure Standard_Test ( deg,dim : integer32 ) is
 
