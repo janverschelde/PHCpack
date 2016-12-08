@@ -442,7 +442,7 @@ ts_giftwrap:
 # Test programs for Math_Lib/Series :
 
 test_series: ts_pstrunc ts_bincff ts_series ts_servec ts_sermat ts_serpol \
-             ts_sersys ts_serlin ts_serinv ts_seritp
+             ts_sersys ts_serlin ts_serinv ts_seritp ts_sersin
 
 ts_pstrunc:
 	make -f $(MAKEFILE) ts_pstrunc
@@ -473,6 +473,9 @@ ts_serinv:
 
 ts_seritp:
 	make -f $(MAKEFILE) ts_seritp
+
+ts_sersin:
+	make -f $(MAKEFILE) ts_sersin
 
 # Test programs for the Deformations library :
 
