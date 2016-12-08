@@ -1,3 +1,4 @@
+with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
 
 package body Standard_Dense_Matrix_Series is
@@ -47,6 +48,53 @@ package body Standard_Dense_Matrix_Series is
     end loop;
     return res;
   end Create;
+
+-- MULTIPLIER :
+
+  function Multiply
+             ( mat : Standard_Dense_Matrix_Series.Matrix;
+               vec : Standard_Dense_Vector_Series.Vector )
+             return Standard_Dense_Vector_Series.Vector is
+
+    res : Standard_Dense_Vector_Series.Vector;
+    deg : constant integer32 := mat.deg + vec.deg;
+    dim : constant integer32 := vec.cff(0)'last;
+    xdg : integer32;
+
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Matrices;
+
+  begin
+    if deg > Standard_Dense_Series.max_deg
+     then res.deg := Standard_Dense_Series.max_deg;
+     else res.deg := deg;
+    end if;
+    for k in 0..mat.deg loop
+      declare
+        acc : Standard_Complex_Vectors.Vector(1..dim)
+            := mat.cff(0).all*vec.cff(k).all;
+      begin
+        for i in 1..k loop
+          acc := acc + mat.cff(i).all*vec.cff(k-i).all;
+        end loop;
+        res.cff(k) := new Standard_Complex_Vectors.Vector'(acc);
+      end;
+    end loop;
+    xdg := mat.deg+1;
+    for k in 1..mat.deg loop -- computed extended degree terms
+      declare
+        acc : Standard_Complex_Vectors.Vector(1..dim)
+            := mat.cff(k).all*vec.cff(xdg-k).all;
+      begin
+        for i in (k+1)..mat.deg loop
+          acc := acc + mat.cff(i).all*vec.cff(xdg-i).all;
+        end loop;
+        res.cff(xdg) := new Standard_Complex_Vectors.Vector'(acc);
+      end;
+      xdg := xdg + 1;
+    end loop;
+    return res;
+  end Multiply;
 
 -- DESTRUCTOR :
 

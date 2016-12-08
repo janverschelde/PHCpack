@@ -2,6 +2,7 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with QuadDobl_Complex_VecMats;
 with QuadDobl_Dense_Series;
 with QuadDobl_Dense_Series_Matrices;
+with QuadDobl_Dense_Vector_Series;
 
 package QuadDobl_Dense_Matrix_Series is
 
@@ -48,6 +49,20 @@ package QuadDobl_Dense_Matrix_Series is
   -- REQUIRED :
   --   The degree of A must be at least zero, at least one of
   --   the coefficients in A must be defined.
+
+-- MULTIPLIER :
+
+  function Multiply
+             ( mat : QuadDobl_Dense_Matrix_Series.Matrix;
+               vec : QuadDobl_Dense_Vector_Series.Vector )
+             return QuadDobl_Dense_Vector_Series.Vector;
+
+  -- DESCRIPTION :
+  --   Multiplies the matrix series with the vector series,
+  --   also convoluting the additional terms of higher degrees,
+  --   up to the maximum degree.
+
+  -- REQUIRED : mat.deg = vec.deg.
 
 -- DESTRUCTOR :
 

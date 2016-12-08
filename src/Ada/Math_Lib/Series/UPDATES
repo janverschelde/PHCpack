@@ -1,6 +1,7 @@
 Wed 7 Dec 2016 : more tests on Hermite-Laurent interpolation in ts_seritp.
-  Made the Hermite-Laurent matrix square.
-  Added timing test to ts_serlin.adb.
+  Made the Hermite-Laurent matrix square.  Added timing test to ts_serlin.adb.
+  Moved Multiply procedure of matrix series with vector series from ts_seritp
+  to the packages {standard,dobldobl,quaddobl}_matrix_series.
 
 Tue 6 Dec 2016 : defined the Hermite-Laurent interpolation problem in
   standard_interpolating_series.  Added test on a singular case to ts_seritp.

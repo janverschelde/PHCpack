@@ -159,162 +159,6 @@ procedure ts_seritp is
     return res;
   end QuadDobl_Random_Matrix_Series;
 
-  function Standard_Multiply
-             ( mat : Standard_Dense_Matrix_Series.Matrix;
-               vec : Standard_Dense_Vector_Series.Vector )
-             return Standard_Dense_Vector_Series.Vector is
-
-  -- DESCRIPTION :
-  --   Multiplies the matrix series with the vector series,
-  --   also convoluting the additional terms of higher degrees,
-  --   up to the maximum degree.
-
-  -- REQUIRED : mat.deg = vec.deg.
-
-    res : Standard_Dense_Vector_Series.Vector;
-    deg : constant integer32 := mat.deg + vec.deg;
-    dim : constant integer32 := vec.cff(0)'last;
-    xdg : integer32;
-
-    use Standard_Complex_Vectors;
-    use Standard_Complex_Matrices;
-
-  begin
-    if deg > Standard_Dense_Series.max_deg
-     then res.deg := Standard_Dense_Series.max_deg;
-     else res.deg := deg;
-    end if;
-    for k in 0..mat.deg loop
-      declare
-        acc : Standard_Complex_Vectors.Vector(1..dim)
-            := mat.cff(0).all*vec.cff(k).all;
-      begin
-        for i in 1..k loop
-          acc := acc + mat.cff(i).all*vec.cff(k-i).all;
-        end loop;
-        res.cff(k) := new Standard_Complex_Vectors.Vector'(acc);
-      end;
-    end loop;
-    xdg := mat.deg+1;
-    for k in 1..mat.deg loop -- computed extended degree terms
-      declare
-        acc : Standard_Complex_Vectors.Vector(1..dim)
-            := mat.cff(k).all*vec.cff(xdg-k).all;
-      begin
-        for i in (k+1)..mat.deg loop
-          acc := acc + mat.cff(i).all*vec.cff(xdg-i).all;
-        end loop;
-        res.cff(xdg) := new Standard_Complex_Vectors.Vector'(acc);
-      end;
-      xdg := xdg + 1;
-    end loop;
-    return res;
-  end Standard_Multiply;
-
-  function DoblDobl_Multiply
-             ( mat : DoblDobl_Dense_Matrix_Series.Matrix;
-               vec : DoblDobl_Dense_Vector_Series.Vector )
-             return DoblDobl_Dense_Vector_Series.Vector is
-
-  -- DESCRIPTION :
-  --   Multiplies the matrix series with the vector series,
-  --   also convoluting the additional terms of higher degrees,
-  --   up to the maximum degree.
-
-  -- REQUIRED : mat.deg = vec.deg.
-
-    res : DoblDobl_Dense_Vector_Series.Vector;
-    deg : constant integer32 := mat.deg + vec.deg;
-    dim : constant integer32 := vec.cff(0)'last;
-    xdg : integer32;
-
-    use DoblDobl_Complex_Vectors;
-    use DoblDobl_Complex_Matrices;
-
-  begin
-    if deg > DoblDobl_Dense_Series.max_deg
-     then res.deg := DoblDobl_Dense_Series.max_deg;
-     else res.deg := deg;
-    end if;
-    for k in 0..mat.deg loop
-      declare
-        acc : DoblDobl_Complex_Vectors.Vector(1..dim)
-            := mat.cff(0).all*vec.cff(k).all;
-      begin
-        for i in 1..k loop
-          acc := acc + mat.cff(i).all*vec.cff(k-i).all;
-        end loop;
-        res.cff(k) := new DoblDobl_Complex_Vectors.Vector'(acc);
-      end;
-    end loop;
-    xdg := mat.deg+1;
-    for k in 1..mat.deg loop -- computed extended degree terms
-      declare
-        acc : DoblDobl_Complex_Vectors.Vector(1..dim)
-            := mat.cff(k).all*vec.cff(xdg-k).all;
-      begin
-        for i in (k+1)..mat.deg loop
-          acc := acc + mat.cff(i).all*vec.cff(xdg-i).all;
-        end loop;
-        res.cff(xdg) := new DoblDobl_Complex_Vectors.Vector'(acc);
-      end;
-      xdg := xdg + 1;
-    end loop;
-    return res;
-  end DoblDobl_Multiply;
-
-  function QuadDobl_Multiply
-             ( mat : QuadDobl_Dense_Matrix_Series.Matrix;
-               vec : QuadDobl_Dense_Vector_Series.Vector )
-             return QuadDobl_Dense_Vector_Series.Vector is
-
-  -- DESCRIPTION :
-  --   Multiplies the matrix series with the vector series,
-  --   also convoluting the additional terms of higher degrees,
-  --   up to the maximum degree.
-
-  -- REQUIRED : mat.deg = vec.deg.
-
-    res : QuadDobl_Dense_Vector_Series.Vector;
-    deg : constant integer32 := mat.deg + vec.deg;
-    dim : constant integer32 := vec.cff(0)'last;
-    xdg : integer32;
-
-    use QuadDobl_Complex_Vectors;
-    use QuadDobl_Complex_Matrices;
-
-  begin
-    if deg > QuadDobl_Dense_Series.max_deg
-     then res.deg := QuadDobl_Dense_Series.max_deg;
-     else res.deg := deg;
-    end if;
-    for k in 0..mat.deg loop
-      declare
-        acc : QuadDobl_Complex_Vectors.Vector(1..dim)
-            := mat.cff(0).all*vec.cff(k).all;
-      begin
-        for i in 1..k loop
-          acc := acc + mat.cff(i).all*vec.cff(k-i).all;
-        end loop;
-        res.cff(k) := new QuadDobl_Complex_Vectors.Vector'(acc);
-      end;
-    end loop;
-    xdg := mat.deg+1;
-    for k in 1..mat.deg loop -- computed extended degree terms
-      declare
-        acc : QuadDobl_Complex_Vectors.Vector(1..dim)
-            := mat.cff(k).all*vec.cff(xdg-k).all;
-      begin
-        for i in (k+1)..mat.deg loop
-          acc := acc + mat.cff(i).all*vec.cff(xdg-i).all;
-        end loop;
-        res.cff(xdg) := new QuadDobl_Complex_Vectors.Vector'(acc);
-      end;
-      xdg := xdg + 1;
-    end loop;
-    return res;
-  end QuadDobl_Multiply;
-
   procedure Standard_Test ( deg,dim : integer32 ) is
 
   -- DESCRIPTION :
@@ -326,7 +170,7 @@ procedure ts_seritp is
     sol : constant Standard_Dense_Vector_Series.Vector
         := Standard_Random_Series.Random_Vector_Series(1,dim,deg);
     rhs : constant Standard_Dense_Vector_Series.Vector
-        := Standard_Multiply(mat,sol);
+        := Standard_Dense_Matrix_Series.Multiply(mat,sol);
     rnk : integer32;
     cff : Standard_Dense_Vector_Series.Vector;
 
@@ -357,7 +201,7 @@ procedure ts_seritp is
     sol : constant DoblDobl_Dense_Vector_Series.Vector
         := DoblDobl_Random_Series.Random_Vector_Series(1,dim,deg);
     rhs : constant DoblDobl_Dense_Vector_Series.Vector
-        := DoblDobl_Multiply(mat,sol);
+        := DoblDobl_Dense_Matrix_Series.Multiply(mat,sol);
     rnk : integer32;
     cff : DoblDobl_Dense_Vector_Series.Vector;
 
@@ -388,7 +232,7 @@ procedure ts_seritp is
     sol : constant QuadDobl_Dense_Vector_Series.Vector
         := QuadDobl_Random_Series.Random_Vector_Series(1,dim,deg);
     rhs : constant QuadDobl_Dense_Vector_Series.Vector
-        := QuadDobl_Multiply(mat,sol);
+        := QuadDobl_Dense_Matrix_Series.Multiply(mat,sol);
     rnk : integer32;
     cff : QuadDobl_Dense_Vector_Series.Vector;
 
@@ -875,7 +719,8 @@ procedure ts_seritp is
     sol : constant Standard_Dense_Vector_Series.Vector
        -- := Standard_Random_Series.Random_Vector_Series(1,dim,2*deg);
         := Standard_Random_Series.Random_Vector_Series(1,dim,deg);
-    rhs : Standard_Dense_Vector_Series.Vector := Standard_Multiply(mat,sol);
+    rhs : Standard_Dense_Vector_Series.Vector
+        := Standard_Dense_Matrix_Series.Multiply(mat,sol);
     rnd : constant Standard_Complex_Numbers.Complex_Number
         := Standard_Random_Numbers.Random1;
     t : Standard_Complex_Numbers.Complex_Number
@@ -921,7 +766,8 @@ procedure ts_seritp is
     sol : constant DoblDobl_Dense_Vector_Series.Vector
        -- := DoblDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
         := DoblDobl_Random_Series.Random_Vector_Series(1,dim,deg);
-    rhs : DoblDobl_Dense_Vector_Series.Vector := DoblDobl_Multiply(mat,sol);
+    rhs : DoblDobl_Dense_Vector_Series.Vector
+        := DoblDobl_Dense_Matrix_Series.Multiply(mat,sol);
     ddt : double_double := Double_Double_Numbers.Create(0.01);
     rnd : constant DoblDobl_Complex_Numbers.Complex_Number
         := DoblDobl_Random_Numbers.Random1;
@@ -968,7 +814,8 @@ procedure ts_seritp is
     sol : constant QuadDobl_Dense_Vector_Series.Vector
        -- := QuadDobl_Random_Series.Random_Vector_Series(1,dim,2*deg);
         := QuadDobl_Random_Series.Random_Vector_Series(1,dim,deg);
-    rhs : QuadDobl_Dense_Vector_Series.Vector := QuadDobl_Multiply(mat,sol);
+    rhs : QuadDobl_Dense_Vector_Series.Vector
+        := QuadDobl_Dense_Matrix_Series.Multiply(mat,sol);
     rnd : constant QuadDobl_Complex_Numbers.Complex_Number
         := QuadDobl_Random_Numbers.Random1;
     qdt : quad_double := Quad_Double_Numbers.Create(0.01);
@@ -1082,7 +929,7 @@ procedure ts_seritp is
     put_line("The singular vector series : "); put(rhs);
     sol := Hermite_Laurent_Interpolate(mat,rhs);
     put_line("The solution : "); put(sol);
-    y := Standard_Multiply(mat,sol);
+    y := Standard_Dense_Matrix_Series.Multiply(mat,sol);
     put_line("The matrix multiplied with the solution :"); put(y);
   end Standard_Singular_Hermite_Test;
 
@@ -1105,7 +952,7 @@ procedure ts_seritp is
     put_line("The singular vector series : "); put(rhs);
     sol := Hermite_Laurent_Interpolate(mat,rhs);
     put_line("The solution : "); put(sol);
-    y := DoblDobl_Multiply(mat,sol);
+    y := DoblDobl_Dense_Matrix_Series.Multiply(mat,sol);
     put_line("The matrix multiplied with the solution :"); put(y);
   end DoblDobl_Singular_Hermite_Test;
 
@@ -1128,7 +975,7 @@ procedure ts_seritp is
     put_line("The singular vector series : "); put(rhs);
     sol := Hermite_Laurent_Interpolate(mat,rhs);
     put_line("The solution : "); put(sol);
-    y := QuadDobl_Multiply(mat,sol);
+    y := QuadDobl_Dense_Matrix_Series.Multiply(mat,sol);
     put_line("The matrix multiplied with the solution :"); put(y);
   end QuadDobl_Singular_Hermite_Test;
 
