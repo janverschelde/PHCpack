@@ -1,5 +1,6 @@
 with text_io;                             use text_io;
 with Communications_with_User;            use Communications_with_User;
+with Timing_Package;                      use Timing_Package;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
@@ -346,6 +347,147 @@ procedure ts_serlin is
     Write_Difference(xs,ys);
   end QuadDobl_Test;
 
+  procedure Standard_Timing ( n,m,d,f : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random problem and solves it f times
+  --   by LU in case n = m or with QR if n > m,
+  --   in standard double precision.
+
+  -- ON ENTRY :
+  --   n        number of equations, number of rows of the matrices;
+  --   m        number of variables, number of columns of the matrices;
+  --   d        degree of the series;
+  --   f        frequency of tests.
+
+    sA : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..m)
+       := Standard_Random_Series.Random_Series_Matrix(1,n,1,m,d);
+    As : constant Standard_Dense_Matrix_Series.Matrix 
+       := Standard_Dense_Matrix_Series.Create(sA); 
+    sb : constant Standard_Dense_Series_Vectors.Vector(1..n)
+       := Standard_Random_Series.Random_Series_Vector(1,n,d);
+    bs : constant Standard_Dense_Vector_Series.Vector
+       := Standard_Dense_Vector_Series.Create(sb);
+    xs : Standard_Dense_Vector_Series.Vector;
+    info : integer32;
+    timer : Timing_Widget;
+
+    use Standard_Matrix_Series_Solvers;
+
+  begin
+    if n = m then
+      tstart(timer);
+      for k in 1..f loop
+        Solve_by_lufac(As,bs,info,xs);
+      end loop;
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"Solve by LUfac");
+    else
+      tstart(timer);
+      for k in 1..f loop
+        Solve_by_QRLS(As,bs,info,xs);
+      end loop;
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"Solve by QRLS");
+    end if;
+  end Standard_Timing;
+
+  procedure DoblDobl_Timing ( n,m,d,f : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random problem and solves it f times
+  --   by LU in case n = m or with QR if n > m,
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   n        number of equations, number of rows of the matrices;
+  --   m        number of variables, number of columns of the matrices;
+  --   d        degree of the series;
+  --   f        frequency of tests.
+
+    sA : constant DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..m)
+       := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,m,d);
+    As : constant DoblDobl_Dense_Matrix_Series.Matrix 
+       := DoblDobl_Dense_Matrix_Series.Create(sA); 
+    sb : constant DoblDobl_Dense_Series_Vectors.Vector(1..n)
+       := DoblDobl_Random_Series.Random_Series_Vector(1,n,d);
+    bs : constant DoblDobl_Dense_Vector_Series.Vector
+       := DoblDobl_Dense_Vector_Series.Create(sb);
+    xs : DoblDobl_Dense_Vector_Series.Vector;
+    info : integer32;
+    timer : Timing_Widget;
+
+    use DoblDobl_Matrix_Series_Solvers;
+
+  begin
+    if n = m then
+      tstart(timer);
+      for k in 1..f loop
+        Solve_by_lufac(As,bs,info,xs);
+      end loop;
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"Solve by LUfac");
+    else
+      tstart(timer);
+      for k in 1..f loop
+        Solve_by_QRLS(As,bs,info,xs);
+      end loop;
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"Solve by QRLS");
+    end if;
+  end DoblDobl_Timing;
+
+  procedure QuadDobl_Timing ( n,m,d,f : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random problem and solves it f times
+  --   by LU in case n = m or with QR if n > m,
+  --   in quad double precision.
+
+  -- ON ENTRY :
+  --   n        number of equations, number of rows of the matrices;
+  --   m        number of variables, number of columns of the matrices;
+  --   d        degree of the series;
+  --   f        frequency of tests.
+
+    sA : constant QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..m)
+       := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,m,d);
+    As : constant QuadDobl_Dense_Matrix_Series.Matrix 
+       := QuadDobl_Dense_Matrix_Series.Create(sA); 
+    sb : constant QuadDobl_Dense_Series_Vectors.Vector(1..n)
+       := QuadDobl_Random_Series.Random_Series_Vector(1,n,d);
+    bs : constant QuadDobl_Dense_Vector_Series.Vector
+       := QuadDobl_Dense_Vector_Series.Create(sb);
+    xs : QuadDobl_Dense_Vector_Series.Vector;
+    info : integer32;
+    timer : Timing_Widget;
+
+    use QuadDobl_Matrix_Series_Solvers;
+
+  begin
+    if n = m then
+      tstart(timer);
+      for k in 1..f loop
+        Solve_by_lufac(As,bs,info,xs);
+      end loop;
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"Solve by LUfac");
+    else
+      tstart(timer);
+      for k in 1..f loop
+        Solve_by_QRLS(As,bs,info,xs);
+      end loop;
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"Solve by QRLS");
+    end if;
+  end QuadDobl_Timing;
+
   function Prompt_for_Precision return character is
 
   -- DESCRIPTION :
@@ -373,7 +515,7 @@ procedure ts_serlin is
   --   Prompts the user for the dimension of the linear system
   --   and the degrees of the series in the system.
 
-    neq,nvr,deg : integer32 := 0;
+    neq,nvr,deg,frq : integer32 := 0;
     prc : character;
 
   begin
@@ -382,13 +524,23 @@ procedure ts_serlin is
     put("  Give the number of equations in the system : "); get(neq);
     put("  Give the number of variables in the system : "); get(nvr);
     put("  Give the degree of the series : "); get(deg);
+    put("  Give frequency of testing (0 for interactive) : "); get(frq);
     prc := Prompt_for_Precision;
-    case prc is
-      when '0' => Standard_Test(neq,nvr,deg);
-      when '1' => DoblDobl_Test(neq,nvr,deg);
-      when '2' => QuadDobl_Test(neq,nvr,deg);
-      when others => null;
-    end case;
+    if frq = 0 then
+      case prc is
+        when '0' => Standard_Test(neq,nvr,deg);
+        when '1' => DoblDobl_Test(neq,nvr,deg);
+        when '2' => QuadDobl_Test(neq,nvr,deg);
+        when others => null;
+      end case;
+    else
+      case prc is
+        when '0' => Standard_Timing(neq,nvr,deg,frq);
+        when '1' => DoblDobl_Timing(neq,nvr,deg,frq);
+        when '2' => QuadDobl_Timing(neq,nvr,deg,frq);
+        when others => null;
+      end case;
+    end if;
   end Main;
 
 begin
