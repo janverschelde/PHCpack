@@ -1,26 +1,26 @@
 with Standard_Integer_Numbers;             use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;            use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
-with Standard_Complex_Vectors;
-with Standard_Complex_Matrices;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Matrices;
 
-package Standard_Echelon_Forms is
+package QuadDobl_Echelon_Forms is
 
 -- DESCRIPTION :
 --   Given a lower block triangular matrix, the operations in this package
 --   transform the given matrix into a lower triangular echelon form.
 --   Solving a linear system in lower triangular echelong form
 --   can then be done by forward substitution.
---   Computations are done in standard double precision.
+--   Computations are done in quad double precision.
 
   procedure Write_Integer_Matrix
-              ( A : in Standard_Complex_Matrices.Matrix );
+              ( A : in QuadDobl_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Writes the integer matrix to screen.
 
   function Is_Zero_Row 
-              ( A : Standard_Complex_Matrices.Matrix;
+              ( A : QuadDobl_Complex_Matrices.Matrix;
                 i : integer32; tol : double_float ) return boolean;
 
   -- DESCRIPTION :
@@ -28,22 +28,22 @@ package Standard_Echelon_Forms is
   --   are less than tol in magnitude.  Returns false otherwise.
 
   procedure Swap_Rows
-              ( A : in out Standard_Complex_Matrices.Matrix;
+              ( A : in out QuadDobl_Complex_Matrices.Matrix;
                 i,j : in integer32 );
 
   -- DESCRIPTION :
   --   Swaps row i with row j in A.
 
   procedure Swap_Elements
-              ( v : in out Standard_Complex_Vectors.Vector;
+              ( v : in out QuadDobl_Complex_Vectors.Vector;
                 i,j : in integer32 );
 
   -- DESCRIPTION :
   --   Swaps element i with j in v.
 
   procedure Swap_Zero_Rows
-              ( A : in out Standard_Complex_Matrices.Matrix;
-                b : in out Standard_Complex_Vectors.Vector;
+              ( A : in out QuadDobl_Complex_Matrices.Matrix;
+                b : in out QuadDobl_Complex_Vectors.Vector;
                 tol : in double_float; pivrow : out integer32 );
 
   -- DESCRIPTION :
@@ -63,7 +63,7 @@ package Standard_Echelon_Forms is
   --   pivrow   index of the first nonzero row in A.
 
   function Max_on_Row
-             ( A : Standard_Complex_Matrices.Matrix;
+             ( A : QuadDobl_Complex_Matrices.Matrix;
                i,j : integer32; tol : double_float ) return integer32;
 
   -- DESCRIPTION :
@@ -72,7 +72,7 @@ package Standard_Echelon_Forms is
   --   then tol, then -1 is returned.
 
   procedure Swap_Columns
-              ( A : in out Standard_Complex_Matrices.Matrix;
+              ( A : in out QuadDobl_Complex_Matrices.Matrix;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 j,k : in integer32 );
 
@@ -81,7 +81,7 @@ package Standard_Echelon_Forms is
   --   information in ipvt as well.
 
   procedure Eliminate_on_Row
-              ( A : in out Standard_Complex_Matrices.Matrix;
+              ( A : in out QuadDobl_Complex_Matrices.Matrix;
                 i,j : in integer32; tol : in double_float );
 
   -- DESCRIPTION :
@@ -93,8 +93,8 @@ package Standard_Echelon_Forms is
   --   in A is zero or not.
 
   procedure Lower_Triangular_Echelon_Form
-              ( A : in out Standard_Complex_Matrices.Matrix;
-                b : in out Standard_Complex_Vectors.Vector;
+              ( A : in out QuadDobl_Complex_Matrices.Matrix;
+                b : in out QuadDobl_Complex_Vectors.Vector;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
@@ -103,4 +103,4 @@ package Standard_Echelon_Forms is
   --   triangular echelon form of A.
   --   If verbose, then intermediate results are written to screen.
 
-end Standard_Echelon_Forms;
+end QuadDobl_Echelon_Forms;

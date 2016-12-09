@@ -1,30 +1,31 @@
 with text_io;                           use text_io;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
-with Standard_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 
-package body Standard_Echelon_Forms is
+package body QuadDobl_Echelon_Forms is
 
   procedure Write_Integer_Matrix
-              ( A : in Standard_Complex_Matrices.Matrix ) is
+              ( A : in QuadDobl_Complex_Matrices.Matrix ) is
 
-    use Standard_Complex_Numbers;
+    use QuadDobl_Complex_Numbers;
 
   begin
     for i in A'range(1) loop
       for j in A'range(2) loop
-        put(" "); put(integer32(REAL_PART(A(i,j))),2);
+        put(" "); put(integer32(hihi_part(REAL_PART(A(i,j)))),2);
       end loop;
       new_line;
     end loop;
   end Write_Integer_Matrix;
 
   function Is_Zero_Row 
-              ( A : Standard_Complex_Matrices.Matrix;
+              ( A : QuadDobl_Complex_Matrices.Matrix;
                 i : integer32; tol : double_float ) return boolean is
   begin
     for j in A'range(2) loop
-      if Standard_Complex_Numbers.AbsVal(A(i,j)) > tol
+      if QuadDobl_Complex_Numbers.AbsVal(A(i,j)) > tol
        then return false;
       end if;
     end loop;
@@ -32,10 +33,10 @@ package body Standard_Echelon_Forms is
   end Is_Zero_Row;
 
   procedure Swap_Rows
-              ( A : in out Standard_Complex_Matrices.Matrix;
+              ( A : in out QuadDobl_Complex_Matrices.Matrix;
                 i,j : in integer32 ) is
 
-    tmp : Standard_Complex_Numbers.Complex_Number;   
+    tmp : QuadDobl_Complex_Numbers.Complex_Number;   
 
   begin
     for k in A'range(2) loop
@@ -46,10 +47,10 @@ package body Standard_Echelon_Forms is
   end Swap_Rows;
 
   procedure Swap_Elements
-              ( v : in out Standard_Complex_Vectors.Vector;
+              ( v : in out QuadDobl_Complex_Vectors.Vector;
                 i,j : in integer32 ) is
 
-    tmp : Standard_Complex_Numbers.Complex_Number;   
+    tmp : QuadDobl_Complex_Numbers.Complex_Number;   
 
   begin
     tmp := v(i);
@@ -58,8 +59,8 @@ package body Standard_Echelon_Forms is
   end Swap_Elements;
 
   procedure Swap_Zero_Rows
-              ( A : in out Standard_Complex_Matrices.Matrix;
-                b : in out Standard_Complex_Vectors.Vector;
+              ( A : in out QuadDobl_Complex_Matrices.Matrix;
+                b : in out QuadDobl_Complex_Vectors.Vector;
                 tol : in double_float; pivrow : out integer32 ) is
 
     idx : integer32 := A'first(1); -- first nonzero row
@@ -78,14 +79,14 @@ package body Standard_Echelon_Forms is
   end Swap_Zero_Rows;
 
   function Max_on_Row
-             ( A : Standard_Complex_Matrices.Matrix;
+             ( A : QuadDobl_Complex_Matrices.Matrix;
                i,j : integer32; tol : double_float ) return integer32 is
 
-    use Standard_Complex_Numbers;
+    use QuadDobl_Complex_Numbers;
 
     res : integer32 := j;
-    maxval : double_float := AbsVal(A(i,j));
-    val : double_float;
+    maxval : quad_double := AbsVal(A(i,j));
+    val : quad_double;
 
   begin
     for k in j+1..A'last(2) loop
@@ -101,11 +102,11 @@ package body Standard_Echelon_Forms is
   end Max_on_Row;
 
   procedure Swap_Columns
-              ( A : in out Standard_Complex_Matrices.Matrix;
+              ( A : in out QuadDobl_Complex_Matrices.Matrix;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 j,k : in integer32 ) is
 
-    Atmp : Standard_Complex_Numbers.Complex_Number;
+    Atmp : QuadDobl_Complex_Numbers.Complex_Number;
     itmp : integer32;
 
   begin
@@ -120,10 +121,10 @@ package body Standard_Echelon_Forms is
   end Swap_Columns;
 
   procedure Eliminate_on_Row
-              ( A : in out Standard_Complex_Matrices.Matrix;
+              ( A : in out QuadDobl_Complex_Matrices.Matrix;
                 i,j : in integer32; tol : in double_float ) is
 
-     use Standard_Complex_Numbers;
+     use QuadDobl_Complex_Numbers;
 
      fac : Complex_Number;
 
@@ -139,8 +140,8 @@ package body Standard_Echelon_Forms is
   end Eliminate_on_Row;
 
   procedure Lower_Triangular_Echelon_Form
-              ( A : in out Standard_Complex_Matrices.Matrix;
-                b : in out Standard_Complex_Vectors.Vector;
+              ( A : in out QuadDobl_Complex_Matrices.Matrix;
+                b : in out QuadDobl_Complex_Vectors.Vector;
                 verbose : in boolean := true ) is
 
     tol : constant double_float := 1.0E-12;
@@ -183,4 +184,4 @@ package body Standard_Echelon_Forms is
     end loop;
   end Lower_Triangular_Echelon_Form;
 
-end Standard_Echelon_Forms;
+end QuadDobl_Echelon_Forms;

@@ -40,46 +40,14 @@ with Standard_Interpolating_Series;
 with DoblDobl_Interpolating_Series;
 with QuadDobl_Interpolating_Series;
 with Standard_Echelon_Forms;             use Standard_Echelon_Forms;
+with DoblDobl_Echelon_Forms;             use DoblDobl_Echelon_Forms;
+with QuadDobl_Echelon_Forms;             use QuadDobl_Echelon_Forms;
 
 procedure ts_sersin is
 
 -- DESCRIPTION :
 --   Development of solving linear systems of series where the leading
 --   coefficient matrices are likely to be singular.
-
-  procedure Write_Integer_Matrix
-              ( A : in DoblDobl_Complex_Matrices.Matrix ) is
-
-  -- DESCRIPTION :
-  --   Writes the integer matrix to screen.
-
-    use DoblDobl_Complex_Numbers;
-
-  begin
-    for i in A'range(1) loop
-      for j in A'range(2) loop
-        put(" "); put(integer32(hi_part(REAL_PART(A(i,j)))),1);       
-      end loop;
-      new_line;
-    end loop;
-  end Write_Integer_Matrix;
-
-  procedure Write_Integer_Matrix
-              ( A : in QuadDobl_Complex_Matrices.Matrix ) is
-
-  -- DESCRIPTION :
-  --   Writes the integer matrix to screen.
-
-    use QuadDobl_Complex_Numbers;
-
-  begin
-    for i in A'range(1) loop
-      for j in A'range(2) loop
-        put(" "); put(integer32(hihi_part(REAL_PART(A(i,j)))),1);       
-      end loop;
-      new_line;
-    end loop;
-  end Write_Integer_Matrix;
 
   procedure Standard_Hermite_Laurent
               ( mat : in Standard_Dense_Matrix_Series.Matrix;
@@ -134,6 +102,8 @@ procedure ts_sersin is
     Write_Integer_Matrix(A);
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
+    Lower_Triangular_Echelon_Form(A,b);
+    put_line("The matrix in echelon form :"); Write_Integer_Matrix(A);
   end DoblDobl_Hermite_Laurent;
 
   procedure QuadDobl_Hermite_Laurent
@@ -161,6 +131,8 @@ procedure ts_sersin is
     Write_Integer_Matrix(A);
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
+    Lower_Triangular_Echelon_Form(A,b);
+    put_line("The matrix in echelon form :"); Write_Integer_Matrix(A);
   end QuadDobl_Hermite_Laurent;
 
   procedure Standard_Test ( deg,dim : integer32 ) is
