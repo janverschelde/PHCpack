@@ -57,7 +57,7 @@ procedure ts_sersin is
   begin
     for i in A'range(1) loop
       for j in A'range(2) loop
-        put(" "); put(integer32(REAL_PART(A(i,j))),1);       
+        put(" "); put(integer32(REAL_PART(A(i,j))),2);
       end loop;
       new_line;
     end loop;
@@ -184,10 +184,12 @@ procedure ts_sersin is
 
   function Max_on_Row
              ( A : Standard_Complex_Matrices.Matrix;
-               i,j : integer32 ) return integer32 is
+               i,j : integer32; tol : double_float ) return integer32 is
 
   -- DESCRIPTION :
   --   Returns the index k >= j on row i for which A(i,k) is largest.
+  --   If all elements on the row, right of the pivot j, are less
+  --   then tol, then -1 is returned.
 
     use Standard_Complex_Numbers;
 
@@ -202,7 +204,10 @@ procedure ts_sersin is
        then maxval := val; res := k;
       end if;
     end loop;
-    return res;
+    if maxval > tol
+     then return res;
+     else return -1;
+    end if;
   end Max_on_Row;
 
   procedure Swap_Columns
@@ -228,6 +233,33 @@ procedure ts_sersin is
     ipvt(k) := itmp;
   end Swap_Columns;
 
+  procedure Eliminate_on_Row
+              ( A : in out Standard_Complex_Matrices.Matrix;
+                i,j : in integer32; tol : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Given in (i,j) are the coordinates of the pivot row
+  --   and column in A.  All elements to the right of A(i,j)
+  --   are eliminated by subtracting an appropriate multiple
+  --   of the pivot column.
+  --   The tolerance tol is used to decide whether a number
+  --   in A is zero or not.
+
+     use Standard_Complex_Numbers;
+
+     fac : Complex_Number;
+
+  begin
+    for k in j+1..A'last(2) loop
+      if AbsVal(A(i,k)) > tol then
+        fac := A(i,k)/A(i,j);
+        for row in i..A'last(1) loop
+          A(row,k) := A(row,k) - fac*A(row,j);
+        end loop;
+      end if;
+    end loop;
+  end Eliminate_on_Row;
+
   procedure Standard_Hermite_Laurent
               ( mat : in Standard_Dense_Matrix_Series.Matrix;
                 rhs : in Standard_Dense_Vector_Series.Vector ) is
@@ -248,30 +280,39 @@ procedure ts_sersin is
     b : Standard_Complex_Vectors.Vector(1..nrows)
       := Hermite_Laurent_Vector(rhs.cff(0..deg));
     tol : constant double_float := 1.0E-12;
-    pivrow,pivcol,idx : integer32;
+    pivrow,pivcol,colidx : integer32;
     ipvt : Standard_Integer_Vectors.Vector(A'range(2));
 
   begin
-    put_line("The Hermite-Laurent matrix :");
-    Write_Integer_Matrix(A);
+    put_line("The Hermite-Laurent matrix :"); Write_Integer_Matrix(A);
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
     for k in ipvt'range loop
       ipvt(k) := k;
     end loop;
     Swap_Zero_Rows(A,b,tol,pivrow);
-    put_line("After swapping zero rows :"); 
-    Write_Integer_Matrix(A);
-    put("The pivot row : "); put(pivrow,1); new_line;
-    idx := A'first(2);
-    pivcol := Max_on_Row(A,pivrow,idx);
-    put("The pivot column : "); put(pivcol,1); new_line; 
-    if pivcol /= idx then
-      Swap_Columns(A,ipvt,idx,pivcol);
-      put_line("After swapping columns : ");
-      Write_Integer_Matrix(A);
-      put("The pivoting information : "); put(ipvt); new_line;
-    end if;
+    put_line("After swapping zero rows :"); Write_Integer_Matrix(A);
+    colidx := A'first(2);
+    loop
+      pivcol := Max_on_Row(A,pivrow,colidx,tol);
+      put("The pivot row : "); put(pivrow,1); 
+      put("  pivot column : "); put(pivcol,1); 
+      put("  column index : "); put(colidx,1); new_line;
+      if pivcol /= -1 then -- if no pivot, then skip row
+        if pivcol /= colidx then
+          Swap_Columns(A,ipvt,colidx,pivcol);
+          put_line("After swapping columns : "); Write_Integer_Matrix(A);
+          put("The pivoting information : "); put(ipvt); new_line;
+        end if;
+        Eliminate_on_Row(A,pivrow,colidx,tol);
+        put_line("After elimination on the pivot row :");
+        Write_Integer_Matrix(A);
+        colidx := colidx + 1;
+      end if;
+      pivrow := pivrow + 1;
+      exit when ((pivrow > A'last(1)) or (colidx > A'last(2)));
+    end loop;
+    put_line("The matrix in echelon form :"); Write_Integer_Matrix(A);
   end Standard_Hermite_Laurent;
 
   procedure DoblDobl_Hermite_Laurent
