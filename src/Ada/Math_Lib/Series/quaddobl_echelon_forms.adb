@@ -2,9 +2,33 @@ with text_io;                           use text_io;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
-with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
 
 package body QuadDobl_Echelon_Forms is
+
+  function Is_Integer ( c : Complex_Number ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if the number c is an integer,
+  --   returns false otherwise.
+
+    rmf : constant double_float := to_double(REAL_PART(c));
+    imf : constant double_float := to_double(IMAG_PART(c));
+    tol : constant double_float := 1.0E-12;
+    rmi : constant integer32 := integer32(rmf);
+    imi : constant integer32 := integer32(imf);
+    drf : constant double_float := abs(double_float(rmi) - rmf);
+    dif : constant double_float := abs(double_float(imi) - imf);
+ 
+  begin
+    if drf > tol then
+      return false;
+    elsif dif > tol then
+      return false;
+    else
+      return true;
+    end if;
+  end Is_Integer;
 
   procedure Write_Integer_Matrix
               ( A : in QuadDobl_Complex_Matrices.Matrix ) is
@@ -14,7 +38,11 @@ package body QuadDobl_Echelon_Forms is
   begin
     for i in A'range(1) loop
       for j in A'range(2) loop
-        put(" "); put(integer32(hihi_part(REAL_PART(A(i,j)))),2);
+        if Is_Integer(A(i,j)) then
+          put(" "); put(integer32(hihi_part(REAL_PART(A(i,j)))),2);
+        else
+          put("  *");
+        end if;
       end loop;
       new_line;
     end loop;
@@ -25,7 +53,7 @@ package body QuadDobl_Echelon_Forms is
                 i : integer32; tol : double_float ) return boolean is
   begin
     for j in A'range(2) loop
-      if QuadDobl_Complex_Numbers.AbsVal(A(i,j)) > tol
+      if AbsVal(A(i,j)) > tol
        then return false;
       end if;
     end loop;
@@ -36,7 +64,7 @@ package body QuadDobl_Echelon_Forms is
               ( A : in out QuadDobl_Complex_Matrices.Matrix;
                 i,j : in integer32 ) is
 
-    tmp : QuadDobl_Complex_Numbers.Complex_Number;   
+    tmp : Complex_Number;   
 
   begin
     for k in A'range(2) loop
@@ -50,7 +78,7 @@ package body QuadDobl_Echelon_Forms is
               ( v : in out QuadDobl_Complex_Vectors.Vector;
                 i,j : in integer32 ) is
 
-    tmp : QuadDobl_Complex_Numbers.Complex_Number;   
+    tmp : Complex_Number;   
 
   begin
     tmp := v(i);
@@ -82,8 +110,6 @@ package body QuadDobl_Echelon_Forms is
              ( A : QuadDobl_Complex_Matrices.Matrix;
                i,j : integer32; tol : double_float ) return integer32 is
 
-    use QuadDobl_Complex_Numbers;
-
     res : integer32 := j;
     maxval : quad_double := AbsVal(A(i,j));
     val : quad_double;
@@ -106,7 +132,7 @@ package body QuadDobl_Echelon_Forms is
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 j,k : in integer32 ) is
 
-    Atmp : QuadDobl_Complex_Numbers.Complex_Number;
+    Atmp : Complex_Number;
     itmp : integer32;
 
   begin
@@ -123,8 +149,6 @@ package body QuadDobl_Echelon_Forms is
   procedure Eliminate_on_Row
               ( A : in out QuadDobl_Complex_Matrices.Matrix;
                 i,j : in integer32; tol : in double_float ) is
-
-     use QuadDobl_Complex_Numbers;
 
      fac : Complex_Number;
 

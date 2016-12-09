@@ -135,10 +135,11 @@ procedure ts_sersin is
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(A);
   end QuadDobl_Hermite_Laurent;
 
-  procedure Standard_Test ( deg,dim : integer32 ) is
+  procedure Standard_Integer_Test ( deg,dim : integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a linear system of the given degree and dimension.
+  --   Generates a linear system of the given degree and dimension,
+  --   with randomly generated 0/1 matrices as coefficients.
   --   Solves the problem in standard double precision.
 
     mat : constant Standard_Dense_Matrix_Series.Matrix
@@ -153,12 +154,13 @@ procedure ts_sersin is
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
     Standard_Hermite_Laurent(mat,rhs);
-  end Standard_Test;
+  end Standard_Integer_Test;
 
-  procedure DoblDobl_Test ( deg,dim : integer32 ) is
+  procedure DoblDobl_Integer_Test ( deg,dim : integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a linear system of the given degree and dimension.
+  --   Generates a linear system of the given degree and dimension,
+  --   with randomly generated 0/1 matrices as coefficients.
   --   Solves the problem in standard double precision.
 
     mat : constant DoblDobl_Dense_Matrix_Series.Matrix
@@ -173,12 +175,13 @@ procedure ts_sersin is
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
     DoblDobl_Hermite_Laurent(mat,rhs);
-  end DoblDobl_Test;
+  end DoblDobl_Integer_Test;
 
-  procedure QuadDobl_Test ( deg,dim : integer32 ) is
+  procedure QuadDobl_Integer_Test ( deg,dim : integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a linear system of the given degree and dimension.
+  --   Generates a linear system of the given degree and dimension,
+  --   with randomly generated 0/1 matrices as coefficients.
   --   Solves the problem in standard double precision.
 
     mat : constant QuadDobl_Dense_Matrix_Series.Matrix
@@ -193,7 +196,70 @@ procedure ts_sersin is
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
     QuadDobl_Hermite_Laurent(mat,rhs);
-  end QuadDobl_Test;
+  end QuadDobl_Integer_Test;
+
+  procedure Standard_Random_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a linear system of the given degree and dimension,
+  --   with random coefficients on the complex unit circle.
+  --   Solves the problem in standard double precision.
+
+    mat : constant Standard_Dense_Matrix_Series.Matrix
+        := Standard_Random_Matrix_Series(deg,dim);
+    sol : constant Standard_Dense_Vector_Series.Vector
+        := Standard_Random_Series.Random_Vector_Series(1,dim,deg);
+    rhs : constant Standard_Dense_Vector_Series.Vector
+        := Standard_Dense_Matrix_Series.Multiply(mat,sol);
+
+  begin
+    put_line("The generated matrix series :"); put(mat);
+    put_line("The generated solution :"); put(sol);
+    put_line("The multiplied right hand side vector : "); put(rhs);
+    Standard_Hermite_Laurent(mat,rhs);
+  end Standard_Random_Test;
+
+  procedure DoblDobl_Random_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a linear system of the given degree and dimension,
+  --   with random coefficients on the complex unit circle.
+  --   Solves the problem in standard double precision.
+
+    mat : constant DoblDobl_Dense_Matrix_Series.Matrix
+        := DoblDobl_Random_Matrix_Series(deg,dim);
+    sol : constant DoblDobl_Dense_Vector_Series.Vector
+        := DoblDobl_Random_Series.Random_Vector_Series(1,dim,deg);
+    rhs : constant DoblDobl_Dense_Vector_Series.Vector
+        := DoblDobl_Dense_Matrix_Series.Multiply(mat,sol);
+
+  begin
+    put_line("The generated matrix series :"); put(mat);
+    put_line("The generated solution :"); put(sol);
+    put_line("The multiplied right hand side vector : "); put(rhs);
+    DoblDobl_Hermite_Laurent(mat,rhs);
+  end DoblDobl_Random_Test;
+
+  procedure QuadDobl_Random_Test ( deg,dim : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a linear system of the given degree and dimension,
+  --   with random coefficients on the complex unit circle.
+  --   Solves the problem in standard double precision.
+
+    mat : constant QuadDobl_Dense_Matrix_Series.Matrix
+        := QuadDobl_Random_Matrix_Series(deg,dim);
+    sol : constant QuadDobl_Dense_Vector_Series.Vector
+        := QuadDobl_Random_Series.Random_Vector_Series(1,dim,deg);
+    rhs : constant QuadDobl_Dense_Vector_Series.Vector
+        := QuadDobl_Dense_Matrix_Series.Multiply(mat,sol);
+
+  begin
+    put_line("The generated matrix series :"); put(mat);
+    put_line("The generated solution :"); put(sol);
+    put_line("The multiplied right hand side vector : "); put(rhs);
+    QuadDobl_Hermite_Laurent(mat,rhs);
+  end QuadDobl_Random_Test;
 
   procedure Main is
 
@@ -203,7 +269,7 @@ procedure ts_sersin is
   --   The dimension is the number of variables in the series.
 
     deg,dim : integer32 := 0;
-    ans : character;
+    ans,i01 : character;
 
   begin
     new_line;
@@ -218,12 +284,24 @@ procedure ts_sersin is
     put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(ans,"012");
     new_line;
-    case ans is
-      when '0' => Standard_Test(deg,dim);
-      when '1' => DoblDobl_Test(deg,dim);
-      when '2' => QuadDobl_Test(deg,dim);
-      when others => null;
-    end case;
+    put("Test on zero/one matrices ? (y/n) ");
+    Ask_Yes_or_No(i01);
+    new_line;
+    if i01 = 'y' then
+      case ans is
+        when '0' => Standard_Integer_Test(deg,dim);
+        when '1' => DoblDobl_Integer_Test(deg,dim);
+        when '2' => QuadDobl_Integer_Test(deg,dim);
+        when others => null;
+      end case;
+    else
+      case ans is
+        when '0' => Standard_Random_Test(deg,dim);
+        when '1' => DoblDobl_Random_Test(deg,dim);
+        when '2' => QuadDobl_Random_Test(deg,dim);
+        when others => null;
+      end case;
+    end if;
   end Main;
 
 begin

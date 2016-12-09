@@ -17,7 +17,8 @@ package Standard_Echelon_Forms is
               ( A : in Standard_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
-  --   Writes the integer matrix to screen.
+  --   Writes integer values in A as integer numbers to screen.
+  --   Value in A that are not integer numbers are written as *.
 
   function Is_Zero_Row 
               ( A : Standard_Complex_Matrices.Matrix;

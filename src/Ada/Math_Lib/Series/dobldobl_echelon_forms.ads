@@ -17,7 +17,8 @@ package DoblDobl_Echelon_Forms is
               ( A : in DoblDobl_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
-  --   Writes the integer matrix to screen.
+  --   Writes the integer values in the matrix as integers to screen.
+  --   Values in A that are not integer are written as a *.
 
   function Is_Zero_Row 
               ( A : DoblDobl_Complex_Matrices.Matrix;

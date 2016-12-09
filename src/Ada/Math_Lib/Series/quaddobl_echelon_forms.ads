@@ -17,7 +17,8 @@ package QuadDobl_Echelon_Forms is
               ( A : in QuadDobl_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
-  --   Writes the integer matrix to screen.
+  --   Writes values in A which are integers as integer numbers to screen.
+  --   Values in A that are not integer numbers are written as *.
 
   function Is_Zero_Row 
               ( A : QuadDobl_Complex_Matrices.Matrix;

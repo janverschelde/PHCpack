@@ -17,6 +17,15 @@ package Random_Matrix_Series is
   --   in [lower, upper], of the given degree deg and dimension dim.
   --   The coefficients are stored in standard double precision.
 
+  function Standard_Random_Matrix_Series
+             ( deg,dim : integer32 )
+             return Standard_Dense_Matrix_Series.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a random matrix series, with random complex coefficients
+  --   of modulus one, of the given degree deg and dimension dim.
+  --   The coefficients are stored in standard double precision.
+
   function DoblDobl_Random_Matrix_Series
              ( deg,dim,lower,upper : integer32 )
              return DoblDobl_Dense_Matrix_Series.Matrix;
@@ -26,13 +35,31 @@ package Random_Matrix_Series is
   --   in [lower, upper], of the given degree deg and dimension dim.
   --   The coefficients are stored in double double precision.
 
+  function DoblDobl_Random_Matrix_Series
+             ( deg,dim : integer32 )
+             return DoblDobl_Dense_Matrix_Series.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a random matrix series, with random complex coefficients
+  --   of modulus one, of the given degree deg and dimension dim.
+  --   The coefficients are stored in double double precision.
+
   function QuadDobl_Random_Matrix_Series
              ( deg,dim,lower,upper : integer32 )
              return QuadDobl_Dense_Matrix_Series.Matrix;
 
   -- DESCRIPTION :
   --   Returns a random matrix series, with integer coefficients
-  --   in [lower, upper] of the given degree deg and dimension dim.
+  --   in [lower, upper], of the given degree deg and dimension dim.
+  --   The coefficients are stored in quad double precision.
+
+  function QuadDobl_Random_Matrix_Series
+             ( deg,dim : integer32 )
+             return QuadDobl_Dense_Matrix_Series.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a random matrix series, with random complex coefficients
+  --   of modulus one, of the given degree deg and dimension dim.
   --   The coefficients are stored in quad double precision.
 
 end Random_Matrix_Series;
