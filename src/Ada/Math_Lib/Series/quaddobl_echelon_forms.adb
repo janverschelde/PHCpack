@@ -155,7 +155,9 @@ package body QuadDobl_Echelon_Forms is
     for k in j+1..A'last(2) loop
       if AbsVal(A(i,k)) > tol then
         fac := A(i,k)/A(i,j);
-        U(i,k) := fac;
+        U(i,j) := Create(integer32(1));  -- mark the pivot column
+        U(i,k) := -fac;                  -- store the multiplier
+        U(k,k) := Create(integer32(1));  -- triangular submatrix
         for row in i..A'last(1) loop
           A(row,k) := A(row,k) - fac*A(row,j);
         end loop;

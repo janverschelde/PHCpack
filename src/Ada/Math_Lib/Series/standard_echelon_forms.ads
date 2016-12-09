@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;             use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;            use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Integer_Matrices;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
 
@@ -124,5 +125,27 @@ package Standard_Echelon_Forms is
   --            the zero rows to the top of the matrix A;
   --   col_ipvt stores the pivoting information for the swapping of
   --            the columns in the determination of the next pivot.
+
+  function Row_Permutation_Matrix
+             ( ipvt : Standard_Integer_Vectors.Vector )
+             return Standard_Integer_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the row permutation matrix defined by the pivoting
+  --   information in the vector ipvt.
+  --   For the row_ipvt computed by Lower_Triangular_Echelon_Form
+  --   on A, and P = Row_Permutation_Matrix(row_ipvt), the product
+  --   P*A gives the swaps done by Lower_Triangular_Echelon_Form.
+
+  function Column_Permutation_Matrix
+             ( ipvt : Standard_Integer_Vectors.Vector )
+             return Standard_Integer_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the column permutation matrix defined by the pivoting
+  --   information in the vector ipvt.
+  --   For the col_ipvt computed by Lower_Triangular_Echelon_Form
+  --   on A, and Q = Column_Permutation_Matrix(row_ipvt), the product
+  --   A*Q gives the swaps done by Lower_Triangular_Echelon_Form.
 
 end Standard_Echelon_Forms;

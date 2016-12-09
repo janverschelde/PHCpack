@@ -147,7 +147,9 @@ package body Standard_Echelon_Forms is
     for k in j+1..A'last(2) loop
       if AbsVal(A(i,k)) > tol then
         fac := A(i,k)/A(i,j);
-        U(i,k) := fac;
+        U(i,j) := Create(1.0); -- mark the pivot column
+        U(i,k) := -fac;        -- store the multiplier
+        U(k,k) := Create(1.0); -- triangular submatrix
         for row in i..A'last(1) loop
           A(row,k) := A(row,k) - fac*A(row,j);
         end loop;
@@ -208,5 +210,41 @@ package body Standard_Echelon_Forms is
       exit when ((pivrow > A'last(1)) or (colidx > A'last(2)));
     end loop;
   end Lower_Triangular_Echelon_Form;
+
+  function Row_Permutation_Matrix
+             ( ipvt : Standard_Integer_Vectors.Vector )
+             return Standard_Integer_Matrices.Matrix is
+
+    res : Standard_Integer_Matrices.Matrix(ipvt'range,ipvt'range);
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := 0;
+      end loop;
+    end loop;
+    for i in ipvt'range loop
+      res(i,ipvt(i)) := 1;
+    end loop;
+    return res;
+  end Row_Permutation_Matrix;
+
+  function Column_Permutation_Matrix
+             ( ipvt : Standard_Integer_Vectors.Vector )
+             return Standard_Integer_Matrices.Matrix is
+
+    res : Standard_Integer_Matrices.Matrix(ipvt'range,ipvt'range);
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := 0;
+      end loop;
+    end loop;
+    for i in ipvt'range loop
+      res(ipvt(i),i) := 1;
+    end loop;
+    return res;
+  end Column_Permutation_Matrix;
 
 end Standard_Echelon_Forms;
