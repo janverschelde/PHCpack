@@ -36,7 +36,7 @@ package Standard_Echelon_Forms is
   --   Swaps row i with row j in A.
 
   procedure Swap_Elements
-              ( v : in out Standard_Complex_Vectors.Vector;
+              ( v : in out Standard_Integer_Vectors.Vector;
                 i,j : in integer32 );
 
   -- DESCRIPTION :
@@ -44,23 +44,22 @@ package Standard_Echelon_Forms is
 
   procedure Swap_Zero_Rows
               ( A : in out Standard_Complex_Matrices.Matrix;
-                b : in out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
                 tol : in double_float; pivrow : out integer32 );
 
   -- DESCRIPTION :
   --   Moves zero rows in A to the top of the matrix,
-  --   swapping also the corresponding entries in the right hand side b.
+  --   storing the pivoting information in the ipvt vector.
 
   -- REQUIRED : A'range(1) = b'range.
 
   -- ON ENTRY :
   --   A        block upper triangular coefficient matrix;
-  --   b        corresponding right hand side of a linear system;
   --   tol      tolerance to decide whether a number is zero or not.
 
   -- ON RETURN :
   --   A        matrix with all zero rows on top;
-  --   b        correspondingly swapped right hand side;
+  --   ipvt     pivoting information of swapped rows;
   --   pivrow   index of the first nonzero row in A.
 
   function Max_on_Row
@@ -83,25 +82,47 @@ package Standard_Echelon_Forms is
 
   procedure Eliminate_on_Row
               ( A : in out Standard_Complex_Matrices.Matrix;
+                U : out Standard_Complex_Matrices.Matrix;
                 i,j : in integer32; tol : in double_float );
 
   -- DESCRIPTION :
-  --   Given in (i,j) are the coordinates of the pivot row
-  --   and column in A.  All elements to the right of A(i,j)
-  --   are eliminated by subtracting an appropriate multiple
-  --   of the pivot column.
-  --   The tolerance tol is used to decide whether a number
-  --   in A is zero or not.
+  --   Eliminates all elements at the right of the pivot (i,j)
+  --   in A by column operations.
+
+  -- ON ENTRY :
+  --   A        matrix with nonzero pivot at row i and column j;
+  --   i        index of the pivot row;
+  --   j        index of the pivot column;
+  --   tol      tolerance to decide whether a number is zero or not.
+  --
+  -- ON RETURN :
+  --   A        elements at the right of (i,j) are made zero;
+  --   U        the multiplier for the pivot to eliminate the k-th
+  --            element is stored at position (i,k).
 
   procedure Lower_Triangular_Echelon_Form
               ( A : in out Standard_Complex_Matrices.Matrix;
-                b : in out Standard_Complex_Vectors.Vector;
+                U : out Standard_Complex_Matrices.Matrix;
+                row_ipvt : out Standard_Integer_Vectors.Vector;
+                col_ipvt : out Standard_Integer_Vectors.Vector;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
-  --   Given a block lower triangular matrix A with corresponding
-  --   right hand side vector in b, the procedure computes a lower
-  --   triangular echelon form of A.
+  --   Given a block lower triangular matrix A, 
+  --   the procedure computes a lower triangular echelon form of A.
   --   If verbose, then intermediate results are written to screen.
+
+  -- ON ENTRY :
+  --   A        block lower triangular matrix;
+  --   verbose  flag to indicate if intermediate output is needed.
+
+  -- ON RETURN :
+  --   A        lower triangular echelon form;
+  --   U        multiplier elements used in the column reductions
+  --            at the right of the pivots;
+  --   row_ipvt stores the pivoting information for the swapping of
+  --            the zero rows to the top of the matrix A;
+  --   col_ipvt stores the pivoting information for the swapping of
+  --            the columns in the determination of the next pivot.
 
 end Standard_Echelon_Forms;

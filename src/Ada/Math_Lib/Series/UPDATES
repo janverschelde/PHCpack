@@ -2,7 +2,7 @@ Fri 9 Dec 2016 : added parameters lower and upper to the random_matrix_series
   functions, adjusted the calls in the tests ts_seritp and ts_sersin.
   To random_matrix_series, added functions to generate random matrices
   with complex coefficients.  Improved writing in *echelon_forms,
-  tested by ts_sersin.
+  tested by ts_sersin.  Returned multipliers in *echelon_forms.
 
 Thu 8 Dec 2016 : new test program ts_sersin to develop the solving of the
   Hermite-Laurent matrix for series with singular matrix coefficients.

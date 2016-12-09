@@ -3,6 +3,7 @@ with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
+with Standard_Echelon_Forms;
 
 package body QuadDobl_Echelon_Forms is
 
@@ -49,8 +50,8 @@ package body QuadDobl_Echelon_Forms is
   end Write_Integer_Matrix;
 
   function Is_Zero_Row 
-              ( A : QuadDobl_Complex_Matrices.Matrix;
-                i : integer32; tol : double_float ) return boolean is
+             ( A : QuadDobl_Complex_Matrices.Matrix;
+               i : integer32; tol : double_float ) return boolean is
   begin
     for j in A'range(2) loop
       if AbsVal(A(i,j)) > tol
@@ -88,7 +89,7 @@ package body QuadDobl_Echelon_Forms is
 
   procedure Swap_Zero_Rows
               ( A : in out QuadDobl_Complex_Matrices.Matrix;
-                b : in out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
                 tol : in double_float; pivrow : out integer32 ) is
 
     idx : integer32 := A'first(1); -- first nonzero row
@@ -98,7 +99,7 @@ package body QuadDobl_Echelon_Forms is
       if Is_Zero_Row(A,i,tol) then
         if i /= idx then
           Swap_Rows(A,i,idx);
-          Swap_Elements(b,i,idx);
+          Standard_Echelon_Forms.Swap_Elements(ipvt,i,idx);
         end if;
         idx := idx + 1;
       end if;
@@ -133,7 +134,6 @@ package body QuadDobl_Echelon_Forms is
                 j,k : in integer32 ) is
 
     Atmp : Complex_Number;
-    itmp : integer32;
 
   begin
     for i in A'range(1) loop
@@ -141,13 +141,12 @@ package body QuadDobl_Echelon_Forms is
       A(i,j) := A(i,k);
       A(i,k) := Atmp;
     end loop;
-    itmp := ipvt(j);
-    ipvt(j) := ipvt(k);
-    ipvt(k) := itmp;
+    Standard_Echelon_Forms.Swap_Elements(ipvt,j,k);
   end Swap_Columns;
 
   procedure Eliminate_on_Row
               ( A : in out QuadDobl_Complex_Matrices.Matrix;
+                U : out QuadDobl_Complex_Matrices.Matrix;
                 i,j : in integer32; tol : in double_float ) is
 
      fac : Complex_Number;
@@ -156,6 +155,7 @@ package body QuadDobl_Echelon_Forms is
     for k in j+1..A'last(2) loop
       if AbsVal(A(i,k)) > tol then
         fac := A(i,k)/A(i,j);
+        U(i,k) := fac;
         for row in i..A'last(1) loop
           A(row,k) := A(row,k) - fac*A(row,j);
         end loop;
@@ -165,18 +165,27 @@ package body QuadDobl_Echelon_Forms is
 
   procedure Lower_Triangular_Echelon_Form
               ( A : in out QuadDobl_Complex_Matrices.Matrix;
-                b : in out QuadDobl_Complex_Vectors.Vector;
+                U : out QuadDobl_Complex_Matrices.Matrix;
+                row_ipvt : out Standard_Integer_Vectors.Vector;
+                col_ipvt : out Standard_Integer_Vectors.Vector;
                 verbose : in boolean := true ) is
 
     tol : constant double_float := 1.0E-12;
     pivrow,pivcol,colidx : integer32;
-    ipvt : Standard_Integer_Vectors.Vector(A'range(2));
 
   begin
-    for k in ipvt'range loop
-      ipvt(k) := k;
+    for i in U'range(1) loop
+      for j in U'range(2) loop
+        U(i,j) := Create(integer32(0));
+      end loop;
     end loop;
-    Swap_Zero_Rows(A,b,tol,pivrow);
+    for k in row_ipvt'range loop
+      row_ipvt(k) := k;
+    end loop;
+    for k in col_ipvt'range loop
+      col_ipvt(k) := k;
+    end loop;
+    Swap_Zero_Rows(A,row_ipvt,tol,pivrow);
     if verbose then
       put_line("After swapping zero rows :"); Write_Integer_Matrix(A);
     end if;
@@ -190,13 +199,13 @@ package body QuadDobl_Echelon_Forms is
       end if;
       if pivcol /= -1 then -- if no pivot, then skip row
         if pivcol /= colidx then
-          Swap_Columns(A,ipvt,colidx,pivcol);
+          Swap_Columns(A,col_ipvt,colidx,pivcol);
           if verbose then
             put_line("After swapping columns : "); Write_Integer_Matrix(A);
-            put("The pivoting information : "); put(ipvt); new_line;
+            put("The pivoting information : "); put(col_ipvt); new_line;
           end if;
         end if;
-        Eliminate_on_Row(A,pivrow,colidx,tol);
+        Eliminate_on_Row(A,U,pivrow,colidx,tol);
         if verbose then
           put_line("After elimination on the pivot row :");
           Write_Integer_Matrix(A);

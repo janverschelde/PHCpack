@@ -68,12 +68,15 @@ procedure ts_sersin is
       := Hermite_Laurent_Matrix(mat.cff(0..deg));
     b : Standard_Complex_Vectors.Vector(1..nrows)
       := Hermite_Laurent_Vector(rhs.cff(0..deg));
+    U : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols);
+    row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
+    col_ipvt : Standard_Integer_Vectors.Vector(1..ncols);
 
   begin
     put_line("The Hermite-Laurent matrix :"); Write_Integer_Matrix(A);
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
-    Lower_Triangular_Echelon_Form(A,b);
+    Lower_Triangular_Echelon_Form(A,U,row_ipvt,col_ipvt);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(A);
   end Standard_Hermite_Laurent;
 
@@ -96,13 +99,16 @@ procedure ts_sersin is
       := Hermite_Laurent_Matrix(mat.cff(0..deg));
     b : DoblDobl_Complex_Vectors.Vector(1..nrows)
       := Hermite_Laurent_Vector(rhs.cff(0..deg));
+    U : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
+    row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
+    col_ipvt : Standard_Integer_Vectors.Vector(1..ncols);
 
   begin
     put_line("The Hermite-Laurent matrix :");
     Write_Integer_Matrix(A);
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
-    Lower_Triangular_Echelon_Form(A,b);
+    Lower_Triangular_Echelon_Form(A,U,row_ipvt,col_ipvt);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(A);
   end DoblDobl_Hermite_Laurent;
 
@@ -125,13 +131,16 @@ procedure ts_sersin is
       := Hermite_Laurent_Matrix(mat.cff(0..deg));
     b : QuadDobl_Complex_Vectors.Vector(1..nrows)
       := Hermite_Laurent_Vector(rhs.cff(0..deg));
+    U : QuadDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
+    row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
+    col_ipvt : Standard_Integer_Vectors.Vector(1..ncols);
 
   begin
     put_line("The Hermite-Laurent matrix :");
     Write_Integer_Matrix(A);
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
-    Lower_Triangular_Echelon_Form(A,b);
+    Lower_Triangular_Echelon_Form(A,U,row_ipvt,col_ipvt);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(A);
   end QuadDobl_Hermite_Laurent;
 
