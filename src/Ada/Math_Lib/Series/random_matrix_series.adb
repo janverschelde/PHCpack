@@ -15,7 +15,7 @@ with QuadDobl_Dense_Series;
 package body Random_Matrix_Series is
 
   function Standard_Random_Matrix_Series
-             ( deg,dim : integer32 )
+             ( deg,dim,lower,upper : integer32 )
              return Standard_Dense_Matrix_Series.Matrix is
 
     res : Standard_Dense_Matrix_Series.Matrix;
@@ -32,7 +32,7 @@ package body Random_Matrix_Series is
       begin
         for i in 1..dim loop
           for j in 1..dim loop
-            rnd := Standard_Random_Numbers.Random(0,1);
+            rnd := Standard_Random_Numbers.Random(lower,upper);
             mat(i,j) := Standard_Complex_Numbers.Create(double_float(rnd));
           end loop;
         end loop;
@@ -43,7 +43,7 @@ package body Random_Matrix_Series is
   end Standard_Random_Matrix_Series;
 
   function DoblDobl_Random_Matrix_Series
-             ( deg,dim : integer32 )
+             ( deg,dim,lower,upper : integer32 )
              return DoblDobl_Dense_Matrix_Series.Matrix is
 
     res : DoblDobl_Dense_Matrix_Series.Matrix;
@@ -61,7 +61,7 @@ package body Random_Matrix_Series is
       begin
         for i in 1..dim loop
           for j in 1..dim loop
-            rnd := Standard_Random_Numbers.Random(0,1);
+            rnd := Standard_Random_Numbers.Random(lower,upper);
             ddr := Double_Double_Numbers.Create(rnd);
             mat(i,j) := DoblDobl_Complex_Numbers.Create(ddr);
           end loop;
@@ -73,7 +73,7 @@ package body Random_Matrix_Series is
   end DoblDobl_Random_Matrix_Series;
 
   function QuadDobl_Random_Matrix_Series
-             ( deg,dim : integer32 )
+             ( deg,dim,lower,upper : integer32 )
              return QuadDobl_Dense_Matrix_Series.Matrix is
 
     res : QuadDobl_Dense_Matrix_Series.Matrix;
@@ -91,7 +91,7 @@ package body Random_Matrix_Series is
       begin
         for i in 1..dim loop
           for j in 1..dim loop
-            rnd := Standard_Random_Numbers.Random(0,1);
+            rnd := Standard_Random_Numbers.Random(lower,upper);
             qdr := Quad_Double_Numbers.Create(rnd);
             mat(i,j) := QuadDobl_Complex_Numbers.Create(qdr);
           end loop;

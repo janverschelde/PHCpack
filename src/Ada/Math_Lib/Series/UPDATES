@@ -1,3 +1,6 @@
+Fri 9 Dec 2016 : added parameters lower and upper to the random_matrix_series
+  functions, adjusted the calls in the tests ts_seritp and ts_sersin.
+
 Thu 8 Dec 2016 : new test program ts_sersin to develop the solving of the
   Hermite-Laurent matrix for series with singular matrix coefficients.
   Defined finding of pivots and swapping of rows and columns in ts_sersin,

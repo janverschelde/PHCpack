@@ -142,7 +142,7 @@ procedure ts_sersin is
   --   Solves the problem in standard double precision.
 
     mat : constant Standard_Dense_Matrix_Series.Matrix
-        := Standard_Random_Matrix_Series(deg,dim);
+        := Standard_Random_Matrix_Series(deg,dim,0,1);
     sol : constant Standard_Dense_Vector_Series.Vector
         := Standard_Random_Series.Random_Vector_Series(1,dim,deg);
     rhs : constant Standard_Dense_Vector_Series.Vector
@@ -162,7 +162,7 @@ procedure ts_sersin is
   --   Solves the problem in standard double precision.
 
     mat : constant DoblDobl_Dense_Matrix_Series.Matrix
-        := DoblDobl_Random_Matrix_Series(deg,dim);
+        := DoblDobl_Random_Matrix_Series(deg,dim,0,1);
     sol : constant DoblDobl_Dense_Vector_Series.Vector
         := DoblDobl_Random_Series.Random_Vector_Series(1,dim,deg);
     rhs : constant DoblDobl_Dense_Vector_Series.Vector
@@ -182,7 +182,7 @@ procedure ts_sersin is
   --   Solves the problem in standard double precision.
 
     mat : constant QuadDobl_Dense_Matrix_Series.Matrix
-        := QuadDobl_Random_Matrix_Series(deg,dim);
+        := QuadDobl_Random_Matrix_Series(deg,dim,0,1);
     sol : constant QuadDobl_Dense_Vector_Series.Vector
         := QuadDobl_Random_Series.Random_Vector_Series(1,dim,deg);
     rhs : constant QuadDobl_Dense_Vector_Series.Vector
