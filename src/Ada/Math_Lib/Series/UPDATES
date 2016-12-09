@@ -1,5 +1,6 @@
 Thu 8 Dec 2016 : new test program ts_sersin to develop the solving of the
   Hermite-Laurent matrix for series with singular matrix coefficients.
+  Defined finding of pivots and swapping of rows and columns in ts_sersin.
 
 Wed 7 Dec 2016 : more tests on Hermite-Laurent interpolation in ts_seritp.
   Made the Hermite-Laurent matrix square.  Added timing test to ts_serlin.adb.
