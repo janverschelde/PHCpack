@@ -23,12 +23,15 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
+with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_VecMats;
 with Standard_Dense_Vector_Series;
 with Standard_Dense_Vector_Series_io;    use Standard_Dense_Vector_Series_io;
 with Standard_Random_Series;
@@ -115,14 +118,215 @@ procedure ts_sersin is
     return res;
   end QuadDobl_Integer2Complex;
 
+  function Column_Permutations
+              ( pivots : Standard_Integer_Vectors.Vector )
+              return Standard_Complex_VecMats.VecMat is
+
+  -- DESCRIPTION :
+  --   Returns the sequence of column permutation matrices,
+  --   corresponding to the sequence of pivot selections in pivots.
+
+    res : Standard_Complex_VecMats.VecMat(pivots'range);
+
+  begin
+    for i in pivots'range loop
+      declare
+        Q : Standard_Integer_Matrices.Matrix(pivots'range,pivots'range);
+        cQ : Standard_Complex_Matrices.Matrix(Q'range(1),Q'range(2));
+      begin
+        for i in Q'range(1) loop
+          for j in Q'range(2) loop
+            Q(i,j) := 0;
+          end loop;
+          Q(i,i) := 1;
+        end loop;
+        if pivots(i) /= i then  -- swap columns i with pivots(i)
+          Q(i,i) := 0;
+          Q(i,pivots(i)) := 1;
+          Q(pivots(i),pivots(i)) := 0;
+          Q(pivots(i),i) := 1;
+        end if;
+        cQ := Standard_Integer2Complex(Q);
+        res(i) := new Standard_Complex_Matrices.Matrix'(cQ);
+      end;
+    end loop;
+    return res;
+  end Column_Permutations;
+
+  function Column_Permutations
+              ( pivots : Standard_Integer_Vectors.Vector )
+              return DoblDobl_Complex_VecMats.VecMat is
+
+  -- DESCRIPTION :
+  --   Returns the sequence of column permutation matrices,
+  --   corresponding to the sequence of pivot selections in pivots.
+
+    res : DoblDobl_Complex_VecMats.VecMat(pivots'range);
+
+  begin
+    for i in pivots'range loop
+      declare
+        Q : Standard_Integer_Matrices.Matrix(pivots'range,pivots'range);
+        cQ : DoblDobl_Complex_Matrices.Matrix(Q'range(1),Q'range(2));
+      begin
+        for i in Q'range(1) loop
+          for j in Q'range(2) loop
+            Q(i,j) := 0;
+          end loop;
+          Q(i,i) := 1;
+        end loop;
+        if pivots(i) /= i then  -- swap columns i with pivots(i)
+          Q(i,i) := 0;
+          Q(i,pivots(i)) := 1;
+          Q(pivots(i),pivots(i)) := 0;
+          Q(pivots(i),i) := 1;
+        end if;
+        cQ := DoblDobl_Integer2Complex(Q);
+        res(i) := new DoblDobl_Complex_Matrices.Matrix'(cQ);
+      end;
+    end loop;
+    return res;
+  end Column_Permutations;
+
+  function Column_Permutations
+              ( pivots : Standard_Integer_Vectors.Vector )
+              return QuadDobl_Complex_VecMats.VecMat is
+
+  -- DESCRIPTION :
+  --   Returns the sequence of column permutation matrices,
+  --   corresponding to the sequence of pivot selections in pivots.
+
+    res : QuadDobl_Complex_VecMats.VecMat(pivots'range);
+
+  begin
+    for i in pivots'range loop
+      declare
+        Q : Standard_Integer_Matrices.Matrix(pivots'range,pivots'range);
+        cQ : QuadDobl_Complex_Matrices.Matrix(Q'range(1),Q'range(2));
+      begin
+        for i in Q'range(1) loop
+          for j in Q'range(2) loop
+            Q(i,j) := 0;
+          end loop;
+          Q(i,i) := 1;
+        end loop;
+        if pivots(i) /= i then  -- swap columns i with pivots(i)
+          Q(i,i) := 0;
+          Q(i,pivots(i)) := 1;
+          Q(pivots(i),pivots(i)) := 0;
+          Q(pivots(i),i) := 1;
+        end if;
+        cQ := QuadDobl_Integer2Complex(Q);
+        res(i) := new QuadDobl_Complex_Matrices.Matrix'(cQ);
+      end;
+    end loop;
+    return res;
+  end Column_Permutations;
+
+  function Multiplier_Matrices
+             ( U : Standard_Complex_Matrices.Matrix ) 
+             return Standard_Complex_VecMats.VecMat is
+
+  -- DESCRIPTION :
+  --   Returns the sequence of multiplier matrices,
+  --   using the accumulated multiplier data in U.
+
+    res : Standard_Complex_VecMats.VecMat(U'range(2));
+
+    use Standard_Complex_Numbers;
+
+  begin
+    for k in res'range loop
+      declare
+        M : Standard_Complex_Matrices.Matrix(U'range(1),U'range(2));
+      begin
+        for i in M'range(1) loop
+          for j in M'range(2) loop
+            M(i,j) := Create(0.0);
+          end loop;
+          M(i,i) := Create(1.0);
+        end loop;
+        for j in U'range(2) loop
+          M(k,j) := U(k,j);
+        end loop;
+        res(k) := new Standard_Complex_Matrices.Matrix'(M);
+      end;
+    end loop;
+    return res;
+  end Multiplier_Matrices;
+
+  function Multiplier_Matrices
+             ( U : DoblDobl_Complex_Matrices.Matrix ) 
+             return DoblDobl_Complex_VecMats.VecMat is
+
+  -- DESCRIPTION :
+  --   Returns the sequence of multiplier matrices,
+  --   using the accumulated multiplier data in U.
+
+    res : DoblDobl_Complex_VecMats.VecMat(U'range(2));
+
+    use DoblDobl_Complex_Numbers;
+
+  begin
+    for k in res'range loop
+      declare
+        M : DoblDobl_Complex_Matrices.Matrix(U'range(1),U'range(2));
+      begin
+        for i in M'range(1) loop
+          for j in M'range(2) loop
+            M(i,j) := Create(integer32(0));
+          end loop;
+          M(i,i) := Create(integer32(1));
+        end loop;
+        for j in U'range(2) loop
+          M(k,j) := U(k,j);
+        end loop;
+        res(k) := new DoblDobl_Complex_Matrices.Matrix'(M);
+      end;
+    end loop;
+    return res;
+  end Multiplier_Matrices;
+
+  function Multiplier_Matrices
+             ( U : QuadDobl_Complex_Matrices.Matrix ) 
+             return QuadDobl_Complex_VecMats.VecMat is
+
+  -- DESCRIPTION :
+  --   Returns the sequence of multiplier matrices,
+  --   using the accumulated multiplier data in U.
+
+    res : QuadDobl_Complex_VecMats.VecMat(U'range(2));
+
+    use QuadDobl_Complex_Numbers;
+
+  begin
+    for k in res'range loop
+      declare
+        M : QuadDobl_Complex_Matrices.Matrix(U'range(1),U'range(2));
+      begin
+        for i in M'range(1) loop
+          for j in M'range(2) loop
+            M(i,j) := Create(integer32(0));
+          end loop;
+          M(i,i) := Create(integer32(1));
+        end loop;
+        for j in U'range(2) loop
+          M(k,j) := U(k,j);
+        end loop;
+        res(k) := new QuadDobl_Complex_Matrices.Matrix'(M);
+      end;
+    end loop;
+    return res;
+  end Multiplier_Matrices;
+
   procedure Standard_Check
               ( A,L,U : in Standard_Complex_Matrices.Matrix;
-                rowp,colp : in Standard_Integer_Vectors.Vector ) is
+                rowp,colp,pivs : in Standard_Integer_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   Given in L the lower triangular echelon form of A,
-  --   with multipliers in U, row and column pivots in rowp, colp,
-  --   the L is reconstructed from the data in A, U, rowp and colp.
+  --   with multipliers in U, row and column pivots in rowp, colp, pivs,
+  --   the L is reconstructed from the data in A, U, rowp, colp and pivs.
 
     P : constant Standard_Integer_Matrices.Matrix(rowp'range,rowp'range)
       := Row_Permutation_Matrix(rowp);
@@ -134,6 +338,10 @@ procedure ts_sersin is
        := Standard_Integer2Complex(Q);
     W : Standard_Complex_Matrices.Matrix(A'range(1),A'range(2));
     checksum : double_float := 0.0;
+    R : Standard_Complex_VecMats.VecMat(pivs'range)
+      := Column_Permutations(pivs);
+    M : Standard_Complex_VecMats.VecMat(U'range(2))
+      := Multiplier_Matrices(U);
    
     use Standard_Complex_Numbers;
     use Standard_Complex_Matrices;
@@ -145,8 +353,12 @@ procedure ts_sersin is
     put_line("The structure of the multiplier matrix : ");
     Write_Integer_Matrix(U);
     W := cP*A;
-    W := W*cQ;
-    W := W*U;
+   -- W := W*cQ;
+   -- W := W*U;
+    for k in R'range loop
+      W := W*R(k).all; -- find the pivot and swap if needed
+      W := W*M(k).all; -- eliminate at the right of the pivot
+    end loop;
     for i in L'range(1) loop
       for j in L'range(2) loop
         put("L("); put(i,1); put(","); put(j,1); put(") :");
@@ -161,12 +373,12 @@ procedure ts_sersin is
 
   procedure DoblDobl_Check
               ( A,L,U : in DoblDobl_Complex_Matrices.Matrix;
-                rowp,colp : in Standard_Integer_Vectors.Vector ) is
+                rowp,colp,pivs : in Standard_Integer_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   Given in L the lower triangular echelon form of A,
-  --   with multipliers in U, row and column pivots in rowp, colp,
-  --   the L is reconstructed from the data in A, U, rowp and colp.
+  --   with multipliers in U, row and column pivots in rowp, colp, pivs,
+  --   the L is reconstructed from the data in A, U, rowp, colp, and pivs.
 
     P : constant Standard_Integer_Matrices.Matrix(rowp'range,rowp'range)
       := Row_Permutation_Matrix(rowp);
@@ -178,6 +390,10 @@ procedure ts_sersin is
        := DoblDobl_Integer2Complex(Q);
     W : DoblDobl_Complex_Matrices.Matrix(A'range(1),A'range(2));
     checksum : double_double := create(0.0);
+    R : DoblDobl_Complex_VecMats.VecMat(pivs'range)
+      := Column_Permutations(pivs);
+    M : DoblDobl_Complex_VecMats.VecMat(U'range(2))
+      := Multiplier_Matrices(U);
 
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Matrices;
@@ -189,8 +405,12 @@ procedure ts_sersin is
     put_line("The structure of the multiplier matrix : ");
     Write_Integer_Matrix(U);
     W := cP*A;
-    W := W*cQ;
-    W := W*U;
+   -- W := W*cQ;
+   -- W := W*U;
+    for k in R'range loop
+      W := W*R(k).all; -- find the pivot and swap if needed
+      W := W*M(k).all; -- eliminate elements at the right of the pivot
+    end loop;
     for i in L'range(1) loop
       for j in L'range(2) loop
         put("L("); put(i,1); put(","); put(j,1); put(") : ");
@@ -205,12 +425,12 @@ procedure ts_sersin is
 
   procedure QuadDobl_Check
               ( A,L,U : in QuadDobl_Complex_Matrices.Matrix;
-                rowp,colp : in Standard_Integer_Vectors.Vector ) is
+                rowp,colp,pivs : in Standard_Integer_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   Given in L the lower triangular echelon form of A,
-  --   with multipliers in U, row and column pivots in rowp, colp,
-  --   the L is reconstructed from the data in A, U, rowp and colp.
+  --   with multipliers in U, row and column pivots in rowp, colp, pivs,
+  --   the L is reconstructed from the data in A, U, rowp, colp, and pivs.
 
     P : constant Standard_Integer_Matrices.Matrix(rowp'range,rowp'range)
       := Row_Permutation_Matrix(rowp);
@@ -222,6 +442,10 @@ procedure ts_sersin is
        := QuadDobl_Integer2Complex(Q);
     W : QuadDobl_Complex_Matrices.Matrix(A'range(1),A'range(2));
     checksum : quad_double := create(0.0);
+    R : QuadDobl_Complex_VecMats.VecMat(pivs'range)
+      := Column_Permutations(pivs);
+    M : QuadDobl_Complex_VecMats.VecMat(U'range(2))
+      := Multiplier_Matrices(U);
 
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Matrices;
@@ -233,8 +457,12 @@ procedure ts_sersin is
     put_line("The structure of the multiplier matrix : ");
     Write_Integer_Matrix(U);
     W := cP*A;
-    W := W*cQ;
-    W := W*U;
+   -- W := W*cQ;
+   -- W := W*U;
+    for k in R'range loop
+      W := W*R(k).all;
+      W := W*M(k).all;
+    end loop;
     for i in L'range(1) loop
       for j in L'range(2) loop
         put("L("); put(i,1); put(","); put(j,1); put(") : ");
@@ -268,16 +496,16 @@ procedure ts_sersin is
       := Hermite_Laurent_Vector(rhs.cff(0..deg));
     L,U : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
-    col_ipvt : Standard_Integer_Vectors.Vector(1..ncols);
+    col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
 
   begin
     put_line("The Hermite-Laurent matrix :"); Write_Integer_Matrix(A);
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
     L := A;
-    Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt);
+    Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
-    Standard_Check(A,L,U,row_ipvt,col_ipvt);
+    Standard_Check(A,L,U,row_ipvt,col_ipvt,pivots);
   end Standard_Hermite_Laurent;
 
   procedure DoblDobl_Hermite_Laurent
@@ -301,7 +529,7 @@ procedure ts_sersin is
       := Hermite_Laurent_Vector(rhs.cff(0..deg));
     L,U : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
-    col_ipvt : Standard_Integer_Vectors.Vector(1..ncols);
+    col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
 
   begin
     put_line("The Hermite-Laurent matrix :");
@@ -309,9 +537,9 @@ procedure ts_sersin is
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
     L := A;
-    Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt);
+    Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
-    DoblDobl_Check(A,L,U,row_ipvt,col_ipvt);
+    DoblDobl_Check(A,L,U,row_ipvt,col_ipvt,pivots);
   end DoblDobl_Hermite_Laurent;
 
   procedure QuadDobl_Hermite_Laurent
@@ -335,7 +563,7 @@ procedure ts_sersin is
       := Hermite_Laurent_Vector(rhs.cff(0..deg));
     L,U : QuadDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
-    col_ipvt : Standard_Integer_Vectors.Vector(1..ncols);
+    col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
 
   begin
     put_line("The Hermite-Laurent matrix :");
@@ -343,9 +571,9 @@ procedure ts_sersin is
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
     L := A;
-    Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt);
+    Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
-    QuadDobl_Check(A,L,U,row_ipvt,col_ipvt);
+    QuadDobl_Check(A,L,U,row_ipvt,col_ipvt,pivots);
   end QuadDobl_Hermite_Laurent;
 
   procedure Standard_Integer_Test ( deg,dim : integer32 ) is
