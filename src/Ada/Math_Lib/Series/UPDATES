@@ -4,7 +4,7 @@ Fri 9 Dec 2016 : added parameters lower and upper to the random_matrix_series
   with complex coefficients.  Improved writing in *echelon_forms,
   tested by ts_sersin.  Returned multipliers in *echelon_forms.
   Defined permutation matrices and stored multipliers better in the
-  *echelon_forms.
+  *echelon_forms.  Added checks on the results in ts_sersin.
 
 Thu 8 Dec 2016 : new test program ts_sersin to develop the solving of the
   Hermite-Laurent matrix for series with singular matrix coefficients.
