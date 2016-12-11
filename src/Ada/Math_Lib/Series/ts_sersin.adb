@@ -21,15 +21,18 @@ with Standard_Integer_Matrices;
 with Standard_Integer_Matrices_io;       use Standard_Integer_Matrices_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with Standard_Complex_Vector_Norms;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_VecMats;
 with Standard_Dense_Vector_Series;
@@ -475,6 +478,135 @@ procedure ts_sersin is
     put("Check sum of differences : "); put(checksum); new_line;
   end QuadDobl_Check;
 
+  procedure Standard_Solve
+              ( A,L,U : in Standard_Complex_Matrices.Matrix;
+                b : in Standard_Complex_Vectors.Vector;
+                rowp,colp,pivs : in Standard_Integer_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Given in L the lower triangular echelon form of A,
+  --   with multipliers in U, row and column pivots in rowp, colp, pivs,
+  --   and right hand side vector in b, the system A*x = b is solved,
+  --   in standard double precision.
+
+    P : constant Standard_Integer_Matrices.Matrix(rowp'range,rowp'range)
+      := Row_Permutation_Matrix(rowp);
+    Q : constant Standard_Integer_Matrices.Matrix(colp'range,colp'range)
+      := Column_Permutation_Matrix(colp);
+    cP : constant Standard_Complex_Matrices.Matrix(P'range(1),P'range(2))
+       := Standard_Integer2Complex(P);
+    cQ : constant Standard_Complex_Matrices.Matrix(Q'range(1),Q'range(2))
+       := Standard_Integer2Complex(Q);
+    R : Standard_Complex_VecMats.VecMat(pivs'range)
+      := Column_Permutations(pivs);
+    M : Standard_Complex_VecMats.VecMat(U'range(2))
+      := Multiplier_Matrices(U);
+    Pb : Standard_Complex_Vectors.Vector(b'range);
+    x,rv : Standard_Complex_Vectors.Vector(b'range);
+    res : double_float;
+   
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Matrices;
+
+  begin
+    put_line("Checking the echelon form ...");
+    put_line("The row permutation matrix : "); put(P);
+    Pb := cP*b;
+    Solve_with_Echelon_Form(L,Pb,x);
+    put_line("The solution : "); put_line(x);
+    rv := Pb - L*x;
+    put_line("The residual vector : "); put_line(rv);
+    res := Standard_Complex_Vector_Norms.Max_Norm(rv);
+    put("The residual : "); put(res,3); new_line;
+  end Standard_Solve;
+
+  procedure DoblDobl_Solve
+              ( A,L,U : in DoblDobl_Complex_Matrices.Matrix;
+                b : in DoblDobl_Complex_Vectors.Vector;
+                rowp,colp,pivs : in Standard_Integer_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Given in L the lower triangular echelon form of A,
+  --   with multipliers in U, row and column pivots in rowp, colp, pivs,
+  --   and right hand side vector in b, the system A*x = b is solved,
+  --   in double double precision.
+
+    P : constant Standard_Integer_Matrices.Matrix(rowp'range,rowp'range)
+      := Row_Permutation_Matrix(rowp);
+    Q : constant Standard_Integer_Matrices.Matrix(colp'range,colp'range)
+      := Column_Permutation_Matrix(colp);
+    cP : constant DoblDobl_Complex_Matrices.Matrix(P'range(1),P'range(2))
+       := DoblDobl_Integer2Complex(P);
+    cQ : constant DoblDobl_Complex_Matrices.Matrix(Q'range(1),Q'range(2))
+       := DoblDobl_Integer2Complex(Q);
+    R : DoblDobl_Complex_VecMats.VecMat(pivs'range)
+      := Column_Permutations(pivs);
+    M : DoblDobl_Complex_VecMats.VecMat(U'range(2))
+      := Multiplier_Matrices(U);
+    Pb : DoblDobl_Complex_Vectors.Vector(b'range);
+    x,rv : DoblDobl_Complex_Vectors.Vector(b'range);
+    res : double_double;
+   
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Vectors;
+    use DoblDobl_Complex_Matrices;
+
+  begin
+    put_line("Checking the echelon form ...");
+    put_line("The row permutation matrix : "); put(P);
+    Pb := cP*b;
+    Solve_with_Echelon_Form(L,Pb,x);
+    put_line("The solution : "); put_line(x);
+    rv := Pb - L*x;
+    put_line("The residual vector : "); put_line(rv);
+    res := DoblDobl_Complex_Vector_Norms.Max_Norm(rv);
+    put("The residual : "); put(res,3); new_line;
+  end DoblDobl_Solve;
+
+  procedure QuadDobl_Solve
+              ( A,L,U : in QuadDobl_Complex_Matrices.Matrix;
+                b : in QuadDobl_Complex_Vectors.Vector;
+                rowp,colp,pivs : in Standard_Integer_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Given in L the lower triangular echelon form of A,
+  --   with multipliers in U, row and column pivots in rowp, colp, pivs,
+  --   and right hand side vector in b, the system A*x = b is solved,
+  --   in double double precision.
+
+    P : constant Standard_Integer_Matrices.Matrix(rowp'range,rowp'range)
+      := Row_Permutation_Matrix(rowp);
+    Q : constant Standard_Integer_Matrices.Matrix(colp'range,colp'range)
+      := Column_Permutation_Matrix(colp);
+    cP : constant QuadDobl_Complex_Matrices.Matrix(P'range(1),P'range(2))
+       := QuadDobl_Integer2Complex(P);
+    cQ : constant QuadDobl_Complex_Matrices.Matrix(Q'range(1),Q'range(2))
+       := QuadDobl_Integer2Complex(Q);
+    R : QuadDobl_Complex_VecMats.VecMat(pivs'range)
+      := Column_Permutations(pivs);
+    M : QuadDobl_Complex_VecMats.VecMat(U'range(2))
+      := Multiplier_Matrices(U);
+    Pb : QuadDobl_Complex_Vectors.Vector(b'range);
+    x,rv : QuadDobl_Complex_Vectors.Vector(b'range);
+    res : quad_double;
+   
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Matrices;
+
+  begin
+    put_line("Checking the echelon form ...");
+    put_line("The row permutation matrix : "); put(P);
+    Pb := cP*b;
+    Solve_with_Echelon_Form(L,Pb,x);
+    put_line("The solution : "); put_line(x);
+    rv := Pb - L*x;
+    put_line("The residual vector : "); put_line(rv);
+    res := QuadDobl_Complex_Vector_Norms.Max_Norm(rv);
+    put("The residual : "); put(res,3); new_line;
+  end QuadDobl_Solve;
+
   procedure Standard_Hermite_Laurent
               ( mat : in Standard_Dense_Matrix_Series.Matrix;
                 rhs : in Standard_Dense_Vector_Series.Vector ) is
@@ -506,6 +638,7 @@ procedure ts_sersin is
     Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
     Standard_Check(A,L,U,row_ipvt,col_ipvt,pivots);
+    Standard_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
   end Standard_Hermite_Laurent;
 
   procedure DoblDobl_Hermite_Laurent
@@ -540,6 +673,7 @@ procedure ts_sersin is
     Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
     DoblDobl_Check(A,L,U,row_ipvt,col_ipvt,pivots);
+    DoblDobl_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
   end DoblDobl_Hermite_Laurent;
 
   procedure QuadDobl_Hermite_Laurent
@@ -574,6 +708,7 @@ procedure ts_sersin is
     Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
     QuadDobl_Check(A,L,U,row_ipvt,col_ipvt,pivots);
+    QuadDobl_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
   end QuadDobl_Hermite_Laurent;
 
   procedure Standard_Integer_Test ( deg,dim : integer32 ) is

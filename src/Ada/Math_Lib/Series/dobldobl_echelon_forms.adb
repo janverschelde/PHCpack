@@ -207,4 +207,31 @@ package body DoblDobl_Echelon_Forms is
     end loop;
   end Lower_Triangular_Echelon_Form;
 
+  procedure Solve_with_Echelon_Form
+              ( L : in DoblDobl_Complex_Matrices.Matrix;
+                b : in DoblDobl_Complex_Vectors.Vector;
+                x : out DoblDobl_Complex_Vectors.Vector ) is
+
+    row : integer32 := L'first(1);
+    col : integer32 := L'first(2);
+    one : constant double_double := create(1.0);
+    val : double_double;
+
+  begin
+    x := (x'range => Create(integer32(0)));
+    loop
+      val := AbsVal(L(row,col));
+      if val + one /= one then -- else skip row
+        x(col) := b(row);
+        for j in L'first(2)..(col-1) loop
+          x(col) := x(col) - L(row,j)*x(j);
+        end loop;
+        x(col) := x(col)/L(row,col);
+        col := col + 1;
+      end if;
+      row := row + 1;
+      exit when ((row > L'last(1)) or (col > L'last(2)));
+    end loop;
+  end Solve_with_Echelon_Form;
+
 end DoblDobl_Echelon_Forms;

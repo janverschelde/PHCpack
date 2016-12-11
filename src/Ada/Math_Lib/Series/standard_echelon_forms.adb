@@ -250,4 +250,30 @@ package body Standard_Echelon_Forms is
     return res;
   end Column_Permutation_Matrix;
 
+  procedure Solve_with_Echelon_Form
+              ( L : in Standard_Complex_Matrices.Matrix;
+                b : in Standard_Complex_Vectors.Vector;
+                x : out Standard_Complex_Vectors.Vector ) is
+
+    row : integer32 := L'first(1);
+    col : integer32 := L'first(2);
+    val : double_float;
+
+  begin
+    x := (x'range => Create(0.0));
+    loop
+      val := AbsVal(L(row,col));
+      if val + 1.0 /= 1.0 then -- else skip row
+        x(col) := b(row);
+        for j in L'first(2)..(col-1) loop
+          x(col) := x(col) - L(row,j)*x(j);
+        end loop;
+        x(col) := x(col)/L(row,col);
+        col := col + 1;
+      end if;
+      row := row + 1;
+      exit when ((row > L'last(1)) or (col > L'last(2)));
+    end loop;
+  end Solve_with_Echelon_Form;
+
 end Standard_Echelon_Forms;

@@ -1,4 +1,5 @@
 Sat 10 Dec 2016 : in *echelon_forms.adb initialized matrix U to the identity.
+  Solved triangular system with the echelon forms, tested by ts_sersin.
 
 Fri 9 Dec 2016 : added parameters lower and upper to the random_matrix_series
   functions, adjusted the calls in the tests ts_seritp and ts_sersin.

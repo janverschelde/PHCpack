@@ -97,7 +97,7 @@ package QuadDobl_Echelon_Forms is
               ( A : in out QuadDobl_Complex_Matrices.Matrix;
                 U : out QuadDobl_Complex_Matrices.Matrix;
                 row_ipvt : out Standard_Integer_Vectors.Vector;
-                col_ipvt : out Standard_Integer_Vectors.Vector;
+                col_ipvt,pivots : out Standard_Integer_Vectors.Vector;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
@@ -116,6 +116,20 @@ package QuadDobl_Echelon_Forms is
   --   row_ipvt stores the pivoting information for the swapping of
   --            the zero rows to the top of the matrix A;
   --   col_ipvt stores the pivoting information for the swapping of
-  --            the columns in the determination of the next pivot.
+  --            the columns in the determination of the next pivot;
+  --   pivots   sequence of column pivots in the order in which
+  --            they were generated.
+
+  procedure Solve_with_Echelon_Form
+              ( L : in QuadDobl_Complex_Matrices.Matrix;
+                b : in QuadDobl_Complex_Vectors.Vector;
+                x : out QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Does the forward substitution on the lower triangular echelon
+  --   form in L with in b the right hand side vector,
+  --   to solve L*x = b.  The solution is returned in x.
+  --   If all diagonal elements on L are nonzero,
+  --   then the residual || b-L*x || should be close to machine precision.
 
 end QuadDobl_Echelon_Forms;
