@@ -1,3 +1,5 @@
+Sun 11 Dec 2016 : to ts_sersin added test on user given input.
+
 Sat 10 Dec 2016 : in *echelon_forms.adb initialized matrix U to the identity.
   Solved triangular system with the echelon forms, tested by ts_sersin.
   Added back transformations to ts_sersin to solve the original system,

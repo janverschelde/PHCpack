@@ -29,11 +29,13 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
 with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices_io;       use QuadDobl_Complex_Matrices_io;
 with QuadDobl_Complex_VecMats;
 with Standard_Dense_Vector_Series;
 with Standard_Dense_Vector_Series_io;    use Standard_Dense_Vector_Series_io;
@@ -842,7 +844,7 @@ procedure ts_sersin is
     end if;
   end QuadDobl_Hermite_Laurent;
 
-  procedure Standard_Integer_Test ( deg,dim : integer32 ) is
+  procedure Standard_Integer_Test ( deg,dim : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a linear system of the given degree and dimension,
@@ -863,7 +865,7 @@ procedure ts_sersin is
     Standard_Hermite_Laurent(mat,rhs);
   end Standard_Integer_Test;
 
-  procedure DoblDobl_Integer_Test ( deg,dim : integer32 ) is
+  procedure DoblDobl_Integer_Test ( deg,dim : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a linear system of the given degree and dimension,
@@ -884,7 +886,7 @@ procedure ts_sersin is
     DoblDobl_Hermite_Laurent(mat,rhs);
   end DoblDobl_Integer_Test;
 
-  procedure QuadDobl_Integer_Test ( deg,dim : integer32 ) is
+  procedure QuadDobl_Integer_Test ( deg,dim : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a linear system of the given degree and dimension,
@@ -905,7 +907,7 @@ procedure ts_sersin is
     QuadDobl_Hermite_Laurent(mat,rhs);
   end QuadDobl_Integer_Test;
 
-  procedure Standard_Random_Test ( deg,dim : integer32 ) is
+  procedure Standard_Random_Test ( deg,dim : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a linear system of the given degree and dimension,
@@ -926,12 +928,12 @@ procedure ts_sersin is
     Standard_Hermite_Laurent(mat,rhs);
   end Standard_Random_Test;
 
-  procedure DoblDobl_Random_Test ( deg,dim : integer32 ) is
+  procedure DoblDobl_Random_Test ( deg,dim : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a linear system of the given degree and dimension,
   --   with random coefficients on the complex unit circle.
-  --   Solves the problem in standard double precision.
+  --   Solves the problem in double double precision.
 
     mat : constant DoblDobl_Dense_Matrix_Series.Matrix
         := DoblDobl_Random_Matrix_Series(deg,dim);
@@ -947,12 +949,12 @@ procedure ts_sersin is
     DoblDobl_Hermite_Laurent(mat,rhs);
   end DoblDobl_Random_Test;
 
-  procedure QuadDobl_Random_Test ( deg,dim : integer32 ) is
+  procedure QuadDobl_Random_Test ( deg,dim : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a linear system of the given degree and dimension,
   --   with random coefficients on the complex unit circle.
-  --   Solves the problem in standard double precision.
+  --   Solves the problem in quad double precision.
 
     mat : constant QuadDobl_Dense_Matrix_Series.Matrix
         := QuadDobl_Random_Matrix_Series(deg,dim);
@@ -968,6 +970,186 @@ procedure ts_sersin is
     QuadDobl_Hermite_Laurent(mat,rhs);
   end QuadDobl_Random_Test;
 
+  procedure Read_Standard_Vector_Series
+              ( deg,dim : in integer32;
+                vec : out Standard_Dense_Vector_Series.Vector ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for deg+1 vectors of dimension dim,
+  --   for the coefficients of a vector series of degree deg,
+  --   in standard double precision.
+
+    wrk : Standard_Complex_Vectors.Vector(1..dim);
+
+  begin
+    vec.deg := deg;
+    for i in 0..deg loop
+      put("Reading a complex "); put(dim,1);
+      put("-vector for coefficient "); put(i,1); put_line(" :");
+      get(wrk);
+      vec.cff(i) := new Standard_Complex_Vectors.Vector'(wrk);
+    end loop;
+  end Read_Standard_Vector_Series;
+
+  procedure Read_DoblDobl_Vector_Series
+              ( deg,dim : in integer32;
+                vec : out DoblDobl_Dense_Vector_Series.Vector ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for deg+1 vectors of dimension dim,
+  --   for the coefficients of a vector series of degree deg,
+  --   in double double precision.
+
+    wrk : DoblDobl_Complex_Vectors.Vector(1..dim);
+
+  begin
+    vec.deg := deg;
+    for i in 0..deg loop
+      put("Reading a complex "); put(dim,1);
+      put("-vector for coefficient "); put(i,1); put_line(" :");
+      get(wrk);
+      vec.cff(i) := new DoblDobl_Complex_Vectors.Vector'(wrk);
+    end loop;
+  end Read_DoblDobl_Vector_Series;
+
+  procedure Read_QuadDobl_Vector_Series
+              ( deg,dim : in integer32;
+                vec : out QuadDobl_Dense_Vector_Series.Vector ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for deg+1 vectors of dimension dim,
+  --   for the coefficients of a vector series of degree deg,
+  --   in quad double precision.
+
+    wrk : QuadDobl_Complex_Vectors.Vector(1..dim);
+
+  begin
+    vec.deg := deg;
+    for i in 0..deg loop
+      put("Reading a complex "); put(dim,1);
+      put("-vector for coefficient "); put(i,1); put_line(" :");
+      get(wrk);
+      vec.cff(i) := new QuadDobl_Complex_Vectors.Vector'(wrk);
+    end loop;
+  end Read_QuadDobl_Vector_Series;
+
+  procedure Read_Standard_Matrix_Series
+              ( deg,dim : in integer32;
+                mat : out Standard_Dense_Matrix_Series.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for deg+1 matrices of dimension dim,
+  --   for the coefficients of a matrix series of degree deg,
+  --   in standard double precision.
+
+    wrk : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+
+  begin
+    mat.deg := deg;
+    for i in 0..deg loop
+      put("Reading a complex "); put(dim,1); put("-by-"); put(dim,1);
+      put(" matrix for coefficient "); put(i,1); put_line(" :");
+      get(wrk);
+      mat.cff(i) := new Standard_Complex_Matrices.Matrix'(wrk);
+    end loop;
+  end Read_Standard_Matrix_Series;
+
+  procedure Read_DoblDobl_Matrix_Series
+              ( deg,dim : in integer32;
+                mat : out DoblDobl_Dense_Matrix_Series.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for deg+1 matrices of dimension dim,
+  --   for the coefficients of a matrix series of degree deg,
+  --   in double double precision.
+
+    wrk : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+
+  begin
+    mat.deg := deg;
+    for i in 0..deg loop
+      put("Reading a complex "); put(dim,1); put("-by-"); put(dim,1);
+      put(" matrix for coefficient "); put(i,1); put_line(" :");
+      get(wrk);
+      mat.cff(i) := new DoblDobl_Complex_Matrices.Matrix'(wrk);
+    end loop;
+  end Read_DoblDobl_Matrix_Series;
+
+  procedure Read_QuadDobl_Matrix_Series
+              ( deg,dim : in integer32;
+                mat : out QuadDobl_Dense_Matrix_Series.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for deg+1 matrices of dimension dim,
+  --   for the coefficients of a matrix series of degree deg,
+  --   in quad double precision.
+
+    wrk : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+
+  begin
+    mat.deg := deg;
+    for i in 0..deg loop
+      put("Reading a complex "); put(dim,1); put("-by-"); put(dim,1);
+      put(" matrix for coefficient "); put(i,1); put_line(" :");
+      get(wrk);
+      mat.cff(i) := new QuadDobl_Complex_Matrices.Matrix'(wrk);
+    end loop;
+  end Read_QuadDobl_Matrix_Series;
+
+  procedure Standard_User_Test ( deg,dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts for a matrix series of given degree deg and dimension dim.
+  --   Prompts for a corresponding right hand side vector series.
+  --   Solves the problem in standard double precision.
+
+    mat : Standard_Dense_Matrix_Series.Matrix;
+    rhs : Standard_Dense_Vector_Series.Vector;
+
+  begin
+    Read_Standard_Matrix_Series(deg,dim,mat);
+    put_line("Your matrix series :"); put(mat);
+    Read_Standard_Vector_Series(deg,dim,rhs);
+    put_line("Your right hand side vector : "); put(rhs);
+    Standard_Hermite_Laurent(mat,rhs);
+  end Standard_User_Test;
+
+  procedure DoblDobl_User_Test ( deg,dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts for a matrix series of given degree deg and dimension dim.
+  --   Prompts for a corresponding right hand side vector series.
+  --   Solves the problem in double double precision.
+
+    mat : DoblDobl_Dense_Matrix_Series.Matrix;
+    rhs : DoblDobl_Dense_Vector_Series.Vector;
+
+  begin
+    Read_DoblDobl_Matrix_Series(deg,dim,mat);
+    put_line("Your matrix series :"); put(mat);
+    Read_DoblDobl_Vector_Series(deg,dim,rhs);
+    put_line("Your right hand side vector : "); put(rhs);
+    DoblDobl_Hermite_Laurent(mat,rhs);
+  end DoblDobl_User_Test;
+
+  procedure QuadDobl_User_Test ( deg,dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts for a matrix series of given degree deg and dimension dim.
+  --   Prompts for a corresponding right hand side vector series.
+  --   Solves the problem in quad double precision.
+
+    mat : QuadDobl_Dense_Matrix_Series.Matrix;
+    rhs : QuadDobl_Dense_Vector_Series.Vector;
+
+  begin
+    Read_QuadDobl_Matrix_Series(deg,dim,mat);
+    put_line("Your matrix series :"); put(mat);
+    Read_QuadDobl_Vector_Series(deg,dim,rhs);
+    put_line("Your right hand side vector : "); put(rhs);
+    QuadDobl_Hermite_Laurent(mat,rhs);
+  end QuadDobl_User_Test;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -976,7 +1158,7 @@ procedure ts_sersin is
   --   The dimension is the number of variables in the series.
 
     deg,dim : integer32 := 0;
-    ans,i01 : character;
+    prc,i01,usr : character;
 
   begin
     new_line;
@@ -989,25 +1171,37 @@ procedure ts_sersin is
     put_line("  1. double double precision;");
     put_line("  2. quad double precision.");
     put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(ans,"012");
+    Ask_Alternative(prc,"012");
     new_line;
-    put("Test on zero/one matrices ? (y/n) ");
+    put("Test on random zero/one matrices ? (y/n) ");
     Ask_Yes_or_No(i01);
     new_line;
     if i01 = 'y' then
-      case ans is
+      case prc is
         when '0' => Standard_Integer_Test(deg,dim);
         when '1' => DoblDobl_Integer_Test(deg,dim);
         when '2' => QuadDobl_Integer_Test(deg,dim);
         when others => null;
       end case;
     else
-      case ans is
-        when '0' => Standard_Random_Test(deg,dim);
-        when '1' => DoblDobl_Random_Test(deg,dim);
-        when '2' => QuadDobl_Random_Test(deg,dim);
-        when others => null;
-      end case;
+      put("Test on user given matrices ? (y/n) ");
+      Ask_Yes_or_No(usr);
+      new_line;
+      if usr = 'y' then
+        case prc is
+          when '0' => Standard_User_Test(deg,dim);
+          when '1' => DoblDobl_User_Test(deg,dim);
+          when '2' => QuadDobl_User_Test(deg,dim);
+          when others => null;
+        end case;
+      else
+        case prc is
+          when '0' => Standard_Random_Test(deg,dim);
+          when '1' => DoblDobl_Random_Test(deg,dim);
+          when '2' => QuadDobl_Random_Test(deg,dim);
+          when others => null;
+        end case;
+      end if;
     end if;
   end Main;
 
