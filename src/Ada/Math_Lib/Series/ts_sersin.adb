@@ -234,9 +234,12 @@ procedure ts_sersin is
   --   Returns the sequence of multiplier matrices,
   --   using the accumulated multiplier data in U.
 
-    res : Standard_Complex_VecMats.VecMat(U'range(2));
-
     use Standard_Complex_Numbers;
+
+    res : Standard_Complex_VecMats.VecMat(U'range(2));
+    one : constant Complex_Number := Create(1.0);
+    val : double_float;
+    pivcol : integer32;
 
   begin
     for k in res'range loop
@@ -249,8 +252,16 @@ procedure ts_sersin is
           end loop;
           M(i,i) := Create(1.0);
         end loop;
+        pivcol := k;
         for j in U'range(2) loop
-          M(k,j) := U(k,j);
+          if Equal(U(k,j),one) then
+            pivcol := j;
+          else
+            val := AbsVal(U(k,j));
+            if val + 1.0 /= 1.0 then
+              M(pivcol,j) := U(k,j);
+            end if;
+          end if;
         end loop;
         res(k) := new Standard_Complex_Matrices.Matrix'(M);
       end;
@@ -504,6 +515,7 @@ procedure ts_sersin is
     Pb : Standard_Complex_Vectors.Vector(b'range);
     x,rv : Standard_Complex_Vectors.Vector(b'range);
     res : double_float;
+    ans : character;
    
     use Standard_Complex_Numbers;
     use Standard_Complex_Vectors;
@@ -519,6 +531,20 @@ procedure ts_sersin is
     put_line("The residual vector : "); put_line(rv);
     res := Standard_Complex_Vector_Norms.Max_Norm(rv);
     put("The residual : "); put(res,3); new_line;
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      for k in reverse R'range loop
+        x := M(k).all*x;
+        x := R(k).all*x;
+      end loop;
+      put_line("The solution vector after the transformations :");
+      put_line(x);
+      rv := b - A*x;
+      put_line("The residual vector : "); put_line(rv);
+      res := Standard_Complex_Vector_Norms.Max_Norm(rv);
+      put("The residual : "); put(res,3); new_line;
+    end if;
   end Standard_Solve;
 
   procedure DoblDobl_Solve
@@ -547,6 +573,7 @@ procedure ts_sersin is
     Pb : DoblDobl_Complex_Vectors.Vector(b'range);
     x,rv : DoblDobl_Complex_Vectors.Vector(b'range);
     res : double_double;
+    ans : character;
    
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Vectors;
@@ -562,6 +589,20 @@ procedure ts_sersin is
     put_line("The residual vector : "); put_line(rv);
     res := DoblDobl_Complex_Vector_Norms.Max_Norm(rv);
     put("The residual : "); put(res,3); new_line;
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      for k in reverse R'range loop
+        x := M(k).all*x;
+        x := R(k).all*x;
+      end loop;
+      put_line("The solution vector after the transformations :");
+      put_line(x);
+      rv := b - A*x;
+      put_line("The residual vector : "); put_line(rv);
+      res := DoblDobl_Complex_Vector_Norms.Max_Norm(rv);
+      put("The residual : "); put(res,3); new_line;
+    end if;
   end DoblDobl_Solve;
 
   procedure QuadDobl_Solve
@@ -590,6 +631,7 @@ procedure ts_sersin is
     Pb : QuadDobl_Complex_Vectors.Vector(b'range);
     x,rv : QuadDobl_Complex_Vectors.Vector(b'range);
     res : quad_double;
+    ans : character;
    
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Vectors;
@@ -605,6 +647,20 @@ procedure ts_sersin is
     put_line("The residual vector : "); put_line(rv);
     res := QuadDobl_Complex_Vector_Norms.Max_Norm(rv);
     put("The residual : "); put(res,3); new_line;
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      for k in reverse R'range loop
+        x := M(k).all*x;
+        x := R(k).all*x;
+      end loop;
+      put_line("The solution vector after the transformations :");
+      put_line(x);
+      rv := b - A*x;
+      put_line("The residual vector : "); put_line(rv);
+      res := QuadDobl_Complex_Vector_Norms.Max_Norm(rv);
+      put("The residual : "); put(res,3); new_line;
+    end if;
   end QuadDobl_Solve;
 
   procedure Standard_Hermite_Laurent
@@ -629,6 +685,7 @@ procedure ts_sersin is
     L,U : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
     col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
+    ans : character;
 
   begin
     put_line("The Hermite-Laurent matrix :"); Write_Integer_Matrix(A);
@@ -637,8 +694,16 @@ procedure ts_sersin is
     L := A;
     Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
-    Standard_Check(A,L,U,row_ipvt,col_ipvt,pivots);
-    Standard_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Standard_Check(A,L,U,row_ipvt,col_ipvt,pivots);
+      put("Continue ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then Standard_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
+      end if;
+    end if;
   end Standard_Hermite_Laurent;
 
   procedure DoblDobl_Hermite_Laurent
@@ -663,6 +728,7 @@ procedure ts_sersin is
     L,U : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
     col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
+    ans : character;
 
   begin
     put_line("The Hermite-Laurent matrix :");
@@ -672,8 +738,16 @@ procedure ts_sersin is
     L := A;
     Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
-    DoblDobl_Check(A,L,U,row_ipvt,col_ipvt,pivots);
-    DoblDobl_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      DoblDobl_Check(A,L,U,row_ipvt,col_ipvt,pivots);
+      put("Continue ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then DoblDobl_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
+      end if;
+    end if;
   end DoblDobl_Hermite_Laurent;
 
   procedure QuadDobl_Hermite_Laurent
@@ -698,6 +772,7 @@ procedure ts_sersin is
     L,U : QuadDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
     col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
+    ans : character;
 
   begin
     put_line("The Hermite-Laurent matrix :");
@@ -707,8 +782,16 @@ procedure ts_sersin is
     L := A;
     Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
-    QuadDobl_Check(A,L,U,row_ipvt,col_ipvt,pivots);
-    QuadDobl_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      QuadDobl_Check(A,L,U,row_ipvt,col_ipvt,pivots);
+      put("Continue ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then QuadDobl_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
+      end if;
+    end if;
   end QuadDobl_Hermite_Laurent;
 
   procedure Standard_Integer_Test ( deg,dim : integer32 ) is

@@ -142,10 +142,17 @@ package body Standard_Echelon_Forms is
                 i,j : in integer32; tol : in double_float ) is
 
      fac : Complex_Number;
+     first : boolean := true;
 
   begin
     for k in j+1..A'last(2) loop
       if AbsVal(A(i,k)) > tol then
+        if first then
+          for kk in A'range(2) loop  -- wipe i-th multiplier row clean
+            U(i,kk) := Create(0.0);
+          end loop;
+          first := false;
+        end if;
         fac := A(i,k)/A(i,j);
         U(i,j) := Create(1.0); -- mark the pivot column
         U(i,k) := -fac;        -- store the multiplier
