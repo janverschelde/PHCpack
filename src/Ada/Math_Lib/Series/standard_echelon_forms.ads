@@ -162,4 +162,21 @@ package Standard_Echelon_Forms is
   --   If all diagonal elements on L are nonzero,
   --   then the residual || b-L*x || should be close to machine precision.
 
+  procedure Multiply_and_Permute
+              ( x : in out Standard_Complex_Vectors.Vector;
+                U : in Standard_Complex_Matrices.Matrix;
+                pivots : in Standard_Integer_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Applies the transformations defined by the multipliers in U
+  --   and permutations defined by the pivots to x.
+
+  -- ON ENTRY :
+  --   x        solution x of Solve_with_Echelon_Form(L,b);
+  --   U        multiplier matrix computed by Lower_Triangular_Echelon_Form;
+  --   pivots   pivots computed by Lower_Triangular_Echelon_Form.
+
+  -- ON RETURN :
+  --   x        transformed solution, to the origin problem A*x = b.
+
 end Standard_Echelon_Forms;

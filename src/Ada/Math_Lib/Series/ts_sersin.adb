@@ -513,8 +513,8 @@ procedure ts_sersin is
     M : Standard_Complex_VecMats.VecMat(U'range(2))
       := Multiplier_Matrices(U);
     Pb : Standard_Complex_Vectors.Vector(b'range);
-    x,rv : Standard_Complex_Vectors.Vector(b'range);
-    res : double_float;
+    x,rv,z : Standard_Complex_Vectors.Vector(b'range);
+    res,checksum : double_float;
     ans : character;
    
     use Standard_Complex_Numbers;
@@ -534,6 +534,7 @@ procedure ts_sersin is
     put("Continue ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      z := x;
       for k in reverse R'range loop
         x := M(k).all*x;
         x := R(k).all*x;
@@ -544,6 +545,21 @@ procedure ts_sersin is
       put_line("The residual vector : "); put_line(rv);
       res := Standard_Complex_Vector_Norms.Max_Norm(rv);
       put("The residual : "); put(res,3); new_line;
+      put("Continue ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Multiply_and_Permute(z,U,pivs);
+        put_line("After Multiply_and_Permute :");
+        put_line(z);
+        put_line("Component by component comparison :");
+        checksum := 0.0;
+        for i in x'range loop
+          put("x("); put(i,1); put(") : "); put(x(i)); new_line;
+          put("z("); put(i,1); put(") : "); put(z(i)); new_line;
+          checksum := checksum + AbsVal(x(i) - z(i));
+        end loop;
+        put("The check sum of differences : "); put(checksum,3); new_line;
+      end if;
     end if;
   end Standard_Solve;
 
@@ -571,8 +587,8 @@ procedure ts_sersin is
     M : DoblDobl_Complex_VecMats.VecMat(U'range(2))
       := Multiplier_Matrices(U);
     Pb : DoblDobl_Complex_Vectors.Vector(b'range);
-    x,rv : DoblDobl_Complex_Vectors.Vector(b'range);
-    res : double_double;
+    x,rv,z : DoblDobl_Complex_Vectors.Vector(b'range);
+    res,checksum : double_double;
     ans : character;
    
     use DoblDobl_Complex_Numbers;
@@ -592,6 +608,7 @@ procedure ts_sersin is
     put("Continue ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      z := x;
       for k in reverse R'range loop
         x := M(k).all*x;
         x := R(k).all*x;
@@ -602,6 +619,21 @@ procedure ts_sersin is
       put_line("The residual vector : "); put_line(rv);
       res := DoblDobl_Complex_Vector_Norms.Max_Norm(rv);
       put("The residual : "); put(res,3); new_line;
+      put("Continue ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Multiply_and_Permute(z,U,pivs);
+        put_line("After Multiply_and_Permute :");
+        put_line(z);
+        put_line("Component by component comparison :");
+        checksum := create(0.0);
+        for i in x'range loop
+          put("x("); put(i,1); put(") : "); put(x(i)); new_line;
+          put("z("); put(i,1); put(") : "); put(z(i)); new_line;
+          checksum := checksum + AbsVal(x(i) - z(i));
+        end loop;
+        put("The check sum of differences : "); put(checksum,3); new_line;
+      end if;
     end if;
   end DoblDobl_Solve;
 
@@ -629,8 +661,8 @@ procedure ts_sersin is
     M : QuadDobl_Complex_VecMats.VecMat(U'range(2))
       := Multiplier_Matrices(U);
     Pb : QuadDobl_Complex_Vectors.Vector(b'range);
-    x,rv : QuadDobl_Complex_Vectors.Vector(b'range);
-    res : quad_double;
+    x,rv,z : QuadDobl_Complex_Vectors.Vector(b'range);
+    res,checksum : quad_double;
     ans : character;
    
     use QuadDobl_Complex_Numbers;
@@ -650,6 +682,7 @@ procedure ts_sersin is
     put("Continue ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      z := x;
       for k in reverse R'range loop
         x := M(k).all*x;
         x := R(k).all*x;
@@ -660,6 +693,21 @@ procedure ts_sersin is
       put_line("The residual vector : "); put_line(rv);
       res := QuadDobl_Complex_Vector_Norms.Max_Norm(rv);
       put("The residual : "); put(res,3); new_line;
+      put("Continue ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Multiply_and_Permute(z,U,pivs);
+        put_line("After Multiply_and_Permute :");
+        put_line(z);
+        put_line("Component by component comparison :");
+        checksum := create(0.0);
+        for i in x'range loop
+          put("x("); put(i,1); put(") : "); put(x(i)); new_line;
+          put("z("); put(i,1); put(") : "); put(z(i)); new_line;
+          checksum := checksum + AbsVal(x(i) - z(i));
+        end loop;
+        put("The check sum of differences : "); put(checksum,3); new_line;
+      end if;
     end if;
   end QuadDobl_Solve;
 

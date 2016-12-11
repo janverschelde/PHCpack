@@ -283,4 +283,26 @@ package body Standard_Echelon_Forms is
     end loop;
   end Solve_with_Echelon_Form;
 
+  procedure Multiply_and_Permute
+              ( x : in out Standard_Complex_Vectors.Vector;
+                U : in Standard_Complex_Matrices.Matrix;
+                pivots : in Standard_Integer_Vectors.Vector ) is
+
+    acc : Complex_Number;
+
+  begin
+    for i in reverse U'range(1) loop
+      acc := Create(0.0);
+      for j in U'range(2) loop
+        acc := acc + U(i,j)*x(j);
+      end loop;
+      x(i) := acc;
+      if pivots(i) /= i then
+        acc := x(i);
+        x(i) := x(pivots(i));
+        x(pivots(i)) := acc;
+      end if;
+    end loop;
+  end Multiply_and_Permute;
+
 end Standard_Echelon_Forms;
