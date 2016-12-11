@@ -154,7 +154,7 @@ package body DoblDobl_Echelon_Forms is
               ( A : in out DoblDobl_Complex_Matrices.Matrix;
                 U : out DoblDobl_Complex_Matrices.Matrix;
                 row_ipvt : out Standard_Integer_Vectors.Vector;
-                col_ipvt : out Standard_Integer_Vectors.Vector;
+                col_ipvt,pivots : out Standard_Integer_Vectors.Vector;
                 verbose : in boolean := true ) is
 
     tol : constant double_float := 1.0E-12;
@@ -165,12 +165,14 @@ package body DoblDobl_Echelon_Forms is
       for j in U'range(2) loop
         U(i,j) := Create(integer32(0));
       end loop;
+      U(i,i) := Create(integer32(1));
     end loop;
     for k in row_ipvt'range loop
       row_ipvt(k) := k;
     end loop;
     for k in col_ipvt'range loop
       col_ipvt(k) := k;
+      pivots(k) := k;
     end loop;
     Swap_Zero_Rows(A,row_ipvt,tol,pivrow);
     if verbose then
@@ -185,6 +187,7 @@ package body DoblDobl_Echelon_Forms is
         put("  column index : "); put(colidx,1); new_line;
       end if;
       if pivcol /= -1 then -- if no pivot, then skip row
+        pivots(colidx) := pivcol;
         if pivcol /= colidx then
           Swap_Columns(A,col_ipvt,colidx,pivcol);
           if verbose then
