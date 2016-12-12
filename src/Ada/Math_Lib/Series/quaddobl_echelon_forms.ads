@@ -7,9 +7,9 @@ with QuadDobl_Complex_Matrices;
 package QuadDobl_Echelon_Forms is
 
 -- DESCRIPTION :
---   Given a lower block triangular matrix, the operations in this package
+--   Given a block banded matrix, the operations in this package
 --   transform the given matrix into a lower triangular echelon form.
---   Solving a linear system in lower triangular echelong form
+--   Solving a linear system in lower triangular echelon form
 --   can then be done by forward substitution.
 --   Computations are done in quad double precision.
 

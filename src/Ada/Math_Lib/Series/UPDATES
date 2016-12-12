@@ -2,6 +2,7 @@ Mon 12 Dec 2016 : added timing for the lower triangular echelon forms for
   the Hermite-Laurent systems to ts_serlin.  To the procedures in the
   packages *echelon_forms, added the block dimension, which changed 
   the test procedures ts_sersin and ts_serlin.
+  Fixed bug in *echelon_forms with added tests in ts_sersin.
 
 Sun 11 Dec 2016 : to ts_sersin added test on user given input.
   Made the Multiply_and_Permute procedures in *echelon_forms.adb

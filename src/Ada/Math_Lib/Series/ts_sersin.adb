@@ -254,14 +254,21 @@ procedure ts_sersin is
           end loop;
           M(i,i) := Create(1.0);
         end loop;
-        pivcol := k;
+        pivcol := -1;
         for j in U'range(2) loop
           if Equal(U(k,j),one) then
             pivcol := j;
-          else
+           -- M(pivcol,k) := Create(1.0);
+           -- M(k,k) := Create(0.0);
+          end if;
+          if pivcol /= -1 then
             val := AbsVal(U(k,j));
             if val + 1.0 /= 1.0 then
-              M(pivcol,j) := U(k,j);
+              -- M(pivcol,j) := U(k,j);
+              M(k,j) := U(k,j);
+             -- if j > k then
+             --   M(k,k) := Create(0.0);
+             -- end if;
             end if;
           end if;
         end loop;
@@ -393,11 +400,16 @@ procedure ts_sersin is
     put_line("The structure of the multiplier matrix : ");
     Write_Integer_Matrix(U);
     W := cP*A;
-   -- W := W*cQ;
-   -- W := W*U;
+    put_line("The matrix at the start :"); Write_Integer_Matrix(W);
     for k in R'range loop
+      put("Permutation matrix "); put(k,1); put_line(" :");
+      Write_Integer_Matrix(R(k).all);
       W := W*R(k).all; -- find the pivot and swap if needed
+      put_line("After the permutation :"); Write_Integer_Matrix(W);
       W := W*M(k).all; -- eliminate at the right of the pivot
+      put("Elimination matrix "); put(k,1); put_line(" :");
+      Write_Integer_matrix(M(k).all);
+      put_line("After the elimination :"); Write_Integer_Matrix(W);
     end loop;
     for i in L'range(1) loop
       for j in L'range(2) loop
@@ -450,8 +462,6 @@ procedure ts_sersin is
     put_line("The structure of the multiplier matrix : ");
     Write_Integer_Matrix(U);
     W := cP*A;
-   -- W := W*cQ;
-   -- W := W*U;
     for k in R'range loop
       W := W*R(k).all; -- find the pivot and swap if needed
       W := W*M(k).all; -- eliminate elements at the right of the pivot
@@ -507,8 +517,6 @@ procedure ts_sersin is
     put_line("The structure of the multiplier matrix : ");
     Write_Integer_Matrix(U);
     W := cP*A;
-   -- W := W*cQ;
-   -- W := W*U;
     for k in R'range loop
       W := W*R(k).all;
       W := W*M(k).all;

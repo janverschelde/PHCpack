@@ -142,9 +142,7 @@ package body DoblDobl_Echelon_Forms is
       exit when (k > A'last(2));
       if AbsVal(A(i,k)) > tol then
         fac := A(i,k)/A(i,j);
-        U(i,j) := Create(integer32(1));  -- mark the pivot column
-        U(i,k) := -fac;                  -- store the multiplier
-        U(k,k) := Create(integer32(1));  -- triangular submatrix
+        U(j,k) := -fac;                  -- store the multiplier
         for row in i..A'last(1) loop
           A(row,k) := A(row,k) - fac*A(row,j);
         end loop;
@@ -243,25 +241,18 @@ package body DoblDobl_Echelon_Forms is
                 pivots : in Standard_Integer_Vectors.Vector ) is
 
     acc : Complex_Number;
-    one : constant Complex_Number := Create(integer32(1));
-    pivcol : integer32;
 
   begin
-    for i in reverse U'range(2) loop
-      for j in U'range(2) loop
-        if Equal(U(i,j),one)
-         then pivcol := j; exit;
-        end if;
-      end loop;
+    for k in reverse U'range(2) loop
       acc := Create(integer32(0));
       for j in U'range(2) loop
-        acc := acc + U(pivcol,j)*x(j);
+        acc := acc + U(k,j)*x(j);
       end loop;
-      x(pivcol) := acc;
-      if pivots(i) /= i then
-        acc := x(i);
-        x(i) := x(pivots(i));
-        x(pivots(i)) := acc;
+      x(k) := acc;
+      if pivots(k) /= k then
+        acc := x(k);
+        x(k) := x(pivots(k));
+        x(pivots(k)) := acc;
       end if;
     end loop;
   end Multiply_and_Permute;
