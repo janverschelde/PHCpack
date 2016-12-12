@@ -9,15 +9,19 @@ with Double_Double_Numbers;               use Double_Double_Numbers;
 with Double_Double_Numbers_io;            use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                 use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;              use Quad_Double_Numbers_io;
+with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
+with Standard_Complex_Matrices;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;         use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
+with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;         use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Matrices;
 with Standard_Random_Series;
 with Standard_Dense_Series_Vectors;
 with Standard_Dense_Series_Vectors_io;    use Standard_Dense_Series_Vectors_io;
@@ -45,6 +49,12 @@ with QuadDobl_Dense_vector_Series_io;     use QuadDobl_Dense_vector_Series_io;
 with QuadDobl_Dense_Matrix_Series;
 with QuadDobl_Dense_Matrix_Series_io;     use QuadDobl_Dense_Matrix_Series_io;
 with QuadDobl_Matrix_Series_Solvers;
+with Standard_Interpolating_Series;
+with DoblDobl_Interpolating_Series;
+with QuadDobl_Interpolating_Series;
+with Standard_Echelon_Forms;
+with DoblDobl_Echelon_Forms;
+with QuadDobl_Echelon_Forms;
 
 procedure ts_serlin is
 
@@ -488,6 +498,153 @@ procedure ts_serlin is
     end if;
   end QuadDobl_Timing;
 
+  procedure Standard_Hermite_Laurent_Timing ( n,d,f : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random problem and solves it f times
+  --   via the Hermite-Laurent matrix, in standard double precision.
+
+  -- ON ENTRY :
+  --   n        number of equations, number of rows of the matrices;
+  --   d        degree of the series;
+  --   f        frequency of tests.
+
+    use Standard_Interpolating_Series;
+    use Standard_Echelon_Forms;
+
+    sA : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..n)
+       := Standard_Random_Series.Random_Series_Matrix(1,n,1,n,d);
+    As : constant Standard_Dense_Matrix_Series.Matrix 
+       := Standard_Dense_Matrix_Series.Create(sA); 
+    sb : constant Standard_Dense_Series_Vectors.Vector(1..n)
+       := Standard_Random_Series.Random_Series_Vector(1,n,d);
+    bs : constant Standard_Dense_Vector_Series.Vector
+       := Standard_Dense_Vector_Series.Create(sb);
+    timer : Timing_Widget;
+    deg : constant integer32 := As.deg;
+    nbr : constant integer32 := As.cff(0)'last(1);
+    nbc : constant integer32 := As.cff(0)'last(2);
+    nrows : constant integer32 := nbr*(2*deg+1);
+    ncols : constant integer32 := nbc*(2*deg+1);
+    A : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols)
+      := Hermite_Laurent_Matrix(As.cff(0..deg));
+    x : Standard_Complex_Vectors.Vector(1..ncols);
+    b : Standard_Complex_Vectors.Vector(1..nrows)
+      := Hermite_Laurent_Vector(bs.cff(0..deg));
+    L,U : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols);
+    row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
+    col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
+
+  begin
+    tstart(timer);
+    for k in 1..f loop
+      Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots,false);
+      Solve_with_Echelon_Form(L,b,x);
+      Multiply_and_Permute(x,U,pivots);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"Solve by Echelon forms");
+  end Standard_Hermite_Laurent_Timing;
+
+  procedure DoblDobl_Hermite_Laurent_Timing ( n,d,f : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random problem and solves it f times
+  --   via the Hermite-Laurent matrix, in double double precision.
+
+  -- ON ENTRY :
+  --   n        number of equations, number of rows of the matrices;
+  --   d        degree of the series;
+  --   f        frequency of tests.
+
+    use DoblDobl_Interpolating_Series;
+    use DoblDobl_Echelon_Forms;
+
+    sA : constant DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
+       := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,n,d);
+    As : constant DoblDobl_Dense_Matrix_Series.Matrix 
+       := DoblDobl_Dense_Matrix_Series.Create(sA); 
+    sb : constant DoblDobl_Dense_Series_Vectors.Vector(1..n)
+       := DoblDobl_Random_Series.Random_Series_Vector(1,n,d);
+    bs : constant DoblDobl_Dense_Vector_Series.Vector
+       := DoblDobl_Dense_Vector_Series.Create(sb);
+    timer : Timing_Widget;
+    deg : constant integer32 := As.deg;
+    nbr : constant integer32 := As.cff(0)'last(1);
+    nbc : constant integer32 := As.cff(0)'last(2);
+    nrows : constant integer32 := nbr*(2*deg+1);
+    ncols : constant integer32 := nbc*(2*deg+1);
+    A : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
+      := Hermite_Laurent_Matrix(As.cff(0..deg));
+    x : DoblDobl_Complex_Vectors.Vector(1..ncols);
+    b : DoblDobl_Complex_Vectors.Vector(1..nrows)
+      := Hermite_Laurent_Vector(bs.cff(0..deg));
+    L,U : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
+    row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
+    col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
+
+  begin
+    tstart(timer);
+    for k in 1..f loop
+      Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots,false);
+      Solve_with_Echelon_Form(L,b,x);
+      Multiply_and_Permute(x,U,pivots);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"Solve by Echelon forms");
+  end DoblDobl_Hermite_Laurent_Timing;
+
+  procedure QuadDobl_Hermite_Laurent_Timing ( n,d,f : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random problem and solves it f times
+  --   via the Hermite-Laurent matrix, in double double precision.
+
+  -- ON ENTRY :
+  --   n        number of equations, number of rows of the matrices;
+  --   d        degree of the series;
+  --   f        frequency of tests.
+
+    use QuadDobl_Interpolating_Series;
+    use QuadDobl_Echelon_Forms;
+
+    sA : constant QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
+       := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,n,d);
+    As : constant QuadDobl_Dense_Matrix_Series.Matrix 
+       := QuadDobl_Dense_Matrix_Series.Create(sA); 
+    sb : constant QuadDobl_Dense_Series_Vectors.Vector(1..n)
+       := QuadDobl_Random_Series.Random_Series_Vector(1,n,d);
+    bs : constant QuadDobl_Dense_Vector_Series.Vector
+       := QuadDobl_Dense_Vector_Series.Create(sb);
+    timer : Timing_Widget;
+    deg : constant integer32 := As.deg;
+    nbr : constant integer32 := As.cff(0)'last(1);
+    nbc : constant integer32 := As.cff(0)'last(2);
+    nrows : constant integer32 := nbr*(2*deg+1);
+    ncols : constant integer32 := nbc*(2*deg+1);
+    A : QuadDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
+      := Hermite_Laurent_Matrix(As.cff(0..deg));
+    x : QuadDobl_Complex_Vectors.Vector(1..ncols);
+    b : QuadDobl_Complex_Vectors.Vector(1..nrows)
+      := Hermite_Laurent_Vector(bs.cff(0..deg));
+    L,U : QuadDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
+    row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
+    col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
+
+  begin
+    tstart(timer);
+    for k in 1..f loop
+      Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots,false);
+      Solve_with_Echelon_Form(L,b,x);
+      Multiply_and_Permute(x,U,pivots);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"Solve by Echelon forms");
+  end QuadDobl_Hermite_Laurent_Timing;
+
   function Prompt_for_Precision return character is
 
   -- DESCRIPTION :
@@ -516,7 +673,7 @@ procedure ts_serlin is
   --   and the degrees of the series in the system.
 
     neq,nvr,deg,frq : integer32 := 0;
-    prc : character;
+    prc,ans : character;
 
   begin
     new_line;
@@ -534,12 +691,24 @@ procedure ts_serlin is
         when others => null;
       end case;
     else
+      new_line;
+      put("Hermite-Laurent system ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
       case prc is
-        when '0' => Standard_Timing(neq,nvr,deg,frq);
-        when '1' => DoblDobl_Timing(neq,nvr,deg,frq);
-        when '2' => QuadDobl_Timing(neq,nvr,deg,frq);
+        when '0' => Standard_Hermite_Laurent_Timing(neq,deg,frq);
+        when '1' => DoblDobl_Hermite_Laurent_Timing(neq,deg,frq);
+        when '2' => QuadDobl_Hermite_Laurent_Timing(neq,deg,frq);
         when others => null;
       end case;
+      else
+        case prc is
+          when '0' => Standard_Timing(neq,nvr,deg,frq);
+          when '1' => DoblDobl_Timing(neq,nvr,deg,frq);
+          when '2' => QuadDobl_Timing(neq,nvr,deg,frq);
+          when others => null;
+        end case;
+      end if;
     end if;
   end Main;
 

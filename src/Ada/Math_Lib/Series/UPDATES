@@ -1,3 +1,6 @@
+Mon 12 Dec 2016 : added timing for the lower triangular echelon forms for
+  the Hermite-Laurent systems to ts_serlin.
+
 Sun 11 Dec 2016 : to ts_sersin added test on user given input.
   Made the Multiply_and_Permute procedures in *echelon_forms.adb
   similar to the Multiplication_Matrices in ts_sersin.
