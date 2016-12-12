@@ -1,4 +1,6 @@
 Sun 11 Dec 2016 : to ts_sersin added test on user given input.
+  Made the Multiply_and_Permute procedures in *echelon_forms.adb
+  similar to the Multiplication_Matrices in ts_sersin.
 
 Sat 10 Dec 2016 : in *echelon_forms.adb initialized matrix U to the identity.
   Solved triangular system with the echelon forms, tested by ts_sersin.

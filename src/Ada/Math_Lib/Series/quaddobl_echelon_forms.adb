@@ -255,13 +255,21 @@ package body QuadDobl_Echelon_Forms is
                 pivots : in Standard_Integer_Vectors.Vector ) is
 
     acc : Complex_Number;
+    one : constant Complex_Number := Create(integer32(1));
+    pivcol : integer32;
 
   begin
-    for i in reverse U'range(1) loop
+    for i in reverse U'range(2) loop
+      for j in U'range(2) loop
+        if Equal(U(i,j),one)
+         then pivcol := j; exit;
+        end if;
+      end loop;
       acc := Create(integer32(0));
       for j in U'range(2) loop
-        acc := acc + U(i,j)*x(j);
+        acc := acc + U(pivcol,j)*x(j);
       end loop;
+      x(pivcol) := acc;
       x(i) := acc;
       if pivots(i) /= i then
         acc := x(i);

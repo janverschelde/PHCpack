@@ -279,9 +279,13 @@ procedure ts_sersin is
   --   Returns the sequence of multiplier matrices,
   --   using the accumulated multiplier data in U.
 
-    res : DoblDobl_Complex_VecMats.VecMat(U'range(2));
-
     use DoblDobl_Complex_Numbers;
+
+    res : DoblDobl_Complex_VecMats.VecMat(U'range(2));
+    pivcol : integer32;
+    val : double_double;
+    cmpone : constant Complex_Number := Create(integer32(1));
+    ddone : constant double_double := Create(1.0);
 
   begin
     for k in res'range loop
@@ -294,8 +298,16 @@ procedure ts_sersin is
           end loop;
           M(i,i) := Create(integer32(1));
         end loop;
+        pivcol := k;
         for j in U'range(2) loop
-          M(k,j) := U(k,j);
+          if Equal(U(k,j),cmpone) then
+            pivcol := j;
+          else
+            val := AbsVal(U(k,j));
+            if val + ddone /= ddone then
+              M(pivcol,j) := U(k,j);
+            end if;
+          end if;
         end loop;
         res(k) := new DoblDobl_Complex_Matrices.Matrix'(M);
       end;
@@ -311,9 +323,13 @@ procedure ts_sersin is
   --   Returns the sequence of multiplier matrices,
   --   using the accumulated multiplier data in U.
 
-    res : QuadDobl_Complex_VecMats.VecMat(U'range(2));
-
     use QuadDobl_Complex_Numbers;
+
+    res : QuadDobl_Complex_VecMats.VecMat(U'range(2));
+    pivcol : integer32;
+    val : quad_double;
+    cmpone : constant Complex_Number := Create(integer32(1));
+    qdone : constant quad_double := Create(1.0);
 
   begin
     for k in res'range loop
@@ -326,8 +342,16 @@ procedure ts_sersin is
           end loop;
           M(i,i) := Create(integer32(1));
         end loop;
+        pivcol := k;
         for j in U'range(2) loop
-          M(k,j) := U(k,j);
+          if Equal(U(k,j),cmpone) then
+            pivcol := j;
+          else
+            val := AbsVal(U(k,j));
+            if val + qdone /= qdone then
+              M(pivcol,j) := U(k,j);
+            end if;
+          end if;
         end loop;
         res(k) := new QuadDobl_Complex_Matrices.Matrix'(M);
       end;
