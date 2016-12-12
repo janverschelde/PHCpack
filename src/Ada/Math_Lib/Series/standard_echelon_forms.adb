@@ -108,8 +108,8 @@ package body Standard_Echelon_Forms is
     val : double_float;
 
   begin
-    for k in j+1..j+dim loop
-      exit when (k > A'last(2));
+    for k in j+1..A'last(2) loop -- j+dim loop
+     -- exit when (k > A'last(2));
       val := AbsVal(A(i,k));
       if val > maxval
        then maxval := val; res := k;
@@ -146,8 +146,8 @@ package body Standard_Echelon_Forms is
      first : boolean := true;
 
   begin
-    for k in j+1..j+dim loop
-      exit when (k > A'last(2));
+    for k in j+1..A'last(2) loop -- j+dim loop
+     -- exit when (k > A'last(2));
       if AbsVal(A(i,k)) > tol then
         fac := A(i,k)/A(i,j);
         U(j,k) := -fac;        -- store the multiplier
@@ -203,8 +203,9 @@ package body Standard_Echelon_Forms is
             put_line("After swapping columns : "); Write_Integer_Matrix(A);
             put("The pivoting information : "); put(col_ipvt); new_line;
           end if;
+          pivcol := colidx;
         end if;
-        Eliminate_on_Row(A,U,pivrow,colidx,dim,tol);
+        Eliminate_on_Row(A,U,pivrow,pivcol,dim,tol);
         if verbose then
           put_line("After elimination on the pivot row :");
           Write_Integer_Matrix(A);

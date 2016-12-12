@@ -3,6 +3,9 @@ Mon 12 Dec 2016 : added timing for the lower triangular echelon forms for
   packages *echelon_forms, added the block dimension, which changed 
   the test procedures ts_sersin and ts_serlin.
   Fixed bug in *echelon_forms with added tests in ts_sersin.
+  Use of added block dimension gives sometimes not an echelon form
+  for very sparse 0/1 matrices, fixed this in *echelon_forms.adb and
+  simplified the construction of multipier matrices in ts_sersin.
 
 Sun 11 Dec 2016 : to ts_sersin added test on user given input.
   Made the Multiply_and_Permute procedures in *echelon_forms.adb

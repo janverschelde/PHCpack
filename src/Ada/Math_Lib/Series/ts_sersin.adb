@@ -239,9 +239,6 @@ procedure ts_sersin is
     use Standard_Complex_Numbers;
 
     res : Standard_Complex_VecMats.VecMat(U'range(2));
-    one : constant Complex_Number := Create(1.0);
-    val : double_float;
-    pivcol : integer32;
 
   begin
     for k in res'range loop
@@ -254,23 +251,8 @@ procedure ts_sersin is
           end loop;
           M(i,i) := Create(1.0);
         end loop;
-        pivcol := -1;
         for j in U'range(2) loop
-          if Equal(U(k,j),one) then
-            pivcol := j;
-           -- M(pivcol,k) := Create(1.0);
-           -- M(k,k) := Create(0.0);
-          end if;
-          if pivcol /= -1 then
-            val := AbsVal(U(k,j));
-            if val + 1.0 /= 1.0 then
-              -- M(pivcol,j) := U(k,j);
-              M(k,j) := U(k,j);
-             -- if j > k then
-             --   M(k,k) := Create(0.0);
-             -- end if;
-            end if;
-          end if;
+          M(k,j) := U(k,j);
         end loop;
         res(k) := new Standard_Complex_Matrices.Matrix'(M);
       end;
@@ -289,10 +271,6 @@ procedure ts_sersin is
     use DoblDobl_Complex_Numbers;
 
     res : DoblDobl_Complex_VecMats.VecMat(U'range(2));
-    pivcol : integer32;
-    val : double_double;
-    cmpone : constant Complex_Number := Create(integer32(1));
-    ddone : constant double_double := Create(1.0);
 
   begin
     for k in res'range loop
@@ -305,16 +283,8 @@ procedure ts_sersin is
           end loop;
           M(i,i) := Create(integer32(1));
         end loop;
-        pivcol := k;
         for j in U'range(2) loop
-          if Equal(U(k,j),cmpone) then
-            pivcol := j;
-          else
-            val := AbsVal(U(k,j));
-            if val + ddone /= ddone then
-              M(pivcol,j) := U(k,j);
-            end if;
-          end if;
+          M(k,j) := U(k,j);
         end loop;
         res(k) := new DoblDobl_Complex_Matrices.Matrix'(M);
       end;
@@ -333,10 +303,6 @@ procedure ts_sersin is
     use QuadDobl_Complex_Numbers;
 
     res : QuadDobl_Complex_VecMats.VecMat(U'range(2));
-    pivcol : integer32;
-    val : quad_double;
-    cmpone : constant Complex_Number := Create(integer32(1));
-    qdone : constant quad_double := Create(1.0);
 
   begin
     for k in res'range loop
@@ -349,16 +315,8 @@ procedure ts_sersin is
           end loop;
           M(i,i) := Create(integer32(1));
         end loop;
-        pivcol := k;
         for j in U'range(2) loop
-          if Equal(U(k,j),cmpone) then
-            pivcol := j;
-          else
-            val := AbsVal(U(k,j));
-            if val + qdone /= qdone then
-              M(pivcol,j) := U(k,j);
-            end if;
-          end if;
+          M(k,j) := U(k,j);
         end loop;
         res(k) := new QuadDobl_Complex_Matrices.Matrix'(M);
       end;
