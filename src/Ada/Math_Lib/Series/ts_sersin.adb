@@ -409,6 +409,10 @@ procedure ts_sersin is
       end loop;
     end loop;
     put("Check sum of differences : "); put(checksum); new_line;
+    if checksum + 1.0 /= 1.0 then
+      put_line("The computed echelon form : "); Write_Integer_Matrix(L);
+      put_line("The reconstructed echelon form : "); Write_Integer_Matrix(W);
+    end if;
   end Standard_Check;
 
   procedure DoblDobl_Check
@@ -434,6 +438,7 @@ procedure ts_sersin is
       := Column_Permutations(pivs);
     M : DoblDobl_Complex_VecMats.VecMat(U'range(2))
       := Multiplier_Matrices(U);
+    one : constant double_double := create(1.0);
 
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Matrices;
@@ -461,6 +466,10 @@ procedure ts_sersin is
       end loop;
     end loop;
     put("Check sum of differences : "); put(checksum); new_line;
+    if checksum + one /= one then
+      put_line("The computed echelon form : "); Write_Integer_Matrix(L);
+      put_line("The reconstructed echelon form : "); Write_Integer_Matrix(W);
+    end if;
   end DoblDobl_Check;
 
   procedure QuadDobl_Check
@@ -486,6 +495,7 @@ procedure ts_sersin is
       := Column_Permutations(pivs);
     M : QuadDobl_Complex_VecMats.VecMat(U'range(2))
       := Multiplier_Matrices(U);
+    one : constant quad_double := create(1.0);
 
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Matrices;
@@ -513,6 +523,10 @@ procedure ts_sersin is
       end loop;
     end loop;
     put("Check sum of differences : "); put(checksum); new_line;
+    if checksum + one /= one then
+      put_line("The computed echelon form : "); Write_Integer_Matrix(L);
+      put_line("The reconstructed echelon form : "); Write_Integer_Matrix(W);
+    end if;
   end QuadDobl_Check;
 
   procedure Standard_Solve
@@ -552,6 +566,8 @@ procedure ts_sersin is
     put_line("The row permutation matrix : "); put(P);
     Pb := cP*b;
     Solve_with_Echelon_Form(L,Pb,x);
+    put_line("The echelon form : "); put(L);
+    put_line("The permuted right hand side vector :"); put_line(Pb);
     put_line("The solution : "); put_line(x);
     rv := Pb - L*x;
     put_line("The residual vector : "); put_line(rv);
