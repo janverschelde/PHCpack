@@ -754,7 +754,8 @@ procedure ts_sersin is
   end QuadDobl_Solve;
 
   procedure Standard_Hermite_Laurent
-              ( mat : in Standard_Dense_Matrix_Series.Matrix;
+              ( dim : in integer32;
+                mat : in Standard_Dense_Matrix_Series.Matrix;
                 rhs : in Standard_Dense_Vector_Series.Vector ) is
 
   -- DESCRIPTION :
@@ -782,7 +783,7 @@ procedure ts_sersin is
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
     L := A;
-    Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
+    Lower_Triangular_Echelon_Form(dim,L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
     put("Continue ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -797,7 +798,8 @@ procedure ts_sersin is
   end Standard_Hermite_Laurent;
 
   procedure DoblDobl_Hermite_Laurent
-              ( mat : in DoblDobl_Dense_Matrix_Series.Matrix;
+              ( dim : in integer32;
+                mat : in DoblDobl_Dense_Matrix_Series.Matrix;
                 rhs : in DoblDobl_Dense_Vector_Series.Vector ) is
 
   -- DESCRIPTION :
@@ -826,7 +828,7 @@ procedure ts_sersin is
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
     L := A;
-    Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
+    Lower_Triangular_Echelon_Form(dim,L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
     put("Continue ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -841,7 +843,8 @@ procedure ts_sersin is
   end DoblDobl_Hermite_Laurent;
 
   procedure QuadDobl_Hermite_Laurent
-              ( mat : in QuadDobl_Dense_Matrix_Series.Matrix;
+              ( dim : in integer32;
+                mat : in QuadDobl_Dense_Matrix_Series.Matrix;
                 rhs : in QuadDobl_Dense_Vector_Series.Vector ) is
 
   -- DESCRIPTION :
@@ -870,7 +873,7 @@ procedure ts_sersin is
     put_line("The Hermite-Laurent right hand side vector :");
     put_line(b);
     L := A;
-    Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots);
+    Lower_Triangular_Echelon_Form(dim,L,U,row_ipvt,col_ipvt,pivots);
     put_line("The matrix in echelon form :"); Write_Integer_Matrix(L);
     put("Continue ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -902,7 +905,7 @@ procedure ts_sersin is
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    Standard_Hermite_Laurent(mat,rhs);
+    Standard_Hermite_Laurent(dim,mat,rhs);
   end Standard_Integer_Test;
 
   procedure DoblDobl_Integer_Test ( deg,dim : in integer32 ) is
@@ -923,7 +926,7 @@ procedure ts_sersin is
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    DoblDobl_Hermite_Laurent(mat,rhs);
+    DoblDobl_Hermite_Laurent(dim,mat,rhs);
   end DoblDobl_Integer_Test;
 
   procedure QuadDobl_Integer_Test ( deg,dim : in integer32 ) is
@@ -944,7 +947,7 @@ procedure ts_sersin is
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    QuadDobl_Hermite_Laurent(mat,rhs);
+    QuadDobl_Hermite_Laurent(dim,mat,rhs);
   end QuadDobl_Integer_Test;
 
   procedure Standard_Random_Test ( deg,dim : in integer32 ) is
@@ -965,7 +968,7 @@ procedure ts_sersin is
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    Standard_Hermite_Laurent(mat,rhs);
+    Standard_Hermite_Laurent(dim,mat,rhs);
   end Standard_Random_Test;
 
   procedure DoblDobl_Random_Test ( deg,dim : in integer32 ) is
@@ -986,7 +989,7 @@ procedure ts_sersin is
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    DoblDobl_Hermite_Laurent(mat,rhs);
+    DoblDobl_Hermite_Laurent(dim,mat,rhs);
   end DoblDobl_Random_Test;
 
   procedure QuadDobl_Random_Test ( deg,dim : in integer32 ) is
@@ -1007,7 +1010,7 @@ procedure ts_sersin is
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    QuadDobl_Hermite_Laurent(mat,rhs);
+    QuadDobl_Hermite_Laurent(dim,mat,rhs);
   end QuadDobl_Random_Test;
 
   procedure Read_Standard_Vector_Series
@@ -1151,7 +1154,7 @@ procedure ts_sersin is
     put_line("Your matrix series :"); put(mat);
     Read_Standard_Vector_Series(deg,dim,rhs);
     put_line("Your right hand side vector : "); put(rhs);
-    Standard_Hermite_Laurent(mat,rhs);
+    Standard_Hermite_Laurent(dim,mat,rhs);
   end Standard_User_Test;
 
   procedure DoblDobl_User_Test ( deg,dim : in integer32 ) is
@@ -1169,7 +1172,7 @@ procedure ts_sersin is
     put_line("Your matrix series :"); put(mat);
     Read_DoblDobl_Vector_Series(deg,dim,rhs);
     put_line("Your right hand side vector : "); put(rhs);
-    DoblDobl_Hermite_Laurent(mat,rhs);
+    DoblDobl_Hermite_Laurent(dim,mat,rhs);
   end DoblDobl_User_Test;
 
   procedure QuadDobl_User_Test ( deg,dim : in integer32 ) is
@@ -1187,7 +1190,7 @@ procedure ts_sersin is
     put_line("Your matrix series :"); put(mat);
     Read_QuadDobl_Vector_Series(deg,dim,rhs);
     put_line("Your right hand side vector : "); put(rhs);
-    QuadDobl_Hermite_Laurent(mat,rhs);
+    QuadDobl_Hermite_Laurent(dim,mat,rhs);
   end QuadDobl_User_Test;
 
   procedure Main is

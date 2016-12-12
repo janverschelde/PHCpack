@@ -57,10 +57,11 @@ package DoblDobl_Echelon_Forms is
 
   function Max_on_Row
              ( A : DoblDobl_Complex_Matrices.Matrix;
-               i,j : integer32; tol : double_float ) return integer32;
+               i,j,dim : integer32; tol : double_float ) return integer32;
 
   -- DESCRIPTION :
   --   Returns the index k >= j on row i for which A(i,k) is largest.
+  --   The dimension of each block in A equals dim.
   --   If all elements on the row, right of the pivot j, are less
   --   then tol, then -1 is returned.
 
@@ -76,7 +77,7 @@ package DoblDobl_Echelon_Forms is
   procedure Eliminate_on_Row
               ( A : in out DoblDobl_Complex_Matrices.Matrix;
                 U : out DoblDobl_Complex_Matrices.Matrix;
-                i,j : in integer32; tol : in double_float );
+                i,j,dim : in integer32; tol : in double_float );
 
   -- DESCRIPTION :
   --   Eliminates all elements at the right of the pivot (i,j)
@@ -86,6 +87,7 @@ package DoblDobl_Echelon_Forms is
   --   A        matrix with nonzero pivot at row i and column j;
   --   i        index of the pivot row;
   --   j        index of the pivot column;
+  --   dim      the dimension of each block in A;
   --   tol      tolerance to decide whether a number is zero or not.
   --
   -- ON RETURN :
@@ -94,7 +96,8 @@ package DoblDobl_Echelon_Forms is
   --            element is stored at position (i,k).
 
   procedure Lower_Triangular_Echelon_Form
-              ( A : in out DoblDobl_Complex_Matrices.Matrix;
+              ( dim : in integer32;
+                A : in out DoblDobl_Complex_Matrices.Matrix;
                 U : out DoblDobl_Complex_Matrices.Matrix;
                 row_ipvt : out Standard_Integer_Vectors.Vector;
                 col_ipvt,pivots : out Standard_Integer_Vectors.Vector;
@@ -106,7 +109,8 @@ package DoblDobl_Echelon_Forms is
   --   If verbose, then intermediate results are written to screen.
 
   -- ON ENTRY :
-  --   A        block lower triangular matrix;
+  --   dim      dimension of each block in A;
+  --   A        block banded matrix, each block has dimension dim;
   --   verbose  flag to indicate if intermediate output is needed.
 
   -- ON RETURN :

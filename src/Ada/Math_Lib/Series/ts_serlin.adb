@@ -538,7 +538,7 @@ procedure ts_serlin is
   begin
     tstart(timer);
     for k in 1..f loop
-      Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots,false);
+      Lower_Triangular_Echelon_Form(n,L,U,row_ipvt,col_ipvt,pivots,false);
       Solve_with_Echelon_Form(L,b,x);
       Multiply_and_Permute(x,U,pivots);
     end loop;
@@ -587,7 +587,7 @@ procedure ts_serlin is
   begin
     tstart(timer);
     for k in 1..f loop
-      Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots,false);
+      Lower_Triangular_Echelon_Form(n,L,U,row_ipvt,col_ipvt,pivots,false);
       Solve_with_Echelon_Form(L,b,x);
       Multiply_and_Permute(x,U,pivots);
     end loop;
@@ -636,7 +636,7 @@ procedure ts_serlin is
   begin
     tstart(timer);
     for k in 1..f loop
-      Lower_Triangular_Echelon_Form(L,U,row_ipvt,col_ipvt,pivots,false);
+      Lower_Triangular_Echelon_Form(n,L,U,row_ipvt,col_ipvt,pivots,false);
       Solve_with_Echelon_Form(L,b,x);
       Multiply_and_Permute(x,U,pivots);
     end loop;

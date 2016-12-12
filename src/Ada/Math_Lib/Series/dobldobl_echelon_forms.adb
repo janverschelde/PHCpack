@@ -94,14 +94,15 @@ package body DoblDobl_Echelon_Forms is
 
   function Max_on_Row
              ( A : DoblDobl_Complex_Matrices.Matrix;
-               i,j : integer32; tol : double_float ) return integer32 is
+               i,j,dim : integer32; tol : double_float ) return integer32 is
 
     res : integer32 := j;
     maxval : double_double := AbsVal(A(i,j));
     val : double_double;
 
   begin
-    for k in j+1..A'last(2) loop
+    for k in j+1..j+dim loop
+      exit when (k > A'last(2));
       val := AbsVal(A(i,k));
       if val > maxval
        then maxval := val; res := k;
@@ -132,12 +133,13 @@ package body DoblDobl_Echelon_Forms is
   procedure Eliminate_on_Row
               ( A : in out DoblDobl_Complex_Matrices.Matrix;
                 U : out DoblDobl_Complex_Matrices.Matrix;
-                i,j : in integer32; tol : in double_float ) is
+                i,j,dim : in integer32; tol : in double_float ) is
 
      fac : Complex_Number;
 
   begin
-    for k in j+1..A'last(2) loop
+    for k in j+1..j+dim loop
+      exit when (k > A'last(2));
       if AbsVal(A(i,k)) > tol then
         fac := A(i,k)/A(i,j);
         U(i,j) := Create(integer32(1));  -- mark the pivot column
@@ -151,7 +153,8 @@ package body DoblDobl_Echelon_Forms is
   end Eliminate_on_Row;
 
   procedure Lower_Triangular_Echelon_Form
-              ( A : in out DoblDobl_Complex_Matrices.Matrix;
+              ( dim : integer32;
+                A : in out DoblDobl_Complex_Matrices.Matrix;
                 U : out DoblDobl_Complex_Matrices.Matrix;
                 row_ipvt : out Standard_Integer_Vectors.Vector;
                 col_ipvt,pivots : out Standard_Integer_Vectors.Vector;
@@ -180,7 +183,7 @@ package body DoblDobl_Echelon_Forms is
     end if;
     colidx := A'first(2);
     loop
-      pivcol := Max_on_Row(A,pivrow,colidx,tol);
+      pivcol := Max_on_Row(A,pivrow,colidx,dim,tol);
       if verbose then
         put("The pivot row : "); put(pivrow,1); 
         put("  pivot column : "); put(pivcol,1); 
@@ -195,7 +198,7 @@ package body DoblDobl_Echelon_Forms is
             put("The pivoting information : "); put(col_ipvt); new_line;
           end if;
         end if;
-        Eliminate_on_Row(A,U,pivrow,colidx,tol);
+        Eliminate_on_Row(A,U,pivrow,colidx,dim,tol);
         if verbose then
           put_line("After elimination on the pivot row :");
           Write_Integer_Matrix(A);
