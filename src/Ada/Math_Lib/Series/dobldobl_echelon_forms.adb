@@ -258,4 +258,37 @@ package body DoblDobl_Echelon_Forms is
     end loop;
   end Multiply_and_Permute;
 
+  function Permute ( v : DoblDobl_Complex_Vectors.Vector; 
+                     ipvt : Standard_Integer_Vectors.Vector )
+                   return DoblDobl_Complex_Vectors.Vector is
+
+    res : DoblDobl_Complex_Vectors.Vector(v'range);
+
+  begin
+    for i in v'range loop
+      res(ipvt(i)) := v(i);
+    end loop;
+    return res;
+  end Permute;
+
+  procedure Solve
+              ( dim : in integer32;
+                A : in DoblDobl_Complex_Matrices.Matrix;
+                b : in DoblDobl_Complex_Vectors.Vector;
+                x : out DoblDobl_Complex_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+    L : DoblDobl_Complex_Matrices.Matrix(A'range(1),A'range(2)) := A;
+    U : DoblDobl_Complex_Matrices.Matrix(A'range(1),A'range(2));
+    row_ipvt : Standard_Integer_Vectors.Vector(A'range(1));
+    col_ipvt,pivots : Standard_Integer_Vectors.Vector(A'range(2));
+    pb : DoblDobl_Complex_Vectors.Vector(b'range);
+
+  begin
+    Lower_Triangular_Echelon_Form(dim,L,U,row_ipvt,col_ipvt,pivots);
+    pb := Permute(b,row_ipvt);
+    Solve_with_Echelon_Form(L,Pb,x);
+    Multiply_and_Permute(x,U,pivots);
+  end Solve;
+
 end DoblDobl_Echelon_Forms;

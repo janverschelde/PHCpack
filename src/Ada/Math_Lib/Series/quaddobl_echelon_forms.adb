@@ -273,4 +273,37 @@ package body QuadDobl_Echelon_Forms is
     end loop;
   end Multiply_and_Permute;
 
+  function Permute ( v : QuadDobl_Complex_Vectors.Vector; 
+                     ipvt : Standard_Integer_Vectors.Vector )
+                   return QuadDobl_Complex_Vectors.Vector is
+
+    res : QuadDobl_Complex_Vectors.Vector(v'range);
+
+  begin
+    for i in v'range loop
+      res(ipvt(i)) := v(i);
+    end loop;
+    return res;
+  end Permute;
+
+  procedure Solve
+              ( dim : in integer32;
+                A : in QuadDobl_Complex_Matrices.Matrix;
+                b : in QuadDobl_Complex_Vectors.Vector;
+                x : out QuadDobl_Complex_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+    L : QuadDobl_Complex_Matrices.Matrix(A'range(1),A'range(2)) := A;
+    U : QuadDobl_Complex_Matrices.Matrix(A'range(1),A'range(2));
+    row_ipvt : Standard_Integer_Vectors.Vector(A'range(1));
+    col_ipvt,pivots : Standard_Integer_Vectors.Vector(A'range(2));
+    pb : QuadDobl_Complex_Vectors.Vector(b'range);
+
+  begin
+    Lower_Triangular_Echelon_Form(dim,L,U,row_ipvt,col_ipvt,pivots);
+    pb := Permute(b,row_ipvt);
+    Solve_with_Echelon_Form(L,Pb,x);
+    Multiply_and_Permute(x,U,pivots);
+  end Solve;
+
 end QuadDobl_Echelon_Forms;

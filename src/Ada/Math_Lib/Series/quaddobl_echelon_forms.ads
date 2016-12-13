@@ -153,4 +153,24 @@ package QuadDobl_Echelon_Forms is
   -- ON RETURN :
   --   x        transformed solution, to the origin problem A*x = b.
 
+  function Permute ( v : QuadDobl_Complex_Vectors.Vector; 
+                     ipvt : Standard_Integer_Vectors.Vector )
+                   return QuadDobl_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Applies the permutations defined by the ipvt vector to v.
+
+  procedure Solve
+              ( dim : in integer32;
+                A : in QuadDobl_Complex_Matrices.Matrix;
+                b : in QuadDobl_Complex_Vectors.Vector;
+                x : out QuadDobl_Complex_Vectors.Vector;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Wraps the computation of the lower triangular echelon form for A
+  --   to solve the linear system A*x = b.
+  --   If verbose, then the stages in the computation of the lower triangular
+  --   echelon form are written to screen.
+
 end QuadDobl_Echelon_Forms;

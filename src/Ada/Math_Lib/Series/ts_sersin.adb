@@ -496,7 +496,8 @@ procedure ts_sersin is
   end QuadDobl_Check;
 
   procedure Standard_Solve
-              ( A,L,U : in Standard_Complex_Matrices.Matrix;
+              ( dim : in integer32;
+                A,L,U : in Standard_Complex_Matrices.Matrix;
                 b : in Standard_Complex_Vectors.Vector;
                 rowp,colp,pivs : in Standard_Integer_Vectors.Vector ) is
 
@@ -519,7 +520,7 @@ procedure ts_sersin is
     M : Standard_Complex_VecMats.VecMat(U'range(2))
       := Multiplier_Matrices(U);
     Pb : Standard_Complex_Vectors.Vector(b'range);
-    x,rv,z : Standard_Complex_Vectors.Vector(b'range);
+    x,rv,y,z : Standard_Complex_Vectors.Vector(b'range);
     res,checksum : double_float;
     ans : character;
    
@@ -559,12 +560,16 @@ procedure ts_sersin is
         Multiply_and_Permute(z,U,pivs);
         put_line("After Multiply_and_Permute :");
         put_line(z);
+        Solve(dim,A,b,y,false);
+        put_line("The outcome of solve :");
+        put_line(y);
         put_line("Component by component comparison :");
         checksum := 0.0;
         for i in x'range loop
           put("x("); put(i,1); put(") : "); put(x(i)); new_line;
+          put("y("); put(i,1); put(") : "); put(y(i)); new_line;
           put("z("); put(i,1); put(") : "); put(z(i)); new_line;
-          checksum := checksum + AbsVal(x(i) - z(i));
+          checksum := checksum + AbsVal(x(i) - y(i)) + AbsVal(x(i) - z(i));
         end loop;
         put("The check sum of differences : "); put(checksum,3); new_line;
       end if;
@@ -572,7 +577,8 @@ procedure ts_sersin is
   end Standard_Solve;
 
   procedure DoblDobl_Solve
-              ( A,L,U : in DoblDobl_Complex_Matrices.Matrix;
+              ( dim : in integer32;
+                A,L,U : in DoblDobl_Complex_Matrices.Matrix;
                 b : in DoblDobl_Complex_Vectors.Vector;
                 rowp,colp,pivs : in Standard_Integer_Vectors.Vector ) is
 
@@ -595,7 +601,7 @@ procedure ts_sersin is
     M : DoblDobl_Complex_VecMats.VecMat(U'range(2))
       := Multiplier_Matrices(U);
     Pb : DoblDobl_Complex_Vectors.Vector(b'range);
-    x,rv,z : DoblDobl_Complex_Vectors.Vector(b'range);
+    x,rv,y,z : DoblDobl_Complex_Vectors.Vector(b'range);
     res,checksum : double_double;
     ans : character;
    
@@ -633,12 +639,16 @@ procedure ts_sersin is
         Multiply_and_Permute(z,U,pivs);
         put_line("After Multiply_and_Permute :");
         put_line(z);
+        Solve(dim,A,b,y,false);
+        put_line("The outcome of solve :");
+        put_line(y);
         put_line("Component by component comparison :");
         checksum := create(0.0);
         for i in x'range loop
           put("x("); put(i,1); put(") : "); put(x(i)); new_line;
+          put("y("); put(i,1); put(") : "); put(y(i)); new_line;
           put("z("); put(i,1); put(") : "); put(z(i)); new_line;
-          checksum := checksum + AbsVal(x(i) - z(i));
+          checksum := checksum + AbsVal(x(i) - y(i)) + AbsVal(x(i) - z(i));
         end loop;
         put("The check sum of differences : "); put(checksum,3); new_line;
       end if;
@@ -646,7 +656,8 @@ procedure ts_sersin is
   end DoblDobl_Solve;
 
   procedure QuadDobl_Solve
-              ( A,L,U : in QuadDobl_Complex_Matrices.Matrix;
+              ( dim : in integer32;
+                A,L,U : in QuadDobl_Complex_Matrices.Matrix;
                 b : in QuadDobl_Complex_Vectors.Vector;
                 rowp,colp,pivs : in Standard_Integer_Vectors.Vector ) is
 
@@ -669,7 +680,7 @@ procedure ts_sersin is
     M : QuadDobl_Complex_VecMats.VecMat(U'range(2))
       := Multiplier_Matrices(U);
     Pb : QuadDobl_Complex_Vectors.Vector(b'range);
-    x,rv,z : QuadDobl_Complex_Vectors.Vector(b'range);
+    x,rv,y,z : QuadDobl_Complex_Vectors.Vector(b'range);
     res,checksum : quad_double;
     ans : character;
    
@@ -707,12 +718,16 @@ procedure ts_sersin is
         Multiply_and_Permute(z,U,pivs);
         put_line("After Multiply_and_Permute :");
         put_line(z);
+        Solve(dim,A,b,y,false);
+        put_line("The outcome of solve :");
+        put_line(y);
         put_line("Component by component comparison :");
         checksum := create(0.0);
         for i in x'range loop
           put("x("); put(i,1); put(") : "); put(x(i)); new_line;
+          put("y("); put(i,1); put(") : "); put(y(i)); new_line;
           put("z("); put(i,1); put(") : "); put(z(i)); new_line;
-          checksum := checksum + AbsVal(x(i) - z(i));
+          checksum := checksum + AbsVal(x(i) - y(i)) + AbsVal(x(i) - z(i));
         end loop;
         put("The check sum of differences : "); put(checksum,3); new_line;
       end if;
@@ -758,7 +773,7 @@ procedure ts_sersin is
       put("Continue ? (y/n) ");
       Ask_Yes_or_No(ans);
       if ans = 'y'
-       then Standard_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
+       then Standard_Solve(dim,A,L,U,b,row_ipvt,col_ipvt,pivots);
       end if;
     end if;
   end Standard_Hermite_Laurent;
@@ -803,7 +818,7 @@ procedure ts_sersin is
       put("Continue ? (y/n) ");
       Ask_Yes_or_No(ans);
       if ans = 'y'
-       then DoblDobl_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
+       then DoblDobl_Solve(dim,A,L,U,b,row_ipvt,col_ipvt,pivots);
       end if;
     end if;
   end DoblDobl_Hermite_Laurent;
@@ -848,7 +863,7 @@ procedure ts_sersin is
       put("Continue ? (y/n) ");
       Ask_Yes_or_No(ans);
       if ans = 'y'
-       then QuadDobl_Solve(A,L,U,b,row_ipvt,col_ipvt,pivots);
+       then QuadDobl_Solve(dim,A,L,U,b,row_ipvt,col_ipvt,pivots);
       end if;
     end if;
   end QuadDobl_Hermite_Laurent;
