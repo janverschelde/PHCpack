@@ -1,5 +1,7 @@
 Wed 14 Dec 2016 : added Determinant function to *echelon_forms.
   Fixed bug in timer in ts_serlin, forgotten to initialize L, as L := A.
+  Wrapped the echelon solver in *matrix_series_solvers, tested by ts_serlin,
+  for the general case.
 
 Mon 12 Dec 2016 : added timing for the lower triangular echelon forms for
   the Hermite-Laurent systems to ts_serlin.  To the procedures in the

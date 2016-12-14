@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Double_Double_Numbers;               use Double_Double_Numbers;
+with DoblDobl_Complex_Numbers;            use DoblDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Matrices;
@@ -328,5 +329,38 @@ package DoblDobl_Matrix_Series_Solvers is
   --            values of the lead coefficient of A;
   --   x        all coefficients of the solution series up to b.deg,
   --            provided rcond /= 0.0.
+
+  procedure Echelon_Solve
+              ( A : in DoblDobl_Dense_Matrix_Series.Matrix;
+                b : in DoblDobl_Dense_Vector_Series.Vector;
+                det : out Complex_Number;
+                xp : out DoblDobl_Dense_Vector_Series.Vector;
+                xn : out DoblDobl_Dense_Vector_Series.Vector );
+            
+  -- DESCRIPTION :
+  --   Solves the linear system A*x = b, using the lower triangular
+  --   echelon form of the Hermite-Laurent system defined by A and b.
+  --   The solution may have negative exponents, maybe a Laurent series.
+
+  -- REQUIRED : A.deg = b.deg >= 0.
+
+  -- REQUIRED :
+  --   A.deg >= 0 and b.deg >= 0.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrix as a matrix series;
+  --   b        the right hand side as a vector series.
+
+  -- ON RETURN :
+  --   det      determinant of the lower triangular echelon form,
+  --            if zero, then the solution may be a formal Laurent series
+  --            as nonzero coefficients with negative exponents appear,
+  --            if nonzero, then xn.deg = -1;
+  --   xp       all coefficients of the solution series up to b.deg,
+  --            provided det /= 0;
+  --   xn       if xn.deg = -1, then there are no terms in the solution
+  --            series with negative exponents,
+  --            if xn.deg > 0, the xn.cff(k) stores the coefficient with
+  --            t**(-k) in the Laurent series of the solution.
 
 end DoblDobl_Matrix_Series_Solvers;

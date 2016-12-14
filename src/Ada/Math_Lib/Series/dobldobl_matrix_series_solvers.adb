@@ -1,7 +1,8 @@
-with DoblDobl_Complex_Numbers;           use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with DoblDobl_Complex_QR_Least_Squares;  use DoblDobl_Complex_QR_Least_Squares;
 with DoblDobl_Complex_Singular_Values;   use DoblDobl_Complex_Singular_Values;
+with DoblDobl_Interpolating_Series;      use DoblDobl_Interpolating_Series;
+with DoblDobl_Echelon_Forms;             use DoblDobl_Echelon_Forms;
 
 package body DoblDobl_Matrix_Series_Solvers is
 
@@ -289,5 +290,55 @@ package body DoblDobl_Matrix_Series_Solvers is
       end loop;
     end if;
   end Solve_by_SVD;
+
+  procedure Echelon_Solve
+              ( A : in DoblDobl_Dense_Matrix_Series.Matrix;
+                b : in DoblDobl_Dense_Vector_Series.Vector;
+                det : out Complex_Number;
+                xp : out DoblDobl_Dense_Vector_Series.Vector;
+                xn : out DoblDobl_Dense_Vector_Series.Vector ) is
+
+    deg : constant integer32 := A.deg;
+    nbr : constant integer32 := A.cff(0)'last(1);
+    nbc : constant integer32 := A.cff(0)'last(2);
+    nrows : constant integer32 := nbr*(2*deg+1);
+    ncols : constant integer32 := nbc*(2*deg+1);
+    hlm : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
+        := Hermite_Laurent_Matrix(A.cff(0..deg));
+    x : DoblDobl_Complex_Vectors.Vector(1..ncols);
+    rhs : DoblDobl_Complex_Vectors.Vector(1..nrows)
+        := Hermite_Laurent_Vector(b.cff(0..deg));
+    U : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
+    row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
+    col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
+    wx : DoblDobl_Complex_Vectors.Vector(1..nbc);
+    startidx : constant integer32 := nbc*deg; -- space for Laurent portion
+    one : constant double_double := create(1.0);
+    absdet : double_double;
+
+  begin
+    Lower_Triangular_Echelon_Form(nbc,hlm,U,row_ipvt,col_ipvt,pivots,false);
+    Solve_with_Echelon_Form(hlm,rhs,x);
+    Multiply_and_Permute(x,U,pivots);
+    det := Determinant(hlm);
+    absdet := AbsVal(det);
+    xp.deg := deg;
+    for i in 0..deg loop
+      for j in 1..nbc loop
+        wx(j) := x(startidx+i*nbc+j);
+      end loop;
+      xp.cff(i) := new DoblDobl_Complex_Vectors.Vector'(wx);
+    end loop;
+    if absdet + one /= one then
+      xn.deg := -1; -- no Laurent portion
+    else
+      for i in 1..deg loop
+        for j in 1..nbc loop
+          wx(j) := x(startidx-i*nbc+j);
+        end loop;
+        xn.cff(i) := new DoblDobl_Complex_Vectors.Vector'(wx);
+      end loop;
+    end if;
+  end Echelon_Solve;
 
 end DoblDobl_Matrix_Series_Solvers;
