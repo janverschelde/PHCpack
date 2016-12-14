@@ -1,3 +1,5 @@
+Wed 14 Dec 2016 : added Determinant function to *echelon_forms.
+
 Mon 12 Dec 2016 : added timing for the lower triangular echelon forms for
   the Hermite-Laurent systems to ts_serlin.  To the procedures in the
   packages *echelon_forms, added the block dimension, which changed 

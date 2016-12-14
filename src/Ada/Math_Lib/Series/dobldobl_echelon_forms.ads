@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;             use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;            use Standard_Floating_Numbers;
+with DoblDobl_Complex_Numbers;             use DoblDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Matrices;
@@ -123,6 +124,14 @@ package DoblDobl_Echelon_Forms is
   --            the columns in the determination of the next pivot;
   --   pivots   sequence of column pivots in the order in which
   --            they were generated.
+
+  function Determinant
+             ( L : DoblDobl_Complex_Matrices.Matrix ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the product of the diagonal elements of L.
+  --   If L is a lower triangular echelon form,
+  --   then the number on return equals the determinant of L.
 
   procedure Solve_with_Echelon_Form
               ( L : in DoblDobl_Complex_Matrices.Matrix;

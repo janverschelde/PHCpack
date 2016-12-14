@@ -2,7 +2,6 @@ with text_io;                           use text_io;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
-with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
 with Standard_Echelon_Forms;
 
 package body DoblDobl_Echelon_Forms is
@@ -208,6 +207,19 @@ package body DoblDobl_Echelon_Forms is
       exit when ((pivrow > A'last(1)) or (colidx > A'last(2)));
     end loop;
   end Lower_Triangular_Echelon_Form;
+
+  function Determinant
+             ( L : DoblDobl_Complex_Matrices.Matrix ) return Complex_Number is
+
+    res : Complex_Number := Create(integer32(1));
+
+  begin
+    for k in L'range(1) loop
+      exit when (k > L'last(2)); -- L might be not square
+      res := res*L(k,k);
+    end loop;
+    return res;
+  end Determinant;
 
   procedure Solve_with_Echelon_Form
               ( L : in DoblDobl_Complex_Matrices.Matrix;

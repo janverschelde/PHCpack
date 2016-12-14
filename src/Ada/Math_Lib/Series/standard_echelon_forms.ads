@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;             use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;            use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;             use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Matrices;
 with Standard_Complex_Vectors;
@@ -131,6 +132,14 @@ package Standard_Echelon_Forms is
   --            the columns in the determination of the next pivot;
   --   pivots   sequence of column pivots in the order in which
   --            they were generated.
+
+  function Determinant
+             ( L : Standard_Complex_Matrices.Matrix ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the product of the diagonal elements of L.
+  --   If L is a lower triangular echelon form,
+  --   then the number on return equals the determinant of L.
 
   function Row_Permutation_Matrix
              ( ipvt : Standard_Integer_Vectors.Vector )
