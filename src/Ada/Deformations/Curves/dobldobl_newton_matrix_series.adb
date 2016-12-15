@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
+with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 with DoblDobl_Dense_Series;
 with DoblDobl_Dense_Series_io;
 with DoblDobl_Series_Vector_Norms;
@@ -504,6 +505,106 @@ package body DoblDobl_Newton_Matrix_Series is
     DoblDobl_Series_Jaco_Matrices.Clear(jp);
   end SVD_Newton_Step;
 
+-- ONE NEWTON STEP WITH ECHELON FORM :
+
+  procedure Echelon_Newton_Step
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    dx : DoblDobl_Dense_Series_Vectors.Vector(x'range);
+    px : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    jm : DoblDobl_Dense_Series_Matrices.Matrix(p'range,x'range);
+    xp,xd,xdn : DoblDobl_Dense_Vector_Series.Vector;
+    mj : DoblDobl_Dense_Matrix_Series.Matrix;
+
+  begin
+    px := DoblDobl_Series_Poly_SysFun.Eval(p,x);
+    DoblDobl_Dense_Series_Vectors.Min(px);
+    Series_and_Polynomials.Set_degree(px,degree);
+    jm := DoblDobl_Series_Jaco_Matrices.Eval(jp,x);
+    Series_and_Polynomials.Set_degree(jm,degree);
+    mj := DoblDobl_Dense_Matrix_Series.Create(jm);
+    xp := DoblDobl_Dense_Vector_Series.Create(px);
+    Echelon_Solve(mj,xp,det,xd,xdn);
+    dx := DoblDobl_Dense_Vector_Series.Create(xd);
+    DoblDobl_Dense_Series_Vectors.Add(x,dx);
+    DoblDobl_Dense_Matrix_Series.Clear(mj);
+    DoblDobl_Dense_Vector_Series.Clear(xp);
+    DoblDobl_Dense_Vector_Series.Clear(xd);
+  end Echelon_Newton_Step;
+
+  procedure Echelon_Newton_Step
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    jp : DoblDobl_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DoblDobl_Series_Jaco_Matrices.Create(p);
+
+  begin
+    Echelon_Newton_Step(p,jp,degree,x,det);
+    DoblDobl_Series_Jaco_Matrices.Clear(jp);
+  end Echelon_Newton_Step;
+
+  procedure Echelon_Newton_Step
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    dx : DoblDobl_Dense_Series_Vectors.Vector(x'range);
+    px : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    jm : DoblDobl_Dense_Series_Matrices.Matrix(p'range,x'range);
+    xp,xd,xdn : DoblDobl_Dense_Vector_Series.Vector;
+    mj : DoblDobl_Dense_Matrix_Series.Matrix;
+
+  begin
+    px := DoblDobl_Series_Poly_SysFun.Eval(p,x);
+    put_line(file,"The evaluated series :");
+    for i in px'range loop
+      DoblDobl_Dense_Series_io.put(file,px(i)); new_line(file);
+    end loop;
+    DoblDobl_Dense_Series_Vectors.Min(px);
+    Series_and_Polynomials.Set_degree(px,degree);
+    jm := DoblDobl_Series_Jaco_Matrices.Eval(jp,x);
+    Series_and_Polynomials.Set_degree(jm,degree);
+    mj := DoblDobl_Dense_Matrix_Series.Create(jm);
+    xp := DoblDobl_Dense_Vector_Series.Create(px);
+    Echelon_Solve(mj,xp,det,xd,xdn);
+    put(file,"n.deg : "); put(file,xdn.deg,1); 
+    put(file,"  det : "); put(file,det); new_line(file);
+    dx := DoblDobl_Dense_Vector_Series.Create(xd);
+    DoblDobl_Dense_Series_Vectors.Add(x,dx);
+    put_line(file,"The update to the series :");
+    for i in dx'range loop
+      DoblDobl_Dense_Series_io.put(file,dx(i)); new_line(file);
+    end loop;
+    DoblDobl_Dense_Matrix_Series.Clear(mj);
+    DoblDobl_Dense_Vector_Series.Clear(xp);
+    DoblDobl_Dense_Vector_Series.Clear(xd);
+  end Echelon_Newton_Step;
+
+  procedure Echelon_Newton_Step
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    jp : DoblDobl_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DoblDobl_Series_Jaco_Matrices.Create(p);
+
+  begin
+    Echelon_Newton_Step(file,p,jp,degree,x,det);
+    DoblDobl_Series_Jaco_Matrices.Clear(jp);
+  end Echelon_Newton_Step;
+
 -- MANY NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Steps
@@ -795,5 +896,72 @@ package body DoblDobl_Newton_Matrix_Series is
     SVD_Newton_Steps(file,p,jp,degree,nbrit,x,info,rcond);
     DoblDobl_Series_Jaco_Matrices.Clear(jp);
   end SVD_Newton_Steps;
+
+-- MANY NEWTON STEPS WITH ECHELON FORM :
+
+  procedure Echelon_Newton_Steps
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+  begin
+    for i in 1..nbrit loop
+      Echelon_Newton_Step(p,jp,degree,x,det);
+      exit when (i = nbrit); -- do not double degree after last step
+      degree := 2*degree;
+      if degree > DoblDobl_Dense_Series.max_deg
+       then degree := DoblDobl_Dense_Series.max_deg;
+      end if;
+    end loop;
+  end Echelon_Newton_Steps;
+
+  procedure Echelon_Newton_Steps
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    jp : DoblDobl_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DoblDobl_Series_Jaco_Matrices.Create(p);
+
+  begin
+    Echelon_Newton_Steps(p,jp,degree,nbrit,x,det);
+    DoblDobl_Series_Jaco_Matrices.Clear(jp);
+  end Echelon_Newton_Steps;
+
+  procedure Echelon_Newton_Steps
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+  begin
+    for i in 1..nbrit loop
+      put(file,"LU Newton step "); put(file,i,1); put_line(file," :");
+      Echelon_Newton_Step(file,p,jp,degree,x,det);
+      exit when (i = nbrit); -- do not double degree after last step
+      degree := 2*degree;
+      if degree > DoblDobl_Dense_Series.max_deg
+       then degree := DoblDobl_Dense_Series.max_deg;
+      end if;
+    end loop;
+  end Echelon_Newton_Steps;
+
+  procedure Echelon_Newton_Steps
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    jp : DoblDobl_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DoblDobl_Series_Jaco_Matrices.Create(p);
+
+  begin
+    Echelon_Newton_Steps(file,p,jp,degree,nbrit,x,det);
+    DoblDobl_Series_Jaco_Matrices.Clear(jp);
+  end Echelon_Newton_Steps;
 
 end DoblDobl_Newton_Matrix_Series;

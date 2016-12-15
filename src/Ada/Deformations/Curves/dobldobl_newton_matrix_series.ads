@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
+with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
 with DoblDobl_Dense_Series_Vectors;
 with DoblDobl_Series_Poly_Systems;
 with DoblDobl_Series_Jaco_Matrices;
@@ -202,6 +203,53 @@ package DoblDobl_Newton_Matrix_Series is
   --   rcond    inverse condition number of the lead coeffficient matrix,
   --            computed with singular values.
 
+-- ONE NEWTON STEP WITH ECHELON FORM :
+
+  procedure Echelon_Newton_Step
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Step
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Step
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Step
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+
+  -- DESCRIPTION :
+  --   Performs one step with Newton's method on the system p,
+  --   starting at the series approximation x, 
+  --   calculating with power series up to the given degree,
+  --   using a lower triangular echelon form to solve the linear system.
+
+  -- ON ENTRY :
+  --   file     for intermediate output: p(x) and the update dx,
+  --            if omitted, LU_Newton_Step is silent;
+  --   p        a polynomial system with series coefficients;
+  --   jp       Jacobi matrix of the system p;
+  --   degree   the degree at which to solve the linear system;
+  --   x        current approximation for the series solution.
+
+  -- ON RETURN :
+  --   x        updated approximation for the series solution;
+  --   det      determinant of the lower triangular echelon form,
+  --            if nonzero, then the problem is regular,
+  --            otherwise, the solution may be a formal Laurent series.
+
 -- MANY NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Steps
@@ -379,7 +427,7 @@ package DoblDobl_Newton_Matrix_Series is
   -- DESCRIPTION :
   --   Does a number of Newton steps on the system p,
   --   starting at x, doubling the degree after each step,
-  --   with QR decomposition on the Jacobian matrix,
+  --   with SVD decomposition on the Jacobian matrix,
   --   terminating if info /= 0 or if nbrit is reached.
 
   -- ON ENTRY :
@@ -397,5 +445,55 @@ package DoblDobl_Newton_Matrix_Series is
   --   info     return code of the SVD on the lead coefficient matrix;
   --   rcond    inverse condition number of the lead coeffficient matrix,
   --            computed with singular values.
+
+-- MANY NEWTON STEPS WITH ECHELON FORM :
+
+  procedure Echelon_Newton_Steps
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Steps
+              ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Steps
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                jp : in DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Steps
+              ( file : in file_type;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+
+  -- DESCRIPTION :
+  --   Does a number of Newton steps on the square system p,
+  --   starting at x, doubling the degree after each step,
+  --   with an echelon form on the Jacobian matrix,
+  --   terminating if nbrit is reached.
+
+  -- ON ENTRY :
+  --   file     for intermediate output: p(x) and the update dx,
+  --            if omitted, LU_Newton_Step is silent;
+  --   p        a polynomial system with series coefficients;
+  --   jp       Jacobi matrix of the system p;
+  --   degree   the degree at start of the computations;
+  --   nbrit    total number of Newton steps;
+  --   x        current approximation for the series solution.
+
+  -- ON RETURN :
+  --   degree   last degree of the computation;
+  --   x        updated approximation for the series solution;
+  --   det      dterminant of the echelon Hermite-Laurent matrix
+  --            if nonzero, then there are no nonzero coefficients
+  --            in the series with negative exponents, otherwise,
+  --            the solution is a formal Laurent series.
 
 end DoblDobl_Newton_Matrix_Series;

@@ -877,4 +877,71 @@ package body Standard_Newton_Matrix_Series is
     Standard_Series_Jaco_Matrices.Clear(jp);
   end SVD_Newton_Steps;
 
+-- MANY NEWTON STEPS WITH ECHELON FORM :
+
+  procedure Echelon_Newton_Steps
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                jp : in Standard_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+  begin
+    for i in 1..nbrit loop
+      Echelon_Newton_Step(p,jp,degree,x,det);
+      exit when (i = nbrit); -- do not double degree after last step
+      degree := 2*degree;
+      if degree > Standard_Dense_Series.max_deg
+       then degree := Standard_Dense_Series.max_deg;
+      end if;
+    end loop;
+  end Echelon_Newton_Steps;
+
+  procedure Echelon_Newton_Steps
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    jp : Standard_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := Standard_Series_Jaco_Matrices.Create(p);
+
+  begin
+    Echelon_Newton_Steps(p,jp,degree,nbrit,x,det);
+    Standard_Series_Jaco_Matrices.Clear(jp);
+  end Echelon_Newton_Steps;
+
+  procedure Echelon_Newton_Steps
+              ( file : in file_type;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                jp : in Standard_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+  begin
+    for i in 1..nbrit loop
+      put(file,"LU Newton step "); put(file,i,1); put_line(file," :");
+      Echelon_Newton_Step(file,p,jp,degree,x,det);
+      exit when (i = nbrit); -- do not double degree after last step
+      degree := 2*degree;
+      if degree > Standard_Dense_Series.max_deg
+       then degree := Standard_Dense_Series.max_deg;
+      end if;
+    end loop;
+  end Echelon_Newton_Steps;
+
+  procedure Echelon_Newton_Steps
+              ( file : in file_type;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    jp : Standard_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := Standard_Series_Jaco_Matrices.Create(p);
+
+  begin
+    Echelon_Newton_Steps(file,p,jp,degree,nbrit,x,det);
+    Standard_Series_Jaco_Matrices.Clear(jp);
+  end Echelon_Newton_Steps;
+
 end Standard_Newton_Matrix_Series;

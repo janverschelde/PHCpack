@@ -427,7 +427,7 @@ package Standard_Newton_Matrix_Series is
   -- DESCRIPTION :
   --   Does a number of Newton steps on the system p,
   --   starting at x, doubling the degree after each step,
-  --   with QR decomposition on the Jacobian matrix,
+  --   with SVD decomposition on the Jacobian matrix,
   --   terminating if info /= 0 or if nbrit is reached.
 
   -- ON ENTRY :
@@ -445,5 +445,55 @@ package Standard_Newton_Matrix_Series is
   --   info     return code of the SVD on the lead coefficient matrix;
   --   rcond    inverse condition number of the lead coeffficient matrix,
   --            computed with singular values.
+
+-- MANY NEWTON STEPS WITH ECHELON FORM :
+
+  procedure Echelon_Newton_Steps
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                jp : in Standard_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Steps
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Steps
+              ( file : in file_type;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                jp : in Standard_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Steps
+              ( file : in file_type;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+
+  -- DESCRIPTION :
+  --   Does a number of Newton steps on the square system p,
+  --   starting at x, doubling the degree after each step,
+  --   with an echelon form on the Jacobian matrix,
+  --   terminating if nbrit is reached.
+
+  -- ON ENTRY :
+  --   file     for intermediate output: p(x) and the update dx,
+  --            if omitted, LU_Newton_Step is silent;
+  --   p        a polynomial system with series coefficients;
+  --   jp       Jacobi matrix of the system p;
+  --   degree   the degree at start of the computations;
+  --   nbrit    total number of Newton steps;
+  --   x        current approximation for the series solution.
+
+  -- ON RETURN :
+  --   degree   last degree of the computation;
+  --   x        updated approximation for the series solution;
+  --   det      dterminant of the echelon Hermite-Laurent matrix
+  --            if nonzero, then there are no nonzero coefficients
+  --            in the series with negative exponents, otherwise,
+  --            the solution is a formal Laurent series.
 
 end Standard_Newton_Matrix_Series;
