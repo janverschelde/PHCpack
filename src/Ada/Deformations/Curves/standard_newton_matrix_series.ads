@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Dense_Series_Vectors;
 with Standard_Series_Poly_Systems;
 with Standard_Series_Jaco_Matrices;
@@ -201,6 +202,53 @@ package Standard_Newton_Matrix_Series is
   --   info     return code of the SVD on the lead coefficient matrix;
   --   rcond    inverse condition number of the lead coeffficient matrix,
   --            computed with singular values.
+
+-- ONE NEWTON STEP WITH ECHELON FORM :
+
+  procedure Echelon_Newton_Step
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                jp : in Standard_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Step
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Step
+              ( file : in file_type;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                jp : in Standard_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Step
+              ( file : in file_type;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number );
+
+  -- DESCRIPTION :
+  --   Performs one step with Newton's method on the system p,
+  --   starting at the series approximation x, 
+  --   calculating with power series up to the given degree,
+  --   using a lower triangular echelon form to solve the linear system.
+
+  -- ON ENTRY :
+  --   file     for intermediate output: p(x) and the update dx,
+  --            if omitted, LU_Newton_Step is silent;
+  --   p        a polynomial system with series coefficients;
+  --   jp       Jacobi matrix of the system p;
+  --   degree   the degree at which to solve the linear system;
+  --   x        current approximation for the series solution.
+
+  -- ON RETURN :
+  --   x        updated approximation for the series solution;
+  --   det      determinant of the lower triangular echelon form,
+  --            if nonzero, then the problem is regular,
+  --            otherwise, the solution may be a formal Laurent series.
 
 -- MANY NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 

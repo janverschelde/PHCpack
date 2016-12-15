@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Dense_Series;
 with Standard_Dense_Series_io;
 with Standard_Series_Vector_Norms;
@@ -498,6 +499,106 @@ package body Standard_Newton_Matrix_Series is
     SVD_Newton_Step(file,p,jp,degree,x,info,rcond);
     Standard_Series_Jaco_Matrices.Clear(jp);
   end SVD_Newton_Step;
+
+-- ONE NEWTON STEP WITH ECHELON FORM :
+
+  procedure Echelon_Newton_Step
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                jp : in Standard_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    dx : Standard_Dense_Series_Vectors.Vector(x'range);
+    px : Standard_Dense_Series_Vectors.Vector(p'range);
+    jm : Standard_Dense_Series_Matrices.Matrix(p'range,x'range);
+    xp,xd,xdn : Standard_Dense_Vector_Series.Vector;
+    mj : Standard_Dense_Matrix_Series.Matrix;
+
+  begin
+    px := Standard_Series_Poly_SysFun.Eval(p,x);
+    Standard_Dense_Series_Vectors.Min(px);
+    Series_and_Polynomials.Set_degree(px,degree);
+    jm := Standard_Series_Jaco_Matrices.Eval(jp,x);
+    Series_and_Polynomials.Set_degree(jm,degree);
+    mj := Standard_Dense_Matrix_Series.Create(jm);
+    xp := Standard_Dense_Vector_Series.Create(px);
+    Echelon_Solve(mj,xp,det,xd,xdn);
+    dx := Standard_Dense_Vector_Series.Create(xd);
+    Standard_Dense_Series_Vectors.Add(x,dx);
+    Standard_Dense_Matrix_Series.Clear(mj);
+    Standard_Dense_Vector_Series.Clear(xp);
+    Standard_Dense_Vector_Series.Clear(xd);
+  end Echelon_Newton_Step;
+
+  procedure Echelon_Newton_Step
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    jp : Standard_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := Standard_Series_Jaco_Matrices.Create(p);
+
+  begin
+    Echelon_Newton_Step(p,jp,degree,x,det);
+    Standard_Series_Jaco_Matrices.Clear(jp);
+  end Echelon_Newton_Step;
+
+  procedure Echelon_Newton_Step
+              ( file : in file_type;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                jp : in Standard_Series_Jaco_Matrices.Jaco_Mat;
+                degree : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    dx : Standard_Dense_Series_Vectors.Vector(x'range);
+    px : Standard_Dense_Series_Vectors.Vector(p'range);
+    jm : Standard_Dense_Series_Matrices.Matrix(p'range,x'range);
+    xp,xd,xdn : Standard_Dense_Vector_Series.Vector;
+    mj : Standard_Dense_Matrix_Series.Matrix;
+
+  begin
+    px := Standard_Series_Poly_SysFun.Eval(p,x);
+    put_line(file,"The evaluated series :");
+    for i in px'range loop
+      Standard_Dense_Series_io.put(file,px(i)); new_line(file);
+    end loop;
+    Standard_Dense_Series_Vectors.Min(px);
+    Series_and_Polynomials.Set_degree(px,degree);
+    jm := Standard_Series_Jaco_Matrices.Eval(jp,x);
+    Series_and_Polynomials.Set_degree(jm,degree);
+    mj := Standard_Dense_Matrix_Series.Create(jm);
+    xp := Standard_Dense_Vector_Series.Create(px);
+    Echelon_Solve(mj,xp,det,xd,xdn);
+    put(file,"n.deg : "); put(file,xdn.deg,1); 
+    put(file,"  det : "); put(file,det); new_line(file);
+    dx := Standard_Dense_Vector_Series.Create(xd);
+    Standard_Dense_Series_Vectors.Add(x,dx);
+    put_line(file,"The update to the series :");
+    for i in dx'range loop
+      Standard_Dense_Series_io.put(file,dx(i)); new_line(file);
+    end loop;
+    Standard_Dense_Matrix_Series.Clear(mj);
+    Standard_Dense_Vector_Series.Clear(xp);
+    Standard_Dense_Vector_Series.Clear(xd);
+  end Echelon_Newton_Step;
+
+  procedure Echelon_Newton_Step
+              ( file : in file_type;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Complex_Number ) is
+
+    jp : Standard_Series_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := Standard_Series_Jaco_Matrices.Create(p);
+
+  begin
+    Echelon_Newton_Step(file,p,jp,degree,x,det);
+    Standard_Series_Jaco_Matrices.Clear(jp);
+  end Echelon_Newton_Step;
 
 -- MANY NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 

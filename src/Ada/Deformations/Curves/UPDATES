@@ -1,3 +1,6 @@
+Wed 14 Dec 2016 : extended standard_newton_matrix_series with the echelon
+  form of the linear solvers.
+
 Wed 30 Nov 2016 : fixed compilation error in series_and_predictors.adb.
 
 Sun 9 Oct 2016 : edits in series_and_trackers.adb for compiler warnings.
