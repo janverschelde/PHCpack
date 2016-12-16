@@ -1,5 +1,6 @@
 Thu 15 Dec 2016 : added echelon Newton methods to more precision levels in 
   the {standard,dobldobl,quaddobl}_newton_matrix_series.
+  Added tests to ts_sernew on the echelon Newton matrix series methods.
 
 Wed 14 Dec 2016 : extended standard_newton_matrix_series with the echelon
   form of the linear solvers.
