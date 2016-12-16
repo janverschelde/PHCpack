@@ -1594,7 +1594,7 @@ procedure ts_sernew is
   --   in standard double precision.
   --   If otp, then extra output is written to screen.
 
-    info : integer32;
+    det : Standard_Complex_Numbers.Complex_Number;
     tol : constant double_float := 1.0E-12;
     eva : Standard_Dense_Series_Vectors.Vector(p'range);
     deg : integer32 := degree;
@@ -1603,22 +1603,19 @@ procedure ts_sernew is
   begin
     Series_and_Polynomials.Set_Degree(z,deg);
     if otp then
-      Standard_Newton_Matrix_Series.LU_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info);
+      Standard_Newton_Matrix_Series.Echelon_Newton_Steps
+        (standard_output,p,deg,nbrit,z,det);
     else
-      Standard_Newton_Matrix_Series.LU_Newton_Steps(p,deg,nbrit,z,info);
+      Standard_Newton_Matrix_Series.Echelon_Newton_Steps(p,deg,nbrit,z,det);
     end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(z,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(z);
-      eva := Standard_Series_Poly_SysFun.Eval(p,z);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
-    end if;
+    put("det : "); put(det); new_line;
+    Series_and_Polynomials.Filter(z,tol);
+    put_line("The updated power series solution :");
+    Series_and_Polynomials_io.put(z);
+    eva := Standard_Series_Poly_SysFun.Eval(p,z);
+    Series_and_Polynomials.Filter(eva,tol);
+    put_line("The evaluated solution :");
+    Series_and_Polynomials_io.put(eva);
   end Echelon_Newton_on_Matrix_Series;
 
   procedure Echelon_Newton_on_Matrix_Series
@@ -1634,7 +1631,7 @@ procedure ts_sernew is
   --   in double double precision.
   --   If otp, then extra output is written to screen.
 
-    info : integer32;
+    det : DoblDobl_Complex_Numbers.Complex_Number;
     tol : constant double_float := 1.0E-12;
     eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
     deg : integer32 := degree;
@@ -1643,22 +1640,19 @@ procedure ts_sernew is
   begin
     Series_and_Polynomials.Set_Degree(z,deg);
     if otp then
-      DoblDobl_Newton_Matrix_Series.LU_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info);
+      DoblDobl_Newton_Matrix_Series.Echelon_Newton_Steps
+        (standard_output,p,deg,nbrit,z,det);
     else
-      DoblDobl_Newton_Matrix_Series.LU_Newton_Steps(p,deg,nbrit,z,info);
+      DoblDobl_Newton_Matrix_Series.Echelon_Newton_Steps(p,deg,nbrit,z,det);
     end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(z,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(z);
-      eva := DoblDobl_Series_Poly_SysFun.Eval(p,z);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
-    end if;
+    put("det : "); put(det); new_line;
+    Series_and_Polynomials.Filter(z,tol);
+    put_line("The updated power series solution :");
+    Series_and_Polynomials_io.put(z);
+    eva := DoblDobl_Series_Poly_SysFun.Eval(p,z);
+    Series_and_Polynomials.Filter(eva,tol);
+    put_line("The evaluated solution :");
+    Series_and_Polynomials_io.put(eva);
   end Echelon_Newton_on_Matrix_Series;
 
   procedure Echelon_Newton_on_Matrix_Series
@@ -1674,7 +1668,7 @@ procedure ts_sernew is
   --   in quad double precision.
   --   If otp, then extra output is written to screen.
 
-    info : integer32;
+    det : QuadDobl_Complex_Numbers.Complex_Number;
     tol : constant double_float := 1.0E-12;
     eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
     deg : integer32 := degree;
@@ -1683,22 +1677,19 @@ procedure ts_sernew is
   begin
     Series_and_Polynomials.Set_Degree(z,deg);
     if otp then
-      QuadDobl_Newton_Matrix_Series.LU_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info);
+      QuadDobl_Newton_Matrix_Series.Echelon_Newton_Steps
+        (standard_output,p,deg,nbrit,z,det);
     else
-      QuadDobl_Newton_Matrix_Series.LU_Newton_Steps(p,deg,nbrit,z,info);
+      QuadDobl_Newton_Matrix_Series.Echelon_Newton_Steps(p,deg,nbrit,z,det);
     end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(z,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(z);
-      eva := QuadDobl_Series_Poly_SysFun.Eval(p,z);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
-    end if;
+    put("det : "); put(det); new_line;
+    Series_and_Polynomials.Filter(z,tol);
+    put_line("The updated power series solution :");
+    Series_and_Polynomials_io.put(z);
+    eva := QuadDobl_Series_Poly_SysFun.Eval(p,z);
+    Series_and_Polynomials.Filter(eva,tol);
+    put_line("The evaluated solution :");
+    Series_and_Polynomials_io.put(eva);
   end Echelon_Newton_on_Matrix_Series;
 
   procedure Test_Echelon_Newton_Steps
