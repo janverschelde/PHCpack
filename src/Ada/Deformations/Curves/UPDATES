@@ -1,3 +1,6 @@
+Fri 16 Dec 2016 : in ts_sernew, fixed the call to echelon Newton.
+  In *newton_matrix_series.adb, fixed an error in the output. 
+
 Thu 15 Dec 2016 : added echelon Newton methods to more precision levels in 
   the {standard,dobldobl,quaddobl}_newton_matrix_series.
   Added tests to ts_sernew on the echelon Newton matrix series methods.

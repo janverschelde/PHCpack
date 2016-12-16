@@ -919,7 +919,7 @@ package body Standard_Newton_Matrix_Series is
                 det : out Complex_Number ) is
   begin
     for i in 1..nbrit loop
-      put(file,"LU Newton step "); put(file,i,1); put_line(file," :");
+      put(file,"Echelon Newton step "); put(file,i,1); put_line(file," :");
       Echelon_Newton_Step(file,p,jp,degree,x,det);
       exit when (i = nbrit); -- do not double degree after last step
       degree := 2*degree;
