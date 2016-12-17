@@ -1161,4 +1161,187 @@ package body Power_Series_Methods is
     end loop;
   end Run_SVD_Newton;
 
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                v : in Standard_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false ) is
+
+    ans : character;
+    det : Standard_Complex_Numbers.Complex_Number;
+
+  begin
+    for i in v'range loop
+      if verbose then
+        put("Running on solution "); put(i,1); put_line(" ...");
+        declare
+          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          sol : Standard_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          Standard_Complex_Solutions_io.put_vector(sol);
+        end;
+      end if;
+      Run_Echelon_Newton(nbrit,p,v(i).all,det,verbose);
+      if verbose then
+        if pause then
+          put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+          exit when (ans /= 'y');
+        end if;
+      end if;
+    end loop;
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false ) is
+
+    ans : character;
+    det : DoblDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    for i in v'range loop
+      if verbose then
+        put("Running on solution "); put(i,1); put_line(" ...");
+        declare
+          lvi : DoblDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          DoblDobl_Complex_Solutions_io.put_vector(sol);
+        end;
+      end if;
+      Run_Echelon_Newton(nbrit,p,v(i).all,det,verbose);
+      if verbose then
+        if pause then
+          put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+          exit when (ans /= 'y');
+        end if;
+      end if;
+    end loop;
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false ) is
+
+    ans : character;
+    det : QuadDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    for i in v'range loop
+      if verbose then
+        put("Running on solution "); put(i,1); put_line(" ...");
+        declare
+          lvi : QuadDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          QuadDobl_Complex_Solutions_io.put_vector(sol);
+        end;
+      end if;
+      Run_Echelon_Newton(nbrit,p,v(i).all,det,verbose);
+      if verbose then
+        if pause then
+          put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+          exit when (ans /= 'y');
+        end if;
+      end if;
+    end loop;
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                v : in Standard_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false ) is
+
+    det : Standard_Complex_Numbers.Complex_Number;
+
+  begin
+    for i in v'range loop
+      if verbose then
+        put(file,"Running on solution ");
+        put(file,i,1); put_line(file," ...");
+        declare
+          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          sol : Standard_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          Standard_Complex_Solutions_io.put_vector(file,sol);
+        end;
+      end if;
+      Run_Echelon_Newton(file,nbrit,p,v(i).all,det,verbose);
+    end loop;
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false ) is
+
+    det : DoblDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    for i in v'range loop
+      if verbose then
+        put(file,"Running on solution ");
+        put(file,i,1); put_line(file," ...");
+        declare
+          lvi : DoblDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          DoblDobl_Complex_Solutions_io.put_vector(file,sol);
+        end;
+      end if;
+      Run_Echelon_Newton(file,nbrit,p,v(i).all,det,verbose);
+    end loop;
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false ) is
+
+    det : QuadDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    for i in v'range loop
+      if verbose then
+        put(file,"Running on solution ");
+        put(file,i,1); put_line(file," ...");
+        declare
+          lvi : QuadDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          QuadDobl_Complex_Solutions_io.put_vector(file,sol);
+        end;
+      end if;
+      Run_Echelon_Newton(file,nbrit,p,v(i).all,det,verbose);
+    end loop;
+  end Run_Echelon_Newton;
+
 end Power_Series_Methods;

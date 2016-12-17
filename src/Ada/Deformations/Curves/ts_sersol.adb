@@ -30,7 +30,7 @@ procedure ts_sersol is
 --   Test on the development of series as solutions of polynomial systems.
 
   procedure Run_Newton
-             ( nq,idx : in integer32;
+             ( nq,idx : in integer32; echelon : in boolean;
                p : in Standard_Complex_Poly_Systems.Poly_Sys;
                s : in Standard_Complex_Solutions.Solution_List ) is
 
@@ -42,6 +42,7 @@ procedure ts_sersol is
   -- ON ENTRY :
   --   nq      number of equations in p;
   --   idx     index to the series parameter;
+  --   echelon is the flag for the echelon Newton's method to be used;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       a list of solutions.
 
@@ -61,18 +62,23 @@ procedure ts_sersol is
     new_line;
     put("Give the number of steps in Newton's method : ");
     get(nbrit); new_line;
-    if nq = dim then
-      put_line("LU Newton will be applied.");
-      Run_LU_Newton(nbrit,srp,srv,true,true);
+    if echelon then
+      put_line("Echelon Newton will be applied.");
+      Run_Echelon_Newton(nbrit,srp,srv,true,true);
     else
-      put_line("QR Newton will be applied.");
-      Run_QR_Newton(nbrit,srp,srv,true,true);
+      if nq = dim then
+        put_line("LU Newton will be applied.");
+        Run_LU_Newton(nbrit,srp,srv,true,true);
+      else
+        put_line("QR Newton will be applied.");
+        Run_QR_Newton(nbrit,srp,srv,true,true);
+      end if;
     end if;
     Standard_Series_Poly_Systems.Clear(srp);
   end Run_Newton;
 
   procedure Run_Newton
-             ( nq,idx : in integer32;
+             ( nq,idx : in integer32; echelon : in boolean;
                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                s : in DoblDobl_Complex_Solutions.Solution_List ) is
 
@@ -84,6 +90,7 @@ procedure ts_sersol is
   -- ON ENTRY :
   --   nq      number of equations in p;
   --   idx     index to the series parameter;
+  --   echelon flag to indicate if the echelon Newton is to be used;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       a list of solutions.
 
@@ -103,18 +110,23 @@ procedure ts_sersol is
     new_line;
     put("Give the number of steps in Newton's method : ");
     get(nbrit); new_line;
-    if nq = dim then
-      put_line("LU Newton will be applied.");
-      Run_LU_Newton(nbrit,srp,srv,true,true);
+    if echelon then
+      put_line("Echelon Newton will be applied.");
+      Run_Echelon_Newton(nbrit,srp,srv,true,true);
     else
-      put_line("QR Newton will be applied.");
-      Run_QR_Newton(nbrit,srp,srv,true,true);
+      if nq = dim then
+        put_line("LU Newton will be applied.");
+        Run_LU_Newton(nbrit,srp,srv,true,true);
+      else
+        put_line("QR Newton will be applied.");
+        Run_QR_Newton(nbrit,srp,srv,true,true);
+      end if;
     end if;
     DoblDobl_Series_Poly_Systems.Clear(srp);
   end Run_Newton;
 
   procedure Run_Newton
-             ( nq,idx : in integer32;
+             ( nq,idx : in integer32; echelon : in boolean;
                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                s : in QuadDobl_Complex_Solutions.Solution_List ) is
 
@@ -126,6 +138,7 @@ procedure ts_sersol is
   -- ON ENTRY :
   --   nq      number of equations in p;
   --   idx     index to the series parameter;
+  --   echelon flag to indicate if echelon Newton is to be used;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       a list of solutions.
 
@@ -145,17 +158,22 @@ procedure ts_sersol is
     new_line;
     put("Give the number of steps in Newton's method : ");
     get(nbrit); new_line;
-    if nq = dim then
-      put_line("LU Newton will be applied.");
-      Run_LU_Newton(nbrit,srp,srv,true,true);
+    if echelon then
+      put_line("Echelon Newton will be applied.");
+      Run_Echelon_Newton(nbrit,srp,srv,true,true);
     else
-      put_line("QR Newton will be applied.");
-      Run_QR_Newton(nbrit,srp,srv,true,true);
+      if nq = dim then
+        put_line("LU Newton will be applied.");
+        Run_LU_Newton(nbrit,srp,srv,true,true);
+      else
+        put_line("QR Newton will be applied.");
+        Run_QR_Newton(nbrit,srp,srv,true,true);
+      end if;
     end if;
     QuadDobl_Series_Poly_Systems.Clear(srp);
   end Run_Newton;
 
-  procedure Standard_Test is
+  procedure Standard_Test ( echelon : in boolean ) is
 
   -- DESCRIPTION :
   --   Performs a test in standard double precision,
@@ -181,10 +199,10 @@ procedure ts_sersol is
     put("Read "); put(integer32(Length_Of(sols)),1); put_line(" solutions.");
     new_line;
     put("Give the index of the parameter : "); get(idx);
-    Run_Newton(nq,idx,lp.all,sols);
+    Run_Newton(nq,idx,echelon,lp.all,sols);
   end Standard_Test;
 
-  procedure DoblDobl_Test is
+  procedure DoblDobl_Test ( echelon : in boolean ) is
 
   -- DESCRIPTION :
   --   Performs a test in double double precision,
@@ -210,10 +228,10 @@ procedure ts_sersol is
     put("Read "); put(integer32(Length_Of(sols)),1); put_line(" solutions.");
     new_line;
     put("Give the index of the parameter : "); get(idx);
-    Run_Newton(nq,idx,lp.all,sols);
+    Run_Newton(nq,idx,echelon,lp.all,sols);
   end DoblDobl_Test;
 
-  procedure QuadDobl_Test is
+  procedure QuadDobl_Test ( echelon : in boolean ) is
 
   -- DESCRIPTION :
   --   Performs a test in quad double precision,
@@ -239,7 +257,7 @@ procedure ts_sersol is
     put("Read "); put(integer32(Length_Of(sols)),1); put_line(" solutions.");
     new_line;
     put("Give the index of the parameter : "); get(idx);
-    Run_Newton(nq,idx,lp.all,sols);
+    Run_Newton(nq,idx,echelon,lp.all,sols);
   end QuadDobl_Test;
 
   procedure Main is
@@ -248,7 +266,8 @@ procedure ts_sersol is
   --   Prompts the user to select the working precision
   --   and then launches the corresponding test.
 
-    prc : character;
+    prc,ans : character;
+    echelon : boolean;
 
   begin
     new_line;
@@ -258,10 +277,14 @@ procedure ts_sersol is
     put_line("  2. quad double precision.");
     put("Type 0, 1, or 2 to select the working precision : ");
     Ask_Alternative(prc,"012");
+    new_line;
+    put("Use the lower triangular echelon form ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    echelon := (ans = 'y');
     case prc is
-      when '0' => Standard_Test;
-      when '1' => DoblDobl_Test;
-      when '2' => QuadDobl_Test;
+      when '0' => Standard_Test(echelon);
+      when '1' => DoblDobl_Test(echelon);
+      when '2' => QuadDobl_Test(echelon);
       when others => null;
     end case;
   end Main;

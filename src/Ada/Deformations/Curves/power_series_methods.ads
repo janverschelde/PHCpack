@@ -24,9 +24,9 @@ package Power_Series_Methods is
 --   The procedures in this packages split in several categories:
 --   (1) whether to be verbose or not;
 --   (2) which precision: double, double double, or quad double;
---   (3) whether to use LU factorization, QR decomposition, or SVD;
+--   (3) whether to use LU, QR, SVD, or a general Echelon form;
 --   (4) whether to work on one vector or on a vector of vectors of series;
---   Depending on the choices, there are 2x3x3x2 = 36 procedures.
+--   Depending on the choices, there are 2x3x4x2 = 48 procedures.
 
 -- NEWTON on ONE VECTOR of POWER SERIES :
 
@@ -431,6 +431,58 @@ package Power_Series_Methods is
   -- DESCRIPTION :
   --   Runs Newton's method on the vector of power series in v.
   --   using the singular value decomposition to compute the updates,
+  --   in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output, to write results,
+  --            if not provided, then output is written to screen;
+  --   nbrit    number of new iterations;
+  --   p        a polynomial system with series coefficients;
+  --   v        leading coefficients for power series solutions;
+  --   verbose  indicates if results of intermediate Newton steps
+  --            need to be written to file or to standard output;
+  --   pause    if verbose and pause, prompts the user to continue.
+
+  -- ON RETURN :
+  --   s        updated power series solutions to p, up to some order.
+
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                v : in Standard_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false );
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false );
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false );
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                v : in Standard_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false );
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false );
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on the vector of power series in v.
+  --   using the lower triangular echelon form to compute the updates,
   --   in double, double double, or quad double precision.
 
   -- ON ENTRY :
