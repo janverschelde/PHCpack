@@ -1,3 +1,6 @@
+Sat 17 Dec 2016 : refactored ts_sersol, to allow to start Newton's method
+  at series with more than just the leading term.
+
 Fri 16 Dec 2016 : in ts_sernew, fixed the call to echelon Newton.
   In *newton_matrix_series.adb, fixed an error in the output. 
   Started adding the echelon Newton methods to power_series_methods,
