@@ -3,6 +3,9 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
+with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Vectors;
@@ -503,6 +506,123 @@ package body Power_Series_Methods is
       end if;
     end if;
   end Run_SVD_Newton;
+
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                s : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Standard_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false ) is
+  begin
+    Run_Echelon_Newton(standard_output,nbrit,p,s,det,verbose);
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                s : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Standard_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false ) is
+
+    use Standard_Newton_Matrix_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-12;
+    eva : Standard_Dense_Series_Vectors.Vector(p'range);
+
+  begin
+    if not verbose then
+      Echelon_Newton_Steps(p,order,nbrit,s,det);
+    else
+      Echelon_Newton_Steps(file,p,order,nbrit,s,det);
+      put(file,"det : "); put(file,det); new_line(file);
+      Series_and_Polynomials.Filter(s,tol);
+      put_line(file,"The updated power series solution :");
+      Series_and_Polynomials_io.put(file,s);
+      eva := Standard_Series_Poly_SysFun.Eval(p,s);
+      Series_and_Polynomials.Filter(eva,tol);
+      put_line(file,"The evaluated solution :");
+      Series_and_Polynomials_io.put(file,eva);
+    end if;
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out DoblDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false ) is
+  begin
+    Run_Echelon_Newton(standard_output,nbrit,p,s,det,verbose);
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out DoblDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false ) is
+
+    use DoblDobl_Newton_Matrix_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-12;
+    eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+
+  begin
+    if not verbose then
+      Echelon_Newton_Steps(p,order,nbrit,s,det);
+    else
+      Echelon_Newton_Steps(file,p,order,nbrit,s,det);
+      put(file,"det : "); put(file,det); new_line(file);
+      Series_and_Polynomials.Filter(s,tol);
+      put_line(file,"The updated power series solution :");
+      Series_and_Polynomials_io.put(file,s);
+      eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
+      Series_and_Polynomials.Filter(eva,tol);
+      put_line(file,"The evaluated solution :");
+      Series_and_Polynomials_io.put(file,eva);
+    end if;
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                det : out QuadDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false ) is
+  begin
+    Run_Echelon_Newton(standard_output,nbrit,p,s,det,verbose);
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                det : out QuadDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false ) is
+
+    use QuadDobl_Newton_Matrix_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-12;
+    eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+
+  begin
+    if not verbose then
+      Echelon_Newton_Steps(p,order,nbrit,s,det);
+    else
+      Echelon_Newton_Steps(file,p,order,nbrit,s,det);
+      put(file,"det : "); put(file,det); new_line(file);
+      Series_and_Polynomials.Filter(s,tol);
+      put_line(file,"The updated power series solution :");
+      Series_and_Polynomials_io.put(file,s);
+      eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
+      Series_and_Polynomials.Filter(eva,tol);
+      put_line(file,"The evaluated solution :");
+      Series_and_Polynomials_io.put(file,eva);
+    end if;
+  end Run_Echelon_Newton;
 
   procedure Run_LU_Newton
               ( nbrit : in integer32;

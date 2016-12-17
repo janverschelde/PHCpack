@@ -3,6 +3,9 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Dense_Series_Vectors;
 with Standard_Dense_Series_VecVecs;
 with DoblDobl_Dense_Series_Vectors;
@@ -228,6 +231,63 @@ package Power_Series_Methods is
   --   rcond    the inverse condition number computed from the singular values,
   --            if 1.0 + rcond = 1.0, then the problem is singular.
 
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                s : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Standard_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false );
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in Standard_Series_Poly_Systems.Poly_Sys;
+                s : in out Standard_Dense_Series_Vectors.Vector;
+                det : out Standard_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false );
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out DoblDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false );
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                det : out DoblDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false );
+  procedure Run_Echelon_Newton
+              ( nbrit : in integer32;
+                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                det : out QuadDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false );
+  procedure Run_Echelon_Newton
+              ( file : in file_type; nbrit : in integer32;
+                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                det : out QuadDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Applies as many steps with Newton's method as the value of nbrit,
+  --   starting at the solution in s to the system p,
+  --   applying Singular Value Decomposition to compute the Newton updates,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output, to write results,
+  --            if not provided, then output is written to screen;
+  --   nbrit    number of new iterations;
+  --   p        a polynomial system with series coefficients;
+  --   s        leading coefficients for a power series solution;
+  --   verbose  indicates if results of intermediate Newton steps
+  --            need to be written to file or to standard output.
+
+  -- ON RETURN :
+  --   s        a power series solution to p, up to some order;
+  --   rcond    the inverse condition number computed from the singular values,
+  --            if 1.0 + rcond = 1.0, then the problem is singular.
+
 -- NEWTON on a VECTOR of VECTOR of POWER SERIES :
 
   procedure Run_LU_Newton
@@ -277,7 +337,7 @@ package Power_Series_Methods is
   --   v        leading coefficients for power series solutions;
   --   verbose  indicates if results of intermediate Newton steps
   --            need to be written to file or to standard output;
-  --   pause   
+  --   pause    if verbose and pause, then prompts the user to continue.
 
   -- ON RETURN :
   --   s        updated power series solutions to p, up to some order.
@@ -329,7 +389,7 @@ package Power_Series_Methods is
   --   v        leading coefficients for power series solutions;
   --   verbose  indicates if results of intermediate Newton steps
   --            need to be written to file or to standard output;
-  --   pause   
+  --   pause    if verbose and pause, then prompts the user to continue.
 
   -- ON RETURN :
   --   s        updated power series solutions to p, up to some order.
@@ -381,7 +441,7 @@ package Power_Series_Methods is
   --   v        leading coefficients for power series solutions;
   --   verbose  indicates if results of intermediate Newton steps
   --            need to be written to file or to standard output;
-  --   pause   
+  --   pause    if verbose and pause, prompts the user to continue.
 
   -- ON RETURN :
   --   s        updated power series solutions to p, up to some order.
