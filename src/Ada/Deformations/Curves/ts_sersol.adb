@@ -485,9 +485,9 @@ procedure ts_sersol is
       end case;
     else
       case prc is
-        when '0' => Standard_Test_at_Zero_Order(echelon);
-        when '1' => DoblDobl_Test_at_Zero_Order(echelon);
-        when '2' => QuadDobl_Test_at_Zero_Order(echelon);
+        when '0' => Standard_Test_at_Series(echelon);
+        when '1' => DoblDobl_Test_at_Series(echelon);
+        when '2' => QuadDobl_Test_at_Series(echelon);
         when others => null;
       end case;
     end if;
