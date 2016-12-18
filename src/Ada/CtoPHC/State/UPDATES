@@ -1,5 +1,6 @@
 Sat 17 Dec 2016 : extended use_series.adb with methods to compute series
   starting a series with more terms, using the echelon Newton method.
+  Added three operations to use_c2phc.
 
 Sun 20 Nov 2016 : fixed use_c2lrhom.adb for the extra parameter nt
   (number of tasks) in the Resolve procedure of Schubert problems.

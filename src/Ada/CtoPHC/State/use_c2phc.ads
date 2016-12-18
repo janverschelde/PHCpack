@@ -745,6 +745,12 @@ function use_c2phc ( job : integer32;
 --                 a[1] : the number of steps in Newton's method,
 --                 b[0] : the verbose flag, 0 for false, 1 for true.
 --                 If verbose, intermediate results are written to screen.
+--   job   = 694 : same as 691, but instead of solutions, the start terms
+--                 on the series are given in the systems pool.
+--   job   = 695 : same as 692, but instead of solutions, the start terms
+--                 on the series are given in the systems pool.
+--   job   = 696 : same as 693, but instead of solutions, the start terms
+--                 on the series are given in the systems pool.
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --

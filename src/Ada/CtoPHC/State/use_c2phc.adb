@@ -2512,7 +2512,7 @@ function use_c2phc ( job : integer32;
       when 661..679 => return use_c2fac(job-600,a,b,c);
       when 682..690 => return use_c2fac(job-600,a,b,c);
      -- power series Newton method
-      when 691..693 => return use_series(job-690,a,b,c);
+      when 691..696 => return use_series(job-690,a,b,c);
      -- blackbox solvers in double double and quad double precision
       when 700 => return Job700; -- dobldobl poly system blackbox solver
       when 701 => return Job701; -- dobldobl Laurent poly blackbox solver
