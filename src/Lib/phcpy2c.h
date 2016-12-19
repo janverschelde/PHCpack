@@ -4427,6 +4427,24 @@ static PyObject *py2c_quaddobl_Newton_power_series
 
 /* The wrapping of functions with prototypes in syspool.h starts below. */
 
+static PyObject *py2c_syspool_standard_init ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the size of the pool for systems with complex coefficients
+ *   in standard double precision, with the value given on input. */
+
+static PyObject *py2c_syspool_dobldobl_init ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the size of the pool for systems with complex coefficients
+ *   in double double precision, with the value given on input. */
+
+static PyObject *py2c_syspool_quaddobl_init ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the size of the pool for systems with complex coefficients
+ *   in quad double precision, with the value given on input. */
+
 static PyObject *py2c_syspool_standard_size ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :

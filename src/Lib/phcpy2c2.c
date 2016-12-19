@@ -6581,6 +6581,39 @@ static PyObject *py2c_quaddobl_Newton_power_series
 
 /* The wrapping of functions with prototypes in syspool.h starts below. */
 
+static PyObject *py2c_syspool_standard_init ( PyObject *self, PyObject *args )
+{
+   int fail,nbr;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&nbr)) return NULL;   
+   fail = syspool_standard_initialize(nbr);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syspool_dobldobl_init ( PyObject *self, PyObject *args )
+{
+   int fail,nbr;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&nbr)) return NULL;   
+   fail = syspool_dobldobl_initialize(nbr);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syspool_quaddobl_init ( PyObject *self, PyObject *args )
+{
+   int fail,nbr;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&nbr)) return NULL;   
+   fail = syspool_quaddobl_initialize(nbr);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_syspool_standard_size ( PyObject *self, PyObject *args )
 {
    int fail,nbr;
@@ -6644,6 +6677,39 @@ static PyObject *py2c_syspool_copy_to_quaddobl_container
    initialize();
    if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;
    fail = syspool_copy_to_quaddobl_container(idx);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syspool_standard_clear ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = syspool_standard_clear();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syspool_dobldobl_clear ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = syspool_dobldobl_clear();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syspool_quaddobl_clear ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = syspool_quaddobl_clear();
+              
    return Py_BuildValue("i",fail);
 }
 
@@ -8175,6 +8241,12 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_quaddobl_Newton_power_series",
      py2c_quaddobl_Newton_power_series, METH_VARARGS,
     "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the quaddobl systems pool the\n leading terms of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in quad double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The solution series are store in the quaddobl systems pool.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syspool_standard_init", py2c_syspool_standard_init, METH_VARARGS,
+    "Initializes the pool for systems in standard double precision."},
+   {"py2c_syspool_dobldobl_init", py2c_syspool_dobldobl_init, METH_VARARGS,
+    "Initializes the pool for systems in double double precision."},
+   {"py2c_syspool_quaddobl_init", py2c_syspool_quaddobl_init, METH_VARARGS,
+    "Initializes the pool for systems in quad double precision."},
    {"py2c_syspool_standard_size", py2c_syspool_standard_size, METH_VARARGS,
     "Returns the size of the pool for systems in standard double precision."},
    {"py2c_syspool_dobldobl_size", py2c_syspool_dobldobl_size, METH_VARARGS,
@@ -8190,6 +8262,12 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_syspool_copy_to_quaddobl_container",
      py2c_syspool_copy_to_quaddobl_container, METH_VARARGS,
     "Copies the k-th system in the pool for systems in quad double\n precision to the quaddobl systems container.\n The value for k is given as an integer input parameter.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syspool_standard_clear", py2c_syspool_standard_clear, METH_VARARGS,
+    "Clears the pool for systems in standard double precision."},
+   {"py2c_syspool_dobldobl_clear", py2c_syspool_dobldobl_clear, METH_VARARGS,
+    "Clears the pool for systems in double double precision."},
+   {"py2c_syspool_quaddobl_clear", py2c_syspool_quaddobl_clear, METH_VARARGS,
+    "Clears the pool for systems in quad double precision."},
    {"py2c_initialize_standard_homotopy", py2c_initialize_standard_homotopy,
      METH_VARARGS,
     "Initializes the homotopy to track a path with a generator,\n using standard double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the standard systems container."},
