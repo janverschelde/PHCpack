@@ -6549,6 +6549,36 @@ static PyObject *py2c_quaddobl_Newton_series ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_standard_Newton_power_series
+ ( PyObject *self, PyObject *args )
+{
+   int idx,nbr,vrb,fail;
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&idx,&nbr,&vrb)) return NULL;   
+   fail = standard_Newton_power_series(idx,nbr,vrb);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_Newton_power_series
+ ( PyObject *self, PyObject *args )
+{
+   int idx,nbr,vrb,fail;
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&idx,&nbr,&vrb)) return NULL;   
+   fail = dobldobl_Newton_power_series(idx,nbr,vrb);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_Newton_power_series
+ ( PyObject *self, PyObject *args )
+{
+   int idx,nbr,vrb,fail;
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&idx,&nbr,&vrb)) return NULL;   
+   fail = quaddobl_Newton_power_series(idx,nbr,vrb);
+   return Py_BuildValue("i",fail);
+}
+
 /* The wrapping of functions with prototypes in syspool.h starts below. */
 
 static PyObject *py2c_syspool_standard_size ( PyObject *self, PyObject *args )
@@ -8131,11 +8161,20 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_mapcon_exponents_of_map", py2c_mapcon_exponents_of_map, METH_VARARGS,
     "Returns the exponents of a monomial map stored in the container.\n On entry are three parameters:\n 1) the dimension of the map;\n 2) the index of the map in all maps of that dimension;\n 3) the number of variables.\n On return is a Python list of integers."},
    {"py2c_standard_Newton_series", py2c_standard_Newton_series, METH_VARARGS,
-    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in standard double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n On return is the failure code, which equals zero if all went well."},
+    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in standard double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The solution series are stored in the standard systems pool.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_dobldobl_Newton_series", py2c_dobldobl_Newton_series, METH_VARARGS,
-    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in double double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n On return is the failure code, which equals zero if all went well."},
+    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in double double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The solution series are stored in the dobldobl systems pool.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_quaddobl_Newton_series", py2c_quaddobl_Newton_series, METH_VARARGS,
-    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in quad double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n On return is the failure code, which equals zero if all went well."},
+    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in quad double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The solution series are stored in the quaddobl systems pool.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_standard_Newton_power_series",
+     py2c_standard_Newton_power_series, METH_VARARGS,
+    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the standard systems pool the\n leading terms of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in standard double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The solution series are stored in the standard systems pool.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_dobldobl_Newton_power_series",
+     py2c_dobldobl_Newton_power_series, METH_VARARGS,
+    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the dobldobl systems pool the\n leading terms of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in double double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The solution series are stored in the dobldobl systems pool.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_quaddobl_Newton_power_series",
+     py2c_quaddobl_Newton_power_series, METH_VARARGS,
+    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the quaddobl systems pool the\n leading terms of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in quad double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The solution series are store in the quaddobl systems pool.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syspool_standard_size", py2c_syspool_standard_size, METH_VARARGS,
     "Returns the size of the pool for systems in standard double precision."},
    {"py2c_syspool_dobldobl_size", py2c_syspool_dobldobl_size, METH_VARARGS,
