@@ -29,7 +29,7 @@ function use_syspool ( job : integer32;
 		       b : C_intarrs.Pointer;
                        c : C_dblarrs.Pointer ) return integer32 is
 
-  function Job0 return integer32 is -- initialize pool with n = a[0]
+  function Job0 return integer32 is -- init standard pool with n = a[0]
 
     v : constant C_Integer_Array := C_intarrs.Value(a);
     n : constant integer32 := integer32(v(v'first));
@@ -38,6 +38,26 @@ function use_syspool ( job : integer32;
     Standard_Systems_Pool.Initialize(n);
     return 0;
   end Job0;
+
+  function Job11 return integer32 is -- init dobldobl pool with n = a[0]
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(v(v'first));
+
+  begin
+    DoblDobl_Systems_Pool.Initialize(n);
+    return 0;
+  end Job11;
+
+  function Job12 return integer32 is -- init quaddobl pool with n = a[0]
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(v(v'first));
+
+  begin
+    QuadDobl_Systems_Pool.Initialize(n);
+    return 0;
+  end Job12;
 
   function Job1 return integer32 is -- size of the standard pool
 
@@ -202,6 +222,24 @@ function use_syspool ( job : integer32;
                    return 315;
   end Job8;
 
+  function Job13 return integer32 is -- clears standard system pool
+  begin
+    Standard_Systems_Pool.Clear;
+    return 0;
+  end Job13;
+
+  function Job14 return integer32 is -- clears dobldobl system pool
+  begin
+    DoblDobl_Systems_Pool.Clear;
+    return 0;
+  end Job14;
+
+  function Job15 return integer32 is -- clears quaddobl system pool
+  begin
+    QuadDobl_Systems_Pool.Clear;
+    return 0;
+  end Job15;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -216,6 +254,11 @@ function use_syspool ( job : integer32;
       when  8 => return Job8;  -- copy to quaddobl systems container
       when  9 => return Job9;  -- returns size of dobldobl pool in a[0]
       when 10 => return Job10; -- returns size of quaddobl pool in a[0]
+      when 11 => return Job11; -- initializes dobldobl pool with a[0]
+      when 12 => return Job12; -- initializes quaddobl pool with a[0]
+      when 13 => return Job13; -- clears the standard systems pool
+      when 14 => return Job14; -- clears the dobldobl systems pool
+      when 15 => return Job15; -- clears the quaddobl systems pool
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

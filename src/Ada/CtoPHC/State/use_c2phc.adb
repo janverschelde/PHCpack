@@ -2407,6 +2407,8 @@ function use_c2phc ( job : integer32;
       when 306..311 => return use_syscon(job-294,a,b,c);
       when 312 => return use_track(48,a,b,c); -- quaddobl collapse diagonal
       when 313..317 => return use_syspool(job-307,a,b,c);
+      when 318 => return use_syspool(11,a,b,c); -- init dobldobl sys pool
+      when 319 => return use_syspool(11,a,b,c); -- init quaddobl sys pool
       when 320..325 => return use_solpool(job-320,a,b,c);
      -- one Newton step on Laurent system :
       when 326 => return Job326; -- standard Newton step on Laurent
@@ -2513,6 +2515,10 @@ function use_c2phc ( job : integer32;
       when 682..690 => return use_c2fac(job-600,a,b,c);
      -- power series Newton method
       when 691..696 => return use_series(job-690,a,b,c);
+     -- clear systems pool
+      when 697 => return use_syspool(13,a,b,c); -- clear standard system pool
+      when 698 => return use_syspool(14,a,b,c); -- clear dobldobl system pool
+      when 699 => return use_syspool(15,a,b,c); -- clear quaddobl system pool
      -- blackbox solvers in double double and quad double precision
       when 700 => return Job700; -- dobldobl poly system blackbox solver
       when 701 => return Job701; -- dobldobl Laurent poly blackbox solver

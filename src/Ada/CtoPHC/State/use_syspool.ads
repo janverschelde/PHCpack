@@ -11,7 +11,7 @@ function use_syspool ( job : integer32;
 --   Provides a gateway to the systems pool.
 
 -- ON ENTRY :
---   job     =  0 : initialize system pool with n = a[0];
+--   job     =  0 : initialize standard system pool with n = a[0];
 --           =  1 : get the size of the system pool returned in a[0];
 --           =  2 : reads a system p iand with k = a[0], the data of p
 --                  for the k-th system in the pool is created;
@@ -28,7 +28,12 @@ function use_syspool ( job : integer32;
 --           =  8 : copies the k-th system in the pool to the quaddobl system
 --                  container, where k is given as a[0];
 --           =  9 : the size of the dobldobl systems pool is returned in a[0];
---           = 10 : the size of the dobldobl systems pool is returned in a[0].
+--           = 10 : the size of the dobldobl systems pool is returned in a[0];
+--           = 11 : initialize dobldobl system pool with n = a[0];
+--           = 12 : initialize quaddobl system pool with n = a[0];
+--           = 13 : clears the standard system pool;
+--           = 14 : clears the dobldobl system pool;
+--           = 15 : clears the quaddobl system pool.
 -- 
 --   a        memory allocated a natural number, either the size
 --            of the systems pool or the index of a system in the pool;

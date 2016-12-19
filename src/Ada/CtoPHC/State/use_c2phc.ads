@@ -1657,7 +1657,14 @@ function use_c2phc ( job : integer32;
 --         = 315 : copies the k-th system in the pool to the quaddobl system
 --                 container, where k is given as a[0];
 --         = 316 : the size of the dobldobl systems pool is returned in a[0];
---         = 317 : the size of the dobldobl systems pool is returned in a[0].
+--         = 317 : the size of the dobldobl systems pool is returned in a[0];
+--         = 318 : initialize dobldobl system pool with n = a[0];
+--         = 319 : initialize quaddobl system pool with n = a[0];
+--         = 697 : clears the standard system pool;
+--         = 698 : clears the dobldobl system pool;
+--         = 699 : clears the quaddobl system pool.
+-- 
+--   a        memory allocated a natural number, either the size
 --
 -- operations on the pool of solution lists :
 --
