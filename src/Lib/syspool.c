@@ -1,9 +1,7 @@
 /* This file "syspool.c" contains the definitions of the operations
  * declared in the file "syspool.h". */
 
-extern void adainit( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal( void );
+#include "syspool.h"
 
 int syspool_standard_initialize ( int n )
 {

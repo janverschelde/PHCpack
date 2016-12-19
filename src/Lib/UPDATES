@@ -1,3 +1,5 @@
+Sun 18 Dec 2016 : fixed syspool.h and syspool.c for compilation with g++.
+
 Sun 16 Oct 2016 : made interface to intcelcon_number_of_points_in_cell simpler
   in intcelcon, adjusted phcpy2c.h, phcpy2c2.c and phcpy2c3.c.
   Added intcelcon_get_point_in_cell to phcpy2c.h, defined in the
