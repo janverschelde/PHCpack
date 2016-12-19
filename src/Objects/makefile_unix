@@ -2826,6 +2826,7 @@ lib_series:
 	gnatlink -C use_c2phc \
                     phcpack.o syscon.o syspool.o series.o lib_series.o \
                  -o $(BIN)/lib_series -lm
+
 lib_series_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -2836,7 +2837,7 @@ lib_series_cpp:
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc \
                     phcpack.o syscon.o syspool.o series.o lib_series.o \
-                 -o $(BIN)/lib_series -lm
+                 -o $(BIN)/lib_series -lm --LINK=g++
 
 lib_nbrvar:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
