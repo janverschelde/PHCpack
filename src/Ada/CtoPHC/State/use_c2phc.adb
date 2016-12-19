@@ -2408,7 +2408,7 @@ function use_c2phc ( job : integer32;
       when 312 => return use_track(48,a,b,c); -- quaddobl collapse diagonal
       when 313..317 => return use_syspool(job-307,a,b,c);
       when 318 => return use_syspool(11,a,b,c); -- init dobldobl sys pool
-      when 319 => return use_syspool(11,a,b,c); -- init quaddobl sys pool
+      when 319 => return use_syspool(12,a,b,c); -- init quaddobl sys pool
       when 320..325 => return use_solpool(job-320,a,b,c);
      -- one Newton step on Laurent system :
       when 326 => return Job326; -- standard Newton step on Laurent

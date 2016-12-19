@@ -1,5 +1,6 @@
 Mon 19 Dec 2016 : added five jobs to use_syspool and use_c2phc;
-  and two more jobs to make systems in the pool.
+  and two more jobs to make systems in the pool.  Bug fix in use_c2phc.adb,
+  in the initialization of the quad double system pool.
 
 Sat 17 Dec 2016 : extended use_series.adb with methods to compute series
   starting a series with more terms, using the echelon Newton method.
