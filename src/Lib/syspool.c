@@ -11,6 +11,22 @@ int syspool_standard_initialize ( int n )
    return fail;
 }
 
+int syspool_dobldobl_initialize ( int n )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(318,&n,b,c);
+   return fail;
+}
+
+int syspool_quaddobl_initialize ( int n )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(319,&n,b,c);
+   return fail;
+}
+
 int syspool_standard_size ( int *n )
 {
    int *b,fail;
@@ -96,4 +112,28 @@ int syspool_copy_to_quaddobl_container ( int k )
    fail = _ada_use_c2phc(315,&k,b,c);
 
    return fail;
+}
+
+int syspool_standard_clear ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(697,a,b,c);
+}
+
+int syspool_dobldobl_clear ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(698,a,b,c);
+}
+
+int syspool_quaddobl_clear ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(699,a,b,c);
 }

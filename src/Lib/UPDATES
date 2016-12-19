@@ -1,3 +1,5 @@
+Mon 19 Dec 2016 : added five functions to syspool.
+
 Sun 18 Dec 2016 : fixed syspool.h and syspool.c for compilation with g++.
   Added three functions to series, to start Newton's method on power
   series, starting at more than just a constant term.

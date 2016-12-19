@@ -19,7 +19,20 @@ extern void adafinal( void );
 int syspool_standard_initialize ( int n );
 /*
  * DESCRIPTION :
- *   Initializes the system pool with n. */
+ *   Initializes with n the pool for systems with complex coefficients
+ *   in standard double precision. */
+
+int syspool_dobldobl_initialize ( int n );
+/*
+ * DESCRIPTION :
+ *   Initializes with n the pool for systems with complex coefficients
+ *   in double double precision. */
+
+int syspool_quaddobl_initialize ( int n );
+/*
+ * DESCRIPTION :
+ *   Initializes with n the pool for systems with complex coefficients
+ *   in quad double precision. */
 
 int syspool_standard_size ( int *n );
 /*
@@ -85,5 +98,20 @@ int syspool_copy_to_quaddobl_container ( int k );
  * DESCRIPTION :
  *   Copies the k-th system in the pool to the quaddobl system container.
  *   Returns the failure code which is zero when all went well. */
+
+int syspool_standard_clear ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the pool for systems in standard double precision. */
+
+int syspool_dobldobl_clear ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the pool for systems in double double precision. */
+
+int syspool_quaddobl_clear ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the pool for systems in quad double precision. */
 
 #endif
