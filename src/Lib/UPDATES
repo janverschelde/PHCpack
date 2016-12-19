@@ -1,4 +1,6 @@
 Sun 18 Dec 2016 : fixed syspool.h and syspool.c for compilation with g++.
+  Added three functions to series, to start Newton's method on power
+  series, starting at more than just a constant term.
 
 Sun 16 Oct 2016 : made interface to intcelcon_number_of_points_in_cell simpler
   in intcelcon, adjusted phcpy2c.h, phcpy2c2.c and phcpy2c3.c.
