@@ -1,3 +1,7 @@
+Mon 19 Dec 2016 : updated series.py in both PHCpy2 and PHCpy3 with three
+  methods to compute power series starting at more than one term,
+  using a lower triangular echelon form in Newton's method.
+
 Sat 3 Dec 2016 : added cite() function to the __init__.py of python2
   and python3 versions of phcpy.
 
