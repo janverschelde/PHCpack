@@ -16,8 +16,8 @@ function use_syspool ( job : integer32;
 --           =  2 : reads a system p iand with k = a[0], the data of p
 --                  for the k-th system in the pool is created;
 --           =  3 : writes the k-th system, with k = a[0];
---           =  4 : takes system of the container to create k-th system
---                  in the pool, k = a[0];
+--           =  4 : takes system of the standard container to make k-th 
+--                  system in the standard system pool, k = a[0];
 --           =  5 : refines a solution using the k-th system in the container,
 --                  k = a[0], n = a[1], m = b[0] and c contains the floating
 --                  part of the solution;
@@ -33,7 +33,11 @@ function use_syspool ( job : integer32;
 --           = 12 : initialize quaddobl system pool with n = a[0];
 --           = 13 : clears the standard system pool;
 --           = 14 : clears the dobldobl system pool;
---           = 15 : clears the quaddobl system pool.
+--           = 15 : clears the quaddobl system pool;
+--           = 16 : takes system of the dobldobl container to make k-th 
+--                  system in the dobldobl system pool, k = a[0];
+--           = 17 : takes system of the quaddobl container to make k-th 
+--                  system in the quaddobl system pool, k = a[0].
 -- 
 --   a        memory allocated a natural number, either the size
 --            of the systems pool or the index of a system in the pool;

@@ -2503,6 +2503,9 @@ function use_c2phc ( job : integer32;
       when 599 => return use_celcon(50,a,b,c); -- quaddobl start solution
      -- size limits of string representations of polynomials
       when 600..607 => return use_syscon(job-520,a,b,c);
+     -- make system in the dobldobl and quaddobl systems pool
+      when 608 => return use_syspool(16,a,b,c); -- k-th dobldobl system
+      when 609 => return use_syspool(17,a,b,c); -- k-th quaddobl system
      -- run the sweep homotopy :
       when 610..621 => return use_sweep(job-610,a,b,c);
      -- make standard monodromy breakup verbose

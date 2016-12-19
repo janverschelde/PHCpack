@@ -6,7 +6,7 @@ with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
@@ -90,7 +90,7 @@ function use_syspool ( job : integer32;
 
     v : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant integer32 := integer32(v(v'first));
-    p : Link_to_Poly_Sys;
+    p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     
   begin
     new_line;
@@ -104,7 +104,10 @@ function use_syspool ( job : integer32;
 
     v : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant integer32 := integer32(v(v'first));
-    p : constant Link_to_Poly_Sys := Standard_Systems_Pool.Retrieve(k);
+    p : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Standard_Systems_Pool.Retrieve(k);
+
+    use Standard_Complex_Poly_Systems;
 
   begin
     if p /= null then
@@ -116,11 +119,14 @@ function use_syspool ( job : integer32;
     return 0;
   end Job3;
 
-  function Job4 return integer32 is -- creates k-th system from container
+  function Job4 return integer32 is -- standard k-th system from container
 
     v : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant integer32 := integer32(v(v'first));
-    p : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    p : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Standard_PolySys_Container.Retrieve;
+
+    use Standard_Complex_Poly_Systems;
 
   begin
     if p /= null
@@ -128,6 +134,38 @@ function use_syspool ( job : integer32;
     end if;
     return 0;
   end Job4;
+
+  function Job16 return integer32 is -- dobldobl k-th system from container
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant integer32 := integer32(v(v'first));
+    p : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := DoblDobl_PolySys_Container.Retrieve;
+
+    use DoblDobl_Complex_Poly_Systems;
+
+  begin
+    if p /= null
+     then DoblDobl_Systems_Pool.Create(k,p.all);
+    end if;
+    return 0;
+  end Job16;
+
+  function Job17 return integer32 is -- quaddobl k-th system from container
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant integer32 := integer32(v(v'first));
+    p : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := QuadDobl_PolySys_Container.Retrieve;
+
+    use QuadDobl_Complex_Poly_Systems;
+
+  begin
+    if p /= null
+     then QuadDobl_Systems_Pool.Create(k,p.all);
+    end if;
+    return 0;
+  end Job17;
 
   function Job5 return integer32 is -- refines a solution using k-th system
 
@@ -247,7 +285,7 @@ function use_syspool ( job : integer32;
       when  1 => return Job1;  -- returns size of standard pool in a[0]
       when  2 => return Job2;  -- read and create k-th system, k = a[0]
       when  3 => return Job3;  -- write k-th system, k = a[0]
-      when  4 => return Job4;  -- creates k-th system from container
+      when  4 => return Job4;  -- standard k-th system from container
       when  5 => return Job5;  -- refine a root with k-th system
       when  6 => return Job6;  -- copy to standard systems container
       when  7 => return Job7;  -- copy to dobldobl systems container
@@ -259,6 +297,8 @@ function use_syspool ( job : integer32;
       when 13 => return Job13; -- clears the standard systems pool
       when 14 => return Job14; -- clears the dobldobl systems pool
       when 15 => return Job15; -- clears the quaddobl systems pool
+      when 16 => return Job16; -- dobldobl k-th system from container
+      when 17 => return Job17; -- quaddobl k-th system from container
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;
