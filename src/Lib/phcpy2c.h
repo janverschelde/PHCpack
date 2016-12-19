@@ -4460,6 +4460,30 @@ static PyObject *py2c_syspool_quaddobl_size ( PyObject *self, PyObject *args );
  * DESCRIPTION :
  *   Returns the size of the pool for systems in quad double precision. */
 
+static PyObject *py2c_syspool_standard_create
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given the index k (k between one and the size of the pool),
+ *   and with a system defined in the standard double system container,
+ *   that system is stored as the k-th system in the standard system pool. */
+
+static PyObject *py2c_syspool_dobldobl_create
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given the index k (k between one and the size of the pool),
+ *   and with a system defined in the double double system container,
+ *   that system is stored as the k-th system in the dobldobl system pool. */
+
+static PyObject *py2c_syspool_quaddobl_create
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given the index k (k between one and the size of the pool),
+ *   and with a system defined in the quad double system container,
+ *   that system is stored as the k-th system in the quaddobl system pool. */
+
 static PyObject *py2c_syspool_copy_to_standard_container
  ( PyObject *self, PyObject *args );
 /*
@@ -4486,6 +4510,24 @@ static PyObject *py2c_syspool_copy_to_quaddobl_container
  *   precision to the quaddobl systems container.
  *   The value for k is given as an integer input parameter.
  *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_syspool_standard_clear
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Clears the pool for systems in standard double precision. */
+
+static PyObject *py2c_syspool_dobldobl_clear
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Clears the pool for systems in double double precision. */
+
+static PyObject *py2c_syspool_quaddobl_clear
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Clears the pool for systems in quad double precision. */
 
 /* The wrapping of functions with prototypes in next_track.h starts below. */
 

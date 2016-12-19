@@ -75,6 +75,22 @@ int syspool_standard_create ( int k )
    return fail;
 }
 
+int syspool_dobldobl_create ( int k )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(608,&k,b,c);
+   return fail;
+}
+
+int syspool_quaddobl_create ( int k )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(609,&k,b,c);
+   return fail;
+}
+
 int syspool_standard_refiner ( int k, int n, int *m, double *c )
 {
    int fail,a[2];

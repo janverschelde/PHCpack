@@ -1,5 +1,7 @@
 Mon 19 Dec 2016 : added five functions to syspool, and added those functions
   also the definition of the C extension module for phcpy.
+  Extended syspool and phcpy2c once more with the function to store a system
+  in the pool, for double, double double, and quad double precision.
 
 Sun 18 Dec 2016 : fixed syspool.h and syspool.c for compilation with g++.
   Added three functions to series, to start Newton's method on power

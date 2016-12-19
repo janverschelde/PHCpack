@@ -6647,6 +6647,42 @@ static PyObject *py2c_syspool_quaddobl_size ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",nbr);
 }
 
+static PyObject *py2c_syspool_standard_create
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;
+   fail = syspool_standard_create(idx);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syspool_dobldobl_create
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;
+   fail = syspool_dobldobl_create(idx);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syspool_quaddobl_create
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;
+   fail = syspool_quaddobl_create(idx);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_syspool_copy_to_standard_container
  ( PyObject *self, PyObject *args )
 {
@@ -8253,6 +8289,15 @@ static PyMethodDef phcpy2c_methods[] =
     "Returns the size of the pool for systems in double double precision."},
    {"py2c_syspool_quaddobl_size", py2c_syspool_quaddobl_size, METH_VARARGS,
     "Returns the size of the pool for systems in quad double precision."},
+   {"py2c_syspool_standard_create",
+     py2c_syspool_standard_create, METH_VARARGS,
+    "Defines the k-th system in the standard system pool,\n using the system in the standard container."},
+   {"py2c_syspool_dobldobl_create",
+     py2c_syspool_dobldobl_create, METH_VARARGS,
+    "Defines the k-th system in the dobldobl system pool,\n using the system in the dobldobl container."},
+   {"py2c_syspool_quaddobl_create",
+     py2c_syspool_quaddobl_create, METH_VARARGS,
+    "Defines the k-th system in the quaddobl system pool,\n using the system in the quaddobl container."},
    {"py2c_syspool_copy_to_standard_container",
      py2c_syspool_copy_to_standard_container, METH_VARARGS,
     "Copies the k-th system in the pool for systems in standard double\n precision to the standard systems container.\n The value for k is given as an integer input parameter.\n On return is the failure code, which equals zero if all went well."},

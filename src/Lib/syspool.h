@@ -62,7 +62,20 @@ int syspool_standard_write_system ( int k );
 int syspool_standard_create ( int k );
 /* 
  * DESCRIPTION :
- *   Creates the k-th system in the pool, using the system in the container. */
+ *   Creates the k-th system in the pool for systems in standard precision,
+ *   using the system in the standard double precision container. */
+
+int syspool_dobldobl_create ( int k );
+/* 
+ * DESCRIPTION :
+ *   Creates the k-th system in the pool for systems in dobldobl precision,
+ *   using the system in the double double precision container. */
+
+int syspool_quaddobl_create ( int k );
+/* 
+ * DESCRIPTION :
+ *   Creates the k-th system in the pool for systems in quaddobl precision,
+ *   using the system in the quad double precision container. */
 
 int syspool_standard_refiner ( int k, int n, int *m, double *c );
 /*
