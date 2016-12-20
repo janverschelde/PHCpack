@@ -1,5 +1,7 @@
 Tue 20 Dec 2016 : added apollonius as a test to the series module,
-  for both python2 and python3.
+  for both python2 and python3.  Adjusted the setup.py, __init__.py,
+  and the conf.py in the doc/source for version 0.6.0 of phcpy,
+  both for python2 and python3.
 
 Mon 19 Dec 2016 : updated series.py in both PHCpy2 and PHCpy3 with three
   methods to compute power series starting at more than one term,

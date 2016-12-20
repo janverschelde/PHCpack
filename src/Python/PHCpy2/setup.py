@@ -17,14 +17,14 @@ setup(
     author_email = 'janv@uic.edu' ,
     description = 'a package for Polynomial Homotopy Continuation' ,
     url = 'https://github.com/janverschelde/PHCpack' ,
-    version = '0.5.9' ,
+    version = '0.6.0' ,
     packages = ['phcpy'] ,
     py_modules = ['phcpy/interface', 'phcpy/solver', 'phcpy/solutions', \
         'phcpy/trackers', 'phcpy/sweepers', 'phcpy/tuning', 'phcpy/tropisms', \
         'phcpy/sets', 'phcpy/maps', 'phcpy/schubert' , 'phcpy/polytopes', \
         'phcpy/server', 'phcpy/examples', 'phcpy/families', \
         'phcpy/dashboard', 'phcpy/series' ] ,
-    license = 'GNU GENERAL PUBLIC LICENSE version 2 or higher' ,
+    license = 'GNU GENERAL PUBLIC LICENSE version 3' ,
     data_files = [(get_python_lib()+'/phcpy', ['phcpy/phcpy2c2.so'])] ,
     platforms = ['linux2'] ,
     long_description=open('README.txt').read()
