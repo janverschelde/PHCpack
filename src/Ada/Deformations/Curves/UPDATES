@@ -1,5 +1,7 @@
 Tue 20 Dec 2016 : refactored mainseries.adb, with better questions to
   select the options of phc -u and make room for echelon Newton.
+  To phc -u added the option of starting Newton at a series which
+  has several leading terms.
 
 Sat 17 Dec 2016 : refactored ts_sersol, to allow to start Newton's method
   at series with more than just the leading term.
