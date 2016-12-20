@@ -1,3 +1,5 @@
+Tue 20 Dec 2016 : updated greeting_banners for version 2.4.31.
+
 Sat 3 Dec 2016 : added procedure in greeting_banners to display information
   about how to cite PHCpack in publications, available via phc --cite.
 
