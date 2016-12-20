@@ -1,4 +1,4 @@
-phcpy 0.5.9 offers a simple Python interface to PHCv2.4.30
+phcpy 0.6.0 offers a simple Python interface to PHCv2.4.31
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -57,6 +57,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.6.0 : 2016-12-20 : better Newton on power series in the series module
 0.5.9 : 2016-11-30 : reorganized chapters in the documentation
 0.5.8 : 2016-11-20 : added an example of a power series solution computation
 0.5.7 : 2016-10-31 : improved reference manual with restructured text

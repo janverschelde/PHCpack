@@ -332,6 +332,32 @@ def viviani2(precision='d'):
         print('invalid argument for the precision')
     print(nser)
 
+def apollonius(precision='d'):
+    """
+    Test on computing the power series at a double solution
+    for the problem of Apolonius.
+    The parameter t is the fourth variable, whence we call
+    Newton's method with idx equal to four.
+    """
+    pols = [ 'x1^2 + 3*x2^2 - r^2 - 2*r - 1;', \
+             'x1^2 + 3*x2^2 - r^2 - 4*x1 - 2*r + 3;', \
+       '3*t^2 + x1^2 - 6*t*x2 + 3*x2^2 - r^2 + 6*t - 2*x1 - 6*x2 + 2*r + 3;']
+    lser1 = ['1;', '1 + 0.536*t;', '1 + 0.904*t;']
+    lser2 = ['1;', '1 + 7.464*t;', '1 + 11.196*t;']
+    if precision == 'd':
+        nser1 = standard_newton_power_series(pols, lser1, idx=4, nbr=8)
+        nser2 = standard_newton_power_series(pols, lser2, idx=4, nbr=8)
+    elif precision == 'dd':
+        nser1 = dobldobl_newton_power_series(pols, lser1, idx=4, nbr=8)
+        nser2 = dobldobl_newton_power_series(pols, lser2, idx=4, nbr=8)
+    elif precision == 'qd':
+        nser1 = quaddobl_newton_power_series(pols, lser1, idx=4, nbr=8)
+        nser2 = quaddobl_newton_power_series(pols, lser2, idx=4, nbr=8)
+    else:
+        print('invalid argument for the precision')
+    print(nser1)
+    print(nser2)
+
 def test(precision='d'):
     """
     Tests the application of Newton's method to compute power
@@ -348,9 +374,10 @@ def test(precision='d'):
         print(series)
 
 if __name__ == "__main__":
-    test('d')
-    test('dd')
-    test('qd')
-    viviani2('d')
-    viviani2('dd')
-    viviani2('qd')
+    #test('d')
+    #test('dd')
+    #test('qd')
+    #viviani2('d')
+    #viviani2('dd')
+    #viviani2('qd')
+    apollonius()
