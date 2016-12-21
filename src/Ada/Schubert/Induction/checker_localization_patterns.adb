@@ -177,19 +177,20 @@ package body Checker_Localization_Patterns is
     res : integer32 := 0;
 
   begin
-    for i1 in lp'range(1) loop
-      for j1 in lp'range(2) loop
-        if lp(i1,j1) = 2
-         then res := res + 1;
-        end if;
-        if ((i1 = i) and (j1 = j)) then
-          if lp(i1,j1) /= 2
-           then return 0;
-           else return res;
+    if lp(i,j) /= 2 then
+      return 0;
+    else
+      for i1 in lp'range(1) loop
+        for j1 in lp'range(2) loop
+          if lp(i1,j1) = 2
+           then res := res + 1;
           end if;
-        end if;
+          if ((i1 = i) and (j1 = j))
+           then return res;
+          end if;
+        end loop;
       end loop;
-    end loop;
+    end if;
     return res;
   end Rank;
 
