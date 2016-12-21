@@ -1,3 +1,6 @@
+Wed 21 Dec 2016 : fixed spelling error in checker_homotopies.ads and
+  added extra print statement for debugging in checker_homotopies.adb.
+
 Wed 30 Nov 2016 : added nt parameter in call to resolve in ts_lrhom.adb.
 
 Wed 2 Nov 2016 : to resolve_schubert_problems, added multitasking,

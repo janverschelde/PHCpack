@@ -982,7 +982,7 @@ package Checker_Homotopies is
   --   In the first type of swap homotopy r+1 < R = big_r, where
   --   x is represented as a matrix of polynomials with coefficients
   --   in standard double, double double, or quad double precision.
-  --   This version writes intermeidate output to file.
+  --   This version writes intermediate output to file.
 
   -- ON ENTRY :
   --   file     for intermediate output, if omitted, then silent;

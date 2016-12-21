@@ -2747,6 +2747,7 @@ package body Checker_Homotopies is
         := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     t : Term;
     empty_zone_A : boolean;
+    failed : boolean := false;
 
   begin
    -- put_line(file,"the localization map : "); put(file,locmap);
@@ -2844,10 +2845,15 @@ package body Checker_Homotopies is
           put(file," for p("); put(file,i,1); put(file,") = ");
           put(file,p(i),1); put(file," and s+1 = "); put(file,s+1,1);
           new_line(file);
+          failed := true;
         end if;
        -- end if;
       end if;
     end loop;
+    if failed then
+      put_line(file,"the localization map for failed indices :");
+      put(file,locmap);
+    end if;
     Clear(t);
   end First_Swap_Plane;
 
