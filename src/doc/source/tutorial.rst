@@ -4,54 +4,6 @@ A Short Tutorial
 
 This section provides a quick getting started guide.
 
-Downloading and installing
-==========================
-
-Executable versions of the program for various machine architectures
-and operating systems are available via
-<http://www.math.uic.edu/~jan/download.html>.
-
-For the :index:`Windows` operating systems, the 
-executable version of phc is in the file ``phc.exe``
-and is available for download in its uncompressed format.
-Using the plain version of phc on a Windows system 
-requires the opening of a command prompt window.
-
-For :index:`Mac OS X` and :index:`Linux` versions, 
-the executable is tarred and gzipped.
-If the downloaded file is saved as ``*phcv2_4p.tar.gz``,
-then the following commands to unzip and untar the downloaded file 
-can be typed at the command prompt:
-
-::
-
-   gunzip *phcv2_4p.tar.gz
-   tar xpf *phcv2_4p.tar
-
-If all went well, typing ``./phc`` at the command prompt should bring
-up the welcome message and the screen with available options.
-
-The executable ``phc`` gives access to almost all the functionality
-of PHCpack, including the :index:`multitasking` capabilities 
-for :index:`shared memory parallelism` 
-on :index:`multicore processors`.
-For other parallel capabilities, such
-as :index:`distributed memory parallelism` with 
-the :index:`Message Passing Interface (MPI)`
-and massive parallelism on 
-a :index:`Graphics Processing Unit (GPU)`,
-one will need to compile the source code.
-
-The :index:`source code` is under :index:`version control` 
-at :index:`github`,
-at <https://github.com/janverschelde/PHCpack>.
-To compile the source code, the gnu-ada compiler is needed.
-Free binary versions of the :index:`gnu-ada compiler`
-are available at <http://libre.adacore.com>.
-The directory ``Objects`` in the
-source code provides makefiles for Linux, Mac OS X, and Windows
-operating systems.
-
 Input formats
 =============
 
