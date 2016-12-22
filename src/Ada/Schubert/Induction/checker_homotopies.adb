@@ -2758,7 +2758,7 @@ package body Checker_Homotopies is
     empty_zone_A := true;
     for i in p'range loop
       if integer32(p(i)) < r then
-        if p'last+1-i > p'last-dc+1
+        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
          then empty_zone_A := false; exit;
         end if;
       end if;
@@ -2780,11 +2780,13 @@ package body Checker_Homotopies is
     for i in p'range loop
       if integer32(p(i)) < r then      -- in zones A and B
         if p'last+1-i > p'last-dc+1 then    -- in zone A
-          if locmap(integer32(p(i)),s+1) = 2 then
-            ind := Checker_Localization_Patterns.Rank
-                     (locmap,integer32(p(i)),s+1);
+          if locmap(integer32(p(i)),s+1) = 2 then -- why was this s+1?
+         -- if locmap(integer32(p(i)),s) = 2 then -- it must be s+1!
+            ind := Checker_Localization_Patterns.Rank -- because we take
+                     (locmap,integer32(p(i)),s+1);    -- the variable at s+1
             t.dg(ind) := 1; t.dg(np1) := 1; t.cf := Create(-1.0);
-            x(integer32(p(i)),s) := Create(t);
+            x(integer32(p(i)),s) := Create(t); -- is this a bug ???
+           -- x(integer32(p(i)),s+1) := Create(t); -- assign to column s?
             t.dg(ind) := 0; t.dg(np1) := 0; t.cf := Create(1.0);
           end if;
         elsif p'last+1-i < p'last-r+1 then -- in zone B
@@ -2820,14 +2822,16 @@ package body Checker_Homotopies is
         end if;
       end if;
     end loop;
-    t.dg(piv) := 1;
-    x(r+1,s+1) := Create(t);    -- x(r+1,s+1)*m(r+1) for column s+1
-    t.dg(piv) := 0;
+    if locmap(r+1,s+1) = 2 then   -- only assign to free position!
+      t.dg(piv) := 1;
+      x(r+1,s+1) := Create(t);    -- x(r+1,s+1)*m(r+1) for column s+1
+      t.dg(piv) := 0;
+    end if;
     x(big_r,s+1) := Create(t);  -- m(R) in column s+1 
     for i in p'range loop
       if integer32(p(i)) /= r and integer32(p(i)) /= r+1
                               and integer32(p(i)) /= big_r then
-       -- if locmap(p(i),s+1) = 2 then
+        if locmap(integer32(p(i)),s+1) = 2 then -- was guarded before!
           ind := Checker_Localization_Patterns.Rank
                    (locmap,integer32(p(i)),s+1);
         if ind in t.dg'range then
@@ -2847,13 +2851,15 @@ package body Checker_Homotopies is
           new_line(file);
           failed := true;
         end if;
-       -- end if;
+        end if; -- placed if again
       end if;
     end loop;
-    if failed then
-      put_line(file,"the localization map for failed indices :");
-      put(file,locmap);
-    end if;
+   -- if failed then
+   --   put_line(file,"the localization map for failed indices :");
+   --   put(file,locmap);
+   -- end if;
+    put_line(file,"the localization map : "); put(file,locmap);
+    put_line(file,"the polynomial matrix of indeterminates :"); put(file,x);
     Clear(t);
   end First_Swap_Plane;
 

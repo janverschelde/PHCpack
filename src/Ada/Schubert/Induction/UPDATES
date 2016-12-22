@@ -1,3 +1,5 @@
+Thu 22 Dec 2016 : made progress in the bug fix in checker_homotopies.adb.
+
 Wed 21 Dec 2016 : fixed spelling error in checker_homotopies.ads and
   added extra print statement for debugging in checker_homotopies.adb.
   Improved Rank definition in checker_localization_patterns.adb.
