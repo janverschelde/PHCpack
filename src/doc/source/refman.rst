@@ -89,3 +89,49 @@ The Ada sources are organized in a tree of directories:
     |-- PHCtoC               : 7. GPU acceleration via a C interface
     |-- Tasking              : 8. multitasking
     |-- Main                 : 9. main dispatcher
+
+Every directory contains a collection of test procedures.
+
+Organization of the C and C++ code
+==================================
+
+C code can be called from within Ada, as is the case
+with the realization of the feedback laws in the output
+placement problem, as defined in the ``Feedback`` directory.
+A C (or C++) function may call Ada code, as was done in
+the message passing code in the ``MPI`` directory.
+
+The directory ``Lib`` defines the C interface libraries.
+In analogy with the single main executable ``phc``,
+there is only one interface function which serves at the main gateway 
+exporting the Ada functionality to the C and C++ programmers.
+
+::
+
+   #ifdef compilewgpp
+   extern "C" void adainit( void );
+   extern "C" int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+   extern "C" void adafinal( void );
+   #else
+   extern void adainit( void );
+   extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+   extern void adafinal( void );
+   #endif
+
+Message Passing and GPU Acceleration
+====================================
+
+The shared memory parallelism is based on the tasking mechanism
+defined by the Ada language and implemented by the gnu-ada compiler.
+This section describes the distributed memory parallelism with
+message passing, using the MPI library.  
+The acceleration with graphics processing units is code with
+the NVIDIA compiler.
+
+The Python Package phcpy
+========================
+
+The package phcpy provides a scripting interface.
+For its functionality phcpy depends mainly on the C interface
+and that was done on purpose: as the Python package grows,
+so does the C interface.

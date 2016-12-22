@@ -2,7 +2,7 @@
 A Short Tutorial
 ****************
 
-This section provides a quick getting started guide.
+This chapter provides a quick getting started guide.
 
 Input formats
 =============
