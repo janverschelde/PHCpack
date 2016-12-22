@@ -17,3 +17,4 @@ PHCpack Documentation Contents
    textoptions
    options
    about
+   refman
