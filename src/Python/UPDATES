@@ -1,3 +1,6 @@
+Fri 23 Dec 2016 : added g48big.py as test script to the examples folder
+  in the PHCpy2 and PHCpy3 directories.
+
 Tue 20 Dec 2016 : added apollonius as a test to the series module,
   for both python2 and python3.  Adjusted the setup.py, __init__.py,
   and the conf.py in the doc/source for version 0.6.0 of phcpy,
