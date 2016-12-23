@@ -2480,7 +2480,8 @@ package body Checker_Homotopies is
     empty_zone_A := true;
     for i in p'range loop
       if integer32(p(i)) < r then
-        if p'last+1-i > p'last-dc+1
+       -- if p'last+1-i > p'last-dc+1
+        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
          then empty_zone_A := false; exit;
         end if;
       end if;
@@ -2571,7 +2572,8 @@ package body Checker_Homotopies is
     empty_zone_A := true;
     for i in p'range loop
       if integer32(p(i)) < r then
-        if p'last+1-i > p'last-dc+1
+       -- if p'last+1-i > p'last-dc+1
+        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
          then empty_zone_A := false; exit;
         end if;
       end if;
@@ -2662,7 +2664,8 @@ package body Checker_Homotopies is
     empty_zone_A := true;
     for i in p'range loop
       if integer32(p(i)) < r then
-        if p'last+1-i > p'last-dc+1
+       -- if p'last+1-i > p'last-dc+1
+        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
          then empty_zone_A := false; exit;
         end if;
       end if;
@@ -2890,7 +2893,8 @@ package body Checker_Homotopies is
     empty_zone_A := true;
     for i in p'range loop
       if integer32(p(i)) < r then
-        if p'last+1-i > p'last-dc+1
+       -- if p'last+1-i > p'last-dc+1
+        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
          then empty_zone_A := false; exit;
         end if;
       end if;
@@ -3011,7 +3015,8 @@ package body Checker_Homotopies is
     empty_zone_A := true;
     for i in p'range loop
       if integer32(p(i)) < r then
-        if p'last+1-i > p'last-dc+1
+       -- if p'last+1-i > p'last-dc+1
+        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
          then empty_zone_A := false; exit;
         end if;
       end if;

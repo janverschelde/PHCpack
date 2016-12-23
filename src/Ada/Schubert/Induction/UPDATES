@@ -1,4 +1,6 @@
 Thu 22 Dec 2016 : made progress in the bug fix in checker_homotopies.adb.
+  Applied the patch to the other procedures in checker_homotopies.adb
+  which define the first swap plane.
 
 Wed 21 Dec 2016 : fixed spelling error in checker_homotopies.ads and
   added extra print statement for debugging in checker_homotopies.adb.
