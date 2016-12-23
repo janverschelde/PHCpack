@@ -1,6 +1,6 @@
-****************
-A Short Tutorial
-****************
+********
+Tutorial
+********
 
 This chapter provides a quick getting started guide.
 

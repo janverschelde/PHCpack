@@ -1,11 +1,8 @@
-.. PHCpack documentation master file, created by
-   sphinx-quickstart on Sun Jan 27 13:05:16 2013.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+***************
+Getting Started
+***************
 
-***********************************
-Welcome to PHCpack's documentation!
-***********************************
+This documentation describes the software package PHCpack.
 
 What is PHCpack?
 ================
