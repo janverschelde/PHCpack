@@ -246,8 +246,58 @@ too large to store in the main memory of one node.
 GPU Acceleration
 ================
 
-The acceleration with graphics processing units is code with
-the NVIDIA compiler.
+The acceleration with Graphics Processing Units (GPUs) is coded with
+the NVIDIA compiler.  GPUs are designed for data parallel applications.  
+Their execution model is single instruction multiple data: 
+the same instruction is executed on many different data elements.  
+Unlike shared memory parallelism with threads on multicore processors, 
+to fully occupy a GPU, one must launch ten thousands of threads.
+
+Polynomial homotopy continuation methods can take advantage of GPUs
+by the evaluation and differentiation of polynomials as required in
+the frequent application of Newton's method.  The reverse mode of
+algorithmic differentiation applied to the monomials with appear
+with a nonzero coefficient in the polynomials provides sufficient
+parallelism and a granularity fine enough for the data parallel
+execution model.  The same arithmetic circuits to evaluate and
+differentiate monomials are applied to different solutions when
+tracking many solution paths.  For the tracking of one path in
+large enough dimension, different threads collaborate in the
+evaluation and differentiation algorithms.
+
+To introduce the evaluation and differentiation algorithms
+consider :numref:`figcirceval4` and :numref:`figcircdiff4`
+to compute the product of four variables and its gradient.
+Observe that results from the evaluation can be recycled in
+the computation of all partial derivatives.
+
+.. _figcirceval4:
+
+.. figure:: ./figcirceval4.png
+    :align: center
+
+    An arithmetic circuit to evaluate the product of four variables
+    :math:`x_1`, :math:`x_2`, :math:`x_3`, and :math:`x_4`.
+
+.. _figcircdiff4:
+
+.. figure:: ./figcircdiff4.png
+    :align: center
+
+    An arithmetic circuit to compute the gradient of
+    the product :math:`x_1 x_2 x_3 x_4`.
+
+The computation of the gradient of :math:`x_1 x_2 \cdots x_8` is
+illustrated in :numref:`figcircdiff8`.
+
+.. _figcircdiff8:
+
+.. figure:: ./figcircdiff8.png
+    :align: center
+
+    An arithmetic circuit to compute the gradient of the product
+    of eight variables
+    :math:`x_1`, :math:`x_2`, :math:`\ldots`, and :math:`x_8`.
 
 The Python Package phcpy
 ========================
