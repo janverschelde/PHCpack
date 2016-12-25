@@ -285,6 +285,48 @@ Pieri homotopies are defined in the subdirectory ``Pieri``.
 The subdirectory ``Induction`` implements a geometric
 Littlewood-Richardson rule to solve general Schubert problems.
 
+Numerical Irreducible Decomposition
+-----------------------------------
+
+Two important characteristics of a pure dimensional solution set of 
+a polynomial system are its dimension and its degree.
+The dimension of a solution set equals the number of general linear equations
+we need to add to the polynomial system so the intersection of the solution
+set of the system with the hyperplanes consists of isolated points.
+The degree of a solution set then equals the number of isolated points
+we find after intersecting the solution set with as many general hyperplanes
+as the dimension of the set.
+These two characteristics are encoded in the *witness set*
+representation of a pure dimensional solution set.
+Given a polynomial system, a numerical irreducible decomposition
+of its solution set provides a witness set for each irreducible
+components, over all dimensions.
+
+The decomposition can be computed in a top down fashion,
+with cascades of homotopies, starting a the top dimension.
+The bottom up computation applies diagonal homotopies.
+Systems can be solved equation-by-equation or subsystem-by-subsystem.
+
+Three types of factorization methods are implemented.
+Interpolation with multivariate polynomials of increasing degrees 
+is a local procedure.  The second method runs monodromy loops to
+connect generic points on the same irreducible component,
+using the linear trace test as stop criterion.  
+Thirdly, we can apply the linear trace test combinatorially,
+which often works very well for components of modest degrees.
+
+The are six subdirectories of the ``Components`` directory.
+The ``Samplers`` subdirectory contains the definitions of the data
+structures to store witness sets.  The multivariate interpolation
+algorithms are implemented in the ``Interpolators`` subdirectory.
+The subdirectory ``Factorization`` provides monodromy factorization
+and the linear trace test.  Cascades of homotopies and diagonal
+homotopies are implemented in the subdirectory ``Decomposition``.
+The ``Solver`` subdirectory provides an equation-by-equation solver.
+Finally, the ``Tropical`` subdirectory offers code to generalize 
+the polyhedral homotopies from isolated solutions to the computation
+of representations of positive dimensional solution sets.
+
 Organization of the C and C++ code
 ==================================
 
