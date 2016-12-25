@@ -103,6 +103,187 @@ The Ada sources are organized in a tree of directories:
     |-- Main                 : 9. main dispatcher
 
 Every directory contains a collection of test procedures.
+The following sections describe the functionality defined
+in each of the directories.
+
+System: OS Dependencies such as Timing
+--------------------------------------
+
+The ``System`` directory defines operations that may have different
+definitions on different operation systems.  One such operation is
+to compute the elapsed CPU time of a computation.
+The timer for Ada on Unix like operation systems was originally
+developed by Dave Emory of the MITRE corporation.
+Not everything in this timing package could be mapped to Windows,
+in particular the resource usage report for Unix.
+While the interface of the timing package is the same for all operating
+systems, the implementation differs for Windows
+
+When multithreaded runs on multicore processors, the elapsed CPU time
+is most often not a good time measurement and one comes interested in
+the wall clock time.  The end of the output contains the start and end
+date of the computation.  With the ``Ada.Calendar``, the time stamping
+is defined in a portable, operating system independent manner.
+
+The directory system contains several very useful utilities,
+such as procedures to prompt the user for a yes or no answer,
+or for a selection between various alternatives.
+While restricting the user selection, the prompting procedures
+allow to retry in case of type errors.
+Similar user friendly guards are defined when the user gives
+the name of an existing file for output.  Before overwriting
+the existing file, the user is prompted to confirm.
+When reading a file, the user is allowed to retry in case the
+given name of the file does not match an existing file.
+
+The handling of the command line options is also defined in this
+directory.  Thanks to the ``Ada.Command_Line``, this definition
+is operating system independent.
+
+The Mathematical Library
+------------------------
+
+The mathematical library defines code that is not specific
+to polynomial homotopy continuation, but nevertheless necessary.
+To make PHCpack self contained, the code does not require the
+installation of outside libraries.  Although there are eleven
+subdirectories, there are three main parts:
+
+1. number representations, general multiprecision and quad doubles;
+
+2. linear algebra with integers and floating-point numbers;
+
+3. polynomials, polynomial functions, series, and Newton polytopes.
+
+The input to a polynomial system solver is a list of polynomials in
+several variables.  This input consists of exact data, such as the
+integer exponents in the monomials, and approximate data, such as
+the floating-point coefficients of the monomials.
+Solving a polynomial system with homotopy continuation is therefore
+always a hybrid computation, involving exact and approximate data.
+While the machine arithmetic may still suffice for many applications,
+the increasing available computational power has led to the formulation
+of large problems for which software defined multiprecision arithmetic
+is required.  The linear algebra operations are defined over exact
+number rings and over arbitrary precision floating-point numbers.
+
+The next subsections contain more detailed descriptions of each
+subdirectory of the mathematical library.
+The following three paragraphs briefly summarize the eleven 
+subdirectories in the three main parts.
+
+The number representations are defined in the subdirectory ``Numbers``
+and the QD library of Y. Hida, X. S. Li, and D. H. Bailey is integrated
+in the subdirectory ``QD``.
+
+The linear algebra data structures are defined in the subdirectories
+``Vectors`` and ``Matrices``.  The ``Divisors`` subdirectory relies
+on the greatest common divisor algorithm to define the Hermite and
+Smith normal forms to solve linear systems over the integer numbers.
+The linear system solvers of numerical linear algebra are provided
+in the subdirectory ``Reduction``.
+
+The third main part of the mathematical library consists in the
+remaining five of the eleven subdirectories.  Multivariate polynomials
+over various number rings in the subdirectory ``Polynomials``.
+The subdirectory ``Functions`` contains definitions of 
+nested Horner schemes to efficiently evaluate dense polynomials.
+The support of a polynomial is the set of exponents of the monomials
+which appear with nonzero coefficients.  Basic linear programming
+and tools to work with polytopes are provided in the subdirectory
+``Supports``.  The subdirectory ``Circuits`` defines arithmetic
+circuits to evaluate and differentiate polynomials via the reverse
+mode of algorithmic differentiation.  Truncated power series define
+a field (that is: dividing two series gives again a series)
+and the arithmetic to manipulate power series is exported by the
+packages in the subdirectory ``Series``.
+
+Deforming Polynomial Systems
+----------------------------
+
+A homotopy is a family of polynomial systems defined by one parameter.
+The parameter may be introduced in an artificial manner, such as
+the parameter :math:`t` in the classical homotopy
+
+.. math::
+
+   h({\bf x}, t) = (1 - t) g({\bf x}) + t f({\bf x}) = {\bf 0}.
+
+The homotopy :math:`h({\bf x}, t)` connects the system
+:math:`g({\bf x}) = {\bf 0}` (the so-called *start system*) to the system
+:math:`f({\bf x}) = {\bf 0}` (the so-called *target system*),
+as :math:`h({\bf x}, 0) = g({\bf x})`
+and :math:`h({\bf x}, 1) = f({\bf x})`.
+The solutions :math:`{\bf x}(t)` to the homotopy are solution paths,
+starting at :math:`t=0` at the solutions of the start system
+and ended at :math:`t=1` at the solutions of the target system.
+
+The code was developed mainly for constructing artificial-parameter
+homotopies, but there is some still limited support for polynomial
+homotopies with natural parameters.  Artificial-parameter homotopies
+can be constructed so that singular solutions occur only at the end
+of the paths.  For natural-parameter homotopies, the detection and
+accurate computation of singularities along the paths becomes an
+important topic.
+
+There are eight subdirectories in the ``Deformations`` directory.
+
+Homotopy Construction via Root Counting Methods
+-----------------------------------------------
+
+At first, it seems counter intuitive to construct a polynomial homotopy
+to solve an unknown system by counting its roots.
+But consider the degeneration of two planar quadrics into lines.
+Each quadric degenerates to a pair of lines.  How many solutions
+could we get intersection two pairs of lines in general position?
+Indeed, four, computed as two by two.  Observe that in this simple
+argument we have no information about the particular representation
+of the quadrics.  To get to this root count, we assumed only that
+the lines after degeneration were generic enough and the count
+involved only the degrees of the polynomials.
+
+Of critical importance for the performance of a polynomial homotopy
+is the accuracy of the root count.  If the root count is a too large
+upper bound for the number of solutions of the system that will be
+solved, then too many solution paths will diverge to infinity,
+representing a very wasteful computation.
+
+We can construct homotopies based on the degree information alone
+or rely on the Newton polytopes.
+Sparse polynomial systems are systems where relatively few monomials
+appear with nonzero coefficient, relative to the degrees of the
+polynomials in the system.  
+For sparse system, the information of the Newton polytopes provides
+a much sharper root count than the ones provided by the degrees.
+
+The are eight subdirecties in the ``Root_Counts`` directory.
+
+Numerical Schubert Calculus
+---------------------------
+
+The classical problem in Schubert calculus asks for the number
+of lines which meet four given general lines in 3-space.
+With polynomial homotopies, we not only count, but also compute
+the actual number of solutions to a Schubert problem.
+
+The problem of four lines is a special case of a Pieri problem:
+compute all *p*-planes which meet :math:`m \times p` given *m*-planes 
+in a space of dimension :math:`m + p`.  If the given *m*-planes are 
+sufficiently generic, then all solution *p*-planes are isolated and
+finite in number.  Pieri homotopies solve the output pole placement
+problem in linear systems control.
+
+There are three subdirectories to the ``Schubert`` directory,
+each exporting a different type of homotopy to solve Schubert problems.
+
+The subdirectory ``SAGBI`` applies the concept of
+subalgebra analog to Groebner basis for ideals
+with polyhedral homotopies to solve Pieri problems.
+
+Pieri homotopies are defined in the subdirectory ``Pieri``.
+
+The subdirectory ``Induction`` implements a geometric
+Littlewood-Richardson rule to solve general Schubert problems.
 
 Organization of the C and C++ code
 ==================================
@@ -306,5 +487,17 @@ The package phcpy provides a scripting interface.
 For its functionality phcpy depends mainly on the C interface
 and that was done on purpose: as the Python package grows,
 so does the C interface.
+
+There are several other scripting interfaces to PHCpack:
+to the computer algebra system Maple (PHCmaple), 
+PHClab for MATLAB and Octave, and for Macaulay2: PHCpack.m2.
+These other interfaces rely only on the executable version of the program.
+
+Another major difference between phcpy and other scripting
+interface is the scope of exported functionality.
+The main goal of phcpy is to export all functionality of ``phc``
+to the Python programmer.  The development of phcpy can be viewed
+as a modernization of the PHCpack code, bringing it into 
+Python's growing computational ecosystem.
 
 The scripting interface to PHCpack has its own documentation.
