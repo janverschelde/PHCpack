@@ -327,6 +327,45 @@ Finally, the ``Tropical`` subdirectory offers code to generalize
 the polyhedral homotopies from isolated solutions to the computation
 of representations of positive dimensional solution sets.
 
+Calling Ada Code From C
+-----------------------
+
+The directory ``CtoPHC`` has two subdirectories, ``Funky`` and ``State``,
+which define two different types of interfacing the Ada code with C.
+The first type is a functional interface, the second type is an interface
+which operates as a state machine.
+
+In a functional interface, the main C program calls an Ada function,
+which then calls a C function to process the results computed by the
+Ada function.  This interface was developed for the application of
+the Pieri homotopies to compute output feedback laws for linear systems
+control.  This type of interface is direct and efficient.
+Its main application is in the ``Feedback`` folder which defines C
+functions to compute realizations of the computed feedback laws.
+
+The goal of the state interfce in the subdirectory ``State`` is to
+export all functionality of the Ada code to the C (and C++) programmer.
+The subdirectory ``State`` contains the definition of the
+``use_c2phc`` function, which defines more than 700 jobs.
+The implementation of this function relies on various container
+packages which hold the persistent objects, mainly polynomial systems
+and solution lists.
+
+Calling C Code From Ada
+-----------------------
+
+The directory ``PHCtoC`` was set up to call the GPU code via a C interface.
+In its current state it defines the wrappers to call the accelerated
+path trackers with algorithmic differentiation.
+Its main goal is to define the extension modules for calling the
+accelerated path trackers from the Python package phcpy.
+
+Multitasking
+------------
+
+The Ada tasking mechanisms allows to define shared memory parallel
+programs at a high level.  Tasks in Ada are mapped to kernel threads.
+
 Organization of the C and C++ code
 ==================================
 
