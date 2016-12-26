@@ -567,6 +567,59 @@ polynomials with integer exponents, so-called Laurent polynomials,
 are defined as well.  In solving Laurent polynomials, solutions
 with zero coordinates are excluded.
 
+Nested Horner Forms for Evaluation
+----------------------------------
+
+Because the evaluation and differentiation of polynomials can be
+just as expensive as solving a linear system in the application of
+Newton's method, the distributed list of terms in a polynomial is
+converted into a nested Horner form, for efficient evaluation.
+The directory ``Functions`` provides specific data structures
+to construct and evaluate the nested Horner forms.
+
+Support Sets and Linear Programming
+-----------------------------------
+
+Given a list of vectors with integer coefficients,
+via linear programming we can extract from the list those points
+which are vertex points of the polytope spanned by the points
+in the list.  Another application of linear programming is
+the computation of all k-dimensional faces of the polytope.
+The directory ``Supports`` provides the primitive operations
+for the volume computations in the polyhedral root counts.
+
+Circuits for Algorithmic Differentiation
+----------------------------------------
+
+The directory ``Circuits`` contains implementations of the algorithms
+which evaluate and differentiate polynomials in several variables using
+the reverse mode of algorithmic differentiation.
+
+Truncated Power Series
+----------------------
+
+Similar to Taylor series approximations for general functions,
+we can approximate roots of polynomials in a parameter by series.
+The directory ``Series`` defines truncated power series with
+complex numbers as coefficients.  Composite types are vectors,
+matrices, and polynomials where the coefficients are series.
+
+The division of two truncated power series is computed via
+the solution of a triangular linear system.
+So we can have a field and we can solve linear systems over
+this field of truncated power series.  However to work efficiently,
+instead of working with vectors and matrices of power series,
+we apply linearization and consider series where the coefficients
+are vectors and matrices.
+
+The directory exports packages to solve linear systems where
+the coefficient matrix is a power series of matrix coefficients.
+We can solve such linear systems with LU factorization, or
+for overdetermined problems we solve in the least squares sense,
+either with a QR or an SVD decomposition.
+To solve Hermite-Laurent interpolation problems,
+a lower triangular echelon form is provided.
+
 Organization of the C and C++ code
 ==================================
 
