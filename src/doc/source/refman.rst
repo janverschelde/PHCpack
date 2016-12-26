@@ -620,6 +620,85 @@ either with a QR or an SVD decomposition.
 To solve Hermite-Laurent interpolation problems,
 a lower triangular echelon form is provided.
 
+Root Counts and Start Systems
+=============================
+
+An important feature of the code is the automatic construction
+of a good start system in an artificial-parameter homotopy. 
+For a start system to be good, it needs to resemble as much as possible
+the structure of the target system.
+
+Linear-Product Start Systems
+----------------------------
+
+The directory ``Product`` contains packages to construct start systems
+based on the degree structure of a polynomial system.
+There are two main categories of start systems.
+
+1. Total degree start systems.  The classical theorem of Bezout states
+   that the product of the degrees of the polynomials in the system
+   gives an upper bound on the number of isolated solutions.
+   A total degree start system consists of a decoupled system,
+   where the *k*-th polynomial equation in the start system equals
+   :math:`x_k^{d_k} - c_k = 0`, where :math:`d_k` is the degree of
+   the *k*-th polynomial in the target system and where :math:`c_k`
+   is some random nonzero complex coefficient.
+
+2. Linear-product start systems.  Every polynomial in a linear-product
+   start system is a product of linear polynomials with random coefficients.
+   Which variables appear with a nonzero coefficient in the linear
+   polynomials is determined in three ways.  The first way is one single
+   partition of the set of unknowns.  In the second way, a different
+   partition may be used for each different polynomial in the system.
+   For general linear-product start systems, the structure of each
+   polynomial is represented by a sequence of sets of variables.
+   Every variable should appear in as many sets in the sequence
+   as its degree in the polynomial.
+
+Lexicographic enumeration of the solutions of a start system is supported.
+By this enumeration, it is not necessary to compute the entire solution
+set of a start system in memory, as one can ask for the computation of
+a particular start solution.
+
+Binomials are Polynomials with Two Terms
+----------------------------------------
+
+The sparsest (Laurent) polynomial systems which allow solutions with
+all coordinates different from zero are systems where the polynomials
+have exactly two monomials with a nonzero coefficient.
+We call such polynomials binomials and systems of binomials are
+binomial systems.  The computation of all solutions with nonzero
+coordinates happens via a unimodular coordinate transformation.
+An extension of a binomial system is a simplicial system:
+the support of a simplicial system is a simplex.
+The directory ``Binomials`` provides solvers for binomial
+and simplicial systems.
+
+Binomial and simplicial systems are start systems in a polyhedral
+homotopy, induced by a generic lifting, where all mixed cells in
+the regular subdivision are fine.  A simplicial system is reduced
+to a binomial system via a diagonalization of its coefficient matrix.
+Binomial systems are solved via a Hermite normal form on the
+matrix of exponent vectors.  Because the solution of binomial and
+simplicial systems does not involve any path tracking
+(just linear algebra), the systems can be solved much faster
+and the blackbox solver treats such systems as a special case.
+
+Even though as the exponents in the binomial systems might be small
+in size, the size of the coefficients in the unimodular coordinate
+transformations may result in relatively high exponents.
+This height of the exponents could lead to overflow in the floating-point
+exponentiation of the partial results in the forward substitution.
+Therefore, for a numerically stable solution of a binomial system,
+we separate the radii from the arguments in the right hand side constant
+coefficients.  This scaled solving prevents overflow.
+
+Underdetermined binomial systems are rational: their positive dimensional
+solution set admits an explicit parameter representation.
+Packages are defined to represent and manipulate monomial maps.
+Monomial maps define the leading terms of a Puiseux series expansion
+of a positive dimensional solution set.
+
 Organization of the C and C++ code
 ==================================
 
