@@ -567,6 +567,11 @@ polynomials with integer exponents, so-called Laurent polynomials,
 are defined as well.  In solving Laurent polynomials, solutions
 with zero coordinates are excluded.
 
+There are packages to read and parse polynomials in symbolic form,
+from the standard input, from a file, and from a string.
+Also the writing of polynomials works for standard output, to file,
+or to string.
+
 Nested Horner Forms for Evaluation
 ----------------------------------
 
@@ -628,6 +633,10 @@ of a good start system in an artificial-parameter homotopy.
 For a start system to be good, it needs to resemble as much as possible
 the structure of the target system.
 
+For generic polynomial systems, where the coefficients are sufficiently
+generic, the mixed volume of the Newton polytopes offers an exact count
+on the number of isolated solutions, where all coordinates are nonzero.
+
 Linear-Product Start Systems
 ----------------------------
 
@@ -659,6 +668,10 @@ Lexicographic enumeration of the solutions of a start system is supported.
 By this enumeration, it is not necessary to compute the entire solution
 set of a start system in memory, as one can ask for the computation of
 a particular start solution.
+
+The generalized Bezout bounds are a special case of the polyhedral
+root counts.  In case the Newton polytopes can be written as the sum
+of simplices, the generalized Bezout bound matches the mixed volume.
 
 Binomials are Polynomials with Two Terms
 ----------------------------------------
@@ -698,6 +711,100 @@ solution set admits an explicit parameter representation.
 Packages are defined to represent and manipulate monomial maps.
 Monomial maps define the leading terms of a Puiseux series expansion
 of a positive dimensional solution set.
+
+Implicit Lifting
+----------------
+
+The directory ``Implift`` contains the code for the original version
+of the polyhedral homotopies, as provided in the constructive proof
+of D. N. Bernshtein's paper.  The polyhedral homotopies induced by
+an implicit lifting are based on the following formula to compute
+the mixed volume of the Newton polytopes.
+Given a tuple of Newton polytopes :math:`{\bf P} = (P_1,P_2,\ldots,P_n)`,
+the mixed volume :math:`V_n({\bf P})` can be computed via the formula
+
+.. math::
+
+   V_n (P_1,P_2,\ldots,P_n) =
+   \sum_{\begin{array}{c}
+             {\bf v} \in {\mathbb Z}^n \\ {\rm gcd}({\bf v}) = 1
+         \end{array} } \ p_1 ({\bf v}) \
+   V_{n-1}({\partial}_{\bf v} P_2, \ldots , {\partial}_{\bf v} P_n),
+
+where :math:`p_1` is the support function for :math:`P_1`
+and :math:`V_1` is the length of a line segment.
+Vectors :math:`\bf v` are normalized so the components of :math:`\bf v`
+have their greatest common divisor equal to one.
+
+Functionality is provided to extract the vertex points from the
+support sets of the polynomials in the system.
+Polyhedral homotopies may be combined with linear-product start systems:
+for some polynomials we use a linear-product structure
+and for the remaining polynomials a random coefficient start system
+is solved.
+
+Static Lifting
+--------------
+
+The static lifting as implemented in the code in the directory
+``Stalift`` is so named in contrast with dynamic lifting.
+Static lifting applies before the mixed volume computation.
+Both integer valued and floating-point valued lifting functions
+are supported.
+
+One particular lifting leads to the computation of the stable mixed volume.
+While the mixed volume often excludes solutions with zero coordinates,
+the stable mixed volume is an upper bound for all isolated solutions,
+also for solutions with zero coordinates.
+
+Dynamic Lifting
+---------------
+
+Volumes are monotone increasing in the size of the polytopes:
+the more vertices in a polytope, the larger the volume.
+One way to build a triangulation of a polytopes is by placing
+the points one after the other.  The next point can be lifted
+sufficiently high so that the existing simplices in the triangulation
+remain invariant.  Applied in connection with a polyhedral homotopy,
+one can solve polynomial systems monomial by monomial.
+
+Dynamic lifting is applied to compute a triangulation of the
+Cayley embedding, which leads to the Minkowski polynomial.
+Given a tuple of polytopes :math:`(P_1, P_2, \ldots, P_n)`,
+Minkowski showed that the volume of the linear combination
+:math:`\lambda_1 P_1 + \lambda_2 P_2 + \cdots + \lambda_n P_n`
+is a homogeneous polynomial of degree :math:`n` in the
+variables :math:`\lambda_1`, :math:`\lambda_2`, and :math:`\lambda_n`.
+The coefficients of this homogeneous polynomial are mixed volumes
+of the polytopes in the tuple.
+
+Exploitation of Permutation Symmetry
+------------------------------------
+
+In a polynomial homotopy where every system, for every value
+of the parameter, has the same permutation symmetry,
+it suffices to track only the generating solution paths.
+The directory ``Symmetry`` provides support to construct symmetric 
+start systems, given the generators of the permutation group.
+
+MixedVol to Compute Mixed Volumes Fast
+--------------------------------------
+
+The directory ``MixedVol`` contains an Ada translation of
+the MixedVol algorithm, archived by ACM TOMS as Algorithm 846,
+developed by Tangan Gao, T. Y. Li and Mengnien Wu.
+
+The C version of the code (written by Yan Zhuang) is contained
+for comparison and correctness verification.
+
+The code is restricted for randomly generated lifting values.
+
+The Newton-Puiseux Method
+-------------------------
+
+The directory ``Puiseux`` contains an implementation of the
+Newton-Puiseux method to compute power series expansions for
+all solution curves of a polynomial system.
 
 Organization of the C and C++ code
 ==================================
