@@ -140,6 +140,10 @@ The handling of the command line options is also defined in this
 directory.  Thanks to the ``Ada.Command_Line``, this definition
 is operating system independent.
 
+The package ``machines`` wraps some system calls.
+One such system call is to get the process identification number (pid).
+This pid is used to seed the random number generators.
+
 The Mathematical Library
 ------------------------
 
@@ -365,6 +369,203 @@ Multitasking
 
 The Ada tasking mechanisms allows to define shared memory parallel
 programs at a high level.  Tasks in Ada are mapped to kernel threads.
+There are two main applications defined in the ``Tasking`` directory.
+
+Given a queue of path tracking jobs, the tasks are arranged in
+a work crew model to execute all jobs.  Dynamic load balancing
+is achieved as tasks, when done with their current job, grab the
+next job from the queue.  Synchronization overhead is minimal,
+as only the movement of the current pointer in the job queue
+happens in a critical section.
+This parallel work crew path tracking scheme is implemented for
+regular homotopies and polyhedral homotopies.
+
+Another application of multitasking is pipelining.
+Polyhedral homotopies start at initial form systems computed by
+the mixed cells.  For large polynomial systems, the computation
+of the mixed volume could be a bottleneck for the parallel execution.
+A pipelined multitasked implementation of the polyhedral homotopies
+combines the tracking of all paths with the mixed cell computation
+as follows.  One task computes the mixed cells and appends the
+mixed cells to the job queue.  Other tasks take the mixed cells
+as the jobs to solve the random coefficient system.
+As soon as one mixed cells is available in the queue,
+the path tracking can start.
+
+The Main Program
+----------------
+
+The directory ``Main`` contains the main program,
+called ``dispatch`` because its main function is to dispatch
+the options given at the command line to the specific procedures.
+
+The code for the blackbox solver (invoked by ``phc -b``)
+is defined by the packages ``black_box_solvers``
+and ``black_box_root_counters``.
+
+A very specific solver is defined by the file ``use_phc.adb``,
+mainly as an example how the code could be customized for one
+particular application.  The code is below:
+
+::
+
+   with text_io;                            use text_io;
+   with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+   with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+   with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+   with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+   with PHCpack;
+
+   procedure use_phc is
+
+     infile,outfile : file_type;        -- input and output file
+     p,q : Link_to_Poly_Sys;            -- target and start system
+     mixed_volume : natural32;          -- root count is mixed volume
+     sols : Solution_List;              -- list of solutions
+   
+   begin
+     Open(infile,in_file,"test.in");
+     get(infile,p);
+     Create(outfile,out_file,"test.out");
+     put(outfile,p.all);
+     q := new Poly_Sys(p'range);
+     PHCpack.Static_Lifting(outfile,p.all,mixed_volume,q.all,sols);
+     PHCpack.Artificial_Parameter_Continuation(outfile,p.all,q.all,sols);
+     PHCpack.Refine_Roots(outfile,p.all,sols);
+   end use_phc;
+
+Numbers, Linear Algebra, Polynomials and Polytopes
+==================================================
+
+In this section we take a closer look at the ``Math_Lib`` directory,
+which defines the basic mathematical data structures and operations.
+
+Numbers
+-------
+
+The machine numbers are divided in two categories: integer and float.
+For the integer types, we distinguish between the 32-bit and 64-bit
+versions, between natural and integer numbers.  The following types are
+defined: ``natural32``, ``natural64``, ``integer32``, and ``integer64``.
+For the float types, we have single precision and double precision,
+defined respectively as ``single_float`` and ``double_float``.
+The renaming of the hardware number types ensures the independence
+of pre-defined number types.
+
+For polynomial system solving, our default field is the field of
+complex numbers.  The real and imaginary part of a complex number
+are floating-point coefficients.  The homotopy algorithms depend
+on the choice of random constants.  Random number generators are
+defined.  The default seed for the random number generators is the
+process identification number.  For reproducible runs, the user can
+set the seed to a fixed number.
+
+Multiprecision numbers are implemented as arrays of machine integers.
+Elementary school algorithms defined the arithmetic.
+The implementation of the floating-point multiprecision numbers
+is directly based on the multiprecision integer numbers,
+for the fraction and the exponent part of the multiprecision float.
+The precision of each multiprecision number can be adjusted when needed,
+which is an advantage.  Mixed-precision arithmetical operations are
+supported.  The disadvantage imposed by this flexibility is the
+frequent memory allocation and deallocation, which makes this type of
+arbitrary multiprecision arithmetic unsuitable for shared memory parallelism.
+
+The directory ``Numbers`` contains definitions of abstract rings, domains,
+and fields.  These abstract classes are useful to define composite
+generic types.  Multiprecision complex numbers are defined via the
+instantiation of a generic complex numbers package.
+
+Quad Doubles
+------------
+
+The directory ``QD`` provides the double double and quad double arithmetic,
+based on the QDlib package of Y. Hida, X. S. Li, and D. H. Bailey.
+
+Compared to arbitrary multiprecision arithmetic, double double and quad
+double numbers exploit the floating-point hardware and have a simple
+memory management.  While arbitrary multiprecision numbers are allocated
+via the heap, the two doubles of a double double and the four doubles
+of a quad double use the stack.  Thus the QD library is very well suited
+for shared memory parallelism.  Another advantage is the predictable
+cost overhead.  Working with double doubles has a similar cost overhead
+as working with complex numbers.  Computations with double doubles are about
+five to eight times slower compared to computations in double precision.
+With quad doubles, computations that took seconds in double precision
+can turn into minutes.
+
+The code in QDlib was hand translated into Ada.
+The directory contains the original C versions for comparison
+and verification of correctness.
+
+Vectors and Matrices
+--------------------
+
+The directories ``Vectors`` and ``Matrices`` contain the definitions
+of respectively all vector and matrix types.
+In both directories, generic packages are defined, which allow to
+specify the ring of numbers (natural32, integer32, natural64, integer64)
+or the number fields (double, double double, quad double, or arbitrary
+multiprecision).  Input and output for all types is provided.
+
+Although both ``Vectors`` and ``Matrices`` are basic data structures,
+random number generators are provided, to generate vectors and matrices
+of random numbers.  The test procedures check the basic arithmetical
+operations.
+
+The directory ``Vectors`` defines vectors of vectors and 
+vectors of matrices are defined in the directory ``Matrices``.
+
+Linear Systems with Integer Coefficients
+----------------------------------------
+
+The problem considered in the directory ``Divisors``
+is the manipulation of matrices with integer coefficients.
+
+With the greatest common divisor we can define unimodular coordinate
+transformations to compute an upper triangular form of a matrix with
+integer coefficients.  Such form is call the Hermite normal form.
+The diagonalization process results in the Smith normal form.
+
+Even if the input matrices have small integer coefficients,
+the size of the integers in the unimodular coordinate transformations
+can outgrow the size of the hardware integers.
+Therefore, multiprecision versions of the normal forms are provided.
+
+This integer linear algebra is applied in the computation of the
+volumes of the mixed cells of subdivisions of Newton polytopes.
+
+Linear Systems with Floating-Point Coefficients
+-----------------------------------------------
+
+The directory ``Reduction`` contains several matrix factorizations
+as common in numerical linear algebra.
+
+The LU factorization is based on the ``lufac``, ``lufco``,
+and ``lusolve`` of the F77 LINPACK libary.
+The Fortran77 code was translated into Ada and extended with versions 
+for double double, quad double, and arbitrary multiprecision;
+both for real and complex number types.
+
+To solve overdetermined linear systems in the least squares sense,
+packages are provided for the QR decomposition.  
+Also the Singular Value Decomposition (SVD) is implemented,
+for all precisions, and for real and complex number types.
+
+To implement a variable precision Newton's method, there are
+variable precision linear system solvers.
+Given the desired accuracy,
+the variable precision linear system solver sets the working
+precision based on a condition number estimate.
+
+Polynomials in Several Variables
+--------------------------------
+
+Multivariable polynomials and polynomial systems are defined
+in the directory ``Polynomials``.  In addition to ordinary polynomials,
+polynomials with integer exponents, so-called Laurent polynomials,
+are defined as well.  In solving Laurent polynomials, solutions
+with zero coordinates are excluded.
 
 Organization of the C and C++ code
 ==================================
