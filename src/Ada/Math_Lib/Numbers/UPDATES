@@ -1,3 +1,6 @@
+Sun 25 Dec 2016 : small bug in ts_fltnum.adb, in case 64-bit integer
+  arithmetic was asked, fixed for next test in the loop.
+
 Sat 22 Oct 2016 : added random number generators with given seed to 
   standard_random_numbers to produce independent random sequences.
 

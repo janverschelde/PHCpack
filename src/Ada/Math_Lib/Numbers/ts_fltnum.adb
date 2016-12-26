@@ -1140,6 +1140,7 @@ procedure ts_fltnum is
           when 'E' => Nearest_Integer64;
           when others => null;
         end case;
+        lng := 'n'; -- for the next test ...
       else
         case ans is
           when '1' => Test_io;
