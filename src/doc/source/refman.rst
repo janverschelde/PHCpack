@@ -806,6 +806,114 @@ The directory ``Puiseux`` contains an implementation of the
 Newton-Puiseux method to compute power series expansions for
 all solution curves of a polynomial system.
 
+Homotopies, Newton's method, and path trackers
+==============================================
+
+The directory ``Deformations`` provides data structures
+for solutions and polynomial homotopies.
+Newton's method serves as a corrector in the path trackers
+and has been modified by deflation to compute isolated singularities.
+Predictors are defined in the ``Curves`` subdirectory
+and polyhedral end games are provided in the subdirectory ``End_Games``.
+Path trackers for solutions defined by artificial-parameter homotopies 
+and natural-parameters are provided respectively in the subdirectories
+``Trackers`` and ``Sweep``.
+
+Solutions of Systems and Homotopies
+-----------------------------------
+
+The second most important data structures, after the polynomials,
+are the data structures to represent solutions of polynomial systems.
+There are three parts in the library.  
+
+1. The data structure for solutions are defined for double,
+   double double, quad double, and general arbitrary multiprecision.
+   The reading and writing of the solutions makes use of the symbol table,
+   so the coordinates of the solutions are connected to the symbols
+   used to represent the variables in the system.
+   The input and output is implemented for the standard input and output,
+   for files, and for strings.
+
+2. The directory contains functions to filter solutions subject to
+   certain given criteria.  For example, one such criterion is whether 
+   the solution is real or not.  To process huge lists of solutions,
+   in particular to check whether all solutions are distinct from
+   each other, a double hash function on a solution list fills a quad tree.
+
+3. To export solutions to other programs, format conversions are
+   implemented, in particular for Maple and Python.
+   For the computer algebra system Maple, a solution is represented as
+   a list of equations.  For the scripting language Python, a solution
+   is formatted into Python's dictionary data structure.
+
+Conversions between solutions in various levels of precision are
+available for the variable precision Newton's method.
+
+Polynomial Homotopies
+---------------------
+
+The ``Homotopy`` directory provides packages to define polynomial homotopies
+in double, double double, quad double, and arbitrary multiprecision.
+These homotopy packages encapsulate the efficient evaluation data structures.
+
+This directory also provides methods to scale the coefficients of
+polynomial systems via an optimization problem to recenter the
+magnitudes of the coefficients.  Another preconditioner is the
+reduction of the degrees of the polynomial via linear row reduction
+and selective replacement with S-polynomials.
+
+Newton's Method and Deflation for Isolated Singularities
+--------------------------------------------------------
+
+The directory ``Newton`` has its focus on the implementation of
+Newton's method and the modification to locate isolated singularities
+accurately with deflation.
+
+Newton's method is applied as the corrector in the path trackers
+and to verify and refine solutions at the end of the path tracking.
+The method is available in double, double double, quad double,
+and arbitrary multiprecision.  The variable precision Newton's method
+estimates the condition number of the polynomial evaluation problem
+and the condition number of the Jacobian matrix, both at the current
+approximation of the solution, to set the precision in order to
+guarantee the desired number of correct decimal places in the answer.
+
+To restore the quadratic convergence of Newton's method in case
+the Jacobian matrix is no longer of full rank, the deflation operator
+appends random combinations of the derivatives recursively, 
+until the extended Jacobian matrix becomes of full rank.
+The rank is computed using the singular value decomposition.
+Derivatives are computed in an efficient hierarchy encoded 
+in a tree data structure.
+
+Curves, Univariate Solvers, and Extrapolators
+---------------------------------------------
+
+The directory ``Curves`` contains an implementation of
+the method of Weierstrass (also called the Durand-Kerner method)
+to compute all roots of a polynomial in one variable.
+A polynomial in one variable is another special case of
+the blackbox system solver.
+
+Divided differences are computed to extrapolate the solutions
+for the predictors.  The higher order extrapolating predictors
+are available in double, double double, quad double, and
+arbitrary multiprecision.  Univariate polynomial solvers
+are used to sample plane algebraic curves and to test the
+higher-order extrapolators.
+
+The directory provides packages to run Newton's method to
+compute series solutions of polynomial homotopies,
+both in the basic version with operator overloading
+and the more efficient version with linearization.
+
+Polyhedral End Games
+--------------------
+
+Deciding whether a solution path diverges to infinity
+is a critical decision.
+
+
 Organization of the C and C++ code
 ==================================
 
