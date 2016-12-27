@@ -231,6 +231,9 @@ accurate computation of singularities along the paths becomes an
 important topic.
 
 There are eight subdirectories in the ``Deformations`` directory.
+The subdirectories ``Solutions`` and ``Homotopies`` provide the
+data structures for the solutions on the paths defined by the
+polynomial homotopies.
 
 Homotopy Construction via Root Counting Methods
 -----------------------------------------------
@@ -279,13 +282,10 @@ problem in linear systems control.
 
 There are three subdirectories to the ``Schubert`` directory,
 each exporting a different type of homotopy to solve Schubert problems.
-
 The subdirectory ``SAGBI`` applies the concept of
 subalgebra analog to Groebner basis for ideals
 with polyhedral homotopies to solve Pieri problems.
-
 Pieri homotopies are defined in the subdirectory ``Pieri``.
-
 The subdirectory ``Induction`` implements a geometric
 Littlewood-Richardson rule to solve general Schubert problems.
 
@@ -625,6 +625,217 @@ either with a QR or an SVD decomposition.
 To solve Hermite-Laurent interpolation problems,
 a lower triangular echelon form is provided.
 
+Homotopies, Newton's Method, and Path Trackers
+==============================================
+
+The directory ``Deformations`` provides data structures
+for solutions and polynomial homotopies.
+Newton's method serves as a corrector in the path trackers
+and has been modified by deflation to compute isolated singularities.
+Predictors are defined in the ``Curves`` subdirectory
+and polyhedral end games are provided in the subdirectory ``End_Games``.
+Path trackers for solutions defined by artificial-parameter homotopies 
+and natural-parameters are provided respectively in the subdirectories
+``Trackers`` and ``Sweep``.
+
+Solutions of Systems and Homotopies
+-----------------------------------
+
+The second most important data structures, after the polynomials,
+are the data structures to represent solutions of polynomial systems.
+There are three parts in the library.  
+
+1. The data structure for solutions are defined for double,
+   double double, quad double, and general arbitrary multiprecision.
+   The reading and writing of the solutions makes use of the symbol table,
+   so the coordinates of the solutions are connected to the symbols
+   used to represent the variables in the system.
+   The input and output is implemented for the standard input and output,
+   for files, and for strings.
+
+2. The directory contains functions to filter solutions subject to
+   certain given criteria.  For example, one such criterion is whether 
+   the solution is real or not.  To process huge lists of solutions,
+   in particular to check whether all solutions are distinct from
+   each other, a double hash function on a solution list fills a quad tree.
+
+3. To export solutions to other programs, format conversions are
+   implemented, in particular for Maple and Python.
+   For the computer algebra system Maple, a solution is represented as
+   a list of equations.  For the scripting language Python, a solution
+   is formatted into Python's dictionary data structure.
+
+Conversions between solutions in various levels of precision are
+available for the variable precision Newton's method.
+
+Polynomial Homotopies
+---------------------
+
+The ``Homotopy`` directory provides packages to define polynomial homotopies
+in double, double double, quad double, and arbitrary multiprecision.
+These homotopy packages encapsulate the efficient evaluation data structures.
+
+This directory also provides methods to scale the coefficients of
+polynomial systems via an optimization problem to recenter the
+magnitudes of the coefficients.  Another preconditioner is the
+reduction of the degrees of the polynomial via linear row reduction
+and selective replacement with S-polynomials.
+
+Newton's Method and Deflation for Isolated Singularities
+--------------------------------------------------------
+
+The directory ``Newton`` has its focus on the implementation of
+Newton's method and the modification to locate isolated singularities
+accurately with deflation.
+
+Newton's method is applied as the corrector in the path trackers
+and to verify and refine solutions at the end of the path tracking.
+The method is available in double, double double, quad double,
+and arbitrary multiprecision.  The variable precision Newton's method
+estimates the condition number of the polynomial evaluation problem
+and the condition number of the Jacobian matrix, both at the current
+approximation of the solution, to set the precision in order to
+guarantee the desired number of correct decimal places in the answer.
+
+To restore the quadratic convergence of Newton's method in case
+the Jacobian matrix is no longer of full rank, the deflation operator
+appends random combinations of the derivatives recursively, 
+until the extended Jacobian matrix becomes of full rank.
+The rank is computed using the singular value decomposition.
+Derivatives are computed in an efficient hierarchy encoded 
+in a tree data structure.
+
+Curves, Univariate Solvers, and Extrapolators
+---------------------------------------------
+
+The directory ``Curves`` contains an implementation of
+the method of Weierstrass (also called the Durand-Kerner method)
+to compute all roots of a polynomial in one variable.
+A polynomial in one variable is another special case of
+the blackbox system solver.
+
+Divided differences are computed to extrapolate the solutions
+for the predictors.  The higher order extrapolating predictors
+are available in double, double double, quad double, and
+arbitrary multiprecision.  Univariate polynomial solvers
+are used to sample plane algebraic curves and to test the
+higher-order extrapolators.
+
+The directory provides packages to run Newton's method to
+compute series solutions of polynomial homotopies,
+both in the basic version with operator overloading
+and the more efficient version with linearization.
+
+Polyhedral End Games
+--------------------
+
+Deciding whether a solution path diverges to infinity
+is a critical decision.  Solutions with coordinates of large magnitude
+are difficult to distinguish from solutions at infinity.
+
+The directory ``End_Games`` contains
+code for a polyhedral end game, implementing Bernshtein second theorem:
+if there are fewer solutions than the mixed volume,
+then there are solutions of initial form systems,
+supported on faces of the Newton polynomials of the given system.
+
+In a polyhedral end game, the direction of the diverging path
+gives the inner normal which defines the initial form system
+that has a solution with all its coordinates different from zero.
+What complicates the computation of this inner normal is the
+presence of winding numbers larger than one.
+If the step size is decreased in a geometric rate,
+then the winding number can be computed with extrapolation.
+The certificate for a diverging path consists of the inner normal
+which defines an initial form system where every equation has at
+least two monomials with a nonzero coefficient.  In addition,
+the end point of the diverging path is (after a proper unimodular
+coordinate transformation) a solution of the initial form system.
+
+The polyhedral end games are implemented in double, double double,
+and quad double precision.
+
+Path Trackers for Artificial-Parameter Homotopies
+-------------------------------------------------
+
+In an artificial-parameter homotopy, singular solutions can only
+occur at the end of the solution paths.
+There are two different parts in the directory ``Trackers``,
+corresponding to the different ways to run a path tracker,
+depending on the level of control.
+
+In the first, most conventional way of running a path tracker,
+the procedure which implements the path tracker gets called with
+data and various execution parameters.  Then the procedure takes
+control of the execution thread and control is only returned when
+the end of the solution path has been reached.
+This first way is available in double, double double, and quad double
+precsion.  The application of the QR decomposition in the corrector
+leads to the capability of tracking paths defined by overdetermined
+polynomial homotopies.
+
+In the second way of running a path tracker, the path tracker is
+initialized with a start solution and some initial settings of the
+execution parameters.  The procedure that calls the path tracker
+wants only the next point on the path and the path tracker is then
+restarted when another next point is needed.
+This type of path tracker is particularly useful in a scripting
+environment when the user wants to visualize the results of the
+path tracker and the responsibility for the memory management of
+all data along a solution path is the responsibility of the calling
+procedure, not of the path tracker.
+
+A preliminary prototype of a variable precision path tracker has
+been implemented.  Depending on the condition numbers of the evaluation
+and the Jacobian matrix, the precision is adjusted to ensure a desired
+number of correct decimal places.
+
+Sweeping for Singularities
+--------------------------
+
+In a natural parameter homotopy, singular points along the solution
+paths are expected to occur.  A path tracker for a natural parameter
+homotopy has two tasks: the detection and the accurate location
+of singular solutions.  The directory ``Sweep`` provides packages
+to compute accurately quadratic turning points and to search for
+general singularities along a solution path, in double, double double,
+and quad double precision.
+
+If one is only interested in the real solutions, then tracking
+the solution paths in real instead of complex arithmetic can go
+about five times faster.  One has to tracker fewer paths,
+as the paths with nonzero imaginary coordinates appear in pairs,
+thus it suffices to track only one path in the complex conjugated pair.
+For sufficiently generic real coefficients, the only type of singular
+solutions that may occur are quadratic turning points.
+A quadratic turning point is where a real path turns back in
+the direction of an increasing continuation parameter.
+At a quadratic turning point, the real path touches the complex
+conjugated pair of paths where their imaginary parts become zero.
+If one forces the continuation parameter to increase, then the
+real path turns complex or vice versa, a complex path turns real.
+Quadratic turning points can be computed efficiently via an
+arc-length parameter continuation and the application of a
+shooting method when the orientation of the tangent vector flips.
+
+The detection and accurate location of general types of singular
+solutions is much more difficult.  If the sign of the determinant
+of the Jacobian matrix flips, then we passed a singularity.
+But the determinant of the Jacobian matrix may remain of the same
+sign before and after passing through a singular solution.
+The criterion implemented monitors the concavity of the determinant
+of the Jacobian matrix.  If the value of the determinant increases
+in magnitude after a decrease, then we may have missed a singular
+solution and we turn back with a finer granularity, in an attempt 
+to locate the singularity.
+
+Polynomial Continuation
+-----------------------
+
+The directory ``Continuation`` provides data structure and data 
+management procedures to organize the application of path trackers 
+to the solution paths defined by a polynomial homotopy.
+
 Root Counts and Start Systems
 =============================
 
@@ -805,114 +1016,6 @@ The Newton-Puiseux Method
 The directory ``Puiseux`` contains an implementation of the
 Newton-Puiseux method to compute power series expansions for
 all solution curves of a polynomial system.
-
-Homotopies, Newton's method, and path trackers
-==============================================
-
-The directory ``Deformations`` provides data structures
-for solutions and polynomial homotopies.
-Newton's method serves as a corrector in the path trackers
-and has been modified by deflation to compute isolated singularities.
-Predictors are defined in the ``Curves`` subdirectory
-and polyhedral end games are provided in the subdirectory ``End_Games``.
-Path trackers for solutions defined by artificial-parameter homotopies 
-and natural-parameters are provided respectively in the subdirectories
-``Trackers`` and ``Sweep``.
-
-Solutions of Systems and Homotopies
------------------------------------
-
-The second most important data structures, after the polynomials,
-are the data structures to represent solutions of polynomial systems.
-There are three parts in the library.  
-
-1. The data structure for solutions are defined for double,
-   double double, quad double, and general arbitrary multiprecision.
-   The reading and writing of the solutions makes use of the symbol table,
-   so the coordinates of the solutions are connected to the symbols
-   used to represent the variables in the system.
-   The input and output is implemented for the standard input and output,
-   for files, and for strings.
-
-2. The directory contains functions to filter solutions subject to
-   certain given criteria.  For example, one such criterion is whether 
-   the solution is real or not.  To process huge lists of solutions,
-   in particular to check whether all solutions are distinct from
-   each other, a double hash function on a solution list fills a quad tree.
-
-3. To export solutions to other programs, format conversions are
-   implemented, in particular for Maple and Python.
-   For the computer algebra system Maple, a solution is represented as
-   a list of equations.  For the scripting language Python, a solution
-   is formatted into Python's dictionary data structure.
-
-Conversions between solutions in various levels of precision are
-available for the variable precision Newton's method.
-
-Polynomial Homotopies
----------------------
-
-The ``Homotopy`` directory provides packages to define polynomial homotopies
-in double, double double, quad double, and arbitrary multiprecision.
-These homotopy packages encapsulate the efficient evaluation data structures.
-
-This directory also provides methods to scale the coefficients of
-polynomial systems via an optimization problem to recenter the
-magnitudes of the coefficients.  Another preconditioner is the
-reduction of the degrees of the polynomial via linear row reduction
-and selective replacement with S-polynomials.
-
-Newton's Method and Deflation for Isolated Singularities
---------------------------------------------------------
-
-The directory ``Newton`` has its focus on the implementation of
-Newton's method and the modification to locate isolated singularities
-accurately with deflation.
-
-Newton's method is applied as the corrector in the path trackers
-and to verify and refine solutions at the end of the path tracking.
-The method is available in double, double double, quad double,
-and arbitrary multiprecision.  The variable precision Newton's method
-estimates the condition number of the polynomial evaluation problem
-and the condition number of the Jacobian matrix, both at the current
-approximation of the solution, to set the precision in order to
-guarantee the desired number of correct decimal places in the answer.
-
-To restore the quadratic convergence of Newton's method in case
-the Jacobian matrix is no longer of full rank, the deflation operator
-appends random combinations of the derivatives recursively, 
-until the extended Jacobian matrix becomes of full rank.
-The rank is computed using the singular value decomposition.
-Derivatives are computed in an efficient hierarchy encoded 
-in a tree data structure.
-
-Curves, Univariate Solvers, and Extrapolators
----------------------------------------------
-
-The directory ``Curves`` contains an implementation of
-the method of Weierstrass (also called the Durand-Kerner method)
-to compute all roots of a polynomial in one variable.
-A polynomial in one variable is another special case of
-the blackbox system solver.
-
-Divided differences are computed to extrapolate the solutions
-for the predictors.  The higher order extrapolating predictors
-are available in double, double double, quad double, and
-arbitrary multiprecision.  Univariate polynomial solvers
-are used to sample plane algebraic curves and to test the
-higher-order extrapolators.
-
-The directory provides packages to run Newton's method to
-compute series solutions of polynomial homotopies,
-both in the basic version with operator overloading
-and the more efficient version with linearization.
-
-Polyhedral End Games
---------------------
-
-Deciding whether a solution path diverges to infinity
-is a critical decision.
-
 
 Organization of the C and C++ code
 ==================================
