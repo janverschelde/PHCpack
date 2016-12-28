@@ -105,6 +105,7 @@ The Ada sources are organized in a tree of directories:
 Every directory contains a collection of test procedures.
 The following sections describe the functionality defined
 in each of the directories.
+Then the subdirectories are described in separate sections.
 
 System: OS Dependencies such as Timing
 --------------------------------------
@@ -836,6 +837,11 @@ The directory ``Continuation`` provides data structure and data
 management procedures to organize the application of path trackers 
 to the solution paths defined by a polynomial homotopy.
 
+The interactive tuning of the settings and tolerances for the
+path trackers are defined in this folder.
+Several different levels of the amount of output information
+during the path trackers are possible, going from nothing to all data.
+
 Root Counts and Start Systems
 =============================
 
@@ -1015,7 +1021,76 @@ The Newton-Puiseux Method
 
 The directory ``Puiseux`` contains an implementation of the
 Newton-Puiseux method to compute power series expansions for
-all solution curves of a polynomial system.
+all solution curves of a regular polynomial system.
+In this context, a polynomial system is regular if its coefficients
+are sufficiently generic, so its initial form systems have no
+singular solutions.
+
+The code in this directory applies the integer lifting applied
+to compute the mixed volume of a tuple of Newton polytopes.
+The key is to use as values of the lifting the powers of the
+variable of the parameter in the series.
+Newton's method on power series provides the series expansion
+for the solution curves.
+
+Determinantal Systems and Schubert Problems
+===========================================
+
+A Schubert problem gives rise to a so-called determinantal system,
+a system where the polynomials are obtained via minor expansions
+of a matrix.  That matrix then represents the intersection condition
+of a given plane with an unknown plane.  In a general Schubert problem
+we require that a *k*-dimensional plane intersects a sequence of
+spaces nontrivially in particular dimensions.
+
+The directory ``Schubert`` consists in three parts,
+described briefly in the sections below.
+
+SAGBI Homotopies to Solve Pieri Problems
+----------------------------------------
+
+SAGBI stands for Subalgebra Analogue to Groebner Basis for Ideals.
+The directory ``SAGBI`` provides packages to define SAGBI homotopies
+to compute all *k*-planes which meet as many as :math:`m \times p`
+general *m*-planes in a space of dimension :math:`m + p`.
+The SAGBI homotopies were applied to investigate a conjecture 
+concerning particular input *m*-planes for which all solution
+*k*-planes are real.
+
+Packages are available to manipulate brackets.
+Brackets represent intersection conditions
+and encode selection of columns in minor expansions.
+A particular application is the symbolic encoding of
+the Laplace expansion to compute the determinant of a matrix.
+The straightening law for brackets leads to a Groebner basis
+for the Grassmannian.  This Groebner basis defines a flat
+deformation which defines the SAGBI homotopy.
+The start system in the SAGBI homotopy is solved by
+a polynomial homotopy.
+
+Pieri Homotopies
+----------------
+
+The directory ``Pieri`` offers a more generic solution to
+solve Pieri problems.  Pieri homotopies are capable to solve
+more general Pieri problems.  For all these Pieri problems,
+there is a combinatorial root count which quickly gives
+the number of solutions to a generic Pieri problem.
+
+Littlewood-Richardson Homotopies
+--------------------------------
+
+General Schubert problems can be solved by 
+a geometric Littlewood-Richardson rule,
+as implemented by the code in the directory ``Induction``.
+
+A general Schubert problem is given by a sequence of flags
+and a sequence of intersection conditions that must be satisfied
+by the *k*-plane solutions of the Schubert problem.
+The geometric Littlewood-Richardson rule to count the number
+of solutions is implemented by a checker board game.
+The stages in the game correspond to specific moves of the
+solutions with respect to the moving flag.
 
 Organization of the C and C++ code
 ==================================
