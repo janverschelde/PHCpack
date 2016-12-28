@@ -844,7 +844,7 @@ PHCpack was used to develop new homotopy algorithms:
 
 #. Xuping Zhang, Jintao Zhang, and Bo Yu:
    **Eigenfunction expansion method for multiple solutions
-   of semilinear elliptic equations with polynomial nonlinearity**>
+   of semilinear elliptic equations with polynomial nonlinearity**
    *SIAM J. Numer. Anal.* 51(5): 2680-2699, 2013.
 
 Last, but certainly not least, there is the wonderful book of
