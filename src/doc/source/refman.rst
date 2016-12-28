@@ -1092,6 +1092,102 @@ of solutions is implemented by a checker board game.
 The stages in the game correspond to specific moves of the
 solutions with respect to the moving flag.
 
+Positive Dimensional Solution Sets
+==================================
+
+This section describes the specific code to compute
+a numerical irreducible decomposition of a polynomial system.
+The directory ``Components`` have six subdirectors,
+which are briefly described in the next sections.
+
+Witness Sets, Extrinsic and Intrinsic Trackers
+----------------------------------------------
+
+The subdirectory ``Samplers`` contains the definition of the
+data structures to represent positive dimensional solution sets,
+the so-called witness set.  A witness set contains the polynomial
+equations, as many random linear equations as the dimension of
+the set, and as many generic points (which satisfy the original
+polynomial equations and the random linear equations) as the
+degree of the solution set.
+
+The extrinsic way to represent a witness set is formulated
+in the given equations, in the given variables.  For a high
+dimensional solution set, the number of equations and variables
+almost doubles.  For example, for a hypersurface, a solution
+set of dimension :math:`n-1`, the extrinsic representation
+requires :math:`2 n - 1` equations and variables.
+This doubling of the dimension leads to an overhead of a factor
+of eight on the linear algebra operations when computing new
+points on the positive solution set.
+
+The intrinsic way to represent a witness set computes a basis
+for the linear space spanned by the random linear equations.
+This basis consists of an offset point and as many directions
+as the dimension of the linear space.  Then the number of
+intrisic variables equals the dimension of the linear space.
+For a random line to intersect a hyperface, the intrisic
+representation reduces to one variable and computing new
+generic points on a hypersurface is reduced to computing new
+solutions of a polynomial equation in one variable.
+
+Unfortunately, the use of intrinsic coordinates, while reducing
+the number of equations and variables, increases the condition
+numbers of the witness points.  To remedy the numerical conditioning
+of the intrinsic representation, tools to work with local coordinates 
+are implemented.  In local intrinsic coordinates, the offset point
+is the origin.
+
+Equations for Solution Components
+---------------------------------
+
+Once we have enough generic points on the positive dimensional
+solution components, we can compute equations for the components
+with the application of interpolation.  
+Code for the interpolation is 
+provided in the subdirectory ``Interpolators``.
+
+Three approaches have been implemented.  The first direct approach
+solves a linear system, either with row reduction or in the least
+squares sense.  The second technique applies a recursive bootstrapping
+method with generalized divided differences.
+Thirdly, the trace form leads to Newton interpolation.
+
+Another application of interpolation is the computation of the
+linear span of a solution set.  We know for instance that every
+quadratic space curve lies in a plane.  With the linear equations
+that define this plane, an accurate representation for a quadratic
+space curve is obtained.  With the linear span of a component,
+the cost to compute new generic points on a solution set is reduced.
+
+Absolute Factorization into Irreducible Components
+--------------------------------------------------
+
+The problem considered in the ``Factorization`` directory takes
+a pure dimensional solution set on input, given as a witness set,
+and computes a witness set for every irreducible component.
+The *absolute* in the title of this section refers to the factorization
+over the complex numbers.
+
+Three methods are implemented to decompose a pure dimensional solution set
+into irreducible components.
+The first method applies incremental interpolation at generic points,
+using polynomials of increasing degrees.  Multiprecision becomes necessary
+when the degrees increase.  The second method is more robust and can handle
+higher degree components without multiprecision.  This method runs loops
+exploiting the monodromy, using the linear trace as the stop test.
+The third method enumerates all factorizations and prunes the
+enumeration tree with linear traces.
+
+A particular case is the factorization of multivariate polynomials,
+which is directly accessible from the blackbox solver.
+
+Cascades of Homotopies and Diagonal Homotopies
+----------------------------------------------
+
+The code in ``Decomposition`` aims to produce generic points on all
+pure dimensional components of the solution set of a polynomial system.
+
 Organization of the C and C++ code
 ==================================
 
