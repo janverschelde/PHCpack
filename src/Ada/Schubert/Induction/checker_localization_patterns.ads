@@ -106,6 +106,13 @@ package Checker_Localization_Patterns is
   --   otherwise the index on return indicates the variable
   --   that should be permuted with the next one.
 
+  function Row_of_Pivot
+             ( lp : Standard_Natural_Matrices.Matrix;
+               col : integer32 ) return integer32;
+
+  -- DESCRIPTION:
+  --   Returns the row index of the one in column col of lp.
+
 -- PART III : mapping patterns to complex matrices
 
   function Map ( m : Standard_Natural_Matrices.Matrix;

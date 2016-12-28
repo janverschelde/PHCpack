@@ -1,3 +1,5 @@
+Wed 28 Dec 2016 : added helper function to checker_localization_patterns.
+
 Thu 22 Dec 2016 : made progress in the bug fix in checker_homotopies.adb.
   Applied the patch to the other procedures in checker_homotopies.adb
   which define the first swap plane.

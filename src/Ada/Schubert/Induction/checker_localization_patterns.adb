@@ -220,6 +220,21 @@ package body Checker_Localization_Patterns is
     return res;
   end Permute_Index;
 
+  function Row_of_Pivot
+             ( lp : Standard_Natural_Matrices.Matrix;
+               col : integer32 ) return integer32 is
+
+    res : integer32 := 0;
+
+  begin
+    for i in lp'range(1) loop
+      if lp(i,col) = 1
+       then res := i; exit;
+      end if;
+    end loop;
+    return res;
+  end Row_of_Pivot;
+
 -- PART III : mapping localization patterns to a complex matrix
 
   function Map ( m : Standard_Natural_Matrices.Matrix;
