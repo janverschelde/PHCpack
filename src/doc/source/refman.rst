@@ -234,7 +234,21 @@ important topic.
 There are eight subdirectories in the ``Deformations`` directory.
 The subdirectories ``Solutions`` and ``Homotopies`` provide the
 data structures for the solutions on the paths defined by the
-polynomial homotopies.
+polynomial homotopies.  Newton's method and deflation are implemented
+in the subdirectory ``Newton``. In ``Curves`` are the extrapolation
+methods for the predictors in the path trackers.  Extrapolation for
+winding numbers is coded in the subdirectory ``End_Games``.
+Path trackers for artificial-parameter homotopies are available
+in the ``Trackers`` subdirectory.  In ``Sweep`` arc length parameter
+continuation is implemented for sweeping solution paths for singularities.
+Finally, the subdirectory ``Continuation`` contains the data management
+and driver procedures.
+
+Observe that in the layered organization of the source code,
+the ``Deformations`` directory is placed before the ``Root_Counts``
+directory, where the start systems are defined.  This organization
+implies that the path trackers are written independently from the
+constructors for the polynomial homotopies.
 
 Homotopy Construction via Root Counting Methods
 -----------------------------------------------
@@ -264,7 +278,17 @@ polynomials in the system.
 For sparse system, the information of the Newton polytopes provides
 a much sharper root count than the ones provided by the degrees.
 
-The are eight subdirecties in the ``Root_Counts`` directory.
+There are eight subdirecties in the ``Root_Counts`` directory.
+Total degree and linear-product start systems are constructed
+in the subdirectory ``Product``.  The subdirectory ``Binomials``
+provides solvers for the sparsest polynomial systems.
+The subdirectories ``Implift``, ``Stalift``, and ``Dynlift``
+implement polyhedral homotopies, respectively with implicit,
+static, and dynamic lifting methods.  In ``MixedVol`` is an
+adaptation of a fast mixed volume calculator.
+Code to exploit permutation symmetry is in the subdirectory ``Symmetry``.
+A generalization of the Newton-Puiseux algorithm is implemented in
+the subdirectory ``Puiseux``.
 
 Numerical Schubert Calculus
 ---------------------------
