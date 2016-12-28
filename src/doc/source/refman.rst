@@ -1179,7 +1179,7 @@ exploiting the monodromy, using the linear trace as the stop test.
 The third method enumerates all factorizations and prunes the
 enumeration tree with linear traces.
 
-A particular case is the factorization of multivariate polynomials,
+A particular case is the factorization of a multivariate polynomial,
 which is directly accessible from the blackbox solver.
 
 Cascades of Homotopies and Diagonal Homotopies
@@ -1187,6 +1187,51 @@ Cascades of Homotopies and Diagonal Homotopies
 
 The code in ``Decomposition`` aims to produce generic points on all
 pure dimensional components of the solution set of a polynomial system.
+
+The first top down method applies cascades of homotopies, starting
+at the top dimensional solution set.  With every added linear equation
+there is a slack variable.  For solutions on the component intersected
+by the linear equations, all slack variables are zero.  Solutions with
+zero slack variables are generic points on the positive dimensional
+solution set.  Solutions with nonzero slack variables are regular
+and serve as start solutions in a homotopy to compute generic points on 
+the lower dimensional solution sets.  Every step in the cascade
+removes one linear equation.  At the end of the cascade we have
+computed all isolated solutions.
+
+The result of running a cascade of homotopies is list of candidate
+generic points, as some of the paths may have ended to higher dimensional
+solution sets.  To filter those points, a homotopy membership test
+starts at a witness set and moves to another set of linear equations
+that pass through the test point.  If the test point is among the new
+generic points, then the test point belongs to the solution set
+represented by the witness set.
+
+The second bottom up method applies diagonal homotopies.
+A diagonal homotopy takes on input two witness sets and produces
+on output generic points on all parts of the intersection of the
+solution sets represented by the two witness sets.
+Two versions of the diagonal homotopy are implemented,
+once in extrinsic coordinates, and once in intrinsic coordinates.
+
+An Equation-by-Equation Solver
+------------------------------
+
+Diagonal homotopies can be applied to solve polynomial systems
+incrementally, adding one equation after the other,
+and updating the data for the solution sets.
+An equation-by-equation solver is implemented in the directory ``Solver``.
+
+Tropicalization of Witness Sets
+-------------------------------
+
+The asymptotics of witness sets lead to tropical geometry
+and generalizations of polyhedral methods from isolated solutions
+to positive dimensional solution sets.
+
+The code in the directory ``Tropical`` collects a preliminary
+standalone implementation of a method to compute the tropical prevariety
+for low dimensional problems.
 
 Organization of the C and C++ code
 ==================================
