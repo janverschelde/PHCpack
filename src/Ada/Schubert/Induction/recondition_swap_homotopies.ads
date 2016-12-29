@@ -77,4 +77,44 @@ package Recondition_Swap_Homotopies is
   --            added at position dim+1 and in the row of the pivot in
   --            column s+1 an extra variable has been added.
 
+  function Random_Linear_Equation
+              ( x : Standard_Complex_Poly_Matrices.Matrix;
+                s : integer32 )
+              return Standard_Complex_Polynomials.Poly;
+
+  -- DESCRIPTION :
+  --   Returns a random linear polynomial with the polynomials in x,
+  --   in columns s and s+1.  The polynomial on return is the sum of
+  --   the polynomials of x in columns s and s+1, multiplied each
+  --   with a random complex constant.
+
+  procedure Set_Exponent_to_Zero
+              ( p : in out Standard_Complex_Polynomials.Poly;
+                k : in integer32 );
+
+  -- DESCRIPTION :
+  --   For all terms in p, sets the exponent of the k-th variable
+  --   to zero.  This procedure is applied to remove the variable
+  --   (typically the last one) which is the continuation parameter.
+
+  -- REQUIRED : k is in the range of 1..Number_of_Unknowns(p).
+
+  procedure Add_Random_Constant
+              ( p : in out Standard_Complex_Polynomials.Poly );
+
+  -- DESCRIPTION :
+  --   Adds a random complex constant to the polynomial p.
+
+  -- REQUIRED : p /= Null_Poly.
+
+  function Recondition_Equation
+             ( x : Standard_Complex_Poly_Matrices.Matrix;
+               s,t : integer32 )
+             return Standard_Complex_Polynomials.Poly;
+
+  -- DESCRIPTION :
+  --   Returns a random linear equation to recondition the columns
+  --   s and s+1 in the matrix.  The variable t is the index of
+  --   the variable used as the continuation parameter.
+
 end Recondition_Swap_Homotopies;

@@ -1,6 +1,7 @@
 Wed 28 Dec 2016 : added helper function to checker_localization_patterns.
   New package recondition_swap_homotopies, with a test in First_Swap_Plane
-  in checker_homotopies.adb.
+  in checker_homotopies.adb.  Added the construction of a random linear
+  equation to recondition_swap_homotopies, tested in checker_homotopies.adb.
 
 Thu 22 Dec 2016 : made progress in the bug fix in checker_homotopies.adb.
   Applied the patch to the other procedures in checker_homotopies.adb

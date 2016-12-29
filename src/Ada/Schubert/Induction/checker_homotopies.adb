@@ -17,6 +17,7 @@ with DoblDobl_Complex_Matrices_io;      use DoblDobl_Complex_Matrices_io;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Matrices_io;      use QuadDobl_Complex_Matrices_io;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Functions;   use DoblDobl_Complex_Poly_Functions;
@@ -2866,11 +2867,16 @@ package body Checker_Homotopies is
     put_line(file,"the polynomial matrix of indeterminates :"); put(file,x);
     declare
       recondx : Standard_Complex_Poly_Matrices.Matrix(x'range(1),x'range(2));
+      reclinq : Standard_Complex_Polynomials.Poly;
     begin
       Standard_Complex_Poly_Matrices.Copy(x,recondx);
       Recondition_Swap_Homotopies.Recondition(recondx,locmap,integer32(dim),s);
       put_line(file,"the polynomial matrix for reconditioning :");
       put(file,recondx);
+      reclinq := Recondition_Swap_Homotopies.Recondition_Equation
+                   (recondx,s,integer32(dim)+2);
+      put_line(file,"the linear recondition equation :");
+      Standard_Complex_Polynomials_io.put(file,reclinq); new_line(file);
     end;
     Clear(t);
   end First_Swap_Plane;
