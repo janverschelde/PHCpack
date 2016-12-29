@@ -2198,19 +2198,23 @@ package body Moving_Flag_Continuation is
 
   begin
     put_line(file,"reconditioning the swap homotopy ...");
+    put(file,"the index of variable x(r+1,s+1) : ");
+    put(file,idx,1); new_line(file);
     put_line(file,"The polynomial matrix on input :");
     Standard_Complex_Poly_Matrices_io.put(file,x);
-    Standard_Complex_Poly_Matrices.Copy(x,recondx);
-    Recondition(recondx,locmap,dim,s);
-    Insert_Scaling_Symbol(natural32(rowpiv),natural32(s+1));
-    put_line(file,"the polynomial matrix for reconditioning :");
-    Standard_Complex_Poly_Matrices_io.put(file,recondx);
-    reclinq := Recondition_Equation(recondx,s,dim+2);
-    put_line(file,"the linear recondition equation :");
-    Standard_Complex_Polynomials_io.put(file,reclinq); new_line(file);
-    sol := Recondition_Solution(ls.all,idx);
-    put_line(file,"the reconditioned solution :");
-    put_vector(file,sol);
+    if idx /= 0 then
+      Standard_Complex_Poly_Matrices.Copy(x,recondx);
+      Recondition(recondx,locmap,dim,s);
+      Insert_Scaling_Symbol(natural32(rowpiv),natural32(s+1));
+      put_line(file,"the polynomial matrix for reconditioning :");
+      Standard_Complex_Poly_Matrices_io.put(file,recondx);
+      reclinq := Recondition_Equation(recondx,s,dim+2,idx);
+      put_line(file,"the linear recondition equation :");
+      Standard_Complex_Polynomials_io.put(file,reclinq); new_line(file);
+      sol := Recondition_Solution(ls.all,idx);
+      put_line(file,"the reconditioned solution :");
+      put_vector(file,sol);
+    end if;
   end Recondition_Swap_Homotopy;
 
   procedure Recondition_Swap_Homotopy
@@ -2232,19 +2236,23 @@ package body Moving_Flag_Continuation is
 
   begin
     put_line(file,"reconditioning the swap homotopy ...");
+    put(file,"the index of variable x(r+1,s+1) : ");
+    put(file,idx,1); new_line(file);
     put_line(file,"The polynomial matrix on input :");
     Standard_Complex_Poly_Matrices_io.put(file,x);
-    Standard_Complex_Poly_Matrices.Copy(x,recondx);
-    Recondition(recondx,locmap,dim,s);
-    Insert_Scaling_Symbol(natural32(rowpiv),natural32(s+1));
-    put_line(file,"the polynomial matrix for reconditioning :");
-    Standard_Complex_Poly_Matrices_io.put(file,recondx);
-    reclinq := Recondition_Equation(recondx,s,dim+2);
-    put_line(file,"the linear recondition equation :");
-    Standard_Complex_Polynomials_io.put(file,reclinq); new_line(file);
-    rcndsols := Recondition_Solutions(sols,idx);
-    put_line(file,"the reconditioned solution list :");
-    put(file,Length_Of(rcndsols),natural32(Head_Of(rcndsols).n),rcndsols);
+    if idx /= 0 then
+      Standard_Complex_Poly_Matrices.Copy(x,recondx);
+      Recondition(recondx,locmap,dim,s);
+      Insert_Scaling_Symbol(natural32(rowpiv),natural32(s+1));
+      put_line(file,"the polynomial matrix for reconditioning :");
+      Standard_Complex_Poly_Matrices_io.put(file,recondx);
+      reclinq := Recondition_Equation(recondx,s,dim+2,idx);
+      put_line(file,"the linear recondition equation :");
+      Standard_Complex_Polynomials_io.put(file,reclinq); new_line(file);
+      rcndsols := Recondition_Solutions(sols,idx);
+      put_line(file,"the reconditioned solution list :");
+      put(file,Length_Of(rcndsols),natural32(Head_Of(rcndsols).n),rcndsols);
+    end if;
   end Recondition_Swap_Homotopy;
 
   procedure Swap_Homotopy

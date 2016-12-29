@@ -109,7 +109,7 @@ package Recondition_Swap_Homotopies is
 
   -- REQUIRED : p /= Null_Poly.
 
-  function Recondition_Equation
+  function Recondition_Target_Equation
              ( x : Standard_Complex_Poly_Matrices.Matrix;
                s,t : integer32 )
              return Standard_Complex_Polynomials.Poly;
@@ -118,6 +118,30 @@ package Recondition_Swap_Homotopies is
   --   Returns a random linear equation to recondition the columns
   --   s and s+1 in the matrix.  The variable t is the index of
   --   the variable used as the continuation parameter.
+
+  function Recondition_Start_Equation
+             ( n,k : integer32 )
+             return Standard_Complex_Polynomials.Poly;
+
+  -- DESCRIPTION :
+  --   Returns the start equation in the reconditioned swap homotopy,
+  --   of the form x(k) - 1, where the polynomial on return is
+  --   a polynomial in n variables.
+
+  function Recondition_Equation
+             ( x : Standard_Complex_Poly_Matrices.Matrix;
+               s,t,k : integer32 )
+             return Standard_Complex_Polynomials.Poly;
+
+  -- DESCRIPTION :
+  --   Returns the added linear equation in the reconditioned homotopy.
+
+  -- ON ENTRY :
+  --   x       matrix of indeterminates with the scaling variable;
+  --   s       the column s in the swap homotopy;
+  --   t       the index of the continuation parameter,
+  --           which is the last variable in each polynomial;
+  --   k       index of the variable x(r+1,s+1).
 
   function Recondition_Solution_Vector
              ( x : Standard_Complex_Vectors.Vector; k : integer32 )

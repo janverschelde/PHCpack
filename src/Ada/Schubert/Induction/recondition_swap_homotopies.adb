@@ -146,7 +146,7 @@ package body Recondition_Swap_Homotopies is
     Clear(t);
   end Add_Random_Constant;
 
-  function Recondition_Equation
+  function Recondition_Target_Equation
              ( x : Standard_Complex_Poly_Matrices.Matrix;
                s,t : integer32 )
              return Standard_Complex_Polynomials.Poly is
@@ -158,6 +158,48 @@ package body Recondition_Swap_Homotopies is
     Set_Exponent_to_Zero(res,t);
     Add_Random_Constant(res);
     return res;
+  end Recondition_Target_Equation;
+
+  function Recondition_Start_Equation
+             ( n,k : integer32 )
+             return Standard_Complex_Polynomials.Poly is
+
+    res : Standard_Complex_Polynomials.Poly;
+    trm : Standard_Complex_Polynomials.term;
+
+  begin
+    trm.cf := Standard_Complex_Numbers.Create(1.0);
+    trm.dg := new Standard_Natural_Vectors.Vector'(1..n => 0);
+    trm.dg(k) := 1;
+    res := Standard_Complex_Polynomials.Create(trm);
+    trm.dg(k) := 0;
+    Standard_Complex_Polynomials.Sub(res,trm);
+    Standard_Complex_Polynomials.Clear(trm);
+    return res;
+  end Recondition_Start_Equation;
+
+  function Recondition_Equation
+             ( x : Standard_Complex_Poly_Matrices.Matrix;
+               s,t,k : integer32 )
+             return Standard_Complex_Polynomials.Poly is
+
+    target : Standard_Complex_Polynomials.Poly
+           := Recondition_Target_Equation(x,s,t);
+    start : Standard_Complex_Polynomials.Poly
+          := Recondition_Start_Equation(t,k);
+    trm : Standard_Complex_Polynomials.Term;
+
+  begin
+    trm.cf := Standard_Complex_Numbers.Create(1.0);
+    trm.dg := new Standard_Natural_Vectors.Vector'(1..t => 0);
+    trm.dg(t) := 1; -- trm is term with the continuation parameter t
+    Standard_Complex_Polynomials.Mul(target,trm);   -- t*target
+    Standard_Complex_Polynomials.Add(target,start); -- t*target + start
+    Standard_Complex_Polynomials.Mul(start,trm);    
+    Standard_Complex_Polynomials.Sub(target,start); -- t*target + (1-t)*start
+    Standard_Complex_Polynomials.Clear(start);
+    Standard_Complex_Polynomials.Clear(trm);
+    return target;
   end Recondition_Equation;
 
   function Recondition_Solution_Vector
