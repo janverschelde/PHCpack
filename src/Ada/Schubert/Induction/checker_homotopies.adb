@@ -33,6 +33,7 @@ with DoblDobl_Matrix_Inversion;
 with QuadDobl_Matrix_Inversion;
 with Checker_Moves;                     use Checker_Moves;
 with Checker_Localization_Patterns;     use Checker_Localization_Patterns;
+with Recondition_Swap_Homotopies;
 
 package body Checker_Homotopies is
 
@@ -2825,16 +2826,16 @@ package body Checker_Homotopies is
         end if;
       end if;
     end loop;
-    if locmap(r+1,s+1) = 2 then   -- only assign to free position!
+   -- if locmap(r+1,s+1) = 2 then   -- only assign to free position!
       t.dg(piv) := 1;
       x(r+1,s+1) := Create(t);    -- x(r+1,s+1)*m(r+1) for column s+1
       t.dg(piv) := 0;
-    end if;
+   -- end if;
     x(big_r,s+1) := Create(t);  -- m(R) in column s+1 
     for i in p'range loop
       if integer32(p(i)) /= r and integer32(p(i)) /= r+1
                               and integer32(p(i)) /= big_r then
-        if locmap(integer32(p(i)),s+1) = 2 then -- was guarded before!
+        --if locmap(integer32(p(i)),s+1) = 2 then -- was guarded before!
           ind := Checker_Localization_Patterns.Rank
                    (locmap,integer32(p(i)),s+1);
         if ind in t.dg'range then
@@ -2854,7 +2855,7 @@ package body Checker_Homotopies is
           new_line(file);
           failed := true;
         end if;
-        end if; -- placed if again
+        --end if; -- placed if again
       end if;
     end loop;
    -- if failed then
@@ -2863,6 +2864,14 @@ package body Checker_Homotopies is
    -- end if;
     put_line(file,"the localization map : "); put(file,locmap);
     put_line(file,"the polynomial matrix of indeterminates :"); put(file,x);
+    declare
+      recondx : Standard_Complex_Poly_Matrices.Matrix(x'range(1),x'range(2));
+    begin
+      Standard_Complex_Poly_Matrices.Copy(x,recondx);
+      Recondition_Swap_Homotopies.Recondition(recondx,locmap,integer32(dim),s);
+      put_line(file,"the polynomial matrix for reconditioning :");
+      put(file,recondx);
+    end;
     Clear(t);
   end First_Swap_Plane;
 

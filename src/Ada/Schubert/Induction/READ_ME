@@ -16,14 +16,16 @@ intersection_posets            : combine posets for several conditions
 intersection_posets_io         : output of formal sums and equations
 ts_checkers                    : interactive test program
 -----------------------------------------------------------------------------
+numeric_schubert_conditions    : numerical evaluation of Schubert conditions
+symbolic_schubert_conditions   : symbolic definition of Schubert conditions
+remember_symbolic_minors       : remember table for symbolic minors
 start_flag_homotopies          : start solutions for flag homotopies
 setup_flag_homotopies          : utilities to setup flag homotopies
 moving_flag_homotopies         : defines homotopies in one checker game
 flag_transformations           : transforming pairs of flags
 ts_induce                      : interactive test program for homotopies
-numeric_schubert_conditions    : numerical evaluation of Schubert conditions
-symbolic_schubert_conditions   : symbolic definition of Schubert conditions
-remember_symbolic_minors       : remember table for symbolic minors
+recondition_swap_homotopies    : reconditioning tools for swap homotopies
+checker_homotopies             : defines Littlewood-Richardson homotopies
 wrapped_path_trackers          : calling path trackers on natural homotopy
 moving_flag_continuation       : trackers for moving flag homotopies
 ts_flagcond                    : test conditions imposed by bracket + flag
