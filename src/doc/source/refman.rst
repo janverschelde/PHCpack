@@ -595,7 +595,18 @@ with zero coordinates are excluded.
 There are packages to read and parse polynomials in symbolic form,
 from the standard input, from a file, and from a string.
 Also the writing of polynomials works for standard output, to file,
-or to string.
+or to string.  The parsing from strings is especially important
+in connection with the use of multiprecision arithmetic.
+An innocently looking constant such as ``0.1`` has no exact
+binary representation and will have a nonzero representation error,
+dependent on the working precision with which it was evaluated.
+The input system given by the user is stored in its string
+representation.  When later in the program, the user wants to
+increase the working precision, all mathematical constants
+are evaluated anew in the higher working precision.
+Numerical algorithms solve nearby problems not exact ones.
+Increasing the working precision may increase only the
+distance to the exact input problem.
 
 Nested Horner Forms for Evaluation
 ----------------------------------
@@ -606,6 +617,13 @@ Newton's method, the distributed list of terms in a polynomial is
 converted into a nested Horner form, for efficient evaluation.
 The directory ``Functions`` provides specific data structures
 to construct and evaluate the nested Horner forms.
+
+For polynomial systems of low degrees and dimensions,
+the change in data structure from a linked list of terms
+into a recursive array structure yields significant improvements
+on the memory access, in addition to the saved multiplications.
+For larger polynomial systems, methods of algorithmic differentiation
+are required, as provided in the directory ``Circuits``.
 
 Support Sets and Linear Programming
 -----------------------------------
@@ -624,6 +642,10 @@ Circuits for Algorithmic Differentiation
 The directory ``Circuits`` contains implementations of the algorithms
 which evaluate and differentiate polynomials in several variables using
 the reverse mode of algorithmic differentiation.
+
+The current state of the code in this directory is still experimental,
+mostly geared towards algorithmic correctness rather than performance.
+An efficient implementation is available in the GPU part of the source code.
 
 Truncated Power Series
 ----------------------
