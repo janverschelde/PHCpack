@@ -1,3 +1,8 @@
+Thu 29 Dec 2016 : added reconditioning of solution vectors to
+  recondition_swap_homotopies, moved the test out of checker_homotopies.adb
+  and into moving_flag_continuation.adb, added a procedure to add an extra
+  symbol in setup_flag_homotopies.
+
 Wed 28 Dec 2016 : added helper function to checker_localization_patterns.
   New package recondition_swap_homotopies, with a test in First_Swap_Plane
   in checker_homotopies.adb.  Added the construction of a random linear

@@ -160,4 +160,57 @@ package body Recondition_Swap_Homotopies is
     return res;
   end Recondition_Equation;
 
+  function Recondition_Solution_Vector
+             ( x : Standard_Complex_Vectors.Vector; k : integer32 )
+             return Standard_Complex_Vectors.Vector is
+
+    use Standard_Complex_Numbers;
+
+    res : Standard_Complex_Vectors.Vector(x'first..x'last+1);
+    fac : constant Complex_Number := 1.0/x(k);
+
+  begin
+    for i in x'range loop
+      res(i) := fac*x(i);
+    end loop;
+    res(res'last) := fac;
+    return res;
+  end Recondition_Solution_Vector;
+
+  function Recondition_Solution
+             ( s : Standard_Complex_Solutions.Solution; k : integer32 )
+             return Standard_Complex_Solutions.Solution is
+
+    res : Standard_Complex_Solutions.Solution(s.n+1);
+
+  begin
+    res.t := s.t;
+    res.m := s.m;
+    res.v := Recondition_Solution_Vector(s.v,k);
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    return res;
+  end Recondition_Solution;
+
+  function Recondition_Solutions
+             ( sols : Standard_Complex_Solutions.Solution_List;
+               k : integer32 )
+             return Standard_Complex_Solutions.Solution_List is
+
+    use Standard_Complex_Solutions;
+
+    res,res_last : Solution_List;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Recondition_Solution(ls.all,k));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Recondition_Solutions;
+
 end Recondition_Swap_Homotopies;

@@ -522,6 +522,17 @@ package body Setup_Flag_Homotopies is
     Add_t_Symbol;
   end Initialize_Homotopy_Symbols;
 
+  procedure Insert_Scaling_Symbol ( i,j : in natural32 ) is
+
+    sb : Symbol_Table.Symbol := Matrix_Indeterminates.X_ij(i,j);
+    nb : natural32 := Symbol_Table.Number;
+
+  begin
+    sb(sb'first) := 's';
+    Symbol_Table.Replace(nb,sb); -- replace t by sij
+    Add_t_Symbol; -- add t again to the symbol table
+  end Insert_Scaling_Symbol;
+
   function Symbolic_Transformation
              ( n,v : integer32; t : Standard_Natural_Matrices.Matrix ) 
              return Standard_Complex_Poly_Matrices.Matrix is

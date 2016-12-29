@@ -130,6 +130,13 @@ package Setup_Flag_Homotopies is
   --   Initializes the symbol table to print a homotopy in the moving flag
   --   with the given localization pattern, using t as added symbol.
 
+  procedure Insert_Scaling_Symbol ( i,j : in natural32 );
+
+  -- DESCRIPTION :
+  --   Inserts the symbol sij to the symbol table,
+  --   where sij is used to recondition the swap homotopy.
+  --   The last symbol in the symbol table is the continuation parameter.
+
   function Symbolic_Transformation
              ( n,v : integer32; t : Standard_Natural_Matrices.Matrix )
              return Standard_Complex_Poly_Matrices.Matrix;
