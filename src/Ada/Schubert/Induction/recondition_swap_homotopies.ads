@@ -171,4 +171,30 @@ package Recondition_Swap_Homotopies is
   --   The list on return has all solution vectors scaled with
   --   respect to the k-th coordinate of the vector.
 
+  function Rescale_Solution_Vector
+             ( x : Standard_Complex_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   The vector on return has range x'first..x'last-1 and the 
+  --   entries of x divided by the last coordinate in x.
+
+  -- REQUIRED : x(x'last) /= 0.
+
+  function Rescale_Solution
+             ( s : Standard_Complex_Solutions.Solution )
+             return Standard_Complex_Solutions.Solution;
+
+  -- DESCRIPTION :
+  --   Returns the solution s with a rescaled solution vector.
+
+  -- REQUIRED : s.v(s.v'last) /= 0.
+
+  function Rescale_Solutions
+             ( sols : Standard_Complex_Solutions.Solution_List )
+             return Standard_Complex_Solutions.Solution_List;
+
+  -- DESCRIPTION :
+  --   Returns the list of rescaled solutions, rescaled sols.
+
 end Recondition_Swap_Homotopies;

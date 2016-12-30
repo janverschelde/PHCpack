@@ -3,6 +3,7 @@ Thu 29 Dec 2016 : added reconditioning of solution vectors to
   and into moving_flag_continuation.adb, added a procedure to add an extra
   symbol in setup_flag_homotopies.  The last equation in the reconditioned
   homotopy must move, changed again also moving_flag_continuation.adb.
+  Added rescaling solutions to recondition_swap_homotopies.
 
 Wed 28 Dec 2016 : added helper function to checker_localization_patterns.
   New package recondition_swap_homotopies, with a test in First_Swap_Plane

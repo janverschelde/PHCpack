@@ -255,4 +255,54 @@ package body Recondition_Swap_Homotopies is
     return res;
   end Recondition_Solutions;
 
+  function Rescale_Solution_Vector
+             ( x : Standard_Complex_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector is
+
+    res : Standard_Complex_Vectors.Vector(x'first..x'last-1);
+
+    use Standard_Complex_Numbers;
+
+  begin
+    for k in res'range loop
+      res(k) := x(k)/x(x'last);
+    end loop;
+    return res;
+  end Rescale_Solution_Vector;
+
+  function Rescale_Solution
+             ( s : Standard_Complex_Solutions.Solution )
+             return Standard_Complex_Solutions.Solution is
+
+    res : Standard_Complex_Solutions.Solution(s.n-1);
+
+  begin
+    res.t := s.t;
+    res.m := s.m;
+    res.v := Rescale_Solution_Vector(s.v);
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    return res;
+  end Rescale_Solution;
+
+  function Rescale_Solutions
+             ( sols : Standard_Complex_Solutions.Solution_List )
+             return Standard_Complex_Solutions.Solution_List is
+
+    use Standard_Complex_Solutions;
+
+    res,res_last : Solution_List;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Rescale_Solution(ls.all));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Rescale_Solutions;
+
 end Recondition_Swap_Homotopies;
