@@ -1,3 +1,5 @@
+Fri 30 Dec 2016 : added Append procedure to setup_flag_homotopies.
+
 Thu 29 Dec 2016 : added reconditioning of solution vectors to
   recondition_swap_homotopies, moved the test out of checker_homotopies.adb
   and into moving_flag_continuation.adb, added a procedure to add an extra

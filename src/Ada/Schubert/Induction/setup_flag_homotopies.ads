@@ -18,10 +18,13 @@ with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Matrices;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Matrices;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Matrices;
 
@@ -353,5 +356,18 @@ package Setup_Flag_Homotopies is
 
   -- DESCRIPTION :
   --   Concatenates all systems in s into one system on return.
+
+  procedure Append
+              ( s : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                p : in Standard_Complex_Polynomials.Poly );
+  procedure Append
+              ( s : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                p : in DoblDobl_Complex_Polynomials.Poly );
+  procedure Append
+              ( s : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                p : in QuadDobl_Complex_Polynomials.Poly );
+
+  -- DESCRIPTION :
+  --   Appends the polynomial p to the system s.
 
 end Setup_Flag_Homotopies;

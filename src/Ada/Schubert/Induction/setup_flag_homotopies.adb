@@ -21,9 +21,6 @@ with DoblDobl_Complex_Singular_Values;
 with QuadDobl_Complex_Singular_Values;
 with Symbol_Table;
 with Matrix_Indeterminates;
-with Standard_Complex_Polynomials;
-with DoblDobl_Complex_Polynomials;
-with QuadDobl_Complex_Polynomials;
 with Standard_Complex_Poly_SysFun;
 with DoblDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Poly_SysFun;
@@ -1312,5 +1309,50 @@ package body Setup_Flag_Homotopies is
     end loop;
     return res;
   end Concatenate;
+
+  procedure Append
+              ( s : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                p : in Standard_Complex_Polynomials.Poly ) is
+
+    use Standard_Complex_Poly_Systems;
+
+    res : Link_to_Poly_Sys;
+
+  begin
+    res := new Poly_Sys(s'first..s'last+1); 
+    res(s'range) := s.all;
+    res(res'last) := p;
+    s := res;
+  end Append;
+
+  procedure Append
+              ( s : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                p : in DoblDobl_Complex_Polynomials.Poly ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+
+    res : Link_to_Poly_Sys;
+
+  begin
+    res := new Poly_Sys(s'first..s'last+1); 
+    res(s'range) := s.all;
+    res(res'last) := p;
+    s := res;
+  end Append;
+
+  procedure Append
+              ( s : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                p : in QuadDobl_Complex_Polynomials.Poly ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+
+    res : Link_to_Poly_Sys;
+
+  begin
+    res := new Poly_Sys(s'first..s'last+1); 
+    res(s'range) := s.all;
+    res(res'last) := p;
+    s := res;
+  end Append;
 
 end Setup_Flag_Homotopies;
