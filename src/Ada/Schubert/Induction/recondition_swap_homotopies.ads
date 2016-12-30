@@ -1,9 +1,17 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Natural_Matrices;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Matrices;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Matrices;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Matrices;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Recondition_Swap_Homotopies is
 
@@ -16,9 +24,17 @@ package Recondition_Swap_Homotopies is
 --   is then reconditioned so that x(r+1,s+1) equals one.
 --   One linear equations with random coefficients is added to the
 --   system to select one affine patch in the homogenized problem.
+--   Every procedure/function appears in three precisions,
+--   for double, double double, and quad double.
 
   procedure Insert_One_Variable
               ( t : in out Standard_Complex_Polynomials.Term;
+                k : in integer32 );
+  procedure Insert_One_Variable
+              ( t : in out DoblDobl_Complex_Polynomials.Term;
+                k : in integer32 );
+  procedure Insert_One_Variable
+              ( t : in out QuadDobl_Complex_Polynomials.Term;
                 k : in integer32 );
 
   -- DESCRIPTION :
@@ -31,6 +47,12 @@ package Recondition_Swap_Homotopies is
   procedure Remove_One_Variable
               ( t : in out Standard_Complex_Polynomials.Term;
                 k : in integer32 );
+  procedure Remove_One_Variable
+              ( t : in out DoblDobl_Complex_Polynomials.Term;
+                k : in integer32 );
+  procedure Remove_One_Variable
+              ( t : in out QuadDobl_Complex_Polynomials.Term;
+                k : in integer32 );
 
   -- DESCRIPTION :
   --   Removes the k-th variable from the term t.
@@ -38,6 +60,12 @@ package Recondition_Swap_Homotopies is
 
   procedure Insert_One_Variable
               ( p : in out Standard_Complex_Polynomials.Poly;
+                k : in integer32 );
+  procedure Insert_One_Variable
+              ( p : in out DoblDobl_Complex_Polynomials.Poly;
+                k : in integer32 );
+  procedure Insert_One_Variable
+              ( p : in out QuadDobl_Complex_Polynomials.Poly;
                 k : in integer32 );
 
   -- DESCRIPTION :
@@ -48,6 +76,12 @@ package Recondition_Swap_Homotopies is
   procedure Remove_One_Variable
               ( p : in out Standard_Complex_Polynomials.Poly;
                 k : in integer32 );
+  procedure Remove_One_Variable
+              ( p : in out DoblDobl_Complex_Polynomials.Poly;
+                k : in integer32 );
+  procedure Remove_One_Variable
+              ( p : in out QuadDobl_Complex_Polynomials.Poly;
+                k : in integer32 );
 
   -- DESCRIPTION :
   --   Removes the k-th variable from the polynomal p.
@@ -55,6 +89,12 @@ package Recondition_Swap_Homotopies is
 
   procedure Insert_One_Variable
               ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                k : in integer32 );
+  procedure Insert_One_Variable
+              ( x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
+                k : in integer32 );
+  procedure Insert_One_Variable
+              ( x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
                 k : in integer32 );
 
   -- DESCRIPTION :
@@ -68,6 +108,12 @@ package Recondition_Swap_Homotopies is
   procedure Remove_One_Variable
               ( x : in out Standard_Complex_Poly_Matrices.Matrix;
                 k : in integer32 );
+  procedure Remove_One_Variable
+              ( x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
+                k : in integer32 );
+  procedure Remove_One_Variable
+              ( x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
+                k : in integer32 );
 
   -- DESCRIPTION :
   --   Removes the variable with index k from all polynomials in x.
@@ -75,6 +121,12 @@ package Recondition_Swap_Homotopies is
 
   procedure Insert_Variable_Pivot
               ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                i,j,k : in integer32 );
+  procedure Insert_Variable_Pivot
+              ( x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
+                i,j,k : in integer32 );
+  procedure Insert_Variable_Pivot
+              ( x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
                 i,j,k : in integer32 );
 
   -- DESCRIPTION :
@@ -85,6 +137,14 @@ package Recondition_Swap_Homotopies is
 
   procedure Recondition
               ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                dim,s : in integer32 );
+  procedure Recondition
+              ( x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                dim,s : in integer32 );
+  procedure Recondition
+              ( x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
                 locmap : in Standard_Natural_Matrices.Matrix;
                 dim,s : in integer32 );
 
@@ -107,6 +167,14 @@ package Recondition_Swap_Homotopies is
               ( x : Standard_Complex_Poly_Matrices.Matrix;
                 s : integer32 )
               return Standard_Complex_Polynomials.Poly;
+  function Random_Linear_Equation
+              ( x : DoblDobl_Complex_Poly_Matrices.Matrix;
+                s : integer32 )
+              return DoblDobl_Complex_Polynomials.Poly;
+  function Random_Linear_Equation
+              ( x : QuadDobl_Complex_Poly_Matrices.Matrix;
+                s : integer32 )
+              return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns a random linear polynomial with the polynomials in x,
@@ -116,6 +184,12 @@ package Recondition_Swap_Homotopies is
 
   procedure Set_Exponent_to_Zero
               ( p : in out Standard_Complex_Polynomials.Poly;
+                k : in integer32 );
+  procedure Set_Exponent_to_Zero
+              ( p : in out DoblDobl_Complex_Polynomials.Poly;
+                k : in integer32 );
+  procedure Set_Exponent_to_Zero
+              ( p : in out QuadDobl_Complex_Polynomials.Poly;
                 k : in integer32 );
 
   -- DESCRIPTION :
@@ -127,6 +201,10 @@ package Recondition_Swap_Homotopies is
 
   procedure Add_Random_Constant
               ( p : in out Standard_Complex_Polynomials.Poly );
+  procedure Add_Random_Constant
+              ( p : in out DoblDobl_Complex_Polynomials.Poly );
+  procedure Add_Random_Constant
+              ( p : in out QuadDobl_Complex_Polynomials.Poly );
 
   -- DESCRIPTION :
   --   Adds a random complex constant to the polynomial p.
@@ -137,6 +215,14 @@ package Recondition_Swap_Homotopies is
              ( x : Standard_Complex_Poly_Matrices.Matrix;
                s,t : integer32 )
              return Standard_Complex_Polynomials.Poly;
+  function Recondition_Target_Equation
+             ( x : DoblDobl_Complex_Poly_Matrices.Matrix;
+               s,t : integer32 )
+             return DoblDobl_Complex_Polynomials.Poly;
+  function Recondition_Target_Equation
+             ( x : QuadDobl_Complex_Poly_Matrices.Matrix;
+               s,t : integer32 )
+             return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns a random linear equation to recondition the columns
@@ -146,6 +232,12 @@ package Recondition_Swap_Homotopies is
   function Recondition_Start_Equation
              ( n,k : integer32 )
              return Standard_Complex_Polynomials.Poly;
+  function Recondition_Start_Equation
+             ( n,k : integer32 )
+             return DoblDobl_Complex_Polynomials.Poly;
+  function Recondition_Start_Equation
+             ( n,k : integer32 )
+             return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the start equation in the reconditioned swap homotopy,
@@ -156,6 +248,14 @@ package Recondition_Swap_Homotopies is
              ( x : Standard_Complex_Poly_Matrices.Matrix;
                s,t,k : integer32 )
              return Standard_Complex_Polynomials.Poly;
+  function Recondition_Equation
+             ( x : DoblDobl_Complex_Poly_Matrices.Matrix;
+               s,t,k : integer32 )
+             return DoblDobl_Complex_Polynomials.Poly;
+  function Recondition_Equation
+             ( x : QuadDobl_Complex_Poly_Matrices.Matrix;
+               s,t,k : integer32 )
+             return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the added linear equation in the reconditioned homotopy.
@@ -172,6 +272,16 @@ package Recondition_Swap_Homotopies is
                locmap : Standard_Natural_Matrices.Matrix;
                xp : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Vectors.Vector;
+  function Recondition_Solution_Vector
+             ( x : DoblDobl_Complex_Vectors.Vector; k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : DoblDobl_Complex_Poly_Matrices.Matrix )
+             return DoblDobl_Complex_Vectors.Vector;
+  function Recondition_Solution_Vector
+             ( x : QuadDobl_Complex_Vectors.Vector; k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : QuadDobl_Complex_Poly_Matrices.Matrix )
+             return QuadDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns the scaled solution vector where every entry in x,
@@ -189,6 +299,18 @@ package Recondition_Swap_Homotopies is
                locmap : Standard_Natural_Matrices.Matrix;
                xp : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Solutions.Solution;
+  function Recondition_Solution
+             ( sol : DoblDobl_Complex_Solutions.Solution;
+               k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : DoblDobl_Complex_Poly_Matrices.Matrix )
+             return DoblDobl_Complex_Solutions.Solution;
+  function Recondition_Solution
+             ( sol : QuadDobl_Complex_Solutions.Solution;
+               k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : QuadDobl_Complex_Poly_Matrices.Matrix )
+             return QuadDobl_Complex_Solutions.Solution;
 
   -- DESCRIPTION :
   --   Returns a solution with the same data as sol, but with its
@@ -200,6 +322,18 @@ package Recondition_Swap_Homotopies is
                locmap : Standard_Natural_Matrices.Matrix;
                xp : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Solutions.Solution_List;
+  function Recondition_Solutions
+             ( sols : DoblDobl_Complex_Solutions.Solution_List;
+               k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : DoblDobl_Complex_Poly_Matrices.Matrix )
+             return DoblDobl_Complex_Solutions.Solution_List;
+  function Recondition_Solutions
+             ( sols : QuadDobl_Complex_Solutions.Solution_List;
+               k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : QuadDobl_Complex_Poly_Matrices.Matrix )
+             return QuadDobl_Complex_Solutions.Solution_List;
 
   -- DESCRIPTION :
   --   The list on return has all solution vectors scaled with
@@ -210,6 +344,16 @@ package Recondition_Swap_Homotopies is
                locmap : Standard_Natural_Matrices.Matrix;
                xp : Standard_Complex_Poly_Matrices.Matrix; pivot : integer32 )
              return Standard_Complex_Vectors.Vector;
+  function Rescale_Solution_Vector
+             ( x : DoblDobl_Complex_Vectors.Vector; s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : DoblDobl_Complex_Poly_Matrices.Matrix; pivot : integer32 )
+             return DoblDobl_Complex_Vectors.Vector;
+  function Rescale_Solution_Vector
+             ( x : QuadDobl_Complex_Vectors.Vector; s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : QuadDobl_Complex_Poly_Matrices.Matrix; pivot : integer32 )
+             return QuadDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   The vector on return has range x'first..x'last-1 and the 
@@ -224,6 +368,16 @@ package Recondition_Swap_Homotopies is
                locmap : Standard_Natural_Matrices.Matrix;
                xp : Standard_Complex_Poly_Matrices.Matrix; pivot : integer32 )
              return Standard_Complex_Solutions.Solution;
+  function Rescale_Solution
+             ( sol : DoblDobl_Complex_Solutions.Solution; s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : DoblDobl_Complex_Poly_Matrices.Matrix; pivot : integer32 )
+             return DoblDobl_Complex_Solutions.Solution;
+  function Rescale_Solution
+             ( sol : QuadDobl_Complex_Solutions.Solution; s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : QuadDobl_Complex_Poly_Matrices.Matrix; pivot : integer32 )
+             return QuadDobl_Complex_Solutions.Solution;
 
   -- DESCRIPTION :
   --   Returns the solution sol with a rescaled solution vector,
@@ -237,6 +391,18 @@ package Recondition_Swap_Homotopies is
                locmap : Standard_Natural_Matrices.Matrix;
                xp : Standard_Complex_Poly_Matrices.Matrix; pivot : integer32 )
              return Standard_Complex_Solutions.Solution_List;
+  function Rescale_Solutions
+             ( sols : DoblDobl_Complex_Solutions.Solution_List;
+               s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : DoblDobl_Complex_Poly_Matrices.Matrix; pivot : integer32 )
+             return DoblDobl_Complex_Solutions.Solution_List;
+  function Rescale_Solutions
+             ( sols : QuadDobl_Complex_Solutions.Solution_List;
+               s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : QuadDobl_Complex_Poly_Matrices.Matrix; pivot : integer32 )
+             return QuadDobl_Complex_Solutions.Solution_List;
 
   -- DESCRIPTION :
   --   Returns the list of rescaled solutions, rescaled sols,

@@ -4,6 +4,7 @@ Fri 30 Dec 2016 : added Append procedure to setup_flag_homotopies.
   Position procedure added to checker_localization_patterns.
   The recondition and scaling procedures in recondition_swap_homotopies
   need more arguments, adjusted calls in moving_flag_continuation.adb.
+  Double double and quad double versions in recondition_swap_homotopies.
 
 Thu 29 Dec 2016 : added reconditioning of solution vectors to
   recondition_swap_homotopies, moved the test out of checker_homotopies.adb
