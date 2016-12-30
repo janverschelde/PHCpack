@@ -6,8 +6,8 @@ with Checker_Localization_Patterns;
 package body Recondition_Swap_Homotopies is
 
   procedure Insert_One_Variable
-              ( k : in integer32;
-                t : in out Standard_Complex_Polynomials.Term ) is
+              ( t : in out Standard_Complex_Polynomials.Term;
+                k : in integer32 ) is
   
     newdeg : Standard_Natural_Vectors.Vector(t.dg'first..t.dg'last+1);
 
@@ -23,15 +23,32 @@ package body Recondition_Swap_Homotopies is
     t.dg := new Standard_Natural_Vectors.Vector'(newdeg);
   end Insert_One_Variable;
 
+  procedure Remove_One_Variable
+              ( t : in out Standard_Complex_Polynomials.Term;
+                k : in integer32 ) is
+
+    newdeg : Standard_Natural_Vectors.Vector(t.dg'first..t.dg'last-1);
+
+  begin
+    for i in t.dg'first..(k-1) loop
+      newdeg(i) := t.dg(i);
+    end loop;
+    for i in (k+1)..t.dg'last loop
+      newdeg(i-1) := t.dg(i);
+    end loop;
+    Standard_Complex_Polynomials.Clear(t.dg);
+    t.dg := new Standard_Natural_Vectors.Vector'(newdeg);
+  end Remove_One_Variable;
+
   procedure Insert_One_Variable
-              ( k : in integer32;
-                p : in out Standard_Complex_Polynomials.Poly ) is
+              ( p : in out Standard_Complex_Polynomials.Poly;
+                k : in integer32 ) is
 
     use Standard_Complex_Polynomials;
 
     procedure Insert_to_Term ( t : in out Term; c : out boolean ) is
     begin
-      Insert_One_Variable(k,t);
+      Insert_One_Variable(t,k);
       c := true;
     end Insert_to_Term;
     procedure Insert_to_Terms is new Changing_Iterator(Insert_to_Term);
@@ -42,16 +59,46 @@ package body Recondition_Swap_Homotopies is
     end if;
   end Insert_One_Variable;
 
+  procedure Remove_One_Variable
+              ( p : in out Standard_Complex_Polynomials.Poly;
+                k : in integer32 ) is
+
+    use Standard_Complex_Polynomials;
+
+    procedure Remove_from_Term ( t : in out Term; c : out boolean ) is
+    begin
+      Remove_One_Variable(t,k);
+      c := true;
+    end Remove_from_Term;
+    procedure Remove_from_Terms is new Changing_Iterator(Remove_from_Term);
+
+  begin
+    if p /= Null_Poly
+     then Remove_from_Terms(p);
+    end if;
+  end Remove_One_Variable;
+
   procedure Insert_One_Variable
-              ( k : in integer32;
-                x : in out Standard_Complex_Poly_Matrices.Matrix ) is
+              ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                k : in integer32 ) is
   begin
     for i in x'range(1) loop
       for j in x'range(2) loop
-        Insert_One_Variable(k,x(i,j));
+        Insert_One_Variable(x(i,j),k);
       end loop;
     end loop;
   end Insert_One_Variable;
+
+  procedure Remove_One_Variable
+              ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                k : in integer32 ) is
+  begin
+    for i in x'range(1) loop
+      for j in x'range(2) loop
+        Remove_One_Variable(x(i,j),k);
+      end loop;
+    end loop;
+  end Remove_One_Variable;
 
   procedure Insert_Variable_Pivot
               ( x : in out Standard_Complex_Poly_Matrices.Matrix;
@@ -81,7 +128,7 @@ package body Recondition_Swap_Homotopies is
            := Checker_Localization_Patterns.Row_of_Pivot(locmap,s+1);
 
   begin
-    Insert_One_Variable(dim+1,x);
+    Insert_One_Variable(x,dim+1);
     Insert_Variable_Pivot(x,rowpiv,s+1,dim+1);
   end Recondition;
 
@@ -99,11 +146,12 @@ package body Recondition_Swap_Homotopies is
 
   begin
     for i in x'range(1) loop
-      if x(i,s) /= Null_Poly then
-        rnd := Standard_Random_Numbers.Random1;     
-        acc := rnd*x(i,s);
-        Add(res,acc); Clear(acc);
-      end if;
+      -- avoid nonlinear terms!
+      --if x(i,s) /= Null_Poly then
+      --  rnd := Standard_Random_Numbers.Random1;     
+      --  acc := rnd*x(i,s);
+      --  Add(res,acc); Clear(acc);
+      --end if;
       if x(i,s+1) /= Null_Poly then
         rnd := Standard_Random_Numbers.Random1;     
         acc := rnd*x(i,s+1);
@@ -203,41 +251,60 @@ package body Recondition_Swap_Homotopies is
   end Recondition_Equation;
 
   function Recondition_Solution_Vector
-             ( x : Standard_Complex_Vectors.Vector; k : integer32 )
+             ( x : Standard_Complex_Vectors.Vector; k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Vectors.Vector is
 
     use Standard_Complex_Numbers;
+    use Standard_Complex_Polynomials;
 
     res : Standard_Complex_Vectors.Vector(x'first..x'last+1);
     fac : constant Complex_Number := 1.0/x(k);
+    r,c : integer32;
 
   begin
     for i in x'range loop
-      res(i) := fac*x(i);
+      Checker_Localization_Patterns.Position(locmap,i,r,c);
+      if c = s+1 then
+        res(i) := fac*x(i);
+      elsif c = s then
+        if Degree(xp(r,c),k) = 0   -- x(ctr+1,s+1) does not occur
+         then res(i) := fac*x(i);
+         else res(i) := x(i);
+        end if;
+      else
+        res(i) := x(i);
+      end if;
     end loop;
     res(res'last) := fac;
     return res;
   end Recondition_Solution_Vector;
 
   function Recondition_Solution
-             ( s : Standard_Complex_Solutions.Solution; k : integer32 )
+             ( sol : Standard_Complex_Solutions.Solution;
+               k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Solutions.Solution is
 
-    res : Standard_Complex_Solutions.Solution(s.n+1);
+    res : Standard_Complex_Solutions.Solution(sol.n+1);
 
   begin
-    res.t := s.t;
-    res.m := s.m;
-    res.v := Recondition_Solution_Vector(s.v,k);
-    res.err := s.err;
-    res.rco := s.rco;
-    res.res := s.res;
+    res.t := sol.t;
+    res.m := sol.m;
+    res.v := Recondition_Solution_Vector(sol.v,k,s,locmap,xp);
+    res.err := sol.err;
+    res.rco := sol.rco;
+    res.res := sol.res;
     return res;
   end Recondition_Solution;
 
   function Recondition_Solutions
              ( sols : Standard_Complex_Solutions.Solution_List;
-               k : integer32 )
+               k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Solutions.Solution_List is
 
     use Standard_Complex_Solutions;
@@ -249,45 +316,64 @@ package body Recondition_Swap_Homotopies is
   begin
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
-      Append(res,res_last,Recondition_Solution(ls.all,k));
+      Append(res,res_last,Recondition_Solution(ls.all,k,s,locmap,xp));
       tmp := Tail_Of(tmp);
     end loop;
     return res;
   end Recondition_Solutions;
 
   function Rescale_Solution_Vector
-             ( x : Standard_Complex_Vectors.Vector )
+             ( x : Standard_Complex_Vectors.Vector; s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix; pivot : integer32 )
              return Standard_Complex_Vectors.Vector is
 
     res : Standard_Complex_Vectors.Vector(x'first..x'last-1);
+    r,c : integer32;
 
     use Standard_Complex_Numbers;
+    use Standard_Complex_Polynomials;
 
   begin
     for k in res'range loop
-      res(k) := x(k)/x(x'last);
+      Checker_Localization_Patterns.Position(locmap,k,r,c);
+      if c = s+1 then
+        res(k) := x(k)/x(x'last);
+      elsif c = s then
+        if Degree(xp(r,c),k) = 0       -- x(ctr+1,s+1) does not occur
+         then res(k) := x(k)/x(x'last);
+         else res(k) := x(k);
+        end if;
+      else
+        res(k) := x(k);
+      end if;
     end loop;
     return res;
   end Rescale_Solution_Vector;
 
   function Rescale_Solution
-             ( s : Standard_Complex_Solutions.Solution )
+             ( sol : Standard_Complex_Solutions.Solution; s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix; pivot : integer32 )
              return Standard_Complex_Solutions.Solution is
 
-    res : Standard_Complex_Solutions.Solution(s.n-1);
+    res : Standard_Complex_Solutions.Solution(sol.n-1);
 
   begin
-    res.t := s.t;
-    res.m := s.m;
-    res.v := Rescale_Solution_Vector(s.v);
-    res.err := s.err;
-    res.rco := s.rco;
-    res.res := s.res;
+    res.t := sol.t;
+    res.m := sol.m;
+    res.v := Rescale_Solution_Vector(sol.v,s,locmap,xp,pivot);
+    res.err := sol.err;
+    res.rco := sol.rco;
+    res.res := sol.res;
     return res;
   end Rescale_Solution;
 
   function Rescale_Solutions
-             ( sols : Standard_Complex_Solutions.Solution_List )
+             ( sols : Standard_Complex_Solutions.Solution_List;
+               s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix; pivot : integer32 )
              return Standard_Complex_Solutions.Solution_List is
 
     use Standard_Complex_Solutions;
@@ -299,7 +385,7 @@ package body Recondition_Swap_Homotopies is
   begin
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
-      Append(res,res_last,Rescale_Solution(ls.all));
+      Append(res,res_last,Rescale_Solution(ls.all,s,locmap,xp,pivot));
       tmp := Tail_Of(tmp);
     end loop;
     return res;

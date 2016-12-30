@@ -194,6 +194,25 @@ package body Checker_Localization_Patterns is
     return res;
   end Rank;
 
+  procedure Position ( lp : in Standard_Natural_Matrices.Matrix;
+                       rnk : in integer32; row,col : out integer32 ) is
+
+    cnt : integer32 := 0;
+
+  begin
+    for i in lp'range(1) loop
+      for j in lp'range(2) loop
+        if lp(i,j) = 2 then
+          cnt := cnt + 1;
+          if cnt = rnk
+           then row := i; col := j; return;
+          end if;
+        end if;
+      end loop;
+    end loop;
+    row := 0; col := 0;
+  end Position;
+
   function Permute_Index
               ( p,q : Standard_Natural_Matrices.Matrix ) return integer32 is
 

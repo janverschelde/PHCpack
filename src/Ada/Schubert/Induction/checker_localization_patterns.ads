@@ -96,6 +96,14 @@ package Checker_Localization_Patterns is
   --   The rank of the variable x(i,j) is its order in the matrix,
   --   when flattened to a vector in row wise fashion.
 
+  procedure Position ( lp : in Standard_Natural_Matrices.Matrix;
+                       rnk : in integer32; row,col : out integer32 );
+
+  -- DESCRIPTION :
+  --   Given the rank of a variable, returns its row and column index
+  --   in the localization pattern lp.  If rnk = Rank(lp,i,j),
+  --   then Position(lp,rnk,row,col) will return row = i and col = j.
+
   function Permute_Index
               ( p,q : Standard_Natural_Matrices.Matrix ) return integer32;
 

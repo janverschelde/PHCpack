@@ -18,8 +18,8 @@ package Recondition_Swap_Homotopies is
 --   system to select one affine patch in the homogenized problem.
 
   procedure Insert_One_Variable
-              ( k : in integer32;
-                t : in out Standard_Complex_Polynomials.Term );
+              ( t : in out Standard_Complex_Polynomials.Term;
+                k : in integer32 );
 
   -- DESCRIPTION :
   --   Inserts one variable at position k into the term t,
@@ -28,18 +28,34 @@ package Recondition_Swap_Homotopies is
 
   -- REQUIRED : k <= t.dg'last.
 
+  procedure Remove_One_Variable
+              ( t : in out Standard_Complex_Polynomials.Term;
+                k : in integer32 );
+
+  -- DESCRIPTION :
+  --   Removes the k-th variable from the term t.
+  --   This is the inverse of Insert_One_Variable(t,k).
+
   procedure Insert_One_Variable
-              ( k : in integer32;
-                p : in out Standard_Complex_Polynomials.Poly );
+              ( p : in out Standard_Complex_Polynomials.Poly;
+                k : in integer32 );
 
   -- DESCRIPTION :
   --   Applies Insert_One_Variable(k,t) to all terms t of p.
 
   -- REQUIRED : k <= Number_of_Unknowns(p).
 
+  procedure Remove_One_Variable
+              ( p : in out Standard_Complex_Polynomials.Poly;
+                k : in integer32 );
+
+  -- DESCRIPTION :
+  --   Removes the k-th variable from the polynomal p.
+  --   This is the inverse of Insert_One_Variable(p,k).
+
   procedure Insert_One_Variable
-              ( k : in integer32;
-                x : in out Standard_Complex_Poly_Matrices.Matrix );
+              ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                k : in integer32 );
 
   -- DESCRIPTION :
   --   Inserts one extra variable to each non null entry in X,
@@ -48,6 +64,14 @@ package Recondition_Swap_Homotopies is
   --   The exponent of the extra variable equals zero.
 
   -- REQUIRED : k <= number of variables in each non null entry of X.
+
+  procedure Remove_One_Variable
+              ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                k : in integer32 );
+
+  -- DESCRIPTION :
+  --   Removes the variable with index k from all polynomials in x.
+  --   This is the inverse of Insert_One_Variable(x,k).
 
   procedure Insert_Variable_Pivot
               ( x : in out Standard_Complex_Poly_Matrices.Matrix;
@@ -144,27 +168,37 @@ package Recondition_Swap_Homotopies is
   --   k       index of the variable x(r+1,s+1).
 
   function Recondition_Solution_Vector
-             ( x : Standard_Complex_Vectors.Vector; k : integer32 )
+             ( x : Standard_Complex_Vectors.Vector; k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
-  --   Returns the scaled solution vector where every entry in x
+  --   Returns the scaled solution vector where every entry in x,
+  --   in columns s and s+1 of the localization pattern locmap,
   --   has been divided by x(k) and 1/x(k) is the last added entry
   --   in the vector on return.
+  --   Variables in column s which are multiplied by the pivot k in xp
+  --   are not divided.
 
   -- REQUIRED : k in x'range and x(k) /= 0.
 
   function Recondition_Solution
-             ( s : Standard_Complex_Solutions.Solution; k : integer32 )
+             ( sol : Standard_Complex_Solutions.Solution;
+               k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Solutions.Solution;
 
   -- DESCRIPTION :
-  --   Returns a solution with the same data as s, but with its
+  --   Returns a solution with the same data as sol, but with its
   --   solution vector scaled with respect to its k-th coordinate.
 
   function Recondition_Solutions
              ( sols : Standard_Complex_Solutions.Solution_List;
-               k : integer32 )
+               k,s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Solutions.Solution_List;
 
   -- DESCRIPTION :
@@ -172,29 +206,40 @@ package Recondition_Swap_Homotopies is
   --   respect to the k-th coordinate of the vector.
 
   function Rescale_Solution_Vector
-             ( x : Standard_Complex_Vectors.Vector )
+             ( x : Standard_Complex_Vectors.Vector; s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix; pivot : integer32 )
              return Standard_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   The vector on return has range x'first..x'last-1 and the 
-  --   entries of x divided by the last coordinate in x.
+  --   entries of x divided by the last coordinate in x,
+  --   but only those entries of x which correspond to columns s and s+1
+  --   with respect to the localization pattern in locmap.
 
   -- REQUIRED : x(x'last) /= 0.
 
   function Rescale_Solution
-             ( s : Standard_Complex_Solutions.Solution )
+             ( sol : Standard_Complex_Solutions.Solution; s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix; pivot : integer32 )
              return Standard_Complex_Solutions.Solution;
 
   -- DESCRIPTION :
-  --   Returns the solution s with a rescaled solution vector.
+  --   Returns the solution sol with a rescaled solution vector,
+  --   with respect to the swap column s in the localization pattern.
 
-  -- REQUIRED : s.v(s.v'last) /= 0.
+  -- REQUIRED : sol.v(sol.v'last) /= 0.
 
   function Rescale_Solutions
-             ( sols : Standard_Complex_Solutions.Solution_List )
+             ( sols : Standard_Complex_Solutions.Solution_List;
+               s : integer32;
+               locmap : Standard_Natural_Matrices.Matrix;
+               xp : Standard_Complex_Poly_Matrices.Matrix; pivot : integer32 )
              return Standard_Complex_Solutions.Solution_List;
 
   -- DESCRIPTION :
-  --   Returns the list of rescaled solutions, rescaled sols.
+  --   Returns the list of rescaled solutions, rescaled sols,
+  --   with respect to the swap column s in the localization pattern.
 
 end Recondition_Swap_Homotopies;

@@ -926,6 +926,21 @@ package Checker_Homotopies is
   -- ON RETURN :
   --   x        initialized coordinates except columns s and s+1.
 
+  function Is_Zone_A_Empty
+             ( locmap : Standard_Natural_Matrices.Matrix;
+               p : Standard_Natural_Vectors.Vector;
+               r,s,dc : integer32 ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if zone A is empty, returns false otherwise.
+
+  -- ON ENTRY :
+  --   locmap   Checker_Localization_Patterns.Column_Pattern(p,rows,cols);
+  --   p        permutation defines current position of black checkers;
+  --   r        critical row, row of the descending black checker;
+  --   s        columns s and s+1 in x are swapped;
+  --   dc       index of the descending black checker in specializing poset.
+
   procedure First_Swap_Plane
               ( x : in out Standard_Complex_Poly_Matrices.Matrix;
                 r,big_r,dc,s : in integer32;

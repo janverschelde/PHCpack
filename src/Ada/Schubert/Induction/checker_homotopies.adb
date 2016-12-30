@@ -2456,6 +2456,25 @@ package body Checker_Homotopies is
     end loop;
   end Initialize_Moving_Plane;
 
+  function Is_Zone_A_Empty
+             ( locmap : Standard_Natural_Matrices.Matrix;
+               p : Standard_Natural_Vectors.Vector;
+               r,s,dc : integer32 ) return boolean is
+
+    res : boolean := true;
+
+  begin
+    for i in p'range loop
+      if integer32(p(i)) < r then
+       -- if p'last+1-i > p'last-dc+1
+        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
+         then res := false; exit;
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Is_Zone_A_Empty;
+
   procedure First_Swap_Plane
               ( x : in out Standard_Complex_Poly_Matrices.Matrix;
                 r,big_r,dc,s : in integer32;
@@ -2471,20 +2490,11 @@ package body Checker_Homotopies is
     piv : constant integer32
         := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     t : Term;
-    empty_zone_A : boolean;
+    empty_zone_A : constant boolean := Is_Zone_A_Empty(locmap,p,r,s,dc);
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
     t.cf := Create(1.0);
-    empty_zone_A := true;
-    for i in p'range loop
-      if integer32(p(i)) < r then
-       -- if p'last+1-i > p'last-dc+1
-        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
-         then empty_zone_A := false; exit;
-        end if;
-      end if;
-    end loop;
     if not empty_zone_A
      then t.dg(piv) := 1;   -- multiply by y(r+1,s+1)
     end if;
@@ -2563,20 +2573,11 @@ package body Checker_Homotopies is
     piv : constant integer32
         := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     t : Term;
-    empty_zone_A : boolean;
+    empty_zone_A : constant boolean := Is_Zone_A_Empty(locmap,p,r,s,dc);
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
     t.cf := Create(integer(1));
-    empty_zone_A := true;
-    for i in p'range loop
-      if integer32(p(i)) < r then
-       -- if p'last+1-i > p'last-dc+1
-        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
-         then empty_zone_A := false; exit;
-        end if;
-      end if;
-    end loop;
     if not empty_zone_A
      then t.dg(piv) := 1;   -- multiply by y(r+1,s+1)
     end if;
@@ -2655,20 +2656,11 @@ package body Checker_Homotopies is
     piv : constant integer32
         := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     t : Term;
-    empty_zone_A : boolean;
+    empty_zone_A : constant boolean := Is_Zone_A_Empty(locmap,p,r,s,dc);
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
     t.cf := Create(integer(1));
-    empty_zone_A := true;
-    for i in p'range loop
-      if integer32(p(i)) < r then
-       -- if p'last+1-i > p'last-dc+1
-        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
-         then empty_zone_A := false; exit;
-        end if;
-      end if;
-    end loop;
     if not empty_zone_A
      then t.dg(piv) := 1;   -- multiply by y(r+1,s+1)
     end if;
@@ -2748,7 +2740,7 @@ package body Checker_Homotopies is
     piv : constant integer32
         := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     t : Term;
-    empty_zone_A : boolean;
+    empty_zone_A : constant boolean := Is_Zone_A_Empty(locmap,p,r,s,dc);
     failed : boolean := false;
 
   begin
@@ -2757,14 +2749,6 @@ package body Checker_Homotopies is
     put(file,"np1 = "); put(file,np1,1); new_line(file);
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
     t.cf := Create(1.0);
-    empty_zone_A := true;
-    for i in p'range loop
-      if integer32(p(i)) < r then
-        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
-         then empty_zone_A := false; exit;
-        end if;
-      end if;
-    end loop;
     if not empty_zone_A then
       put_line(file,"empty_zone_A is false");
       t.dg(piv) := 1;   -- multiply by y(r+1,s+1)
@@ -2881,7 +2865,7 @@ package body Checker_Homotopies is
     piv : constant integer32
         := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     t : Term;
-    empty_zone_A : boolean;
+    empty_zone_A : constant boolean := Is_Zone_A_Empty(locmap,p,r,s,dc);
 
   begin
    -- put_line(file,"the localization map : "); put(file,locmap);
@@ -2889,15 +2873,6 @@ package body Checker_Homotopies is
     put(file,"np1 = "); put(file,np1,1); new_line(file);
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
     t.cf := Create(integer(1));
-    empty_zone_A := true;
-    for i in p'range loop
-      if integer32(p(i)) < r then
-       -- if p'last+1-i > p'last-dc+1
-        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
-         then empty_zone_A := false; exit;
-        end if;
-      end if;
-    end loop;
     if not empty_zone_A then
       put_line(file,"empty_zone_A is false");
       t.dg(piv) := 1;   -- multiply by y(r+1,s+1)
@@ -3003,7 +2978,7 @@ package body Checker_Homotopies is
     piv : constant integer32
         := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     t : Term;
-    empty_zone_A : boolean;
+    empty_zone_A : constant boolean := Is_Zone_A_Empty(locmap,p,r,s,dc);
 
   begin
    -- put_line(file,"the localization map : "); put(file,locmap);
@@ -3011,15 +2986,6 @@ package body Checker_Homotopies is
     put(file,"np1 = "); put(file,np1,1); new_line(file);
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
     t.cf := Create(integer(1));
-    empty_zone_A := true;
-    for i in p'range loop
-      if integer32(p(i)) < r then
-       -- if p'last+1-i > p'last-dc+1
-        if p'last+1-i > p'last-dc+1 and locmap(integer32(p(i)),s+1) = 2
-         then empty_zone_A := false; exit;
-        end if;
-      end if;
-    end loop;
     if not empty_zone_A then
       put_line(file,"empty_zone_A is false");
       t.dg(piv) := 1;   -- multiply by y(r+1,s+1)

@@ -10,7 +10,6 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
-with Standard_Natural_Matrices;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
@@ -19,8 +18,8 @@ with DoblDobl_Complex_Vector_Norms;     use DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;     use QuadDobl_Complex_Vector_Norms;
 with Symbol_Table;
 with Matrix_Indeterminates;
-with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;
+with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Matrices_io;
@@ -2183,75 +2182,75 @@ package body Moving_Flag_Continuation is
   procedure Recondition_Swap_Homotopy
               ( file : in file_type; dim,r,s : in integer32;
                 locmap : in Standard_Natural_Matrices.Matrix;
-                x : in Standard_Complex_Poly_Matrices.Matrix;
-                ls : in Standard_Complex_Solutions.Link_to_Solution ) is
+                x : in out Standard_Complex_Poly_Matrices.Matrix;
+                ls : in out Standard_Complex_Solutions.Link_to_Solution;
+                rlq : out Standard_Complex_Polynomials.Poly;
+                pividx : out integer32 ) is
 
     use Recondition_Swap_Homotopies;
 
-    recondx : Standard_Complex_Poly_Matrices.Matrix(x'range(1),x'range(2));
-    reclinq : Standard_Complex_Polynomials.Poly;
     rowpiv : constant integer32
            := Checker_Localization_Patterns.Row_of_Pivot(locmap,s+1);
     sol : Standard_Complex_Solutions.Solution(ls.n+1);
-    idx : constant integer32
-        := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
 
   begin
     put_line(file,"reconditioning the swap homotopy ...");
+    pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     put(file,"the index of variable x(r+1,s+1) : ");
-    put(file,idx,1); new_line(file);
+    put(file,pividx,1); new_line(file);
     put_line(file,"The polynomial matrix on input :");
     Standard_Complex_Poly_Matrices_io.put(file,x);
-    if idx /= 0 then
-      Standard_Complex_Poly_Matrices.Copy(x,recondx);
-      Recondition(recondx,locmap,dim,s);
+    if pividx /= 0 then
+      Recondition(x,locmap,dim,s);
       Insert_Scaling_Symbol(natural32(rowpiv),natural32(s+1));
       put_line(file,"the polynomial matrix for reconditioning :");
-      Standard_Complex_Poly_Matrices_io.put(file,recondx);
-      reclinq := Recondition_Equation(recondx,s,dim+2,idx);
+      Standard_Complex_Poly_Matrices_io.put(file,x);
+      rlq := Recondition_Equation(x,s,dim+2,pividx);
       put_line(file,"the linear recondition equation :");
-      Standard_Complex_Polynomials_io.put(file,reclinq); new_line(file);
-      sol := Recondition_Solution(ls.all,idx);
+      Standard_Complex_Polynomials_io.put(file,rlq); new_line(file);
+      sol := Recondition_Solution(ls.all,pividx,s,locmap,x);
       put_line(file,"the reconditioned solution :");
       put_vector(file,sol);
+      Standard_Complex_Solutions.Clear(ls);
+      ls := new Standard_Complex_Solutions.Solution'(sol);
     end if;
   end Recondition_Swap_Homotopy;
 
   procedure Recondition_Swap_Homotopy
               ( file : in file_type; dim,r,s : in integer32;
                 locmap : in Standard_Natural_Matrices.Matrix;
-                x : in Standard_Complex_Poly_Matrices.Matrix;
-                sols : in Standard_Complex_Solutions.Solution_List ) is
+                x : in out Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                rlq : out Standard_Complex_Polynomials.Poly;
+                pividx : out integer32 ) is
 
     use Standard_Complex_Solutions;
     use Recondition_Swap_Homotopies;
 
-    recondx : Standard_Complex_Poly_Matrices.Matrix(x'range(1),x'range(2));
-    reclinq : Standard_Complex_Polynomials.Poly;
     rowpiv : constant integer32
            := Checker_Localization_Patterns.Row_of_Pivot(locmap,s+1);
     rcndsols : Standard_Complex_Solutions.Solution_List;
-    idx : constant integer32
-        := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
 
   begin
     put_line(file,"reconditioning the swap homotopy ...");
+    pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     put(file,"the index of variable x(r+1,s+1) : ");
-    put(file,idx,1); new_line(file);
+    put(file,pividx,1); new_line(file);
     put_line(file,"The polynomial matrix on input :");
     Standard_Complex_Poly_Matrices_io.put(file,x);
-    if idx /= 0 then
-      Standard_Complex_Poly_Matrices.Copy(x,recondx);
-      Recondition(recondx,locmap,dim,s);
+    if pividx /= 0 then
+      Recondition(x,locmap,dim,s);
       Insert_Scaling_Symbol(natural32(rowpiv),natural32(s+1));
       put_line(file,"the polynomial matrix for reconditioning :");
-      Standard_Complex_Poly_Matrices_io.put(file,recondx);
-      reclinq := Recondition_Equation(recondx,s,dim+2,idx);
+      Standard_Complex_Poly_Matrices_io.put(file,x);
+      rlq := Recondition_Equation(x,s,dim+2,pividx);
       put_line(file,"the linear recondition equation :");
-      Standard_Complex_Polynomials_io.put(file,reclinq); new_line(file);
-      rcndsols := Recondition_Solutions(sols,idx);
+      Standard_Complex_Polynomials_io.put(file,rlq); new_line(file);
+      rcndsols := Recondition_Solutions(sols,pividx,s,locmap,x);
       put_line(file,"the reconditioned solution list :");
       put(file,Length_Of(rcndsols),natural32(Head_Of(rcndsols).n),rcndsols);
+      Standard_Complex_Solutions.Clear(sols);
+      sols := rcndsols;
     end if;
   end Recondition_Swap_Homotopy;
 
@@ -2276,22 +2275,48 @@ package body Moving_Flag_Continuation is
     dim : constant integer32
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
     gh : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    rlq : Standard_Complex_Polynomials.Poly;
+    pivot : integer32;
 
   begin
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp); 
-    Recondition_Swap_Homotopy(file,dim,ctr,s,locmap,xp,ls);
+    if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
+     then pivot := 0; -- no reconditioning needed
+     else Recondition_Swap_Homotopy(file,dim,ctr,s,locmap,xp,ls,rlq,pivot);
+    end if;
     xpm := Moving_Flag(start_mf,xp);
-   -- put_line(file,"The moving coordinates after multiplication by M :");
-   -- put(file,xpm);
+    if pivot /= 0 then
+      put_line(file,"The moving coordinates after multiplication by M :");
+      Standard_Complex_Poly_Matrices_io.put(file,xpm);
+    end if;
     fail := true;
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    if ind = 0
-     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+    if pivot = 0 then
+      if ind = 0
+       then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+       else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+      end if;
+    else -- pivot /= 0, reconditioned homotopy has one extra variable
+      Setup_Flag_Homotopies.Append(gh,rlq);
+      put_line(file,"The reconditioned swap homotopy :");
+      put_line(file,gh.all);
+      if ind = 0
+       then Track_First_Move(file,dim+1,gh.all,tosqr,tol,ls,fail);
+       else Track_Next_Move(file,dim+1,gh.all,tosqr,tol,ls,fail);
+      end if;
+      declare
+        nls : constant Standard_Complex_Solutions.Solution
+            := Recondition_Swap_Homotopies.Rescale_Solution
+                 (ls.all,s,locmap,xp,pivot);
+      begin
+        Standard_Complex_Solutions.Clear(ls);
+        ls := new Standard_Complex_Solutions.Solution'(nls);
+        Recondition_Swap_Homotopies.Remove_One_Variable(xpm,dim+1);
+      end;
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -2451,20 +2476,46 @@ package body Moving_Flag_Continuation is
     dim : constant integer32
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
     gh : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    rlq : Standard_Complex_Polynomials.Poly;
+    pivot : integer32;
 
   begin
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp); 
-    Recondition_Swap_Homotopy(file,dim,ctr,s,locmap,xp,sols);
+    if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
+     then pivot := 0; -- no reconditioning needed
+     else Recondition_Swap_Homotopy(file,dim,ctr,s,locmap,xp,sols,rlq,pivot);
+    end if;
     xpm := Moving_Flag(start_mf,xp);
-   -- put_line(file,"The moving coordinates after multiplication by M :");
-   -- put(file,xpm);
+    if pivot /= 0 then
+      put_line(file,"The moving coordinates after multiplication by M :");
+      Standard_Complex_Poly_Matrices_io.put(file,xpm);
+    end if;
     fail := true;
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
+    if pivot = 0 then
+      Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
+    else -- pivot /= 0, reconditioned homotopy has one extra variable
+      Setup_Flag_Homotopies.Append(gh,rlq);
+      put_line(file,"The reconditioned swap homotopy :");
+      put_line(file,gh.all);
+      Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail);
+      declare
+        rsols : Standard_Complex_Solutions.Solution_List
+              := Recondition_Swap_Homotopies.Rescale_Solutions
+                   (sols,s,locmap,xp,pivot);
+        use Standard_Complex_Solutions;
+      begin
+        Standard_Complex_Solutions.Clear(sols);
+        sols := rsols;
+        put_line(file,"The rescaled solutions :");
+        put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+        Recondition_Swap_Homotopies.Remove_One_Variable(xpm,dim+1);
+      end;
+    end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
