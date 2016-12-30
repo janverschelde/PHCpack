@@ -16,8 +16,12 @@ with QuadDobl_Complex_VecMats;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Matrices;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Matrices;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Matrices;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -697,11 +701,26 @@ package Moving_Flag_Continuation is
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
                 rlq : out Standard_Complex_Polynomials.Poly;
                 pividx : out integer32 );
+  procedure Recondition_Swap_Homotopy
+              ( file : in file_type; dim,r,s : in integer32;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
+                ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
+                rlq : out DoblDobl_Complex_Polynomials.Poly;
+                pividx : out integer32 );
+  procedure Recondition_Swap_Homotopy
+              ( file : in file_type; dim,r,s : in integer32;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
+                ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
+                rlq : out QuadDobl_Complex_Polynomials.Poly;
+                pividx : out integer32 );
 
   -- DESCRIPTION :
   --   The variable k-plane x may have no pivot in column s in case of
   --   a swap homotopy which may cause that column to slide to zero.
   --   This procedure reconditions the swap homotopy for one start solution.
+  --   Output is written to file.
 
   -- ON ENTRY :
   --   file     must be opened for writing output;
@@ -721,17 +740,76 @@ package Moving_Flag_Continuation is
   --            index of x(r+1,s+1); if zero, then no recondition happened.
 
   procedure Recondition_Swap_Homotopy
-              ( file : in file_type; dim,r,s : in integer32;
+              ( dim,r,s : in integer32;
                 locmap : in Standard_Natural_Matrices.Matrix;
                 x : in out Standard_Complex_Poly_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 rlq : out Standard_Complex_Polynomials.Poly;
+                pividx : out integer32 );
+  procedure Recondition_Swap_Homotopy
+              ( dim,r,s : in integer32;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                rlq : out DoblDobl_Complex_Polynomials.Poly;
+                pividx : out integer32 );
+  procedure Recondition_Swap_Homotopy
+              ( dim,r,s : in integer32;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                rlq : out QuadDobl_Complex_Polynomials.Poly;
                 pividx : out integer32 );
 
   -- DESCRIPTION :
   --   The variable k-plane x may have no pivot in column s in case of
   --   a swap homotopy which may cause that column to slide to zero.
   --   This procedure reconditions the swap homotopy for many start solutions.
+  --   No output is written.
+
+  -- ON ENTRY :
+  --   dim      number of free variables in the localization map, locmap;
+  --   r        index of the critical column;
+  --   s        the swap column;
+  --   locmap   localization pattern for x;
+  --   x        variable coordinates for the solution k-plane;
+  --   ls       start solutions.
+
+  -- ON RETURN :
+  --   x        matrix x with one scaling variable added if pividx /= 0;
+  --   ls       reconditioned start solution if pividx /= 0;
+  --   rlq      moving linear equation added for the extra scaling variable,
+  --            is not null if pividx /= 0;
+  --   pividx   index of the pivot in the swap column, which equals the
+  --            index of x(r+1,s+1); if zero, then no recondition happened.
+
+  procedure Recondition_Swap_Homotopy
+              ( file : in file_type; dim,r,s : in integer32;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                x : in out Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                rlq : out Standard_Complex_Polynomials.Poly;
+                pividx : out integer32 );
+  procedure Recondition_Swap_Homotopy
+              ( file : in file_type; dim,r,s : in integer32;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                rlq : out DoblDobl_Complex_Polynomials.Poly;
+                pividx : out integer32 );
+  procedure Recondition_Swap_Homotopy
+              ( file : in file_type; dim,r,s : in integer32;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                rlq : out QuadDobl_Complex_Polynomials.Poly;
+                pividx : out integer32 );
+
+  -- DESCRIPTION :
+  --   The variable k-plane x may have no pivot in column s in case of
+  --   a swap homotopy which may cause that column to slide to zero.
+  --   This procedure reconditions the swap homotopy for many start solutions.
+  --   Output is written to file.
 
   -- ON ENTRY :
   --   file     must be opened for writing output;
