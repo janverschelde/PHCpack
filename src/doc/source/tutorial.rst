@@ -2,7 +2,10 @@
 Tutorial
 ********
 
-This chapter provides a quick getting started guide.
+This chapter provides a short tutorial,
+mainly for use at the command line.
+Interfaces for Maple, MATLAB (Octave), and Python 
+provide a scripting environment.
 
 Input formats
 =============
@@ -62,8 +65,8 @@ is a valid input file for phc.
 Note that we replaced the logical e variable by f.
 We save this input in the file with name ``multilin``.
 
-A very simple Maple interface
-=============================
+Interfaces
+==========
 
 The software is developed for command line interactions.
 Because there is no interpreter provided with PHCpack,
