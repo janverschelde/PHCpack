@@ -3,6 +3,30 @@ The module series exports functions to compute power series solutions with
 Newton's method in double, double double, or quad double precision.
 """
 
+def replace_symbol(pol, idx):
+    """
+    In the polynomial pol, 
+    replaces the first symbol by the symbol at place idx.
+    """
+    from phcpy.phcpy2c2 import py2c_syscon_string_of_symbols
+    sbl = py2c_syscon_string_of_symbols()
+    var = sbl.split(' ')
+    result = pol.replace(var[0], var[idx-1])
+    return result
+
+def substitute_symbol(pols, idx):
+    """
+    Given in pols is a list of polynomials,
+    replaces the first symbol by the symbol at place idx.
+    """
+    if idx == 1:
+        return pols
+    else:
+        result = []
+        for pol in pols:
+            result.append(replace_symbol(pol, idx))
+        return result
+
 def standard_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     r"""
     Computes series in standard double precision for the polynomials
@@ -48,7 +72,7 @@ def standard_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     for k in range(1, size+1):
         py2c_syspool_copy_to_standard_container(k)
         sersol = load_standard_system()
-        result.append(sersol)
+        result.append(substitute_symbol(sersol, idx))
     py2c_syspool_standard_clear()
     return result
 
@@ -97,7 +121,7 @@ def dobldobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     for k in range(1, size+1):
         py2c_syspool_copy_to_dobldobl_container(k)
         sersol = load_dobldobl_system()
-        result.append(sersol)
+        result.append(substitute_symbol(sersol, idx))
     py2c_syspool_dobldobl_clear()
     return result
 
@@ -146,7 +170,7 @@ def quaddobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     for k in range(1, size+1):
         py2c_syspool_copy_to_quaddobl_container(k)
         sersol = load_quaddobl_system()
-        result.append(sersol)
+        result.append(substitute_symbol(sersol, idx))
     py2c_syspool_quaddobl_clear()
     return result
 
@@ -197,6 +221,7 @@ def standard_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
             print "Computed one series solution."
     py2c_syspool_copy_to_standard_container(1)
     result = load_standard_system()
+    result = substitute_symbol(result, idx)
     py2c_syspool_standard_clear()
     return result
 
@@ -247,6 +272,7 @@ def dobldobl_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
             print "Computed one series solution."
     py2c_syspool_copy_to_dobldobl_container(1)
     result = load_dobldobl_system()
+    result = substitute_symbol(result, idx)
     py2c_syspool_dobldobl_clear()
     return result
 
@@ -297,6 +323,7 @@ def quaddobl_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
             print "Computed one series solution."
     py2c_syspool_copy_to_quaddobl_container(1)
     result = load_quaddobl_system()
+    result = substitute_symbol(result, idx)
     py2c_syspool_quaddobl_clear()
     return result
 

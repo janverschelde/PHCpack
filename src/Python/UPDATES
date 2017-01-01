@@ -1,3 +1,6 @@
+Sun 1 Jan 2017 : fixed a bug in the writing of a power series, in the
+  module series.py of PHCpy2.
+
 Fri 30 Dec 2016 : prepared for release 0.6.1 in PHCpy2 and PHCpy3.
 
 Fri 23 Dec 2016 : added g48big.py as test script to the examples folder
