@@ -1,3 +1,5 @@
+Sun 1 Jan 2017 : formatted code in predict.cu.
+
 Thu 3 Sep 2015 : added verbose option to GPU_Newton in newton.cu and
   set the debug to false to mute the execution of Newton's method on the GPU.
   This verbose option is also added to the prototype in path_gpu.h.
