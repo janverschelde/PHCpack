@@ -1,15 +1,16 @@
 This directory contains the code for the path tracker on the host.
 
 -------------------------------------------------------------------------------
-file name              : short description
+file name            : short description
 -------------------------------------------------------------------------------
-eval_host              : evaluation and differentiation of polynomials
-mgs_host               : modified Gram-Schmidt method
+varset               : data structures for the evaluation and differentiation
+eval_host            : evaluation and differentiation of polynomials
+mgs_host             : modified Gram-Schmidt method
 -------------------------------------------------------------------------------
-parameter.h            : settings for the numerical constants
-predictor_host         : Newton extrapolation for the predictor
-newton_host            : Newton's method
+parameter.h          : settings for the numerical constants
+predictor_host       : Newton extrapolation for the predictor
+newton_host          : Newton's method
 -------------------------------------------------------------------------------
-workspace_host         : class to hold all data during path tracking
-path_host              : main function path_tracker
+workspace_host       : class to hold all data during path tracking
+path_host            : main function path_tracker
 -------------------------------------------------------------------------------
