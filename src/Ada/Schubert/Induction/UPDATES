@@ -1,3 +1,6 @@
+Mon 2 Jan 2017 : writing of the sequence of flags in the stack to file
+  in resolve_schubert_problems.adb.
+
 Fri 30 Dec 2016 : added Append procedure to setup_flag_homotopies.
   Refactored Is_Zone_A_Empty in checker_homotopies.
   Added remove_one_variable procedures to recondition_swap_homotopies.

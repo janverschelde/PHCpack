@@ -1601,6 +1601,16 @@ package body Resolve_Schubert_Problems is
          flags(flags'last..flags'last),sps.nodes(sps.m),residual);
     elsif flags'last > 1 then
       Flag_Transformations.Create(n,flags,stack,sqA,sqinvA,sqT);
+      put_line(file,"Successively transformed a sequence of flags ...");
+      put_line(file,"The stack of flags :");
+      for i in stack'range loop
+        put(file,"the stack at level "); put(file,i,1);
+        put_line(file," :");
+        for k in stack(i)'range loop
+          put(file,"matrix "); put(file,k,1); put_line(file,":");
+          put(file,stack(i)(k).all);
+        end loop;
+      end loop;
       workf := stack(index);
       Initialize_Solution_Nodes
         (file,n,k,conds(conds'last..conds'last),
