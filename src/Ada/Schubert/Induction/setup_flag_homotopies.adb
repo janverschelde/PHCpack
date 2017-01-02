@@ -16,9 +16,9 @@ with QuadDobl_Random_Numbers;           use QuadDobl_Random_Numbers;
 with Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;
-with Standard_Complex_Singular_Values;
-with DoblDobl_Complex_Singular_Values;
-with QuadDobl_Complex_Singular_Values;
+with Standard_Random_Matrices;
+with DoblDobl_Random_Matrices;
+with QuadDobl_Random_Matrices;
 with Symbol_Table;
 with Matrix_Indeterminates;
 with Standard_Complex_Poly_SysFun;
@@ -35,13 +35,15 @@ package body Setup_Flag_Homotopies is
   function Random_Flag
              ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
 
-    res : Standard_Complex_Matrices.Matrix(1..n,1..n);
+    dim : constant natural32 := natural32(n);
+    res : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+        := Standard_Random_Matrices.Random_Orthogonal_Matrix(dim,dim);
 
   begin
-    for j in 1..n loop
-      for i in 1..n loop
-        res(i,j) := Random1;
-      end loop;
+    --for j in 1..n loop
+    --  for i in 1..n loop
+    --    res(i,j) := Random1;
+    --  end loop;
      -- for i in 1..(n-j) loop
      --   res(i,j) := Random1;
      -- end loop; 
@@ -49,35 +51,29 @@ package body Setup_Flag_Homotopies is
      -- for i in (n-j+2)..n loop
      --   res(i,j) := Create(0.0);
      -- end loop;
-    end loop;
+    --end loop;
     return res;
   end Random_Flag;
 
   function Random_Flag
              ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix is
 
-    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+    dim : constant natural32 := natural32(n);
+    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+        := DoblDobl_Random_Matrices.Random_Orthogonal_Matrix(dim,dim);
 
   begin
-    for j in 1..n loop
-      for i in 1..n loop
-        res(i,j) := Random1;
-      end loop;
-    end loop;
     return res;
   end Random_Flag;
 
   function Random_Flag
              ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix is
 
-    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+    dim : constant natural32 := natural32(n);
+    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+        := QuadDobl_Random_Matrices.Random_Orthogonal_Matrix(dim,dim);
 
   begin
-    for j in 1..n loop
-      for i in 1..n loop
-        res(i,j) := Random1;
-      end loop;
-    end loop;
     return res;
   end Random_Flag;
 
