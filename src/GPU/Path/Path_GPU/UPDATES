@@ -1,4 +1,5 @@
-Mon 2 Jan 2017 : formatted code in eval_base.cu and eval_coef.cu.
+Mon 2 Jan 2017 : formatted code in eval_base.cu and eval_coef.cu,
+  als reformatted eval_sum.cu, eval_sum_seq.cu, and eval_sum_tree.cu.
 
 Sun 1 Jan 2017 : formatted code in predict.cu and eval.cu.
 
