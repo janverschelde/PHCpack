@@ -1,3 +1,6 @@
+Tue 3 Jan 2017 : updated bablvali.adb so phc -b -v (or phc -v -b) works
+  also for overdetermined polynomial systems.
+
 Fri 30 Dec 2016 : prepared version 2.4.32, with update of greeting_banners.
 
 Tue 20 Dec 2016 : updated greeting_banners for version 2.4.31.
