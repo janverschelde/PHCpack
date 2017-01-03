@@ -1,3 +1,5 @@
+Mon 2 Jan 2017 : formatted code in eval_base.cu and eval_coef.cu.
+
 Sun 1 Jan 2017 : formatted code in predict.cu and eval.cu.
 
 Thu 3 Sep 2015 : added verbose option to GPU_Newton in newton.cu and
