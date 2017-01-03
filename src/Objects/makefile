@@ -24,8 +24,8 @@ phcpy2c2.so:
 phcpy2c3.so:
 	make -f $(MAKEFILE) phcpy2c3.so
 
-phcpy2c.a:
-	make -f $(MAKEFILE) phcpy2c.a
+phcpy2c2.a:
+	make -f $(MAKEFILE) phcpy2c2.a
 
 # with the double version of the Path library :
 
