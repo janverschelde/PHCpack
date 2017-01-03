@@ -11,6 +11,8 @@ PYTHON3=/Library/Frameworks/Python.framework/Versions/3.5/include/python3.5m
 PYTHON3lib=/Library/Frameworks/Python.framework/Versions/3.5/lib
 MPI_HOME=/usr/local
 
+SAGEPYTHONLIB=/Users/jan/Downloads/sage-7.2/local/lib
+
 QD_ROOT=/usr/local/qd-2.3.17
 QD_LIB=/usr/local/lib
 
@@ -2521,6 +2523,37 @@ phcpy2c2.so:
             scalers.o numbtrop.o sweep.o schubert.o syspool.o series.o \
                  -o ../Python/PHCpy2/phcpy/phcpy2c2.so -framework Python
 
+# to extend the Python interpreter of Sage with phcpy2c2.so :
+
+sage_phcpy2c2.so:
+	gcc -c -O2 $(PHCLib)/syscon.c
+	gcc -c -O2 $(PHCLib)/solcon.c
+	gcc -c -O2 $(PHCLib)/product.c
+	gcc -c -O2 $(PHCLib)/lists_and_strings.c
+	gcc -c -O2 $(PHCLib)/celcon.c
+	gcc -c -O2 $(PHCLib)/intcelcon.c
+	gcc -c -O2 $(PHCLib)/scalers.c
+	gcc -c -O2 $(PHCLib)/numbtrop.c
+	gcc -c -O2 $(PHCLib)/sweep.c
+	gcc -c -O2 $(PHCLib)/witset.c
+	gcc -c -O2 $(PHCLib)/schubert.c
+	gcc -c -O2 $(PHCLib)/unisolvers.c
+	gcc -c -O2 $(PHCLib)/giftwrappers.c
+	gcc -c -O2 $(PHCLib)/phcpack.c
+	gcc -c -O2 $(PHCLib)/mapcon.c
+	gcc -c -O2 $(PHCLib)/next_track.c
+	gcc -c -O2 $(PHCLib)/syspool.c
+	gcc -c -O2 $(PHCLib)/series.c
+	$(MCC) -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
+	#gcc -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
+	gnatmake -c -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatbind -n use_c2phc
+	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
+            witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
+            solcon.o product.o lists_and_strings.o celcon.o intcelcon.o \
+            scalers.o numbtrop.o sweep.o schubert.o syspool.o series.o \
+            $(SAGEPYTHONLIB)/libpython2.7.dylib -o phcpy2c2.so 
+
 phcpy2c3.so:
 	gcc -c -O2 $(PHCLib)/syscon.c
 	gcc -c -O2 $(PHCLib)/solcon.c
@@ -2551,29 +2584,33 @@ phcpy2c3.so:
                  -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
                  $(PYTHON3lib)/libpython3.5m.dylib
 
-phcpy2c.a:
+phcpy2c2.a:
 	gcc -static -c -O2 $(PHCLib)/syscon.c
 	gcc -static -c -O2 $(PHCLib)/solcon.c
 	gcc -static -c -O2 $(PHCLib)/product.c
 	gcc -static -c -O2 $(PHCLib)/lists_and_strings.c
 	gcc -static -c -O2 $(PHCLib)/celcon.c
+	gcc -static -c -O2 $(PHCLib)/intcelcon.c
 	gcc -static -c -O2 $(PHCLib)/scalers.c
+	gcc -static -c -O2 $(PHCLib)/sweep.c
+	gcc -static -c -O2 $(PHCLib)/numbtrop.c
 	gcc -static -c -O2 $(PHCLib)/witset.c
 	gcc -static -c -O2 $(PHCLib)/unisolvers.c
 	gcc -static -c -O2 $(PHCLib)/giftwrappers.c
 	gcc -static -c -O2 $(PHCLib)/phcpack.c
 	gcc -static -c -O2 $(PHCLib)/schubert.c
 	gcc -static -c -O2 $(PHCLib)/mapcon.c
+	gcc -static -c -O2 $(PHCLib)/series.c
+	gcc -static -c -O2 $(PHCLib)/syspool.c
 	gcc -static -c -O2 $(PHCLib)/next_track.c
 	gcc -static -c -O2 -I$(PYTHON) -I$(PYTHON)/Include \
-                             $(PHCLib)/phcpy2c.c
-	gnatmake -static -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gnatbind -static -n $(INCLULIBS) use_c2phc
-	gnatlink -v -static -C use_c2phc syscon.o solcon.o product.o celcon.o \
-            lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
-            next_track.o phcpy2c.o -framework Python \
-            unisolvers.o giftwrappers.o scalers.o \
-            -lm -o phcpy2c.a
+                               $(PHCLib)/phcpy2c2.c
+	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind -static -n use_c2phc
+	ar ruv phcpy2c2.a *.o
+	ranlib phcpy2c2.a
+	gcc -dynamiclib -o phcpy2c2.so \
+            -Wl,-whole-archive phcpy2c2.a -Wl,-no-whole-archive
 
 # phcpy2c with double version of Path library :
 

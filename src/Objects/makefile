@@ -19,10 +19,17 @@ phc:
 phcpy2c2.so:
 	make -f $(MAKEFILE) phcpy2c2.so
 
+# for use with Sage on mac OS X :
+
+sage_phcpy2c2.so:
+	make -f $(MAKEFILE) sage_phcpy2c2.so
+
 # for phcpy on Python 3.5, make phcpy2c3.so
 
 phcpy2c3.so:
 	make -f $(MAKEFILE) phcpy2c3.so
+
+# without the dependencies on GNAT, on Linux:
 
 phcpy2c2.a:
 	make -f $(MAKEFILE) phcpy2c2.a
