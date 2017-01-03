@@ -770,9 +770,14 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-96. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
-    and Jeff Sommars: **Solving polynomial systems via homotopy continuation
-    and monodromy**. arXiv:1609.08722v2 [math.AG] 2 Nov 2016
+96. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+    **A robust approach for finding all well-separated solutions of
+    sparse systems of nonlinear equations**.
+    *Numerical Algorithms*, pages 1-27, 2016 (online first).
+
+#. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
+   and Jeff Sommars: **Solving polynomial systems via homotopy continuation
+   and monodromy**. arXiv:1609.08722v2 [math.AG] 2 Nov 2016
 
 #. T. Gao and T.Y. Li:
    **Mixed volume computation via linear programming**.
@@ -832,7 +837,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-110. Bo Dong, Bo Yu, and Yan Yu:
+111. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -851,7 +856,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-113. B. Sturmfels:
+114. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
