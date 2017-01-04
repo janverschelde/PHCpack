@@ -19,7 +19,7 @@ phc:
 phcpy2c2.so:
 	make -f $(MAKEFILE) phcpy2c2.so
 
-# for use with Sage on mac OS X :
+# for use with Sage :
 
 sage_phcpy2c2.so:
 	make -f $(MAKEFILE) sage_phcpy2c2.so
