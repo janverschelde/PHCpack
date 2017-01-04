@@ -1,18 +1,33 @@
-# This makefile starts off with the general directory structure
-# of the library of PHCpack, then comes the MPI set up, followed
-# by a listing of all the targets, grouped by library.
+# The beginning of this makefile defines the names of the locations
+# of the Python development headers for phcpy, followed by the home
+# of MPI (message passing), and the QD library (with its GPU version).
+# The next set of names defines by this makefile refers to the
+# general directory structure of the library of PHCpack.
+# The targets are then listed, grouped by each directory.
 
-# The makefile works on RHEL 6.6, with python2.6, openmpi, and GNATGPL 2014.
+# The makefile works on RHEL 6.6, with python2.6, openmpi, and GNATGPL 2016.
+
+# Location of Python for 2.7 and 3.5, development headers for phcpy
 
 PYTHON=/usr/include/python2.6
 PYTHON3=/usr/local/include/python3.5m
-# MPI_HOME=/usr/lib64/openmpi
+
+# The location of the adalib folder for the GNATGPL compiler:
+
+ADALIB=/usr/gnat/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib
+
+# The location of the MPI:
+
 MPI_HOME=/usr/local/mpi/gcc/openmpi-1.4.3
+
+# Location of the QD library and its GPU version:
 
 QD_ROOT=/usr/local/qd-2.3.17
 QD_LIB=/usr/local/lib
 GQD_HOME=/usr/local/gqd_1_2
 SDK_HOME=/usr/local/cuda/sdk
+
+# Definitions of PHCpack specific names start here:
 
 PHCLib=../Lib
 PHCAda=../Ada
@@ -2467,13 +2482,13 @@ lib_solcon_cpp:
                  --LINK=g++
 
 lib_read:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gcc -c $(PHCLib)/phcpack.c
-	gcc -c $(PHCLib)/solcon.c
-	gcc -c $(PHCLib)/lib_read.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o \
-                 -o $(BIN)/lib_read -lm
+	gnatmake -static -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -static -c $(PHCLib)/phcpack.c
+	gcc -static -c $(PHCLib)/solcon.c
+	gcc -static -c $(PHCLib)/lib_read.c
+	gnatbind -v -static -n use_c2phc -o outbinder.adb
+#	gnatlink -v -static -C use_c2phc phcpack.o solcon.o lib_read.o \
+#                 -o $(BIN)/lib_read -lm
 
 lib_read_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -3040,6 +3055,15 @@ phc_solve_cpp:
 	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
                  -o $(BIN)/phc_solve -lm --LINK=g++
 
+# Before typing make phcpy2c2.so, do make clean because everthing must
+# be compiled with the -fPIC option.
+# All statically compiled .o files are collected into one archive.
+# Because there is no main Ada program we call gnatbind with -n
+# and must compile the output of gnatbind separately.
+# Normally, the output of gnatbind is automatically compiled with
+# gnatlink, but we use gcc to link, so the output of the binder,
+# which contains the adainit must go into the archive phcpy2c2.a.
+
 phcpy2c2.so:
 	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/solcon.c
@@ -3059,15 +3083,17 @@ phcpy2c2.so:
 	gcc -static -c -fPIC -O2 $(PHCLib)/series.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/syspool.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/next_track.c
-	gcc -static -c -fPIC -I$(PYTHON) -I$(PYTHON)/Include \
+	gcc -static -c -fPIC -O2 -I$(PYTHON) -I$(PYTHON)/Include \
                                $(PHCLib)/phcpy2c2.c
 	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gnatbind -n -shared use_c2phc
-	gnatlink -shared -C use_c2phc syscon.o solcon.o product.o celcon.o \
-            lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
-            next_track.o phcpy2c2.o unisolvers.o giftwrappers.o scalers.o \
-            intcelcon.o sweep.o numbtrop.o series.o syspool.o \
-            -o ../Python/PHCpy2/phcpy/phcpy2c2.so -lm
+	gnatbind -n -static use_c2phc -o use_c2phc_binder.adb
+	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc_binder.adb
+	ar ruv phcpy2c2.a *.o
+	ranlib phcpy2c2.a
+	gcc -v -shared -o ../Python/PHCpy2/phcpy/phcpy2c2.so -lm \
+            -Wl,-whole-archive phcpy2c2.a \
+            $(ADALIB)/libgnat_pic.a $(ADALIB)/libgnarl_pic.a \
+            -Wl,-no-whole-archive -lrt
 
 phcpy2c3.so:
 	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
@@ -3088,45 +3114,16 @@ phcpy2c3.so:
 	gcc -static -c -fPIC -O2 $(PHCLib)/series.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/syspool.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/next_track.c
-	gcc -static -c -fPIC -I$(PYTHON3) $(PHCLib)/phcpy2c3.c
+	gcc -static -c -fPIC -O2 -I$(PYTHON3) $(PHCLib)/phcpy2c3.c
 	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gnatbind -n -shared use_c2phc
-	gnatlink -shared -C use_c2phc syscon.o solcon.o product.o celcon.o \
-            lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
-            next_track.o phcpy2c3.o unisolvers.o giftwrappers.o scalers.o \
-            intcelcon.o sweep.o numbtrop.o series.o syspool.o \
-            -o ../Python/PHCpy3/phcpy/phcpy2c3.so -lm
-
-phcpy2c2.a:
-	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/solcon.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/celcon.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/intcelcon.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/scalers.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/sweep.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/numbtrop.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/witset.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/unisolvers.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/giftwrappers.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/phcpack.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/schubert.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/mapcon.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/series.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/syspool.c
-	gcc -static -c -fPIC -O2 $(PHCLib)/next_track.c
-	gcc -static -c -fPIC -I$(PYTHON) -I$(PYTHON)/Include \
-                               $(PHCLib)/phcpy2c2.c
-	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gnatbind -static -n use_c2phc
-	ar ruv phcpy2c2.a *.o
-	ranlib phcpy2c2.a
-	gcc -shared -o phcpy2c2.so \
-            -Wl,-whole-archive phcpy2c2.a \
-/usr/gnat/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib/libgnat_pic.a \
-/usr/gnat/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib/libgnarl_pic.a \
--Wl,-no-whole-archive -lrt
+	gnatbind -n -static use_c2phc -o use_c2phc_binder.adb
+	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc_binder.adb
+	ar ruv phcpy2c3.a *.o
+	ranlib phcpy2c3.a
+	gcc -shared -o ../Python/PHCpy3/phcpy/phcpy2c3.so -lm \
+            -Wl,-whole-archive phcpy2c3.a \
+            $(ADALIB)/libgnat_pic.a $(ADALIB)/libgnarl_pic.a \
+            -Wl,-no-whole-archive -lrt
 
 # phcpy2c with double version of Path library :
 
