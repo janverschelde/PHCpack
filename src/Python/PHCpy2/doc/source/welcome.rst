@@ -135,6 +135,41 @@ Below is a step-by-step installation procedure.
    For python3, go to ``PHCpy/phcpy3`` and run
    ``python3 setup.py install`` as superuser or as sudoer.
 
+extending Sage with phcpy
+=========================
+
+The current version of Sage uses python2.
+So the instructions to extend Sage with phcpy work only with
+the Python2 version of phcpy.
+
+If you have installed Sage from source on your computer,
+then this installation comes with its own python libraries
+and interpreter.  Then it is not too much work any more
+(in comparison to the steps in last section) to extend
+the python interpreter of Sage with phcpy.
+
+On Linux systems, locate the python interpreter of Sage.
+Most likely this python is ``/local/bin`` of in the downloaded directory.
+Use the absolute path name for the location of the Sage python
+interpreter and navigate to the ``Python/PHCpy2`` directory which
+contains the ``setup.py`` for phcpy.
+Once in ``Python/PHCpy2``, type ``python setup.py install`` at
+the command prompt.  This does not require superuser access,
+but you must execute this setup with the same account you used
+to install Sage with.
+
+On Mac OS X, extending Sage with phcpy requires a bit more work as
+the ``phcpy2c2.so`` must be compiled with the Python library that
+comes with the Sage installation.  For this, the ``makefile_mac``
+must be modified with the correct definition for the location of
+the Python library of Sage, as defined by ``SAGEPYTHONLIB``.
+With this definition, do ``make sage_phcpy2c2.so`` and then move
+this file under the name ``phcpy2c2.so`` to the directory
+``/Python/PHCpy2/phcpy``.  The installation is then similar as
+for Linux, type ``python setup.py install`` at the command prompt
+in the directory where ``setup.py`` exists and for ``python``
+using the absolute file name of the executable, e.g., type
+``/Users/jan/Downloads/sage-7.2/local/bin/python setup.py install``.
 
 project history
 ===============

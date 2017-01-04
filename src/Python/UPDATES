@@ -1,3 +1,6 @@
+Wed 4 Jan 2017 : added instructions to welcome.rst of the documentation for
+  phcpy to extend Sage with phcpy.
+
 Sun 1 Jan 2017 : fixed a bug in the writing of a power series, in the
   module series.py of PHCpy2 and of PHCpy3.
 
