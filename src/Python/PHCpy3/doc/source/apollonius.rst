@@ -1,7 +1,7 @@
-the circle problem of Appolonius
+the circle problem of Apollonius
 ================================
 
-The circle problem of Appolonius asks to find all circles tangent
+The circle problem of Apollonius asks to find all circles tangent
 to three given circles.  
 In :numref:`figappolgeneral`,
 the input circles are shown as blue disks and the eight circles
@@ -12,7 +12,7 @@ tangent to the three input circles are displayed in red.
 .. figure:: ./appolfig1.png
     :align: center
 
-    A general configuration of the circle problem of Appolonius.
+    A general configuration of the circle problem of Apollonius.
 
 This problem can be reformulated into that
 of solving eight polynomial systems.  The number eight equals
@@ -64,7 +64,7 @@ Polynomials are represented as strings as in the following function:
 
    def polynomials(c2x, r2, c3x, c3y, r3):
        """
-       On input are the five parameters of the circle problem of Appolonius:
+       On input are the five parameters of the circle problem of Apollonius:
        c2x : the x-coordinate of the center of the second circle,
        r2 : the radius of the second circle,
        c3x : the x-coordinate of the center of the third circle,
@@ -166,7 +166,7 @@ mutually touch each other, as shown in :numref:`figappolspecial`.
 .. figure:: ./appolfig2.png
     :align: center
 
-    A special configuration of the circle problem of Appolonius.
+    A special configuration of the circle problem of Apollonius.
 
 The five input parameters for this special configuration are
 listed in the tuple :math:`(2, 1, 1, \sqrt{3}, 1)`.
@@ -214,7 +214,7 @@ configuration twice, consider :numref:`figappolperturbed`.
 .. figure:: ./appolfig3.png
     :align: center
 
-    A perturbed configuration of the circle problem of Appolonius.
+    A perturbed configuration of the circle problem of Apollonius.
 
 The five input parameters for this perturbed problem are
 listed in the tuple :math:`(2.05, 1, 1.025, \sqrt{3} + 0.025, 1)`.
@@ -246,4 +246,4 @@ What is printed defines the large perturbation of the unit circle:
 
 The script ``appolonius.py`` in the source code distribution in
 the ``examples`` folder of ``PHCpy2`` or ``PHCpy3`` is a self contained
-script which solves the three instances of the problem of Appolonius.
+script which solves the three instances of the problem of Apollonius.

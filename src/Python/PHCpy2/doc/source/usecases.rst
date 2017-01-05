@@ -37,7 +37,7 @@ For these specific instances, singular solutions are likely to occur.
 .. toctree::
    :maxdepth: 2
 
-   appolonius
+   apollonius
    fourbar
    fourlines
    touchcircle

@@ -158,6 +158,16 @@ the command prompt.  This does not require superuser access,
 but you must execute this setup with the same account you used
 to install Sage with.
 
+We check the installation at the command prompt,
+as shown in :numref:`figphcpyinsage`.
+
+.. _figphcpyinsage:
+
+.. figure:: ./figphcpyinsage.png
+    :align: center
+
+    Importing phcpy in a Sage terminal session.
+
 On Mac OS X, extending Sage with phcpy requires a bit more work as
 the ``phcpy2c2.so`` must be compiled with the Python library that
 comes with the Sage installation.  For this, the ``makefile_mac``
