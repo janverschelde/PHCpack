@@ -1,23 +1,16 @@
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Timing_Package;                     use Timing_Package;
-with Communications_with_User;           use Communications_with_User;
-with File_Scanning;                      use File_Scanning;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
+with DoblDobl_Root_Refiners;             use DoblDobl_Root_Refiners;
+with QuadDobl_Root_Refiners;             use QuadDobl_Root_Refiners;
+with Root_Refining_Parameters;           use Root_Refining_Parameters;
 
 package body Black_Box_Root_Refiners is
-
--- DESCRIPTION :
---   Wraps the root refiners with basic settins for the tolerances.
 
   procedure Refine_Roots
                ( file : in file_type;
@@ -26,26 +19,20 @@ package body Black_Box_Root_Refiners is
 
     use Standard_Complex_Solutions;
 
-    epsxa,epsfa : constant double_float := 1.0E-8;
-    tolsing : constant double_float := 1.0E-8;
-    maxit : constant natural32 := 3;
-    numb : natural32 := 0;
-    deflate : boolean := false;
+    epsxa,epsfa,tolsing : double_float;
+    maxit,numb : natural32 := 0;
+    deflate,wout : boolean;
     refsols : Solution_List;
     timer : Timing_Widget;
     dim : constant integer32 := Head_Of(sols).n;
 
   begin
+    Standard_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
     new_line(file);
     put_line(file,"ROOT REFINING PARAMETERS");
-    put(file,"  tolerance for error on the root : ");
-    put(file,epsxa,2,3,3); new_line(file);
-    put(file,"  tolerance for residual          : ");
-    put(file,epsfa,2,3,3); new_line(file);
-    put(file,"  tolerance for singular roots    : ");
-    put(file,tolsing,2,3,3); new_line(file);
-    put(file,"  maximum number of iterations    : ");
-    put(file,maxit,2); new_line(file);
+    Standard_Put_Root_Refining_Parameters
+      (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
     if p'last = dim then
       tstart(timer);
       Reporting_Root_Refiner
@@ -57,6 +44,68 @@ package body Black_Box_Root_Refiners is
         (file,p,sols,refsols,epsxa,epsfa,tolsing,numb,maxit,deflate,false);
       tstop(timer);
     end if;
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(refsols),natural32(Head_Of(refsols).n),refsols);
+    new_line(file);
+    print_times(file,timer,"Root refining");
+  end Refine_Roots;
+
+  procedure Refine_Roots
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    epsxa,epsfa,tolsing : double_float;
+    maxit,numb : natural32 := 0;
+    deflate,wout : boolean;
+    refsols : Solution_List;
+    timer : Timing_Widget;
+
+  begin
+    DoblDobl_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    new_line(file);
+    put_line(file,"ROOT REFINING PARAMETERS");
+    Standard_Put_Root_Refining_Parameters
+      (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
+    tstart(timer);
+    Reporting_Root_Refiner
+      (file,p,sols,refsols,epsxa,epsfa,tolsing,numb,maxit,deflate,false);
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(refsols),natural32(Head_Of(refsols).n),refsols);
+    new_line(file);
+    print_times(file,timer,"Root refining");
+  end Refine_Roots;
+
+  procedure Refine_Roots
+               ( file : in file_type;
+                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    epsxa,epsfa,tolsing : double_float;
+    maxit,numb : natural32 := 0;
+    deflate,wout : boolean;
+    refsols : Solution_List;
+    timer : Timing_Widget;
+
+  begin
+    QuadDobl_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    new_line(file);
+    put_line(file,"ROOT REFINING PARAMETERS");
+    Standard_Put_Root_Refining_Parameters
+      (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
+    tstart(timer);
+    Reporting_Root_Refiner
+      (file,p,sols,refsols,epsxa,epsfa,tolsing,numb,maxit,deflate,false);
+    tstop(timer);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Length_Of(refsols),natural32(Head_Of(refsols).n),refsols);

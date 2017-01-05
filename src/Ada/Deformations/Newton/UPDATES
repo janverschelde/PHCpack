@@ -1,3 +1,6 @@
+Thu 5 Jan 2017 : added double double and quad double versions to
+  the black_box_root_refiners.
+
 Wed 4 Jan 2017 : new package black_box_root_refiners with code refactored
   from bablvali.adb.
 
