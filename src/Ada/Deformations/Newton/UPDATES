@@ -1,3 +1,6 @@
+Wed 4 Jan 2017 : new package black_box_root_refiners with code refactored
+  from bablvali.adb.
+
 Sat 22 Oct 2016 : in standard_root_refiners.adb used independent sequences
   of random numbers for the point lists in the frequency tables.
   Did the same for dobldobl_root_refiners.adb and quaddobl_root_refiners.adb.

@@ -1,4 +1,4 @@
-Root refining and a modified Newton's method in PHCv2.4.28
+Root refining and a modified Newton's method in PHCv2.4.33
 
 This directory is entirely new in release 2.3.  It contains the
 older root refiners, which were extended in the second release with
@@ -23,6 +23,7 @@ ts_rootrefi                      : calls the root refiners
 multprec_residual_evaluations    : computing residuals with multprec numbers
 ts_mreseva                       : multiprecision residual computation
 root_refining_parameters         : sets the parameters of root refiners
+black_box_root_refiners          : basic versions of the root refiners
 ------------------------------------------------------------------------------
 standard_numerical_rank          : numerical rank by SVD for standard numbers
 dobldobl_numerical_rank          : numerical rank by SVD for dobldobl numbers
