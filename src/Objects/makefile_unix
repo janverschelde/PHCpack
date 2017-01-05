@@ -3065,7 +3065,7 @@ phc_solve_cpp:
 # which contains the adainit must go into the archive phcpy2c2.a.
 
 phcpy2c2.so:
-	/bin/rm -f -r phcpy2c2.a phcpy2c3.a
+	/bin/rm -f -r phcpy2c2.o phcpy2c2.a phcpy2c3.o phcpy2c3.a
 	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/solcon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
@@ -3097,7 +3097,7 @@ phcpy2c2.so:
             -Wl,-no-whole-archive -lrt
 
 phcpy2c3.so:
-	/bin/rm -f -r phcpy2c2.a phcpy2c3.a
+	/bin/rm -f -r phcpy2c2.o phcpy2c2.a phcpy2c3.o phcpy2c3.a
 	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/solcon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
