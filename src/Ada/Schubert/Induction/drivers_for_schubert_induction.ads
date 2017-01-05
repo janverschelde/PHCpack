@@ -185,7 +185,7 @@ package Drivers_for_Schubert_Induction is
                 minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 vfs : in DoblDobl_Complex_VecMats.VecMat;
-                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 fsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Write_Results
               ( file : in file_type; n,k : in integer32;
@@ -193,7 +193,7 @@ package Drivers_for_Schubert_Induction is
                 minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 vfs : in QuadDobl_Complex_VecMats.VecMat;
-                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 fsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
@@ -212,7 +212,8 @@ package Drivers_for_Schubert_Induction is
   --   sols     solution k-planes.
 
   -- ON RETURN :
-  --   fsys     the polynomial system representing the conditions.
+  --   fsys     the polynomial system representing the conditions;
+  --   sols     solutions after application of the root refiner.
 
   function Random_Flags
              ( n,m : integer32 ) return Standard_Complex_VecMats.VecMat;

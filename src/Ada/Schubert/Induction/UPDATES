@@ -1,3 +1,6 @@
+Thu 5 Jan 2017 : in drivers_for_schubert_induction, applied the root refiners
+  for double double and quad double precision.
+
 Wed 4 Jan 2017 : in drivers_for_schubert_induction, called the root refiners
   on the end solutions.
 

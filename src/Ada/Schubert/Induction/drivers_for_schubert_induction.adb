@@ -411,14 +411,6 @@ package body Drivers_for_Schubert_Induction is
     return res;
   end QuadDobl_System_Solved;
 
-  procedure Refine_Roots
-              ( file : in file_type;
-                f : in Standard_Complex_Poly_Systems.Poly_Sys;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
-  begin
-    null;
-  end Refine_Roots;
- 
   procedure Write_Results
               ( file : in file_type; n,k : in integer32;
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
@@ -485,9 +477,8 @@ package body Drivers_for_Schubert_Induction is
     end if;
     f := Standard_System_Solved(n,k,q,rows,cols,minrep,cnds,vfs);
     put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
-    if not Is_Null(sols) then
-      Black_Box_Root_Refiners.Refine_Roots(file,f.all,sols);
-      -- put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    if not Is_Null(sols)
+     then Black_Box_Root_Refiners.Refine_Roots(file,f.all,sols);
     end if;
     fsys := f;
   end Write_Results;
@@ -498,7 +489,7 @@ package body Drivers_for_Schubert_Induction is
                 minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 vfs : in DoblDobl_Complex_VecMats.VecMat;
-                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 fsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
     use DoblDobl_Complex_Poly_Systems;
@@ -558,10 +549,8 @@ package body Drivers_for_Schubert_Induction is
     end if;
     f := DoblDobl_System_Solved(n,k,q,rows,cols,minrep,cnds,vfs);
     put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
-    if not Is_Null(sols) then
-      new_line(file);
-      put_line(file,"THE SOLUTIONS :");
-      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    if not Is_Null(sols)
+     then Black_Box_Root_Refiners.Refine_Roots(file,f.all,sols);
     end if;
     fsys := f;
   end Write_Results;
@@ -572,7 +561,7 @@ package body Drivers_for_Schubert_Induction is
                 minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 vfs : in QuadDobl_Complex_VecMats.VecMat;
-                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 fsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
     use QuadDobl_Complex_Poly_Systems;
@@ -632,10 +621,8 @@ package body Drivers_for_Schubert_Induction is
     end if;
     f := QuadDobl_System_Solved(n,k,q,rows,cols,minrep,cnds,vfs);
     put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
-    if not Is_Null(sols) then
-      new_line(file);
-      put_line(file,"THE SOLUTIONS :");
-      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    if not Is_Null(sols)
+     then Black_Box_Root_Refiners.Refine_Roots(file,f.all,sols);
     end if;
     fsys := f;
   end Write_Results;
