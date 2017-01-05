@@ -1,3 +1,6 @@
+Thu 5 Jan 2017 : prepared for version 0.6.2 of phcpy, with updated conf.py
+  in doc/source, updated __init__.py and setup.py, in PHCpy2 and PHCpy3.
+
 Wed 4 Jan 2017 : added instructions to welcome.rst of the documentation for
   phcpy to extend Sage with phcpy.
 
