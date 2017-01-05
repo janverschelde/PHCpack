@@ -23,6 +23,7 @@ with Standard_Homotopy;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
+with Black_Box_Root_Refiners;
 with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
 with Brackets_io;                        use Brackets_io;
 with Bracket_Monomials_io;               use Bracket_Monomials_io;
@@ -409,6 +410,14 @@ package body Drivers_for_Schubert_Induction is
     end if;
     return res;
   end QuadDobl_System_Solved;
+
+  procedure Refine_Roots
+              ( file : in file_type;
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+  begin
+    null;
+  end Refine_Roots;
  
   procedure Write_Results
               ( file : in file_type; n,k : in integer32;
@@ -416,7 +425,7 @@ package body Drivers_for_Schubert_Induction is
                 minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 vfs : in Standard_Complex_VecMats.VecMat;
-                sols : in Standard_Complex_Solutions.Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List;
                 fsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
     use Standard_Complex_Poly_Systems;
@@ -477,9 +486,8 @@ package body Drivers_for_Schubert_Induction is
     f := Standard_System_Solved(n,k,q,rows,cols,minrep,cnds,vfs);
     put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
     if not Is_Null(sols) then
-      new_line(file);
-      put_line(file,"THE SOLUTIONS :");
-      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Black_Box_Root_Refiners.Refine_Roots(file,f.all,sols);
+      -- put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     end if;
     fsys := f;
   end Write_Results;

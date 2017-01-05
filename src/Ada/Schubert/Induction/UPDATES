@@ -1,3 +1,6 @@
+Wed 4 Jan 2017 : in drivers_for_schubert_induction, called the root refiners
+  on the end solutions.
+
 Mon 2 Jan 2017 : writing of the sequence of flags in the stack to file
   in resolve_schubert_problems.adb.  A random flag should be orthogonal,
   fixed this in setup_flag_homotopies.adb.

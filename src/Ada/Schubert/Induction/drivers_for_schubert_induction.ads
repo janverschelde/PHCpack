@@ -177,7 +177,7 @@ package Drivers_for_Schubert_Induction is
                 minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 vfs : in Standard_Complex_VecMats.VecMat;
-                sols : in Standard_Complex_Solutions.Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List;
                 fsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Write_Results
               ( file : in file_type; n,k : in integer32;
