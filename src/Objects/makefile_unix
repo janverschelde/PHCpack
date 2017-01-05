@@ -3065,6 +3065,7 @@ phc_solve_cpp:
 # which contains the adainit must go into the archive phcpy2c2.a.
 
 phcpy2c2.so:
+	/bin/rm -f -r phcpy2c2.a phcpy2c3.a
 	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/solcon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
@@ -3096,6 +3097,7 @@ phcpy2c2.so:
             -Wl,-no-whole-archive -lrt
 
 phcpy2c3.so:
+	/bin/rm -f -r phcpy2c2.a phcpy2c3.a
 	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/solcon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
@@ -3480,4 +3482,4 @@ mpi2cell_d:
 # cleaning up the object files :
 
 clean:
-	/bin/rm -f  b* *.o *.ali lib.a
+	/bin/rm -f  b* *.o *.ali lib.a phcpy2c2.a phcpy2c3.a
