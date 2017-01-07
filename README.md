@@ -33,3 +33,8 @@ Other links:
   at <http://www.math.uic.edu/~jan/phcpy_doc_html>
   and its pdf version is
   at <http://www.math.uic.edu/~jan/phcpydoc.pdf>.
+
+The restructured text source for the documentation for PHCpack starts at
+<https://github.com/janverschelde/PHCpack/tree/master/src/doc/source>
+and for phcpy at
+<https://github.com/janverschelde/PHCpack/tree/master/src/Python/PHCpy3/doc/source>.
