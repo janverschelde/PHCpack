@@ -22,6 +22,25 @@ was done on Linux computers.
 The Python code was developed and tested on Linux and MacOS X,
 not on Windows.
 
+The Test Procedures
+===================
+
+A dynamic manner to experience the structure of the source code
+is to run through all test procecures.  There over three hundred
+test programs which can be built typing
+
+::
+
+   make testall
+
+at the command prompt when situated in the ``Objects`` directory.
+The tests are organized along the source code directories.
+Every directory in the source code hierarchy has its own test
+procedures which focus on the particular functionality coded
+in that directory.  To test the mathematical library, running
+``make test_math_lib`` invokes ten other makes, one for each
+subdirectory of the mathematical library.
+
 Organization of the Ada code
 ============================
 
