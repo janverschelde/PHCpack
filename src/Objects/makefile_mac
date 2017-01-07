@@ -10,8 +10,8 @@
 
 # PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
 PYTHON=/usr/include/python2.7
-PYTHON3=/Library/Frameworks/Python.framework/Versions/3.5/include/python3.5m
-PYTHON3lib=/Library/Frameworks/Python.framework/Versions/3.5/lib
+PYTHON3=/Library/Frameworks/Python.framework/Versions/3.6/include/python3.6m
+PYTHON3lib=/Library/Frameworks/Python.framework/Versions/3.6/lib
 MPI_HOME=/usr/local
 
 # To extend sage on Mac OS X with python, we must link with the python
@@ -2592,7 +2592,7 @@ phcpy2c3.so:
             solcon.o product.o lists_and_strings.o celcon.o intcelcon.o \
             scalers.o sweep.o numbtrop.o schubert.o syspool.o series.o \
                  -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
-                 $(PYTHON3lib)/libpython3.5m.dylib
+                 $(PYTHON3lib)/libpython3.6m.dylib
 
 phcpy2c2.a:
 	gcc -static -c -O2 $(PHCLib)/syscon.c
