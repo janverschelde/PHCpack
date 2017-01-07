@@ -32,17 +32,17 @@ rebuilt using Ada 95 concepts and offering multi-precision arithmetic.
 There are four major layers in the code:
 
 1. ``Math_Lib``: linear algebra, representations of polynomials,
-   Newton polytopes, and power series 
+   Newton polytopes, and power series;
 
 2. ``Deformations``: Newton's method, path trackers, end games, 
-   solutions and homotopies, deflation
+   solutions and homotopies, deflation;
 
 3. ``Root_Counts``: root counting methods and constructions of homotopies,
    linear-product start start systems based on Bezout bounds,
-   mixed volumes and polyhedral homotopies
+   mixed volumes and polyhedral homotopies;
 
 4. ``Components``: witness sets, cascades of homotopies, monodromy, 
-   diagonal homotopies, to compute a numerical irreducible decomposition
+   diagonal homotopies, to compute a numerical irreducible decomposition.
 
 There are five other parts, called ``System``, ``Schubert``, ``CtoPHC``,
 ``PHCtoC``, and ``Tasking``.  The top down perspective starts at the
@@ -607,6 +607,47 @@ are evaluated anew in the higher working precision.
 Numerical algorithms solve nearby problems not exact ones.
 Increasing the working precision may increase only the
 distance to the exact input problem.
+
+The symbolic form of a polynomial system makes the program
+user friendly.  For some applications, a flat representation
+of a polynomial into a tuple of coefficients and exponents
+is a more convenient data structure, both for internal and
+external use, for a more direct interface.
+In addition to the symbolic format, code is available to
+represent a polynomial system in a tableau format.
+For example,
+
+::
+
+   2
+   3
+    1.00000000000000E+00 0.00000000000000E+00 2 0
+    4.00000000000000E+00 0.00000000000000E+00 0 2
+   -4.00000000000000E+00 0.00000000000000E+00 0 0
+   2
+    2.00000000000000E+00 0.00000000000000E+00 0 2
+   -1.00000000000000E+00 0.00000000000000E+00 1 0
+
+is the tableau format of the system, in symbolic format:
+
+::
+
+   2
+    x**2 + 4*y**2 - 4;
+           2*y**2 - x;
+
+where the variables are represented by the symbols ``x`` and ``y``.
+In the tableau format, the term ``4*y**2`` is represented by
+
+::
+
+    4.00000000000000E+00 0.00000000000000E+00 0 2
+
+where the coefficient appears first as a complex number,
+as a sequence of two doubles, its real and imaginary part.
+The monomial ``y**2`` is represented as ``0 2`` as the ``y``
+is the second variable which appeared in the symbolic format
+of the system and 2 is its exponent.
 
 Nested Horner Forms for Evaluation
 ----------------------------------
