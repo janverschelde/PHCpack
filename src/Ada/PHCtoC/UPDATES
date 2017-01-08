@@ -1,3 +1,5 @@
+Sun 8 Jan 2017 : added timers to ts_adepath_{d,dd,qd}.adb.
+
 Mon 14 Dec 2015 : name changes in solcon changed {ade,gpu}newton_d.cpp,
   {ada,gpu}onepath_d.cpp, and {ade,gpu}manypaths_d.cpp.
 

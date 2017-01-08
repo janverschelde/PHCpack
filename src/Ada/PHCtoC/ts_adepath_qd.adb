@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
@@ -119,6 +120,7 @@ procedure ts_adepath_qd is
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
 
+    timer : Timing_Widget;
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
@@ -142,11 +144,16 @@ procedure ts_adepath_qd is
     put_line("Initializing the solutions container ...");
     QuadDobl_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
+    tstart(timer);
     QuadDobl_ADE_Track_Many(verbose,gamma);
+    tstop(timer);
     newtsols := QuadDobl_Solutions_Container.Retrieve;
     put_line("The solutions after path tracking :");
     put(standard_output,Length_Of(newtsols),
         natural32(Head_Of(newtsols).n),newtsols);
+    new_line;
+    print_times(standard_output,timer,
+      "tracking many paths in quad double precision");
   end QuadDobl_Track_many_Paths;
 
   procedure Main is
