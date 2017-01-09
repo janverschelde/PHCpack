@@ -1,0 +1,12 @@
+Sun 8 Jan 2017 : experimenting with complex numbers at several levels
+  of precision in the same source file in the file use_complex.cpp,
+  made a change to complexH.h, in the copy mycomplex.h.
+  Updated makefile for qd-2.3.14.
+
+Fri 8 Mar 2013 : gqd_qd_util.h_new for initialization of the
+  coefficients of the Jacobian matrix.
+
+Wed 6 Mar 2013 : modified run_ped.cpp, gqd_qd_util.h, gqd_qd_util.cpp,
+  ped_kernelsT.cu, ped_kernelsT_qd.cu to suppress output when taking
+  timings for Table VI in the relation with MGS.
+  Made a new directory Timings.

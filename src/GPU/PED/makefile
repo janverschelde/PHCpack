@@ -4,6 +4,10 @@ SDK_HOME=/usr/local/cuda/sdk
 
 all: run_ped_d run_ped_dd run_ped_qd
 
+use_complex:
+	g++ -o /tmp/use_complex -I$(QD_ROOT)/include use_complex.cpp \
+            /usr/local/lib/libqd.a
+
 run_ped_d:
 	@-echo ">>> compiling kernels ..."
 	nvcc --define-macro precision=d -I./DefineTypesD \
