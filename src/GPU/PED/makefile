@@ -1,4 +1,8 @@
-QD_ROOT=/usr/local/qd-2.3.9
+# This makefile works for the K20C and C2050.
+# For the P100, remove the -arch=sm_13 option.
+
+QD_ROOT=/usr/local/qd-2.3.17
+QD_LIB=/usr/local/lib
 GQD_HOME=/usr/local/gqd_1_2
 SDK_HOME=/usr/local/cuda/sdk
 
@@ -24,7 +28,7 @@ run_ped_d:
 	@-echo ">>> linking ..."
 	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
 		ped_kernelsT.o run_ped.o gqd_qd_util.o \
-		$(QD_ROOT)/src/libqd.a -o run_ped_d \
+		$(QD_LIB)/libqd.a -o run_ped_d \
             -lcuda -lcutil_x86_64 -lcudart \
             -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib
 
@@ -44,7 +48,7 @@ run_ped_dd:
 	@-echo ">>> linking ..."
 	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
 		ped_kernelsT.o run_ped.o gqd_qd_util.o \
-		$(QD_ROOT)/src/libqd.a -I./DefineTypesDD -o run_ped_dd \
+		$(QD_LIB)/libqd.a -I./DefineTypesDD -o run_ped_dd \
             -lcuda -lcutil_x86_64 -lcudart \
             -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib
 
@@ -64,7 +68,7 @@ run_ped_qd:
 	@-echo ">>> linking ..."
 	g++ -I./DefineTypesQD -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
 		ped_kernelsT_qd.o run_ped.o gqd_qd_util.o \
-		$(QD_ROOT)/src/libqd.a -o run_ped_qd \
+		$(QD_LIB)/libqd.a -o run_ped_qd \
             -lcuda -lcutil_x86_64 -lcudart \
             -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib
 

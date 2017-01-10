@@ -200,7 +200,8 @@ void GPU_evaldiff
  // allocate space for output
    int ant = ((dim*dim+dim)/BS + 1)*BS;
    int aas = ant*m;
-   complex<T> *derivatives_h = new complex<T>[aas];
+  // complex<T> *derivatives_h = new complex<T>[aas]; // illegal
+   complex<T> derivatives_h[aas]; // replaces the above allocation
    for(int i=0; i<aas; i++)
       derivatives_h[i].initH(0.0,0.0);
    size_t size_c = ncoefs*sizeof(complex<T>);

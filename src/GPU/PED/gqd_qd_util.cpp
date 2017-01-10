@@ -53,7 +53,14 @@ int parse_arguments
 {
    if(argc < 8)
    {
-      cout << argv[0] << "needs seven parameters" << endl;
+      cout << argv[0] << " needs seven parameters :" << endl;
+      cout << "(1) block size, number of threads in a block" << endl;
+      cout << "(2) dimension of the problem" << endl;
+      cout << "(3) number of monomials" << endl;
+      cout << "(4) number of variables in each monomial" << endl;
+      cout << "(5) maximal degree of each variable" << endl;
+      cout << "(6) number of repeated runs" << endl;
+      cout << "(7) execution mode" << endl;
       cout << "please try again..." << endl; return 1;
    }
    *BS = atoi(argv[1]);     // block size

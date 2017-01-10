@@ -1,3 +1,9 @@
+Tue 10 Jan 2017 : updated the makefile for qd-2.3.17, where the libqd.a
+  is in a separate location, separate from the src directory.
+  Fixed an allocation error in ped_kernelsT.cu and ped_kernelsT_qd.cu.
+  Made the error message when parsing the command line arguments in
+  gqd_qd_util.cpp better.
+
 Sun 8 Jan 2017 : experimenting with complex numbers at several levels
   of precision in the same source file in the file use_complex.cpp,
   made a change to complexH.h, in the copy mycomplex.h.
