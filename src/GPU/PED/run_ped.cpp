@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <string>
 #include <gqd_type.h>
-#include "complex.h"
+#include "complexD.h"
 #include "gqd_qd_util.h"
 // #include <qd/qd_real.h>
 #include "DefineType.h"
@@ -36,18 +36,18 @@ typedef qd_real T1;
 // typedef dd_real T1;
 
 
-void print(complex<T>* a, complexH<T1>* b, int dim, string var);
-void print(complex<T>* a, complexH<T1>** b, int dimX, int dimY, int stride, string var);
+void print(complexD<T>* a, complexH<T1>* b, int dim, string var);
+void print(complexD<T>* a, complexH<T1>** b, int dimX, int dimY, int stride, string var);
 
 void GPU_evaldiff
  ( int BS, int dim, int NM, int NV, int deg, int r, int mode, int m,
-   int ncoefs, char *pos_arr_h_char, char *exp_arr_h_char, complex<T> *x_h,
-   complex<T> *c_h, complex<T> *factors_h, complex<T> *polvalues_h );
+   int ncoefs, char *pos_arr_h_char, char *exp_arr_h_char, complexD<T> *x_h,
+   complexD<T> *c_h, complexD<T> *factors_h, complexD<T> *polvalues_h );
 
 void CPU_evaldiff
  ( int dim, int NM, int NV, int deg, int r, int mode, int m,
    int *pos_arr_h_int, int *exp_arr_h_int, complexH<T1> *c,
-   complexH<T1> *x, complex<T> *factors_h, complex<T> *polvalues_h );
+   complexH<T1> *x, complexD<T> *factors_h, complexD<T> *polvalues_h );
 
 void write_system ( int dim, 
 int NM, 
@@ -69,12 +69,12 @@ int main ( int argc, char *argv[] )
 
   int timevalue = 1287178355; // fixed seed instead of timevalue=time(NULL)
   const int n = 32;
-  complex<T> *x = (complex<T>*)calloc(n,sizeof(complex<T>));
-  complex<T> *y = (complex<T>*)calloc(n,sizeof(complex<T>));
-  complex<T> *yD2 = (complex<T>*)calloc(n,sizeof(complex<T>));
+  complexD<T> *x = (complexD<T>*)calloc(n,sizeof(complexD<T>));
+  complexD<T> *y = (complexD<T>*)calloc(n,sizeof(complexD<T>));
+  complexD<T> *yD2 = (complexD<T>*)calloc(n,sizeof(complexD<T>));
   
    srand(timevalue);
-   complex<T> *xp_h = new complex<T>[dim];
+   complexD<T> *xp_h = new complexD<T>[dim];
    complexH<T1> *xp = new complexH<T1>[dim];
    random_point(dim,xp_h,xp);
    // print(xp_h,xp,dim,"x");
@@ -88,7 +88,7 @@ int main ( int argc, char *argv[] )
    int exp_arr_h_int[NM*NV];
    char exp_arr_h_char[NM*NV];
    int ncoefs = NM*(NV+1);
-   complex<T> *c_h = new complex<T>[ncoefs];
+   complexD<T> *c_h = new complexD<T>[ncoefs];
    complexH<T1> *c = new complexH<T1>[ncoefs];
    generate_system(dim,NM,NV,deg,pos_arr_h_int,pos_arr_h_char,
                    exp_arr_h_int,exp_arr_h_char,c_h,c);
@@ -96,10 +96,10 @@ int main ( int argc, char *argv[] )
 // allocate space for output
    int m = NM/dim;
    // cout << "m=" << m << endl;
-   complex<T> *factors_h = new complex<T>[NM];
+   complexD<T> *factors_h = new complexD<T>[NM];
    int ant = ((dim*dim+dim)/BS + 1)*BS;
    // cout << "ant=" << ant << endl;
-   complex<T> *polvalues_h = new complex<T>[ant];
+   complexD<T> *polvalues_h = new complexD<T>[ant];
    if(mode == 0 || mode == 2)
       GPU_evaldiff(BS,dim,NM,NV,deg,r,mode,m,ncoefs,pos_arr_h_char,
                    exp_arr_h_char,xp_h,c_h,factors_h,polvalues_h);
@@ -225,7 +225,7 @@ void sum_mons
 void CPU_evaldiff
  ( int dim, int NM, int NV, int deg, int r, int mode, int m,
    int *pos_arr_h_int, int *exp_arr_h_int, complexH<T1> *c,
-   complexH<T1> *x, complex<T> *factors_h, complex<T> *polvalues_h )
+   complexH<T1> *x, complexD<T> *factors_h, complexD<T> *polvalues_h )
 // The CPU is used to evaluate a system and its Jacobian matrix.
 {
    complexH<T1> **vdegrees = new complexH<T1>*[dim];
@@ -271,7 +271,7 @@ void CPU_evaldiff
    }
 }
 
-void print(complex<T>* a, complexH<T1>* b, int dim, string var)
+void print(complexD<T>* a, complexH<T1>* b, int dim, string var)
 {
    complexH<T1> temp;
 
@@ -283,19 +283,22 @@ void print(complex<T>* a, complexH<T1>* b, int dim, string var)
    }
 }
 
-void print(complex<T>* a, complexH<T1>** b, int dimX, int dimY, int stride, string var)
+void print
+ ( complexD<T>* a, complexH<T1>** b, int dimX, int dimY,
+   int stride, string var)
 {
 
-complexH<T1> temp;
+   complexH<T1> temp;
 
-for (int i=0;i<dimX;i++)
- for (int j=0;j<dimY;j++)
-  {
-    comp1_gqd2qd(&a[stride+dimY*j+i],&temp);
-    cout << "GPU: " << var << "["<< i << "]" << "["<< j << "] = " << temp;
-    cout << "CPU: " << var << "["<< i << "]" << "["<< j << "] = " << b[i][j];
-  }
-
+   for(int i=0;i<dimX;i++)
+      for(int j=0;j<dimY;j++)
+      {
+         comp1_gqd2qd(&a[stride+dimY*j+i],&temp);
+         cout << "GPU: " 
+              << var << "["<< i << "]" << "["<< j << "] = " << temp;
+         cout << "CPU: "
+              << var << "["<< i << "]" << "["<< j << "] = " << b[i][j];
+      }
 }
 
 void write_system ( int dim, int NM, int NV, complexH<T1> *c, int *myp, int *e )
@@ -314,4 +317,3 @@ void write_system ( int dim, int NM, int NV, complexH<T1> *c, int *myp, int *e )
       cout << endl;
    }
 }
-

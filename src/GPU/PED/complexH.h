@@ -45,13 +45,13 @@ class complexH
       complexH operator*(T);
       complexH operator*(int);
       complexH operator/(complexH);
-      T absv() {return sqrt(real*real+image*image);};
-      complexH adj() {return complexH(real,-image,(bool)1);};
+      T absv() {return sqrt(real*real+imag*imag);};
+      complexH adj() {return complexH(real,-imag,(bool)1);};
       // void init(double,double);
       //void init(qd_real,qd_real);
 
       T real;
-      T image;
+      T imag;
 };
 
 template<class T, int size>
@@ -77,7 +77,7 @@ template <class T>
 complexH<T>::complexH ( const complexH<T>& source )
 {
    real = source.real;
-   image = source.image;
+   imag = source.imag;
 }
 
 template <class T>
@@ -85,14 +85,14 @@ std::ostream& operator<< ( std::ostream& os, const complexH<T>& number )
 {
    int pr = 2*sizeof(T);
    cout.precision(pr);
-   os << number.real << " + i*" << number.image << endl;
+   os << number.real << " + i*" << number.imag << endl;
    return os;
 }
 
 template <class T>
 std:: ifstream& operator >> ( std::ifstream& is, const complexH<T>& number )
 {
-   is >> number.real >> "+i*" >> number.image;
+   is >> number.real >> "+i*" >> number.imag;
    return is;
 }
 
@@ -100,7 +100,7 @@ template <class T>
 complexH<T> complexH<T>::operator= ( complexH<T> a )
 {
    real = a.real;
-   image = a.image;
+   imag = a.imag;
 
    return *this;
 }
@@ -109,7 +109,7 @@ template <class T>
 complexH<T>::complexH(T a, T b, bool c)
 {
    real = a;
-   image = b;
+   imag = b;
 }
 
 /*
@@ -117,39 +117,38 @@ template <class T>
 complexH<T>::complexH(double a, double b)
 {
 real.x[0] = a;
-image.x[0] =b;
+imag.x[0] =b;
 }
 */
 
 template <class T>
 complexH<T>::complexH(double a, double b)
 {
-real.x[0] = a; real.x[1]=0.0;
-image.x[0] =b; image.x[1]=0.0;
+   real.x[0] = a; real.x[1]=0.0;
+   imag.x[0] = b; imag.x[1]=0.0;
 }
 
 template <>
 inline complexH<qd_real>::complexH(double a, double b)
 {
-real.x[0] = a; real.x[1]=0.0; real.x[2]=0.0; real.x[3]=0.0;
-image.x[0] =b; image.x[1]=0.0; image.x[2]=0.0; image.x[3]=0.0;
+   real.x[0] = a; real.x[1]=0.0; real.x[2]=0.0; real.x[3]=0.0;
+   imag.x[0] = b; imag.x[1]=0.0; imag.x[2]=0.0; imag.x[3]=0.0;
 }
 
 template <>
 inline complexH<double>::complexH ( double a, double b )
 {
    real = a; 
-   image = b; 
+   imag = b; 
 }
 
 template <class T>
 void complexH<T>::init(double a, double b)
-
 {
    complexH<T> temp(a,b);
 
    real = temp.real;
-   image = temp.image;   
+   imag = temp.imag;
 }
 
 //template <class T>
@@ -158,40 +157,38 @@ void complexH<T>::init(double a, double b)
 template <class T>
 __device__ complexH<T> complexH<T>::operator+(complexH<T> a)
 {
-   return complexH( real + a.real, image + a.image,1);
+   return complexH( real + a.real, imag + a.imag,1);
 }
 
 template <class T>
 complexH<T> complexH<T>::operator-(complexH<T> a)
 {
-   return complexH( real - a.real, image - a.image,1);
+   return complexH( real - a.real, imag - a.imag,1);
 }
 
 template <class T>
 complexH<T> complexH<T>::operator*(complexH<T> a)
 {
-   return complexH( real*a.real-image*a.image, image*a.real+real*a.image,1);
+   return complexH( real*a.real-imag*a.imag, imag*a.real+real*a.imag,1);
 }
 
 template <class T>
 complexH<T> complexH<T>::operator*(T a)
 {
-  return complexH( real*a, image*a,1);
+  return complexH( real*a, imag*a,1);
 }
 
 template <class T>
 complexH<T> complexH<T>::operator*(int a)
 {
-   return complexH( real*a, image*a,1);
+   return complexH( real*a, imag*a,1);
 }
 
 template <class T>
 complexH<T> complexH<T>::operator/(complexH<T> a)
 {
-
-  return complexH( (real*a.real+image*a.image)/(a.real*a.real+a.image*a.image),
-		  (image*a.real-real*a.image)/ (a.real*a.real+a.image*a.image),1);
-
+   return complexH((real*a.real+imag*a.imag)/(a.real*a.real+a.imag*a.imag),
+                   (imag*a.real-real*a.imag)/ (a.real*a.real+a.imag*a.imag),1);
 }
 
 #endif

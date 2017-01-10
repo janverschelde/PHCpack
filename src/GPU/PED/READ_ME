@@ -34,7 +34,7 @@ DefineType.h       : defines the precision in the respective directories
 ped_kernelsT.cu    : kernels of the GPU solver
 ped_kernelsT_qd.cu : kernels of the GPU solver for quad double precision
 ------------------------------------------------------------------------------
-complex.h          : complex types for GPU
+complexD.h         : complex types for GPU (D = device)
 complexH.h         : complex types for CPU (H = host)
 gqd_qd_util.h      : headers of type conversions and command line parsing
 gqd_qd_util.cpp    : definitions of type conversions and command line parsing

@@ -2,12 +2,9 @@
 #define UTIL
 
 #include<qd/qd_real.h>
-#include"complex.h"
+#include"complexD.h"
 #include"complexH.h"
 #include"cstdlib"
-
-
-
 
 void qd2gqd( qd_real *a, gqd_real *b );
 void gqd2qd( gqd_real *a, qd_real *b );
@@ -16,25 +13,20 @@ void gqd2qd ( gdd_real *a, dd_real *b );
 void qd2gqd ( double *a, double *b );
 void gqd2qd ( double *a, double *b );
 
-
-
 template<class T, class T1>
-void comp1_gqd2qd(complex<T>* a, complexH<T1>* b)
+void comp1_gqd2qd(complexD<T>* a, complexH<T1>* b)
 {
-gqd2qd(&(a->real),&(b->real));
-gqd2qd(&(a->image),&(b->image));
-
+   gqd2qd(&(a->real),&(b->real));
+   gqd2qd(&(a->imag),&(b->imag));
 }
 
 template<class T, class T1>
-void comp1_gqdArr2qdArr(complex<T>* a, complexH<T1>* b, int dim)
+void comp1_gqdArr2qdArr(complexD<T>* a, complexH<T1>* b, int dim)
 {
-int i;
+   int i;
 
-for (i=0;i<dim;i++)
-  comp1_gqd2qd(a+i,b+i);
+   for(i=0;i<dim;i++) comp1_gqd2qd(a+i,b+i);
 }
-
 
 int parse_arguments
  ( int argc, char *argv[],
@@ -48,7 +40,6 @@ void random_exponents ( int NM, int NV, int d, int *e_int, char *e_char );
 // Generates random exponents for the NM monomials in NV variables,
 // of degree at most d, stored twice in the arrays e_int and e_char.
 
-
 double random_double ( void )
 // Returns a random double in [0,1].
 {
@@ -56,7 +47,7 @@ double random_double ( void )
 }
 
 template<class T, class T1>
-void random_point ( int dim, complex<T> *x_h, complexH<T1> *x )
+void random_point ( int dim, complexD<T> *x_h, complexH<T1> *x )
 // Generates a random complex point of length dim,
 // stored twice in the arrays x and x_h.
 {
@@ -80,7 +71,7 @@ void random_point ( int dim, complex<T> *x_h, complexH<T1> *x )
 }
 
 template<class T, class T1>
-void random_coefficients ( int n, complex<T> *c_h, complexH<T1> *c )
+void random_coefficients ( int n, complexD<T> *c_h, complexH<T1> *c )
 // Generates n random coefficients
 // stored twice in the arrays c_h and c.
 {
@@ -94,13 +85,10 @@ void random_coefficients ( int n, complex<T> *c_h, complexH<T1> *c )
    }
 }
 
-
-
-
 template<class T, class T1>
 void generate_system
  ( int dim, int NM, int NV, int deg, int *p_int, char *p_char,
-   int *e_int, char *e_char, complex<T> *c_h, complexH<T1> *c )
+   int *e_int, char *e_char, complexD<T> *c_h, complexH<T1> *c )
 // Generates a random system of dimension dim.
 // On input are the number of monomials NM, number of variables NV,
 // largest degree deg.  On returns are positions in p_int, p_char,
@@ -112,7 +100,7 @@ void generate_system
 }
 
 template<class T, class T1>
-void error_on_factors ( int NM, complex<T> *factors_h, complexH<T1> *factors_s )
+void error_on_factors ( int NM, complexD<T> *factors_h, complexH<T1> *factors_s )
 // Compares the factors computes on the host with those computed by
 // the CPU, for a number of monomials equal to NM.
 {
@@ -160,7 +148,7 @@ void error_on_factors ( int NM, complex<T> *factors_h, complexH<T1> *factors_s )
 
 template<class T, class T1>
 void error_on_derivatives
- ( int dim, complexH<T1> **derivatives, complex<T> *values_h )
+ ( int dim, complexH<T1> **derivatives, complexD<T> *values_h )
 // compares the derivatives of the system of dimension dim
 // computed on the GPU with those computed by the CPU
 {
@@ -178,7 +166,5 @@ void error_on_derivatives
 
    cout << "poly_error=" << poly_error;
 }
-
-
 
 #endif

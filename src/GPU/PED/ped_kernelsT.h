@@ -12,7 +12,7 @@
 template<class T>
 void GPU_evaldiff
  ( int BS, int dim, int NM, int NV, int deg, int r, int mode, int m,
-   int ncoefs, char *pos_arr_h_char, char *exp_arr_h_char, complex<T> *x_h,
-   complex<T> *c_h, complex<T> *factors_h, complex<T> *polvalues_h );
+   int ncoefs, char *pos_arr_h_char, char *exp_arr_h_char, complexD<T> *x_h,
+   complexD<T> *c_h, complexD<T> *factors_h, complexD<T> *polvalues_h );
 
 #endif
