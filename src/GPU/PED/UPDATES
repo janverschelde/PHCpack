@@ -5,6 +5,8 @@ Tue 10 Jan 2017 : updated the makefile for qd-2.3.17, where the libqd.a
   gqd_qd_util.cpp better.  For symmetry with complexH.h, renamed complex.h
   into complexD.h, which changed the *cu, *h, and *cpp files,
   except for the experimental use_complex.cpp and mycomplex.h.
+  Extended the experimental use_complex.cpp with a templated function;
+  replaced the image by imag in mycomplex.h.
 
 Sun 8 Jan 2017 : experimenting with complex numbers at several levels
   of precision in the same source file in the file use_complex.cpp,
