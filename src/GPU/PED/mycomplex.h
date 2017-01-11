@@ -19,181 +19,156 @@
 
 using namespace std;
 
-template <class T>
+template <class real>
 class mycomplex
 {
-   //template <class T1>
-   //friend std::ostream& operator<<
-   //   ( std::ostream& os, const mycomplex& number );
-      // ( std::ostream& os, const mycomplex<T1>& number );
-
-   // template <class T1>
-   //friend std::ifstream& operator>>
-   //   ( std::ifstream& is, const mycomplex& number );
-      // ( std::ifstream& is, const mycomplex<T1>& number );
-
    public:
 
-      mycomplex<T> operator=(mycomplex<T>);
-      mycomplex(T,T,bool);
+      mycomplex<real> operator=(mycomplex<real>);
+      mycomplex(real,real,bool);
       mycomplex(double,double);
-      mycomplex(const mycomplex<T> &);
+      mycomplex(const mycomplex<real> &);
       void init(double,double);
 
       mycomplex() {};
       mycomplex operator+(mycomplex);
       mycomplex operator-(mycomplex);
       mycomplex operator*(mycomplex);
-      mycomplex operator*(T);
+      mycomplex operator*(real);
       mycomplex operator*(int);
       mycomplex operator/(mycomplex);
-      T absv() {return sqrt(real*real+imag*imag);};
-      mycomplex adj() {return mycomplex(real,-imag,(bool)1);};
-      // void init(double,double);
-      //void init(qd_real,qd_real);
+      real absv() {return sqrt(re*re+im*im);};
+      mycomplex adj() {return mycomplex(re,-im,(bool)1);};
 
-      T real;
-      T imag;
+      real re;
+      real im;
 };
 
-template<class T, int size>
+template<class real, int size>
 class storage
 {
    public:
 
-      mycomplex<T> array[size];
+      mycomplex<real> array[size];
 
       void print()
       {
          for(int i=0; i<size; i++) cout << array[i];
       }
 
-      void copyToStor( mycomplex<T>* a)
+      void copyrealoStor( mycomplex<real>* a)
       {
          for(int i=0; i<size; i++) array[i]=a[i];
       }
 
 };
 
-template <class T>
-mycomplex<T>::mycomplex ( const mycomplex<T>& source )
+template <class real>
+mycomplex<real>::mycomplex ( const mycomplex<real>& source )
 {
-   real = source.real;
-   imag = source.imag;
+   re = source.re;
+   im = source.im;
 }
 
-template <class T>
-std::ostream& operator<< ( std::ostream& os, const mycomplex<T>& number )
+template <class real>
+std::ostream& operator<< ( std::ostream& os, const mycomplex<real>& number )
 {
-   int pr = 2*sizeof(T);
+   int pr = 2*sizeof(real);
    cout.precision(pr);
-   os << number.real << " + i*" << number.imag << endl;
+   os << number.re << " + i*" << number.im << endl;
    return os;
 }
 
-template <class T>
-std:: ifstream& operator >> ( std::ifstream& is, const mycomplex<T>& number )
+template <class real>
+std:: ifstream& operator >>
+ ( std::ifstream& is, const mycomplex<real>& number )
 {
-   is >> number.real >> "+i*" >> number.imag;
+   is >> number.re >> "+i*" >> number.im;
    return is;
 }
 
-template <class T>
-mycomplex<T> mycomplex<T>::operator= ( mycomplex<T> a )
+template <class real>
+mycomplex<real> mycomplex<real>::operator= ( mycomplex<real> a )
 {
-   real = a.real;
-   imag = a.imag;
+   re = a.re;
+   im = a.im;
 
    return *this;
 }
 
-template <class T>
-mycomplex<T>::mycomplex(T a, T b, bool c)
+template <class real>
+mycomplex<real>::mycomplex(real a, real b, bool c)
 {
-   real = a;
-   imag = b;
+   re = a;
+   im = b;
 }
 
-/*
-template <class T>
-mycomplex<T>::mycomplex(double a, double b)
+template <class real>
+mycomplex<real>::mycomplex(double a, double b)
 {
-real.x[0] = a;
-imag.x[0] =b;
-}
-*/
-
-template <class T>
-mycomplex<T>::mycomplex(double a, double b)
-{
-real.x[0] = a; real.x[1]=0.0;
-imag.x[0] =b; imag.x[1]=0.0;
+   re.x[0] = a; re.x[1] = 0.0;
+   im.x[0] = b; im.x[1] = 0.0;
 }
 
 template <>
-inline mycomplex<qd_real>::mycomplex(double a, double b)
+inline mycomplex<qd_real>::mycomplex ( double a, double b )
 {
-real.x[0] = a; real.x[1]=0.0; real.x[2]=0.0; real.x[3]=0.0;
-imag.x[0] =b; imag.x[1]=0.0; imag.x[2]=0.0; imag.x[3]=0.0;
+   re.x[0] = a; re.x[1] = 0.0; re.x[2] = 0.0; re.x[3] = 0.0;
+   im.x[0] = b; im.x[1] = 0.0; im.x[2] = 0.0; im.x[3] = 0.0;
 }
 
 template <>
 inline mycomplex<double>::mycomplex ( double a, double b )
 {
-   real = a; 
-   imag = b; 
+   re = a; 
+   im = b; 
 }
 
-template <class T>
-void mycomplex<T>::init(double a, double b)
-
+template <class real>
+void mycomplex<real>::init ( double a, double b )
 {
-   mycomplex<T> temp(a,b);
+   mycomplex<real> temp(a,b);
 
-   real = temp.real;
-   imag = temp.imag;   
+   re = temp.re;
+   im = temp.im;   
 }
 
-//template <class T>
-//mycomplex<T>::mycomplex() {}
-
-template <class T>
-mycomplex<T> mycomplex<T>::operator+(mycomplex<T> a)
+template <class real>
+mycomplex<real> mycomplex<real>::operator+ ( mycomplex<real> a )
 {
-   return mycomplex( real + a.real, imag + a.imag,1);
+   return mycomplex(re + a.re,im + a.im,1);
 }
 
-template <class T>
-mycomplex<T> mycomplex<T>::operator-(mycomplex<T> a)
+template <class real>
+mycomplex<real> mycomplex<real>::operator- ( mycomplex<real> a )
 {
-   return mycomplex( real - a.real, imag - a.imag,1);
+   return mycomplex(re - a.re, im - a.im,1);
 }
 
-template <class T>
-mycomplex<T> mycomplex<T>::operator*(mycomplex<T> a)
+template <class real>
+mycomplex<real> mycomplex<real>::operator* ( mycomplex<real> a )
 {
-   return mycomplex( real*a.real-imag*a.imag, imag*a.real+real*a.imag,1);
+   return mycomplex(re*a.re-im*a.im, im*a.re+re*a.im,1);
 }
 
-template <class T>
-mycomplex<T> mycomplex<T>::operator*(T a)
+template <class real>
+mycomplex<real> mycomplex<real>::operator* ( real a )
 {
-  return mycomplex( real*a, imag*a,1);
+   return mycomplex(re*a, im*a,1);
 }
 
-template <class T>
-mycomplex<T> mycomplex<T>::operator*(int a)
+template <class real>
+mycomplex<real> mycomplex<real>::operator* ( int a )
 {
-   return mycomplex( real*a, imag*a,1);
+   return mycomplex(re*a, im*a,1);
 }
 
-template <class T>
-mycomplex<T> mycomplex<T>::operator/(mycomplex<T> a)
+template <class real>
+mycomplex<real> mycomplex<real>::operator/ ( mycomplex<real> a )
 {
 
-  return mycomplex((real*a.real+imag*a.imag)/(a.real*a.real+a.imag*a.imag),
-		   (imag*a.real-real*a.imag)/(a.real*a.real+a.imag*a.imag),1);
-
+  return mycomplex((re*a.re+im*a.im)/(a.re*a.re+a.im*a.im),
+		   (im*a.re-re*a.im)/(a.re*a.re+a.im*a.im),1);
 }
 
 #endif
