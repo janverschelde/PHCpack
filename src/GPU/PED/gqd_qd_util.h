@@ -13,15 +13,15 @@ void gqd2qd ( gdd_real *a, dd_real *b );
 void qd2gqd ( double *a, double *b );
 void gqd2qd ( double *a, double *b );
 
-template<class T, class T1>
-void comp1_gqd2qd(complexD<T>* a, complexH<T1>* b)
+template<class realD, class realH>
+void comp1_gqd2qd(complexD<realD>* a, complexH<realH>* b)
 {
-   gqd2qd(&(a->real),&(b->real));
-   gqd2qd(&(a->imag),&(b->imag));
+   gqd2qd(&(a->re),&(b->re));
+   gqd2qd(&(a->im),&(b->im));
 }
 
-template<class T, class T1>
-void comp1_gqdArr2qdArr(complexD<T>* a, complexH<T1>* b, int dim)
+template<class realD, class realH>
+void comp1_gqdArr2qdArr(complexD<realD>* a, complexH<realH>* b, int dim)
 {
    int i;
 
@@ -46,8 +46,8 @@ double random_double ( void )
    return rand()/((double) RAND_MAX);
 }
 
-template<class T, class T1>
-void random_point ( int dim, complexD<T> *x_h, complexH<T1> *x )
+template<class realD, class realH>
+void random_point ( int dim, complexD<realD> *x_h, complexH<realH> *x )
 // Generates a random complex point of length dim,
 // stored twice in the arrays x and x_h.
 {
@@ -70,8 +70,8 @@ void random_point ( int dim, complexD<T> *x_h, complexH<T1> *x )
      }
 }
 
-template<class T, class T1>
-void random_coefficients ( int n, complexD<T> *c_h, complexH<T1> *c )
+template<class realD, class realH>
+void random_coefficients ( int n, complexD<realD> *c_h, complexH<realH> *c )
 // Generates n random coefficients
 // stored twice in the arrays c_h and c.
 {
@@ -80,15 +80,13 @@ void random_coefficients ( int n, complexD<T> *c_h, complexH<T1> *c )
       double temp = random_double()*2*M_PI;
       c_h[i].initH(cos(temp),sin(temp));
       c[i].init(cos(temp),sin(temp));
-      //c_h[i].re = cos(temp); c_h[i].im = sin(temp);
-      //c[i].re = cos(temp);   c[i].im = sin(temp);
    }
 }
 
-template<class T, class T1>
+template<class realD, class realH>
 void generate_system
  ( int dim, int NM, int NV, int deg, int *p_int, char *p_char,
-   int *e_int, char *e_char, complexD<T> *c_h, complexH<T1> *c )
+   int *e_int, char *e_char, complexD<realD> *c_h, complexH<realH> *c )
 // Generates a random system of dimension dim.
 // On input are the number of monomials NM, number of variables NV,
 // largest degree deg.  On returns are positions in p_int, p_char,
@@ -99,14 +97,15 @@ void generate_system
    random_coefficients(NM,c_h,c);
 }
 
-template<class T, class T1>
-void error_on_factors ( int NM, complexD<T> *factors_h, complexH<T1> *factors_s )
+template<class realD, class realH>
+void error_on_factors
+ ( int NM, complexD<realD> *factors_h, complexH<realH> *factors_s )
 // Compares the factors computes on the host with those computed by
 // the CPU, for a number of monomials equal to NM.
 {
 
-   complexH<T1> factors_error(0.0,0.0);   
-   complexH<T1> temp;
+   complexH<realH> factors_error(0.0,0.0);   
+   complexH<realH> temp;
 
    for(int i=0;i<NM;i++)
       {
@@ -146,22 +145,22 @@ void error_on_factors ( int NM, complexD<T> *factors_h, complexH<T1> *factors_s 
 */
 }
 
-template<class T, class T1>
+template<class realD, class realH>
 void error_on_derivatives
- ( int dim, complexH<T1> **derivatives, complexD<T> *values_h )
+ ( int dim, complexH<realH> **derivatives, complexD<realD> *values_h )
 // compares the derivatives of the system of dimension dim
 // computed on the GPU with those computed by the CPU
 {
 
-   complexH<T1> poly_error;
-   complexH<T1> temp;
+   complexH<realH> poly_error;
+   complexH<realH> temp;
 
    for(int i=0;i<dim;i++)
-        for(int j=0; j<dim; j++)
-
+      for(int j=0; j<dim; j++)
       {
-        comp1_gqd2qd(&values_h[dim+dim*i+j], &temp);
-        poly_error=poly_error+(derivatives[j][i]-temp)*(derivatives[j][i]-temp);
+         comp1_gqd2qd(&values_h[dim+dim*i+j], &temp);
+         poly_error=poly_error
+            +(derivatives[j][i]-temp)*(derivatives[j][i]-temp);
       }
 
    cout << "poly_error=" << poly_error;

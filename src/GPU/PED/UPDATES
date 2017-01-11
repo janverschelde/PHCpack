@@ -1,5 +1,8 @@
 Wed 11 Jan 2017 : in mycomplex.h and use_complex.cpp, used type real
   instead of T, and replaced real and imag with re and im.
+  Replaced real and imag by re and im in complexD.h and complexH.h.
+  Instead of T and T1 used realD and realH in gqd_qd_util.h,
+  and also in complexH.h; replaced T by real in complexD.h.
 
 Tue 10 Jan 2017 : updated the makefile for qd-2.3.17, where the libqd.a
   is in a separate location, separate from the src directory.

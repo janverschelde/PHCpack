@@ -19,13 +19,13 @@
 
 using namespace std;
 
-template <class T>
+template <class real>
 class complexD
 {
    public:
 
-      DEVICE complexD<T> operator=(complexD<T>);
-      DEVICE complexD(T,T,bool);
+      DEVICE complexD<real> operator=(complexD<real>);
+      DEVICE complexD(real,real,bool);
       DEVICE complexD();
       DEVICE complexD(double,double);
       DEVICE void init(double,double);
@@ -34,127 +34,127 @@ class complexD
       DEVICE complexD operator+(complexD);
       DEVICE complexD operator-(complexD);
       DEVICE complexD operator*(complexD);
-      DEVICE complexD operator*(T);
+      DEVICE complexD operator*(real);
       DEVICE complexD operator*(int);
       DEVICE complexD operator/(complexD);
-      DEVICE T absv() {return sqrt(real*real+imag*imag);};
-      DEVICE complexD adj() {return complexD(real,0.0-imag,(bool)1);};
+      DEVICE real absv() {return sqrt(re*re+im*im);};
+      DEVICE complexD adj() {return complexD(re,0.0-im,(bool)1);};
 
-      T real;
-      T imag;
+      real re;
+      real im;
 };
 
-template <class T>
-DEVICE complexD<T> complexD<T>::operator=(complexD<T> a)
+template <class real>
+DEVICE complexD<real> complexD<real>::operator=(complexD<real> a)
 {
-   real=a.real;
-   imag=a.imag;
+   re=a.re;
+   im=a.im;
 
    return *this;
 }
 
-template <class T>
-inline DEVICE complexD<T>::complexD(T a, T b, bool c)
+template <class real>
+inline DEVICE complexD<real>::complexD(real a, real b, bool c)
 {
-   real = a;
-   imag = b;
+   re = a;
+   im = b;
 }
 
-template <class T>
-DEVICE complexD<T>::complexD(double a, double b)
+template <class real>
+DEVICE complexD<real>::complexD(double a, double b)
 {
-   real.x = a; real.y = 0.0;
-   imag.x = b; imag.y = 0.0;
+   re.x = a; re.y = 0.0;
+   im.x = b; im.y = 0.0;
 }
 
 template <>
 inline DEVICE complexD<gqd_real>::complexD(double a, double b)
 {
-   real.x = a; real.y = 0.0; real.z = 0.0; real.w = 0.0;
-   imag.x = b; imag.y = 0.0; imag.z = 0.0; imag.w = 0.0;
+   re.x = a; re.y = 0.0; re.z = 0.0; re.w = 0.0;
+   im.x = b; im.y = 0.0; im.z = 0.0; im.w = 0.0;
 }
 
 template <>
 inline DEVICE complexD<double>::complexD(double a, double b)
 {
-   real = a; 
-   imag = b; 
+   re = a; 
+   im = b; 
 }
 
-template <class T>
-DEVICE void complexD<T>::init(double a, double b)
+template <class real>
+DEVICE void complexD<real>::init(double a, double b)
 {
-   complexD<T> temp(a,b);
-   real = temp.real;
-   imag = temp.imag;   
+   complexD<real> temp(a,b);
+   re = temp.re;
+   im = temp.im;   
 }
 
 template <>
 inline void complexD<gqd_real>::initH(double a, double b)
 {
-   real.x = a; real.y = 0.0; real.z = 0.0; real.w = 0.0;
-   imag.x = b; imag.y = 0.0; imag.z = 0.0; imag.w = 0.0;
+   re.x = a; re.y = 0.0; re.z = 0.0; re.w = 0.0;
+   im.x = b; im.y = 0.0; im.z = 0.0; im.w = 0.0;
 }
 
 template <>
 inline void complexD<gdd_real>::initH(double a, double b)
 {
-   real.x=a; real.y=0.0; imag.x=b; imag.y=0.0;
+   re.x=a; re.y=0.0; im.x=b; im.y=0.0;
 }
 
 template <>
 inline void complexD<double>::initH(double a, double b)
 {
-   real=a;
-   imag=b;
+   re=a;
+   im=b;
 }
 
-template <class T>
-void complexD<T>::initH(double a, double b)
+template <class real>
+void complexD<real>::initH(double a, double b)
 {
-  //complex<T> temp(a,b);
-  //real=temp.real; image=temp.image;
-  //real.x=a; real.y=0.0; image.x=b; image.y=0.0;
+  //complex<real> temp(a,b);
+  //re=temp.re; ime=temp.ime;
+  //re.x=a; re.y=0.0; ime.x=b; ime.y=0.0;
 }
 
-template <class T>
-DEVICE complexD<T>::complexD() {}
+template <class real>
+DEVICE complexD<real>::complexD() {}
 
-template <class T>
-DEVICE complexD<T> complexD<T>::operator+(complexD<T> a)
+template <class real>
+DEVICE complexD<real> complexD<real>::operator+(complexD<real> a)
 {
-   return complexD(real + a.real, imag + a.imag,1);
+   return complexD(re + a.re, im + a.im,1);
 }
 
-template <class T>
-DEVICE complexD<T> complexD<T>::operator-(complexD<T> a)
+template <class real>
+DEVICE complexD<real> complexD<real>::operator-(complexD<real> a)
 {
-   return complexD(real-a.real,imag-a.imag,1);
+   return complexD(re-a.re,im-a.im,1);
 }
 
-template <class T>
-DEVICE complexD<T> complexD<T>::operator*(complexD<T> a)
+template <class real>
+DEVICE complexD<real> complexD<real>::operator*(complexD<real> a)
 {
-   return complexD(real*a.real-imag*a.imag, imag*a.real+real*a.imag,1);
+   return complexD(re*a.re-im*a.im, im*a.re+re*a.im,1);
 }
 
-template <class T>
-DEVICE complexD<T> complexD<T>::operator*(T a)
+template <class real>
+DEVICE complexD<real> complexD<real>::operator*(real a)
 {
-   return complexD(real*a,imag*a,1);
+   return complexD(re*a,im*a,1);
 }
 
-template <class T>
-DEVICE complexD<T> complexD<T>::operator*(int a)
+template <class real>
+DEVICE complexD<real> complexD<real>::operator*(int a)
 {
-   return complexD(real*a,imag*a,1);
+   return complexD(re*a,im*a,1);
 }
 
-template <class T>
-DEVICE complexD<T> complexD<T>::operator/(complexD<T> a)
+template <class real>
+DEVICE complexD<real> complexD<real>::operator/(complexD<real> a)
 {
-   return complexD((real*a.real+imag*a.imag)/(a.real*a.real+a.imag*a.imag),
-		   (imag*a.real-real*a.imag)/(a.real*a.real+a.imag*a.imag),1);
+   return complexD((re*a.re+im*a.im)/(a.re*a.re+a.im*a.im),
+		   (im*a.re-re*a.im)/(a.re*a.re+a.im*a.im),1);
 }
 
 #endif

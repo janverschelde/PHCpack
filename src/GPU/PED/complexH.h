@@ -19,176 +19,162 @@
 
 using namespace std;
 
-template <class T>
+template <class realH>
 class complexH
 {
-   template <class T1>
+   template <class realD>
    friend std::ostream& operator<<
-      ( std::ostream& os, const complexH<T1>& number );
+      ( std::ostream& os, const complexH<realD>& number );
 
-   template <class T1>
+   template <class realD>
    friend std::ifstream& operator>>
-      ( std::ifstream& is, const complexH<T1>& number );
+      ( std::ifstream& is, const complexH<realD>& number );
 
    public:
 
-      complexH<T> operator=(complexH<T>);
-      complexH(T,T,bool);
+      complexH<realH> operator=(complexH<realH>);
+      complexH(realH,realH,bool);
       complexH(double,double);
-      complexH(const complexH<T> &);
+      complexH(const complexH<realH> &);
       void init(double,double);
 
       complexH() {};
       complexH operator+(complexH);
       complexH operator-(complexH);
       complexH operator*(complexH);
-      complexH operator*(T);
+      complexH operator*(realH);
       complexH operator*(int);
       complexH operator/(complexH);
-      T absv() {return sqrt(real*real+imag*imag);};
-      complexH adj() {return complexH(real,-imag,(bool)1);};
-      // void init(double,double);
-      //void init(qd_real,qd_real);
+      realH absv() {return sqrt(re*re+im*im);};
+      complexH adj() {return complexH(re,-im,(bool)1);};
 
-      T real;
-      T imag;
+      realH re;
+      realH im;
 };
 
-template<class T, int size>
+template<class realH, int size>
 class storage
 {
    public:
 
-      complexH<T> array[size];
+      complexH<realH> array[size];
 
       void print()
       {
          for(int i=0; i<size; i++) cout << array[i];
       }
 
-      void copyToStor( complexH<T>* a)
+      void copyToStor( complexH<realH>* a)
       {
          for(int i=0; i<size; i++) array[i]=a[i];
       }
 
 };
 
-template <class T>
-complexH<T>::complexH ( const complexH<T>& source )
+template <class realH>
+complexH<realH>::complexH ( const complexH<realH>& source )
 {
-   real = source.real;
-   imag = source.imag;
+   re = source.re;
+   im = source.im;
 }
 
-template <class T>
-std::ostream& operator<< ( std::ostream& os, const complexH<T>& number )
+template <class realH>
+std::ostream& operator<< ( std::ostream& os, const complexH<realH>& number )
 {
-   int pr = 2*sizeof(T);
+   int pr = 2*sizeof(realH);
    cout.precision(pr);
-   os << number.real << " + i*" << number.imag << endl;
+   os << number.re << " + i*" << number.im << endl;
    return os;
 }
 
-template <class T>
-std:: ifstream& operator >> ( std::ifstream& is, const complexH<T>& number )
+template <class realH>
+std:: ifstream& operator >> ( std::ifstream& is, const complexH<realH>& number )
 {
-   is >> number.real >> "+i*" >> number.imag;
+   is >> number.re >> "+i*" >> number.im;
    return is;
 }
 
-template <class T>
-complexH<T> complexH<T>::operator= ( complexH<T> a )
+template <class realH>
+complexH<realH> complexH<realH>::operator= ( complexH<realH> a )
 {
-   real = a.real;
-   imag = a.imag;
+   re = a.re;
+   im = a.im;
 
    return *this;
 }
 
-template <class T>
-complexH<T>::complexH(T a, T b, bool c)
+template <class realH>
+complexH<realH>::complexH(realH a, realH b, bool c)
 {
-   real = a;
-   imag = b;
+   re = a;
+   im = b;
 }
 
-/*
-template <class T>
-complexH<T>::complexH(double a, double b)
+template <class realH>
+complexH<realH>::complexH(double a, double b)
 {
-real.x[0] = a;
-imag.x[0] =b;
-}
-*/
-
-template <class T>
-complexH<T>::complexH(double a, double b)
-{
-   real.x[0] = a; real.x[1]=0.0;
-   imag.x[0] = b; imag.x[1]=0.0;
+   re.x[0] = a; re.x[1] = 0.0;
+   im.x[0] = b; im.x[1] = 0.0;
 }
 
 template <>
 inline complexH<qd_real>::complexH(double a, double b)
 {
-   real.x[0] = a; real.x[1]=0.0; real.x[2]=0.0; real.x[3]=0.0;
-   imag.x[0] = b; imag.x[1]=0.0; imag.x[2]=0.0; imag.x[3]=0.0;
+   re.x[0] = a; re.x[1] = 0.0; re.x[2] = 0.0; re.x[3] = 0.0;
+   im.x[0] = b; im.x[1] = 0.0; im.x[2] = 0.0; im.x[3] = 0.0;
 }
 
 template <>
 inline complexH<double>::complexH ( double a, double b )
 {
-   real = a; 
-   imag = b; 
+   re = a; 
+   im = b; 
 }
 
-template <class T>
-void complexH<T>::init(double a, double b)
+template <class realH>
+void complexH<realH>::init(double a, double b)
 {
-   complexH<T> temp(a,b);
+   complexH<realH> temp(a,b);
 
-   real = temp.real;
-   imag = temp.imag;
+   re = temp.re;
+   im = temp.im;
 }
 
-//template <class T>
-//complexH<T>::complexH() {}
-
-template <class T>
-__device__ complexH<T> complexH<T>::operator+(complexH<T> a)
+template <class realH>
+__device__ complexH<realH> complexH<realH>::operator+(complexH<realH> a)
 {
-   return complexH( real + a.real, imag + a.imag,1);
+   return complexH(re + a.re, im + a.im,1);
 }
 
-template <class T>
-complexH<T> complexH<T>::operator-(complexH<T> a)
+template <class realH>
+complexH<realH> complexH<realH>::operator-(complexH<realH> a)
 {
-   return complexH( real - a.real, imag - a.imag,1);
+   return complexH(re - a.re, im - a.im,1);
 }
 
-template <class T>
-complexH<T> complexH<T>::operator*(complexH<T> a)
+template <class realH>
+complexH<realH> complexH<realH>::operator*(complexH<realH> a)
 {
-   return complexH( real*a.real-imag*a.imag, imag*a.real+real*a.imag,1);
+   return complexH(re*a.re-im*a.im, im*a.re+re*a.im,1);
 }
 
-template <class T>
-complexH<T> complexH<T>::operator*(T a)
+template <class realH>
+complexH<realH> complexH<realH>::operator*(realH a)
 {
-  return complexH( real*a, imag*a,1);
+  return complexH(re*a, im*a,1);
 }
 
-template <class T>
-complexH<T> complexH<T>::operator*(int a)
+template <class realH>
+complexH<realH> complexH<realH>::operator*(int a)
 {
-   return complexH( real*a, imag*a,1);
+   return complexH(re*a, im*a,1);
 }
 
-template <class T>
-complexH<T> complexH<T>::operator/(complexH<T> a)
+template <class realH>
+complexH<realH> complexH<realH>::operator/(complexH<realH> a)
 {
-   return complexH((real*a.real+imag*a.imag)/(a.real*a.real+a.imag*a.imag),
-                   (imag*a.real-real*a.imag)/ (a.real*a.real+a.imag*a.imag),1);
+   return complexH((re*a.re+im*a.im)/(a.re*a.re+a.im*a.im),
+                   (im*a.re-re*a.im)/(a.re*a.re+a.im*a.im),1);
 }
 
 #endif
