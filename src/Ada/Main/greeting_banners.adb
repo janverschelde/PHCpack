@@ -603,7 +603,13 @@ package body Greeting_Banners is
     put_line("For isolated singular solutions, deflation may restore the");
     put_line("quadratic convergence of Newton's method.");
     new_line;
-    put_line("To select solutions from a list subject to certain criteria");
+    put_line("The blackbox version uses default settings for the parameters,");
+    put_line("use as phc -v -b or phc -b -v, for double precision.");
+    put_line("For double double precision, use as phc -b2 -v or phc -b -v2.");
+    put_line("For quad double precision, use as phc -b4 -v or phc -b -v4.");
+    put_line("The order of -b and -v at the command line does not matter.");
+    new_line;
+    put_line("To select solutions from a list subject to certain criteria,");
     put_line("use phc -f.");
   end help4verification;
 

@@ -1,3 +1,6 @@
+Fri 13 Jan 2017 : updated greeting_banners.adb to document the blackbox
+  versions of the verification procedures.
+
 Thu 12 Jan 2017 : new procedures bablvali2 and bablvali4 to call the
   blackbox root refiners in double double and quad double precision.
   Updated the dispatch.adb so that phc -v2 -b, phc -v -b2, phc -b2 -v,
