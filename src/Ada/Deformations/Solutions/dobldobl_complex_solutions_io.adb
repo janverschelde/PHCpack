@@ -10,77 +10,9 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with Symbol_Table;                       use Symbol_Table;
+with Symbols_io;
 
 package body DoblDobl_Complex_Solutions_io is
-
--- INPUT OF SYMBOL :
-
-  procedure Skip_Symbol ( file : in file_type ) is
-
-  -- DESCRIPTION :
-  --   Skips all symbols until a `:' is encountered.
-
-    c : character;
-
-  begin
-    loop
-      get(file,c);
-      exit when (c = ':');
-    end loop;
-  end Skip_Symbol;
-
-  function Read_Symbol ( file : file_type ) return Symbol is
-
-  -- DESCRIPTION :
-  --   Reads a symbol from file, skipping leading spaces, and returns it.
-
-    sb : Symbol;
-    c : character;
-
-  begin
-    for i in sb'range loop
-      sb(i) := ' ';
-    end loop;
-    loop       -- skip the spaces
-      get(file,c);
-      exit when ((c /= ' ') and (c /= ASCII.CR));
-    end loop;
-    sb(1) := c;
-    for i in sb'first+1..sb'last loop
-      get(file,c);
-      exit when c = ' ';
-      sb(i) := c;
-    end loop;
-    return sb;
-  end Read_Symbol;
-
-  function Get_Symbol ( file : file_type ) return natural32 is
-
-  -- DESCRIPTION :
-  --   Reads a symbol from file and returns its number.
-
-    sb : constant Symbol := Read_Symbol(file);
-
-  begin
-    return Symbol_Table.get(sb);
-  end Get_Symbol;
-
--- OUTPUT OF A SYMBOL :
-
-  procedure put_symbol ( file : in file_type; i : in natural32 ) is
-
-  -- DESCRIPTION :
-  --   Given the number of the symbol,
-  --   the corresponding symbol will be written.
-
-    sb : constant Symbol := Get(i);
-
-  begin
-    for k in sb'range loop
-      exit when sb(k) = ' ';
-      put(file,sb(k));
-    end loop;
-  end put_symbol;
 
 -- INPUT OF A SOLUTION VECTOR :
 
@@ -99,10 +31,10 @@ package body DoblDobl_Complex_Solutions_io is
       Symbol_Table.Init(natural32(s.n));
       for i in s.v'range loop
         declare
-          sb : constant Symbol := Read_Symbol(file);
+          sb : constant Symbol := Symbols_io.Read_Symbol(file);
         begin
           Symbol_Table.Add(sb);
-          Skip_Symbol(file); get(file,s.v(i));
+          Symbols_io.Skip_Symbol(file); get(file,s.v(i));
         exception
           when others
             => put("exception raised at component "); put(i,1); new_line;
@@ -113,8 +45,8 @@ package body DoblDobl_Complex_Solutions_io is
       for i in s.v'range loop
         declare
         begin
-          ind := integer32(Get_Symbol(file));
-          Skip_Symbol(file); get(file,s.v(ind));
+          ind := integer32(Symbols_io.Get_Symbol(file));
+          Symbols_io.Skip_Symbol(file); get(file,s.v(ind));
         exception
           when others
             => put("exception raised at component "); put(i,1); new_line;
@@ -248,7 +180,8 @@ package body DoblDobl_Complex_Solutions_io is
       end loop;
     else
       for i in v'range loop
-        put(file,' '); put_symbol(file,natural32(i)); put(file," : ");
+        put(file,' '); 
+        Symbols_io.put_symbol(file,natural32(i)); put(file," : ");
         put(file,v(i)); new_line(file);
       end loop;
     end if;

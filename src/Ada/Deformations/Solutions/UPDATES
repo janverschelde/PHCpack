@@ -1,5 +1,6 @@
 Fri 13 Jan 2017 : new package symbols_io with utilities factored out from
-  standard_complex_solutions_io.adb.
+  standard_complex_solutions_io.adb.  Use symbols_io for double double and
+  quad doubles in {dobldobl,quaddobl}_complex_solutions_io.adb.
 
 Thu 12 Jan 2017 : in standard_complex_solutions_io.adb, added exception 
   handler in the get() procedure, so phc -b -v no longer crashes when there
