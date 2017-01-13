@@ -1260,6 +1260,12 @@ With ``phc -v`` one can do the following tasks:
    to meet the wanted number of accurate decimal places in the solutions
    when applying Newton's method.
 
+The blackbox version uses default settings for the parameters,
+use as ``phc -v -b`` or ``phc -b -v``, for double precision.
+For double double precision, use as ``phc -b2 -v`` or ``phc -b -v2``.
+For quad double precision, use as ``phc -b4 -v`` or ``phc -b -v4``.
+The order of ``-b`` and ``-v`` at the command line does not matter.
+
 phc -w : witness set intersection using diagonal homotopies    
 ===========================================================
 
