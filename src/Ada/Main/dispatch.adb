@@ -16,7 +16,8 @@ with mainpoco,bablpoco;       -- polynomial continuation
 with bablpoco2,bablpoco4;     -- double double and quad double continuation
 with mainphc,bablphc;         -- main phc driver + blackbox
 with bablphc2,bablphc4;       -- blackbox in double double and quad double
-with mainvali,bablvali;       -- validation tool
+with mainvali,bablvali;       -- verification tool
+with bablvali2,bablvali4;     -- verification with dd and qd
 with mainenum,bablenum;       -- numerical Schubert calculus
 with mainfeed;                -- realization of pole placing feedback
 with maindict;                -- converts solutions into Python dictionary
@@ -320,6 +321,7 @@ procedure Dispatch is
   --   second option and calls the appropriate main driver.
 
     bbprc : constant natural32 := Scan_Precision('b');
+    valiprc : constant natural32 := Scan_Precision('v');
     contprc : constant natural32 := Scan_Precision('p');
 
   begin
@@ -346,7 +348,14 @@ procedure Dispatch is
         else
           bablpoco(file1,file2,file3);
         end if;
-      when 'v'    => bablvali(file1,file2);
+      when 'v' => 
+        if bbprc = 2 or valiprc = 2 then
+          bablvali2(file1,file2);
+        elsif bbprc = 4 or valiprc = 4 then
+          bablvali4(file1,file2);
+        else
+          bablvali(file1,file2);
+        end if;
       when 'e'    => bablenum(file1,file2);
       when 't'    => 
         case option3 is
@@ -490,9 +499,19 @@ procedure Dispatch is
   -- DESCRIPTION :
   --   Validates the computed results.
 
+    veriprc : constant natural32 := Scan_Precision('v');
+    bbprc : constant natural32 := Scan_Precision('b');
+
   begin
     case o2 is
-      when 'b' => bablvali(infile,outfile);
+      when 'b' =>
+        if veriprc = 2 or bbprc = 2 then
+          bablvali2(infile,outfile);
+        elsif veriprc = 4 or bbprc = 4 then
+          bablvali4(infile,outfile);
+        else
+          bablvali(infile,outfile);
+        end if;
       when 'h' | '-' => Greeting_Banners.help4verification;
       when others => put_line(welcome); put_line(veriban);
                      mainvali(infile,outfile);

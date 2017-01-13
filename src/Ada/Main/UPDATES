@@ -1,5 +1,8 @@
 Thu 12 Jan 2017 : new procedures bablvali2 and bablvali4 to call the
   blackbox root refiners in double double and quad double precision.
+  Updated the dispatch.adb so that phc -v2 -b, phc -v -b2, phc -b2 -v,
+  or phc -b -v2 calls the blackbox solver in double double precision.
+  Similarly, for quad double precision, replace 2 by 4 in the above.
 
 Thu 5 Jan 2017 : updated the greeting_banners for version 2.4.33.
 
