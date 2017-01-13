@@ -1,3 +1,7 @@
+Thu 12 Jan 2017 : in standard_complex_solutions_io.adb, added exception 
+  handler in the get() procedure, so phc -b -v no longer crashes when there
+  is a solution vector with NaN coordinates.
+
 Mon 8 Aug 2016 : to standard_complex_solutions_io added a put_vector to
   work on vectors of complex numbers.  Did the same for the dobldobl and
   the quaddobl versions.

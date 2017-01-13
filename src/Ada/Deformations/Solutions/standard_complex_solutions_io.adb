@@ -459,6 +459,21 @@ package body Standard_Complex_Solutions_io is
     get(Standard_Input,sols);
   end get;
 
+  procedure Skip_Till_Next_Solution ( file : in file_type ) is
+
+  -- DESCRIPION :
+  --   Skips all lines until the first character on the line is '=',
+  --   then we have skipped all coordinates, up to the next solution.
+
+    ch : character;
+
+  begin
+    loop
+      get(file,ch); skip_line(file);
+      exit when (ch = '=');
+    end loop;
+  end Skip_Till_Next_Solution;
+
   procedure get ( file : in file_type; len,n : in natural32;
                   sols,sols_last : in out Solution_List ) is
 
@@ -482,6 +497,12 @@ package body Standard_Complex_Solutions_io is
       begin
         get(file,s);
         Append(sols,sols_last,s);
+      exception
+        when others
+          => new_line;
+             put("Exception raised while reading solution ");
+             put(i,1); put_line(".");
+             Skip_Till_Next_Solution(file);
       end;
       i := i+1;
     end loop;
