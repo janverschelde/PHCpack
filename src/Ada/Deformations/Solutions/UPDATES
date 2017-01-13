@@ -1,3 +1,6 @@
+Fri 13 Jan 2017 : new package symbols_io with utilities factored out from
+  standard_complex_solutions_io.adb.
+
 Thu 12 Jan 2017 : in standard_complex_solutions_io.adb, added exception 
   handler in the get() procedure, so phc -b -v no longer crashes when there
   is a solution vector with NaN coordinates.  Fixed the skip_line(file)

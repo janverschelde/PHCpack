@@ -8,6 +8,7 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Symbol_Table_io;
+with Symbols_io;
 
 package body Standard_Complex_Solutions_io is
 
@@ -23,90 +24,6 @@ package body Standard_Complex_Solutions_io is
       put_line("' ...");
     end if;
   end write_warning;
-
--- INPUT OF SYMBOL :
-
-  procedure Skip_Symbol ( file : in file_type ) is
-
-  -- DESCRIPTION :
-  --   Skips all symbols until a `:' is encountered.
-
-    c : character;
-
-  begin
-    loop
-      get(file,c);
-      exit when (c = ':');
-    end loop;
-  end Skip_Symbol;
-
-  function Read_Symbol ( file : file_type ) return Symbol is
-
-  -- DESCRIPTION :
-  --   Reads a symbol from file, skipping leading spaces, and returns it.
-
-    sb : Symbol;
-    c : character;
-
-  begin
-    for i in sb'range loop
-      sb(i) := ' ';
-    end loop;
-    loop       -- skip the spaces
-      get(file,c);
-      exit when ((c /= ' ') and (c /= ASCII.CR));
-    end loop;
-    sb(1) := c;
-    for i in sb'first+1..sb'last loop
-      get(file,c);
-      exit when c = ' ';
-      sb(i) := c;
-    end loop;
-    return sb;
-  end Read_Symbol;    
-
-  function Get_Symbol ( file : file_type ) return natural32 is
-
-  -- DESCRIPTION :
-  --   Reads a symbol from file and returns its number,
-  --   returns 0 if the symbol does not occur in the table.
-
-    sb : constant Symbol := Read_Symbol(file);
-
-  begin
-    return Symbol_Table.get(sb);
-  end Get_Symbol;
-
-  function Get_Symbol ( file : file_type;
-                        s : Array_of_Symbols ) return natural32 is
-
-  -- DESCRIPTION :
-  --   Reads a symbol from file and returns its position in the array.
-
-    sb : constant Symbol := Read_Symbol(file);
-
-  begin
-    for i in s'range loop
-      if Equal(s(i),sb)
-       then return natural32(i);
-      end if;
-    end loop;
-    return 0;
-  end Get_Symbol;
-
--- OUTPUT OF A SYMBOL :
-
-  procedure put_symbol ( file : in file_type; i : in natural32 ) is
-
-  -- DESCRIPTION :
-  --   Given the number of the symbol,
-  --   the corresponding symbol will be written.
-
-    sb : constant Symbol := Get(i);
-
-  begin
-    Symbol_Table_io.put(file,sb);
-  end put_symbol;
 
 -- INPUT OF A SOLUTION VECTOR :
 
@@ -130,16 +47,16 @@ package body Standard_Complex_Solutions_io is
       Symbol_Table.Init(natural32(s.n));
       for i in s.v'range loop
         declare
-          sb : constant Symbol := Read_Symbol(file);
+          sb : constant Symbol := Symbols_io.Read_Symbol(file);
         begin
           Symbol_Table.Add(sb); 
-          Skip_Symbol(file); get(file,s.v(i));
+          Symbols_io.Skip_Symbol(file); get(file,s.v(i));
         end;
       end loop;
     else
       for i in s.v'range loop
-        ind := integer32(Get_Symbol(file));
-        Skip_Symbol(file); get(file,s.v(ind));
+        ind := integer32(Symbols_io.Get_Symbol(file));
+        Symbols_io.Skip_Symbol(file); get(file,s.v(ind));
       end loop;
     end if; 
   end get_vector;
@@ -175,18 +92,18 @@ package body Standard_Complex_Solutions_io is
       Symbol_Table.Init(natural32(s.n));
       for i in s.v'range loop
         declare
-          sb : constant Symbol := Read_Symbol(file);
+          sb : constant Symbol := Symbols_io.Read_Symbol(file);
         begin
           Symbol_Table.Add(sb); 
-          Skip_Symbol(file); -- get(file,s.v(i));
+          Symbols_io.Skip_Symbol(file); -- get(file,s.v(i));
           read_complex_number(file,s.v(i),fl);
           fail := fail or fl;
         end;
       end loop;
     else
       for i in s.v'range loop
-        ind := integer32(Get_Symbol(file));
-        Skip_Symbol(file); -- get(file,s.v(ind));
+        ind := integer32(Symbols_io.Get_Symbol(file));
+        Symbols_io.Skip_Symbol(file); -- get(file,s.v(ind));
         read_complex_number(file,s.v(ind),fl);
         fail := fail or fl;
       end loop;
@@ -202,8 +119,8 @@ package body Standard_Complex_Solutions_io is
 
   begin
     for i in s.v'range loop
-      ind := integer32(Get_Symbol(file,asy));
-      Skip_Symbol(file);
+      ind := integer32(Symbols_io.Get_Symbol(file,asy));
+      Symbols_io.Skip_Symbol(file);
       get(file,s.v(ind));
     end loop;
   end get_vector;
@@ -391,7 +308,8 @@ package body Standard_Complex_Solutions_io is
       end loop;
     else
       for i in v'range loop
-        put(file,' '); put_symbol(file,natural32(i)); put(file," : ");
+        put(file,' ');
+        Symbols_io.put_symbol(file,natural32(i)); put(file," : ");
         put(file,v(i)); new_line(file);
       end loop;
     end if;

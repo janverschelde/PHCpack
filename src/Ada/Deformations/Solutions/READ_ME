@@ -16,6 +16,7 @@ There are three parts in this library:
 ------------------------------------------------------------------------------
 file name                          : short description
 ------------------------------------------------------------------------------
+symbols_io                         : utilities for i/o of symbols
 standard_complex_solutions         : standard solutions to families of systems
 standard_complex_solutions_io      : input/output of standard solutions
 dobldobl_complex_solutions         : solutions with double double complex
