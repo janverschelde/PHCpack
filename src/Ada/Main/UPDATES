@@ -1,3 +1,6 @@
+Thu 12 Jan 2017 : new procedures bablvali2 and bablvali4 to call the
+  blackbox root refiners in double double and quad double precision.
+
 Thu 5 Jan 2017 : updated the greeting_banners for version 2.4.33.
 
 Wed 4 Jan 2017 : factored the code in bablvali into a new package
