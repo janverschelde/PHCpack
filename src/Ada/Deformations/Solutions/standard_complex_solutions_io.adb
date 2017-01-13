@@ -469,8 +469,9 @@ package body Standard_Complex_Solutions_io is
 
   begin
     loop
-      get(file,ch); skip_line(file);
+      get(file,ch); -- skip_line(file);
       exit when (ch = '=');
+      skip_line(file);
     end loop;
   end Skip_Till_Next_Solution;
 
@@ -502,6 +503,7 @@ package body Standard_Complex_Solutions_io is
           => new_line;
              put("Exception raised while reading solution ");
              put(i,1); put_line(".");
+             put_line("Skipping the solution ...");
              Skip_Till_Next_Solution(file);
       end;
       i := i+1;
