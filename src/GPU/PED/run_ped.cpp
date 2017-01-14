@@ -1,3 +1,5 @@
+// the main program to run the polynomial evaluation and differentiation
+
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
@@ -5,7 +7,6 @@
 #include <gqd_type.h>
 #include "complexD.h"
 #include "gqd_qd_util.h"
-// #include <qd/qd_real.h>
 #include "DefineType.h"
 #include "complexH.h"
 #include "ped_kernelsT.h"
@@ -23,63 +24,56 @@ using namespace std;
 #endif
 
 #if(the_p == 0)
-typedef double T;
-typedef double T1;
+typedef double realD;
+typedef double realH;
 #elif(the_p == 1)
-typedef gdd_real T;
-typedef dd_real T1;
+typedef gdd_real realD;
+typedef dd_real realH;
 #else
-typedef gqd_real T;
-typedef qd_real T1;
+typedef gqd_real realD;
+typedef qd_real realH;
 #endif
 
-// typedef dd_real T1;
-
-
-void print(complexD<T>* a, complexH<T1>* b, int dim, string var);
-void print(complexD<T>* a, complexH<T1>** b, int dimX, int dimY, int stride, string var);
+void print ( complexD<realD>* a, complexH<realH>* b, int dim, string var );
+void print ( complexD<realD>* a, complexH<realH>** b, int dimX, int dimY,
+             int stride, string var);
 
 void GPU_evaldiff
  ( int BS, int dim, int NM, int NV, int deg, int r, int mode, int m,
-   int ncoefs, char *pos_arr_h_char, char *exp_arr_h_char, complexD<T> *x_h,
-   complexD<T> *c_h, complexD<T> *factors_h, complexD<T> *polvalues_h );
+   int ncoefs, char *pos_arr_h_char, char *exp_arr_h_char,
+   complexD<realD> *x_h, complexD<realD> *c_h,
+   complexD<realD> *factors_h, complexD<realD> *polvalues_h );
 
 void CPU_evaldiff
  ( int dim, int NM, int NV, int deg, int r, int mode, int m,
-   int *pos_arr_h_int, int *exp_arr_h_int, complexH<T1> *c,
-   complexH<T1> *x, complexD<T> *factors_h, complexD<T> *polvalues_h );
+   int *pos_arr_h_int, int *exp_arr_h_int, complexH<realH> *c,
+   complexH<realH> *x, complexD<realD> *factors_h,
+   complexD<realD> *polvalues_h );
 
-void write_system ( int dim, 
-int NM, 
-int NV, 
-complexH<T1> *c, 
-int *myp, 
-int *e );
+void write_system
+ ( int dim, int NM, int NV, complexH<realH> *c, int *myp, int *e );
 // Writes the system of dimension dim, with number of monomials NM
 // number of variables NV with coefficients in c, positions of nonzero
 // exponents in p, and values of the exponents in e.
 
 int main ( int argc, char *argv[] )
 {
+   int BS,dim,NM,NV,deg,r,mode;
+   if(parse_arguments(argc,argv,&BS,&dim,&NM,&NV,&deg,&r,&mode) == 1) return 1;
 
-// complexH<T1> ExCompH; ExCompH.init(2.3,3.4); cout << "ExCompH=" << ExCompH;
-
-  int BS,dim,NM,NV,deg,r,mode;
-  if(parse_arguments(argc,argv,&BS,&dim,&NM,&NV,&deg,&r,&mode) == 1) return 1;
-
-  int timevalue = 1287178355; // fixed seed instead of timevalue=time(NULL)
-  const int n = 32;
-  complexD<T> *x = (complexD<T>*)calloc(n,sizeof(complexD<T>));
-  complexD<T> *y = (complexD<T>*)calloc(n,sizeof(complexD<T>));
-  complexD<T> *yD2 = (complexD<T>*)calloc(n,sizeof(complexD<T>));
+   int timevalue = 1287178355; // fixed seed instead of timevalue=time(NULL)
+   const int n = 32;
+   complexD<realD> *x = (complexD<realD>*)calloc(n,sizeof(complexD<realD>));
+   complexD<realD> *y = (complexD<realD>*)calloc(n,sizeof(complexD<realD>));
+   complexD<realD> *yD2 = (complexD<realD>*)calloc(n,sizeof(complexD<realD>));
   
    srand(timevalue);
-   complexD<T> *xp_h = new complexD<T>[dim];
-   complexH<T1> *xp = new complexH<T1>[dim];
+   complexD<realD> *xp_h = new complexD<realD>[dim];
+   complexH<realH> *xp = new complexH<realH>[dim];
    random_point(dim,xp_h,xp);
    // print(xp_h,xp,dim,"x");
    // for (int i=0;i<dim;i++) cout << "xp=" <<xp[i];
-   storage<T1,4> pt; pt.copyToStor(xp);
+   storage<realH,4> pt; pt.copyToStor(xp);
    // pt.print(); 
    // cout << "M_PI=" << M_PI << endl;
 
@@ -88,18 +82,18 @@ int main ( int argc, char *argv[] )
    int exp_arr_h_int[NM*NV];
    char exp_arr_h_char[NM*NV];
    int ncoefs = NM*(NV+1);
-   complexD<T> *c_h = new complexD<T>[ncoefs];
-   complexH<T1> *c = new complexH<T1>[ncoefs];
+   complexD<realD> *c_h = new complexD<realD>[ncoefs];
+   complexH<realH> *c = new complexH<realH>[ncoefs];
    generate_system(dim,NM,NV,deg,pos_arr_h_int,pos_arr_h_char,
                    exp_arr_h_int,exp_arr_h_char,c_h,c);
    if(mode == 2) write_system(dim,NM,NV,c,pos_arr_h_int,exp_arr_h_int);
-// allocate space for output
+   // allocate space for output
    int m = NM/dim;
    // cout << "m=" << m << endl;
-   complexD<T> *factors_h = new complexD<T>[NM];
+   complexD<realD> *factors_h = new complexD<realD>[NM];
    int ant = ((dim*dim+dim)/BS + 1)*BS;
    // cout << "ant=" << ant << endl;
-   complexD<T> *polvalues_h = new complexD<T>[ant];
+   complexD<realD> *polvalues_h = new complexD<realD>[ant];
    if(mode == 0 || mode == 2)
       GPU_evaldiff(BS,dim,NM,NV,deg,r,mode,m,ncoefs,pos_arr_h_char,
                    exp_arr_h_char,xp_h,c_h,factors_h,polvalues_h);
@@ -108,34 +102,26 @@ int main ( int argc, char *argv[] )
       CPU_evaldiff(dim,NM,NV,deg,r,mode,m,pos_arr_h_int,exp_arr_h_int,
                    c,xp,factors_h,polvalues_h);
 
-  for(int i = 0; i<n; i++) x[i].initH(double(i+2),0.12345);      
+   for(int i = 0; i<n; i++) x[i].initH(double(i+2),0.12345);      
 
-  int fail; // = sqrt_by_Newton(n,x,y);
-  int fail1; //= squareCall(n,y,yD2);
+   int fail; // = sqrt_by_Newton(n,x,y);
+   int fail1; //= squareCall(n,y,yD2);
 
-  complexH<T1>* xH; complexH<T1>* yH; complexH<T1>* yD2H;
-  xH= new complexH<T1>[n]; yH= new complexH<T1>[n]; yD2H= new complexH<T1>[n];
+   complexH<realH>* xH;
+   complexH<realH>* yH;
+   complexH<realH>* yD2H;
+   xH = new complexH<realH>[n];
+   yH = new complexH<realH>[n];
+   yD2H= new complexH<realH>[n];
 
    comp1_gqdArr2qdArr(x, xH, n);
    comp1_gqdArr2qdArr(y, yH, n);
    comp1_gqdArr2qdArr(yD2, yD2H, n);
 
-/*
- if(fail == 0 && fail1==0)
-    for(int i=0;i<n;i++)
-      {
-        cout << "X["<< i << "]: \t \t" << xH[i];
-        cout << "sqrtX[" << i << "]: \t" <<  yH[i];
-        cout << "(sqrtX)^2[" << i << "]: \t" << yD2H[i];
-        cout << endl;
-       }
-*/
-// cout << sizeof(double) << endl;
-
-  return 0;
+   return 0;
 }
 
-void degrees ( complexH<T1> **deg, complexH<T1> *bm, int dim, int maxd )
+void degrees ( complexH<realH> **deg, complexH<realH> *bm, int dim, int maxd )
 {
    for(int i=0; i<dim; i++)
    {
@@ -150,7 +136,7 @@ void degrees ( complexH<T1> **deg, complexH<T1> *bm, int dim, int maxd )
 
 void comp_factors ( int na, int no_monomials, int nvarm,
    int **monvarindexes, int **nonz_exponentsx,
-   complexH<T1> *xval, complexH<T1> **deg, complexH<T1> *roots )
+   complexH<realH> *xval, complexH<realH> **deg, complexH<realH> *roots )
 {
    for(int i=0; i<no_monomials; i++)
    {
@@ -168,15 +154,15 @@ void comp_factors ( int na, int no_monomials, int nvarm,
 
 void speeldif_h
  ( int na, int NM, int nvarm, int nders, int **monvarindexes,
-   complexH<T1> *xval, complexH<T1> *roots, complexH<T1> *coefs,
-   complexH<T1> *monvalues, complexH<T1> **monderivatives )
+   complexH<realH> *xval, complexH<realH> *roots, complexH<realH> *coefs,
+   complexH<realH> *monvalues, complexH<realH> **monderivatives )
 {
-   complexH<T1> *products1;
-   complexH<T1> *products2;
-   products1 = new complexH<T1>[nvarm];
-   products2 = new complexH<T1>[nvarm];
-   complexH<T1> *top_mon_derivatives;
-   top_mon_derivatives = new complexH<T1>[nvarm];
+   complexH<realH> *products1;
+   complexH<realH> *products2;
+   products1 = new complexH<realH>[nvarm];
+   products2 = new complexH<realH>[nvarm];
+   complexH<realH> *top_mon_derivatives;
+   top_mon_derivatives = new complexH<realH>[nvarm];
    for(int i=0; i<NM; i++)
    {
       products1[0] = xval[monvarindexes[i][0]];
@@ -201,8 +187,8 @@ void speeldif_h
 
 void sum_mons
  ( int dim, int m, int nvarm, int **monvarindexes,
-   complexH<T1> *monvalues, complexH<T1> **monderivatives,
-   complexH<T1> *polyvalues, complexH<T1> **polyderivatives )
+   complexH<realH> *monvalues, complexH<realH> **monderivatives,
+   complexH<realH> *polyvalues, complexH<realH> **polyderivatives )
 {
    for(int i=0; i<dim; i++)
    {
@@ -224,12 +210,13 @@ void sum_mons
 
 void CPU_evaldiff
  ( int dim, int NM, int NV, int deg, int r, int mode, int m,
-   int *pos_arr_h_int, int *exp_arr_h_int, complexH<T1> *c,
-   complexH<T1> *x, complexD<T> *factors_h, complexD<T> *polvalues_h )
+   int *pos_arr_h_int, int *exp_arr_h_int, complexH<realH> *c,
+   complexH<realH> *x, complexD<realD> *factors_h,
+   complexD<realD> *polvalues_h )
 // The CPU is used to evaluate a system and its Jacobian matrix.
 {
-   complexH<T1> **vdegrees = new complexH<T1>*[dim];
-   for(int i=0; i<dim; i++) vdegrees[i] = new complexH<T1>[deg+1];
+   complexH<realH> **vdegrees = new complexH<realH>*[dim];
+   for(int i=0; i<dim; i++) vdegrees[i] = new complexH<realH>[deg+1];
    int **positions_h = new int*[NM];
    int **exponents_h = new int*[NM];
    for(int i=0; i<NM; i++)
@@ -241,14 +228,14 @@ void CPU_evaldiff
       for(int j=0; j<NV; j++) positions_h[i][j] = pos_arr_h_int[NV*i+j];
    for(int i=0; i<NM; i++)
       for(int j=0; j<NV; j++) exponents_h[i][j] = exp_arr_h_int[NV*i+j];
-   complexH<T1> *factors_s = new complexH<T1>[NM];
-   complexH<T1> *monvalues = new complexH<T1>[NM];
-   complexH<T1> **derivatives = new complexH<T1>*[NM];
-   for(int i=0; i<NM; i++) derivatives[i] = new complexH<T1>[NV];
+   complexH<realH> *factors_s = new complexH<realH>[NM];
+   complexH<realH> *monvalues = new complexH<realH>[NM];
+   complexH<realH> **derivatives = new complexH<realH>*[NM];
+   for(int i=0; i<NM; i++) derivatives[i] = new complexH<realH>[NV];
    int nders = NM*NV;
-   complexH<T1> *polyvalues = new complexH<T1>[dim];
-   complexH<T1> **polyderivatives = new complexH<T1>*[dim];
-   for(int i=0; i<dim; i++) polyderivatives[i] = new complexH<T1>[dim];
+   complexH<realH> *polyvalues = new complexH<realH>[dim];
+   complexH<realH> **polyderivatives = new complexH<realH>*[dim];
+   for(int i=0; i<dim; i++) polyderivatives[i] = new complexH<realH>[dim];
    for(int j=0; j<r; j++)
    {
       degrees(vdegrees,x,dim,deg);
@@ -271,9 +258,9 @@ void CPU_evaldiff
    }
 }
 
-void print(complexD<T>* a, complexH<T1>* b, int dim, string var)
+void print ( complexD<realD>* a, complexH<realH>* b, int dim, string var )
 {
-   complexH<T1> temp;
+   complexH<realH> temp;
 
    for (int i=0;i<dim;i++)
    {
@@ -284,11 +271,11 @@ void print(complexD<T>* a, complexH<T1>* b, int dim, string var)
 }
 
 void print
- ( complexD<T>* a, complexH<T1>** b, int dimX, int dimY,
+ ( complexD<realD>* a, complexH<realH>** b, int dimX, int dimY,
    int stride, string var)
 {
 
-   complexH<T1> temp;
+   complexH<realH> temp;
 
    for(int i=0;i<dimX;i++)
       for(int j=0;j<dimY;j++)
@@ -301,7 +288,8 @@ void print
       }
 }
 
-void write_system ( int dim, int NM, int NV, complexH<T1> *c, int *myp, int *e )
+void write_system
+ ( int dim, int NM, int NV, complexH<realH> *c, int *myp, int *e )
 {
    cout << "          dimension : " << dim << endl;
    cout << "number of monomials : " << NM << endl;

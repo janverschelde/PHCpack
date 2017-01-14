@@ -1,3 +1,5 @@
+Fri 13 Jan 2017 : instead of T and T1, used realD and realH in run_ped.cpp.
+
 Wed 11 Jan 2017 : in mycomplex.h and use_complex.cpp, used type real
   instead of T, and replaced real and imag with re and im.
   Replaced real and imag by re and im in complexD.h and complexH.h.
