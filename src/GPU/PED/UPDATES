@@ -1,3 +1,6 @@
+Sat 14 Jan 2017 : edits in gqd_qd_util.h and gqd_qd_util.cpp, with a bug
+  fix in the generation of the random positions.
+
 Fri 13 Jan 2017 : instead of T and T1, used realD and realH in run_ped.cpp.
 
 Wed 11 Jan 2017 : in mycomplex.h and use_complex.cpp, used type real
