@@ -12,6 +12,21 @@ use_complex:
 	g++ -o /tmp/use_complex -I$(QD_ROOT)/include use_complex.cpp \
             /usr/local/lib/libqd.a
 
+test_ped:
+	@-echo ">>> compiling utilities ..."
+	g++ -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
+            -I$(QD_ROOT)/include -c gqd_qd_util.cpp
+	@-echo ">>> compiling test_ped ..."
+	g++ -c test_ped.cpp \
+            -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
+            -I$(QD_ROOT)/include
+	@-echo ">>> linking ..."
+	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
+		test_ped.o gqd_qd_util.o \
+		$(QD_LIB)/libqd.a -o test_ped \
+            -lcuda -lcutil_x86_64 -lcudart \
+            -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib
+
 run_ped_d:
 	@-echo ">>> compiling kernels ..."
 	nvcc --define-macro precision=d -I./DefineTypesD \
@@ -76,4 +91,5 @@ clean:
 	test -z "run_ped_d" || rm -f run_ped_d
 	test -z "run_ped_dd" || rm -f run_ped_dd
 	test -z "run_ped_qd" || rm -f run_ped_qd
+	test -z "test_ped" || rm -f test_ped
 	rm -f *.o

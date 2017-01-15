@@ -39,6 +39,8 @@ complexH.h         : complex types for CPU (H = host)
 gqd_qd_util.h      : headers of type conversions and command line parsing
 gqd_qd_util.cpp    : definitions of type conversions and command line parsing
 ------------------------------------------------------------------------------
+test_ped.cpp       : main test which takes precision at the command line
+------------------------------------------------------------------------------
 
 After successful compilation, the program requires several
 command line arguments, integer values BS, dim, NM, NV, degr, and r:
