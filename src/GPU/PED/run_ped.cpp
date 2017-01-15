@@ -45,10 +45,23 @@ void GPU_evaldiff
    complexD<realD> *factors_h, complexD<realD> *polvalues_h );
 
 void CPU_evaldiff
- ( int dim, int NM, int NV, int deg, int r, int mode, int m,
-   int *pos_arr_h_int, int *exp_arr_h_int, complexH<realH> *c,
-   complexH<realH> *x, complexD<realD> *factors_h,
-   complexD<realD> *polvalues_h );
+( int dim, int NM, int NV, int deg, int r, int m, int *pos, int *exp,
+   complexH<realH> *c, complexH<realH> *x,
+   complexH<realH> *factors_h, complexH<realH> **polvalues_h );
+/*
+ * The CPU is used to evaluate a system and its Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the problem;
+ *   NM       number of monomials;
+ *   NV       number of variables;
+ *   deg      highest degree of the variables;
+ *   r        frequency of the runs,
+ *   m        NM divided by dim
+ *   pos      indicate the participating variables in the monomials;
+ *   exp      the exponents of the participating variables; 
+ *   c        coefficients of the monomials;
+ *   x        point where to evaluate. */
 
 int main ( int argc, char *argv[] )
 {
@@ -62,12 +75,12 @@ int main ( int argc, char *argv[] )
    complexD<realD> *yD2 = (complexD<realD>*)calloc(n,sizeof(complexD<realD>));
   
    srand(timevalue);
-   complexD<realD> *xp_h = new complexD<realD>[dim];
-   complexH<realH> *xp = new complexH<realH>[dim];
-   random_point(dim,xp_h,xp);
-   // print(xp_h,xp,dim,"x");
-   // for (int i=0;i<dim;i++) cout << "xp=" <<xp[i];
-   storage<realH,4> pt; pt.copyToStor(xp);
+   complexD<realD> *xp_d = new complexD<realD>[dim];
+   complexH<realH> *xp_h = new complexH<realH>[dim];
+   random_point(dim,xp_d,xp_h);
+   // print(xp_d,xp_h,dim,"x");
+   // for (int i=0;i<dim;i++) cout << "xp =" << xp_h[i];
+   storage<realH,4> pt; pt.copyToStor(xp_h);
    // pt.print(); 
    // cout << "M_PI=" << M_PI << endl;
 
@@ -76,26 +89,38 @@ int main ( int argc, char *argv[] )
    char pos_arr_h_char[NM*NV];
    char exp_arr_h_char[NM*NV];
    int ncoefs = NM*(NV+1);
-   complexD<realD> *c_h = new complexD<realD>[ncoefs];
-   complexH<realH> *c = new complexH<realH>[ncoefs];
+   complexD<realD> *c_d = new complexD<realD>[ncoefs];
+   complexH<realH> *c_h = new complexH<realH>[ncoefs];
    generate_system(dim,NM,NV,deg,pos_arr_h_int,pos_arr_h_char,
-                   exp_arr_h_int,exp_arr_h_char,c_h,c);
-   if(mode == 2) write_system<realH>(dim,NM,NV,c,pos_arr_h_int,exp_arr_h_int);
+                   exp_arr_h_int,exp_arr_h_char,c_d,c_h);
+   if(mode == 2) write_system<realH>(dim,NM,NV,c_h,pos_arr_h_int,exp_arr_h_int);
    // allocate space for output
    int m = NM/dim;
    // cout << "m=" << m << endl;
-   complexD<realD> *factors_h = new complexD<realD>[NM];
+   complexD<realD> *factors_d = new complexD<realD>[NM];
+   complexH<realH> *factors_h = new complexH<realH>[NM];
    int ant = ((dim*dim+dim)/BS + 1)*BS;
    // cout << "ant=" << ant << endl;
-   complexD<realD> *polvalues_h = new complexD<realD>[ant];
+   complexD<realD> *polvalues_d = new complexD<realD>[ant];
+   complexH<realH> **polvalues_h = new complexH<realH>*[dim];
+   for(int i=0; i<dim; i++) polvalues_h[i] = new complexH<realH>[dim];
+
    if(mode == 0 || mode == 2)
       GPU_evaldiff(BS,dim,NM,NV,deg,r,mode,m,ncoefs,pos_arr_h_char,
-                   exp_arr_h_char,xp_h,c_h,factors_h,polvalues_h);
+                   exp_arr_h_char,xp_d,c_d,factors_d,polvalues_d);
 
    if(mode == 1 || mode == 2)
-      CPU_evaldiff(dim,NM,NV,deg,r,mode,m,pos_arr_h_int,exp_arr_h_int,
-                   c,xp,factors_h,polvalues_h);
-
+   {
+      CPU_evaldiff(dim,NM,NV,deg,r,m,pos_arr_h_int,
+                   exp_arr_h_int,c_h,xp_h,factors_h,polvalues_h);
+      if(mode==2) // compare results of GPU with CPU
+      {
+         // print(factors_h, factors_d,NM,"factors");
+         // print(polvalues_d,polvalues_h,dim,dim,dim,"poly_derivatives"); 
+         error_on_factors(NM,factors_d,factors_h);
+         error_on_derivatives(dim,polvalues_h,polvalues_d);
+      }
+   }
    for(int i = 0; i<n; i++) x[i].initH(double(i+2),0.12345);      
 
    int fail; // = sqrt_by_Newton(n,x,y);
@@ -203,11 +228,9 @@ void sum_mons
 }
 
 void CPU_evaldiff
- ( int dim, int NM, int NV, int deg, int r, int mode, int m,
-   int *pos_arr_h_int, int *exp_arr_h_int, complexH<realH> *c,
-   complexH<realH> *x, complexD<realD> *factors_h,
-   complexD<realD> *polvalues_h )
-// The CPU is used to evaluate a system and its Jacobian matrix.
+ ( int dim, int NM, int NV, int deg, int r, int m, int *pos, int *exp,
+   complexH<realH> *c, complexH<realH> *x,
+   complexH<realH> *factors_h, complexH<realH> **polvalues_h )
 {
    complexH<realH> **vdegrees = new complexH<realH>*[dim];
    for(int i=0; i<dim; i++) vdegrees[i] = new complexH<realH>[deg+1];
@@ -219,36 +242,22 @@ void CPU_evaldiff
       exponents_h[i] = new int[NV];
    }
    for(int i=0; i<NM; i++)
-      for(int j=0; j<NV; j++) positions_h[i][j] = pos_arr_h_int[NV*i+j];
+      for(int j=0; j<NV; j++) positions_h[i][j] = pos[NV*i+j];
    for(int i=0; i<NM; i++)
-      for(int j=0; j<NV; j++) exponents_h[i][j] = exp_arr_h_int[NV*i+j];
-   complexH<realH> *factors_s = new complexH<realH>[NM];
+      for(int j=0; j<NV; j++) exponents_h[i][j] = exp[NV*i+j];
    complexH<realH> *monvalues = new complexH<realH>[NM];
    complexH<realH> **derivatives = new complexH<realH>*[NM];
    for(int i=0; i<NM; i++) derivatives[i] = new complexH<realH>[NV];
    int nders = NM*NV;
    complexH<realH> *polyvalues = new complexH<realH>[dim];
-   complexH<realH> **polyderivatives = new complexH<realH>*[dim];
-   for(int i=0; i<dim; i++) polyderivatives[i] = new complexH<realH>[dim];
    for(int j=0; j<r; j++)
    {
       degrees(vdegrees,x,dim,deg);
-      comp_factors(dim,NM,NV,positions_h,exponents_h,x,vdegrees,factors_s);
-      // for(int i=0;i<NM;i++)
-      //      cout << "sec. factors after comp-g="<< factors_s[i];
-      // print(factors_h, factors_s,NM,"factors");
-      speeldif_h(dim,NM,NV,nders,positions_h,x,factors_s,c,
-                  monvalues,derivatives);
-      // for(int i=0;i<NM;i++)
-      //     cout << "sec. factors after comp-g=" <<factors_s[i];
+      comp_factors(dim,NM,NV,positions_h,exponents_h,x,vdegrees,factors_h);
+      speeldif_h(dim,NM,NV,nders,positions_h,x,factors_h,c,
+                 monvalues,derivatives);
       sum_mons(dim,m,NV,positions_h,monvalues,derivatives,
-               polyvalues,polyderivatives);
-      // print(polvalues_h,polyderivatives,dim,dim,dim,"poly_derivatives"); 
-   }
-   if(mode==2) // compare results of GPU with CPU
-   {
-      error_on_factors(NM,factors_h,factors_s);
-      error_on_derivatives(dim,polyderivatives,polvalues_h);
+               polyvalues,polvalues_h);
    }
 }
 
