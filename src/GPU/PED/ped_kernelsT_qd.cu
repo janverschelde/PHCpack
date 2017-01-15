@@ -16,35 +16,33 @@
 #endif
 
 #if(p == 0)
-typedef double T;
+typedef double realD;
 #elif(p == 1)
-typedef gdd_real T;
+typedef gdd_real realD;
 #else
-typedef gqd_real T;
+typedef gqd_real realD;
 #endif
 
 using namespace std;
 
-
 __constant__ char positions[20000];
 __constant__ char exponents[20000];
 
-//typedef gqd_real T;
-
 __global__ void mult1_sw_ind_for_shar
- ( int dim, int Mdegr, int NV, complexD<T> *xval, complexD<T> *factors )
+ ( int dim, int Mdegr, int NV,
+   complexD<realD> *xval, complexD<realD> *factors )
 {
    int i = blockIdx.x*blockDim.x + threadIdx.x;
    int k = threadIdx.x;
    // up to 32 variables, each in up to degree 4 ?
-   __shared__ complexD<T> degrees[4][32];
+   __shared__ complexD<realD> degrees[4][32];
    // precomputing degrees
    // first N threads in each block compute degrees of variables
    if(k<dim)
    {
-      complexD<T> a;
+      complexD<realD> a;
       a = xval[k];
-      complexD<T> b(1.0,0.0);
+      complexD<realD> b(1.0,0.0);
       degrees[0][k] = b;
       for(int j=1; j<Mdegr; j++)
       {
@@ -53,7 +51,7 @@ __global__ void mult1_sw_ind_for_shar
       }
    }
    __syncthreads(); 
-   complexD<T> factor_i(1.0,0.0);
+   complexD<realD> factor_i(1.0,0.0);
    int pos,exp;
    for(int ind=0; ind<NV; ind++)
    {
@@ -65,19 +63,20 @@ __global__ void mult1_sw_ind_for_shar
 }
 
 __global__ void mult1
- ( int dim, int Mdegr, int NV, complexD<T> *xval, complexD<T> *factors )
+ ( int dim, int Mdegr, int NV,
+   complexD<realD> *xval, complexD<realD> *factors )
 {
    int i = blockIdx.x*blockDim.x + threadIdx.x;
    int k = threadIdx.x;
    //up to 32 variables, each in up to degree 16
-   __shared__ complexD<T> degrees[32][4];
+   __shared__ complexD<realD> degrees[32][4];
    //precomputing degrees
    //first N threads in each block compute degrees of variables
    if(k<dim)
    {
-      complexD<T> a;
+      complexD<realD> a;
       a = xval[k];
-      complexD<T> b(1.0,0.0);
+      complexD<realD> b(1.0,0.0);
       degrees[k][0] = b;
       for(int j=1; j<Mdegr; j++)
       {
@@ -86,7 +85,7 @@ __global__ void mult1
       }
    }
    __syncthreads();
-   complexD<T> factor_i(1.0,0.0);
+   complexD<realD> factor_i(1.0,0.0);
    for(int ind=0; ind<NV; ind++)
    {
       int pos = (int)positions[NV*i+ind];
@@ -97,10 +96,11 @@ __global__ void mult1
 }
 
 __global__ void sum_monoms
- ( int dim_s, complexD<T> *monvalues, complexD<T> *polvalues, int act_n_threads)
+ ( int dim_s, complexD<realD> *monvalues, complexD<realD> *polvalues,
+   int act_n_threads)
 {
    int i=blockIdx.x*blockDim.x + threadIdx.x;
-   complexD<T> polvalue_regs(0.0,0.0);
+   complexD<realD> polvalue_regs(0.0,0.0);
    for(int ind=0;ind<dim_s; ind++)
       polvalue_regs=polvalue_regs + monvalues[ind*act_n_threads + i];
    polvalues[i]=polvalue_regs;
@@ -108,16 +108,16 @@ __global__ void sum_monoms
 
 __global__ void speeldif
  ( int dim, int tot_n_mons, int ant, int m, int nvarm, 
-   complexD<T> *xval, complexD<T> *roots, complexD<T> *coefs, complexD<T> *monvalues,
-   complexD<T> *monderivatives )
+   complexD<realD> *xval, complexD<realD> *roots, complexD<realD> *coefs,
+   complexD<realD> *monvalues, complexD<realD> *monderivatives )
 {
    int i = blockIdx.x*blockDim.x + threadIdx.x;
    int j = threadIdx.x;
    int mn = i % m;
    int pn = i/m;
    int sp = ant*mn;
-   __shared__ complexD<T>  xv_sh[32];
-   __shared__ complexD<T>  derivatives[4][32];
+   __shared__ complexD<realD>  xv_sh[32];
+   __shared__ complexD<realD>  derivatives[4][32];
    int n_download_rounds=dim/blockDim.x;
    for(int ind=0; ind < n_download_rounds; ind++)
       xv_sh[blockDim.x*ind + j]=xval[blockDim.x*ind +j];
@@ -139,7 +139,7 @@ __global__ void speeldif
       derivatives[ind+2][j] = derivatives[ind+1][j]*xv_sh[pos];
    }
    // compute in registers the current backward product
-   complexD<T> curr_back_prod;
+   complexD<realD> curr_back_prod;
    pos = (int) positions[nvarm*i + nvarm -1];
    curr_back_prod=xv_sh[pos];
    derivatives[nvarm-2][j]=derivatives[nvarm-2][j] * curr_back_prod;
@@ -184,55 +184,52 @@ inline int number_of_blocks ( int dim, int BS )
 }
 
 void GPU_evaldiff
- ( int BS, int dim, int NM, int NV, int deg, int r, int mode, int m,
-   int ncoefs, char *pos_arr_h_char, char *exp_arr_h_char, complexD<T> *x_h,
-   complexD<T> *c_h, complexD<T> *factors_h, complexD<T> *polvalues_h )
-// Evaluates and differentiates a polynomial system on the GPU.
+ ( int BS, int dim, int NM, int NV, int deg, int r, int m,
+   int ncoefs, char *pos_arr_h_char, char *exp_arr_h_char,
+   complexD<realD> *x_h,
+   complexD<realD> *c_h, complexD<realD> *factors_h, complexD<realD> *polvalues_h )
 {
    int nblocks = number_of_blocks(dim,BS);
-   // if(mode != 1) cout << "number of blocks : " << nblocks << endl;
-   complexD<T> *derivatives_d;
-   complexD<T> *factors_d;
-   complexD<T> *monvalues_d;
-   complexD<T> *polvalues_d;
-   complexD<T> *x_d;
-   complexD<T> *c_d;
- // allocate space for output
+   complexD<realD> *derivatives_d;
+   complexD<realD> *factors_d;
+   complexD<realD> *monvalues_d;
+   complexD<realD> *polvalues_d;
+   complexD<realD> *x_d;
+   complexD<realD> *c_d;
+   // allocate space for output
    int ant = ((dim*dim+dim)/BS + 1)*BS;
    int aas = ant*m;
-  // complexD<T> *derivatives_h = new complexD<T>[aas]; // illegal
-   complexD<T> derivatives_h[aas]; // replaces the above allocation
+   // complexD<realD> *derivatives_h = new complexD<realD>[aas]; // illegal
+   complexD<realD> derivatives_h[aas]; // replaces the above allocation
    for(int i=0; i<aas; i++)
       derivatives_h[i].initH(0.0,0.0);
-   size_t size_c = ncoefs*sizeof(complexD<T>);
-   size_t size_d = aas*sizeof(complexD<T>);
-   size_t size_pols = ant*sizeof(complexD<T>);
- // copy positions and exponents to constant memory
+   size_t size_c = ncoefs*sizeof(complexD<realD>);
+   size_t size_d = aas*sizeof(complexD<realD>);
+   size_t size_pols = ant*sizeof(complexD<realD>);
+   // copy positions and exponents to constant memory
    cudaMemcpyToSymbol(positions,pos_arr_h_char,NM*NV*sizeof(char));
    cudaMemcpyToSymbol(exponents,exp_arr_h_char,NM*NV*sizeof(char));
-   size_t size_m = NM*sizeof(complexD<T>);
+   size_t size_m = NM*sizeof(complexD<realD>);
    cudaMalloc((void**)&monvalues_d,size_m);
-   if(mode==0 || mode==2)
+
+   size_t size = dim*sizeof(complexD<realD>);
+   cudaMalloc((void**)&x_d,size);
+   cudaMemcpy(x_d,x_h,size,cudaMemcpyHostToDevice);
+   size_t size_NM = NM*sizeof(complexD<realD>);
+   cudaMalloc((void**)&factors_d,size_NM);
+   cudaMalloc((void**)&c_d,size_c);
+   cudaMemcpy(c_d,c_h,size_c,cudaMemcpyHostToDevice);
+   cudaMalloc((void**)&derivatives_d,size_d);
+   cudaMalloc((void**)&polvalues_d,size_pols);
+   cudaMemcpy(derivatives_d,derivatives_h,size_d,cudaMemcpyHostToDevice);
+   for(int j=0; j<r; j++)
    {
-      size_t size = dim*sizeof(complexD<T>);
-      cudaMalloc((void**)&x_d,size);
-      cudaMemcpy(x_d,x_h,size,cudaMemcpyHostToDevice);
-      size_t size_NM = NM*sizeof(complexD<T>);
-      cudaMalloc((void**)&factors_d,size_NM);
-      cudaMalloc((void**)&c_d,size_c);
-      cudaMemcpy(c_d,c_h,size_c,cudaMemcpyHostToDevice);
-      cudaMalloc((void**)&derivatives_d,size_d);
-      cudaMalloc((void**)&polvalues_d,size_pols);
-      cudaMemcpy(derivatives_d,derivatives_h,size_d,cudaMemcpyHostToDevice);
-      for(int j=0; j<r; j++)
-      {
-       	 mult1_sw_ind_for_shar<<<NM/BS,BS>>>(dim,deg,NV,x_d,factors_d);
-         speeldif<<<NM/BS,BS>>>(dim,NM,ant,m,NV,x_d,factors_d,c_d,
-                                monvalues_d,derivatives_d);
-         sum_monoms<<<nblocks,BS>>>(m,derivatives_d,polvalues_d,ant);
-      }
-      cudaMemcpy(factors_h,factors_d,size_NM,cudaMemcpyDeviceToHost);
-      cudaMemcpy(derivatives_h,derivatives_d,size_d,cudaMemcpyDeviceToHost);
-      cudaMemcpy(polvalues_h,polvalues_d,size_pols,cudaMemcpyDeviceToHost);
+      mult1_sw_ind_for_shar<<<NM/BS,BS>>>(dim,deg,NV,x_d,factors_d);
+      speeldif<<<NM/BS,BS>>>(dim,NM,ant,m,NV,x_d,factors_d,c_d,
+                             monvalues_d,derivatives_d);
+      sum_monoms<<<nblocks,BS>>>(m,derivatives_d,polvalues_d,ant);
    }
+   cudaMemcpy(factors_h,factors_d,size_NM,cudaMemcpyDeviceToHost);
+   cudaMemcpy(derivatives_h,derivatives_d,size_d,cudaMemcpyDeviceToHost);
+   cudaMemcpy(polvalues_h,polvalues_d,size_pols,cudaMemcpyDeviceToHost);
 }

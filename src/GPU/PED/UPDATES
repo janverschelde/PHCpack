@@ -3,6 +3,7 @@ Sat 14 Jan 2017 : edits in gqd_qd_util.h and gqd_qd_util.cpp, with a bug
   from run_ped.cpp to the gqd_qd_util.h.  New main test program test_ped
   takes the working precision at the command line.
   Cleaned up the CPU_evaldiff in run_ped.cpp, with comparisons in main.
+  Replaced T by realD in ped_kernelsT* and improved run_ped.cpp.
 
 Fri 13 Jan 2017 : instead of T and T1, used realD and realH in run_ped.cpp.
 

@@ -39,29 +39,53 @@ void print ( complexD<realD>* a, complexH<realH>** b, int dimX, int dimY,
              int stride, string var);
 
 void GPU_evaldiff
- ( int BS, int dim, int NM, int NV, int deg, int r, int mode, int m,
-   int ncoefs, char *pos_arr_h_char, char *exp_arr_h_char,
+ ( int BS, int dim, int NM, int NV, int deg, int r, int m, int ncoefs,
+   char *pos, char *exp,
    complexD<realD> *x_h, complexD<realD> *c_h,
    complexD<realD> *factors_h, complexD<realD> *polvalues_h );
+/*
+ * THE GPU is used to evaluate a system and its Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   BS           number of threads in a block;
+ *   dim          dimension of the problem;
+ *   NM           number of monomials;
+ *   NV           number of variables;
+ *   deg          highest degree of the variables;
+ *   r            frequency of the runs,
+ *   m            NM divided by dim
+ *   ncoefs       number of coefficients
+ *   pos          indicate the participating variables in the monomials;
+ *   exp          the exponents of the participating variables; 
+ *   c            coefficients of the monomials;
+ *   x            point where to evaluate.
+ *
+ * ON RETURN :
+ *   factors_h    the factors common to evaluation and differentiation;
+ *   polvalues_h  are the values of polynomials and their derivatives. */
 
 void CPU_evaldiff
-( int dim, int NM, int NV, int deg, int r, int m, int *pos, int *exp,
+ ( int dim, int NM, int NV, int deg, int r, int m, int *pos, int *exp,
    complexH<realH> *c, complexH<realH> *x,
    complexH<realH> *factors_h, complexH<realH> **polvalues_h );
 /*
  * The CPU is used to evaluate a system and its Jacobian matrix.
  *
  * ON ENTRY :
- *   dim      dimension of the problem;
- *   NM       number of monomials;
- *   NV       number of variables;
- *   deg      highest degree of the variables;
- *   r        frequency of the runs,
- *   m        NM divided by dim
- *   pos      indicate the participating variables in the monomials;
- *   exp      the exponents of the participating variables; 
- *   c        coefficients of the monomials;
- *   x        point where to evaluate. */
+ *   dim          dimension of the problem;
+ *   NM           number of monomials;
+ *   NV           number of variables;
+ *   deg          highest degree of the variables;
+ *   r            frequency of the runs,
+ *   m            NM divided by dim
+ *   pos          indicate the participating variables in the monomials;
+ *   exp          the exponents of the participating variables; 
+ *   c            coefficients of the monomials;
+ *   x            point where to evaluate.
+ *
+ * ON RETURN :
+ *   factors_h    the factors common to evaluation and differentiation;
+ *   polvalues_h  are the values of polynomials and their derivatives. */
 
 int main ( int argc, char *argv[] )
 {
@@ -106,7 +130,7 @@ int main ( int argc, char *argv[] )
    for(int i=0; i<dim; i++) polvalues_h[i] = new complexH<realH>[dim];
 
    if(mode == 0 || mode == 2)
-      GPU_evaldiff(BS,dim,NM,NV,deg,r,mode,m,ncoefs,pos_arr_h_char,
+      GPU_evaldiff(BS,dim,NM,NV,deg,r,m,ncoefs,pos_arr_h_char,
                    exp_arr_h_char,xp_d,c_d,factors_d,polvalues_d);
 
    if(mode == 1 || mode == 2)
