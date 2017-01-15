@@ -50,12 +50,6 @@ void CPU_evaldiff
    complexH<realH> *x, complexD<realD> *factors_h,
    complexD<realD> *polvalues_h );
 
-void write_system
- ( int dim, int NM, int NV, complexH<realH> *c, int *myp, int *e );
-// Writes the system of dimension dim, with number of monomials NM
-// number of variables NV with coefficients in c, positions of nonzero
-// exponents in p, and values of the exponents in e.
-
 int main ( int argc, char *argv[] )
 {
    int BS,dim,NM,NV,deg,r,mode;
@@ -78,15 +72,15 @@ int main ( int argc, char *argv[] )
    // cout << "M_PI=" << M_PI << endl;
 
    int pos_arr_h_int[NM*NV];
-   char pos_arr_h_char[NM*NV];
    int exp_arr_h_int[NM*NV];
+   char pos_arr_h_char[NM*NV];
    char exp_arr_h_char[NM*NV];
    int ncoefs = NM*(NV+1);
    complexD<realD> *c_h = new complexD<realD>[ncoefs];
    complexH<realH> *c = new complexH<realH>[ncoefs];
    generate_system(dim,NM,NV,deg,pos_arr_h_int,pos_arr_h_char,
                    exp_arr_h_int,exp_arr_h_char,c_h,c);
-   if(mode == 2) write_system(dim,NM,NV,c,pos_arr_h_int,exp_arr_h_int);
+   if(mode == 2) write_system<realH>(dim,NM,NV,c,pos_arr_h_int,exp_arr_h_int);
    // allocate space for output
    int m = NM/dim;
    // cout << "m=" << m << endl;
@@ -286,22 +280,4 @@ void print
          cout << "CPU: "
               << var << "["<< i << "]" << "["<< j << "] = " << b[i][j];
       }
-}
-
-void write_system
- ( int dim, int NM, int NV, complexH<realH> *c, int *myp, int *e )
-{
-   cout << "          dimension : " << dim << endl;
-   cout << "number of monomials : " << NM << endl;
-   cout << "number of variables : " << NV << endl;
-   cout << "   the coefficients : " << endl;
-   cout << scientific << setprecision(8);
-   for(int i=0; i<NM; i++)
-   {
-      cout << "c[" << i << "] : ";
-      cout << "(" <<  c[i] << ")";
-      for(int j=0; j<NV; j++)
-         cout << "*x[" << myp[NV*i+j] << "]^" << e[NV*i+j];
-      cout << endl;
-   }
 }

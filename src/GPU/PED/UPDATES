@@ -1,5 +1,6 @@
 Sat 14 Jan 2017 : edits in gqd_qd_util.h and gqd_qd_util.cpp, with a bug
-  fix in the generation of the random positions.
+  fix in the generation of the random positions.  Move the write_system
+  from run_ped.cpp to the gqd_qd_util.h.
 
 Fri 13 Jan 2017 : instead of T and T1, used realD and realH in run_ped.cpp.
 

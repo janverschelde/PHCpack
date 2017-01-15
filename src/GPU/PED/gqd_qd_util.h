@@ -169,4 +169,27 @@ void error_on_derivatives
    cout << "poly_error=" << poly_error;
 }
 
+template<class realH>
+void write_system
+ ( int dim, int NM, int NV, complexH<realH> *c, int *myp, int *e )
+/*
+ * Writes the system of dimension dim, with number of monomials NM
+ * number of variables NV with coefficients in c, positions of nonzero
+ * exponents in p, and values of the exponents in e. */
+{
+   cout << "          dimension : " << dim << endl;
+   cout << "number of monomials : " << NM << endl;
+   cout << "number of variables : " << NV << endl;
+   cout << "   the coefficients : " << endl;
+   cout << scientific << setprecision(8);
+   for(int i=0; i<NM; i++)
+   {
+      cout << "c[" << i << "] : ";
+      cout << "(" <<  c[i] << ")";
+      for(int j=0; j<NV; j++)
+         cout << "*x[" << myp[NV*i+j] << "]^" << e[NV*i+j];
+      cout << endl;
+   }
+}
+
 #endif
