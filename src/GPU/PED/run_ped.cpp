@@ -64,6 +64,7 @@ void GPU_evaldiff
  *   factors_h    the factors common to evaluation and differentiation;
  *   polvalues_h  are the values of polynomials and their derivatives. */
 
+template <class realH>
 void CPU_evaldiff
  ( int dim, int NM, int NV, int deg, int r, int m, int *pos, int *exp,
    complexH<realH> *c, complexH<realH> *x,
@@ -135,8 +136,9 @@ int main ( int argc, char *argv[] )
 
    if(mode == 1 || mode == 2)
    {
-      CPU_evaldiff(dim,NM,NV,deg,r,m,pos_arr_h_int,
-                   exp_arr_h_int,c_h,xp_h,factors_h,polvalues_h);
+      CPU_evaldiff<realH>
+         (dim,NM,NV,deg,r,m,pos_arr_h_int,
+          exp_arr_h_int,c_h,xp_h,factors_h,polvalues_h);
       if(mode==2) // compare results of GPU with CPU
       {
          // print(factors_h, factors_d,NM,"factors");
@@ -164,37 +166,61 @@ int main ( int argc, char *argv[] )
    return 0;
 }
 
+void print ( complexD<realD>* a, complexH<realH>* b, int dim, string var )
+{
+   complexH<realH> temp;
+
+   for (int i=0;i<dim;i++)
+   {
+      comp1_gqd2qd(&a[i],&temp);
+      cout << "GPU: " << var << "["<< i << "] = " << temp;
+      cout << "CPU: " << var << "["<< i << "] = " << b[i];
+   }
+}
+
+void print
+ ( complexD<realD>* a, complexH<realH>** b, int dimX, int dimY,
+   int stride, string var)
+{
+
+   complexH<realH> temp;
+
+   for(int i=0;i<dimX;i++)
+      for(int j=0;j<dimY;j++)
+      {
+         comp1_gqd2qd(&a[stride+dimY*j+i],&temp);
+         cout << "GPU: " 
+              << var << "["<< i << "]" << "["<< j << "] = " << temp;
+         cout << "CPU: "
+              << var << "["<< i << "]" << "["<< j << "] = " << b[i][j];
+      }
+}
+
+template <class realH>
 void degrees ( complexH<realH> **deg, complexH<realH> *bm, int dim, int maxd )
 {
    for(int i=0; i<dim; i++)
    {
       deg[i][0].init(1.0,0.0);
-      for(int j=1; j<=maxd; j++)
-      {  
-         deg[i][j] = deg[i][j-1]*bm[i];
-         // cout << "deg="<<deg[i][j];
-      }
+      for(int j=1; j<=maxd; j++) deg[i][j] = deg[i][j-1]*bm[i];
    }
 }
 
-void comp_factors ( int na, int no_monomials, int nvarm,
+template <class realH>
+void comp_factors
+ ( int na, int no_monomials, int nvarm,
    int **monvarindexes, int **nonz_exponentsx,
    complexH<realH> *xval, complexH<realH> **deg, complexH<realH> *roots )
 {
    for(int i=0; i<no_monomials; i++)
    {
       roots[i].init(1.0,0.0);
-      // cout << "seq.roots=" << roots[i];
       for(int j=0; j<nvarm; j++)
-      {
          roots[i]=roots[i]*deg[monvarindexes[i][j]][nonz_exponentsx[i][j]];
-         // cout << deg[monvarindexes[i][j]][nonz_exponentsx[i][j]];
-      }
-      // cout << "seq.roots=" << roots[i];
-      
    }
 }
 
+template <class realH>
 void speeldif_h
  ( int na, int NM, int nvarm, int nders, int **monvarindexes,
    complexH<realH> *xval, complexH<realH> *roots, complexH<realH> *coefs,
@@ -228,6 +254,7 @@ void speeldif_h
    }
 }
 
+template <class realH>
 void sum_mons
  ( int dim, int m, int nvarm, int **monvarindexes,
    complexH<realH> *monvalues, complexH<realH> **monderivatives,
@@ -251,6 +278,7 @@ void sum_mons
       }
 }
 
+template <class realH>
 void CPU_evaldiff
  ( int dim, int NM, int NV, int deg, int r, int m, int *pos, int *exp,
    complexH<realH> *c, complexH<realH> *x,
@@ -276,41 +304,12 @@ void CPU_evaldiff
    complexH<realH> *polyvalues = new complexH<realH>[dim];
    for(int j=0; j<r; j++)
    {
-      degrees(vdegrees,x,dim,deg);
-      comp_factors(dim,NM,NV,positions_h,exponents_h,x,vdegrees,factors_h);
-      speeldif_h(dim,NM,NV,nders,positions_h,x,factors_h,c,
-                 monvalues,derivatives);
-      sum_mons(dim,m,NV,positions_h,monvalues,derivatives,
-               polyvalues,polvalues_h);
+      degrees<realH>(vdegrees,x,dim,deg);
+      comp_factors<realH>
+         (dim,NM,NV,positions_h,exponents_h,x,vdegrees,factors_h);
+      speeldif_h<realH>
+         (dim,NM,NV,nders,positions_h,x,factors_h,c,monvalues,derivatives);
+      sum_mons<realH>
+         (dim,m,NV,positions_h,monvalues,derivatives,polyvalues,polvalues_h);
    }
-}
-
-void print ( complexD<realD>* a, complexH<realH>* b, int dim, string var )
-{
-   complexH<realH> temp;
-
-   for (int i=0;i<dim;i++)
-   {
-      comp1_gqd2qd(&a[i],&temp);
-      cout << "GPU: " << var << "["<< i << "] = " << temp;
-      cout << "CPU: " << var << "["<< i << "] = " << b[i];
-   }
-}
-
-void print
- ( complexD<realD>* a, complexH<realH>** b, int dimX, int dimY,
-   int stride, string var)
-{
-
-   complexH<realH> temp;
-
-   for(int i=0;i<dimX;i++)
-      for(int j=0;j<dimY;j++)
-      {
-         comp1_gqd2qd(&a[stride+dimY*j+i],&temp);
-         cout << "GPU: " 
-              << var << "["<< i << "]" << "["<< j << "] = " << temp;
-         cout << "CPU: "
-              << var << "["<< i << "]" << "["<< j << "] = " << b[i][j];
-      }
 }
