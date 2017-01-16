@@ -1,3 +1,5 @@
+Mon 16 Jan 2017 : reformatted eval_host.cpp and newton_host.cpp.
+
 Sat 31 Dec 2016 : reformatted varset.h.
 
 Sat 3 Sep 2016 : fixed bug in newton_host.cpp, introduced by reformatting.
