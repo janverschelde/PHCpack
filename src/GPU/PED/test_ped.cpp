@@ -3,8 +3,10 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <gqd_type.h>
 #include "gqd_qd_util.h"
 #include "ped_host.h"
+// #include "ped_kernels.h"
 
 using namespace std;
 
@@ -72,19 +74,30 @@ int ped_test
 
    if(mode == 2) write_system<realH>(dim,NM,NV,c_h,pos_arr_h_int,exp_arr_h_int);
 
+   complexD<realD> *xp_d = new complexD<realD>[dim];
    complexH<realH> *xp_h = new complexH<realH>[dim];
    for(int i=0; i<dim; i++)
    {
       double temp = random_double()*2*M_PI;
+      xp_d[i].initH(cos(temp),sin(temp));
       xp_h[i].init(cos(temp),sin(temp));
    }
+   complexD<realD> *factors_d = new complexD<realD>[NM];
    complexH<realH> *factors_h = new complexH<realH>[NM];
+
+   int ant = ((dim*dim+dim)/BS + 1)*BS;
+   complexD<realD> *polvalues_d = new complexD<realD>[ant];
    complexH<realH> **polvalues_h = new complexH<realH>*[dim];
    for(int i=0; i<dim; i++) polvalues_h[i] = new complexH<realH>[dim];
 
+   int m = NM/dim;
+/*
+   if(mode == 0 || mode == 2)
+      GPU_evaldiff(BS,dim,NM,NV,deg,r,m,ncoefs,pos_arr_h_char,
+                   exp_arr_h_char,xp_d,c_d,factors_d,polvalues_d);
+ */
    if(mode == 1 || mode == 2)
    {
-      int m = NM/dim;
       CPU_evaldiff(dim,NM,NV,deg,r,m,pos_arr_h_int,
                    exp_arr_h_int,c_h,xp_h,factors_h,polvalues_h);
       if(mode == 2)

@@ -41,6 +41,9 @@ gqd_qd_util.cpp    : definitions of type conversions and command line parsing
 ------------------------------------------------------------------------------
 ped_host.h         : prototypes for execution on the host
 ped_host.cpp       : definition of the functions for the host
+ped_kernels.h      : prototypes for the new kernels
+ped_kernels.cu     : definition of the new kernels
+ped_kernels_qd.cu  : definition of the new kernels for qd
 test_ped.cpp       : main test which takes precision at the command line
 ------------------------------------------------------------------------------
 

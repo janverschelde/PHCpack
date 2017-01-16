@@ -1,6 +1,9 @@
 Sun 15 Jan 2017 : new files ped_host.h and ped_host.cpp to define the
   execution on the host, tested in test_ped, and compiled with double,
   double double, and quad double precision, as defined by the makefile.
+  Redefined ped_kernels.h, with ped_kernels.cu, ped_kernels_qd.cu,
+  with their separate compilations as defined in the makefile,
+  with the call documented away in test_ped.cpp.
 
 Sat 14 Jan 2017 : edits in gqd_qd_util.h and gqd_qd_util.cpp, with a bug
   fix in the generation of the random positions.  Move the write_system
