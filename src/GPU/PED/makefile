@@ -16,13 +16,25 @@ test_ped:
 	@-echo ">>> compiling utilities ..."
 	g++ -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
             -I$(QD_ROOT)/include -c gqd_qd_util.cpp
+	@-echo ">>> compiling ped_host for double precision ..."
+	g++ --define-macro precision=d -c ped_host.cpp \
+            -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
+            -I$(QD_ROOT)/include -o ped_host_d.o
+	@-echo ">>> compiling ped_host for double double precision ..."
+	g++ --define-macro precision=dd -c ped_host.cpp \
+            -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
+            -I$(QD_ROOT)/include -o ped_host_dd.o
+	@-echo ">>> compiling ped_host for quad double precision ..."
+	g++ --define-macro precision=qd -c ped_host.cpp \
+            -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
+            -I$(QD_ROOT)/include -o ped_host_qd.o
 	@-echo ">>> compiling test_ped ..."
 	g++ -c test_ped.cpp \
             -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
             -I$(QD_ROOT)/include
 	@-echo ">>> linking ..."
-	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
-		test_ped.o gqd_qd_util.o \
+	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include test_ped.o \
+		gqd_qd_util.o ped_host_d.o ped_host_dd.o ped_host_qd.o \
 		$(QD_LIB)/libqd.a -o test_ped \
             -lcuda -lcutil_x86_64 -lcudart \
             -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib

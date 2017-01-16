@@ -39,6 +39,8 @@ complexH.h         : complex types for CPU (H = host)
 gqd_qd_util.h      : headers of type conversions and command line parsing
 gqd_qd_util.cpp    : definitions of type conversions and command line parsing
 ------------------------------------------------------------------------------
+ped_host.h         : prototypes for execution on the host
+ped_host.cpp       : definition of the functions for the host
 test_ped.cpp       : main test which takes precision at the command line
 ------------------------------------------------------------------------------
 

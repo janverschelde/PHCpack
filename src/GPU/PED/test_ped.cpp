@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include "gqd_qd_util.h"
+#include "ped_host.h"
 
 using namespace std;
 
@@ -70,4 +71,27 @@ int ped_test
        exp_arr_h_int,exp_arr_h_char,c_d,c_h);
 
    if(mode == 2) write_system<realH>(dim,NM,NV,c_h,pos_arr_h_int,exp_arr_h_int);
+
+   complexH<realH> *xp_h = new complexH<realH>[dim];
+   for(int i=0; i<dim; i++)
+   {
+      double temp = random_double()*2*M_PI;
+      xp_h[i].init(cos(temp),sin(temp));
+   }
+   complexH<realH> *factors_h = new complexH<realH>[NM];
+   complexH<realH> **polvalues_h = new complexH<realH>*[dim];
+   for(int i=0; i<dim; i++) polvalues_h[i] = new complexH<realH>[dim];
+
+   if(mode == 1 || mode == 2)
+   {
+      int m = NM/dim;
+      CPU_evaldiff(dim,NM,NV,deg,r,m,pos_arr_h_int,
+                   exp_arr_h_int,c_h,xp_h,factors_h,polvalues_h);
+      if(mode == 2)
+      {
+         for(int i=0; i<NM; i++) cout << factors_h[i];
+         for(int i=0; i<dim; i++)
+            for(int j=0; j<dim; j++) cout << polvalues_h[j][i];
+      }
+   }
 }
