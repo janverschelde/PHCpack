@@ -1,4 +1,6 @@
 // This is the main test on polynomial evaluation and differentiation.
+// Three precisions are supported: double, double double, and quad double,
+// by one single main function.
 
 #include <iostream>
 #include <iomanip>
@@ -6,7 +8,7 @@
 #include <gqd_type.h>
 #include "gqd_qd_util.h"
 #include "ped_host.h"
-// #include "ped_kernels.h"
+#include "ped_kernels.h"
 
 using namespace std;
 
@@ -91,20 +93,22 @@ int ped_test
    for(int i=0; i<dim; i++) polvalues_h[i] = new complexH<realH>[dim];
 
    int m = NM/dim;
-/*
+
    if(mode == 0 || mode == 2)
       GPU_evaldiff(BS,dim,NM,NV,deg,r,m,ncoefs,pos_arr_h_char,
                    exp_arr_h_char,xp_d,c_d,factors_d,polvalues_d);
- */
+
    if(mode == 1 || mode == 2)
    {
       CPU_evaldiff(dim,NM,NV,deg,r,m,pos_arr_h_int,
                    exp_arr_h_int,c_h,xp_h,factors_h,polvalues_h);
       if(mode == 2)
       {
-         for(int i=0; i<NM; i++) cout << factors_h[i];
-         for(int i=0; i<dim; i++)
-            for(int j=0; j<dim; j++) cout << polvalues_h[j][i];
+         //for(int i=0; i<NM; i++) cout << factors_h[i];
+         //for(int i=0; i<dim; i++)
+         //   for(int j=0; j<dim; j++) cout << polvalues_h[j][i];
+         error_on_factors(NM,factors_d,factors_h);
+         error_on_derivatives(dim,polvalues_h,polvalues_d);
       }
    }
 }

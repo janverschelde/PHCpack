@@ -6,28 +6,17 @@ QD_LIB=/usr/local/lib
 GQD_HOME=/usr/local/gqd_1_2
 SDK_HOME=/usr/local/cuda/sdk
 
-all: run_ped_d run_ped_dd run_ped_qd
+all: run_ped_d run_ped_dd run_ped_qd test_ped
 
 use_complex:
 	g++ -o /tmp/use_complex -I$(QD_ROOT)/include use_complex.cpp \
             /usr/local/lib/libqd.a
 
 test_ped:
-	@-echo ">>> compiling kernels for double precision ..."
-	nvcc --define-macro precision=d \
-	     -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
+	@-echo ">>> compiling the kernels ..."
+	nvcc -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
              -I/usr/local/cuda/include \
-             -c ped_kernels.cu -arch=sm_13 -o ped_kernels_d.o
-	@-echo ">>> compiling kernels for double double precision ..."
-	nvcc --define-macro precision=dd \
-	     -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
-             -I/usr/local/cuda/include \
-             -c ped_kernels.cu -arch=sm_13 -o ped_kernels_dd.o
-	@-echo ">>> compiling kernels for quad double precision ..."
-	nvcc --define-macro precision=qd \
-	     -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
-             -I/usr/local/cuda/include \
-             -c ped_kernels_qd.cu -arch=sm_13 -o ped_kernels_qd.o
+             -c all_ped_kernels.cu -arch=sm_13 -o ped_kernels.o
 	@-echo ">>> compiling utilities ..."
 	g++ -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
             -I$(QD_ROOT)/include -c gqd_qd_util.cpp
@@ -50,11 +39,9 @@ test_ped:
 	@-echo ">>> linking ..."
 	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include test_ped.o \
 		gqd_qd_util.o ped_host_d.o ped_host_dd.o ped_host_qd.o \
-		$(QD_LIB)/libqd.a -o test_ped \
+		ped_kernels.o $(QD_LIB)/libqd.a -o test_ped \
             -lcuda -lcutil_x86_64 -lcudart \
             -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib
-
-#                ped_kernels_d.o ped_kernels_dd.o ped_kernels_qd.o \
 
 run_ped_d:
 	@-echo ">>> compiling kernels ..."

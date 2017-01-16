@@ -1,3 +1,7 @@
+Mon 16 Jan 2017 : new file all_ped_kernels.cu combines the all kernels
+  for the three precisions, which allows then to run the tests in test_ped,
+  with the precision at the first item at the command line.
+
 Sun 15 Jan 2017 : new files ped_host.h and ped_host.cpp to define the
   execution on the host, tested in test_ped, and compiled with double,
   double double, and quad double precision, as defined by the makefile.

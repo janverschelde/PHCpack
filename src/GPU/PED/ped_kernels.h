@@ -1,8 +1,9 @@
 // Kernels to evaluate and differentiate polynomials in several variables,
 // written for double, double double, and quad double precision.
+// The definitions of the functions are in all_ped_kernels.cu.
 
-#ifndef __KERNELS__
-#define __KERNELS__
+#ifndef __ALL_PED_KERNELS_H__
+#define __ALL_PED_KERNELS_H__
 
 void GPU_evaldiff
  ( int BS, int dim, int NM, int NV, int deg, int r, int m, int ncoefs,
