@@ -1682,6 +1682,62 @@ ts_gpu2norm_qd:
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
                  -L$(PHCAda)/Math_Lib/QD --LINK=$(gpp)
 
+ts_gpu2norm:
+	@-echo ">>> compiling kernels for all precisions ..."
+	nvcc -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
+             -I/usr/local/cuda/include \
+             -c $(PHCgpu)/MGS2/all_norm_kernels.cu \
+             -arch=sm_13 --ptxas-options=-v \
+             -o all_norm_kernels.o
+	@-echo ">>> compiling host code in double precision ..."
+	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesD \
+            -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
+            -I/usr/local/cuda/include \
+            -c $(PHCgpu)/MGS2/norm_host.cpp -o norm_host_d.o
+	@-echo ">>> compiling host code in double double precision ..."
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/Math_Lib/QD/double_double.c -o double_double.o
+	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesDD \
+            -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
+            -I/usr/local/cuda/include \
+            -c $(PHCgpu)/MGS2/norm_host.cpp -o norm_host_dd.o
+	@-echo ">>> compiling host code in quad double precision ..."
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/Math_Lib/QD/quad_double.c -o quad_double.o
+	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesQD \
+            -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
+            -I/usr/local/cuda/include \
+            -c $(PHCgpu)/MGS2/norm_host.cpp -o norm_host_qd.o
+	@-echo ">>> compiling the caller in double precision ..."
+	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesD \
+            -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
+            -I/usr/local/cuda/include \
+            -c $(PHCAda)/PHCtoC/gpu2norm_d.cpp -o gpu2norm_d.o
+	@-echo ">>> compiling the caller in double double precision ..."
+	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesDD \
+            -I$(PHCAda)/Math_Lib/QD \
+            -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
+            -I/usr/local/cuda/include \
+            -c $(PHCAda)/PHCtoC/gpu2norm_dd.cpp -o gpu2norm_dd.o
+	@-echo ">>> compiling the caller in quad double precision ..."
+	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesQD \
+            -I$(PHCAda)/Math_Lib/QD \
+            -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
+            -I/usr/local/cuda/include \
+            -c $(PHCAda)/PHCtoC/gpu2norm_qd.cpp -o gpu2norm_qd.o
+	@-echo ">>> compiling and binding the main Ada program ..."
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm.adb \
+                 -o ts_gpu2norm.o
+	gnatbind ts_gpu2norm
+	@-echo ">>> linking ..."
+	gnatlink -o $(BIN)/ts_gpu2norm ts_gpu2norm \
+                 all_norm_kernels.o norm_host_d.o gpu2norm_d.o \
+                 double_double.o norm_host_dd.o gpu2norm_dd.o \
+                 quad_double.o norm_host_qd.o gpu2norm_qd.o -lm \
+                 -lcutil_x86_64 -lcudart $(QD_LIB)/libqd.a \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 --LINK=$(gpp)
+
 utilities_d.o:
 	$(gpp) -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/utilities.cpp -o utilities_d.o
