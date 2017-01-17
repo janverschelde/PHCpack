@@ -1,3 +1,7 @@
+Thu 17 Jan 2017 : new ts_gpu2norm.adb, which collects the test code from
+  ts_gpu2norm_d, ts_gpu2norm_dd, and ts_gpu2norm_qd.  This new ts_gpu2norm
+  builds to one executable program for the three levels of precision.
+
 Mon 16 Jan 2017 : new ts_cpu2norm.adb, with the code from the three separate
   test programs for double, double double, and quad double precision.
 
