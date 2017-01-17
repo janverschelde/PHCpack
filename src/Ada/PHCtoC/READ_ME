@@ -19,6 +19,7 @@ cpu2norm_qd_in_c.c    : C function called by ts_gpu2norm_qd.adb
 ts_cpu2norm_d.adb     : 2-norm of a random complex double vector
 ts_cpu2norm_dd.adb    : 2-norm of a random complex double double vector
 ts_cpu2norm_qd.adb    : 2-norm of a random complex quad double vector
+ts_cpu2norm.adb       : test for all three precisions
 -------------------------------------------------------------------------------
 gpu2norm_d.cpp        : GPU computes 2-norm of complex double vector
 gpu2norm_dd.cpp       : GPU computes 2-norm of complex double double vector
