@@ -1,3 +1,6 @@
+Tue 17 Jan 2017 : new all_norm_kernels.cu with header in all_norm_kernels.h,
+  to enable the building of one executable test program for all precisions.
+
 Tue 1 Jul 2014 : extended constructors in complex.h and complexH.h
   to add the low part of double doubles (instead of just default 0.0).
   Did the same for quad doubles and added setprecision to run_norm.cpp.

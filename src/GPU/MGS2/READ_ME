@@ -1,3 +1,5 @@
+Second accelerated modified Gram-Schmidt algorithm in PHCv2.4.34
+
 This directory contains version 2 of the modified Gram-Schmidt algorithm
 to accelerate the solving of linear systems.  The main goal is to remove
 the restrictions on the dimensions.
@@ -26,47 +28,49 @@ The directory Timings contains experimental data and Python scripts
 to process the timings.
 
 ------------------------------------------------------------------------------
-file name          : short description
+file name           : short description
 ------------------------------------------------------------------------------
-DefineType.h       : defines the precision in the respective directories
+DefineType.h        : defines the precision in the respective directories
                      DefineTypesD, DefineTypesDD, and DefineTypesQD, for
                      double, double double, and quad double precision
-complex.h          : complex types for GPU
-complexH.h         : complex types for CPU (H = host)
-gqd_qd_util.h      : headers of type conversions and command line parsing
-gqd_qd_util.cpp    : definitions of type conversions and command line parsing
-gqd_qd_utilT.cpp   : templated complex type conversions and random points
+complex.h           : complex types for GPU
+complexH.h          : complex types for CPU (H = host)
+gqd_qd_util.h       : headers of type conversions and command line parsing
+gqd_qd_util.cpp     : definitions of type conversions and command line parsing
+gqd_qd_utilT.cpp    : templated complex type conversions and random points
 ------------------------------------------------------------------------------
-run_norm.cpp       : main program for the normalization of a vector
-norm_kernels.h     : prototypes of the kernels of the normalization
-norm_kernels.cu    : definitions of the kernels of the normalization
-norm_host.h        : prototypes of normalization for execution on the host 
-norm_host.cpp      : definitions of normalization on the host
+run_norm.cpp        : main program for the normalization of a vector
+norm_kernels.h      : prototypes of the kernels of the normalization
+norm_kernels.cu     : definitions of the kernels of the normalization
+norm_host.h         : prototypes of normalization for execution on the host 
+norm_host.cpp       : definitions of normalization on the host
+all_norm_kernels.h  : prototypes for all precision to compute 2-norm
+all_norm_kernels.cu : kernels for all 2-norms
 ---------------------------------------------------------------------------
-run_gram.cpp       : main program for the calculation of a Gram matrix
-gram_kernels.h     : prototypes of the kernels for the Gram matrix
-gram_kernels.cu    : definitions of the kernels for the Gram matrix
-gram_host.h        : prototypes of Gram matrix for execution on the host 
-gram_host.cpp      : definitions of Gram matrix on the host
+run_gram.cpp        : main program for the calculation of a Gram matrix
+gram_kernels.h      : prototypes of the kernels for the Gram matrix
+gram_kernels.cu     : definitions of the kernels for the Gram matrix
+gram_host.h         : prototypes of Gram matrix for execution on the host 
+gram_host.cpp       : definitions of Gram matrix on the host
 ---------------------------------------------------------------------------
-chandra.h          : prototypes to evaluate the Chandrasekhar H-equation
-chandra.cpp        : definition of evaluation and differentiation routines
-chandra_test.cpp   : small test on the correctness
+chandra.h           : prototypes to evaluate the Chandrasekhar H-equation
+chandra.cpp         : definition of evaluation and differentiation routines
+chandra_test.cpp    : small test on the correctness
 ---------------------------------------------------------------------------
-run_mgs2.cpp       : main program for the modified Gram-Schmidt method
-mgs2_kernels.cu    : prototypes of the kernels of the GPU solver
-mgs2_host.h        : prototypes of CPU solver, for execution on the host 
-mgs2_host.cpp      : definitions of CPU solver
+run_mgs2.cpp        : main program for the modified Gram-Schmidt method
+mgs2_kernels.cu     : prototypes of the kernels of the GPU solver
+mgs2_host.h         : prototypes of CPU solver, for execution on the host 
+mgs2_host.cpp       : definitions of CPU solver
 ------------------------------------------------------------------------------
-run_mgs3.cpp       : modification for GPU eval+diff of chandra
-mgs3_kernels.h     : prototypes for GPU eval+diff of chandra
-mgs3_kernels.cu    : kernels for eval+diff of chandra
+run_mgs3.cpp        : modification for GPU eval+diff of chandra
+mgs3_kernels.h      : prototypes for GPU eval+diff of chandra
+mgs3_kernels.cu     : kernels for eval+diff of chandra
 ------------------------------------------------------------------------------
-run_mgs.cpp        : original main for the modified Gram-Schmidt method
-mgs_kernelsT.cu    : prototypes of the kernels of the GPU solver
-mgs_kernelsT_qd.cu : definitions of the kernels of the GPU solver, for QD
-mgs_host.h         : prototypes of CPU solver, for execution on the host 
-mgs_host.cpp       : definitions of CPU solver
+run_mgs.cpp         : original main for the modified Gram-Schmidt method
+mgs_kernelsT.cu     : prototypes of the kernels of the GPU solver
+mgs_kernelsT_qd.cu  : definitions of the kernels of the GPU solver, for QD
+mgs_host.h          : prototypes of CPU solver, for execution on the host 
+mgs_host.cpp        : definitions of CPU solver
 ------------------------------------------------------------------------------
 
 The capacity of shared memory imposes a limit on the dimension n:
