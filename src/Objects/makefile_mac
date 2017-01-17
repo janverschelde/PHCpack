@@ -1594,6 +1594,23 @@ ts_cpu2norm_qd:
               -o $(BIN)/ts_cpu2norm_qd \
               -largs double_double.o quad_double.o cpu2norm_qd_in_c.o -lm
 
+ts_cpu2norm:
+	gcc -c $(PHCAda)/PHCtoC/cpu2norm_d_in_c.c -o cpu2norm_d_in_c.o
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/Math_Lib/QD/double_double.c -o double_double.o
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/PHCtoC/cpu2norm_dd_in_c.c \
+            -o cpu2norm_dd_in_c.o
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/Math_Lib/QD/quad_double.c -o quad_double.o
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/PHCtoC/cpu2norm_qd_in_c.c \
+            -o cpu2norm_qd_in_c.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cpu2norm.adb \
+              -o $(BIN)/ts_cpu2norm -largs cpu2norm_d_in_c.o \
+                 double_double.o cpu2norm_dd_in_c.o \
+                 quad_double.o cpu2norm_qd_in_c.o -lm
+
 ts_gpu2norm_Cmain:
 	g++ -c $(PHCAda)/PHCtoC/callGPUnorm.cpp -o callGPUnorm.o
 	gcc $(PHCAda)/PHCtoC/ts_gpu2norm_Cmain.c callGPUnorm.o \
