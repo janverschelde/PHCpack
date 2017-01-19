@@ -1,93 +1,95 @@
 #include "poly.h"
 
-inline int var_to_pos(string var){
-    string var1 = var.substr(1,var.length()-1);
-	//return atoi(var1.c_str());
-	//return atoi(var1.c_str())-1;
-	return (atoi(var1.c_str())+6)%8;
-}
-
-CT pow(const CT x, int exp){
-    CT tmp = x;
-    for(int i=1; i<exp; i++){
-        tmp *= x;
-    }
-    return tmp;
-}
-
-int not_empty_line(const string& line){
-    int not_empty = -1;
-    for(unsigned int j=0; j < line.length(); j++){
-        char c = line[j];
-        if(c!=' '&&c!=';'&&c!='\n'){
-            not_empty = j;
-        }
-    }
-    return not_empty;
-}
-
-std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
-    std::stringstream ss(s);
-    std::string item;
-    std::string empy_str = "";
-    while (std::getline(ss, item, delim)) {
-    	if(item != empy_str){
-    		elems.push_back(item);
-    	}
-    }
-    return elems;
-}
-
-
-std::vector<std::string> split(const std::string &s, char delim) {
-    std::vector<std::string> elems;
-    split(s, delim, elems);
-    return elems;
-}
-
-void PolyMon::read(const string& mon_string, VarDict& pos_dict)
+inline int var_to_pos ( string var )
 {
-    int end = mon_string.length();
-    int loc = 0;
-    CT coef = get_coef_complex(mon_string, loc);
-    read(mon_string, pos_dict, loc, end, coef);
+   string var1 = var.substr(1,var.length()-1);
+   // return atoi(var1.c_str());
+   // return atoi(var1.c_str())-1;
+   return (atoi(var1.c_str())+6)%8;
 }
 
-void PolyMon::read(const string& mon_string, VarDict& pos_dict, CT coef)
+CT pow ( const CT x, int exp )
 {
-    int end = mon_string.length();
-    read(mon_string, pos_dict, 0, end, coef);
+   CT tmp = x;
+
+   for(int i=1; i<exp; i++) tmp *= x;
+
+   return tmp;
 }
 
-void PolyMon::read(const string& eq_string, VarDict& pos_dict, int start, int end, CT coef)
+int not_empty_line ( const string& line )
 {
-    n_var = 1;
+   int not_empty = -1;
+   for(unsigned int j=0; j < line.length(); j++)
+   {
+      char c = line[j];
 
-    this->coef = coef;
+      if(c!=' ' && c!=';' && c!='\n') not_empty = j;
+   }
+   return not_empty;
+}
 
-    for(int i = start; i<end; ++i){
-        if(eq_string[i] == '*'){
-            if(eq_string[i+1] == '*'){
-                i++;
-            }
-            else{
-                n_var++;
-            }
-        }
-    }
+std::vector<std::string> &split
+ ( const std::string &s, char delim, std::vector<std::string> &elems )
+{
+   std::stringstream ss(s);
+   std::string item;
+   std::string empy_str = "";
 
-    pos = new int[n_var];
-    exp = new int[n_var];
+   while (std::getline(ss, item, delim))
+      if(item != empy_str) elems.push_back(item);
 
-    string var;
-    int cur_type = 0, pos_ind = 0;
+   return elems;
+}
 
-    for(int i=start, next_type=1; i<end; ++i){
 
+std::vector<std::string> split ( const std::string &s, char delim )
+{
+   std::vector<std::string> elems;
+   split(s, delim, elems);
+   return elems;
+}
+
+void PolyMon::read ( const string& mon_string, VarDict& pos_dict )
+{
+   int end = mon_string.length();
+   int loc = 0;
+   CT coef = get_coef_complex(mon_string, loc);
+   read(mon_string, pos_dict, loc, end, coef);
+}
+
+void PolyMon::read ( const string& mon_string, VarDict& pos_dict, CT coef )
+{
+   int end = mon_string.length();
+   read(mon_string, pos_dict, 0, end, coef);
+}
+
+void PolyMon::read
+ ( const string& eq_string, VarDict& pos_dict, int start, int end, CT coef )
+{
+   n_var = 1;
+
+   this->coef = coef;
+
+   for(int i = start; i<end; ++i)
+      if(eq_string[i] == '*')
+      {
+          if(eq_string[i+1] == '*')
+             i++;
+          else
+             n_var++;
+      }
+
+   pos = new int[n_var];
+   exp = new int[n_var];
+
+   string var;
+   int cur_type = 0, pos_ind = 0;
+
+   for(int i=start, next_type=1; i<end; ++i)
+   {
         char c = eq_string[i];
-
         int new_var = 0;
-
         // handle symbols
         if(c == '*'){
             if(eq_string[i+1] == '*'){
@@ -150,9 +152,10 @@ void PolyMon::read(const string& eq_string, VarDict& pos_dict, int start, int en
     update_base();
 }
 
-void PolyMon::update_base(){
-	n_base = 0;
-	for(int var_idx=0; var_idx<n_var; var_idx++){
+void PolyMon::update_base()
+{
+   n_base = 0;
+   for(int var_idx=0; var_idx<n_var; var_idx++){
 		if(exp[var_idx]>1){
 			n_base++;
 		}
@@ -189,59 +192,61 @@ CT PolyMon::speel(const CT* x_val, CT* deri){
     return tmp;
 }*/
 
-CT PolyMon::speel(const CT* x_val, CT* deri){
-    deri[1] = x_val[pos[0]];
+CT PolyMon::speel ( const CT* x_val, CT* deri )
+{
+   deri[1] = x_val[pos[0]];
 
-    for(int i=1; i<n_var-1; i++){
-        deri[i+1] = deri[i]*x_val[pos[i]];
-    }
+   for(int i=1; i<n_var-1; i++) deri[i+1] = deri[i]*x_val[pos[i]];
 
-    CT tmp = coef;
-    for(int i=n_var-1; i>0; i--){
-        deri[i] *= tmp;
-        tmp *= x_val[pos[i]];
-    }
-    deri[0] = tmp;
+   CT tmp = coef;
+   for(int i=n_var-1; i>0; i--)
+   {
+      deri[i] *= tmp;
+      tmp *= x_val[pos[i]];
+   }
+   deri[0] = tmp;
 
-    return tmp*x_val[pos[0]];
+   return tmp*x_val[pos[0]];
 }
 
-CT PolyMon::speel_with_base(const CT* x_val, CT* deri, CT base){
-    deri[1] = x_val[pos[0]];
+CT PolyMon::speel_with_base(const CT* x_val, CT* deri, CT base)
+{
+   deri[1] = x_val[pos[0]];
 
-    for(int i=1; i<n_var-1; i++){
-        deri[i+1] = deri[i]*x_val[pos[i]];
-    }
+   for(int i=1; i<n_var-1; i++) deri[i+1] = deri[i]*x_val[pos[i]];
 
-    CT tmp = base;
-    for(int i=n_var-1; i>0; i--){
-    	if(exp[i]>1){
-    		deri[i] *= tmp*exp[i];
-    	}
-    	else{
-            deri[i] *= tmp;
-    	}
-        tmp *= x_val[pos[i]];
-    }
-    deri[0] = tmp*exp[0];
+   CT tmp = base;
+   for(int i=n_var-1; i>0; i--)
+   {
+      if(exp[i]>1)
+         deri[i] *= tmp*exp[i];
+      else
+         deri[i] *= tmp;
+    	
+      tmp *= x_val[pos[i]];
+   }
+   deri[0] = tmp*exp[0];
 
-    return tmp*x_val[pos[0]];
+   return tmp*x_val[pos[0]];
 }
 
-CT PolyMon::eval(const CT* x_val){
-    CT val = coef;
-    for(int i=0; i<n_var; i++){
-        val *= pow(x_val[pos[i]],exp[i]);
-    }
-    return val;
+CT PolyMon::eval ( const CT* x_val )
+{
+   CT val = coef;
+
+   for(int i=0; i<n_var; i++) val *= pow(x_val[pos[i]],exp[i]);
+
+   return val;
 }
 
-CT PolyMon::eval_base(const CT* x_val, CT** deg_table){
-    CT val = coef;
-    for(int i=0; i<n_base; i++){
-    	val *= deg_table[pos_base[i]][exp_tbl_base[i]];
-    }
-    return val;
+CT PolyMon::eval_base ( const CT* x_val, CT** deg_table )
+{
+   CT val = coef;
+
+   for(int i=0; i<n_base; i++)
+      val *= deg_table[pos_base[i]][exp_tbl_base[i]];
+
+   return val;
 }
 
 CT PolyMon::eval(const CT* x_val, CT* deri){
@@ -255,25 +260,27 @@ CT PolyMon::eval(const CT* x_val, CT* deri){
     return val;
 }
 
-CT PolyMon::eval(const CT* x_val, CT* deri, CT** deg_table){
-	CT base = eval_base(x_val, deg_table);
-    CT val = speel_with_base(x_val, deri, base);
-    /*CT base = eval_base(x_val);
+CT PolyMon::eval ( const CT* x_val, CT* deri, CT** deg_table )
+{
+   CT base = eval_base(x_val, deg_table);
+   CT val = speel_with_base(x_val, deri, base);
+
+   /*CT base = eval_base(x_val);
     val *= base;
 
-    for(int i=0; i<n_var; i++){
-        deri[i] *= base*exp[i];
-    }*/
-    return val;
+    for(int i=0; i<n_var; i++) deri[i] *= base*exp[i];
+   */
+   return val;
 }
 
 
-CT PolyEq::eval(const CT* x_val){
-    CT val = constant;
-    for(int i=0; i<n_mon; i++){
-        val += mon[i]->eval(x_val);
-    }
-    return val;
+CT PolyEq::eval ( const CT* x_val )
+{
+   CT val = constant;
+
+   for(int i=0; i<n_mon; i++) val += mon[i]->eval(x_val);
+
+   return val;
 }
 
 CT PolyEq::eval(const CT* x_val, CT* deri){
@@ -378,8 +385,10 @@ CT** PolySys::eval_deg(const CT* x_val){
     return deg_table;
 }
 
-void PolySys::eval(const CT* x_val, CT* f_val, CT** deri_val){
-	if(eval_base){
+void PolySys::eval ( const CT* x_val, CT* f_val, CT** deri_val )
+{
+   if(eval_base)
+   {
 		CT** deg_table = eval_deg(x_val);
 		for(int i=0; i<n_eq; i++){
 //			cout << "eq " << i << endl;
@@ -552,7 +561,8 @@ void PolySys::read(const string& sys_string, VarDict& pos_dict)
     LinkNode<int>* tmp = eq_list->header();
 
     int eq_start = tmp->data;
-    for(int i=0; i<n_eq; i++){
+    for(int i=0; i<n_eq; i++)
+    {
         PolyEq* new_eq = new PolyEq();
         tmp = tmp->next;
         int eq_end = tmp->data;
