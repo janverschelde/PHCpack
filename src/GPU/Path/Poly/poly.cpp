@@ -209,7 +209,7 @@ CT PolyMon::speel ( const CT* x_val, CT* deri )
    return tmp*x_val[pos[0]];
 }
 
-CT PolyMon::speel_with_base(const CT* x_val, CT* deri, CT base)
+CT PolyMon::speel_with_base ( const CT* x_val, CT* deri, CT base )
 {
    deri[1] = x_val[pos[0]];
 
@@ -249,9 +249,10 @@ CT PolyMon::eval_base ( const CT* x_val, CT** deg_table )
    return val;
 }
 
-CT PolyMon::eval(const CT* x_val, CT* deri){
-    CT val = speel(x_val, deri);
-    /*CT base = eval_base(x_val);
+CT PolyMon::eval ( const CT* x_val, CT* deri )
+{
+   CT val = speel(x_val, deri);
+   /*CT base = eval_base(x_val);
     val *= base;
 
     for(int i=0; i<n_var; i++){
@@ -283,181 +284,214 @@ CT PolyEq::eval ( const CT* x_val )
    return val;
 }
 
-CT PolyEq::eval(const CT* x_val, CT* deri){
-    for(int i=0; i<dim; i++){
-        deri[i].init(0.0,0.0);
-    }
-    CT val = constant;
-    //std::cout << constant << std::endl;
+CT PolyEq::eval ( const CT* x_val, CT* deri )
+{
+   for(int i=0; i<dim; i++)
+   {
+      deri[i].init(0.0,0.0);
+   }
+   CT val = constant;
+   // std::cout << constant << std::endl;
     
-    CT* mon_deri = new CT[dim];
+   CT* mon_deri = new CT[dim];
 
-    for(int i=0; i<n_mon; i++){
-        PolyMon* m = mon[i];
-        val += m->eval(x_val, mon_deri);
+   for(int i=0; i<n_mon; i++)
+   {
+      PolyMon* m = mon[i];
+      val += m->eval(x_val, mon_deri);
 
-        for(int j=0; j<m->n_var; j++){
-            deri[m->pos[j]] += mon_deri[j];
-        }
-    }
+      for(int j=0; j<m->n_var; j++)
+      {
+         deri[m->pos[j]] += mon_deri[j];
+      }
+   }
+   delete [] mon_deri;
 
-    delete [] mon_deri;
-
-    return val;
+   return val;
 }
 
-CT PolyEq::eval(const CT* x_val, CT* deri, CT** deg_table){
-    for(int i=0; i<dim; i++){
-        deri[i].init(0.0,0.0);
-    }
-    CT val = constant;
-    //std::cout << constant << std::endl;
+CT PolyEq::eval ( const CT* x_val, CT* deri, CT** deg_table )
+{
+   for(int i=0; i<dim; i++)
+   {
+      deri[i].init(0.0,0.0);
+   }
+   CT val = constant;
+   // std::cout << constant << std::endl;
 
-    CT* mon_deri = new CT[dim];
-    for(int mon_idx=0; mon_idx<n_mon; mon_idx++){
-//    	std::cout << "mon " << mon_idx << std::endl;
-        PolyMon* m = mon[mon_idx];
-        val += m->eval(x_val, mon_deri, deg_table);
-        for(int j=0; j<m->n_var; j++){
-            deri[m->pos[j]] += mon_deri[j];
-        }
-    }
+   CT* mon_deri = new CT[dim];
+   for(int mon_idx=0; mon_idx<n_mon; mon_idx++)
+   {
+      // std::cout << "mon " << mon_idx << std::endl;
+      PolyMon* m = mon[mon_idx];
+      val += m->eval(x_val, mon_deri, deg_table);
+      for(int j=0; j<m->n_var; j++)
+      {
+         deri[m->pos[j]] += mon_deri[j];
+      }
+   }
+   delete [] mon_deri;
 
-    delete [] mon_deri;
-
-    return val;
+   return val;
 }
 
-CT* PolySys::eval(const CT* x_val){
-    CT* val = new CT[n_eq];
-    for(int i=0; i<n_eq; i++){
-        val[i] = eq[i]->eval(x_val);
-    }
-    return val;
+CT* PolySys::eval ( const CT* x_val )
+{
+   CT* val = new CT[n_eq];
+   for(int i=0; i<n_eq; i++)
+   {
+      val[i] = eq[i]->eval(x_val);
+   }
+   return val;
 }
 
-CT* PolySys::eval(const CT* x_val, CT** deri_val){
-    CT* val = new CT[n_eq];
-    for(int i=0; i<n_eq; i++){
-        val[i] = eq[i]->eval(x_val, deri_val[i]);
-    }
-    return val;
+CT* PolySys::eval ( const CT* x_val, CT** deri_val )
+{
+   CT* val = new CT[n_eq];
+   for(int i=0; i<n_eq; i++)
+   {
+      val[i] = eq[i]->eval(x_val, deri_val[i]);
+   }
+   return val;
 }
 
-void PolySys::balance_eq(const CT* x_val){
-    CT* f_val = eval(x_val);
-    for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-    	eq[eq_idx]->constant -= f_val[eq_idx];
-    }
+void PolySys::balance_eq ( const CT* x_val )
+{
+   CT* f_val = eval(x_val);
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+       eq[eq_idx]->constant -= f_val[eq_idx];
+   }
 }
 
-CT** PolySys::eval_deg(const CT* x_val){
-//	std::cout << "eval_deg" << std::endl;
-    // Allocate memory
-	int n_total_deg = 0;
-    for(int var_idx=0; var_idx<dim; var_idx++){
-    	n_total_deg += max_deg_base[var_idx];
-    }
-    CT** deg_table = new CT*[dim];
-//    std::cout << "n_total_deg = " << n_total_deg << std::endl;
-    deg_table[0] = new CT[n_total_deg];
-    for(int var_idx=1; var_idx<dim; var_idx++){
-    	deg_table[var_idx]=deg_table[var_idx-1]+max_deg_base[var_idx-1];
-    }
+CT** PolySys::eval_deg ( const CT* x_val )
+{
+   // std::cout << "eval_deg" << std::endl;
+   // Allocate memory
+   int n_total_deg = 0;
+   for(int var_idx=0; var_idx<dim; var_idx++)
+   {
+       n_total_deg += max_deg_base[var_idx];
+   }
+   CT** deg_table = new CT*[dim];
+   // std::cout << "n_total_deg = " << n_total_deg << std::endl;
+   deg_table[0] = new CT[n_total_deg];
+   for(int var_idx=1; var_idx<dim; var_idx++)
+   {
+      deg_table[var_idx]=deg_table[var_idx-1]+max_deg_base[var_idx-1];
+   }
+   // Compute degree table
+   for(int var_idx=0; var_idx<dim; var_idx++)
+   {
+      if(max_deg_base[var_idx]>0)
+      {
+         CT* tmp_deg_table = deg_table[var_idx];
+         CT tmp_var = x_val[var_idx];
+         tmp_deg_table[0] = tmp_var;
+         for(int deg_idx=1; deg_idx<max_deg_base[var_idx]; deg_idx++)
+         {
+            tmp_deg_table[deg_idx] = tmp_deg_table[deg_idx-1]*tmp_var;
+         }
+      }
+   }
+   // print degree table
+   // for(int var_idx=0; var_idx<dim; var_idx++)
+   // {
+   //    for(int deg_idx=0; deg_idx<max_deg_base[var_idx]; deg_idx++)
+   //    {
+   //       std::cout << var_idx << " " << deg_idx
+   //                 << " " << deg_table[var_idx][deg_idx];
+   //    }
+   // }
 
-    // Compute degree table
-    for(int var_idx=0; var_idx<dim; var_idx++){
-    	if(max_deg_base[var_idx]>0){
-    		CT* tmp_deg_table = deg_table[var_idx];
-			CT tmp_var = x_val[var_idx];
-			tmp_deg_table[0] = tmp_var;
-			for(int deg_idx=1; deg_idx<max_deg_base[var_idx]; deg_idx++){
-				tmp_deg_table[deg_idx] = tmp_deg_table[deg_idx-1]*tmp_var;
-			}
-    	}
-    }
-    // print degree table
-//    for(int var_idx=0; var_idx<dim; var_idx++){
-//    	for(int deg_idx=0; deg_idx<max_deg_base[var_idx]; deg_idx++){
-//    		std::cout << var_idx << " " << deg_idx << " " << deg_table[var_idx][deg_idx];
-//    	}
-//    }
-    return deg_table;
+   return deg_table;
 }
 
 void PolySys::eval ( const CT* x_val, CT* f_val, CT** deri_val )
 {
    if(eval_base)
    {
-		CT** deg_table = eval_deg(x_val);
-		for(int i=0; i<n_eq; i++){
-//			cout << "eq " << i << endl;
-			f_val[i] = eq[i]->eval(x_val, deri_val[i], deg_table);
-		}
-		delete[] deg_table[0];
-		delete[] deg_table;
-	}
-	else{
-		for(int i=0; i<n_eq; i++){
-			//cout << "eq " << i << endl;
-			f_val[i] = eq[i]->eval(x_val, deri_val[i]);
-		}
-	}
+      CT** deg_table = eval_deg(x_val);
+      for(int i=0; i<n_eq; i++)
+      {
+         // cout << "eq " << i << endl;
+         f_val[i] = eq[i]->eval(x_val, deri_val[i], deg_table);
+      }
+      delete[] deg_table[0];
+      delete[] deg_table;
+   }
+   else
+   {
+      for(int i=0; i<n_eq; i++)
+      {
+         // cout << "eq " << i << endl;
+         f_val[i] = eq[i]->eval(x_val, deri_val[i]);
+      }
+   }
 }
 
-void PolyMon::print(const string* pos_var)
+void PolyMon::print ( const string* pos_var )
 {
-    // print coef
-	print_coef_complex(coef);
-	//cout << endl;
-    cout << pos_var[pos[0]];
-    if(exp[0]!= 1){
-        cout << '^' << exp[0];
-    }
-
-    for(int i =1; i< n_var; i++){
-        cout << " * " << pos_var[pos[i]];
-        if(exp[i]!= 1){
-            cout << '^' << exp[i];
-        }
-    }
+   // print coef
+   print_coef_complex(coef);
+   // cout << endl;
+   cout << pos_var[pos[0]];
+   if(exp[0]!= 1)
+   {
+      cout << '^' << exp[0];
+   }
+   for(int i =1; i< n_var; i++)
+   {
+      cout << " * " << pos_var[pos[i]];
+      if(exp[i]!= 1)
+      {
+         cout << '^' << exp[i];
+      }
+   }
 }
 
-void PolyEq::read(const string& eq_string, VarDict& pos_dict){
-    int l = eq_string.length();
-    read(eq_string, pos_dict, 0, l);
+void PolyEq::read ( const string& eq_string, VarDict& pos_dict )
+{
+   int l = eq_string.length();
+   read(eq_string, pos_dict, 0, l);
 }
 
-void PolyEq::read(const string& eq_string, VarDict& pos_dict, int start, int end){
-    n_mon = 0;
+void PolyEq::read
+ ( const string& eq_string, VarDict& pos_dict, int start, int end )
+{
+   n_mon = 0;
 
-    // Get the starting position of first monomial
-    int mon_first = start;
-    for(int i=start; i< end; i++){
-        char c = eq_string[i];
-        if(c != ' '){
-            mon_first = i;
-            break;
-        }
-    }
+   // Get the starting position of first monomial
+   int mon_first = start;
+   for(int i=start; i< end; i++)
+   {
+      char c = eq_string[i];
+      if(c != ' ')
+      {
+         mon_first = i;
+         break;
+      }
+   }
+   // Count the number of monomials
+   // Generate monomials link list, include coef, start and end pos in string
 
-    // Count the number of monomials
-    // Generate monomials link list, include coef, start and end pos in string
-
-    int mon_start = mon_first;
-    int i=mon_first;
-    int parentheses_open = 0;
-    while(i<end){
-        char c = eq_string[i];
-        if(c == '('){
-        	parentheses_open = 1;
-
-        }
-        else if (c == ')'){
-        	parentheses_open = 0;
-        }
-        // If a new monomial appears, record the starting and ending position of last one.
-        if(((c== '+' || c == '-') && eq_string[i-1]!='e' && eq_string[i-1]!='E' \
+   int mon_start = mon_first;
+   int i=mon_first;
+   int parentheses_open = 0;
+   while(i<end)
+   {
+      char c = eq_string[i];
+      if(c == '(')
+      {
+         parentheses_open = 1;
+      }
+      else if (c == ')')
+      {
+         parentheses_open = 0;
+      }
+      // If a new monomial appears,
+      // record the starting and ending position of last one.
+      if(((c== '+' || c == '-') && eq_string[i-1]!='e' && eq_string[i-1]!='E' \
            && eq_string[i-1]!='(') && (i != mon_first) && parentheses_open == 0){
             int tmp_start = mon_start;
             CT tmp_coef = get_coef_complex(eq_string, mon_start);
@@ -499,24 +533,26 @@ void PolyEq::read(const string& eq_string, VarDict& pos_dict, int start, int end
     dim = pos_dict.n_job;
 }
 
-void PolyEq::print(const string* pos_var){
-	//std::cout << "n_mon = " << n_mon << std::endl;
-    for(int i=0; i<n_mon; i++){
+void PolyEq::print(const string* pos_var)
+{
+   // std::cout << "n_mon = " << n_mon << std::endl;
+   for(int i=0; i<n_mon; i++){
         mon[i]->print(pos_var);
-    }
+   }
 
-    // print plus and minus
-    //if(constant.real > 0){
-    //    cout << " + ";
-    //}
+   // print plus and minus
+   // if(constant.real > 0){
+   //    cout << " + ";
+   // }
 
-    // print plus and minus
-    print_number_complex(constant);
-    //cout << constant;
-    cout << endl;
+   // print plus and minus
+   print_number_complex(constant);
+   // cout << constant;
+   cout << endl;
 }
 
-void PolySys::print(){
+void PolySys::print()
+{
     cout << "dim = " << dim << ", n_eq = " << n_eq << endl;
     for(int i=0; i<n_eq; i++){
         cout << "f"<< i << "=" << endl;
@@ -528,35 +564,38 @@ void PolySys::print(){
     }*/
 }
 
-void PolySys::read(const string& sys_string, VarDict& pos_dict)
+void PolySys::read ( const string& sys_string, VarDict& pos_dict )
 {
-    int l = sys_string.length();
-    n_eq = 1;
+   int l = sys_string.length();
+   n_eq = 1;
 
-    int eq_first = 0;
+   int eq_first = 0;
 
-    LinkList<int>* eq_list = new LinkList<int>();
+   LinkList<int>* eq_list = new LinkList<int>();
 
-    eq_list->append(eq_first);
+   eq_list->append(eq_first);
 
-    int ii = eq_first;
-    while(ii<l){
-        if(sys_string[ii] == ';'){
-            ii++;
-            while(ii<l){
+   int ii = eq_first;
+   while(ii<l)
+   {
+      if(sys_string[ii] == ';')
+      {
+         ii++;
+         while(ii<l)
+         {
                 if(sys_string[ii] != ' '){
                     n_eq++;
                     eq_list->append(ii);
                     break;
                 }
                 ii++;
-            }
-        }
-        ii++;
-    }
-    eq_list->append(l);
+         }
+      }
+      ii++;
+   }
+   eq_list->append(l);
 
-    //eq = new PolyEq[n_eq];
+   // eq = new PolyEq[n_eq];
 
     LinkNode<int>* tmp = eq_list->header();
 
@@ -573,7 +612,6 @@ void PolySys::read(const string& sys_string, VarDict& pos_dict)
         eq.push_back(new_eq);
         eq_start = eq_end;
     }
-
     eq_list->destroy();
     delete eq_list;
 
@@ -582,13 +620,13 @@ void PolySys::read(const string& sys_string, VarDict& pos_dict)
     //dim = pos_dict.n_job;
 }
 
+void PolySys::read ( const string* sys_string, int n_eq, VarDict& pos_dict )
+{
+   eq.reserve(n_eq);
+   this->n_eq = n_eq;
+   dim = n_eq;
 
-void PolySys::read(const string* sys_string, int n_eq, VarDict& pos_dict){
-    eq.reserve(n_eq);
-    this->n_eq = n_eq;
-    dim = n_eq;
-
-    // ***Here is confusion, I should use either vector or array, but not to mix them
+   // ***Here is confusion, I should use either vector or array, but not to mix them
     eq_space = new PolyEq[n_eq];
     PolyEq* tmp_eq_space = eq_space;
     for(int i=0; i< n_eq; i++){
@@ -601,62 +639,71 @@ void PolySys::read(const string* sys_string, int n_eq, VarDict& pos_dict){
     update_max_deg_base();
 }
 
-
-void PolySys::read_file(const string& file_name){
-    VarDict pos_dict;
-    ifstream myfile (file_name.c_str());
-    if (myfile.is_open()){
-        read_file(myfile, pos_dict);
-        myfile.close();
-    }
-    else{
-        cout << "There is no such file." << endl;
-    }
-    //dim = pos_dict.n_job;
-    pos_var = pos_dict.reverse();
-    std::cout << "dim = " << dim << std::endl;
-    for(int var_idx=0; var_idx<dim; var_idx++){
-    	std::cout << var_idx << " " << pos_var[var_idx] << std::endl;
-    }
+void PolySys::read_file ( const string& file_name )
+{
+   VarDict pos_dict;
+   ifstream myfile (file_name.c_str());
+   if(myfile.is_open())
+   {
+      read_file(myfile, pos_dict);
+      myfile.close();
+   }
+   else
+   {
+      cout << "There is no such file." << endl;
+   }
+   // dim = pos_dict.n_job;
+   pos_var = pos_dict.reverse();
+   std::cout << "dim = " << dim << std::endl;
+   for(int var_idx=0; var_idx<dim; var_idx++)
+   {
+      std::cout << var_idx << " " << pos_var[var_idx] << std::endl;
+   }
 }
 
-void PolySys::read_file(ifstream& myfile, VarDict& pos_dict){
-    string line;
-    getline(myfile,line);
+void PolySys::read_file ( ifstream& myfile, VarDict& pos_dict )
+{
+   string line;
+   getline(myfile,line);
 
-    while(true){
-        if(not_empty_line(line)!=-1){
-            break;
-        }
-        getline(myfile,line);
-    }
+   while(true)
+   {
+      if(not_empty_line(line)!=-1)
+      {
+         break;
+      }
+      getline(myfile,line);
+   }
 
-    std::vector<std::string> line_parts = split(line, ' ');
-    if(line_parts.size() == 2){
-        dim = atoi(line_parts[1].c_str());
-    	n_eq = atoi(line_parts[0].c_str());
-    }
-    else{
-        dim = atoi(line_parts[0].c_str());
-    	n_eq = dim;
-    }
-
-    eq.reserve(n_eq);
-    eq_space = new PolyEq[n_eq];
-    PolyEq* tmp_eq_space = eq_space;
-    /*for(int i=0; i< n_eq; i++){
+   std::vector<std::string> line_parts = split(line, ' ');
+   if(line_parts.size() == 2)
+   {
+      dim = atoi(line_parts[1].c_str());
+      n_eq = atoi(line_parts[0].c_str());
+   }
+   else
+   {
+      dim = atoi(line_parts[0].c_str());
+      n_eq = dim;
+   }
+   eq.reserve(n_eq);
+   eq_space = new PolyEq[n_eq];
+   PolyEq* tmp_eq_space = eq_space;
+   /*for(int i=0; i< n_eq; i++)
+     {
         eq.push_back(tmp_eq_space);
-    	tmp_eq_space->dim = dim;
+        tmp_eq_space->dim = dim;
         tmp_eq_space++;
-    }*/
+     }*/
 
-    string tmp_line;
-    line = "";
-    int n_eq_file = 0;
-    while( getline(myfile,tmp_line) ){
-        int not_empty = not_empty_line(tmp_line);
+   string tmp_line;
+   line = "";
+   int n_eq_file = 0;
+   while( getline(myfile,tmp_line) )
+   {
+      int not_empty = not_empty_line(tmp_line);
 
-        if(not_empty != -1){
+      if(not_empty != -1){
             int finish = 0;
             for(unsigned int j=not_empty; j<tmp_line.length(); j++){
                 char c =tmp_line[j];
@@ -686,45 +733,59 @@ void PolySys::read_file(ifstream& myfile, VarDict& pos_dict){
     update_max_deg_base();
 }
 
-void PolyMon::update_max_deg(int* max_deg){
-    for(int i=0; i<n_var; i++){
-        //cout << "var " << i << endl;
-        if(exp[i]>max_deg[pos[i]]){
-        	max_deg[pos[i]] = exp[i];
-        }
-    }
+void PolyMon::update_max_deg ( int* max_deg )
+{
+   for(int i=0; i<n_var; i++)
+   {
+      // cout << "var " << i << endl;
+      if(exp[i]>max_deg[pos[i]])
+      {
+         max_deg[pos[i]] = exp[i];
+      }
+   }
 }
 
-void PolyEq::update_max_deg(int* max_deg){
-    for(int i=0; i<n_mon; i++){
-        //cout << "mon " << i << endl;
-        mon[i]->update_max_deg(max_deg);
-    }
+void PolyEq::update_max_deg ( int* max_deg )
+{
+   for(int i=0; i<n_mon; i++)
+   {
+      // cout << "mon " << i << endl;
+      mon[i]->update_max_deg(max_deg);
+   }
 }
 
-void PolySys::update_max_deg_base(){
-	max_deg_base = new int[dim];
-    for(int i=0; i<dim; i++){
-    	max_deg_base[i] = 0;
-    }
-    for(int i=0; i<n_eq; i++){
-        //cout << "eq " << i << endl;
-        eq[i]->update_max_deg(max_deg_base);
-    }
+void PolySys::update_max_deg_base()
+{
+   max_deg_base = new int[dim];
+   for(int i=0; i<dim; i++)
+   {
+      max_deg_base[i] = 0;
+   }
+   for(int i=0; i<n_eq; i++)
+   {
+      // cout << "eq " << i << endl;
+      eq[i]->update_max_deg(max_deg_base);
+   }
 
-    for(int var_idx=0; var_idx<dim; var_idx++){
-    	max_deg_base[var_idx] -= 1;
-    	if(max_deg_base[var_idx] > 0){
-    		eval_base = true;
-    	}
-    }
+   for(int var_idx=0; var_idx<dim; var_idx++)
+   {
+      max_deg_base[var_idx] -= 1;
+      if(max_deg_base[var_idx] > 0)
+      {
+         eval_base = true;
+      }
+   }
 
-//    for(int i=0; i<dim; i++){
-//        std::cout << i << " " << max_deg_base[i] << " " << pos_var[i] << std::endl;
-//    }
+   // for(int i=0; i<dim; i++)
+   // {
+   //    std::cout << i << " " << max_deg_base[i]
+   //                   << " " << pos_var[i] << std::endl;
+   // }
 }
 
-/*void PolyMon::print_level(){
+/*
+void PolyMon::print_level()
+{
     for(int i=0; i<n_level; i++){
         cout << "    level " << i  << ": n_job = "<< n_pos_level[i]<< endl;
         cout << "        pos: ";
@@ -735,65 +796,75 @@ void PolySys::update_max_deg_base(){
     }
 }
 
-void PolyEq::print_level(){
-    for(int i=0; i<n_mon; i++){
-        cout << "  Monomial " << i << endl;
-        mon[i] -> print_level();
-    }
+void PolyEq::print_level()
+{
+   for(int i=0; i<n_mon; i++)
+   {
+      cout << "  Monomial " << i << endl;
+      mon[i] -> print_level();
+   }
 }
 
-void PolySys::print_level(){
-    for(int i=0; i<n_eq; i++){
-        cout << "Equation " << i << endl; 
-        eq[i] -> print_level();
-    }
+void PolySys::print_level()
+{
+   for(int i=0; i<n_eq; i++)
+   {
+      cout << "Equation " << i << endl; 
+      eq[i] -> print_level();
+   }
 }
 
-int PolyEq::workspace_size_block(int start_level, int factor_size){
-    int level = 0;
-    for(int i=0; i<n_mon; i++){
-        if(level < mon[i]->n_level){
-            level = mon[i]->n_level;
-        }
-    }
-    if(start_level >= level){
-        return 0;
-    }
+int PolyEq::workspace_size_block(int start_level, int factor_size)
+{
+   int level = 0;
+   for(int i=0; i<n_mon; i++)
+   {
+      if(level < mon[i]->n_level)
+      {
+          level = mon[i]->n_level;
+      }
+   }
+   if(start_level >= level)
+   {
+      return 0;
+   }
+   int* level_start = new int[level+1];
+   int* base_size = new int[level];
 
-    int* level_start = new int[level+1];
-    int* base_size = new int[level];
+   for(int i=0; i<start_level; i++)
+   {
+      level_start[i] = 0;
+   }
+   int tmp_size = 1;
+   for(int i=1; i<start_level; i++)
+   {
+      tmp_size *= factor_size;
+      base_size[i-1] = tmp_size + 1;
+   }
+   for(int i=start_level; i<level+1; i++)
+   {
+      // cout << "i = " << i << endl;
+      tmp_size *= factor_size;
+      base_size[i-1] = tmp_size + 1;
+      level_start[i] = 0;
+   }
+   for(int j=0; j<n_mon; j++)
+   {
+      for(int i=start_level; i<mon[j]->n_level; i++)
+      {
+         level_start[i] += mon[j]->n_pos_level[i]*base_size[i-1];
+      }
+   }
+   for(int i=start_level; i<level+1; i++)
+   {
+      level_start[i] += level_start[i-1];
+   }
+   int workspace_size = level_start[level];
 
-    for(int i=0; i<start_level; i++){
-        level_start[i] = 0;
-    }
+   delete[] base_size;
+   delete[] level_start;
 
-    int tmp_size = 1;
-    for(int i=1; i<start_level; i++){
-        tmp_size *= factor_size;
-        base_size[i-1] = tmp_size + 1;
-    }
-    for(int i=start_level; i<level+1; i++){
-        //cout << "i = " << i << endl;
-        tmp_size *= factor_size;
-        base_size[i-1] = tmp_size + 1;
-        level_start[i] = 0;
-    }
-
-    for(int j=0; j<n_mon; j++){
-        for(int i=start_level; i<mon[j]->n_level; i++){
-            level_start[i] += mon[j]->n_pos_level[i]*base_size[i-1];
-        }
-    }
-
-    for(int i=start_level; i<level+1; i++){
-        level_start[i] += level_start[i-1];
-    }
-    int workspace_size = level_start[level];
-
-    delete[] base_size;
-    delete[] level_start;
-
-    return workspace_size;
+   return workspace_size;
 }
 
 int PolySys::workspace_size_block(int start_level, int factor_size){
@@ -860,16 +931,18 @@ int PolyEq::job_number_block(int start_level){
     return n_job_block_est;
 }
 
-int PolySys::job_number_block(int start_level){
-    cout << endl;
-    int n_job_block_est = 0;
-    for(int i=0; i<n_eq; i++){
-        //cout << "eq    " << i << endl;
-        int tmp = eq[i] -> job_number_block(start_level);
-        n_job_block_est += tmp;
-        //cout << "eq total  " << tmp << endl;
-    }
-    return n_job_block_est;
+int PolySys::job_number_block ( int start_level )
+{
+   cout << endl;
+   int n_job_block_est = 0;
+   for(int i=0; i<n_eq; i++)
+   {
+      // cout << "eq    " << i << endl;
+      int tmp = eq[i] -> job_number_block(start_level);
+      n_job_block_est += tmp;
+      // cout << "eq total  " << tmp << endl;
+   }
+   return n_job_block_est;
 }*/
 
 void PolySys::gpu_mon(int& dim, int& level, int& workspace_size, int*& workspace_level,
