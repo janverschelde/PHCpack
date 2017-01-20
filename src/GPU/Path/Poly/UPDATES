@@ -1,4 +1,5 @@
-Thu 19 Jan 2017 : reformatted the code in utilities.cpp and utilities.h.
+Thu 19 Jan 2017 : reformatted the code in utilities.cpp, utilities.h,
+  and polysol.cpp.
 
 Wed 18 Jan 2017 : reformatted code in poly.cpp.
 
