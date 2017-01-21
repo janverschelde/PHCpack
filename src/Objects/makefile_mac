@@ -1841,7 +1841,7 @@ ts_adepath_d: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
                utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
                eval_host_d.o mgs_host_d.o newton_host_d.o \
                predictor_host_d.o path_host_d.o \
-                 -o $(BIN)/ts_adepath_d -lm --LINK=$(gpp)
+                 -o $(BIN)/ts_adepath_d -lm --LINK=g++
 
 ts_adepath_dd: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
                eval_host_dd.o mgs_host_dd.o newton_host_dd.o ada_test_dd.o \
@@ -1849,9 +1849,9 @@ ts_adepath_dd: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
                adenewton_dd.o adeonepath_dd.o ademanypaths_dd.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	@-echo ">>> compiling code for the containers ..."
-	/usr/bin/g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
-	/usr/bin/g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
-	/usr/bin/g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	@-echo ">>> compiling the main Ada procedure ..."
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_adepath_dd.adb \
                  -o ts_adepath_dd.o
@@ -1873,9 +1873,9 @@ ts_adepath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                adenewton_qd.o adeonepath_qd.o ademanypaths_qd.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	@-echo ">>> compiling code for the containers ..."
-	/usr/bin/g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
-	/usr/bin/g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
-	/usr/bin/g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	@-echo ">>> compiling the main Ada procedure ..."
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_adepath_qd.adb \
                  -o ts_adepath_qd.o
@@ -1922,7 +1922,10 @@ ts_adepath: utilities_d.o utilities_dd.o poly_d.o poly_dd.o \
                newton_host_d.o newton_host_dd.o \
                predictor_host_d.o predictor_host_dd.o \
                path_host_d.o path_host_dd.o \
-                 -o $(BIN)/ts_adepath -lm --LINK=g++
+               $(QD_LIB)/libqd.a \
+               /usr/lib/libc++.dylib \
+               /usr/lib/libstdc++.dylib \
+            -o $(BIN)/ts_adepath -lm --LINK=g++
 
 # Test programs for the Tasking :
 
