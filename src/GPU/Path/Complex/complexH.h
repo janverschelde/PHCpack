@@ -1,15 +1,8 @@
+// The class complexH define complex arithmetic on the host,
+// the real type is a templated parameter T.
+
 #ifndef __COMPLEXH_H__
 #define __COMPLEXH_H__
-
-/*#define __CUDAC__
-
-#ifdef __CUDAC__
-#define HOST __host__
-#define DEVICE __device__
-#else
-#define HOST
-#define DEVICE
-#endif*/
 
 #include <iostream>
 #include <qd/qd_real.h>
@@ -17,107 +10,71 @@
 
 using namespace std;
 
-/**
- * The class complexH defines a complex type for CPU computations,
- * the 'H' stands for 'the host'
- * and the template parameter value T specifies the precision level.
- */
-
 #include <iostream>
 #include <fstream>
 
 template <class T>
 class complexH
 {
-	public:
-		complexH() {};
+   public:
 
-		complexH operator=(const complexH&);
-		complexH operator=(const int&);
-		complexH operator=(const double&);
-		complexH operator=(const dd_real&);
-		complexH operator=(const qd_real&);
+      complexH() {};
 
-		complexH(const double&, const double&);
-		complexH(const dd_real&, const dd_real&);
-		complexH(const qd_real&, const qd_real&);
+      complexH operator= ( const complexH& );
+      complexH operator= ( const int& );
+      complexH operator= ( const double& );
+      complexH operator= ( const dd_real& );
+      complexH operator= ( const qd_real& );
 
-		complexH(const int&);
-		complexH(const double&);
+      complexH ( const double&, const double& );
+      complexH ( const dd_real&, const dd_real& );
+      complexH ( const qd_real&, const qd_real& );
 
-		complexH(const char*);
-		complexH(const char*, const char*);
-		complexH(const complexH&);
+      complexH ( const int& );
+      complexH ( const double& );
 
-		/**
-		 * Update value of complex number by (double, double)
-		 */
-		void init(const double&, const double&);
-		/**
-		 * Update value of complex number by (dd_real,dd_real)
-		 */
-		void init(const dd_real&, const dd_real&);
-		/**
-		 * Update value of complex number by (qd_real,qd_real)
-		 */
-		void init(const qd_real&, const qd_real&);
+      complexH ( const char* );
+      complexH ( const char*, const char* );
+      complexH ( const complexH& );
 
-		/* Complex number computation operators*/
-		complexH operator+(const complexH&);
-		void     operator+=(const complexH&);
-		complexH operator-(const complexH&);
-		void     operator-=(const complexH&);
-		complexH operator*(const complexH&) const;
-		complexH operator*(const T&);
-		complexH operator*(const int&);
-		void     operator*=(const complexH&);
-		complexH operator/(const complexH&);
-		complexH operator/(const T&);
+      void init ( const double&, const double& );
+      // define a complex number with a tuple of doubles
 
-		/**
-		 * Compute norm2 of complex number
-		 */
-		T absv() {return sqrt(real*real+imag*imag);};
+      void init ( const dd_real&, const dd_real& );
+      // define a complex number with a tuple of double doubles
 
-		/**
-		 * Compute conjugation of complex number
-		 */
-		complexH adj() {return complexH(real,-imag);};
+      void init ( const qd_real&, const qd_real& );
+      // define a complex number with a tuple of quad doubles
 
-		T real;
-		T imag;
+      // operators for complex arithmetic are below
+      complexH operator+ ( const complexH& );
+      void     operator+= ( const complexH& );
+      complexH operator- ( const complexH& );
+      void     operator-= ( const complexH& );
+      complexH operator* ( const complexH& ) const;
+      complexH operator* ( const T& );
+      complexH operator* ( const int& );
+      void     operator*= ( const complexH& );
+      complexH operator/ ( const complexH& );
+      complexH operator/ ( const T& );
 
-	/**
-	 * Input stream operator for format a + b*i
-	 */
-	template <class T1>
-	friend std::ostream& operator<<
-	  ( std::ostream& os, const complexH<T1>& number );
+      T absv() {return sqrt(real*real+imag*imag);};
+      // returns the modulus or radius of a complex number
 
-	template <class T1>
-	friend std::ifstream& operator>>
-	  ( std::ifstream& is, const complexH<T1>& number );
+      complexH adj() {return complexH(real,-imag);};
+      // complex conjugate of complex number
+
+      T real; // real part of complex number
+      T imag; // imaginary part of complex number
+
+      template <class T1>
+      friend std::ostream& operator<<
+         ( std::ostream& os, const complexH<T1>& number );
+
+      template <class T1>
+      friend std::ifstream& operator>>
+         ( std::ifstream& is, const complexH<T1>& number );
 };
 
 #include "complexH.cpp"
-
-
 #endif
-
-/*template<class T, int size>
-class storage
-{
-   public:
-
-      complexH<T> array[size];
-
-      void print()
-      {
-         for(int i=0; i<size; i++) cout << array[i];
-      }
-
-      void copyToStor(complexH<T>* a)
-      {
-         for(int i=0; i<size; i++) array[i]=a[i];
-      }
-};*/
