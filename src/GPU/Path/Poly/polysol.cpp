@@ -3,13 +3,9 @@
 bool compare_sol ( PolySol* sol1, PolySol* sol2 )
 {
    if(*sol1 < *sol2)
-   {
       return true;
-   }
    else
-   {
       return false;
-   }
 }
 
 void PolySol::init
@@ -251,9 +247,9 @@ void PolySol::print_info ( string* pos_var )
    {
       std::cout << pos_var[i] << " : " << sol[i];
    }
-   std::cout << "== err : " << err \
-             << " = rco : " << rco \
-             << " = res : " << res \
+   std::cout << "== err : " << err
+             << " = rco : " << rco
+             << " = res : " << res
              << " ==" << std::endl;
 }
 
@@ -268,7 +264,7 @@ CT* PolySol::get_sol()
 
 void PolySol::print_short()
 {
-   std::cout << std::scientific \
+   std::cout << std::scientific
              << " " << err  << " " << res << " " << " x[0] = " << sol[0];
 }
 
@@ -503,7 +499,7 @@ void PolySolSet::change_sol ( int idx, CT* coords )
 
 void PolySolSet::add_sol
  ( CT* new_sol, T1 max_residual, T1 max_delta_x, int path_idx,
-   string path_info)
+   string path_info )
 {
    PolySol* tmp_sol = new PolySol(new_sol, dim, max_residual, max_delta_x, 
                                   path_idx, path_info);
@@ -513,31 +509,30 @@ void PolySolSet::add_sol
 
 void PolySolSet::print()
 {
-   std::cout << "dim   = " << dim << std::endl\
+   std::cout << "dim   = " << dim << std::endl
              << "n_sol = " << n_sol << std::endl;
 
    for(int i=0; i<n_sol; i++) sols[i]->print();
 }
 
-void PolySolSet::print_info(string* pos_var){
-	std::cout << "dim   = " << dim << std::endl\
-			  << "n_sol = " << n_sol << std::endl;
+void PolySolSet::print_info ( string* pos_var )
+{
+   std::cout << "dim   = " << dim << std::endl
+             << "n_sol = " << n_sol << std::endl;
 
-	for(int i=0; i<n_sol; i++){
-		sols[i]->print_info(pos_var);
-	}
-
+   for(int i=0; i<n_sol; i++) sols[i]->print_info(pos_var);
 }
 
-void PolySolSet::print_short(){
-	std::cout << "n_sol = " << n_sol << std::endl;
-	for(int i=0; i<n_sol; i++){
-		std::cout << i << " " << sols[i]->info << " x[0] = " << sols[i]->sol[0];
-	}
+void PolySolSet::print_short()
+{
+   std::cout << "n_sol = " << n_sol << std::endl;
+   for(int i=0; i<n_sol; i++)
+      std::cout << i << " " << sols[i]->info << " x[0] = " << sols[i]->sol[0];
 }
 
-CT* PolySolSet::get_sol(int idx){
-	return sols[idx]->get_sol();
+CT* PolySolSet::get_sol ( int idx )
+{
+   return sols[idx]->get_sol();
 }
 
 void PolySolSet::sort_set()
@@ -565,66 +560,73 @@ void PolySolSet::compare ( PolySolSet& that )
 
    while(true)
    {
-		if((**this_pointer)==(**that_pointer)){
-			this_pointer++;
-			that_pointer++;
-			same_sol++;
-		}
-		else{
-			if((**this_pointer)<(**that_pointer)){
-				this_sols_only.push_back(*this_pointer);
-				this_pointer++;
-				this_sol++;
-			}
-			else{
-				/*std::cout << this_pointer - this_sols.begin() << std::endl;
-				std::cout << that_pointer - that_sols.begin() << std::endl;
-				(*this_pointer)->print();
-				(*that_pointer)->print();*/
-				that_sols_only.push_back(*that_pointer);
-				that_pointer++;
-				that_sol++;
-			}
-		}
-		if(this_pointer==this_sols.end() || that_pointer==that_sols.end()){
-			break;
-		}
-	}
+      if((**this_pointer)==(**that_pointer))
+      {
+         this_pointer++;
+         that_pointer++;
+         same_sol++;
+      }
+      else
+      {
+         if((**this_pointer)<(**that_pointer))
+         {
+            this_sols_only.push_back(*this_pointer);
+            this_pointer++;
+            this_sol++;
+         }
+         else
+         {
+            /* std::cout << this_pointer - this_sols.begin() << std::endl;
+               std::cout << that_pointer - that_sols.begin() << std::endl;
+               (*this_pointer)->print();
+               (*that_pointer)->print();
+             */
+            that_sols_only.push_back(*that_pointer);
+            that_pointer++;
+            that_sol++;
+         }
+      }
+      if(this_pointer==this_sols.end() || that_pointer==that_sols.end())
+      {
+         break;
+      }
+   }
 
-	if(this_pointer != this_sols.end()){
-		this_sol += this_sols.end() - this_pointer;
-		while(this_pointer < this_sols.end()){
-			this_sols_only.push_back(*this_pointer);
-			this_pointer++;
-		}
-	}
+   if(this_pointer != this_sols.end())
+   {
+      this_sol += this_sols.end() - this_pointer;
+      while(this_pointer < this_sols.end())
+      {
+         this_sols_only.push_back(*this_pointer);
+         this_pointer++;
+      }
+   }
 
-	if(that_pointer != that_sols.end()){
-		that_sol += that_sols.end() - that_pointer;
-		while(that_pointer < that_sols.end()){
-			that_sols_only.push_back(*that_pointer);
-			that_pointer++;
-		}
-	}
-	std::cout << "same_sol = " << same_sol << std::endl;
+   if(that_pointer != that_sols.end())
+   {
+      that_sol += that_sols.end() - that_pointer;
+      while(that_pointer < that_sols.end())
+      {
+         that_sols_only.push_back(*that_pointer);
+         that_pointer++;
+      }
+   }
+   std::cout << "same_sol = " << same_sol << std::endl;
 
-	if(this_sol > 0){
-		std::cout << "this_sol = " << this_sol << std::endl;
-	}
-	if(that_sol > 0){
-		std::cout << "that_sol = " << that_sol << std::endl;
-	}
+   if(this_sol > 0) std::cout << "this_sol = " << this_sol << std::endl;
+   if(that_sol > 0) std::cout << "that_sol = " << that_sol << std::endl;
 
-	that_pointer = that_sols_only.begin();
-	int i=0;
-	while(that_pointer < that_sols_only.end()){
-		bool find_same_this = find_same_sol(*that_pointer);
-		int that_n_same_sol = that.count_same_sol(*that_pointer);
-		std::cout << std::setw(4) << i++ << " " \
-				  << std::setw(8) << (*that_pointer)->path_idx << " " \
-				  << std::setw(4) << find_same_this << " " \
-				  << std::setw(4) << that_n_same_sol;
-		(*that_pointer)->print_short();
-		that_pointer++;
-	}
+   that_pointer = that_sols_only.begin();
+   int i=0;
+   while(that_pointer < that_sols_only.end())
+   {
+      bool find_same_this = find_same_sol(*that_pointer);
+      int that_n_same_sol = that.count_same_sol(*that_pointer);
+      std::cout << std::setw(4) << i++ << " "
+                << std::setw(8) << (*that_pointer)->path_idx << " "
+                << std::setw(4) << find_same_this << " "
+                << std::setw(4) << that_n_same_sol;
+      (*that_pointer)->print_short();
+      that_pointer++;
+   }
 }
