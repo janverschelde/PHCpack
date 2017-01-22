@@ -1837,10 +1837,13 @@ ts_adepath_d: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
 	gnatbind ts_adepath_d use_c2phc
 	@-echo ">>> linking ..."
 	gnatlink ts_adepath_d adenewton_d.o adeonepath_d.o \
-               ademanypaths_d.o syscon.o solcon.o phcpack.o ada_test.o \
-               utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
-               eval_host_d.o mgs_host_d.o newton_host_d.o \
-               predictor_host_d.o path_host_d.o \
+                 ademanypaths_d.o syscon.o solcon.o phcpack.o ada_test.o \
+                 utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+                 eval_host_d.o mgs_host_d.o newton_host_d.o \
+                 predictor_host_d.o path_host_d.o \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/ts_adepath_dd -lm --LINK=g++
                  -o $(BIN)/ts_adepath_d -lm --LINK=g++
 
 ts_adepath_dd: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
