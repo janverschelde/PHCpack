@@ -88,109 +88,105 @@ void PolyMon::read
 
    for(int i=start, next_type=1; i<end; ++i)
    {
-        char c = eq_string[i];
-        int new_var = 0;
-        // handle symbols
-        if(c == '*'){
-            if(eq_string[i+1] == '*'){
-                next_type = 2;
-                i++;
-            }
-            else{
-                next_type = 1;
-            }
-            new_var++;
-        }
-        else if(c=='^'){
+      char c = eq_string[i];
+      int new_var = 0;
+      // handle symbols
+      if(c == '*')
+      {
+         if(eq_string[i+1] == '*')
+         {
             next_type = 2;
-            new_var++;
-        }
-        else if(c == ' ' || c ==';'){
-            new_var++;
-        }
+            i++;
+         }
+         else
+         {
+            next_type = 1;
+         }
+         new_var++;
+      }
+      else if(c=='^')
+      {
+         next_type = 2;
+         new_var++;
+      }
+      else if(c == ' ' || c ==';')
+      {
+         new_var++;
+      }
 
-        // handle vars
-        if(new_var == 1){
-            if(cur_type == 1){
-            	//pos[pos_ind] = var_to_pos(var);
-                //string var1 = var.substr(1,var.length()-1);
-                //cout << var << " " << var1 << " " << atoi(var1.c_str()) << endl;
-                //pos[pos_ind] = atoi(var1.c_str())-1;
-                pos[pos_ind] = pos_dict.get(var);
-                exp[pos_ind] = 1;
-                pos_ind++;
-                cur_type = 0;
-            }
-            else if(cur_type == 2){
-                int tmp_exp =  atoi(var.c_str());
-                exp[pos_ind-1] = tmp_exp;
-                cur_type = 0;
-            }
-        }
-        else{
-            if(cur_type == 0){
-                var = c;
-                cur_type = next_type;            
-            }
-            else{
-                var += c;
-            }
-        }        
-    }
+      // handle vars
+      if(new_var == 1)
+      {
+         if(cur_type == 1)
+         {
+            // pos[pos_ind] = var_to_pos(var);
+            // string var1 = var.substr(1,var.length()-1);
+            // cout << var << " " << var1 << " " << atoi(var1.c_str()) << endl;
+            // pos[pos_ind] = atoi(var1.c_str())-1;
+            pos[pos_ind] = pos_dict.get(var);
+            exp[pos_ind] = 1;
+            pos_ind++;
+            cur_type = 0;
+         }
+         else if(cur_type == 2)
+         {
+            int tmp_exp =  atoi(var.c_str());
+            exp[pos_ind-1] = tmp_exp;
+            cur_type = 0;
+         }
+      }
+      else
+      {
+         if(cur_type == 0)
+         {
+            var = c;
+            cur_type = next_type;            
+         }
+         else
+         {
+            var += c;
+         }
+      }        
+   }
 
-    if(cur_type == 1){
-        string var1 = var.substr(1,var.length()-1);
-        //cout << var << " " << var1 << " " << atoi(var1.c_str()) << endl;
-    	//pos[pos_ind] = var_to_pos(var);
-        //pos[pos_ind] = atoi(var1.c_str())-1;
-        pos[pos_ind] = pos_dict.get(var);
-        exp[pos_ind] = 1;
-    }
-    else if(cur_type == 2){
-        exp[pos_ind-1] = atoi(var.c_str()); 
-    }
-    update_base();
+   if(cur_type == 1)
+   {
+      string var1 = var.substr(1,var.length()-1);
+      // cout << var << " " << var1 << " " << atoi(var1.c_str()) << endl;
+      // pos[pos_ind] = var_to_pos(var);
+      // pos[pos_ind] = atoi(var1.c_str())-1;
+      pos[pos_ind] = pos_dict.get(var);
+      exp[pos_ind] = 1;
+   }
+   else if(cur_type == 2)
+   {
+      exp[pos_ind-1] = atoi(var.c_str()); 
+   }
+   update_base();
 }
 
 void PolyMon::update_base()
 {
    n_base = 0;
-   for(int var_idx=0; var_idx<n_var; var_idx++){
-		if(exp[var_idx]>1){
-			n_base++;
-		}
-	}
-	pos_base = new int[n_base];
-	exp_base = new int[n_base];
-	exp_tbl_base = new int[n_base];
-	int base_idx = 0;
-	for(int var_idx=0; var_idx<n_var; var_idx++){
-		if(exp[var_idx]>1){
-			pos_base[base_idx] = pos[var_idx];
-			exp_base[base_idx] = exp[var_idx];
-			exp_tbl_base[base_idx] = exp[var_idx]-2;
-			base_idx++;
-		}
-	}
+   for(int var_idx=0; var_idx<n_var; var_idx++)
+   {
+      if(exp[var_idx]>1) n_base++;
+   }
+   pos_base = new int[n_base];
+   exp_base = new int[n_base];
+   exp_tbl_base = new int[n_base];
+   int base_idx = 0;
+   for(int var_idx=0; var_idx<n_var; var_idx++)
+   {
+      if(exp[var_idx]>1)
+      {
+         pos_base[base_idx] = pos[var_idx];
+         exp_base[base_idx] = exp[var_idx];
+         exp_tbl_base[base_idx] = exp[var_idx]-2;
+         base_idx++;
+      }
+   }
 }
-
-/*
- //speel without coefficient
-CT PolyMon::speel(const CT* x_val, CT* deri){
-    deri[0].init(1.0,0.0);
-    deri[1] = x_val[pos[0]];
-
-    for(int i=1; i<n_var-1; i++){
-        deri[i+1] = deri[i]*x_val[pos[i]];
-    }
-
-    CT tmp = x_val[pos[n_var-1]];
-    for(int i=n_var-2; i>-1; i--){
-        deri[i] *= tmp;
-        tmp *= x_val[pos[i]];
-    }
-    return tmp;
-}*/
 
 CT PolyMon::speel ( const CT* x_val, CT* deri )
 {
@@ -252,13 +248,7 @@ CT PolyMon::eval_base ( const CT* x_val, CT** deg_table )
 CT PolyMon::eval ( const CT* x_val, CT* deri )
 {
    CT val = speel(x_val, deri);
-   /*CT base = eval_base(x_val);
-    val *= base;
-
-    for(int i=0; i<n_var; i++){
-        deri[i] *= base*exp[i];
-    }*/
-    return val;
+   return val;
 }
 
 CT PolyMon::eval ( const CT* x_val, CT* deri, CT** deg_table )
@@ -266,11 +256,6 @@ CT PolyMon::eval ( const CT* x_val, CT* deri, CT** deg_table )
    CT base = eval_base(x_val, deg_table);
    CT val = speel_with_base(x_val, deri, base);
 
-   /*CT base = eval_base(x_val);
-    val *= base;
-
-    for(int i=0; i<n_var; i++) deri[i] *= base*exp[i];
-   */
    return val;
 }
 
@@ -338,30 +323,27 @@ CT PolyEq::eval ( const CT* x_val, CT* deri, CT** deg_table )
 CT* PolySys::eval ( const CT* x_val )
 {
    CT* val = new CT[n_eq];
-   for(int i=0; i<n_eq; i++)
-   {
-      val[i] = eq[i]->eval(x_val);
-   }
+
+   for(int i=0; i<n_eq; i++) val[i] = eq[i]->eval(x_val);
+
    return val;
 }
 
 CT* PolySys::eval ( const CT* x_val, CT** deri_val )
 {
    CT* val = new CT[n_eq];
-   for(int i=0; i<n_eq; i++)
-   {
-      val[i] = eq[i]->eval(x_val, deri_val[i]);
-   }
+
+   for(int i=0; i<n_eq; i++) val[i] = eq[i]->eval(x_val, deri_val[i]);
+
    return val;
 }
 
 void PolySys::balance_eq ( const CT* x_val )
 {
    CT* f_val = eval(x_val);
+
    for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
-   {
-       eq[eq_idx]->constant -= f_val[eq_idx];
-   }
+      eq[eq_idx]->constant -= f_val[eq_idx];
 }
 
 CT** PolySys::eval_deg ( const CT* x_val )
@@ -370,16 +352,14 @@ CT** PolySys::eval_deg ( const CT* x_val )
    // Allocate memory
    int n_total_deg = 0;
    for(int var_idx=0; var_idx<dim; var_idx++)
-   {
        n_total_deg += max_deg_base[var_idx];
-   }
+
    CT** deg_table = new CT*[dim];
    // std::cout << "n_total_deg = " << n_total_deg << std::endl;
    deg_table[0] = new CT[n_total_deg];
    for(int var_idx=1; var_idx<dim; var_idx++)
-   {
       deg_table[var_idx]=deg_table[var_idx-1]+max_deg_base[var_idx-1];
-   }
+
    // Compute degree table
    for(int var_idx=0; var_idx<dim; var_idx++)
    {
@@ -389,9 +369,7 @@ CT** PolySys::eval_deg ( const CT* x_val )
          CT tmp_var = x_val[var_idx];
          tmp_deg_table[0] = tmp_var;
          for(int deg_idx=1; deg_idx<max_deg_base[var_idx]; deg_idx++)
-         {
             tmp_deg_table[deg_idx] = tmp_deg_table[deg_idx-1]*tmp_var;
-         }
       }
    }
    // print degree table
@@ -436,17 +414,11 @@ void PolyMon::print ( const string* pos_var )
    print_coef_complex(coef);
    // cout << endl;
    cout << pos_var[pos[0]];
-   if(exp[0]!= 1)
-   {
-      cout << '^' << exp[0];
-   }
+   if(exp[0]!= 1) cout << '^' << exp[0];
    for(int i =1; i< n_var; i++)
    {
       cout << " * " << pos_var[pos[i]];
-      if(exp[i]!= 1)
-      {
-         cout << '^' << exp[i];
-      }
+      if(exp[i]!= 1) cout << '^' << exp[i];
    }
 }
 
@@ -492,76 +464,64 @@ void PolyEq::read
       // If a new monomial appears,
       // record the starting and ending position of last one.
       if(((c== '+' || c == '-') && eq_string[i-1]!='e' && eq_string[i-1]!='E' \
-           && eq_string[i-1]!='(') && (i != mon_first) && parentheses_open == 0){
-            int tmp_start = mon_start;
-            CT tmp_coef = get_coef_complex(eq_string, mon_start);
-        	parentheses_open = 0;
+         && eq_string[i-1]!='(') && (i != mon_first) && parentheses_open == 0)
+      {
+         int tmp_start = mon_start;
+         CT tmp_coef = get_coef_complex(eq_string, mon_start);
+         parentheses_open = 0;
 
-            if(mon_start < i){
-            	/*for(int k=mon_start; k<end; k++){
-            		std::cout << eq_string[k];
-            	}
-            	std::cout << std::endl;*/
-                n_mon++;
-                //std::cout << "n_mon = " << n_mon << std::endl;
-                PolyMon* mm = new PolyMon;
-                mm->read(eq_string, pos_dict, mon_start, i, tmp_coef);
-                mon.push_back(mm);
-                mon_start = i;
-            }
-            else{
-            	//std::cout << tmp_coef;
-                constant += tmp_coef;
-            }
-        }
-        i++;
-    }
-
-    if (mon_start < end){
-        CT tmp_coef = get_coef_complex(eq_string, mon_start);
-        if(mon_start < end){
+         if(mon_start < i)
+         {
             n_mon++;
+            // std::cout << "n_mon = " << n_mon << std::endl;
             PolyMon* mm = new PolyMon;
-            mm->read(eq_string, pos_dict, mon_start, end, tmp_coef);
+            mm->read(eq_string, pos_dict, mon_start, i, tmp_coef);
             mon.push_back(mm);
-        }
-        else{
+            mon_start = i;
+         }
+         else
+         {
+            // std::cout << tmp_coef;
             constant += tmp_coef;
-        }
-    }
-
-    dim = pos_dict.n_job;
+         }
+      }
+      i++;
+   }
+   if(mon_start < end)
+   {
+      CT tmp_coef = get_coef_complex(eq_string, mon_start);
+      if(mon_start < end)
+      {
+         n_mon++;
+         PolyMon* mm = new PolyMon;
+         mm->read(eq_string, pos_dict, mon_start, end, tmp_coef);
+         mon.push_back(mm);
+      }
+      else
+      {
+         constant += tmp_coef;
+      }
+   }
+   dim = pos_dict.n_job;
 }
 
 void PolyEq::print(const string* pos_var)
 {
    // std::cout << "n_mon = " << n_mon << std::endl;
-   for(int i=0; i<n_mon; i++){
-        mon[i]->print(pos_var);
-   }
+   for(int i=0; i<n_mon; i++) mon[i]->print(pos_var);
 
-   // print plus and minus
-   // if(constant.real > 0){
-   //    cout << " + ";
-   // }
-
-   // print plus and minus
    print_number_complex(constant);
-   // cout << constant;
    cout << endl;
 }
 
 void PolySys::print()
 {
-    cout << "dim = " << dim << ", n_eq = " << n_eq << endl;
-    for(int i=0; i<n_eq; i++){
-        cout << "f"<< i << "=" << endl;
-        eq[i]->print(pos_var);
-    }
-    /*cout << "max deg" << endl;
-    for(int i=0; i<dim; i++){
-        cout << pos_var[i] << " " << max_deg[i] << endl;
-    }*/
+   cout << "dim = " << dim << ", n_eq = " << n_eq << endl;
+   for(int i=0; i<n_eq; i++)
+   {
+       cout << "f"<< i << "=" << endl;
+       eq[i]->print(pos_var);
+   }
 }
 
 void PolySys::read ( const string& sys_string, VarDict& pos_dict )
@@ -583,12 +543,13 @@ void PolySys::read ( const string& sys_string, VarDict& pos_dict )
          ii++;
          while(ii<l)
          {
-                if(sys_string[ii] != ' '){
-                    n_eq++;
-                    eq_list->append(ii);
-                    break;
-                }
-                ii++;
+            if(sys_string[ii] != ' ')
+            {
+               n_eq++;
+               eq_list->append(ii);
+               break;
+            }
+            ii++;
          }
       }
       ii++;
@@ -597,46 +558,49 @@ void PolySys::read ( const string& sys_string, VarDict& pos_dict )
 
    // eq = new PolyEq[n_eq];
 
-    LinkNode<int>* tmp = eq_list->header();
+   LinkNode<int>* tmp = eq_list->header();
 
-    int eq_start = tmp->data;
-    for(int i=0; i<n_eq; i++)
-    {
-        PolyEq* new_eq = new PolyEq();
-        tmp = tmp->next;
-        int eq_end = tmp->data;
-        //cout << n_eq << " "<< eq_start <<" " << eq_end<< endl;
-        //string new_eq = sys_string.substr(eq_start, eq_end-eq_start);
-        //cout << new_eq << endl;
-        new_eq->read(sys_string, pos_dict, eq_start, eq_end);
-        eq.push_back(new_eq);
-        eq_start = eq_end;
-    }
-    eq_list->destroy();
-    delete eq_list;
+   int eq_start = tmp->data;
+   for(int i=0; i<n_eq; i++)
+   {
+      PolyEq* new_eq = new PolyEq();
+      tmp = tmp->next;
+      int eq_end = tmp->data;
+      // cout << n_eq << " "<< eq_start <<" " << eq_end<< endl;
+      // string new_eq = sys_string.substr(eq_start, eq_end-eq_start);
+      // cout << new_eq << endl;
+      new_eq->read(sys_string, pos_dict, eq_start, eq_end);
+      eq.push_back(new_eq);
+      eq_start = eq_end;
+   }
+   eq_list->destroy();
+   delete eq_list;
 
-    dim = pos_dict.n_job;
-    pos_var = pos_dict.reverse();
-    //dim = pos_dict.n_job;
+   dim = pos_dict.n_job;
+   pos_var = pos_dict.reverse();
+   // dim = pos_dict.n_job;
 }
 
-void PolySys::read ( const string* sys_string, int n_eq, VarDict& pos_dict )
+void PolySys::read
+ ( const string* sys_string, int n_eq, VarDict& pos_dict )
 {
    eq.reserve(n_eq);
    this->n_eq = n_eq;
    dim = n_eq;
 
-   // ***Here is confusion, I should use either vector or array, but not to mix them
-    eq_space = new PolyEq[n_eq];
-    PolyEq* tmp_eq_space = eq_space;
-    for(int i=0; i< n_eq; i++){
-    	tmp_eq_space->read(sys_string[i], pos_dict);
-    	tmp_eq_space->dim = dim;
-        eq.push_back(tmp_eq_space);
-        tmp_eq_space++;
-    }
-    pos_var = pos_dict.reverse();
-    update_max_deg_base();
+   // Here is confusion, I should use either vector or array, 
+   // but not to mix them
+   eq_space = new PolyEq[n_eq];
+   PolyEq* tmp_eq_space = eq_space;
+   for(int i=0; i< n_eq; i++)
+   {
+      tmp_eq_space->read(sys_string[i], pos_dict);
+      tmp_eq_space->dim = dim;
+      eq.push_back(tmp_eq_space);
+      tmp_eq_space++;
+   }
+   pos_var = pos_dict.reverse();
+   update_max_deg_base();
 }
 
 void PolySys::read_file ( const string& file_name )
@@ -668,10 +632,8 @@ void PolySys::read_file ( ifstream& myfile, VarDict& pos_dict )
 
    while(true)
    {
-      if(not_empty_line(line)!=-1)
-      {
-         break;
-      }
+      if(not_empty_line(line)!=-1) break;
+
       getline(myfile,line);
    }
 
@@ -703,34 +665,36 @@ void PolySys::read_file ( ifstream& myfile, VarDict& pos_dict )
    {
       int not_empty = not_empty_line(tmp_line);
 
-      if(not_empty != -1){
-            int finish = 0;
-            for(unsigned int j=not_empty; j<tmp_line.length(); j++){
-                char c =tmp_line[j];
-                if(c ==';'){
-                    finish = 1;
-                }
+      if(not_empty != -1)
+      {
+         int finish = 0;
+         for(unsigned int j=not_empty; j<tmp_line.length(); j++)
+         {
+            char c =tmp_line[j];
+            if(c ==';') finish = 1;
+         }
+         line += tmp_line;
+         if(finish)
+         {
+            // std::cout << line << std::endl << std::endl;
+            tmp_eq_space->read(line, pos_dict);
+            tmp_eq_space->dim = dim;
+            eq.push_back(tmp_eq_space);
+            tmp_eq_space++;
+            n_eq_file++;
+            // std::cout << "n_eq_file = " << n_eq_file << std::endl;
+            if(n_eq_file >= n_eq)
+            {
+               cout << "Error: too many lines" << endl;
+               break;
             }
-            line += tmp_line;
-            if(finish){
-            	//std::cout << line << std::endl << std::endl;
-            	tmp_eq_space->read(line, pos_dict);
-            	tmp_eq_space->dim = dim;
-                eq.push_back(tmp_eq_space);
-                tmp_eq_space++;
-                n_eq_file++;
-                //std::cout << "n_eq_file = " << n_eq_file << std::endl;
-                if(n_eq_file >= n_eq){
-                    cout << "Error: too many lines" << endl;
-                    break;
-                }
-                line = "";
-            }
-        }
-    }
-    pos_var = pos_dict.reverse();
+            line = "";
+         }
+      }
+   }
+   pos_var = pos_dict.reverse();
 
-    update_max_deg_base();
+   update_max_deg_base();
 }
 
 void PolyMon::update_max_deg ( int* max_deg )
@@ -738,10 +702,7 @@ void PolyMon::update_max_deg ( int* max_deg )
    for(int i=0; i<n_var; i++)
    {
       // cout << "var " << i << endl;
-      if(exp[i]>max_deg[pos[i]])
-      {
-         max_deg[pos[i]] = exp[i];
-      }
+      if(exp[i]>max_deg[pos[i]]) max_deg[pos[i]] = exp[i];
    }
 }
 
@@ -775,25 +736,20 @@ void PolySys::update_max_deg_base()
          eval_base = true;
       }
    }
-
-   // for(int i=0; i<dim; i++)
-   // {
-   //    std::cout << i << " " << max_deg_base[i]
-   //                   << " " << pos_var[i] << std::endl;
-   // }
 }
 
 /*
 void PolyMon::print_level()
 {
-    for(int i=0; i<n_level; i++){
-        cout << "    level " << i  << ": n_job = "<< n_pos_level[i]<< endl;
-        cout << "        pos: ";
-        for(int j=0; j<n_pos_level[i]; j++){
-            cout << pos_level[i][j] << ", ";
-        }
-        cout << " last l = " << pos_level_last[i] << endl;
-    }
+   for(int i=0; i<n_level; i++)
+   {
+      cout << "    level " << i  << ": n_job = "<< n_pos_level[i]<< endl;
+      cout << "        pos: ";
+      for(int j=0; j<n_pos_level[i]; j++)
+         cout << pos_level[i][j] << ", ";
+
+      cout << " last l = " << pos_level_last[i] << endl;
+  }
 }
 
 void PolyEq::print_level()
@@ -818,23 +774,15 @@ int PolyEq::workspace_size_block(int start_level, int factor_size)
 {
    int level = 0;
    for(int i=0; i<n_mon; i++)
-   {
-      if(level < mon[i]->n_level)
-      {
-          level = mon[i]->n_level;
-      }
-   }
-   if(start_level >= level)
-   {
-      return 0;
-   }
+      if(level < mon[i]->n_level) level = mon[i]->n_level;
+
+   if(start_level >= level) return 0;
+
    int* level_start = new int[level+1];
    int* base_size = new int[level];
 
-   for(int i=0; i<start_level; i++)
-   {
-      level_start[i] = 0;
-   }
+   for(int i=0; i<start_level; i++) level_start[i] = 0;
+
    int tmp_size = 1;
    for(int i=1; i<start_level; i++)
    {
@@ -849,16 +797,12 @@ int PolyEq::workspace_size_block(int start_level, int factor_size)
       level_start[i] = 0;
    }
    for(int j=0; j<n_mon; j++)
-   {
       for(int i=start_level; i<mon[j]->n_level; i++)
-      {
          level_start[i] += mon[j]->n_pos_level[i]*base_size[i-1];
-      }
-   }
+
    for(int i=start_level; i<level+1; i++)
-   {
       level_start[i] += level_start[i-1];
-   }
+
    int workspace_size = level_start[level];
 
    delete[] base_size;
@@ -867,68 +811,77 @@ int PolyEq::workspace_size_block(int start_level, int factor_size)
    return workspace_size;
 }
 
-int PolySys::workspace_size_block(int start_level, int factor_size){
-    // max workspace for single equation
-    int m_size = 0;
-    long eq_workspace_max = 0;
-    for(int j=0; j<n_eq; j++){
-        int new_m_size = eq[j]->memory_size(factor_size);
-        if(m_size < new_m_size){
-            m_size = new_m_size;
-        }
-        int eq_workspace_size = eq[j]->workspace_size_block(start_level, factor_size);
-        if(eq_workspace_max < eq_workspace_size){
-            eq_workspace_max = eq_workspace_size;
-        }
-    }
-    //cout << "eq_workspace_max = " << eq_workspace_max << endl;
-    return eq_workspace_max;
+int PolySys::workspace_size_block ( int start_level, int factor_size )
+{
+   // max workspace for single equation
+   int m_size = 0;
+   long eq_workspace_max = 0;
+   for(int j=0; j<n_eq; j++)
+   {
+      int new_m_size = eq[j]->memory_size(factor_size);
+      if(m_size < new_m_size) m_size = new_m_size;
+
+      int eq_workspace_size
+         = eq[j]->workspace_size_block(start_level, factor_size);
+      if(eq_workspace_max < eq_workspace_size)
+         eq_workspace_max = eq_workspace_size;
+   }
+   // cout << "eq_workspace_max = " << eq_workspace_max << endl;
+   return eq_workspace_max;
 }
 
-int PolyMon::memory_size(int factor_size){
-    return n_var + (n_var + factor_size - 1) / factor_size;
+int PolyMon::memory_size ( int factor_size )
+{
+   return n_var + (n_var + factor_size - 1) / factor_size;
 }
 
-int PolyEq::memory_size(int factor_size){
-    int m_size = 0;
-    for(int i=0; i< n_mon; i++){
-        m_size += mon[i]->memory_size(factor_size);
-    }
-    return m_size;
+int PolyEq::memory_size(int factor_size)
+{
+   int m_size = 0;
+
+   for(int i=0; i< n_mon; i++) m_size += mon[i]->memory_size(factor_size);
+
+   return m_size;
 }
 
-int PolySys::memory_size(int factor_size){
-    int m_size = 0;
-    for(int i=0; i < n_eq; i++){
-        m_size += eq[i]->memory_size(factor_size);
-    }
-    return m_size;
+int PolySys::memory_size ( int factor_size )
+{
+   int m_size = 0;
+
+   for(int i=0; i < n_eq; i++) m_size += eq[i]->memory_size(factor_size);
+
+   return m_size;
 }
 
-void PolySys::job_number(){
-    for(int i=0; i<level; i++){
-        cout << i << " " << job_number_level[i] << endl;
-    }
+void PolySys::job_number()
+{
+   for(int i=0; i<level; i++)
+      cout << i << " " << job_number_level[i] << endl;
 }
 
-int PolyMon::job_number_block(int start_level){
-    int n_job_block_est = 0;
-    if(start_level <= n_level){
-        for(int i=start_level; i<n_level; i++){
-            //cout << i << " " <<  n_pos_level[i] << endl;
-            n_job_block_est += n_pos_level[i];
-        }
-    }
-    return n_job_block_est;
+int PolyMon::job_number_block ( int start_level )
+{
+   int n_job_block_est = 0;
+   if(start_level <= n_level)
+   {
+      for(int i=start_level; i<n_level; i++)
+      {
+         //cout << i << " " <<  n_pos_level[i] << endl;
+         n_job_block_est += n_pos_level[i];
+      }
+   }
+   return n_job_block_est;
 }
 
-int PolyEq::job_number_block(int start_level){
-    int n_job_block_est = 0;
-    //cout << "n_mon = " << n_mon << endl;
-    for(int i=0; i<n_mon; i++){
-        n_job_block_est += mon[i] -> job_number_block(start_level);
-    }
-    return n_job_block_est;
+int PolyEq::job_number_block ( int start_level )
+{
+   int n_job_block_est = 0;
+   //cout << "n_mon = " << n_mon << endl;
+
+   for(int i=0; i<n_mon; i++)
+      n_job_block_est += mon[i] -> job_number_block(start_level);
+
+   return n_job_block_est;
 }
 
 int PolySys::job_number_block ( int start_level )
@@ -945,332 +898,363 @@ int PolySys::job_number_block ( int start_level )
    return n_job_block_est;
 }*/
 
-void PolySys::gpu_mon(int& dim, int& level, int& workspace_size, int*& workspace_level,
-                      int*& n_mon_level, int& pos_size, unsigned short*& pos, int*& pos_level,
-                      int& sum_level, int*& n_sum_level,
-                      int& total_n_sum, int& sum_array_size, int*& sum_start, int*& sum_array){
-    dim = this->dim;                  
+void PolySys::gpu_mon
+ ( int& dim, int& level, int& workspace_size, int*& workspace_level,
+   int*& n_mon_level, int& pos_size, unsigned short*& pos, int*& pos_level,
+   int& sum_level, int*& n_sum_level,
+   int& total_n_sum, int& sum_array_size, int*& sum_start, int*& sum_array )
+{
+   dim = this->dim;                  
     
-    int max_n_var = 0;
-    int total_n_mon = 0;
+   int max_n_var = 0;
+   int total_n_mon = 0;
 
-    // Count the largest n_var and the total n_mon
-    for(int i=0; i<n_eq; i++){
-        PolyEq* eq_tmp = eq[i];
-        for(int j=0; j<eq_tmp->n_mon; j++){
-            int new_n_var = eq_tmp->mon[j]->n_var;
-            if( new_n_var > max_n_var){
-                max_n_var = new_n_var;
-            }
-            total_n_mon++;
-        }
-    }
-    //cout << "max_n_var = " << max_n_var << endl;
+   // Count the largest n_var and the total n_mon
+   for(int i=0; i<n_eq; i++)
+   {
+      PolyEq* eq_tmp = eq[i];
+      for(int j=0; j<eq_tmp->n_mon; j++)
+      {
+         int new_n_var = eq_tmp->mon[j]->n_var;
+         if(new_n_var > max_n_var) max_n_var = new_n_var;
+         total_n_mon++;
+      }
+   }
+   // cout << "max_n_var = " << max_n_var << endl;
     
-    // Put monomials index into vector ordered by n_var
-    vector<int_idx>* n_var_list = new vector<int_idx>[max_n_var+1];
-    for(int i=0; i<n_eq; i++){
-        PolyEq* eq_tmp = eq[i];
-        for(int j=0; j<eq_tmp->n_mon; j++){
-            int new_n_var = eq_tmp->mon[j]->n_var;
-            n_var_list[new_n_var].push_back(int_idx(i,j));
-            //cout << new_n_var << " " << i << " " << j << endl;
-        }
-    }
+   // Put monomials index into vector ordered by n_var
+   vector<int_idx>* n_var_list = new vector<int_idx>[max_n_var+1];
+   for(int i=0; i<n_eq; i++)
+   {
+      PolyEq* eq_tmp = eq[i];
+      for(int j=0; j<eq_tmp->n_mon; j++)
+      {
+         int new_n_var = eq_tmp->mon[j]->n_var;
+         n_var_list[new_n_var].push_back(int_idx(i,j));
+         // cout << new_n_var << " " << i << " " << j << endl;
+      }
+   }
     
-    /*for(int i=0; i< max_n_var+1; i++){
+   /*for(int i=0; i< max_n_var+1; i++)
+     {
         cout << i << " size = " << n_var_list[i].size() << endl;
-        for (vector<int_idx>::iterator it = n_var_list[i].begin(); it!=n_var_list[i].end(); ++it) {
-            cout << (*it).eq_idx << " " << (*it).mon_idx << endl;
+        for(vector<int_idx>::iterator it = n_var_list[i].begin();
+            it!=n_var_list[i].end(); ++it)
+        {
+           cout << (*it).eq_idx << " " << (*it).mon_idx << endl;
         }
-    }*/
+     }*/
     
-    // compute level
-    level = 0;
-    for(int i=1; i<max_n_var; i<<=1){
-        level++;
-        //cout << "i = " << i << " level = " << level << endl;
-    }
-    cout << " level = " << level << endl;
+   // compute level
+   level = 0;
+   for(int i=1; i<max_n_var; i<<=1) level++;
+
+   cout << " level = " << level << endl;
     
+   // Count monomials on each level and count n_vars
+   n_mon_level = new int[level + 1];
     
-    // Count monomials on each level and count n_vars
-    n_mon_level = new int[level + 1];
+   for(int i=0; i<=level; i++)
+   {
+      n_mon_level[i] = 0;
+      int m_size = 1<<i;
+      for(int j= m_size/2+1; j<= min(max_n_var, m_size); j++)
+      {
+         int size_tmp = n_var_list[j].size();
+         n_mon_level[i] += size_tmp;
+      }
+   }
     
-    for(int i=0; i<=level; i++){
-        n_mon_level[i] = 0;
-        int m_size = 1<<i;
-        for(int j= m_size/2+1; j<= min(max_n_var, m_size); j++){
-            int size_tmp = n_var_list[j].size();
-            n_mon_level[i] += size_tmp;
-        }
-    }
+   // Count pos on each level and total pos
+   pos_level = new int[level + 1];
+   pos_size = 0;
+   workspace_level = new int[level + 1];
+   workspace_size = 0;
+   pos_level[0] = 0;
+   workspace_level[0] = 0;
+   int pos_level_size = 0;
+   for(int i=0; i<=level; i++)
+   {
+      pos_level[i] = pos_level_size;
+      workspace_level[i] = pos_level_size;
+      pos_level_size = n_mon_level[i] * ((1<<i)+1);
+      // cout << i << " pos_level_size = " << pos_level_size 
+      //           << " level_start = " << pos_level[i] << endl;
+      pos_size += pos_level_size;
+      workspace_size += pos_level_size;
+   }
+   // cout << "pos_size = " << pos_size << " workspace_size = "
+   //      << workspace_size << endl;
     
-    // Count pos on each level and total pos
-    pos_level = new int[level + 1];
-    pos_size = 0;
-    workspace_level = new int[level + 1];
-    workspace_size = 0;
-    pos_level[0] = 0;
-    workspace_level[0] = 0;
-    int pos_level_size = 0;
-    for(int i=0; i<=level; i++){
-        pos_level[i] = pos_level_size;
-        workspace_level[i] = pos_level_size;
-        pos_level_size = n_mon_level[i] * ((1<<i)+1);
-        //cout << i << " pos_level_size = " << pos_level_size 
-        //          << " level_start = " << pos_level[i] << endl;
-        pos_size += pos_level_size;
-        workspace_size += pos_level_size;
-    }
-    //cout << "pos_size = " << pos_size << " workspace_size = " << workspace_size << endl;
-    
-    // Put data into pos
-    pos = new unsigned short[pos_size];    
-    unsigned short* pos_tmp = pos;
-    for(int i=0; i<=level; i++){
-        int m_size = 1<<i;
-        //cout << "m_size = " << m_size << endl;
-        for(int j= m_size/2+1; j<= min(max_n_var, m_size); j++){
-            //cout << "size = " << j << endl;
-            for (vector<int_idx>::iterator it = n_var_list[j].begin(); it!=n_var_list[j].end(); ++it) {
-                int eq_idx = (*it).eq_idx;
-                int mon_idx = (*it).mon_idx;
-                int* mon_pos = eq[eq_idx] -> mon[mon_idx] -> pos;
-                *pos_tmp++ = j;
-                for(int k=0; k<j; k++){
-                    pos_tmp[k] = mon_pos[k];
-                    //cout << pos_tmp[k] << " ";
-                }
-                //cout << endl;
-                pos_tmp += m_size;
-                //cout << m_size << endl;
+   // Put data into pos
+   pos = new unsigned short[pos_size];    
+   unsigned short* pos_tmp = pos;
+   for(int i=0; i<=level; i++)
+   {
+      int m_size = 1<<i;
+      // cout << "m_size = " << m_size << endl;
+      for(int j= m_size/2+1; j<= min(max_n_var, m_size); j++)
+      {
+         // cout << "size = " << j << endl;
+         for(vector<int_idx>::iterator it = n_var_list[j].begin();
+             it!=n_var_list[j].end(); ++it)
+         {
+            int eq_idx = (*it).eq_idx;
+            int mon_idx = (*it).mon_idx;
+            int* mon_pos = eq[eq_idx] -> mon[mon_idx] -> pos;
+            *pos_tmp++ = j;
+            for(int k=0; k<j; k++)
+            {
+               pos_tmp[k] = mon_pos[k];
+               // cout << pos_tmp[k] << " ";
             }
-        }
-    }
+            // cout << endl;
+            pos_tmp += m_size;
+            // cout << m_size << endl;
+         }
+      }
+   }
     
-    // print pos
-    pos_tmp = pos;
-    for(int i=1; i<=level; i++){
-        int m_size = 1<<i;
-        //cout << "level = " << i << " m_size = " << m_size << " level_start = " << pos_level[i] << endl;
-        pos_tmp += pos_level[i];
-        for(int j=0; j<n_mon_level[i]; j++){
-            //cout << m_size << endl;
-            unsigned short* pos_start = pos_tmp + (m_size+1)*j;
-            int n_var_tmp = *pos_start++;
-            /*cout << "size = " << n_var_tmp << "   ";
-            for(int k=0; k<n_var_tmp; k++){
-                cout << pos_start[k] << " ";
-            }
-            cout << endl;*/
-        }
-    }
+   // print pos
+   pos_tmp = pos;
+   for(int i=1; i<=level; i++)
+   {
+      int m_size = 1<<i;
+      // cout << "level = " << i << " m_size = " << m_size
+      //      << " level_start = " << pos_level[i] << endl;
+      pos_tmp += pos_level[i];
+      for(int j=0; j<n_mon_level[i]; j++)
+      {
+         //cout << m_size << endl;
+         unsigned short* pos_start = pos_tmp + (m_size+1)*j;
+         int n_var_tmp = *pos_start++;
+         /*cout << "size = " << n_var_tmp << "   ";
+           for(int k=0; k<n_var_tmp; k++) cout << pos_start[k] << " ";
+           cout << endl;*/
+      }
+   }
     
-    //Get location of each monomials in pos
-    //cout << "n_mon = " << n_mon << endl;
-    int* mon_pos_data = new int[total_n_mon];
-    int** mon_pos = new int*[n_eq];
-    mon_pos[0] = mon_pos_data;
-    for(int i=1; i<n_eq; i++){
-        mon_pos[i] = mon_pos[i-1] + eq[i-1] -> n_mon;
-    }
+   // Get location of each monomials in pos
+   // cout << "n_mon = " << n_mon << endl;
+   int* mon_pos_data = new int[total_n_mon];
+   int** mon_pos = new int*[n_eq];
+   mon_pos[0] = mon_pos_data;
+   for(int i=1; i<n_eq; i++) mon_pos[i] = mon_pos[i-1] + eq[i-1] -> n_mon;
     
-    int mon_loc = 0;
-    for(int i=0; i<=level; i++){
-        int m_size = 1<<i;
-        //cout << "m_size = " << m_size << endl;
-        for(int j= m_size/2+1; j<= min(max_n_var, m_size); j++){
-            //cout << "size = " << j << endl;
-            for (vector<int_idx>::iterator it = n_var_list[j].begin(); it!=n_var_list[j].end(); ++it) {
-                int eq_idx = (*it).eq_idx;
-                int mon_idx = (*it).mon_idx;
-                mon_pos[eq_idx][mon_idx] = mon_loc;
-                mon_loc += m_size + 1;
-            }
-        }
-    }
+   int mon_loc = 0;
+   for(int i=0; i<=level; i++)
+   {
+      int m_size = 1<<i;
+      // cout << "m_size = " << m_size << endl;
+      for(int j= m_size/2+1; j<= min(max_n_var, m_size); j++)
+      {
+         // cout << "size = " << j << endl;
+         for(vector<int_idx>::iterator it = n_var_list[j].begin();
+             it!=n_var_list[j].end(); ++it)
+         {
+            int eq_idx = (*it).eq_idx;
+            int mon_idx = (*it).mon_idx;
+            mon_pos[eq_idx][mon_idx] = mon_loc;
+            mon_loc += m_size + 1;
+         }
+      }
+   }
     
-    /*for(int i=0; i<n_eq; i++){
+   /*for(int i=0; i<n_eq; i++)
+     {
         cout << "eq " << i << endl;
         for(int j=0; j<eq[i] -> n_mon; j++){
             cout << mon_pos[i][j] << " "; 
         }
         cout << endl;
-    }*/
+     }*/
     
-    int* sum_size_data = new int[n_eq*(dim+1)];
-    for(int i=0; i<n_eq*(dim+1); i++){
-        sum_size_data[i] = 0;
-    }
-    int** sum_size = new int*[n_eq];
-    sum_size[0] = sum_size_data;
-    for(int i=1; i<n_eq; i++){
-        sum_size[i] = sum_size[i-1] + dim + 1;
-    }
+   int* sum_size_data = new int[n_eq*(dim+1)];
+   for(int i=0; i<n_eq*(dim+1); i++) sum_size_data[i] = 0;
+   int** sum_size = new int*[n_eq];
+   sum_size[0] = sum_size_data;
+   for(int i=1; i<n_eq; i++) sum_size[i] = sum_size[i-1] + dim + 1;
     
-    //cout << "Equation size:";
-    /*for(int i=0; i<n_eq; i++){
+   //cout << "Equation size:";
+   /*for(int i=0; i<n_eq; i++)
+     {
         //cout << sum_size[n_eq][i] << " ";
-    }
-    //cout << endl;*/
+     }
+     //cout << endl;*/
     
-    // Equation Sum Size and Derivative Sum Size
-    for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-        sum_size[eq_idx][dim] = eq[eq_idx] -> n_mon; // +1 for constant
-        //cout << "eq " << eq_idx << " eq_size " << eq[eq_idx] -> n_mon << endl;
-        for(int mon_idx=0; mon_idx<eq[eq_idx] -> n_mon; mon_idx++){
-            int mon_start = mon_pos[eq_idx][mon_idx];
-            int mon_size = pos[mon_start];
-            //cout << "eq " << eq_idx << " mon_idx " << mon_idx << " mon_size " << mon_size << endl;
-            for(int i=1; i<mon_size+1; i++){
-                (sum_size[eq_idx][pos[mon_start+i]])++;
-            }
-        }
-    }
+   // Equation Sum Size and Derivative Sum Size
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      sum_size[eq_idx][dim] = eq[eq_idx] -> n_mon; // +1 for constant
+      // cout << "eq " << eq_idx << " eq_size " << eq[eq_idx] -> n_mon << endl;
+      for(int mon_idx=0; mon_idx<eq[eq_idx] -> n_mon; mon_idx++)
+      {
+         int mon_start = mon_pos[eq_idx][mon_idx];
+         int mon_size = pos[mon_start];
+         // cout << "eq " << eq_idx << " mon_idx " << mon_idx
+         //      << " mon_size " << mon_size << endl;
+         for(int i=1; i<mon_size+1; i++)
+            (sum_size[eq_idx][pos[mon_start+i]])++;
+      }
+   }
     
-    // Largest number in Sum
-    int max_sum_size = 0;
-    total_n_sum = 0;
-    int total_n_sum_pos = 0;
-    for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-        //cout << "eq " << eq_idx << "   ";
-        for(int x_idx=0; x_idx < dim+1; x_idx++){
-            int tmp_sum_size = sum_size[eq_idx][x_idx];
-            if(tmp_sum_size>max_sum_size){
-                max_sum_size = tmp_sum_size;
-            }
-            if(tmp_sum_size > 0){
-                total_n_sum++;
-                total_n_sum_pos += tmp_sum_size;
-            }
-            //cout << sum_size[eq_idx][x_idx] << " ";
-        }
-        //cout << endl;
-    }
-    cout << "max_sum_size    = " << max_sum_size << endl;
-    cout << "total_n_sum     = " << total_n_sum  << endl;
-    cout << "total_n_sum_pos = " << total_n_sum_pos  << endl;
+   // Largest number in Sum
+   int max_sum_size = 0;
+   total_n_sum = 0;
+   int total_n_sum_pos = 0;
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      // cout << "eq " << eq_idx << "   ";
+      for(int x_idx=0; x_idx < dim+1; x_idx++)
+      {
+         int tmp_sum_size = sum_size[eq_idx][x_idx];
+         if(tmp_sum_size>max_sum_size)
+         {
+            max_sum_size = tmp_sum_size;
+         }
+         if(tmp_sum_size > 0)
+         {
+            total_n_sum++;
+            total_n_sum_pos += tmp_sum_size;
+         }
+         // cout << sum_size[eq_idx][x_idx] << " ";
+      }
+      // cout << endl;
+   }
+   cout << "max_sum_size    = " << max_sum_size << endl;
+   cout << "total_n_sum     = " << total_n_sum  << endl;
+   cout << "total_n_sum_pos = " << total_n_sum_pos  << endl;
     
-    // Put index into Sum Vector
-    vector<int_idx>* sum_size_list = new vector<int_idx>[max_sum_size+1];
-    for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-        for(int x_idx=0; x_idx<dim+1; x_idx++){
-            sum_size_list[sum_size[eq_idx][x_idx]].push_back(int_idx(eq_idx, x_idx));
-        }
-    }
+   // Put index into Sum Vector
+   vector<int_idx>* sum_size_list = new vector<int_idx>[max_sum_size+1];
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      for(int x_idx=0; x_idx<dim+1; x_idx++)
+      {
+         sum_size_list[sum_size[eq_idx][x_idx]].push_back
+            (int_idx(eq_idx, x_idx));
+      }
+   }
 
-    // Generate n_sum_level
-    sum_level = 0;
-    for(int i=1; i<max_sum_size; i<<=1){
-        sum_level ++;
-        //cout << "i = " << i << " level = " << level << endl;
-    }
-    cout << "sum_level = " << sum_level << endl;
+   // Generate n_sum_level
+   sum_level = 0;
+   for(int i=1; i<max_sum_size; i<<=1)
+   {
+      sum_level ++;
+      // cout << "i = " << i << " level = " << level << endl;
+   }
+   cout << "sum_level = " << sum_level << endl;
     
+   // Count n_sum on each level
+   n_sum_level = new int[sum_level + 1];
     
-    // Count n_sum on each level
-    n_sum_level = new int[sum_level + 1];
-    
-    for(int i=0; i<=sum_level; i++){
-        n_sum_level[i] = 0;
-        int m_size = 1<<i;
-        for(int j= m_size/2+1; j<= min(max_sum_size, m_size); j++){
-            int size_tmp = sum_size_list[j].size();
-            n_sum_level[i] += size_tmp;
-        }
-    }
+   for(int i=0; i<=sum_level; i++)
+   {
+      n_sum_level[i] = 0;
+      int m_size = 1<<i;
+      for(int j= m_size/2+1; j<= min(max_sum_size, m_size); j++)
+      {
+         int size_tmp = sum_size_list[j].size();
+         n_sum_level[i] += size_tmp;
+      }
+   }
 
-    /*for(int i=0; i<=sum_level; i++){
+   /*for(int i=0; i<=sum_level; i++)
+     {
         cout << i << " " << n_sum_level[i] << endl;
-    }*/
+     }*/
 
-    // Generate Sum Start
-    int* sum_start_loc_data = new int[n_eq*(dim+1)];
-    for(int i=0; i<n_eq*(dim+1); i++){
-        sum_start_loc_data[i] = 0;
-    }
+   // Generate Sum Start
+   int* sum_start_loc_data = new int[n_eq*(dim+1)];
+   for(int i=0; i<n_eq*(dim+1); i++) sum_start_loc_data[i] = 0;
     
-    int** sum_start_loc = new int*[n_eq+1];
-    sum_start_loc[0] = sum_start_loc_data;
-    for(int i=1; i<n_eq; i++){
-        sum_start_loc[i] = sum_start_loc[i-1] + dim + 1;
-    }
+   int** sum_start_loc = new int*[n_eq+1];
+   sum_start_loc[0] = sum_start_loc_data;
+   for(int i=1; i<n_eq; i++)
+       sum_start_loc[i] = sum_start_loc[i-1] + dim + 1;
     
-    sum_array_size = total_n_sum*2+total_n_sum_pos;
-    sum_array = new int[sum_array_size]; // need to return
-    for(int i=0; i<total_n_sum*2+total_n_sum_pos; i++){
-        sum_array[i] = 0;
-    }
+   sum_array_size = total_n_sum*2+total_n_sum_pos;
+   sum_array = new int[sum_array_size]; // need to return
+   for(int i=0; i<total_n_sum*2+total_n_sum_pos; i++) sum_array[i] = 0;
 
-    sum_start = new int[total_n_sum+1]; // need to be return
-    int* sum_start_tmp = sum_start;
-    *sum_start_tmp = 0;
+   sum_start = new int[total_n_sum+1]; // need to be return
+   int* sum_start_tmp = sum_start;
+   *sum_start_tmp = 0;
     
-    for(int i=0; i<=max_sum_size; i++){
-        //cout << "size = " << i+2  << " n = " << sum_size_list[i].size() << endl;
-        for (vector<int_idx>::iterator it = sum_size_list[i].begin(); it!=sum_size_list[i].end(); ++it) {
-            //cout << "   " << (*it).eq_idx << " " << (*it).mon_idx << endl;
-            int eq_idx = (*it).eq_idx;
-            int x_idx = (*it).mon_idx;
-            sum_start_loc[eq_idx][x_idx] = *sum_start_tmp;
-            sum_array[*sum_start_tmp+1] = eq_idx + x_idx*dim;
-            *(sum_start_tmp+1) = (*sum_start_tmp) + i+2;
-            sum_start_tmp++;
-        }
-    }
+   for(int i=0; i<=max_sum_size; i++)
+   {
+      // cout << "size = " << i+2  << " n = "
+      //      << sum_size_list[i].size() << endl;
+      for(vector<int_idx>::iterator it = sum_size_list[i].begin();
+          it!=sum_size_list[i].end(); ++it)
+      {
+         // cout << "   " << (*it).eq_idx << " " << (*it).mon_idx << endl;
+         int eq_idx = (*it).eq_idx;
+         int x_idx = (*it).mon_idx;
+         sum_start_loc[eq_idx][x_idx] = *sum_start_tmp;
+         sum_array[*sum_start_tmp+1] = eq_idx + x_idx*dim;
+         *(sum_start_tmp+1) = (*sum_start_tmp) + i+2;
+         sum_start_tmp++;
+      }
+   }
     
-    /*for(int i=0; i<total_n_sum; i++){
+   /*for(int i=0; i<total_n_sum; i++)
+     {
         cout << i << " " << sum_start[i] << endl;
-    }*/
+     }*/
     
-    for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-        //cout << "eq " << eq_idx << endl;
-        for(int mon_idx=0; mon_idx < eq[eq_idx]->n_mon; mon_idx++){
-            int mon_start = mon_pos[eq_idx][mon_idx];
-            int mon_size = pos[mon_start];
-            //cout << "eq " << eq_idx << " mon_idx " << mon_idx << " mon_size " << mon_size << endl;
-            for(int i=1; i<mon_size+1; i++){
-                int x_idx = pos[mon_start+i];
-                int deri_start = sum_start_loc[eq_idx][x_idx];
-                int current_deri_size = sum_array[deri_start];
-                sum_array[deri_start+current_deri_size+2] = mon_start+i;
-                sum_array[deri_start]++;
-            }
-        }
-    }
-    
-    for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-        //cout << "eq[eq_idx]->n_mon = " << eq[eq_idx]->n_mon << endl;
-        int deri_start = sum_start_loc[eq_idx][dim];
-        //cout << "deri_start = " << deri_start << endl;
-        for(int mon_idx=0; mon_idx < eq[eq_idx]->n_mon; mon_idx++){
-            int mon_start = mon_pos[eq_idx][mon_idx];
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      //cout << "eq " << eq_idx << endl;
+      for(int mon_idx=0; mon_idx < eq[eq_idx]->n_mon; mon_idx++)
+      {
+         int mon_start = mon_pos[eq_idx][mon_idx];
+         int mon_size = pos[mon_start];
+         // cout << "eq " << eq_idx << " mon_idx " << mon_idx
+         //      << " mon_size " << mon_size << endl;
+         for(int i=1; i<mon_size+1; i++)
+         {
+            int x_idx = pos[mon_start+i];
+            int deri_start = sum_start_loc[eq_idx][x_idx];
             int current_deri_size = sum_array[deri_start];
-            //cout << "current_deri_size = " << current_deri_size << endl;
-            sum_array[deri_start+current_deri_size+2] = mon_start;
+            sum_array[deri_start+current_deri_size+2] = mon_start+i;
             sum_array[deri_start]++;
-        }
-    }
+         }
+      }
+   }
     
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      // cout << "eq[eq_idx]->n_mon = " << eq[eq_idx]->n_mon << endl;
+      int deri_start = sum_start_loc[eq_idx][dim];
+      // cout << "deri_start = " << deri_start << endl;
+      for(int mon_idx=0; mon_idx < eq[eq_idx]->n_mon; mon_idx++)
+      {
+         int mon_start = mon_pos[eq_idx][mon_idx];
+         int current_deri_size = sum_array[deri_start];
+         // cout << "current_deri_size = " << current_deri_size << endl;
+         sum_array[deri_start+current_deri_size+2] = mon_start;
+         sum_array[deri_start]++;
+      }
+   }
     
-    /*cout << "sum array" << endl;
-    for(int i=0; i<total_n_sum; i++){
+   /*cout << "sum array" << endl;
+     for(int i=0; i<total_n_sum; i++)
+     {
         int sum_start_tmp = sum_start[i];
-        for(int j=0; j<sum_array[sum_start_tmp]+2; j++){
+        for(int j=0; j<sum_array[sum_start_tmp]+2; j++)
+        {
             cout << sum_array[sum_start_tmp+j] << " ";
         }
         cout << endl;
-    }*/
+     }*/
             
-    
-    delete[] n_var_list;
-    delete[] sum_size;
-    delete[] sum_size_data;
-    delete[] mon_pos_data;
-    delete[] mon_pos;
-    delete[] sum_size_list;
-    delete[] sum_start_loc;
-    delete[] sum_start_loc_data;
+   delete[] n_var_list;
+   delete[] sum_size;
+   delete[] sum_size_data;
+   delete[] mon_pos_data;
+   delete[] mon_pos;
+   delete[] sum_size_list;
+   delete[] sum_start_loc;
+   delete[] sum_start_loc_data;
 }
-
