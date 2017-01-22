@@ -4,6 +4,7 @@
 #define PATH_MULTI_TEST_H_
 
 #include "path_test.h"
+#include "polysol.h"
 
 bool path_multiple_test
  ( Workspace& workspace_cpu, CPUInstHom& cpu_inst_hom,
