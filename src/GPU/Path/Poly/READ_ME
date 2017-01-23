@@ -9,3 +9,5 @@ linklist               : templated linked list
 poly                   : defines polynomials, systems and homotopies
 polysol                : solutions of polynomial homotopies
 -------------------------------------------------------------------------------
+test_poly              : simple test on the functions in poly
+-------------------------------------------------------------------------------
