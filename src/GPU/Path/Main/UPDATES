@@ -1,5 +1,6 @@
 Sun 22 Jan 2017 : reformatted code in pieri_test.h and pieri_test.cpp.
   Inserted missing #include in path_multi_test.h.
+  Reformatted code in witness_set_test.h and witness_set_test.cpp.
 
 Sun 4 Sep 2016 : fixes in ada_test_dd.cpp and ada_test_qd.cpp for
   the g++ Apple LLVM version 7.3.0.
