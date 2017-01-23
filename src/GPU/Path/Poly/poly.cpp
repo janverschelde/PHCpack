@@ -618,11 +618,12 @@ void PolySys::read_file ( const string& file_name )
    }
    // dim = pos_dict.n_job;
    pos_var = pos_dict.reverse();
+   /*
    std::cout << "dim = " << dim << std::endl;
    for(int var_idx=0; var_idx<dim; var_idx++)
    {
       std::cout << var_idx << " " << pos_var[var_idx] << std::endl;
-   }
+   }*/
 }
 
 void PolySys::read_file ( ifstream& myfile, VarDict& pos_dict )
@@ -683,11 +684,12 @@ void PolySys::read_file ( ifstream& myfile, VarDict& pos_dict )
             tmp_eq_space++;
             n_eq_file++;
             // std::cout << "n_eq_file = " << n_eq_file << std::endl;
+            /* the following is not an error
             if(n_eq_file >= n_eq)
             {
                cout << "Error: too many lines" << endl;
                break;
-            }
+            }*/
             line = "";
          }
       }

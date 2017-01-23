@@ -27,7 +27,7 @@ class Dict
       // Constructor builds an empty dictionary.
       ~Dict() // Destructor
       {
-         cout << "Dictionary destructed" << endl;
+         // cout << "Dictionary destructed" << endl;
       }
 
       int at ( T job_key );

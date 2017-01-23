@@ -1,3 +1,6 @@
+Mon 23 Jan 2017 : suppressed a superfluous error message in poly.cpp
+  and extra printing in dict.h when reading a polynomial system from file.
+
 Sun 22 Jan 2017 : new test program test_poly.cpp, with a new makefile.
 
 Sat 21 Jan 2017 : reformatted code of poly.h and poly.cpp.
