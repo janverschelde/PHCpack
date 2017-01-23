@@ -1,5 +1,6 @@
 Sat 21 Jan 2017 : reformatted code of poly.h and poly.cpp.
   More reformatting in dict.h and polysol.cpp.
+  Reformatting in linklist.h and linklist.tpp.
 
 Thu 19 Jan 2017 : reformatted the code in utilities.cpp, utilities.h,
   and polysol.cpp.  More edits in poly.cpp.

@@ -5,139 +5,136 @@
 
 using namespace std;
 
-/// Locate the monomial from the string
-/**
-Recording the monomial start & end positions, and coefficent.
-*/
+// Locate the monomial from the string
+/*
+   Recording the monomial start & end positions, and coefficent.
+ */
+
 template <class T>
-class MonData{
-public:
-	/// start position in the string
-	int start;
-	/// end position in the string
-	int end;
-	/// coefficient of the monomial
-	T coef;
+class MonData
+{
+   public:
 
+      int start; // start position in the string
+      int end;   // end position in the string
+      T coef;    // coefficient of the monomial
 
-	/// A constructor.
-	/**
-	@param s an integer argument.
-	@param e a constant character pointer.
-	*/
-	MonData(int s, int e, T c){
-		start = s;
-		end = e;
-		coef = c;
-	}
+      MonData ( int s, int e, T c ) // constructor
+      /*
+         @param s an integer argument.
+         @param e a constant character pointer.
+       */
+      {
+         start = s;
+         end = e;
+         coef = c;
+      }
 
-	/// A print function
-	/**    
-	Print the data of MonData instant. 
-	*/
-	void print(){
-		cout << start << " " << end << " " << coef << endl;
-	}
+      void print() // prints the data in a MonData object
+      {
+         cout << start << " " << end << " " << coef << endl;
+      }
 };
 
-/// Linked node
-/**
-LinkNode to be used in the LinkList
-*/
+// Linked node
+/*
+   LinkNode to be used in the LinkList
+ */
+
 template <class T>
-class LinkNode{
-public:
-	/// Data in the node
-	T data;
-	/// Address of the next linked node
-	LinkNode* next;
+class LinkNode
+{
+   public:
 
-	/// A constructor
-	/**
-	Create of a new node of new_data.
-	@param new_data a T type of data
-	*/
-	LinkNode(T new_data){
-		data = new_data;
-		next = NULL;
-	}
+      T data; // data in the node
+      LinkNode* next; // address of the next linked node
 
-	/// A constructor function
-	/**
-	Create a new node of new_data and link to the current node.
-	@param new_data a T type of data
-	@return Address of the new node
-	@sa LinkNode()
-	*/
-	LinkNode* append(T new_data);
-	void print();
-	void print_class();
+      LinkNode ( T new_data ) // constructor
+      /*
+         Creation of a new node of new_data.
+         @param new_data a T type of data
+       */
+      {
+         data = new_data;
+         next = NULL;
+      }
+
+      LinkNode* append ( T new_data );
+      // A constructor function
+      /*
+         Creates a new node of new_data and link to the current node.
+         @param new_data a T type of data
+         @return Address of the new node
+         @sa LinkNode()
+       */
+
+      void print();
+      void print_class();
 };
 
-/// linked list based on LinkNode
-/**
-A linked list based on LinkNode
-*/
+// linked list based on LinkNode
+/*
+   A linked list based on LinkNode
+ */
 
 template <class T>
-class LinkList{
-public:
-	/// Header of the LinkList
-	LinkNode<T>* link_header;
+class LinkList
+{
+   public:
 
-	/// Last node of the LinkList
-	LinkNode<T>* link_last;
+      LinkNode<T>* link_header; // Header of the LinkList
 
-	/// Number of Nodes in the LinkList
-	int n_node;
+      LinkNode<T>* link_last; // Last node of the LinkList
 
-	/// A constructor
-	/**
-	Create a zero node as the header;
-	*/
-	LinkList(){
-		link_header = new LinkNode<T>(0);
-		link_last = link_header;
-		n_node = 0;
-	}
+      int n_node; // Number of Nodes in the LinkList
+
+      LinkList() // constructor
+      /*
+         Create a zero node as the header;
+       */
+      {
+         link_header = new LinkNode<T>(0);
+         link_last = link_header;
+         n_node = 0;
+      }
 	
-	LinkNode<T>* header(){
-		return link_header->next;
-	}
+      LinkNode<T>* header()
+      {
+         return link_header->next;
+      }
 
-	/// Append a new node with new_data
-	/**
-	Use LinkNode::append to creat a new node of new_data
-	and append it to the NodeList. 
-	Increase n_node by 1;
-	/param new_data a data of T type
-	/sa LinkNode::append
-	*/
-	void append(T new_data);
+      void append(T new_data);
+      // Append a new node with new_data
+      /*
+         Use LinkNode::append to creat a new node of new_data
+         and append it to the NodeList. 
+         Increase n_node by 1;
+         /param new_data a data of T type
+         /sa LinkNode::append
+       */
 
-	/// Print the list
-	/**
-	Print the data of the list. Header is skipped.
-	*/
-	void print();
+      void print(); // prints the list
+      /*
+         Prints the data of the list.  The header is skipped.
+       */
 
-	/// Print the list of a certain class
-	/**
-	Use the print method in the class to print the list.
-	Header is skipped.
-	*/
-	void print_class();
+      void print_class(); // prints the list of a certain class
+      /*
+         Uses the print method in the class to print the list.
+         The header is skipped.
+       */
 
-	/// Destructor for linked list of simple data
-	/**
-	Delete every node in the list
-	*/
-	void destroy();
-	/// Destructor for linked list of certain class
-	/**
-	Delete every node and its data in the list
-	*/
-	void destroy_class();
+      void destroy();
+      // destructor for linked list of simple data
+      /*
+         Deletes every node in the list.
+       */
+
+      void destroy_class();
+      // destructor for linked list of certain class
+      /*
+         Deletes every node and its data in the list.
+       */
 };
 
 #include "linklist.tpp"

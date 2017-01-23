@@ -4,6 +4,8 @@ for use in the code to accelerate the path tracking on the GPU.
 -------------------------------------------------------------------------------
 file name              : short description
 -------------------------------------------------------------------------------
+linklist               : templated linked list
+-------------------------------------------------------------------------------
 poly                   : defines polynomials, systems and homotopies
 polysol                : solutions of polynomial homotopies
 -------------------------------------------------------------------------------
