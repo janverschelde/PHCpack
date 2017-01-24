@@ -4,9 +4,14 @@ This directory is the reworked PATH_CPU subdirectory of the Path directory.
 The code is reworked to use templates properly.
 
 -------------------------------------------------------------------------------
-file name         : short description
+file name          : short description
 -------------------------------------------------------------------------------
-mgs_host.h        : templated prototypes for the modified Gram-Schmidt method
-mgs_host.tpp      : definition of the prototyped functions in mgs_host.h
-test_mgs          : test on solving a random linear system with mgs_host
+mgs_host.h         : templated prototypes for the modified Gram-Schmidt method
+mgs_host.tpp       : definition of the prototyped functions in mgs_host.h
+test_mgs           : test on solving a random linear system with mgs_host
+-------------------------------------------------------------------------------
+workspace_host.h   : prototypes for all data during the path tracking
+workspace_host.tpp : definition of templated methods of workspace_host.h
+path_data.h        : data structures for the path trackers
+path_data.tpp      : definition of templated code of path_data.h
 -------------------------------------------------------------------------------
