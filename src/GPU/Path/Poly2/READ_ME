@@ -1,0 +1,20 @@
+Polynomials and solutions in the Path library, in PHCv2.4.34
+
+This directory is the reworked Poly subdirectory of the Path directory.
+Poly defines the data structures for the code on the host.
+The code is reworked to use templates properly.
+
+-------------------------------------------------------------------------------
+file name         : short description
+-------------------------------------------------------------------------------
+dict.h            : dictionary for the symbols of variabes
+linklist.h        : templated linked list
+linklist.tpp      : definitions of the templated code of linklist
+-------------------------------------------------------------------------------
+utilities.h       : templated prototypes of utility functions
+utilities.tpp     : definitions of the code prototyped in utilities.h
+poly.h            : templated data structures for polynomials and systems
+poly.tpp          : definitions of the templated code of poly.h 
+-------------------------------------------------------------------------------
+test_poly         : simple test on the functions in poly
+-------------------------------------------------------------------------------
