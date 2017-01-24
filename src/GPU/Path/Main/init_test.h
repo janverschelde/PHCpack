@@ -5,6 +5,7 @@
 
 #include "families.h"
 #include "eval_host.h"
+#include "polysol.h"
 
 bool init_homotopy_test
  ( PolySys& Target_Sys, PolySys& Start_Sys, PolySolSet& sol_set,

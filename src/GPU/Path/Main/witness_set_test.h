@@ -8,6 +8,7 @@
 #include "eval_host.h"
 #include "path_gpu.h"
 #include "path_test.h"
+#include "polysol.h"
 
 int witness_set_test
  ( Workspace& workspace_cpu, CPUInstHom& cpu_inst_hom,
