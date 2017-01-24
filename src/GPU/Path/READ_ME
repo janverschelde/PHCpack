@@ -1,4 +1,4 @@
-Accelerated Path Tracking in the software package PHCv2.3.99
+Accelerated Path Tracking in the software package PHCv2.4.34
 
 The code is developed on the NVIDIA K20C with g++ and the CUDA SDK.
 It requires the QD and the GQD libraries.
@@ -11,11 +11,18 @@ Objects       : contains makefiles and .o files
 DefineTypesD  : headers specific for double precision
 DefineTypesDD : headers specific for double double precision
 DefineTypesQD : headers specific for quad double precision
+Host          : revised Path_CPU with proper templated code
 Main          : main programs
 Path_CPU      : path tracking on the host, the CPU
 Path_GPU      : path tracking on the device, the GPU
 Poly          : defines data structures for polynomials
+Poly2         : revised Poly with proper templated code
 Test          : code to link with PHClib
 
 The standalone binaries are designed for benchmarking purposes
 and work in several modes.
+
+The library was first released in version 2.3.99 of PHCpack,
+and made accessible in version 0.2.9 of phcpy.
+Currently, the code is being revised for a better distribution,
+integration, and future development.
