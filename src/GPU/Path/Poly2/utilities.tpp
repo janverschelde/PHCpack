@@ -1,7 +1,7 @@
 // utilities.tpp contains the definitions of the functions with
 // prototypes in utilities.h
 
-int log2ceil(int n)
+int log2ceil ( int n )
 {
    n = 2*n-1;
    int log2n = 0;
@@ -37,7 +37,7 @@ void string_stop
    }
 }
 
-string get_number_string( const string& mon_string, int& loc, int l )
+string get_number_string ( const string& mon_string, int& loc, int l )
 {
    string number_string;
 
@@ -77,10 +77,10 @@ string get_number_string( const string& mon_string, int& loc, int l )
    return number_string;
 }
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 ComplexType get_complex_number ( ifstream& myfile )
 {
-   T1 tmp_real, tmp_imag;
+   RealType tmp_real, tmp_imag;
    myfile >> tmp_real;
    myfile >> tmp_imag;
    return ComplexType(tmp_real, tmp_imag);
@@ -279,8 +279,8 @@ ComplexType get_coef_real ( const string& mon_string, int& loc )
    return coef;
 }
 
-template <class T1>
-void print_matrix ( T1** m, int row, int col )
+template <class RealType>
+void print_matrix ( RealType** m, int row, int col )
 {
    // int width = 6;
    for(int i=0; i<row; i++)
@@ -293,8 +293,8 @@ void print_matrix ( T1** m, int row, int col )
    }
 };
 
-template <class T1>
-void print_vector ( T1* v, int n )
+template <class RealType>
+void print_vector ( RealType* v, int n )
 {
    // int width = 6;
    for(int i=0; i<n; i++)
@@ -305,13 +305,13 @@ void print_vector ( T1* v, int n )
 };
 
 
-template <class T1>
-void print_result ( T1* v, T1** m, int dim, int n_eq )
+template <class RealType>
+void print_result ( RealType* v, RealType** m, int dim, int n_eq )
 {
    std::cout << "f =" << endl;
-   print_vector<T1>(v, n_eq);
+   print_vector<RealType>(v, n_eq);
    std::cout << "deri ="<< endl;
-   print_matrix<T1>(m, n_eq, dim);
+   print_matrix<RealType>(m, n_eq, dim);
 };
 
 void print_size ( size_t tmp_size_B )
@@ -366,41 +366,41 @@ double* rand_val ( int dim )
    return val;
 }
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 ComplexType* rand_val_complex ( int dim )
 {
    ComplexType* val = new ComplexType[dim];
-   T1 zero = 0.0;
+   RealType zero = 0.0;
    for(int i=0; i< dim; i++)
    {
-      // T1 tmp = T1(rand())/T1(RAND_MAX);
+      // RealType tmp = RealType(rand())/RealType(RAND_MAX);
       // val[i] = ComplexType(double(i+1), 0.0);
-      T1 tmp = T1(1)/T1(i+2);
-      T1 tmp1 = T1(i+2)/T1(i+3);
+      RealType tmp = RealType(1)/RealType(i+2);
+      RealType tmp1 = RealType(i+2)/RealType(i+3);
       val[i] = ComplexType(tmp, tmp1);
    }
    return val;
 }
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 ComplexType* rand_val_complex_frac ( int dim )
 {
    ComplexType* val = new ComplexType[dim];
-   T1 zero = 0.0;
+   RealType zero = 0.0;
    for(int i=0; i< dim; i++)
    {
-      T1 tmp = T1(1)/T1(i+2);
-      T1 tmp1 = T1(i+2)/T1(i+3);
+      RealType tmp = RealType(1)/RealType(i+2);
+      RealType tmp1 = RealType(i+2)/RealType(i+3);
       val[i] = ComplexType(tmp, tmp1);
    }
    return val;
 }
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 ComplexType* rand_val_complex_one ( int dim )
 {
    ComplexType* val = new ComplexType[dim];
-   T1 zero = 0.0;
+   RealType zero = 0.0;
    for(int i=0; i< dim; i++)
    {
       val[i] = ComplexType(1.0, 0.0);
@@ -408,11 +408,11 @@ ComplexType* rand_val_complex_one ( int dim )
    return val;
 }
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 ComplexType* rand_val_complex_n ( int dim )
 {
    ComplexType* val = new ComplexType[dim];
-   T1 zero = 0.0;
+   RealType zero = 0.0;
    for(int i=0; i< dim; i++)
    {
       val[i] = ComplexType(double(i+1), 0.0);
@@ -420,28 +420,28 @@ ComplexType* rand_val_complex_n ( int dim )
    return val;
 }
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 ComplexType* rand_val_complex_unit(int dim)
 {
    ComplexType* val = new ComplexType[dim];
-   T1 zero = 0.0;
+   RealType zero = 0.0;
    for(int i=0; i<dim; i++)
    {
       int r = rand();
-      T1 tmp = T1(r);
+      RealType tmp = RealType(r);
       val[i].init(sin(tmp),cos(tmp));
    }
    return val;
 }
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 ComplexType* rand_val_complex_unit_n( int dim )
 {
    ComplexType* val = new ComplexType[dim];
-   T1 zero = 0.0;
+   RealType zero = 0.0;
    for(int i=0; i<dim; i++)
    {
-      T1 tmp = T1(i+1);
+      RealType tmp = RealType(i+1);
       val[i].init(sin(tmp),cos(tmp));
    }
    return val;
@@ -459,8 +459,8 @@ string* var_list ( int dim, string v )
    return vars;
 }
 
-template <class T1>
-void print_number ( T1 v )
+template <class RealType>
+void print_number ( RealType v )
 {
    if(v > 0)
    {
@@ -472,35 +472,35 @@ void print_number ( T1 v )
    }
 }
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 void print_number_complex ( ComplexType v )
 {
-   T1 v_real = v.real;
-   T1 v_imag = v.imag;
+   RealType v_real = v.real;
+   RealType v_imag = v.imag;
    if(v_real != 0 && v_imag!= 0)
    {
       cout << " + (";
-      print_number<T1>(v_real);
-      print_number<T1>(v_imag);
+      print_number<RealType>(v_real);
+      print_number<RealType>(v_imag);
       cout << "*i )";
    }
    else if(v_real != 0)
    {
-      print_number<T1>(v_real);
+      print_number<RealType>(v_real);
    }
    else if(v.imag != 0)
    {
-      print_number<T1>(v_imag);
+      print_number<RealType>(v_imag);
    }
 }
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 void print_coef_complex ( ComplexType coef )
 {
    if(coef.real != 1.0 or coef.imag != 0.0)
    {
       //cout << coef;
-      print_number_complex<ComplexType,T1>(coef);
+      print_number_complex<ComplexType,RealType>(coef);
       cout <<  " * ";
    }
    else
@@ -529,7 +529,6 @@ void cpu_speel_with_base0
    deri[1] = coef;
 }
 
-// speelpenning on CPU
 template <class ComplexType>
 void cpu_speel
  ( const ComplexType* x_val, unsigned short* pos, ComplexType* deri,
@@ -565,7 +564,6 @@ void cpu_speel
    //std::cout << "deri[0] = " << deri[0];
 }
 
-// speelpenning on CPU
 template <class ComplexType>
 void cpu_speel_with_base
  ( const ComplexType* x_val, unsigned short* pos, unsigned short* exp,

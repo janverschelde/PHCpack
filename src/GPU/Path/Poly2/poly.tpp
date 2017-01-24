@@ -49,8 +49,8 @@ std::vector<std::string> split ( const std::string &s, char delim )
    return elems;
 }
 
-template <class ComplexType, class T1>
-void PolyMon<ComplexType,T1>::read
+template <class ComplexType, class RealType>
+void PolyMon<ComplexType,RealType>::read
  ( const string& mon_string, VarDict& pos_dict )
 {
    int end = mon_string.length();
@@ -59,16 +59,16 @@ void PolyMon<ComplexType,T1>::read
    read(mon_string, pos_dict, loc, end, coef);
 }
 
-template <class ComplexType, class T1>
-void PolyMon<ComplexType,T1>::read
+template <class ComplexType, class RealType>
+void PolyMon<ComplexType,RealType>::read
  ( const string& mon_string, VarDict& pos_dict, ComplexType coef )
 {
    int end = mon_string.length();
    read(mon_string, pos_dict, 0, end, coef);
 }
 
-template <class ComplexType, class T1>
-void PolyMon<ComplexType,T1>::read
+template <class ComplexType, class RealType>
+void PolyMon<ComplexType,RealType>::read
  ( const string& eq_string, VarDict& pos_dict, int start, int end,
    ComplexType coef )
 {
@@ -170,8 +170,8 @@ void PolyMon<ComplexType,T1>::read
    update_base();
 }
 
-template <class ComplexType, class T1>
-void PolyMon<ComplexType,T1>::update_base()
+template <class ComplexType, class RealType>
+void PolyMon<ComplexType,RealType>::update_base()
 {
    n_base = 0;
    for(int var_idx=0; var_idx<n_var; var_idx++)
@@ -194,8 +194,8 @@ void PolyMon<ComplexType,T1>::update_base()
    }
 }
 
-template <class ComplexType, class T1>
-ComplexType PolyMon<ComplexType,T1>::speel
+template <class ComplexType, class RealType>
+ComplexType PolyMon<ComplexType,RealType>::speel
  ( const ComplexType* x_val, ComplexType* deri )
 {
    deri[1] = x_val[pos[0]];
@@ -213,8 +213,8 @@ ComplexType PolyMon<ComplexType,T1>::speel
    return tmp*x_val[pos[0]];
 }
 
-template <class ComplexType, class T1>
-ComplexType PolyMon<ComplexType,T1>::speel_with_base
+template <class ComplexType, class RealType>
+ComplexType PolyMon<ComplexType,RealType>::speel_with_base
  ( const ComplexType* x_val, ComplexType* deri, ComplexType base )
 {
    deri[1] = x_val[pos[0]];
@@ -236,8 +236,8 @@ ComplexType PolyMon<ComplexType,T1>::speel_with_base
    return tmp*x_val[pos[0]];
 }
 
-template <class ComplexType, class T1>
-ComplexType PolyMon<ComplexType,T1>::eval ( const ComplexType* x_val )
+template <class ComplexType, class RealType>
+ComplexType PolyMon<ComplexType,RealType>::eval ( const ComplexType* x_val )
 {
    ComplexType val = coef;
 
@@ -246,8 +246,8 @@ ComplexType PolyMon<ComplexType,T1>::eval ( const ComplexType* x_val )
    return val;
 }
 
-template <class ComplexType, class T1>
-ComplexType PolyMon<ComplexType,T1>::eval_base
+template <class ComplexType, class RealType>
+ComplexType PolyMon<ComplexType,RealType>::eval_base
  ( const ComplexType* x_val, ComplexType** deg_table )
 {
    ComplexType val = coef;
@@ -258,16 +258,16 @@ ComplexType PolyMon<ComplexType,T1>::eval_base
    return val;
 }
 
-template <class ComplexType, class T1>
-ComplexType PolyMon<ComplexType,T1>::eval
+template <class ComplexType, class RealType>
+ComplexType PolyMon<ComplexType,RealType>::eval
  ( const ComplexType* x_val, ComplexType* deri )
 {
    ComplexType val = speel(x_val, deri);
    return val;
 }
 
-template <class ComplexType, class T1>
-ComplexType PolyMon<ComplexType,T1>::eval
+template <class ComplexType, class RealType>
+ComplexType PolyMon<ComplexType,RealType>::eval
  ( const ComplexType* x_val, ComplexType* deri, ComplexType** deg_table )
 {
    ComplexType base = eval_base(x_val, deg_table);
@@ -276,8 +276,8 @@ ComplexType PolyMon<ComplexType,T1>::eval
    return val;
 }
 
-template <class ComplexType, class T1>
-ComplexType PolyEq<ComplexType,T1>::eval ( const ComplexType* x_val )
+template <class ComplexType, class RealType>
+ComplexType PolyEq<ComplexType,RealType>::eval ( const ComplexType* x_val )
 {
    ComplexType val = constant;
 
@@ -286,8 +286,8 @@ ComplexType PolyEq<ComplexType,T1>::eval ( const ComplexType* x_val )
    return val;
 }
 
-template <class ComplexType, class T1>
-ComplexType PolyEq<ComplexType,T1>::eval
+template <class ComplexType, class RealType>
+ComplexType PolyEq<ComplexType,RealType>::eval
  ( const ComplexType* x_val, ComplexType* deri )
 {
    for(int i=0; i<dim; i++)
@@ -301,7 +301,7 @@ ComplexType PolyEq<ComplexType,T1>::eval
 
    for(int i=0; i<n_mon; i++)
    {
-      PolyMon<ComplexType,T1>* m = mon[i];
+      PolyMon<ComplexType,RealType>* m = mon[i];
       val += m->eval(x_val, mon_deri);
 
       for(int j=0; j<m->n_var; j++)
@@ -314,8 +314,8 @@ ComplexType PolyEq<ComplexType,T1>::eval
    return val;
 }
 
-template <class ComplexType, class T1>
-ComplexType PolyEq<ComplexType,T1>::eval
+template <class ComplexType, class RealType>
+ComplexType PolyEq<ComplexType,RealType>::eval
  ( const ComplexType* x_val, ComplexType* deri, ComplexType** deg_table )
 {
    for(int i=0; i<dim; i++)
@@ -329,7 +329,7 @@ ComplexType PolyEq<ComplexType,T1>::eval
    for(int mon_idx=0; mon_idx<n_mon; mon_idx++)
    {
       // std::cout << "mon " << mon_idx << std::endl;
-      PolyMon<ComplexType,T1>* m = mon[mon_idx];
+      PolyMon<ComplexType,RealType>* m = mon[mon_idx];
       val += m->eval(x_val, mon_deri, deg_table);
       for(int j=0; j<m->n_var; j++)
       {
@@ -341,8 +341,8 @@ ComplexType PolyEq<ComplexType,T1>::eval
    return val;
 }
 
-template <class ComplexType, class T1>
-ComplexType* PolySys<ComplexType,T1>::eval ( const ComplexType* x_val )
+template <class ComplexType, class RealType>
+ComplexType* PolySys<ComplexType,RealType>::eval ( const ComplexType* x_val )
 {
    ComplexType* val = new ComplexType[n_eq];
 
@@ -351,8 +351,8 @@ ComplexType* PolySys<ComplexType,T1>::eval ( const ComplexType* x_val )
    return val;
 }
 
-template <class ComplexType, class T1>
-ComplexType* PolySys<ComplexType,T1>::eval
+template <class ComplexType, class RealType>
+ComplexType* PolySys<ComplexType,RealType>::eval
  ( const ComplexType* x_val, ComplexType** deri_val )
 {
    ComplexType* val = new ComplexType[n_eq];
@@ -362,8 +362,8 @@ ComplexType* PolySys<ComplexType,T1>::eval
    return val;
 }
 
-template <class ComplexType, class T1>
-void PolySys<ComplexType,T1>::balance_eq ( const ComplexType* x_val )
+template <class ComplexType, class RealType>
+void PolySys<ComplexType,RealType>::balance_eq ( const ComplexType* x_val )
 {
    ComplexType* f_val = eval(x_val);
 
@@ -371,8 +371,9 @@ void PolySys<ComplexType,T1>::balance_eq ( const ComplexType* x_val )
       eq[eq_idx]->constant -= f_val[eq_idx];
 }
 
-template <class ComplexType, class T1>
-ComplexType** PolySys<ComplexType,T1>::eval_deg ( const ComplexType* x_val )
+template <class ComplexType, class RealType>
+ComplexType** PolySys<ComplexType,RealType>::eval_deg
+ ( const ComplexType* x_val )
 {
    // std::cout << "eval_deg" << std::endl;
    // Allocate memory
@@ -411,8 +412,8 @@ ComplexType** PolySys<ComplexType,T1>::eval_deg ( const ComplexType* x_val )
    return deg_table;
 }
 
-template <class ComplexType, class T1>
-void PolySys<ComplexType,T1>::eval
+template <class ComplexType, class RealType>
+void PolySys<ComplexType,RealType>::eval
  ( const ComplexType* x_val, ComplexType* f_val, ComplexType** deri_val )
 {
    if(eval_base)
@@ -436,11 +437,11 @@ void PolySys<ComplexType,T1>::eval
    }
 }
 
-template <class ComplexType, class T1>
-void PolyMon<ComplexType,T1>::print ( const string* pos_var )
+template <class ComplexType, class RealType>
+void PolyMon<ComplexType,RealType>::print ( const string* pos_var )
 {
    // print coef
-   print_coef_complex<ComplexType,T1>(coef);
+   print_coef_complex<ComplexType,RealType>(coef);
    // cout << endl;
    cout << pos_var[pos[0]];
    if(exp[0]!= 1) cout << '^' << exp[0];
@@ -451,15 +452,16 @@ void PolyMon<ComplexType,T1>::print ( const string* pos_var )
    }
 }
 
-template <class ComplexType, class T1>
-void PolyEq<ComplexType,T1>::read ( const string& eq_string, VarDict& pos_dict )
+template <class ComplexType, class RealType>
+void PolyEq<ComplexType,RealType>::read
+ ( const string& eq_string, VarDict& pos_dict )
 {
    int l = eq_string.length();
    read(eq_string, pos_dict, 0, l);
 }
 
-template <class ComplexType, class T1>
-void PolyEq<ComplexType,T1>::read
+template <class ComplexType, class RealType>
+void PolyEq<ComplexType,RealType>::read
  ( const string& eq_string, VarDict& pos_dict, int start, int end )
 {
    n_mon = 0;
@@ -506,7 +508,8 @@ void PolyEq<ComplexType,T1>::read
          {
             n_mon++;
             // std::cout << "n_mon = " << n_mon << std::endl;
-            PolyMon<ComplexType,T1>* mm = new PolyMon<ComplexType,T1>;
+            PolyMon<ComplexType,RealType>* mm
+               = new PolyMon<ComplexType,RealType>;
             mm->read(eq_string, pos_dict, mon_start, i, tmp_coef);
             mon.push_back(mm);
             mon_start = i;
@@ -526,7 +529,7 @@ void PolyEq<ComplexType,T1>::read
       if(mon_start < end)
       {
          n_mon++;
-         PolyMon<ComplexType,T1>* mm = new PolyMon<ComplexType,T1>;
+         PolyMon<ComplexType,RealType>* mm = new PolyMon<ComplexType,RealType>;
          mm->read(eq_string, pos_dict, mon_start, end, tmp_coef);
          mon.push_back(mm);
       }
@@ -538,18 +541,18 @@ void PolyEq<ComplexType,T1>::read
    dim = pos_dict.n_job;
 }
 
-template <class ComplexType, class T1>
-void PolyEq<ComplexType,T1>::print(const string* pos_var)
+template <class ComplexType, class RealType>
+void PolyEq<ComplexType,RealType>::print(const string* pos_var)
 {
    // std::cout << "n_mon = " << n_mon << std::endl;
    for(int i=0; i<n_mon; i++) mon[i]->print(pos_var);
 
-   print_number_complex<ComplexType,T1>(constant);
+   print_number_complex<ComplexType,RealType>(constant);
    cout << endl;
 }
 
-template <class ComplexType, class T1>
-void PolySys<ComplexType,T1>::print()
+template <class ComplexType, class RealType>
+void PolySys<ComplexType,RealType>::print()
 {
    cout << "dim = " << dim << ", n_eq = " << n_eq << endl;
    for(int i=0; i<n_eq; i++)
@@ -559,8 +562,8 @@ void PolySys<ComplexType,T1>::print()
    }
 }
 
-template <class ComplexType, class T1>
-void PolySys<ComplexType, T1>::read
+template <class ComplexType, class RealType>
+void PolySys<ComplexType, RealType>::read
  ( const string& sys_string, VarDict& pos_dict )
 {
    int l = sys_string.length();
@@ -600,7 +603,7 @@ void PolySys<ComplexType, T1>::read
    int eq_start = tmp->data;
    for(int i=0; i<n_eq; i++)
    {
-      PolyEq<ComplexType,T1>* new_eq = new PolyEq<ComplexType,T1>();
+      PolyEq<ComplexType,RealType>* new_eq = new PolyEq<ComplexType,RealType>();
       tmp = tmp->next;
       int eq_end = tmp->data;
       // cout << n_eq << " "<< eq_start <<" " << eq_end<< endl;
@@ -618,8 +621,8 @@ void PolySys<ComplexType, T1>::read
    // dim = pos_dict.n_job;
 }
 
-template <class ComplexType, class T1>
-void PolySys<ComplexType,T1>::read
+template <class ComplexType, class RealType>
+void PolySys<ComplexType,RealType>::read
  ( const string* sys_string, int n_eq, VarDict& pos_dict )
 {
    eq.reserve(n_eq);
@@ -628,8 +631,8 @@ void PolySys<ComplexType,T1>::read
 
    // Here is confusion, I should use either vector or array, 
    // but not to mix them
-   eq_space = new PolyEq<ComplexType,T1>[n_eq];
-   PolyEq<ComplexType,T1>* tmp_eq_space = eq_space;
+   eq_space = new PolyEq<ComplexType,RealType>[n_eq];
+   PolyEq<ComplexType,RealType>* tmp_eq_space = eq_space;
    for(int i=0; i< n_eq; i++)
    {
       tmp_eq_space->read(sys_string[i], pos_dict);
@@ -641,8 +644,8 @@ void PolySys<ComplexType,T1>::read
    update_max_deg_base();
 }
 
-template <class ComplexType, class T1>
-void PolySys<ComplexType,T1>::read_file ( const string& file_name )
+template <class ComplexType, class RealType>
+void PolySys<ComplexType,RealType>::read_file ( const string& file_name )
 {
    VarDict pos_dict;
    ifstream myfile (file_name.c_str());
@@ -665,8 +668,9 @@ void PolySys<ComplexType,T1>::read_file ( const string& file_name )
    }*/
 }
 
-template <class ComplexType, class T1>
-void PolySys<ComplexType,T1>::read_file ( ifstream& myfile, VarDict& pos_dict )
+template <class ComplexType, class RealType>
+void PolySys<ComplexType,RealType>::read_file
+ ( ifstream& myfile, VarDict& pos_dict )
 {
    string line;
    getline(myfile,line);
@@ -690,8 +694,8 @@ void PolySys<ComplexType,T1>::read_file ( ifstream& myfile, VarDict& pos_dict )
       n_eq = dim;
    }
    eq.reserve(n_eq);
-   eq_space = new PolyEq<ComplexType,T1>[n_eq];
-   PolyEq<ComplexType,T1>* tmp_eq_space = eq_space;
+   eq_space = new PolyEq<ComplexType,RealType>[n_eq];
+   PolyEq<ComplexType,RealType>* tmp_eq_space = eq_space;
    /*for(int i=0; i< n_eq; i++)
      {
         eq.push_back(tmp_eq_space);
@@ -739,8 +743,8 @@ void PolySys<ComplexType,T1>::read_file ( ifstream& myfile, VarDict& pos_dict )
    update_max_deg_base();
 }
 
-template <class ComplexType, class T1>
-void PolyMon<ComplexType,T1>::update_max_deg ( int* max_deg )
+template <class ComplexType, class RealType>
+void PolyMon<ComplexType,RealType>::update_max_deg ( int* max_deg )
 {
    for(int i=0; i<n_var; i++)
    {
@@ -749,8 +753,8 @@ void PolyMon<ComplexType,T1>::update_max_deg ( int* max_deg )
    }
 }
 
-template <class ComplexType, class T1>
-void PolyEq<ComplexType,T1>::update_max_deg ( int* max_deg )
+template <class ComplexType, class RealType>
+void PolyEq<ComplexType,RealType>::update_max_deg ( int* max_deg )
 {
    for(int i=0; i<n_mon; i++)
    {
@@ -759,8 +763,8 @@ void PolyEq<ComplexType,T1>::update_max_deg ( int* max_deg )
    }
 }
 
-template <class ComplexType, class T1>
-void PolySys<ComplexType,T1>::update_max_deg_base()
+template <class ComplexType, class RealType>
+void PolySys<ComplexType,RealType>::update_max_deg_base()
 {
    max_deg_base = new int[dim];
    for(int i=0; i<dim; i++)
@@ -943,8 +947,8 @@ int PolySys::job_number_block ( int start_level )
    return n_job_block_est;
 }*/
 
-template <class ComplexType, class T1>
-void PolySys<ComplexType,T1>::gpu_mon
+template <class ComplexType, class RealType>
+void PolySys<ComplexType,RealType>::gpu_mon
  ( int& dim, int& level, int& workspace_size, int*& workspace_level,
    int*& n_mon_level, int& pos_size, unsigned short*& pos, int*& pos_level,
    int& sum_level, int*& n_sum_level,
@@ -958,7 +962,7 @@ void PolySys<ComplexType,T1>::gpu_mon
    // Count the largest n_var and the total n_mon
    for(int i=0; i<n_eq; i++)
    {
-      PolyEq<ComplexType,T1>* eq_tmp = eq[i];
+      PolyEq<ComplexType,RealType>* eq_tmp = eq[i];
       for(int j=0; j<eq_tmp->n_mon; j++)
       {
          int new_n_var = eq_tmp->mon[j]->n_var;
@@ -972,7 +976,7 @@ void PolySys<ComplexType,T1>::gpu_mon
    vector<int_idx>* n_var_list = new vector<int_idx>[max_n_var+1];
    for(int i=0; i<n_eq; i++)
    {
-      PolyEq<ComplexType,T1>* eq_tmp = eq[i];
+      PolyEq<ComplexType,RealType>* eq_tmp = eq[i];
       for(int j=0; j<eq_tmp->n_mon; j++)
       {
          int new_n_var = eq_tmp->mon[j]->n_var;

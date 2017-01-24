@@ -17,6 +17,19 @@ inline double read_number ( const char* number )
    return atof(number);
 }
 
+/* still todo: convert strings to double doubles and quad doubles ...
+ 
+inline dd_real read_number ( const char* number )
+{
+   return dd_real(number);
+}
+
+inline qd_real read_number ( const char* number )
+{
+   return qd_real(number);
+}
+*/
+
 void string_stop
  ( const string& mon_string, int& loc, const char* symbols,
    const int n_symbol, int l );
@@ -44,14 +57,14 @@ ComplexType get_coef_complex ( const string& mon_string, int& loc );
 template <class ComplexType>
 ComplexType get_coef_real ( const string& mon_string, int& loc );
 
-template <class T1>
-void print_matrix ( T1** m, int row, int col );
+template <class RealType>
+void print_matrix ( RealType** m, int row, int col );
 
-template <class T1>
-void print_vector ( T1* v, int n );
+template <class RealType>
+void print_vector ( RealType* v, int n );
 
-template <class T1>
-void print_result ( T1* v, T1** m, int dim, int n_eq );
+template <class RealType>
+void print_result ( RealType* v, RealType** m, int dim, int n_eq );
 
 void print_size ( size_t tmp_size_B );
 
@@ -77,13 +90,13 @@ ComplexType* rand_val_complex_unit_n ( int dim );
 
 string* var_list ( int dim, string v );
 
-template <class T1>
-void print_number ( T1 v );
+template <class RealType>
+void print_number ( RealType v );
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 void print_number_complex ( ComplexType v );
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 void print_coef_complex ( ComplexType coef );
 
 template <class ComplexType>

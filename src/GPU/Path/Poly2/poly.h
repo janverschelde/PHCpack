@@ -21,13 +21,13 @@ using namespace std;
 
 // Monomial class
 /*
-Read the monomial from the string.
-PolyMon is used to construct polynomial equaion, PolyEq,
-which is used to construct polynomial system, PolySys.
-@sa PolyEq PolySys
+   Read the monomial from the string.
+   PolyMon is used to construct polynomial equaion, PolyEq,
+   which is used to construct polynomial system, PolySys.
+   @sa PolyEq PolySys
 */
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 class PolyMon
 {
    public:
@@ -69,7 +69,7 @@ class PolyMon
          exp_tbl_base = NULL;
       }
 
-      PolyMon ( int n, int* d, T1* c )
+      PolyMon ( int n, int* d, RealType* c )
       {
          coef = ComplexType(c[0],c[1]);
          dim = n;
@@ -127,7 +127,8 @@ class PolyMon
          @param coef0 the coefficient of the monomail
        */
 
-      void read ( const string& mon_string, VarDict& pos_dict, ComplexType coef );
+      void read ( const string& mon_string, VarDict& pos_dict,
+                  ComplexType coef );
       // Reads a monomial from a monomial string.
       /*
          Coefficient is given.
@@ -154,9 +155,11 @@ class PolyMon
          @return value of product of variables
        */
 
-      ComplexType speel_with_base ( const ComplexType* x_val, ComplexType* deri, ComplexType base );
+      ComplexType speel_with_base
+       ( const ComplexType* x_val, ComplexType* deri, ComplexType base );
 
-      ComplexType eval_base ( const ComplexType* x_val, ComplexType** deg_table );
+      ComplexType eval_base
+       ( const ComplexType* x_val, ComplexType** deg_table );
       // Compute base of monomial
       /*
          @param[in] x_val values of variables
@@ -178,7 +181,9 @@ class PolyMon
          @sa eval_base() speel()
        */
 
-      ComplexType eval ( const ComplexType* x_val, ComplexType* deri, ComplexType** deg_table );
+      ComplexType eval
+       ( const ComplexType* x_val, ComplexType* deri,
+         ComplexType** deg_table );
 
       void print ( const string* pos_var );
       // prints a monomial
@@ -199,15 +204,15 @@ class PolyMon
       void update_base();
 };
 
-/// Polynomial equation class
+// Polynomial equation class
 /*
-Read polynomial equation from string,
-and build array of monomials, PolyMon.
-PolyEq is used to construct polynomial system, PolySys.
-@sa PolyMon PolySys
+   Read polynomial equation from string,
+   and build array of monomials, PolyMon.
+   PolyEq is used to construct polynomial system, PolySys.
+   @sa PolyMon PolySys
 */
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 class PolyEq
 {
    public:
@@ -215,7 +220,8 @@ class PolyEq
       ComplexType constant; // Constant of equation
       int n_mon;   // Number of monomials
       int dim;     // Number of monomials
-      vector<PolyMon<ComplexType,T1>*> mon; // Monomial array of the equation
+      vector<PolyMon<ComplexType,RealType>*> mon;
+      // Monomial array of the equation
 
       int level;
       int* job_number_level;
@@ -240,8 +246,8 @@ class PolyEq
 
       ~PolyEq() // Destructor
       {
-          for(typename vector< PolyMon<ComplexType,T1>* >::iterator it=mon.begin();
-              it<mon.end(); it++)
+          for(typename vector< PolyMon<ComplexType,RealType>* >::iterator
+              it=mon.begin(); it<mon.end(); it++)
           {
              delete *it;
           }
@@ -311,12 +317,12 @@ class PolyEq
 
 // Polynomial system class
 /*
-Read polynomial system from string or string arrays,
-and build array of polynomial equations, PolyEq.
-@sa PolyMon, PolyEq.
+   Read polynomial system from string or string arrays,
+   and build array of polynomial equations, PolyEq.
+   @sa PolyMon, PolyEq.
 */
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 class PolySys
 {
    public:
@@ -324,9 +330,10 @@ class PolySys
       int n_eq; // Number of Equations
       int dim;  // Dimension
       string* pos_var;
-      vector<PolyEq<ComplexType,T1>*> eq; // Array of polynomial equations
+      vector<PolyEq<ComplexType,RealType>*> eq;
+      // Array of polynomial equations
 	
-      PolyEq<ComplexType, T1>* eq_space;
+      PolyEq<ComplexType, RealType>* eq_space;
 
       int* max_deg_base;
       bool eval_base;
@@ -368,11 +375,11 @@ class PolySys
       void read ( const string& sys_string, VarDict& pos_dict );
       // Read polynomial system from string
       /*
-        First split the string by ';',
-        then use PolyEq::read() to read each equation.
-        @param sys_string polynomial system string
-        @param pos_dict the dictionary of variables and their positions
-        @sa PolyEq::read()
+         First split the string by ';',
+         then use PolyEq::read() to read each equation.
+         @param sys_string polynomial system string
+         @param pos_dict the dictionary of variables and their positions
+         @sa PolyEq::read()
        */
 
       void read_file ( const string& file_name );
@@ -418,7 +425,8 @@ class PolySys
          @return equation value
        */
 
-      void eval ( const ComplexType* x_val, ComplexType* f_val,  ComplexType** deri_val );
+      void eval ( const ComplexType* x_val, ComplexType* f_val,
+                  ComplexType** deri_val );
 
       void print();
       // Print polynomial system
@@ -453,17 +461,17 @@ class PolySys
       void balance_eq ( const ComplexType* x_val );
 };
 
-template <class ComplexType, class T1>
+template <class ComplexType, class RealType>
 class PolySysHom
 {
    public:
 
-      PolySys<ComplexType,T1>* start_sys;
-      PolySys<ComplexType,T1>* target_sys;
+      PolySys<ComplexType,RealType>* start_sys;
+      PolySys<ComplexType,RealType>* target_sys;
       int dim;
 
-      PolySysHom ( PolySys<ComplexType,T1>* start_sys,
-                   PolySys<ComplexType,T1>* target_sys )
+      PolySysHom ( PolySys<ComplexType,RealType>* start_sys,
+                   PolySys<ComplexType,RealType>* target_sys )
       {
          if(start_sys->dim != target_sys->dim)
          {

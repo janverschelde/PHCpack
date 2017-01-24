@@ -1,0 +1,2 @@
+Tue 24 Jan 2017 : renamed the template type T1 into RealType in poly.h,
+  poly.tpp, utilities.h, and utilities.tpp.
