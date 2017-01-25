@@ -15,3 +15,8 @@ workspace_host.tpp : definition of templated methods of workspace_host.h
 path_data.h        : data structures for the path trackers
 path_data.tpp      : definition of templated code of path_data.h
 -------------------------------------------------------------------------------
+varset.h           : data structures for the evaluation and differentiation
+parameter.h        : settings for numerical constants
+eval_host.h        : evaluation and differentiation of polynomials
+eval_host.tpp      : definition of the tempated code in eval_host.h
+-------------------------------------------------------------------------------

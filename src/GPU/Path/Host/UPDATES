@@ -1,2 +1,5 @@
 Tue 24 Jan 2017 : added path_data, copied from Main, where it should not be,
   because needed by eval_host, and added workspace_host.
+  Copied from Path_CPU the code for varset.h (added templates),
+  also copied parameter.h, and the file eval_host.h (added templates).
+  Renamed eval_host.cpp into eval_host.tpp.
