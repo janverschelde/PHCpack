@@ -1,5 +1,6 @@
 Wed 25 Jan 2017 : made a first pass through eval_host.h and eval_host.tpp
-  adding template directives wherever needed.
+  adding template directives wherever needed.  New test_eval.cpp to
+  evaluate a polynomial system, with make instructions in the makefile.
 
 Tue 24 Jan 2017 : added path_data, copied from Main, where it should not be,
   because needed by eval_host, and added workspace_host.
