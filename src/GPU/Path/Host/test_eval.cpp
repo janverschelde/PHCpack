@@ -4,6 +4,7 @@
 #include <string>
 #include "complexH.h"
 #include "poly.h"
+#include "eval_host.h"
 
 using namespace std;
 
@@ -48,7 +49,7 @@ int main ( void )
 
 int double_test ( string filename )
 {
-   PolySys< complexH<double>, double > polynomials;
+   PolySys<complexH<double>,double> polynomials;
 
    polynomials.read_file(filename);
 
@@ -64,6 +65,12 @@ int double_test ( string filename )
    complexH<double> *val = polynomials.eval(arg);
    cout << "The value of the system at a vector of ones :" << endl;
    for(int i=0; i<polynomials.dim; i++) cout << val[i];
+
+   CPUInstHom<complexH<double>,double> ped;
+   complexH<double> alpha;
+
+   alpha.init(1.0,0.0);
+   ped.init(polynomials,polynomials.dim,polynomials.n_eq,0,alpha);
 
    return 0;
 }

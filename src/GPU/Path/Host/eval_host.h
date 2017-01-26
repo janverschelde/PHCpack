@@ -312,7 +312,7 @@ class CPUInstHom
    public:
 
       bool PED_hom; // true: homotopy, false: single
-      CPUInstHomCoef<ComplexType> CPU_inst_hom_coef;
+      CPUInstHomCoef<ComplexType,RealType> CPU_inst_hom_coef;
       CPUInstHomMon<ComplexType> CPU_inst_hom_mon;
       CPUInstHomSum<ComplexType> CPU_inst_hom_sum;
       CPUInstHomMonBlock<ComplexType> CPU_inst_hom_block;

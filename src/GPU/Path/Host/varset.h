@@ -8,7 +8,7 @@
 
 #define IntSet GeneralSet<int>
 #define ShortSet GeneralSet<short>
-#define EqSet GeneralSet<EqIdxCoef>
+#define EqSet GeneralSet<EqIdxCoef<ComplexType> >
 #define PosExpSet GeneralSet<TwoInt>
 
 class VarSet
@@ -204,10 +204,10 @@ class VarSet
       }
 };
 
-template<class T>
+template <class T>
 class GeneralSet
 {
-   friend class MonSet;
+   template <class ComplexType> friend class MonSet;
    int n;
    T* elements;
 
@@ -462,7 +462,8 @@ class TwoInt
 template <class ComplexType>
 class MonIdxSet
 {
-   friend class MonSet;
+   // friend class MonSet;
+   template <class T> friend class MonSet;
 
    IntSet pos;
    IntSet exp;
@@ -808,13 +809,13 @@ class MonSet
 
       MonSet(){ };
 
-      void copy_pos ( const MonIdxSet& original )
+      void copy_pos ( const MonIdxSet<ComplexType>& original )
       {
          this->pos = original.pos;
          this->exp = original.exp;
       }
 
-      void update_eq_idx ( int n, EqIdxCoef* eq_idx_elements )
+      void update_eq_idx ( int n, EqIdxCoef<ComplexType>* eq_idx_elements )
       {
          eq_idx.update(n,eq_idx_elements);
       }

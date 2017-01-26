@@ -3,7 +3,13 @@
 #ifndef PARAMETER_H_
 #define PARAMETER_H_
 
-#include "Parameter_Header.h"
+// #include "Parameter_Header.h"
+// the following definition is copied from Parameter_Header.h
+#define MON_EVAL_METHOD 2
+// 0 : reverse mode
+// 1 : reverse mode with aligned memory for instructions
+// 2 : tree mode
+// 3 : for multiple evaluation (chosen when #paths > 1)
 
 #include <iostream>
 

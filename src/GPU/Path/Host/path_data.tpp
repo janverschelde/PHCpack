@@ -1,21 +1,21 @@
 // definitions of the templated code with prototypes in path_data.h
 
 template <class ComplexType, class RealType>
-Complex_Type* read_pt ( ifstream& path_file, int dim )
+ComplexType* read_pt ( ifstream& path_file, int dim )
 {
-   Complex_Type* pt = new Complex_Type[dim];
+   ComplexType* pt = new ComplexType[dim];
    string tmp_line;
    for(int i=0; i<dim; i++)
    {
       getline(path_file,tmp_line, ':');
-      pt[i] = get_complex_number(path_file);
+      pt[i] = get_complex_number<ComplexType>(path_file);
       getline(path_file,tmp_line);
    }
    return pt;
 }
 
 template <class ComplexType, class RealType>
-void print_pt ( Complex_Type* pt, int dim )
+void print_pt ( ComplexType* pt, int dim )
 {
    int pr = 2 * sizeof(RealType);
    std::cout << setprecision(pr);
@@ -48,10 +48,10 @@ void PathStep<ComplexType,RealType>::read_phc_file ( ifstream& path_file )
    path_file >> t.imag;
    getline(path_file,tmp_line);
    getline(path_file,tmp_line);
-   predict_pt = read_pt(path_file, dim);
+   predict_pt = read_pt<ComplexType,RealType>(path_file, dim);
    read_correct_it(path_file);
    read_until_line(path_file, "the solution");
-   correct_pt = read_pt(path_file, dim);
+   correct_pt = read_pt<ComplexType,RealType>(path_file, dim);
 }
 
 template <class ComplexType, class RealType>
@@ -75,23 +75,23 @@ void PathStep<ComplexType,RealType>::read_correct_it ( ifstream& path_file )
 }
 
 template <class ComplexType, class RealType>
-void PathStep<ComplexType,RealType>::update_predict_pt ( Complex_Type* predict_pt )
+void PathStep<ComplexType,RealType>::update_predict_pt ( ComplexType* predict_pt )
 {
-   this-> predict_pt = new Complex_Type[dim];
+   this-> predict_pt = new ComplexType[dim];
 
    for(int i=0; i<dim; i++) this->predict_pt[i] = predict_pt[i];
 }
 
 template <class ComplexType, class RealType>
-void PathStep<ComplexType,RealType>::update_correct_pt ( Complex_Type* correct_pt )
+void PathStep<ComplexType,RealType>::update_correct_pt ( ComplexType* correct_pt )
 {
-   this->correct_pt = new Complex_Type[dim];
+   this->correct_pt = new ComplexType[dim];
 
    for(int i=0; i<dim; i++) this->correct_pt[i] = correct_pt[i];
 }
 
 template <class ComplexType, class RealType>
-void PathStep<ComplexType,RealType>::update_t ( Complex_Type delta_t, Complex_Type t )
+void PathStep<ComplexType,RealType>::update_t ( ComplexType delta_t, ComplexType t )
 {
    this->delta_t = delta_t.real;
    this->t = t;
@@ -162,7 +162,7 @@ void Path<ComplexType,RealType>::read_phc_file ( ifstream& path_file )
    read_until_line(path_file, output_symbol);
    string sol_symbol = "the solution";
    read_until_line(path_file, sol_symbol);
-   start_pt = read_pt(path_file, dim);
+   start_pt = read_pt<ComplexType,RealType>(path_file, dim);
    string step_symbol = "== err : ";
    string corrector_symbol = "correction (a&r)";
 
@@ -214,21 +214,21 @@ void Path<ComplexType,RealType>::add_step_empty()
 
 template <class ComplexType, class RealType>
 void Path<ComplexType,RealType>::update_step_predict_pt
- ( Complex_Type* predict_pt )
+ ( ComplexType* predict_pt )
 {
    steps[n_step-1]->update_predict_pt(predict_pt);
 }
 
 template <class ComplexType, class RealType>
 void Path<ComplexType,RealType>::update_step_correct_pt
- ( Complex_Type* correct_pt )
+ ( ComplexType* correct_pt )
 {
    steps[n_step-1]->update_correct_pt(correct_pt);
 }
 
 template <class ComplexType, class RealType>
 void Path<ComplexType,RealType>::update_step_t
- ( Complex_Type delta_t, Complex_Type t )
+ ( ComplexType delta_t, ComplexType t )
 {
    steps[n_step-1]->update_t(delta_t,t);
 }
@@ -311,17 +311,17 @@ void Path<ComplexType,RealType>::compare ( Path& that )
 }
 
 template <class ComplexType, class RealType>
-void Path<ComplexType,RealType>::add_start_pt ( Complex_Type* start_pt )
+void Path<ComplexType,RealType>::add_start_pt ( ComplexType* start_pt )
 {
-   this->start_pt = new Complex_Type[dim];
+   this->start_pt = new ComplexType[dim];
 
    for(int i=0; i<dim; i++) this->start_pt[i] = start_pt[i];
 }
 
 template <class ComplexType, class RealType>
-void Path<ComplexType,RealType>::add_end_pt ( Complex_Type* end_pt )
+void Path<ComplexType,RealType>::add_end_pt ( ComplexType* end_pt )
 {
-   this->end_pt = new Complex_Type[dim];
+   this->end_pt = new ComplexType[dim];
 
    for(int i=0; i<dim; i++) this->end_pt[i] = end_pt[i];
 }

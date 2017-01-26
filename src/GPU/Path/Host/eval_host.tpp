@@ -58,7 +58,7 @@ MonIdxSet<ComplexType>* polysyshom_monidxset
    if(verbose > 0)
       std::cout << "total_n_mon = " << total_n_mon << std::endl;
 
-   MonIdxSet<ComplexType>* mon_set = new MonIdxSet[total_n_mon];
+   MonIdxSet<ComplexType>* mon_set = new MonIdxSet<ComplexType>[total_n_mon];
 
    polysys_mon_set<ComplexType,RealType>(Target_Sys, mon_set, 0);
 
@@ -92,7 +92,7 @@ MonIdxSet<ComplexType>* polysys_monidxset
    if(verbose > 0)
       std::cout << "total_n_mon = " << total_n_mon << std::endl;
 
-   MonIdxSet<ComplexType>* mon_set = new MonIdxSet[total_n_mon];
+   MonIdxSet<ComplexType>* mon_set = new MonIdxSet<ComplexType>[total_n_mon];
 
    polysys_mon_set<ComplexType,RealType>(Target_Sys, mon_set, 0);
 
@@ -178,21 +178,21 @@ MonSet<ComplexType>* polysyshom_monset
             if(mons[mon_idx].get_sys_idx() == 1 
                && tmp_eq_idx == mons[mon_idx].get_eq_idx())
             {
-               tmp_eq_idx_coef[j] = EqIdxCoef
+               tmp_eq_idx_coef[j] = EqIdxCoef<ComplexType>
                   (tmp_eq_idx,mons[mon_idx-1].get_coef(),
                    mons[mon_idx].get_coef());
                mon_idx++;
             }
             else
             {
-               tmp_eq_idx_coef[j] = EqIdxCoef
+               tmp_eq_idx_coef[j] = EqIdxCoef<ComplexType>
                   (tmp_eq_idx,mons[mon_idx-1].get_coef(),0);
             }
          }
          else
          {
             int tmp_eq_idx = mons[mon_idx].get_eq_idx();
-            tmp_eq_idx_coef[j] = EqIdxCoef
+            tmp_eq_idx_coef[j] = EqIdxCoef<ComplexType>
                (tmp_eq_idx,mons[mon_idx].get_coef(),1);
             mon_idx++;
          }
@@ -274,7 +274,7 @@ int* get_max_deg_base ( PolySys<ComplexType,RealType>& Target_Sys )
 }
 
 template <class ComplexType, class RealType>
-void CPUInstHom::init
+void CPUInstHom<ComplexType,RealType>::init
  ( PolySys<ComplexType,RealType>& Target_Sys,
    PolySys<ComplexType,RealType>& Start_Sys,
    int dim, int n_eq, int n_predictor, ComplexType alpha, int verbose )
@@ -368,8 +368,8 @@ void CPUInstHom<ComplexType,RealType>::init
       std::cout << "Generating CPU Instruction Finished" << std::endl;
 }
 
-template <class ComplexType>
-void CPUInstHomCoef<ComplexType>::init
+template <class ComplexType, class RealType>
+void CPUInstHomCoef<ComplexType,RealType>::init
  ( MonSet<ComplexType>* hom_monset, int total_n_mon, int n_monset,
    int n_constant, ComplexType alpha, int verbose )
 {
@@ -399,8 +399,8 @@ void CPUInstHomCoef<ComplexType>::init
    coef_orig = tmp_coef_orig;
 }
 
-template <class ComplexType>
-void CPUInstHomCoef<ComplexType>::print()
+template <class ComplexType, class RealType>
+void CPUInstHomCoef<ComplexType,RealType>::print()
 {
    for(int i=0; i<n_coef; i++)
    {
@@ -410,8 +410,8 @@ void CPUInstHomCoef<ComplexType>::print()
    }
 }
 
-template <class ComplexType>
-void CPUInstHomCoef<ComplexType>::eval
+template <class ComplexType, class RealType>
+void CPUInstHomCoef<ComplexType,RealType>::eval
  ( const ComplexType t, ComplexType* coef, int reverse )
 {
    ComplexType one_minor_t(1.0- t.real, -t.imag);
@@ -568,8 +568,8 @@ void CPUInstHomEq<ComplexType>::print()
    std::cout << "n_pos+n_mon = " << n_pos_total << std::endl;
 }
 
-template <class ComplexType>
-void CPUInstHom<ComplexType>::print()
+template <class ComplexType, class RealType>
+void CPUInstHom<ComplexType,RealType>::print()
 {
    std::cout << "*************** Coef Instruction ********************"
              << std::endl;
@@ -582,8 +582,8 @@ void CPUInstHom<ComplexType>::print()
    CPU_inst_hom_sum.print();
 }
 
-template <class ComplexType>
-void CPUInstHom<ComplexType>::init_workspace
+template <class ComplexType, class RealType>
+void CPUInstHom<ComplexType,RealType>::init_workspace
  ( Workspace<ComplexType>& workspace_cpu )
 {
    int coef_size = CPU_inst_hom_coef.n_coef;
@@ -592,8 +592,8 @@ void CPUInstHom<ComplexType>::init_workspace
        n_predictor, CPU_inst_hom_mon.max_deg_base);
 }
 
-template <class ComplexType>
-void CPUInstHom<ComplexType>::eval
+template <class ComplexType, class RealType>
+void CPUInstHom<ComplexType,RealType>::eval
  ( Workspace<ComplexType>& workspace_cpu,
    const ComplexType* sol, const ComplexType t, int reverse )
 {
@@ -652,7 +652,7 @@ void CPUInstHomCoef<ComplexType,RealType>::update_alpha ( ComplexType alpha )
 }
 
 template <class ComplexType>
-void CPUInstHomMon::init
+void CPUInstHomMon<ComplexType>::init
  ( MonSet<ComplexType>* hom_monset, int n_monset, int total_n_mon,
    int n_constant, int* max_deg_base, int verbose )
 {
