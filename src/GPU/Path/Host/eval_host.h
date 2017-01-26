@@ -15,7 +15,7 @@
 
 #define warp_size 32
 
-template <class ComplexType>
+template <class ComplexType, class RealType>
 class CPUInstHomCoef
 {
    public:
@@ -52,7 +52,7 @@ class CPUInstHomCoef
 
       void eval ( const ComplexType t, ComplexType* coef, int reverse=0 );
 
-      void update_alpha( ComplexType alpha=ComplexType(0.0,0.0));
+      void update_alpha ( ComplexType alpha=ComplexType(0.0,0.0) );
 };
 
 template <class ComplexType>
@@ -118,6 +118,7 @@ class CPUInstHomMon
       void print();
 };
 
+template <class ComplexType>
 class CPUInstHomMonBlock
 {
    public:
@@ -145,7 +146,8 @@ class CPUInstHomMonBlock
          mon_single_pos_block = NULL;
       }
 
-      CPUInstHomMonBlock ( CPUInstHomMon& orig, int BS, int verbose )
+      CPUInstHomMonBlock
+       ( CPUInstHomMon<ComplexType>& orig, int BS, int verbose )
       {
          init(orig,BS,verbose);
       }
@@ -157,11 +159,12 @@ class CPUInstHomMonBlock
          delete[] mon_pos_block;
       }
 
-      void init ( CPUInstHomMon& orig, int BS, int verbose );
+      void init ( CPUInstHomMon<ComplexType>& orig, int BS, int verbose );
 
       void print();
 };
 
+template <class ComplexType>
 class CPUInstHomSumBlock
 {
    public:
@@ -264,6 +267,7 @@ class CPUInstHomSum
       void print();
 };
 
+template <class ComplexType>
 class CPUInstHomEq
 {
    public:
@@ -308,13 +312,13 @@ class CPUInstHom
    public:
 
       bool PED_hom; // true: homotopy, false: single
-      CPUInstHomCoef CPU_inst_hom_coef;
-      CPUInstHomMon CPU_inst_hom_mon;
-      CPUInstHomSum CPU_inst_hom_sum;
-      CPUInstHomMonBlock CPU_inst_hom_block;
-      CPUInstHomSumBlock CPU_inst_hom_sum_block;
+      CPUInstHomCoef<ComplexType> CPU_inst_hom_coef;
+      CPUInstHomMon<ComplexType> CPU_inst_hom_mon;
+      CPUInstHomSum<ComplexType> CPU_inst_hom_sum;
+      CPUInstHomMonBlock<ComplexType> CPU_inst_hom_block;
+      CPUInstHomSumBlock<ComplexType> CPU_inst_hom_sum_block;
 
-      CPUInstHomEq CPU_inst_hom_eq;
+      CPUInstHomEq<ComplexType> CPU_inst_hom_eq;
 
       int n_constant;
       int dim;
@@ -323,8 +327,8 @@ class CPUInstHom
       int n_predictor;
 
       // Record timing for both CPU and GPU
-      Path path_data;
-      Path path_data_gpu;
+      Path<ComplexType,RealType> path_data;
+      Path<ComplexType,RealType> path_data_gpu;
       double timeSec_Path_CPU;
       double timeSec_Path_GPU;
 
@@ -332,8 +336,8 @@ class CPUInstHom
       bool success_GPU;
       ComplexType t_CPU;
       ComplexType t_GPU;
-      T1 max_residual;
-      T1 max_delta_x;
+      RealType max_residual;
+      RealType max_delta_x;
 
       int n_step_CPU;
       int n_step_GPU;
@@ -414,9 +418,10 @@ class CPUInstHom
 
       void print();
  
-      void init_workspace ( Workspace& workspace_cpu );
+      void init_workspace ( Workspace<ComplexType>& workspace_cpu );
 
-      void eval ( Workspace& workspace_cpu, const ComplexType* sol,
+      void eval ( Workspace<ComplexType>& workspace_cpu,
+                  const ComplexType* sol,
                   const ComplexType t, int reverse=0 );
 
       void update_alpha ( ComplexType alpha=ComplexType(0.0,0.0) );

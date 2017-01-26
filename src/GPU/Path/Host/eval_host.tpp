@@ -1,24 +1,26 @@
 // eval_host.tpp contains the definitions of the templated methods
 // with prototypes in eval_host.h
 
+template <class ComplexType, class RealType>
 void polysys_mon_set
- ( const PolySys& Target_Sys, MonIdxSet* mon_set, bool sys_idx )
+ ( const PolySys<ComplexType,RealType>& Target_Sys,
+   MonIdxSet<ComplexType>* mon_set, bool sys_idx )
 {
-   PolyEq* tmp_eq= Target_Sys.eq_space;
+   PolyEq<ComplexType,RealType>* tmp_eq = Target_Sys.eq_space;
 
    int mon_idx = 0;
    for(int i=0; i<Target_Sys.n_eq; i++)
    {
       if(tmp_eq->constant.real != 0.0 || tmp_eq->constant.imag != 0.0)
       {
-         mon_set[mon_idx] = MonIdxSet(0,NULL,NULL,i,0,sys_idx,
-                                      tmp_eq->constant);
+         mon_set[mon_idx] = MonIdxSet<ComplexType>
+            (0,NULL,NULL,i,0,sys_idx,tmp_eq->constant);
          mon_idx++;
       }
       for(int j=0; j<tmp_eq->n_mon; j++)
       {
-         PolyMon* tmp_mon = tmp_eq->mon[j];
-         mon_set[mon_idx] = MonIdxSet
+         PolyMon<ComplexType,RealType>* tmp_mon = tmp_eq->mon[j];
+         mon_set[mon_idx] = MonIdxSet<ComplexType>
            (tmp_mon->n_var,tmp_mon->pos,tmp_mon->exp,i,j,
             sys_idx,tmp_mon->coef);
          mon_idx++;
@@ -27,12 +29,14 @@ void polysys_mon_set
    }
 }
 
-MonIdxSet* polysyshom_monidxset
- ( PolySys& Target_Sys, PolySys& Start_Sys, int& total_n_mon,
-   int verbose )
+template <class ComplexType, class RealType>
+MonIdxSet<ComplexType>* polysyshom_monidxset
+ ( PolySys<ComplexType,RealType>& Target_Sys,
+   PolySys<ComplexType,RealType>& Start_Sys,
+   int& total_n_mon, int verbose )
 {
    total_n_mon = 0;
-   PolyEq* tmp_eq= Target_Sys.eq_space;
+   PolyEq<ComplexType,RealType>* tmp_eq = Target_Sys.eq_space;
 
    for(int i=0; i<Target_Sys.n_eq; i++)
    {
@@ -54,11 +58,12 @@ MonIdxSet* polysyshom_monidxset
    if(verbose > 0)
       std::cout << "total_n_mon = " << total_n_mon << std::endl;
 
-   MonIdxSet* mon_set = new MonIdxSet[total_n_mon];
+   MonIdxSet<ComplexType>* mon_set = new MonIdxSet[total_n_mon];
 
-   polysys_mon_set(Target_Sys, mon_set, 0);
+   polysys_mon_set<ComplexType,RealType>(Target_Sys, mon_set, 0);
 
-   polysys_mon_set(Start_Sys, mon_set+total_n_mon_start, 1);
+   polysys_mon_set<ComplexType,RealType>
+      (Start_Sys, mon_set+total_n_mon_start, 1);
 
    for(int i=0; i<total_n_mon; i++) mon_set[i].sorted();
 
@@ -68,11 +73,12 @@ MonIdxSet* polysyshom_monidxset
    return mon_set;
 }
 
-MonIdxSet* polysys_monidxset
- ( PolySys& Target_Sys, int& total_n_mon, int verbose )
+template <class ComplexType, class RealType>
+MonIdxSet<ComplexType>* polysys_monidxset
+ ( PolySys<ComplexType,RealType>& Target_Sys, int& total_n_mon, int verbose )
 {
    total_n_mon = 0;
-   PolyEq* tmp_eq= Target_Sys.eq_space;
+   PolyEq<ComplexType,RealType>* tmp_eq = Target_Sys.eq_space;
 
    for(int i=0; i<Target_Sys.n_eq; i++)
    {
@@ -86,9 +92,9 @@ MonIdxSet* polysys_monidxset
    if(verbose > 0)
       std::cout << "total_n_mon = " << total_n_mon << std::endl;
 
-   MonIdxSet* mon_set = new MonIdxSet[total_n_mon];
+   MonIdxSet<ComplexType>* mon_set = new MonIdxSet[total_n_mon];
 
-   polysys_mon_set(Target_Sys, mon_set, 0);
+   polysys_mon_set<ComplexType,RealType>(Target_Sys, mon_set, 0);
 
    for(int i=0; i<total_n_mon; i++)
    {
@@ -100,8 +106,9 @@ MonIdxSet* polysys_monidxset
    return mon_set;
 }
 
-MonSet* polysyshom_monset
- ( int total_n_mon, MonIdxSet* mons, 
+template <class ComplexType>
+MonSet<ComplexType>* polysyshom_monset
+ ( int total_n_mon, MonIdxSet<ComplexType>* mons, 
    int& n_constant, int& hom_n_mon, int& n_monset, int verbose )
 {
    if(verbose > 0)
@@ -114,7 +121,7 @@ MonSet* polysyshom_monset
    new_type[0] = 0;
 
    // Check monomial type
-   MonIdxSet tmp_mon = mons[0];
+   MonIdxSet<ComplexType> tmp_mon = mons[0];
 
    for(int i=1; i<total_n_mon; i++)
    {
@@ -154,12 +161,13 @@ MonSet* polysyshom_monset
       }
    }
 
-   MonSet* hom_monset = new MonSet[n_monset];
+   MonSet<ComplexType>* hom_monset = new MonSet<ComplexType>[n_monset];
    int mon_idx = 0;
    for(int i=0; i<n_monset; i++)
    {
       hom_monset[i].copy_pos(mons[mon_idx]);
-      EqIdxCoef* tmp_eq_idx_coef = new EqIdxCoef[n_mons[i]];
+      EqIdxCoef<ComplexType>* tmp_eq_idx_coef
+         = new EqIdxCoef<ComplexType>[n_mons[i]];
       for(int j=0; j<n_mons[i]; j++)
       {
          // merge by eq_idx
@@ -203,33 +211,41 @@ MonSet* polysyshom_monset
    return hom_monset;
 }
 
-MonSet* hom_monset_generator
- ( PolySys& Target_Sys, PolySys& Start_Sys, int& n_monset, int& n_constant,
+template <class ComplexType, class RealType>
+MonSet<ComplexType>* hom_monset_generator
+ ( PolySys<ComplexType,RealType>& Target_Sys,
+   PolySys<ComplexType,RealType>& Start_Sys,
+   int& n_monset, int& n_constant,
    int& total_n_mon, int verbose )
 {
    int hom_n_mon;
 
-   MonIdxSet* mons = polysyshom_monidxset
+   MonIdxSet<ComplexType>* mons = polysyshom_monidxset<ComplexType>
       (Target_Sys,Start_Sys,hom_n_mon,verbose);
-   MonSet* hom_monset = polysyshom_monset
+   MonSet<ComplexType>* hom_monset = polysyshom_monset<ComplexType>
       (hom_n_mon,mons,n_constant,total_n_mon,n_monset,verbose);
 
    return hom_monset;
 }
 
-MonSet* single_monset_generator
- ( PolySys& Target_Sys, int& n_monset, int& n_constant, int& total_n_mon,
-   int verbose )
+template <class ComplexType, class RealType>
+MonSet<ComplexType>* single_monset_generator
+ ( PolySys<ComplexType, RealType>& Target_Sys,
+   int& n_monset, int& n_constant, int& total_n_mon, int verbose )
 {
    int hom_n_mon;
-   MonIdxSet* mons = polysys_monidxset(Target_Sys,hom_n_mon,verbose);
-   MonSet* hom_monset = polysyshom_monset
+   MonIdxSet<ComplexType>* mons
+      = polysys_monidxset<ComplexType>(Target_Sys,hom_n_mon,verbose);
+   MonSet<ComplexType>* hom_monset = polysyshom_monset<ComplexType>
       (hom_n_mon, mons,n_constant,total_n_mon,n_monset,verbose);
 
    return hom_monset;
 }
 
-int* get_max_deg_base ( PolySys& Target_Sys, PolySys& Start_Sys )
+template <class ComplexType, class RealType>
+int* get_max_deg_base
+ ( PolySys<ComplexType,RealType>& Target_Sys,
+   PolySys<ComplexType,RealType>& Start_Sys )
 {
    if(Target_Sys.eval_base==false && Start_Sys.eval_base==false) return NULL;
 
@@ -243,7 +259,8 @@ int* get_max_deg_base ( PolySys& Target_Sys, PolySys& Start_Sys )
    return max_deg_base;
 }
 
-int* get_max_deg_base ( PolySys& Target_Sys )
+template <class ComplexType, class RealType>
+int* get_max_deg_base ( PolySys<ComplexType,RealType>& Target_Sys )
 {
    if(Target_Sys.eval_base==false) return NULL;
 
@@ -256,18 +273,21 @@ int* get_max_deg_base ( PolySys& Target_Sys )
    return max_deg_base;
 }
 
+template <class ComplexType, class RealType>
 void CPUInstHom::init
- ( PolySys& Target_Sys, PolySys& Start_Sys, int dim, int n_eq,
-   int n_predictor, CT alpha, int verbose )
+ ( PolySys<ComplexType,RealType>& Target_Sys,
+   PolySys<ComplexType,RealType>& Start_Sys,
+   int dim, int n_eq, int n_predictor, ComplexType alpha, int verbose )
 {
    PED_hom = true;
    int n_constant;
    int total_n_mon;
    int n_monset;
    int n_mon;
-   MonSet* hom_monset = hom_monset_generator
+   MonSet<ComplexType>* hom_monset = hom_monset_generator
       (Target_Sys,Start_Sys,n_monset,n_constant,total_n_mon,verbose);
-   int* max_deg_base = get_max_deg_base(Target_Sys, Start_Sys);
+   int* max_deg_base 
+      = get_max_deg_base<ComplexType,RealType>(Target_Sys, Start_Sys);
 
    if(verbose > 0)
    {
@@ -279,18 +299,19 @@ void CPUInstHom::init
         n_predictor,alpha,max_deg_base,verbose);
 }
 
-void CPUInstHom::init
- ( PolySys& Target_Sys, int dim, int n_eq, int n_predictor, CT alpha,
-   int verbose )
+template <class ComplexType, class RealType>
+void CPUInstHom<ComplexType,RealType>::init
+ ( PolySys<ComplexType,RealType>& Target_Sys,
+   int dim, int n_eq, int n_predictor, ComplexType alpha, int verbose )
 {
    PED_hom = false;
    int n_constant;
    int total_n_mon;
    int n_monset;
    int n_mon;
-   MonSet* hom_monset = single_monset_generator
+   MonSet<ComplexType>* hom_monset = single_monset_generator
       (Target_Sys,n_monset,n_constant,total_n_mon,verbose);
-   int* max_deg_base = get_max_deg_base(Target_Sys);
+   int* max_deg_base = get_max_deg_base<ComplexType,RealType>(Target_Sys);
 
    if(verbose > 0)
    {
@@ -303,10 +324,11 @@ void CPUInstHom::init
         alpha,max_deg_base,verbose);
 }
 
-void CPUInstHom::init
- ( MonSet* hom_monset, int n_monset, int n_constant, int total_n_mon,
-   int dim, int n_eq, int n_predictor, CT alpha, int* max_deg_base,
-   int verbose )
+template <class ComplexType, class RealType>
+void CPUInstHom<ComplexType,RealType>::init
+ ( MonSet<ComplexType>* hom_monset, int n_monset, int n_constant,
+   int total_n_mon, int dim, int n_eq, int n_predictor, ComplexType alpha,
+   int* max_deg_base, int verbose )
 {
    this->n_constant = n_constant;
    this->dim = dim;
@@ -346,14 +368,15 @@ void CPUInstHom::init
       std::cout << "Generating CPU Instruction Finished" << std::endl;
 }
 
-void CPUInstHomCoef::init
- ( MonSet* hom_monset, int total_n_mon, int n_monset, int n_constant,
-   CT alpha, int verbose )
+template <class ComplexType>
+void CPUInstHomCoef<ComplexType>::init
+ ( MonSet<ComplexType>* hom_monset, int total_n_mon, int n_monset,
+   int n_constant, ComplexType alpha, int verbose )
 {
    this->alpha = alpha;
    n_coef = total_n_mon;
-   coef_orig = new CT[n_coef*2];
-   CT* tmp_coef_orig = coef_orig;
+   coef_orig = new ComplexType[n_coef*2];
+   ComplexType* tmp_coef_orig = coef_orig;
 
    int constant_exist = 0;
    if(n_constant > 0) constant_exist = 1;
@@ -366,7 +389,7 @@ void CPUInstHomCoef::init
       hom_monset[0].write_coef(tmp_coef_orig);
 
    // write start coefficient and target coefficient seperately
-   tmp_coef_orig = new CT[n_coef*2];
+   tmp_coef_orig = new ComplexType[n_coef*2];
    for(int coef_idx=0; coef_idx<n_coef; coef_idx++)
    {
       tmp_coef_orig[coef_idx] = coef_orig[2*coef_idx];
@@ -376,7 +399,8 @@ void CPUInstHomCoef::init
    coef_orig = tmp_coef_orig;
 }
 
-void CPUInstHomCoef::print()
+template <class ComplexType>
+void CPUInstHomCoef<ComplexType>::print()
 {
    for(int i=0; i<n_coef; i++)
    {
@@ -386,19 +410,21 @@ void CPUInstHomCoef::print()
    }
 }
 
-void CPUInstHomCoef::eval ( const CT t, CT* coef, int reverse )
+template <class ComplexType>
+void CPUInstHomCoef<ComplexType>::eval
+ ( const ComplexType t, ComplexType* coef, int reverse )
 {
-   CT one_minor_t(1.0- t.real, -t.imag);
+   ComplexType one_minor_t(1.0- t.real, -t.imag);
 
    int k = 1;
-   CT t_power_k = t;
-   CT one_minor_t_power_k = one_minor_t;
+   ComplexType t_power_k = t;
+   ComplexType one_minor_t_power_k = one_minor_t;
    for(int i=1; i<k; i++)
    {
       t_power_k *= t;
       one_minor_t_power_k *= one_minor_t;
    }
-   CT t0, t1;
+   ComplexType t0, t1;
    if(reverse == 0)
    {
       t0 = one_minor_t_power_k*alpha;
@@ -413,8 +439,9 @@ void CPUInstHomCoef::eval ( const CT t, CT* coef, int reverse )
       coef[i] = coef_orig[i+n_coef]*t0 + coef_orig[i]*t1;
 }
 
-void CPUInstHomEq::init
- ( MonSet* hom_monset, int n_monset, int n_eq, int n_constant )
+template <class ComplexType>
+void CPUInstHomEq<ComplexType>::init
+ ( MonSet<ComplexType>* hom_monset, int n_monset, int n_eq, int n_constant )
 {
    this->n_eq = n_eq;
    n_mon_eq = NULL;
@@ -470,7 +497,7 @@ void CPUInstHomEq::init
       n_pos_total += eq_mon_pos_size[eq_idx];
 
    mon_pos_start_eq = new int[n_mon_total];
-   coef = new CT[n_mon_total*2];
+   coef = new ComplexType[n_mon_total*2];
    mon_pos_start_eq[0] = 0;
 
    int* eq_mon_idx_tmp = new int[n_eq];
@@ -494,8 +521,8 @@ void CPUInstHomEq::init
    // init coef
    for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
    {
-      coef[2*eq_pos_start[eq_idx]] = CT(0.0,0.0);
-      coef[2*eq_pos_start[eq_idx]+1] = CT(0.0,0.0);
+      coef[2*eq_pos_start[eq_idx]] = ComplexType(0.0,0.0);
+      coef[2*eq_pos_start[eq_idx]+1] = ComplexType(0.0,0.0);
    }
    mon_pos_eq = new unsigned short[n_pos_total];
    for(int set_idx=0; set_idx<n_monset; set_idx++)
@@ -507,7 +534,7 @@ void CPUInstHomEq::init
          {
             int eq_idx = hom_monset[set_idx].get_eq_idx(mon_idx);
             mon_pos_start_eq[eq_mon_idx_tmp[eq_idx]] = eq_mon_pos_tmp[eq_idx];
-            CT* coef_tmp = coef + 2*eq_mon_idx_tmp[eq_idx];
+            ComplexType* coef_tmp = coef + 2*eq_mon_idx_tmp[eq_idx];
             hom_monset[set_idx].write_coef(coef_tmp, mon_idx);
             int tmp_pos = eq_mon_pos_tmp[eq_idx];
             mon_pos_eq[tmp_pos] = hom_monset[set_idx].get_n();
@@ -523,14 +550,15 @@ void CPUInstHomEq::init
          for(int mon_idx=0; mon_idx<n_mon_set; mon_idx++)
          {
              int eq_idx = hom_monset[set_idx].get_eq_idx(mon_idx);
-             CT* coef_tmp = coef + 2*eq_pos_start[eq_idx];
+             ComplexType* coef_tmp = coef + 2*eq_pos_start[eq_idx];
              hom_monset[set_idx].write_coef(coef_tmp, mon_idx);
          }
       }
    }
 }
 
-void CPUInstHomEq::print()
+template <class ComplexType>
+void CPUInstHomEq<ComplexType>::print()
 {
    std::cout << "CPUInstHomMonEq" << std::endl;
    std::cout << "n_eq = " << n_eq << std::endl;
@@ -540,7 +568,8 @@ void CPUInstHomEq::print()
    std::cout << "n_pos+n_mon = " << n_pos_total << std::endl;
 }
 
-void CPUInstHom::print()
+template <class ComplexType>
+void CPUInstHom<ComplexType>::print()
 {
    std::cout << "*************** Coef Instruction ********************"
              << std::endl;
@@ -553,7 +582,9 @@ void CPUInstHom::print()
    CPU_inst_hom_sum.print();
 }
 
-void CPUInstHom::init_workspace ( Workspace& workspace_cpu )
+template <class ComplexType>
+void CPUInstHom<ComplexType>::init_workspace
+ ( Workspace<ComplexType>& workspace_cpu )
 {
    int coef_size = CPU_inst_hom_coef.n_coef;
    int workspace_size = coef_size + CPU_inst_hom_mon.mon_pos_size;
@@ -561,8 +592,10 @@ void CPUInstHom::init_workspace ( Workspace& workspace_cpu )
        n_predictor, CPU_inst_hom_mon.max_deg_base);
 }
 
-void CPUInstHom::eval
- ( Workspace& workspace_cpu, const CT* sol, const CT t, int reverse )
+template <class ComplexType>
+void CPUInstHom<ComplexType>::eval
+ ( Workspace<ComplexType>& workspace_cpu,
+   const ComplexType* sol, const ComplexType t, int reverse )
 {
    if(PED_hom == true)
    {
@@ -580,12 +613,14 @@ void CPUInstHom::eval
    CPU_inst_hom_sum.eval(workspace_cpu.sum, workspace_cpu.matrix);
 }
 
-void CPUInstHom::update_alpha(CT alpha)
+template <class ComplexType, class RealType>
+void CPUInstHom<ComplexType,RealType>::update_alpha ( ComplexType alpha )
 {
    CPU_inst_hom_coef.update_alpha(alpha);
 }
 
-void CPUInstHom::compare_path_cpu_gpu()
+template <class ComplexType, class RealType>
+void CPUInstHom<ComplexType,RealType>::compare_path_cpu_gpu()
 {
    std::cout << "n_step_cpu = " << path_data.n_step << std::endl
              << "n_step_gpu = " << path_data_gpu.n_step << std::endl;
@@ -603,21 +638,23 @@ void CPUInstHom::compare_path_cpu_gpu()
    }
 }
 
-void CPUInstHomCoef::update_alpha(CT alpha)
+template <class ComplexType, class RealType>
+void CPUInstHomCoef<ComplexType,RealType>::update_alpha ( ComplexType alpha )
 {
    if(alpha.real == 0 && alpha.imag == 0)
    {
       int r = rand();
-      T1 tmp = T1(r);
-      this->alpha = CT(sin(tmp),cos(tmp));
+      RealType tmp = RealType(r);
+      this->alpha = ComplexType(sin(tmp),cos(tmp));
    }
    else
       this->alpha = alpha;
 }
 
+template <class ComplexType>
 void CPUInstHomMon::init
- ( MonSet* hom_monset, int n_monset, int total_n_mon, int n_constant,
-   int* max_deg_base, int verbose )
+ ( MonSet<ComplexType>* hom_monset, int n_monset, int total_n_mon,
+   int n_constant, int* max_deg_base, int verbose )
 {
    this->max_deg_base = max_deg_base;
    int max_n_var = hom_monset[n_monset-1].get_n();
@@ -704,8 +741,10 @@ void CPUInstHomMon::init
    }
 }
 
-void CPUInstHomMon::eval
- ( int dim, const CT* x_val, CT* mon, CT* coef, CT** deg_table )
+template <class ComplexType>
+void CPUInstHomMon<ComplexType>::eval
+ ( int dim, const ComplexType* x_val, ComplexType* mon,
+   ComplexType* coef, ComplexType** deg_table )
 {
    if(deg_table != NULL)
    {
@@ -739,16 +778,16 @@ void CPUInstHomMon::eval
    }
 }
 
-
-void CPUInstHomMon::eval_deg_table
- ( int dim, const CT* x_val, CT** deg_table )
+template <class ComplexType>
+void CPUInstHomMon<ComplexType>::eval_deg_table
+ ( int dim, const ComplexType* x_val, ComplexType** deg_table )
 {
    for(int var_idx=0; var_idx<dim; var_idx++)
    {
       if(max_deg_base[var_idx]>0)
       {
-         CT* tmp_deg_table = deg_table[var_idx];
-         CT tmp_var = x_val[var_idx];
+         ComplexType* tmp_deg_table = deg_table[var_idx];
+         ComplexType tmp_var = x_val[var_idx];
          tmp_deg_table[0] = tmp_var;
          for(int deg_idx=1; deg_idx<max_deg_base[var_idx]; deg_idx++)
          {
@@ -758,7 +797,9 @@ void CPUInstHomMon::eval_deg_table
    }
 }
 
-void CPUInstHomMon::eval_base ( CT** deg_table, CT* coef )
+template <class ComplexType>
+void CPUInstHomMon<ComplexType>::eval_base
+ ( ComplexType** deg_table, ComplexType* coef )
 {
    for(int mon_idx=n_mon_base_start; mon_idx<n_mon; mon_idx++)
    {
@@ -769,7 +810,7 @@ void CPUInstHomMon::eval_base ( CT** deg_table, CT* coef )
       int tmp_n_var = *tmp_mon_pos++;
       if(tmp_var_start < tmp_n_var)
       {
-         CT tmp_val = coef[mon_idx];
+         ComplexType tmp_val = coef[mon_idx];
          for(int var_idx=tmp_var_start; var_idx<tmp_n_var; var_idx++)
             tmp_val *= deg_table[tmp_mon_pos[var_idx]][tmp_mon_exp[var_idx]-2];
          coef[mon_idx] = tmp_val;
@@ -777,7 +818,8 @@ void CPUInstHomMon::eval_base ( CT** deg_table, CT* coef )
    }
 }
 
-void CPUInstHomMon::print()
+template <class ComplexType>
+void CPUInstHomMon<ComplexType>::print()
 {
    std::cout << "level = " << level << std::endl;
    for(int i=0; i<level; i++)
@@ -800,7 +842,9 @@ void CPUInstHomMon::print()
    }
 }
 
-void CPUInstHomMonBlock::init ( CPUInstHomMon& orig, int BS, int verbose )
+template <class ComplexType>
+void CPUInstHomMonBlock<ComplexType>::init
+ ( CPUInstHomMon<ComplexType>& orig, int BS, int verbose )
 {
    n_mon = orig.n_mon;
    this->BS = BS;
@@ -878,7 +922,8 @@ void CPUInstHomMonBlock::init ( CPUInstHomMon& orig, int BS, int verbose )
    }
 }
 
-void CPUInstHomMonBlock::print()
+template <class ComplexType>
+void CPUInstHomMonBlock<ComplexType>::print()
 {
    std::cout << "BS = " << BS << std::endl;
    std::cout << "NB = " << NB << std::endl;
@@ -905,10 +950,11 @@ void CPUInstHomMonBlock::print()
    }
 }
 
-void CPUInstHomSumBlock::init
- ( MonSet* hom_monset, int n_monset, const int* mon_pos_start, int dim,
-   int n_eq, int n_constant, int n_mon_single, int* mon_pos_start_block,
-   int verbose )
+template <class ComplexType>
+void CPUInstHomSumBlock<ComplexType>::init
+ ( MonSet<ComplexType>* hom_monset, int n_monset,
+   const int* mon_pos_start, int dim, int n_eq, int n_constant,
+   int n_mon_single, int* mon_pos_start_block, int verbose )
 {
    if(verbose > 0)
    {
@@ -927,7 +973,7 @@ void CPUInstHomSumBlock::init
       n_sums[i] = n_sums_tmp;
       n_sums_tmp += dim+1;
    }
-   MonSet* tmp_hom_monset = hom_monset;
+   MonSet<ComplexType>* tmp_hom_monset = hom_monset;
    for(int set_idx=0; set_idx<n_monset; set_idx++)
    {
       for(int mon_idx=0; mon_idx<tmp_hom_monset->get_n_mon(); mon_idx++)
@@ -1144,14 +1190,16 @@ void CPUInstHomSumBlock::init
    delete[] sum_pos_start_matrix;
 }
 
-void CPUInstHomSumBlock::eval ( CT* sum, CT* matrix )
+template <class ComplexType>
+void CPUInstHomSumBlock<ComplexType>::eval
+ ( ComplexType* sum, ComplexType* matrix )
 {
    for(int i=0; i<n_sum; i++)
    {
       int tmp_start = sum_pos_start[i];
       int* tmp_pos = sum_pos+tmp_start;
       int tmp_n = *(tmp_pos++);
-      CT tmp = sum[*tmp_pos++];
+      ComplexType tmp = sum[*tmp_pos++];
 
       for(int j=1; j<tmp_n; j++) tmp += sum[*tmp_pos++];
 
@@ -1159,7 +1207,8 @@ void CPUInstHomSumBlock::eval ( CT* sum, CT* matrix )
    }
 }
 
-void CPUInstHomSumBlock::print()
+template <class ComplexType>
+void CPUInstHomSumBlock<ComplexType>::print()
 {
    std::cout << "n_sum = " << n_sum << std::endl;
    std::cout << "sum_pos_size = " << sum_pos_size << std::endl;
@@ -1177,8 +1226,9 @@ void CPUInstHomSumBlock::print()
    }
 }
 
-void CPUInstHomSum::init
- ( MonSet* hom_monset, int n_monset, const int* mon_pos_start,
+template <class ComplexType>
+void CPUInstHomSum<ComplexType>::init
+ ( MonSet<ComplexType>* hom_monset, int n_monset, const int* mon_pos_start,
    int dim, int n_eq, int n_constant, int verbose )
 {
    if(verbose > 0)
@@ -1198,7 +1248,7 @@ void CPUInstHomSum::init
       n_sums[i] = n_sums_tmp;
       n_sums_tmp += dim+1;
    }
-   MonSet* tmp_hom_monset = hom_monset;
+   MonSet<ComplexType>* tmp_hom_monset = hom_monset;
 
    for(int monset_idx=0; monset_idx<n_monset; monset_idx++)
    {
@@ -1410,14 +1460,15 @@ void CPUInstHomSum::init
    delete[] sum_pos_start_matrix;
 }
 
-void CPUInstHomSum::eval ( CT* sum, CT* matrix )
+template <class ComplexType>
+void CPUInstHomSum<ComplexType>::eval
+ ( ComplexType* sum, ComplexType* matrix )
 {
    // std::cout << "n_sum = " << n_sum << std::endl;
 
    for(int i=0; i<n_sum_zero; i++)
-   {
       matrix[sum_zeros[i]].init(0.0,0.0);
-   }
+
    for(int i=0; i<n_sum; i++)
    {
       int tmp_start = sum_pos_start[i];
@@ -1425,7 +1476,7 @@ void CPUInstHomSum::eval ( CT* sum, CT* matrix )
       int tmp_n = *(tmp_pos++);
       // std::cout << "i = " << i << " n = " << tmp_n << ", ";
       // std::cout << *tmp_pos << " " << sum[*tmp_pos] << " ";
-      CT tmp = sum[*tmp_pos++];
+      ComplexType tmp = sum[*tmp_pos++];
       for(int j=1; j<tmp_n; j++)
       {
          // std::cout << *tmp_pos << " " << sum[*tmp_pos] << " ";
@@ -1437,7 +1488,8 @@ void CPUInstHomSum::eval ( CT* sum, CT* matrix )
    }
 }
 
-void CPUInstHomSum::print()
+template <class ComplexType>
+void CPUInstHomSum<ComplexType>::print()
 {
    std::cout << "n_sum = " << n_sum << std::endl;
    std::cout << "sum_pos_size = " << sum_pos_size << std::endl;
