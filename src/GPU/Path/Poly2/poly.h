@@ -301,8 +301,8 @@ class PolyEq
          @return equation value
        */
 
-      ComplexType eval(const ComplexType* x_val, ComplexType* deri,
-                       ComplexType** deg_table);
+      ComplexType eval ( const ComplexType* x_val, ComplexType* deri,
+                         ComplexType** deg_table );
 
       int memory_size ( int factor_size );
 
@@ -362,7 +362,7 @@ class PolySys
       }
 
       void read ( const string* sys_string, int n_eq, VarDict& pos_dict );
-      // Read polynomial system from string array
+      // Reads a polynomial system from an array of strings.
       /*
         Read equation from string array, sys_string, using PolyEq::read().
         @param sys_string polynomial system string
@@ -373,7 +373,7 @@ class PolySys
        */
 
       void read ( const string& sys_string, VarDict& pos_dict );
-      // Read polynomial system from string
+      // Reads a polynomial system from a string.
       /*
          First split the string by ';',
          then use PolyEq::read() to read each equation.
@@ -383,9 +383,9 @@ class PolySys
        */
 
       void read_file ( const string& file_name );
-      // Read a polynomial system from file.
+      // Reads a polynomial system from file.
       /*
-         Read dimension on the first line and then system.
+         Reads the dimension on the first line and then the system.
          @param filename file name of polynomial system.
          File requirement: first line is dimension
          and the equations are separated by ';' symbols.
@@ -393,10 +393,12 @@ class PolySys
          If it is empty, the positions will be created by the order 
          of variables appearance first time in the file.
          @sa read_file(ifstream& myfile, Dict& pos_dict)
+         Note that there should not be any blank lines
+         between the lines that contain polynomials.
        */
 
       void read_file ( ifstream& myfile, VarDict& pos_dict );
-      // Read polynomial system from file
+      // Reads a polynomial system from file.
       /*
          Read dimension on the first line and then system.
          @param myfile file stream of polynomial system.
@@ -409,14 +411,18 @@ class PolySys
        */
 
       ComplexType* eval ( const ComplexType* x_val );
-      // Evaluate polynomial system
+      // Evaluates a polynomial system at the point x_val.
       /*
          @param x_val ComplexType array of variables' values
          @return ComplexType array of system value
+         On input, x_val points to as many complex numbers
+         as the dimension of the system.
+         On return is a pointer to a newly allocated array
+         of as many complex numbers as the number of equations.
       */
 
       ComplexType* eval ( const ComplexType* x_val, ComplexType** deri );
-      // Evaluate equation and its derivative
+      // Evaluates a polynomial system and its derivatives.
       /*
          Evaluate monomials and their derivatives by PolyMon::eval(),
          and add them up.
@@ -429,7 +435,7 @@ class PolySys
                   ComplexType** deri_val );
 
       void print();
-      // Print polynomial system
+      // Prints the polynomial system.
       /*
          Use PolyEq::print() to print each equation in the system.
          @param pos_dict the dictionary of variables and their positions
