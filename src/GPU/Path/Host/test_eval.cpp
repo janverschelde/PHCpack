@@ -61,9 +61,7 @@ int double_test ( string filename )
    complexH<double> *arg = new complexH<double>[polynomials.dim];
    for(int i=0; i<polynomials.dim; i++) arg[i].init(1.0,0.0);
 
-   complexH<double> *val = new complexH<double>[polynomials.dim];
-   val = polynomials.eval(arg);
-  
+   complexH<double> *val = polynomials.eval(arg);
    cout << "The value of the system at a vector of ones :" << endl;
    for(int i=0; i<polynomials.dim; i++) cout << val[i];
 
@@ -85,9 +83,7 @@ int double_double_test ( string filename )
    complexH<dd_real> *arg = new complexH<dd_real>[polynomials.dim];
    for(int i=0; i<polynomials.dim; i++) arg[i].init(1.0,0.0);
 
-   complexH<dd_real> *val = new complexH<dd_real>[polynomials.dim];
-   val = polynomials.eval(arg);
-  
+   complexH<dd_real> *val = polynomials.eval(arg);
    cout << "The value of the system at a vector of ones :" << endl;
    for(int i=0; i<polynomials.dim; i++) cout << val[i];
 
@@ -109,9 +105,7 @@ int quad_double_test ( string filename )
    complexH<qd_real> *arg = new complexH<qd_real>[polynomials.dim];
    for(int i=0; i<polynomials.dim; i++) arg[i].init(1.0,0.0);
 
-   complexH<qd_real> *val = new complexH<qd_real>[polynomials.dim];
-   val = polynomials.eval(arg);
-  
+   complexH<qd_real> *val = val = polynomials.eval(arg);
    cout << "The value of the system at a vector of ones :" << endl;
    for(int i=0; i<polynomials.dim; i++) cout << val[i];
 
