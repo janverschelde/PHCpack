@@ -419,11 +419,28 @@ class CPUInstHom
       void print();
  
       void init_workspace ( Workspace<ComplexType>& workspace_cpu );
+      /*
+         Initialization of the data structures to evaluate and
+         differentiate the polynomial system.
+         This function must be executed before the eval.
+       */
 
       void eval ( Workspace<ComplexType>& workspace_cpu,
                   const ComplexType* sol,
                   const ComplexType t, int reverse=0 );
-
+      /*
+         Evaluates the polynomials corresponding to the workspace
+         at the array of complex numbers in sol, at t if a homotopy.
+         The number of elements in sol should equal the dimension
+         of the polynomial system.
+         The result is in workspace_cpu.matrix, which is a single
+         index array of (dim+1)*dim complex numbers, where dim is
+         the dimension of the polynomial system.
+         The function value of the system at sol is in the last dim
+         elements of the matrix.  The first dim*dim numbers contain
+         the values of the Jacobian matrix at sol.
+       */
+      
       void update_alpha ( ComplexType alpha=ComplexType(0.0,0.0) );
 
       void compare_path_cpu_gpu();
