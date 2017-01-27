@@ -1,28 +1,32 @@
-// testing the operations on evaluation and differentiation
+// Tests the operations on evaluation and differentiation.
+// When prompted for a system, cyclic5 is a good test case.
 
 #include <iostream>
 #include <string>
 #include "complexH.h"
-#include "poly.h"
 #include "eval_host.h"
 
 using namespace std;
 
+template <class ComplexType, class RealType>
+int test ( PolySys<ComplexType,RealType> polynomials );
+// evaluates and differentiates the polynomials at 0, 1, 2, ...
+// once with poly methods and once with eval_host methods
+
 int double_test ( string filename );
-// test in double precision, reads a system from file
+// reads a double precision system from file, calls test
 
 int double_double_test ( string filename );
-// test in double double precision, reads a system from file
+// reads a double double precision system from file, calls test
 
 int quad_double_test ( string filename );
-// test in quad double precision, reads a system from file
+// reads a quad double precision system from file, calls test
 
 int main ( void )
 {
    cout << "Testing the polynomials ..." << endl;
 
-   string name;
-
+   string name; // = "/Users/jan/PHCv2/Demo/cyclic5";
    cout << "-> give a file name : "; cin >> name;
 
    char choice;
@@ -47,32 +51,62 @@ int main ( void )
    return 0;
 }
 
+template <class ComplexType, class RealType>
+int test ( PolySys<ComplexType,RealType> polynomials )
+{
+   cout << "The dimension : " << polynomials.dim << endl;
+
+   ComplexType* arg = new ComplexType[polynomials.dim];
+   for(int i=0; i<polynomials.dim; i++) arg[i].init(i,0.0);
+   ComplexType* val = new ComplexType[polynomials.dim]; // function value
+   ComplexType** jac = new ComplexType*[polynomials.dim]; // Jacobian
+   for(int i=0; i<polynomials.dim; i++)
+      jac[i] = new ComplexType[polynomials.dim];
+   polynomials.eval(arg,val,jac); // evaluate and differentiate
+   cout << "The value of the system at 0, 1, 2, ... :" << endl;
+   for(int i=0; i<polynomials.dim; i++) cout << val[i];
+   cout << "The derivatives at 0, 1, 2, ... :" << endl;
+   for(int i=0; i<polynomials.dim; i++)
+   {
+      cout << "All derivatives of polynomial " << i << " :" << endl;
+      for(int j=0; j<polynomials.dim; j++)
+      {
+         int idx = i*polynomials.dim + j;
+         cout << jac[i][j];
+      }
+   }
+   CPUInstHom<ComplexType,RealType> ped; // data for eval_host
+   Workspace<ComplexType> wrk;
+   ComplexType alpha,t;
+   alpha.init(0.0,0.0); // initialize the data for eval_host
+   t.init(0.0,0.0);
+   ped.init(polynomials,polynomials.dim,polynomials.n_eq,0,alpha);
+   ped.init_workspace(wrk);
+   ped.eval(wrk,arg,t); // evaluate and differentiate
+   cout << "The value of the system at 0, 1, 2, ... :" << endl;
+   for(int j=0; j<polynomials.dim; j++)
+      cout << wrk.matrix[polynomials.dim*polynomials.dim + j];
+   for(int j=0; j<polynomials.dim; j++)
+   {
+      cout << "All derivatives of polynomial " << j << " :" << endl;
+      for(int i=0; i<polynomials.dim; i++)
+      {
+         int idx = i*polynomials.dim + j;
+         cout << wrk.matrix[idx];
+      }
+   }
+   return 0;
+}
+
 int double_test ( string filename )
 {
    PolySys<complexH<double>,double> polynomials;
 
    polynomials.read_file(filename);
-
    cout << "The polynomials on the file " << filename << " :" << endl;
-
    polynomials.print();
 
-   cout << "The dimension : " << polynomials.dim << endl;
- 
-   complexH<double> *arg = new complexH<double>[polynomials.dim];
-   for(int i=0; i<polynomials.dim; i++) arg[i].init(1.0,0.0);
-
-   complexH<double> *val = polynomials.eval(arg);
-   cout << "The value of the system at a vector of ones :" << endl;
-   for(int i=0; i<polynomials.dim; i++) cout << val[i];
-
-   CPUInstHom<complexH<double>,double> ped;
-   complexH<double> alpha;
-
-   alpha.init(1.0,0.0);
-   ped.init(polynomials,polynomials.dim,polynomials.n_eq,0,alpha);
-
-   return 0;
+   return test<complexH<double>,double>(polynomials);
 }
 
 int double_double_test ( string filename )
@@ -80,21 +114,10 @@ int double_double_test ( string filename )
    PolySys< complexH<dd_real>, dd_real > polynomials;
 
    polynomials.read_file(filename);
-
    cout << "The polynomials on the file " << filename << " :" << endl;
-
    polynomials.print();
 
-   cout << "The dimension : " << polynomials.dim << endl;
- 
-   complexH<dd_real> *arg = new complexH<dd_real>[polynomials.dim];
-   for(int i=0; i<polynomials.dim; i++) arg[i].init(1.0,0.0);
-
-   complexH<dd_real> *val = polynomials.eval(arg);
-   cout << "The value of the system at a vector of ones :" << endl;
-   for(int i=0; i<polynomials.dim; i++) cout << val[i];
-
-   return 0;
+   return test<complexH<dd_real>,dd_real>(polynomials);
 }
 
 int quad_double_test ( string filename )
@@ -102,19 +125,8 @@ int quad_double_test ( string filename )
    PolySys< complexH<qd_real>, qd_real > polynomials;
 
    polynomials.read_file(filename);
-
    cout << "The polynomials on the file " << filename << " :" << endl;
-
    polynomials.print();
 
-   cout << "The dimension : " << polynomials.dim << endl;
- 
-   complexH<qd_real> *arg = new complexH<qd_real>[polynomials.dim];
-   for(int i=0; i<polynomials.dim; i++) arg[i].init(1.0,0.0);
-
-   complexH<qd_real> *val = val = polynomials.eval(arg);
-   cout << "The value of the system at a vector of ones :" << endl;
-   for(int i=0; i<polynomials.dim; i++) cout << val[i];
-
-   return 0;
+   return test<complexH<qd_real>,qd_real>(polynomials);
 }

@@ -1,6 +1,7 @@
 Thu 26 Jan 2017 : removed the allocation for the result of the evaluation
   in test_eval.cpp.  Fixed path_data.h, path_data.tpp, parameter.h,
   varset.h, eval_host.h, eval_host.tpp, and test_eval.cpp.
+  Defined a templated test program in test_eval.cpp.
 
 Wed 25 Jan 2017 : made a first pass through eval_host.h and eval_host.tpp
   adding template directives wherever needed.  New test_eval.cpp to
