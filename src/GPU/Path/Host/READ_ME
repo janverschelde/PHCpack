@@ -3,12 +3,14 @@ Code to run on the host in the Path library, in PHCv2.4.34
 This directory is the reworked PATH_CPU subdirectory of the Path directory.
 The code is reworked to use templates properly.
 
+The makefile defines the compilation of the test programs.
+
 -------------------------------------------------------------------------------
 file name          : short description
 -------------------------------------------------------------------------------
 mgs_host.h         : templated prototypes for the modified Gram-Schmidt method
 mgs_host.tpp       : definition of the prototyped functions in mgs_host.h
-test_mgs           : test on solving a random linear system with mgs_host
+test_mgs.cpp       : test on solving a random linear system with mgs_host
 -------------------------------------------------------------------------------
 workspace_host.h   : prototypes for all data during the path tracking
 workspace_host.tpp : definition of templated methods of workspace_host.h
@@ -19,4 +21,5 @@ varset.h           : data structures for the evaluation and differentiation
 parameter.h        : settings for numerical constants
 eval_host.h        : evaluation and differentiation of polynomials
 eval_host.tpp      : definition of the tempated code in eval_host.h
+test_eval.cpp      : test on the evaluation and the differentation
 -------------------------------------------------------------------------------
