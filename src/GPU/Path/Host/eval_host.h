@@ -41,7 +41,7 @@ class CPUInstHomCoef
       ~CPUInstHomCoef()
       {
          // std::cout << "Delete CPUInstHomCoef" << std::endl;
-         delete[] coef_orig;
+         if(coef_orig != NULL) delete[] coef_orig;
       }
 
       void init ( MonSet<ComplexType>* hom_monset,
@@ -96,11 +96,11 @@ class CPUInstHomMon
       ~CPUInstHomMon()
       {
          // std::cout << "Delete CPUInstHomMon" << std::endl;
-         delete[] n_mon_level;
-         delete[] mon_pos_start;
-         delete[] mon_pos;
-         delete[] mon_exp;
-         delete[] max_deg_base;
+         if(n_mon_level != NULL) delete[] n_mon_level;
+         if(mon_pos_start != NULL) delete[] mon_pos_start;
+         if(mon_pos != NULL) delete[] mon_pos;
+         if(mon_exp != NULL) delete[] mon_exp;
+         if(max_deg_base != NULL) delete[] max_deg_base;
       }
 
       void init ( MonSet<ComplexType>* hom_monset, int n_monset,
@@ -154,9 +154,9 @@ class CPUInstHomMonBlock
 
       ~CPUInstHomMonBlock()
       {
-         delete[] max_var_block;
-         delete[] mon_pos_start_block;
-         delete[] mon_pos_block;
+         if(max_var_block != NULL) delete[] max_var_block;
+         if(mon_pos_start_block != NULL) delete[] mon_pos_start_block;
+         if(mon_pos_block != NULL) delete[] mon_pos_block;
       }
 
       void init ( CPUInstHomMon<ComplexType>& orig, int BS, int verbose );
@@ -201,8 +201,8 @@ class CPUInstHomSumBlock
       ~CPUInstHomSumBlock()
       {
          // std::cout << "Delete CPUInstHomSum" << std::endl;
-         delete[] sum_pos_start;
-         delete[] sum_pos;
+         if(sum_pos_start != NULL) delete[] sum_pos_start;
+         if(sum_pos != NULL) delete[] sum_pos;
       }
 
       void init ( MonSet<ComplexType>* hom_monset,
@@ -254,8 +254,8 @@ class CPUInstHomSum
       ~CPUInstHomSum()
       {
          // std::cout << "Delete CPUInstHomSum" << std::endl;
-         delete[] sum_pos_start;
-         delete[] sum_pos;
+         if(sum_pos_start != NULL) delete[] sum_pos_start;
+         if(sum_pos != NULL) delete[] sum_pos;
       }
 
       void init ( MonSet<ComplexType>* hom_monset,

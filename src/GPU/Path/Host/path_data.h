@@ -54,8 +54,8 @@ class PathStep
 
       ~PathStep()
       {
-         delete[] predict_pt;
-         delete[] correct_pt;
+         if(predict_pt != NULL) delete[] predict_pt;
+         if(correct_pt != NULL) delete[] correct_pt;
       }
 
       PathStep ( int dim, ifstream& path_file )
@@ -116,7 +116,7 @@ class Path
       {
          for(typename vector<PathStep<ComplexType, RealType>*>::iterator
              it = steps.begin(); 
-             it!=steps.end(); ++it) 
+             it != steps.end(); ++it) 
          {
             delete (*it);
          }

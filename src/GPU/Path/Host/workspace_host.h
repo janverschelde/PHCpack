@@ -77,11 +77,11 @@ class Workspace
 
       ~Workspace()
       {
-         delete[] all;
-         delete[] matrix;
-         delete[] V;
-         delete[] R;
-         delete[] sol;
+         if(all != NULL) delete[] all;
+         if(matrix != NULL) delete[] matrix;
+         if(V != NULL) delete[] V;
+         if(R != NULL) delete[] R;
+         if(sol != NULL) delete[] sol;
          if(deg_table != NULL)
          {
             delete[] deg_table[0];
