@@ -110,8 +110,8 @@ class PolyMon
 
       ~PolyMon()
       {
-         delete[] pos;
-         delete[] exp;
+         if(pos != NULL) delete[] pos;
+         if(exp != NULL) delete[] exp;
       }
 
       void read 
@@ -357,7 +357,7 @@ class PolySys
       {
          // delete eq_space;
          // delete pos_var;
-         delete max_deg_base;
+         if(max_deg_base != NULL) delete max_deg_base;
          // cout << "sys destructed" << endl;
       }
 

@@ -1,4 +1,5 @@
 Thu 26 Jan 2017 : some improvements in the documentation of poly.h.
+  Guarded a delete statement with a test if NULL in poly.h.
 
 Tue 24 Jan 2017 : renamed the template type T1 into RealType in poly.h,
   poly.tpp, utilities.h, and utilities.tpp.
