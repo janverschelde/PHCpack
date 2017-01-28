@@ -1,3 +1,5 @@
+Sat 28 Jan 2017 : templated the test function in test_poly.cpp.
+
 Thu 26 Jan 2017 : some improvements in the documentation of poly.h.
   Guarded a delete statement with a test if NULL in poly.h.
 

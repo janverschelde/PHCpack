@@ -7,14 +7,9 @@
 
 using namespace std;
 
-int double_test ( string filename );
-// test in double precision, reads a system from file
-
-int double_double_test ( string filename );
-// test in double double precision, reads a system from file
-
-int quad_double_test ( string filename );
-// test in quad double precision, reads a system from file
+template <class ComplexType, class RealType>
+int test ( string filename);
+// reads a system from file and writes it to screen
 
 int main ( void )
 {
@@ -35,46 +30,21 @@ int main ( void )
    cout << "\nReading from file " << name << " ..." << endl;
 
    if(choice == '0')
-      double_test(name);
+      test<complexH<double>,double>(name);
    else if(choice == '1')
-      double_double_test(name);
+      test<complexH<dd_real>,dd_real>(name);
    else if(choice == '2')
-      quad_double_test(name);
+      test<complexH<qd_real>,qd_real>(name);
    else
       cout << "Invalid choice " << choice << " for the precision." << endl; 
 
    return 0;
 }
 
-int double_test ( string filename )
+template <class ComplexType, class RealType>
+int test ( string filename )
 {
-   PolySys< complexH<double>, double > polynomials;
-
-   polynomials.read_file(filename);
-
-   cout << "The polynomials on the file " << filename << " :" << endl;
-
-   polynomials.print();
-
-   return 0;
-}
-
-int double_double_test ( string filename )
-{
-   PolySys< complexH<dd_real>, dd_real > polynomials;
-
-   polynomials.read_file(filename);
-
-   cout << "The polynomials on the file " << filename << " :" << endl;
-
-   polynomials.print();
-
-   return 0;
-}
-
-int quad_double_test ( string filename )
-{
-   PolySys< complexH<qd_real>, qd_real > polynomials;
+   PolySys<ComplexType,RealType> polynomials;
 
    polynomials.read_file(filename);
 
