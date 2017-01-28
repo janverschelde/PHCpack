@@ -27,3 +27,9 @@ newton_host.h      : prototypes for applying Newton's method
 newton_host.tpp    : templated definitions for the functions in newton_host.h
 test_newton.cpp    : test on Newton's method with algorithmic differentiation
 -------------------------------------------------------------------------------
+predictor_host.h   : prototype for the predictor on the host
+predictor_host.tpp : templated code for the predictor
+path_host.h        : prototype for the path tracker on the host
+path_host.tpp      : templated code for the prototype in path_host.h
+test_path.cpp      : testing the path tracker
+-------------------------------------------------------------------------------

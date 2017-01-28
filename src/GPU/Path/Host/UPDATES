@@ -2,6 +2,8 @@ Sat 28 Jan 2017 : rewrote test_eval.cpp into a templated version,
   with better separation of tasks in separate functions.
   Fixed bug in test_eval.cpp, must pass PolySys objects by reference.
   Updated test_newton.cpp for templates and call by reference.
+  Initial version of predictor_host.h, predictor_host.tpp, path_host,
+  path_host.tpp, tested by test_path.cpp, with updated makefile.
 
 Fri 27 Jan 2017 : first templated version of newton_host.h, with the
   templated code in newton_host.tpp.  Added instructions to the makefile

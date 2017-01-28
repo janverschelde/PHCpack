@@ -18,5 +18,9 @@ test_newton:
 	$(gpp) -c -I$(CMPLX) -I$(POLYS) test_newton.cpp -o test_newton.o
 	$(gpp) test_newton.o $(QD_LIB)/libqd.a -o /tmp/test_newton
 
+test_path:
+	$(gpp) -c -I$(CMPLX) -I$(POLYS) test_path.cpp -o test_path.o
+	$(gpp) test_path.o $(QD_LIB)/libqd.a -o /tmp/test_path
+
 clean:
 	/bin/rm -f -r *.o
