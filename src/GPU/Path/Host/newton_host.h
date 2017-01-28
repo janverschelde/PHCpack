@@ -21,6 +21,6 @@ bool CPU_Newton_Refine
    Parameter path_parameter, double& timeSec_Eval, double& timeSec_MGS,
    int reverse = 0 );
 
-#include "newton_host.h"
+#include "newton_host.tpp"
 
-#endif /* NEWTON_HOST_H_ */
+#endif /* _NEWTON_HOST_H_ */

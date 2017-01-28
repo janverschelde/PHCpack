@@ -1,5 +1,6 @@
 Fri 27 Jan 2017 : first templated version of newton_host.h, with the
-  templated code in newton_host.tpp.
+  templated code in newton_host.tpp.  Added instructions to the makefile
+  to compile the new test program test_newton.cpp.
 
 Thu 26 Jan 2017 : removed the allocation for the result of the evaluation
   in test_eval.cpp.  Fixed path_data.h, path_data.tpp, parameter.h,

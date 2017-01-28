@@ -42,7 +42,8 @@ double CPU_normalize ( complexH<qd_real>* sol, int dim )
 
 template <class ComplexType, class RealType>
 bool CPU_Newton 
- ( Workspace& workspace_cpu, CPUInstHom& cpu_inst_hom,
+ ( Workspace<ComplexType>& workspace_cpu,
+   CPUInstHom<ComplexType,RealType>& cpu_inst_hom,
    Parameter path_parameter, double& timeSec_Eval, double& timeSec_MGS,
    int reverse )
 {
@@ -88,7 +89,7 @@ bool CPU_Newton
    {
       if(Debug) std::cout << "Iteration " << i << std::endl;
 
-      CPU_mgs2qrls(V,R,sol,n_eq,dim+1);
+      CPU_mgs2qrls<ComplexType,RealType>(V,R,sol,n_eq,dim+1);
       cpu_inst_hom.n_mgs_CPU++;
       max_delta_x = CPU_normalize(sol,dim);
       double r_max_delta_x = max_delta_x/max_x;
