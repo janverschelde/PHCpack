@@ -1,3 +1,6 @@
+Fri 27 Jan 2017 : first templated version of newton_host.h, with the
+  templated code in newton_host.tpp.
+
 Thu 26 Jan 2017 : removed the allocation for the result of the evaluation
   in test_eval.cpp.  Fixed path_data.h, path_data.tpp, parameter.h,
   varset.h, eval_host.h, eval_host.tpp, and test_eval.cpp.
