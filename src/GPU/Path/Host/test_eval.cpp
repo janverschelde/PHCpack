@@ -9,18 +9,22 @@
 using namespace std;
 
 template <class ComplexType, class RealType>
-int test ( PolySys<ComplexType,RealType> polynomials );
+int test ( string filename );
+// reads a double precision system from file, calls eval_test
+
+template <class ComplexType, class RealType>
+int eval_test ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg );
 // evaluates and differentiates the polynomials at 0, 1, 2, ...
 // once with poly methods and once with eval_host methods
 
-int double_test ( string filename );
-// reads a double precision system from file, calls test
+template <class ComplexType, class RealType>
+int basic_eval ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg );
+// evaluates and differentiates the polynomials at arg with basic methods
 
-int double_double_test ( string filename );
-// reads a double double precision system from file, calls test
-
-int quad_double_test ( string filename );
-// reads a quad double precision system from file, calls test
+template <class ComplexType, class RealType>
+int ade_eval ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg );
+// evaluates and differentiates the polynomials at arg
+// with methods of algorithmic differentiation
 
 int main ( void )
 {
@@ -40,11 +44,11 @@ int main ( void )
    cout << "\nReading from file " << name << " ..." << endl;
 
    if(choice == '0')
-      double_test(name);
+      test<complexH<double>,double>(name);
    else if(choice == '1')
-      double_double_test(name);
+      test<complexH<dd_real>,dd_real>(name);
    else if(choice == '2')
-      quad_double_test(name);
+      test<complexH<qd_real>,qd_real>(name);
    else
       cout << "Invalid choice " << choice << " for the precision." << endl; 
 
@@ -52,17 +56,43 @@ int main ( void )
 }
 
 template <class ComplexType, class RealType>
-int test ( PolySys<ComplexType,RealType> polynomials )
+int test ( string filename )
+{
+   PolySys<ComplexType,RealType> polynomials;
+
+   polynomials.read_file(filename);
+   cout << "The polynomials on the file " << filename << " :" << endl;
+   polynomials.print();
+
+   return eval_test<ComplexType,RealType>(polynomials);
+}
+
+template <class ComplexType, class RealType>
+int eval_test ( PolySys<ComplexType,RealType> polynomials )
 {
    cout << "The dimension : " << polynomials.dim << endl;
 
    ComplexType* arg = new ComplexType[polynomials.dim];
    for(int i=0; i<polynomials.dim; i++) arg[i].init(i,0.0);
+
+   int fail = basic_eval<ComplexType,RealType>(polynomials,arg);
+
+   if(fail != 0)
+      fail = ade_eval<ComplexType,RealType>(polynomials,arg);
+
+   return fail;
+}
+
+template <class ComplexType, class RealType>
+int basic_eval ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg )
+{
    ComplexType* val = new ComplexType[polynomials.dim]; // function value
    ComplexType** jac = new ComplexType*[polynomials.dim]; // Jacobian
    for(int i=0; i<polynomials.dim; i++)
       jac[i] = new ComplexType[polynomials.dim];
+
    polynomials.eval(arg,val,jac); // evaluate and differentiate
+
    cout << "The value of the system at 0, 1, 2, ... :" << endl;
    for(int i=0; i<polynomials.dim; i++) cout << val[i];
    cout << "The derivatives at 0, 1, 2, ... :" << endl;
@@ -75,14 +105,23 @@ int test ( PolySys<ComplexType,RealType> polynomials )
          cout << jac[i][j];
       }
    }
+   return 0;
+}
+
+template <class ComplexType, class RealType>
+int ade_eval ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg )
+{
    CPUInstHom<ComplexType,RealType> ped; // data for eval_host
    Workspace<ComplexType> wrk;
    ComplexType alpha,t;
+
    alpha.init(0.0,0.0); // initialize the data for eval_host
    t.init(0.0,0.0);
    ped.init(polynomials,polynomials.dim,polynomials.n_eq,0,alpha);
    ped.init_workspace(wrk);
+
    ped.eval(wrk,arg,t); // evaluate and differentiate
+
    cout << "The value of the system at 0, 1, 2, ... :" << endl;
    for(int j=0; j<polynomials.dim; j++)
       cout << wrk.matrix[polynomials.dim*polynomials.dim + j];
@@ -96,37 +135,4 @@ int test ( PolySys<ComplexType,RealType> polynomials )
       }
    }
    return 0;
-}
-
-int double_test ( string filename )
-{
-   PolySys<complexH<double>,double> polynomials;
-
-   polynomials.read_file(filename);
-   cout << "The polynomials on the file " << filename << " :" << endl;
-   polynomials.print();
-
-   return test<complexH<double>,double>(polynomials);
-}
-
-int double_double_test ( string filename )
-{
-   PolySys< complexH<dd_real>, dd_real > polynomials;
-
-   polynomials.read_file(filename);
-   cout << "The polynomials on the file " << filename << " :" << endl;
-   polynomials.print();
-
-   return test<complexH<dd_real>,dd_real>(polynomials);
-}
-
-int quad_double_test ( string filename )
-{
-   PolySys< complexH<qd_real>, qd_real > polynomials;
-
-   polynomials.read_file(filename);
-   cout << "The polynomials on the file " << filename << " :" << endl;
-   polynomials.print();
-
-   return test<complexH<qd_real>,qd_real>(polynomials);
 }
