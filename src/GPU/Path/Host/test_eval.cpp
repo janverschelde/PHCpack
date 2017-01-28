@@ -13,16 +13,16 @@ int test ( string filename );
 // reads a double precision system from file, calls eval_test
 
 template <class ComplexType, class RealType>
-int eval_test ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg );
+int eval_test ( PolySys<ComplexType,RealType>& polynomials, ComplexType* arg );
 // evaluates and differentiates the polynomials at 0, 1, 2, ...
 // once with poly methods and once with eval_host methods
 
 template <class ComplexType, class RealType>
-int basic_eval ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg );
+int basic_eval ( PolySys<ComplexType,RealType>& polynomials, ComplexType* arg );
 // evaluates and differentiates the polynomials at arg with basic methods
 
 template <class ComplexType, class RealType>
-int ade_eval ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg );
+int ade_eval ( PolySys<ComplexType,RealType>& polynomials, ComplexType* arg );
 // evaluates and differentiates the polynomials at arg
 // with methods of algorithmic differentiation
 
@@ -43,16 +43,18 @@ int main ( void )
 
    cout << "\nReading from file " << name << " ..." << endl;
 
+   int fail = 0;
+
    if(choice == '0')
-      test<complexH<double>,double>(name);
+      fail = test<complexH<double>,double>(name);
    else if(choice == '1')
-      test<complexH<dd_real>,dd_real>(name);
+      fail = test<complexH<dd_real>,dd_real>(name);
    else if(choice == '2')
-      test<complexH<qd_real>,qd_real>(name);
+      fail = test<complexH<qd_real>,qd_real>(name);
    else
       cout << "Invalid choice " << choice << " for the precision." << endl; 
 
-   return 0;
+   return fail;
 }
 
 template <class ComplexType, class RealType>
@@ -68,12 +70,13 @@ int test ( string filename )
 }
 
 template <class ComplexType, class RealType>
-int eval_test ( PolySys<ComplexType,RealType> polynomials )
+int eval_test ( PolySys<ComplexType,RealType>& polynomials )
 {
    cout << "The dimension : " << polynomials.dim << endl;
 
    ComplexType* arg = new ComplexType[polynomials.dim];
-   for(int i=0; i<polynomials.dim; i++) arg[i].init(i,0.0);
+   for(int i=0; i<polynomials.dim; i++) arg[i] = ComplexType(i,0.0);
+   // arg[i].init(i,0.0);
 
    int fail = basic_eval<ComplexType,RealType>(polynomials,arg);
 
@@ -84,7 +87,7 @@ int eval_test ( PolySys<ComplexType,RealType> polynomials )
 }
 
 template <class ComplexType, class RealType>
-int basic_eval ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg )
+int basic_eval ( PolySys<ComplexType,RealType>& polynomials, ComplexType* arg )
 {
    ComplexType* val = new ComplexType[polynomials.dim]; // function value
    ComplexType** jac = new ComplexType*[polynomials.dim]; // Jacobian
@@ -109,7 +112,7 @@ int basic_eval ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg )
 }
 
 template <class ComplexType, class RealType>
-int ade_eval ( PolySys<ComplexType,RealType> polynomials, ComplexType* arg )
+int ade_eval ( PolySys<ComplexType,RealType>& polynomials, ComplexType* arg )
 {
    CPUInstHom<ComplexType,RealType> ped; // data for eval_host
    Workspace<ComplexType> wrk;
