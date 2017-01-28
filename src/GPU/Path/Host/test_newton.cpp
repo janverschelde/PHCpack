@@ -1,5 +1,4 @@
-// Tests the operations on evaluation and differentiation.
-// When prompted for a system, cyclic5 is a good test case.
+// Tests Newton's method with algorithmic differentiation.
 
 #include <iostream>
 #include <string>
@@ -10,18 +9,12 @@
 using namespace std;
 
 template <class ComplexType, class RealType>
-int test ( PolySys<ComplexType,RealType> polynomials );
-// evaluates and differentiates the polynomials at 0, 1, 2, ...
-// once with poly methods and once with eval_host methods
+int newton_test ( PolySys<ComplexType,RealType>& polynomials );
+// calls Newton's method on the polynomials
 
-int double_test ( string filename );
-// reads a double precision system from file, calls test
-
-int double_double_test ( string filename );
-// reads a double double precision system from file, calls test
-
-int quad_double_test ( string filename );
-// reads a quad double precision system from file, calls test
+template <class ComplexType, class RealType>
+int test ( string filename );
+// reads a double precision system from file, calls newton_test
 
 // Parameters
 #define N_PREDICTOR           4
@@ -61,20 +54,34 @@ int main ( void )
 
    cout << "\nReading from file " << name << " ..." << endl;
 
+   int fail = 0;
+
    if(choice == '0')
-      double_test(name);
+      fail = test<complexH<double>,double>(name);
    else if(choice == '1')
-      double_double_test(name);
+      fail = test<complexH<dd_real>,dd_real>(name);
    else if(choice == '2')
-      quad_double_test(name);
+      fail = test<complexH<qd_real>,qd_real>(name);
    else
       cout << "Invalid choice " << choice << " for the precision." << endl; 
 
-   return 0;
+   return fail;
 }
 
 template <class ComplexType, class RealType>
-int test ( PolySys<ComplexType,RealType> polynomials )
+int test ( string filename )
+{
+   PolySys<ComplexType,RealType> polynomials;
+
+   polynomials.read_file(filename);
+   cout << "The polynomials on the file " << filename << " :" << endl;
+   polynomials.print();
+
+   return newton_test<ComplexType,RealType>(polynomials);
+}
+
+template <class ComplexType, class RealType>
+int newton_test ( PolySys<ComplexType,RealType>& polynomials )
 {
    cout << "The dimension : " << polynomials.dim << endl;
 
@@ -101,37 +108,4 @@ int test ( PolySys<ComplexType,RealType> polynomials )
       = CPU_Newton<ComplexType,RealType>(wrk,ped,pars,tSec_Eval,tSec_MGS);
 
    return 0;
-}
-
-int double_test ( string filename )
-{
-   PolySys<complexH<double>,double> polynomials;
-
-   polynomials.read_file(filename);
-   cout << "The polynomials on the file " << filename << " :" << endl;
-   polynomials.print();
-
-   return test<complexH<double>,double>(polynomials);
-}
-
-int double_double_test ( string filename )
-{
-   PolySys< complexH<dd_real>, dd_real > polynomials;
-
-   polynomials.read_file(filename);
-   cout << "The polynomials on the file " << filename << " :" << endl;
-   polynomials.print();
-
-   return test<complexH<dd_real>,dd_real>(polynomials);
-}
-
-int quad_double_test ( string filename )
-{
-   PolySys< complexH<qd_real>, qd_real > polynomials;
-
-   polynomials.read_file(filename);
-   cout << "The polynomials on the file " << filename << " :" << endl;
-   polynomials.print();
-
-   return test<complexH<qd_real>,qd_real>(polynomials);
 }

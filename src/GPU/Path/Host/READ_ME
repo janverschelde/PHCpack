@@ -23,3 +23,7 @@ eval_host.h        : evaluation and differentiation of polynomials
 eval_host.tpp      : definition of the tempated code in eval_host.h
 test_eval.cpp      : test on the evaluation and the differentation
 -------------------------------------------------------------------------------
+newton_host.h      : prototypes for applying Newton's method
+newton_host.tpp    : templated definitions for the functions in newton_host.h
+test_newton.cpp    : test on Newton's method with algorithmic differentiation
+-------------------------------------------------------------------------------
