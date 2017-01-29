@@ -81,8 +81,10 @@ template <class ComplexType, class RealType>
 ComplexType get_complex_number ( ifstream& myfile )
 {
    RealType tmp_real, tmp_imag;
+
    myfile >> tmp_real;
    myfile >> tmp_imag;
+
    return ComplexType(tmp_real, tmp_imag);
 }
 

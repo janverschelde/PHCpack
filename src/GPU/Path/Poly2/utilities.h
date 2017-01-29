@@ -46,7 +46,7 @@ string get_number_string ( const string& mon_string, int& loc, int l );
  * Read number string from string,
  * used by get_coef_complex.  */
 
-template <class ComplexType>
+template <class ComplexType, class RealType>
 ComplexType get_complex_number ( ifstream& myfile );
 
 template <class ComplexType>

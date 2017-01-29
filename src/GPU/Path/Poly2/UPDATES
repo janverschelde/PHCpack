@@ -1,4 +1,7 @@
 Sat 28 Jan 2017 : templated the test function in test_poly.cpp.
+  Added templated code for the solutions in polysol.h, polysol.tpp,
+  fixed bug in utilities.h, utilities.tpp, with the test_polysol.cpp,
+  and its compilation instructions in the makefile.
 
 Thu 26 Jan 2017 : some improvements in the documentation of poly.h.
   Guarded a delete statement with a test if NULL in poly.h.

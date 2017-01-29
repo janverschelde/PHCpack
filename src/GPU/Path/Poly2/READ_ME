@@ -16,5 +16,9 @@ utilities.tpp     : definitions of the code prototyped in utilities.h
 poly.h            : templated data structures for polynomials and systems
 poly.tpp          : definitions of the templated code of poly.h 
 -------------------------------------------------------------------------------
-test_poly         : simple test on the functions in poly
+polysol.h         : templated classes for solutions of a polynomial system
+polysol.tpp       : definitions of the prototypes in polysol.h
+-------------------------------------------------------------------------------
+test_poly         : reads a system from file and prints it
+test_polysol      : reads solutions from file and prints them
 -------------------------------------------------------------------------------
