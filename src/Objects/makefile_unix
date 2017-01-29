@@ -2437,6 +2437,11 @@ ts_adepath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                  $(QD_LIB)/libqd.a \
                  -o $(BIN)/ts_adepath_qd -lm --LINK=$(gpp)
 
+lib2path.o:
+	$(gpp) -O2 -I$(PHCLib) -I$(QD_ROOR)/include \
+                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly2 \
+               -c $(PHCgpu)/Path/Host/lib2path.cpp -o lib2path.o
+
 # Test programs for the Tasking :
 
 ts_mtmatvec:

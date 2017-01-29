@@ -1428,7 +1428,7 @@ test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd ts_cpu2norm \
              ts_gpuonepath_d ts_gpuonepath_dd ts_gpuonepath_qd \
              ts_gpumanypaths_d ts_gpumanypaths_dd ts_gpumanypaths_qd \
              ts_gpupath_d ts_gpupath_dd ts_gpupath_qd \
-             ts_adepath_d ts_adepath_dd ts_adepath_qd
+             ts_adepath_d ts_adepath_dd ts_adepath_qd ts_adepath
 
 ts_cpu2norm_d:
 	make -f $(MAKEFILE) ts_cpu2norm_d
@@ -1498,6 +1498,12 @@ ts_adepath_dd:
 
 ts_adepath_qd:
 	make -f $(MAKEFILE) ts_adepath_qd
+
+ts_adepath:
+	make -f $(MAKEFILE) ts_adepath
+
+lib2path.o:
+	make -f $(MAKEFILE) lib2path.o
 
 # Test programs for the Tasking:
 

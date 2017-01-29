@@ -1741,6 +1741,11 @@ ada_test_qd.o:
                 -I$(PHCLib) -I$(PHCgpu)/Path/Poly \
                 -c $(PHCgpu)/Path/Main/ada_test_qd.cpp -o ada_test_qd.o
 
+lib2path.o:
+	$(gpp) -O2 -I$(PHCLib) -I$(QD_ROOT)/include \
+                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly2 \
+               -c $(PHCgpu)/Path/Host/lib2path.cpp -o lib2path.o
+
 adenewton_d.o: 
 	$(gpp) -c $(PHCAda)/PHCtoC/adenewton_d.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesD -I $(PHCgpu)/Path/Main \
