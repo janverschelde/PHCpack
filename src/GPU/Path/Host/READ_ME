@@ -33,3 +33,5 @@ path_host.h        : prototype for the path tracker on the host
 path_host.tpp      : templated code for the prototype in path_host.h
 test_path.cpp      : testing the path tracker
 -------------------------------------------------------------------------------
+lib2path           : connect Lib interface to the Path data structures
+-------------------------------------------------------------------------------
