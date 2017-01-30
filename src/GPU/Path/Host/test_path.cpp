@@ -11,16 +11,20 @@
 using namespace std;
 
 template <class ComplexType, class RealType>
-int test ( string targetfile, string startfile );
-// reads target and start system from file, calls path_test
+int test ( string targetfile, string startfile, int precision );
+// Reads target and start system from file, calls path_test.
+// The precision should be 16, 32, or 64 for printing solutions.
 
 template <class ComplexType, class RealType>
 int path_test
  ( PolySys<ComplexType,RealType>& targetpols,
    PolySys<ComplexType,RealType>& startpols,
-   PolySolSet<ComplexType,RealType>& sols );
+   PolySolSet<ComplexType,RealType>& sols,
+   int precision );
 // Calls the path tracker on the target system in targetpols,
 // the start system in startpols, and the start solutions in sols.
+// The precision should be 16 (double), 32 (double double),
+// or 64 (quad double), for use in the printing of the solutions.
 
 string* x_var ( string x, int dim );
 // Generates a string of variables of size dim.
@@ -77,11 +81,11 @@ int main ( void )
    int fail = 0;
 
    if(choice == '0')
-      fail = test<complexH<double>,double>(name4target,name4start);
+      fail = test<complexH<double>,double>(name4target,name4start,16);
    else if(choice == '1')
-      fail = test<complexH<dd_real>,dd_real>(name4target,name4start);
+      fail = test<complexH<dd_real>,dd_real>(name4target,name4start,32);
    else if(choice == '2')
-      fail = test<complexH<qd_real>,qd_real>(name4target,name4start);
+      fail = test<complexH<qd_real>,qd_real>(name4target,name4start,64);
    else
       cout << "Invalid choice " << choice << " for the precision." << endl; 
 
@@ -89,7 +93,7 @@ int main ( void )
 }
 
 template <class ComplexType, class RealType>
-int test ( string targetfile, string startfile )
+int test ( string targetfile, string startfile, int precision )
 {
    PolySys<ComplexType,RealType> targetsys;
    PolySys<ComplexType,RealType> startsys;
@@ -113,7 +117,7 @@ int test ( string targetfile, string startfile )
    //bool success = read_homotopy_from_file<ComplexType,RealType>
    //   (targetsys,startsys,&sols,targetfile,startfile);
 
-   return path_test<ComplexType,RealType>(targetsys,startsys,sols);
+   return path_test<ComplexType,RealType>(targetsys,startsys,sols,precision);
 }
 
 string* x_var ( string x, int dim )
@@ -181,7 +185,8 @@ template <class ComplexType, class RealType>
 int path_test
  ( PolySys<ComplexType,RealType>& targetpols,
    PolySys<ComplexType,RealType>& startpols,
-   PolySolSet<ComplexType,RealType>& sols )
+   PolySolSet<ComplexType,RealType>& sols,
+   int precision )
 {
    cout << "The dimension : " << targetpols.dim << endl;
 
@@ -207,7 +212,7 @@ int path_test
       (wrk,ped,pars,tSecPred,tSecEval,tSecMGS);
   */
 
-   int ret = manytrack(1,1.0,0.0,16,targetpols,startpols,sols);
+   int ret = manytrack(1,1.0,0.0,precision,targetpols,startpols,sols);
 
    return 0;
 }

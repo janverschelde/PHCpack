@@ -12,6 +12,8 @@ int manytrack
    PolySolSet<ComplexType,RealType>& s );
 /*
  * DESCRIPTION :
+ *   Calls the path tracker to track all paths starting from the solutions
+ *   in s, solutions of the start system q, to solve the system p.
  *
  * ON ENTRY :
  *   verbose   0 if silent, 1 for intermediate output;

@@ -1,3 +1,6 @@
+Mon 30 Jan 2017 : arranged the printing in test_path.cpp so that it takes
+  the working precision into account.  Added description to path_track.h.
+
 Sun 29 Jan 2017 : reading of start system and start solutions added to
   test_path.cpp.  With code from ade_manypaths_d.cpp in Ada/PHCtoC
   defined the path_track.h and path_track.cpp, for use in test_path.cpp.
