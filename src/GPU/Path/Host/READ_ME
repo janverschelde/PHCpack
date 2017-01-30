@@ -31,6 +31,8 @@ predictor_host.h   : prototype for the predictor on the host
 predictor_host.tpp : templated code for the predictor
 path_host.h        : prototype for the path tracker on the host
 path_host.tpp      : templated code for the prototype in path_host.h
+path_track.h       : prototype to track many paths
+path_track.tpp     : templated code for the prototype in path_track.h
 test_path.cpp      : testing the path tracker
 -------------------------------------------------------------------------------
 lib2path           : connect Lib interface to the Path data structures

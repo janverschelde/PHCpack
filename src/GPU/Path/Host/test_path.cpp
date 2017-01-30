@@ -6,6 +6,7 @@
 #include "polysol.h"
 #include "eval_host.h"
 #include "path_host.h"
+#include "path_track.h"
 
 using namespace std;
 
@@ -16,9 +17,10 @@ int test ( string targetfile, string startfile );
 template <class ComplexType, class RealType>
 int path_test
  ( PolySys<ComplexType,RealType>& targetpols,
-   PolySys<ComplexType,RealType>& startpols );
-// Calls the path tracker on a homotopy defined by the target system
-// in targetpols and the start system in startpols.
+   PolySys<ComplexType,RealType>& startpols,
+   PolySolSet<ComplexType,RealType>& sols );
+// Calls the path tracker on the target system in targetpols,
+// the start system in startpols, and the start solutions in sols.
 
 string* x_var ( string x, int dim );
 // Generates a string of variables of size dim.
@@ -111,7 +113,7 @@ int test ( string targetfile, string startfile )
    //bool success = read_homotopy_from_file<ComplexType,RealType>
    //   (targetsys,startsys,&sols,targetfile,startfile);
 
-   return path_test<ComplexType,RealType>(targetsys,startsys);
+   return path_test<ComplexType,RealType>(targetsys,startsys,sols);
 }
 
 string* x_var ( string x, int dim )
@@ -178,10 +180,12 @@ bool read_homotopy_from_file
 template <class ComplexType, class RealType>
 int path_test
  ( PolySys<ComplexType,RealType>& targetpols,
-   PolySys<ComplexType,RealType>& startpols )
+   PolySys<ComplexType,RealType>& startpols,
+   PolySolSet<ComplexType,RealType>& sols )
 {
    cout << "The dimension : " << targetpols.dim << endl;
 
+ /*
    CPUInstHom<ComplexType,RealType> ped; // data for eval_host
    Workspace<ComplexType> wrk;
    ComplexType alpha,t;
@@ -201,6 +205,9 @@ int path_test
 
    bool success_cpu = path_tracker<ComplexType,RealType>
       (wrk,ped,pars,tSecPred,tSecEval,tSecMGS);
+  */
+
+   int ret = manytrack(1,1.0,0.0,16,targetpols,startpols,sols);
 
    return 0;
 }

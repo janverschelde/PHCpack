@@ -1,5 +1,6 @@
 Sun 29 Jan 2017 : reading of start system and start solutions added to
-  test_path.cpp.
+  test_path.cpp.  With code from ade_manypaths_d.cpp in Ada/PHCtoC
+  defined the path_track.h and path_track.cpp, for use in test_path.cpp.
   
 Sat 28 Jan 2017 : rewrote test_eval.cpp into a templated version,
   with better separation of tasks in separate functions.
