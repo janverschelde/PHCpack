@@ -1502,6 +1502,9 @@ ts_adepath_qd:
 ts_adepath:
 	make -f $(MAKEFILE) ts_adepath
 
+ademanypaths.o:
+	make -f $(MAKEFILE) ademanypaths.o
+
 lib2path.o:
 	make -f $(MAKEFILE) lib2path.o
 
