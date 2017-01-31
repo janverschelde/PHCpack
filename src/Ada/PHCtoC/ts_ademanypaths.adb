@@ -60,6 +60,114 @@ procedure ts_ademanypaths is
     end if;
   end Prompt_for_Verbose;
 
+  procedure Standard_ADE_Newton ( verbose : in integer32 ) is
+
+    return_of_call : integer32;
+
+    function newton ( v : integer32 ) return integer32;
+    pragma import(C, newton, "standard_adenewton");
+
+  begin
+    return_of_call := newton(verbose);
+  end Standard_ADE_Newton;
+
+  procedure DoblDobl_ADE_Newton ( verbose : in integer32 ) is
+
+    return_of_call : integer32;
+
+    function newton ( v : integer32 ) return integer32;
+    pragma import(C, newton, "dobldobl_adenewton");
+
+  begin
+    return_of_call := newton(verbose);
+  end DoblDobl_ADE_Newton;
+
+  procedure QuadDobl_ADE_Newton ( verbose : in integer32 ) is
+
+    return_of_call : integer32;
+
+    function newton ( v : integer32 ) return integer32;
+    pragma import(C, newton, "quaddobl_adenewton");
+
+  begin
+    return_of_call := newton(verbose);
+  end QuadDobl_ADE_Newton;
+
+  procedure Standard_ADE_Track_One
+              ( verbose : in integer32; 
+                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   With the homotopy as defined by the containers,
+  --   tracks one path in standard double precision.
+
+  -- ON ENTRY :
+  --   verbose  >0 if intermediate output needs to be written to screen;
+  --   gamma    the gamma constant in the homotopy.
+
+    use Standard_Complex_Numbers;
+
+    return_of_call : integer32;
+    regam : constant double_float := REAL_PART(gamma);
+    imgam : constant double_float := IMAG_PART(gamma);
+
+    function one_track ( v : integer32; r,i : double_float ) return integer32;
+    pragma import(C, one_track, "standard_adeonepath");
+
+  begin
+    return_of_call := one_track(verbose,regam,imgam);
+  end Standard_ADE_Track_One;
+
+  procedure DoblDobl_ADE_Track_One
+              ( verbose : in integer32; 
+                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   With the homotopy as defined by the containers,
+  --   tracks one path in double double precision.
+
+  -- ON ENTRY :
+  --   verbose  >0 if intermediate output needs to be written to screen;
+  --   gamma    the gamma constant in the homotopy.
+
+    use Standard_Complex_Numbers;
+
+    return_of_call : integer32;
+    regam : constant double_float := REAL_PART(gamma);
+    imgam : constant double_float := IMAG_PART(gamma);
+
+    function one_track ( v : integer32; r,i : double_float ) return integer32;
+    pragma import(C, one_track, "dobldobl_adeonepath");
+
+  begin
+    return_of_call := one_track(verbose,regam,imgam);
+  end DoblDobl_ADE_Track_One;
+
+  procedure QuadDobl_ADE_Track_One
+              ( verbose : in integer32; 
+                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   With the homotopy as defined by the containers,
+  --   tracks one path in quad double precision.
+
+  -- ON ENTRY :
+  --   verbose  >0 if intermediate output needs to be written to screen;
+  --   gamma    the gamma constant in the homotopy.
+
+    use Standard_Complex_Numbers;
+
+    return_of_call : integer32;
+    regam : constant double_float := REAL_PART(gamma);
+    imgam : constant double_float := IMAG_PART(gamma);
+
+    function one_track ( v : integer32; r,i : double_float ) return integer32;
+    pragma import(C, one_track, "quaddobl_adeonepath");
+
+  begin
+    return_of_call := one_track(verbose,regam,imgam);
+  end QuadDobl_ADE_Track_One;
+
   procedure Standard_ADE_Track_Many
               ( verbose : in integer32;
                 gamma : in Standard_Complex_Numbers.Complex_Number ) is
@@ -87,7 +195,7 @@ procedure ts_ademanypaths is
 
   procedure DoblDobl_ADE_Track_Many
               ( verbose : in integer32;
-                gamma : in DoblDobl_Complex_Numbers.Complex_Number ) is
+                gamma : in Standard_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
   --   With the homotopy as defined by the containers,
@@ -97,13 +205,22 @@ procedure ts_ademanypaths is
   --   verbose  >0 if intermediate output needs to be written to screen;
   --   gamma    the gamma constant in the homotopy.
 
+    use Standard_Complex_Numbers;
+
+    return_of_call : integer32;
+    regam : constant double_float := REAL_PART(gamma);
+    imgam : constant double_float := IMAG_PART(gamma);
+
+    function many_track ( v : integer32; r,i : double_float ) return integer32;
+    pragma import(C, many_track, "dobldobl_ademanypaths");
+
   begin
-    null;
+    return_of_call := many_track(verbose,regam,imgam);
   end DoblDobl_ADE_Track_Many;
 
   procedure QuadDobl_ADE_Track_Many
               ( verbose : in integer32;
-                gamma : in QuadDobl_Complex_Numbers.Complex_Number ) is
+                gamma : in Standard_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
   --   With the homotopy as defined by the containers,
@@ -113,9 +230,228 @@ procedure ts_ademanypaths is
   --   verbose  >0 if intermediate output needs to be written to screen;
   --   gamma    the gamma constant in the homotopy.
 
+    use Standard_Complex_Numbers;
+
+    return_of_call : integer32;
+    regam : constant double_float := REAL_PART(gamma);
+    imgam : constant double_float := IMAG_PART(gamma);
+
+    function many_track ( v : integer32; r,i : double_float ) return integer32;
+    pragma import(C, many_track, "quaddobl_ademanypaths");
+
   begin
-    null;
+    return_of_call := many_track(verbose,regam,imgam);
   end QuadDobl_ADE_Track_Many;
+
+  procedure Standard_Newton is
+
+  -- DESCRIPTION :
+  --   Reads a polynomial system and a corresponding list of solutions
+  --   in standard double precision.
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+
+    p : Link_to_Poly_Sys;
+    sols,newtsols : Solution_List;
+    verbose : integer32;
+
+  begin
+    new_line;
+    put_line("Reading a system with solutions ...");
+    Standard_System_and_Solutions_io.get(p,sols);
+    new_line;
+    put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
+    put_line("Initializing the systems container ...");
+    Standard_PolySys_Container.Initialize(p.all);
+    put_line("Initializing the solutions container ...");
+    Standard_Solutions_Container.Initialize(sols);
+    verbose := Prompt_for_Verbose;
+    Standard_ADE_Newton(verbose);
+    newtsols := Standard_Solutions_Container.Retrieve;
+    put_line("The solutions after Newton's method :");
+    put(standard_output,Length_Of(newtsols),
+        natural32(Head_Of(newtsols).n),newtsols);
+  end Standard_Newton;
+
+  procedure DoblDobl_Newton is
+
+  -- DESCRIPTION :
+  --   Reads a polynomial system and a corresponding list of solutions
+  --   in double double precision.
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    p : Link_to_Poly_Sys;
+    sols,newtsols : Solution_List;
+    verbose : integer32;
+
+  begin
+    new_line;
+    put_line("Reading a system with solutions ...");
+    DoblDobl_System_and_Solutions_io.get(p,sols);
+    new_line;
+    put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
+    put_line("Initializing the systems container ...");
+    DoblDobl_PolySys_Container.Initialize(p.all);
+    put_line("Initializing the solutions container ...");
+    DoblDobl_Solutions_Container.Initialize(sols);
+    verbose := Prompt_for_Verbose;
+    DoblDobl_ADE_Newton(verbose);
+    newtsols := DoblDobl_Solutions_Container.Retrieve;
+    put_line("The solutions after Newton's method :");
+    put(standard_output,Length_Of(newtsols),
+        natural32(Head_Of(newtsols).n),newtsols);
+  end DoblDobl_Newton;
+
+  procedure QuadDobl_Newton is
+
+  -- DESCRIPTION :
+  --   Reads a polynomial system and a corresponding list of solutions
+  --   in quad double precision.
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    p : Link_to_Poly_Sys;
+    sols,newtsols : Solution_List;
+    verbose : integer32;
+
+  begin
+    new_line;
+    put_line("Reading a system with solutions ...");
+    QuadDobl_System_and_Solutions_io.get(p,sols);
+    new_line;
+    put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
+    put_line("Initializing the systems container ...");
+    QuadDobl_PolySys_Container.Initialize(p.all);
+    put_line("Initializing the solutions container ...");
+    QuadDobl_Solutions_Container.Initialize(sols);
+    verbose := Prompt_for_Verbose;
+    QuadDobl_ADE_Newton(verbose);
+    newtsols := QuadDobl_Solutions_Container.Retrieve;
+    put_line("The solutions after Newton's method :");
+    put(standard_output,Length_Of(newtsols),
+        natural32(Head_Of(newtsols).n),newtsols);
+  end QuadDobl_Newton;
+
+  procedure Standard_Track_one_Path is
+
+  -- DESCRIPTION :
+  --   Reads a target and start system, with a solution in standard double
+  --   precision and calls the path tracker.
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+
+    target,start : Link_to_Poly_Sys;
+    sols,newtsols : Solution_List;
+    verbose : integer32;
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Random_Numbers.Random1;
+
+  begin
+    new_line;
+    put_line("Reading a target system ...");
+    get(target);
+    new_line;
+    put_line("Reading a start system with solutions ...");
+    Standard_System_and_Solutions_io.get(start,sols);
+    new_line;
+    put("gamma = "); put(gamma); new_line;
+    new_line;
+    put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
+    put_line("Initializing the data for container copies ...");
+    PHCpack_Operations.Store_Target_System(target.all);
+    PHCpack_Operations.Store_Start_System(start.all);
+    put_line("Initializing the solutions container ...");
+    Standard_Solutions_Container.Initialize(sols);
+    verbose := Prompt_for_Verbose;
+    Standard_ADE_Track_One(verbose,gamma);
+    newtsols := Standard_Solutions_Container.Retrieve;
+    put_line("The solutions after path tracking :");
+    put(standard_output,Length_Of(newtsols),
+        natural32(Head_Of(newtsols).n),newtsols);
+  end Standard_Track_one_Path;
+
+  procedure DoblDobl_Track_one_Path is
+
+  -- DESCRIPTION :
+  --   Reads a target and start system, with a solution in double double
+  --   precision and calls the path tracker.
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    target,start : Link_to_Poly_Sys;
+    sols,newtsols : Solution_List;
+    verbose : integer32;
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Random_Numbers.Random1;
+
+  begin
+    new_line;
+    put_line("Reading a target system ...");
+    get(target);
+    new_line;
+    put_line("Reading a start system with solutions ...");
+    DoblDobl_System_and_Solutions_io.get(start,sols);
+    new_line;
+    put("gamma = "); put(gamma); new_line;
+    new_line;
+    put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
+    put_line("Initializing the data for container copies ...");
+    PHCpack_Operations.Store_Target_System(target.all);
+    PHCpack_Operations.Store_Start_System(start.all);
+    put_line("Initializing the solutions container ...");
+    DoblDobl_Solutions_Container.Initialize(sols);
+    verbose := Prompt_for_Verbose;
+    DoblDobl_ADE_Track_One(verbose,gamma);
+    newtsols := DoblDobl_Solutions_Container.Retrieve;
+    put_line("The solutions after path tracking :");
+    put(standard_output,Length_Of(newtsols),
+        natural32(Head_Of(newtsols).n),newtsols);
+  end DoblDobl_Track_one_Path;
+
+  procedure QuadDobl_Track_one_Path is
+
+  -- DESCRIPTION :
+  --   Reads a target and start system, with a solution in quad double
+  --   precision and calls the path tracker.
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    target,start : Link_to_Poly_Sys;
+    sols,newtsols : Solution_List;
+    verbose : integer32;
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Random_Numbers.Random1;
+
+  begin
+    new_line;
+    put_line("Reading a target system ...");
+    get(target);
+    new_line;
+    put_line("Reading a start system with solutions ...");
+    QuadDobl_System_and_Solutions_io.get(start,sols);
+    new_line;
+    put("gamma = "); put(gamma); new_line;
+    new_line;
+    put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
+    put_line("Initializing the data for container copies ...");
+    PHCpack_Operations.Store_Target_System(target.all);
+    PHCpack_Operations.Store_Start_System(start.all);
+    put_line("Initializing the solutions container ...");
+    QuadDobl_Solutions_Container.Initialize(sols);
+    verbose := Prompt_for_Verbose;
+    QuadDobl_ADE_Track_One(verbose,gamma);
+    newtsols := QuadDobl_Solutions_Container.Retrieve;
+    put_line("The solutions after path tracking :");
+    put(standard_output,Length_Of(newtsols),
+        natural32(Head_Of(newtsols).n),newtsols);
+  end QuadDobl_Track_one_Path;
 
   procedure Standard_Track_many_Paths is
 
@@ -123,7 +459,6 @@ procedure ts_ademanypaths is
   --   Reads a target and start system, with solutions in standard double
   --   precision, and calls the path tracker.
 
-    use Standard_Complex_Numbers;
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
 
@@ -131,7 +466,7 @@ procedure ts_ademanypaths is
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
-    gamma : constant Complex_Number
+    gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
 
   begin
@@ -169,7 +504,6 @@ procedure ts_ademanypaths is
   --   Reads a target and start system, with solutions in double double
   --   precision, and calls the path tracker.
 
-    use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
 
@@ -177,8 +511,8 @@ procedure ts_ademanypaths is
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
-    gamma : constant Complex_Number
-          := DoblDobl_Random_Numbers.Random1;
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Random_Numbers.Random1;
 
   begin
     new_line;
@@ -215,7 +549,6 @@ procedure ts_ademanypaths is
   --   Reads a target and start system, with solutions in double double
   --   precision, and calls the path tracker.
 
-    use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
 
@@ -223,8 +556,8 @@ procedure ts_ademanypaths is
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
-    gamma : constant Complex_Number
-          := QuadDobl_Random_Numbers.Random1;
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Random_Numbers.Random1;
 
   begin
     new_line;
@@ -260,20 +593,45 @@ procedure ts_ademanypaths is
   -- DESCRIPTION :
   --   Prompts the user for the precsion and then calls the test.
 
-    ans : character;
+    tst,prc : character;
 
   begin
     new_line;
-    put_line("MENU to test ADE code to track many paths :");
+    put_line("MENU to test the algorithmic differentiation :");
+    put_line("  0. running Newton's method;");
+    put_line("  1. tracking one path;");
+    put_line("  2. tracking many paths;");
+    put("Type 0, 1, or 2 to select a test : ");
+    Ask_Alternative(tst,"012");
+    new_line;
+    put_line("MENU to test the ADE code to track many paths :");
     put_line("  0. in standard double precision;");
     put_line("  1. in double double precision;");
     put_line("  2. in quad double precision.");
     put("Type 0, 1, or 2 to make your choice : ");
-    Ask_Alternative(ans,"012");
-    case ans is
-      when '0' => Standard_Track_Many_Paths;
-      when '1' => DoblDobl_Track_Many_Paths;
-      when '2' => QuadDobl_Track_Many_Paths;
+    Ask_Alternative(prc,"012");
+    case tst is
+      when '0' =>
+        case prc is
+          when '0' => Standard_Newton;
+          when '1' => DoblDobl_Newton;
+          when '2' => QuadDobl_Newton;
+          when others => null;
+        end case;
+      when '1' =>
+        case prc is
+          when '0' => Standard_Track_one_Path;
+          when '1' => DoblDobl_Track_one_Path;
+          when '2' => QuadDobl_Track_one_Path;
+          when others => null;
+        end case;
+      when '2' =>
+        case prc is
+          when '0' => Standard_Track_many_Paths;
+          when '1' => DoblDobl_Track_many_Paths;
+          when '2' => QuadDobl_Track_many_Paths;
+          when others => null;
+        end case;
       when others => null;
     end case;
   end Main;
