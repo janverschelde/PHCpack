@@ -74,3 +74,5 @@ ts_adepath_d                   : main test program in double precision
 ts_adepath_dd                  : main test program in double double precision
 ts_adepath_qd                  : main test program in quad double precision
 -------------------------------------------------------------------------------
+ademanypaths                   : calls the new templated code
+-------------------------------------------------------------------------------
