@@ -1,5 +1,6 @@
 Mon 30 Jan 2017 : new ademanypaths.h and ademanypaths.cpp which uses the
-  templated code.
+  templated code.  Added dobldobl and quaddobl versions to ademanypaths.h
+  and ademanypaths.cpp.
 
 Thu 17 Jan 2017 : new ts_gpu2norm.adb, which collects the test code from
   ts_gpu2norm_d, ts_gpu2norm_dd, and ts_gpu2norm_qd.  This new ts_gpu2norm
