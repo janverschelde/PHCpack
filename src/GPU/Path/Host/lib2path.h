@@ -92,10 +92,48 @@ void lib2path_read_quaddobl_homotopy
  *   the C interface to PHCpack is used to parse the systems,
  *   and the solutions of the start system. */
 
+int standard_newton
+ ( int verbose, PolySys<complexH<double>,double>& p,
+   PolySolSet<complexH<double>,double>& s );
+int dobldobl_newton
+ ( int verbose, PolySys<complexH<dd_real>,dd_real>& p,
+   PolySolSet<complexH<dd_real>,dd_real>& s );
+int quaddobl_newton
+ ( int verbose, PolySys<complexH<qd_real>,qd_real>& p,
+   PolySolSet<complexH<qd_real>,qd_real>& s );
+/*
+ * DESCRIPTION :
+ *   Applies Newton's method to the first solution in s,
+ *   on the polynomial system p.
+ *   If verbose > 0, then additional output is written to screen. */
 
-/* This file ademanypaths.h collects the prototypes to track many paths
- * using algorithmic differentiation in double, double double,
- * and quad double precision. */
+int standard_onetrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<double>,double>& p,
+   PolySys<complexH<double>,double>& q,
+   PolySolSet<complexH<double>,double>& s );
+int dobldobl_onetrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<dd_real>,dd_real>& p,
+   PolySys<complexH<dd_real>,dd_real>& q,
+   PolySolSet<complexH<dd_real>,dd_real>& s );
+int quaddobl_onetrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<qd_real>,qd_real>& p,
+   PolySys<complexH<qd_real>,qd_real>& q,
+   PolySolSet<complexH<qd_real>,qd_real>& s );
+/*
+ * DESCRIPTION :
+ *   Tracks one path defined by an artificial parameter homotopy,
+ *   starting at a solution s of q and ending at a solution of p.
+ *
+ * ON ENTRY :
+ *   verbose   if > 0, then additional output is written to screen;
+ *   regamma   real part of the gamma constant;
+ *   imgamma   imaginary part of the gamma constant;
+ *   p         target system in the homotopy;
+ *   q         start system in the homotopy;
+ *   s         a solution of the start system q. */
 
 int standard_manytrack
  ( int verbose, double regamma, double imgamma,
@@ -124,6 +162,31 @@ int quaddobl_manytrack
  *   p         target system in the homotopy;
  *   q         start system in the homotopy;
  *   s         solutions of the start system q. */
+
+extern "C" int standard_adenewton ( int verbose );
+extern "C" int dobldobl_adenewton ( int verbose );
+extern "C" int quaddobl_adenewton ( int verbose );
+/*
+ * DESCRIPTION :
+ *   Calls Newton's method with algorithmic differentiaton,
+ *   encapsulated as a C function for to be called from Ada.
+ *   If verbose > 0, then additional output will be written. */
+
+extern "C" int standard_adeonepath
+ ( int verbose, double regamma, double imgamma );
+extern "C" int dobldobl_adeonepath
+ ( int verbose, double regamma, double imgamma );
+extern "C" int quaddobl_adeonepath
+ ( int verbose, double regamma, double imgamma );
+/*
+ * DESCRIPTION :
+ *   A C++ function to track one solution path,
+ *   encapsulated as a C function for to be called from Ada.
+ *
+ * ON ENTRY :
+ *   verbose   if > 0, then additional output is written to screen;
+ *   regamma   real part of the gamma constant;
+ *   imgamma   imaginary part of the gamma constant; */
 
 extern "C" int standard_ademanypaths
  ( int verbose, double regamma, double imgamma );

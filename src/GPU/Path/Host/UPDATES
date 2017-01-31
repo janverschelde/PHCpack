@@ -1,4 +1,5 @@
 Tue 31 Jan 2017 : added tracking of many paths to lib2path.h and lib2path.cpp.
+  To lib2path.h and lib2path.cpp added Newton and the one path tracker.
 
 Mon 30 Jan 2017 : arranged the printing in test_path.cpp so that it takes
   the working precision into account.  Added description to path_track.h.

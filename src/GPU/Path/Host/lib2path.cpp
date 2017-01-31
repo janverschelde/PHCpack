@@ -4,6 +4,7 @@
 #include "solcon.h"
 #include "phcpack.h"
 #include "complexH.h"
+#include "newton_host.h"
 #include "path_host.h"
 #include "lib2path.h"
 
@@ -609,7 +610,6 @@ void lib2path_read_quaddobl_homotopy
    lib2path_read_quaddobl_sols(start_sys, sols);
 }
 
-
 using namespace std;
 
 // Parameters
@@ -632,6 +632,222 @@ using namespace std;
 
 #define STEP_INCREASE   1.25
 #define STEP_DECREASE   0.7
+
+extern "C" int standard_adenewton ( int verbose )
+{
+   int fail;
+   PolySys<complexH<double>,double> ps;
+   PolySolSet<complexH<double>,double> sols;
+
+   if(verbose > 0)
+   {
+      int dim, len;
+
+      cout << endl;
+      cout << "Newton's method ..." << endl;
+      fail = syscon_number_of_standard_polynomials(&dim);
+      cout << "number of polynomials : " << dim << endl;
+      fail = solcon_number_of_standard_solutions(&len);
+      cout << "number of solutions : " << len << endl;
+   }
+
+   lib2path_read_standard_sys(verbose,ps);
+   lib2path_read_standard_sols(ps,sols);
+
+   fail = standard_newton(verbose,ps,sols);
+
+   if(verbose > 0)
+      cout << "writing the solutions to the container ..." << endl;
+
+   lib2path_write_standard_sols(sols);
+
+   return 0;
+}
+
+extern "C" int dobldobl_adenewton ( int verbose )
+{
+   int fail;
+   PolySys<complexH<dd_real>,dd_real> ps;
+   PolySolSet<complexH<dd_real>,dd_real> sols;
+
+   if(verbose > 0)
+   {
+      int dim, len;
+
+      cout << endl;
+      cout << "Newton's method ..." << endl;
+      fail = syscon_number_of_dobldobl_polynomials(&dim);
+      cout << "number of polynomials : " << dim << endl;
+      fail = solcon_number_of_dobldobl_solutions(&len);
+      cout << "number of solutions : " << len << endl;
+   }
+
+   lib2path_read_dobldobl_sys(verbose,ps);
+   lib2path_read_dobldobl_sols(ps,sols);
+
+   fail = dobldobl_newton(verbose,ps,sols);
+
+   if(verbose > 0)
+      cout << "writing the solutions to the container ..." << endl;
+
+   lib2path_write_dobldobl_sols(sols);
+
+   return 0;
+}
+
+extern "C" int quaddobl_adenewton ( int verbose )
+{
+   int fail;
+   PolySys<complexH<qd_real>,qd_real> ps;
+   PolySolSet<complexH<qd_real>,qd_real> sols;
+
+   if(verbose > 0)
+   {
+      int dim, len;
+
+      cout << endl;
+      cout << "Newton's method ..." << endl;
+      fail = syscon_number_of_quaddobl_polynomials(&dim);
+      cout << "number of polynomials : " << dim << endl;
+      fail = solcon_number_of_quaddobl_solutions(&len);
+      cout << "number of solutions : " << len << endl;
+   }
+
+   lib2path_read_quaddobl_sys(verbose,ps);
+   lib2path_read_quaddobl_sols(ps,sols);
+
+   fail = quaddobl_newton(verbose,ps,sols);
+
+   if(verbose > 0)
+      cout << "writing the solutions to the container ..." << endl;
+
+   lib2path_write_quaddobl_sols(sols);
+
+   return 0;
+}
+
+extern "C" int standard_adeonepath
+ ( int verbose, double regamma, double imgamma )
+{
+   int fail;
+   PolySys<complexH<double>,double> ps;
+   PolySys<complexH<double>,double> qs;
+   PolySolSet<complexH<double>,double> sols;
+
+   fail = copy_target_system_to_container();
+
+   if(verbose > 0)
+   {
+      int dim, len;
+
+      cout << endl;
+      cout << "Tracking one path ..." << endl;
+      cout << "gamma = " << setprecision(16)
+           << regamma << " + i* " << imgamma << endl;
+      fail = syscon_number_of_standard_polynomials(&dim);
+      cout << "number of polynomials : " << dim << endl;
+      fail = solcon_number_of_standard_solutions(&len);
+      cout << "number of solutions : " << len << endl;
+   }
+
+   lib2path_read_standard_sys(verbose,ps);
+
+   fail = copy_start_system_to_container();
+
+   lib2path_read_standard_sys(verbose,qs);
+   lib2path_read_standard_sols(qs,sols);
+
+   fail = standard_onetrack(verbose,regamma,imgamma,ps,qs,sols);
+
+   if(verbose > 0)
+      cout << "writing the solutions to the container ..." << endl;
+
+   lib2path_write_standard_sols(sols);
+
+   return 0;
+}
+
+extern "C" int dobldobl_adeonepath
+ ( int verbose, double regamma, double imgamma )
+{
+   int fail;
+   PolySys<complexH<dd_real>,dd_real> ps;
+   PolySys<complexH<dd_real>,dd_real> qs;
+   PolySolSet<complexH<dd_real>,dd_real> sols;
+
+   fail = copy_dobldobl_target_system_to_container();
+
+   if(verbose > 0)
+   {
+      int dim, len;
+
+      cout << endl;
+      cout << "Tracking one path ..." << endl;
+      cout << "gamma = " << setprecision(16)
+           << regamma << " + i* " << imgamma << endl;
+      fail = syscon_number_of_dobldobl_polynomials(&dim);
+      cout << "number of polynomials : " << dim << endl;
+      fail = solcon_number_of_dobldobl_solutions(&len);
+      cout << "number of solutions : " << len << endl;
+   }
+
+   lib2path_read_dobldobl_sys(verbose,ps);
+
+   fail = copy_dobldobl_start_system_to_container();
+
+   lib2path_read_dobldobl_sys(verbose,qs);
+   lib2path_read_dobldobl_sols(qs,sols);
+
+   fail = dobldobl_onetrack(verbose,regamma,imgamma,ps,qs,sols);
+
+   if(verbose > 0)
+      cout << "writing the solutions to the container ..." << endl;
+
+   lib2path_write_dobldobl_sols(sols);
+
+   return 0;
+}
+
+extern "C" int quaddobl_adeonepath
+ ( int verbose, double regamma, double imgamma )
+{
+   int fail;
+   PolySys<complexH<qd_real>,qd_real> ps;
+   PolySys<complexH<qd_real>,qd_real> qs;
+   PolySolSet<complexH<qd_real>,qd_real> sols;
+
+   fail = copy_quaddobl_target_system_to_container();
+
+   if(verbose > 0)
+   {
+      int dim, len;
+
+      cout << endl;
+      cout << "Tracking one path ..." << endl;
+      cout << "gamma = " << setprecision(16)
+           << regamma << " + i* " << imgamma << endl;
+      fail = syscon_number_of_quaddobl_polynomials(&dim);
+      cout << "number of polynomials : " << dim << endl;
+      fail = solcon_number_of_quaddobl_solutions(&len);
+      cout << "number of solutions : " << len << endl;
+   }
+
+   lib2path_read_quaddobl_sys(verbose,ps);
+
+   fail = copy_quaddobl_start_system_to_container();
+
+   lib2path_read_quaddobl_sys(verbose,qs);
+   lib2path_read_quaddobl_sols(qs,sols);
+
+   fail = quaddobl_onetrack(verbose,regamma,imgamma,ps,qs,sols);
+
+   if(verbose > 0)
+      cout << "writing the solutions to the container ..." << endl;
+
+   lib2path_write_quaddobl_sols(sols);
+
+   return 0;
+}
 
 extern "C" int standard_ademanypaths
  ( int verbose, double regamma, double imgamma )
@@ -752,6 +968,300 @@ extern "C" int quaddobl_ademanypaths
       cout << "writing the solutions to the container ..." << endl;
 
    lib2path_write_quaddobl_sols(sols);
+
+   return 0;
+}
+
+int standard_newton
+ ( int verbose, PolySys<complexH<double>,double>& p,
+   PolySolSet<complexH<double>,double>& s )
+{
+   double teval,tmgs;
+   bool success;
+   complexH<double>* sol = s.get_sol(0);
+   complexH<double> alpha;
+   CPUInstHom<complexH<double>,double> cpu_inst_hom;
+   Workspace< complexH<double> > workspace_cpu;
+   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
+      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
+      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
+      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+  
+   if(verbose > 0)
+   {
+      cout << "The first solution on input :" << endl;
+      for(int k=0; k<p.dim; k++)
+      {
+         cout << k << " :";
+         cout << setw(24) << scientific << setprecision(16) << sol[k];
+      }
+   }
+
+   alpha = complexH<double>(1,0);
+   cpu_inst_hom.init(p,p,p.dim,p.n_eq,1,alpha,verbose);
+   cpu_inst_hom.init_workspace(workspace_cpu);
+
+   workspace_cpu.init_x_t_idx();
+   workspace_cpu.update_x_t_value(sol,alpha);
+   success = CPU_Newton(workspace_cpu,cpu_inst_hom,pars,teval,tmgs);
+   if(verbose > 0)
+   {
+      cout.precision(16);
+      cout << "The first solution after CPU_Newton :" << endl;
+      for(int k=0; k<p.dim; k++)
+         cout << k << " :" << setw(24) << workspace_cpu.x[k];
+   }
+
+   s.change_sol(0,workspace_cpu.x);
+
+   return 0;
+}
+
+int dobldobl_newton
+ ( int verbose, PolySys<complexH<dd_real>,dd_real>& p,
+   PolySolSet<complexH<dd_real>,dd_real>& s )
+{
+   double teval,tmgs;
+   bool success;
+   complexH<dd_real>* sol = s.get_sol(0);
+   complexH<dd_real> alpha;
+   CPUInstHom<complexH<dd_real>,dd_real> cpu_inst_hom;
+   Workspace< complexH<dd_real> > workspace_cpu;
+   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
+      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
+      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
+      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+  
+   if(verbose > 0)
+   {
+      cout << "The first solution on input :" << endl;
+      for(int k=0; k<p.dim; k++)
+      {
+         cout << k << " :";
+         cout << setw(24) << scientific << setprecision(16) << sol[k];
+      }
+   }
+
+   alpha = complexH<dd_real>(1,0);
+   cpu_inst_hom.init(p,p,p.dim,p.n_eq,1,alpha,verbose);
+   cpu_inst_hom.init_workspace(workspace_cpu);
+
+   workspace_cpu.init_x_t_idx();
+   workspace_cpu.update_x_t_value(sol,alpha);
+   success = CPU_Newton(workspace_cpu,cpu_inst_hom,pars,teval,tmgs);
+   if(verbose > 0)
+   {
+      cout.precision(16);
+      cout << "The first solution after CPU_Newton :" << endl;
+      for(int k=0; k<p.dim; k++)
+         cout << k << " :" << setw(24) << workspace_cpu.x[k];
+   }
+
+   s.change_sol(0,workspace_cpu.x);
+
+   return 0;
+}
+
+int quaddobl_newton
+ ( int verbose, PolySys<complexH<qd_real>,qd_real>& p,
+   PolySolSet<complexH<qd_real>,qd_real>& s )
+{
+   double teval,tmgs;
+   bool success;
+   complexH<qd_real>* sol = s.get_sol(0);
+   complexH<qd_real> alpha;
+   CPUInstHom<complexH<qd_real>,qd_real> cpu_inst_hom;
+   Workspace< complexH<qd_real> > workspace_cpu;
+   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
+      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
+      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
+      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+  
+   if(verbose > 0)
+   {
+      cout << "The first solution on input :" << endl;
+      for(int k=0; k<p.dim; k++)
+      {
+         cout << k << " :";
+         cout << setw(24) << scientific << setprecision(16) << sol[k];
+      }
+   }
+
+   alpha = complexH<qd_real>(1,0);
+   cpu_inst_hom.init(p,p,p.dim,p.n_eq,1,alpha,verbose);
+   cpu_inst_hom.init_workspace(workspace_cpu);
+
+   workspace_cpu.init_x_t_idx();
+   workspace_cpu.update_x_t_value(sol,alpha);
+   success = CPU_Newton(workspace_cpu,cpu_inst_hom,pars,teval,tmgs);
+   if(verbose > 0)
+   {
+      cout.precision(16);
+      cout << "The first solution after CPU_Newton :" << endl;
+      for(int k=0; k<p.dim; k++)
+         cout << k << " :" << setw(24) << workspace_cpu.x[k];
+   }
+
+   s.change_sol(0,workspace_cpu.x);
+
+   return 0;
+}
+
+int standard_onetrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<double>,double>& p,
+   PolySys<complexH<double>,double>& q,
+   PolySolSet<complexH<double>,double>& s )
+{
+   double tpred,teval,tmgs;
+   bool success;
+   complexH<double>* sol = s.get_sol(0);
+   complexH<double> alpha,t;
+   CPUInstHom<complexH<double>,double> cpu_inst_hom;
+   Workspace< complexH<double> > workspace_cpu;
+   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
+      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
+      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
+      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+  
+   if(verbose > 0)
+   {
+      cout << "The first solution on input :" << endl;
+      for(int k=0; k<p.dim; k++)
+      {
+         cout << k << " :";
+         cout << setw(24) << scientific << setprecision(16) << sol[k];
+      }
+   }
+
+   alpha = complexH<double>(regamma,imgamma);
+   cpu_inst_hom.init(p,q,p.dim,p.n_eq,1,alpha,verbose);
+   cpu_inst_hom.init_workspace(workspace_cpu);
+
+   t = complexH<double>(0.0,0);
+   workspace_cpu.init_x_t_idx();
+   workspace_cpu.update_x_t_value(sol,t);
+   workspace_cpu.update_x_t_idx();
+   tpred = 0.0; teval = 0.0; tmgs = 0.0;
+   if(verbose > 0) cout << "calling path_tracker ..." << endl;
+   success = path_tracker(workspace_cpu,cpu_inst_hom,pars,
+                          tpred,teval,tmgs,0,verbose);
+   if(verbose > 0) cout << "done with call to path_tracker." << endl;
+   if(verbose > 0)
+   {
+      cout.precision(16);
+      cout << "The first solution after CPU path tracker :" << endl;
+      for(int k=0; k<p.dim; k++)
+         cout << k << " :" << setw(24) << workspace_cpu.x_last[k];
+   }
+
+   s.change_sol(0,workspace_cpu.x_last);
+
+   return 0;
+}
+
+int dobldobl_onetrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<dd_real>,dd_real>& p,
+   PolySys<complexH<dd_real>,dd_real>& q,
+   PolySolSet<complexH<dd_real>,dd_real>& s )
+{
+   double tpred,teval,tmgs;
+   bool success;
+   complexH<dd_real>* sol = s.get_sol(0);
+   complexH<dd_real> alpha,t;
+   CPUInstHom<complexH<dd_real>,dd_real> cpu_inst_hom;
+   Workspace< complexH<dd_real> > workspace_cpu;
+   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
+      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
+      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
+      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+  
+   if(verbose > 0)
+   {
+      cout << "The first solution on input :" << endl;
+      for(int k=0; k<p.dim; k++)
+      {
+         cout << k << " :";
+         cout << setw(40) << scientific << setprecision(32) << sol[k];
+      }
+   }
+
+   alpha = complexH<dd_real>(regamma,imgamma);
+   cpu_inst_hom.init(p,q,p.dim,p.n_eq,1,alpha,verbose);
+   cpu_inst_hom.init_workspace(workspace_cpu);
+
+   t = complexH<dd_real>(0.0,0);
+   workspace_cpu.init_x_t_idx();
+   workspace_cpu.update_x_t_value(sol,t);
+   workspace_cpu.update_x_t_idx();
+   tpred = 0.0; teval = 0.0; tmgs = 0.0;
+   if(verbose > 0) cout << "calling path_tracker ..." << endl;
+   success = path_tracker(workspace_cpu,cpu_inst_hom,pars,
+                          tpred,teval,tmgs,0,verbose);
+   if(verbose > 0) cout << "done with call to path_tracker." << endl;
+   if(verbose > 0)
+   {
+      cout.precision(32);
+      cout << "The first solution after CPU path tracker :" << endl;
+      for(int k=0; k<p.dim; k++)
+         cout << k << " :" << setw(40) << workspace_cpu.x_last[k];
+   }
+
+   s.change_sol(0,workspace_cpu.x_last);
+
+   return 0;
+}
+
+int quaddobl_onetrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<qd_real>,qd_real>& p,
+   PolySys<complexH<qd_real>,qd_real>& q,
+   PolySolSet<complexH<qd_real>,qd_real>& s )
+{
+   double tpred,teval,tmgs;
+   bool success;
+   complexH<qd_real>* sol = s.get_sol(0);
+   complexH<qd_real> alpha,t;
+   CPUInstHom<complexH<qd_real>,qd_real> cpu_inst_hom;
+   Workspace< complexH<qd_real> > workspace_cpu;
+   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
+      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
+      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
+      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+  
+   if(verbose > 0)
+   {
+      cout << "The first solution on input :" << endl;
+      for(int k=0; k<p.dim; k++)
+      {
+         cout << k << " :";
+         cout << setw(72) << scientific << setprecision(64) << sol[k];
+      }
+   }
+
+   alpha = complexH<qd_real>(regamma,imgamma);
+   cpu_inst_hom.init(p,q,p.dim,p.n_eq,1,alpha,verbose);
+   cpu_inst_hom.init_workspace(workspace_cpu);
+
+   t = complexH<qd_real>(0.0,0);
+   workspace_cpu.init_x_t_idx();
+   workspace_cpu.update_x_t_value(sol,t);
+   workspace_cpu.update_x_t_idx();
+   tpred = 0.0; teval = 0.0; tmgs = 0.0;
+   if(verbose > 0) cout << "calling path_tracker ..." << endl;
+   success = path_tracker(workspace_cpu,cpu_inst_hom,pars,
+                          tpred,teval,tmgs,0,verbose);
+   if(verbose > 0) cout << "done with call to path_tracker." << endl;
+   if(verbose > 0)
+   {
+      cout.precision(64);
+      cout << "The first solution after CPU path tracker :" << endl;
+      for(int k=0; k<p.dim; k++)
+         cout << k << " :" << setw(72) << workspace_cpu.x_last[k];
+   }
+
+   s.change_sol(0,workspace_cpu.x_last);
 
    return 0;
 }
