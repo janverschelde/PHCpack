@@ -1508,6 +1508,9 @@ ademanypaths.o:
 lib2path.o:
 	make -f $(MAKEFILE) lib2path.o
 
+ts_ademanypaths:
+	make -f $(MAKEFILE) ts_ademanypaths
+
 # Test programs for the Tasking:
 
 test_tasking: ts_mutex ts_jobs ts_mtvol ts_mtvolcon ts_mtverify ts_mtcont \

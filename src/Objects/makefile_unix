@@ -2438,8 +2438,9 @@ ts_adepath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                  -o $(BIN)/ts_adepath_qd -lm --LINK=$(gpp)
 
 lib2path.o:
-	$(gpp) -O2 -I$(PHCLib) -I$(QD_ROOR)/include \
+	$(gpp) -O2 -I$(PHCLib) -I$(QD_ROOT)/include \
                    -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly2 \
+                   -I$(PHCgpu)/Path/Host \
                -c $(PHCgpu)/Path/Host/lib2path.cpp -o lib2path.o
 
 ademanypaths.o:
@@ -2448,6 +2449,21 @@ ademanypaths.o:
                    -I$(PHCgpu)/Path/Host \
                -c $(PHCAda)/PHCtoC/ademanypaths.cpp \
                -o ademanypaths.o
+
+ts_ademanypaths: lib2path.o
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	@-echo ">>> compiling code for the containers ..."
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	@-echo ">>> compiling the main Ada procedure ..."
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_ademanypaths.adb \
+                 -o ts_ademanypaths.o
+	gnatbind ts_ademanypaths use_c2phc
+	@-echo ">>> linking ..."
+	gnatlink ts_ademanypaths syscon.o solcon.o phcpack.o \
+                 lib2path.o $(QD_LIB)/libqd.a \
+              -o $(BIN)/ts_ademanypaths -lm --LINK=$(gpp)
 
 # Test programs for the Tasking :
 
