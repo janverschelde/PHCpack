@@ -1,4 +1,4 @@
-GPU acceleration of Newton's method and path tracking in PHCv2.4.34
+GPU acceleration of Newton's method and path tracking in PHCv2.4.35
 
 This directory is newly created in release 2.3.90 of PHCpack.
 At this point it consists of a collection of test programs to 
@@ -74,5 +74,6 @@ ts_adepath_d                   : main test program in double precision
 ts_adepath_dd                  : main test program in double double precision
 ts_adepath_qd                  : main test program in quad double precision
 -------------------------------------------------------------------------------
-ademanypaths                   : calls the new templated code
+algorithmic_diffeval_trackers  : wrappers and drivers to the Path library
+ts_ademanypaths                : calls the drivers to the ADE trackers
 -------------------------------------------------------------------------------

@@ -1,3 +1,6 @@
+Wed 1 Feb 2017 : new package algorithmic_diffeval_trackers with code from
+  ts_ademanypaths.adb.
+
 Tue 31 Jan 2017 : ts_ademanypaths.adb is a new test procedure to call the
   path tracking functions in lib2path, extended with a test on Newton's
   method and the tracking of one path.
