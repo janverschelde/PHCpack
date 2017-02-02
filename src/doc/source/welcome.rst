@@ -4,6 +4,9 @@ Getting Started
 
 This documentation describes the software package PHCpack.
 
+This work is licensed under 
+a Creative Commons Attribution-Share Alike 3.0 License.
+
 What is PHCpack?
 ================
 
