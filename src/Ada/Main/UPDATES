@@ -1,3 +1,6 @@
+Thu 2 Feb 2017 : added one line banner about the phc -u option in mainphc.adb
+  which is called when running phc without options.
+
 Tue 31 Jan 2017 : prepared release 2.3.34 in greeting_banners.
 
 Fri 13 Jan 2017 : updated greeting_banners.adb to document the blackbox
