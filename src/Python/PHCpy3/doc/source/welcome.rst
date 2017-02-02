@@ -5,6 +5,9 @@ Getting Started
 This documentation describes a collection of Python modules
 to compute solutions of polynomial systems using PHCpack.
 
+This work is licensed under 
+a Creative Commons Attribution-Share Alike 3.0 License.
+
 The computation of the mixed volume in phcpy calls MixedVol
 (ACM TOMS Algorithm 846 of T. Gao, T.Y. Li, M. Wu) 
 as it is integrated in PHCpack.
