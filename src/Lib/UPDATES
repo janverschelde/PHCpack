@@ -1,5 +1,5 @@
 Thu 2 Feb 2017 : extended phcpy2c.h and phcpy2c3.c with the ade methods
-  in standard double precision.
+  in standard double precision.  Also updated phcpy2c2.c for python2.
 
 Mon 19 Dec 2016 : added five functions to syspool, and added those functions
   also the definition of the C extension module for phcpy.
