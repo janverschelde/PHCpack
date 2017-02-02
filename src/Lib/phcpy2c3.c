@@ -23,10 +23,16 @@
 #include "mapcon.h"
 #include "series.h"
 #include "next_track.h"
+// #include "lib2path.h"
 #include "structmember.h"
 
-extern void adainit ( void );
-extern void adafinal ( void );
+#ifdef compilewgpp
+extern "C" void adainit( void );
+extern "C" void adafinal( void );
+#else
+extern void adainit( void );
+extern void adafinal( void );
+#endif
 
 int g_ada_initialized = 0;
 int g_ada_finalized = 0;
@@ -7005,6 +7011,50 @@ static PyObject *py2c_clear_varbprec_tracker
    return Py_BuildValue("i",fail);
 }
 
+/* The wrapping of Newton's method and path trackers with the evaluation
+ * done by algorithmic differentiation in lib2path.h, starts here. */
+
+extern int standard_ade_newton ( int verbose );
+extern int standard_ade_onepath
+ ( int verbose, double regamma, double imgamma );
+extern int standard_ade_manypaths
+ ( int verbose, double regamma, double imgamma );
+
+static PyObject *py2c_ade_newton_d ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
+   fail = standard_ade_newton(verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_ade_onepath_d ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+   double reg,img;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"idd",&verbose,&reg,&img)) return NULL;
+   fail = standard_ade_onepath(verbose,reg,img);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_ade_manypaths_d ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+   double reg,img;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"idd",&verbose,&reg,&img)) return NULL;
+   fail = standard_ade_manypaths(verbose,reg,img);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyMethodDef phcpy2c3_methods[] = 
 {
    {"py2c_PHCpack_version_string", py2c_PHCpack_version_string, METH_VARARGS,
@@ -8387,6 +8437,12 @@ static PyMethodDef phcpy2c3_methods[] =
     "Deallocates data used in the arbitrary multiprecision tracker\n with a generator."},
    {"py2c_clear_varbprec_tracker", py2c_clear_varbprec_tracker, METH_VARARGS, 
     "Deallocates data used in the variable precision tracker\n with a generator."},
+   {"py2c_ade_newton_d", py2c_ade_newton_d, METH_VARARGS,
+    "Runs Newton's method with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The standard systems container must contain a valid polynomial system\n and the standard solutions container must hold a valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_ade_onepath_d", py2c_ade_onepath_d, METH_VARARGS,
+    "Tracks one solution path with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the standard solutions container must holds valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_ade_manypaths_d", py2c_ade_manypaths_d, METH_VARARGS,
+    "Tracks many solution paths with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the standard solutions container holds valid solutions.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
    {NULL, NULL, 0, NULL} 
 };
 
