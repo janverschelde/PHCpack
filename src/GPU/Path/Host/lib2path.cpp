@@ -633,7 +633,7 @@ using namespace std;
 #define STEP_INCREASE   1.25
 #define STEP_DECREASE   0.7
 
-extern "C" int standard_adenewton ( int verbose )
+int standard_ade_newton ( int verbose )
 {
    int fail;
    PolySys<complexH<double>,double> ps;
@@ -664,7 +664,7 @@ extern "C" int standard_adenewton ( int verbose )
    return 0;
 }
 
-extern "C" int dobldobl_adenewton ( int verbose )
+int dobldobl_ade_newton ( int verbose )
 {
    int fail;
    PolySys<complexH<dd_real>,dd_real> ps;
@@ -695,7 +695,7 @@ extern "C" int dobldobl_adenewton ( int verbose )
    return 0;
 }
 
-extern "C" int quaddobl_adenewton ( int verbose )
+int quaddobl_ade_newton ( int verbose )
 {
    int fail;
    PolySys<complexH<qd_real>,qd_real> ps;
@@ -726,7 +726,22 @@ extern "C" int quaddobl_adenewton ( int verbose )
    return 0;
 }
 
-extern "C" int standard_adeonepath
+extern "C" int standard_adenewton ( int verbose )
+{
+   return standard_ade_newton(verbose);
+}
+
+extern "C" int dobldobl_adenewton ( int verbose )
+{
+   return dobldobl_ade_newton(verbose);
+}
+
+extern "C" int quaddobl_adenewton ( int verbose )
+{
+   return quaddobl_ade_newton(verbose);
+}
+
+int standard_ade_onepath
  ( int verbose, double regamma, double imgamma )
 {
    int fail;
@@ -767,7 +782,7 @@ extern "C" int standard_adeonepath
    return 0;
 }
 
-extern "C" int dobldobl_adeonepath
+int dobldobl_ade_onepath
  ( int verbose, double regamma, double imgamma )
 {
    int fail;
@@ -808,7 +823,7 @@ extern "C" int dobldobl_adeonepath
    return 0;
 }
 
-extern "C" int quaddobl_adeonepath
+int quaddobl_ade_onepath
  ( int verbose, double regamma, double imgamma )
 {
    int fail;
@@ -849,7 +864,25 @@ extern "C" int quaddobl_adeonepath
    return 0;
 }
 
-extern "C" int standard_ademanypaths
+extern "C" int standard_adeonepath
+ ( int verbose, double regamma, double imgamma )
+{
+   return standard_ade_onepath(verbose,regamma,imgamma);
+}
+
+extern "C" int dobldobl_adeonepath
+ ( int verbose, double regamma, double imgamma )
+{
+   return dobldobl_ade_onepath(verbose,regamma,imgamma);
+}
+
+extern "C" int quaddobl_adeonepath
+ ( int verbose, double regamma, double imgamma )
+{
+   return quaddobl_ade_onepath(verbose,regamma,imgamma);
+}
+
+int standard_ade_manypaths
  ( int verbose, double regamma, double imgamma )
 {
    int fail;
@@ -890,7 +923,7 @@ extern "C" int standard_ademanypaths
    return 0;
 }
 
-extern "C" int dobldobl_ademanypaths
+int dobldobl_ade_manypaths
  ( int verbose, double regamma, double imgamma )
 {
    int fail;
@@ -931,7 +964,7 @@ extern "C" int dobldobl_ademanypaths
    return 0;
 }
 
-extern "C" int quaddobl_ademanypaths
+int quaddobl_ade_manypaths
  ( int verbose, double regamma, double imgamma )
 {
    int fail;
@@ -970,6 +1003,24 @@ extern "C" int quaddobl_ademanypaths
    lib2path_write_quaddobl_sols(sols);
 
    return 0;
+}
+
+extern "C" int standard_ademanypaths
+ ( int verbose, double regamma, double imgamma )
+{
+   return standard_ade_manypaths(verbose,regamma,imgamma);
+}
+
+extern "C" int dobldobl_ademanypaths
+ ( int verbose, double regamma, double imgamma )
+{
+   return dobldobl_ade_manypaths(verbose,regamma,imgamma);
+}
+
+extern "C" int quaddobl_ademanypaths
+ ( int verbose, double regamma, double imgamma )
+{
+   return quaddobl_ade_manypaths(verbose,regamma,imgamma);
 }
 
 int standard_newton

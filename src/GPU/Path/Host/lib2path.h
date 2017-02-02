@@ -163,6 +163,45 @@ int quaddobl_manytrack
  *   q         start system in the homotopy;
  *   s         solutions of the start system q. */
 
+int standard_ade_newton ( int verbose );
+int dobldobl_ade_newton ( int verbose );
+int quaddobl_ade_newton ( int verbose );
+/*
+ * DESCRIPTION :
+ *   Calls Newton's method with algorithmic differentiation.
+ *   If verbose > 0, then additional output will be written. */
+
+int standard_ade_onepath
+ ( int verbose, double regamma, double imgamma );
+int dobldobl_ade_onepath
+ ( int verbose, double regamma, double imgamma );
+int quaddobl_ade_onepath
+ ( int verbose, double regamma, double imgamma );
+/*
+ * DESCRIPTION :
+ *   A C++ function to track one solution path.
+ *
+ * ON ENTRY :
+ *   verbose   if > 0, then additional output is written to screen;
+ *   regamma   real part of the gamma constant;
+ *   imgamma   imaginary part of the gamma constant; */
+
+int standard_ade_manypaths
+ ( int verbose, double regamma, double imgamma );
+int dobldobl_ade_manypaths
+ ( int verbose, double regamma, double imgamma );
+int quaddobl_ade_manypaths
+ ( int verbose, double regamma, double imgamma );
+/*
+ * DESCRIPTION :
+ *   A C++ function to track one solution path,
+ *   encapsulated as a C function for to be called from Ada.
+ *
+ * ON ENTRY :
+ *   verbose   if > 0, then additional output is written to screen;
+ *   regamma   real part of the gamma constant;
+ *   imgamma   imaginary part of the gamma constant; */
+
 extern "C" int standard_adenewton ( int verbose );
 extern "C" int dobldobl_adenewton ( int verbose );
 extern "C" int quaddobl_adenewton ( int verbose );
@@ -170,6 +209,7 @@ extern "C" int quaddobl_adenewton ( int verbose );
  * DESCRIPTION :
  *   Calls Newton's method with algorithmic differentiaton,
  *   encapsulated as a C function for to be called from Ada.
+ *   Notice the lack of an underscore after the _ade in the functin names.
  *   If verbose > 0, then additional output will be written. */
 
 extern "C" int standard_adeonepath
@@ -182,6 +222,7 @@ extern "C" int quaddobl_adeonepath
  * DESCRIPTION :
  *   A C++ function to track one solution path,
  *   encapsulated as a C function for to be called from Ada.
+ *   Notice the lack of an underscore after the _ade in the function names.
  *
  * ON ENTRY :
  *   verbose   if > 0, then additional output is written to screen;
@@ -196,8 +237,9 @@ extern "C" int quaddobl_ademanypaths
  ( int verbose, double regamma, double imgamma );
 /*
  * DESCRIPTION :
- *   A C++ function to track one solution path,
+ *   A C++ function to track many solution path,
  *   encapsulated as a C function for to be called from Ada.
+ *   Notice the lack of an underscore after the _ade in the function names.
  *
  * ON ENTRY :
  *   verbose   if > 0, then additional output is written to screen;
