@@ -1,5 +1,5 @@
 Fri 3 Feb 2017 : added the _ade_ routines to phcpy2c.h and phcpy2c3.c
-  for double double and quad double precision.
+  for double double and quad double precision; also to phcpy2c2.c.
 
 Thu 2 Feb 2017 : extended phcpy2c.h and phcpy2c3.c with the ade methods
   in standard double precision.  Also updated phcpy2c2.c for python2.
