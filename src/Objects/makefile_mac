@@ -2596,34 +2596,39 @@ phc_solve_cpp:
 	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
                  -o $(BIN)/phc_solve -lm --LINK=g++
 
-phcpy2c2.so:
-	gcc -c -O2 $(PHCLib)/syscon.c
-	gcc -c -O2 $(PHCLib)/solcon.c
-	gcc -c -O2 $(PHCLib)/product.c
-	gcc -c -O2 $(PHCLib)/lists_and_strings.c
-	gcc -c -O2 $(PHCLib)/celcon.c
-	gcc -c -O2 $(PHCLib)/intcelcon.c
-	gcc -c -O2 $(PHCLib)/scalers.c
-	gcc -c -O2 $(PHCLib)/numbtrop.c
-	gcc -c -O2 $(PHCLib)/sweep.c
-	gcc -c -O2 $(PHCLib)/witset.c
-	gcc -c -O2 $(PHCLib)/schubert.c
-	gcc -c -O2 $(PHCLib)/unisolvers.c
-	gcc -c -O2 $(PHCLib)/giftwrappers.c
-	gcc -c -O2 $(PHCLib)/phcpack.c
-	gcc -c -O2 $(PHCLib)/mapcon.c
-	gcc -c -O2 $(PHCLib)/next_track.c
-	gcc -c -O2 $(PHCLib)/syspool.c
-	gcc -c -O2 $(PHCLib)/series.c
-	$(MCC) -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
-	#gcc -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
-	gnatmake -c -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+phcpy2c2.so: lib2path.o
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/lists_and_strings.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/celcon.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/intcelcon.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/scalers.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
+	g++ -Dcompilewgpp=1 -c -I$(PYTHON) -I$(PYTHON)/Include \
+            $(PHCLib)/phcpy2c2.c
+	gnatmake -c -static -O3 $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
             solcon.o product.o lists_and_strings.o celcon.o intcelcon.o \
             scalers.o numbtrop.o sweep.o schubert.o syspool.o series.o \
-                 -o ../Python/PHCpy2/phcpy/phcpy2c2.so -framework Python
+            lib2path.o $(QD_LIB)/libqd.a \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 -o ../Python/PHCpy2/phcpy/phcpy2c2.so \
+                 /usr/lib/libpython2.7.dylib \
+                 -lm --LINK=gcc
 
 # to extend the Python interpreter of Sage with phcpy2c2.so :
 
@@ -2657,7 +2662,6 @@ sage_phcpy2c2.so:
             $(SAGEPYTHONLIB)/libpython2.7.dylib -o sage_phcpy2c2.so 
 
 phcpy2c3.so: lib2path.o
-	/bin/rm -f -r phcpy2c2.o phcpy2c.a phcpy2c3.o phcpy2c3.a
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
