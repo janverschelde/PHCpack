@@ -4759,6 +4759,44 @@ static PyObject *py2c_ade_newton_d ( PyObject *self, PyObject *args );
  *            solution container,
  *            if different from zero, then an error happened. */
 
+static PyObject *py2c_ade_newton_dd ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Runs Newton's method with algorithmic differentation in double
+ *   double double precision on the data in the systems and solutions container.
+ *
+ * REQUIRED :
+ *   The dobldobl systems container contains a valid polynomial system
+ *   and the dobldobl solutions container holds a valid solution.
+ *
+ * ON ENTRY :
+ *   verbose  0 if no intermediate output is wanted,
+ *            1 if extra information should be written to screen.
+ *
+ * ON RETURN :
+ *   fail     0 if all went well, and the corrected solution is in the
+ *            solution container,
+ *            if different from zero, then an error happened. */
+
+static PyObject *py2c_ade_newton_qd ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Runs Newton's method with algorithmic differentation in quad
+ *   double precision on the data in the systems and solutions container.
+ *
+ * REQUIRED :
+ *   The quaddobl systems container contains a valid polynomial system
+ *   and the quaddobl solutions container holds a valid solution.
+ *
+ * ON ENTRY :
+ *   verbose  0 if no intermediate output is wanted,
+ *            1 if extra information should be written to screen.
+ *
+ * ON RETURN :
+ *   fail     0 if all went well, and the corrected solution is in the
+ *            solution container,
+ *            if different from zero, then an error happened. */
+
 static PyObject *py2c_ade_onepath_d ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -4777,7 +4815,49 @@ static PyObject *py2c_ade_onepath_d ( PyObject *self, PyObject *args );
  *
  * ON RETURN :
  *   fail     0 if all went well, and the solution at the end of the path 
- *              is in the  solution container,
+ *            is in the  solution container,
+ *            if different from 0, then an error happened. */
+
+static PyObject *py2c_ade_onepath_dd ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks one solution path with algorithmic differentation in double
+ *   double precision on the data in the systems and solutions container.
+ *
+ * REQUIRED :
+ *   The start and target systems have been defined
+ *   and the dobldobl solutions container holds a valid solution.
+ *
+ * ON ENTRY :
+ *   verbose  0 if no intermediate output is wanted,
+ *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random constant.
+ *
+ * ON RETURN :
+ *   fail     0 if all went well, and the solution at the end of the path 
+ *            is in the  solution container,
+ *            if different from 0, then an error happened. */
+
+static PyObject *py2c_ade_onepath_qd ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks one solution path with algorithmic differentation in quad
+ *   double precision on the data in the systems and solutions container.
+ *
+ * REQUIRED :
+ *   The start and target systems have been defined
+ *   and the quaddobl solutions container holds a valid solution.
+ *
+ * ON ENTRY :
+ *   verbose  0 if no intermediate output is wanted,
+ *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random constant.
+ *
+ * ON RETURN :
+ *   fail     0 if all went well, and the solution at the end of the path 
+ *            is in the  solution container,
  *            if different from 0, then an error happened. */
 
 static PyObject *py2c_ade_manypaths_d ( PyObject *self, PyObject *args );
@@ -4798,5 +4878,47 @@ static PyObject *py2c_ade_manypaths_d ( PyObject *self, PyObject *args );
  *
  * ON RETURN :
  *   fail     0 if all went well, and the solutions at the end of paths
- *              are in the solution container,
+ *            are in the solution container,
+ *            if different from 0, then an error happened. */
+
+static PyObject *py2c_ade_manypaths_dd ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks many solution paths with algorithmic differentation in double
+ *   double precision on the data in the systems and solutions container.
+ *
+ * REQUIRED :
+ *   The start and target systems have been defined
+ *   and the dobldobl solutions container holds valid solutions.
+ *
+ * ON ENTRY :
+ *   verbose  0 if no intermediate output is wanted,
+ *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random constant.
+ *
+ * ON RETURN :
+ *   fail     0 if all went well, and the solutions at the end of paths
+ *            are in the solution container,
+ *            if different from 0, then an error happened. */
+
+static PyObject *py2c_ade_manypaths_qd ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks many solution paths with algorithmic differentation in quad
+ *   double precision on the data in the systems and solutions container.
+ *
+ * REQUIRED :
+ *   The start and target systems have been defined
+ *   and the quaddobl solutions container holds valid solutions.
+ *
+ * ON ENTRY :
+ *   verbose  0 if no intermediate output is wanted,
+ *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random constant.
+ *
+ * ON RETURN :
+ *   fail     0 if all went well, and the solutions at the end of paths
+ *            are in the solution container,
  *            if different from 0, then an error happened. */

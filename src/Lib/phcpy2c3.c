@@ -7014,10 +7014,24 @@ static PyObject *py2c_clear_varbprec_tracker
 /* The wrapping of Newton's method and path trackers with the evaluation
  * done by algorithmic differentiation in lib2path.h, starts here. */
 
+// For the separate compilation of lib2path, extern declarations are needed.
+
 extern int standard_ade_newton ( int verbose );
 extern int standard_ade_onepath
  ( int verbose, double regamma, double imgamma );
 extern int standard_ade_manypaths
+ ( int verbose, double regamma, double imgamma );
+
+extern int dobldobl_ade_newton ( int verbose );
+extern int dobldobl_ade_onepath
+ ( int verbose, double regamma, double imgamma );
+extern int dobldobl_ade_manypaths
+ ( int verbose, double regamma, double imgamma );
+
+extern int quaddobl_ade_newton ( int verbose );
+extern int quaddobl_ade_onepath
+ ( int verbose, double regamma, double imgamma );
+extern int quaddobl_ade_manypaths
  ( int verbose, double regamma, double imgamma );
 
 static PyObject *py2c_ade_newton_d ( PyObject *self, PyObject *args )
@@ -7027,6 +7041,28 @@ static PyObject *py2c_ade_newton_d ( PyObject *self, PyObject *args )
    initialize();
    if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
    fail = standard_ade_newton(verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_ade_newton_dd ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
+   fail = dobldobl_ade_newton(verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_ade_newton_qd ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
+   fail = quaddobl_ade_newton(verbose);
 
    return Py_BuildValue("i",fail);
 }
@@ -7043,6 +7079,30 @@ static PyObject *py2c_ade_onepath_d ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_ade_onepath_dd ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+   double reg,img;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"idd",&verbose,&reg,&img)) return NULL;
+   fail = dobldobl_ade_onepath(verbose,reg,img);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_ade_onepath_qd ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+   double reg,img;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"idd",&verbose,&reg,&img)) return NULL;
+   fail = quaddobl_ade_onepath(verbose,reg,img);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_ade_manypaths_d ( PyObject *self, PyObject *args )
 {
    int fail,verbose;
@@ -7051,6 +7111,30 @@ static PyObject *py2c_ade_manypaths_d ( PyObject *self, PyObject *args )
    initialize();
    if(!PyArg_ParseTuple(args,"idd",&verbose,&reg,&img)) return NULL;
    fail = standard_ade_manypaths(verbose,reg,img);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_ade_manypaths_dd ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+   double reg,img;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"idd",&verbose,&reg,&img)) return NULL;
+   fail = dobldobl_ade_manypaths(verbose,reg,img);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_ade_manypaths_qd ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+   double reg,img;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"idd",&verbose,&reg,&img)) return NULL;
+   fail = quaddobl_ade_manypaths(verbose,reg,img);
 
    return Py_BuildValue("i",fail);
 }
@@ -8443,6 +8527,18 @@ static PyMethodDef phcpy2c3_methods[] =
     "Tracks one solution path with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the standard solutions container must holds valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_ade_manypaths_d", py2c_ade_manypaths_d, METH_VARARGS,
     "Tracks many solution paths with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the standard solutions container holds valid solutions.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_ade_newton_dd", py2c_ade_newton_dd, METH_VARARGS,
+    "Runs Newton's method with algorithmic differentation\n in double double precision on the data in the systems and solutions container.\n The dobldobl systems container must contain a valid polynomial system\n and the dobldobl solutions container must hold a valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_ade_onepath_dd", py2c_ade_onepath_dd, METH_VARARGS,
+    "Tracks one solution path with algorithmic differentation\n in double double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the dobldobl solutions container must holds valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_ade_manypaths_dd", py2c_ade_manypaths_dd, METH_VARARGS,
+    "Tracks many solution paths with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the dobldobl solutions container holds valid solutions.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_ade_newton_qd", py2c_ade_newton_qd, METH_VARARGS,
+    "Runs Newton's method with algorithmic differentation\n in quad double precision on the data in the systems and solutions container.\n The quaddobl systems container must contain a valid polynomial system\n and the quaddobl solutions container must hold a valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_ade_onepath_qd", py2c_ade_onepath_qd, METH_VARARGS,
+    "Tracks one solution path with algorithmic differentation\n in quad double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the quaddobl solutions container must holds valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_ade_manypaths_qd", py2c_ade_manypaths_qd, METH_VARARGS,
+    "Tracks many solution paths with algorithmic differentation\n in quad double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the quaddobl solutions container holds valid solutions.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
    {NULL, NULL, 0, NULL} 
 };
 
