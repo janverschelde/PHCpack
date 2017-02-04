@@ -612,27 +612,6 @@ void lib2path_read_quaddobl_homotopy
 
 using namespace std;
 
-// Parameters
-#define N_PREDICTOR           4
-
-#define MAX_STEP              400
-#define MAX_DELTA_T           1E-1
-#define MAX_DELTA_T_END       1E-2
-#define MIN_DELTA_T           1E-7
-
-#define MAX_IT                3
-#define ERR_MIN_ROUND_OFF     1E-9
-
-#define MAX_IT_REFINE                   5
-#define ERR_MIN_ROUND_OFF_REFINE    1E-11
-
-#define ERR_MAX_RES           1E-2
-#define ERR_MAX_DELTA_X       1E-1
-#define ERR_MAX_FIRST_DELTA_X 1E-2
-
-#define STEP_INCREASE   1.25
-#define STEP_DECREASE   0.7
-
 int standard_ade_newton ( int verbose )
 {
    int fail;
@@ -1033,10 +1012,7 @@ int standard_newton
    complexH<double> alpha;
    CPUInstHom<complexH<double>,double> cpu_inst_hom;
    Workspace< complexH<double> > workspace_cpu;
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+   Parameter pars(16);
   
    if(verbose > 0)
    {
@@ -1078,10 +1054,7 @@ int dobldobl_newton
    complexH<dd_real> alpha;
    CPUInstHom<complexH<dd_real>,dd_real> cpu_inst_hom;
    Workspace< complexH<dd_real> > workspace_cpu;
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+   Parameter pars(32);
   
    if(verbose > 0)
    {
@@ -1123,10 +1096,7 @@ int quaddobl_newton
    complexH<qd_real> alpha;
    CPUInstHom<complexH<qd_real>,qd_real> cpu_inst_hom;
    Workspace< complexH<qd_real> > workspace_cpu;
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+   Parameter pars(64);
   
    if(verbose > 0)
    {
@@ -1170,10 +1140,7 @@ int standard_onetrack
    complexH<double> alpha,t;
    CPUInstHom<complexH<double>,double> cpu_inst_hom;
    Workspace< complexH<double> > workspace_cpu;
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+   Parameter pars(16);
   
    if(verbose > 0)
    {
@@ -1223,10 +1190,7 @@ int dobldobl_onetrack
    complexH<dd_real> alpha,t;
    CPUInstHom<complexH<dd_real>,dd_real> cpu_inst_hom;
    Workspace< complexH<dd_real> > workspace_cpu;
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+   Parameter pars(32);
   
    if(verbose > 0)
    {
@@ -1276,10 +1240,7 @@ int quaddobl_onetrack
    complexH<qd_real> alpha,t;
    CPUInstHom<complexH<qd_real>,qd_real> cpu_inst_hom;
    Workspace< complexH<qd_real> > workspace_cpu;
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+   Parameter pars(64);
   
    if(verbose > 0)
    {
@@ -1329,10 +1290,7 @@ int standard_manytrack
    complexH<double> alpha,t;
    CPUInstHom<complexH<double>,double> cpu_inst_hom;
    Workspace< complexH<double> > workspace_cpu;
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+   Parameter pars(16);
   
    if(verbose > 0)
    {
@@ -1389,10 +1347,7 @@ int dobldobl_manytrack
    complexH<dd_real> alpha,t;
    CPUInstHom<complexH<dd_real>,dd_real> cpu_inst_hom;
    Workspace< complexH<dd_real> > workspace_cpu;
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+   Parameter pars(32);
   
    if(verbose > 0)
    {
@@ -1449,10 +1404,7 @@ int quaddobl_manytrack
    complexH<qd_real> alpha,t;
    CPUInstHom<complexH<qd_real>,qd_real> cpu_inst_hom;
    Workspace< complexH<qd_real> > workspace_cpu;
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
+   Parameter pars(64);
   
    if(verbose > 0)
    {

@@ -2,6 +2,7 @@ Sat 4 Feb 2017 : extended parameter.h with a constructor with default values
   of the parameters, cleaned up path_track.tpp, test_path.cpp,
   and also test_newton.cpp.  Added default values for double double and 
   quad double runs in parameter.h, used in path_track.tpp.
+  The new defaults for parameters are used in lib2path.cpp.
 
 Thu 2 Feb 2017 : to lib2path.h and lib2path.cpp, added interface functions
   to be called directly from C++.
