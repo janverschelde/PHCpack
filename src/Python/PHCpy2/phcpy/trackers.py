@@ -830,9 +830,11 @@ def test_monitored_track():
     print 'tracked', len(targetsols), 'paths, running newton_step...'
     newton_step(quadrics, targetsols)
 
-def test_ade_double_track():
+def cyclic3homotopy():
     """
-    Tests the path tracker on the cyclic 3-roots problem.
+    Returns a triplet with the cyclic 3-roots system as first item,
+    then in second place a random coefficient system, and the start
+    solutions in the third item of the triplet.
     """
     c3 = ['x0 + x1 + x2;', 'x0*x1 + x1*x2 + x2*x0;', 'x0*x1*x2 - 1;']
     c3q = ['+( 9.32743666318680E-01 - 3.60540223750954E-01*i)*x0' \
@@ -886,8 +888,35 @@ def test_ade_double_track():
           + ' x2 : -5.56554454587126E-01  -2.95260532866119E-01\n' \
           + '== err :  2.131E-16 = rco :  2.195E-01 = res :  5.551E-17 =='
     c3qsols = [c3qs0, c3qs1, c3qs2, c3qs3, c3qs4, c3qs5]
+    return (c3, c3q, c3qsols)
+
+def test_ade_double_track():
+    """
+    Tests the path tracker on the cyclic 3-roots problem,
+    in standard double precision.
+    """
+    (c3, c3q, c3qsols) = cyclic3homotopy()
     sols = ade_double_track(c3, c3q, c3qsols)
-    # sols = standard_double_track(c3, c3q, c3qsols)
+    for sol in sols:
+        print sol
+
+def test_ade_double_double_track():
+    """
+    Tests the path tracker on the cyclic 3-roots problem,
+    in double double precision.
+    """
+    (c3, c3q, c3qsols) = cyclic3homotopy()
+    sols = ade_double_double_track(c3, c3q, c3qsols)
+    for sol in sols:
+        print sol
+
+def test_ade_quad_double_track():
+    """
+    Tests the path tracker on the cyclic 3-roots problem,
+    in quad double precision.
+    """
+    (c3, c3q, c3qsols) = cyclic3homotopy()
+    sols = ade_quad_double_track(c3, c3q, c3qsols)
     for sol in sols:
         print sol
 

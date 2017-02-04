@@ -1,3 +1,6 @@
+Fri 3 Feb 2017 : added tests on the algorithmic differentiation path trackers
+  in trackers.py, both in PHCpy2/phcpy and PHCpy3/phcpy.
+
 Thu 5 Jan 2017 : prepared for version 0.6.2 of phcpy, with updated conf.py
   in doc/source, updated __init__.py and setup.py, in PHCpy2 and PHCpy3.
 
