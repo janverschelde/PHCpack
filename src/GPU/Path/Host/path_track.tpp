@@ -1,24 +1,3 @@
-// Parameters
-#define N_PREDICTOR           4
-
-#define MAX_STEP              400
-#define MAX_DELTA_T           1E-1
-#define MAX_DELTA_T_END       1E-2
-#define MIN_DELTA_T           1E-7
-
-#define MAX_IT                3
-#define ERR_MIN_ROUND_OFF     1E-9
-
-#define MAX_IT_REFINE                   5
-#define ERR_MIN_ROUND_OFF_REFINE    1E-11
-
-#define ERR_MAX_RES           1E-2
-#define ERR_MAX_DELTA_X       1E-1
-#define ERR_MAX_FIRST_DELTA_X 1E-2
-
-#define STEP_INCREASE   1.25
-#define STEP_DECREASE   0.7
-
 template <class ComplexType, class RealType>
 int manytrack
  ( int verbose, double regamma, double imgamma, int prec,
@@ -31,11 +10,8 @@ int manytrack
    ComplexType alpha,t;
    CPUInstHom<ComplexType,RealType> cpu_inst_hom;
    Workspace<ComplexType> workspace_cpu;
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T, \
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X, \
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE, \
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
-  
+   Parameter pars;
+
    if(verbose > 0)
    {
       cout << "The first solution on input :" << endl;

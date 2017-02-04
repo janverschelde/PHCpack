@@ -37,27 +37,6 @@ bool read_homotopy_from_file
    string startname, string targetname );
 // Reads a target system, start system, and solutions from file.
 
-// Parameters
-#define N_PREDICTOR           4
-
-#define MAX_STEP              400
-#define MAX_DELTA_T           1E-1
-#define MAX_DELTA_T_END       1E-2
-#define MIN_DELTA_T           1E-7
-
-#define MAX_IT                3
-#define ERR_MIN_ROUND_OFF     1E-9
-
-#define MAX_IT_REFINE                   5
-#define ERR_MIN_ROUND_OFF_REFINE    1E-11
-
-#define ERR_MAX_RES           1E-2
-#define ERR_MAX_DELTA_X       1E-1
-#define ERR_MAX_FIRST_DELTA_X 1E-2
-
-#define STEP_INCREASE   1.25
-#define STEP_DECREASE   0.7
-
 int main ( void )
 {
    cout << "Testing the path tracker ..." << endl;
@@ -189,28 +168,6 @@ int path_test
    int precision )
 {
    cout << "The dimension : " << targetpols.dim << endl;
-
- /*
-   CPUInstHom<ComplexType,RealType> ped; // data for eval_host
-   Workspace<ComplexType> wrk;
-   ComplexType alpha,t;
-   alpha.init(0.0,0.0); // initialize the data for eval_host
-   t.init(0.0,0.0);
-   ped.init(targetpols,startpols,targetpols.dim,targetpols.n_eq,0,alpha);
-   ped.init_workspace(wrk);
-
-   Parameter pars(N_PREDICTOR, MAX_STEP, MAX_IT, MAX_DELTA_T,
-      MAX_DELTA_T_END, MIN_DELTA_T, ERR_MAX_RES, ERR_MAX_DELTA_X,
-      ERR_MAX_FIRST_DELTA_X, ERR_MIN_ROUND_OFF, MAX_IT_REFINE,
-      ERR_MIN_ROUND_OFF_REFINE, STEP_INCREASE, STEP_DECREASE);
-
-   double tSecPred = 0;
-   double tSecEval = 0;
-   double tSecMGS = 0;
-
-   bool success_cpu = path_tracker<ComplexType,RealType>
-      (wrk,ped,pars,tSecPred,tSecEval,tSecMGS);
-  */
 
    int ret = manytrack(1,1.0,0.0,precision,targetpols,startpols,sols);
 
