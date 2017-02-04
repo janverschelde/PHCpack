@@ -10,7 +10,7 @@ int manytrack
    ComplexType alpha,t;
    CPUInstHom<ComplexType,RealType> cpu_inst_hom;
    Workspace<ComplexType> workspace_cpu;
-   Parameter pars;
+   Parameter pars(prec);
 
    if(verbose > 0)
    {
