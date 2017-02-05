@@ -1,6 +1,4 @@
-/* newton_host.cpp, created on: Dec 6, 2014 by yxc with edits by jv */
-
-#include "newton_host.h"
+/* newton_host.tpp contains the templated code for newton_host.h */
 
 double norm1 ( double real, double imag )
 {
@@ -47,7 +45,7 @@ bool CPU_Newton
    Parameter path_parameter, double& timeSec_Eval, double& timeSec_MGS,
    int reverse )
 {
-   bool Debug = false; // Debug = true;
+   bool Debug = true; // false; // Debug = true;
    // if(workspace_cpu.path_idx == 0) { // Debug = true; }
    bool Record = false; // Record = true;
    ComplexType* x = workspace_cpu.x;
