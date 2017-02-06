@@ -460,6 +460,15 @@ package body Greeting_Banners is
     put_line("when needed in the tracking of the next solution path.");
   end help4jumpstart;
 
+  procedure help4adepath is
+  begin
+    put_line("phc -j tracks solution paths with algorithmic differentiation.");
+    new_line;
+    put_line("Instead of computing all partial derivatives separately,");
+    put_line("the Jacobian matrix can be evaluated more efficiently");
+    put_line("using methods of algorithmic differentiation.");
+  end help4adepath;
+
   procedure help4rootcounts is
   begin
     put_line("phc -r computes root counts and constructs start systems.");

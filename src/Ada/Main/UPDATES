@@ -1,3 +1,6 @@
+Sun 5 Feb 2017 : extended greeting_banners for the new options -j,
+  with added code to dispatch.adb.
+
 Thu 2 Feb 2017 : added one line banner about the phc -u option in mainphc.adb
   which is called when running phc without options.
 

@@ -14,6 +14,7 @@ with mainsmvc,babldmvc;       -- mixed-volume computation
 with maintrack;               -- path tracking
 with mainpoco,bablpoco;       -- polynomial continuation
 with bablpoco2,bablpoco4;     -- double double and quad double continuation
+with mainadep;                -- path tracking with algorithmic differentiation
 with mainphc,bablphc;         -- main phc driver + blackbox
 with bablphc2,bablphc4;       -- blackbox in double double and quad double
 with mainvali,bablvali;       -- verification tool
@@ -56,6 +57,7 @@ procedure Dispatch is
   samban  : constant string := Greeting_Banners.samban;
   scalban : constant string := Greeting_Banners.scalban;
   slvban  : constant string := Greeting_Banners.slvban;
+  adepban : constant string := Greeting_Banners.adepban;
   trackban : constant string := Greeting_Banners.trackban;
   seriesban : constant string := Greeting_Banners.seriesban;
   veriban : constant string := Greeting_Banners.veriban;
@@ -63,7 +65,7 @@ procedure Dispatch is
 
 -- AVAILABLE OPTIONS :
 
-  options : constant string := "0asdpqmrvbekcxyzftwlgo-hu";
+  options : constant string := "0asdpqmrvbekcxyzftwlgo-huj";
   -- 0 : zero seed for repeatable runs
   -- a : solve => equation-by-equation solver
   -- b : batch or black box processing
@@ -73,7 +75,8 @@ procedure Dispatch is
   -- f : fac  => factor pure dimensional solution set into irreducibles
   -- g : good => check if the input is a system in the valid format
   -- h : help => write information about a certain option
-  -- k : feba => dynamic output feedback to control linear systems
+  -- j : adep => algorithmic differentiation path trackers
+  -- k : feed => dynamic output feedback to control linear systems
   -- l : hyp  => witness set for hypersurface cutting with random line
   -- m : mvc  => mixed-volume computation
   -- o : symbOls -> get symbols using as variables in a system
@@ -696,6 +699,7 @@ procedure Dispatch is
       when 'f' => Greeting_Banners.help4factor;
       when 'g' => Greeting_Banners.help4goodformat;
       when 'h' | '-' => Greeting_Banners.help4help;
+      when 'j' => Greeting_Banners.help4adepath;
       when 'k' => Greeting_Banners.help4feedback;
       when 'l' => Greeting_Banners.help4hypersurface;
       when 'm' => Greeting_Banners.help4mixvol;
@@ -745,6 +749,12 @@ procedure Dispatch is
                       else Test_if_System_is_Good(f1,f2);
                      end if;
       when 'h'    => General_Help(o2);
+      when 'j'    => if o2 = 'h' or o2 = '-' then
+                       Greeting_Banners.help4adepath;
+                     else
+                       put_line(welcome); put_line(adepban);
+                       mainadep(f1,f2,f3);
+                     end if;
       when 'k'    => if o2 = 'h' or o2 = '-'
                       then Greeting_Banners.help4feedback;
                       else mainfeed(f1,f2);

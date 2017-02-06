@@ -49,6 +49,9 @@ package Greeting_Banners is
   trackban : constant string :=
     "Tracking Solution Paths with incremental read/write of solutions.";
 
+  adepban : constant string :=
+    "Tracking Solution Paths with Algorithmic Differentiation Methods.";
+
   seriesban : constant string :=
     "Newton's method to compute power series solutions of polynomial systems.";
 
@@ -142,6 +145,11 @@ package Greeting_Banners is
 
   -- DESCRIPTION :
   --   Writes help on the jumpstarting path tracking.
+
+  procedure help4adepath;
+
+  -- DESCRIPTION :
+  --   Writes help for the path trackers with algorithmic differentiation.
 
   procedure help4mixvol;
 
