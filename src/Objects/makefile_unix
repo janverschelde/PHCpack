@@ -73,12 +73,18 @@ COFLAGS = -O2
 
 # the main executable is phc :
 
-phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o
+phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o lib2path.o
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_solver.adb
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) dispatch.adb
-	gnatmake -o $(BIN)/phc $(INCLULIBS) $(GNATNOPFLAGS) dispatch.adb \
-                 -largs lib.a pieri_solver.o feedback.o \
-                        get_clock.o get_clocks_per_sec.o -lm
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind dispatch use_c2phc
+	gnatlink dispatch syscon.o solcon.o phcpack.o feedback.o \
+                 pieri_solver.o lib.a lib2path.o $(QD_LIB)/libqd.a \
+                 get_clock.o get_clocks_per_sec.o \
+              -o $(BIN)/phc -lm --LINK=$(gpp)
 
 # some settings for MPI :
 
