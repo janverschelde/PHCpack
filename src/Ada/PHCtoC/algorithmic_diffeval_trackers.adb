@@ -3,6 +3,7 @@ with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
@@ -198,6 +199,8 @@ package body Algorithmic_DiffEval_Trackers is
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
 
+    outfile : file_type;
+    timer : timing_widget;
     p : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
@@ -208,16 +211,32 @@ package body Algorithmic_DiffEval_Trackers is
     Standard_System_and_Solutions_io.get(p,sols);
     new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
-    put_line("Initializing the systems container ...");
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(outfile);
+    put(outfile,p'last,1); put(outfile,"  ");
+    put(outfile,Head_Of(sols).n,1); new_line(outfile);
+    put(outfile,p.all);
+   -- put_line("Initializing the systems container ...");
     Standard_PolySys_Container.Initialize(p.all);
-    put_line("Initializing the solutions container ...");
+   -- put_line("Initializing the solutions container ...");
     Standard_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
+    tstart(timer);
     Standard_ADE_Newton(verbose);
+    tstop(timer);
     newtsols := Standard_Solutions_Container.Retrieve;
-    put_line("The solutions after Newton's method :");
-    put(standard_output,Length_Of(newtsols),
+    if verbose > 0 then
+      put_line("The solutions after Newton's method :");
+      put(standard_output,Length_Of(newtsols),
+          natural32(Head_Of(newtsols).n),newtsols);
+    end if;
+    new_line(outfile);
+    put_line(outfile,"THE SOLUTIONS :");
+    put(outfile,Length_Of(newtsols),
         natural32(Head_Of(newtsols).n),newtsols);
+    new_line(outfile);
+    print_times(outfile,timer,"Newton's method in double precision");  
   end Standard_Newton;
 
   procedure DoblDobl_Newton is
@@ -225,6 +244,8 @@ package body Algorithmic_DiffEval_Trackers is
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
 
+    outfile : file_type;
+    timer : Timing_Widget;
     p : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
@@ -235,16 +256,33 @@ package body Algorithmic_DiffEval_Trackers is
     DoblDobl_System_and_Solutions_io.get(p,sols);
     new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
-    put_line("Initializing the systems container ...");
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(outfile);
+    put(outfile,p'last,1); put(outfile,"  ");
+    put(outfile,Head_Of(sols).n,1); new_line(outfile);
+    put(outfile,p.all);
+   -- put_line("Initializing the systems container ...");
     DoblDobl_PolySys_Container.Initialize(p.all);
-    put_line("Initializing the solutions container ...");
+   -- put_line("Initializing the solutions container ...");
     DoblDobl_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
+    tstart(timer);
     DoblDobl_ADE_Newton(verbose);
+    tstop(timer);
     newtsols := DoblDobl_Solutions_Container.Retrieve;
-    put_line("The solutions after Newton's method :");
-    put(standard_output,Length_Of(newtsols),
+    if verbose > 0 then
+      put_line("The solutions after Newton's method :");
+      put(standard_output,Length_Of(newtsols),
+          natural32(Head_Of(newtsols).n),newtsols);
+    end if;
+    new_line(outfile);
+    put_line(outfile,"THE SOLUTIONS :");
+    put(outfile,Length_Of(newtsols),
         natural32(Head_Of(newtsols).n),newtsols);
+    new_line(outfile);
+    print_times(outfile,timer,
+                "Newton's method in double double precision");  
   end DoblDobl_Newton;
 
   procedure QuadDobl_Newton is
@@ -252,6 +290,8 @@ package body Algorithmic_DiffEval_Trackers is
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
 
+    outfile : file_type;
+    timer : Timing_Widget;
     p : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
@@ -262,16 +302,32 @@ package body Algorithmic_DiffEval_Trackers is
     QuadDobl_System_and_Solutions_io.get(p,sols);
     new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
-    put_line("Initializing the systems container ...");
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(outfile);
+    put(outfile,p'last,1); put(outfile,"  ");
+    put(outfile,Head_Of(sols).n,1); new_line(outfile);
+    put(outfile,p.all);
+   -- put_line("Initializing the systems container ...");
     QuadDobl_PolySys_Container.Initialize(p.all);
-    put_line("Initializing the solutions container ...");
+   -- put_line("Initializing the solutions container ...");
     QuadDobl_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
+    tstart(timer);
     QuadDobl_ADE_Newton(verbose);
+    tstop(timer);
     newtsols := QuadDobl_Solutions_Container.Retrieve;
-    put_line("The solutions after Newton's method :");
-    put(standard_output,Length_Of(newtsols),
+    if verbose > 0 then
+      put_line("The solutions after Newton's method :");
+      put(standard_output,Length_Of(newtsols),
+          natural32(Head_Of(newtsols).n),newtsols);
+    end if;
+    new_line(outfile);
+    put_line(outfile,"THE SOLUTIONS :");
+    put(outfile,Length_Of(newtsols),
         natural32(Head_Of(newtsols).n),newtsols);
+    new_line(outfile);
+    print_times(outfile,timer,"Newton's method in quad double precision");
   end QuadDobl_Newton;
 
   procedure Standard_Track_one_Path is
@@ -279,6 +335,8 @@ package body Algorithmic_DiffEval_Trackers is
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
 
+    outfile : file_type;
+    timer : Timing_Widget;
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
@@ -293,20 +351,33 @@ package body Algorithmic_DiffEval_Trackers is
     put_line("Reading a start system with solutions ...");
     Standard_System_and_Solutions_io.get(start,sols);
     new_line;
-    put("gamma = "); put(gamma); new_line;
-    new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
-    put_line("Initializing the data for container copies ...");
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(outfile);
+    put(outfile,target'last,1); put(outfile,"  ");
+    put(outfile,Head_Of(sols).n,1); new_line(outfile);
+    put(outfile,target.all);
+    new_line(outfile);
+    put(outfile,"gamma = "); put(outfile,gamma); new_line(outfile);
+   -- put_line("Initializing the data for container copies ...");
     PHCpack_Operations.Store_Target_System(target.all);
     PHCpack_Operations.Store_Start_System(start.all);
-    put_line("Initializing the solutions container ...");
+   -- put_line("Initializing the solutions container ...");
     Standard_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
     Standard_ADE_Track_One(verbose,gamma);
     newtsols := Standard_Solutions_Container.Retrieve;
-    put_line("The solutions after path tracking :");
-    put(standard_output,Length_Of(newtsols),
+    if verbose > 0 then
+      put_line("The solutions after path tracking :");
+      put(standard_output,Length_Of(newtsols),
+          natural32(Head_Of(newtsols).n),newtsols);
+    end if;
+    new_line(outfile);
+    put_line(outfile,"THE SOLUTIONS :");
+    put(outfile,Length_Of(newtsols),
         natural32(Head_Of(newtsols).n),newtsols);
+    print_times(outfile,timer,"Tracking one path in double precision");
   end Standard_Track_one_Path;
 
   procedure DoblDobl_Track_one_Path is
@@ -314,6 +385,8 @@ package body Algorithmic_DiffEval_Trackers is
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
 
+    outfile : file_type;
+    timer : Timing_Widget;
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
@@ -328,20 +401,35 @@ package body Algorithmic_DiffEval_Trackers is
     put_line("Reading a start system with solutions ...");
     DoblDobl_System_and_Solutions_io.get(start,sols);
     new_line;
-    put("gamma = "); put(gamma); new_line;
-    new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
-    put_line("Initializing the data for container copies ...");
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(outfile);
+    put(outfile,target'last,1); put(outfile,"  ");
+    put(outfile,Head_Of(sols).n,1); new_line(outfile);
+    put(outfile,target.all);
+    new_line(outfile);
+    put(outfile,"gamma = "); put(outfile,gamma); new_line(outfile);
+   -- put_line("Initializing the data for container copies ...");
     PHCpack_Operations.Store_Target_System(target.all);
     PHCpack_Operations.Store_Start_System(start.all);
-    put_line("Initializing the solutions container ...");
+   -- put_line("Initializing the solutions container ...");
     DoblDobl_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
+    tstart(timer);
     DoblDobl_ADE_Track_One(verbose,gamma);
+    tstop(timer);
     newtsols := DoblDobl_Solutions_Container.Retrieve;
-    put_line("The solutions after path tracking :");
-    put(standard_output,Length_Of(newtsols),
+    if verbose > 0 then
+      put_line("The solutions after path tracking :");
+      put(standard_output,Length_Of(newtsols),
+          natural32(Head_Of(newtsols).n),newtsols);
+    end if;
+    new_line(outfile);
+    put_line(outfile,"THE SOLUTIONS :");
+    put(outfile,Length_Of(newtsols),
         natural32(Head_Of(newtsols).n),newtsols);
+    print_times(outfile,timer,"Tracking one path in double double precision");
   end DoblDobl_Track_one_Path;
 
   procedure QuadDobl_Track_one_Path is
@@ -349,6 +437,8 @@ package body Algorithmic_DiffEval_Trackers is
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
 
+    outfile : file_type;
+    timer : Timing_Widget;
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
@@ -363,20 +453,35 @@ package body Algorithmic_DiffEval_Trackers is
     put_line("Reading a start system with solutions ...");
     QuadDobl_System_and_Solutions_io.get(start,sols);
     new_line;
-    put("gamma = "); put(gamma); new_line;
-    new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
-    put_line("Initializing the data for container copies ...");
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(outfile);
+    put(outfile,target'last,1); put(outfile,"  ");
+    put(outfile,Head_Of(sols).n,1); new_line(outfile);
+    put(outfile,target.all);
+    new_line(outfile);
+    put(outfile,"gamma = "); put(outfile,gamma); new_line(outfile);
+   -- put_line("Initializing the data for container copies ...");
     PHCpack_Operations.Store_Target_System(target.all);
     PHCpack_Operations.Store_Start_System(start.all);
-    put_line("Initializing the solutions container ...");
+   -- put_line("Initializing the solutions container ...");
     QuadDobl_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
+    tstart(timer);
     QuadDobl_ADE_Track_One(verbose,gamma);
+    tstop(timer);
     newtsols := QuadDobl_Solutions_Container.Retrieve;
-    put_line("The solutions after path tracking :");
-    put(standard_output,Length_Of(newtsols),
+    if verbose > 0 then
+      put_line("The solutions after path tracking :");
+      put(standard_output,Length_Of(newtsols),
+          natural32(Head_Of(newtsols).n),newtsols);
+    end if;
+    new_line(outfile);
+    put_line(outfile,"THE SOLUTIONS :");
+    put(outfile,Length_Of(newtsols),
         natural32(Head_Of(newtsols).n),newtsols);
+    print_times(outfile,timer,"Tracking one path in quad double precision");
   end QuadDobl_Track_one_Path;
 
   procedure Standard_Track_many_Paths is
@@ -384,6 +489,7 @@ package body Algorithmic_DiffEval_Trackers is
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
 
+    outfile : file_type;
     timer : Timing_Widget;
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
@@ -399,25 +505,40 @@ package body Algorithmic_DiffEval_Trackers is
     put_line("Reading a start system with solutions ...");
     Standard_System_and_Solutions_io.get(start,sols);
     new_line;
-    put("gamma = "); put(gamma); new_line;
-    new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
-    put_line("Initializing the data for container copies ...");
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(outfile);
+    put(outfile,target'last,1); put(outfile,"  ");
+    put(outfile,Head_Of(sols).n,1); new_line(outfile);
+    put(outfile,target.all);
+    new_line(outfile);
+    put(outfile,"gamma = "); put(outfile,gamma); new_line(outfile);
+   -- put_line("Initializing the data for container copies ...");
     PHCpack_Operations.Store_Target_System(target.all);
     PHCpack_Operations.Store_Start_System(start.all);
-    put_line("Initializing the solutions container ...");
+   -- put_line("Initializing the solutions container ...");
     Standard_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
     tstart(timer);
     Standard_ADE_Track_Many(verbose,gamma);
     tstop(timer);
     newtsols := Standard_Solutions_Container.Retrieve;
-    put_line("The solutions after path tracking :");
-    put(standard_output,Length_Of(newtsols),
+    if verbose > 0 then
+      put_line("The solutions after path tracking :");
+      put(standard_output,Length_Of(newtsols),
+          natural32(Head_Of(newtsols).n),newtsols);
+      new_line;
+      print_times
+        (standard_output,timer,"tracking many paths in double precision");
+    end if;
+    new_line(outfile);
+    put_line(outfile,"THE SOLUTIONS :");
+    put(outfile,Length_Of(newtsols),
         natural32(Head_Of(newtsols).n),newtsols);
-    new_line;
-    print_times
-      (standard_output,timer,"tracking many paths in double precision");
+    new_line(outfile);
+    print_times(outfile,timer,"tracking many paths in double precision");
+    close(outfile);
   end Standard_Track_many_Paths;
 
   procedure DoblDobl_Track_many_Paths is
@@ -425,6 +546,7 @@ package body Algorithmic_DiffEval_Trackers is
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
 
+    outfile : file_type;
     timer : Timing_Widget;
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
@@ -440,25 +562,40 @@ package body Algorithmic_DiffEval_Trackers is
     put_line("Reading a start system with solutions ...");
     DoblDobl_System_and_Solutions_io.get(start,sols);
     new_line;
-    put("gamma = "); put(gamma); new_line;
-    new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
-    put_line("Initializing the data for container copies ...");
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(outfile);
+    put(outfile,target'last,1); put(outfile,"  ");
+    put(outfile,Head_Of(sols).n,1); new_line(outfile);
+    put(outfile,target.all);
+    new_line(outfile);
+    put(outfile,"gamma = "); put(outfile,gamma); new_line(outfile);
+   -- put_line("Initializing the data for container copies ...");
     PHCpack_Operations.Store_Target_System(target.all);
     PHCpack_Operations.Store_Start_System(start.all);
-    put_line("Initializing the solutions container ...");
+   -- put_line("Initializing the solutions container ...");
     DoblDobl_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
     tstart(timer);
     DoblDobl_ADE_Track_Many(verbose,gamma);
     tstop(timer);
     newtsols := DoblDobl_Solutions_Container.Retrieve;
-    put_line("The solutions after path tracking :");
-    put(standard_output,Length_Of(newtsols),
+    if verbose > 0 then
+      put_line("The solutions after path tracking :");
+      put(standard_output,Length_Of(newtsols),
+          natural32(Head_Of(newtsols).n),newtsols);
+      new_line;
+      print_times(standard_output,timer,
+                  "tracking many paths in double double precision");
+    end if;
+    new_line(outfile);
+    put_line(outfile,"THE SOLUTIONS :");
+    put(outfile,Length_Of(newtsols),
         natural32(Head_Of(newtsols).n),newtsols);
-    new_line;
-    print_times
-      (standard_output,timer,"tracking many paths in double double precision");
+    new_line(outfile);
+    print_times(outfile,timer,"tracking many paths in double double precision");
+    close(outfile);
   end DoblDobl_Track_many_Paths;
 
   procedure QuadDobl_Track_many_Paths is
@@ -466,6 +603,7 @@ package body Algorithmic_DiffEval_Trackers is
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
 
+    outfile : file_type;
     timer : Timing_Widget;
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
@@ -481,25 +619,40 @@ package body Algorithmic_DiffEval_Trackers is
     put_line("Reading a start system with solutions ...");
     QuadDobl_System_and_Solutions_io.get(start,sols);
     new_line;
-    put("gamma = "); put(gamma); new_line;
-    new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
-    put_line("Initializing the data for container copies ...");
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(outfile);
+    put(outfile,target'last,1); put(outfile,"  ");
+    put(outfile,Head_Of(sols).n,1); new_line(outfile);
+    put(outfile,target.all);
+    new_line(outfile);
+    put(outfile,"gamma = "); put(outfile,gamma); new_line(outfile);
+   -- put_line("Initializing the data for container copies ...");
     PHCpack_Operations.Store_Target_System(target.all);
     PHCpack_Operations.Store_Start_System(start.all);
-    put_line("Initializing the solutions container ...");
+   -- put_line("Initializing the solutions container ...");
     QuadDobl_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
     tstart(timer);
     QuadDobl_ADE_Track_Many(verbose,gamma);
     tstop(timer);
     newtsols := QuadDobl_Solutions_Container.Retrieve;
-    put_line("The solutions after path tracking :");
-    put(standard_output,Length_Of(newtsols),
+    if verbose > 0 then
+      put_line("The solutions after path tracking :");
+      put(standard_output,Length_Of(newtsols),
+          natural32(Head_Of(newtsols).n),newtsols);
+      new_line;
+      print_times
+        (standard_output,timer,"tracking many paths in quad double precision");
+    end if;
+    new_line(outfile);
+    put_line(outfile,"THE SOLUTIONS :");
+    put(outfile,Length_Of(newtsols),
         natural32(Head_Of(newtsols).n),newtsols);
-    new_line;
-    print_times
-      (standard_output,timer,"tracking many paths in quad double precision");
+    new_line(outfile);
+    print_times(outfile,timer,"tracking many paths in quad double precision");
+    close(outfile);
   end QuadDobl_Track_many_Paths;
 
 end Algorithmic_DiffEval_Trackers;

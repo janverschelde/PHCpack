@@ -1,3 +1,5 @@
+Mon 6 Feb 2017 : added output to file in algorithmic_algodiff_trackers.adb.
+
 Sun 5 Feb 2017 : new mainadep.ads and mainadep.adb to call the path trackers
   with algorithmic differentiation.
 
