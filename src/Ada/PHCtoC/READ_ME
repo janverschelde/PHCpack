@@ -77,3 +77,5 @@ ts_adepath_qd                  : main test program in quad double precision
 algorithmic_diffeval_trackers  : wrappers and drivers to the Path library
 ts_ademanypaths                : calls the drivers to the ADE trackers
 -------------------------------------------------------------------------------
+mainadep                       : main driver for phc -j
+-------------------------------------------------------------------------------
