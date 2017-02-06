@@ -12,8 +12,8 @@
 PYTHON=/usr/include/python2.7
 PYTHON36=/Library/Frameworks/Python.framework/Versions/3.6/include/python3.6m
 PYTHON36lib=/Library/Frameworks/Python.framework/Versions/3.6/lib
-PYTHON3=/Library/Frameworks/Python.framework/Versions/3.5/include/python3.5m
-PYTHON3lib=/Library/Frameworks/Python.framework/Versions/3.5/lib
+PYTHON35=/Library/Frameworks/Python.framework/Versions/3.5/include/python3.5m
+PYTHON35lib=/Library/Frameworks/Python.framework/Versions/3.5/lib
 MPI_HOME=/usr/local
 
 # which g++ to use
@@ -69,15 +69,6 @@ GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
 
 COFLAGS = -O2
 
-# the main executable 
-
-phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) pieri_solver.adb
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) dispatch.adb
-	gnatmake -o $(BIN)/phc $(INCLULIBS) $(GNATOPTFLAGS) dispatch.adb \
-                 -largs lib.a pieri_solver.o feedback.o \
-                        get_clock.o get_clocks_per_sec.o -lm
-
 # Very likely the value for MPIR_HOME needs adjusting :
 
 MCC=/usr/bin/gcc
@@ -87,6 +78,23 @@ CC          = $(MPI_HOME)/bin/mpicc
 CLINKER     = $(CC)
 CCC         = $(MPI_HOME)/bin/mpiCC
 CCLINKER    = $(CCC)
+
+# the main executable 
+
+phc: lib.a lib2path.o feedback.o get_clock.o get_clocks_per_sec.o
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) pieri_solver.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) dispatch.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatbind dispatch use_c2phc
+	gnatlink dispatch syscon.o solcon.o phcpack.o feedback.o \
+                 pieri_solver.o lib2path.o lib.a $(QD_LIB)/libqd.a \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 get_clock.o get_clocks_per_sec.o \
+              -o $(BIN)/phc -lm --LINK=g++
 
 # Test program to see if compiler works, "hello world" :
 
@@ -2680,8 +2688,8 @@ phcpy2c3.so: lib2path.o
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
-	g++ -Dcompilewgpp=1 -c -O3 -I$(PYTHON3) \
-               -I$(PYTHON3)/Include $(PHCLib)/phcpy2c3.c
+	g++ -Dcompilewgpp=1 -c -O3 -I$(PYTHON36) \
+               -I$(PYTHON36)/Include $(PHCLib)/phcpy2c3.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o \
