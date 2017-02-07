@@ -527,6 +527,15 @@ void PolySolSet<ComplexType,RealType>::change_sol
 }
 
 template <class ComplexType, class RealType>
+void PolySolSet<ComplexType,RealType>::change_solt
+ ( int idx, ComplexType* coords, ComplexType* tval )
+{
+   PolySol<ComplexType,RealType>* idxsol = sols[idx];
+   for(int k=0; k<dim; k++) idxsol->sol[k] = coords[k];
+   idxsol->t = *tval;
+}
+
+template <class ComplexType, class RealType>
 void PolySolSet<ComplexType,RealType>::add_sol
  ( ComplexType* new_sol, RealType max_residual, RealType max_delta_x,
    int path_idx, string path_info )
@@ -536,7 +545,6 @@ void PolySolSet<ComplexType,RealType>::add_sol
            (new_sol,dim,max_residual,max_delta_x,path_idx,path_info);
    add_sol(tmp_sol);
 }
-
 
 template <class ComplexType, class RealType>
 void PolySolSet<ComplexType,RealType>::print()
@@ -568,6 +576,17 @@ template <class ComplexType, class RealType>
 ComplexType* PolySolSet<ComplexType,RealType>::get_sol ( int idx )
 {
    return sols[idx]->get_sol();
+}
+
+template <class ComplexType, class RealType>
+void PolySolSet<ComplexType,RealType>::get_solt
+ ( int idx, ComplexType* sol, ComplexType *t )
+{
+   PolySol<ComplexType,RealType>* solution = sols[idx];
+
+   for(int i=0; i<solution->dim; i++) sol[i] = solution->sol[i];
+
+   *t = solution->t;
 }
 
 template <class ComplexType, class RealType>

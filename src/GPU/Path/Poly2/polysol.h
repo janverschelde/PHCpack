@@ -160,8 +160,12 @@ class PolySolSet
       void add_sol ( PolySol<ComplexType,RealType>* tmp_sol );
 
       void change_sol ( int idx, ComplexType* coords );
-        // updates the coordinates of the solution with index idx,
-        // using the values in coords
+      // updates the coordinates of the solution with index idx,
+      // using the values in coords
+
+      void change_solt ( int idx, ComplexType* coords, ComplexType* tval );
+      // updates the coordinates of the solution with index idx,
+      // using the values in coords; also updates the t with tval
 
       bool add_diff_sol ( ComplexType* new_sol );
 
@@ -172,6 +176,10 @@ class PolySolSet
       void print_short();
 
       ComplexType* get_sol ( int idx );
+
+      void get_solt ( int idx, ComplexType* sol, ComplexType* t );
+      // returns in sol the coordinates of the solution with index idx
+      // and in t its corresponding t value
 
       void sort_set();
 

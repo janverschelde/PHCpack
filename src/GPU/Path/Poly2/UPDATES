@@ -1,3 +1,6 @@
+Mon 6 Feb 2017 : added method to get solution and its corresponding t value
+  to polysol.h and polysol.ttp.
+
 Sat 28 Jan 2017 : templated the test function in test_poly.cpp.
   Added templated code for the solutions in polysol.h, polysol.tpp,
   fixed bug in utilities.h, utilities.tpp, with the test_polysol.cpp,

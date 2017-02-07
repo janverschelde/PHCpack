@@ -1,4 +1,4 @@
-Polynomials and solutions in the Path library, in PHCv2.4.34
+Polynomials and solutions in the Path library, in PHCv2.4.35
 
 This directory is the reworked Poly subdirectory of the Path directory.
 Poly defines the data structures for the code on the host.
