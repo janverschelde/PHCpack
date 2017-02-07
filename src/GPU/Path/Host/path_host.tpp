@@ -169,7 +169,11 @@ bool path_tracker
    if(tmp_t_last->real == 1)
    {
       success = 1;
-      if(verbose > 0) std::cout << "Success" << std::endl;
+      if(verbose > 0)
+      {
+         std::cout << "Success" << std::endl;
+         std::cout << "t : " << *tmp_t_last;
+      }
    }
    else
    {

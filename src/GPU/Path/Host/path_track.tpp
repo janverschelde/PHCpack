@@ -43,7 +43,8 @@ int manytrack
       success = path_tracker(workspace_cpu,cpu_inst_hom,pars,
                              tpred,teval,tmgs,0,verbose);
       if(verbose > 0) cout << "done with call to path_tracker." << endl;
-      s.change_sol(path_idx,workspace_cpu.x_last);
+      s.change_solt(path_idx,workspace_cpu.x_last,workspace_cpu.t_last);
+      cout << "t : " << *workspace_cpu.t_last;
       if(verbose > 0)
       {
          cout.precision(prec);

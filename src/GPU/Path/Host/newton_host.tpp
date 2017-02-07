@@ -45,7 +45,7 @@ bool CPU_Newton
    Parameter path_parameter, double& timeSec_Eval, double& timeSec_MGS,
    int reverse )
 {
-   bool Debug = true; // false; // Debug = true;
+   bool Debug = false; // Debug = true;
    // if(workspace_cpu.path_idx == 0) { // Debug = true; }
    bool Record = false; // Record = true;
    ComplexType* x = workspace_cpu.x;

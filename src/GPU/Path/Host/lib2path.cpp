@@ -463,13 +463,16 @@ void lib2path_write_standard_sols
    int dim = sols.dim;
    int nbsols = sols.n_sol;
    // std::cout << "number of solutions : " << nbsols << std::endl;
+   complexH<double>* sol = new complexH<double>[dim];
+   complexH<double> tval;
+   double csol[2*dim+5];
 
    for(int sol_idx=0; sol_idx<nbsols; sol_idx++)
    {
-      complexH<double>* sol = sols.get_sol(sol_idx);
-      double csol[2*dim+5];
-      csol[0] = 0.0;
-      csol[1] = 0.0;
+      sols.get_solt(sol_idx,sol,&tval);
+
+      csol[0] = tval.real;
+      csol[1] = tval.imag;
       int idx = 2;
       for(int k=0; k<dim; k++)
       {
@@ -495,13 +498,16 @@ void lib2path_write_dobldobl_sols
       std::cout << "failed to clear the solutions" << std::endl;
    int dim = sols.dim;
    int nbsols = sols.n_sol;
+   complexH<dd_real>* sol = new complexH<dd_real>[dim];
+   complexH<dd_real> tval;
+   double csol[4*dim+10];
 
    for(int sol_idx=0; sol_idx<nbsols; sol_idx++)
    {
-      complexH<dd_real>* sol = sols.get_sol(sol_idx);
-      double csol[4*dim+10];
-      csol[0] = 0.0; csol[1] = 0.0;
-      csol[2] = 0.0; csol[3] = 0.0;
+      sols.get_solt(sol_idx,sol,&tval);
+
+      csol[0] = tval.real.x[0]; csol[1] = tval.real.x[1];
+      csol[2] = tval.imag.x[0]; csol[3] = tval.imag.x[1];
       int idx = 4;
       for(int k=0; k<dim; k++)
       {
@@ -527,13 +533,17 @@ void lib2path_write_quaddobl_sols
       std::cout << "failed to clear the solutions" << std::endl;
    int dim = sols.dim;
    int nbsols = sols.n_sol;
+   complexH<qd_real>* sol = new complexH<qd_real>[dim];
+   complexH<qd_real> tval;
+   double csol[8*dim+20];
 
    for(int sol_idx=0; sol_idx<nbsols; sol_idx++)
    {
-      complexH<qd_real>* sol = sols.get_sol(sol_idx);
-      double csol[8*dim+20];
-      csol[0] = 0.0; csol[1] = 0.0; csol[2] = 0.0; csol[3] = 0.0;
-      csol[4] = 0.0; csol[5] = 0.0; csol[6] = 0.0; csol[7] = 0.0;
+      sols.get_solt(sol_idx,sol,&tval);
+      csol[0] = tval.real.x[0]; csol[1] = tval.real.x[1];
+      csol[2] = tval.real.x[2]; csol[3] = tval.real.x[3];
+      csol[4] = tval.imag.x[0]; csol[5] = tval.imag.x[1];
+      csol[6] = tval.imag.x[2]; csol[7] = tval.imag.x[3];
       int idx = 8;
       for(int k=0; k<dim; k++)
       {
@@ -1172,8 +1182,7 @@ int standard_onetrack
       for(int k=0; k<p.dim; k++)
          cout << k << " :" << setw(24) << workspace_cpu.x_last[k];
    }
-
-   s.change_sol(0,workspace_cpu.x_last);
+   s.change_solt(0,workspace_cpu.x_last,workspace_cpu.t_last);
 
    return 0;
 }
@@ -1222,8 +1231,7 @@ int dobldobl_onetrack
       for(int k=0; k<p.dim; k++)
          cout << k << " :" << setw(40) << workspace_cpu.x_last[k];
    }
-
-   s.change_sol(0,workspace_cpu.x_last);
+   s.change_solt(0,workspace_cpu.x_last,workspace_cpu.t_last);
 
    return 0;
 }
@@ -1272,8 +1280,7 @@ int quaddobl_onetrack
       for(int k=0; k<p.dim; k++)
          cout << k << " :" << setw(72) << workspace_cpu.x_last[k];
    }
-
-   s.change_sol(0,workspace_cpu.x_last);
+   s.change_solt(0,workspace_cpu.x_last,workspace_cpu.t_last);
 
    return 0;
 }
@@ -1323,7 +1330,8 @@ int standard_manytrack
       success = path_tracker(workspace_cpu,cpu_inst_hom,pars,
                              tpred,teval,tmgs,0,verbose);
       if(verbose > 0) cout << "done with call to path_tracker." << endl;
-      s.change_sol(path_idx,workspace_cpu.x_last);
+      // s.change_sol(path_idx,workspace_cpu.x_last);
+      s.change_solt(path_idx,workspace_cpu.x_last,workspace_cpu.t_last);
       if(verbose > 0)
       {
          cout.precision(16);
@@ -1380,7 +1388,8 @@ int dobldobl_manytrack
       success = path_tracker(workspace_cpu,cpu_inst_hom,pars,
                              tpred,teval,tmgs,0,verbose);
       if(verbose > 0) cout << "done with call to path_tracker." << endl;
-      s.change_sol(path_idx,workspace_cpu.x_last);
+      // s.change_sol(path_idx,workspace_cpu.x_last);
+      s.change_solt(path_idx,workspace_cpu.x_last,workspace_cpu.t_last);
       if(verbose > 0)
       {
          cout.precision(32);
@@ -1437,7 +1446,8 @@ int quaddobl_manytrack
       success = path_tracker(workspace_cpu,cpu_inst_hom,pars,
                              tpred,teval,tmgs,0,verbose);
       if(verbose > 0) cout << "done with call to path_tracker." << endl;
-      s.change_sol(path_idx,workspace_cpu.x_last);
+      // s.change_sol(path_idx,workspace_cpu.x_last);
+      s.change_solt(path_idx,workspace_cpu.x_last,workspace_cpu.t_last);
       if(verbose > 0)
       {
          cout.precision(64);
