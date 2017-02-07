@@ -102,6 +102,12 @@ The directory ``Objects`` in the
 source code provides makefiles for Linux, Mac OS X, and Windows
 operating systems.
 
+When compiling from source, note that since version 2.4.35,
+the quad double library QDlib must be installed.
+On Linux systems, the qdlib.a must have been compiled with
+the -fPIC option for the shared object file for the C extension
+module of phcpy.
+
 Project History
 ===============
 
