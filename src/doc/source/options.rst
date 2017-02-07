@@ -456,6 +456,20 @@ Typing ``phc -h -h`` displays the list of all available options.
 
 Instead of ``-h``, one can also type ``--help``.
 
+phc -j : path tracking with algorithmic differentiation
+=======================================================
+
+In the tracking of a solution path we frequently apply Newton's method.
+To run Newton's method we need to evaluate the system and compute all
+its partial derivatives.  The cost of evaluation and differentiation
+is a significant factor in the total cost.  For large systems,
+this cost may even dominate.
+
+The ``phc -j`` gives access to the Path library developed to
+accelerate the path trackers with graphics processing units.
+The code is capable to evaluate and differentiate large polynomial
+systems efficiently, in double, double double, and quad double precision.
+
 phc -k : realization of dynamic output feedback placing poles  
 =============================================================
 
