@@ -93,7 +93,15 @@ Below is a step-by-step installation procedure.
    You may have to edit ``.bashrc`` (for the Bourne shell)
    or ``.cshrc`` (for the C shell).
 
-2. The source code directory of PHCpack contains the directory ``Objects``,
+2. Since version 0.6.4, the code depends on the quad double library QDlib,
+   available at <http://crd-legacy.lbl.gov/~dhbailey/mpdist>.
+
+   On Linux systems, make sure to compile and install the library
+   with the option -fPIC.  When configuring, run configure as
+   ``./configure CXX=/usr/bin/g++ CXXFLAGS='-fPIC -O3'`` to set the flags
+   of the c++ compiler.
+
+3. The source code directory of PHCpack contains the directory ``Objects``,
    a directory with file ``makefile`` in it.
    Depending on whether you are on a Unix-like system or on a mac,
    you will have to edit the ``makefile`` so the ``MAKEFILE`` variable
@@ -102,7 +110,7 @@ Below is a step-by-step installation procedure.
    ``make phc`` to compile the main executable program.
    Note that for phcpy, you will not need this executable.
 
-3. To make the shared object file, your python system needs to have been
+4. To make the shared object file, your python system needs to have been
    installed with the development version, that is: the file ``Python.h``
    must be available on your disk.  Often, following binary installations
    of the Python interpreter, this ``Python.h`` might be absent.
@@ -116,12 +124,12 @@ Below is a step-by-step installation procedure.
    so both the scripting environment as the compiled code are using
    the same version of gcc.
 
-4. Once you have located the file ``Python.h`` on your system,
+5. Once you have located the file ``Python.h`` on your system,
    you most likely will have to adjust the definitions in the files
    ``makefile_unix`` or ``makefile_mac``.  Assign to the variables
    ``PYTHON`` and ``PYTHON3`` the directories where ``Python.h`` is.
 
-5. In the directory ``Objects`` of the PHCpack source distribution,
+6. In the directory ``Objects`` of the PHCpack source distribution,
    type ``make phcpy2c2.so`` to make the shared object file for python2,
    or type ``make phcpy2c3.so`` for the python3 version of phcpy.
    If all goes well, the shared object ``phcpy2c2.so`` can then be
@@ -132,11 +140,16 @@ Below is a step-by-step installation procedure.
    directory ``phcpy`` of the source code distribution, then the
    ``import phcpy`` should already work.
 
-6. To extend your python2 installation with phcpy, 
+7. To extend your python2 installation with phcpy, 
    go to the ``Python/PHCpy2`` directory and run
    ``python2 setup.py install`` as superuser or as sudoer.
    For python3, go to ``PHCpy/phcpy3`` and run
    ``python3 setup.py install`` as superuser or as sudoer.
+
+The documentation is typeset with Sphinx.  Sphinx depends on the
+default version of Python on your system.  If phcpy is installed
+with a different version of Python than the version Sphinx depends on,
+then this may cause problems to typeset the documentation.
 
 extending Sage with phcpy
 =========================
