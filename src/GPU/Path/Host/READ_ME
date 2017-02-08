@@ -1,4 +1,4 @@
-Code to run on the host in the Path library, in PHCv2.4.35
+Code to run on the host in the Path library, in PHCv2.4.36
 
 This directory is the reworked PATH_CPU subdirectory of the Path directory.
 The code is reworked to use templates properly.
@@ -19,6 +19,7 @@ path_data.tpp      : definition of templated code of path_data.h
 -------------------------------------------------------------------------------
 varset.h           : data structures for the evaluation and differentiation
 parameter.h        : settings for numerical constants
+test_parameter     : test on tuning the parameter settings
 eval_host.h        : evaluation and differentiation of polynomials
 eval_host.tpp      : definition of the tempated code in eval_host.h
 test_eval.cpp      : test on the evaluation and the differentation
