@@ -1,5 +1,5 @@
 Wed 8 Feb 2017 : new test program test_parameter.cpp to prepare for the
-  interactive tuning of the parameters.
+  interactive tuning of the parameters, implemented by the tune function.
 
 Mon 6 Feb 2017 : stored the t value at the end of the paths in path_host.tpp,
   path_track.tpp, improved newton_host.tpp, and copied the final value of t
