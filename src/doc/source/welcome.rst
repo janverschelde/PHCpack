@@ -922,5 +922,9 @@ The Maple interface ``PHCmaple`` was written jointly with Anton Leykin.
 The work of Anton Leykin also paved the way for the Macaulay2 interface,
 which was further developed into ``PHCpack.m2`` in joint work with
 Elizabeth Gross and Sonja Petrovic.
+The ``PHCpack.m2`` (and also PHCpack itself) improved during various
+Macaulay2 workshops, with the help of
+Taylor Brysiewicz, Diego Cifuentes, Corey Harris, Kaie Kubjas,
+Anne Seigal, and Jeff Sommars.
 
 The software has been developed with GNAT GPL, the gnu-ada compiler.
