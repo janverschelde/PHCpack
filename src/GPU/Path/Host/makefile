@@ -22,9 +22,13 @@ test_path:
 	$(gpp) -c -I$(CMPLX) -I$(POLYS) test_path.cpp -o test_path.o
 	$(gpp) test_path.o $(QD_LIB)/libqd.a -o /tmp/test_path
 
-test_parameter:
+parameter.o:
+	$(gpp) -c parameter.cpp -o parameter.o
+
+test_parameter: parameter.o
 	$(gpp) -c -I$(CMPLX) -I$(POLYS) test_parameter.cpp -o test_parameter.o
-	$(gpp) test_parameter.o $(QD_LIB)/libqd.a -o /tmp/test_parameter
+	$(gpp) test_parameter.o parameter.o $(QD_LIB)/libqd.a \
+               -o /tmp/test_parameter
 
 clean:
 	/bin/rm -f -r *.o

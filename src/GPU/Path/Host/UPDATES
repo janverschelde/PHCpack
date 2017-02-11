@@ -1,3 +1,7 @@
+Fri 10 Feb 2017 : move writing and tuning of the parameters from the
+  test_parameter.cpp to a new parameter.cpp file, with added headers
+  to the parameter.h, so writing and tuning belong to the parameter class.
+
 Wed 8 Feb 2017 : new test program test_parameter.cpp to prepare for the
   interactive tuning of the parameters, implemented by the tune function.
 

@@ -123,6 +123,16 @@ class Parameter
             this->err_min_round_off_refine = QD_ERR_MIN_ROUND_OFF_REFINE;
          }
       }
+     
+      void write ( void );
+      // Writes the values in pars to screen.
+
+      void set_value ( int idx, double val );
+      // Sets the value of the parameter with idx to the value val.
+      // Required: idx is in the range from 1 to 14.
+
+      void tune ( void );
+      // Interactive tuning of the parameters in pars.
 };
 
 #endif /* PARAMETER_H_ */
