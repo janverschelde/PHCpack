@@ -1,6 +1,6 @@
 template <class ComplexType, class RealType>
 int manytrack
- ( int verbose, double regamma, double imgamma, int prec,
+ ( int verbose, double regamma, double imgamma, Parameter pars, int prec,
    PolySys<ComplexType,RealType>& p, PolySys<ComplexType,RealType>& q,
    PolySolSet<ComplexType,RealType>& s )
 {
@@ -10,7 +10,7 @@ int manytrack
    ComplexType alpha,t;
    CPUInstHom<ComplexType,RealType> cpu_inst_hom;
    Workspace<ComplexType> workspace_cpu;
-   Parameter pars(prec);
+   // Parameter pars(prec);
 
    if(verbose > 0)
    {

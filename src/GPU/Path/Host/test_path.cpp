@@ -5,6 +5,7 @@
 #include "complexH.h"
 #include "polysol.h"
 #include "eval_host.h"
+#include "parameter.h"
 #include "path_host.h"
 #include "path_track.h"
 
@@ -169,7 +170,11 @@ int path_test
 {
    cout << "The dimension : " << targetpols.dim << endl;
 
-   int ret = manytrack(1,1.0,0.0,precision,targetpols,startpols,sols);
+   Parameter pars(precision);
+
+   pars.tune();
+
+   int ret = manytrack(1,1.0,0.0,pars,precision,targetpols,startpols,sols);
 
    return 0;
 }

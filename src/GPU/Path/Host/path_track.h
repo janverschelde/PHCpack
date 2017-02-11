@@ -7,7 +7,7 @@
 
 template <class ComplexType, class RealType>
 int manytrack
- ( int verbose, double regamma, double imgamma, int prec,
+ ( int verbose, double regamma, double imgamma, Parameter pars, int prec,
    PolySys<ComplexType,RealType>& p, PolySys<ComplexType,RealType>& q,
    PolySolSet<ComplexType,RealType>& s );
 /*
@@ -19,6 +19,7 @@ int manytrack
  *   verbose   0 if silent, 1 for intermediate output;
  *   regamma   real part of the gamma constant;
  *   imgamma   imaginary part of the gamma constant;
+ *   pars      settings for the parameters and tolerances;
  *   prec      precision, 16, 32, or 64;
  *   p         target system;
  *   q         start system;
