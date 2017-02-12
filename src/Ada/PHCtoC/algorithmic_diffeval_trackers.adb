@@ -57,9 +57,27 @@ package body Algorithmic_DiffEval_Trackers is
 
 -- WRAPPERS TO THE C INTERFACE FUNCTIONS :
 
-  procedure Standard_ADE_Newton ( verbose : in integer32 ) is
+  procedure Standard_ADE_Newton
+              ( verbose : in integer32; pars : in Parameters ) is
 
     return_of_call : integer32;
+   -- flatten the path parameters :
+    max_step : constant integer32 := pars.max_step;
+    n_predictor : constant integer32 := pars.n_predictor;
+    step_increase : constant double_float := pars.step_increase;
+    step_decrease : constant double_float := pars.step_decrease;
+    max_delta_t : constant double_float := pars.max_delta_t;
+    max_delta_t_end : constant double_float := pars.max_delta_t_end;
+    min_delta_t : constant double_float := pars.min_delta_t;
+    err_max_res : constant double_float := pars.err_max_res;
+    err_max_delta_x : constant double_float := pars.err_max_delta_x;
+    err_max_first_delta_x : constant double_float
+      := pars.err_max_first_delta_x;
+    max_it : constant integer32 := pars.max_it;
+    err_min_round_off : constant double_float := pars.err_min_round_off;
+    max_it_refine : constant integer32 := pars.max_it_refine;
+    err_min_round_off_refine : constant double_float
+      := pars.err_min_round_off_refine;
 
     function newton ( v : integer32 ) return integer32;
     pragma import(C, newton, "standard_adenewton");
@@ -68,9 +86,27 @@ package body Algorithmic_DiffEval_Trackers is
     return_of_call := newton(verbose);
   end Standard_ADE_Newton;
 
-  procedure DoblDobl_ADE_Newton ( verbose : in integer32 ) is
+  procedure DoblDobl_ADE_Newton
+              ( verbose : in integer32; pars : in Parameters ) is
 
     return_of_call : integer32;
+   -- flatten the path parameters :
+    max_step : constant integer32 := pars.max_step;
+    n_predictor : constant integer32 := pars.n_predictor;
+    step_increase : constant double_float := pars.step_increase;
+    step_decrease : constant double_float := pars.step_decrease;
+    max_delta_t : constant double_float := pars.max_delta_t;
+    max_delta_t_end : constant double_float := pars.max_delta_t_end;
+    min_delta_t : constant double_float := pars.min_delta_t;
+    err_max_res : constant double_float := pars.err_max_res;
+    err_max_delta_x : constant double_float := pars.err_max_delta_x;
+    err_max_first_delta_x : constant double_float
+      := pars.err_max_first_delta_x;
+    max_it : constant integer32 := pars.max_it;
+    err_min_round_off : constant double_float := pars.err_min_round_off;
+    max_it_refine : constant integer32 := pars.max_it_refine;
+    err_min_round_off_refine : constant double_float
+      := pars.err_min_round_off_refine;
 
     function newton ( v : integer32 ) return integer32;
     pragma import(C, newton, "dobldobl_adenewton");
@@ -79,9 +115,27 @@ package body Algorithmic_DiffEval_Trackers is
     return_of_call := newton(verbose);
   end DoblDobl_ADE_Newton;
 
-  procedure QuadDobl_ADE_Newton ( verbose : in integer32 ) is
+  procedure QuadDobl_ADE_Newton
+              ( verbose : in integer32; pars : in Parameters ) is
 
     return_of_call : integer32;
+   -- flatten the path parameters :
+    max_step : constant integer32 := pars.max_step;
+    n_predictor : constant integer32 := pars.n_predictor;
+    step_increase : constant double_float := pars.step_increase;
+    step_decrease : constant double_float := pars.step_decrease;
+    max_delta_t : constant double_float := pars.max_delta_t;
+    max_delta_t_end : constant double_float := pars.max_delta_t_end;
+    min_delta_t : constant double_float := pars.min_delta_t;
+    err_max_res : constant double_float := pars.err_max_res;
+    err_max_delta_x : constant double_float := pars.err_max_delta_x;
+    err_max_first_delta_x : constant double_float
+      := pars.err_max_first_delta_x;
+    max_it : constant integer32 := pars.max_it;
+    err_min_round_off : constant double_float := pars.err_min_round_off;
+    max_it_refine : constant integer32 := pars.max_it_refine;
+    err_min_round_off_refine : constant double_float
+      := pars.err_min_round_off_refine;
 
     function newton ( v : integer32 ) return integer32;
     pragma import(C, newton, "quaddobl_adenewton");
@@ -92,13 +146,31 @@ package body Algorithmic_DiffEval_Trackers is
 
   procedure Standard_ADE_Track_One
               ( verbose : in integer32; 
-                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters ) is
 
     use Standard_Complex_Numbers;
 
     return_of_call : integer32;
     regam : constant double_float := REAL_PART(gamma);
     imgam : constant double_float := IMAG_PART(gamma);
+   -- flatten the path parameters :
+    max_step : constant integer32 := pars.max_step;
+    n_predictor : constant integer32 := pars.n_predictor;
+    step_increase : constant double_float := pars.step_increase;
+    step_decrease : constant double_float := pars.step_decrease;
+    max_delta_t : constant double_float := pars.max_delta_t;
+    max_delta_t_end : constant double_float := pars.max_delta_t_end;
+    min_delta_t : constant double_float := pars.min_delta_t;
+    err_max_res : constant double_float := pars.err_max_res;
+    err_max_delta_x : constant double_float := pars.err_max_delta_x;
+    err_max_first_delta_x : constant double_float
+      := pars.err_max_first_delta_x;
+    max_it : constant integer32 := pars.max_it;
+    err_min_round_off : constant double_float := pars.err_min_round_off;
+    max_it_refine : constant integer32 := pars.max_it_refine;
+    err_min_round_off_refine : constant double_float
+      := pars.err_min_round_off_refine;
 
     function one_track ( v : integer32; r,i : double_float ) return integer32;
     pragma import(C, one_track, "standard_adeonepath");
@@ -109,13 +181,31 @@ package body Algorithmic_DiffEval_Trackers is
 
   procedure DoblDobl_ADE_Track_One
               ( verbose : in integer32; 
-                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters ) is
 
     use Standard_Complex_Numbers;
 
     return_of_call : integer32;
     regam : constant double_float := REAL_PART(gamma);
     imgam : constant double_float := IMAG_PART(gamma);
+   -- flatten the path parameters :
+    max_step : constant integer32 := pars.max_step;
+    n_predictor : constant integer32 := pars.n_predictor;
+    step_increase : constant double_float := pars.step_increase;
+    step_decrease : constant double_float := pars.step_decrease;
+    max_delta_t : constant double_float := pars.max_delta_t;
+    max_delta_t_end : constant double_float := pars.max_delta_t_end;
+    min_delta_t : constant double_float := pars.min_delta_t;
+    err_max_res : constant double_float := pars.err_max_res;
+    err_max_delta_x : constant double_float := pars.err_max_delta_x;
+    err_max_first_delta_x : constant double_float
+      := pars.err_max_first_delta_x;
+    max_it : constant integer32 := pars.max_it;
+    err_min_round_off : constant double_float := pars.err_min_round_off;
+    max_it_refine : constant integer32 := pars.max_it_refine;
+    err_min_round_off_refine : constant double_float
+      := pars.err_min_round_off_refine;
 
     function one_track ( v : integer32; r,i : double_float ) return integer32;
     pragma import(C, one_track, "dobldobl_adeonepath");
@@ -126,13 +216,31 @@ package body Algorithmic_DiffEval_Trackers is
 
   procedure QuadDobl_ADE_Track_One
               ( verbose : in integer32; 
-                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters ) is
 
     use Standard_Complex_Numbers;
 
     return_of_call : integer32;
     regam : constant double_float := REAL_PART(gamma);
     imgam : constant double_float := IMAG_PART(gamma);
+   -- flatten the path parameters :
+    max_step : constant integer32 := pars.max_step;
+    n_predictor : constant integer32 := pars.n_predictor;
+    step_increase : constant double_float := pars.step_increase;
+    step_decrease : constant double_float := pars.step_decrease;
+    max_delta_t : constant double_float := pars.max_delta_t;
+    max_delta_t_end : constant double_float := pars.max_delta_t_end;
+    min_delta_t : constant double_float := pars.min_delta_t;
+    err_max_res : constant double_float := pars.err_max_res;
+    err_max_delta_x : constant double_float := pars.err_max_delta_x;
+    err_max_first_delta_x : constant double_float
+      := pars.err_max_first_delta_x;
+    max_it : constant integer32 := pars.max_it;
+    err_min_round_off : constant double_float := pars.err_min_round_off;
+    max_it_refine : constant integer32 := pars.max_it_refine;
+    err_min_round_off_refine : constant double_float
+      := pars.err_min_round_off_refine;
 
     function one_track ( v : integer32; r,i : double_float ) return integer32;
     pragma import(C, one_track, "quaddobl_adeonepath");
@@ -143,13 +251,31 @@ package body Algorithmic_DiffEval_Trackers is
 
   procedure Standard_ADE_Track_Many
               ( verbose : in integer32;
-                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters ) is
 
     use Standard_Complex_Numbers;
 
     return_of_call : integer32;
     regam : constant double_float := REAL_PART(gamma);
     imgam : constant double_float := IMAG_PART(gamma);
+   -- flatten the path parameters :
+    max_step : constant integer32 := pars.max_step;
+    n_predictor : constant integer32 := pars.n_predictor;
+    step_increase : constant double_float := pars.step_increase;
+    step_decrease : constant double_float := pars.step_decrease;
+    max_delta_t : constant double_float := pars.max_delta_t;
+    max_delta_t_end : constant double_float := pars.max_delta_t_end;
+    min_delta_t : constant double_float := pars.min_delta_t;
+    err_max_res : constant double_float := pars.err_max_res;
+    err_max_delta_x : constant double_float := pars.err_max_delta_x;
+    err_max_first_delta_x : constant double_float
+      := pars.err_max_first_delta_x;
+    max_it : constant integer32 := pars.max_it;
+    err_min_round_off : constant double_float := pars.err_min_round_off;
+    max_it_refine : constant integer32 := pars.max_it_refine;
+    err_min_round_off_refine : constant double_float
+      := pars.err_min_round_off_refine;
 
     function many_track ( v : integer32; r,i : double_float ) return integer32;
     pragma import(C, many_track, "standard_ademanypaths");
@@ -160,13 +286,31 @@ package body Algorithmic_DiffEval_Trackers is
 
   procedure DoblDobl_ADE_Track_Many
               ( verbose : in integer32;
-                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters ) is
 
     use Standard_Complex_Numbers;
 
     return_of_call : integer32;
     regam : constant double_float := REAL_PART(gamma);
     imgam : constant double_float := IMAG_PART(gamma);
+   -- flatten the path parameters :
+    max_step : constant integer32 := pars.max_step;
+    n_predictor : constant integer32 := pars.n_predictor;
+    step_increase : constant double_float := pars.step_increase;
+    step_decrease : constant double_float := pars.step_decrease;
+    max_delta_t : constant double_float := pars.max_delta_t;
+    max_delta_t_end : constant double_float := pars.max_delta_t_end;
+    min_delta_t : constant double_float := pars.min_delta_t;
+    err_max_res : constant double_float := pars.err_max_res;
+    err_max_delta_x : constant double_float := pars.err_max_delta_x;
+    err_max_first_delta_x : constant double_float
+      := pars.err_max_first_delta_x;
+    max_it : constant integer32 := pars.max_it;
+    err_min_round_off : constant double_float := pars.err_min_round_off;
+    max_it_refine : constant integer32 := pars.max_it_refine;
+    err_min_round_off_refine : constant double_float
+      := pars.err_min_round_off_refine;
 
     function many_track ( v : integer32; r,i : double_float ) return integer32;
     pragma import(C, many_track, "dobldobl_ademanypaths");
@@ -177,13 +321,31 @@ package body Algorithmic_DiffEval_Trackers is
 
   procedure QuadDobl_ADE_Track_Many
               ( verbose : in integer32;
-                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters ) is
 
     use Standard_Complex_Numbers;
 
     return_of_call : integer32;
     regam : constant double_float := REAL_PART(gamma);
     imgam : constant double_float := IMAG_PART(gamma);
+   -- flatten the path parameters :
+    max_step : constant integer32 := pars.max_step;
+    n_predictor : constant integer32 := pars.n_predictor;
+    step_increase : constant double_float := pars.step_increase;
+    step_decrease : constant double_float := pars.step_decrease;
+    max_delta_t : constant double_float := pars.max_delta_t;
+    max_delta_t_end : constant double_float := pars.max_delta_t_end;
+    min_delta_t : constant double_float := pars.min_delta_t;
+    err_max_res : constant double_float := pars.err_max_res;
+    err_max_delta_x : constant double_float := pars.err_max_delta_x;
+    err_max_first_delta_x : constant double_float
+      := pars.err_max_first_delta_x;
+    max_it : constant integer32 := pars.max_it;
+    err_min_round_off : constant double_float := pars.err_min_round_off;
+    max_it_refine : constant integer32 := pars.max_it_refine;
+    err_min_round_off_refine : constant double_float
+      := pars.err_min_round_off_refine;
 
     function many_track ( v : integer32; r,i : double_float ) return integer32;
     pragma import(C, many_track, "quaddobl_ademanypaths");
@@ -204,6 +366,8 @@ package body Algorithmic_DiffEval_Trackers is
     p : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
+    pars : Path_Parameters.Parameters
+         := Path_Parameters.Default_Parameters(16);
 
   begin
     new_line;
@@ -221,9 +385,13 @@ package body Algorithmic_DiffEval_Trackers is
     Standard_PolySys_Container.Initialize(p.all);
    -- put_line("Initializing the solutions container ...");
     Standard_Solutions_Container.Initialize(sols);
+    Path_Parameters.Tune(pars);
+    new_line(outfile);
+    put_line(outfile,"The values of the path parameters :");
+    Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
     tstart(timer);
-    Standard_ADE_Newton(verbose);
+    Standard_ADE_Newton(verbose,pars);
     tstop(timer);
     newtsols := Standard_Solutions_Container.Retrieve;
     if verbose > 0 then
@@ -249,6 +417,8 @@ package body Algorithmic_DiffEval_Trackers is
     p : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
+    pars : Path_Parameters.Parameters
+         := Path_Parameters.Default_Parameters(32);
 
   begin
     new_line;
@@ -266,9 +436,13 @@ package body Algorithmic_DiffEval_Trackers is
     DoblDobl_PolySys_Container.Initialize(p.all);
    -- put_line("Initializing the solutions container ...");
     DoblDobl_Solutions_Container.Initialize(sols);
+    Path_Parameters.Tune(pars);
+    new_line(outfile);
+    put_line(outfile,"The values of the path parameters :");
+    Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
     tstart(timer);
-    DoblDobl_ADE_Newton(verbose);
+    DoblDobl_ADE_Newton(verbose,pars);
     tstop(timer);
     newtsols := DoblDobl_Solutions_Container.Retrieve;
     if verbose > 0 then
@@ -295,6 +469,8 @@ package body Algorithmic_DiffEval_Trackers is
     p : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
+    pars : Path_Parameters.Parameters
+         := Path_Parameters.Default_Parameters(64);
 
   begin
     new_line;
@@ -312,9 +488,13 @@ package body Algorithmic_DiffEval_Trackers is
     QuadDobl_PolySys_Container.Initialize(p.all);
    -- put_line("Initializing the solutions container ...");
     QuadDobl_Solutions_Container.Initialize(sols);
+    Path_Parameters.Tune(pars);
+    new_line(outfile);
+    put_line(outfile,"The values of the path parameters :");
+    Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
     tstart(timer);
-    QuadDobl_ADE_Newton(verbose);
+    QuadDobl_ADE_Newton(verbose,pars);
     tstop(timer);
     newtsols := QuadDobl_Solutions_Container.Retrieve;
     if verbose > 0 then
@@ -342,6 +522,8 @@ package body Algorithmic_DiffEval_Trackers is
     verbose : integer32;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
+    pars : Path_Parameters.Parameters
+         := Path_Parameters.Default_Parameters(16);
 
   begin
     new_line;
@@ -365,8 +547,12 @@ package body Algorithmic_DiffEval_Trackers is
     PHCpack_Operations.Store_Start_System(start.all);
    -- put_line("Initializing the solutions container ...");
     Standard_Solutions_Container.Initialize(sols);
+    Path_Parameters.Tune(pars);
+    new_line(outfile);
+    put_line(outfile,"The values of the path parameters :");
+    Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
-    Standard_ADE_Track_One(verbose,gamma);
+    Standard_ADE_Track_One(verbose,gamma,pars);
     newtsols := Standard_Solutions_Container.Retrieve;
     if verbose > 0 then
       put_line("The solutions after path tracking :");
@@ -392,6 +578,8 @@ package body Algorithmic_DiffEval_Trackers is
     verbose : integer32;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
+    pars : Path_Parameters.Parameters
+         := Path_Parameters.Default_Parameters(32);
 
   begin
     new_line;
@@ -415,9 +603,13 @@ package body Algorithmic_DiffEval_Trackers is
     PHCpack_Operations.Store_Start_System(start.all);
    -- put_line("Initializing the solutions container ...");
     DoblDobl_Solutions_Container.Initialize(sols);
+    Path_Parameters.Tune(pars);
+    new_line(outfile);
+    put_line(outfile,"The values of the path parameters :");
+    Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
     tstart(timer);
-    DoblDobl_ADE_Track_One(verbose,gamma);
+    DoblDobl_ADE_Track_One(verbose,gamma,pars);
     tstop(timer);
     newtsols := DoblDobl_Solutions_Container.Retrieve;
     if verbose > 0 then
@@ -444,6 +636,8 @@ package body Algorithmic_DiffEval_Trackers is
     verbose : integer32;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
+    pars : Path_Parameters.Parameters
+         := Path_Parameters.Default_Parameters(64);
 
   begin
     new_line;
@@ -467,9 +661,13 @@ package body Algorithmic_DiffEval_Trackers is
     PHCpack_Operations.Store_Start_System(start.all);
    -- put_line("Initializing the solutions container ...");
     QuadDobl_Solutions_Container.Initialize(sols);
+    Path_Parameters.Tune(pars);
+    new_line(outfile);
+    put_line(outfile,"The values of the path parameters :");
+    Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
     tstart(timer);
-    QuadDobl_ADE_Track_One(verbose,gamma);
+    QuadDobl_ADE_Track_One(verbose,gamma,pars);
     tstop(timer);
     newtsols := QuadDobl_Solutions_Container.Retrieve;
     if verbose > 0 then
@@ -496,6 +694,8 @@ package body Algorithmic_DiffEval_Trackers is
     verbose : integer32;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
+    pars : Path_Parameters.Parameters
+         := Path_Parameters.Default_Parameters(16);
 
   begin
     new_line;
@@ -519,9 +719,13 @@ package body Algorithmic_DiffEval_Trackers is
     PHCpack_Operations.Store_Start_System(start.all);
    -- put_line("Initializing the solutions container ...");
     Standard_Solutions_Container.Initialize(sols);
+    Path_Parameters.Tune(pars);
+    new_line(outfile);
+    put_line(outfile,"The values of the path parameters :");
+    Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
     tstart(timer);
-    Standard_ADE_Track_Many(verbose,gamma);
+    Standard_ADE_Track_Many(verbose,gamma,pars);
     tstop(timer);
     newtsols := Standard_Solutions_Container.Retrieve;
     if verbose > 0 then
@@ -553,6 +757,8 @@ package body Algorithmic_DiffEval_Trackers is
     verbose : integer32;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
+    pars : Path_Parameters.Parameters
+         := Path_Parameters.Default_Parameters(32);
 
   begin
     new_line;
@@ -576,9 +782,13 @@ package body Algorithmic_DiffEval_Trackers is
     PHCpack_Operations.Store_Start_System(start.all);
    -- put_line("Initializing the solutions container ...");
     DoblDobl_Solutions_Container.Initialize(sols);
+    Path_Parameters.Tune(pars);
+    new_line(outfile);
+    put_line(outfile,"The values of the path parameters :");
+    Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
     tstart(timer);
-    DoblDobl_ADE_Track_Many(verbose,gamma);
+    DoblDobl_ADE_Track_Many(verbose,gamma,pars);
     tstop(timer);
     newtsols := DoblDobl_Solutions_Container.Retrieve;
     if verbose > 0 then
@@ -610,6 +820,8 @@ package body Algorithmic_DiffEval_Trackers is
     verbose : integer32;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
+    pars : Path_Parameters.Parameters
+         := Path_Parameters.Default_Parameters(64);
 
   begin
     new_line;
@@ -633,9 +845,13 @@ package body Algorithmic_DiffEval_Trackers is
     PHCpack_Operations.Store_Start_System(start.all);
    -- put_line("Initializing the solutions container ...");
     QuadDobl_Solutions_Container.Initialize(sols);
+    Path_Parameters.Tune(pars);
+    new_line(outfile);
+    put_line(outfile,"The values of the path parameters :");
+    Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
     tstart(timer);
-    QuadDobl_ADE_Track_Many(verbose,gamma);
+    QuadDobl_ADE_Track_Many(verbose,gamma,pars);
     tstop(timer);
     newtsols := QuadDobl_Solutions_Container.Retrieve;
     if verbose > 0 then

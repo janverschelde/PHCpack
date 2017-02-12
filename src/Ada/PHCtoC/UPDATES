@@ -1,7 +1,8 @@
 Sat 11 Feb 2017 : new package path_parameters to define a tune the
   parameters for the path trackers in the path library, tested by ts_pathpars.
+  Extended wrappers in algorithmic_diffeval_trackers with the parameters.
 
-Mon 6 Feb 2017 : added output to file in algorithmic_algodiff_trackers.adb.
+Mon 6 Feb 2017 : added output to file in algorithmic_diffeval_trackers.adb.
 
 Sun 5 Feb 2017 : new mainadep.ads and mainadep.adb to call the path trackers
   with algorithmic differentiation.

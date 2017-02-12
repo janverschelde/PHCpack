@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
+with Path_Parameters;                    use Path_Parameters;
 
 package Algorithmic_DiffEval_Trackers is
 
@@ -14,9 +15,12 @@ package Algorithmic_DiffEval_Trackers is
 
 -- WRAPPERS :
 
-  procedure Standard_ADE_Newton ( verbose : in integer32 );
-  procedure DoblDobl_ADE_Newton ( verbose : in integer32 );
-  procedure QuadDobl_ADE_Newton ( verbose : in integer32 );
+  procedure Standard_ADE_Newton
+              ( verbose : in integer32; pars : in Parameters );
+  procedure DoblDobl_ADE_Newton
+              ( verbose : in integer32; pars : in Parameters );
+  procedure QuadDobl_ADE_Newton
+              ( verbose : in integer32; pars : in Parameters );
 
   -- DESCRIPTION :
   --   Wraps the call to the C interface to run Newton's method in
@@ -24,6 +28,7 @@ package Algorithmic_DiffEval_Trackers is
   --   on the target system stored in the systems container and the
   --   first solution stored in the solutions container.
   --   If verbose is positive, then output is written to screen.
+  --   The values for the path parameters are in pars.
 
   -- REQUIRED :
   --   The containers have been initialized with a target system
@@ -31,13 +36,16 @@ package Algorithmic_DiffEval_Trackers is
 
   procedure Standard_ADE_Track_One
               ( verbose : in integer32; 
-                gamma : in Standard_Complex_Numbers.Complex_Number );
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters );
   procedure DoblDobl_ADE_Track_One
               ( verbose : in integer32; 
-                gamma : in Standard_Complex_Numbers.Complex_Number );
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters );
   procedure QuadDobl_ADE_Track_One
               ( verbose : in integer32; 
-                gamma : in Standard_Complex_Numbers.Complex_Number );
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters );
 
   -- DESCRIPTION :
   --   With the homotopy as defined by the containers, tracks one path
@@ -45,7 +53,8 @@ package Algorithmic_DiffEval_Trackers is
 
   -- ON ENTRY :
   --   verbose  >0 if intermediate output needs to be written to screen;
-  --   gamma    the gamma constant in the homotopy.
+  --   gamma    the gamma constant in the homotopy;
+  --   pars     values for the path parameters.
 
   -- REQUIRED :
   --   The containers have been initialized with a target system,
@@ -53,13 +62,16 @@ package Algorithmic_DiffEval_Trackers is
 
   procedure Standard_ADE_Track_Many
               ( verbose : in integer32;
-                gamma : in Standard_Complex_Numbers.Complex_Number );
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters );
   procedure DoblDobl_ADE_Track_Many
               ( verbose : in integer32;
-                gamma : in Standard_Complex_Numbers.Complex_Number );
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters );
   procedure QuadDobl_ADE_Track_Many
               ( verbose : in integer32;
-                gamma : in Standard_Complex_Numbers.Complex_Number );
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                pars : in Parameters );
 
   -- DESCRIPTION :
   --   Wraps the C interface function to track many paths.
@@ -68,7 +80,8 @@ package Algorithmic_DiffEval_Trackers is
 
   -- ON ENTRY :
   --   verbose  >0 if intermediate output needs to be written to screen;
-  --   gamma    the gamma constant in the homotopy.
+  --   gamma    the gamma constant in the homotopy;
+  --   pars     values for the path parameters.
 
   -- REQUIRED :
   --   The containers have been initialized with a target system,
