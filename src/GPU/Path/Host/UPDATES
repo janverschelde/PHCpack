@@ -1,5 +1,7 @@
 Sat 11 Feb 2017 : added parameters to the parameter list of path_track
   in path_track.h and path_track.tpp, so test_path can do path.tune().
+  Added functions to lib2path.h and lib2path.cpp which take in tuned
+  values of the path parameters.
 
 Fri 10 Feb 2017 : move writing and tuning of the parameters from the
   test_parameter.cpp to a new parameter.cpp file, with added headers

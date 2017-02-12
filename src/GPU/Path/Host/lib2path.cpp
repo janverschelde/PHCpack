@@ -622,7 +622,7 @@ void lib2path_read_quaddobl_homotopy
 
 using namespace std;
 
-int standard_ade_newton ( int verbose )
+int standard_ade_newton_with_pars ( int verbose, Parameter pars )
 {
    int fail;
    PolySys<complexH<double>,double> ps;
@@ -643,7 +643,7 @@ int standard_ade_newton ( int verbose )
    lib2path_read_standard_sys(verbose,ps);
    lib2path_read_standard_sols(ps,sols);
 
-   fail = standard_newton(verbose,ps,sols);
+   fail = standard_newton_with_pars(verbose,pars,ps,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -653,7 +653,7 @@ int standard_ade_newton ( int verbose )
    return 0;
 }
 
-int dobldobl_ade_newton ( int verbose )
+int dobldobl_ade_newton_with_pars ( int verbose, Parameter pars )
 {
    int fail;
    PolySys<complexH<dd_real>,dd_real> ps;
@@ -674,7 +674,7 @@ int dobldobl_ade_newton ( int verbose )
    lib2path_read_dobldobl_sys(verbose,ps);
    lib2path_read_dobldobl_sols(ps,sols);
 
-   fail = dobldobl_newton(verbose,ps,sols);
+   fail = dobldobl_newton_with_pars(verbose,pars,ps,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -684,7 +684,7 @@ int dobldobl_ade_newton ( int verbose )
    return 0;
 }
 
-int quaddobl_ade_newton ( int verbose )
+int quaddobl_ade_newton_with_pars ( int verbose, Parameter pars )
 {
    int fail;
    PolySys<complexH<qd_real>,qd_real> ps;
@@ -705,7 +705,7 @@ int quaddobl_ade_newton ( int verbose )
    lib2path_read_quaddobl_sys(verbose,ps);
    lib2path_read_quaddobl_sols(ps,sols);
 
-   fail = quaddobl_newton(verbose,ps,sols);
+   fail = quaddobl_newton_with_pars(verbose,pars,ps,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -713,6 +713,27 @@ int quaddobl_ade_newton ( int verbose )
    lib2path_write_quaddobl_sols(sols);
 
    return 0;
+}
+
+int standard_ade_newton ( int verbose )
+{
+   Parameter pars(16);
+
+   return standard_ade_newton_with_pars(verbose,pars);
+}
+
+int dobldobl_ade_newton ( int verbose )
+{
+   Parameter pars(32);
+
+   return dobldobl_ade_newton_with_pars(verbose,pars);
+}
+
+int quaddobl_ade_newton ( int verbose )
+{
+   Parameter pars(64);
+
+   return quaddobl_ade_newton_with_pars(verbose,pars);
 }
 
 extern "C" int standard_adenewton ( int verbose )
@@ -730,8 +751,8 @@ extern "C" int quaddobl_adenewton ( int verbose )
    return quaddobl_ade_newton(verbose);
 }
 
-int standard_ade_onepath
- ( int verbose, double regamma, double imgamma )
+int standard_ade_onepath_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars )
 {
    int fail;
    PolySys<complexH<double>,double> ps;
@@ -761,7 +782,7 @@ int standard_ade_onepath
    lib2path_read_standard_sys(verbose,qs);
    lib2path_read_standard_sols(qs,sols);
 
-   fail = standard_onetrack(verbose,regamma,imgamma,ps,qs,sols);
+   fail = standard_onetrack_with_pars(verbose,regamma,imgamma,pars,ps,qs,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -771,8 +792,8 @@ int standard_ade_onepath
    return 0;
 }
 
-int dobldobl_ade_onepath
- ( int verbose, double regamma, double imgamma )
+int dobldobl_ade_onepath_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars )
 {
    int fail;
    PolySys<complexH<dd_real>,dd_real> ps;
@@ -802,7 +823,7 @@ int dobldobl_ade_onepath
    lib2path_read_dobldobl_sys(verbose,qs);
    lib2path_read_dobldobl_sols(qs,sols);
 
-   fail = dobldobl_onetrack(verbose,regamma,imgamma,ps,qs,sols);
+   fail = dobldobl_onetrack_with_pars(verbose,regamma,imgamma,pars,ps,qs,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -812,8 +833,8 @@ int dobldobl_ade_onepath
    return 0;
 }
 
-int quaddobl_ade_onepath
- ( int verbose, double regamma, double imgamma )
+int quaddobl_ade_onepath_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars )
 {
    int fail;
    PolySys<complexH<qd_real>,qd_real> ps;
@@ -843,7 +864,7 @@ int quaddobl_ade_onepath
    lib2path_read_quaddobl_sys(verbose,qs);
    lib2path_read_quaddobl_sols(qs,sols);
 
-   fail = quaddobl_onetrack(verbose,regamma,imgamma,ps,qs,sols);
+   fail = quaddobl_onetrack_with_pars(verbose,regamma,imgamma,pars,ps,qs,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -851,6 +872,30 @@ int quaddobl_ade_onepath
    lib2path_write_quaddobl_sols(sols);
 
    return 0;
+}
+
+int standard_ade_onepath
+ ( int verbose, double regamma, double imgamma )
+{
+   Parameter pars(16);
+
+   return standard_ade_onepath_with_pars(verbose,regamma,imgamma,pars);
+}
+
+int dobldobl_ade_onepath
+ ( int verbose, double regamma, double imgamma )
+{
+   Parameter pars(32);
+
+   return dobldobl_ade_onepath_with_pars(verbose,regamma,imgamma,pars);
+}
+
+int quaddobl_ade_onepath
+ ( int verbose, double regamma, double imgamma )
+{
+   Parameter pars(64);
+
+   return quaddobl_ade_onepath_with_pars(verbose,regamma,imgamma,pars);
 }
 
 extern "C" int standard_adeonepath
@@ -871,8 +916,8 @@ extern "C" int quaddobl_adeonepath
    return quaddobl_ade_onepath(verbose,regamma,imgamma);
 }
 
-int standard_ade_manypaths
- ( int verbose, double regamma, double imgamma )
+int standard_ade_manypaths_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars )
 {
    int fail;
    PolySys<complexH<double>,double> ps;
@@ -902,7 +947,7 @@ int standard_ade_manypaths
    lib2path_read_standard_sys(verbose,qs);
    lib2path_read_standard_sols(qs,sols);
 
-   fail = standard_manytrack(verbose,regamma,imgamma,ps,qs,sols);
+   fail = standard_manytrack_with_pars(verbose,regamma,imgamma,pars,ps,qs,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -912,8 +957,8 @@ int standard_ade_manypaths
    return 0;
 }
 
-int dobldobl_ade_manypaths
- ( int verbose, double regamma, double imgamma )
+int dobldobl_ade_manypaths_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars )
 {
    int fail;
    PolySys<complexH<dd_real>,dd_real> ps;
@@ -943,7 +988,7 @@ int dobldobl_ade_manypaths
    lib2path_read_dobldobl_sys(verbose,qs);
    lib2path_read_dobldobl_sols(qs,sols);
 
-   fail = dobldobl_manytrack(verbose,regamma,imgamma,ps,qs,sols);
+   fail = dobldobl_manytrack_with_pars(verbose,regamma,imgamma,pars,ps,qs,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -953,8 +998,8 @@ int dobldobl_ade_manypaths
    return 0;
 }
 
-int quaddobl_ade_manypaths
- ( int verbose, double regamma, double imgamma )
+int quaddobl_ade_manypaths_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars )
 {
    int fail;
    PolySys<complexH<qd_real>,qd_real> ps;
@@ -984,7 +1029,7 @@ int quaddobl_ade_manypaths
    lib2path_read_quaddobl_sys(verbose,qs);
    lib2path_read_quaddobl_sols(qs,sols);
 
-   fail = quaddobl_manytrack(verbose,regamma,imgamma,ps,qs,sols);
+   fail = quaddobl_manytrack_with_pars(verbose,regamma,imgamma,pars,ps,qs,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -992,6 +1037,30 @@ int quaddobl_ade_manypaths
    lib2path_write_quaddobl_sols(sols);
 
    return 0;
+}
+
+int standard_ade_manypaths
+ ( int verbose, double regamma, double imgamma )
+{
+   Parameter pars(16);
+
+   return standard_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
+}
+
+int dobldobl_ade_manypaths
+ ( int verbose, double regamma, double imgamma )
+{
+   Parameter pars(32);
+
+   return dobldobl_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
+}
+
+int quaddobl_ade_manypaths
+ ( int verbose, double regamma, double imgamma )
+{
+   Parameter pars(64);
+
+   return quaddobl_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
 }
 
 extern "C" int standard_ademanypaths
@@ -1012,8 +1081,9 @@ extern "C" int quaddobl_ademanypaths
    return quaddobl_ade_manypaths(verbose,regamma,imgamma);
 }
 
-int standard_newton
- ( int verbose, PolySys<complexH<double>,double>& p,
+int standard_newton_with_pars
+ ( int verbose, Parameter pars,
+   PolySys<complexH<double>,double>& p,
    PolySolSet<complexH<double>,double>& s )
 {
    double teval,tmgs;
@@ -1022,7 +1092,6 @@ int standard_newton
    complexH<double> alpha;
    CPUInstHom<complexH<double>,double> cpu_inst_hom;
    Workspace< complexH<double> > workspace_cpu;
-   Parameter pars(16);
   
    if(verbose > 0)
    {
@@ -1054,8 +1123,9 @@ int standard_newton
    return 0;
 }
 
-int dobldobl_newton
- ( int verbose, PolySys<complexH<dd_real>,dd_real>& p,
+int dobldobl_newton_with_pars
+ ( int verbose, Parameter pars,
+   PolySys<complexH<dd_real>,dd_real>& p,
    PolySolSet<complexH<dd_real>,dd_real>& s )
 {
    double teval,tmgs;
@@ -1064,7 +1134,6 @@ int dobldobl_newton
    complexH<dd_real> alpha;
    CPUInstHom<complexH<dd_real>,dd_real> cpu_inst_hom;
    Workspace< complexH<dd_real> > workspace_cpu;
-   Parameter pars(32);
   
    if(verbose > 0)
    {
@@ -1096,8 +1165,9 @@ int dobldobl_newton
    return 0;
 }
 
-int quaddobl_newton
- ( int verbose, PolySys<complexH<qd_real>,qd_real>& p,
+int quaddobl_newton_with_pars
+ ( int verbose, Parameter pars,
+   PolySys<complexH<qd_real>,qd_real>& p,
    PolySolSet<complexH<qd_real>,qd_real>& s )
 {
    double teval,tmgs;
@@ -1106,7 +1176,6 @@ int quaddobl_newton
    complexH<qd_real> alpha;
    CPUInstHom<complexH<qd_real>,qd_real> cpu_inst_hom;
    Workspace< complexH<qd_real> > workspace_cpu;
-   Parameter pars(64);
   
    if(verbose > 0)
    {
@@ -1138,8 +1207,35 @@ int quaddobl_newton
    return 0;
 }
 
-int standard_onetrack
- ( int verbose, double regamma, double imgamma,
+int standard_newton
+ ( int verbose, PolySys<complexH<double>,double>& p,
+   PolySolSet<complexH<double>,double>& s )
+{
+   Parameter pars(16);
+
+   return standard_newton_with_pars(verbose,pars,p,s);
+}
+
+int dobldobl_newton
+ ( int verbose, PolySys<complexH<dd_real>,dd_real>& p,
+   PolySolSet<complexH<dd_real>,dd_real>& s )
+{
+   Parameter pars(32);
+
+   return dobldobl_newton_with_pars(verbose,pars,p,s);
+}
+
+int quaddobl_newton
+ ( int verbose, PolySys<complexH<qd_real>,qd_real>& p,
+   PolySolSet<complexH<qd_real>,qd_real>& s )
+{
+   Parameter pars(64);
+
+   return quaddobl_newton_with_pars(verbose,pars,p,s);
+}
+
+int standard_onetrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
    PolySys<complexH<double>,double>& p,
    PolySys<complexH<double>,double>& q,
    PolySolSet<complexH<double>,double>& s )
@@ -1150,7 +1246,6 @@ int standard_onetrack
    complexH<double> alpha,t;
    CPUInstHom<complexH<double>,double> cpu_inst_hom;
    Workspace< complexH<double> > workspace_cpu;
-   Parameter pars(16);
   
    if(verbose > 0)
    {
@@ -1187,8 +1282,8 @@ int standard_onetrack
    return 0;
 }
 
-int dobldobl_onetrack
- ( int verbose, double regamma, double imgamma,
+int dobldobl_onetrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
    PolySys<complexH<dd_real>,dd_real>& p,
    PolySys<complexH<dd_real>,dd_real>& q,
    PolySolSet<complexH<dd_real>,dd_real>& s )
@@ -1199,7 +1294,6 @@ int dobldobl_onetrack
    complexH<dd_real> alpha,t;
    CPUInstHom<complexH<dd_real>,dd_real> cpu_inst_hom;
    Workspace< complexH<dd_real> > workspace_cpu;
-   Parameter pars(32);
   
    if(verbose > 0)
    {
@@ -1236,8 +1330,8 @@ int dobldobl_onetrack
    return 0;
 }
 
-int quaddobl_onetrack
- ( int verbose, double regamma, double imgamma,
+int quaddobl_onetrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
    PolySys<complexH<qd_real>,qd_real>& p,
    PolySys<complexH<qd_real>,qd_real>& q,
    PolySolSet<complexH<qd_real>,qd_real>& s )
@@ -1248,7 +1342,6 @@ int quaddobl_onetrack
    complexH<qd_real> alpha,t;
    CPUInstHom<complexH<qd_real>,qd_real> cpu_inst_hom;
    Workspace< complexH<qd_real> > workspace_cpu;
-   Parameter pars(64);
   
    if(verbose > 0)
    {
@@ -1285,8 +1378,41 @@ int quaddobl_onetrack
    return 0;
 }
 
-int standard_manytrack
+int standard_onetrack
  ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<double>,double>& p,
+   PolySys<complexH<double>,double>& q,
+   PolySolSet<complexH<double>,double>& s )
+{
+   Parameter pars(16);
+
+   return standard_onetrack_with_pars(verbose,regamma,imgamma,pars,p,q,s);
+}
+
+int dobldobl_onetrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<dd_real>,dd_real>& p,
+   PolySys<complexH<dd_real>,dd_real>& q,
+   PolySolSet<complexH<dd_real>,dd_real>& s )
+{
+   Parameter pars(32);
+
+   return dobldobl_onetrack_with_pars(verbose,regamma,imgamma,pars,p,q,s);
+}
+
+int quaddobl_onetrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<qd_real>,qd_real>& p,
+   PolySys<complexH<qd_real>,qd_real>& q,
+   PolySolSet<complexH<qd_real>,qd_real>& s )
+{
+   Parameter pars(64);
+
+   return quaddobl_onetrack_with_pars(verbose,regamma,imgamma,pars,p,q,s);
+}
+
+int standard_manytrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
    PolySys<complexH<double>,double>& p,
    PolySys<complexH<double>,double>& q,
    PolySolSet<complexH<double>,double>& s )
@@ -1297,7 +1423,6 @@ int standard_manytrack
    complexH<double> alpha,t;
    CPUInstHom<complexH<double>,double> cpu_inst_hom;
    Workspace< complexH<double> > workspace_cpu;
-   Parameter pars(16);
   
    if(verbose > 0)
    {
@@ -1343,8 +1468,8 @@ int standard_manytrack
    return 0;
 }
 
-int dobldobl_manytrack
- ( int verbose, double regamma, double imgamma,
+int dobldobl_manytrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
    PolySys<complexH<dd_real>,dd_real>& p,
    PolySys<complexH<dd_real>,dd_real>& q,
    PolySolSet<complexH<dd_real>,dd_real>& s )
@@ -1355,7 +1480,6 @@ int dobldobl_manytrack
    complexH<dd_real> alpha,t;
    CPUInstHom<complexH<dd_real>,dd_real> cpu_inst_hom;
    Workspace< complexH<dd_real> > workspace_cpu;
-   Parameter pars(32);
   
    if(verbose > 0)
    {
@@ -1401,8 +1525,8 @@ int dobldobl_manytrack
    return 0;
 }
 
-int quaddobl_manytrack
- ( int verbose, double regamma, double imgamma,
+int quaddobl_manytrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
    PolySys<complexH<qd_real>,qd_real>& p,
    PolySys<complexH<qd_real>,qd_real>& q,
    PolySolSet<complexH<qd_real>,qd_real>& s )
@@ -1413,7 +1537,6 @@ int quaddobl_manytrack
    complexH<qd_real> alpha,t;
    CPUInstHom<complexH<qd_real>,qd_real> cpu_inst_hom;
    Workspace< complexH<qd_real> > workspace_cpu;
-   Parameter pars(64);
   
    if(verbose > 0)
    {
@@ -1457,4 +1580,37 @@ int quaddobl_manytrack
       }
    }
    return 0;
+}
+
+int standard_manytrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<double>,double>& p,
+   PolySys<complexH<double>,double>& q,
+   PolySolSet<complexH<double>,double>& s )
+{
+   Parameter pars(16);
+
+   return standard_manytrack_with_pars(verbose,regamma,imgamma,pars,p,q,s);
+}
+
+int dobldobl_manytrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<dd_real>,dd_real>& p,
+   PolySys<complexH<dd_real>,dd_real>& q,
+   PolySolSet<complexH<dd_real>,dd_real>& s )
+{
+   Parameter pars(32);
+
+   return dobldobl_manytrack_with_pars(verbose,regamma,imgamma,pars,p,q,s);
+}
+
+int quaddobl_manytrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys<complexH<qd_real>,qd_real>& p,
+   PolySys<complexH<qd_real>,qd_real>& q,
+   PolySolSet<complexH<qd_real>,qd_real>& s )
+{
+   Parameter pars(64);
+
+   return quaddobl_manytrack_with_pars(verbose,regamma,imgamma,pars,p,q,s);
 }

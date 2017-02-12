@@ -105,7 +105,27 @@ int quaddobl_newton
  * DESCRIPTION :
  *   Applies Newton's method to the first solution in s,
  *   on the polynomial system p.
- *   If verbose > 0, then additional output is written to screen. */
+ *   If verbose > 0, then additional output is written to screen.
+ *   Default values for the path parameters will be applied. */
+
+int standard_newton_with_pars
+ ( int verbose, Parameter pars,
+   PolySys<complexH<double>,double>& p,
+   PolySolSet<complexH<double>,double>& s );
+int dobldobl_newton_with_pars
+ ( int verbose, Parameter pars,
+   PolySys<complexH<dd_real>,dd_real>& p,
+   PolySolSet<complexH<dd_real>,dd_real>& s );
+int quaddobl_newton_with_pars
+ ( int verbose, Parameter pars,
+   PolySys<complexH<qd_real>,qd_real>& p,
+   PolySolSet<complexH<qd_real>,qd_real>& s );
+/*
+ * DESCRIPTION :
+ *   Applies Newton's method to the first solution in s,
+ *   on the polynomial system p.
+ *   If verbose > 0, then additional output is written to screen.
+ *   Tuned values for the path parameter can be given on input. */
 
 int standard_onetrack
  ( int verbose, double regamma, double imgamma,
@@ -126,11 +146,42 @@ int quaddobl_onetrack
  * DESCRIPTION :
  *   Tracks one path defined by an artificial parameter homotopy,
  *   starting at a solution s of q and ending at a solution of p.
+ *   Default values for the parameter are applied.
  *
  * ON ENTRY :
  *   verbose   if > 0, then additional output is written to screen;
  *   regamma   real part of the gamma constant;
  *   imgamma   imaginary part of the gamma constant;
+ *   p         target system in the homotopy;
+ *   q         start system in the homotopy;
+ *   s         a solution of the start system q. */
+
+int standard_onetrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
+   PolySys<complexH<double>,double>& p,
+   PolySys<complexH<double>,double>& q,
+   PolySolSet<complexH<double>,double>& s );
+int dobldobl_onetrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
+   PolySys<complexH<dd_real>,dd_real>& p,
+   PolySys<complexH<dd_real>,dd_real>& q,
+   PolySolSet<complexH<dd_real>,dd_real>& s );
+int quaddobl_onetrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
+   PolySys<complexH<qd_real>,qd_real>& p,
+   PolySys<complexH<qd_real>,qd_real>& q,
+   PolySolSet<complexH<qd_real>,qd_real>& s );
+/*
+ * DESCRIPTION :
+ *   Tracks one path defined by an artificial parameter homotopy,
+ *   starting at a solution s of q and ending at a solution of p.
+ *   Tuned values for the parameter can be given on input.
+ *
+ * ON ENTRY :
+ *   verbose   if > 0, then additional output is written to screen;
+ *   regamma   real part of the gamma constant;
+ *   imgamma   imaginary part of the gamma constant;
+ *   pars      values for the path parameters;
  *   p         target system in the homotopy;
  *   q         start system in the homotopy;
  *   s         a solution of the start system q. */
@@ -154,11 +205,42 @@ int quaddobl_manytrack
  * DESCRIPTION :
  *   Tracks many paths defined by an artificial parameter homotopy,
  *   starting at solutions in s of q and ending at solutions of p.
+ *   Default values for the path parameters are applied.
  *
  * ON ENTRY :
  *   verbose   if > 0, then additional output is written to screen;
  *   regamma   real part of the gamma constant;
  *   imgamma   imaginary part of the gamma constant;
+ *   p         target system in the homotopy;
+ *   q         start system in the homotopy;
+ *   s         solutions of the start system q. */
+
+int standard_manytrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
+   PolySys<complexH<double>,double>& p,
+   PolySys<complexH<double>,double>& q,
+   PolySolSet<complexH<double>,double>& s );
+int dobldobl_manytrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
+   PolySys<complexH<dd_real>,dd_real>& p,
+   PolySys<complexH<dd_real>,dd_real>& q,
+   PolySolSet<complexH<dd_real>,dd_real>& s );
+int quaddobl_manytrack_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars,
+   PolySys<complexH<qd_real>,qd_real>& p,
+   PolySys<complexH<qd_real>,qd_real>& q,
+   PolySolSet<complexH<qd_real>,qd_real>& s );
+/*
+ * DESCRIPTION :
+ *   Tracks many paths defined by an artificial parameter homotopy,
+ *   starting at solutions in s of q and ending at solutions of p.
+ *   Tuned values for the parameters can be provided on input.
+ *
+ * ON ENTRY :
+ *   verbose   if > 0, then additional output is written to screen;
+ *   regamma   real part of the gamma constant;
+ *   imgamma   imaginary part of the gamma constant;
+ *   pars      values for the path parameters;
  *   p         target system in the homotopy;
  *   q         start system in the homotopy;
  *   s         solutions of the start system q. */
@@ -169,7 +251,17 @@ int quaddobl_ade_newton ( int verbose );
 /*
  * DESCRIPTION :
  *   Calls Newton's method with algorithmic differentiation.
- *   If verbose > 0, then additional output will be written. */
+ *   If verbose > 0, then additional output will be written.
+ *   Default values for the path parameters are applied. */
+
+int standard_ade_newton_with_pars ( int verbose, Parameter pars );
+int dobldobl_ade_newton_with_pars ( int verbose, Parameter pars );
+int quaddobl_ade_newton_with_pars ( int verbose, Parameter pars );
+/*
+ * DESCRIPTION :
+ *   Calls Newton's method with algorithmic differentiation.
+ *   If verbose > 0, then additional output will be written.
+ *   Tuned values of the parameters can be given on input in pars. */
 
 int standard_ade_onepath
  ( int verbose, double regamma, double imgamma );
@@ -180,11 +272,29 @@ int quaddobl_ade_onepath
 /*
  * DESCRIPTION :
  *   A C++ function to track one solution path.
+ *   Default values for the path parameters are applied.
  *
  * ON ENTRY :
  *   verbose   if > 0, then additional output is written to screen;
  *   regamma   real part of the gamma constant;
- *   imgamma   imaginary part of the gamma constant; */
+ *   imgamma   imaginary part of the gamma constant. */
+
+int standard_ade_onepath_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars );
+int dobldobl_ade_onepath_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars );
+int quaddobl_ade_onepath_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars );
+/*
+ * DESCRIPTION :
+ *   A C++ function to track one solution path.
+ *   Tuned values for the path parameters can be given in pars.
+ *
+ * ON ENTRY :
+ *   verbose   if > 0, then additional output is written to screen;
+ *   regamma   real part of the gamma constant;
+ *   imgamma   imaginary part of the gamma constant;
+ *   pars      values for the path parameters. */
 
 int standard_ade_manypaths
  ( int verbose, double regamma, double imgamma );
@@ -196,11 +306,30 @@ int quaddobl_ade_manypaths
  * DESCRIPTION :
  *   A C++ function to track one solution path,
  *   encapsulated as a C function for to be called from Ada.
+ *   Default values for the path parameters are applied.
  *
  * ON ENTRY :
  *   verbose   if > 0, then additional output is written to screen;
  *   regamma   real part of the gamma constant;
- *   imgamma   imaginary part of the gamma constant; */
+ *   imgamma   imaginary part of the gamma constant. */
+
+int standard_ade_manypaths_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars );
+int dobldobl_ade_manypaths_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars );
+int quaddobl_ade_manypaths_with_pars
+ ( int verbose, double regamma, double imgamma, Parameter pars );
+/*
+ * DESCRIPTION :
+ *   A C++ function to track one solution path,
+ *   encapsulated as a C function for to be called from Ada.
+ *   Tuned values for the path parameters can be given in pars.
+ *
+ * ON ENTRY :
+ *   verbose   if > 0, then additional output is written to screen;
+ *   regamma   real part of the gamma constant;
+ *   imgamma   imaginary part of the gamma constant;
+ *   pars      values for the path parameters. */
 
 extern "C" int standard_adenewton ( int verbose );
 extern "C" int dobldobl_adenewton ( int verbose );
