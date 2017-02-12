@@ -336,10 +336,57 @@ extern "C" int dobldobl_adenewton ( int verbose );
 extern "C" int quaddobl_adenewton ( int verbose );
 /*
  * DESCRIPTION :
- *   Calls Newton's method with algorithmic differentiaton,
+ *   Calls Newton's method with algorithmic differentiation,
  *   encapsulated as a C function for to be called from Ada.
- *   Notice the lack of an underscore after the _ade in the functin names.
- *   If verbose > 0, then additional output will be written. */
+ *   Notice the lack of an underscore after the _ade in the function names.
+ *   If verbose > 0, then additional output will be written.
+ *   Default values for the path parameters are applied. */
+
+extern "C" int standard_adenewton_with_pars
+ ( int verbose, int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+extern "C" int dobldobl_adenewton_with_pars
+ ( int verbose, int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+extern "C" int quaddobl_adenewton_with_pars
+ ( int verbose, int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+/*
+ * DESCRIPTION :
+ *   Calls Newton's method with algorithmic differentiation,
+ *   encapsulated as a C function for to be called from Ada.
+ *   Notice the lack of an underscore after the _ade in the function names.
+ *   If verbose > 0, then additional output will be written.
+ *   All 14 values for the path parameters must be provided.
+ *
+ * ON ENTRY :
+ *   verbose              if > 0, then additional output is written to screen;
+ *   max_step             maximum number of steps along a path;
+ *   n_predictor          number of points used in the predictor;
+ *   step_increase        increase factor of the predictor;
+ *   step_decrease        decrease factor of the precdictor;
+ *   max_delta_t          maximum step size along a path;
+ *   max_delta_t_end      maximum step size at the end of a path;
+ *   min_delta_t          minimum step size;
+ *   err_max_res          tolerance on the residual;
+ *   err_max_delta_x      tolerance on the corrector update;
+ *   err_max_first_delta_x is the tolerance on the first correction update;
+ *   max_it               maximum number of iterations of the corrector;
+ *   err_min_round_off    tolerance on the corrector;
+ *   max_it_refine        number of steps in the Newton root refiner;
+ *   err_min_round_off_refine is the tolerance for the final refinement. */
 
 extern "C" int standard_adeonepath
  ( int verbose, double regamma, double imgamma );
@@ -352,11 +399,62 @@ extern "C" int quaddobl_adeonepath
  *   A C++ function to track one solution path,
  *   encapsulated as a C function for to be called from Ada.
  *   Notice the lack of an underscore after the _ade in the function names.
+ *   Default values for the path parameters are applied.
  *
  * ON ENTRY :
  *   verbose   if > 0, then additional output is written to screen;
  *   regamma   real part of the gamma constant;
- *   imgamma   imaginary part of the gamma constant; */
+ *   imgamma   imaginary part of the gamma constant. */
+
+extern "C" int standard_adeonepath_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+extern "C" int dobldobl_adeonepath_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+extern "C" int quaddobl_adeonepath_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+/*
+ * DESCRIPTION :
+ *   A C++ function to track one solution path,
+ *   encapsulated as a C function for to be called from Ada.
+ *   Notice the lack of an underscore after the _ade in the function names.
+ *   Values for all 14 path parameters have to be provided.
+ *
+ * ON ENTRY :
+ *   verbose              if > 0, then additional output is written to screen;
+ *   regamma              real part of the gamma constant;
+ *   imgamma              imaginary part of the gamma constant;
+ *   max_step             maximum number of steps along a path;
+ *   n_predictor          number of points used in the predictor;
+ *   step_increase        increase factor of the predictor;
+ *   step_decrease        decrease factor of the precdictor;
+ *   max_delta_t          maximum step size along a path;
+ *   max_delta_t_end      maximum step size at the end of a path;
+ *   min_delta_t          minimum step size;
+ *   err_max_res          tolerance on the residual;
+ *   err_max_delta_x      tolerance on the corrector update;
+ *   err_max_first_delta_x is the tolerance on the first correction update;
+ *   max_it               maximum number of iterations of the corrector;
+ *   err_min_round_off    tolerance on the corrector;
+ *   max_it_refine        number of steps in the Newton root refiner;
+ *   err_min_round_off_refine is the tolerance for the final refinement. */
 
 extern "C" int standard_ademanypaths
  ( int verbose, double regamma, double imgamma );
@@ -369,10 +467,61 @@ extern "C" int quaddobl_ademanypaths
  *   A C++ function to track many solution path,
  *   encapsulated as a C function for to be called from Ada.
  *   Notice the lack of an underscore after the _ade in the function names.
+ *   Default values for the path parameters are applied.
  *
  * ON ENTRY :
- *   verbose   if > 0, then additional output is written to screen;
- *   regamma   real part of the gamma constant;
- *   imgamma   imaginary part of the gamma constant; */
+ *   verbose              if > 0, then additional output is written to screen;
+ *   regamma              real part of the gamma constant;
+ *   imgamma              imaginary part of the gamma constant. */
+
+extern "C" int standard_ademanypaths_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+extern "C" int dobldobl_ademanypaths_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+extern "C" int quaddobl_ademanypaths_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+/*
+ * DESCRIPTION :
+ *   A C++ function to track many solution path,
+ *   encapsulated as a C function for to be called from Ada.
+ *   Notice the lack of an underscore after the _ade in the function names.
+ *   Values for all 14 path parameters have to be provided.
+ *
+ * ON ENTRY :
+ *   verbose              if > 0, then additional output is written to screen;
+ *   regamma              real part of the gamma constant;
+ *   imgamma              imaginary part of the gamma constant;
+ *   max_step             maximum number of steps along a path;
+ *   n_predictor          number of points used in the predictor;
+ *   step_increase        increase factor of the predictor;
+ *   step_decrease        decrease factor of the precdictor;
+ *   max_delta_t          maximum step size along a path;
+ *   max_delta_t_end      maximum step size at the end of a path;
+ *   min_delta_t          minimum step size;
+ *   err_max_res          tolerance on the residual;
+ *   err_max_delta_x      tolerance on the corrector update;
+ *   err_max_first_delta_x is the tolerance on the first correction update;
+ *   max_it               maximum number of iterations of the corrector;
+ *   err_min_round_off    tolerance on the corrector;
+ *   max_it_refine        number of steps in the Newton root refiner;
+ *   err_min_round_off_refine is the tolerance for the final refinement. */
 
 #endif

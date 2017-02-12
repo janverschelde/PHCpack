@@ -751,6 +751,90 @@ extern "C" int quaddobl_adenewton ( int verbose )
    return quaddobl_ade_newton(verbose);
 }
 
+extern "C" int standard_adenewton_with_pars
+ ( int verbose, int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(16);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return standard_ade_newton_with_pars(verbose,pars);
+}
+
+extern "C" int dobldobl_adenewton_with_pars
+ ( int verbose, int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(32);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return standard_ade_newton_with_pars(verbose,pars);
+}
+
+extern "C" int quaddobl_adenewton_with_pars
+ ( int verbose, int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(64);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return standard_ade_newton_with_pars(verbose,pars);
+}
+
 int standard_ade_onepath_with_pars
  ( int verbose, double regamma, double imgamma, Parameter pars )
 {
@@ -916,6 +1000,93 @@ extern "C" int quaddobl_adeonepath
    return quaddobl_ade_onepath(verbose,regamma,imgamma);
 }
 
+extern "C" int standard_adeonepath_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(16);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return standard_ade_onepath_with_pars(verbose,regamma,imgamma,pars);
+}
+
+extern "C" int dobldobl_adeonepath_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(32);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return dobldobl_ade_onepath_with_pars(verbose,regamma,imgamma,pars);
+}
+
+extern "C" int quaddobl_adeonepath_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(64);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return quaddobl_ade_onepath_with_pars(verbose,regamma,imgamma,pars);
+}
+
 int standard_ade_manypaths_with_pars
  ( int verbose, double regamma, double imgamma, Parameter pars )
 {
@@ -1079,6 +1250,93 @@ extern "C" int quaddobl_ademanypaths
  ( int verbose, double regamma, double imgamma )
 {
    return quaddobl_ade_manypaths(verbose,regamma,imgamma);
+}
+
+extern "C" int standard_ademanypaths_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(16);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return standard_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
+}
+
+extern "C" int dobldobl_ademanypaths_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(32);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return standard_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
+}
+
+extern "C" int quaddobl_ademanypaths_with_pars
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(64);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return standard_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
 }
 
 int standard_newton_with_pars

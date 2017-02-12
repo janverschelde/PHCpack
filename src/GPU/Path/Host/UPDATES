@@ -1,3 +1,6 @@
+Sun 12 Feb 2017 : added functions to lib2path.h and lib2path.cpp that allow
+  to pass all 14 path parameters through to the trackers with AD.
+
 Sat 11 Feb 2017 : added parameters to the parameter list of path_track
   in path_track.h and path_track.tpp, so test_path can do path.tune().
   Added functions to lib2path.h and lib2path.cpp which take in tuned
