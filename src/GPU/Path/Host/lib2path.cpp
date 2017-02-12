@@ -804,7 +804,7 @@ extern "C" int dobldobl_adenewton_with_pars
    pars.max_it_refine = max_it_refine;
    pars.err_min_round_off_refine = err_min_round_off_refine;
 
-   return standard_ade_newton_with_pars(verbose,pars);
+   return dobldobl_ade_newton_with_pars(verbose,pars);
 }
 
 extern "C" int quaddobl_adenewton_with_pars
@@ -832,7 +832,7 @@ extern "C" int quaddobl_adenewton_with_pars
    pars.max_it_refine = max_it_refine;
    pars.err_min_round_off_refine = err_min_round_off_refine;
 
-   return standard_ade_newton_with_pars(verbose,pars);
+   return quaddobl_ade_newton_with_pars(verbose,pars);
 }
 
 int standard_ade_onepath_with_pars
@@ -1307,7 +1307,7 @@ extern "C" int dobldobl_ademanypaths_with_pars
    pars.max_it_refine = max_it_refine;
    pars.err_min_round_off_refine = err_min_round_off_refine;
 
-   return standard_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
+   return dobldobl_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
 }
 
 extern "C" int quaddobl_ademanypaths_with_pars
@@ -1336,7 +1336,7 @@ extern "C" int quaddobl_ademanypaths_with_pars
    pars.max_it_refine = max_it_refine;
    pars.err_min_round_off_refine = err_min_round_off_refine;
 
-   return standard_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
+   return quaddobl_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
 }
 
 int standard_newton_with_pars

@@ -1,5 +1,6 @@
 Sun 12 Feb 2017 : added functions to lib2path.h and lib2path.cpp that allow
   to pass all 14 path parameters through to the trackers with AD.
+  Fixed bug in the calls in lib2path.cpp for double double and quad doubles.
 
 Sat 11 Feb 2017 : added parameters to the parameter list of path_track
   in path_track.h and path_track.tpp, so test_path can do path.tune().
