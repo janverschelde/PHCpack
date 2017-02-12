@@ -2470,6 +2470,10 @@ ts_ademanypaths: lib2path.o
                  lib2path.o $(QD_LIB)/libqd.a \
               -o $(BIN)/ts_ademanypaths -lm --LINK=$(gpp)
 
+ts_pathpars:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pathpars.adb \
+              -o $(BIN)/ts_pathpars
+
 # Test programs for the Tasking :
 
 ts_mtmatvec:

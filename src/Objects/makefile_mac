@@ -1969,6 +1969,10 @@ ts_ademanypaths: lib2path.o
                  /usr/lib/libstdc++.dylib \
               -o $(BIN)/ts_ademanypaths -lm --LINK=g++
 
+ts_pathpars:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pathpars.adb \
+                 -o $(BIN)/ts_pathpars
+
 # Test programs for the Tasking :
 
 ts_mtmatvec:
