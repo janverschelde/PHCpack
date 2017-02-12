@@ -1,5 +1,7 @@
 Sun 12 Feb 2017 : extended algorithmic_diffeval_trackers.adb with the calls
   to the C code with the full list of tuned parameters.
+  Added root refiners with condition tables at the end of the manytrack
+  in algorithmic_diffeval_trackers.
 
 Sat 11 Feb 2017 : new package path_parameters to define a tune the
   parameters for the path trackers in the path library, tested by ts_pathpars.

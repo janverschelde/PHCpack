@@ -1,4 +1,3 @@
-with text_io;                            use text_io;
 with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
@@ -19,15 +18,16 @@ with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
-with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_System_and_Solutions_io;
-with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with DoblDobl_System_and_Solutions_io;
-with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with QuadDobl_System_and_Solutions_io;
+with Root_Refining_Parameters;
+with Standard_Root_Refiners;
+with DoblDobl_Root_Refiners;
+with QuadDobl_Root_Refiners;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_PolySys_Container;
@@ -775,6 +775,114 @@ package body Algorithmic_DiffEval_Trackers is
     print_times(outfile,timer,"Tracking one path in quad double precision");
   end QuadDobl_Track_one_Path;
 
+  procedure Standard_Refine_Roots
+              ( file : in file_type;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    timer : Timing_Widget;
+    p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    epsxa,epsfa,tolsing : double_float;
+    numit : natural32 := 0;
+    maxit : natural32;
+    deflate,wout : boolean := false;
+
+    use Standard_Complex_Poly_Systems;
+    use Root_Refining_Parameters;
+
+  begin
+    if not Standard_Complex_Solutions.Is_Null(sols) then
+      PHCpack_Operations.Retrieve_Target_System(p);
+      if p /= null then
+        new_line(file);
+        tstart(timer);
+        Standard_Default_Root_Refining_Parameters
+          (epsxa,epsfa,tolsing,maxit,deflate,wout);
+        new_line(file);
+        put_line(file,"ROOT REFINEMENT PARAMETERS :");
+        Standard_Put_Root_Refining_Parameters
+          (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
+        tstart(timer);
+        Standard_Root_Refiners.Reporting_Root_Refiner
+          (file,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        tstop(timer);
+        new_line(file);
+        print_times(file,timer,"Root refining in double precision");
+      end if;
+    end if;
+  end Standard_Refine_Roots;
+
+  procedure DoblDobl_Refine_Roots
+              ( file : in file_type;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    timer : Timing_Widget;
+    p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    epsxa,epsfa,tolsing : double_float;
+    numit : natural32 := 0;
+    maxit : natural32;
+    deflate,wout : boolean := false;
+
+    use DoblDobl_Complex_Poly_Systems;
+    use Root_Refining_Parameters;
+
+  begin
+    if not DoblDobl_Complex_Solutions.Is_Null(sols) then
+      PHCpack_Operations.Retrieve_Target_System(p);
+      if p /= null then
+        new_line(file);
+        tstart(timer);
+        DoblDobl_Default_Root_Refining_Parameters
+          (epsxa,epsfa,tolsing,maxit,deflate,wout);
+        new_line(file);
+        put_line(file,"ROOT REFINEMENT PARAMETERS :");
+        Standard_Put_Root_Refining_Parameters
+          (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
+        tstart(timer);
+        DoblDobl_Root_Refiners.Reporting_Root_Refiner
+          (file,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        tstop(timer);
+        new_line(file);
+        print_times(file,timer,"Root refining in double double precision");
+      end if;
+    end if;
+  end DoblDobl_Refine_Roots;
+
+  procedure QuadDobl_Refine_Roots
+              ( file : in file_type;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    timer : Timing_Widget;
+    p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    epsxa,epsfa,tolsing : double_float;
+    numit : natural32 := 0;
+    maxit : natural32;
+    deflate,wout : boolean := false;
+
+    use QuadDobl_Complex_Poly_Systems;
+    use Root_Refining_Parameters;
+
+  begin
+    if not QuadDobl_Complex_Solutions.Is_Null(sols) then
+      PHCpack_Operations.Retrieve_Target_System(p);
+      if p /= null then
+        new_line(file);
+        tstart(timer);
+        QuadDobl_Default_Root_Refining_Parameters
+          (epsxa,epsfa,tolsing,maxit,deflate,wout);
+        new_line(file);
+        put_line(file,"ROOT REFINEMENT PARAMETERS :");
+        Standard_Put_Root_Refining_Parameters
+          (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
+        tstart(timer);
+        QuadDobl_Root_Refiners.Reporting_Root_Refiner
+          (file,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        tstop(timer);
+        new_line(file);
+        print_times(file,timer,"Root refining in quad double precision");
+      end if;
+    end if;
+  end QuadDobl_Refine_Roots;
+
   procedure Standard_Track_many_Paths is
 
     use Standard_Complex_Poly_Systems;
@@ -835,6 +943,7 @@ package body Algorithmic_DiffEval_Trackers is
         natural32(Head_Of(newtsols).n),newtsols);
     new_line(outfile);
     print_times(outfile,timer,"tracking many paths in double precision");
+    Standard_Refine_Roots(outfile,newtsols);
     close(outfile);
   end Standard_Track_many_Paths;
 
@@ -898,6 +1007,7 @@ package body Algorithmic_DiffEval_Trackers is
         natural32(Head_Of(newtsols).n),newtsols);
     new_line(outfile);
     print_times(outfile,timer,"tracking many paths in double double precision");
+    DoblDobl_Refine_Roots(outfile,newtsols);
     close(outfile);
   end DoblDobl_Track_many_Paths;
 
@@ -961,6 +1071,7 @@ package body Algorithmic_DiffEval_Trackers is
         natural32(Head_Of(newtsols).n),newtsols);
     new_line(outfile);
     print_times(outfile,timer,"tracking many paths in quad double precision");
+    QuadDobl_Refine_Roots(outfile,newtsols);
     close(outfile);
   end QuadDobl_Track_many_Paths;
 

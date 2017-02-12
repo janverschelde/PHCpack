@@ -1,5 +1,9 @@
+with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Path_Parameters;                    use Path_Parameters;
 
 package Algorithmic_DiffEval_Trackers is
@@ -110,6 +114,21 @@ package Algorithmic_DiffEval_Trackers is
   --   in standard double, double double, or quad double precision.
   --   Even if the user would give a whole list of start solutions,
   --   only the path starting at the first solution is tracked.
+
+  procedure Standard_Refine_Roots
+              ( file : in file_type;
+                sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure DoblDobl_Refine_Roots
+              ( file : in file_type;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure QuadDobl_Refine_Roots
+              ( file : in file_type;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Calls the root refiners and the computation of the condition tables
+  --   on the list of solutions for the target system stored in the
+  --   package PHCpack_Operations.
 
   procedure Standard_Track_many_Paths;
   procedure DoblDobl_Track_many_Paths;
