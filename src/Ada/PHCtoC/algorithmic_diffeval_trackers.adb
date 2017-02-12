@@ -79,11 +79,20 @@ package body Algorithmic_DiffEval_Trackers is
     err_min_round_off_refine : constant double_float
       := pars.err_min_round_off_refine;
 
-    function newton ( v : integer32 ) return integer32;
-    pragma import(C, newton, "standard_adenewton");
+    function newton ( v,maxstep,npred : integer32;
+                      ic,dc,mxdt,mdtnd,mndt,mxres,mxdltx,mx1st : double_float;
+                      mxit : integer32; minrnd : double_float;
+                      mxitref : integer32; minrndref : double_float )
+                    return integer32;
+    pragma import(C, newton, "standard_adenewton_with_pars");
 
   begin
-    return_of_call := newton(verbose);
+    return_of_call := newton(verbose,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,
+      err_max_res,err_max_delta_x,err_max_first_delta_x,
+      max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
   end Standard_ADE_Newton;
 
   procedure DoblDobl_ADE_Newton
@@ -108,11 +117,20 @@ package body Algorithmic_DiffEval_Trackers is
     err_min_round_off_refine : constant double_float
       := pars.err_min_round_off_refine;
 
-    function newton ( v : integer32 ) return integer32;
-    pragma import(C, newton, "dobldobl_adenewton");
+    function newton ( v,maxstep,npred : integer32;
+                      ic,dc,mxdt,mdtnd,mndt,mxres,mxdltx,mx1st : double_float;
+                      mxit : integer32; minrnd : double_float;
+                      mxitref : integer32; minrndref : double_float )
+                    return integer32;
+    pragma import(C, newton, "dobldobl_adenewton_with_pars");
 
   begin
-    return_of_call := newton(verbose);
+    return_of_call := newton(verbose,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,
+      err_max_res,err_max_delta_x,err_max_first_delta_x,
+      max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
   end DoblDobl_ADE_Newton;
 
   procedure QuadDobl_ADE_Newton
@@ -137,11 +155,20 @@ package body Algorithmic_DiffEval_Trackers is
     err_min_round_off_refine : constant double_float
       := pars.err_min_round_off_refine;
 
-    function newton ( v : integer32 ) return integer32;
-    pragma import(C, newton, "quaddobl_adenewton");
+    function newton ( v,maxstep,npred : integer32;
+                      ic,dc,mxdt,mdtnd,mndt,mxres,mxdltx,mx1st : double_float;
+                      mxit : integer32; minrnd : double_float;
+                      mxitref : integer32; minrndref : double_float )
+                    return integer32;
+    pragma import(C, newton, "quaddobl_adenewton_with_pars");
 
   begin
-    return_of_call := newton(verbose);
+    return_of_call := newton(verbose,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,
+      err_max_res,err_max_delta_x,err_max_first_delta_x,
+      max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
   end QuadDobl_ADE_Newton;
 
   procedure Standard_ADE_Track_One
@@ -172,11 +199,22 @@ package body Algorithmic_DiffEval_Trackers is
     err_min_round_off_refine : constant double_float
       := pars.err_min_round_off_refine;
 
-    function one_track ( v : integer32; r,i : double_float ) return integer32;
-    pragma import(C, one_track, "standard_adeonepath");
+    function one_track
+               ( v : integer32; r,i : double_float;
+                 maxstep,npred : integer32;
+                 ic,dc,mxdt,mdtnd,mndt,mxres,mxdltx,mx1st : double_float;
+                 mxit : integer32; minrnd : double_float;
+                 mxitref : integer32; minrndref : double_float )
+               return integer32;
+    pragma import(C, one_track, "standard_adeonepath_with_pars");
 
   begin
-    return_of_call := one_track(verbose,regam,imgam);
+    return_of_call := one_track(verbose,regam,imgam,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,
+      err_max_res,err_max_delta_x,err_max_first_delta_x,
+      max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
   end Standard_ADE_Track_One;
 
   procedure DoblDobl_ADE_Track_One
@@ -207,11 +245,22 @@ package body Algorithmic_DiffEval_Trackers is
     err_min_round_off_refine : constant double_float
       := pars.err_min_round_off_refine;
 
-    function one_track ( v : integer32; r,i : double_float ) return integer32;
-    pragma import(C, one_track, "dobldobl_adeonepath");
+    function one_track
+               ( v : integer32; r,i : double_float;
+                 maxstep,npred : integer32;
+                 ic,dc,mxdt,mdtnd,mndt,mxres,mxdltx,mx1st : double_float;
+                 mxit : integer32; minrnd : double_float;
+                 mxitref : integer32; minrndref : double_float )
+               return integer32;
+    pragma import(C, one_track, "dobldobl_adeonepath_with_pars");
 
   begin
-    return_of_call := one_track(verbose,regam,imgam);
+    return_of_call := one_track(verbose,regam,imgam,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,
+      err_max_res,err_max_delta_x,err_max_first_delta_x,
+      max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
   end DoblDobl_ADE_Track_One;
 
   procedure QuadDobl_ADE_Track_One
@@ -242,11 +291,22 @@ package body Algorithmic_DiffEval_Trackers is
     err_min_round_off_refine : constant double_float
       := pars.err_min_round_off_refine;
 
-    function one_track ( v : integer32; r,i : double_float ) return integer32;
-    pragma import(C, one_track, "quaddobl_adeonepath");
+    function one_track
+               ( v : integer32; r,i : double_float;
+                 maxstep,npred : integer32;
+                 ic,dc,mxdt,mdtnd,mndt,mxres,mxdltx,mx1st : double_float;
+                 mxit : integer32; minrnd : double_float;
+                 mxitref : integer32; minrndref : double_float )
+               return integer32;
+    pragma import(C, one_track, "quaddobl_adeonepath_with_pars");
 
   begin
-    return_of_call := one_track(verbose,regam,imgam);
+    return_of_call := one_track(verbose,regam,imgam,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,
+      err_max_res,err_max_delta_x,err_max_first_delta_x,
+      max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
   end QuadDobl_ADE_Track_One;
 
   procedure Standard_ADE_Track_Many
@@ -277,11 +337,22 @@ package body Algorithmic_DiffEval_Trackers is
     err_min_round_off_refine : constant double_float
       := pars.err_min_round_off_refine;
 
-    function many_track ( v : integer32; r,i : double_float ) return integer32;
-    pragma import(C, many_track, "standard_ademanypaths");
+    function many_track
+               ( v : integer32; r,i : double_float;
+                 maxstep,npred : integer32;
+                 ic,dc,mxdt,mdtnd,mndt,mxres,mxdltx,mx1st : double_float;
+                 mxit : integer32; minrnd : double_float;
+                 mxitref : integer32; minrndref : double_float )
+               return integer32;
+    pragma import(C, many_track, "standard_ademanypaths_with_pars");
 
   begin
-    return_of_call := many_track(verbose,regam,imgam);
+    return_of_call := many_track(verbose,regam,imgam,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,
+      err_max_res,err_max_delta_x,err_max_first_delta_x,
+      max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
   end Standard_ADE_Track_Many;
 
   procedure DoblDobl_ADE_Track_Many
@@ -312,11 +383,22 @@ package body Algorithmic_DiffEval_Trackers is
     err_min_round_off_refine : constant double_float
       := pars.err_min_round_off_refine;
 
-    function many_track ( v : integer32; r,i : double_float ) return integer32;
-    pragma import(C, many_track, "dobldobl_ademanypaths");
+    function many_track
+               ( v : integer32; r,i : double_float;
+                 maxstep,npred : integer32;
+                 ic,dc,mxdt,mdtnd,mndt,mxres,mxdltx,mx1st : double_float;
+                 mxit : integer32; minrnd : double_float;
+                 mxitref : integer32; minrndref : double_float )
+               return integer32;
+    pragma import(C, many_track, "dobldobl_ademanypaths_with_pars");
 
   begin
-    return_of_call := many_track(verbose,regam,imgam);
+    return_of_call := many_track(verbose,regam,imgam,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,
+      err_max_res,err_max_delta_x,err_max_first_delta_x,
+      max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
   end DoblDobl_ADE_Track_Many;
 
   procedure QuadDobl_ADE_Track_Many
@@ -347,11 +429,22 @@ package body Algorithmic_DiffEval_Trackers is
     err_min_round_off_refine : constant double_float
       := pars.err_min_round_off_refine;
 
-    function many_track ( v : integer32; r,i : double_float ) return integer32;
-    pragma import(C, many_track, "quaddobl_ademanypaths");
+    function many_track
+               ( v : integer32; r,i : double_float;
+                 maxstep,npred : integer32;
+                 ic,dc,mxdt,mdtnd,mndt,mxres,mxdltx,mx1st : double_float;
+                 mxit : integer32; minrnd : double_float;
+                 mxitref : integer32; minrndref : double_float )
+               return integer32;
+    pragma import(C, many_track, "quaddobl_ademanypaths_with_pars");
 
   begin
-    return_of_call := many_track(verbose,regam,imgam);
+    return_of_call := many_track(verbose,regam,imgam,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,
+      err_max_res,err_max_delta_x,err_max_first_delta_x,
+      max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
   end QuadDobl_ADE_Track_Many;
 
 -- INTERACTIVE DRIVERS :
