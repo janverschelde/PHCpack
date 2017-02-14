@@ -1,3 +1,5 @@
+Mon 13 Feb 2017 : started reformatting in mgs_small.cu.
+
 Mon 2 Jan 2017 : formatted code in eval_base.cu and eval_coef.cu,
   als reformatted eval_sum.cu, eval_sum_seq.cu, and eval_sum_tree.cu.
   Started reformatting of the mgs_ code, starting with mgs.cu.
