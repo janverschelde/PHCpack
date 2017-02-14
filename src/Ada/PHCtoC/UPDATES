@@ -1,3 +1,6 @@
+Tue 14 Feb 2017 : to algorithmic_diffeval_trackers.adb, added statement
+  that no more input is expected, just before the path tracking.
+
 Sun 12 Feb 2017 : extended algorithmic_diffeval_trackers.adb with the calls
   to the C code with the full list of tuned parameters.
   Added root refiners with condition tables at the end of the manytrack

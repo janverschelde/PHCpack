@@ -925,6 +925,9 @@ package body Algorithmic_DiffEval_Trackers is
     put_line(outfile,"The values of the path parameters :");
     Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
+    new_line;
+    put_line("No more input expected.  See output file for results.");
+    new_line;
     tstart(timer);
     Standard_ADE_Track_Many(verbose,gamma,pars);
     tstop(timer);
@@ -989,6 +992,9 @@ package body Algorithmic_DiffEval_Trackers is
     put_line(outfile,"The values of the path parameters :");
     Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
+    new_line;
+    put_line("No more input expected.  See output file for results.");
+    new_line;
     tstart(timer);
     DoblDobl_ADE_Track_Many(verbose,gamma,pars);
     tstop(timer);
@@ -1053,6 +1059,9 @@ package body Algorithmic_DiffEval_Trackers is
     put_line(outfile,"The values of the path parameters :");
     Path_Parameters.Write(outfile,pars);
     verbose := Prompt_for_Verbose;
+    new_line;
+    put_line("No more input expected.  See output file for results.");
+    new_line;
     tstart(timer);
     QuadDobl_ADE_Track_Many(verbose,gamma,pars);
     tstop(timer);
