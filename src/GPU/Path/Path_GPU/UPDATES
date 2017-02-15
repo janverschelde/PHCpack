@@ -1,5 +1,5 @@
 Tue 14 Feb 2017 : more reformatting of mgs_small.cu and started the
-  reformatting in newton.cu...
+  reformatting in newton.cu...  Reformatted mgs_large_norm.cu.
 
 Mon 13 Feb 2017 : started reformatting in mgs_small.cu.
 
