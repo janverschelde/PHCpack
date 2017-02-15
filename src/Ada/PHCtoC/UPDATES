@@ -1,5 +1,7 @@
 Tue 14 Feb 2017 : to algorithmic_diffeval_trackers.adb, added statement
   that no more input is expected, just before the path tracking.
+  In path_parameters.ads, tightened the default value for the tolerance
+  on the residual, from 1.0e-2 to 1.0e-5.  Increased max number of steps.
 
 Sun 12 Feb 2017 : extended algorithmic_diffeval_trackers.adb with the calls
   to the C code with the full list of tuned parameters.

@@ -18,13 +18,13 @@
 #define MAX_DELTA_T           1E-1
 #define MAX_DELTA_T_END       1E-2
 #define MIN_DELTA_T           1E-7
-#define ERR_MAX_RES           1E-2
+#define ERR_MAX_RES           1E-6
 #define ERR_MAX_DELTA_X       1E-1
 #define ERR_MAX_FIRST_DELTA_X 1E-2
 
-#define D_MAX_STEP            400
-#define DD_MAX_STEP           1000
-#define QD_MAX_STEP           2000
+#define D_MAX_STEP            1000
+#define DD_MAX_STEP           2000
+#define QD_MAX_STEP           3000
 
 #define D_MAX_IT              3
 #define DD_MAX_IT             4

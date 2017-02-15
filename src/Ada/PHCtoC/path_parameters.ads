@@ -17,13 +17,13 @@ package Path_Parameters is
   MAX_DELTA_T : double_float := 1.0E-1;
   MAX_DELTA_T_END : double_float := 1.0E-2;
   MIN_DELTA_T : double_float := 1.0E-7;
-  ERR_MAX_RES : double_float := 1.0E-2;
+  ERR_MAX_RES : double_float := 1.0E-5;
   ERR_MAX_DELTA_X : double_float := 1.0E-1;
   ERR_MAX_FIRST_DELTA_X : double_float := 1.0E-2;
 
-  D_MAX_STEP : integer32 := 400;
-  DD_MAX_STEP : integer32 := 1000;
-  QD_MAX_STEP : integer32 := 2000;
+  D_MAX_STEP  : integer32 := 1000;
+  DD_MAX_STEP : integer32 := 2000;
+  QD_MAX_STEP : integer32 := 3000;
 
   D_MAX_IT : integer32 := 3;
   DD_MAX_IT : integer32 := 4;
