@@ -1,3 +1,5 @@
+Wed 15 Feb 2017 : finished reformatting in path_gpu.cu.
+
 Tue 14 Feb 2017 : more reformatting of mgs_small.cu and started the
   reformatting in newton.cu...  Reformatted mgs_large_norm.cu.
 

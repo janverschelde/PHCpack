@@ -14,136 +14,154 @@
 
 bool path_single
  ( GPUWorkspace& workspace, GPUInst& inst, Parameter path_parameter,
-   CT cpu_t, int n_path, int inverse = 0, int verbose = 0)
+   CT cpu_t, int n_path, int inverse = 0, int verbose = 0 )
 {
-	bool debug = false;
-	//debug = true;
+   bool debug = false; // debug = true;
 
-//	bool Record = false;
-//	//Record = true;
-//
-//	if(Record){
-//		//workspace.path_record.init_record(path_parameter.max_step);
-//	}
+   /* bool Record = false; // Record = true;
 
-	int n_point = 1;
-	int n_step = 0;
+     if(Record)
+     {
+        workspace.path_record.init_record(path_parameter.max_step);
+     }
+    */
 
-	// Parameters
-	CT delta_t = CT(path_parameter.max_delta_t,0);
+   int n_point = 1;
+   int n_step = 0;
 
-	CT* tmp_t = (CT *)malloc(sizeof(CT));
-	CT* tmp_t_last = (CT *)malloc(sizeof(CT));
-	*tmp_t_last = cpu_t;
+   // Parameters
+   CT delta_t = CT(path_parameter.max_delta_t,0);
 
-	int n_success = 0;
+   CT* tmp_t = (CT *)malloc(sizeof(CT));
+   CT* tmp_t_last = (CT *)malloc(sizeof(CT));
+   *tmp_t_last = cpu_t;
 
-	while(tmp_t_last->real < T1(1)) {
-		if(debug){
-			std::cout << "n_point = " << n_point << ", n_step = " << n_step << std::endl;
-		}
+   int n_success = 0;
 
-		if(delta_t.real + tmp_t_last->real < 1) {
-			*tmp_t = *tmp_t_last + delta_t;
-		}
-		else {
-			*tmp_t = CT(1,0);
-		}
+   while(tmp_t_last->real < T1(1)) 
+   {
+      if(debug)
+      {
+         std::cout << "n_point = " << n_point << ", n_step = "
+                   << n_step << std::endl;
+      }
+      if(delta_t.real + tmp_t_last->real < 1) 
+      {
+         *tmp_t = *tmp_t_last + delta_t;
+      }
+      else
+      {
+         *tmp_t = CT(1,0);
+      }
+      if(debug)
+      {
+         std::cout << "delta_t = " << delta_t;
+         std::cout << "tmp_t   = " << *tmp_t;
+      }
+      bool end_range = false;
 
-		if(debug){
-			std::cout << "delta_t = " << delta_t;
-			std::cout << "tmp_t   = " << *tmp_t;
-		}
+      if(tmp_t->real>0.9)
+      {
+         end_range = true;
+      }
+      if(inverse == 0)
+      {
+         workspace.update_t_value(*tmp_t);
+      }
+      else
+      {
+         workspace.update_t_value_inverse(*tmp_t);
+      }
+      int n_predictor = min(workspace.n_predictor, n_point);
 
-		bool end_range = false;
-		if(tmp_t->real>0.9){
-			end_range = true;
-		}
+      if(debug)
+      {
+         std::cout << "n_predictor   = " << n_predictor << std::endl;
+      }
 
-		if(inverse == 0){
-			workspace.update_t_value(*tmp_t);
-		}
-		else{
-			workspace.update_t_value_inverse(*tmp_t);
-		}
+      // int BS_pred = 32;
+      // int nBS_pred = (inst.dim-1)/BS_pred+1;
+      // std::cout << "workspace.x_t_idx = " << workspace.x_t_idx << std::endl;
 
-		int n_predictor = min(workspace.n_predictor, n_point);
+      predict_newton_kernel<<<inst.predict_grid, inst.predict_BS>>>
+         (workspace.x_array, workspace.t_array, n_predictor, inst.dim,
+          workspace.x_t_idx_mult, workspace.workspace_size);
 
-		if(debug){
-			std::cout << "n_predictor   = " << n_predictor << std::endl;
-		}
+      if(debug)
+      {
+         std::cout << "Predict X:" << std::endl;
+         workspace.print_x();
 
-		//int BS_pred = 32;
-		//int nBS_pred = (inst.dim-1)/BS_pred+1;
-		//std::cout << "workspace.x_t_idx = " << workspace.x_t_idx << std::endl;
+         /*std::cout << "X Array:" << std::endl;
+	   workspace.print_x_array();*/
+      }
+      /*
+       if(Record)
+       {
+          hom.path_data_gpu.add_step_empty();
+          hom.path_data_gpu.update_step_t(delta_t, *tmp_t);
+       }
+       */
+      bool newton_success = newton_single
+         (workspace, inst, path_parameter, end_range);
 
-		predict_newton_kernel<<<inst.predict_grid, inst.predict_BS>>>(workspace.x_array, workspace.t_array,
-				n_predictor, inst.dim, workspace.x_t_idx_mult, workspace.workspace_size);
-
-		if(debug){
-			std::cout << "Predict X:" << std::endl;
-			workspace.print_x();
-
-			/*std::cout << "X Array:" << std::endl;
-			workspace.print_x_array();*/
-		}
-
-//    	if(Record){
-//        	//hom.path_data_gpu.add_step_empty();
-//    		//hom.path_data_gpu.update_step_t(delta_t, *tmp_t);
-//    	}
-
-		bool newton_success = newton_single(workspace, inst, path_parameter, end_range);
-
-		if(newton_success == 1) {
-			if(debug){
-				std::cout << "---------- success -----------"<< std::endl;
-			}
-			n_point++;
-			workspace.update_x_t_idx();
-			*tmp_t_last = *tmp_t;
-			n_success++;
-		}
-		else {
-			delta_t.real = delta_t.real*path_parameter.step_decrease;
-			if(debug){
-				std::cout << "Decrease delta_t = " << delta_t << std::endl;
-			}
-			//std::cout << "      tmp_t_last = " << *tmp_t_last << std::endl;
-			if(delta_t.real < path_parameter.min_delta_t) {
-				break;
-			}
-			n_success = 0;
-		}
-
-		if(n_success > 1) {
-			delta_t.real = delta_t.real*path_parameter.step_increase;;
-			if(delta_t.real > path_parameter.max_delta_t) {
-				delta_t.real = path_parameter.max_delta_t;
-			}
-			if(debug){
-				std::cout << "Increase delta_t = " << delta_t << std::endl;
-			}
-		}
-
-		T1 max_delta_t_real;
-		//std::cout << "tmp_t->real = " << tmp_t_last->real << std::endl;
-		if(tmp_t_last->real > 0.9){
-			max_delta_t_real = 1E-2;
-		}
-		else{
-			max_delta_t_real = path_parameter.max_delta_t;
-		}
-		if(delta_t.real > max_delta_t_real){
-			delta_t.real = max_delta_t_real;
-		}
-
-		n_step++;
-		if(n_step >= path_parameter.max_step) {
-			break;
-		}
-	}
-
+      if(newton_success == 1)
+      {
+         if(debug)
+         {
+            std::cout << "---------- success -----------"<< std::endl;
+	 }
+         n_point++;
+         workspace.update_x_t_idx();
+         *tmp_t_last = *tmp_t;
+         n_success++;
+      }
+      else
+      {
+         delta_t.real = delta_t.real*path_parameter.step_decrease;
+         if(debug)
+         {
+            std::cout << "Decrease delta_t = " << delta_t << std::endl;
+         }
+         // std::cout << "      tmp_t_last = " << *tmp_t_last << std::endl;
+         if(delta_t.real < path_parameter.min_delta_t)
+         {
+            break;
+         }
+         n_success = 0;
+      }
+      if(n_success > 1)
+      {
+         delta_t.real = delta_t.real*path_parameter.step_increase;;
+         if(delta_t.real > path_parameter.max_delta_t)
+         {
+            delta_t.real = path_parameter.max_delta_t;
+         }
+         if(debug)
+         {
+            std::cout << "Increase delta_t = " << delta_t << std::endl;
+         }
+      }
+      T1 max_delta_t_real;
+      // std::cout << "tmp_t->real = " << tmp_t_last->real << std::endl;
+      if(tmp_t_last->real > 0.9)
+      {
+         max_delta_t_real = 1E-2;
+      }
+      else
+      {
+         max_delta_t_real = path_parameter.max_delta_t;
+      }
+      if(delta_t.real > max_delta_t_real)
+      {
+         delta_t.real = max_delta_t_real;
+      }
+      n_step++;
+      if(n_step >= path_parameter.max_step) 
+      {
+         break;
+      }
+   }
    bool success = 0;
    if(verbose > 0)
    {
