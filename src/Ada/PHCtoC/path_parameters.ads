@@ -17,8 +17,8 @@ package Path_Parameters is
   MAX_DELTA_T : double_float := 1.0E-1;
   MAX_DELTA_T_END : double_float := 1.0E-2;
   MIN_DELTA_T : double_float := 1.0E-7;
-  ERR_MAX_RES : double_float := 1.0E-5;
-  ERR_MAX_DELTA_X : double_float := 1.0E-1;
+  ERR_MAX_RES : double_float := 1.0E-6;
+  ERR_MAX_DELTA_X : double_float := 1.0E-6;
   ERR_MAX_FIRST_DELTA_X : double_float := 1.0E-2;
 
   D_MAX_STEP  : integer32 := 1000;
@@ -32,9 +32,9 @@ package Path_Parameters is
   DD_ERR_MIN_ROUND_OFF : double_float := 1.0E-14;
   QD_ERR_MIN_ROUND_OFF : double_float := 1.0E-26;
 
-  D_MAX_IT_REFINE : integer32 := 5;
-  DD_MAX_IT_REFINE : integer32 := 6;
-  QD_MAX_IT_REFINE : integer32 := 7;
+  D_MAX_IT_REFINE : integer32 := 3;
+  DD_MAX_IT_REFINE : integer32 := 4;
+  QD_MAX_IT_REFINE : integer32 := 5;
   D_ERR_MIN_ROUND_OFF_REFINE : double_float := 1.0E-11;
   DD_ERR_MIN_ROUND_OFF_REFINE : double_float := 1.0E-22;
   QD_ERR_MIN_ROUND_OFF_REFINE : double_float := 1.0E-40;

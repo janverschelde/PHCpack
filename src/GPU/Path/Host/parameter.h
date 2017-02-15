@@ -19,7 +19,7 @@
 #define MAX_DELTA_T_END       1E-2
 #define MIN_DELTA_T           1E-7
 #define ERR_MAX_RES           1E-6
-#define ERR_MAX_DELTA_X       1E-1
+#define ERR_MAX_DELTA_X       1E-6
 #define ERR_MAX_FIRST_DELTA_X 1E-2
 
 #define D_MAX_STEP            1000
@@ -33,9 +33,9 @@
 #define DD_ERR_MIN_ROUND_OFF  1E-14
 #define QD_ERR_MIN_ROUND_OFF  1E-26
 
-#define D_MAX_IT_REFINE                  5
-#define DD_MAX_IT_REFINE                 6
-#define QD_MAX_IT_REFINE                 7
+#define D_MAX_IT_REFINE                  3
+#define DD_MAX_IT_REFINE                 4
+#define QD_MAX_IT_REFINE                 5
 #define D_ERR_MIN_ROUND_OFF_REFINE   1E-11
 #define DD_ERR_MIN_ROUND_OFF_REFINE  1E-22
 #define QD_ERR_MIN_ROUND_OFF_REFINE  1E-40

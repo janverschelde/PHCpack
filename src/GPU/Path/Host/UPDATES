@@ -1,3 +1,6 @@
+Wed 15 Feb 2017 : lowered the number of Newton steps at the end
+  and lowered the tolerance on the corrector update in parameter.h.
+
 Tue 14 Feb 2017 : updated parameter.h with a new default value for the
   tolerance on the residual.  Increased the default number of steps.
 

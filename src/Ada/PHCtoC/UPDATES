@@ -1,3 +1,7 @@
+Wed 15 Feb 2017 : in the default values in path_parameters.ads, lowered
+  the number of Newton steps at the end and lowered the default tolerance
+  on the corrector update.
+
 Tue 14 Feb 2017 : to algorithmic_diffeval_trackers.adb, added statement
   that no more input is expected, just before the path tracking.
   In path_parameters.ads, tightened the default value for the tolerance
