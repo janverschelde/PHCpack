@@ -1,3 +1,5 @@
+Thu 16 Feb 2017 : finished reformatting in path_gpu_data.h.
+
 Wed 15 Feb 2017 : finished reformatting in path_gpu.cu.
   Formatted path_gpu_data.cu and mgs_large_backsub.cu.
 

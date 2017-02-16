@@ -268,109 +268,110 @@ class GPUWorkspace
          cudaFree(int_arrays);
       }
 
-      void init_workspace_eq(int n_pos_total_eq, int n_path);
+      void init_workspace_eq ( int n_pos_total_eq, int n_path );
 
-      void init_matrix(int dim, int n_eq);
+      void init_matrix ( int dim, int n_eq );
 
-      void init_V_value(CT* V_cpu);
+      void init_V_value ( CT* V_cpu );
 
-	void init_x_t(int dim, int n_predictor);
+      void init_x_t ( int dim, int n_predictor );
 
-	void update_x_t_idx();
+      void update_x_t_idx();
 
-	void update_x_t_idx_all(int* x_t_idx_host);
+      void update_x_t_idx_all ( int* x_t_idx_host );
 
-	int* get_x_t_idx_all();
+      int* get_x_t_idx_all();
 
-	void update_t_value(CT cpu_t);
+      void update_t_value ( CT cpu_t );
 
-	void update_t_value_array(CT* cpu_t, int* x_t_idx_host);
+      void update_t_value_array ( CT* cpu_t, int* x_t_idx_host );
 
-	void update_t_value_mult(CT* cpu_t);
+      void update_t_value_mult ( CT* cpu_t );
 
-	void update_t_value_inverse(CT cpu_one_minor_t);
+      void update_t_value_inverse ( CT cpu_one_minor_t );
 
-	void update_x_value(CT* cpu_sol0);
+      void update_x_value ( CT* cpu_sol0);
 
-	void update_x_value_array(CT* cpu_sol0);
+      void update_x_value_array ( CT* cpu_sol0 );
 
-	void update_x_value_mult(CT* cpu_sol0);
+      void update_x_value_mult ( CT* cpu_sol0 );
 
-	void update_x_mult_horizontal(CT* cpu_sol0);
+      void update_x_mult_horizontal ( CT* cpu_sol0 );
 
-	void update_x_t_value(CT* cpu_sol0, CT cpu_t);
+      void update_x_t_value ( CT* cpu_sol0, CT cpu_t );
 
-	void update_x_t_value_array(CT* cpu_sol0, CT* cpu_t, int* x_t_idx_host);
+      void update_x_t_value_array
+              ( CT* cpu_sol0, CT* cpu_t, int* x_t_idx_host );
 
-	void update_x_t_value_mult(CT* cpu_sol0, CT* cpu_t);
+      void update_x_t_value_mult ( CT* cpu_sol0, CT* cpu_t );
 
-	void update_x_mult_vertical(CT* cpu_sol0, int* x_t_idx_host);
+      void update_x_mult_vertical ( CT* cpu_sol0, int* x_t_idx_host );
 
-	void update_t_value_mult2(CT* cpu_t, int* x_t_idx_host);
+      void update_t_value_mult2 ( CT* cpu_t, int* x_t_idx_host );
 
-	void update_x_t(CT* cpu_sol0, CT cpu_t);
+      void update_x_t ( CT* cpu_sol0, CT cpu_t );
 
-	CT* get_matrix();
+      CT* get_matrix();
 
-	CT* get_matrix(int sys_idx);
+      CT* get_matrix ( int sys_idx );
 
-	CT** get_matrix_mult();
+      CT** get_matrix_mult();
 
-	CT* get_workspace(int sys_idx);
+      CT* get_workspace ( int sys_idx );
 
-	CT* get_workspace();
+      CT* get_workspace();
 
-	CT** get_workspace_mult();
+      CT** get_workspace_mult();
 
-	CT* get_matrix_r(int sys_idx=0);
+      CT* get_matrix_r ( int sys_idx=0 );
 
-	void print_matrix_r();
+      void print_matrix_r();
 
-	CT* get_x();
+      CT* get_x();
 
-	CT** get_mult_x_horizontal();
+      CT** get_mult_x_horizontal();
 
-	CT* get_x_array();
+      CT* get_x_array();
 
-	CT* get_t_array();
+      CT* get_t_array();
 
-	CT** get_x_all();
+      CT** get_x_all();
 
-	CT** get_x_last_all();
+      CT** get_x_last_all();
 
-	void print_x();
+      void print_x();
 
-	void print_x_mult(int path_idx_one=-1);
+      void print_x_mult ( int path_idx_one=-1 );
 
-	void print_t_mult(int path_idx_one=-1);
+      void print_t_mult ( int path_idx_one=-1 );
 
-	void print_delta_t_mult(int path_idx_one=-1);
+      void print_delta_t_mult ( int path_idx_one=-1 );
 
-	void print_x_last_mult();
+      void print_x_last_mult();
 
-	void print_x_array();
+      void print_x_array();
 
-	void print_t_array();
+      void print_t_array();
 
-	CT* get_f_val();
+      CT* get_f_val();
 
-	void print_f_val();
+      void print_f_val();
 
-	CT* get_coef_mult();
+      CT* get_coef_mult();
 
-	CT* get_mon_mult();
+      CT* get_mon_mult();
 
-	CT* get_x_last();
+      CT* get_x_last();
 
-	CT* get_sol(int path_idx=0);
+      CT* get_sol ( int path_idx=0 );
 
-	CT* get_sol_array();
+      CT* get_sol_array();
 
-	CT** get_sol_mult();
+      CT** get_sol_mult();
 
-	T1 sol_norm();
+      T1 sol_norm();
 
-	void init_x_t_predict_test();
+      void init_x_t_predict_test();
 };
 
 class GPUInst
@@ -381,168 +382,173 @@ class GPUInst
       int n_path;
 
       // Sol Instruction
-	int dim;
-	int n_eq;
+      int dim;
+      int n_eq;
 
-	/**** workspace Instruction ***/
-	int n_workspace;
-	int n_constant;
+      /**** workspace Instruction ***/
+      int n_workspace;
+      int n_constant;
 
-	// Coef Instruction
-	int n_coef;
-	GT* coef;
+      // Coef Instruction
+      int n_coef;
+      GT* coef;
 
-	int coef_BS;
-	dim3 coef_grid;
+      int coef_BS;
+      dim3 coef_grid;
 
-	int dim_BS;
-	dim3 dim_grid;
+      int dim_BS;
+      dim3 dim_grid;
 
+      /**** Mon Instruction ****/
+      // for leveled kernels
+      int level;
+      int* n_mon_level;
+      // for single kernel
+      int n_mon;
+      int* mon_pos_start;
+      unsigned short* mon_pos;
 
-	/**** Mon Instruction ****/
-	// for leveled kernels
-	int level;
-	int* n_mon_level;
-	// for single kernel
-	int n_mon;
-	int* mon_pos_start;
-	unsigned short* mon_pos;
+      int n_mon_global;
 
-	int n_mon_global;
+      dim3* mon_level_grid;
+      int* n_mon_level_rest;
+      dim3* mon_level_grid_rest;
 
-	dim3* mon_level_grid;
-	int* n_mon_level_rest;
-	dim3* mon_level_grid_rest;
+      int mon_pos_size;
 
-	int mon_pos_size;
+      int mon_level0_BS;
+      int mon_level_BS;
 
-	int mon_level0_BS;
-	int mon_level_BS;
+      int mon_global_BS;
+      dim3 mon_global_grid;
 
-	int mon_global_BS;
-	dim3 mon_global_grid;
+      int n_mon_block;
+      dim3 mon_block_grid;
+      int BS_mon_block;
+      int NB_mon_block;
+      int* mon_pos_start_block;
+      unsigned short* mon_pos_block;
+      int n_mon_single;
+      unsigned short* mon_single_pos_block;
 
-	int n_mon_block;
-	dim3 mon_block_grid;
-	int BS_mon_block;
-	int NB_mon_block;
-	int* mon_pos_start_block;
-	unsigned short* mon_pos_block;
-	int n_mon_single;
-	unsigned short* mon_single_pos_block;
+      /**** Sum instruction ****/
+      int n_sum; // size of sum_start
+      int n_sum_levels;
+      int* n_sum_level;
+      dim3* sum_level_grid;
+      int* n_sum_level_rest;
+      dim3* sum_level_grid_rest;
 
+      int* sum_pos_start;
+      int* sum_pos;
 
-	/**** Sum instruction ****/
-	int n_sum; // size of sum_start
-	int n_sum_levels;
-	int* n_sum_level;
-	dim3* sum_level_grid;
-	int* n_sum_level_rest;
-	dim3* sum_level_grid_rest;
+      int* sum_pos_start_align;
+      int* sum_pos_align;
 
-	int* sum_pos_start;
-	int* sum_pos;
+      int sum_BS;
+      dim3 sum_grid;
 
-	int* sum_pos_start_align;
-	int* sum_pos_align;
+      int n_step_GPU;
+      int n_point_GPU;
+      int n_eval_GPU;
+      int n_mgs_GPU;
 
-	int sum_BS;
-	dim3 sum_grid;
+      int predict_BS;
+      dim3 predict_grid;
 
-	int n_step_GPU;
-	int n_point_GPU;
-	int n_eval_GPU;
-	int n_mgs_GPU;
+      int* eq_pos_start;
+      int n_mon_total_eq;
+      int* mon_pos_start_eq;
+      GT* coef_eq;
+      int n_pos_total_eq;
+      unsigned short* mon_pos_eq;
 
-	int predict_BS;
-	dim3 predict_grid;
+      CT alpha;
 
-	int* eq_pos_start;
-	int n_mon_total_eq;
-	int* mon_pos_start_eq;
-	GT* coef_eq;
-	int n_pos_total_eq;
-	unsigned short* mon_pos_eq;
+      int n_sum_zero;
+      int* sum_zeros;
 
-	CT alpha;
+      int base_table_size;
+      int* base_table_start;
+      int* max_deg_base;
+      unsigned short* mon_exp;
+      int n_mon_base;
+      int n_mon_base_start;
 
-	int n_sum_zero;
-	int* sum_zeros;
+      GPUInst ( const CPUInstHom& cpu_inst, int n_path )
+      {
+         PED_hom = cpu_inst.PED_hom;
+         dim = cpu_inst.dim;
+         n_eq = cpu_inst.n_eq;
+         this->n_path = n_path;
+         init_predict();
+         init_coef(cpu_inst.CPU_inst_hom_coef);
+         if(MON_EVAL_METHOD == 1 && n_path == 1)
+         {
+            init_mon(cpu_inst.CPU_inst_hom_block);
+            init_sum(cpu_inst.CPU_inst_hom_sum_block,
+                     cpu_inst.CPU_inst_hom_sum);
+         }
+         else
+         {
+            init_mon(cpu_inst.CPU_inst_hom_mon);
+            init_sum(cpu_inst.CPU_inst_hom_sum);
+         }
+         init_workspace(cpu_inst);
 
-	int base_table_size;
-	int* base_table_start;
-	int* max_deg_base;
-	unsigned short* mon_exp;
-	int n_mon_base;
-	int n_mon_base_start;
+         dim_BS = 32;
+         dim_grid = get_grid(dim,dim_BS,n_path);
+         n_step_GPU = 0;
+         n_point_GPU = 0;
+         n_eval_GPU = 0;
+         n_mgs_GPU = 0;
 
+         init_eq(cpu_inst.CPU_inst_hom_eq);
 
-	GPUInst(const CPUInstHom& cpu_inst, int n_path){
-		PED_hom = cpu_inst.PED_hom;
-		dim = cpu_inst.dim;
-		n_eq = cpu_inst.n_eq;
-		this->n_path = n_path;
-		init_predict();
-		init_coef(cpu_inst.CPU_inst_hom_coef);
-		if(MON_EVAL_METHOD == 1 && n_path == 1){
-			init_mon(cpu_inst.CPU_inst_hom_block);
-			init_sum(cpu_inst.CPU_inst_hom_sum_block, cpu_inst.CPU_inst_hom_sum);
-		}
-		else{
-			init_mon(cpu_inst.CPU_inst_hom_mon);
-			init_sum(cpu_inst.CPU_inst_hom_sum);
-		}
-		init_workspace(cpu_inst);
+         // Initialize the base part
+         if(cpu_inst.CPU_inst_hom_mon.max_deg_base != NULL)
+         {
+            init_base(cpu_inst.CPU_inst_hom_mon);
+	 }
+	 else
+         {
+            // No base
+            base_table_size = 0;
+            base_table_start = NULL;
+            max_deg_base = NULL;
+            mon_exp = NULL;
+            n_mon_base = 0;
+            n_mon_base_start = 0;
+         }
+      }
 
-		dim_BS = 32;
-	    dim_grid = get_grid(dim,dim_BS,n_path);
-	    n_step_GPU = 0;
-	    n_point_GPU = 0;
-	    n_eval_GPU = 0;
-	    n_mgs_GPU = 0;
+      ~GPUInst()
+      {
+          cudaFree(coef);
+          cudaFree(mon_pos_start);
+          cudaFree(mon_pos);
+          cudaFree(sum_pos_start);
+          cudaFree(sum_pos);
+      }
 
-	    init_eq(cpu_inst.CPU_inst_hom_eq);
+      void init_predict();
 
-	    // Initialize the base part
-	    if(cpu_inst.CPU_inst_hom_mon.max_deg_base != NULL){
-	    	init_base(cpu_inst.CPU_inst_hom_mon);
-	    }
-	    else{
-	    	// No base
-	    	base_table_size = 0;
-	    	base_table_start = NULL;
-	    	max_deg_base = NULL;
-	    	mon_exp = NULL;
-	    	n_mon_base = 0;
-	    	n_mon_base_start = 0;
-	    }
-	}
+      void init_coef ( const CPUInstHomCoef& cpu_inst_coef );
 
-	~GPUInst(){
-		cudaFree(coef);
-		cudaFree(mon_pos_start);
-		cudaFree(mon_pos);
-		cudaFree(sum_pos_start);
-		cudaFree(sum_pos);
-	}
+      void init_mon ( const CPUInstHomMon& cpu_inst_mon );
 
-	void init_predict();
+      void init_mon ( const CPUInstHomMonBlock& cpu_inst_mon_block );
 
-	void init_coef(const CPUInstHomCoef& cpu_inst_coef);
+      void init_base ( const CPUInstHomMon& cpu_inst_mon);
 
-	void init_mon(const CPUInstHomMon& cpu_inst_mon);
+      void init_sum ( const CPUInstHomSumBlock& cpu_inst_sum,
+                      const CPUInstHomSum& cpu_inst_sum_orig );
 
-	void init_mon(const CPUInstHomMonBlock& cpu_inst_mon_block);
+      void init_sum ( const CPUInstHomSum& cpu_inst_sum );
 
-	void init_base(const CPUInstHomMon& cpu_inst_mon);
+      void init_workspace ( const CPUInstHom& cpu_inst );
 
-	void init_sum(const CPUInstHomSumBlock& cpu_inst_sum, const CPUInstHomSum& cpu_inst_sum_orig);
-
-	void init_sum(const CPUInstHomSum& cpu_inst_sum);
-
-	void init_workspace(const CPUInstHom& cpu_inst);
-
-	void init_eq(const CPUInstHomEq& cpu_inst_mon_eq);
+      void init_eq ( const CPUInstHomEq& cpu_inst_mon_eq );
 };
 
 #endif /* GPU_DATA_H_ */
