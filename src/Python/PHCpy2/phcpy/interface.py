@@ -349,61 +349,130 @@ def load_multprec_laurent_system():
     return result
 
 def read_standard_system(filename):
-    """
-    Opens the filename for reading a polynomial system
+    r"""
+    Opens the *filename* for reading a polynomial system
     with coefficients in standard double precision.
     Returns the list of polynomials in the system
-    or the empty list if something went wrong.
+    or *None* if something went wrong.
     """
-    from phcpy.phcpy2c2 import py2c_clear_symbol_table
+    from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
     from phcpy.phcpy2c2 import py2c_read_standard_target_system_from_file
     from phcpy.phcpy2c2 import py2c_copy_standard_target_system_to_container
-    py2c_clear_symbol_table()
+    py2c_syscon_clear_symbol_table()
     lnf = len(filename)
     fail = py2c_read_standard_target_system_from_file(lnf,filename)
     if(fail != 0):
-        return []
+        return None
     else:
         py2c_copy_standard_target_system_to_container()
         return load_standard_system()
 
 def read_dobldobl_system(filename):
-    """
-    Opens the filename for reading a polynomial system
+    r"""
+    Opens the *filename* for reading a polynomial system
     with coefficients in double double precision.
     Returns the list of polynomials in the system
-    or the empty list if something went wrong.
+    or *None* if something went wrong.
     """
-    from phcpy.phcpy2c2 import py2c_clear_symbol_table
+    from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
     from phcpy.phcpy2c2 import py2c_read_dobldobl_target_system_from_file
     from phcpy.phcpy2c2 import py2c_copy_dobldobl_target_system_to_container
-    py2c_clear_symbol_table()
+    py2c_syscon_clear_symbol_table()
     lnf = len(filename)
     fail = py2c_read_dobldobl_target_system_from_file(lnf,filename)
     if(fail != 0):
-        return []
+        return None
     else:
         py2c_copy_dobldobl_target_system_to_container()
         return load_dobldobl_system()
 
 def read_quaddobl_system(filename):
-    """
-    Opens the filename for reading a polynomial system
+    r"""
+    Opens the *filename* for reading a polynomial system
     with coefficients in quad double precision.
     Returns the list of polynomials in the system
-    or the empty list if something went wrong.
+    or *None* if something went wrong.
     """
-    from phcpy.phcpy2c2 import py2c_clear_symbol_table
+    from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
     from phcpy.phcpy2c2 import py2c_read_quaddobl_target_system_from_file
     from phcpy.phcpy2c2 import py2c_copy_quaddobl_target_system_to_container
-    py2c_clear_symbol_table()
+    py2c_syscon_clear_symbol_table()
     lnf = len(filename)
     fail = py2c_read_quaddobl_target_system_from_file(lnf,filename)
     if(fail != 0):
-        return []
+        return None
     else:
         py2c_copy_quaddobl_target_system_to_container()
         return load_quaddobl_system()
+
+def read_standard_system_and_solutions(filename):
+    r"""
+    Opens the *filename* for reading a polynomial system
+    with coefficients in standard double precision,
+    and its corresponding list of solutions.
+    Returns *None* if the reading went wrong, or otherwise
+    returns a tuple with first the list of polynomials
+    and second the list of solutions.
+    """
+    from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
+    from phcpy.phcpy2c2 import py2c_read_standard_start_system_from_file
+    from phcpy.phcpy2c2 import py2c_copy_start_system_to_container
+    from phcpy.phcpy2c2 import py2c_copy_start_solutions_to_container
+    py2c_syscon_clear_symbol_table()
+    lnf = len(filename)
+    fail = py2c_read_standard_start_system_from_file(lnf,filename)
+    if(fail != 0):
+        return None
+    else:
+        py2c_copy_start_system_to_container()
+        py2c_copy_start_solutions_to_container()
+        return (load_standard_system(), load_standard_solutions())
+
+def read_dobldobl_system_and_solutions(filename):
+    r"""
+    Opens the *filename* for reading a polynomial system
+    with coefficients in double double precision,
+    and its corresponding list of solutions.
+    Returns *None* if the reading went wrong, or otherwise
+    returns a tuple with first the list of polynomials
+    and second the list of solutions.
+    """
+    from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
+    from phcpy.phcpy2c2 import py2c_read_dobldobl_start_system_from_file
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_start_system_to_container
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_start_solutions_to_container
+    py2c_syscon_clear_symbol_table()
+    lnf = len(filename)
+    fail = py2c_read_dobldobl_start_system_from_file(lnf,filename)
+    if(fail != 0):
+        return None
+    else:
+        py2c_copy_dobldobl_start_system_to_container()
+        py2c_copy_dobldobl_start_solutions_to_container()
+        return (load_dobldobl_system(), load_dobldobl_solutions())
+
+def read_quaddobl_system_and_solutions(filename):
+    r"""
+    Opens the *filename* for reading a polynomial system
+    with coefficients in quad double precision,
+    and its corresponding list of solutions.
+    Returns *None* if the reading went wrong, or otherwise
+    returns a tuple with first the list of polynomials
+    and second the list of solutions.
+    """
+    from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
+    from phcpy.phcpy2c2 import py2c_read_quaddobl_start_system_from_file
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_start_system_to_container
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_start_solutions_to_container
+    py2c_syscon_clear_symbol_table()
+    lnf = len(filename)
+    fail = py2c_read_quaddobl_start_system_from_file(lnf,filename)
+    if(fail != 0):
+        return None
+    else:
+        py2c_copy_quaddobl_start_system_to_container()
+        py2c_copy_quaddobl_start_solutions_to_container()
+        return (load_quaddobl_system(), load_quaddobl_solutions())
 
 def store_standard_solutions(nvar, sols):
     r"""

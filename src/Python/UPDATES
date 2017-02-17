@@ -1,3 +1,6 @@
+Fri 17 Feb 2017 : to interface.py in PHCpy2 and PHCpy3 added function to
+  read a system and a list of solutions from file.
+
 Thu 16 Feb 2017 : added functions to the interface module to read
   polynomial systems directly from file.
 
