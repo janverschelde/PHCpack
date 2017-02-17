@@ -1,3 +1,8 @@
+Thu 16 Feb 2017 : added functions to the interface module to read
+  polynomial systems directly from file.
+
+Tue 7 Feb 2017 : prepared files for version 0.6.4 of phcpy.
+
 Fri 3 Feb 2017 : added tests on the algorithmic differentiation path trackers
   in trackers.py, both in PHCpy2/phcpy and PHCpy3/phcpy.
 

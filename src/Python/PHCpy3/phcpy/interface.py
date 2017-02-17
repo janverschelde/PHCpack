@@ -348,6 +348,63 @@ def load_multprec_laurent_system():
         result.append(py2c_syscon_load_multprec_Laurential(ind))
     return result
 
+def read_standard_system(filename):
+    """
+    Opens the filename for reading a polynomial system
+    with coefficients in standard double precision.
+    Returns the list of polynomials in the system
+    or the empty list if something went wrong.
+    """
+    from phcpy.phcpy2c3 import py2c_syscon_clear_symbol_table
+    from phcpy.phcpy2c3 import py2c_read_standard_target_system_from_file
+    from phcpy.phcpy2c3 import py2c_copy_standard_target_system_to_container
+    py2c_syscon_clear_symbol_table()
+    lnf = len(filename)
+    fail = py2c_read_standard_target_system_from_file(lnf,filename)
+    if(fail != 0):
+        return []
+    else:
+        py2c_copy_standard_target_system_to_container()
+        return load_standard_system()
+
+def read_dobldobl_system(filename):
+    """
+    Opens the filename for reading a polynomial system
+    with coefficients in double double precision.
+    Returns the list of polynomials in the system
+    or the empty list if something went wrong.
+    """
+    from phcpy.phcpy2c3 import py2c_syscon_clear_symbol_table
+    from phcpy.phcpy2c3 import py2c_read_dobldobl_target_system_from_file
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_target_system_to_container
+    py2c_syscon_clear_symbol_table()
+    lnf = len(filename)
+    fail = py2c_read_dobldobl_target_system_from_file(lnf,filename)
+    if(fail != 0):
+        return []
+    else:
+        py2c_copy_dobldobl_target_system_to_container()
+        return load_dobldobl_system()
+
+def read_quaddobl_system(filename):
+    """
+    Opens the filename for reading a polynomial system
+    with coefficients in quad double precision.
+    Returns the list of polynomials in the system
+    or the empty list if something went wrong.
+    """
+    from phcpy.phcpy2c3 import py2c_syscon_clear_symbol_table
+    from phcpy.phcpy2c3 import py2c_read_quaddobl_target_system_from_file
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_target_system_to_container
+    py2c_syscon_clear_symbol_table()
+    lnf = len(filename)
+    fail = py2c_read_quaddobl_target_system_from_file(lnf,filename)
+    if(fail != 0):
+        return []
+    else:
+        py2c_copy_quaddobl_target_system_to_container()
+        return load_quaddobl_system()
+
 def store_standard_solutions(nvar, sols):
     r"""
     Stores the solutions in the list *sols*, represented as strings
