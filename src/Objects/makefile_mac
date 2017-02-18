@@ -81,7 +81,7 @@ CCLINKER    = $(CCC)
 
 # the main executable 
 
-phc: lib.a lib2path.o feedback.o get_clock.o get_clocks_per_sec.o
+phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -90,7 +90,8 @@ phc: lib.a lib2path.o feedback.o get_clock.o get_clocks_per_sec.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind dispatch use_c2phc
 	gnatlink dispatch syscon.o solcon.o phcpack.o feedback.o \
-                 pieri_solver.o lib2path.o lib.a $(QD_LIB)/libqd.a \
+                 pieri_solver.o parameter.o lib2path.o \
+                 lib.a $(QD_LIB)/libqd.a \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
                  get_clock.o get_clocks_per_sec.o \
@@ -1939,6 +1940,10 @@ ts_adepath: utilities_d.o utilities_dd.o poly_d.o poly_dd.o \
                /usr/lib/libc++.dylib \
                /usr/lib/libstdc++.dylib \
             -o $(BIN)/ts_adepath -lm --LINK=g++
+
+parameter.o:
+	$(gpp) -O3 -I$(PHCgpu)/Path/Host \
+               -c $(PHCgpu)/Path/Host/parameter.cpp -o parameter.o
 
 lib2path.o:
 	$(gpp) -O3 -I$(PHCLib) -I$(QD_ROOT)/include \

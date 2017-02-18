@@ -1905,7 +1905,7 @@ extern "C" int get_default_path_parameters
 {
    Parameter pars(precision);
 
-   *max_step = pars.max_step.
+   *max_step = pars.max_step;
    *n_predictor = pars.n_predictor;
    *step_increase = pars.step_increase;
    *step_decrease = pars.step_decrease;
