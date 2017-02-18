@@ -66,6 +66,38 @@ void Parameter::set_value ( int idx, double val )
        this->err_min_round_off_refine = val;
 }
 
+void Parameter::get_value ( int idx, double* val )
+{
+   if(idx == 1)
+       *val = (double) this->max_step;
+   else if(idx == 2)
+       *val = (double) this->n_predictor;
+   else if(idx == 3)
+       *val = this->step_increase;
+   else if(idx == 4)
+       *val = this->step_decrease;
+   else if(idx == 5)
+       *val = this->max_delta_t;
+   else if(idx == 6)
+       *val = this->max_delta_t_end;
+   else if(idx == 7)
+       *val = this->min_delta_t;
+   else if(idx == 8)
+       *val = this->err_max_res;
+   else if(idx == 9)
+       *val = this->err_max_delta_x;
+   else if(idx == 10)
+       *val = this->err_max_first_delta_x;
+   else if(idx == 11)
+       *val = (double) this->max_it;
+   else if(idx == 12)
+       *val = this->err_min_round_off;
+   else if(idx == 13)
+       *val = (double) this->max_it_refine;
+   else if(idx == 14)
+       *val = this->err_min_round_off_refine;
+}
+
 void Parameter::tune ( void )
 {
    int idx = 1;

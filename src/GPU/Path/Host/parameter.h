@@ -131,6 +131,11 @@ class Parameter
       // Sets the value of the parameter with idx to the value val.
       // Required: idx is in the range from 1 to 14.
 
+      void get_value ( int idx, double* val );
+      // Gets the value of the parameter with idx 
+      // and assigns the value to the parameter val.
+      // Required: idx is in the range from 1 to 14.
+
       void tune ( void );
       // Interactive tuning of the parameters in pars.
 };

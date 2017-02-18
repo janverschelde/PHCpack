@@ -1,3 +1,6 @@
+Sat 18 Feb 2017 : added get_value() method to parameters.h and parameters.cpp,
+  with stub in lib2path.h and lib2path.cpp.
+
 Wed 15 Feb 2017 : lowered the number of Newton steps at the end
   and lowered the tolerance on the corrector update in parameter.h.
 

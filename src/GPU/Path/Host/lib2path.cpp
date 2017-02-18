@@ -1872,3 +1872,25 @@ int quaddobl_manytrack
 
    return quaddobl_manytrack_with_pars(verbose,regamma,imgamma,pars,p,q,s);
 }
+
+int set_path_parameter_value ( Parameter pars, int idx, double val )
+{
+   if((idx < 1) || (idx > 14))
+      return -1;
+   else
+   {
+      // pars.set_value(idx,val);
+      return 0;      
+   }
+}
+
+int get_path_parameter_value ( Parameter pars, int idx, double* val )
+{
+   if((idx < 1) || (idx > 14))
+      return -1;
+   else
+   {
+      // pars.get_value(idx,val);
+      return 0;
+   }
+}

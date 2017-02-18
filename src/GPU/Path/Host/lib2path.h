@@ -524,4 +524,50 @@ extern "C" int quaddobl_ademanypaths_with_pars
  *   max_it_refine        number of steps in the Newton root refiner;
  *   err_min_round_off_refine is the tolerance for the final refinement. */
 
+int set_path_parameter_value ( Parameter pars, int idx, double val );
+/*
+ * Sets the value of the path parameter idx to the value val.
+ * Returns 0 if the value of idx is in the range 1 to 14.
+ * Returns -1 if the value of idx is out of the range 1 to 14.
+ *
+ * The value val sets the value corresponding to the index idx,
+ * where idx is the index to one of the 14 parameters:
+ *    1 : maximum number of steps along a path;
+ *    2 : number of points used in the predictor;
+ *    3 : increase factor of the predictor;
+ *    4 : decrease factor of the precdictor;
+ *    5 : maximum step size along a path;
+ *    6 : maximum step size at the end of a path;
+ *    7 : minimum step size;
+ *    8 : tolerance on the residual;
+ *    9 : tolerance on the corrector update;
+ *   10 : the tolerance on the first correction update;
+ *   11 : maximum number of iterations of the corrector;
+ *   12 : tolerance on the corrector;
+ *   13 : number of steps in the Newton root refiner;
+ *   14 : tolerance for the final refinement. */
+
+int get_path_parameter_value ( Parameter pars, int idx, double* val );
+/*
+ * Returns in val the value of the path parameter with index idx.
+ * Returns 0 if the value of idx is in the range 1 to 14.
+ * Returns -1 if the value of idx is out of the range 1 to 14.
+ *
+ * The value val sets the value corresponding to the index idx,
+ * where idx is the index to one of the 14 parameters:
+ *    1 : maximum number of steps along a path;
+ *    2 : number of points used in the predictor;
+ *    3 : increase factor of the predictor;
+ *    4 : decrease factor of the precdictor;
+ *    5 : maximum step size along a path;
+ *    6 : maximum step size at the end of a path;
+ *    7 : minimum step size;
+ *    8 : tolerance on the residual;
+ *    9 : tolerance on the corrector update;
+ *   10 : the tolerance on the first correction update;
+ *   11 : maximum number of iterations of the corrector;
+ *   12 : tolerance on the corrector;
+ *   13 : number of steps in the Newton root refiner;
+ *   14 : tolerance for the final refinement. */
+
 #endif
