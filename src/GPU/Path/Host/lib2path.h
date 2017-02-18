@@ -526,12 +526,14 @@ extern "C" int quaddobl_ademanypaths_with_pars
 
 int set_path_parameter_value ( Parameter pars, int idx, double val );
 /*
- * Sets the value of the path parameter idx to the value val.
- * Returns 0 if the value of idx is in the range 1 to 14.
- * Returns -1 if the value of idx is out of the range 1 to 14.
+ * DESCRIPTION :
+ *   Sets the value of the path parameter idx to the value val.
+ *   Returns 0 if the value of idx is in the range 1 to 14.
+ *   Returns -1 if the value of idx is out of the range 1 to 14.
  *
- * The value val sets the value corresponding to the index idx,
- * where idx is the index to one of the 14 parameters:
+ * ON ENTRY :
+ *   The value val sets the value corresponding to the index idx,
+ *   where idx is the index to one of the 14 parameters:
  *    1 : maximum number of steps along a path;
  *    2 : number of points used in the predictor;
  *    3 : increase factor of the predictor;
@@ -549,12 +551,13 @@ int set_path_parameter_value ( Parameter pars, int idx, double val );
 
 int get_path_parameter_value ( Parameter pars, int idx, double* val );
 /*
- * Returns in val the value of the path parameter with index idx.
- * Returns 0 if the value of idx is in the range 1 to 14.
- * Returns -1 if the value of idx is out of the range 1 to 14.
+ * DESCRIPTION :
+ *   Returns in val the value of the path parameter with index idx.
+ *   Returns 0 if the value of idx is in the range 1 to 14.
+ *   Returns -1 if the value of idx is out of the range 1 to 14.
  *
- * The value val sets the value corresponding to the index idx,
- * where idx is the index to one of the 14 parameters:
+ * ON ENTRY :
+ *   The index corresponding to the value should be one of the following
  *    1 : maximum number of steps along a path;
  *    2 : number of points used in the predictor;
  *    3 : increase factor of the predictor;
@@ -568,6 +571,42 @@ int get_path_parameter_value ( Parameter pars, int idx, double* val );
  *   11 : maximum number of iterations of the corrector;
  *   12 : tolerance on the corrector;
  *   13 : number of steps in the Newton root refiner;
- *   14 : tolerance for the final refinement. */
+ *   14 : tolerance for the final refinement.
+ *
+ * ON RETURN :
+ *   val    the value with the corresponding index. */
+
+extern "C" int get_default_path_parameters
+ ( int precision, int* max_step, int* n_predictor,
+   double* step_increase, double* step_decrease,
+   double* max_delta_t, double* max_delta_t_end, double* min_delta_t,
+   double* err_max_res, double* err_max_delta_x, double* err_max_first_delta_x,
+   int* max_it, double* err_min_round_off,
+   int* max_it_refine, double* err_min_round_off_refine );
+/*
+ * DESCRIPTION :
+ *   Returns all default values for the path parameters,
+ *   corresponding to the value of the precision.
+ *
+ * ON ENTRY :
+ *   precision is the number of decimal places in the working precision,
+ *             should be 16, 32, or 64 for double, double double,
+ *             or quad double precision respectively.
+ *
+ * ON RETURN :
+ *   max_step             maximum number of steps along a path;
+ *   n_predictor          number of points used in the predictor;
+ *   step_increase        increase factor of the predictor;
+ *   step_decrease        decrease factor of the precdictor;
+ *   max_delta_t          maximum step size along a path;
+ *   max_delta_t_end      maximum step size at the end of a path;
+ *   min_delta_t          minimum step size;
+ *   err_max_res          tolerance on the residual;
+ *   err_max_delta_x      tolerance on the corrector update;
+ *   err_max_first_delta_x is the tolerance on the first correction update;
+ *   max_it               maximum number of iterations of the corrector;
+ *   err_min_round_off    tolerance on the corrector;
+ *   max_it_refine        number of steps in the Newton root refiner;
+ *   err_min_round_off_refine is the tolerance for the final refinement. */
 
 #endif

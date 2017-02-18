@@ -1879,7 +1879,7 @@ int set_path_parameter_value ( Parameter pars, int idx, double val )
       return -1;
    else
    {
-      // pars.set_value(idx,val);
+      pars.set_value(idx,val);
       return 0;      
    }
 }
@@ -1890,7 +1890,33 @@ int get_path_parameter_value ( Parameter pars, int idx, double* val )
       return -1;
    else
    {
-      // pars.get_value(idx,val);
+      pars.get_value(idx,val);
       return 0;
    }
+}
+
+extern "C" int get_default_path_parameters
+ ( int precision, int* max_step, int* n_predictor,
+   double* step_increase, double* step_decrease,
+   double* max_delta_t, double* max_delta_t_end, double* min_delta_t,
+   double* err_max_res, double* err_max_delta_x, double* err_max_first_delta_x,
+   int* max_it, double* err_min_round_off,
+   int* max_it_refine, double* err_min_round_off_refine )
+{
+   Parameter pars(precision);
+
+   *max_step = pars.max_step.
+   *n_predictor = pars.n_predictor;
+   *step_increase = pars.step_increase;
+   *step_decrease = pars.step_decrease;
+   *max_delta_t = pars.max_delta_t;
+   *max_delta_t_end = pars.max_delta_t_end;
+   *min_delta_t = pars.min_delta_t;
+   *err_max_res = pars.err_max_res;
+   *err_max_delta_x = pars.err_max_delta_x;
+   *err_max_first_delta_x = pars.err_max_first_delta_x;
+   *max_it = pars.max_it;
+   *err_min_round_off = pars.err_min_round_off;
+   *max_it_refine = pars.max_it_refine;
+   *err_min_round_off_refine = pars.err_min_round_off_refine;
 }
