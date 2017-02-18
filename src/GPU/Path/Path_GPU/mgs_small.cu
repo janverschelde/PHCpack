@@ -632,66 +632,70 @@ __global__ void mgs_small_dynamic_kernel_template
       {
          if(col_idx < cols && col_idx_rnd<n_cols)
          {
-			tmp_col[t_idx] = piv[col_t_idx].adj_multiple(shv[col_t_idx]);
-			if(col_t_idx + half_size_init < rows) {
-				tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+half_size_init];
-			}
-
-			if(n_th > 16){
-				if(col_t_idx < 8) {
-						tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+8];
-					}
-				}
-
-				if(n_th > 8){
-					if(col_t_idx < 4) {
-						tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+4];
-					}
-				}
-
-				if(n_th >4){
-					if(col_t_idx < 2) {
-						tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+2];
-					}
-				}
-
-				if(col_t_idx < 1) {
-					tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+1];
-				}
-
-				shv[col_t_idx] = shv[col_t_idx] - tmp_col[sum_pos]*piv[col_t_idx];
-				//V[block*rows+t_idx] = shv[t_idx];
-				if(col_t_idx == 0){
-					int indR = r_pos(pivot, col_idx, cols);// (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
-					//R[indR] = tmp_col[0];
-					R_shared[indR] = tmp_col[sum_pos];
-				}
-				shv += rows*n_cols;
-				col_idx += n_cols;
-			}
-		}
-		piv += rows;
-	}
-
-    // back substitution
-    if(t_idx<cols-1)
-    {
-       GT update = R_shared[t_idx];
-       int dim = cols -1;
-       GT* Rcl;
-       for(int k=dim-1; k>=0; k--) // compute k-th component of solution
-       {
-          if(t_idx < k+1)
-          {
-             int ind = (dim - k)*(dim + 3 + k)/2;
-             Rcl = R_shared+ind;
-          }
-          if(t_idx == k) tmp_col[t_idx] = update/Rcl[t_idx];
-          // all other threads wait
-          if(t_idx < k) update = update - tmp_col[k]*Rcl[t_idx];// update
-       }
-       sol += blockIdx.x*dim;
-       sol[t_idx] = tmp_col[t_idx];
+            tmp_col[t_idx] = piv[col_t_idx].adj_multiple(shv[col_t_idx]);
+            if(col_t_idx + half_size_init < rows) 
+            {
+               tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+half_size_init];
+            }
+            if(n_th > 16)
+            {
+               if(col_t_idx < 8) 
+               {
+                  tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+8];
+               }
+            }
+            if(n_th > 8)
+            {
+               if(col_t_idx < 4) 
+               {
+                  tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+4];
+               }
+            }
+            if(n_th >4)
+            {
+               if(col_t_idx < 2) 
+               {
+                  tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+2];
+               }
+            }
+            if(col_t_idx < 1) 
+            {
+               tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+1];
+            }
+            shv[col_t_idx] = shv[col_t_idx] - tmp_col[sum_pos]*piv[col_t_idx];
+            // V[block*rows+t_idx] = shv[t_idx];
+            if(col_t_idx == 0)
+            {
+               int indR = r_pos(pivot, col_idx, cols);
+               // (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
+               // R[indR] = tmp_col[0];
+               R_shared[indR] = tmp_col[sum_pos];
+            }
+            shv += rows*n_cols;
+            col_idx += n_cols;
+         }
+      }
+      piv += rows;
+   }
+   // back substitution
+   if(t_idx<cols-1)
+   {
+      GT update = R_shared[t_idx];
+      int dim = cols -1;
+      GT* Rcl;
+      for(int k=dim-1; k>=0; k--) // compute k-th component of solution
+      {
+         if(t_idx < k+1)
+         {
+            int ind = (dim - k)*(dim + 3 + k)/2;
+            Rcl = R_shared+ind;
+         }
+         if(t_idx == k) tmp_col[t_idx] = update/Rcl[t_idx];
+         // all other threads wait
+         if(t_idx < k) update = update - tmp_col[k]*Rcl[t_idx];// update
+      }
+      sol += blockIdx.x*dim;
+      sol[t_idx] = tmp_col[t_idx];
    }
 };
 
@@ -719,87 +723,93 @@ __global__ void mgs_small_kernel1
    v_idx=t_idx;
    for(int pivot=0; pivot<cols-1; pivot++)
    {
-		// Normalization
-		prd[t_idx] = piv[t_idx].real*piv[t_idx].real + piv[t_idx].imag*piv[t_idx].imag;
-		if(t_idx + half_size_init < rows) {
-			prd[t_idx] = prd[t_idx] + prd[t_idx+half_size_init];
-		}
-
-		if(t_idx < 4) {
-			prd[t_idx] = prd[t_idx] + prd[t_idx+4];
-		}
-
-		if(t_idx < 2) {
-			prd[t_idx] = prd[t_idx] + prd[t_idx+2];
-		}
-
-		if(t_idx == 0) {
-			prd[0] = prd[0] + prd[1];
-			prd[0] = sqrt(prd[0]);
-			int indR = r_pos(pivot, pivot, cols); //(dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
-			//R[indR].init_imag();
-			//R[indR].real = prd[0];
-			R_shared[indR].real = prd[0];
-			R_shared[indR].init_imag();
-		}
-		__syncthreads();
-		piv[t_idx] /= prd[0];
-
-		// Reduce
-		GT* shv = V_shared + (pivot+1)*rows;
-		for(int block=pivot+1; block<cols; block++){
-			tmp_col[t_idx] = piv[t_idx].adj_multiple(shv[t_idx]);
-			__syncthreads();
-			if(t_idx + half_size_init < rows) {
-				tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+half_size_init];
-			}
-
-			if(t_idx < 4) {
-				tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+4];
-			}
-
-			if(t_idx < 2) {
-				tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+2];
-			}
-
-			if(t_idx < 1) {
-				tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+1];
-			}
-
-
-			shv[t_idx] = shv[t_idx] - tmp_col[0]*piv[t_idx];
-			//V[block*rows+t_idx] = shv[t_idx];
-			shv += rows;
-
-			int indR = r_pos(pivot, block, cols);// (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
-			if(t_idx == 0){
-				//R[indR] = tmp_col[0];
-				R_shared[indR] = tmp_col[0];
-			}
-		}
-		piv += rows;
-		v_idx += rows;
-	}
-	// Back substitution
-	GT update = R_shared[t_idx];
-	int dim = cols -1;
-	GT* Rcl;
-	for(int k=dim-1; k>=0; k--)  // compute k-th component of solution
-	{
-		if(t_idx < k+1)
-		{
-			int ind = (dim - k)*(dim + 3 + k)/2;
-			Rcl = R_shared+ind;
-		}
-		if(t_idx == k) tmp_col[t_idx] = update/Rcl[t_idx]; // all other threads wait
-		if(t_idx < k) update = update - tmp_col[k]*Rcl[t_idx];// update
-	}
-
-	sol += blockIdx.x*workspace_size;
-	sol[t_idx] = tmp_col[t_idx];
+      // Normalization
+      prd[t_idx] = piv[t_idx].real*piv[t_idx].real
+                 + piv[t_idx].imag*piv[t_idx].imag;
+      if(t_idx + half_size_init < rows) 
+      {
+         prd[t_idx] = prd[t_idx] + prd[t_idx+half_size_init];
+      }
+      if(t_idx < 4) 
+      {
+         prd[t_idx] = prd[t_idx] + prd[t_idx+4];
+      }
+      if(t_idx < 2)
+      {
+         prd[t_idx] = prd[t_idx] + prd[t_idx+2];
+      }
+      if(t_idx == 0) 
+      {
+         prd[0] = prd[0] + prd[1];
+         prd[0] = sqrt(prd[0]);
+         int indR = r_pos(pivot, pivot, cols);
+         // (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
+         // R[indR].init_imag();
+         // R[indR].real = prd[0];
+         R_shared[indR].real = prd[0];
+         R_shared[indR].init_imag();
+      }
+      __syncthreads();
+      piv[t_idx] /= prd[0];
+      // Reduce
+      GT* shv = V_shared + (pivot+1)*rows;
+      for(int block=pivot+1; block<cols; block++)
+      {
+         tmp_col[t_idx] = piv[t_idx].adj_multiple(shv[t_idx]);
+         __syncthreads();
+         if(t_idx + half_size_init < rows) 
+         {
+            tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+half_size_init];
+         }
+         if(t_idx < 4) 
+         {
+            tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+4];
+         }
+         if(t_idx < 2) 
+         {
+            tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+2];
+         }
+         if(t_idx < 1) 
+         {
+            tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+1];
+         }
+         shv[t_idx] = shv[t_idx] - tmp_col[0]*piv[t_idx];
+         // V[block*rows+t_idx] = shv[t_idx];
+         shv += rows;
+         int indR = r_pos(pivot, block, cols);
+         // (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
+         if(t_idx == 0)
+         {
+            // R[indR] = tmp_col[0];
+            R_shared[indR] = tmp_col[0];
+         }
+      }
+      piv += rows;
+      v_idx += rows;
+   }
+   // Back substitution
+   GT update = R_shared[t_idx];
+   int dim = cols -1;
+   GT* Rcl;
+   for(int k=dim-1; k>=0; k--)  // compute k-th component of solution
+   {
+      if(t_idx < k+1)
+      {
+         int ind = (dim - k)*(dim + 3 + k)/2;
+         Rcl = R_shared+ind;
+      }
+      if(t_idx == k) tmp_col[t_idx] = update/Rcl[t_idx];
+      // all other threads wait
+      if(t_idx < k) update = update - tmp_col[k]*Rcl[t_idx]; // update
+   }
+   sol += blockIdx.x*workspace_size;
+   sol[t_idx] = tmp_col[t_idx];
 };
 
-void mgs_small2(GT* V, GT* R, GT* sol, int rows, int cols, int workspace_size=0, int n_path=1) {
+void mgs_small2
+ ( GT* V, GT* R, GT* sol, int rows, int cols, int workspace_size=0,
+   int n_path=1 ) 
+{
 	int BS = rows; // XXX Temperary solution
 	//int rows = dim;
 	int rowsLog2 = log2ceil(rows);// ceil for sum reduction
@@ -1041,34 +1051,35 @@ __global__ void mgs_small_reduce_kernel161
 
    for(int block=pivot+1; block<cols; block++)
    {
-		int i = block*rows + t_idx; // idx
+      int i = block*rows + t_idx; // idx
 
-		shv[0][t_idx] = v[i];
-		shv[1][t_idx] = piv[t_idx].adj_multiple(shv[0][t_idx]);
+      shv[0][t_idx] = v[i];
+      shv[1][t_idx] = piv[t_idx].adj_multiple(shv[0][t_idx]);
 
-		//int rowsLog2_tmp = rowsLog2;
-		if(t_idx + half_size < rows) {
-			shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+half_size];
-		}
+      // int rowsLog2_tmp = rowsLog2;
+      if(t_idx + half_size < rows) 
+      {
+         shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+half_size];
+      }
+      if(t_idx < 4) 
+      {
+         shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+4];
+      }
+      if(t_idx < 2) 
+      {
+         shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+2];
+      }
+      if(t_idx < 1) 
+      {
+         shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+1];
+      }
+      shv[0][t_idx] = shv[0][t_idx] - shv[1][0]*piv[t_idx];
+      v[i] = shv[0][t_idx];
 
-		if(t_idx < 4) {
-			shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+4];
-		}
-
-		if(t_idx < 2) {
-			shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+2];
-		}
-
-		if(t_idx < 1) {
-			shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+1];
-		}
-
-		shv[0][t_idx] = shv[0][t_idx] - shv[1][0]*piv[t_idx];
-		v[i] = shv[0][t_idx];
-
-		int indR = r_pos(pivot, block, cols);// (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
-		if(t_idx == 0) R[indR] = shv[1][0];
-	}
+      int indR = r_pos(pivot, block, cols);
+      // (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
+      if(t_idx == 0) R[indR] = shv[1][0];
+   }
 }
 
 template <unsigned int n_th>
@@ -1087,51 +1098,55 @@ __global__ void mgs_small_reduce_kernel_template
    R += b*n_matrix_R;
 
    // load pivot
-   if(t_idx < rows){
-		piv[t_idx] = v[L];
+   if(t_idx < rows)
+   {
+      piv[t_idx] = v[L];
+   }
+   int n_cols = 32/rows;
+   int col_idx_rnd = t_idx/rows;
+   int col_t_idx = t_idx - rows*col_idx_rnd;
+
+   int col_idx = col_idx_rnd + pivot + 1;
+   int n_rnd = (cols -pivot-2)/n_cols + 1;
+   int sum_pos = col_idx_rnd*rows;
+
+   GT* tmp_v = v + (pivot+1)*rows;
+
+   for(int rnd_idx=0; rnd_idx<n_rnd; rnd_idx++)
+   {
+      if(col_idx < cols && col_idx_rnd<n_cols)
+      {
+         shv[0][t_idx] = tmp_v[t_idx];
+         shv[1][t_idx] = piv[col_t_idx].adj_multiple(shv[0][t_idx]);
+         if(col_t_idx + half_size < rows) 
+         {
+            shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+half_size];
+         }
+         if(n_th>16)
+         {
+		if(col_t_idx < 8) {
+			shv[1][t_idx] = shv[1][t_idx] +shv[1][t_idx+8];
+		}
 	}
 
-	int n_cols = 32/rows;
-	int col_idx_rnd = t_idx/rows;
-	int col_t_idx = t_idx - rows*col_idx_rnd;
+	if(n_th>8){
+		if(col_t_idx < 4) {
+			shv[1][t_idx] = shv[1][t_idx] +shv[1][t_idx+4];
+		}
+	}
 
-	int col_idx = col_idx_rnd + pivot + 1;
-	int n_rnd = (cols -pivot-2)/n_cols + 1;
-	int sum_pos = col_idx_rnd*rows;
-
-	GT* tmp_v = v + (pivot+1)*rows;
-
-	for(int rnd_idx=0; rnd_idx<n_rnd; rnd_idx++){
-		if(col_idx < cols && col_idx_rnd<n_cols){
-			shv[0][t_idx] = tmp_v[t_idx];
-			shv[1][t_idx] = piv[col_t_idx].adj_multiple(shv[0][t_idx]);
-			if(col_t_idx + half_size < rows) {
-				shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+half_size];
+		if(n_th>4){
+			if(col_t_idx < 2) {
+				shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+2];
 			}
-			if(n_th>16){
-				if(col_t_idx < 8) {
-					shv[1][t_idx] = shv[1][t_idx] +shv[1][t_idx+8];
-				}
-			}
+		}
 
-			if(n_th>8){
-				if(col_t_idx < 4) {
-					shv[1][t_idx] = shv[1][t_idx] +shv[1][t_idx+4];
-				}
-			}
+		if(col_t_idx < 1) {
+			shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+1];
+		}
 
-			if(n_th>4){
-				if(col_t_idx < 2) {
-					shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+2];
-				}
-			}
-
-			if(col_t_idx < 1) {
-				shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+1];
-			}
-
-			tmp_v[t_idx] = shv[0][t_idx] - shv[1][sum_pos]*piv[col_t_idx];
-			//V[block*rows+t_idx] = shv[t_idx];
+		tmp_v[t_idx] = shv[0][t_idx] - shv[1][sum_pos]*piv[col_t_idx];
+		//V[block*rows+t_idx] = shv[t_idx];
 			if(col_t_idx == 0){
 				int indR = r_pos(pivot, col_idx, cols);// (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
 				//R[indR] = tmp_col[0];
@@ -1451,144 +1466,159 @@ int dimR, int rows, int rowsLog2, int cols, int pivot, int workspace_size)
 	mgs_small_kernel<<<n_path,32>>>(V,R,sol,rows,rowsLog2-1,half_size_init,cols,n_matrix);
 }
 
-__global__ void mgs_small_kernel(GT* V, GT* R, GT* sol0, \
-		int rows, int rowsLog2, int half_size_init, int cols, int workspace_size);
+__global__ void mgs_small_kernel
+ ( GT* V, GT* R, GT* sol0, int rows, int rowsLog2, int half_size_init, 
+   int cols, int workspace_size );
 
-__global__ void mgs_small_kernel(GT* V, GT* R, GT* sol, int rows, int rowsLog2, int half_size_init, int cols, int workspace_size){
-	// 10
-	__shared__ GT V_shared[110];// contains pivot column
-	__shared__ GT R_shared[66];// contains pivot column
+__global__ void mgs_small_kernel
+ ( GT* V, GT* R, GT* sol, int rows, int rowsLog2, int half_size_init,
+   int cols, int workspace_size ) 
+{
+   // 10
+   __shared__ GT V_shared[110]; // contains pivot column
+   __shared__ GT R_shared[66];  // contains pivot column
 
-	//15
-	//__shared__ GT V_shared[182];// contains pivot column
-	//__shared__ GT R_shared[105];// contains pivot column
+   // 15
+   //__shared__ GT V_shared[182]; // contains pivot column
+   //__shared__ GT R_shared[105]; // contains pivot column
 
-	//16
-	__shared__ GT V_shared[272];// contains pivot column
-	__shared__ GT R_shared[153];// contains pivot column
+   // 16
+   __shared__ GT V_shared[272]; // contains pivot column
+   __shared__ GT R_shared[153]; // contains pivot column
 
-	__shared__ T prd[16];// for norm of the pivot
-	__shared__ GT tmp_col[32];// temporary column for pivot column * reduction column
+   __shared__ T prd[16];// for norm of the pivot
+   __shared__ GT tmp_col[32];
+   // temporary column for pivot column * reduction column
 
-	V += blockIdx.x*workspace_size;
-	//R += blockIdx.x*workspace_size;
+   V += blockIdx.x*workspace_size;
+   // R += blockIdx.x*workspace_size;
 
-	//load matrix
-	int t_idx = threadIdx.x;
-	int v_idx=t_idx;
+   // load matrix
+   int t_idx = threadIdx.x;
+   int v_idx=t_idx;
 
-	int n_cols = 32/rows;
-	int col_idx_rnd = t_idx/rows;
-	int col_t_idx = t_idx - rows*col_idx_rnd;
-	int n_rnd = (cols-1)/n_cols + 1;
+   int n_cols = 32/rows;
+   int col_idx_rnd = t_idx/rows;
+   int col_t_idx = t_idx - rows*col_idx_rnd;
+   int n_rnd = (cols-1)/n_cols + 1;
 
-	int col_idx = col_idx_rnd;
-	for(int rnd_idx=0; rnd_idx<n_rnd; rnd_idx++){
-		if(col_idx_rnd < n_cols && col_idx < cols){
-			V_shared[v_idx] = V[v_idx];
-		}
-		v_idx += n_cols*rows;
-		col_idx += n_cols;
-	}
+   int col_idx = col_idx_rnd;
+   for(int rnd_idx=0; rnd_idx<n_rnd; rnd_idx++)
+   {
+      if(col_idx_rnd < n_cols && col_idx < cols)
+      {
+         V_shared[v_idx] = V[v_idx];
+      }
+      v_idx += n_cols*rows;
+      col_idx += n_cols;
+   }
+   // QR
+   GT* piv = V_shared;
+   v_idx=t_idx;
+   for(int pivot=0; pivot<cols-1; pivot++)
+   {
+      // normalize
+      if(t_idx<rows)
+      {
+         prd[t_idx] = piv[t_idx].real*piv[t_idx].real
+                    + piv[t_idx].imag*piv[t_idx].imag;
+         if(t_idx + half_size_init < rows) 
+         {
+            prd[t_idx] = prd[t_idx] + prd[t_idx+half_size_init];
+         }
+         if(t_idx < 4)
+         {
+            prd[t_idx] = prd[t_idx] + prd[t_idx+4];
+         }
+         if(t_idx < 2) 
+         {
+            prd[t_idx] = prd[t_idx] + prd[t_idx+2];
+         }
+         if(t_idx == 0) 
+         {
+            prd[0] = prd[0] + prd[1];
+            prd[0] = sqrt(prd[0]);
+            int indR = r_pos(pivot, pivot, cols);
+            // (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
+            // R[indR].init_imag();
+            // R[indR].real = prd[0];
+            R_shared[indR].real = prd[0];
+            R_shared[indR].init_imag();
+         }
+      }
+      if(t_idx<rows)
+      {
+         piv[t_idx] /= prd[0];
+      }
+      // reduce
+      int col_idx = col_idx_rnd + pivot + 1;
+      int n_rnd = (cols -pivot-2)/n_cols + 1;
+      int sum_pos = col_idx_rnd*rows;
 
-	// QR
-	GT* piv = V_shared;
-	v_idx=t_idx;
-	for(int pivot=0; pivot<cols-1; pivot++){
-		// normalize
-		if(t_idx<rows){
-			prd[t_idx] = piv[t_idx].real*piv[t_idx].real + piv[t_idx].imag*piv[t_idx].imag;
-			if(t_idx + half_size_init < rows) {
-				prd[t_idx] = prd[t_idx] + prd[t_idx+half_size_init];
-			}
-
-			if(t_idx < 4) {
-				prd[t_idx] = prd[t_idx] + prd[t_idx+4];
-			}
-
-			if(t_idx < 2) {
-				prd[t_idx] = prd[t_idx] + prd[t_idx+2];
-			}
-
-			if(t_idx == 0) {
-				prd[0] = prd[0] + prd[1];
-				prd[0] = sqrt(prd[0]);
-				int indR = r_pos(pivot, pivot, cols); //(dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
-				//R[indR].init_imag();
-				//R[indR].real = prd[0];
-				R_shared[indR].real = prd[0];
-				R_shared[indR].init_imag();
-			}
-		}
-
-		if(t_idx<rows){
-			piv[t_idx] /= prd[0];
-		}
-
-		// reduce
-		int col_idx = col_idx_rnd + pivot + 1;
-		int n_rnd = (cols -pivot-2)/n_cols + 1;
-		int sum_pos = col_idx_rnd*rows;
-
-		GT* shv = V_shared + col_idx*rows;
-		for(int rnd_idx=0; rnd_idx<n_rnd; rnd_idx++){
-			if(col_idx < cols && col_idx_rnd<n_cols){
-				tmp_col[t_idx] = piv[col_t_idx].adj_multiple(shv[col_t_idx]);
-				if(col_t_idx + half_size_init < rows) {
-					tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+half_size_init];
-				}
-
-				if(col_t_idx < 4) {
-					tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+4];
-				}
-
-				if(col_t_idx < 2) {
-					tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+2];
-				}
-
-				if(col_t_idx < 1) {
-					tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+1];
-				}
-
-				shv[col_t_idx] = shv[col_t_idx] - tmp_col[sum_pos]*piv[col_t_idx];
-				//V[block*rows+t_idx] = shv[t_idx];
-				if(col_t_idx == 0){
-					int indR = r_pos(pivot, col_idx, cols);// (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
-					//R[indR] = tmp_col[0];
-					R_shared[indR] = tmp_col[sum_pos];
-				}
-				shv += rows*n_cols;
-				col_idx += n_cols;
-			}
-		}
-		piv += rows;
-		v_idx += rows;
-	}
-
-	// back substitution
-	if(t_idx<cols-1){
-		GT update = R_shared[t_idx];
-		int dim = cols -1;
-		GT* Rcl;
-		for(int k=dim-1; k>=0; k--)  // compute k-th component of solution
-		{
-			if(t_idx < k+1)
-			{
-				int ind = (dim - k)*(dim + 3 + k)/2;
-				Rcl = R_shared+ind;
-			}
-			if(t_idx == k) tmp_col[t_idx] = update/Rcl[t_idx]; // all other threads wait
-			if(t_idx < k) update = update - tmp_col[k]*Rcl[t_idx];// update
-		}
-
-		sol += blockIdx.x*dim;
-		sol[t_idx] = tmp_col[t_idx];
-	}
+      GT* shv = V_shared + col_idx*rows;
+      for(int rnd_idx=0; rnd_idx<n_rnd; rnd_idx++)
+      {
+         if(col_idx < cols && col_idx_rnd<n_cols)
+         {
+            tmp_col[t_idx] = piv[col_t_idx].adj_multiple(shv[col_t_idx]);
+            if(col_t_idx + half_size_init < rows) 
+            {
+               tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+half_size_init];
+            }
+            if(col_t_idx < 4) 
+            {
+               tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+4];
+            }
+            if(col_t_idx < 2) 
+            {
+               tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+2];
+            }
+            if(col_t_idx < 1) 
+            {
+               tmp_col[t_idx] = tmp_col[t_idx] + tmp_col[t_idx+1];
+            }
+            shv[col_t_idx] = shv[col_t_idx] - tmp_col[sum_pos]*piv[col_t_idx];
+            // V[block*rows+t_idx] = shv[t_idx];
+            if(col_t_idx == 0)
+            {
+               int indR = r_pos(pivot, col_idx, cols);
+               // (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
+               // R[indR] = tmp_col[0];
+               R_shared[indR] = tmp_col[sum_pos];
+            }
+            shv += rows*n_cols;
+            col_idx += n_cols;
+         }
+      }
+      piv += rows;
+      v_idx += rows;
+   }
+   // back substitution
+   if(t_idx<cols-1)
+   {
+      GT update = R_shared[t_idx];
+      int dim = cols -1;
+      GT* Rcl;
+      for(int k=dim-1; k>=0; k--)  // compute k-th component of solution
+      {
+         if(t_idx < k+1)
+         {
+            int ind = (dim - k)*(dim + 3 + k)/2;
+            Rcl = R_shared+ind;
+         }
+         if(t_idx == k) tmp_col[t_idx] = update/Rcl[t_idx];
+         // all other threads wait
+         if(t_idx < k) update = update - tmp_col[k]*Rcl[t_idx];// update
+      }
+      sol += blockIdx.x*dim;
+      sol[t_idx] = tmp_col[t_idx];
+   }
 };*/
 
 /*
-__global__ void mgs_small_dynamic_kernel(GT* V, GT* R, GT* sol0, \
-		int rows, int rowsLog2, int half_size_init, int cols, int n_matrix, int n_matrix_R);
+__global__ void mgs_small_dynamic_kernel
+ ( GT* V, GT* R, GT* sol0, int rows, int rowsLog2, int half_size_init,
+   int cols, int n_matrix, int n_matrix_R );
 
 extern __shared__ GT shared_array[];
 __global__ void mgs_small_dynamic_kernel(GT* V, GT* R, GT* sol, int rows, int rowsLog2, int half_size_init, int cols, int n_matrix, int n_matrix_R){
@@ -1908,70 +1938,75 @@ __global__ void mgs_small_reduce_kernel16
    }
 }
 
-
-__global__ void mgs_small_reduce_kernel32(GT* v, GT* R, \
-int dimR, int rows, int half_size, int cols, int pivot, int n_matrix, int n_matrix_R)
+__global__ void mgs_small_reduce_kernel32
+ ( GT* v, GT* R, int dimR, int rows, int half_size, int cols, int pivot,
+   int n_matrix, int n_matrix_R )
 {
-	int b = blockIdx.x;
-	int t_idx = threadIdx.x;
-	int L = pivot*rows + t_idx;
+   int b = blockIdx.x;
+   int t_idx = threadIdx.x;
+   int L = pivot*rows + t_idx;
 
-	__shared__ GT piv[32];// contains pivot column
-	__shared__ GT shv[2][32];// for the reduction
+   __shared__ GT piv[32];// contains pivot column
+   __shared__ GT shv[2][32];// for the reduction
 
-	v += b*n_matrix;
-	R += b*n_matrix_R;
+   v += b*n_matrix;
+   R += b*n_matrix_R;
 
-	// load pivot
-	if(t_idx < rows){
-		piv[t_idx] = v[L];
-	}
+   // load pivot
+   if(t_idx < rows)
+   {
+      piv[t_idx] = v[L];
+   }
 
-	int n_cols = 32/rows;
-	int col_idx_rnd = t_idx/rows;
-	int col_t_idx = t_idx - rows*col_idx_rnd;
+   int n_cols = 32/rows;
+   int col_idx_rnd = t_idx/rows;
+   int col_t_idx = t_idx - rows*col_idx_rnd;
 
-	int col_idx = col_idx_rnd + pivot + 1;
-	int n_rnd = (cols -pivot-2)/n_cols + 1;
-	int sum_pos = col_idx_rnd*rows;
+   int col_idx = col_idx_rnd + pivot + 1;
+   int n_rnd = (cols -pivot-2)/n_cols + 1;
+   int sum_pos = col_idx_rnd*rows;
 
-	GT* tmp_v = v + (pivot+1)*rows;
+   GT* tmp_v = v + (pivot+1)*rows;
 
-	for(int rnd_idx=0; rnd_idx<n_rnd; rnd_idx++){
-		if(col_idx < cols && col_idx_rnd<n_cols){
-			shv[0][t_idx] = tmp_v[t_idx];
-			shv[1][t_idx] = piv[col_t_idx].adj_multiple(shv[0][t_idx]);
-			if(col_t_idx + half_size < rows) {
-				shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+half_size];
-			}
-
-			if(col_t_idx < 8) {
-				shv[1][t_idx] = shv[1][t_idx] +shv[1][t_idx+8];
-			}
-
-			if(col_t_idx < 4) {
-				shv[1][t_idx] = shv[1][t_idx] +shv[1][t_idx+4];
-			}
-
-			if(col_t_idx < 2) {
-				shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+2];
-			}
-
-			if(col_t_idx < 1) {
-				shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+1];
-			}
-
-			tmp_v[t_idx] = shv[0][t_idx] - shv[1][sum_pos]*piv[col_t_idx];
-			//V[block*rows+t_idx] = shv[t_idx];
-			if(col_t_idx == 0){
-				int indR = r_pos(pivot, col_idx, cols);// (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
-				//R[indR] = tmp_col[0];
-				R[indR] = shv[1][sum_pos];
-			}
-			col_idx += n_cols;
-			tmp_v += n_cols*rows;
-		}
-	}
+   for(int rnd_idx=0; rnd_idx<n_rnd; rnd_idx++)
+   {
+      if(col_idx < cols && col_idx_rnd<n_cols)
+      {
+         shv[0][t_idx] = tmp_v[t_idx];
+         shv[1][t_idx] = piv[col_t_idx].adj_multiple(shv[0][t_idx]);
+         if(col_t_idx + half_size < rows) 
+         {
+            shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+half_size];
+         }
+         if(col_t_idx < 8) 
+         {
+            shv[1][t_idx] = shv[1][t_idx] +shv[1][t_idx+8];
+         }
+         if(col_t_idx < 4) 
+         {
+            shv[1][t_idx] = shv[1][t_idx] +shv[1][t_idx+4];
+         }
+         if(col_t_idx < 2) 
+         {
+            shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+2];
+         }
+         if(col_t_idx < 1)
+         {
+            shv[1][t_idx] = shv[1][t_idx] + shv[1][t_idx+1];
+         }
+         tmp_v[t_idx] = shv[0][t_idx] - shv[1][sum_pos]*piv[col_t_idx];
+         // V[block*rows+t_idx] = shv[t_idx];
+         if(col_t_idx == 0)
+         {
+            int indR = r_pos(pivot, col_idx, cols);
+            // (dimR-1) - (pivot*(pivot+1))/2 - (b*(b+1))/2 - b*(pivot+1);
+            // R[indR] = tmp_col[0];
+            R[indR] = shv[1][sum_pos];
+         }
+         col_idx += n_cols;
+         tmp_v += n_cols*rows;
+      }
+   }
 }*/
 
 /*__global__ void mgs_small_vertical_kernel_mult(GT* V, GT* R, GT* sol, int rows, int rowsLog2, int half_size_init, \
@@ -2126,11 +2161,12 @@ void mgs_small11
    int rowsLog2 = log2ceil(rows); // ceil for sum reduction
    // int cols = dim + 1;
 
-	std::cout << "rows = " << rows
-	<< " cols = " << cols
-	<< " rowsLog2 = " << rowsLog2 << std::endl;
+   std::cout << "rows = " << rows
+             << " cols = " << cols
+             << " rowsLog2 = " << rowsLog2 << std::endl;
 
-	std::cout << "n_path = " << n_path << std::endl;
-	int half_size_init = 1 << (rowsLog2-1);
-	mgs_small_kernel<<<n_path,BS>>>(V,R,sol,rows,rowsLog2-1, half_size_init,cols,workspace_size);
+   std::cout << "n_path = " << n_path << std::endl;
+   int half_size_init = 1 << (rowsLog2-1);
+   mgs_small_kernel<<<n_path,BS>>>
+      (V,R,sol,rows,rowsLog2-1, half_size_init,cols,workspace_size);
 }*/
