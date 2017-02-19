@@ -100,6 +100,53 @@ def ade_double_track(target, start, sols, gamma=0, verbose=1):
         print('Path tracking with AD failed!')
     return load_standard_solutions()
 
+def ade_tuned_double_track(target, start, sols, pars, gamma=0, verbose=1):
+    r"""
+    Does path tracking with algorithm differentiation,
+    in standard double precision, with tuned parameters in pars.
+    On input are a target system, a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    The *pars* is a tuple of 14 values for the path parameters.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    If *gamma* on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of *gamma* are used.
+    """
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_target_system
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_ade_manypaths_d_pars
+    from phcpy.interface import store_standard_system
+    from phcpy.interface import store_standard_solutions
+    from phcpy.interface import load_standard_solutions
+    store_standard_system(target)
+    py2c_copy_standard_container_to_target_system()
+    store_standard_system(start)
+    py2c_copy_standard_container_to_start_system()
+    dim = len(start)
+    store_standard_solutions(dim, sols)
+    if(gamma == 0):
+        from random import uniform
+        from cmath import exp, pi
+        angle = uniform(0, 2*pi)
+        gamma = exp(angle*complex(0, 1))
+        if(verbose > 0):
+            print('random gamma constant :', gamma)
+    if(verbose > 0):
+        print('the path parameters :\n', pars)
+    fail = py2c_ade_manypaths_d_pars(verbose, gamma.real, gamma.imag, \
+        pars[0], pars[1], pars[2], pars[3], pars[4], pars[5], pars[6], \
+        pars[7], pars[8], pars[9], pars[10], pars[11], pars[12], pars[13])
+    if(fail == 0):
+        if(verbose > 0):
+            print('Path tracking with AD was a success!')
+    else:
+        print('Path tracking with AD failed!')
+    return load_standard_solutions()
+
 def gpu_double_track(target, start, sols, gamma=0, verbose=1):
     r"""
     GPU accelerated path tracking with algorithm differentiation,
@@ -231,6 +278,54 @@ def ade_double_double_track(target, start, sols, gamma=0, verbose=1):
         print('Path tracking with AD failed!')
     return load_dobldobl_solutions()
 
+def ade_tuned_double_double_track\
+    (target, start, sols, pars, gamma=0, verbose=1):
+    r"""
+    Does path tracking with algorithm differentiation,
+    in double double precision, with tuned path parameters.
+    On input are a target system, a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    The *pars* is a tuple of 14 values for the path parameters.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    If *gamma* on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of *gamma* are used.
+    """
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_target_system
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_ade_manypaths_dd_pars
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.interface import store_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_solutions
+    store_dobldobl_system(target)
+    py2c_copy_dobldobl_container_to_target_system()
+    store_dobldobl_system(start)
+    py2c_copy_dobldobl_container_to_start_system()
+    dim = len(start)
+    store_dobldobl_solutions(dim, sols)
+    if(gamma == 0):
+        from random import uniform
+        from cmath import exp, pi
+        angle = uniform(0, 2*pi)
+        gamma = exp(angle*complex(0, 1))
+        if(verbose > 0):
+            print('random gamma constant :', gamma)
+    if(verbose > 0):
+        print('the path parameters :\n', pars)
+    fail = py2c_ade_manypaths_dd_pars(verbose, gamma.real, gamma.imag, \
+        pars[0], pars[1], pars[2], pars[3], pars[4], pars[5], pars[6], \
+        pars[7], pars[8], pars[9], pars[10], pars[11], pars[12], pars[13])
+    if(fail == 0):
+        if(verbose > 0):
+            print('Path tracking with AD was a success!')
+    else:
+        print('Path tracking with AD failed!')
+    return load_dobldobl_solutions()
+
 def gpu_double_double_track(target, start, sols, gamma=0, verbose=1):
     r"""
     GPU accelerated path tracking with algorithmic differentiation,
@@ -354,6 +449,53 @@ def ade_quad_double_track(target, start, sols, gamma=0, verbose=1):
         if(verbose > 0):
             print('random gamma constant :', gamma)
     fail = py2c_ade_manypaths_qd(verbose, gamma.real, gamma.imag)
+    if(fail == 0):
+        if(verbose > 0):
+            print('Path tracking with AD was a success!')
+    else:
+        print('Path tracking with AD failed!')
+    return load_quaddobl_solutions()
+
+def ade_tuned_quad_double_track(target, start, sols, pars, gamma=0, verbose=1):
+    r"""
+    Does path tracking with algorithm differentiation,
+    in quad double precision, with tuned path parameters.
+    On input are a target system, a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    The *pars* is a tuple of tuned values for the path parameters.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    If *gamma* on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of *gamma* are used.
+    """
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_target_system
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_ade_manypaths_qd_pars
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.interface import store_quaddobl_solutions
+    from phcpy.interface import load_quaddobl_solutions
+    store_quaddobl_system(target)
+    py2c_copy_quaddobl_container_to_target_system()
+    store_quaddobl_system(start)
+    py2c_copy_quaddobl_container_to_start_system()
+    dim = len(start)
+    store_quaddobl_solutions(dim, sols)
+    if(gamma == 0):
+        from random import uniform
+        from cmath import exp, pi
+        angle = uniform(0, 2*pi)
+        gamma = exp(angle*complex(0, 1))
+        if(verbose > 0):
+            print('random gamma constant :', gamma)
+    if(verbose > 0):
+        print('the path parameters :\n', pars)
+    fail = py2c_ade_manypaths_qd_pars(verbose, gamma.real, gamma.imag, \
+        pars[0], pars[1], pars[2], pars[3], pars[4], pars[5], pars[6], \
+        pars[7], pars[8], pars[9], pars[10], pars[11], pars[12], pars[13])
     if(fail == 0):
         if(verbose > 0):
             print('Path tracking with AD was a success!')
@@ -897,7 +1039,13 @@ def test_ade_double_track():
     in standard double precision.
     """
     (c3, c3q, c3qsols) = cyclic3homotopy()
-    sols = ade_double_track(c3, c3q, c3qsols)
+    ans = input('Tune the path parameters ? (y/n) ')
+    if(ans != 'y'):
+        sols = ade_double_track(c3, c3q, c3qsols)
+    else:
+        from phcpy.tuning import tune_path_parameters as tune
+        pars = tune(16)
+        sols = ade_tuned_double_track(c3, c3q, c3qsols, pars)
     for sol in sols:
         print(sol)
 
@@ -907,7 +1055,13 @@ def test_ade_double_double_track():
     in double double precision.
     """
     (c3, c3q, c3qsols) = cyclic3homotopy()
-    sols = ade_double_double_track(c3, c3q, c3qsols)
+    ans = input('Tune the path parameters ? (y/n) ')
+    if(ans != 'y'):
+        sols = ade_double_double_track(c3, c3q, c3qsols)
+    else:
+        from phcpy.tuning import tune_path_parameters as tune
+        pars = tune(32)
+        sols = ade_tuned_double_double_track(c3, c3q, c3qsols, pars)
     for sol in sols:
         print(sol)
 
@@ -917,7 +1071,13 @@ def test_ade_quad_double_track():
     in quad double precision.
     """
     (c3, c3q, c3qsols) = cyclic3homotopy()
-    sols = ade_quad_double_track(c3, c3q, c3qsols)
+    ans = input('Tune the path parameters ? (y/n) ')
+    if(ans != 'y'):
+        sols = ade_quad_double_track(c3, c3q, c3qsols)
+    else:
+        from phcpy.tuning import tune_path_parameters as tune
+        pars = tune(64)
+        sols = ade_tuned_quad_double_track(c3, c3q, c3qsols, pars)
     for sol in sols:
         print(sol)
 

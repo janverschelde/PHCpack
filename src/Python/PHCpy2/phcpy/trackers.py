@@ -1043,7 +1043,7 @@ def test_ade_double_track():
     if(ans != 'y'):
         sols = ade_double_track(c3, c3q, c3qsols)
     else:
-        from tuning import tune_path_parameters as tune
+        from phcpy.tuning import tune_path_parameters as tune
         pars = tune(16)
         sols = ade_tuned_double_track(c3, c3q, c3qsols, pars)
     for sol in sols:
@@ -1059,7 +1059,7 @@ def test_ade_double_double_track():
     if(ans != 'y'):
         sols = ade_double_double_track(c3, c3q, c3qsols)
     else:
-        from tuning import tune_path_parameters as tune
+        from phcpy.tuning import tune_path_parameters as tune
         pars = tune(32)
         sols = ade_tuned_double_double_track(c3, c3q, c3qsols, pars)
     for sol in sols:
@@ -1075,7 +1075,7 @@ def test_ade_quad_double_track():
     if(ans != 'y'):
         sols = ade_quad_double_track(c3, c3q, c3qsols)
     else:
-        from tuning import tune_path_parameters as tune
+        from phcpy.tuning import tune_path_parameters as tune
         pars = tune(64)
         sols = ade_tuned_quad_double_track(c3, c3q, c3qsols, pars)
     for sol in sols:
