@@ -751,6 +751,95 @@ def tolerance_infsolendgame_set(tol):
     from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
     return set(34, tol)
 
+def default_path_parameters(precision):
+    """
+    Given in precision 16, 32, or 64 for double, double double, or quad
+    double precision respectively, returns a tuple with the default values
+    for the path parameters.
+    """
+    from phcpy.phcpy2c3 import py2c_get_default_path_parameters as get
+    return get(precision)
+
+def write_path_parameters(pars):
+    """
+    Given in pars is a 14-tuple with the path parameters.
+    The path parameters are written, for later interactive tuning.
+    """
+    print(' 1. Maximum number of steps                   : ', pars[0])
+    print(' 2. Number of points in the predictor         : ', pars[1])
+    print(' 3. Increase factor on the step size          : ', pars[2])
+    print(' 4. Decrease factor on the step size          : ', pars[3])
+    print(' 5. Maximal step size along a path            : ', pars[4])
+    print(' 6. Maximal step size at the end of a path    : ', pars[5])
+    print(' 7. Minimum step size along a path            : ', pars[6])
+    print(' 8. Tolerance on the residual                 : ', pars[7])
+    print(' 9. Tolerance on the corrector update         : ', pars[8])
+    print('10. Tolerance on the first corrector update   : ', pars[9])
+    print('11. Maximum number of Newton iterations       : ', pars[10])
+    print('12. Tolerance for Newton\'s corrector method   : ', pars[11])
+    print('13. Maximum number of Newton refinement steps : ', pars[12])
+    print('14. Tolerance for Newton\'s refinement method  : ', pars[13])
+
+def set_path_parameter_value(idx):
+    """
+    Given the index idx of a path parameter, prompts the user for
+    a new value which will be returned.
+    """
+    try:
+        if(idx == 1):
+            val = int(input('-> maximum number of steps : '))
+        elif(idx == 2):
+            val = int(input('-> number of points in the predictor : '))
+        elif(idx == 3):
+            val = float(input('-> increase factor on the step size : '))
+        elif(idx == 4):
+            val = float(input('-> decrease factor on the step size : '))
+        elif(idx == 5):
+            val = float(input('-> maximal step size along a path : '))
+        elif(idx == 6):
+            val = float(input('-> maximal step size at the end of a path : '))
+        elif(idx == 7):
+            val = float(input('-> minimum step size along a path : '))
+        elif(idx == 8):
+            val = float(input('-> tolerance on the residual : '))
+        elif(idx == 9):
+            val = float(input('-> tolerance on the corrector update : '))
+        elif(idx == 10):
+            val = float(input('-> tolerance on the first corrector update : '))
+        elif(idx == 11):
+            val = int(input('-> maximum number of Newton iterations : '))
+        elif(idx == 12):
+            val = float(input('-> tolerance for Newton\'s corrector method : '))
+        elif(idx == 13):
+            val = int(input('-> maximum number of Newton refinement steps : '))
+        elif(idx == 14):
+            val = float\
+                (input('-> tolerance for Newton\'s refinement method  : '))
+        else:
+            val = -1
+    except ValueError:
+        print('Wrong value.  Please retry.')
+        val = -1
+    return val
+
+def tune_path_parameters(precision):
+    """
+    Given in precision the value 16, 32, or 64 for double, double double,
+    or quad double precision respectively, tunes the path parameters
+    interactively, starting from the default path parameters.
+    """
+    pars = default_path_parameters(precision)
+    parslist = list(pars)
+    while True:
+        write_path_parameters(parslist)
+        idx = int(input('Give the index to set a value, 0 to exit : '))
+        if(idx == 0):
+            break
+        val = set_path_parameter_value(idx)
+        if(val > 0):
+            parslist[idx-1] = val
+    return tuple(parslist)
+
 def test():
     """
     Tests the tuning of the parameters.

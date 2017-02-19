@@ -1,3 +1,6 @@
+Sat 18 Feb 2017 : to tuning.py in PHCpy2 and PHCpy3 added function to get
+  the default values for the path parameters, to write and tune them.
+
 Fri 17 Feb 2017 : to interface.py in PHCpy2 and PHCpy3 added function to
   read a system and a list of solutions from file.
 
