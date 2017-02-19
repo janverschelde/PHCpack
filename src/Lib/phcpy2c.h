@@ -4922,3 +4922,31 @@ static PyObject *py2c_ade_manypaths_qd ( PyObject *self, PyObject *args );
  *   fail     0 if all went well, and the solutions at the end of paths
  *            are in the solution container,
  *            if different from 0, then an error happened. */
+
+static PyObject *py2c_get_default_path_parameters
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given the precision (16, 32, or 64), returns the tuple with the
+ *   default values for the path parameters.
+ *
+ * ON ENTRY :
+ *   prec     an integer value, 16, 32, or 64 to indicate double,
+ *            double double, or quad double precision respectively.
+ *
+ * ON RETURN :
+ *   t        a 14-tuple with the defaults for the path parameters:
+ *   t[0]     maximum number of steps along a path;
+ *   t[1]     number of points used in the predictor;
+ *   t[2]     increase factor of the predictor;
+ *   t[3]     decrease factor of the precdictor;
+ *   t[4]     maximum step size along a path;
+ *   t[5]     maximum step size at the end of a path;
+ *   t[6]     minimum step size;
+ *   t[7]     tolerance on the residual;
+ *   t[8]     tolerance on the corrector update;
+ *   t[9]     tolerance on the first correction update;
+ *   t[10]    maximum number of iterations of the corrector;
+ *   t[11]    tolerance on the corrector;
+ *   t[12]    number of steps in the Newton root refiner;
+ *   t[13]    tolerance for the final refinement. */

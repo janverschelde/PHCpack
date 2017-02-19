@@ -1895,7 +1895,7 @@ int get_path_parameter_value ( Parameter pars, int idx, double* val )
    }
 }
 
-extern "C" int get_default_path_parameters
+int get_default_path_parameters
  ( int precision, int* max_step, int* n_predictor,
    double* step_increase, double* step_decrease,
    double* max_delta_t, double* max_delta_t_end, double* min_delta_t,
@@ -1919,4 +1919,6 @@ extern "C" int get_default_path_parameters
    *err_min_round_off = pars.err_min_round_off;
    *max_it_refine = pars.max_it_refine;
    *err_min_round_off_refine = pars.err_min_round_off_refine;
+
+   return 0;
 }

@@ -1,6 +1,8 @@
 Sat 18 Feb 2017 : added get_value() method to parameters.h and parameters.cpp,
   with calls in lib2path.h and lib2path.cpp.  To lib2path.h and lib2path.cpp,
   added a function to get the default values for the path parameters.
+  Removed the "extern" in front of the get_default_path_parameters in
+  lib2path.h and lib2path.cpp.
 
 Wed 15 Feb 2017 : lowered the number of Newton steps at the end
   and lowered the tolerance on the corrector update in parameter.h.

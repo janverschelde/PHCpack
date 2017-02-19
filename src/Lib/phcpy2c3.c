@@ -7139,6 +7139,41 @@ static PyObject *py2c_ade_manypaths_qd ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
+/* For the parameter tuning we need the default path parameters,
+ * provided by the lib2path function below,
+ * see lib2path.h for its specification. */
+
+extern int get_default_path_parameters
+ ( int precision, int* max_step, int* n_predictor,
+   double* step_increase, double* step_decrease,
+   double* max_delta_t, double* max_delta_t_end, double* min_delta_t,
+   double* err_max_res, double* err_max_delta_x, double* err_max_first_delta_x,
+   int* max_it, double* err_min_round_off,
+   int* max_it_refine, double* err_min_round_off_refine );
+
+static PyObject *py2c_get_default_path_parameters
+ ( PyObject *self, PyObject *args )
+{
+   int fail,precision,max_step,n_predictor,max_it,max_it_refine;
+   double step_increase,step_decrease;
+   double max_delta_t,max_delta_t_end,min_delta_t;
+   double err_max_res,err_max_delta_x,err_max_first_delta_x;
+   double err_min_round_off,err_min_round_off_refine;
+ 
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&precision)) return NULL;
+   fail = get_default_path_parameters(precision,&max_step,&n_predictor,
+      &step_increase,&step_decrease,&max_delta_t,&max_delta_t_end,&min_delta_t,
+      &err_max_res,&err_max_delta_x,&err_max_first_delta_x,
+      &max_it,&err_min_round_off,&max_it_refine,&err_min_round_off_refine);
+
+   return Py_BuildValue("(i,i,d,d,d,d,d,d,d,d,i,d,i,d)",
+      max_step,n_predictor,step_increase,
+      step_decrease,max_delta_t,max_delta_t_end,min_delta_t,err_max_res,
+      err_max_delta_x,err_max_first_delta_x,max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
+}
+
 static PyMethodDef phcpy2c3_methods[] = 
 {
    {"py2c_PHCpack_version_string", py2c_PHCpack_version_string, METH_VARARGS,
@@ -8539,6 +8574,9 @@ static PyMethodDef phcpy2c3_methods[] =
     "Tracks one solution path with algorithmic differentation\n in quad double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the quaddobl solutions container must holds valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_ade_manypaths_qd", py2c_ade_manypaths_qd, METH_VARARGS,
     "Tracks many solution paths with algorithmic differentation\n in quad double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the quaddobl solutions container holds valid solutions.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_get_default_path_parameters", 
+     py2c_get_default_path_parameters, METH_VARARGS, 
+    "Given the working precision (16, 32, or 64), returns the default values\n of the path parameters, for the path trackers with algorithmic differentiation."},
    {NULL, NULL, 0, NULL} 
 };
 

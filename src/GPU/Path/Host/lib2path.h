@@ -576,7 +576,7 @@ int get_path_parameter_value ( Parameter pars, int idx, double* val );
  * ON RETURN :
  *   val    the value with the corresponding index. */
 
-extern "C" int get_default_path_parameters
+int get_default_path_parameters
  ( int precision, int* max_step, int* n_predictor,
    double* step_increase, double* step_decrease,
    double* max_delta_t, double* max_delta_t_end, double* min_delta_t,
