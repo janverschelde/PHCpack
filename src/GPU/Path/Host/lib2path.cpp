@@ -1922,3 +1922,90 @@ int get_default_path_parameters
 
    return 0;
 }
+
+int standard_ademanypaths_with_parameters
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(16);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return standard_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
+}
+
+int dobldobl_ademanypaths_with_parameters
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(32);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return dobldobl_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
+}
+
+int quaddobl_ademanypaths_with_parameters
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine )
+{
+   Parameter pars(64);
+
+   pars.max_step = max_step;
+   pars.n_predictor = n_predictor;
+   pars.step_increase = step_increase;
+   pars.step_decrease = step_decrease;
+   pars.max_delta_t = max_delta_t;
+   pars.max_delta_t_end = max_delta_t_end;
+   pars.min_delta_t = min_delta_t;
+   pars.err_max_res = err_max_res;
+   pars.err_max_delta_x = err_max_delta_x;
+   pars.err_max_first_delta_x = err_max_first_delta_x;
+   pars.max_it = max_it;
+   pars.err_min_round_off = err_min_round_off;
+   pars.max_it_refine = max_it_refine;
+   pars.err_min_round_off_refine = err_min_round_off_refine;
+
+   return quaddobl_ade_manypaths_with_pars(verbose,regamma,imgamma,pars);
+}

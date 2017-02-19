@@ -4950,3 +4950,114 @@ static PyObject *py2c_get_default_path_parameters
  *   t[11]    tolerance on the corrector;
  *   t[12]    number of steps in the Newton root refiner;
  *   t[13]    tolerance for the final refinement. */
+
+static PyObject *py2c_ade_manypaths_d_pars ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks many solution paths with algorithmic differentation
+ *   in double precision on the data in the systems and solutions container.
+ *   All values of the 14 path parameters must be provided,
+ *   default values are obtained with py2c_get_default_path_parameters.
+ *
+ * REQUIRED :
+ *   The start and target systems have been defined
+ *   and the standard solutions container holds valid solutions.
+ *
+ * ON ENTRY :
+ *   verbose  0 if no intermediate output is wanted,
+ *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random constant;
+ *   par00    maximum number of steps along a path;
+ *   par01    number of points used in the predictor;
+ *   par02    increase factor of the predictor;
+ *   par03    decrease factor of the precdictor;
+ *   par04    maximum step size along a path;
+ *   par05    maximum step size at the end of a path;
+ *   par06    minimum step size;
+ *   par07    tolerance on the residual;
+ *   par08    tolerance on the corrector update;
+ *   par09    tolerance on the first correction update;
+ *   par10    maximum number of iterations of the corrector;
+ *   par11    tolerance on the corrector;
+ *   par12    number of steps in the Newton root refiner;
+ *   par13    tolerance for the final refinement.
+ *
+ * ON RETURN :
+ *   fail     0 if all went well, and the solutions at the end of paths
+ *            are in the solution container,
+ *            if different from 0, then an error happened. */
+
+static PyObject *py2c_ade_manypaths_dd_pars ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks many solution paths with algorithmic differentation in double
+ *   double precision on the data in the systems and solutions container.
+ *   All values of the 14 path parameters must be provided,
+ *   default values are obtained with py2c_get_default_path_parameters.
+ *
+ * REQUIRED :
+ *   The start and target systems have been defined
+ *   and the dobldobl solutions container holds valid solutions.
+ *
+ * ON ENTRY :
+ *   verbose  0 if no intermediate output is wanted,
+ *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random constant;
+ *   par00    maximum number of steps along a path;
+ *   par01    number of points used in the predictor;
+ *   par02    increase factor of the predictor;
+ *   par03    decrease factor of the precdictor;
+ *   par04    maximum step size along a path;
+ *   par05    maximum step size at the end of a path;
+ *   par06    minimum step size;
+ *   par07    tolerance on the residual;
+ *   par08    tolerance on the corrector update;
+ *   par09    tolerance on the first correction update;
+ *   par10    maximum number of iterations of the corrector;
+ *   par11    tolerance on the corrector;
+ *   par12    number of steps in the Newton root refiner;
+ *   par13    tolerance for the final refinement.
+ *
+ * ON RETURN :
+ *   fail     0 if all went well, and the solutions at the end of paths
+ *            are in the solution container,
+ *            if different from 0, then an error happened. */
+
+static PyObject *py2c_ade_manypaths_qd_pars ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks many solution paths with algorithmic differentation in quad
+ *   double precision on the data in the systems and solutions container.
+ *   All values of the 14 path parameters must be provided,
+ *   default values are obtained with py2c_get_default_path_parameters.
+ *
+ * REQUIRED :
+ *   The start and target systems have been defined
+ *   and the quaddobl solutions container holds valid solutions.
+ *
+ * ON ENTRY :
+ *   verbose  0 if no intermediate output is wanted,
+ *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random constant;
+ *   par00    maximum number of steps along a path;
+ *   par01    number of points used in the predictor;
+ *   par02    increase factor of the predictor;
+ *   par03    decrease factor of the precdictor;
+ *   par04    maximum step size along a path;
+ *   par05    maximum step size at the end of a path;
+ *   par06    minimum step size;
+ *   par07    tolerance on the residual;
+ *   par08    tolerance on the corrector update;
+ *   par09    tolerance on the first correction update;
+ *   par10    maximum number of iterations of the corrector;
+ *   par11    tolerance on the corrector;
+ *   par12    number of steps in the Newton root refiner;
+ *   par13    tolerance for the final refinement.
+ *
+ * ON RETURN :
+ *   fail     0 if all went well, and the solutions at the end of paths
+ *            are in the solution container,
+ *            if different from 0, then an error happened. */

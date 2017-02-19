@@ -7154,6 +7154,107 @@ static PyObject *py2c_get_default_path_parameters
       max_it_refine,err_min_round_off_refine);
 }
 
+// for separate compilation, extern declarations are needed, as below
+
+extern int standard_ademanypaths_with_parameters
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+
+extern int dobldobl_ademanypaths_with_parameters
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+
+extern int quaddobl_ademanypaths_with_parameters
+ ( int verbose, double regamma, double imgamma,
+   int max_step, int n_predictor,
+   double step_increase, double step_decrease,
+   double max_delta_t, double max_delta_t_end, double min_delta_t,
+   double err_max_res, double err_max_delta_x, double err_max_first_delta_x,
+   int max_it, double err_min_round_off,
+   int max_it_refine, double err_min_round_off_refine );
+
+static PyObject *py2c_ade_manypaths_d_pars ( PyObject *self, PyObject *args )
+{
+   int fail,verbose,max_step,n_predictor,max_it,max_it_refine;
+   double reg,img,step_increase,step_decrease;
+   double max_delta_t,max_delta_t_end,min_delta_t;
+   double err_max_res,err_max_delta_x,err_max_first_delta_x;
+   double err_min_round_off,err_min_round_off_refine;
+ 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iddiiddddddddidid",&verbose,&reg,&img,
+      &max_step,&n_predictor,&step_increase,&step_decrease,
+      &max_delta_t,&max_delta_t_end,&min_delta_t,&err_max_res,
+      &err_max_delta_x,&err_max_first_delta_x,&max_it,&err_min_round_off,
+      &max_it_refine,&err_min_round_off_refine)) return NULL;
+
+   fail = standard_ademanypaths_with_parameters(verbose,reg,img,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,err_max_res,
+      err_max_delta_x,err_max_first_delta_x,max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_ade_manypaths_dd_pars ( PyObject *self, PyObject *args )
+{
+   int fail,verbose,max_step,n_predictor,max_it,max_it_refine;
+   double reg,img,step_increase,step_decrease;
+   double max_delta_t,max_delta_t_end,min_delta_t;
+   double err_max_res,err_max_delta_x,err_max_first_delta_x;
+   double err_min_round_off,err_min_round_off_refine;
+ 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iddiiddddddddidid",&verbose,&reg,&img,
+      &max_step,&n_predictor,&step_increase,&step_decrease,
+      &max_delta_t,&max_delta_t_end,&min_delta_t,&err_max_res,
+      &err_max_delta_x,&err_max_first_delta_x,&max_it,&err_min_round_off,
+      &max_it_refine,&err_min_round_off_refine)) return NULL;
+
+   fail = dobldobl_ademanypaths_with_parameters(verbose,reg,img,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,err_max_res,
+      err_max_delta_x,err_max_first_delta_x,max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_ade_manypaths_qd_pars ( PyObject *self, PyObject *args )
+{
+   int fail,verbose,max_step,n_predictor,max_it,max_it_refine;
+   double reg,img,step_increase,step_decrease;
+   double max_delta_t,max_delta_t_end,min_delta_t;
+   double err_max_res,err_max_delta_x,err_max_first_delta_x;
+   double err_min_round_off,err_min_round_off_refine;
+ 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iddiiddddddddidid",&verbose,&reg,&img,
+      &max_step,&n_predictor,&step_increase,&step_decrease,
+      &max_delta_t,&max_delta_t_end,&min_delta_t,&err_max_res,
+      &err_max_delta_x,&err_max_first_delta_x,&max_it,&err_min_round_off,
+      &max_it_refine,&err_min_round_off_refine)) return NULL;
+
+   fail = quaddobl_ademanypaths_with_parameters(verbose,reg,img,
+      max_step,n_predictor,step_increase,step_decrease,
+      max_delta_t,max_delta_t_end,min_delta_t,err_max_res,
+      err_max_delta_x,err_max_first_delta_x,max_it,err_min_round_off,
+      max_it_refine,err_min_round_off_refine);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyMethodDef phcpy2c_methods[] = 
 {
    {"py2c_PHCpack_version_string", py2c_PHCpack_version_string, METH_VARARGS,
@@ -8557,6 +8658,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_get_default_path_parameters", 
      py2c_get_default_path_parameters, METH_VARARGS, 
     "Given the working precision (16, 32, or 64), returns the default values\n of the path parameters, for the path trackers with algorithmic differentiation."},
+   {"py2c_ade_manypaths_d_pars",
+     py2c_ade_manypaths_d_pars, METH_VARARGS,
+    "Tracks many solution paths with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the standard solutions container holds valid solutions.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n Other input parameters are the real and imaginary parts of the gamma constant.\n Then, the 14 values of the path parameters has to be provided.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_ade_manypaths_dd_pars",
+     py2c_ade_manypaths_dd_pars, METH_VARARGS,
+    "Tracks many solution paths with algorithmic differentation\n in double double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the dobldobl solutions container holds valid solutions.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n Other input parameters are the real and imaginary parts of the gamma constant.\n Then, the 14 values of the path parameters has to be provided.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_ade_manypaths_qd_pars",
+     py2c_ade_manypaths_qd_pars, METH_VARARGS,
+    "Tracks many solution paths with algorithmic differentation\n in quad double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the quaddobl solutions container holds valid solutions.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n Other input parameters are the real and imaginary parts of the gamma constant.\n Then, the 14 values of the path parameters has to be provided.\n On return is the failure code, which equals zero if all went well."},
    {NULL, NULL, 0, NULL} 
 };
 

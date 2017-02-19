@@ -1,3 +1,6 @@
+Sun 19 Feb 2017 : extended lib2path.h and lib2path.cpp with functions to call
+  the path trackers with all parameters for the phcpy2c extension module.
+
 Sat 18 Feb 2017 : added get_value() method to parameters.h and parameters.cpp,
   with calls in lib2path.h and lib2path.cpp.  To lib2path.h and lib2path.cpp,
   added a function to get the default values for the path parameters.
