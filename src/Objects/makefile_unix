@@ -2445,7 +2445,7 @@ ts_adepath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                  -o $(BIN)/ts_adepath_qd -lm --LINK=$(gpp)
 
 parameter.o:
-	$(gpp) -O3 -I$(PHCgpu)/Path/Host \
+	$(gpp) -O3 -fPIC -I$(PHCgpu)/Path/Host \
                -c $(PHCgpu)/Path/Host/parameter.cpp -o parameter.o
 
 lib2path.o:
@@ -3183,7 +3183,7 @@ phc_solve_cpp:
 # gnatlink, but we use gcc to link, so the output of the binder,
 # which contains the adainit must go into the archive phcpy2c2.a.
 
-phcpy2c2.so: lib2path.o
+phcpy2c2.so: parameter.o lib2path.o
 	/bin/rm -f -r phcpy2c2.o phcpy2c2.a phcpy2c3.o phcpy2c3.a
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/syscon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/solcon.c
@@ -3218,7 +3218,7 @@ phcpy2c2.so: lib2path.o
             $(ADALIB)/libgnat_pic.a $(ADALIB)/libgnarl_pic.a \
             -Wl,-no-whole-archive -lrt
 
-phcpy2c3.so: lib2path.o
+phcpy2c3.so: parameter.o lib2path.o
 	/bin/rm -f -r phcpy2c2.o phcpy2c2.a phcpy2c3.o phcpy2c3.a
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/syscon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/solcon.c
