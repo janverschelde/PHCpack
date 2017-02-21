@@ -1,3 +1,6 @@
+Mon 20 Feb 2017 : new class defined in jobqueue.h, tested by test_jobs.cpp,
+  and updated makefile.
+
 Sun 19 Feb 2017 : extended lib2path.h and lib2path.cpp with functions to call
   the path trackers with all parameters for the phcpy2c extension module.
 
