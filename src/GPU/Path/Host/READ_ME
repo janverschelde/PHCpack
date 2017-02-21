@@ -36,5 +36,10 @@ path_track.h       : prototype to track many paths
 path_track.tpp     : templated code for the prototype in path_track.h
 test_path.cpp      : testing the path tracker
 -------------------------------------------------------------------------------
+jobqueue.h         : management of a job queue with mutex
+worker.h           : encapsulation of pthreads
+test_worker.cpp    : basic test on the methods in the Worker class
+test_jobs          : test on processing jobs
+-------------------------------------------------------------------------------
 lib2path           : connect Lib interface to the Path data structures
 -------------------------------------------------------------------------------

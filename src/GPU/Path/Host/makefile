@@ -29,6 +29,9 @@ test_parameter: parameter.o
 test_jobs:
 	$(gpp) -o /tmp/test_jobs test_jobs.cpp
 
+test_worker:
+	$(gpp) -pthread -o /tmp/test_worker test_worker.cpp -lpthread
+
 test_path: parameter.o
 	$(gpp) -c -I$(CMPLX) -I$(POLYS) test_path.cpp -o test_path.o
 	$(gpp) test_path.o parameter.o $(QD_LIB)/libqd.a -o /tmp/test_path

@@ -1,3 +1,6 @@
+Tue 21 Feb 2017 : the class Worker in worker.h encapsulates pthreads,
+  and is tested by test_worker.cpp.
+
 Mon 20 Feb 2017 : new class defined in jobqueue.h, tested by test_jobs.cpp,
   and updated makefile.
 
