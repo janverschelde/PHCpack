@@ -1,3 +1,7 @@
+Wed 22 Feb 2017 : added WorkItem struct in test_jobs.cpp; used explicitly
+  the keyword private in jobqueue.h and worker.h.  Modified the makefile
+  with the flags '-pthread' and '-lpthread' to compile test_jobs.cpp with.
+
 Tue 21 Feb 2017 : the class Worker in worker.h encapsulates pthreads,
   and is tested by test_worker.cpp.  Added test on work crew model
   to test_jobs.cpp.

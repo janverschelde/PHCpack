@@ -10,7 +10,10 @@
 
 class Worker
 {
-   pthread_t thread;     // the thread of execution
+   private:
+
+      pthread_t thread;      // the thread of execution
+      pthread_attr_t attrib; // attributes of the thread
 
    public:
 
@@ -34,7 +37,8 @@ class Worker
              std::cout << "worker " << this->idn
                        << " starts to work ..." << std::endl;
 
-         pthread_create(&(this->thread),NULL,do_job,args);
+         pthread_attr_init(&attrib);
+         pthread_create(&(this->thread),&attrib,do_job,args);
 
          if(verbose > 0)
              std:: cout << "worker " << this->idn

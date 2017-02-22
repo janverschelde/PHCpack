@@ -27,7 +27,7 @@ test_parameter: parameter.o
                -o /tmp/test_parameter
 
 test_jobs:
-	$(gpp) -o /tmp/test_jobs test_jobs.cpp
+	$(gpp) -pthread -o /tmp/test_jobs test_jobs.cpp -lpthread
 
 test_worker:
 	$(gpp) -pthread -o /tmp/test_worker test_worker.cpp -lpthread

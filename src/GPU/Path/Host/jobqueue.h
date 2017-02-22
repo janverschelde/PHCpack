@@ -9,7 +9,9 @@
 
 class JobQueue
 {
-   pthread_mutex_t read_lock;
+   private:
+
+      pthread_mutex_t read_lock;
 
    public:
 
