@@ -174,7 +174,16 @@ int path_test
 
    pars.tune();
 
-   int ret = manytrack(1,1.0,0.0,pars,precision,targetpols,startpols,sols);
+   int nbworkers,ret;
+
+   cout << "\nGive the number of workers (0 for no multithreading) : ";
+   cin >> nbworkers;
+
+   if(nbworkers > 0)
+      ret = crewmanytrack
+          (nbworkers,1,1.0,0.0,pars,precision,targetpols,startpols,sols);
+   else
+      ret = manytrack(1,1.0,0.0,pars,precision,targetpols,startpols,sols);
 
    return 0;
 }

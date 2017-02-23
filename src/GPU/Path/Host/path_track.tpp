@@ -10,7 +10,6 @@ int manytrack
    ComplexType alpha,t;
    CPUInstHom<ComplexType,RealType> cpu_inst_hom;
    Workspace<ComplexType> workspace_cpu;
-   // Parameter pars(prec);
 
    if(verbose > 0)
    {
@@ -32,7 +31,6 @@ int manytrack
    {
       if(verbose > 0) cout << "tracking path " << path_idx << endl;
       ComplexType* sol0 = s.get_sol(path_idx);
-      ComplexType* sol_new = NULL;
       t = ComplexType(0.0,0);
       workspace_cpu.init_x_t_idx();
       workspace_cpu.update_x_t_value(sol0,t);
@@ -53,5 +51,62 @@ int manytrack
             cout << k << " :" << setw(prec+8) << workspace_cpu.x_last[k];
       }
    }
+   return 0;
+}
+
+template <class ComplexType, class RealType>
+int crewmanytrack
+ ( int crewsize,
+   int verbose, double regamma, double imgamma, Parameter pars, int prec,
+   PolySys<ComplexType,RealType>& p, PolySys<ComplexType,RealType>& q,
+   PolySolSet<ComplexType,RealType>& s )
+{
+   double tpred,teval,tmgs;
+   bool success;
+   ComplexType alpha,t;
+   alpha = ComplexType(regamma,imgamma);
+
+   CPUInstHom<ComplexType,RealType> *cpu_inst_hom;
+   cpu_inst_hom = (CPUInstHom<ComplexType,RealType>*)calloc
+      (crewsize,sizeof(CPUInstHom<ComplexType,RealType>));
+
+   Workspace<ComplexType> *workspace_cpu;
+   workspace_cpu = (Workspace<ComplexType>*)calloc
+      (crewsize,sizeof(Workspace<ComplexType>));
+
+   int fail,n_path;
+   n_path = s.n_sol;
+
+   for(int idxworker=0; idxworker<crewsize; idxworker++)
+   {
+      cpu_inst_hom[idxworker].init(p,q,p.dim,p.n_eq,1,alpha,verbose);
+      cpu_inst_hom[idxworker].init_workspace(workspace_cpu[idxworker]);
+   }
+
+   ComplexType* points[n_path]; // stores solution coordinates
+
+   for(int path_idx=0; path_idx<n_path; path_idx++)
+   {
+      points[path_idx] = s.get_sol(path_idx);
+   }
+   for(int path_idx=0; path_idx<n_path; path_idx++)
+   {
+      cout << "The coordinates of start solution " << path_idx
+           << " :" << endl;
+      for(int k=0; k<p.dim; k++) cout << points[path_idx][k];
+   }
+
+   typedef struct
+   {
+      int label;
+      CPUInstHom<ComplexType,RealType>* homotopy;
+      Workspace<ComplexType>* workdata;
+      JobQueue *jobs;
+   }
+   WorkItem;
+
+   Worker *crew = (Worker*)calloc(crewsize,sizeof(Worker));
+   WorkItem *wit = (WorkItem*) calloc(crewsize,sizeof(WorkItem));
+
    return 0;
 }

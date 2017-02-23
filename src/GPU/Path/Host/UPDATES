@@ -1,6 +1,9 @@
 Wed 22 Feb 2017 : added WorkItem struct in test_jobs.cpp; used explicitly
   the keyword private in jobqueue.h and worker.h.  Modified the makefile
   with the flags '-pthread' and '-lpthread' to compile test_jobs.cpp with.
+  Made a first step in adding a work crew version of the manytrack in
+  path_track.h, path_track.tpp, tested by test_path.cpp, with an updated
+  makefile to compile test_path.cpp with the proper flags.
 
 Tue 21 Feb 2017 : the class Worker in worker.h encapsulates pthreads,
   and is tested by test_worker.cpp.  Added test on work crew model
