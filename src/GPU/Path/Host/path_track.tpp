@@ -107,6 +107,15 @@ int crewmanytrack
 
    Worker *crew = (Worker*)calloc(crewsize,sizeof(Worker));
    WorkItem *wit = (WorkItem*) calloc(crewsize,sizeof(WorkItem));
+   JobQueue jobpaths(n_path);
 
+   for(int idxworker=0; idxworker<crewsize; idxworker++)
+   {
+      wit[idxworker].label = idxworker;
+      wit[idxworker].jobs = &jobpaths;
+      wit[idxworker].workdata = &workspace_cpu[idxworker];
+      wit[idxworker].homotopy = &cpu_inst_hom[idxworker];
+   }
+   
    return 0;
 }

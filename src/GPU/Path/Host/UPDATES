@@ -1,3 +1,5 @@
+Thu 23 Feb 2017 : defined the content of the work items in path_track.tpp.
+
 Wed 22 Feb 2017 : added WorkItem struct in test_jobs.cpp; used explicitly
   the keyword private in jobqueue.h and worker.h.  Modified the makefile
   with the flags '-pthread' and '-lpthread' to compile test_jobs.cpp with.
