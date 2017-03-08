@@ -1,3 +1,5 @@
+Tue 7 Mar 2017 : added explicit this-> to workspace_host.tpp.
+
 Fri 24 Feb 2017 : path_track.tpp works for a work crew of size one...
 
 Thu 23 Feb 2017 : defined the content of the work items in path_track.tpp.

@@ -2,8 +2,8 @@
 
 template <class ComplexType>
 void Workspace<ComplexType>::init
-  (int workspace_size, int n_coef, int n_constant,
-   int n_eq, int dim, int n_predictor, int* max_deg_base)
+ ( int workspace_size, int n_coef, int n_constant,
+   int n_eq, int dim, int n_predictor, int* max_deg_base )
 {
    this->dim = dim;
    this->n_eq = n_eq;
@@ -38,7 +38,7 @@ void Workspace<ComplexType>::init
 
    // tmp_x = new ComplexType[dim];
 
-   init_x_t(dim, n_predictor);
+   this->init_x_t(dim, n_predictor); // added this->
    if(max_deg_base != NULL)
    {
       init_deg_table(max_deg_base);
@@ -67,28 +67,32 @@ void Workspace<ComplexType>::init_x_t ( int dim, int n_predictor )
 {
    this->dim = dim;
    this->n_predictor = n_predictor;
-   n_array = n_predictor+1;
+   this->n_array = n_predictor+1;  // added this->
 
-   x_t_idx = 0;
+   this->x_t_idx = 0; // added this->
 
-   x_array = new ComplexType*[n_array];
-   x_array[0] = new ComplexType[n_array*dim];
+   this->x_array = new ComplexType*[this->n_array]; // added this->
+   this->x_array[0] = new ComplexType[this->n_array*dim]; // added this->
    for(int i=0; i<n_predictor; i++)
    {
-      x_array[i+1] = x_array[i] + dim;
+      this->x_array[i+1] = this->x_array[i] + dim; // added this->
    }
-   t_array = new ComplexType[n_array];
+   this->t_array = new ComplexType[this->n_array]; // added this->
 
-   x = x_array[0];
-   t = t_array;
+   this->x = this->x_array[0]; // added this->
+   this->t = this->t_array;    // added this->
 }
 
 template <class ComplexType>
 void Workspace<ComplexType>::init_x_t_idx()
 {
-   x_t_idx = 0;
-   x = x_array[0];
-   t = t_array;
+   std::cout << "inside init_x_t_idx() ..." << std::endl;
+   this->x_t_idx = 0; // added this->
+   std::cout << "assigning x_array[0] to x ..." << std::endl;
+   this->x = this->x_array[0]; // added this->
+   std::cout << "after assignement" << std::endl;
+   this->t = this->t_array; // added this->
+   std::cout << "leaving init_x_t_idx()" << std::endl;
 }
 
 template <class ComplexType>
@@ -112,7 +116,7 @@ void Workspace<ComplexType>::update_x_value ( ComplexType* cpu_sol0 )
 {
    for(int i=0; i<dim; i++)
    {
-      x[i] = cpu_sol0[i];
+      this->x[i] = cpu_sol0[i]; // added this->
    }
 }
 
