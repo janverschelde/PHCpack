@@ -609,7 +609,7 @@ static PyObject *py2c_copy_multprec_container_to_start_solutions
 
 /* black box solver, mixed volume calculator, and Newton step */
 
-static PyObject *py2c_solve_system
+static PyObject *py2c_solve_standard_system
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -653,7 +653,7 @@ static PyObject *py2c_solve_quaddobl_system
  *   On return, the container for solutions in quad double precision
  *   contains the solutions to the system in the quaddobl systems container. */
 
-static PyObject *py2c_solve_Laurent_system
+static PyObject *py2c_solve_standard_Laurent_system
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :

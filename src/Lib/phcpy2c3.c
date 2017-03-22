@@ -992,14 +992,14 @@ static PyObject *py2c_copy_multprec_container_to_start_solutions
 
 /* black box solver, mixed volume calculator, and Newton step */
 
-static PyObject *py2c_solve_system
+static PyObject *py2c_solve_standard_system
  ( PyObject *self, PyObject *args )
 {
-   int fail,rc,nbtasks = 0;
+   int fail,rc,silent,nbtasks = 0;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&nbtasks)) return NULL;
-   fail = solve_system(&rc,nbtasks);
+   if(!PyArg_ParseTuple(args,"ii",&silent,&nbtasks)) return NULL;
+   fail = solve_standard_system(&rc,silent,nbtasks);
    return Py_BuildValue("i",rc);
 }
 
@@ -1020,33 +1020,33 @@ static PyObject *py2c_scan_for_symbols
 static PyObject *py2c_solve_dobldobl_system
  ( PyObject *self, PyObject *args )
 {
-   int fail,rc,nbtasks = 0;
+   int fail,rc,silent,nbtasks = 0;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&nbtasks)) return NULL;
-   fail = solve_dobldobl_system(&rc,nbtasks);
+   if(!PyArg_ParseTuple(args,"ii",&silent,&nbtasks)) return NULL;
+   fail = solve_dobldobl_system(&rc,silent,nbtasks);
    return Py_BuildValue("i",rc);
 }
 
 static PyObject *py2c_solve_quaddobl_system
  ( PyObject *self, PyObject *args )
 {
-   int fail,rc,nbtasks = 0;
+   int fail,rc,silent,nbtasks = 0;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&nbtasks)) return NULL;
-   fail = solve_quaddobl_system(&rc,nbtasks);
+   if(!PyArg_ParseTuple(args,"ii",&silent,&nbtasks)) return NULL;
+   fail = solve_quaddobl_system(&rc,silent,nbtasks);
    return Py_BuildValue("i",rc);
 }
 
-static PyObject *py2c_solve_Laurent_system
+static PyObject *py2c_solve_standard_Laurent_system
  ( PyObject *self, PyObject *args )
 {
    int silent,fail,rc,nbtasks = 0;
 
    initialize();
    if (!PyArg_ParseTuple(args,"ii",&silent,&nbtasks)) return NULL;
-   fail = solve_Laurent_system(&rc,silent,nbtasks);
+   fail = solve_standard_Laurent_system(&rc,silent,nbtasks);
    return Py_BuildValue("i",rc);
 }
 
@@ -7499,7 +7499,7 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_copy_multprec_container_to_start_solutions",
      py2c_copy_multprec_container_to_start_solutions, METH_VARARGS,
     "Copies the solutions in arbitrary multiprecision from the\n container to the start solutions in arbitrary multiprecision."},
-   {"py2c_solve_system", py2c_solve_system, METH_VARARGS,
+   {"py2c_solve_standard_system", py2c_solve_standard_system, METH_VARARGS,
     "Calls the blackbox solver on the system stored in the container for\n systems with coefficients in standard double precision.\n One integer is expected on input: the number of tasks.\n If that number is zero, then no multitasking is applied.\n On return, the container for solutions in standard double precision\n contains the solutions to the system in the standard systems container."},
    {"py2c_scan_for_symbols", py2c_scan_for_symbols, METH_VARARGS,
     "Given on input are two arguments: a number and a string.\n The string holds the string representation of a polynomial system,\n where each polynomial is terminated by a semi colon.\n The first argument on input is the number of characters in the string.\n On return is the number of symbols used as variables in the system.\n This function helps to determine whether a system is square or not."},
@@ -7507,7 +7507,8 @@ static PyMethodDef phcpy2c3_methods[] =
     "Calls the blackbox solver on the system stored in the container for\n systems with coefficients in double double precision.\n One integer is expected on input: the number of tasks.\n If that number is zero, then no multitasking is applied.\n On return, the container for solutions in double double precision\n contains the solutions to the system in the dobldobl systems container."},
    {"py2c_solve_quaddobl_system", py2c_solve_quaddobl_system, METH_VARARGS,
     "Calls the blackbox solver on the system stored in the container for\n systems with coefficients in quad double precision.\n One integer is expected on input: the number of tasks.\n If that number is zero, then no multitasking is applied.\n On return, the container for solutions in quad double precision\n contains the solutions to the system in the quaddobl systems container."},
-   {"py2c_solve_Laurent_system", py2c_solve_Laurent_system, METH_VARARGS,
+   {"py2c_solve_standard_Laurent_system",
+     py2c_solve_standard_Laurent_system, METH_VARARGS,
     "Calls the blackbox solver on the system stored in the container for\n Laurent systems with coefficients in standard double precision.\n Two integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose; and \n 2) the number of tasks: if 0, then no multitasking is applied,\n otherwise as many tasks as the number will run.\n On return, the container for solutions in standard double precision\n contains the solutions to the system in the standard Laurent systems\n container."},
    {"py2c_solve_dobldobl_Laurent_system",
      py2c_solve_dobldobl_Laurent_system, METH_VARARGS,
