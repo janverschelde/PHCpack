@@ -1,3 +1,6 @@
+Tue 21 Mar 2017 : added silent option to the blackbox solvers in phcpack,
+  normalized names, and adjusted phc_solve.c with the extra parameters.
+
 Sun 19 Feb 2017 : extended phcpy2c.h, phcpy2c2.c and phcpy2c3.c with
   functions to call the AD path trackers with values of the path parameters.
 

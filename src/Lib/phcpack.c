@@ -44,38 +44,59 @@ int get_seed ( int *seed )
    return fail;
 }
 
-int solve_system ( int *root_count, int nbtasks )
-{
-   int fail;
-   double *c;
-   fail = _ada_use_c2phc(77,root_count,&nbtasks,c);
-   return fail;
-}
-
-int solve_dobldobl_system ( int *root_count, int nbtasks )
-{
-   int fail;
-   double *c;
-   fail = _ada_use_c2phc(700,root_count,&nbtasks,c);
-   return fail;
-}
-
-int solve_quaddobl_system ( int *root_count, int nbtasks )
-{
-   int fail;
-   double *c;
-   fail = _ada_use_c2phc(702,root_count,&nbtasks,c);
-   return fail;
-}
-
-int solve_Laurent_system ( int *root_count, int silent, int nbtasks )
+int solve_standard_system ( int *root_count, int silent, int nbtasks )
 {
    int fail;
    int b[2];
    double *c;
+
    b[0] = silent;
    b[1] = nbtasks;
+
+   fail = _ada_use_c2phc(77,root_count,b,c);
+
+   return fail;
+}
+
+int solve_dobldobl_system ( int *root_count, int silent, int nbtasks )
+{
+   int fail;
+   int b[2];
+   double *c;
+
+   b[0] = silent;
+   b[1] = nbtasks;
+
+   fail = _ada_use_c2phc(700,root_count,b,c);
+
+   return fail;
+}
+
+int solve_quaddobl_system ( int *root_count, int silent, int nbtasks )
+{
+   int fail;
+   int b[2];
+   double *c;
+
+   b[0] = silent;
+   b[1] = nbtasks;
+
+   fail = _ada_use_c2phc(702,root_count,b,c);
+
+   return fail;
+}
+
+int solve_standard_Laurent_system ( int *root_count, int silent, int nbtasks )
+{
+   int fail;
+   int b[2];
+   double *c;
+
+   b[0] = silent;
+   b[1] = nbtasks;
+
    fail = _ada_use_c2phc(75,root_count,b,c);
+
    return fail;
 }
 
@@ -84,9 +105,12 @@ int solve_dobldobl_Laurent_system ( int *root_count, int silent, int nbtasks )
    int fail;
    int b[2];
    double *c;
+
    b[0] = silent;
    b[1] = nbtasks;
+
    fail = _ada_use_c2phc(701,root_count,b,c);
+
    return fail;
 }
 
@@ -95,9 +119,12 @@ int solve_quaddobl_Laurent_system ( int *root_count, int silent, int nbtasks )
    int fail;
    int b[2];
    double *c;
+
    b[0] = silent;
    b[1] = nbtasks;
+
    fail = _ada_use_c2phc(703,root_count,b,c);
+
    return fail;
 }
 
@@ -105,7 +132,9 @@ int mixed_volume ( int *mv )
 {
    int *b,fail;
    double *c;
+
    fail = _ada_use_c2phc(78,mv,b,c);
+
    return fail;
 }
 
@@ -113,7 +142,9 @@ int stable_mixed_volume ( int *mv, int *smv )
 {
    int fail;
    double *c;
+
    fail = _ada_use_c2phc(79,mv,smv,c);
+
    return fail;
 }
 
@@ -122,6 +153,7 @@ int standard_deflate
 {
    int fail;
    double tols[3];
+
    tols[0] = tolerr;
    tols[1] = tolres;
    tols[2] = tolrnk;
@@ -136,6 +168,7 @@ int dobldobl_deflate
 {
    int fail;
    double tols[3];
+
    tols[0] = tolerr;
    tols[1] = tolres;
    tols[2] = tolrnk;
@@ -150,6 +183,7 @@ int quaddobl_deflate
 {
    int fail;
    double tols[3];
+
    tols[0] = tolerr;
    tols[1] = tolres;
    tols[2] = tolrnk;
@@ -163,7 +197,9 @@ int standard_Newton_step ( void )
 {
    int *a,*b,fail;
    double *c;
+
    fail = _ada_use_c2phc(199,a,b,c);
+
    return fail;
 }
 
@@ -171,7 +207,9 @@ int dobldobl_Newton_step ( void )
 {
    int *a,*b,fail;
    double *c;
+
    fail = _ada_use_c2phc(198,a,b,c);
+
    return fail;
 }
 

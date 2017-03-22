@@ -41,34 +41,43 @@ int get_seed ( int *seed );
  *   This function enables reproducible runs which may be useful
  *   for debugging and testing benchmark problems. */
 
-int solve_system ( int *root_count, int nbtasks );
+int solve_standard_system ( int *root_count, int silent, int nbtasks );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the standard double polynomial systems
  *   container.  The solutions on return are in the solution container.
  *   The integer on return is the root count used in the homotopy.
+ *   If silent == 1, then the solver will not write the computed root
+ *   counts to screen, otherwise, if silent == 0, the user will see
+ *   the computed root counts to screen.
  *   The number of tasks nbtasks is the number of threads that will be used,
  *   if zero, then there will be no multitasking. */
 
-int solve_dobldobl_system ( int *root_count, int nbtasks );
+int solve_dobldobl_system ( int *root_count, int silent, int nbtasks );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the double double polynomial systems
  *   container.  The solutions on return are in the solution container.
  *   The integer on return is the root count used in the homotopy.
+ *   If silent == 1, then the solver will not write the computed root
+ *   counts to screen, otherwise, if silent == 0, the user will see
+ *   the computed root counts to screen.
  *   The number of tasks nbtasks is the number of threads that will be used,
  *   if zero, then there will be no multitasking. */
 
-int solve_quaddobl_system ( int *root_count, int nbtasks );
+int solve_quaddobl_system ( int *root_count, int silent, int nbtasks );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the quad double polynomial systems
  *   container.  The solutions on return are in the solution container.
  *   The integer on return is the root count used in the homotopy.
+ *   If silent == 1, then the solver will not write the computed root
+ *   counts to screen, otherwise, if silent == 0, the user will see
+ *   the computed root counts to screen.
  *   The number of tasks nbtasks is the number of threads that will be used,
  *   if zero, then there will be no multitasking. */
 
-int solve_Laurent_system ( int *root_count, int silent, int nbtasks );
+int solve_standard_Laurent_system ( int *root_count, int silent, int nbtasks );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the standard double Laurent systems
