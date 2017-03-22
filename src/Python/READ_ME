@@ -1,4 +1,4 @@
-phcpy 0.6.5 offers a simple Python interface to PHCv2.4.36
+phcpy 0.6.6 offers a simple Python interface to PHCv2.4.37
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.

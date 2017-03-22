@@ -117,7 +117,7 @@ def standard_solve(pols, silent=False, tasks=0):
     import py2c_syscon_initialize_number_of_standard_Laurentials
     from phcpy.phcpy2c3 import py2c_syscon_store_standard_Laurential
     from phcpy.phcpy2c3 import py2c_solcon_clear_standard_solutions
-    from phcpy.phcpy2c3 import py2c_solve_Laurent_system
+    from phcpy.phcpy2c3 import py2c_solve_standard_Laurent_system
     from phcpy.interface import load_standard_solutions
     py2c_syscon_clear_standard_Laurent_system()
     py2c_solcon_clear_standard_solutions()
@@ -127,7 +127,7 @@ def standard_solve(pols, silent=False, tasks=0):
         pol = pols[ind]
         nchar = len(pol)
         py2c_syscon_store_standard_Laurential(nchar, dim, ind+1, pol)
-    py2c_solve_Laurent_system(silent, tasks)
+    py2c_solve_standard_Laurent_system(silent, tasks)
     return load_standard_solutions()
 
 def dobldobl_solve(pols, silent=False, tasks=0):

@@ -1,5 +1,9 @@
+Tue 21 Mar 2017 : adjusted solver.py in PHCpy2/phcpy and PHCpy3/phcpy
+  for the normalized name to call the blackbox solver in standard precision.
+
 Sun 19 Feb 2017 : added tuned versions of the path trackers with AD to the
   trackers module of phcpy in PHCpy2; also did this addition to PHCpy3.
+  Prepared files for version 0.6.5 of phcpy.
 
 Sat 18 Feb 2017 : to tuning.py in PHCpy2 and PHCpy3 added function to get
   the default values for the path parameters, to write and tune them.
