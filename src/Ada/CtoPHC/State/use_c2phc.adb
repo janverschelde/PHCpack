@@ -1794,9 +1794,14 @@ function use_c2phc ( job : integer32;
   function Job77 return integer32 is -- calls the blackbox solver
 
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
+    use Interfaces.C;
+
    -- n : constant natural := Standard_PolySys_Container.Dimension;
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
-    nt : constant natural32  := natural32(v_b(v_b'first));
+    v_b : constant C_Integer_Array(0..1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    silval : constant natural32 := natural32(v_b(v_b'first));
+    silent : constant boolean := (silval = 1);
+    ntasks : constant natural32 := natural32(v_b(v_b'first+1));
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
@@ -1812,7 +1817,7 @@ function use_c2phc ( job : integer32;
       put_line("The system is underdetermined, add linear equations.");
       return 77;
     end if;
-    Black_Box_Solvers.Solve(nt,lp.all,false,rc,sols); -- not silent by default
+    Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
     Assign(integer32(rc),a);
     Standard_Solutions_Container.Initialize(sols);
     return 0;
@@ -1821,8 +1826,13 @@ function use_c2phc ( job : integer32;
   function Job700 return integer32 is -- dobldobl polynomial blackbox solver
 
     use DoblDobl_Complex_Poly_Systems,DoblDobl_Complex_Solutions;
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
-    nt : constant natural32  := natural32(v_b(v_b'first));
+    use Interfaces.C;
+
+    v_b : constant C_Integer_Array(0..1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    silval : constant natural32 := natural32(v_b(v_b'first));
+    silent : constant boolean := (silval = 1);
+    ntasks : constant natural32 := natural32(v_b(v_b'first+1));
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
@@ -1838,7 +1848,7 @@ function use_c2phc ( job : integer32;
       put_line("The system is underdetermined, add linear equations.");
       return 700;
     end if;
-    Black_Box_Solvers.Solve(nt,lp.all,false,rc,sols); -- not silent by default
+    Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
     Assign(integer32(rc),a);
     DoblDobl_Solutions_Container.Initialize(sols);
     return 0;
@@ -1889,8 +1899,13 @@ function use_c2phc ( job : integer32;
   function Job702 return integer32 is -- quaddobl polynomial blackbox solver
 
     use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Solutions;
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
-    nt : constant natural32  := natural32(v_b(v_b'first));
+    use Interfaces.C;
+
+    v_b : constant C_Integer_Array(0..1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    silval : constant natural32 := natural32(v_b(v_b'first));
+    silent : constant boolean := (silval = 1);
+    ntasks : constant natural32 := natural32(v_b(v_b'first+1));
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
@@ -1906,7 +1921,7 @@ function use_c2phc ( job : integer32;
       put_line("The system is underdetermined, add linear equations.");
       return 702;
     end if;
-    Black_Box_Solvers.Solve(nt,lp.all,false,rc,sols); -- not silent by default
+    Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
     Assign(integer32(rc),a);
     QuadDobl_Solutions_Container.Initialize(sols);
     return 0;
