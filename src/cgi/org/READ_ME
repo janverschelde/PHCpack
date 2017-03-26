@@ -1,0 +1,10 @@
+This directory contains the html code which defines the phcpack.org
+redirection to the computational server kepler.math.uic.edu.
+
+--------------------------------------------------------------
+file           : short description
+--------------------------------------------------------------
+login.css      : style for the login box
+columns.css    : style for the left and right columns
+index.html     : main page for phcpack.org
+--------------------------------------------------------------

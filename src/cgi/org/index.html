@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<head>
+<title>welcome to the PHCpack web portal</TITLE>
+<meta name="description"
+      content="the web portal to PHCpack">
+<link rel="stylesheet" href="columns.css">
+<body>
+<div align="center">
+<b>Solving Polynomial Systems by Polynomial Homotopy Continuation</b>
+</div>
+
+<div class="main">
+
+ <div class="column" id="leftcolumn">
+ <link rel="stylesheet" href="login.css">
+
+   <div class="signin-box">
+    <div  style = "max-width:220px; margin-left:auto; margin-right:auto" >
+    <h2> Sign in </h2>
+    <form method = "post"
+          action = "https://kepler.math.uic.edu/cgi-bin/phcweb.py">
+       <p><b>Email</b></p>
+       <p><input type="email" name="login" spellcheck="false" ></p>
+       <p><b>Password</b></p>
+       <p><input type = "password" name = "passw"></p>
+       <p><input type="checkbox" name="rememberme" value="yes">Remember me
+          <input type = "hidden" name = "phcaction" value ="signin">
+          <input style="float:right" type="submit"
+                 class="g-button g-button-submit" value="Sign in">
+       </p>
+    </form>
+
+    <center>
+    <a href="register.py" id="login-create-an-account">Create an account</a>
+    </center>
+    <center>
+    <a href="forgetpwd.py" id="login-forget-password">Forgot your password?</a>
+    </center>
+    </div>
+   </div>
+   <div class="column" id="leftcolumn">
+   <p> executables
+      <ul>
+      <li> <a href="http://www.math.uic.edu/~jan/x86_64phcv24p.tar.gz">
+         64-bit Linux</a></li>
+      <li> <a href="http://www.math.uic.edu/~jan/mactel64y_phcv24p.tar.gz"> 
+         Mac OS X 10.11</a></li>
+      <li> <a href="http://www.math.uic.edu/~jan/phc.exe">
+        Windows</a></li>
+      </ul>
+   </p>
+   </div>
+  </div>
+ </div>
+</div>
+
+<div class="column" id="rightcolumn">
+<p> PHCpack documentation
+<ul>
+<li> <a href="http://www.math.uic.edu/~jan/acmtomsphcpack.pdf"
+        target=none>paper</a>
+<li> <a href="http://www.math.uic.edu/~jan/phcpack_doc_html/index.html"
+        target=none>html</a>
+<li> <a href="http://www.math.uic.edu/~jan/PHCpack.pdf" target=none>pdf</a>
+</ul>
+</p>
+<p> phcpy documentation
+<ul>
+<li> <a href="http://arxiv.org/abs/1310.0056v2" target=none>paper</A>
+<li> <a href="http://www.math.uic.edu/~jan/phcpy_doc_html/index.html"
+        target=none>html</a>
+<li> <a href="http://www.math.uic.edu/~jan/phcpydoc.pdf"
+        target=none>pdf</a>
+</ul>
+</p>
+<p> data
+<ul>
+<li> <a href="http://www.math.uic.edu/~jan/Demo.tar.gz" target=none>
+     demo systems</a></li>
+</ul>
+</p>
+
+<p>source code
+<ul>
+<li> <a href="https://github.com/janverschelde/PHCpack" target=none>github</a>
+</li>
+<li> <a href="http://www.math.uic.edu/~jan/PHCv2_4p.tar.gz"> tar.gz </a>
+</li>
+</ul>
+</p>
+<p> interfaces
+<ul>
+<li> <a HREF="http://www.math.uic.edu/~jan/PHClab1.0.4.tar.gz"> MATLAB </a>
+</li>
+<li> <A HREF="https://github.com/antonleykin/PHCmaple" target=none> Maple</A>
+</li>
+</ul>
+</p>
+</div>
+
+</div>
+
+</body>
+</html>

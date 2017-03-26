@@ -1,0 +1,26 @@
+.main
+{
+   margin:0 auto;
+   width = 100%;
+}
+
+.column
+{
+   width: 42%;
+   display: block;
+   min-height: 240px;
+   padding: 2%;
+   margin: 2%;
+}
+
+#leftcolumn
+{
+   float: left;
+   background-color: white;
+}
+
+#rightcolumn
+{
+   float: right;
+   background-color: white;
+}
