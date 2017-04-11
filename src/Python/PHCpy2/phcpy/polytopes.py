@@ -280,7 +280,31 @@ def convex_hull(dim, points, checkin=True, checkout=True):
             print 'the list of facets is not correct'
     return result
 
-def mixed_volume(mixture, points):
+def check_mixture(mixture, points):
+    """
+    The sum of the integers in the list mixture equal
+    the dimension of each point in points.
+    Returns True if the mixture type passes the test,
+    otherwise, prints an error message and returns False.
+    """
+    if not isinstance(mixture, list):
+        print 'the argument mixture is not a list'
+        return False
+    if not isinstance(points, list):
+        print 'the argument points is not a list'
+        return False
+    if len(mixture) != len(points):
+        print 'mixture length is not equal to points length'
+        return False
+    dim = sum(mixture)
+    for sup in points:
+        for point in sup:
+           if len(point) != dim:
+              print 'mixture does not match length of point'
+              return False
+    return True
+
+def mixed_volume(mixture, points, checkin=True):
     r"""
     Returns the mixed volume of the tuple in *points*.
     Both *mixture* and *points* have the same length.
@@ -295,6 +319,10 @@ def mixed_volume(mixture, points):
     from phcpy.phcpy2c2 import py2c_celcon_set_type_of_mixture as setmix
     from phcpy.phcpy2c2 import py2c_celcon_append_lifted_point as applft
     from phcpy.phcpy2c2 import py2c_celcon_mixed_volume_of_supports as mixvol
+    if checkin:
+        if not check_mixture(mixture, points):
+            print 'incorrect type of mixture'
+            return -1
     nbr = len(mixture)
     init(nbr)
     setmix(nbr, str(mixture))

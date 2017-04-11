@@ -1,3 +1,6 @@
+Tue 11 Apr 2017 : added check_mixture() function to the polytopes module
+  to check the input format because wrong input crashed python.
+
 Tue 21 Mar 2017 : adjusted solver.py in PHCpy2/phcpy and PHCpy3/phcpy
   for the normalized name to call the blackbox solver in standard precision.
 
