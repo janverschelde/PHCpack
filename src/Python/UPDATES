@@ -1,3 +1,7 @@
+Fri 14 Apr 2017 : fixed bug in the run_pieri_homotopies of the schubert
+  module which occurred with repeated calls to the function.
+  Add the verbose as a last keyword argument.
+
 Tue 11 Apr 2017 : added check_mixture() function to the polytopes module
   to check the input format because wrong input crashed python.
 

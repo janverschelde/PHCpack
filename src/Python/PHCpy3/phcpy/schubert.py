@@ -298,7 +298,7 @@ def points_to_string(pts):
             result = result + ' ' + ('%.17e' % yre)
     return result
 
-def run_pieri_homotopies(mdim, pdim, qdeg, planes, verbose=True, *pts):
+def run_pieri_homotopies(mdim, pdim, qdeg, planes, *pts, **opt):
     r"""
     Computes the number of *pdim*-plane producing maps of degree *qdeg*
     that meet *mdim*-planes at mdim*pdim + qdeq*(mdim+pdim) points.
@@ -307,9 +307,14 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, verbose=True, *pts):
     from phcpy.phcpy2c3 import py2c_schubert_pieri_count
     from phcpy.phcpy2c3 import py2c_schubert_pieri_homotopies
     from phcpy.phcpy2c3 import py2c_syscon_load_standard_polynomial
+    from phcpy.phcpy2c3 import py2c_solcon_clear_standard_solutions
     from phcpy.phcpy2c3 import py2c_solcon_number_of_standard_solutions
     from phcpy.phcpy2c3 import py2c_solcon_length_standard_solution_string
     from phcpy.phcpy2c3 import py2c_solcon_write_standard_solution_string
+    if 'verbose' not in opt:
+        verbose = True        # by default, the function is verbose
+    else:
+        verbose = opt['verbose']
     root_count = py2c_schubert_pieri_count(mdim, pdim, qdeg)
     if verbose:
         print('Pieri root count for', (mdim, pdim, qdeg), 'is', root_count)
@@ -321,6 +326,7 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, verbose=True, *pts):
     else:
         strpts = ''
     # print 'calling py2c_pieri_homotopies ...'
+    py2c_solcon_clear_standard_solutions()
     if verbose:
         print('passing %d characters for (m, p, q) = (%d, %d, %d)' \
             % (len(strplanes), mdim, pdim, qdeg))
@@ -484,8 +490,7 @@ def test_pieri():
         print('interpolation points :')
         for point in points:
             print(point)
-        (system, sols) = run_pieri_homotopies(mdim, pdim, qdeg, planes, \
-            True, points)
+        (system, sols) = run_pieri_homotopies(mdim, pdim, qdeg, planes, points)
     else:
         (system, sols) = run_pieri_homotopies(mdim, pdim, qdeg, planes)
     print('evaluation of the solutions :')
