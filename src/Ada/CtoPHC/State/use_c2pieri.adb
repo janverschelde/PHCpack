@@ -574,7 +574,7 @@ function use_c2pieri ( job : integer32;
 
   begin
     Assign(natural32(tdim+2*n),c,cff);
-    Show_Input_Planes_and_Points(n,m,p,q,cff);
+   -- Show_Input_Planes_and_Points(n,m,p,q,cff);
     planes := Construct_Input_Planes(n,m,p,cff);
    -- put_line("The input planes :"); put(planes);
     for i in 1..n loop

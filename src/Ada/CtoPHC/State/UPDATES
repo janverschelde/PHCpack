@@ -1,3 +1,6 @@
+Sat 22 Apr 2017 : commented out the Show_Input_Planes_and_Points in the
+  running of the Pieri homotopies in use_c2pieri.adb.
+
 Tue 21 Mar 2017 : in use_c2phc.adb, captured the silent option in the
   blackbox solvers for regular polynomial systems.
 
