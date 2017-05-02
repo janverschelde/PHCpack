@@ -115,6 +115,40 @@ def tangent_lines(solpts):
         result.append((pnt, tan))
     return result
 
+def plot_spheres(ctr, rad):
+    """
+    Returns the spheres with centers in ctr and radii in rad
+    as golden balls.
+    """
+    x, y, z = var('x, y, z')
+    ctr = [(1, 1, 1), (1, -1, -1), (-1, 1, -1), (-1, -1, 1)]
+    eqs = [(x - c[0])^2 + (y - c[1])^2 + (z - c[2])^2 - r^2 \
+        for (c, r) in zip(ctr, rad)]
+    xr = (x, -3, 3)
+    yr = (y, -3, 3)
+    zr = (z, -3, 3)
+    balls = [implicit_plot3d(equ, xr, yr, zr, color='gold') for equ in eqs]
+    return sum(balls)
+
+def plot_tangents(lines):
+    """
+    Given in lines the coordinates of the points and the tangents,
+    plots the lines in the range [-3, 3] for the x, y, z coordinates.
+    """
+    points = [pnt for (pnt, tan) in lines]
+    tangents = [tan for (pnt, tan) in lines]
+    a1 = vector(RR, points[0]) + 3*vector(RR, tangents[0])
+    a2 = vector(RR, points[2]) + 3*vector(RR, tangents[2])
+    a3 = vector(RR, points[4]) + 3*vector(RR, tangents[4])
+    b1 = vector(RR, points[0]) - 3*vector(RR, tangents[0])
+    b2 = vector(RR, points[2]) - 3*vector(RR, tangents[2])
+    b3 = vector(RR, points[4]) - 3*vector(RR, tangents[4])
+    L1 = line([a1, b1], thickness=10, color='red')
+    L2 = line([a2, b2], thickness=10, color='blue')
+    L3 = line([a3, b3], thickness=10, color='green')
+    fig = L1 + L2 + L3
+    return fig
+
 def main():
     """
     Solves the problem of computing all tangent lines
@@ -143,5 +177,8 @@ def main():
     print 'the tangent lines :'
     for line in lines:
         print line
+    fig1 = plot_spheres(ctr, rad)
+    fig2 = plot_tangents(lines)
+    (fig1+fig2).save('tangents.png')
 
 main()
