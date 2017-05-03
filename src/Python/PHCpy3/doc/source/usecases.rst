@@ -25,6 +25,11 @@ In all use cases, plots of the solutions are made with matplotlib.
 To formulate the polynomial equations we may use sympy,
 as illustrated in the design of 4-bar mechanisms.
 
+The python interpreter in Sage can be extended to include phcpy.
+In the problem of all lines tangent to four given lines,
+the polynomial system is formulated with Sage and the visualization
+of the solutions is also done within Sage.
+
 In all use cases, we distinguish between general instances of a problem
 (where the numbers for the parameters are chosen at random),
 and specific instances of the problem.
@@ -37,3 +42,4 @@ For these specific instances, singular solutions are likely to occur.
    fourbar
    fourlines
    touchcircle
+   tangents4spheres
