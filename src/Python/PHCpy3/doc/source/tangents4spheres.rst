@@ -44,7 +44,7 @@ the equation is
    \cdot ({\bf m} - {\bf c} \times {\bf t}) - r^2 = 0,
 
 where :math:`\times` is the cross product
-and where :math:`\cdot` is the dot product
+and where :math:`\cdot` is the dot product.
 So we end up with a polynomial system of six equations in six unknowns.
 
 The code in Sage to generate the polynomial system is below:
@@ -87,3 +87,31 @@ Calling the blackbox solver then happens as
         print sol
 
 and we see the multiplicity four solutions printed.
+
+tangents lines of multiplicities two
+------------------------------------
+
+If the four spheres are centered at
+:math:`(2, 2, 0)`,
+:math:`(2, 0, 2)`, 
+:math:`(0, 2, 2)`,
+:math:`(0, 0, 0)`, and the radius of all four spheres 
+is :math:`3/2`, then there are six lines tangents to
+all four spheres, which are to be counted each with
+multiplicity two, shown in :numref:`figtangents2`.
+
+.. _figtangents2:
+
+.. figure:: ./tangents2.png
+    :align: center
+
+    Six lines touching four spheres.
+
+The reference for this case is the paper by Frank Sottile 
+and Thorsten Theobald:
+**Line problems in nonlinear computational geometry**,
+published in *Computational Geometry - Twenty Years Later*, pages 411-432,
+edited by J.E. Goodman, J. Pach, and R. Pollack, AMS, 2008.
+
+The setup for the polynomial systems is identical to that
+of the previous section.
