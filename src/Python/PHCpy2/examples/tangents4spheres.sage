@@ -94,8 +94,9 @@ def real_coordinates(vars, sols):
         crd = []
         for var in vars:
             idx = names.index(var)
-            nbr = values[idx].real
-            crd.append((nbr if abs(nbr) > 1.e-12 else 0.0))
+            nbr = RDF(values[idx].real)
+            val = float(nbr.n(digits=12)) # remove round off errors
+            crd.append((val if abs(val) > 1.e-12 else 0.0))
         result.append(tuple(crd))
     return result
 
@@ -160,6 +161,35 @@ def plot_double_spheres(ctr, rad):
     balls = [implicit_plot3d(equ, xr, yr, zr, color='gold') for equ in eqs]
     return sum(balls)
 
+def insigned(vectors, tangent):
+    """
+    Returns True if -tangent occurs in the list vectors,
+    returns False otherwise.
+    """
+    for vec in vectors:
+        if ((abs(vec[0] + tangent[0]) < 1.0e-12) and
+            (abs(vec[1] + tangent[1]) < 1.0e-12) and
+            (abs(vec[2] + tangent[2]) < 1.0e-12)):
+            return True
+    return False
+
+def filter(points, tangents):
+    """
+    Every tangent vector t occurs as a pairs: (+t, -t), as +t and -t.
+    Given the list of points and corresponding tangent vectors,
+    returns a tuple of two lists: a list of points and a list of tangents,
+    where every tangent vector occurs only once.
+    Therefore, the lists on return should be half the length
+    of the lists on input.
+    """
+    pts = []
+    tgs = []
+    for (pnt, tan) in zip(points, tangents):
+        if not insigned(tgs, tan):
+            pts.append(pnt)
+            tgs.append(tan)
+    return (pts, tgs)
+
 def plot_quadruple_tangents(lines):
     """
     Given in lines the coordinates of the points and the tangents,
@@ -168,12 +198,20 @@ def plot_quadruple_tangents(lines):
     """
     points = [pnt for (pnt, tan) in lines]
     tangents = [tan for (pnt, tan) in lines]
-    a1 = vector(RR, points[0]) + 3*vector(RR, tangents[0])
-    a2 = vector(RR, points[2]) + 3*vector(RR, tangents[2])
-    a3 = vector(RR, points[4]) + 3*vector(RR, tangents[4])
-    b1 = vector(RR, points[0]) - 3*vector(RR, tangents[0])
-    b2 = vector(RR, points[2]) - 3*vector(RR, tangents[2])
-    b3 = vector(RR, points[4]) - 3*vector(RR, tangents[4])
+    for (pnt, tan) in zip(points, tangents):
+        print 'point :', pnt
+        print 'tangent :', tan
+    (filpts, filtan) = filter(points, tangents)
+    print 'after filtering :'
+    for (pnt, tan) in zip(filpts, filtan):
+        print 'point :', pnt
+        print 'tangent :', tan
+    a1 = vector(RR, filpts[0]) + 3*vector(RR, filtan[0])
+    a2 = vector(RR, filpts[1]) + 3*vector(RR, filtan[1])
+    a3 = vector(RR, filpts[2]) + 3*vector(RR, filtan[2])
+    b1 = vector(RR, filpts[0]) - 3*vector(RR, filtan[0])
+    b2 = vector(RR, filpts[1]) - 3*vector(RR, filtan[1])
+    b3 = vector(RR, filpts[2]) - 3*vector(RR, filtan[2])
     L1 = line([a1, b1], thickness=10, color='red')
     L2 = line([a2, b2], thickness=10, color='blue')
     L3 = line([a3, b3], thickness=10, color='green')
@@ -188,18 +226,26 @@ def plot_double_tangents(lines):
     """
     points = [pnt for (pnt, tan) in lines]
     tangents = [tan for (pnt, tan) in lines]
-    a1 = vector(RR, points[0]) + 3*vector(RR, tan[0][1])
-    a2 = vector(RR, points[2]) + 3*vector(RR, tan[2][1])
-    a3 = vector(RR, points[4]) + 3*vector(RR, tan[4][1])
-    a4 = vector(RR, points[6]) + 3*vector(RR, tan[6][1])
-    a5 = vector(RR, points[8]) + 5*vector(RR, tan[8][1])
-    a6 = vector(RR, points[9]) + 3*vector(RR, tan[9][1])
-    b1 = vector(RR, points[0]) - 5*vector(RR, tan[0][1])
-    b2 = vector(RR, points[2]) - 5*vector(RR, tan[2][1])
-    b3 = vector(RR, points[4]) - 5*vector(RR, tan[4][1])
-    b4 = vector(RR, points[6]) - 5*vector(RR, montans[6][1])
-    b5 = vector(RR, points[8]) - 3*vector(RR, montans[8][1])
-    b6 = vector(RR, points[9]) - 5*vector(RR, montans[9][1])
+    for (pnt, tan) in zip(points, tangents):
+        print 'point :', pnt
+        print 'tangent :', tan
+    (filpts, filtan) = filter(points, tangents)
+    print 'after filtering :'
+    for (pnt, tan) in zip(filpts, filtan):
+        print 'point :', pnt
+        print 'tangent :', tan
+    a1 = vector(RR, filpts[0]) + 5*vector(RR, filtan[0])
+    a2 = vector(RR, filpts[1]) + 5*vector(RR, filtan[1])
+    a3 = vector(RR, filpts[2]) + 5*vector(RR, filtan[2])
+    a4 = vector(RR, filpts[3]) + 5*vector(RR, filtan[3])
+    a5 = vector(RR, filpts[4]) + 5*vector(RR, filtan[4])
+    a6 = vector(RR, filpts[5]) + 5*vector(RR, filtan[5])
+    b1 = vector(RR, filpts[0]) - 5*vector(RR, filtan[0])
+    b2 = vector(RR, filpts[1]) - 5*vector(RR, filtan[1])
+    b3 = vector(RR, filpts[2]) - 5*vector(RR, filtan[2])
+    b4 = vector(RR, filpts[3]) - 5*vector(RR, filtan[3])
+    b5 = vector(RR, filpts[4]) - 3*vector(RR, filtan[4])
+    b6 = vector(RR, filpts[5]) - 5*vector(RR, filtan[5])
     L0 = line([a1, b1], thickness=10, color='red')
     L1 = line([a2, b2], thickness=10, color='blue')
     L2 = line([a3, b3], thickness=10, color='green')
