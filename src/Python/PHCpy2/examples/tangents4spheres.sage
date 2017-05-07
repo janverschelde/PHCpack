@@ -52,6 +52,22 @@ def quadruples():
     rad = [sqrt(2) for _ in range(4)]
     return (ctr, rad)
 
+def quadruples_perturbed():
+    """
+    If each pair of the four given spheres touch each other, then the
+    tangent lines connect the points where the spheres touch each other.
+    In that case, the tangent lines then have multiplicity four.
+    This function returns the centers and the radii of the four
+    spheres as a tuple of two lists.
+    """
+    c0 = (+1, +1, +1)
+    c1 = (+1, -1, -1)
+    c2 = (-1, +1, -1)
+    c3 = (-1, -1, +1)
+    ctr = [c0, c1, c2, c3]
+    rad = [sqrt(2.1) for _ in range(4)]
+    return (ctr, rad)
+
 def doubles():
     """
     Returns the centers and the radii for a case where the solutions 
@@ -265,7 +281,11 @@ def main():
     if dbl:
         (ctr, rad) = doubles()
     else:
-        (ctr, rad) = quadruples()
+        ans = raw_input('perturbed ? (y/n) ')
+        if ans == 'y':
+            (ctr, rad) = quadruples_perturbed()
+        else:
+            (ctr, rad) = quadruples()
     eqs, vrs = tangent_system(ctr, rad)
     print 'the polynomial system :'
     for equ in eqs:
