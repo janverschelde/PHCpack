@@ -116,11 +116,26 @@ def real_coordinates(vars, sols):
         result.append(tuple(crd))
     return result
 
+def iszero(vec, tol):
+    """
+    Returns True if every component of the vector vec
+    has a smaller magnitude than the tolerance tol.
+    """
+    for x in vec:
+        if abs(x) > tol:
+            return False
+    return True
+
 def crosspoint(tan, mom, verbose=True):
     """
     Given a tangent vector and moment vector,
     computes a point, solving for m = p x t.
+    If the moment vector is zero, then zero is a solution.
     """
+    if iszero(mom, 1.0e-8):
+        if verbose:
+            print 'zero moment vector'
+        return vector([0.0, 0.0, 0.0])
     if verbose:
         print 't =', tan
         print 'm =', mom
@@ -129,6 +144,9 @@ def crosspoint(tan, mom, verbose=True):
                     [tan[1], -tan[0], 0]])
     if verbose:
         print A
+    if abs(det(A)) < 1.0e-8:
+        if verbose:
+            print 'matrix A is singular'
     sol = A\vector(RR,mom)
     if verbose:
         print 'x =', sol
