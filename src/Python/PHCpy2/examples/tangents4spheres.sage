@@ -65,7 +65,7 @@ def quadruples_perturbed():
     c2 = (-1, +1, -1)
     c3 = (-1, -1, +1)
     ctr = [c0, c1, c2, c3]
-    rad = [sqrt(2.1) for _ in range(4)]
+    rad = [sqrt(2.01) for _ in range(4)]
     return (ctr, rad)
 
 def doubles():
@@ -147,7 +147,9 @@ def crosspoint(tan, mom, verbose=True):
     if abs(det(A)) < 1.0e-8:
         if verbose:
             print 'matrix A is singular'
-        F = A.echelon_form()
+        mommat = Matrix(mom).transpose()
+        B = A.augment(mommat)
+        F = B.echelon_form()
         if verbose:
             print 'the echelon form :', F
         sol = vector(RR, [x[0] for x in F[:,-1]])
@@ -276,8 +278,8 @@ def plot_twelve_tangents(lines):
         print 'tangent :', tan
     first = True
     for (pnt, tan) in zip(filpts, filtan):
-        apt = vector(RR, pnt) + 5*vector(RR, tan)
-        bpt = vector(RR, pnt) - 5*vector(RR, tan)
+        apt = vector(RR, pnt) + 4*vector(RR, tan)
+        bpt = vector(RR, pnt) - 4*vector(RR, tan)
         abL = line([apt, bpt], thickness=5, color='red')
         fig = (abL if first else fig + abL)
         first = False
