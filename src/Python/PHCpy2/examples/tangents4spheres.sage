@@ -147,7 +147,12 @@ def crosspoint(tan, mom, verbose=True):
     if abs(det(A)) < 1.0e-8:
         if verbose:
             print 'matrix A is singular'
-    sol = A\vector(RR,mom)
+        F = A.echelon_form()
+        if verbose:
+            print 'the echelon form :', F
+        sol = vector(RR, [x[0] for x in F[:,-1]])
+    else:
+        sol = A\vector(RR, mom)
     if verbose:
         print 'x =', sol
     return sol
@@ -252,6 +257,32 @@ def plot_quadruple_tangents(lines):
     fig = L1 + L2 + L3
     return fig
 
+def plot_twelve_tangents(lines):
+    """
+    Given in lines the coordinates of the points and the tangents,
+    returns the plot of the lines in the range [-3, +3] for all three
+    coordinates, in the case of the twelve tangents of the
+    perturbed case of the multiplicity four case.
+    """
+    points = [pnt for (pnt, tan) in lines]
+    tangents = [tan for (pnt, tan) in lines]
+    for (pnt, tan) in zip(points, tangents):
+        print 'point :', pnt
+        print 'tangent :', tan
+    (filpts, filtan) = filter(points, tangents)
+    print 'after filtering :'
+    for (pnt, tan) in zip(filpts, filtan):
+        print 'point :', pnt
+        print 'tangent :', tan
+    first = True
+    for (pnt, tan) in zip(filpts, filtan):
+        apt = vector(RR, pnt) + 5*vector(RR, tan)
+        bpt = vector(RR, pnt) - 5*vector(RR, tan)
+        abL = line([apt, bpt], thickness=5, color='red')
+        fig = (abL if first else fig + abL)
+        first = False
+    return fig
+
 def plot_double_tangents(lines):
     """
     Given in lines the coordinates of the points and the tangents,
@@ -299,8 +330,9 @@ def main():
     if dbl:
         (ctr, rad) = doubles()
     else:
-        ans = raw_input('perturbed ? (y/n) ')
-        if ans == 'y':
+        ans = raw_input('Perturbed ? (y/n) ')
+        prb = (ans == 'y')
+        if prb:
             (ctr, rad) = quadruples_perturbed()
         else:
             (ctr, rad) = quadruples()
@@ -331,7 +363,10 @@ def main():
         fig2 = plot_double_tangents(lines)
     else:
         fig1 = plot_quadruple_spheres(ctr, rad)
-        fig2 = plot_quadruple_tangents(lines)
+        if prb:
+            fig2 = plot_twelve_tangents(lines)
+        else:
+            fig2 = plot_quadruple_tangents(lines)
     (fig1+fig2).save('tangents.png')
 
 main()
