@@ -26,7 +26,8 @@ def tangent_system(centers, radii, verbose=True):
         print momt
     eqs = [normt, momt]
     for (ctr, rad) in zip(centers, radii):
-        print 'the center :', ctr
+        if verbose:
+            print 'the center :', ctr
         vc = vector(ctr)
         left = vm - vc.cross_product(vt)
         equ = left.dot_product(left) - rad**2
@@ -159,7 +160,7 @@ def crosspoint(tan, mom, verbose=True):
         print 'x =', sol
     return sol
 
-def tangent_lines(solpts):
+def tangent_lines(solpts, verbose=True):
     """
     Given the list of solution points in solpts, returns the list of 
     tuples which represent the lines.  Each tuple contains a point on 
@@ -167,10 +168,11 @@ def tangent_lines(solpts):
     """
     result = []
     for point in solpts:
-        print point
+        if verbose:
+            print point
         tan = vector(point[0:3])
         mom = vector(point[3:6])
-        pnt = crosspoint(tan, mom)
+        pnt = crosspoint(tan, mom, verbose)
         result.append((pnt, tan))
     return result
 
@@ -231,7 +233,7 @@ def filter(points, tangents):
             tgs.append(tan)
     return (pts, tgs)
 
-def plot_quadruple_tangents(lines):
+def plot_quadruple_tangents(lines, verbose=True):
     """
     Given in lines the coordinates of the points and the tangents,
     returns the plot of the lines in the range [-3, +3] for all three
@@ -239,14 +241,16 @@ def plot_quadruple_tangents(lines):
     """
     points = [pnt for (pnt, tan) in lines]
     tangents = [tan for (pnt, tan) in lines]
-    for (pnt, tan) in zip(points, tangents):
-        print 'point :', pnt
-        print 'tangent :', tan
+    if verbose:
+        for (pnt, tan) in zip(points, tangents):
+            print 'point :', pnt
+            print 'tangent :', tan
     (filpts, filtan) = filter(points, tangents)
-    print 'after filtering :'
-    for (pnt, tan) in zip(filpts, filtan):
-        print 'point :', pnt
-        print 'tangent :', tan
+    if verbose:
+        print 'after filtering :'
+        for (pnt, tan) in zip(filpts, filtan):
+            print 'point :', pnt
+            print 'tangent :', tan
     a1 = vector(RR, filpts[0]) + 3*vector(RR, filtan[0])
     a2 = vector(RR, filpts[1]) + 3*vector(RR, filtan[1])
     a3 = vector(RR, filpts[2]) + 3*vector(RR, filtan[2])
@@ -259,7 +263,7 @@ def plot_quadruple_tangents(lines):
     fig = L1 + L2 + L3
     return fig
 
-def plot_twelve_tangents(lines):
+def plot_twelve_tangents(lines, verbose=True):
     """
     Given in lines the coordinates of the points and the tangents,
     returns the plot of the lines in the range [-3, +3] for all three
@@ -268,14 +272,16 @@ def plot_twelve_tangents(lines):
     """
     points = [pnt for (pnt, tan) in lines]
     tangents = [tan for (pnt, tan) in lines]
-    for (pnt, tan) in zip(points, tangents):
-        print 'point :', pnt
-        print 'tangent :', tan
+    if verbose:
+        for (pnt, tan) in zip(points, tangents):
+            print 'point :', pnt
+            print 'tangent :', tan
     (filpts, filtan) = filter(points, tangents)
-    print 'after filtering :'
-    for (pnt, tan) in zip(filpts, filtan):
-        print 'point :', pnt
-        print 'tangent :', tan
+    if verbose:
+        print 'after filtering :'
+        for (pnt, tan) in zip(filpts, filtan):
+            print 'point :', pnt
+            print 'tangent :', tan
     first = True
     for (pnt, tan) in zip(filpts, filtan):
         apt = vector(RR, pnt) + 4*vector(RR, tan)
@@ -285,7 +291,7 @@ def plot_twelve_tangents(lines):
         first = False
     return fig
 
-def plot_double_tangents(lines):
+def plot_double_tangents(lines, verbose=True):
     """
     Given in lines the coordinates of the points and the tangents,
     plots the lines in the range [-2, 4] for the x, y, z coordinates,
@@ -293,14 +299,16 @@ def plot_double_tangents(lines):
     """
     points = [pnt for (pnt, tan) in lines]
     tangents = [tan for (pnt, tan) in lines]
-    for (pnt, tan) in zip(points, tangents):
-        print 'point :', pnt
-        print 'tangent :', tan
+    if verbose:
+        for (pnt, tan) in zip(points, tangents):
+            print 'point :', pnt
+            print 'tangent :', tan
     (filpts, filtan) = filter(points, tangents)
-    print 'after filtering :'
-    for (pnt, tan) in zip(filpts, filtan):
-        print 'point :', pnt
-        print 'tangent :', tan
+    if verbose:
+        print 'after filtering :'
+        for (pnt, tan) in zip(filpts, filtan):
+            print 'point :', pnt
+            print 'tangent :', tan
     a1 = vector(RR, filpts[0]) + 5*vector(RR, filtan[0])
     a2 = vector(RR, filpts[1]) + 5*vector(RR, filtan[1])
     a3 = vector(RR, filpts[2]) + 5*vector(RR, filtan[2])
@@ -338,37 +346,44 @@ def main():
             (ctr, rad) = quadruples_perturbed()
         else:
             (ctr, rad) = quadruples()
-    eqs, vrs = tangent_system(ctr, rad)
-    print 'the polynomial system :'
-    for equ in eqs:
-        print equ
+    ans = raw_input('Verbose ? (y/n) ')
+    verbose = (ans == 'y')
+    eqs, vrs = tangent_system(ctr, rad, verbose)
+    if verbose:
+        print 'the polynomial system :'
+        for equ in eqs:
+            print equ
     pols = tostrings(eqs)
-    for pol in pols:
-        print pol
-    print 'calling the solver of phcpy :'
+    if verbose:
+        for pol in pols:
+            print pol
+        print 'calling the solver of phcpy :'
     from phcpy.solver import solve
     sols = solve(pols, silent=True)
-    print 'the solutions :'
-    for sol in sols:
-        print sol
+    if verbose:
+        print 'the solutions :'
+        for sol in sols:
+            print sol
     vars = ['x0', 'x1', 'x2', 'x3', 'x4', 'x5']
     pts = real_coordinates(vars, sols)
-    print 'the coordinates of the solution points :'
-    for point in pts:
-        print point
-    lines = tangent_lines(pts)
-    print 'the tangent lines :'
-    for line in lines:
-        print line
+    if verbose:
+        print 'the coordinates of the solution points :'
+        for point in pts:
+            print point
+    lines = tangent_lines(pts, verbose)
+    if verbose:
+        print 'the tangent lines :'
+        for line in lines:
+            print line
     if dbl:
         fig1 = plot_double_spheres(ctr, rad)
-        fig2 = plot_double_tangents(lines)
+        fig2 = plot_double_tangents(lines, verbose)
     else:
         fig1 = plot_quadruple_spheres(ctr, rad)
         if prb:
-            fig2 = plot_twelve_tangents(lines)
+            fig2 = plot_twelve_tangents(lines, verbose)
         else:
-            fig2 = plot_quadruple_tangents(lines)
+            fig2 = plot_quadruple_tangents(lines, verbose)
     (fig1+fig2).save('tangents.png')
 
 main()
