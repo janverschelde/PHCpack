@@ -87,3 +87,104 @@ Calling the blackbox solver then happens as
         print sol
 
 and we see the multiplicity four solutions printed.
+
+Lines are represented as :math:`{\bf m} = {\bf p} \times {\bf t}`,
+where :math:`{\bf p}` is a point on the line.
+The solutions of the polynomial system give values for the
+components of the moment vector :math:`{\bf m} = (x_0, x_1, x_2)`
+and the tangent vector :math:`{\bf t} = (x_3, x_4, x_5)`.
+To draw the line defined by :math:`{\bf m}` and :math:`{\bf t}`
+we need to compute the coordinates
+of :math:`{\bf p} = (p_1, p_2, p_3)`
+which can be done via the solution of a 3-by-3 linear system.
+The equation :math:`{\bf m} = {\bf p} \times {\bf t}`
+with the definition of the cross product and components:
+
+.. math::
+   {\bf m} =
+   \left(
+      \begin{array}{c}
+         x_0 \\
+          0  \\
+          0 
+      \end{array}
+   \right) {\bf i}
+   +
+   \left(
+      \begin{array}{c}
+          0  \\
+         x_1 \\
+          0
+      \end{array}
+   \right) {\bf j}
+   +
+   \left(
+      \begin{array}{c}
+         0 \\
+         0 \\
+         x_2 
+      \end{array}
+   \right) {\bf k}, \quad
+   {\bf p} \times {\bf t}
+   =
+   \left|
+      \begin{array}{ccc}
+         {\bf i} & {\bf j} & {\bf k} \\    
+           p_1   &   p_2   &   p_3   \\
+           x_3   &   x_4   &   x_5
+      \end{array}
+   \right|.
+
+Expanding the cross product for :math:`{\bf p} \times {\bf t}`
+and identifying its components with the components of :math:`{\bf m}`
+gives the linear system
+
+.. math::
+   \left(
+      \begin{array}{ccc}
+         0 & x_5 & -x_4 \\
+        -x_5 & 0 &  x_3 \\
+         x_4 & -x_3 & 0
+      \end{array}
+   \right)
+   \left(
+      \begin{array}{c}
+         p_1 \\ p_2 \\ p_3
+      \end{array}
+   \right)
+   =
+   \left(
+      \begin{array}{c}
+         x_0 \\ x_1 \\ x_2
+      \end{array}
+   \right)
+
+in the unknown coordinates for the point :math:`{\bf p}`.
+
+tangents lines of multiplicities two
+------------------------------------
+
+If the four spheres are centered at
+:math:`(2, 2, 0)`,
+:math:`(2, 0, 2)`, 
+:math:`(0, 2, 2)`,
+:math:`(0, 0, 0)`, and the radius of all four spheres 
+is :math:`3/2`, then there are six lines tangents to
+all four spheres, which are to be counted each with
+multiplicity two, shown in :numref:`figtangents2`.
+
+.. _figtangents2:
+
+.. figure:: ./tangents2.png
+    :align: center
+
+    Six lines touching four spheres.
+
+The reference for this case is the paper by Frank Sottile 
+and Thorsten Theobald:
+**Line problems in nonlinear computational geometry**,
+published in *Computational Geometry - Twenty Years Later*, pages 411-432,
+edited by J.E. Goodman, J. Pach, and R. Pollack, AMS, 2008.
+
+The setup for the polynomial systems is identical to that
+of the previous section.
