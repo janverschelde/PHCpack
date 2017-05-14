@@ -223,10 +223,10 @@ latex_elements = {
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-#'preamble': '',
+'preamble': '\usepackage{amssymb}',
 
 # Latex figure (float) alignment
-#'figure_align': 'htbp',
+'figure_align': 'htbp',
 
 # chapter headings
 'fncychap': '\\usepackage[Sonny]{fncychap}',

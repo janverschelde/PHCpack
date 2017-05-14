@@ -19,6 +19,19 @@ in :numref:`figtangents4` shows that each tangent line occurs
 with multiplicity four.  Counting with multiplicities,
 the number of tangent lines thus equals twelve.
 
+This problem was studied by
+I.G. Macdonald, J. Pach, and T. Theobald, who wrote the paper
+*Common Tangents to Four Unit Balls in* :math:`{\mathbb R}^3`
+published in *Discrete and Computational Geometry* 26(1): 1-17, 2001.
+Many instances of this problem appear in the book by Frank Sottile,
+entitled *Real Solutions to Equations from Geometry*
+published as Volume 57 of University Lecture Series, AMS, 2011.
+The formulation of the problem, representing tangent lines by
+moment and tangent vectors, is described in the PhD thesis
+of Cassiano Durand:
+*Symbolic and Numerical Techniques for Constraint Solving*,
+Purdue University, 1998.
+
 four mutually touching spheres
 ------------------------------
 
