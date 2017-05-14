@@ -174,6 +174,52 @@ gives the linear system
 
 in the unknown coordinates for the point :math:`{\bf p}`.
 
+To solve for :math:`{\bf p}` in the equation 
+:math:`{\bf m} = {\bf p} \times {\bf t}`,
+we use the function ``iszero`` for the special case
+when the moment vector is zero.
+If the moment vector is zero, the zero is a solution for :math:``{\bf p}``.
+
+::
+
+   def iszero(vec, tol):
+       """
+       Returns True if every component of the vector vec
+       has a smaller magnitude than the tolerance tol.
+       """
+       for x in vec:
+           if abs(x) > tol:
+               return False
+       return True
+
+Another special case in solving
+:math:`{\bf m} = {\bf p} \times {\bf t}`,
+is when the matrix is singular.
+In that case, the row echelon form is used to solve the linear system
+in the function below.
+
+::
+
+   def crosspoint(tan, mom):
+       """
+       Given a tangent vector and moment vector,
+       computes a point, solving for m = p x t.
+       If the moment vector is zero, then zero is a solution.
+       """
+       if iszero(mom, 1.0e-8):
+           return vector([0.0, 0.0, 0.0])
+       A = Matrix(RR, [[0, tan[2], -tan[1]], \
+                       [-tan[2], 0, tan[0]], \
+                       [tan[1], -tan[0], 0]])
+       if abs(det(A)) < 1.0e-8:
+           mommat = Matrix(mom).transpose()
+           B = A.augment(mommat)
+           F = B.echelon_form()
+           sol = vector(RR, [x[0] for x in F[:,-1]])
+       else:
+           sol = A\vector(RR, mom)
+       return sol
+
 tangents lines of multiplicities two
 ------------------------------------
 
@@ -201,3 +247,14 @@ edited by J.E. Goodman, J. Pach, and R. Pollack, AMS, 2008.
 
 The setup for the polynomial systems is identical to that
 of the previous section.
+
+twelve real single tangent lines
+--------------------------------
+
+A configuration with twelve real tangent lines of multiplicity one
+can be obtained by changing the radii in :numref:`figtangents4`.
+Instead of taking :math:`sqrt{2}` as the value for each radius,
+the radius of each sphere is enlarged to :math:`sqrt{2.01}`.
+This change is large enough for the quadruple tangent lines to split
+into single tangent lines and small enough for the single tangent lines
+to appears in clustered groups of four each.
