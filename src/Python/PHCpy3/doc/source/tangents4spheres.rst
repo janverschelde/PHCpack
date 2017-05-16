@@ -32,6 +32,15 @@ of Cassiano Durand:
 *Symbolic and Numerical Techniques for Constraint Solving*,
 Purdue University, 1998.
 
+The tangent lines are represented in Pluecker coordinates,
+with a tangent :math:`{\bf t}` and moment :math:`{\bf m}` vector.
+For a point :math:`{\bf p}` on the line, its cross product
+with the tangent vector equals the moment vector, or in equation form:
+:math:`{\bf m} = {\bf p} \times {\bf t}`.
+For a reference on this representation, consider the book
+*Mechanics of robotic manipulation* by Matthew T. Mason,
+MIT Press, 2001.
+
 four mutually touching spheres
 ------------------------------
 
@@ -109,116 +118,11 @@ and the tangent vector :math:`{\bf t} = (x_3, x_4, x_5)`.
 To draw the line defined by :math:`{\bf m}` and :math:`{\bf t}`
 we need to compute the coordinates
 of :math:`{\bf p} = (p_1, p_2, p_3)`
-which can be done via the solution of a 3-by-3 linear system.
-The equation :math:`{\bf m} = {\bf p} \times {\bf t}`
-with the definition of the cross product and components:
-
-.. math::
-   {\bf m} =
-   \left(
-      \begin{array}{c}
-         x_0 \\
-          0  \\
-          0 
-      \end{array}
-   \right) {\bf i}
-   +
-   \left(
-      \begin{array}{c}
-          0  \\
-         x_1 \\
-          0
-      \end{array}
-   \right) {\bf j}
-   +
-   \left(
-      \begin{array}{c}
-         0 \\
-         0 \\
-         x_2 
-      \end{array}
-   \right) {\bf k}, \quad
-   {\bf p} \times {\bf t}
-   =
-   \left|
-      \begin{array}{ccc}
-         {\bf i} & {\bf j} & {\bf k} \\    
-           p_1   &   p_2   &   p_3   \\
-           x_3   &   x_4   &   x_5
-      \end{array}
-   \right|.
-
-Expanding the cross product for :math:`{\bf p} \times {\bf t}`
-and identifying its components with the components of :math:`{\bf m}`
-gives the linear system
-
-.. math::
-   \left(
-      \begin{array}{ccc}
-         0 & x_5 & -x_4 \\
-        -x_5 & 0 &  x_3 \\
-         x_4 & -x_3 & 0
-      \end{array}
-   \right)
-   \left(
-      \begin{array}{c}
-         p_1 \\ p_2 \\ p_3
-      \end{array}
-   \right)
-   =
-   \left(
-      \begin{array}{c}
-         x_0 \\ x_1 \\ x_2
-      \end{array}
-   \right)
-
-in the unknown coordinates for the point :math:`{\bf p}`.
-
-To solve for :math:`{\bf p}` in the equation 
-:math:`{\bf m} = {\bf p} \times {\bf t}`,
-we use the function ``iszero`` for the special case
-when the moment vector is zero.
-If the moment vector is zero, the zero is a solution for :math:``{\bf p}``.
-
-::
-
-   def iszero(vec, tol):
-       """
-       Returns True if every component of the vector vec
-       has a smaller magnitude than the tolerance tol.
-       """
-       for x in vec:
-           if abs(x) > tol:
-               return False
-       return True
-
-Another special case in solving
-:math:`{\bf m} = {\bf p} \times {\bf t}`,
-is when the matrix is singular.
-In that case, the row echelon form is used to solve the linear system
-in the function below.
-
-::
-
-   def crosspoint(tan, mom):
-       """
-       Given a tangent vector and moment vector,
-       computes a point, solving for m = p x t.
-       If the moment vector is zero, then zero is a solution.
-       """
-       if iszero(mom, 1.0e-8):
-           return vector([0.0, 0.0, 0.0])
-       A = Matrix(RR, [[0, tan[2], -tan[1]], \
-                       [-tan[2], 0, tan[0]], \
-                       [tan[1], -tan[0], 0]])
-       if abs(det(A)) < 1.0e-8:
-           mommat = Matrix(mom).transpose()
-           B = A.augment(mommat)
-           F = B.echelon_form()
-           sol = vector(RR, [x[0] for x in F[:,-1]])
-       else:
-           sol = A\vector(RR, mom)
-       return sol
+which can be done via a simple cross product,
+because the tangent vector :math:`{\bf t}` is normalized to one.
+The cross product :math:`{\bf p} = {\bf t} \times {\bf m}`
+gives the coordinates of the point on the line
+closest to the origin.
 
 tangents lines of multiplicities two
 ------------------------------------
@@ -257,4 +161,17 @@ Instead of taking :math:`sqrt{2}` as the value for each radius,
 the radius of each sphere is enlarged to :math:`sqrt{2.01}`.
 This change is large enough for the quadruple tangent lines to split
 into single tangent lines and small enough for the single tangent lines
-to appears in clustered groups of four each.
+to appears in clustered groups of four each,
+as shown in :numref:`figtangents1`.
+
+.. _figtangents1:
+
+.. figure:: ./tangents1.png
+    :align: center
+
+    Twelve single real tangent lines clustered in groups of four.
+
+The script ``tangents4spheres.sage``
+and the Sage notebook ``tangents4spheres.sws``
+in the ``examples`` folder of the ``src/Python/PHCpy2`` source
+distribution provide all details of the calculations.
