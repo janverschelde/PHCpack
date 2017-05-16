@@ -237,6 +237,8 @@ the sets.py module provides the key ingredients for a numerical
 irreducible decomposition.  
 Version 0.5.0 introduced Newton's method on power series.
 Use cases were added to the documentation in versions 0.5.2, 0.5.3, and 0.5.4.
+With static linking, the dependencies on the gnat runtime libraries are removed
+and the Sage python interpreter could be extended with version 0.6.2.
 
 references
 ==========
