@@ -127,6 +127,17 @@ def iszero(vec, tol):
             return False
     return True
 
+def check_solution(mat, rhs, sol):
+    """
+    Computes the residual rhs - mat*sol and checks 
+    whether the residual is small enough.
+    Returns True if that is the case, False otherwise.
+    """
+    res = rhs - mat*sol
+    nrm = norm(res)
+    print 'residual :', nrm
+    return (nrm < 1.0e-8)
+
 def crosspoint(tan, mom, verbose=True):
     """
     Given a tangent vector and moment vector,
@@ -158,6 +169,7 @@ def crosspoint(tan, mom, verbose=True):
         sol = A\vector(RR, mom)
     if verbose:
         print 'x =', sol
+        print check_solution(A, mom, sol)
     return sol
 
 def tangent_lines(solpts, verbose=True):
