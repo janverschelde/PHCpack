@@ -127,56 +127,12 @@ def iszero(vec, tol):
             return False
     return True
 
-def check_solution(mat, rhs, sol):
-    """
-    Computes the residual rhs - mat*sol and checks 
-    whether the residual is small enough.
-    Returns True if that is the case, False otherwise.
-    """
-    res = rhs - mat*sol
-    nrm = norm(res)
-    print 'residual :', nrm
-    return (nrm < 1.0e-8)
-
-def crosspoint(tan, mom, verbose=True):
-    """
-    Given a tangent vector and moment vector,
-    computes a point, solving for m = p x t.
-    If the moment vector is zero, then zero is a solution.
-    """
-    if iszero(mom, 1.0e-8):
-        if verbose:
-            print 'zero moment vector'
-        return vector([0.0, 0.0, 0.0])
-    if verbose:
-        print 't =', tan
-        print 'm =', mom
-    A = Matrix(RR, [[0, tan[2], -tan[1]], \
-                    [-tan[2], 0, tan[0]], \
-                    [tan[1], -tan[0], 0]])
-    if verbose:
-        print A
-    if abs(det(A)) < 1.0e-8:
-        if verbose:
-            print 'matrix A is singular'
-        mommat = Matrix(mom).transpose()
-        B = A.augment(mommat)
-        F = B.echelon_form()
-        if verbose:
-            print 'the echelon form :', F
-        sol = vector(RR, [x[0] for x in F[:,-1]])
-    else:
-        sol = A\vector(RR, mom)
-    if verbose:
-        print 'x =', sol
-        print check_solution(A, mom, sol)
-    return sol
-
 def tangent_lines(solpts, verbose=True):
     """
     Given the list of solution points in solpts, returns the list of 
     tuples which represent the lines.  Each tuple contains a point on 
-    the line and the tangent vector.
+    the line and the tangent vector.  Because the tangent t is normalized,
+    a point on the line is computed as t x m, where m is the moment vector.
     """
     result = []
     for point in solpts:
@@ -184,7 +140,7 @@ def tangent_lines(solpts, verbose=True):
             print point
         tan = vector(point[0:3])
         mom = vector(point[3:6])
-        pnt = crosspoint(tan, mom, verbose)
+        pnt = tan.cross_product(mom) # solves m = p x t
         result.append((pnt, tan))
     return result
 
@@ -296,9 +252,9 @@ def plot_twelve_tangents(lines, verbose=True):
             print 'tangent :', tan
     first = True
     for (pnt, tan) in zip(filpts, filtan):
-        apt = vector(RR, pnt) + 4*vector(RR, tan)
-        bpt = vector(RR, pnt) - 4*vector(RR, tan)
-        abL = line([apt, bpt], thickness=5, color='red')
+        apt = vector(RR, pnt) + 5*vector(RR, tan)
+        bpt = vector(RR, pnt) - 5*vector(RR, tan)
+        abL = line([apt, bpt], thickness=3, color='red')
         fig = (abL if first else fig + abL)
         first = False
     return fig
@@ -390,12 +346,15 @@ def main():
     if dbl:
         fig1 = plot_double_spheres(ctr, rad)
         fig2 = plot_double_tangents(lines, verbose)
+        thefig = fig1 + fig2
     else:
         fig1 = plot_quadruple_spheres(ctr, rad)
         if prb:
             fig2 = plot_twelve_tangents(lines, verbose)
+            thefig = (fig1 + fig2).rotateZ(-pi/12)
         else:
             fig2 = plot_quadruple_tangents(lines, verbose)
-    (fig1+fig2).save('tangents.png')
+            thefig = fig1 + fig2
+    thefig.save('tangents.png')
 
 main()
