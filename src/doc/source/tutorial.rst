@@ -4,7 +4,7 @@ Tutorial
 
 This chapter provides a short tutorial,
 mainly for use at the command line.
-Interfaces for Maple, MATLAB (Octave), and Python 
+Interfaces for Maple, MATLAB (Octave), Sage, and Python 
 provide a scripting environment.
 
 Input formats
