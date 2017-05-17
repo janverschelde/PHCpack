@@ -157,8 +157,8 @@ twelve real single tangent lines
 
 A configuration with twelve real tangent lines of multiplicity one
 can be obtained by changing the radii in :numref:`figtangents4`.
-Instead of taking :math:`sqrt{2}` as the value for each radius,
-the radius of each sphere is enlarged to :math:`sqrt{2.01}`.
+Instead of taking :math:`\sqrt{2}` as the value for each radius,
+the radius of each sphere is enlarged to :math:`\sqrt{2.01}`.
 This change is large enough for the quadruple tangent lines to split
 into single tangent lines and small enough for the single tangent lines
 to appears in clustered groups of four each,
