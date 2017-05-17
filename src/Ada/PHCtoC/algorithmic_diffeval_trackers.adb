@@ -35,6 +35,7 @@ with DoblDobl_Solutions_Container;
 with QuadDobl_PolySys_Container;
 with QuadDobl_Solutions_Container;
 with PHCpack_Operations;
+with Maximum_Power_Degrees;
 
 package body Algorithmic_DiffEval_Trackers is
 
@@ -617,11 +618,17 @@ package body Algorithmic_DiffEval_Trackers is
           := Standard_Random_Numbers.Random1;
     pars : Path_Parameters.Parameters
          := Path_Parameters.Default_Parameters(16);
+    maxdeg : integer32;
 
   begin
     new_line;
     put_line("Reading a target system ...");
     get(target);
+    maxdeg := Maximum_Power_Degrees.Maximum_Power(target.all);
+    if maxdeg > 1 then
+      put("The largest power is "); put(maxdeg,1);
+      put_line(", no power tables yet."); return;
+    end if;
     new_line;
     put_line("Reading a start system with solutions ...");
     Standard_System_and_Solutions_io.get(start,sols);
@@ -673,11 +680,17 @@ package body Algorithmic_DiffEval_Trackers is
           := Standard_Random_Numbers.Random1;
     pars : Path_Parameters.Parameters
          := Path_Parameters.Default_Parameters(32);
+    maxdeg : integer32;
 
   begin
     new_line;
     put_line("Reading a target system ...");
     get(target);
+    maxdeg := Maximum_Power_Degrees.Maximum_Power(target.all);
+    if maxdeg > 1 then
+      put("The largest power is "); put(maxdeg,1);
+      put_line(", no power tables yet."); return;
+    end if;
     new_line;
     put_line("Reading a start system with solutions ...");
     DoblDobl_System_and_Solutions_io.get(start,sols);
@@ -731,11 +744,17 @@ package body Algorithmic_DiffEval_Trackers is
           := Standard_Random_Numbers.Random1;
     pars : Path_Parameters.Parameters
          := Path_Parameters.Default_Parameters(64);
+    maxdeg : integer32;
 
   begin
     new_line;
     put_line("Reading a target system ...");
     get(target);
+    maxdeg := Maximum_Power_Degrees.Maximum_Power(target.all);
+    if maxdeg > 1 then
+      put("The largest power is "); put(maxdeg,1);
+      put_line(", no power tables yet."); return;
+    end if;
     new_line;
     put_line("Reading a start system with solutions ...");
     QuadDobl_System_and_Solutions_io.get(start,sols);
@@ -897,11 +916,17 @@ package body Algorithmic_DiffEval_Trackers is
           := Standard_Random_Numbers.Random1;
     pars : Path_Parameters.Parameters
          := Path_Parameters.Default_Parameters(16);
+    maxdeg : integer32;
 
   begin
     new_line;
     put_line("Reading a target system ...");
     get(target);
+    maxdeg := Maximum_Power_Degrees.Maximum_Power(target.all);
+    if maxdeg > 1 then
+      put("The largest power is "); put(maxdeg,1);
+      put_line(", no power tables yet."); return;
+    end if;
     new_line;
     put_line("Reading a start system with solutions ...");
     Standard_System_and_Solutions_io.get(start,sols);
@@ -964,11 +989,17 @@ package body Algorithmic_DiffEval_Trackers is
           := Standard_Random_Numbers.Random1;
     pars : Path_Parameters.Parameters
          := Path_Parameters.Default_Parameters(32);
+    maxdeg : integer32;
 
   begin
     new_line;
     put_line("Reading a target system ...");
     get(target);
+    maxdeg := Maximum_Power_Degrees.Maximum_Power(target.all);
+    if maxdeg > 1 then
+      put("The largest power is "); put(maxdeg,1);
+      put_line(", no power tables yet."); return;
+    end if;
     new_line;
     put_line("Reading a start system with solutions ...");
     DoblDobl_System_and_Solutions_io.get(start,sols);
@@ -1031,11 +1062,17 @@ package body Algorithmic_DiffEval_Trackers is
           := Standard_Random_Numbers.Random1;
     pars : Path_Parameters.Parameters
          := Path_Parameters.Default_Parameters(64);
+    maxdeg : integer32;
 
   begin
     new_line;
     put_line("Reading a target system ...");
     get(target);
+    maxdeg := Maximum_Power_Degrees.Maximum_Power(target.all);
+    if maxdeg > 1 then
+      put("The largest power is "); put(maxdeg,1);
+      put_line(", no power tables yet."); return;
+    end if;
     new_line;
     put_line("Reading a start system with solutions ...");
     QuadDobl_System_and_Solutions_io.get(start,sols);

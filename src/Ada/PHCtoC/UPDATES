@@ -1,3 +1,7 @@
+Tue 16 May 2017 : new package maximum_power_degrees to check whether simple
+  algorithmic circuits will do to evaluate and differentiate,
+  used in algorithmic_diffeval_trackers.adb.
+
 Wed 15 Feb 2017 : in the default values in path_parameters.ads, lowered
   the number of Newton steps at the end and lowered the default tolerance
   on the corrector update.
