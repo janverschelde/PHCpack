@@ -1,3 +1,6 @@
+Wed 17 May 2017 : prepared files for version 0.6.6, after introduction of
+  a new use case: all tangent lines to four given spheres.
+
 Fri 14 Apr 2017 : fixed bug in the run_pieri_homotopies of the schubert
   module which occurred with repeated calls to the function.
   Add the verbose as a last keyword argument.
