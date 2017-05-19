@@ -1,4 +1,4 @@
-Univariate solvers and plane algebraic curves in PHCpack version 2.4.31
+Univariate solvers and plane algebraic curves in PHCpack version 2.4.38
 
 The numerical treatment of plane algebraic curves needs the solution of
 polynomial equations in one variable.  To solve univariate polynomials,
@@ -43,6 +43,8 @@ series_and_solutions             : making series from solution vectors
 power_series_methods             : Newton's method on power series solutions
 ts_sersol                        : test on series and solutions
 mainseries                       : defines the phc -u
+-------------------------------------------------------------------------------
+ts_serpade                       : test rational approximations given series
 -------------------------------------------------------------------------------
 series_and_homotopies            : homotopies as systems with series coeffs
 ts_serhom                        : test on series and homotopies

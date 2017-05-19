@@ -1,3 +1,6 @@
+Fri 19 May 2017 : new ts_serpade.adb to develop a rational approximation,
+  given a power series.
+
 Tue 20 Dec 2016 : refactored mainseries.adb, with better questions to
   select the options of phc -u and make room for echelon Newton.
   To phc -u added the option of starting Newton at a series which
