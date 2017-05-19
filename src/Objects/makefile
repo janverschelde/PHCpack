@@ -635,7 +635,7 @@ ts_vmpnewt:
 # Test programs for the Deformations/Curves library :
 
 test_curves: ts_durker ts_extrapol ts_extrapts \
-             ts_sernew ts_sersol ts_serhom ts_serpred ts_serpath
+             ts_sernew ts_sersol ts_serhom ts_serpred ts_serpath ts_serpade
 
 ts_durker:
 	make -f $(MAKEFILE) ts_durker
@@ -660,6 +660,9 @@ ts_serpred:
 
 ts_serpath:
 	make -f $(MAKEFILE) ts_serpath
+
+ts_serpade:
+	make -f $(MAKEFILE) ts_serpade
 
 # Test programs for the Deformations/End_Games library :
 

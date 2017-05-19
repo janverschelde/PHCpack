@@ -7,16 +7,20 @@
 
 # The makefile works on RHEL 6.6, with python2.6, openmpi, and GNATGPL 2016.
 
-# Location of Python for 2.7 and 3.6, development headers for phcpy
+# Location of Python for 2.7 and 3.5, development headers for phcpy
 
-PYTHON=/usr/include/python2.6
+PYTHON=/usr/include/python2.7
 PYTHON3=/usr/local/include/python3.6m
+
+# The location of the Sage Python lib:
+
+SAGEPYTHONLIB=/home/microway/Downloads/sage-7.3/local/lib
 
 # The location of the adalib folder for the GNATGPL compiler:
 
 ADALIB=/usr/gnat/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib
 
-# which g++ to use
+# The location of the g++ compiler
 
 gpp=/usr/bin/g++
 
@@ -490,11 +494,11 @@ ts_giftwrap:
 ts_pstrunc:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pstrunc.adb -o $(BIN)/ts_pstrunc
 
-ts_bincff:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_bincff.adb -o $(BIN)/ts_bincff
-
 ts_series:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_series.adb -o $(BIN)/ts_series
+
+ts_bincff:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_bincff.adb -o $(BIN)/ts_bincff
 
 ts_servec:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_servec.adb -o $(BIN)/ts_servec
@@ -698,6 +702,10 @@ ts_serpred:
 ts_serpath:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_serpath.adb \
               -o $(BIN)/ts_serpath
+
+ts_serpade:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_serpade.adb \
+              -o $(BIN)/ts_serpade
 
 # Test programs for the Deformations/End_Games library :
 
@@ -917,10 +925,6 @@ ts_stable:
 ts_balance:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_balance.adb \
               -o $(BIN)/ts_balance
-
-ts_userlift:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_userlift.adb \
-              -o $(BIN)/ts_userlift
 
 # Test programs for the Root_Counts/Dynlift library :
 
@@ -1694,7 +1698,6 @@ ts_gpu2norm:
 	nvcc -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
              -I/usr/local/cuda/include \
              -c $(PHCgpu)/MGS2/all_norm_kernels.cu \
-             -arch=sm_13 --ptxas-options=-v \
              -o all_norm_kernels.o
 	@-echo ">>> compiling host code in double precision ..."
 	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesD \
@@ -2451,6 +2454,7 @@ parameter.o:
 lib2path.o:
 	$(gpp) -O3 -fPIC -I$(PHCLib) -I$(QD_ROOR)/include \
                          -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly2 \
+                         -I$(PHCgpu)/Path/Host \
                -c $(PHCgpu)/Path/Host/lib2path.cpp -o lib2path.o
 
 ademanypaths.o:
@@ -2601,13 +2605,13 @@ lib_solcon_cpp:
                  --LINK=$(gpp)
 
 lib_read:
-	gnatmake -static -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gcc -static -c $(PHCLib)/phcpack.c
-	gcc -static -c $(PHCLib)/solcon.c
-	gcc -static -c $(PHCLib)/lib_read.c
-	gnatbind -v -static -n use_c2phc -o outbinder.adb
-#	gnatlink -v -static -C use_c2phc phcpack.o solcon.o lib_read.o \
-#                 -o $(BIN)/lib_read -lm
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/lib_read.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o \
+                 -o $(BIN)/lib_read -lm
 
 lib_read_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -2960,7 +2964,6 @@ lib_series:
 	gnatlink -C use_c2phc \
                     phcpack.o syscon.o syspool.o series.o lib_series.o \
                  -o $(BIN)/lib_series -lm
-
 lib_series_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -3223,8 +3226,7 @@ phcpy2c3.so: parameter.o lib2path.o
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/syscon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/solcon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/product.c
-	$(gpp) -Dcompilewgpp=1 -static -c -fPIC \
-               -O3 $(PHCLib)/lists_and_strings.c
+	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/lists_and_strings.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/celcon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/intcelcon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/scalers.c
@@ -3242,15 +3244,15 @@ phcpy2c3.so: parameter.o lib2path.o
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 -I$(PYTHON3) -I$(PHCLib) \
                -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Host \
                -I$(PHCgpu)/Path/Poly2 $(PHCLib)/phcpy2c3.c
-	gnatmake -static -c -fPIC -O3 $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc -o use_c2phc_binder.adb
 	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc_binder.adb
 	ar ruv phcpy2c3.a *.o
 	ranlib phcpy2c3.a
 	$(gpp) -shared -o ../Python/PHCpy3/phcpy/phcpy2c3.so -lm \
-               -Wl,-whole-archive phcpy2c3.a $(QD_LIB)/libqd.a \
-               $(ADALIB)/libgnat_pic.a $(ADALIB)/libgnarl_pic.a \
-               -Wl,-no-whole-archive -lrt
+            -Wl,-whole-archive phcpy2c3.a $(QD_LIB)/libqd.a \
+            $(ADALIB)/libgnat_pic.a $(ADALIB)/libgnarl_pic.a \
+            -Wl,-no-whole-archive -lrt
 
 # phcpy2c with double version of Path library :
 
