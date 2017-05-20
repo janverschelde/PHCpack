@@ -1,5 +1,5 @@
 Fri 19 May 2017 : new ts_serpade.adb to develop a rational approximation,
-  given a power series.
+  given a power series.  Added more tests: exp(x), sin(x), cos(x).
 
 Tue 20 Dec 2016 : refactored mainseries.adb, with better questions to
   select the options of phc -u and make room for echelon Newton.
