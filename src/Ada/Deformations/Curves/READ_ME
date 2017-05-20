@@ -44,6 +44,7 @@ power_series_methods             : Newton's method on power series solutions
 ts_sersol                        : test on series and solutions
 mainseries                       : defines the phc -u
 -------------------------------------------------------------------------------
+standard_rational_approximations : definition of a Pade approximation
 ts_serpade                       : test rational approximations given series
 -------------------------------------------------------------------------------
 series_and_homotopies            : homotopies as systems with series coeffs
