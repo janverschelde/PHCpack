@@ -1,3 +1,6 @@
+Sat 20 May 2017 : new package dobldobl_rational_approximations, tested by
+  ts_serpade, to compute Pade approximations with double doubles.
+
 Fri 19 May 2017 : new ts_serpade.adb to develop a rational approximation,
   given a power series.  Added more tests: exp(x), sin(x), cos(x).
   Refactored code in ts_serpade into standard_rational_approximations,

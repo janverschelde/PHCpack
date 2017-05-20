@@ -45,6 +45,7 @@ ts_sersol                        : test on series and solutions
 mainseries                       : defines the phc -u
 -------------------------------------------------------------------------------
 standard_rational_approximations : definition of a Pade approximation
+dobldobl_rational_approximations : Pade approximations with double doubles
 ts_serpade                       : test rational approximations given series
 -------------------------------------------------------------------------------
 series_and_homotopies            : homotopies as systems with series coeffs
