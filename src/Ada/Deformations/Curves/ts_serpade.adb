@@ -455,8 +455,8 @@ procedure ts_serpade is
     nbr : constant double_double := create(0.1);
     pnt : constant Complex_Number := Create(nbr);
     eva : Complex_Number;
-    chkpnt : constant double_float
-           := Standard_Mathematical_Functions.LN(1.1);
+    arg : constant double_double := create(1.1);
+    chkpnt : constant double_double := Double_Double_Numbers.log(arg);
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
@@ -464,8 +464,8 @@ procedure ts_serpade is
     put_line("The coefficients of the numerator :"); put_line(num);
     put_line("The coefficients of the denominator :"); put_line(den);
     eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 1.1      :"); put(eva); new_line;
-    put("The value of log(1.1) :"); put(chkpnt); new_line;
+    put("The value at 1.1      : "); put(eva); new_line;
+    put("The value of log(1.1) : "); put(chkpnt); new_line;
   end DoblDobl_log_Test;
 
   procedure QuadDobl_log_Test ( numdeg,dendeg : in integer32 ) is
@@ -484,8 +484,8 @@ procedure ts_serpade is
     nbr : constant quad_double := create(0.1);
     pnt : constant Complex_Number := Create(nbr);
     eva : Complex_Number;
-    chkpnt : constant double_float
-           := Standard_Mathematical_Functions.LN(1.1);
+    arg : constant quad_double := create(1.1);
+    chkpnt : constant quad_double := Quad_Double_Numbers.log(arg);
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
@@ -493,8 +493,8 @@ procedure ts_serpade is
     put_line("The coefficients of the numerator :"); put_line(num);
     put_line("The coefficients of the denominator :"); put_line(den);
     eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 1.1      :"); put(eva); new_line;
-    put("The value of log(1.1) :"); put(chkpnt); new_line;
+    put("The value at 1.1      : "); put(eva); new_line;
+    put("The value of log(1.1) : "); put(chkpnt); new_line;
   end QuadDobl_log_Test;
 
   procedure Standard_sin_Test ( numdeg,dendeg : in integer32 ) is
@@ -550,9 +550,9 @@ procedure ts_serpade is
     put_line("The coefficients of the numerator :"); put_line(num);
     put_line("The coefficients of the denominator :"); put_line(den);
     eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      :"); put(eva); new_line;
-    put("The value of sin(0.1) :"); put(chkpnt); new_line;
-  end DoblDobl_Sin_Test;
+    put("The value at 0.1      : "); put(eva); new_line;
+    put("The value of sin(0.1) : "); put(chkpnt); new_line;
+  end DoblDobl_sin_Test;
 
   procedure QuadDobl_sin_Test ( numdeg,dendeg : in integer32 ) is
 
@@ -579,8 +579,8 @@ procedure ts_serpade is
     put_line("The coefficients of the numerator :"); put_line(num);
     put_line("The coefficients of the denominator :"); put_line(den);
     eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      :"); put(eva); new_line;
-    put("The value of sin(0.1) :"); put(chkpnt); new_line;
+    put("The value at 0.1      : "); put(eva); new_line;
+    put("The value of sin(0.1) : "); put(chkpnt); new_line;
   end QuadDobl_Sin_Test;
 
   procedure Standard_exp_Test ( numdeg,dendeg : in integer32 ) is
@@ -608,7 +608,7 @@ procedure ts_serpade is
     put_line("The coefficients of the denominator :"); put_line(den);
     eva := Standard_Rational_Approximations.Evaluate(num,den,pnt);
     put("The value at 0.1      :"); put(eva); new_line;
-    put("The value of sin(0.1) :"); put(chkpnt); new_line;
+    put("The value of exp(0.1) :"); put(chkpnt); new_line;
   end Standard_exp_Test;
 
   procedure DoblDobl_exp_Test ( numdeg,dendeg : in integer32 ) is
@@ -627,8 +627,7 @@ procedure ts_serpade is
     arg : constant double_double := create(0.1);
     pnt : constant Complex_Number := Create(arg);
     eva : Complex_Number;
-    chkpnt : constant double_float
-           := Standard_Mathematical_Functions.EXP(0.1);
+    chkpnt : constant double_double := Double_Double_Numbers.exp(arg);
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
@@ -636,8 +635,8 @@ procedure ts_serpade is
     put_line("The coefficients of the numerator :"); put_line(num);
     put_line("The coefficients of the denominator :"); put_line(den);
     eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      :"); put(eva); new_line;
-    put("The value of sin(0.1) :"); put(chkpnt); new_line;
+    put("The value at 0.1      : "); put(eva); new_line;
+    put("The value of exp(0.1) : "); put(chkpnt); new_line;
   end DoblDobl_exp_Test;
 
   procedure QuadDobl_exp_Test ( numdeg,dendeg : in integer32 ) is
@@ -656,8 +655,7 @@ procedure ts_serpade is
     arg : constant quad_double := create(0.1);
     pnt : constant Complex_Number := Create(arg);
     eva : Complex_Number;
-    chkpnt : constant double_float
-           := Standard_Mathematical_Functions.EXP(0.1);
+    chkpnt : constant quad_double := Quad_Double_Numbers.exp(arg);
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
@@ -665,8 +663,8 @@ procedure ts_serpade is
     put_line("The coefficients of the numerator :"); put_line(num);
     put_line("The coefficients of the denominator :"); put_line(den);
     eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      :"); put(eva); new_line;
-    put("The value of sin(0.1) :"); put(chkpnt); new_line;
+    put("The value at 0.1      : "); put(eva); new_line;
+    put("The value of exp(0.1) : "); put(chkpnt); new_line;
   end QuadDobl_exp_Test;
 
   procedure Standard_cos_Test ( numdeg,dendeg : in integer32 ) is
@@ -722,8 +720,8 @@ procedure ts_serpade is
     put_line("The coefficients of the numerator :"); put_line(num);
     put_line("The coefficients of the denominator :"); put_line(den);
     eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      :"); put(eva); new_line;
-    put("The value of cos(0.1) :"); put(chkpnt); new_line;
+    put("The value at 0.1      : "); put(eva); new_line;
+    put("The value of cos(0.1) : "); put(chkpnt); new_line;
   end DoblDobl_cos_Test;
 
   procedure QuadDobl_cos_Test ( numdeg,dendeg : in integer32 ) is
@@ -751,8 +749,8 @@ procedure ts_serpade is
     put_line("The coefficients of the numerator :"); put_line(num);
     put_line("The coefficients of the denominator :"); put_line(den);
     eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      :"); put(eva); new_line;
-    put("The value of cos(0.1) :"); put(chkpnt); new_line;
+    put("The value at 0.1      : "); put(eva); new_line;
+    put("The value of cos(0.1) : "); put(chkpnt); new_line;
   end QuadDobl_cos_Test;
 
   procedure Main is
