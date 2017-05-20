@@ -12,12 +12,20 @@ with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 with DoblDobl_Mathematical_Functions;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
+with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
+with QuadDobl_Mathematical_Functions;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
+with QuadDobl_Rational_Approximations;
 
 procedure ts_serpade is
 
@@ -76,6 +84,34 @@ procedure ts_serpade is
     return res;
   end dobldobl_log_series;
 
+  function quaddobl_log_series
+             ( dim : integer32 ) return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the first dim+1 coefficients of the series of log(1+x)
+  --   as a vector of range 0..dim as a vector of complex numbers in
+  --   quad double precision.
+
+    use QuadDobl_Complex_Numbers;
+
+    res : QuadDobl_Complex_Vectors.Vector(0..dim);
+    zero : constant quad_double := create(0.0);
+    one : constant quad_double := create(1.0);
+    val : quad_double;
+
+  begin
+    res(0) := Create(zero);
+    for k in 1..dim loop
+      val := create(k);
+      val := one/val;
+      res(k) := Create(val);
+      if k mod 2 = 0
+       then Min(res(k));
+      end if;
+    end loop;
+    return res;
+  end quaddobl_log_series;
+
   function standard_invfactorial
              ( n : integer32 )
              return Standard_Complex_Numbers.Complex_Number is
@@ -124,6 +160,31 @@ procedure ts_serpade is
     return res;
   end dobldobl_invfactorial;
 
+  function quaddobl_invfactorial
+             ( n : integer32 )
+             return QuadDobl_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns 1/n! where n! is the factorial,
+  --   stored as a complex number in quad double precision.
+
+    use QuadDobl_Complex_Numbers;
+
+    res : Complex_Number;
+    fac : integer32 := 1;
+    dd_fac : quad_double;
+    invfac : quad_double;
+
+  begin
+    for k in 2..n loop
+      fac := fac*k;
+    end loop;
+    dd_fac := create(fac);
+    invfac := 1.0/dd_fac;
+    res := Create(invfac);
+    return res;
+  end quaddobl_invfactorial;
+
   function standard_exp_series
              ( dim : integer32 ) return Standard_Complex_Vectors.Vector is
 
@@ -159,6 +220,24 @@ procedure ts_serpade is
     end loop;
     return res;
   end dobldobl_exp_series;
+
+  function quaddobl_exp_series
+             ( dim : integer32 ) return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 0..dim with the coefficients
+  --   of the series expansion of exp(x) at x = 0, as a vector
+  --   of complex numbers in quad double precision.
+
+    res : QuadDobl_Complex_Vectors.Vector(0..dim);
+    plus : boolean := true;
+
+  begin
+    for k in res'range loop
+      res(k) := quaddobl_invfactorial(k);
+    end loop;
+    return res;
+  end quaddobl_exp_series;
 
   function standard_sin_series
              ( dim : integer32 ) return Standard_Complex_Vectors.Vector is
@@ -217,6 +296,35 @@ procedure ts_serpade is
     return res;
   end dobldobl_sin_series;
 
+  function quaddobl_sin_series
+             ( dim : integer32 ) return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 0..dim with the coefficients
+  --   of the series expansion of sin(x) at x = 0, as a vector
+  --   of complex numbers in quad double precision.
+
+    use QuadDobl_Complex_Numbers;
+
+    res : QuadDobl_Complex_Vectors.Vector(0..dim);
+    zero : constant quad_double := create(0.0);
+    plus : boolean := true;
+
+  begin
+    for k in res'range loop
+      if k mod 2 = 0 then
+        res(k) := Create(zero);
+      else
+        res(k) := quaddobl_invfactorial(k);
+        if not plus
+         then Min(res(k)); 
+        end if;
+        plus := not plus;
+      end if;
+    end loop;
+    return res;
+  end quaddobl_sin_series;
+
   function standard_cos_series
              ( dim : integer32 ) return Standard_Complex_Vectors.Vector is
 
@@ -273,6 +381,35 @@ procedure ts_serpade is
     end loop;
     return res;
   end dobldobl_cos_series;
+
+  function quaddobl_cos_series
+             ( dim : integer32 ) return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 0..dim with the coefficients
+  --   of the series expansion of cos(x) at x = 0, as a vector
+  --   of complex numbers in quad double precision.
+
+    use QuadDobl_Complex_Numbers;
+
+    res : QuadDobl_Complex_Vectors.Vector(0..dim);
+    zero : constant quad_double := create(0.0);
+    plus : boolean := true;
+
+  begin
+    for k in res'range loop
+      if k mod 2 = 1 then
+        res(k) := Create(zero);
+      else
+        res(k) := quaddobl_invfactorial(k);
+        if not plus
+         then Min(res(k)); 
+        end if;
+        plus := not plus;
+      end if;
+    end loop;
+    return res;
+  end quaddobl_cos_series;
 
   procedure Standard_log_Test ( numdeg,dendeg : in integer32 ) is
 
@@ -331,6 +468,35 @@ procedure ts_serpade is
     put("The value of log(1.1) :"); put(chkpnt); new_line;
   end DoblDobl_log_Test;
 
+  procedure QuadDobl_log_Test ( numdeg,dendeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the construction in quad double arithmetic
+  --   on the natural logarithm of 1 + x.
+
+    use QuadDobl_Complex_Numbers;
+
+    dim : constant integer32 := numdeg + dendeg;
+    cff : constant QuadDobl_Complex_Vectors.Vector(0..dim)
+        := QuadDobl_log_series(dim);
+    num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
+    den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
+    nbr : constant quad_double := create(0.1);
+    pnt : constant Complex_Number := Create(nbr);
+    eva : Complex_Number;
+    chkpnt : constant double_float
+           := Standard_Mathematical_Functions.LN(1.1);
+
+  begin
+    put_line("The coefficient vector of the series :"); put_line(cff);
+    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
+    put_line("The coefficients of the numerator :"); put_line(num);
+    put_line("The coefficients of the denominator :"); put_line(den);
+    eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
+    put("The value at 1.1      :"); put(eva); new_line;
+    put("The value of log(1.1) :"); put(chkpnt); new_line;
+  end QuadDobl_log_Test;
+
   procedure Standard_sin_Test ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
@@ -387,6 +553,35 @@ procedure ts_serpade is
     put("The value at 0.1      :"); put(eva); new_line;
     put("The value of sin(0.1) :"); put(chkpnt); new_line;
   end DoblDobl_Sin_Test;
+
+  procedure QuadDobl_sin_Test ( numdeg,dendeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the construction in quad double arithmetic
+  --   on the series of sin(x) at x = 0.
+
+    use QuadDobl_Complex_Numbers;
+
+    dim : constant integer32 := numdeg + dendeg;
+    cff : constant QuadDobl_Complex_Vectors.Vector(0..dim)
+        := quaddobl_sin_series(dim);
+    num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
+    den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
+    arg : constant quad_double := create(0.1);
+    pnt : constant Complex_Number := Create(arg);
+    eva : Complex_Number;
+    chkpnt : constant quad_double
+           := QuadDobl_Mathematical_Functions.SIN(arg);
+
+  begin
+    put_line("The coefficient vector of the series :"); put_line(cff);
+    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
+    put_line("The coefficients of the numerator :"); put_line(num);
+    put_line("The coefficients of the denominator :"); put_line(den);
+    eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
+    put("The value at 0.1      :"); put(eva); new_line;
+    put("The value of sin(0.1) :"); put(chkpnt); new_line;
+  end QuadDobl_Sin_Test;
 
   procedure Standard_exp_Test ( numdeg,dendeg : in integer32 ) is
 
@@ -445,6 +640,35 @@ procedure ts_serpade is
     put("The value of sin(0.1) :"); put(chkpnt); new_line;
   end DoblDobl_exp_Test;
 
+  procedure QuadDobl_exp_Test ( numdeg,dendeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the construction in quad double arithmetic
+  --   on the series of exp(x) at x = 0.
+
+    use QuadDobl_Complex_Numbers;
+
+    dim : constant integer32 := numdeg + dendeg;
+    cff : constant QuadDobl_Complex_Vectors.Vector(0..dim)
+        := quaddobl_exp_series(dim);
+    num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
+    den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
+    arg : constant quad_double := create(0.1);
+    pnt : constant Complex_Number := Create(arg);
+    eva : Complex_Number;
+    chkpnt : constant double_float
+           := Standard_Mathematical_Functions.EXP(0.1);
+
+  begin
+    put_line("The coefficient vector of the series :"); put_line(cff);
+    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
+    put_line("The coefficients of the numerator :"); put_line(num);
+    put_line("The coefficients of the denominator :"); put_line(den);
+    eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
+    put("The value at 0.1      :"); put(eva); new_line;
+    put("The value of sin(0.1) :"); put(chkpnt); new_line;
+  end QuadDobl_exp_Test;
+
   procedure Standard_cos_Test ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
@@ -502,6 +726,35 @@ procedure ts_serpade is
     put("The value of cos(0.1) :"); put(chkpnt); new_line;
   end DoblDobl_cos_Test;
 
+  procedure QuadDobl_cos_Test ( numdeg,dendeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the construction in quad double arithmetic
+  --   on the series of cos(x) at x = 0.
+
+    use QuadDobl_Complex_Numbers;
+
+    dim : constant integer32 := numdeg + dendeg;
+    cff : constant QuadDobl_Complex_Vectors.Vector(0..dim)
+        := quaddobl_cos_series(dim);
+    num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
+    den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
+    arg : constant quad_double := create(0.1);
+    pnt : constant Complex_Number := Create(arg);
+    eva : Complex_Number;
+    chkpnt : constant quad_double
+           := QuadDobl_Mathematical_Functions.COS(arg);
+
+  begin
+    put_line("The coefficient vector of the series :"); put_line(cff);
+    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
+    put_line("The coefficients of the numerator :"); put_line(num);
+    put_line("The coefficients of the denominator :"); put_line(den);
+    eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
+    put("The value at 0.1      :"); put(eva); new_line;
+    put("The value of cos(0.1) :"); put(chkpnt); new_line;
+  end QuadDobl_cos_Test;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -529,10 +782,11 @@ procedure ts_serpade is
     put("The dimension : "); put(dim,1); new_line;
     new_line;
     put_line("MENU for the precision :");
-    put_line("  0. standard double precision");
-    put_line("  1. double double precision");
-    put("Type 0 or 1 to select the precision : ");
-    Ask_Alternative(prc,"01");
+    put_line("  0. standard double precision,");
+    put_line("  1. double double precision, or");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(prc,"012");
     case prc is
       when '0' =>
         case ans is 
@@ -548,6 +802,14 @@ procedure ts_serpade is
           when '2' => DoblDobl_exp_Test(degnum,degden);
           when '3' => DoblDobl_sin_Test(degnum,degden);
           when '4' => DoblDobl_cos_Test(degnum,degden);
+          when others => null;
+        end case;
+      when '2' =>
+        case ans is 
+          when '1' => QuadDobl_log_Test(degnum,degden);
+          when '2' => QuadDobl_exp_Test(degnum,degden);
+          when '3' => QuadDobl_sin_Test(degnum,degden);
+          when '4' => QuadDobl_cos_Test(degnum,degden);
           when others => null;
         end case;
       when others => null;
