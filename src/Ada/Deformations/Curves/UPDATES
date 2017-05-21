@@ -1,6 +1,7 @@
 Sun 21 May 2017 : the package homotopy_series_readers collects code of the
   test procedures ts_serpred and ts_serpath.  Added default value for the
   power of the continuation parameter in homotopy_series_readers.
+  Extra procedures in homotopy_series_readers for the given gamma constant.
 
 Sat 20 May 2017 : new package dobldobl_rational_approximations, tested by
   ts_serpade, to compute Pade approximations with double doubles.
