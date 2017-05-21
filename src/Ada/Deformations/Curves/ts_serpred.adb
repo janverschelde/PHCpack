@@ -66,6 +66,7 @@ with Power_Series_Methods;               use Power_Series_Methods;
 with Series_and_Solutions;
 with Series_and_Homotopies;
 with Series_and_Predictors;
+with Homotopy_Series_Readers;
 
 procedure ts_serpred is
 
@@ -435,23 +436,13 @@ procedure ts_serpred is
   --   Test on the operations of a homotopy with series coefficients,
   --   in standard double precision.
 
-    target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-    k : constant natural32 := 2;
-    gamma : constant Standard_Complex_Numbers.Complex_Number
-          := Standard_Random_Numbers.Random1;
+    nbeq : integer32;
     sols : Standard_Complex_Solutions.Solution_List;
 
   begin
+    Homotopy_Series_Readers.Standard_Reader(nbeq,sols);
     new_line;
-    put_line("Testing the creation of a homotopies as a series system ...");
-    new_line;
-    put_line("Reading the target system ..."); get(target);
-    new_line;
-    put_line("Reading the start system and its solutions ...");
-    Standard_System_and_Solutions_io.get(start,sols);
-    Standard_Homotopy.Create(target.all,start.all,k,gamma);
-    new_line;
-    Standard_Test_Prediction(target'last,sols);
+    Standard_Test_Prediction(nbeq,sols);
   end Standard_Main;
 
   procedure DoblDobl_Main is
@@ -460,23 +451,13 @@ procedure ts_serpred is
   --   Test on the operations of a homotopy with series coefficients,
   --   in double double precision.
 
-    target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    k : constant natural32 := 2;
-    gamma : constant DoblDobl_Complex_Numbers.Complex_Number
-          := DoblDobl_Random_Numbers.Random1;
+    nbeq : integer32;
     sols : DoblDobl_Complex_Solutions.Solution_List;
 
   begin
+    Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols);
     new_line;
-    put_line("Testing the creation of a homotopies as a series system ...");
-    new_line;
-    put_line("Reading the target system ..."); get(target);
-    new_line;
-    put_line("Reading the start system and its solutions ...");
-    DoblDobl_System_and_Solutions_io.get(start,sols);
-    DoblDobl_Homotopy.Create(target.all,start.all,k,gamma);
-    new_line;
-    DoblDobl_Test_Prediction(target'last,sols);
+    DoblDobl_Test_Prediction(nbeq,sols);
   end DoblDobl_Main;
 
   procedure QuadDobl_Main is
@@ -485,23 +466,13 @@ procedure ts_serpred is
   --   Test on the operations of a homotopy with series coefficients,
   --   in quad double precision.
 
-    target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    k : constant natural32 := 2;
-    gamma : constant QuadDobl_Complex_Numbers.Complex_Number
-          := QuadDobl_Random_Numbers.Random1;
+    nbeq : integer32;
     sols : QuadDobl_Complex_Solutions.Solution_List;
 
   begin
+    Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols);
     new_line;
-    put_line("Testing the creation of a homotopies as a series system ...");
-    new_line;
-    put_line("Reading the target system ..."); get(target);
-    new_line;
-    put_line("Reading the start system ...");
-    QuadDobl_System_and_Solutions_io.get(start,sols);
-    QuadDobl_Homotopy.Create(target.all,start.all,k,gamma);
-    new_line;
-    QuadDobl_Test_Prediction(target'last,sols);
+    QuadDobl_Test_Prediction(nbeq,sols);
   end QuadDobl_Main;
 
   procedure Main is
