@@ -1,4 +1,5 @@
-Mon 22 May 2017 : added coefficients function to ts_serpade.
+Mon 22 May 2017 : added coefficients function to ts_serpade and constructed
+  a rational pade approximation for the solution in the homotopy.
 
 Sun 21 May 2017 : the package homotopy_series_readers collects code of the
   test procedures ts_serpred and ts_serpath.  Added default value for the
