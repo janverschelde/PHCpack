@@ -764,7 +764,72 @@ procedure ts_serpade is
     put("The value of cos(0.1) : "); put(chkpnt); new_line;
   end QuadDobl_cos_Test;
 
+  function Coefficients ( srv : Standard_Dense_Series_Vectors.Vector;
+                          idx : integer32 )
+                        return Standard_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the coefficients of series srv at the compenent
+  --   with index idx.
+
+  -- REQUIRED : idx in srv'range.
+
+    dim : constant integer32 := srv(idx).deg;
+    res : Standard_Complex_Vectors.Vector(0..dim);
+
+  begin
+    for i in res'range loop
+      res(i) := srv(idx).cff(i);
+    end loop;
+    return res;
+  end Coefficients;
+
+  function Coefficients ( srv : DoblDobl_Dense_Series_Vectors.Vector;
+                          idx : integer32 )
+                        return DoblDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the coefficients of series srv at the compenent
+  --   with index idx.
+
+  -- REQUIRED : idx in srv'range.
+
+    dim : constant integer32 := srv(idx).deg;
+    res : DoblDobl_Complex_Vectors.Vector(0..dim);
+
+  begin
+    for i in res'range loop
+      res(i) := srv(idx).cff(i);
+    end loop;
+    return res;
+  end Coefficients;
+
+  function Coefficients ( srv : QuadDobl_Dense_Series_Vectors.Vector;
+                          idx : integer32 )
+                        return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the coefficients of series srv at the compenent
+  --   with index idx.
+
+  -- REQUIRED : idx in srv'range.
+
+    dim : constant integer32 := srv(idx).deg;
+    res : QuadDobl_Complex_Vectors.Vector(0..dim);
+
+  begin
+    for i in res'range loop
+      res(i) := srv(idx).cff(i);
+    end loop;
+    return res;
+  end Coefficients;
+
   procedure Standard_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts for a target, start system, and start solutions.
+  --   Applies Newton's method for a series development of the first
+  --   start solution, in standard double precision.
 
     nbeq : integer32;
     sols : Standard_Complex_Solutions.Solution_List;
@@ -790,6 +855,11 @@ procedure ts_serpade is
 
   procedure DoblDobl_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
 
+  -- DESCRIPTION :
+  --   Prompts for a target, start system, and start solutions.
+  --   Applies Newton's method for a series development of the first
+  --   start solution, in double double precision.
+
     nbeq : integer32;
     sols : DoblDobl_Complex_Solutions.Solution_List;
 
@@ -813,6 +883,11 @@ procedure ts_serpade is
   end DoblDobl_Homotopy_Test;
 
   procedure QuadDobl_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts for a target, start system, and start solutions.
+  --   Applies Newton's method for a series development of the first
+  --   start solution, in quad double precision.
 
     nbeq : integer32;
     sols : QuadDobl_Complex_Solutions.Solution_List;
