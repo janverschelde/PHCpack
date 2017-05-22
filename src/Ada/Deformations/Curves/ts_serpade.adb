@@ -832,33 +832,37 @@ procedure ts_serpade is
                 srv : in Standard_Dense_Series_Vectors.Vector ) is
 
     approx : Standard_Complex_Vectors.Vector(srv'range);
-    pnt : constant Standard_Complex_Numbers.Complex_Number
-        := Standard_Complex_Numbers.Create(0.1);
+    arg : double_float;
+    pnt : Standard_Complex_Numbers.Complex_Number;
     value : Standard_Complex_Vectors.Vector(1..nbequ);
 
   begin
-    for i in srv'range loop
-      declare
-        cff : constant Standard_Complex_Vectors.Vector
-            := Coefficients(srv,i);
-        num : Standard_Complex_Vectors.Vector(0..numdeg);
-        den : Standard_Complex_Vectors.Vector(0..dendeg);
-        val : Standard_Complex_Numbers.Complex_Number;
-      begin
-        put("The coefficients of component "); put(i);
-        put_line(" :"); put_line(cff);
-        Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-        put_line("The coefficients of the numerator :"); put_line(num);
-        put_line("The coefficients of the denominator :"); put_line(den);
-        val := Standard_Rational_Approximations.Evaluate(num,den,pnt);
-        approx(i) := val;
-      end;
+    for k in 1..5 loop
+      arg := double_float(k)*0.04;
+      pnt := Standard_Complex_Numbers.Create(arg);
+      for i in srv'range loop
+        declare
+          cff : constant Standard_Complex_Vectors.Vector
+              := Coefficients(srv,i);
+          num : Standard_Complex_Vectors.Vector(0..numdeg);
+          den : Standard_Complex_Vectors.Vector(0..dendeg);
+          val : Standard_Complex_Numbers.Complex_Number;
+        begin
+         -- put("The coefficients of component "); put(i);
+         -- put_line(" :"); put_line(cff);
+          Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
+         -- put_line("The coefficients of the numerator :"); put_line(num);
+         -- put_line("The coefficients of the denominator :"); put_line(den);
+          val := Standard_Rational_Approximations.Evaluate(num,den,pnt);
+          approx(i) := val;
+        end;
+      end loop;
+      put_line("The value of the rational approximation :");
+      put_line(approx);
+      value := Standard_Homotopy.Eval(approx,pnt);
+      put("Evaluated at "); put(arg,3); put_line(" :");
+      put_line(value);
     end loop;
-    put_line("The value of the rational approximation :");
-    put_line(approx);
-    value := Standard_Homotopy.Eval(approx,pnt);
-    put_line("Evaluated at the homotopy :");
-    put_line(value);
   end Standard_Pade_Approximation;
 
   procedure DoblDobl_Pade_Approximation
@@ -866,34 +870,37 @@ procedure ts_serpade is
                 srv : in DoblDobl_Dense_Series_Vectors.Vector ) is
 
     approx : DoblDobl_Complex_Vectors.Vector(srv'range);
-    arg : constant double_double := create(0.1);
-    pnt : constant DoblDobl_Complex_Numbers.Complex_Number
-        := DoblDobl_Complex_Numbers.Create(arg);
+    arg : double_double;
+    pnt : DoblDobl_Complex_Numbers.Complex_Number;
     value : DoblDobl_Complex_Vectors.Vector(1..nbequ);
 
   begin
-    for i in srv'range loop
-      declare
-        cff : constant DoblDobl_Complex_Vectors.Vector
-            := Coefficients(srv,i);
-        num : DoblDobl_Complex_Vectors.Vector(0..numdeg);
-        den : DoblDobl_Complex_Vectors.Vector(0..dendeg);
-        val : DoblDobl_Complex_Numbers.Complex_Number;
-      begin
-        put("The coefficients of component "); put(i);
-        put_line(" :"); put_line(cff);
-        DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-        put_line("The coefficients of the numerator :"); put_line(num);
-        put_line("The coefficients of the denominator :"); put_line(den);
-        val := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
-        approx(i) := val;
-      end;
+    for k in 1..5 loop
+      arg := Double_Double_Numbers.create(double_float(k)*0.04);
+      pnt := DoblDobl_Complex_Numbers.Create(arg);
+      for i in srv'range loop
+        declare
+          cff : constant DoblDobl_Complex_Vectors.Vector
+              := Coefficients(srv,i);
+          num : DoblDobl_Complex_Vectors.Vector(0..numdeg);
+          den : DoblDobl_Complex_Vectors.Vector(0..dendeg);
+          val : DoblDobl_Complex_Numbers.Complex_Number;
+        begin
+         -- put("The coefficients of component "); put(i);
+         -- put_line(" :"); put_line(cff);
+          DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
+         -- put_line("The coefficients of the numerator :"); put_line(num);
+         -- put_line("The coefficients of the denominator :"); put_line(den);
+          val := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
+          approx(i) := val;
+        end;
+      end loop;
+      put_line("The value of the rational approximation :");
+      put_line(approx);
+      value := DoblDobl_Homotopy.Eval(approx,pnt);
+      put("Evaluated at "); put(arg,3); put_line(" :");
+      put_line(value);
     end loop;
-    put_line("The value of the rational approximation :");
-    put_line(approx);
-    value := DoblDobl_Homotopy.Eval(approx,pnt);
-    put_line("Evaluated at the homotopy :");
-    put_line(value);
   end DoblDobl_Pade_Approximation;
 
   procedure QuadDobl_Pade_Approximation
@@ -901,34 +908,39 @@ procedure ts_serpade is
                 srv : in QuadDobl_Dense_Series_Vectors.Vector ) is
 
     approx : QuadDobl_Complex_Vectors.Vector(srv'range);
-    arg : constant quad_double := create(0.1);
-    pnt : constant QuadDobl_Complex_Numbers.Complex_Number
-        := QuadDobl_Complex_Numbers.Create(arg);
+    dd_arg : double_double;
+    qd_arg : quad_double;
+    pnt : QuadDobl_Complex_Numbers.Complex_Number;
     value : QuadDobl_Complex_Vectors.Vector(1..nbequ);
 
   begin
-    for i in srv'range loop
-      declare
-        cff : constant QuadDobl_Complex_Vectors.Vector
-            := Coefficients(srv,i);
-        num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
-        den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
-        val : QuadDobl_Complex_Numbers.Complex_Number;
-      begin
-        put("The coefficients of component "); put(i);
-        put_line(" :"); put_line(cff);
-        QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-        put_line("The coefficients of the numerator :"); put_line(num);
-        put_line("The coefficients of the denominator :"); put_line(den);
-        val := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
-        approx(i) := val;
-      end;
+    for k in 1..5 loop
+      dd_arg := Double_Double_Numbers.create(double_float(k)*0.04);
+      qd_arg := Quad_Double_Numbers.create(dd_arg);
+      pnt := QuadDobl_Complex_Numbers.Create(qd_arg);
+      for i in srv'range loop
+        declare
+          cff : constant QuadDobl_Complex_Vectors.Vector
+              := Coefficients(srv,i);
+          num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
+          den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
+          val : QuadDobl_Complex_Numbers.Complex_Number;
+        begin
+         -- put("The coefficients of component "); put(i);
+         -- put_line(" :"); put_line(cff);
+          QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
+         -- put_line("The coefficients of the numerator :"); put_line(num);
+         -- put_line("The coefficients of the denominator :"); put_line(den);
+          val := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
+          approx(i) := val;
+        end;
+      end loop;
+      put_line("The value of the rational approximation :");
+      put_line(approx);
+      value := QuadDobl_Homotopy.Eval(approx,pnt);
+      put("Evaluated at "); put(qd_arg,3); put_line(" :");
+      put_line(value);
     end loop;
-    put_line("The value of the rational approximation :");
-    put_line(approx);
-    value := QuadDobl_Homotopy.Eval(approx,pnt);
-    put_line("Evaluated at the homotopy :");
-    put_line(value);
   end QuadDobl_Pade_Approximation;
 
   procedure Standard_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
