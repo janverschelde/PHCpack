@@ -1,5 +1,6 @@
 with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
@@ -26,6 +27,16 @@ with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
 with QuadDobl_Rational_Approximations;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
+with Standard_Dense_Series_Vectors;
+with Standard_Dense_Series_Vectors_io;
+with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Dense_Series_Vectors_io;
+with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Dense_Series_Vectors_io;
+with Homotopy_Series_Readers;
 
 procedure ts_serpade is
 
@@ -753,6 +764,78 @@ procedure ts_serpade is
     put("The value of cos(0.1) : "); put(chkpnt); new_line;
   end QuadDobl_cos_Test;
 
+  procedure Standard_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
+
+    nbeq : integer32;
+    sols : Standard_Complex_Solutions.Solution_List;
+
+  begin
+    Homotopy_Series_Readers.Standard_Reader(nbeq,sols);
+    declare
+      lnk : constant Standard_Complex_Solutions.Link_to_Solution
+          := Standard_Complex_Solutions.Head_Of(sols);
+      sol : Standard_Complex_Solutions.Solution := lnk.all;
+      nbt : constant natural32 := natural32(numdeg+dendeg+1);
+      nit : constant natural32 := 2*nbt;
+      srv,eva : Standard_Dense_Series_Vectors.Vector(1..nbeq);
+    begin
+      Homotopy_Series_Readers.Standard_Series_Newton
+        (sol,nbeq,nbt,nit,srv,eva);
+      put_line("The solution series :");
+      Standard_Dense_Series_Vectors_io.put(srv);
+      put_line("The evaluated solution series :");
+      Standard_Dense_Series_Vectors_io.put(eva);
+    end;
+  end Standard_Homotopy_Test;
+
+  procedure DoblDobl_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
+
+    nbeq : integer32;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols);
+    declare
+      lnk : constant DoblDobl_Complex_Solutions.Link_to_Solution
+          := DoblDobl_Complex_Solutions.Head_Of(sols);
+      sol : DoblDobl_Complex_Solutions.Solution := lnk.all;
+      nbt : constant natural32 := natural32(numdeg+dendeg+1);
+      nit : constant natural32 := 2*nbt;
+      srv,eva : DoblDobl_Dense_Series_Vectors.Vector(1..nbeq);
+    begin
+      Homotopy_Series_Readers.DoblDobl_Series_Newton
+        (sol,nbeq,nbt,nit,srv,eva);
+      put_line("The solution series :");
+      DoblDobl_Dense_Series_Vectors_io.put(srv);
+      put_line("The evaluated solution series :");
+      DoblDobl_Dense_Series_Vectors_io.put(eva);
+    end;
+  end DoblDobl_Homotopy_Test;
+
+  procedure QuadDobl_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
+
+    nbeq : integer32;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols);
+    declare
+      lnk : constant QuadDobl_Complex_Solutions.Link_to_Solution
+          := QuadDobl_Complex_Solutions.Head_Of(sols);
+      sol : QuadDobl_Complex_Solutions.Solution := lnk.all;
+      nbt : constant natural32 := natural32(numdeg+dendeg+1);
+      nit : constant natural32 := 2*nbt;
+      srv,eva : QuadDobl_Dense_Series_Vectors.Vector(1..nbeq);
+    begin
+      Homotopy_Series_Readers.QuadDobl_Series_Newton
+        (sol,nbeq,nbt,nit,srv,eva);
+      put_line("The solution series :");
+      QuadDobl_Dense_Series_Vectors_io.put(srv);
+      put_line("The evaluated solution series :");
+      QuadDobl_Dense_Series_Vectors_io.put(eva);
+    end;
+  end QuadDobl_Homotopy_Test;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -767,12 +850,13 @@ procedure ts_serpade is
   begin
     new_line;
     put_line("MENU to test rational approximations for a function ...");
+    put_line("  0. artificial parameter homotopy");
     put_line("  1. series for log(1+x)");
     put_line("  2. series for exp(x)");
     put_line("  3. series for sin(x)");
     put_line("  4. series for cos(x)");
-    put("Type 1, 2, 3, or 4 to choose the test : ");
-    Ask_Alternative(ans,"1234");
+    put("Type 0, 1, 2, 3, or 4 to choose the test : ");
+    Ask_Alternative(ans,"01234");
     new_line;
     put("Give the degree of the numerator : "); get(degnum);
     put("Give the degree of the denominator : "); get(degden);
@@ -788,6 +872,7 @@ procedure ts_serpade is
     case prc is
       when '0' =>
         case ans is 
+          when '0' => Standard_Homotopy_Test(degnum,degden);
           when '1' => Standard_log_Test(degnum,degden);
           when '2' => Standard_exp_Test(degnum,degden);
           when '3' => Standard_sin_Test(degnum,degden);
@@ -796,6 +881,7 @@ procedure ts_serpade is
         end case;
       when '1' =>
         case ans is 
+          when '0' => DoblDobl_Homotopy_Test(degnum,degden);
           when '1' => DoblDobl_log_Test(degnum,degden);
           when '2' => DoblDobl_exp_Test(degnum,degden);
           when '3' => DoblDobl_sin_Test(degnum,degden);
@@ -804,6 +890,7 @@ procedure ts_serpade is
         end case;
       when '2' =>
         case ans is 
+          when '0' => QuadDobl_Homotopy_Test(degnum,degden);
           when '1' => QuadDobl_log_Test(degnum,degden);
           when '2' => QuadDobl_exp_Test(degnum,degden);
           when '3' => QuadDobl_sin_Test(degnum,degden);

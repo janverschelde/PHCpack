@@ -15,6 +15,11 @@ with DoblDobl_Homotopy;
 with DoblDobl_System_and_Solutions_io;
 with QuadDobl_Homotopy;
 with QuadDobl_System_and_Solutions_io;
+with Standard_Series_Poly_Systems;
+with DoblDobl_Series_Poly_Systems;
+with QuadDobl_Series_Poly_Systems;
+with Series_and_Homotopies;
+with Series_and_Predictors;
 
 package body Homotopy_Series_Readers is
 
@@ -113,5 +118,59 @@ package body Homotopy_Series_Readers is
   begin
     QuadDobl_Reader(nbequ,sols,tpow,gamma);
   end QuadDobl_Reader;
+
+  procedure Standard_Series_Newton
+              ( sol : in Standard_Complex_Solutions.Solution;
+                nbequ : in integer32; nbterms,nbiters : in natural32;
+                srv,eva : out Standard_Dense_Series_Vectors.Vector ) is
+
+    dim : constant integer32 := sol.n;
+    hom : Standard_Complex_Poly_Systems.Poly_Sys(1..nbequ)
+        := Standard_Homotopy.Homotopy_System;
+    sys : Standard_Series_Poly_Systems.Poly_Sys(1..nbequ)
+        := Series_and_Homotopies.Create(hom,nbequ+1);
+    nit : constant integer32 := integer32(nbiters);
+
+  begin
+    Series_and_Predictors.Newton_Prediction(nit,sys,sol.v,srv,eva);
+    Standard_Complex_Poly_Systems.Clear(hom);
+    Standard_Series_Poly_Systems.Clear(sys);
+  end Standard_Series_Newton;
+
+  procedure DoblDobl_Series_Newton
+              ( sol : in DoblDobl_Complex_Solutions.Solution;
+                nbequ : in integer32; nbterms,nbiters : in natural32;
+                srv,eva : out DoblDobl_Dense_Series_Vectors.Vector ) is
+
+    dim : constant integer32 := sol.n;
+    hom : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nbequ)
+        := DoblDobl_Homotopy.Homotopy_System;
+    sys : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nbequ)
+        := Series_and_Homotopies.Create(hom,nbequ+1);
+    nit : constant integer32 := integer32(nbiters);
+
+  begin
+    Series_and_Predictors.Newton_Prediction(nit,sys,sol.v,srv,eva);
+    DoblDobl_Complex_Poly_Systems.Clear(hom);
+    DoblDobl_Series_Poly_Systems.Clear(sys);
+  end DoblDobl_Series_Newton;
+
+  procedure QuadDobl_Series_Newton
+              ( sol : in QuadDobl_Complex_Solutions.Solution;
+                nbequ : in integer32; nbterms,nbiters : in natural32;
+                srv,eva : out QuadDobl_Dense_Series_Vectors.Vector ) is
+
+    dim : constant integer32 := sol.n;
+    hom : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nbequ)
+        := QuadDobl_Homotopy.Homotopy_System;
+    sys : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nbequ)
+        := Series_and_Homotopies.Create(hom,nbequ+1);
+    nit : constant integer32 := integer32(nbiters);
+
+  begin
+    Series_and_Predictors.Newton_Prediction(nit,sys,sol.v,srv,eva);
+    QuadDobl_Complex_Poly_Systems.Clear(hom);
+    QuadDobl_Series_Poly_Systems.Clear(sys);
+  end QuadDobl_Series_Newton;
 
 end Homotopy_Series_Readers;
