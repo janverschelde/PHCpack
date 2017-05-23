@@ -1,3 +1,6 @@
+Tue 23 May 2017 : new package standard_pade_approximations to encapsulate
+  a Pade approximant and a vector of Pade approximants, tested by ts_serpade.
+
 Mon 22 May 2017 : added coefficients function to ts_serpade and constructed
   a rational pade approximation for the solution in the homotopy.
   Added loop to test the Pade approximations at 5 points.

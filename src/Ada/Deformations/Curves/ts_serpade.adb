@@ -40,6 +40,7 @@ with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
 with Homotopy_Series_Readers;
+with Standard_Pade_Approximants;
 
 procedure ts_serpade is
 
@@ -831,32 +832,18 @@ procedure ts_serpade is
               ( nbequ,numdeg,dendeg : in integer32;
                 srv : in Standard_Dense_Series_Vectors.Vector ) is
 
-    approx : Standard_Complex_Vectors.Vector(srv'range);
     arg : double_float;
     pnt : Standard_Complex_Numbers.Complex_Number;
     value : Standard_Complex_Vectors.Vector(1..nbequ);
+    pv : constant Standard_Pade_Approximants.Pade_Vector(srv'range)
+       := Standard_Pade_Approximants.Create(numdeg,dendeg,srv);
+    approx : Standard_Complex_Vectors.Vector(pv'range);
 
   begin
     for k in 1..5 loop
       arg := double_float(k)*0.04;
       pnt := Standard_Complex_Numbers.Create(arg);
-      for i in srv'range loop
-        declare
-          cff : constant Standard_Complex_Vectors.Vector
-              := Coefficients(srv,i);
-          num : Standard_Complex_Vectors.Vector(0..numdeg);
-          den : Standard_Complex_Vectors.Vector(0..dendeg);
-          val : Standard_Complex_Numbers.Complex_Number;
-        begin
-         -- put("The coefficients of component "); put(i);
-         -- put_line(" :"); put_line(cff);
-          Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-         -- put_line("The coefficients of the numerator :"); put_line(num);
-         -- put_line("The coefficients of the denominator :"); put_line(den);
-          val := Standard_Rational_Approximations.Evaluate(num,den,pnt);
-          approx(i) := val;
-        end;
-      end loop;
+      approx := Standard_Pade_Approximants.Eval(pv,pnt);
       put_line("The value of the rational approximation :");
       put_line(approx);
       value := Standard_Homotopy.Eval(approx,pnt);
