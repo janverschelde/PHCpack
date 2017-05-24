@@ -32,10 +32,13 @@ with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Standard_Dense_Series_Vectors;
 with Standard_Dense_Series_Vectors_io;
+with Standard_Series_Vector_Functions;
 with DoblDobl_Dense_Series_Vectors;
 with DoblDobl_Dense_Series_Vectors_io;
+with DoblDobl_Series_Vector_Functions;
 with QuadDobl_Dense_Series_Vectors;
 with QuadDobl_Dense_Series_Vectors_io;
+with QuadDobl_Series_Vector_Functions;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
@@ -780,16 +783,23 @@ procedure ts_serpade is
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
        := Standard_Pade_Approximants.Create(numdeg,dendeg,srv);
     approx : Standard_Complex_Vectors.Vector(pv'range);
+    valsrv : Standard_Complex_Vectors.Vector(srv'range);
 
   begin
     for k in 1..5 loop
       arg := double_float(k)*0.04;
       pnt := Standard_Complex_Numbers.Create(arg);
+      valsrv := Standard_Series_Vector_Functions.Eval(srv,pnt);
+      put_line("The value of the series approximation :");
+      put_line(valsrv);
       approx := Standard_Pade_Approximants.Eval(pv,pnt);
       put_line("The value of the rational approximation :");
       put_line(approx);
+      value := Standard_Homotopy.Eval(valsrv,pnt);
+      put("Series approximation evaluated at "); put(arg,3); put_line(" :");
+      put_line(value);
       value := Standard_Homotopy.Eval(approx,pnt);
-      put("Evaluated at "); put(arg,3); put_line(" :");
+      put("Pade approximation evaluated at "); put(arg,3); put_line(" :");
       put_line(value);
     end loop;
     Standard_Pade_Approximants.Clear(pv);
@@ -805,16 +815,23 @@ procedure ts_serpade is
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
        := DoblDobl_Pade_Approximants.Create(numdeg,dendeg,srv);
     approx : DoblDobl_Complex_Vectors.Vector(pv'range);
+    valsrv : DoblDobl_Complex_Vectors.Vector(srv'range);
 
   begin
     for k in 1..5 loop
       arg := Double_Double_Numbers.create(double_float(k)*0.04);
       pnt := DoblDobl_Complex_Numbers.Create(arg);
+      valsrv := DoblDobl_Series_Vector_Functions.Eval(srv,pnt);
+      put_line("The value of the series approximation :");
+      put_line(valsrv);
       approx := DoblDobl_Pade_Approximants.Eval(pv,pnt);
       put_line("The value of the rational approximation :");
       put_line(approx);
+      value := DoblDobl_Homotopy.Eval(valsrv,pnt);
+      put("Series approximation evaluated at "); put(arg,3); put_line(" :");
+      put_line(value);
       value := DoblDobl_Homotopy.Eval(approx,pnt);
-      put("Evaluated at "); put(arg,3); put_line(" :");
+      put("Pade approximant evaluated at "); put(arg,3); put_line(" :");
       put_line(value);
     end loop;
     DoblDobl_Pade_Approximants.Clear(pv);
@@ -831,17 +848,24 @@ procedure ts_serpade is
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
        := QuadDobl_Pade_Approximants.Create(numdeg,dendeg,srv);
     approx : QuadDobl_Complex_Vectors.Vector(pv'range);
+    valsrv : QuadDobl_Complex_Vectors.Vector(srv'range);
 
   begin
     for k in 1..5 loop
       dd_arg := Double_Double_Numbers.create(double_float(k)*0.04);
       qd_arg := Quad_Double_Numbers.create(dd_arg);
       pnt := QuadDobl_Complex_Numbers.Create(qd_arg);
+      valsrv := QuadDobl_Series_Vector_Functions.Eval(srv,pnt);
+      put_line("The value of the series approximation :");
+      put_line(valsrv);
       approx := QuadDobl_Pade_Approximants.Eval(pv,pnt);
       put_line("The value of the rational approximation :");
       put_line(approx);
+      value := QuadDobl_Homotopy.Eval(valsrv,pnt);
+      put("Series approximation evaluated at "); put(qd_arg,3); put_line(" :");
+      put_line(value);
       value := QuadDobl_Homotopy.Eval(approx,pnt);
-      put("Evaluated at "); put(qd_arg,3); put_line(" :");
+      put("Pade approximation evaluated at "); put(qd_arg,3); put_line(" :");
       put_line(value);
     end loop;
     QuadDobl_Pade_Approximants.Clear(pv);
