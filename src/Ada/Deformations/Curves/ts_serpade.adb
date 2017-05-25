@@ -18,12 +18,16 @@ with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Mathematical_Functions;
+with Standard_Random_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
+with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Systems;
 with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
 with QuadDobl_Rational_Approximations;
@@ -871,6 +875,72 @@ procedure ts_serpade is
     QuadDobl_Pade_Approximants.Clear(pv);
   end QuadDobl_Pade_Approximation;
 
+  procedure Standard_Test_Homotopy is
+
+  -- DESCRIPTION :
+  --   Stores the test homotopy, starting at x^2 - 1, and with
+  --   target system 3*x^2 - 3/2 in the Standard_Homotopy package.
+
+    use Standard_Complex_Polynomials;
+
+    start,target : Standard_Complex_Poly_Systems.Poly_Sys(1..1);
+    startpol,targetpol : Poly;
+    trm : Term;
+    tpow : constant natural32 := 1;
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Random_Numbers.Random1;
+
+  begin
+    trm.cf := Standard_Complex_Numbers.Create(1.0);
+    trm.dg := new Standard_Natural_Vectors.Vector'(1..1 => 0);
+    trm.dg(1) := 2;
+    startpol := Create(trm);
+    trm.dg(1) := 0;
+    Sub(startpol,trm);
+    start(1) := startpol;
+    trm.dg(1) := 2;
+    trm.cf := Standard_Complex_Numbers.Create(3.0);
+    targetpol := Create(trm);
+    trm.dg(1) := 0;
+    trm.cf := Standard_Complex_Numbers.Create(0.5);
+    Sub(targetpol,trm);
+    target(1) := targetpol;
+    Standard_Homotopy.Create(target,start,tpow,gamma);
+  end Standard_Test_Homotopy;
+
+  procedure Standard_Test_Start_Solutions
+              ( sols : out Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Returns in sols the two start solutions +1 and -1
+  --   for the test homotopy.
+
+    sol : Standard_Complex_Solutions.Solution(1);
+    two,one : Standard_Complex_Solutions.Link_to_Solution;
+
+  begin
+    sol.t := Standard_Complex_Numbers.Create(0.0);
+    sol.m := 1;
+    sol.v(1) := Standard_Complex_Numbers.Create(-1.0);
+    sol.err := 0.0; sol.rco := 1.0; sol.res := 0.0; 
+    two := new Standard_Complex_Solutions.Solution'(sol);
+    Standard_Complex_Solutions.Construct(two,sols);
+    sol.v(1) := Standard_Complex_Numbers.Create(1.0);
+    one := new Standard_Complex_Solutions.Solution'(sol);
+    Standard_Complex_Solutions.Construct(one,sols);
+  end Standard_Test_Start_Solutions;
+
+  procedure Standard_Test_Case
+              ( sols : out Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Defines the homotopy for an example test case.
+
+  begin
+    Standard_Test_Homotopy;
+    Standard_Test_Start_Solutions(sols);
+  end Standard_Test_Case;
+
   procedure Standard_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
@@ -880,9 +950,15 @@ procedure ts_serpade is
 
     nbeq : integer32;
     sols : Standard_Complex_Solutions.Solution_List;
+    ans : character;
 
   begin
-    Homotopy_Series_Readers.Standard_Reader(nbeq,sols,tpow=>1);
+    put("Run an example test case ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Standard_Test_Case(sols); nbeq := 1;
+     else Homotopy_Series_Readers.Standard_Reader(nbeq,sols,tpow=>1);
+    end if;
     declare
       lnk : constant Standard_Complex_Solutions.Link_to_Solution
           := Standard_Complex_Solutions.Head_Of(sols);
