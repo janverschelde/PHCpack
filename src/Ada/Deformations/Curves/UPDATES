@@ -1,5 +1,7 @@
 Thu 25 May 2017 : for the example test case, extended the range so it shows
   a converging Pade approximant versus a diverging series.
+  For the general homotopy test, prompt for the number of steps to set
+  the range of evaluation of the series and Pade approximations.
 
 Wed 24 May 2017 : added an example test case to ts_serpade.
 

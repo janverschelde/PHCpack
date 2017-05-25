@@ -1147,9 +1147,13 @@ procedure ts_serpade is
     put("Run an example test case ? (y/n) ");
     Ask_Yes_or_No(ans);
     new_line;
-    if ans = 'y'
-     then Standard_Test_Case(sols); nbeq := 1; nbsteps := 50;
-     else Homotopy_Series_Readers.Standard_Reader(nbeq,sols,tpow=>1);
+    if ans = 'y' then
+      Standard_Test_Case(sols); nbeq := 1; nbsteps := 50;
+    else
+      Homotopy_Series_Readers.Standard_Reader(nbeq,sols,tpow=>1);
+      new_line;
+      put("Give the number of steps : "); get(nbsteps);
+      new_line;
     end if;
     declare
       lnk : constant Standard_Complex_Solutions.Link_to_Solution
@@ -1186,9 +1190,13 @@ procedure ts_serpade is
     put("Run an example test case ? (y/n) ");
     Ask_Yes_or_No(ans);
     new_line;
-    if ans = 'y'
-     then DoblDobl_Test_Case(sols); nbeq := 1; nbsteps := 50;
-     else Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,tpow=>1);
+    if ans = 'y' then
+      DoblDobl_Test_Case(sols); nbeq := 1; nbsteps := 50;
+    else
+      Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,tpow=>1);
+      new_line;
+      put("Give the number of steps : "); get(nbsteps);
+      new_line;
     end if;
     declare
       lnk : constant DoblDobl_Complex_Solutions.Link_to_Solution
@@ -1225,9 +1233,13 @@ procedure ts_serpade is
     put("Run an example test case ? (y/n) ");
     Ask_Yes_or_No(ans);
     new_line;
-    if ans = 'y'
-     then QuadDobl_Test_Case(sols); nbeq := 1; nbsteps := 50;
-     else Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,tpow=>1);
+    if ans = 'y' then
+      QuadDobl_Test_Case(sols); nbeq := 1; nbsteps := 50;
+    else
+      Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,tpow=>1);
+      new_line;
+      put("Give the number of steps : "); get(nbsteps);
+      new_line;
     end if;
     declare
       lnk : constant QuadDobl_Complex_Solutions.Link_to_Solution
