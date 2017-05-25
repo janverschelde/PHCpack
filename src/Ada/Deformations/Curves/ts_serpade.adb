@@ -18,7 +18,6 @@ with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Mathematical_Functions;
-with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
@@ -28,6 +27,10 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;
 with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
 with QuadDobl_Rational_Approximations;
@@ -778,8 +781,15 @@ procedure ts_serpade is
   end QuadDobl_cos_Test;
 
   procedure Standard_Pade_Approximation
-              ( nbequ,numdeg,dendeg : in integer32;
+              ( nbequ,numdeg,dendeg,nbsteps : in integer32;
                 srv : in Standard_Dense_Series_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes a Pade approximant based on the series in srv,
+  --   with degree of the numerator in numdeg and degree of the
+  --   denominator in dendeg, in standard double precision.
+  --   The Pade approximant is evaluated in as many points
+  --   as the value of nbsteps.
 
     arg : double_float;
     pnt : Standard_Complex_Numbers.Complex_Number;
@@ -790,7 +800,7 @@ procedure ts_serpade is
     valsrv : Standard_Complex_Vectors.Vector(srv'range);
 
   begin
-    for k in 1..5 loop
+    for k in 1..nbsteps loop
       arg := double_float(k)*0.04;
       pnt := Standard_Complex_Numbers.Create(arg);
       valsrv := Standard_Series_Vector_Functions.Eval(srv,pnt);
@@ -810,8 +820,15 @@ procedure ts_serpade is
   end Standard_Pade_Approximation;
 
   procedure DoblDobl_Pade_Approximation
-              ( nbequ,numdeg,dendeg : in integer32;
+              ( nbequ,numdeg,dendeg,nbsteps : in integer32;
                 srv : in DoblDobl_Dense_Series_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes a Pade approximant based on the series in srv,
+  --   with degree of the numerator in numdeg and degree of the
+  --   denominator in dendeg, in double double precision.
+  --   The Pade approximant is evaluated in as many points
+  --   as the value of nbsteps.
 
     arg : double_double;
     pnt : DoblDobl_Complex_Numbers.Complex_Number;
@@ -822,7 +839,7 @@ procedure ts_serpade is
     valsrv : DoblDobl_Complex_Vectors.Vector(srv'range);
 
   begin
-    for k in 1..5 loop
+    for k in 1..nbsteps loop
       arg := Double_Double_Numbers.create(double_float(k)*0.04);
       pnt := DoblDobl_Complex_Numbers.Create(arg);
       valsrv := DoblDobl_Series_Vector_Functions.Eval(srv,pnt);
@@ -842,8 +859,15 @@ procedure ts_serpade is
   end DoblDobl_Pade_Approximation;
 
   procedure QuadDobl_Pade_Approximation
-              ( nbequ,numdeg,dendeg : in integer32;
+              ( nbequ,numdeg,dendeg,nbsteps : in integer32;
                 srv : in QuadDobl_Dense_Series_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes a Pade approximant based on the series in srv,
+  --   with degree of the numerator in numdeg and degree of the
+  --   denominator in dendeg, in quad double precision.
+  --   The Pade approximant is evaluated in as many points
+  --   as the value of nbsteps.
 
     dd_arg : double_double;
     qd_arg : quad_double;
@@ -855,7 +879,7 @@ procedure ts_serpade is
     valsrv : QuadDobl_Complex_Vectors.Vector(srv'range);
 
   begin
-    for k in 1..5 loop
+    for k in 1..nbsteps loop
       dd_arg := Double_Double_Numbers.create(double_float(k)*0.04);
       qd_arg := Quad_Double_Numbers.create(dd_arg);
       pnt := QuadDobl_Complex_Numbers.Create(qd_arg);
@@ -879,7 +903,11 @@ procedure ts_serpade is
 
   -- DESCRIPTION :
   --   Stores the test homotopy, starting at x^2 - 1, and with
-  --   target system 3*x^2 - 3/2 in the Standard_Homotopy package.
+  --   target system 3*x^2 - 3/2 in the Standard_Homotopy data.
+  --   The test homotopy (1-t)*(x^2 - 1) + t*(3*x^2 - 3/2) = 0
+  --   expands into x^2 - 1 - t*x^2 + t + t*3*x^2 - 3/2*t = 0
+  --   which leads to (1+2*t)*x^2 = 1 + 1/2*t and thus defines
+  --   the function x(t) = ((1 + 1/2*t)/(1 + 2*t))^(1/2).
 
     use Standard_Complex_Polynomials;
 
@@ -888,7 +916,7 @@ procedure ts_serpade is
     trm : Term;
     tpow : constant natural32 := 1;
     gamma : constant Standard_Complex_Numbers.Complex_Number
-          := Standard_Random_Numbers.Random1;
+          := Standard_Complex_Numbers.Create(1.0);
 
   begin
     trm.cf := Standard_Complex_Numbers.Create(1.0);
@@ -908,12 +936,92 @@ procedure ts_serpade is
     Standard_Homotopy.Create(target,start,tpow,gamma);
   end Standard_Test_Homotopy;
 
+  procedure DoblDobl_Test_Homotopy is
+
+  -- DESCRIPTION :
+  --   Stores the test homotopy, starting at x^2 - 1, and with
+  --   target system 3*x^2 - 3/2 in the DoblDobl_Homotopy data.
+  --   The test homotopy (1-t)*(x^2 - 1) + t*(3*x^2 - 3/2) = 0
+  --   expands into x^2 - 1 - t*x^2 + t + t*3*x^2 - 3/2*t = 0
+  --   which leads to (1+2*t)*x^2 = 1 + 1/2*t and thus defines
+  --   the function x(t) = ((1 + 1/2*t)/(1 + 2*t))^(1/2).
+
+    use DoblDobl_Complex_Polynomials;
+
+    start,target : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..1);
+    startpol,targetpol : Poly;
+    trm : Term;
+    tpow : constant natural32 := 1;
+    nbr : double_double := create(1.0);
+    gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+          := DoblDobl_Complex_Numbers.Create(nbr);
+
+  begin
+    trm.cf := DoblDobl_Complex_Numbers.Create(nbr);
+    trm.dg := new Standard_Natural_Vectors.Vector'(1..1 => 0);
+    trm.dg(1) := 2;
+    startpol := Create(trm);
+    trm.dg(1) := 0;
+    Sub(startpol,trm);
+    start(1) := startpol;
+    trm.dg(1) := 2;
+    nbr := create(3.0);
+    trm.cf := DoblDobl_Complex_Numbers.Create(nbr);
+    targetpol := Create(trm);
+    trm.dg(1) := 0;
+    nbr := create(0.5);
+    trm.cf := DoblDobl_Complex_Numbers.Create(nbr);
+    Sub(targetpol,trm);
+    target(1) := targetpol;
+    DoblDobl_Homotopy.Create(target,start,tpow,gamma);
+  end DoblDobl_Test_Homotopy;
+
+  procedure QuadDobl_Test_Homotopy is
+
+  -- DESCRIPTION :
+  --   Stores the test homotopy, starting at x^2 - 1, and with
+  --   target system 3*x^2 - 3/2 in the QuadDobl_Homotopy data.
+  --   The test homotopy (1-t)*(x^2 - 1) + t*(3*x^2 - 3/2) = 0
+  --   expands into x^2 - 1 - t*x^2 + t + t*3*x^2 - 3/2*t = 0
+  --   which leads to (1+2*t)*x^2 = 1 + 1/2*t and thus defines
+  --   the function x(t) = ((1 + 1/2*t)/(1 + 2*t))^(1/2).
+
+    use QuadDobl_Complex_Polynomials;
+
+    start,target : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..1);
+    startpol,targetpol : Poly;
+    trm : Term;
+    tpow : constant natural32 := 1;
+    nbr : quad_double := create(1.0);
+    gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+          := QuadDobl_Complex_Numbers.Create(nbr);
+
+  begin
+    trm.cf := QuadDobl_Complex_Numbers.Create(nbr);
+    trm.dg := new Standard_Natural_Vectors.Vector'(1..1 => 0);
+    trm.dg(1) := 2;
+    startpol := Create(trm);
+    trm.dg(1) := 0;
+    Sub(startpol,trm);
+    start(1) := startpol;
+    trm.dg(1) := 2;
+    nbr := create(3.0);
+    trm.cf := QuadDobl_Complex_Numbers.Create(nbr);
+    targetpol := Create(trm);
+    trm.dg(1) := 0;
+    nbr := create(0.5);
+    trm.cf := QuadDobl_Complex_Numbers.Create(nbr);
+    Sub(targetpol,trm);
+    target(1) := targetpol;
+    QuadDobl_Homotopy.Create(target,start,tpow,gamma);
+  end QuadDobl_Test_Homotopy;
+
   procedure Standard_Test_Start_Solutions
               ( sols : out Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   Returns in sols the two start solutions +1 and -1
-  --   for the test homotopy.
+  --   for the test homotopy, in standard double precision.
 
     sol : Standard_Complex_Solutions.Solution(1);
     two,one : Standard_Complex_Solutions.Link_to_Solution;
@@ -930,16 +1038,97 @@ procedure ts_serpade is
     Standard_Complex_Solutions.Construct(one,sols);
   end Standard_Test_Start_Solutions;
 
+  procedure DoblDobl_Test_Start_Solutions
+              ( sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Returns in sols the two start solutions +1 and -1
+  --   for the test homotopy, in double double precision.
+
+    sol : DoblDobl_Complex_Solutions.Solution(1);
+    nbr : double_double;
+    two,one : DoblDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    nbr := create(0.0);
+    sol.t := DoblDobl_Complex_Numbers.Create(nbr);
+    sol.m := 1;
+    nbr := create(-1.0);
+    sol.v(1) := DoblDobl_Complex_Numbers.Create(nbr);
+    sol.err := create(0.0);
+    sol.rco := create(1.0);
+    sol.res := create(0.0); 
+    two := new DoblDobl_Complex_Solutions.Solution'(sol);
+    DoblDobl_Complex_Solutions.Construct(two,sols);
+    nbr := create(1.0);
+    sol.v(1) := DoblDobl_Complex_Numbers.Create(nbr);
+    one := new DoblDobl_Complex_Solutions.Solution'(sol);
+    DoblDobl_Complex_Solutions.Construct(one,sols);
+  end DoblDobl_Test_Start_Solutions;
+
+  procedure QuadDobl_Test_Start_Solutions
+              ( sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Returns in sols the two start solutions +1 and -1
+  --   for the test homotopy, in quad double precision.
+
+    sol : QuadDobl_Complex_Solutions.Solution(1);
+    nbr : quad_double;
+    two,one : QuadDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    nbr := create(0.0);
+    sol.t := QuadDobl_Complex_Numbers.Create(nbr);
+    sol.m := 1;
+    nbr := create(-1.0);
+    sol.v(1) := QuadDobl_Complex_Numbers.Create(nbr);
+    sol.err := create(0.0);
+    sol.rco := create(1.0);
+    sol.res := create(0.0); 
+    two := new QuadDobl_Complex_Solutions.Solution'(sol);
+    QuadDobl_Complex_Solutions.Construct(two,sols);
+    nbr := create(1.0);
+    sol.v(1) := QuadDobl_Complex_Numbers.Create(nbr);
+    one := new QuadDobl_Complex_Solutions.Solution'(sol);
+    QuadDobl_Complex_Solutions.Construct(one,sols);
+  end QuadDobl_Test_Start_Solutions;
+
   procedure Standard_Test_Case
               ( sols : out Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
-  --   Defines the homotopy for an example test case.
+  --   Defines the homotopy for an example test case,
+  --   in standard double precision.
 
   begin
     Standard_Test_Homotopy;
     Standard_Test_Start_Solutions(sols);
   end Standard_Test_Case;
+
+  procedure DoblDobl_Test_Case
+              ( sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Defines the homotopy for an example test case,
+  --   in double double precision.
+
+  begin
+    DoblDobl_Test_Homotopy;
+    DoblDobl_Test_Start_Solutions(sols);
+  end DoblDobl_Test_Case;
+
+  procedure QuadDobl_Test_Case
+              ( sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Defines the homotopy for an example test case,
+  --   in quad double precision.
+
+  begin
+    QuadDobl_Test_Homotopy;
+    QuadDobl_Test_Start_Solutions(sols);
+  end QuadDobl_Test_Case;
 
   procedure Standard_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
 
@@ -949,14 +1138,17 @@ procedure ts_serpade is
   --   start solution, in standard double precision.
 
     nbeq : integer32;
+    nbsteps : integer32 := 5;
     sols : Standard_Complex_Solutions.Solution_List;
     ans : character;
 
   begin
+    new_line;
     put("Run an example test case ? (y/n) ");
     Ask_Yes_or_No(ans);
+    new_line;
     if ans = 'y'
-     then Standard_Test_Case(sols); nbeq := 1;
+     then Standard_Test_Case(sols); nbeq := 1; nbsteps := 50;
      else Homotopy_Series_Readers.Standard_Reader(nbeq,sols,tpow=>1);
     end if;
     declare
@@ -973,7 +1165,7 @@ procedure ts_serpade is
       Standard_Dense_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
       Standard_Dense_Series_Vectors_io.put(eva);
-      Standard_Pade_Approximation(nbeq,numdeg,dendeg,srv);
+      Standard_Pade_Approximation(nbeq,numdeg,dendeg,nbsteps,srv);
     end;
   end Standard_Homotopy_Test;
 
@@ -985,10 +1177,19 @@ procedure ts_serpade is
   --   start solution, in double double precision.
 
     nbeq : integer32;
+    nbsteps : integer32 := 5;
     sols : DoblDobl_Complex_Solutions.Solution_List;
+    ans : character;
 
   begin
-    Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,tpow=>1);
+    new_line;
+    put("Run an example test case ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    if ans = 'y'
+     then DoblDobl_Test_Case(sols); nbeq := 1; nbsteps := 50;
+     else Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,tpow=>1);
+    end if;
     declare
       lnk : constant DoblDobl_Complex_Solutions.Link_to_Solution
           := DoblDobl_Complex_Solutions.Head_Of(sols);
@@ -1003,7 +1204,7 @@ procedure ts_serpade is
       DoblDobl_Dense_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
       DoblDobl_Dense_Series_Vectors_io.put(eva);
-      DoblDobl_Pade_Approximation(nbeq,numdeg,dendeg,srv);
+      DoblDobl_Pade_Approximation(nbeq,numdeg,dendeg,nbsteps,srv);
     end;
   end DoblDobl_Homotopy_Test;
 
@@ -1015,10 +1216,19 @@ procedure ts_serpade is
   --   start solution, in quad double precision.
 
     nbeq : integer32;
+    nbsteps : integer32 := 5;
     sols : QuadDobl_Complex_Solutions.Solution_List;
+    ans : character;
 
   begin
-    Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,tpow=>1);
+    new_line;
+    put("Run an example test case ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    if ans = 'y'
+     then QuadDobl_Test_Case(sols); nbeq := 1; nbsteps := 50;
+     else Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,tpow=>1);
+    end if;
     declare
       lnk : constant QuadDobl_Complex_Solutions.Link_to_Solution
           := QuadDobl_Complex_Solutions.Head_Of(sols);
@@ -1033,7 +1243,7 @@ procedure ts_serpade is
       QuadDobl_Dense_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
       QuadDobl_Dense_Series_Vectors_io.put(eva);
-      QuadDobl_Pade_Approximation(nbeq,numdeg,dendeg,srv);
+      QuadDobl_Pade_Approximation(nbeq,numdeg,dendeg,nbsteps,srv);
     end;
   end QuadDobl_Homotopy_Test;
 
