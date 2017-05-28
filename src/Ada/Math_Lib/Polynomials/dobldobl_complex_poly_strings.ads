@@ -1,5 +1,6 @@
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Symbol_Table;                       use Symbol_Table;
 with DoblDobl_Complex_Polynomials;       use DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Term_Lists;        use DoblDobl_Complex_Term_Lists;
 with DoblDobl_Complex_Poly_Systems;      use DoblDobl_Complex_Poly_Systems;
@@ -53,20 +54,30 @@ package DoblDobl_Complex_Poly_Strings is
   --   interface programs, multiplying the number of terms with the 
   --   number of variables, the coefficient size and the symbol size.
   --   The size is limited by 2**32 - 1, the largest positive integer.
-  --
+
   function Write ( p : Poly ) return string;
+  function Write ( p : Poly; s : Array_of_Symbols ) return string;
 
   -- DESCRIPTION :
   --   This function writes the polynomial to a string.
+  --   Without s, the symbols in the symbol table represent the variables,
+  --   otherwise, with s, the variables are written with the symbols in s.
 
   function Write ( p : Poly_Sys ) return string;
+  function Write ( p : Poly_Sys; s : Array_of_Symbols ) return string;
 
   -- DESCRIPTION :
   --   This function writes the polynomial system to a string.
+  --   Without s, the symbols in the symbol table represent the variables,
+  --   otherwise, with s, the variables are written with the symbols in s.
 
   function Write ( p : Poly_Sys ) return Array_of_Strings;
+  function Write ( p : Poly_Sys; s : Array_of_Symbols )
+                 return Array_of_Strings;
 
   -- DESCRIPTION :
   --   Writes every polynomial in p to a separate string.
+  --   Without s, the symbols in the symbol table represent the variables,
+  --   otherwise, with s, the variables are written with the symbols in s.
 
 end DoblDobl_Complex_Poly_Strings;

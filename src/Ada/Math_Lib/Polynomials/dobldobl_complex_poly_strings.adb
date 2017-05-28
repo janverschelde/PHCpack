@@ -174,11 +174,30 @@ package body DoblDobl_Complex_Poly_Strings is
     return res;
   end Write;
 
+  function Write ( p : Poly; s : Array_of_Symbols ) return string is
+
+    q : Multprec_Complex_Polynomials.Poly
+      := DoblDobl_Complex_to_Multprec_Polynomial(p);
+    res : constant string := Multprec_Complex_Poly_Strings.Write(q,s);
+
+  begin
+    Multprec_Complex_Polynomials.Clear(q);
+    return res;
+  end Write;
+
   function Write ( p : Poly_Sys ) return string is
   begin
     if p'first = p'last
      then return Write(p(p'first));
      else return Write(p(p'first)) & Write(p(p'first+1..p'last));
+    end if;
+  end Write;
+
+  function Write ( p : Poly_Sys; s : Array_of_Symbols ) return string is
+  begin
+    if p'first = p'last
+     then return Write(p(p'first),s);
+     else return Write(p(p'first),s) & Write(p(p'first+1..p'last),s);
     end if;
   end Write;
 
@@ -192,6 +211,22 @@ package body DoblDobl_Complex_Poly_Strings is
         s : constant string := Write(p(integer32(i)));
       begin
         res(i) := new string'(s);
+      end;
+    end loop;
+    return res;
+  end Write;
+
+  function Write ( p : Poly_Sys; s : Array_of_Symbols )
+                 return Array_of_Strings is
+
+    res : Array_of_Strings(integer(p'first)..integer(p'last));
+
+  begin
+    for i in res'range loop
+      declare
+        pstr : constant string := Write(p(integer32(i)),s);
+      begin
+        res(i) := new string'(pstr);
       end;
     end loop;
     return res;

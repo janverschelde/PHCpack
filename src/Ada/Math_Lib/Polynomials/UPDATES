@@ -1,5 +1,6 @@
 Sun 28 May 2017 : added procedures to write polynomials to string with a
   given array of symbols in standard_complex_poly_strings.
+  Did the same for the multprec, the dobldobl, and quaddobl versions.
 
 Mon 3 Oct 2016 : factored a new package random_polynomial_systems out of
   the test procedure ts_randpoly.  Added an additional parameter to return

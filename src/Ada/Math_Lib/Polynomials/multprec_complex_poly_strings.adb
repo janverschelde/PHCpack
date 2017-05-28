@@ -866,12 +866,14 @@ package body Multprec_Complex_Poly_Strings is
 
 -- AUXILIARIES FOR OUTPUT :
 
-  function Write ( t : Term; lead : boolean ) return string is
+  function Write ( t : Term; lead : boolean;
+                   s : Array_of_Symbols ) return string is
 
   -- DESCRIPTION :
   --   Returns the string representation of the term.
   --   When the term is the leading term of the polynomial,
   --   then lead is true.
+  --   The symbols in s represent the variables in the term.
 
     function Rec_Write ( k : integer32; accu : string; first : boolean )
                        return string is
@@ -882,7 +884,7 @@ package body Multprec_Complex_Poly_Strings is
         return Rec_Write(k+1,accu,first);
       else
         declare
-          sb : constant Symbol := Symbol_Table.Get(natural32(k));
+          sb : constant Symbol := s(k); -- Symbol_Table.Get(natural32(k));
         begin
           if t.dg(k) > 1 then
             if first then
@@ -950,12 +952,20 @@ package body Multprec_Complex_Poly_Strings is
     end;
   end Write;
 
-  function Write ( p : Poly_Sys ) return string is
+  function Write ( t : Term; lead : boolean ) return string is
+
+  -- DESCRIPTION :
+  --   Returns the string representation of the term.
+  --   When the term is the leading term of the polynomial,
+  --   then lead is true.
+
+    s : Array_of_Symbols(t.dg'range);
+
   begin
-    if p'first = p'last
-     then return Write(p(p'first));
-     else return Write(p(p'first)) & Write(p(p'first+1..p'last));
-    end if;
+    for k in s'range loop
+      s(k) := Symbol_Table.Get(natural32(k));
+    end loop;
+    return Write(t,lead,s);
   end Write;
 
 -- TARGET FUNCTIONS :
@@ -1081,7 +1091,7 @@ package body Multprec_Complex_Poly_Strings is
     end if;
   end Size_Limit;
 
-  function Write ( p : Poly ) return string is
+  function Write ( p : Poly; s : Array_of_Symbols ) return string is
 
     nb : constant natural32 := Number_of_Terms(p);
     terms : array(1..nb) of Term;
@@ -1106,13 +1116,13 @@ package body Multprec_Complex_Poly_Strings is
         return "";
       elsif tfirst = tlast then
         if tfirst = 1
-         then return Write(terms(tfirst),true);  -- lead term
-         else return Write(terms(tfirst),false); -- trailing term
+         then return Write(terms(tfirst),true,s);  -- lead term
+         else return Write(terms(tfirst),false,s); -- trailing term
         end if;
       else
         declare
           middle : constant natural32 := (tfirst+tlast)/2;
-          midterm : constant string := Write(terms(middle),false);
+          midterm : constant string := Write(terms(middle),false,s);
           firsthalf : constant string := Write_Terms(tfirst,middle-1);
           secondhalf : constant string := Write_Terms(middle+1,tlast);
         begin
@@ -1126,6 +1136,34 @@ package body Multprec_Complex_Poly_Strings is
     return Write_Terms(1,nb) & ";";
   end Write;
 
+  function Write ( p : Poly ) return string is
+
+    n : constant natural32 := Number_of_Unknowns(p);
+    s : Array_of_Symbols(1..integer32(n));
+
+  begin
+    for k in s'range loop
+      s(k) := Symbol_Table.Get(natural32(k));
+    end loop;
+    return Write(p,s);
+  end Write;
+
+  function Write ( p : Poly_Sys ) return string is
+  begin
+    if p'first = p'last
+     then return Write(p(p'first));
+     else return Write(p(p'first)) & Write(p(p'first+1..p'last));
+    end if;
+  end Write;
+
+  function Write ( p : Poly_Sys; s : Array_of_Symbols ) return string is
+  begin
+    if p'first = p'last
+     then return Write(p(p'first),s);
+     else return Write(p(p'first),s) & Write(p(p'first+1..p'last),s);
+    end if;
+  end Write;
+
   function Write ( p : Poly_Sys ) return Array_of_Strings is
 
     res : Array_of_Strings(integer(p'first)..integer(p'last));
@@ -1136,6 +1174,22 @@ package body Multprec_Complex_Poly_Strings is
         s : constant string := Write(p(integer32(i)));
       begin
         res(i) := new string'(s);
+      end;
+    end loop;
+    return res;
+  end Write;
+
+  function Write ( p : Poly_Sys; s : Array_of_Symbols )
+                 return Array_of_Strings is
+
+    res : Array_of_Strings(integer(p'first)..integer(p'last));
+
+  begin
+    for i in res'range loop
+      declare
+        pstr : constant string := Write(p(integer32(i)),s);
+      begin
+        res(i) := new string'(pstr);
       end;
     end loop;
     return res;
