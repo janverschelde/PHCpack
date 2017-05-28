@@ -135,4 +135,25 @@ package body Standard_Pade_Approximants is
     end loop;
   end Clear;
 
+  procedure Clear ( p : in out Link_to_Pade_Vector ) is
+
+    procedure free is
+      new unchecked_deallocation(Pade_Vector,Link_to_Pade_Vector);
+
+  begin
+    if p /= null then
+      for k in p'range loop
+        Clear(p(k));
+      end loop;
+      free(p);
+    end if;
+  end Clear;
+
+  procedure Clear ( p : in out Pade_VecVec ) is
+  begin
+    for k in p'range loop
+      Clear(p(k));
+    end loop;
+  end Clear;
+
 end Standard_Pade_Approximants;

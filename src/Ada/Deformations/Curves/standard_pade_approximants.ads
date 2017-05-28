@@ -19,6 +19,9 @@ package Standard_Pade_Approximants is
   type Pade_Vector is array ( integer32 range <> ) of Pade;
   -- A Pade vector is a vector of Pade approximants.
 
+  type Link_to_Pade_Vector is access Pade_Vector;
+  type Pade_VecVec is array ( integer32 range <> ) of Link_to_Pade_Vector;
+
 -- CONSTRUCTORS :
 
   function Create ( num,den : Standard_Complex_Vectors.Vector )
@@ -105,6 +108,8 @@ package Standard_Pade_Approximants is
 
   procedure Clear ( p : in out Pade );
   procedure Clear ( p : in out Pade_Vector );
+  procedure Clear ( p : in out Link_to_Pade_Vector );
+  procedure Clear ( p : in out Pade_VecVec );
 
   -- DESCRIPTION :
   --   Deallocates the memory occupied by p.
