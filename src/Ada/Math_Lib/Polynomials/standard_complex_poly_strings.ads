@@ -94,18 +94,28 @@ package Standard_Complex_Poly_Strings is
   --   The size is limited by 2**32 - 1, the largest positive integer.
 
   function Write ( p : Poly ) return string;
+  function Write ( p : Poly; s : Array_of_Symbols ) return string;
 
   -- DESCRIPTION :
   --   This function writes the polynomial to a string.
+  --   Without s, the symbols in the symbol table represent the variables,
+  --   otherwise, with s, the variables are written with the symbols in s.
 
   function Write ( p : Poly_Sys ) return string;
+  function Write ( p : Poly_Sys; s : Array_of_Symbols ) return string;
 
   -- DESCRIPTION :
   --   This function writes the polynomial system to a string.
+  --   Without s, the symbols in the symbol table represent the variables,
+  --   otherwise, with s, the variables are written with the symbols in s.
 
   function Write ( p : Poly_Sys ) return Array_of_Strings;
+  function Write ( p : Poly_Sys; s : Array_of_Symbols )
+                 return Array_of_Strings;
 
   -- DESCRIPTION :
   --   Writes each polynomial in p to a separate string.
+  --   Without s, the symbols in the symbol table represent the variables,
+  --   otherwise, with s, the variables are written with the symbols in s.
 
 end Standard_Complex_Poly_Strings;
