@@ -25,7 +25,6 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
-with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
@@ -57,6 +56,7 @@ with DoblDobl_Pade_Approximants;
 with DoblDobl_Pade_Approximants_io;
 with QuadDobl_Pade_Approximants;
 with QuadDobl_Pade_Approximants_io;
+with Homotopy_Pade_Approximants;
 
 procedure ts_serpade is
 
@@ -455,6 +455,7 @@ procedure ts_serpade is
         := standard_log_series(dim);
     num : Standard_Complex_Vectors.Vector(0..numdeg);
     den : Standard_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     pnt : constant Complex_Number := Create(0.1);
     eva : Complex_Number;
     chkpnt : constant double_float
@@ -462,12 +463,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := Standard_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 1.1      :"); put(eva); new_line;
-    put("The value of log(1.1) :"); put(chkpnt); new_line;
+    Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := Standard_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 1.1      :"); put(eva); new_line;
+      put("The value of log(1.1) :"); put(chkpnt); new_line;
+    end if;
   end Standard_log_Test;
 
   procedure DoblDobl_log_Test ( numdeg,dendeg : in integer32 ) is
@@ -483,6 +488,7 @@ procedure ts_serpade is
         := DoblDobl_log_series(dim);
     num : DoblDobl_Complex_Vectors.Vector(0..numdeg);
     den : DoblDobl_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     nbr : constant double_double := create(0.1);
     pnt : constant Complex_Number := Create(nbr);
     eva : Complex_Number;
@@ -491,12 +497,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 1.1      : "); put(eva); new_line;
-    put("The value of log(1.1) : "); put(chkpnt); new_line;
+    DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 1.1      : "); put(eva); new_line;
+      put("The value of log(1.1) : "); put(chkpnt); new_line;
+    end if;
   end DoblDobl_log_Test;
 
   procedure QuadDobl_log_Test ( numdeg,dendeg : in integer32 ) is
@@ -512,6 +522,7 @@ procedure ts_serpade is
         := QuadDobl_log_series(dim);
     num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
     den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     nbr : constant quad_double := create(0.1);
     pnt : constant Complex_Number := Create(nbr);
     eva : Complex_Number;
@@ -520,12 +531,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 1.1      : "); put(eva); new_line;
-    put("The value of log(1.1) : "); put(chkpnt); new_line;
+    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 1.1      : "); put(eva); new_line;
+      put("The value of log(1.1) : "); put(chkpnt); new_line;
+    end if;
   end QuadDobl_log_Test;
 
   procedure Standard_sin_Test ( numdeg,dendeg : in integer32 ) is
@@ -541,6 +556,7 @@ procedure ts_serpade is
         := standard_sin_series(dim);
     num : Standard_Complex_Vectors.Vector(0..numdeg);
     den : Standard_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     pnt : constant Complex_Number := Create(0.1);
     eva : Complex_Number;
     chkpnt : constant double_float
@@ -548,12 +564,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := Standard_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      :"); put(eva); new_line;
-    put("The value of sin(0.1) :"); put(chkpnt); new_line;
+    Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := Standard_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 0.1      :"); put(eva); new_line;
+      put("The value of sin(0.1) :"); put(chkpnt); new_line;
+    end if;
   end Standard_Sin_Test;
 
   procedure DoblDobl_sin_Test ( numdeg,dendeg : in integer32 ) is
@@ -569,6 +589,7 @@ procedure ts_serpade is
         := dobldobl_sin_series(dim);
     num : DoblDobl_Complex_Vectors.Vector(0..numdeg);
     den : DoblDobl_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     arg : constant double_double := create(0.1);
     pnt : constant Complex_Number := Create(arg);
     eva : Complex_Number;
@@ -577,12 +598,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      : "); put(eva); new_line;
-    put("The value of sin(0.1) : "); put(chkpnt); new_line;
+    DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 0.1      : "); put(eva); new_line;
+      put("The value of sin(0.1) : "); put(chkpnt); new_line;
+    end if;
   end DoblDobl_sin_Test;
 
   procedure QuadDobl_sin_Test ( numdeg,dendeg : in integer32 ) is
@@ -598,6 +623,7 @@ procedure ts_serpade is
         := quaddobl_sin_series(dim);
     num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
     den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     arg : constant quad_double := create(0.1);
     pnt : constant Complex_Number := Create(arg);
     eva : Complex_Number;
@@ -606,12 +632,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      : "); put(eva); new_line;
-    put("The value of sin(0.1) : "); put(chkpnt); new_line;
+    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 0.1      : "); put(eva); new_line;
+      put("The value of sin(0.1) : "); put(chkpnt); new_line;
+    end if;
   end QuadDobl_Sin_Test;
 
   procedure Standard_exp_Test ( numdeg,dendeg : in integer32 ) is
@@ -627,6 +657,7 @@ procedure ts_serpade is
         := standard_exp_series(dim);
     num : Standard_Complex_Vectors.Vector(0..numdeg);
     den : Standard_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     pnt : constant Complex_Number := Create(0.1);
     eva : Complex_Number;
     chkpnt : constant double_float
@@ -634,12 +665,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := Standard_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      :"); put(eva); new_line;
-    put("The value of exp(0.1) :"); put(chkpnt); new_line;
+    Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := Standard_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 0.1      :"); put(eva); new_line;
+      put("The value of exp(0.1) :"); put(chkpnt); new_line;
+    end if;
   end Standard_exp_Test;
 
   procedure DoblDobl_exp_Test ( numdeg,dendeg : in integer32 ) is
@@ -655,6 +690,7 @@ procedure ts_serpade is
         := dobldobl_exp_series(dim);
     num : DoblDobl_Complex_Vectors.Vector(0..numdeg);
     den : DoblDobl_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     arg : constant double_double := create(0.1);
     pnt : constant Complex_Number := Create(arg);
     eva : Complex_Number;
@@ -662,12 +698,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      : "); put(eva); new_line;
-    put("The value of exp(0.1) : "); put(chkpnt); new_line;
+    DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 0.1      : "); put(eva); new_line;
+      put("The value of exp(0.1) : "); put(chkpnt); new_line;
+    end if;
   end DoblDobl_exp_Test;
 
   procedure QuadDobl_exp_Test ( numdeg,dendeg : in integer32 ) is
@@ -683,6 +723,7 @@ procedure ts_serpade is
         := quaddobl_exp_series(dim);
     num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
     den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     arg : constant quad_double := create(0.1);
     pnt : constant Complex_Number := Create(arg);
     eva : Complex_Number;
@@ -690,12 +731,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      : "); put(eva); new_line;
-    put("The value of exp(0.1) : "); put(chkpnt); new_line;
+    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 0.1      : "); put(eva); new_line;
+      put("The value of exp(0.1) : "); put(chkpnt); new_line;
+    end if;
   end QuadDobl_exp_Test;
 
   procedure Standard_cos_Test ( numdeg,dendeg : in integer32 ) is
@@ -711,6 +756,7 @@ procedure ts_serpade is
         := standard_cos_series(dim);
     num : Standard_Complex_Vectors.Vector(0..numdeg);
     den : Standard_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     pnt : constant Complex_Number := Create(0.1);
     eva : Complex_Number;
     chkpnt : constant double_float
@@ -718,12 +764,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := Standard_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      :"); put(eva); new_line;
-    put("The value of cos(0.1) :"); put(chkpnt); new_line;
+    Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := Standard_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 0.1      :"); put(eva); new_line;
+      put("The value of cos(0.1) :"); put(chkpnt); new_line;
+    end if;
   end Standard_cos_Test;
 
   procedure DoblDobl_cos_Test ( numdeg,dendeg : in integer32 ) is
@@ -739,6 +789,7 @@ procedure ts_serpade is
         := dobldobl_cos_series(dim);
     num : DoblDobl_Complex_Vectors.Vector(0..numdeg);
     den : DoblDobl_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     arg : constant double_double := create(0.1);
     pnt : constant Complex_Number := Create(arg);
     eva : Complex_Number;
@@ -747,12 +798,16 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      : "); put(eva); new_line;
-    put("The value of cos(0.1) : "); put(chkpnt); new_line;
+    DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := DoblDobl_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 0.1      : "); put(eva); new_line;
+      put("The value of cos(0.1) : "); put(chkpnt); new_line;
+    end if;
   end DoblDobl_cos_Test;
 
   procedure QuadDobl_cos_Test ( numdeg,dendeg : in integer32 ) is
@@ -768,6 +823,7 @@ procedure ts_serpade is
         := quaddobl_cos_series(dim);
     num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
     den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
     arg : constant quad_double := create(0.1);
     pnt : constant Complex_Number := Create(arg);
     eva : Complex_Number;
@@ -776,30 +832,30 @@ procedure ts_serpade is
 
   begin
     put_line("The coefficient vector of the series :"); put_line(cff);
-    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
-    put_line("The coefficients of the numerator :"); put_line(num);
-    put_line("The coefficients of the denominator :"); put_line(den);
-    eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
-    put("The value at 0.1      : "); put(eva); new_line;
-    put("The value of cos(0.1) : "); put(chkpnt); new_line;
+    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+      eva := QuadDobl_Rational_Approximations.Evaluate(num,den,pnt);
+      put("The value at 0.1      : "); put(eva); new_line;
+      put("The value of cos(0.1) : "); put(chkpnt); new_line;
+    end if;
   end QuadDobl_cos_Test;
 
   procedure Standard_Pade_Approximation
-              ( nbequ,numdeg,dendeg,nbsteps : in integer32;
-                srv : in Standard_Dense_Series_Vectors.Vector ) is
+              ( nbequ,nbsteps : in integer32;
+                srv : in Standard_Dense_Series_Vectors.Vector;
+                pv : in Standard_Pade_Approximants.Pade_Vector ) is
 
   -- DESCRIPTION :
-  --   Computes a Pade approximant based on the series in srv,
-  --   with degree of the numerator in numdeg and degree of the
-  --   denominator in dendeg, in standard double precision.
-  --   The Pade approximant is evaluated in as many points
-  --   as the value of nbsteps.
+  --   The Pade approximant pv and the series srv are evaluated in 
+  --   as many points as the value of nbsteps.
 
     arg : double_float;
     pnt : Standard_Complex_Numbers.Complex_Number;
     value : Standard_Complex_Vectors.Vector(1..nbequ);
-    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
-       := Standard_Pade_Approximants.Create(numdeg,dendeg,srv);
     approx : Standard_Complex_Vectors.Vector(pv'range);
     valsrv : Standard_Complex_Vectors.Vector(srv'range);
 
@@ -820,35 +876,20 @@ procedure ts_serpade is
       put("Pade approximation evaluated at "); put(arg,3); put_line(" :");
       put_line(value);
     end loop;
-    put_line("The Pade approximant :");
-    declare
-      sb : Symbol_Table.Symbol;
-    begin
-      sb := (sb'range => ' ');
-      sb(sb'first) :=  't';
-      for i in pv'range loop
-        put_line(Standard_Pade_Approximants_io.Write(pv(i),sb));
-      end loop;
-    end;
-    Standard_Pade_Approximants.Clear(pv);
   end Standard_Pade_Approximation;
 
   procedure DoblDobl_Pade_Approximation
-              ( nbequ,numdeg,dendeg,nbsteps : in integer32;
-                srv : in DoblDobl_Dense_Series_Vectors.Vector ) is
+              ( nbequ,nbsteps : in integer32;
+                srv : in DoblDobl_Dense_Series_Vectors.Vector;
+                pv : in DoblDobl_Pade_Approximants.Pade_Vector ) is
 
   -- DESCRIPTION :
-  --   Computes a Pade approximant based on the series in srv,
-  --   with degree of the numerator in numdeg and degree of the
-  --   denominator in dendeg, in double double precision.
-  --   The Pade approximant is evaluated in as many points
-  --   as the value of nbsteps.
+  --   The Pade approximant pv and the series srv are evaluated in
+  --   as many points as the value of nbsteps.
 
     arg : double_double;
     pnt : DoblDobl_Complex_Numbers.Complex_Number;
     value : DoblDobl_Complex_Vectors.Vector(1..nbequ);
-    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
-       := DoblDobl_Pade_Approximants.Create(numdeg,dendeg,srv);
     approx : DoblDobl_Complex_Vectors.Vector(pv'range);
     valsrv : DoblDobl_Complex_Vectors.Vector(srv'range);
 
@@ -869,36 +910,21 @@ procedure ts_serpade is
       put("Pade approximant evaluated at "); put(arg,3); put_line(" :");
       put_line(value);
     end loop;
-    put_line("The Pade approximant :");
-    declare
-      sb : Symbol_Table.Symbol;
-    begin
-      sb := (sb'range => ' ');
-      sb(sb'first) :=  't';
-      for i in pv'range loop
-        put_line(DoblDobl_Pade_Approximants_io.Write(pv(i),sb));
-      end loop;
-    end;
-    DoblDobl_Pade_Approximants.Clear(pv);
   end DoblDobl_Pade_Approximation;
 
   procedure QuadDobl_Pade_Approximation
-              ( nbequ,numdeg,dendeg,nbsteps : in integer32;
-                srv : in QuadDobl_Dense_Series_Vectors.Vector ) is
+              ( nbequ,nbsteps : in integer32;
+                srv : in QuadDobl_Dense_Series_Vectors.Vector;
+                pv : in QuadDobl_Pade_Approximants.Pade_Vector ) is
 
   -- DESCRIPTION :
-  --   Computes a Pade approximant based on the series in srv,
-  --   with degree of the numerator in numdeg and degree of the
-  --   denominator in dendeg, in quad double precision.
-  --   The Pade approximant is evaluated in as many points
-  --   as the value of nbsteps.
+  --   The Pade approximant pv and the series srv are evaluated in 
+  --   as many points as the value of nbsteps.
 
     dd_arg : double_double;
     qd_arg : quad_double;
     pnt : QuadDobl_Complex_Numbers.Complex_Number;
     value : QuadDobl_Complex_Vectors.Vector(1..nbequ);
-    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
-       := QuadDobl_Pade_Approximants.Create(numdeg,dendeg,srv);
     approx : QuadDobl_Complex_Vectors.Vector(pv'range);
     valsrv : QuadDobl_Complex_Vectors.Vector(srv'range);
 
@@ -920,17 +946,6 @@ procedure ts_serpade is
       put("Pade approximation evaluated at "); put(qd_arg,3); put_line(" :");
       put_line(value);
     end loop;
-    put_line("The Pade approximant :");
-    declare
-      sb : Symbol_Table.Symbol;
-    begin
-      sb := (sb'range => ' ');
-      sb(sb'first) :=  't';
-      for i in pv'range loop
-        put_line(QuadDobl_Pade_Approximants_io.Write(pv(i),sb));
-      end loop;
-    end;
-    QuadDobl_Pade_Approximants.Clear(pv);
   end QuadDobl_Pade_Approximation;
 
   procedure Standard_Test_Homotopy is
@@ -1195,15 +1210,22 @@ procedure ts_serpade is
       sol : Standard_Complex_Solutions.Solution := lnk.all;
       nbt : constant natural32 := natural32(numdeg+dendeg+1);
       nit : constant natural32 := 4*nbt;
-      srv,eva : Standard_Dense_Series_Vectors.Vector(1..nbeq);
+      srv : Standard_Dense_Series_Vectors.Vector(sol.v'range);
+      eva : Standard_Dense_Series_Vectors.Vector(1..nbeq);
+      pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
     begin
-      Homotopy_Series_Readers.Standard_Series_Newton
-        (sol,nbeq,nbt,nit,srv,eva);
+      Homotopy_Pade_Approximants.Standard_Pade_Approximant
+        (sol.v,nbeq,numdeg,dendeg,nit,srv,eva,pv);
       put_line("The solution series :");
       Standard_Dense_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
       Standard_Dense_Series_Vectors_io.put(eva);
-      Standard_Pade_Approximation(nbeq,numdeg,dendeg,nbsteps,srv);
+      Standard_Pade_Approximation(nbeq,nbsteps,srv,pv);
+      put_line("The Pade approximant :");
+      for i in pv'range loop
+        put_line(Standard_Pade_Approximants_io.Write(pv(i)));
+      end loop;
+      Standard_Pade_Approximants.Clear(pv);
     end;
   end Standard_Homotopy_Test;
 
@@ -1238,15 +1260,22 @@ procedure ts_serpade is
       sol : DoblDobl_Complex_Solutions.Solution := lnk.all;
       nbt : constant natural32 := natural32(numdeg+dendeg+1);
       nit : constant natural32 := 4*nbt;
-      srv,eva : DoblDobl_Dense_Series_Vectors.Vector(1..nbeq);
+      srv : DoblDobl_Dense_Series_Vectors.Vector(sol.v'range);
+      eva : DoblDobl_Dense_Series_Vectors.Vector(1..nbeq);
+      pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
     begin
-      Homotopy_Series_Readers.DoblDobl_Series_Newton
-        (sol,nbeq,nbt,nit,srv,eva);
+      Homotopy_Pade_Approximants.DoblDobl_Pade_Approximant
+        (sol.v,nbeq,numdeg,dendeg,nit,srv,eva,pv);
       put_line("The solution series :");
       DoblDobl_Dense_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
       DoblDobl_Dense_Series_Vectors_io.put(eva);
-      DoblDobl_Pade_Approximation(nbeq,numdeg,dendeg,nbsteps,srv);
+      DoblDobl_Pade_Approximation(nbeq,nbsteps,srv,pv);
+      put_line("The Pade approximant :");
+      for i in pv'range loop
+        put_line(DoblDobl_Pade_Approximants_io.Write(pv(i)));
+      end loop;
+      DoblDobl_Pade_Approximants.Clear(pv);
     end;
   end DoblDobl_Homotopy_Test;
 
@@ -1281,15 +1310,22 @@ procedure ts_serpade is
       sol : QuadDobl_Complex_Solutions.Solution := lnk.all;
       nbt : constant natural32 := natural32(numdeg+dendeg+1);
       nit : constant natural32 := 4*nbt;
-      srv,eva : QuadDobl_Dense_Series_Vectors.Vector(1..nbeq);
+      srv : QuadDobl_Dense_Series_Vectors.Vector(sol.v'range);
+      eva : QuadDobl_Dense_Series_Vectors.Vector(1..nbeq);
+      pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
     begin
-      Homotopy_Series_Readers.QuadDobl_Series_Newton
-        (sol,nbeq,nbt,nit,srv,eva);
+      Homotopy_Pade_Approximants.QuadDobl_Pade_Approximant
+        (sol.v,nbeq,numdeg,dendeg,nit,srv,eva,pv);
       put_line("The solution series :");
       QuadDobl_Dense_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
       QuadDobl_Dense_Series_Vectors_io.put(eva);
-      QuadDobl_Pade_Approximation(nbeq,numdeg,dendeg,nbsteps,srv);
+      QuadDobl_Pade_Approximation(nbeq,nbsteps,srv,pv);
+      put_line("The Pade approximant :");
+      for i in pv'range loop
+        put_line(QuadDobl_Pade_Approximants_io.Write(pv(i)));
+      end loop;
+      QuadDobl_Pade_Approximants.Clear(pv);
     end;
   end QuadDobl_Homotopy_Test;
 

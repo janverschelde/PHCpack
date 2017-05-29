@@ -44,6 +44,14 @@ power_series_methods             : Newton's method on power series solutions
 ts_sersol                        : test on series and solutions
 mainseries                       : defines the phc -u
 -------------------------------------------------------------------------------
+series_and_homotopies            : homotopies as systems with series coeffs
+ts_serhom                        : test on series and homotopies
+series_and_predictors            : apply power series to predict solutions
+homotopy_series_readers          : reads a homotopy for power series
+ts_serpred                       : test on series predictor
+series_and_trackers              : power series predictor in path tracker
+ts_serpath                       : test on series path tracker
+-------------------------------------------------------------------------------
 standard_rational_approximations : definition of a rational approximation
 dobldobl_rational_approximations : rational approximations with double doubles
 quaddobl_rational_approximations : rational approximations with quad doubles
@@ -53,13 +61,6 @@ dobldobl_pade_approximants       : Pade approximants with double doubles
 dobldobl_pade_approximants_io    : output of double double Pade approximants
 quaddobl_pade_approximants       : Pade approximants with quad doubles
 quaddobl_pade_approximants_io    : output of quad double Pade approximants
+homotopy_pade_approximants       : wraps series Newton and Pade creators
 ts_serpade                       : test rational approximations given series
--------------------------------------------------------------------------------
-series_and_homotopies            : homotopies as systems with series coeffs
-ts_serhom                        : test on series and homotopies
-series_and_predictors            : apply power series to predict solutions
-homotopy_series_readers          : reads a homotopy for power series
-ts_serpred                       : test on series predictor
-series_and_trackers              : power series predictor in path tracker
-ts_serpath                       : test on series path tracker
 -------------------------------------------------------------------------------
