@@ -25,6 +25,7 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
+with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
@@ -51,6 +52,7 @@ with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
 with Homotopy_Series_Readers;
 with Standard_Pade_Approximants;
+with Standard_Pade_Approximants_io;
 with DoblDobl_Pade_Approximants;
 with QuadDobl_Pade_Approximants;
 
@@ -816,6 +818,16 @@ procedure ts_serpade is
       put("Pade approximation evaluated at "); put(arg,3); put_line(" :");
       put_line(value);
     end loop;
+    put_line("The Pade approximant :");
+    declare
+      sb : Symbol_Table.Symbol;
+    begin
+      sb := (sb'range => ' ');
+      sb(sb'first) :=  't';
+      for i in pv'range loop
+        put_line(Standard_Pade_Approximants_io.Write(pv(i),sb));
+      end loop;
+    end;
     Standard_Pade_Approximants.Clear(pv);
   end Standard_Pade_Approximation;
 
