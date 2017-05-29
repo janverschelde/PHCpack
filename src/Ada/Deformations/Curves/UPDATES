@@ -1,5 +1,6 @@
 Sun 28 May 2017 : new package standard_pade_approximants_io to compute the
   string representation of a Pade approximant, called in ts_serpade.adb.
+  Similarly, made the packages {dobldobl,quaddobl}_pade_approximants_io.
 
 Sat 27 May 2017 : added vector of vector of Pade approximant types to the
   *_pade_approximants packages.

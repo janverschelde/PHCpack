@@ -54,7 +54,9 @@ with Homotopy_Series_Readers;
 with Standard_Pade_Approximants;
 with Standard_Pade_Approximants_io;
 with DoblDobl_Pade_Approximants;
+with DoblDobl_Pade_Approximants_io;
 with QuadDobl_Pade_Approximants;
+with QuadDobl_Pade_Approximants_io;
 
 procedure ts_serpade is
 
@@ -867,6 +869,16 @@ procedure ts_serpade is
       put("Pade approximant evaluated at "); put(arg,3); put_line(" :");
       put_line(value);
     end loop;
+    put_line("The Pade approximant :");
+    declare
+      sb : Symbol_Table.Symbol;
+    begin
+      sb := (sb'range => ' ');
+      sb(sb'first) :=  't';
+      for i in pv'range loop
+        put_line(DoblDobl_Pade_Approximants_io.Write(pv(i),sb));
+      end loop;
+    end;
     DoblDobl_Pade_Approximants.Clear(pv);
   end DoblDobl_Pade_Approximation;
 
@@ -908,6 +920,16 @@ procedure ts_serpade is
       put("Pade approximation evaluated at "); put(qd_arg,3); put_line(" :");
       put_line(value);
     end loop;
+    put_line("The Pade approximant :");
+    declare
+      sb : Symbol_Table.Symbol;
+    begin
+      sb := (sb'range => ' ');
+      sb(sb'first) :=  't';
+      for i in pv'range loop
+        put_line(QuadDobl_Pade_Approximants_io.Write(pv(i),sb));
+      end loop;
+    end;
     QuadDobl_Pade_Approximants.Clear(pv);
   end QuadDobl_Pade_Approximation;
 

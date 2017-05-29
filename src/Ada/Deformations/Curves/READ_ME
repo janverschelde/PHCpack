@@ -48,9 +48,11 @@ standard_rational_approximations : definition of a rational approximation
 dobldobl_rational_approximations : rational approximations with double doubles
 quaddobl_rational_approximations : rational approximations with quad doubles
 standard_pade_approximants       : Pade approximants in double precision
-standard_pade_approximants_io    : output of Pade approximants
+standard_pade_approximants_io    : output of double Pade approximants
 dobldobl_pade_approximants       : Pade approximants with double doubles
+dobldobl_pade_approximants_io    : output of double double Pade approximants
 quaddobl_pade_approximants       : Pade approximants with quad doubles
+quaddobl_pade_approximants_io    : output of quad double Pade approximants
 ts_serpade                       : test rational approximations given series
 -------------------------------------------------------------------------------
 series_and_homotopies            : homotopies as systems with series coeffs
