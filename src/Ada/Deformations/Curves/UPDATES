@@ -1,3 +1,7 @@
+Mon 29 May 2017 : exposed the info parameter in the construction of the Pade
+  approximants in *_rational_approximations, which altered the body of the
+  *_pade_approximants packages, tested by ts_serpade.
+
 Sun 28 May 2017 : new package standard_pade_approximants_io to compute the
   string representation of a Pade approximant, called in ts_serpade.adb.
   Similarly, made the packages {dobldobl,quaddobl}_pade_approximants_io.

@@ -55,16 +55,15 @@ package body Standard_Rational_Approximations is
     return res;
   end Numerator_Coefficients;
 
-  procedure Pade
-              ( numdeg,dendeg : in integer32;
-                cff : in Standard_Complex_Vectors.Vector;
-                numcff,dencff : out Standard_Complex_Vectors.Vector ) is
+  procedure Pade ( numdeg,dendeg : in integer32;
+                   cff : in Standard_Complex_Vectors.Vector;
+                   numcff,dencff : out Standard_Complex_Vectors.Vector;
+                   info : out integer32 ) is
 
     dim : constant integer32 := numdeg + dendeg;
     mat : Standard_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
     rhs : Standard_Complex_Vectors.Vector(1..dendeg);
     ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
-    info : integer32;
 
   begin
     Denominator_System(numdeg,dendeg,cff,mat,rhs);

@@ -46,7 +46,8 @@ package DoblDobl_Rational_Approximations is
   procedure Pade
               ( numdeg,dendeg : in integer32;
                 cff : in DoblDobl_Complex_Vectors.Vector;
-                numcff,dencff : out DoblDobl_Complex_Vectors.Vector );
+                numcff,dencff : out DoblDobl_Complex_Vectors.Vector;
+                info : out integer32 );
 
   -- DESCRIPTION :
   --   Tests the construction in standard floating point arithmetic
@@ -59,8 +60,10 @@ package DoblDobl_Rational_Approximations is
   --   cff      coefficients of the power series.
 
   -- ON RETURN :
-  --   numcff   coefficients of the numerator;
-  --   dencff   coefficients of the denominator.
+  --   numcff   coefficients of the numerator, if info is nonzero;
+  --   dencff   coefficients of the denominator, if info is nonzero;
+  --   info     if zero, then the partial pivoting in the LU factorization
+  --            worked, otherwise, info indicates a zero column.
 
   -- REQUIRED : cff'range = 0..numdeg+dendeg.
 

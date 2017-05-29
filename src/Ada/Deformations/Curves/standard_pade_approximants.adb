@@ -53,8 +53,9 @@ package body Standard_Pade_Approximants is
             := Coefficients(srv,i);
         num : Standard_Complex_Vectors.Vector(0..numdeg);
         den : Standard_Complex_Vectors.Vector(0..dendeg);
+        info : integer32;
       begin
-        Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
+        Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
         res(i) := Create(num,den);
       end;
     end loop;

@@ -53,8 +53,9 @@ package body DoblDobl_Pade_Approximants is
             := Coefficients(srv,i);
         num : DoblDobl_Complex_Vectors.Vector(0..numdeg);
         den : DoblDobl_Complex_Vectors.Vector(0..dendeg);
+        info : integer32;
       begin
-        DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den);
+        DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
         res(i) := Create(num,den);
       end;
     end loop;

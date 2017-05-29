@@ -57,16 +57,15 @@ package body QuadDobl_Rational_Approximations is
     return res;
   end Numerator_Coefficients;
 
-  procedure Pade
-              ( numdeg,dendeg : in integer32;
-                cff : in QuadDobl_Complex_Vectors.Vector;
-                numcff,dencff : out QuadDobl_Complex_Vectors.Vector ) is
+  procedure Pade ( numdeg,dendeg : in integer32;
+                   cff : in QuadDobl_Complex_Vectors.Vector;
+                   numcff,dencff : out QuadDobl_Complex_Vectors.Vector;
+                   info : out integer32 ) is
 
     dim : constant integer32 := numdeg + dendeg;
     mat : QuadDobl_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
     rhs : QuadDobl_Complex_Vectors.Vector(1..dendeg);
     ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
-    info : integer32;
     zero : constant quad_double := create(0.0);
     one : constant quad_double := create(1.0);
 
