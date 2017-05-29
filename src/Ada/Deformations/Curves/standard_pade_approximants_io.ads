@@ -19,16 +19,25 @@ package Standard_Pade_Approximants_io is
 
   -- REQUIRED : c'first = 0.
 
+  function t_symbol return Symbol;
+
+  -- DESCRIPTION :
+  --   Returns 't' as the default symbol.
+
+  function Write ( c : Vector ) return string;
   function Write ( c : Vector; s : Symbol ) return string;
 
   -- DESCRIPTION :
   --   Writes the string representation of the polynomial with
   --   coefficients in c using the symbol s for the variable.
+  --   By default, 't' is used as the symbol for the variable..
 
+  function Write ( p : Pade ) return string;
   function Write ( p : Pade; s : Symbol ) return string;
 
   -- DESCRIPTION :
   --   Returns the string representation of the Pade approximant,
   --   using the symbol s for the variable.
+  --   By default, 't' is used as the symbol for the variable.
 
 end Standard_Pade_Approximants_io;

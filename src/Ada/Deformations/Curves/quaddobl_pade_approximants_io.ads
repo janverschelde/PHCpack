@@ -19,16 +19,20 @@ package QuadDobl_Pade_Approximants_io is
 
   -- REQUIRED : c'first = 0.
 
+  function Write ( c : Vector ) return string;
   function Write ( c : Vector; s : Symbol ) return string;
 
   -- DESCRIPTION :
   --   Writes the string representation of the polynomial with
   --   coefficients in c using the symbol s for the variable.
+  --   By default, the symbol 't' will be used for the variable.
 
+  function Write ( p : Pade ) return string;
   function Write ( p : Pade; s : Symbol ) return string;
 
   -- DESCRIPTION :
   --   Returns the string representation of the Pade approximant,
   --   using the symbol s for the variable.
+  --   By default, the symbol 't' will be used for the variable.
 
 end QuadDobl_Pade_Approximants_io;

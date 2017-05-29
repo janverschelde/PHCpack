@@ -1,6 +1,7 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Vectors;
 with QuadDobl_Complex_Poly_Strings;
+with Standard_Pade_Approximants_io;
 
 package body QuadDobl_Pade_Approximants_io is
 
@@ -36,6 +37,15 @@ package body QuadDobl_Pade_Approximants_io is
     end;
   end Write;
 
+  function Write ( c : Vector ) return string is
+
+    tsb : constant Symbol_Table.Symbol
+        := Standard_Pade_Approximants_io.t_symbol;
+
+  begin
+    return Write(c,tsb);
+  end Write;
+
   function Write ( p : Pade; s : Symbol ) return string is
 
     numcff : constant QuadDobl_Complex_Vectors.Vector
@@ -50,6 +60,15 @@ package body QuadDobl_Pade_Approximants_io is
 
   begin
     return res;
+  end Write;
+
+  function Write ( p : Pade ) return string is
+
+    tsb : constant Symbol_Table.Symbol
+        := Standard_Pade_Approximants_io.t_symbol;
+
+  begin
+    return Write(p,tsb);
   end Write;
 
 end QuadDobl_Pade_Approximants_io;

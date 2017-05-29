@@ -20,6 +20,16 @@ package body Standard_Pade_Approximants_io is
     return res;
   end to_Poly;
 
+  function t_symbol return Symbol is
+
+    res : Symbol_Table.Symbol;
+
+  begin
+    res := (res'range => ' ');
+    res(res'first) :=  't';
+    return res;
+  end t_symbol;
+
   function Write ( c : Vector; s : Symbol ) return string is
 
     sa : Array_of_Symbols(1..1);
@@ -36,6 +46,14 @@ package body Standard_Pade_Approximants_io is
     end;
   end Write;
 
+  function Write ( c : Vector ) return string is
+
+    tsb : constant Symbol_Table.Symbol := t_symbol;
+
+  begin
+    return Write(c,tsb);
+  end Write;
+
   function Write ( p : Pade; s : Symbol ) return string is
 
     numcff : constant Standard_Complex_Vectors.Vector
@@ -50,6 +68,14 @@ package body Standard_Pade_Approximants_io is
 
   begin
     return res;
+  end Write;
+
+  function Write ( p : Pade ) return string is
+
+    tsb : constant Symbol_Table.Symbol := t_symbol;
+
+  begin
+    return Write(p,tsb);
   end Write;
 
 end Standard_Pade_Approximants_io;
