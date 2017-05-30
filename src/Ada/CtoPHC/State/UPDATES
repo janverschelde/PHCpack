@@ -1,3 +1,5 @@
+Tue 30 May 2017 : added documentation to jobs 3, 4, and 5 in use_series.ads.
+
 Sat 22 Apr 2017 : commented out the Show_Input_Planes_and_Points in the
   running of the Pieri homotopies in use_c2pieri.adb.
 

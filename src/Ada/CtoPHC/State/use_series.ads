@@ -32,6 +32,12 @@ function use_series ( job : integer32;
 --              a[1] : the number of steps in Newton's method,
 --              b[0] : the verbose flag, 0 for false, 1 for true.
 --              If verbose, then intermediate results are written to screen.
+--   job =  3 : same as 0, but instead of solutions, the start terms
+--              on the series are given in the systems pool.
+--   job =  4 : same as 1, but instead of solutions, the start terms
+--              on the series are given in the systems pool.
+--   job =  5 : same as 2, but instead of solutions, the start terms
+--              on the series are given in the systems pool.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
