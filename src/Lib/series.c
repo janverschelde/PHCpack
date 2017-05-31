@@ -87,3 +87,27 @@ int quaddobl_Newton_power_series ( int idx, int nbr, int verbose )
 
    return fail;
 }
+
+int standard_Pade_approximant
+ ( int idx, int numdeg, int dendeg, int nbr, int verbose )
+{
+   int fail = 0;
+
+   return fail;
+}
+
+int dobldobl_Pade_approximant
+ ( int idx, int numdeg, int dendeg, int nbr, int verbose )
+{
+   int fail = 0;
+
+   return fail;
+}
+
+int quaddobl_Pade_approximant
+ ( int idx, int numdeg, int dendeg, int nbr, int verbose )
+{
+   int fail = 0;
+
+   return fail;
+}

@@ -1,3 +1,6 @@
+Wed 21 May 2017 : provided wrapper functions for Pade approximants in
+  series.h, series.c, called in lib_series.c.
+
 Tue 21 Mar 2017 : added silent option to the blackbox solvers in phcpack,
   normalized names, and adjusted phc_solve.c with the extra parameters.
   Normalized the names in phcpy2c.h, phcpy2c2.c, and phcpy2c3.c,

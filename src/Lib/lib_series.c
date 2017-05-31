@@ -9,19 +9,50 @@
 #include "syspool.h"
 #include "series.h"
 
-void standard_test ( void ); /* test in standard double precision */
+void standard_series_test ( void );
+/* 
+ * Tests Newton's method for power series in standard double precision. */
 
-void dobldobl_test ( void ); /* test in double double precision */
+void dobldobl_series_test ( void );
+/*
+ * Tests Newton's method for power series in double double precision. */
 
-void quaddobl_test ( void ); /* test in quad double precision */
+void quaddobl_series_test ( void );
+/*
+ * Tests Newton's method for power series in quad double precision. */
 
-void ask_options ( int *idx, int *nbr, int *verbose );
+void standard_Pade_test ( void );
+/* 
+ * Tests the Pade approximant constructor in standard double precision. */
+
+void dobldobl_Pade_test ( void );
+/*
+ * Tests the Pade approximant constructor in double double precision. */
+
+void quaddobl_Pade_test ( void );
+/*
+ * Tests the Pade approximant constructor in quad double precision. */
+
+void ask_options_for_series ( int *idx, int *nbr, int *verbose );
 /*
  * DESCRIPTION :
  *   Prompts the user for the options of the power series method.
  *
  * ON RETURN :
  *   idx       index of the series parameter;
+ *   nbr       number of steps with Newton's method;
+ *   verbose   0 for false, 1 for true. */
+
+void ask_options_for_Pade
+ ( int *idx, int *numdeg, int *dendeg, int *nbr, int *verbose );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for the options of the Pade approximant. 
+ *
+ * ON RETURN :
+ *   idx       index of the series parameter;
+ *   numdeg    degree of the numerator;
+ *   dendeg    degree of the denominator;
  *   nbr       number of steps with Newton's method;
  *   verbose   0 for false, 1 for true. */
 
@@ -32,20 +63,29 @@ int main ( int argc, char *argv[] )
 
    adainit();
 
-   printf("\nMENU to select the working precision : \n");
-   printf("  0. standard double precision;\n");
-   printf("  1. double double precision;\n");
-   printf("  2. quad double precision.\n");
-   printf("Type 0, 1, or 2 to select the precision : ");
+   printf("\nMENU to select the test and the working precision : \n");
+   printf("  0. power series in standard double precision;\n");
+   printf("  1. power series in double double precision;\n");
+   printf("  2. power series in quad double precision.\n");
+   printf("  3. Pade approximant in standard double precision;\n");
+   printf("  4. Pade approximant in double double precision;\n");
+   printf("  5. Pade approximant in quad double precision.\n");
+   printf("Type 0, 1, 2, 3, 4, or 5 to select the precision : ");
    scanf("%d",&choice);
    scanf("%c",&ch); /* skip newline symbol */
 
    if(choice == 0)
-      standard_test();
+      standard_series_test();
    else if(choice == 1)
-      dobldobl_test();
+      dobldobl_series_test();
    else if(choice == 2)
-      quaddobl_test();
+      quaddobl_series_test();
+   else if(choice == 3)
+      standard_Pade_test();
+   else if(choice == 4)
+      dobldobl_Pade_test();
+   else if(choice == 5)
+      quaddobl_Pade_test();
    else
       printf("invalid selection, please try again\n");
 
@@ -54,7 +94,7 @@ int main ( int argc, char *argv[] )
    return 0;
 }
 
-void standard_test ( void )
+void standard_series_test ( void )
 {
    int fail,idx,nbr,verbose;
 
@@ -63,7 +103,7 @@ void standard_test ( void )
    fail = copy_start_system_to_container();
    fail = copy_start_solutions_to_container();
 
-   ask_options(&idx,&nbr,&verbose);
+   ask_options_for_series(&idx,&nbr,&verbose);
    fail = standard_Newton_series(idx,nbr,verbose);
 
    printf("\nDone with Newton's method.");
@@ -81,7 +121,7 @@ void standard_test ( void )
    }
 }
 
-void dobldobl_test ( void )
+void dobldobl_series_test ( void )
 {
    int fail,idx,nbr,verbose;
 
@@ -90,7 +130,7 @@ void dobldobl_test ( void )
    fail = copy_dobldobl_start_system_to_container();
    fail = copy_dobldobl_start_solutions_to_container();
 
-   ask_options(&idx,&nbr,&verbose);
+   ask_options_for_series(&idx,&nbr,&verbose);
    fail = dobldobl_Newton_series(idx,nbr,verbose);
 
    printf("\nDone with Newton's method.");
@@ -108,7 +148,7 @@ void dobldobl_test ( void )
    }
 }
 
-void quaddobl_test ( void )
+void quaddobl_series_test ( void )
 {
    int fail,idx,nbr,verbose;
 
@@ -117,7 +157,7 @@ void quaddobl_test ( void )
    fail = copy_quaddobl_start_system_to_container();
    fail = copy_quaddobl_start_solutions_to_container();
 
-   ask_options(&idx,&nbr,&verbose);
+   ask_options_for_series(&idx,&nbr,&verbose);
    fail = quaddobl_Newton_series(idx,nbr,verbose);
 
    printf("\nDone with Newton's method.");
@@ -135,7 +175,7 @@ void quaddobl_test ( void )
    }
 }
 
-void ask_options ( int *idx, int *nbr, int *verbose )
+void ask_options_for_series ( int *idx, int *nbr, int *verbose )
 {
    char ch;
 
@@ -147,4 +187,60 @@ void ask_options ( int *idx, int *nbr, int *verbose )
    scanf("%c",&ch);
    *verbose = (ch == 'y' ? 1 : 0);
    scanf("%c",&ch); /* skip newline symbol */
+}
+
+void ask_options_for_Pade
+ ( int *idx, int *numdeg, int *dendeg, int *nbr, int *verbose )
+{
+   char ch;
+
+   printf("\nReading the settings of the Pade approximant constructor ...\n");
+   printf("  Give the index of the series parameter : "); scanf("%d",idx);
+   printf("  Give the degree of the numerator : "); scanf("%d",numdeg);
+   printf("  Give the degree of the denominator : "); scanf("%d",dendeg);
+   printf("  Give the number of Newton steps : "); scanf("%d",nbr);
+   printf("  Extra output during computations ? (y/n) ");
+   scanf("%c",&ch); /* skip newline symbol */
+   scanf("%c",&ch);
+   *verbose = (ch == 'y' ? 1 : 0);
+   scanf("%c",&ch); /* skip newline symbol */
+}
+
+void standard_Pade_test ( void )
+{
+   int fail,idx,numdeg,dendeg,nbr,verbose;
+
+   printf("\nPade approximant creator in double precision ...\n");
+   fail = read_standard_start_system();
+   fail = copy_start_system_to_container();
+   fail = copy_start_solutions_to_container();
+
+   ask_options_for_Pade(&idx,&numdeg,&dendeg,&nbr,&verbose);
+   fail = standard_Pade_approximant(idx,numdeg,dendeg,nbr,verbose);
+}
+
+void dobldobl_Pade_test ( void )
+{
+   int fail,idx,numdeg,dendeg,nbr,verbose;
+
+   printf("\nPade approximant creator in double double precision ...\n");
+   fail = read_dobldobl_start_system();
+   fail = copy_dobldobl_start_system_to_container();
+   fail = copy_dobldobl_start_solutions_to_container();
+
+   ask_options_for_Pade(&idx,&numdeg,&dendeg,&nbr,&verbose);
+   fail = dobldobl_Pade_approximant(idx,numdeg,dendeg,nbr,verbose);
+}
+
+void quaddobl_Pade_test ( void )
+{
+   int fail,idx,numdeg,dendeg,nbr,verbose;
+
+   printf("\nPade approximant creator in quad double precision ...\n");
+   fail = read_quaddobl_start_system();
+   fail = copy_quaddobl_start_system_to_container();
+   fail = copy_quaddobl_start_solutions_to_container();
+
+   ask_options_for_Pade(&idx,&numdeg,&dendeg,&nbr,&verbose);
+   fail = quaddobl_Pade_approximant(idx,numdeg,dendeg,nbr,verbose);
 }
