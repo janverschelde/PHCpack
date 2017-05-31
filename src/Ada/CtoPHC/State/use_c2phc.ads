@@ -751,6 +751,30 @@ function use_c2phc ( job : integer32;
 --                 on the series are given in the systems pool.
 --   job   = 696 : same as 693, but instead of solutions, the start terms
 --                 on the series are given in the systems pool.
+--   job   = 704 : power series Newton method in standard double precision,
+--                 for a Pade approximant.  The input parameters are
+--                 a[0] : the index of the series parameter,
+--                 a[1] : the degree of the numerator,
+--                 a[2] : the degree of the denominator,
+--                 a[3] : the number of the steps in Newton's method,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, then intermediate results are written to screen.
+--   job   = 705 : power series Newton method in double double precision,
+--                 for a Pade approximant.  The input parameters are
+--                 a[0] : the index of the series parameter,
+--                 a[1] : the degree of the numerator,
+--                 a[2] : the degree of the denominator,
+--                 a[3] : the number of the steps in Newton's method,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, then intermediate results are written to screen.
+--   job   = 706 : power series Newton method in quad double precision,
+--                 for a Pade approximant.  The input parameters are
+--                 a[0] : the index of the series parameter,
+--                 a[1] : the degree of the numerator,
+--                 a[2] : the degree of the denominator,
+--                 a[3] : the number of the steps in Newton's method,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, then intermediate results are written to screen.
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --

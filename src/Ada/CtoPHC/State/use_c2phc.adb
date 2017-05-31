@@ -2542,6 +2542,10 @@ function use_c2phc ( job : integer32;
       when 701 => return Job701; -- dobldobl Laurent poly blackbox solver
       when 702 => return Job702; -- dobldobl poly system blackbox solver
       when 703 => return Job703; -- dobldobl Laurent poly blackbox solver
+     -- Pade approximants
+      when 704 => return use_series(6,a,b,c); -- Pade in double precision
+      when 705 => return use_series(7,a,b,c); -- Pade with double doubles
+      when 706 => return use_series(8,a,b,c); -- Pade with quad doubles
      -- container for numerically computed tropisms
       when 711..731 => return use_numbtrop(job-710,a,b,c);
      -- integer mixed cell configurations
