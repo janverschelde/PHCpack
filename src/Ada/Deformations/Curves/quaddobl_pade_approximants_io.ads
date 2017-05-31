@@ -1,6 +1,7 @@
 with QuadDobl_Complex_Vectors;          use QuadDobl_Complex_Vectors;
 with Symbol_Table;                      use Symbol_Table;
 with QuadDobl_Complex_Polynomials;      use QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;     use QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Pade_Approximants;        use QuadDobl_Pade_Approximants;
 
 package QuadDobl_Pade_Approximants_io is
@@ -18,6 +19,20 @@ package QuadDobl_Pade_Approximants_io is
   --   c(0) + c(1)*x + c(2)*x^2 + .. + c(d)*x^d, where d = c'last.
 
   -- REQUIRED : c'first = 0.
+
+  function to_System ( p : Pade ) return Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns a tuple of two polynomials with the numerator and
+  --   the denominator of p, stored as polynomials in one variable.
+
+  function to_System ( p : Pade_Vector ) return Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns a polynomial system of range 1..2*p'length,
+  --   where the odd indexed polynomials are the numerators
+  --   and the even indexed polynomials are the denominators
+  --   of the Pade approximants in the vector.
 
   function Write ( c : Vector ) return string;
   function Write ( c : Vector; s : Symbol ) return string;

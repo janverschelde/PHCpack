@@ -1,6 +1,7 @@
 with Standard_Complex_Vectors;          use Standard_Complex_Vectors;
 with Symbol_Table;                      use Symbol_Table;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Pade_Approximants;        use Standard_Pade_Approximants;
 
 package Standard_Pade_Approximants_io is
@@ -18,6 +19,20 @@ package Standard_Pade_Approximants_io is
   --   c(0) + c(1)*x + c(2)*x^2 + .. + c(d)*x^d, where d = c'last.
 
   -- REQUIRED : c'first = 0.
+
+  function to_System ( p : Pade ) return Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns a tuple of two polynomials with the numerator and
+  --   the denominator of p, stored as polynomials in one variable.
+
+  function to_System ( p : Pade_Vector ) return Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns a polynomial system of range 1..2*p'length,
+  --   where the odd indexed polynomials are the numerators
+  --   and the even indexed polynomials are the denominators
+  --   of the Pade approximants in the vector.
 
   function t_symbol return Symbol;
 

@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Poly_Strings;
 
@@ -19,6 +20,32 @@ package body Standard_Pade_Approximants_io is
     Clear(trm);
     return res;
   end to_Poly;
+
+  function to_System ( p : Pade ) return Poly_Sys is
+
+    res : Poly_Sys(1..2);
+
+  begin
+    res(1) := to_Poly(Numerator_Coefficients(p));
+    res(2) := to_Poly(Denominator_Coefficients(p));
+    return res;
+  end to_System;
+
+  function to_System ( p : Pade_Vector ) return Poly_Sys is
+
+    dim : constant integer32 := p'length;
+    res : Poly_Sys(1..2*dim);
+    idx : integer32 := 1;
+
+  begin
+    for k in p'range loop
+      res(idx) := to_Poly(Numerator_Coefficients(p(k)));
+      idx := idx + 1;
+      res(idx) := to_Poly(Denominator_Coefficients(p(k)));
+      idx := idx + 1;
+    end loop;
+    return res;
+  end to_System;
 
   function t_symbol return Symbol is
 
