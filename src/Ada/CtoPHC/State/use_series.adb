@@ -59,6 +59,33 @@ function use_series ( job : integer32;
     end if;
   end extract_options;
 
+  procedure extract_options_for_pade
+              ( idx,numdeg,dendeg,nbrit : out integer32; 
+                verbose : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Extracts the options from the arguments a and b.
+
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    vrb : constant integer32 := integer32(v_b(v_b'first));
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    use Interfaces.C;
+
+  begin
+    verbose := (vrb = 1);
+    idx := integer32(v_a(v_a'first));
+    numdeg := integer32(v_a(v_a'first)+1);
+    dendeg := integer32(v_a(v_a'first)+2);
+    nbrit := integer32(v_a(v_a'first+3));
+    if verbose then
+      put("The index of the series parameter : "); put(idx,1); new_line;
+      put("The degree of the numerator : "); put(numdeg,1); new_line;
+      put("The degree of the denominator : "); put(dendeg,1); new_line;
+      put("The number of Newton steps : "); put(nbrit,1); new_line;
+    end if;
+  end extract_options_for_pade;
+
   procedure Load_Series_Solutions
               ( s : out Standard_Dense_Series_VecVecs.Link_to_VecVec ) is
 
@@ -563,6 +590,72 @@ function use_series ( job : integer32;
     return 0;
   end Job6;
 
+  function Job7 return integer32 is -- Pade in standard double precision
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+
+    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
+    nq : constant integer32 := lp'last;
+    nv : constant integer32 := Head_Of(sols).n;
+    idx,numdeg,dendeg,nbr,dim : integer32;
+    verbose : boolean;
+
+  begin
+    extract_options_for_pade(idx,numdeg,dendeg,nbr,verbose);
+    dim := (if idx = 0 then nv else nv-1);
+    if verbose then
+      put("Number of equations in the system : "); put(nq,1); new_line;
+      put("The dimension of the series : "); put(dim,1); new_line;
+    end if;
+    return 0;
+  end Job7;
+
+  function Job8 return integer32 is -- Pade in double double precision
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+    nq : constant integer32 := lp'last;
+    nv : constant integer32 := Head_Of(sols).n;
+    idx,numdeg,dendeg,nbr,dim : integer32;
+    verbose : boolean;
+
+  begin
+    extract_options_for_pade(idx,numdeg,dendeg,nbr,verbose);
+    dim := (if idx = 0 then nv else nv-1);
+    if verbose then
+      put("Number of equations in the system : "); put(nq,1); new_line;
+      put("The dimension of the series : "); put(dim,1); new_line;
+    end if;
+    return 0;
+  end Job8;
+
+  function Job9 return integer32 is -- Pade in quad double precision
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+    nq : constant integer32 := lp'last;
+    nv : constant integer32 := Head_Of(sols).n;
+    idx,numdeg,dendeg,nbr,dim : integer32;
+    verbose : boolean;
+
+  begin
+    extract_options_for_pade(idx,numdeg,dendeg,nbr,verbose);
+    dim := (if idx = 0 then nv else nv-1);
+    if verbose then
+      put("Number of equations in the system : "); put(nq,1); new_line;
+      put("The dimension of the series : "); put(dim,1); new_line;
+    end if;
+    return 0;
+  end Job9;
+
   function do_jobs return integer32 is
   begin
     case job is
@@ -572,6 +665,9 @@ function use_series ( job : integer32;
       when 4 => return Job4; -- starting at series in double precision
       when 5 => return Job5; -- starting at series in double double precision
       when 6 => return Job6; -- starting at series in quad double precision
+      when 7 => return Job7; -- Pade approximant in double precision
+      when 8 => return Job8; -- Pade approximant with double doubles
+      when 9 => return Job9; -- Pade approximant with quad doubles
       when others => return -1;
     end case;
   end do_jobs;
