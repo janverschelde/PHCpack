@@ -1,5 +1,6 @@
 with Interfaces.C;
 with text_io;                              use text_io;
+with Standard_Natural_Numbers;             use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;          use Standard_Integer_Numbers_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
@@ -7,13 +8,20 @@ with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
+with Standard_Homotopy;
 with Standard_Complex_Solutions;
+with DoblDobl_Homotopy;
 with DoblDobl_Complex_Solutions;
+with QuadDobl_Homotopy;
+with QuadDobl_Complex_Solutions;
 with Standard_Dense_Series_Vectors;
+with Standard_Dense_Series_Vectors_io;
 with Standard_Dense_Series_VecVecs;
 with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Dense_Series_Vectors_io;
 with DoblDobl_Dense_Series_VecVecs;
 with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Dense_Series_Vectors_io;
 with QuadDobl_Dense_Series_VecVecs;
 with Standard_Series_Poly_Systems;
 with DoblDobl_Series_Poly_Systems;
@@ -21,6 +29,13 @@ with QuadDobl_Series_Poly_Systems;
 with Series_and_Polynomials;
 with Series_and_Solutions;
 with Power_Series_Methods;                 use Power_Series_Methods;
+with Standard_Pade_Approximants;
+with Standard_Pade_Approximants_io;
+with DoblDobl_Pade_Approximants;
+with DoblDobl_Pade_Approximants_io;
+with QuadDobl_Pade_Approximants;
+with QuadDobl_Pade_Approximants_io;
+with Homotopy_Pade_Approximants;
 with Standard_PolySys_Container;
 with Standard_Systems_Pool;
 with Standard_Solutions_Container;
@@ -29,7 +44,6 @@ with DoblDobl_Systems_Pool;
 with DoblDobl_Solutions_Container;
 with QuadDobl_PolySys_Container;
 with QuadDobl_Systems_Pool;
-with QuadDobl_Complex_Solutions;
 with QuadDobl_Solutions_Container;
 
 function use_series ( job : integer32;
@@ -601,6 +615,8 @@ function use_series ( job : integer32;
     nv : constant integer32 := Head_Of(sols).n;
     idx,numdeg,dendeg,nbr,dim : integer32;
     verbose : boolean;
+    tmp : Solution_List;
+    cnt : integer32 := 0;
 
   begin
     extract_options_for_pade(idx,numdeg,dendeg,nbr,verbose);
@@ -609,6 +625,40 @@ function use_series ( job : integer32;
       put("Number of equations in the system : "); put(nq,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
+    Standard_Homotopy.Create(lp.all,idx);
+    Standard_Systems_Pool.Initialize(integer32(Length_Of(sols)));
+    tmp := sols;
+    while not Is_Null(tmp) loop
+      declare
+        sol : Link_to_Solution := Head_Of(tmp);
+        nbt : constant natural32 := natural32(numdeg+dendeg+1);
+        nit : constant natural32 := 4*nbt;
+        srv : Standard_Dense_Series_Vectors.Vector(sol.v'range);
+        eva : Standard_Dense_Series_Vectors.Vector(1..nq);
+        pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
+      begin
+        Homotopy_Pade_Approximants.Standard_Pade_Approximant
+          (sol.v,nq,numdeg,dendeg,nit,srv,eva,pv);
+        if verbose then
+          put_line("The solution series :");
+          Standard_Dense_Series_Vectors_io.put(srv);
+          put_line("The evaluated solution series :");
+          Standard_Dense_Series_Vectors_io.put(eva);
+          put_line("The Pade approximant :");
+          for i in pv'range loop
+            put_line(Standard_Pade_Approximants_io.Write(pv(i)));
+          end loop;
+        end if;
+        cnt := cnt + 1;
+        declare
+          spv : constant Standard_Complex_Poly_Systems.Poly_Sys
+              := Standard_Pade_Approximants_io.to_System(pv);
+        begin
+          Standard_Systems_Pool.Initialize(cnt,spv);
+        end;
+        tmp := Tail_Of(tmp);
+      end;
+    end loop;
     return 0;
   end Job7;
 
@@ -623,6 +673,8 @@ function use_series ( job : integer32;
     nv : constant integer32 := Head_Of(sols).n;
     idx,numdeg,dendeg,nbr,dim : integer32;
     verbose : boolean;
+    tmp : Solution_List;
+    cnt : integer32 := 0;
 
   begin
     extract_options_for_pade(idx,numdeg,dendeg,nbr,verbose);
@@ -631,6 +683,40 @@ function use_series ( job : integer32;
       put("Number of equations in the system : "); put(nq,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
+    DoblDobl_Homotopy.Create(lp.all,idx);
+    DoblDobl_Systems_Pool.Initialize(integer32(Length_Of(sols)));
+    tmp := sols;
+    while not Is_Null(tmp) loop
+      declare
+        sol : Link_to_Solution := Head_Of(tmp);
+        nbt : constant natural32 := natural32(numdeg+dendeg+1);
+        nit : constant natural32 := 4*nbt;
+        srv : DoblDobl_Dense_Series_Vectors.Vector(sol.v'range);
+        eva : DoblDobl_Dense_Series_Vectors.Vector(1..nq);
+        pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
+      begin
+        Homotopy_Pade_Approximants.DoblDobl_Pade_Approximant
+          (sol.v,nq,numdeg,dendeg,nit,srv,eva,pv);
+        if verbose then
+          put_line("The solution series :");
+          DoblDobl_Dense_Series_Vectors_io.put(srv);
+          put_line("The evaluated solution series :");
+          DoblDobl_Dense_Series_Vectors_io.put(eva);
+          put_line("The Pade approximant :");
+          for i in pv'range loop
+            put_line(DoblDobl_Pade_Approximants_io.Write(pv(i)));
+          end loop;
+        end if;
+        cnt := cnt + 1;
+        declare
+          spv : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+              := DoblDobl_Pade_Approximants_io.to_System(pv);
+        begin
+          DoblDobl_Systems_Pool.Initialize(cnt,spv);
+        end;
+        tmp := Tail_Of(tmp);
+      end;
+    end loop;
     return 0;
   end Job8;
 
@@ -645,6 +731,8 @@ function use_series ( job : integer32;
     nv : constant integer32 := Head_Of(sols).n;
     idx,numdeg,dendeg,nbr,dim : integer32;
     verbose : boolean;
+    tmp : Solution_List;
+    cnt : integer32 := 0;
 
   begin
     extract_options_for_pade(idx,numdeg,dendeg,nbr,verbose);
@@ -653,6 +741,40 @@ function use_series ( job : integer32;
       put("Number of equations in the system : "); put(nq,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
+    QuadDobl_Homotopy.Create(lp.all,idx);
+    QuadDobl_Systems_Pool.Initialize(integer32(Length_Of(sols)));
+    tmp := sols;
+    while not Is_Null(tmp) loop
+      declare
+        sol : Link_to_Solution := Head_Of(tmp);
+        nbt : constant natural32 := natural32(numdeg+dendeg+1);
+        nit : constant natural32 := 4*nbt;
+        srv : QuadDobl_Dense_Series_Vectors.Vector(sol.v'range);
+        eva : QuadDobl_Dense_Series_Vectors.Vector(1..nq);
+        pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
+      begin
+        Homotopy_Pade_Approximants.QuadDobl_Pade_Approximant
+          (sol.v,nq,numdeg,dendeg,nit,srv,eva,pv);
+        if verbose then
+          put_line("The solution series :");
+          QuadDobl_Dense_Series_Vectors_io.put(srv);
+          put_line("The evaluated solution series :");
+          QuadDobl_Dense_Series_Vectors_io.put(eva);
+          put_line("The Pade approximant :");
+          for i in pv'range loop
+            put_line(QuadDobl_Pade_Approximants_io.Write(pv(i)));
+          end loop;
+        end if;
+        cnt := cnt + 1;
+        declare
+          spv : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+              := QuadDobl_Pade_Approximants_io.to_System(pv);
+        begin
+          QuadDobl_Systems_Pool.Initialize(cnt,spv);
+        end;
+        tmp := Tail_Of(tmp);
+      end;
+    end loop;
     return 0;
   end Job9;
 

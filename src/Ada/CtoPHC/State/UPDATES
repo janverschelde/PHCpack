@@ -1,4 +1,5 @@
 Wed 31 May 2017 : added the job numbers in use_c2phc for Pade approximants.
+  Completed the Pade approximant computations in use_series.adb.
 
 Tue 30 May 2017 : added documentation to jobs 3, 4, and 5 in use_series.ads.
   Provided skeleton for the jobs to compute a Pade approximant in use_series.
