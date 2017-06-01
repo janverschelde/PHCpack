@@ -9,6 +9,21 @@
 #include "syspool.h"
 #include "series.h"
 
+void standard_query_pool ( void );
+/*
+ * Interactive function to query the pool for systems
+ * in standard double precision. */
+
+void dobldobl_query_pool ( void );
+/*
+ * Interactive function to query the pool for systems
+ * in double double precision. */
+
+void quaddobl_query_pool ( void );
+/*
+ * Interactive function to query the pool for systems
+ * in quad double precision. */
+
 void standard_series_test ( void );
 /* 
  * Tests Newton's method for power series in standard double precision. */
@@ -94,6 +109,60 @@ int main ( int argc, char *argv[] )
    return 0;
 }
 
+void standard_query_pool ( void )
+{
+   int nbr,idx;
+
+   syspool_standard_size(&nbr);
+   printf("  Computed %d solution systems.\n",nbr);
+   while(1)
+   {
+      printf("\nGive index for the system you want to see : ");
+      scanf("%d",&idx);
+      if(idx <= 0) break;
+      printf("Copying system %d to container ...\n",idx);
+      syspool_copy_to_standard_container(idx);
+      printf("The system in the container :\n");
+      syscon_write_standard_system();
+   }
+}
+
+void dobldobl_query_pool ( void )
+{
+   int nbr,idx;
+
+   syspool_dobldobl_size(&nbr);
+   printf("  Computed %d solution systems.\n",nbr);
+   while(1)
+   {
+      printf("\nGive index for the system you want to see (0 to exit) : ");
+      scanf("%d",&idx);
+      if(idx <= 0) break;
+      printf("Copying system %d to container ...\n",idx);
+      syspool_copy_to_dobldobl_container(idx);
+      printf("The system in the container :\n");
+      syscon_write_dobldobl_system();
+   }
+}
+
+void quaddobl_query_pool ( void )
+{
+   int nbr,idx;
+
+   syspool_quaddobl_size(&nbr);
+   printf("  Computed %d solution systems.\n",nbr);
+   while(1)
+   {
+      printf("\nGive index for the system you want to see : ");
+      scanf("%d",&idx);
+      if(idx <= 0) break;
+      printf("Copying system %d to container ...\n",idx);
+      syspool_copy_to_quaddobl_container(idx);
+      printf("The system in the container :\n");
+      syscon_write_quaddobl_system();
+   }
+}
+
 void standard_series_test ( void )
 {
    int fail,idx,nbr,verbose;
@@ -107,18 +176,7 @@ void standard_series_test ( void )
    fail = standard_Newton_series(idx,nbr,verbose);
 
    printf("\nDone with Newton's method.");
-   syspool_standard_size(&nbr);
-   printf("  Computed %d solution series.\n",nbr);
-   while(1)
-   {
-      printf("\nGive index for series you want to see : ");
-      scanf("%d",&idx);
-      if(idx <= 0) break;
-      printf("Copying system %d to container ...\n",idx);
-      syspool_copy_to_standard_container(idx);
-      printf("The system in the container :\n");
-      syscon_write_standard_system();
-   }
+   standard_query_pool();
 }
 
 void dobldobl_series_test ( void )
@@ -134,18 +192,7 @@ void dobldobl_series_test ( void )
    fail = dobldobl_Newton_series(idx,nbr,verbose);
 
    printf("\nDone with Newton's method.");
-   syspool_dobldobl_size(&nbr);
-   printf("  Computed %d solution series.\n",nbr);
-   while(1)
-   {
-      printf("\nGive index for series you want to see (0 to exit) : ");
-      scanf("%d",&idx);
-      if(idx <= 0) break;
-      printf("Copying system %d to container ...\n",idx);
-      syspool_copy_to_dobldobl_container(idx);
-      printf("The system in the container :\n");
-      syscon_write_dobldobl_system();
-   }
+   dobldobl_query_pool();
 }
 
 void quaddobl_series_test ( void )
@@ -161,18 +208,7 @@ void quaddobl_series_test ( void )
    fail = quaddobl_Newton_series(idx,nbr,verbose);
 
    printf("\nDone with Newton's method.");
-   syspool_quaddobl_size(&nbr);
-   printf("  Computed %d solution series.\n",nbr);
-   while(1)
-   {
-      printf("\nGive index for series you want to see : ");
-      scanf("%d",&idx);
-      if(idx <= 0) break;
-      printf("Copying system %d to container ...\n",idx);
-      syspool_copy_to_quaddobl_container(idx);
-      printf("The system in the container :\n");
-      syscon_write_quaddobl_system();
-   }
+   quaddobl_query_pool();
 }
 
 void ask_options_for_series ( int *idx, int *nbr, int *verbose )
@@ -217,6 +253,9 @@ void standard_Pade_test ( void )
 
    ask_options_for_Pade(&idx,&numdeg,&dendeg,&nbr,&verbose);
    fail = standard_Pade_approximant(idx,numdeg,dendeg,nbr,verbose);
+
+   printf("\nDone with the Pade approximant constructor.");
+   standard_query_pool();
 }
 
 void dobldobl_Pade_test ( void )
@@ -230,6 +269,9 @@ void dobldobl_Pade_test ( void )
 
    ask_options_for_Pade(&idx,&numdeg,&dendeg,&nbr,&verbose);
    fail = dobldobl_Pade_approximant(idx,numdeg,dendeg,nbr,verbose);
+
+   printf("\nDone with the Pade approximant constructor.");
+   dobldobl_query_pool();
 }
 
 void quaddobl_Pade_test ( void )
@@ -243,4 +285,7 @@ void quaddobl_Pade_test ( void )
 
    ask_options_for_Pade(&idx,&numdeg,&dendeg,&nbr,&verbose);
    fail = quaddobl_Pade_approximant(idx,numdeg,dendeg,nbr,verbose);
+
+   printf("\nDone with the Pade approximant constructor.");
+   quaddobl_query_pool();
 }

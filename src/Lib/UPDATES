@@ -1,5 +1,7 @@
 Wed 21 May 2017 : provided wrapper functions for Pade approximants in
-  series.h, series.c, called in lib_series.c.
+  series.h, series.c, called in lib_series.c.  Connected the wrappers
+  in series.c to the calls to the use_c2phc function, added the query
+  of the systems pool functions to lib_series.c.
 
 Tue 21 Mar 2017 : added silent option to the blackbox solvers in phcpack,
   normalized names, and adjusted phc_solve.c with the extra parameters.

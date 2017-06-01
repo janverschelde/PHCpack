@@ -92,6 +92,14 @@ int standard_Pade_approximant
  ( int idx, int numdeg, int dendeg, int nbr, int verbose )
 {
    int fail = 0;
+   int pars[4];
+   double *c;
+
+   pars[0] = idx;
+   pars[1] = numdeg;
+   pars[2] = dendeg;
+   pars[3] = nbr;
+   fail = _ada_use_c2phc(704,pars,&verbose,c);
 
    return fail;
 }
@@ -100,6 +108,14 @@ int dobldobl_Pade_approximant
  ( int idx, int numdeg, int dendeg, int nbr, int verbose )
 {
    int fail = 0;
+   int pars[4];
+   double *c;
+
+   pars[0] = idx;
+   pars[1] = numdeg;
+   pars[2] = dendeg;
+   pars[3] = nbr;
+   fail = _ada_use_c2phc(705,pars,&verbose,c);
 
    return fail;
 }
@@ -108,6 +124,14 @@ int quaddobl_Pade_approximant
  ( int idx, int numdeg, int dendeg, int nbr, int verbose )
 {
    int fail = 0;
+   int pars[4];
+   double *c;
+
+   pars[0] = idx;
+   pars[1] = numdeg;
+   pars[2] = dendeg;
+   pars[3] = nbr;
+   fail = _ada_use_c2phc(706,pars,&verbose,c);
 
    return fail;
 }
