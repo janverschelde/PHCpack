@@ -1,3 +1,5 @@
+Thu 1 Jun 2017 : misaligned job numbers is use_c2phc to call use_series.
+
 Wed 31 May 2017 : added the job numbers in use_c2phc for Pade approximants.
   Completed the Pade approximant computations in use_series.adb.
 
