@@ -1,5 +1,7 @@
 Fri 2 Jun 2017 : prompted for random gamma or not in the artificial parameter
-  homotopy in ts_serpade.
+  homotopy in ts_serpade.  Patched the computation of the denominator of the
+  Pade approximant in case of a singular coefficient matrix with a zero right
+  hand size in the *_rational_approximations.adb bodies, tested by ts_serpade.
 
 Wed 31 May 2017 : added the conversion of a Pade vector to a system of
   polynomials in the *_pade_approximants_io packages.

@@ -442,6 +442,88 @@ procedure ts_serpade is
     return res;
   end quaddobl_cos_series;
 
+  procedure Standard_line_Test ( numdeg,dendeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the construction of the Pade approximant in standard
+  --   double precision for the line x = t.
+
+    use Standard_Complex_Numbers;
+
+    dim : constant integer32 := numdeg + dendeg;
+    cff : Standard_Complex_Vectors.Vector(0..dim);
+    num : Standard_Complex_Vectors.Vector(0..numdeg);
+    den : Standard_Complex_Vectors.Vector(0..dendeg);
+    info : integer32;
+
+  begin
+    cff := (0..dim => Create(0.0));
+    cff(1) := Create(1.0);
+    Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+    end if;
+  end Standard_line_Test;
+
+  procedure DoblDobl_line_Test ( numdeg,dendeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the construction of the Pade approximant in double
+  --   double precision for the line x = t.
+
+    use DoblDobl_Complex_Numbers;
+
+    dim : constant integer32 := numdeg + dendeg;
+    cff : DoblDobl_Complex_Vectors.Vector(0..dim);
+    num : DoblDobl_Complex_Vectors.Vector(0..numdeg);
+    den : DoblDobl_Complex_Vectors.Vector(0..dendeg);
+    zero : constant double_double := create(0.0);
+    one : constant double_double := create(1.0);
+    info : integer32;
+
+  begin
+    cff := (0..dim => Create(zero));
+    cff(1) := Create(one);
+    DoblDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+    end if;
+  end DoblDobl_line_Test;
+
+  procedure QuadDobl_line_Test ( numdeg,dendeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the construction of the Pade approximant in quad
+  --   double precision for the line x = t.
+
+    use QuadDobl_Complex_Numbers;
+
+    dim : constant integer32 := numdeg + dendeg;
+    cff : QuadDobl_Complex_Vectors.Vector(0..dim);
+    num : QuadDobl_Complex_Vectors.Vector(0..numdeg);
+    den : QuadDobl_Complex_Vectors.Vector(0..dendeg);
+    zero : constant quad_double := create(0.0);
+    one : constant quad_double := create(1.0);
+    info : integer32;
+
+  begin
+    cff := (0..dim => Create(zero));
+    cff(1) := Create(one);
+    QuadDobl_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+    if info /= 0 then
+      put("info : "); put(info,1); put_line(" error!");
+    else
+      put_line("The coefficients of the numerator :"); put_line(num);
+      put_line("The coefficients of the denominator :"); put_line(den);
+    end if;
+  end QuadDobl_line_Test;
+
   procedure Standard_log_Test ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
@@ -1378,13 +1460,14 @@ procedure ts_serpade is
   begin
     new_line;
     put_line("MENU to test rational approximations for a function ...");
-    put_line("  0. artificial parameter homotopy");
+    put_line("  0. simple test on line x = t");
     put_line("  1. series for log(1+x)");
     put_line("  2. series for exp(x)");
     put_line("  3. series for sin(x)");
     put_line("  4. series for cos(x)");
-    put("Type 0, 1, 2, 3, or 4 to choose the test : ");
-    Ask_Alternative(ans,"01234");
+    put_line("  5. artificial parameter homotopy");
+    put("Type 0, 1, 2, 3, 4, or 5 to choose the test : ");
+    Ask_Alternative(ans,"012345");
     new_line;
     put("Give the degree of the numerator : "); get(degnum);
     put("Give the degree of the denominator : "); get(degden);
@@ -1400,29 +1483,32 @@ procedure ts_serpade is
     case prc is
       when '0' =>
         case ans is 
-          when '0' => Standard_Homotopy_Test(degnum,degden);
+          when '0' => Standard_line_Test(degnum,degden);
           when '1' => Standard_log_Test(degnum,degden);
           when '2' => Standard_exp_Test(degnum,degden);
           when '3' => Standard_sin_Test(degnum,degden);
           when '4' => Standard_cos_Test(degnum,degden);
+          when '5' => Standard_Homotopy_Test(degnum,degden);
           when others => null;
         end case;
       when '1' =>
         case ans is 
-          when '0' => DoblDobl_Homotopy_Test(degnum,degden);
+          when '0' => DoblDobl_line_Test(degnum,degden);
           when '1' => DoblDobl_log_Test(degnum,degden);
           when '2' => DoblDobl_exp_Test(degnum,degden);
           when '3' => DoblDobl_sin_Test(degnum,degden);
           when '4' => DoblDobl_cos_Test(degnum,degden);
+          when '5' => DoblDobl_Homotopy_Test(degnum,degden);
           when others => null;
         end case;
       when '2' =>
         case ans is 
-          when '0' => QuadDobl_Homotopy_Test(degnum,degden);
+          when '0' => QuadDobl_line_Test(degnum,degden);
           when '1' => QuadDobl_log_Test(degnum,degden);
           when '2' => QuadDobl_exp_Test(degnum,degden);
           when '3' => QuadDobl_sin_Test(degnum,degden);
           when '4' => QuadDobl_cos_Test(degnum,degden);
+          when '5' => QuadDobl_Homotopy_Test(degnum,degden);
           when others => null;
         end case;
       when others => null;

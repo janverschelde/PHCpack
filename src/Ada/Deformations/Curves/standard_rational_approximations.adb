@@ -64,6 +64,7 @@ package body Standard_Rational_Approximations is
     mat : Standard_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
     rhs : Standard_Complex_Vectors.Vector(1..dendeg);
     ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
+    zero : constant Complex_Number := Create(0.0);
 
   begin
     Denominator_System(numdeg,dendeg,cff,mat,rhs);
@@ -75,9 +76,17 @@ package body Standard_Rational_Approximations is
         dencff(i) := rhs(dendeg-i+1);
       end loop;
       numcff := Numerator_Coefficients(numdeg,dendeg,dencff,cff);
-    else
-      numcff := (0..numdeg => Create(0.0));
-      dencff := (0..dendeg => Create(0.0));
+    else -- singular coefficient matrix detected
+      numcff := (0..numdeg => zero);
+      dencff := (0..dendeg => zero);
+      for k in rhs'range loop -- check if right hand side is zero
+        if rhs(k) /= zero
+         then return;
+        end if;
+      end loop;
+      dencff(0) := Create(1.0); -- denominator is just one
+      numcff := Numerator_Coefficients(numdeg,dendeg,dencff,cff);
+      info := 0; -- ignore the singular coefficient matrix
     end if;
   end Pade;
 

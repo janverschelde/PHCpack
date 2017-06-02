@@ -67,6 +67,7 @@ package body DoblDobl_Rational_Approximations is
     rhs : DoblDobl_Complex_Vectors.Vector(1..dendeg);
     ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
     zero : constant double_double := create(0.0);
+    cmplx_zero : constant Complex_Number := create(zero);
     one : constant double_double := create(1.0);
 
   begin
@@ -79,9 +80,17 @@ package body DoblDobl_Rational_Approximations is
         dencff(i) := rhs(dendeg-i+1);
       end loop;
       numcff := Numerator_Coefficients(numdeg,dendeg,dencff,cff);
-    else
+    else -- singular coefficient matrix detected
       numcff := (0..numdeg => Create(zero));
       dencff := (0..dendeg => Create(zero));
+      for k in rhs'range loop -- check if right hand side is zero
+        if rhs(k) /= cmplx_zero
+         then return;
+        end if;
+      end loop;
+      dencff(0) := Create(one); -- denominator is just one
+      numcff := Numerator_Coefficients(numdeg,dendeg,dencff,cff);
+      info := 0; -- ignore the singular coefficient matrix
     end if;
   end Pade;
 
