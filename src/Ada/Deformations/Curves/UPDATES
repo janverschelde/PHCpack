@@ -1,3 +1,6 @@
+Fri 2 Jun 2017 : prompted for random gamma or not in the artificial parameter
+  homotopy in ts_serpade.
+
 Wed 31 May 2017 : added the conversion of a Pade vector to a system of
   polynomials in the *_pade_approximants_io packages.
 
