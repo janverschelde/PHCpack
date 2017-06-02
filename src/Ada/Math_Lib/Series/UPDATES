@@ -1,3 +1,6 @@
+Fri 2 Jun 2017 : added guard test on setting the degree in
+  series_and_polynomials.adb.
+
 Wed 14 Dec 2016 : added Determinant function to *echelon_forms.
   Fixed bug in timer in ts_serlin, forgotten to initialize L, as L := A.
   Wrapped the echelon solver in *matrix_series_solvers, tested by ts_serlin,

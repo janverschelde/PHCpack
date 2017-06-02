@@ -449,7 +449,7 @@ package body Series_and_Polynomials is
   end System_Array_to_Series_VecVec;
 
   function Set_Degree ( i : integer32;
-                       d : Standard_Natural_Vectors.Link_to_Vector )
+                        d : Standard_Natural_Vectors.Link_to_Vector )
                      return integer32 is
 
   -- DESCRIPTION :
@@ -457,7 +457,7 @@ package body Series_and_Polynomials is
   --   which is either zero if i = 0, or otherwise d(i).
 
   begin
-    if i = 0
+    if i = 0 or i > d'last
      then return 0;
      else return integer32(d(i));
     end if;
