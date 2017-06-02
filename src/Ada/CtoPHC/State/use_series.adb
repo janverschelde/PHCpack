@@ -83,14 +83,14 @@ function use_series ( job : integer32;
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
     vrb : constant integer32 := integer32(v_b(v_b'first));
     v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
     use Interfaces.C;
 
   begin
     verbose := (vrb = 1);
     idx := integer32(v_a(v_a'first));
-    numdeg := integer32(v_a(v_a'first)+1);
-    dendeg := integer32(v_a(v_a'first)+2);
+    numdeg := integer32(v_a(v_a'first+1));
+    dendeg := integer32(v_a(v_a'first+2));
     nbrit := integer32(v_a(v_a'first+3));
     if verbose then
       put("The index of the series parameter : "); put(idx,1); new_line;
@@ -623,6 +623,7 @@ function use_series ( job : integer32;
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
       put("Number of equations in the system : "); put(nq,1); new_line;
+      put("Number of variables in the solutions : "); put(nv,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
     Standard_Homotopy.Create(lp.all,idx);
@@ -633,12 +634,12 @@ function use_series ( job : integer32;
         sol : Link_to_Solution := Head_Of(tmp);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
         nit : constant natural32 := 4*nbt;
-        srv : Standard_Dense_Series_Vectors.Vector(sol.v'range);
+        srv : Standard_Dense_Series_Vectors.Vector(1..nv-1);
         eva : Standard_Dense_Series_Vectors.Vector(1..nq);
         pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
       begin
         Homotopy_Pade_Approximants.Standard_Pade_Approximant
-          (sol.v,nq,numdeg,dendeg,nit,srv,eva,pv);
+          (sol.v(1..sol.v'last-1),nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
           put_line("The solution series :");
           Standard_Dense_Series_Vectors_io.put(srv);
