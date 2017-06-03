@@ -1,3 +1,6 @@
+Sat 3 Jun 2017 : fixed a newline in phcpy2c2.c and prepared phcpy2c3.c
+  for the python 3 extension module.
+
 Fri 2 Jun 2017 : prepared phcpy2c.h and phcpy2c2.c for the python 2 extension.
 
 Wed 21 May 2017 : provided wrapper functions for Pade approximants in
