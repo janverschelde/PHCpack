@@ -132,7 +132,7 @@ package body Homotopy_Series_Readers is
 
   begin
     Series_and_Predictors.Newton_Prediction(nit,sys,sol,srv,eva);
-    Standard_Complex_Poly_Systems.Clear(hom);
+   -- Standard_Complex_Poly_Systems.Clear(hom); -- sharing, do not clear!
     Standard_Series_Poly_Systems.Clear(sys);
   end Standard_Series_Newton;
 
@@ -157,7 +157,7 @@ package body Homotopy_Series_Readers is
 
   begin
     Series_and_Predictors.Newton_Prediction(nit,sys,sol,srv,eva);
-    DoblDobl_Complex_Poly_Systems.Clear(hom);
+   -- DoblDobl_Complex_Poly_Systems.Clear(hom); -- sharing, do not clear!
     DoblDobl_Series_Poly_Systems.Clear(sys);
   end DoblDobl_Series_Newton;
 
@@ -182,7 +182,7 @@ package body Homotopy_Series_Readers is
 
   begin
     Series_and_Predictors.Newton_Prediction(nit,sys,sol,srv,eva);
-    QuadDobl_Complex_Poly_Systems.Clear(hom);
+   -- QuadDobl_Complex_Poly_Systems.Clear(hom); -- sharing, do not clear!
     QuadDobl_Series_Poly_Systems.Clear(sys);
   end QuadDobl_Series_Newton;
 
