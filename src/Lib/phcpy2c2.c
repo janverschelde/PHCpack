@@ -6584,6 +6584,48 @@ static PyObject *py2c_quaddobl_Newton_power_series
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_standard_Pade_approximant
+ ( PyObject *self, PyObject *args )
+{
+   int idx,numdeg,dendeg,nbr,vrb,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiii",&idx,&numdeg,&dendeg,&nbr,&vrb))
+      return NULL;   
+
+   fail = standard_Pade_approximant(idx,numdeg,dendeg,nbr,vrb);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_Pade_approximant
+ ( PyObject *self, PyObject *args )
+{
+   int idx,numdeg,dendeg,nbr,vrb,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiii",&idx,&numdeg,&dendeg,&nbr,&vrb))
+      return NULL;   
+
+   fail = dobldobl_Pade_approximant(idx,numdeg,dendeg,nbr,vrb);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_Pade_approximant
+ ( PyObject *self, PyObject *args )
+{
+   int idx,numdeg,dendeg,nbr,vrb,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiii",&idx,&numdeg,&dendeg,&nbr,&vrb))
+      return NULL;   
+
+   fail = quaddobl_Pade_approximant(idx,numdeg,dendeg,nbr,vrb);
+
+   return Py_BuildValue("i",fail);
+}
+
 /* The wrapping of functions with prototypes in syspool.h starts below. */
 
 static PyObject *py2c_syspool_standard_init ( PyObject *self, PyObject *args )
@@ -8547,6 +8589,16 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_quaddobl_Newton_power_series",
      py2c_quaddobl_Newton_power_series, METH_VARARGS,
     "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the quaddobl systems pool the\n leading terms of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in quad double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The solution series are store in the quaddobl systems pool.\n On return is the failure code, which equals zero if all went well."},
+
+   {"py2c_standard_Pade_approximant",
+     py2c_standard_Pade_approximant, METH_VARARGS,
+    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in standard double precision, followed by the construction of the\n Pade approximants, for each solution. There are five integers on input:\n 1) the index of the series parameter;\n 2) the degree of the numerator of the Pade approximant;\n 3) the degree of the denominator of the Pade approximant;\n 4) the number of Newton steps to be done on each solution;\n 5) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The Pade approximants are stored in the standard systems pool,\n numerators in the odd indexed entries and denominators in the entries\n with even index in each system.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_dobldobl_Pade_approximant",
+     py2c_dobldobl_Pade_approximant, METH_VARARGS,
+    "Given in the systems container a polynomial system with coefficients\n in double double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in double double precision, followed by the construction of the\n Pade approximants, for each solution. There are five integers on input:\n 1) the index of the series parameter;\n 2) the degree of the numerator of the Pade approximant;\n 3) the degree of the denominator of the Pade approximant;\n 4) the number of Newton steps to be done on each solution;\n 5) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The Pade approximants are stored in the dobldobl systems pool,\n numerators in the odd indexed entries and denominators in the entries\n with even index in each system.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_quaddobl_Pade_approximant",
+     py2c_quaddobl_Pade_approximant, METH_VARARGS,
+    "Given in the systems container a polynomial system with coefficients\n in quad double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in quad double precision, followed by the construction of the\n Pade approximants, for each solution. There are five integers on input:\n 1) the index of the series parameter;\n 2) the degree of the numerator of the Pade approximant;\n 3) the degree of the denominator of the Pade approximant;\n 4) the number of Newton steps to be done on each solution;\n 5) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The Pade approximants are stored in the quaddobl systems pool,\n numerators in the odd indexed entries and denominators in the entries\n with even index in each system.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_syspool_standard_init", py2c_syspool_standard_init, METH_VARARGS,
     "Initializes the pool for systems in standard double precision."},
    {"py2c_syspool_dobldobl_init", py2c_syspool_dobldobl_init, METH_VARARGS,

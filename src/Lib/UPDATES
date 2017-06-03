@@ -1,3 +1,5 @@
+Fri 2 Jun 2017 : prepared phcpy2c.h and phcpy2c2.c for the python 2 extension.
+
 Wed 21 May 2017 : provided wrapper functions for Pade approximants in
   series.h, series.c, called in lib_series.c.  Connected the wrappers
   in series.c to the calls to the use_c2phc function, added the query
