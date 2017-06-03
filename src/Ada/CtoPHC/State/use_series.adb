@@ -2,6 +2,7 @@ with Interfaces.C;
 with text_io;                              use text_io;
 with Standard_Natural_Numbers;             use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;          use Standard_Integer_Numbers_io;
+with Standard_Complex_Vectors_io;          use Standard_Complex_Vectors_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
@@ -638,6 +639,10 @@ function use_series ( job : integer32;
         eva : Standard_Dense_Series_Vectors.Vector(1..nq);
         pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
       begin
+        if verbose then
+          put_line("Calling the Pade approximant constructor ...");
+          put_line("The solution vector :"); put_line(sol.v);
+        end if;
         Homotopy_Pade_Approximants.Standard_Pade_Approximant
           (sol.v(1..sol.v'last-1),nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
@@ -651,12 +656,18 @@ function use_series ( job : integer32;
           end loop;
         end if;
         cnt := cnt + 1;
+        if verbose
+         then put("Storing Pade approximant "); put(cnt,1); put_line(" ...");
+        end if;
         declare
           spv : constant Standard_Complex_Poly_Systems.Poly_Sys
               := Standard_Pade_Approximants_io.to_System(pv);
         begin
           Standard_Systems_Pool.Initialize(cnt,spv);
         end;
+        if verbose
+         then put("Done storing Pade approximant "); put(cnt,1); new_line;
+        end if;
         tmp := Tail_Of(tmp);
       end;
     end loop;

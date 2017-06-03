@@ -1,3 +1,5 @@
+Fri 2 Jun 2017 : more verbose job in use_series.adb for bug hunting.
+
 Thu 1 Jun 2017 : misaligned job numbers is use_c2phc to call use_series.
   Fixed extraction of the parameters for the Pade approximant and made
   progress for the correct construction with a natural parameter homotopy.
