@@ -608,8 +608,12 @@ def example4pade(prc='d'):
         print ser
     if prc == 'd':
         pade = standard_pade_approximants(pols[:1], sols, idx=2)
-    else:
+    elif prc == 'dd':
         pade = dobldobl_pade_approximants(pols[:1], sols, idx=2)
+    elif prc == 'qd':
+        pade = quaddobl_pade_approximants(pols[:1], sols, idx=2)
+    else:
+        print 'wrong value for the precision'
     print 'the Pade approximants :'
     for pad in pade:
         print pad

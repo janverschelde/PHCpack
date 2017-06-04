@@ -1,5 +1,6 @@
 Sun 4 Jun 2017 : added functions to the series module for Python 3,
   to compute the Pade approximants for the regular case.
+  Fixed the precision in the example test for Pade approximants.
 
 Sat 3 Jun 2017 : made a start extending the series module for Python 2;
   adjusted the routines for double double and quad double precision.
