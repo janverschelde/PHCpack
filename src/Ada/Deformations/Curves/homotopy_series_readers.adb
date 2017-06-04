@@ -121,13 +121,13 @@ package body Homotopy_Series_Readers is
 
   procedure Standard_Series_Newton
               ( sol : in Standard_Complex_Vectors.Vector;
-                nbequ : in integer32; nbterms,nbiters : in natural32;
+                idx,nbequ : in integer32; nbterms,nbiters : in natural32;
                 srv,eva : out Standard_Dense_Series_Vectors.Vector ) is
 
     hom : Standard_Complex_Poly_Systems.Poly_Sys(1..nbequ)
         := Standard_Homotopy.Homotopy_System;
     sys : Standard_Series_Poly_Systems.Poly_Sys(1..nbequ)
-        := Series_and_Homotopies.Create(hom,nbequ+1);
+        := Series_and_Homotopies.Create(hom,idx);
     nit : constant integer32 := integer32(nbiters);
 
   begin
@@ -138,21 +138,21 @@ package body Homotopy_Series_Readers is
 
   procedure Standard_Series_Newton
               ( sol : in Standard_Complex_Solutions.Solution;
-                nbequ : in integer32; nbterms,nbiters : in natural32;
+                idx,nbequ : in integer32; nbterms,nbiters : in natural32;
                 srv,eva : out Standard_Dense_Series_Vectors.Vector ) is
   begin
-    Standard_Series_Newton(sol.v,nbequ,nbterms,nbiters,srv,eva);
+    Standard_Series_Newton(sol.v,idx,nbequ,nbterms,nbiters,srv,eva);
   end Standard_Series_Newton;
 
   procedure DoblDobl_Series_Newton
               ( sol : in DoblDobl_Complex_Vectors.Vector;
-                nbequ : in integer32; nbterms,nbiters : in natural32;
+                idx,nbequ : in integer32; nbterms,nbiters : in natural32;
                 srv,eva : out DoblDobl_Dense_Series_Vectors.Vector ) is
 
     hom : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nbequ)
         := DoblDobl_Homotopy.Homotopy_System;
     sys : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nbequ)
-        := Series_and_Homotopies.Create(hom,nbequ+1);
+        := Series_and_Homotopies.Create(hom,idx);
     nit : constant integer32 := integer32(nbiters);
 
   begin
@@ -163,21 +163,21 @@ package body Homotopy_Series_Readers is
 
   procedure DoblDobl_Series_Newton
               ( sol : in DoblDobl_Complex_Solutions.Solution;
-                nbequ : in integer32; nbterms,nbiters : in natural32;
+                idx,nbequ : in integer32; nbterms,nbiters : in natural32;
                 srv,eva : out DoblDobl_Dense_Series_Vectors.Vector ) is
   begin
-    DoblDobl_Series_Newton(sol.v,nbequ,nbterms,nbiters,srv,eva);
+    DoblDobl_Series_Newton(sol.v,idx,nbequ,nbterms,nbiters,srv,eva);
   end DoblDobl_Series_Newton;
 
   procedure QuadDobl_Series_Newton
               ( sol : in QuadDobl_Complex_Vectors.Vector;
-                nbequ : in integer32; nbterms,nbiters : in natural32;
+                idx,nbequ : in integer32; nbterms,nbiters : in natural32;
                 srv,eva : out QuadDobl_Dense_Series_Vectors.Vector ) is
 
     hom : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nbequ)
         := QuadDobl_Homotopy.Homotopy_System;
     sys : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nbequ)
-        := Series_and_Homotopies.Create(hom,nbequ+1);
+        := Series_and_Homotopies.Create(hom,idx);
     nit : constant integer32 := integer32(nbiters);
 
   begin
@@ -188,10 +188,10 @@ package body Homotopy_Series_Readers is
 
   procedure QuadDobl_Series_Newton
               ( sol : in QuadDobl_Complex_Solutions.Solution;
-                nbequ : in integer32; nbterms,nbiters : in natural32;
+                idx,nbequ : in integer32; nbterms,nbiters : in natural32;
                 srv,eva : out QuadDobl_Dense_Series_Vectors.Vector ) is
   begin
-    QuadDobl_Series_Newton(sol.v,nbequ,nbterms,nbiters,srv,eva);
+    QuadDobl_Series_Newton(sol.v,idx,nbequ,nbterms,nbiters,srv,eva);
   end QuadDobl_Series_Newton;
 
 end Homotopy_Series_Readers;

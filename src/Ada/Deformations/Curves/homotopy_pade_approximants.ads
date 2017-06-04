@@ -19,17 +19,20 @@ package Homotopy_Pade_Approximants is
 
   procedure Standard_Pade_Approximant
               ( sol : in Standard_Complex_Vectors.Vector;
-                nbequ,numdeg,dendeg : in integer32; nbiters : in natural32;
+                idx,nbequ,numdeg,dendeg : in integer32;
+                nbiters : in natural32;
                 srv,eva : out Standard_Dense_Series_Vectors.Vector;
                 pv : out Standard_Pade_Approximants.Pade_Vector );
   procedure DoblDobl_Pade_Approximant
               ( sol : in DoblDobl_Complex_Vectors.Vector;
-                nbequ,numdeg,dendeg : in integer32; nbiters : in natural32;
+                idx,nbequ,numdeg,dendeg : in integer32;
+                nbiters : in natural32;
                 srv,eva : out DoblDobl_Dense_Series_Vectors.Vector;
                 pv : out DoblDobl_Pade_Approximants.Pade_Vector );
   procedure QuadDobl_Pade_Approximant
               ( sol : in QuadDobl_Complex_Vectors.Vector;
-                nbequ,numdeg,dendeg : in integer32; nbiters : in natural32;
+                idx,nbequ,numdeg,dendeg : in integer32;
+                nbiters : in natural32;
                 srv,eva : out QuadDobl_Dense_Series_Vectors.Vector;
                 pv : out QuadDobl_Pade_Approximants.Pade_Vector );
 
@@ -45,6 +48,8 @@ package Homotopy_Pade_Approximants is
 
   -- ON ENTRY :
   --   sol      solution of a start system in a polynomial homotopy;
+  --   idx      index of the parameter in the series in the homotopy,
+  --            which equals nbequ+1 for an artificial-parameter homotopy;
   --   nbequ    number of equations in the polynomial homotopy;
   --   numdeg   degree of the numerator of the Pade approximant;
   --   dendeg   degree of the denominator of the Pade approximant;

@@ -1061,7 +1061,7 @@ procedure ts_serpade is
     trm.cf := Standard_Complex_Numbers.Create(3.0);
     targetpol := Create(trm);
     trm.dg(1) := 0;
-    trm.cf := Standard_Complex_Numbers.Create(0.5);
+    trm.cf := Standard_Complex_Numbers.Create(1.5);
     Sub(targetpol,trm);
     target(1) := targetpol;
     Standard_Homotopy.Create(target,start,tpow,gamma);
@@ -1100,7 +1100,7 @@ procedure ts_serpade is
     trm.cf := DoblDobl_Complex_Numbers.Create(nbr);
     targetpol := Create(trm);
     trm.dg(1) := 0;
-    nbr := create(0.5);
+    nbr := create(1.5);
     trm.cf := DoblDobl_Complex_Numbers.Create(nbr);
     Sub(targetpol,trm);
     target(1) := targetpol;
@@ -1140,7 +1140,7 @@ procedure ts_serpade is
     trm.cf := QuadDobl_Complex_Numbers.Create(nbr);
     targetpol := Create(trm);
     trm.dg(1) := 0;
-    nbr := create(0.5);
+    nbr := create(1.5);
     trm.cf := QuadDobl_Complex_Numbers.Create(nbr);
     Sub(targetpol,trm);
     target(1) := targetpol;
@@ -1308,7 +1308,7 @@ procedure ts_serpade is
       pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
     begin
       Homotopy_Pade_Approximants.Standard_Pade_Approximant
-        (sol.v,nbeq,numdeg,dendeg,nit,srv,eva,pv);
+        (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
       put_line("The solution series :");
       Standard_Dense_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
@@ -1370,7 +1370,7 @@ procedure ts_serpade is
       pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
     begin
       Homotopy_Pade_Approximants.DoblDobl_Pade_Approximant
-        (sol.v,nbeq,numdeg,dendeg,nit,srv,eva,pv);
+        (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
       put_line("The solution series :");
       DoblDobl_Dense_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
@@ -1432,7 +1432,7 @@ procedure ts_serpade is
       pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
     begin
       Homotopy_Pade_Approximants.QuadDobl_Pade_Approximant
-        (sol.v,nbeq,numdeg,dendeg,nit,srv,eva,pv);
+        (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
       put_line("The solution series :");
       QuadDobl_Dense_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
