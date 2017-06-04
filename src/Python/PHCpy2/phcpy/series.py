@@ -410,6 +410,120 @@ def standard_pade_approximants(pols, sols, idx=1, numdeg=2, dendeg=2, \
     py2c_syspool_standard_clear()
     return result
 
+def dobldobl_pade_approximants(pols, sols, idx=1, numdeg=2, dendeg=2, \
+    nbr=4, verbose=True):
+    r"""
+    Computes Pade approximants based on the series in double double 
+    precision for the polynomials in *pols*, where the leading 
+    coefficients of the series are the solutions in *sols*.
+    On entry are the following seven parameters:
+
+    *pols*: a list of string representations of polynomials,
+
+    *sols*: a list of solutions of the polynomials in *pols*,
+
+    *idx*: index of the series parameter, by default equals 1,
+
+    *numdeg*: the degree of the numerator,
+
+    *dendeg*: the degree of the denominator,
+
+    *nbr*: number of steps with Newton's method,
+
+    *verbose*: whether to write intermediate output to screen or not.
+
+    On return is a list of lists of strings.  Each lists of strings
+    represents the series solution for the variables in the list *pols*.
+    """
+    from phcpy.solver import number_of_symbols
+    from phcpy.interface import store_dobldobl_solutions
+    from phcpy.interface import store_dobldobl_system, load_dobldobl_system
+    from phcpy.phcpy2c2 \
+        import py2c_dobldobl_Pade_approximant as Pade_approximants
+    from phcpy.phcpy2c2 import py2c_syspool_dobldobl_size as poolsize
+    from phcpy.phcpy2c2 import py2c_syspool_copy_to_dobldobl_container
+    from phcpy.phcpy2c2 import py2c_syspool_dobldobl_clear
+    nbsym = number_of_symbols(pols)
+    if verbose:
+        print "the polynomials :"
+        for pol in pols:
+            print pol
+        print "Number of variables :", nbsym
+    store_dobldobl_system(pols, nbvar=nbsym)
+    store_dobldobl_solutions(nbsym, sols)
+    fail = Pade_approximants(idx, numdeg, dendeg, nbr, int(verbose))
+    size = (-1 if fail else poolsize())
+    if verbose:
+        if size == -1:
+            print "An error occurred in the Pade constructor."
+        else:
+            print "Computed %d Pade approximants." % size
+    result = []
+    for k in range(1, size+1):
+        py2c_syspool_copy_to_dobldobl_container(k)
+        sersol = load_dobldobl_system()
+        substsersol = substitute_symbol(sersol, idx)
+        result.append(make_fractions(substsersol))
+    py2c_syspool_dobldobl_clear()
+    return result
+
+def quaddobl_pade_approximants(pols, sols, idx=1, numdeg=2, dendeg=2, \
+    nbr=4, verbose=True):
+    r"""
+    Computes Pade approximants based on the series in quad double 
+    precision for the polynomials in *pols*, where the leading 
+    coefficients of the series are the solutions in *sols*.
+    On entry are the following seven parameters:
+
+    *pols*: a list of string representations of polynomials,
+
+    *sols*: a list of solutions of the polynomials in *pols*,
+
+    *idx*: index of the series parameter, by default equals 1,
+
+    *numdeg*: the degree of the numerator,
+
+    *dendeg*: the degree of the denominator,
+
+    *nbr*: number of steps with Newton's method,
+
+    *verbose*: whether to write intermediate output to screen or not.
+
+    On return is a list of lists of strings.  Each lists of strings
+    represents the series solution for the variables in the list *pols*.
+    """
+    from phcpy.solver import number_of_symbols
+    from phcpy.interface import store_quaddobl_solutions
+    from phcpy.interface import store_quaddobl_system, load_quaddobl_system
+    from phcpy.phcpy2c2 \
+        import py2c_quaddobl_Pade_approximant as Pade_approximants
+    from phcpy.phcpy2c2 import py2c_syspool_quaddobl_size as poolsize
+    from phcpy.phcpy2c2 import py2c_syspool_copy_to_quaddobl_container
+    from phcpy.phcpy2c2 import py2c_syspool_quaddobl_clear
+    nbsym = number_of_symbols(pols)
+    if verbose:
+        print "the polynomials :"
+        for pol in pols:
+            print pol
+        print "Number of variables :", nbsym
+    store_quaddobl_system(pols, nbvar=nbsym)
+    store_quaddobl_solutions(nbsym, sols)
+    fail = Pade_approximants(idx, numdeg, dendeg, nbr, int(verbose))
+    size = (-1 if fail else poolsize())
+    if verbose:
+        if size == -1:
+            print "An error occurred in the Pade constructor."
+        else:
+            print "Computed %d Pade approximants." % size
+    result = []
+    for k in range(1, size+1):
+        py2c_syspool_copy_to_quaddobl_container(k)
+        sersol = load_quaddobl_system()
+        substsersol = substitute_symbol(sersol, idx)
+        result.append(make_fractions(substsersol))
+    py2c_syspool_quaddobl_clear()
+    return result
+
 def viviani(prc='d'):
     """
     Returns the system which stores the Viviani curve,
@@ -475,21 +589,27 @@ def apollonius(precision='d'):
     print nser1
     print nser2
 
-def example4pade():
+def example4pade(prc='d'):
     """
     The function f(z) = ((1 + 1/2*z)/(1 + 2*z))^(1/2) is
     a solution x(s) of (1-s)*(x^2 - 1) + s*(3*x^2 - 3/2) = 0
     """
     pols = ['(x^2 - 1)*(1-s) + (3*x^2 - 3/2)*s;', 's;']
     from phcpy.solver import solve
-    sols = solve(pols, silent=True)
+    sols = solve(pols, silent=True, precision=prc)
     for sol in sols:
         print sol
-    sers = standard_newton_series(pols[:1], sols, idx=2)
+    if prc == 'd':
+        sers = standard_newton_series(pols[:1], sols, idx=2)
+    else:
+        sers = dobldobl_newton_series(pols[:1], sols, idx=2)
     print 'the series solutions :'
     for ser in sers:
         print ser
-    pade = standard_pade_approximants(pols[:1], sols, idx=2)
+    if prc == 'd':
+        pade = standard_pade_approximants(pols[:1], sols, idx=2)
+    else:
+        pade = dobldobl_pade_approximants(pols[:1], sols, idx=2)
     print 'the Pade approximants :'
     for pad in pade:
         print pad
@@ -515,4 +635,4 @@ if __name__ == "__main__":
     #test('qd')
     #viviani2('qd')
     #apollonius()
-    example4pade()
+    example4pade('qd')
