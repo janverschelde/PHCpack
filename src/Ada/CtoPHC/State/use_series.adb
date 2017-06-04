@@ -635,7 +635,7 @@ function use_series ( job : integer32;
         sol : Link_to_Solution := Head_Of(tmp);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
         nit : constant natural32 := 4*nbt;
-        srv : Standard_Dense_Series_Vectors.Vector(1..nv-1);
+        srv : Standard_Dense_Series_Vectors.Vector(1..dim);
         eva : Standard_Dense_Series_Vectors.Vector(1..nq);
         pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
       begin
@@ -644,7 +644,7 @@ function use_series ( job : integer32;
           put_line("The solution vector :"); put_line(sol.v);
         end if;
         Homotopy_Pade_Approximants.Standard_Pade_Approximant
-          (sol.v(1..sol.v'last-1),nq,numdeg,dendeg,nit,srv,eva,pv);
+          (sol.v(1..sol.v'last-1),idx,nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
           put_line("The solution series :");
           Standard_Dense_Series_Vectors_io.put(srv);
@@ -693,6 +693,7 @@ function use_series ( job : integer32;
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
       put("Number of equations in the system : "); put(nq,1); new_line;
+      put("Number of variables in the solutions : "); put(nv,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
     DoblDobl_Homotopy.Create(lp.all,idx);
@@ -703,12 +704,12 @@ function use_series ( job : integer32;
         sol : Link_to_Solution := Head_Of(tmp);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
         nit : constant natural32 := 4*nbt;
-        srv : DoblDobl_Dense_Series_Vectors.Vector(sol.v'range);
+        srv : DoblDobl_Dense_Series_Vectors.Vector(1..dim);
         eva : DoblDobl_Dense_Series_Vectors.Vector(1..nq);
         pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
       begin
         Homotopy_Pade_Approximants.DoblDobl_Pade_Approximant
-          (sol.v,nq,numdeg,dendeg,nit,srv,eva,pv);
+          (sol.v(1..sol.v'last-1),idx,nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
           put_line("The solution series :");
           DoblDobl_Dense_Series_Vectors_io.put(srv);
@@ -751,6 +752,7 @@ function use_series ( job : integer32;
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
       put("Number of equations in the system : "); put(nq,1); new_line;
+      put("Number of variables in the solutions : "); put(nv,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
     QuadDobl_Homotopy.Create(lp.all,idx);
@@ -761,12 +763,12 @@ function use_series ( job : integer32;
         sol : Link_to_Solution := Head_Of(tmp);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
         nit : constant natural32 := 4*nbt;
-        srv : QuadDobl_Dense_Series_Vectors.Vector(sol.v'range);
+        srv : QuadDobl_Dense_Series_Vectors.Vector(1..dim);
         eva : QuadDobl_Dense_Series_Vectors.Vector(1..nq);
         pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
       begin
         Homotopy_Pade_Approximants.QuadDobl_Pade_Approximant
-          (sol.v,nq,numdeg,dendeg,nit,srv,eva,pv);
+          (sol.v(1..sol.v'last-1),idx,nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
           put_line("The solution series :");
           QuadDobl_Dense_Series_Vectors_io.put(srv);
