@@ -3,6 +3,9 @@ with text_io;                              use text_io;
 with Standard_Natural_Numbers;             use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;          use Standard_Integer_Numbers_io;
 with Standard_Complex_Vectors_io;          use Standard_Complex_Vectors_io;
+with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
@@ -605,6 +608,96 @@ function use_series ( job : integer32;
     return 0;
   end Job6;
 
+  function Coordinates ( s : Standard_Complex_Solutions.Link_to_Solution;
+                         idx : integer32 )
+                       return Standard_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns s.v if idx equals zero, otherwise return s.v with the
+  --   coordinate with index idx removed.
+
+  -- REQUIRED : s /= null;
+
+  begin
+    if idx = 0 then
+      return s.v;
+    elsif idx = s.v'last then
+      return s.v(s.v'first..s.v'last-1);
+    else
+      declare
+        res : Standard_Complex_Vectors.Vector(s.v'first..s.v'last-1);
+      begin
+        for k in 1..(idx-1) loop
+          res(k) := s.v(k);
+        end loop;
+        for k in (idx+1)..s.v'last loop
+          res(k-1) := s.v(k);
+        end loop;
+        return res;
+      end;
+    end if;
+  end Coordinates;
+
+  function Coordinates ( s : DoblDobl_Complex_Solutions.Link_to_Solution;
+                         idx : integer32 )
+                       return DoblDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns s.v if idx equals zero, otherwise return s.v with the
+  --   coordinate with index idx removed.
+
+  -- REQUIRED : s /= null;
+
+  begin
+    if idx = 0 then
+      return s.v;
+    elsif idx = s.v'last then
+      return s.v(s.v'first..s.v'last-1);
+    else
+      declare
+        res : DoblDobl_Complex_Vectors.Vector(s.v'first..s.v'last-1);
+      begin
+        for k in 1..(idx-1) loop
+          res(k) := s.v(k);
+        end loop;
+        for k in (idx+1)..s.v'last loop
+          res(k-1) := s.v(k);
+        end loop;
+        return res;
+      end;
+    end if;
+  end Coordinates;
+
+  function Coordinates ( s : QuadDobl_Complex_Solutions.Link_to_Solution;
+                         idx : integer32 )
+                       return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns s.v if idx equals zero, otherwise return s.v with the
+  --   coordinate with index idx removed.
+
+  -- REQUIRED : s /= null;
+
+  begin
+    if idx = 0 then
+      return s.v;
+    elsif idx = s.v'last then
+      return s.v(s.v'first..s.v'last-1);
+    else
+      declare
+        res : QuadDobl_Complex_Vectors.Vector(s.v'first..s.v'last-1);
+      begin
+        for k in 1..(idx-1) loop
+          res(k) := s.v(k);
+        end loop;
+        for k in (idx+1)..s.v'last loop
+          res(k-1) := s.v(k);
+        end loop;
+        return res;
+      end;
+    end if;
+  end Coordinates;
+
   function Job7 return integer32 is -- Pade in standard double precision
 
     use Standard_Complex_Poly_Systems;
@@ -633,6 +726,8 @@ function use_series ( job : integer32;
     while not Is_Null(tmp) loop
       declare
         sol : Link_to_Solution := Head_Of(tmp);
+        solvec : constant Standard_Complex_Vectors.Vector
+               := Coordinates(sol,idx);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
         nit : constant natural32 := 4*nbt;
         srv : Standard_Dense_Series_Vectors.Vector(1..dim);
@@ -644,7 +739,7 @@ function use_series ( job : integer32;
           put_line("The solution vector :"); put_line(sol.v);
         end if;
         Homotopy_Pade_Approximants.Standard_Pade_Approximant
-          (sol.v(1..sol.v'last-1),idx,nq,numdeg,dendeg,nit,srv,eva,pv);
+          (solvec,idx,nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
           put_line("The solution series :");
           Standard_Dense_Series_Vectors_io.put(srv);
@@ -702,6 +797,8 @@ function use_series ( job : integer32;
     while not Is_Null(tmp) loop
       declare
         sol : Link_to_Solution := Head_Of(tmp);
+        solvec : constant DoblDobl_Complex_Vectors.Vector
+               := Coordinates(sol,idx);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
         nit : constant natural32 := 4*nbt;
         srv : DoblDobl_Dense_Series_Vectors.Vector(1..dim);
@@ -709,7 +806,7 @@ function use_series ( job : integer32;
         pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
       begin
         Homotopy_Pade_Approximants.DoblDobl_Pade_Approximant
-          (sol.v(1..sol.v'last-1),idx,nq,numdeg,dendeg,nit,srv,eva,pv);
+          (solvec,idx,nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
           put_line("The solution series :");
           DoblDobl_Dense_Series_Vectors_io.put(srv);
@@ -761,6 +858,8 @@ function use_series ( job : integer32;
     while not Is_Null(tmp) loop
       declare
         sol : Link_to_Solution := Head_Of(tmp);
+        solvec : constant QuadDobl_Complex_Vectors.Vector
+               := Coordinates(sol,idx);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
         nit : constant natural32 := 4*nbt;
         srv : QuadDobl_Dense_Series_Vectors.Vector(1..dim);
@@ -768,7 +867,7 @@ function use_series ( job : integer32;
         pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
       begin
         Homotopy_Pade_Approximants.QuadDobl_Pade_Approximant
-          (sol.v(1..sol.v'last-1),idx,nq,numdeg,dendeg,nit,srv,eva,pv);
+          (solvec,idx,nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
           put_line("The solution series :");
           QuadDobl_Dense_Series_Vectors_io.put(srv);

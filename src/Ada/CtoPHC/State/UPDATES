@@ -1,3 +1,6 @@
+Mon 5 Jun 2017 : adjusted use_series.adb to work with indices which are
+  different from the last coordinate.
+
 Sun 4 Jun 2017 : fixed bugs in use_series.adb for double double and
   the quad double precision.
 
