@@ -148,8 +148,8 @@ functions in the module schubert
 .. automodule:: schubert
    :members:
 
-Newton polytopes and monomial maps
-==================================
+Newton polytopes, monomial maps, and power series
+=================================================
 
 The Newton polytope of a polynomial is spanned by the exponents 
 of monomials which occur with nonzero coefficient in the polynomial.
@@ -180,6 +180,9 @@ The solution set of a binomial system is a set of monomial maps.
 
 functions in the module series
 ------------------------------
+
+Newton's method over the field of truncated power series
+computes series expansions for solution curves.
 
 .. automodule:: series
    :members:
