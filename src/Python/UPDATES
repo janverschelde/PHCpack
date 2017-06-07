@@ -1,3 +1,6 @@
+Wed 7 Jun 2017 : updated files, setup.py, __init__.py, and conf.py in
+  the folders PHCpy2 and PHCpy3 to prepare release 0.6.7.
+
 Sun 4 Jun 2017 : added functions to the series module for Python 3,
   to compute the Pade approximants for the regular case.
   Fixed the precision in the example test for Pade approximants.
