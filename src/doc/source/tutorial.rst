@@ -4,7 +4,7 @@ Tutorial
 
 This chapter provides a short tutorial,
 mainly for use at the command line.
-Interfaces for Maple, MATLAB (Octave), Sage, and Python 
+Interfaces for Maple, MATLAB (Octave), SageMath, and Python 
 provide a scripting environment.
 
 Input formats
@@ -81,10 +81,10 @@ polynomials.  This procedure sets up the input file for phc, calls
 the blackbox solver and returns the list of approximate solutions.
 This list is returned in Maple format.
 
-.. index:: Octave, MATLAB, Sage, Macaulay2, Maple
+.. index:: Octave, MATLAB, SageMath, Macaulay2, Maple
 
 Other interfaces are PHClab (for Octave and MATLAB),
-phc.py (for Sage), and PHCpack.m2 (for Macaulay 2).
+phc.py (for SageMath), and PHCpack.m2 (for Macaulay 2).
 These interfaces require only the executable phc to be present
 in some directory contained in the execution path.
 Interfaces for C and C++ programmers require the compilation
@@ -105,6 +105,10 @@ The interfaces PHCpack.m2, PHCmaple, PHClab, shown to the right
 of the antidiagonal require only the executable version phc.
 The other interfaces PHClib, PHCmpi, and phcpy are tied
 to the source code.
+
+The phc.py is an optional package, available in the distribution
+of SageMath.  Another, perhaps more natural interface to SageMath,
+is to extend the Python interpreter of SageMath with phcpy.
 
 Calling the blackbox solver
 ===========================
