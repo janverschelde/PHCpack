@@ -1515,6 +1515,10 @@ ts_use_sweep:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_use_sweep.adb \
               -o $(BIN)/ts_use_sweep
 
+ts_runtrack:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_runtrack.adb \
+              -o $(BIN)/ts_runtrack
+
 # files in feedback :
 
 lib.a:$(PHCAda)/../Feedback/*.c $(PHCAda)/../Feedback/*.h

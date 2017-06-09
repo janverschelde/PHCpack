@@ -1353,7 +1353,7 @@ test_state: ts_filman ts_solcon ts_use_solcon ts_solpool ts_use_solpool \
             ts_syscon ts_use_syscon ts_syspool ts_use_syspool \
             ts_celcon ts_use_celcon ts_pirhom ts_use_c2pieri ts_c2phc \
             ts_c2str ts_use_c2phc ts_use_c2fac ts_unisolve ts_use_giftwrap \
-            ts_giftwcon ts_use_sweep
+            ts_giftwcon ts_use_sweep ts_runtrack
 
 ts_filman:
 	make -f $(MAKEFILE) ts_filman
@@ -1417,6 +1417,9 @@ ts_giftwcon:
 
 ts_use_sweep:
 	make -f $(MAKEFILE) ts_use_sweep
+
+ts_runtrack:
+	make -f $(MAKEFILE) ts_runtrack
 
 # files in feedback :
 
