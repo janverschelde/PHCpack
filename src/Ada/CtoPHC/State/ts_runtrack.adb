@@ -7,6 +7,7 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_System_and_Solutions_io;
+with Standard_Solutions_Container;
 with PHCpack_Operations;
 
 procedure ts_runtrack is
@@ -20,11 +21,18 @@ procedure ts_runtrack is
   -- DESCRIPTION :
   --   Tracks all paths starting at the solutions
   --   stored as start solutions.
+  --   The solutions container will contain all solutions.
+  --   Solutions are appended directly after the computation.
+  --   There is no root postprocessing stage.
+
+  -- REQUIRED :
+  --   The data in PHCpack_Operations have been initialized with
+  --   a target system, start system with start solutions,
+  --   in double precision.
     
     use Standard_Complex_Solutions;
  
     sols,tmp : Solution_List;
-    ls : Link_to_Solution;
     len : double_float;
     nbstep,nbfail,nbiter,nbsyst : natural32;
     crash : boolean;
@@ -32,16 +40,24 @@ procedure ts_runtrack is
 
   begin
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
+    Standard_Solutions_Container.Clear;
     tmp := sols;
     while not Is_Null(tmp) loop
-      ls := Head_Of(tmp);
-      PHCpack_Operations.Silent_Path_Tracker
-        (ls,len,nbstep,nbfail,nbiter,nbsyst,crash);
-      cnt := cnt + 1;
-      put("Solution "); put(cnt,1); put_line(" :");
-      put_vector(ls.v);
+      declare
+        ls : constant Link_to_Solution := Head_Of(tmp);
+      begin
+        PHCpack_Operations.Silent_Path_Tracker
+          (ls,len,nbstep,nbfail,nbiter,nbsyst,crash);
+        cnt := cnt + 1;
+        put("Solution "); put(cnt,1); put_line(" :");
+        put_vector(ls.v);
+        Standard_Solutions_Container.Append(ls);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
+    put("Number of solutions in the solution container : ");
+    put(Standard_Solutions_Container.Length,1);
+    new_line;
   end Standard_Track_Paths;
 
   procedure Main is
