@@ -1,3 +1,6 @@
+Thu 8 Jun 2017 : new ts_runtrack.adb to develop path trackers which
+  immediately allow to check the progress of the trackers.
+
 Mon 5 Jun 2017 : adjusted use_series.adb to work with indices which are
   different from the last coordinate.
 

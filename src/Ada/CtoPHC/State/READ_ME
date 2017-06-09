@@ -1,4 +1,4 @@
-Calling PHCpack from C as a state machine in PHCv2.4.38
+Calling PHCpack from C as a state machine in PHCv2.4.39
 
 This directory was created in release 2.3 as subdirectory to CtoPHC.
 The idea for using PHCpack as a state machine originated from the need
