@@ -94,6 +94,9 @@ parameter_homotopy_state         : definition of parameter indices
 use_sweep                        : C interface for sweep homotopy
 ts_use_sweep                     : test on use_sweep
 ------------------------------------------------------------------------------
+crude_path_trackers              : path trackers without postprocessing
+ts_runtrack                      : calls the crude path trackers
+------------------------------------------------------------------------------
 use_series                       : power series Newton method
 ------------------------------------------------------------------------------
 ts_c2phc.c                       : C routine calls the Ada gateway to PHCpack
