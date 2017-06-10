@@ -1,3 +1,6 @@
+Sat 10 Jun 2017 : extended jump_track with functions to access the crude
+  path trackers, tested in lib_track.
+
 Sat 3 Jun 2017 : fixed a newline in phcpy2c2.c and prepared phcpy2c3.c
   for the python 3 extension module.
 

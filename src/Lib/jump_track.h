@@ -48,8 +48,8 @@ int read_named_linear_product_start_system ( int n, char *s );
  *   The appropriate data structures in PHCpack are initialized. */
 
 int silent_path_tracker
-           ( int n, int *m, double *c,
-             int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
 /*
  * DESCRIPTION :
  *   Tracks one path using a silent path tracker,
@@ -71,8 +71,8 @@ int silent_path_tracker
  *   nbsyst  #linear systems solved. */
 
 int silent_dobldobl_path_tracker
-           ( int n, int *m, double *c,
-             int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
 /*
  * DESCRIPTION :
  *   Tracks one path using a silent path tracker,
@@ -94,8 +94,8 @@ int silent_dobldobl_path_tracker
  *   nbsyst  #linear systems solved. */
 
 int silent_quaddobl_path_tracker
-           ( int n, int *m, double *c,
-             int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
 /*
  * DESCRIPTION :
  *   Tracks one path using a silent path tracker,
@@ -117,8 +117,8 @@ int silent_quaddobl_path_tracker
  *   nbsyst  #linear systems solved. */
 
 int reporting_path_tracker
-           ( int n, int *m, double *c,
-             int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
 /*
  * DESCRIPTION :
  *   Tracks one path, writing extra information while path tracking.
@@ -139,8 +139,8 @@ int reporting_path_tracker
  *   nbsyst  #linear systems solved. */
 
 int reporting_dobldobl_path_tracker
-           ( int n, int *m, double *c,
-             int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
 /*
  * DESCRIPTION :
  *   Tracks one path, writing extra information while path tracking,
@@ -162,8 +162,8 @@ int reporting_dobldobl_path_tracker
  *   nbsyst  #linear systems solved. */
 
 int reporting_quaddobl_path_tracker
-           ( int n, int *m, double *c,
-             int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst );
 /*
  * DESCRIPTION :
  *   Tracks one path, writing extra information while path tracking,
@@ -185,8 +185,8 @@ int reporting_quaddobl_path_tracker
  *   nbsyst  #linear systems solved. */
 
 int write_next_solution_with_diagnostics
-       ( int *k, int n, int m, double *sol,
-         int nbstep, int nbfail, int nbiter, int nbsyst );
+ ( int *k, int n, int m, double *sol,
+   int nbstep, int nbfail, int nbiter, int nbsyst );
 /*
  * DESCRIPTION :
  *   The next solution is written to file, along with statistics
@@ -208,8 +208,8 @@ int write_next_solution_with_diagnostics
  *   k         updated counter on number of solutions written to file. */
 
 int write_next_dobldobl_solution_with_diagnostics
-       ( int *k, int n, int m, double *sol,
-         int nbstep, int nbfail, int nbiter, int nbsyst );
+ ( int *k, int n, int m, double *sol,
+   int nbstep, int nbfail, int nbiter, int nbsyst );
 /*
  * DESCRIPTION :
  *   The next solution is written to file, along with statistics
@@ -231,8 +231,8 @@ int write_next_dobldobl_solution_with_diagnostics
  *   k         updated counter on number of solutions written to file. */
 
 int write_next_quaddobl_solution_with_diagnostics
-       ( int *k, int n, int m, double *sol,
-         int nbstep, int nbfail, int nbiter, int nbsyst );
+ ( int *k, int n, int m, double *sol,
+   int nbstep, int nbfail, int nbiter, int nbsyst );
 /*
  * DESCRIPTION :
  *   The next solution is written to file, along with statistics
@@ -252,5 +252,47 @@ int write_next_quaddobl_solution_with_diagnostics
  *
  * ON RETURN :
  *   k         updated counter on number of solutions written to file. */
+
+int standard_crude_tracker ( int verbose );
+/*
+ * DESCRIPTION :
+ *   A crude tracker appends the end point of a path directly to
+ *   the solutions container, without refinement or postprocessing.
+ *
+ * REQUIRED :
+ *   The target system, start system, and start solutions in standard
+ *   double precision have been initialized in the containers.
+ *
+ * ON ENTRY :
+ *   verbose  if 1, then the solution vectors are written to screen,
+ *            otherwise, the crude tracker remains mute. */
+
+int dobldobl_crude_tracker ( int verbose );
+/*
+ * DESCRIPTION :
+ *   A crude tracker appends the end point of a path directly to
+ *   the solutions container, without refinement or postprocessing.
+ *
+ * REQUIRED :
+ *   The target system, start system, and start solutions in double
+ *   double precision have been initialized in the containers.
+ *
+ * ON ENTRY :
+ *   verbose  if 1, then the solution vectors are written to screen,
+ *            otherwise, the crude tracker remains mute. */
+
+int quaddobl_crude_tracker ( int verbose );
+/*
+ * DESCRIPTION :
+ *   A crude tracker appends the end point of a path directly to
+ *   the solutions container, without refinement or postprocessing.
+ *
+ * REQUIRED :
+ *   The target system, start system, and start solutions in quad
+ *   double precision have been initialized in the containers.
+ *
+ * ON ENTRY :
+ *   verbose  if 1, then the solution vectors are written to screen,
+ *            otherwise, the crude tracker remains mute. */
 
 #endif

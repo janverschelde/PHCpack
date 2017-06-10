@@ -154,6 +154,27 @@ int remove_last_slack_variable ( void );
  *   This operation is typically done before moving to
  *   the next level down in a cascade. */
 
+int test_standard_crude_tracker ( int verbose );
+/*
+ * DESCRIPTION :
+ *   Tests the crude path tracker in standard double precision. */
+
+int test_dobldobl_crude_tracker ( int verbose );
+/*
+ * DESCRIPTION :
+ *   Tests the crude path tracker in double double precision. */
+
+int test_quaddobl_crude_tracker ( int verbose );
+/*
+ * DESCRIPTION :
+ *   Tests the crude path tracker in quad double precision. */
+
+int test_crude_trackers ( int verbose );
+/*
+ * DESCRIPTION :
+ *   Prompts the precision and then calls the crude path trackers
+ *   in double, double double, or quad double precision. */
+
 int main ( int argc, char *argv[] )
 {
    int fail,kind,monitor,n1,n2,a,b,d1,d2,cd;
@@ -164,6 +185,11 @@ int main ( int argc, char *argv[] )
 
    ask_menu_selection(&kind,&monitor);
 
+   if(kind == 9)
+   {
+      fail = test_crude_trackers(monitor);
+      adafinal(); return fail;
+   }
    if(kind == 6)
    {
       fail = witness_set_for_hypersurface();
@@ -221,8 +247,9 @@ void ask_menu_selection ( int *kind, int *monitor )
    printf("  5. diagonal homotopy to start a cascade;\n");
    printf("  6. compute witness set for a hypersurface;\n");
    printf("  7. collapse extrinsic diagonal of a witness set;\n");
-   printf("  8. remove the last slack variable of a witness set.\n");
-   printf("Type 1, 2, 3, 4, 5, 6, 7, or 8 to select : ");
+   printf("  8. remove the last slack variable of a witness set;\n");
+   printf("  9. test the crude path trackers.\n");
+   printf("Type 1, 2, 3, 4, 5, 6, 7, 8, or 9 to select : ");
    scanf("%d",kind);
    if(*kind < 6)
    {
@@ -235,6 +262,7 @@ void ask_menu_selection ( int *kind, int *monitor )
          *monitor = 0;
       scanf("%c",&ans);  /* skip current new line symbol */
    }
+   if(*kind == 9) *monitor = 1; /* verbose mode default when testing */
 }
 
 int read_file_names ( int kind )
@@ -604,4 +632,80 @@ int remove_last_slack_variable ( void )
    printf("\nThe current number of slack variables : %d\n",dim);
    fail = remove_last_slack(dim);
    fail = write_witness_set_to_file(m2,outfile);
+}
+
+int test_standard_crude_tracker ( int verbose )
+{
+   int fail;
+
+   printf("\ntesting the crude trackers in double precision ...\n");
+
+   fail = read_standard_target_system();
+   fail = copy_container_to_target_system();
+   fail = read_standard_start_system();
+   fail = copy_container_to_start_system();
+   fail = copy_container_to_start_solutions();
+   fail = create_homotopy();
+   fail = standard_crude_tracker(verbose);
+
+   return 0;
+}
+
+int test_dobldobl_crude_tracker ( int verbose )
+{
+   int fail;
+
+   printf("\ntesting the crude trackers in double double precision ...\n");
+
+   fail = read_dobldobl_target_system();
+   fail = copy_dobldobl_container_to_target_system();
+   fail = read_dobldobl_start_system();
+   fail = copy_dobldobl_container_to_start_system();
+   fail = copy_dobldobl_container_to_start_solutions();
+   fail = create_dobldobl_homotopy();
+   fail = dobldobl_crude_tracker(verbose);
+
+   return 0;
+}
+
+int test_quaddobl_crude_tracker ( int verbose )
+{
+   int fail;
+
+   printf("\ntesting the crude trackers in quad double precision ...\n");
+
+   fail = read_quaddobl_target_system();
+   fail = copy_quaddobl_container_to_target_system();
+   fail = read_quaddobl_start_system();
+   fail = copy_quaddobl_container_to_start_system();
+   fail = copy_quaddobl_container_to_start_solutions();
+   fail = create_quaddobl_homotopy();
+   fail = quaddobl_crude_tracker(verbose);
+
+   return 0;
+}
+
+int test_crude_trackers ( int verbose )
+{
+   int precision = 0;
+   char nlch;
+
+   printf("\nMENU for the working precision :\n");
+   printf("  0. double precision,\n");
+   printf("  1. double double precision, or\n");
+   printf("  2. quad double precision.\n");
+   printf("Type 0, 1, or 2 to select the precision : ");
+   scanf("%d",&precision);
+   scanf("%c",&nlch); /* swallow new line character */
+
+   if(precision == 0)
+      return test_standard_crude_tracker(verbose);
+   else if(precision == 1)
+      return test_dobldobl_crude_tracker(verbose);
+   else if(precision == 2)
+      return test_quaddobl_crude_tracker(verbose);
+   else
+      printf("Invalid value for the precision.");
+
+   return 0;
 }

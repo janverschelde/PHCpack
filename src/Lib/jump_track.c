@@ -61,8 +61,8 @@ int read_named_linear_product_start_system ( int n, char *s )
 }
 
 int silent_path_tracker
-      ( int n, int *m, double *c,
-        int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
 {
    int a[4],b[2],fail;
    b[0] = n; b[1] = *m;
@@ -74,8 +74,8 @@ int silent_path_tracker
 }
 
 int silent_dobldobl_path_tracker
-      ( int n, int *m, double *c,
-        int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
 {
    int a[4],b[2],fail;
    b[0] = n; b[1] = *m;
@@ -87,8 +87,8 @@ int silent_dobldobl_path_tracker
 }
 
 int silent_quaddobl_path_tracker
-      ( int n, int *m, double *c,
-        int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
 {
    int a[4],b[2],fail;
    b[0] = n; b[1] = *m;
@@ -100,8 +100,8 @@ int silent_quaddobl_path_tracker
 }
 
 int reporting_path_tracker
-      ( int n, int *m, double *c,
-        int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
 {
    int a[4],b[2],fail;
    b[0] = n; b[1] = *m;
@@ -113,8 +113,8 @@ int reporting_path_tracker
 }
 
 int reporting_dobldobl_path_tracker
-      ( int n, int *m, double *c,
-        int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
 {
    int a[4],b[2],fail;
    b[0] = n; b[1] = *m;
@@ -126,8 +126,8 @@ int reporting_dobldobl_path_tracker
 }
 
 int reporting_quaddobl_path_tracker
-      ( int n, int *m, double *c,
-        int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
+ ( int n, int *m, double *c,
+   int *nbstep, int *nbfail, int *nbiter, int *nbsyst )
 {
    int a[4],b[2],fail;
    b[0] = n; b[1] = *m;
@@ -139,8 +139,8 @@ int reporting_quaddobl_path_tracker
 }
 
 int write_next_solution_with_diagnostics
-       ( int *k, int n, int m, double *sol,
-         int nbstep, int nbfail, int nbiter, int nbsyst )
+ ( int *k, int n, int m, double *sol,
+   int nbstep, int nbfail, int nbiter, int nbsyst )
 {
    int a[5],b[2],fail;
 
@@ -153,8 +153,8 @@ int write_next_solution_with_diagnostics
 }
 
 int write_next_dobldobl_solution_with_diagnostics
-       ( int *k, int n, int m, double *sol,
-         int nbstep, int nbfail, int nbiter, int nbsyst )
+ ( int *k, int n, int m, double *sol,
+   int nbstep, int nbfail, int nbiter, int nbsyst )
 {
    int a[5],b[2],fail;
 
@@ -167,8 +167,8 @@ int write_next_dobldobl_solution_with_diagnostics
 }
 
 int write_next_quaddobl_solution_with_diagnostics
-       ( int *k, int n, int m, double *sol,
-         int nbstep, int nbfail, int nbiter, int nbsyst )
+ ( int *k, int n, int m, double *sol,
+   int nbstep, int nbfail, int nbiter, int nbsyst )
 {
    int a[5],b[2],fail;
 
@@ -177,5 +177,35 @@ int write_next_quaddobl_solution_with_diagnostics
    a[4] = *k;
    fail = _ada_use_c2phc(187,a,b,sol);
    if(fail == 0) (*k)++;
+   return fail;
+}
+
+int standard_crude_tracker ( int verbose )
+{
+   int fail,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(622,&verbose,b,c);
+
+   return fail;
+}
+
+int dobldobl_crude_tracker ( int verbose )
+{
+   int fail,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(623,&verbose,b,c);
+
+   return fail;
+}
+
+int quaddobl_crude_tracker ( int verbose )
+{
+   int fail,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(624,&verbose,b,c);
+
    return fail;
 }
