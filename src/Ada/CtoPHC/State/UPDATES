@@ -1,3 +1,6 @@
+Sat 10 Jun 2017 : added job codes for the crude path trackers in use_track
+  and use_c2phc.
+
 Fri 9 Jun 2017 : updated ts_runtrack.adb with append to solutions container.
   New package crude_path_trackers, with code factored out from ts_runtrack.
 

@@ -1594,10 +1594,6 @@ function use_c2phc ( job : integer32;
 --                 in b are the brackets, as many integers as the dimension k
 --                 of the solution planes times c, the number of conditions;
 --                 in c are the characters of the name of the output file.
-
--- ON RETURN :
---   0 if the operation was successful, otherwise something went wrong,
---   e.g.: job not in the right range.
 -- 
 -- addition operations for diagonal homotopies :
 --
@@ -1817,6 +1813,17 @@ function use_c2phc ( job : integer32;
 --                 with a gamma constant given by two doubles in c.
 --         = 524 : clear the homotopy.
 --
+-- Launching crude path trackers, for an artificial parameter homotopy,
+-- with defined target system, start system, and start solutions,
+-- in double, double double, and quad double precision :
+--
+--   job   = 622 : crude path trackers in double precision,
+--                 if a[0] = 1, then verbose, otherwise mute;
+--         = 623 : crude path trackers in double double precision,
+--                 if a[0] = 1, then verbose, otherwise mute;
+--         = 624 : crude path trackers in quad double precision,
+--                 if a[0] = 1, then verbose, otherwise mute.
+--
 -- homotopy membership test on point, given a witness set :
 --
 --   job   = 537 : runs the membership test in standard double precision,
@@ -1870,7 +1877,6 @@ function use_c2phc ( job : integer32;
 --                 0 if failure, or 1 if success,
 --                 on return in b is the result of the membership test:
 --                 0 if failure, or 1 if success.
---
 --
 -- operations on reading systems and solution with given file name :
 --

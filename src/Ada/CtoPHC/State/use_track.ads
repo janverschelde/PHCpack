@@ -202,6 +202,17 @@ function use_track ( job : integer32;
 --                  with a gamma constant given by two doubles in c.
 --          =  54 : clear the homotopy.
 --
+-- Launching crude path trackers, for an artificial parameter homotopy,
+-- with defined target system, start system, and start solutions,
+-- in double, double double, and quad double precision :
+--
+--   job    =  55 : crude path trackers in double precision,
+--                  if a[0] = 1, then verbose, otherwise mute;
+--   job    =  56 : crude path trackers in double double precision,
+--                  if a[0] = 1, then verbose, otherwise mute;
+--   job    =  57 : crude path trackers in quad double precision,
+--                  if a[0] = 1, then verbose, otherwise mute.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   e.g.: job not in the right range.

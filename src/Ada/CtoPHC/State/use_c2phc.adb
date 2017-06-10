@@ -2523,6 +2523,10 @@ function use_c2phc ( job : integer32;
       when 609 => return use_syspool(17,a,b,c); -- k-th quaddobl system
      -- run the sweep homotopy :
       when 610..621 => return use_sweep(job-610,a,b,c);
+     -- crude path trackers :
+      when 622 => return use_track(55,a,b,c); -- double crude tracker
+      when 623 => return use_track(56,a,b,c); -- double double crude tracker
+      when 624 => return use_track(57,a,b,c); -- quad double crude tracker
      -- make standard monodromy breakup verbose
       when 630 => return use_c2fac(30,a,b,c);
      -- monodromy breakup in double double precision :

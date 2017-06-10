@@ -54,6 +54,7 @@ with QuadDobl_PolySys_Container;
 with QuadDobl_Solutions_Container;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
+with Crude_Path_Trackers;
 
 function use_track ( job : integer32;
                      a : C_intarrs.Pointer;
@@ -646,11 +647,16 @@ function use_track ( job : integer32;
     cd : natural32;
 
   begin
+   -- put("  n1 = "); put(n1,1);
+   -- put("  n2 = "); put(n2,1);
+   -- put("  a = "); put(a_d,1);
+   -- put("  b = "); put(b_d,1); new_line;
     if a_d >= b_d then
       cd := Extrinsic_Diagonal_Homotopies.Cascade_Dimension(n1,n2,a_d,b_d);
     else
       cd := Extrinsic_Diagonal_Homotopies.Cascade_Dimension(n2,n1,b_d,a_d);
     end if;
+   -- put("cascade dimension cd = "); put(cd,1); new_line;
     Assign(integer32(cd),a);
     return 0;
   exception
@@ -714,8 +720,10 @@ function use_track ( job : integer32;
   begin
    -- put("#equations in systems container : "); put(lp'last,1); new_line;
    -- put("#solutions in solutions container : ");
-   -- put(Length_Of(sols),1); new_line;
+   -- put(Standard_Complex_Solutions.Length_Of(sols),1); new_line;
     Standard_Complex_Solutions.Copy(sols,clps);
+   -- put("Collapse system with k = ");
+   -- put(k,1); put(" and d = "); put(d,1); new_line;
     Extrinsic_Diagonal_Solvers.Collapse_System(lp.all,clps,k,d,cp);
     Standard_PolySys_Container.Clear;
     Standard_PolySys_Container.Initialize(cp.all);
@@ -1053,6 +1061,63 @@ function use_track ( job : integer32;
       return 230;
   end Job42;
 
+  function Job55 return integer32 is -- crude tracker in double precision
+
+  -- DESCRIPTION :
+  --   Gets the flag for the verbose mode from the first parameter a[0]
+  --   and launches the crude path tracker in double precision.
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    val : constant natural32 := natural32(v_a(v_a'first));
+    verbose : constant boolean := (val = 1);
+
+  begin
+    Crude_Path_Trackers.Standard_Track_Paths(verbose);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when launching crude tracker in double precision.");
+      raise;
+  end Job55;
+
+  function Job56 return integer32 is -- crude tracker with double doubles
+
+  -- DESCRIPTION :
+  --   Gets the flag for the verbose mode from the first parameter a[0]
+  --   and launches the crude path tracker in double double precision.
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    val : constant natural32 := natural32(v_a(v_a'first));
+    verbose : constant boolean := (val = 1);
+
+  begin
+    Crude_Path_Trackers.DoblDobl_Track_Paths(verbose);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when launching crude tracker with double doubles.");
+      raise;
+  end Job56;
+
+  function Job57 return integer32 is -- crude tracker with quad doubles
+
+  -- DESCRIPTION :
+  --   Gets the flag for the verbose mode from the first parameter a[0]
+  --   and launches the crude path tracker in double double precision.
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    val : constant natural32 := natural32(v_a(v_a'first));
+    verbose : constant boolean := (val = 1);
+
+  begin
+    Crude_Path_Trackers.QuadDobl_Track_Paths(verbose);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when launching crude tracker with double doubles.");
+      raise;
+  end Job57;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -1115,6 +1180,10 @@ function use_track ( job : integer32;
       when 52 => PHCpack_Operations.Create_Multprec_Homotopy; return 0;
       when 53 => return Job53; -- multiprecision homotopy with given gamma
       when 54 => Multprec_Homotopy.Clear; return 0;
+     -- crude path trackers
+      when 55 => return Job55; -- crude tracker in double precision
+      when 56 => return Job56; -- crude tracker in double double precision
+      when 57 => return Job57; -- crude tracker in quad double precision
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;
