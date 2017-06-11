@@ -493,6 +493,56 @@ static PyObject *py2c_solve_by_multprec_homotopy_continuation
  *   On input is one integer: the number of decimal places in the precision.
  *   On return is the failure code, which is zero when all went well. */
 
+/* Wrapping of crude path trackers of the jumpstart library starts here. */
+
+static PyObject *py2c_standard_crude_tracker
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   A crude tracker appends the end point of a path directly to
+ *   the solutions container, without refinement or postprocessing.
+ *   Tracking happens in standard double precision.
+ *   On entry is the verbose parameter which is 1 or 0.  
+ *   If 1, then the solution vectors are written to screen, otherwise
+ *   the crude tracker stays mute.
+ *   On return is the failure code, which is zero when all went well.
+ *
+ * REQUIRED :
+ *   The target system, start system, and start solutions in standard
+ *   double precision have been initialized in the containers. */
+
+static PyObject *py2c_dobldobl_crude_tracker
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   A crude tracker appends the end point of a path directly to
+ *   the solutions container, without refinement or postprocessing.
+ *   Tracking happens in double double precision.
+ *   On entry is the verbose parameter which is 1 or 0.  
+ *   If 1, then the solution vectors are written to screen, otherwise
+ *   the crude tracker stays mute.
+ *   On return is the failure code, which is zero when all went well.
+ *
+ * REQUIRED :
+ *   The target system, start system, and start solutions in double
+ *   double precision have been initialized in the containers. */
+
+static PyObject *py2c_quaddobl_crude_tracker
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   A crude tracker appends the end point of a path directly to
+ *   the solutions container, without refinement or postprocessing.
+ *   Tracking happens in quad double precision.
+ *   On entry is the verbose parameter which is 1 or 0.  
+ *   If 1, then the solution vectors are written to screen, otherwise
+ *   the crude tracker stays mute.
+ *   On return is the failure code, which is zero when all went well.
+ *
+ * REQUIRED :
+ *   The target system, start system, and start solutions in quad
+ *   double precision have been initialized in the containers. */
+
 /* The wrapping of copying solutions from and to containers starts here. */
 
 static PyObject *py2c_copy_standard_target_solutions_to_container

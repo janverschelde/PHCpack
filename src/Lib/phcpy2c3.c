@@ -22,6 +22,7 @@
 #include "witset.h"
 #include "mapcon.h"
 #include "series.h"
+#include "jump_track.h"
 #include "next_track.h"
 // #include "lib2path.h"
 #include "structmember.h"
@@ -812,7 +813,45 @@ static PyObject *py2c_solve_by_multprec_homotopy_continuation
    return Py_BuildValue("i",fail);
 }
 
-/* The wrrapping of copying solutions from and to containers starts here. */
+/* Wrapping of crude path trackers of the jumpstart library starts here. */
+
+static PyObject *py2c_standard_crude_tracker
+ ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;   
+   fail = standard_crude_tracker(verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_crude_tracker
+ ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;   
+   fail = dobldobl_crude_tracker(verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_crude_tracker
+ ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;   
+   fail = quaddobl_crude_tracker(verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+/* The wrapping of copying solutions from and to containers starts here. */
 
 static PyObject *py2c_copy_standard_target_solutions_to_container
  ( PyObject *self, PyObject *args )
@@ -7493,6 +7532,12 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_solve_by_multprec_homotopy_continuation",
      py2c_solve_by_multprec_homotopy_continuation, METH_VARARGS, 
     "Tracks the paths defined by the homotopy in arbitrary multiprecision.\n On input is one integer: the number of decimal places in the precision.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_standard_crude_tracker", py2c_standard_crude_tracker, METH_VARARGS,
+    "A crude tracker appends the end point of a path directly to\n the solutions container, without refinement or postprocessing.\n Tracking happens in standard double precision.\n On entry is the verbose parameter which is 1 or 0.\n  If 1, then the solution vectors are written to screen, otherwise\n the crude tracker stays mute.\n On return is the failure code, which is zero when all went well.\n The requirement is that\n the target system, start system, and start solutions in standard\n double precision have been initialized in the containers."},
+   {"py2c_dobldobl_crude_tracker", py2c_dobldobl_crude_tracker, METH_VARARGS,
+    "A crude tracker appends the end point of a path directly to\n the solutions container, without refinement or postprocessing.\n Tracking happens in double double precision.\n On entry is the verbose parameter which is 1 or 0.\n  If 1, then the solution vectors are written to screen, otherwise\n the crude tracker stays mute.\n On return is the failure code, which is zero when all went well.\n The requirement is that\n the target system, start system, and start solutions in double\n double precision have been initialized in the containers."},
+   {"py2c_quaddobl_crude_tracker", py2c_quaddobl_crude_tracker, METH_VARARGS,
+    "A crude tracker appends the end point of a path directly to\n the solutions container, without refinement or postprocessing.\n Tracking happens in quad double precision.\n On entry is the verbose parameter which is 1 or 0.\n  If 1, then the solution vectors are written to screen, otherwise\n the crude tracker stays mute.\n On return is the failure code, which is zero when all went well.\n The requirement is that\n the target system, start system, and start solutions in quad\n double precision have been initialized in the containers."},
    {"py2c_copy_standard_target_solutions_to_container",
      py2c_copy_standard_target_solutions_to_container, METH_VARARGS,
     "Copies the target solutions in standard double precision to the\n container for solutions in standard double precision."},
