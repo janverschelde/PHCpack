@@ -1,3 +1,6 @@
+Sun 11 Jun 2017 : added functions for the crude trackers to the trackers
+  module of phcpy in PHCpy2 and PHCpy3.
+
 Wed 7 Jun 2017 : updated files, setup.py, __init__.py, and conf.py in
   the folders PHCpy2 and PHCpy3 to prepare release 0.6.7.
 

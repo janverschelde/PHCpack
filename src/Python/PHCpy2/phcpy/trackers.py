@@ -864,6 +864,126 @@ def next_varbprec_solution(wanted, maxprec, maxit, verbose):
     sol = py2c_next_varbprec_solution(wanted, maxprec, maxit, verbose)
     return sol
 
+def standard_double_crude_track(target, start, sols, gamma=0, verbose=True):
+    r"""
+    A crude path tracker does not refine or postprocess the solutions
+    at the end of the paths, computed in standard double precision.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    By default, a random *gamma* constant is generated,
+    otherwise *gamma* must be a nonzero complex constant.
+    If *verbose*, then the solution vectors are written to screen.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_start_solutions
+    from phcpy.phcpy2c2 import py2c_create_standard_homotopy
+    from phcpy.phcpy2c2 import py2c_create_standard_homotopy_with_gamma
+    from phcpy.phcpy2c2 import py2c_standard_crude_tracker
+    from phcpy.phcpy2c2 import py2c_solcon_clear_standard_solutions
+    from phcpy.interface import store_standard_system
+    from phcpy.interface import store_standard_solutions
+    from phcpy.interface import load_standard_solutions
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(start)
+    store_standard_system(target, nbvar=dim)
+    py2c_copy_standard_container_to_target_system()
+    store_standard_system(start, nbvar=dim)
+    py2c_copy_standard_container_to_start_system()
+    if(gamma == 0):
+        py2c_create_standard_homotopy()
+    else:
+        py2c_create_standard_homotopy_with_gamma(gamma.real, gamma.imag)
+    store_standard_solutions(dim, sols)
+    py2c_copy_standard_container_to_start_solutions()
+    py2c_standard_crude_tracker(int(verbose))
+    return load_standard_solutions()
+
+def double_double_crude_track(target, start, sols, gamma=0, verbose=True):
+    r"""
+    A crude path tracker does not refine or postprocess the solutions
+    at the end of the paths, computed in double double precision.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    By default, a random *gamma* constant is generated,
+    otherwise *gamma* must be a nonzero complex constant.
+    If *verbose*, then the solution vectors are written to screen.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_start_solutions
+    from phcpy.phcpy2c2 import py2c_create_dobldobl_homotopy
+    from phcpy.phcpy2c2 import py2c_create_dobldobl_homotopy_with_gamma
+    from phcpy.phcpy2c2 import py2c_dobldobl_crude_tracker
+    from phcpy.phcpy2c2 import py2c_solcon_clear_dobldobl_solutions
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.interface import store_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_solutions
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(start)
+    store_dobldobl_system(target, nbvar=dim)
+    py2c_copy_dobldobl_container_to_target_system()
+    store_dobldobl_system(start, nbvar=dim)
+    py2c_copy_dobldobl_container_to_start_system()
+    if(gamma == 0):
+        py2c_create_dobldobl_homotopy()
+    else:
+        py2c_create_dobldobl_homotopy_with_gamma(gamma.real, gamma.imag)
+    store_dobldobl_solutions(dim, sols)
+    py2c_copy_dobldobl_container_to_start_solutions()
+    py2c_dobldobl_crude_tracker(int(verbose))
+    return load_dobldobl_solutions()
+
+def quad_double_crude_track(target, start, sols, gamma=0, verbose=True):
+    r"""
+    A crude path tracker does not refine or postprocess the solutions
+    at the end of the paths, computed in quad double precision.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    By default, a random *gamma* constant is generated,
+    otherwise *gamma* must be a nonzero complex constant.
+    If *verbose*, then the solution vectors are written to screen.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_start_solutions
+    from phcpy.phcpy2c2 import py2c_create_quaddobl_homotopy
+    from phcpy.phcpy2c2 import py2c_create_quaddobl_homotopy_with_gamma
+    from phcpy.phcpy2c2 import py2c_quaddobl_crude_tracker
+    from phcpy.phcpy2c2 import py2c_solcon_clear_quaddobl_solutions
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.interface import store_quaddobl_solutions
+    from phcpy.interface import load_quaddobl_solutions
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(start)
+    store_quaddobl_system(target, nbvar=dim)
+    py2c_copy_quaddobl_container_to_target_system()
+    store_quaddobl_system(start, nbvar=dim)
+    py2c_copy_quaddobl_container_to_start_system()
+    if(gamma == 0):
+        py2c_create_quaddobl_homotopy()
+    else:
+        py2c_create_quaddobl_homotopy_with_gamma(gamma.real, gamma.imag)
+    store_quaddobl_solutions(dim, sols)
+    py2c_copy_quaddobl_container_to_start_solutions()
+    py2c_quaddobl_crude_tracker(int(verbose))
+    return load_quaddobl_solutions()
+
 def test_track(silent=True, precision='d', decimals=80):
     """
     Tests the path tracking on a small random system.
@@ -1080,6 +1200,25 @@ def test_ade_quad_double_track():
         sols = ade_tuned_quad_double_track(c3, c3q, c3qsols, pars)
     for sol in sols:
         print sol
+
+def test_crude_tracker(precision='d'):
+    """
+    Runs the crude path trackers.  Values for precision are 'd', 'dd', or
+    'qd', respectively for double, double double, or quad double precision.
+    """
+    from phcpy.families import noon
+    from phcpy.solver import random_linear_product_system as rlps
+    target = noon(5)
+    (start, startsols) = rlps(target)
+    if(precision == 'd'):
+        sols = standard_double_crude_track(target, start, startsols)
+    elif(precision == 'dd'):
+        sols = double_double_crude_track(target, start, startsols)
+    elif(precision == 'qd'):
+        sols = quad_double_crude_track(target, start, startsols)
+    else:
+        print 'Wrong value for the precision.'
+    print 'Number of solutions returned :', len(sols)
 
 def test():
     """
