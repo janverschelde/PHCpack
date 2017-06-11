@@ -2637,6 +2637,7 @@ phcpy2c2.so: lib2path.o parameter.o
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
@@ -2645,8 +2646,8 @@ phcpy2c2.so: lib2path.o parameter.o
 	gnatmake -c -static -O3 $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
-            witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
-            solcon.o product.o lists_and_strings.o celcon.o intcelcon.o \
+            solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
+            giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
             scalers.o numbtrop.o sweep.o schubert.o syspool.o series.o \
             parameter.o lib2path.o $(QD_LIB)/libqd.a \
                  /usr/lib/libc++.dylib \
@@ -2673,6 +2674,7 @@ sage_phcpy2c2.so: parameter.o lib2path.o
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
@@ -2681,8 +2683,8 @@ sage_phcpy2c2.so: parameter.o lib2path.o
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
-            witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
-            solcon.o product.o lists_and_strings.o celcon.o intcelcon.o \
+            solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
+            giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
             scalers.o numbtrop.o sweep.o schubert.o syspool.o series.o \
             parameter.o lib2path.o $(QD_LIB)/libqd.a \
                  /usr/lib/libc++.dylib \
@@ -2714,6 +2716,7 @@ phcpy2c3.so: parameter.o lib2path.o
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
@@ -2721,12 +2724,11 @@ phcpy2c3.so: parameter.o lib2path.o
                -I$(PYTHON36)/Include $(PHCLib)/phcpy2c3.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc
-	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o \
-            syscon.o solcon.o phcpack.o parameter.o lib2path.o \
-            witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
-            product.o lists_and_strings.o celcon.o intcelcon.o \
+	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
+            solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
+            giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
             scalers.o sweep.o numbtrop.o schubert.o syspool.o series.o \
-               $(QD_LIB)/libqd.a \
+            parameter.o lib2path.o $(QD_LIB)/libqd.a \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
                -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
