@@ -315,6 +315,11 @@ global optimization, and computational physics:
    Method**. *International Journal of Engineering Research &
    Technology (IJERT)* 2(8):1401-1411, 2013.
 
+#. Dmitry Batenkov:
+   **Accurate solution of near-colliding Prony systems via decimation
+   and homotopy continuation**.
+   *Theoretical Computer Science* 681:1-232, 2017.
+
 #. Daniel J. Bates and Frank Sottile:
    **Khovanskii-Rolle Continuation for Real Solutions**.
    *Foundations of Computational Mathematics* 11:563-587, 2011.
@@ -779,7 +784,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-96. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+97. Ali Baharev, Ferenc Domes, Arnold Neumaier:
     **A robust approach for finding all well-separated solutions of
     sparse systems of nonlinear equations**.
     *Numerical Algorithms*, pages 1-27, 2016 (online first).
@@ -846,7 +851,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-111. Bo Dong, Bo Yu, and Yan Yu:
+112. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -865,7 +870,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-114. B. Sturmfels:
+115. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
