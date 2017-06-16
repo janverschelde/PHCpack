@@ -9,32 +9,32 @@ function Symmetric_Randomize ( p : Laur_Sys; v,w : List_of_Permutations )
                              return Laur_Sys is
 
   res : Laur_Sys(p'range);
+
+  procedure Permute_and_Randomize ( t : in Term; index : integer32 ) is
+
+    tmpv,tmpw : List_of_Permutations;
+
+  begin
+    tmpv := v;  tmpw := w;
+    while not Is_Null(tmpv) loop
+      declare
+        permt : Term := Permutation(Head_Of(tmpv).all)*t;
+        indw : constant integer32 := Head_Of(tmpw)(index);
+      begin
+        if Coeff(res(indw),permt.dg) = Create(0.0)
+         then Add(res(indw),permt);
+        end if;
+        Clear(permt);
+      end;
+      tmpv := Tail_Of(tmpv); 
+      tmpw := Tail_Of(tmpw);
+    end loop;
+  end Permute_and_Randomize;
   
   procedure Symmetric_Randomize_Terms
               ( index : in integer32; py : in Poly ) is
 
     tpy : Term;
-
-    procedure Permute_and_Randomize ( t : in Term ) is
-
-      tmpv,tmpw : List_of_Permutations;
-
-    begin
-      tmpv := v;  tmpw := w;
-      while not Is_Null(tmpv) loop
-        declare
-          permt : Term := Permutation(Head_Of(tmpv).all)*t;
-          indw : constant integer32 := Head_Of(tmpw)(index);
-        begin
-          if Coeff(res(indw),permt.dg) = Create(0.0)
-           then Add(res(indw),permt);
-          end if;
-          Clear(permt);
-        end;
-        tmpv := Tail_Of(tmpv); 
-        tmpw := Tail_Of(tmpw);
-      end loop;
-    end Permute_and_Randomize;
 
     procedure Pick_Term ( t : in Term; cont : out boolean ) is
     begin
@@ -52,7 +52,7 @@ function Symmetric_Randomize ( p : Laur_Sys; v,w : List_of_Permutations )
     tpy.cf := Create(0.0);
     Pick_A_Term(py);
     if tpy.cf /= Create(0.0) then
-      Permute_and_Randomize(tpy);
+      Permute_and_Randomize(tpy,index);
       Clear(tpy);
     end if;
   end Symmetric_Randomize_Terms;

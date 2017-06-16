@@ -1,4 +1,4 @@
-Sat 11 Jun 2016 : removed '(0 is the default)' from the menu in mainsmvc.adb.
+Fri 16 Jun 2017 : changed symmetric_randomize.adb for GNAT GPL 2017 error.
 
 Thu 10 Dec 2015 : added time stamp to mainsmvc.adb.
 
