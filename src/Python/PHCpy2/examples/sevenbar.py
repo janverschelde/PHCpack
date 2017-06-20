@@ -2,6 +2,7 @@
 Setup of a moving sevenbar example with sympy.
 """
 from sympy import var
+from cmath import exp
 
 def symbolic_equations():
     """
@@ -27,13 +28,13 @@ def generic_problem(eqs):
     suitable for input to the solve of phcpy.
     """
     i = complex(0, 1)
-    subdict = {a0:0.7+.2*i, b0:0.6, c0:0.5-0.5*i, \
-        a1:0.7, a2:0.8, b2:0.6+0.5*i, a3:0.4, a4:0.6, \
-        a5:0.8, b5:0.4+0.3*i, a6:0.9}
+    subdict = {a0: 0.7 + 0.2*i, b0: 0.6, c0: 0.5 - 0.5*i, \
+        a1: 0.7, a2: 0.8, b2: 0.6 + 0.5*i, a3: 0.4, a4: 0.6, \
+        a5: 0.8, b5: 0.4 + 0.3*i, a6: 0.9}
     print subdict
-    conjugates = {a0:0.7-.2*i, b0:0.6, c0:0.5+0.5*i, \
-        a1:0.7, a2:0.8, b2:0.6-0.5*i, a3:0.4, a4:0.6, \
-        a5:0.8, b5:0.4-0.3*i, a6:0.9}
+    conjugates = {a0: 0.7 - 0.2*i, b0: 0.6, c0: 0.5 + 0.5*i, \
+        a1: 0.7, a2: 0.8, b2: 0.6 - 0.5*i, a3: 0.4, a4: 0.6, \
+        a5: 0.8, b5: 0.4 - 0.3*i, a6: 0.9}
     print conjugates
     result = []
     for equ in eqs:
@@ -41,6 +42,63 @@ def generic_problem(eqs):
         result.append(str(pol) + ';')
     for equ in eqs:
         pol = str(equ.subs(conjugates))
+        pol = pol.replace('t1', 't1**(-1)')
+        pol = pol.replace('t2', 't2**(-1)')
+        pol = pol.replace('t3', 't3**(-1)')
+        pol = pol.replace('t4', 't4**(-1)')
+        pol = pol.replace('t5', 't5**(-1)')
+        pol = pol.replace('t6', 't6**(-1)')
+        result.append(pol + ';')
+    return result
+
+def special_parameters():
+    """
+    Returns a dictionary with special values for the parameters
+    for the Assur7c in Roberts Cognate pattern.
+    Before calling this function, the symbolic_equations()
+    must have defined the variables for the parameters.
+    """
+    i = complex(0, 1)
+    # start with the independent parameters
+    result = {b0: 0.0, c0: 1.2, a2: 0.46, \
+        b2: -0.11 + 0.49*i, a5: 0.41}
+    theta4 = 0.6 + 0.8*i
+    theta3 = exp(1.8*i)
+    # add the derived parameters
+    result[a3] = result[a5]
+    beta = result[b2]/result[a2]
+    result[a0] = result[c0]/beta
+    result[b5] = result[a5]*beta
+    result[a4] = abs(result[b2])
+    result[a1] = abs(result[a0] + result[a3]*theta3 - result[a4]*theta4/beta)
+    result[a6] = abs(result[a4]*theta4 - result[b5]*theta3-result[c0])
+    return result
+
+def conjugates(dic):
+    """
+    Given on input a dictionary with variables as keys
+    and complex numbers as values.
+    Returns a dictionary with the same keys,
+    but with values replaced by complex conjugates.
+    """
+    result = {}
+    for key in dic.keys():
+        result[key] = dic[key].conjugate()
+    return result
+  
+def special_problem(eqs):
+    """
+    Given the symbolic equations in eqs,
+    replaces the parameters with special values.
+    """
+    pars = special_parameters()
+    conj = conjugates(pars)
+    result = []
+    for equ in eqs:
+        pol = equ.subs(pars)
+        result.append(str(pol) + ';')
+    for equ in eqs:
+        pol = str(equ.subs(conj))
         pol = pol.replace('t1', 't1**(-1)')
         pol = pol.replace('t2', 't2**(-1)')
         pol = pol.replace('t3', 't3**(-1)')
@@ -63,6 +121,12 @@ def main():
         print equ
     from phcpy.solver import solve
     sols = solve(generic)
+    for sol in sols:
+        print sol
+    special = special_problem(eqs)
+    for equ in special:
+        print equ
+    sols = solve(special)
     for sol in sols:
         print sol
    
