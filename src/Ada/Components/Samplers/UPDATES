@@ -1,3 +1,6 @@
+Wed 21 Jun 2017 : to planes_and_polynomials added representations of
+  hyperplanes as Laurent polynomial types.
+
 Tue 20 Jun 2017 : extended witness_sets with operations on Laurent systems.
 
 Fri 18 Mar 2016 : change in affine_sampling_machine.adb for changed interface

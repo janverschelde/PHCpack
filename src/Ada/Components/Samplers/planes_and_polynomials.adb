@@ -169,6 +169,31 @@ package body Planes_and_Polynomials is
     return res;
   end Hyperplane;
 
+  function Hyperplane ( cff : Standard_Complex_Vectors.Vector )
+                      return Standard_Complex_Laurentials.Poly is
+
+    use Standard_Complex_Laurentials;
+    res : Poly := Null_Poly;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..cff'last => 0);
+    if cff(0) /= Create(0.0) then
+      t.cf := cff(0);
+      Add(res,t);
+    end if;
+    for i in 1..cff'last loop
+      if cff(i) /= Create(0.0) then
+        t.dg(i) := 1;
+        t.cf := cff(i);
+        Add(res,t);
+        t.dg(i) := 0;
+      end if;
+    end loop;
+    Clear(t);
+    return res;
+  end Hyperplane;
+
   function Hyperplane ( cff : Standard_Complex_Vectors.Vector;
                         tol : double_float )
                       return Standard_Complex_Polynomials.Poly is
@@ -221,6 +246,32 @@ package body Planes_and_Polynomials is
     return res;
   end Hyperplane;
 
+  function Hyperplane ( cff : DoblDobl_Complex_Vectors.Vector )
+                      return DoblDobl_Complex_Laurentials.Poly is
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Laurentials;
+    ddzero : constant double_double := Double_Double_Numbers.Create(0.0);
+    res : Poly := Null_Poly;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..cff'last => 0);
+    if cff(0) /= Create(ddzero) then
+      t.cf := cff(0);
+      Add(res,t);
+    end if;
+    for i in 1..cff'last loop
+      if cff(i) /= Create(ddzero) then
+        t.dg(i) := 1;
+        t.cf := cff(i);
+        Add(res,t);
+        t.dg(i) := 0;
+      end if;
+    end loop;
+    Clear(t);
+    return res;
+  end Hyperplane;
+
   function Hyperplane ( cff : QuadDobl_Complex_Vectors.Vector )
                       return QuadDobl_Complex_Polynomials.Poly is
 
@@ -232,6 +283,33 @@ package body Planes_and_Polynomials is
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..cff'last => 0);
+    if cff(0) /= Create(ddzero) then
+      t.cf := cff(0);
+      Add(res,t);
+    end if;
+    for i in 1..cff'last loop
+      if cff(i) /= Create(ddzero) then
+        t.dg(i) := 1;
+        t.cf := cff(i);
+        Add(res,t);
+        t.dg(i) := 0;
+      end if;
+    end loop;
+    Clear(t);
+    return res;
+  end Hyperplane;
+
+  function Hyperplane ( cff : QuadDobl_Complex_Vectors.Vector )
+                      return QuadDobl_Complex_Laurentials.Poly is
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Laurentials;
+    ddzero : constant quad_double
+           := Quad_Double_Numbers.Create(0.0);
+    res : Poly := Null_Poly;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..cff'last => 0);
     if cff(0) /= Create(ddzero) then
       t.cf := cff(0);
       Add(res,t);

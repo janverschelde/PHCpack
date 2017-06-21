@@ -9,8 +9,11 @@ with Multprec_Complex_Vectors;
 with Multprec_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
@@ -25,29 +28,40 @@ package Planes_and_Polynomials is
 
   function Hyperplane ( cff : Standard_Complex_Vectors.Vector )
                       return Standard_Complex_Polynomials.Poly;
+  function Hyperplane ( cff : DoblDobl_Complex_Vectors.Vector )
+                      return DoblDobl_Complex_Polynomials.Poly;
+  function Hyperplane ( cff : QuadDobl_Complex_Vectors.Vector )
+                      return QuadDobl_Complex_Polynomials.Poly;
+  function Hyperplane ( cff : Multprec_Complex_Vectors.Vector )
+                      return Multprec_Complex_Polynomials.Poly;
+
+  -- DESCRIPTION :
+  --   Returns the polynomial representation of the hyperplane
+  --     cff(0) + cff(1)*x1 + cff(2)*x2 + .. + cff(n)*xn.
+
+  function Hyperplane ( cff : Standard_Complex_Vectors.Vector )
+                      return Standard_Complex_Laurentials.Poly;
+  function Hyperplane ( cff : DoblDobl_Complex_Vectors.Vector )
+                      return DoblDobl_Complex_Laurentials.Poly;
+  function Hyperplane ( cff : QuadDobl_Complex_Vectors.Vector )
+                      return QuadDobl_Complex_Laurentials.Poly;
+
+  -- DESCRIPTION :
+  --   Returns the representation of the hyperplane
+  --     cff(0) + cff(1)*x1 + cff(2)*x2 + .. + cff(n)*xn,
+  --   where n = cff'last, as a Laurent polynomial in n variables.
 
   function Hyperplane ( cff : Standard_Complex_Vectors.Vector;
                         tol : double_float )
                       return Standard_Complex_Polynomials.Poly;
-
-  function Hyperplane ( cff : DoblDobl_Complex_Vectors.Vector )
-                      return DoblDobl_Complex_Polynomials.Poly;
-
-  function Hyperplane ( cff : QuadDobl_Complex_Vectors.Vector )
-                      return QuadDobl_Complex_Polynomials.Poly;
-
-  function Hyperplane ( cff : Multprec_Complex_Vectors.Vector )
-                      return Multprec_Complex_Polynomials.Poly;
-
   function Hyperplane ( cff : Multprec_Complex_Vectors.Vector;
                         tol : double_float )
                       return Multprec_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the polynomial representation of the hyperplane
-  --     cff(0) + cff(1)*x1 + cff(2)*x2 + .. + cff(n)*xn.
-  --   The routines that have a tolerance (tol) as argument
-  --   ignore all coefficients that are in magnitude less than tol.
+  --     cff(0) + cff(1)*x1 + cff(2)*x2 + .. + cff(n)*xn,
+  --   ignoring all coefficients in magnitude less than tol.
 
   function Polynomial ( p : Standard_Complex_Polynomials.Poly )
                       return Standard_Complex_Vectors.Vector;
