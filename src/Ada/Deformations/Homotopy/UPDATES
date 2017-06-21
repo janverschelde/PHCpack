@@ -1,3 +1,6 @@
+Tue 20 Jun 2017 : new packages {standard,dobldobl,quaddobl}_embed_laurentials
+  for the cascade homotopies to accept Laurent systems.
+
 Fri 13 May 2016 : refixed bug in {standard, dobldobl, quaddobl}_homotopy.adb
   in the creation of a natural homotopy, (nv-1,nv) instead of (nv,nv).
 
