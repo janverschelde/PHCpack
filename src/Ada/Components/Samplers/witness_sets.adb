@@ -5,6 +5,7 @@ with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Integer_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
@@ -20,8 +21,11 @@ with DoblDobl_Random_Matrices;           use DoblDobl_Random_Matrices;
 with QuadDobl_Random_Matrices;           use QuadDobl_Random_Matrices;
 with Standard_Complex_Substitutors;      use Standard_Complex_Substitutors;
 with Standard_Embed_Polynomials;         use Standard_Embed_Polynomials;
+with Standard_Embed_Laurentials;         use Standard_Embed_Laurentials;
 with DoblDobl_Embed_Polynomials;         use DoblDobl_Embed_Polynomials;
+with DoblDobl_Embed_Laurentials;         use DoblDobl_Embed_Laurentials;
 with QuadDobl_Embed_Polynomials;         use QuadDobl_Embed_Polynomials;
+with QuadDobl_Embed_Laurentials;         use QuadDobl_Embed_Laurentials;
 with Planes_and_Polynomials;             use Planes_and_Polynomials;
 
 package body Witness_Sets is
@@ -97,6 +101,22 @@ package body Witness_Sets is
   end Add_Dummy;
 
   function Add_Dummy ( n,k,i : natural32 )
+                     return Standard_Complex_Laurentials.Poly is
+
+    use Standard_Complex_Numbers,Standard_Complex_Laurentials;
+    res : Poly := Null_Poly;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..integer32(n+k) => 0);
+    t.cf := Create(1.0);
+    t.dg(integer32(n+i)) := 1;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Add_Dummy;
+
+  function Add_Dummy ( n,k,i : natural32 )
                      return DoblDobl_Complex_Polynomials.Poly is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Polynomials;
@@ -113,6 +133,22 @@ package body Witness_Sets is
   end Add_Dummy;
 
   function Add_Dummy ( n,k,i : natural32 )
+                     return DoblDobl_Complex_Laurentials.Poly is
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Laurentials;
+    res : Poly := Null_Poly;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..integer32(n+k) => 0);
+    t.cf := Create(integer(1));
+    t.dg(integer32(n+i)) := 1;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Add_Dummy;
+
+  function Add_Dummy ( n,k,i : natural32 )
                      return QuadDobl_Complex_Polynomials.Poly is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Polynomials;
@@ -121,6 +157,22 @@ package body Witness_Sets is
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n+k) => 0);
+    t.cf := Create(integer(1));
+    t.dg(integer32(n+i)) := 1;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Add_Dummy;
+
+  function Add_Dummy ( n,k,i : natural32 )
+                     return QuadDobl_Complex_Laurentials.Poly is
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Laurentials;
+    res : Poly := Null_Poly;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..integer32(n+k) => 0);
     t.cf := Create(integer(1));
     t.dg(integer32(n+i)) := 1;
     Add(res,t);
@@ -168,6 +220,27 @@ package body Witness_Sets is
     return res;
   end Add_Embedding;
 
+  function Add_Embedding ( p : Standard_Complex_Laurentials.Poly;
+                           k : natural32 )
+                         return Standard_Complex_Laurentials.Poly is
+
+    use Standard_Complex_Laurentials;
+    res : Poly := Add_Variables(p,k);
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..n+integer32(k) => 0);
+    for i in 1..integer32(k) loop
+      t.cf := Standard_Random_Numbers.Random1;
+      t.dg(n+i) := 1;
+      Add(res,t);
+      t.dg(n+i) := 0;
+    end loop;
+    Clear(t);
+    return res;
+  end Add_Embedding;
+
   function Add_Embedding ( p : DoblDobl_Complex_Polynomials.Poly;
                            k : natural32 )
                          return DoblDobl_Complex_Polynomials.Poly is
@@ -179,6 +252,27 @@ package body Witness_Sets is
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..n+integer32(k) => 0);
+    for i in 1..integer32(k) loop
+      t.cf := DoblDobl_Random_Numbers.Random1;
+      t.dg(n+i) := 1;
+      Add(res,t);
+      t.dg(n+i) := 0;
+    end loop;
+    Clear(t);
+    return res;
+  end Add_Embedding;
+
+  function Add_Embedding ( p : DoblDobl_Complex_Laurentials.Poly;
+                           k : natural32 )
+                         return DoblDobl_Complex_Laurentials.Poly is
+
+    use DoblDobl_Complex_Laurentials;
+    res : Poly := Add_Variables(p,k);
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..n+integer32(k) => 0);
     for i in 1..integer32(k) loop
       t.cf := DoblDobl_Random_Numbers.Random1;
       t.dg(n+i) := 1;
@@ -210,11 +304,45 @@ package body Witness_Sets is
     return res;
   end Add_Embedding;
 
+  function Add_Embedding ( p : QuadDobl_Complex_Laurentials.Poly;
+                           k : natural32 )
+                         return QuadDobl_Complex_Laurentials.Poly is
+
+    use QuadDobl_Complex_Laurentials;
+    res : Poly := Add_Variables(p,k);
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..n+integer32(k) => 0);
+    for i in 1..integer32(k) loop
+      t.cf := QuadDobl_Random_Numbers.Random1;
+      t.dg(n+i) := 1;
+      Add(res,t);
+      t.dg(n+i) := 0;
+    end loop;
+    Clear(t);
+    return res;
+  end Add_Embedding;
+
   function Add_Embedding ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                            k : natural32 )
                          return Standard_Complex_Poly_Systems.Poly_Sys is
 
     res : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Add_Embedding(p(i),k);
+    end loop;
+    return res;
+  end Add_Embedding;
+
+  function Add_Embedding ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                           k : natural32 )
+                         return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    res : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
 
   begin
     for i in p'range loop
@@ -460,6 +588,18 @@ package body Witness_Sets is
     return res;
   end Embed;
 
+  function Embed ( p : Standard_Complex_Laur_Systems.Laur_Sys )
+                 return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    res : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+
+  begin
+    for i in res'range loop
+      res(i) := Add_Variables(p(i),1);
+    end loop;
+    return res;
+  end Embed;
+
   function Embed ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
                  return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
@@ -472,10 +612,34 @@ package body Witness_Sets is
     return res;
   end Embed;
 
+  function Embed ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                 return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+
+  begin
+    for i in res'range loop
+      res(i) := Add_Variables(p(i),1);
+    end loop;
+    return res;
+  end Embed;
+
   function Embed ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
                  return QuadDobl_Complex_Poly_Systems.Poly_Sys is
 
     res : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+
+  begin
+    for i in res'range loop
+      res(i) := Add_Variables(p(i),1);
+    end loop;
+    return res;
+  end Embed;
+
+  function Embed ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                 return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
 
   begin
     for i in res'range loop

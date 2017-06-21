@@ -8,11 +8,17 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with Multprec_Complex_VecVecs;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -54,6 +60,12 @@ package Witness_Sets is
                      return DoblDobl_Complex_Polynomials.Poly;
   function Add_Dummy ( n,k,i : natural32 )
                      return QuadDobl_Complex_Polynomials.Poly;
+  function Add_Dummy ( n,k,i : natural32 )
+                     return Standard_Complex_Laurentials.Poly;
+  function Add_Dummy ( n,k,i : natural32 )
+                     return DoblDobl_Complex_Laurentials.Poly;
+  function Add_Dummy ( n,k,i : natural32 )
+                     return QuadDobl_Complex_Laurentials.Poly;
 
   -- DESCRIPTION :
   --   Returns one monomial: "zzi", where i is the number of slack
@@ -71,15 +83,28 @@ package Witness_Sets is
   function Add_Embedding ( p : Standard_Complex_Polynomials.Poly;
                            k : natural32 )
                          return Standard_Complex_Polynomials.Poly;
+  function Add_Embedding ( p : Standard_Complex_Laurentials.Poly;
+                           k : natural32 )
+                         return Standard_Complex_Laurentials.Poly;
   function Add_Embedding ( p : DoblDobl_Complex_Polynomials.Poly;
                            k : natural32 )
                          return DoblDobl_Complex_Polynomials.Poly;
+  function Add_Embedding ( p : DoblDobl_Complex_Laurentials.Poly;
+                           k : natural32 )
+                         return DoblDobl_Complex_Laurentials.Poly;
   function Add_Embedding ( p : QuadDobl_Complex_Polynomials.Poly;
                            k : natural32 )
                          return QuadDobl_Complex_Polynomials.Poly;
+  function Add_Embedding ( p : QuadDobl_Complex_Laurentials.Poly;
+                           k : natural32 )
+                         return QuadDobl_Complex_Laurentials.Poly;
+
   function Add_Embedding ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                            k : natural32 )
                          return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Add_Embedding ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                           k : natural32 )
+                         return Standard_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Does Add_Variables(p,k) and adds to the result k linear terms
@@ -144,14 +169,20 @@ package Witness_Sets is
 
   function Embed ( p : Standard_Complex_Poly_Systems.Poly_Sys )
                  return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Embed ( p : Standard_Complex_Laur_Systems.Laur_Sys )
+                 return Standard_Complex_Laur_Systems.Laur_Sys;
   function Embed ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
                  return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Embed ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                 return DoblDobl_Complex_Laur_Systems.Laur_Sys;
   function Embed ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
                  return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Embed ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                 return QuadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Augments the number of variables in the polynomials with one,
-  --   in standar double, double double, and quad double precision,
+  --   in standard double, double double, and quad double precision,
   --   every monomial is multiplied with z^0.
 
   function Embed ( p : Standard_Complex_Poly_Systems.Poly_Sys;
