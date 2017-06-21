@@ -4,9 +4,13 @@ with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;         use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Symbol_Table,Symbol_Table_io;
-with Standard_Complex_Polynomials;        use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;       use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;    use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laurentials;
+with Standard_Complex_Laur_Systems;       use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;    use Standard_Complex_Laur_Systems_io;
+with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;          use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;       use Standard_Complex_Solutions_io;
 with Witness_Sets,Witness_Sets_io;        use Witness_Sets,Witness_Sets_io;
@@ -33,6 +37,8 @@ procedure ts_embed is
   -- NOTE :
   --   This procedure does not add dummy equations in case p
   --   is underdetermined.
+
+    use Standard_Complex_Polynomials;
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'last));
@@ -72,6 +78,53 @@ procedure ts_embed is
     end if;
   end Square_Slice_and_Embed;
 
+  procedure Square_Slice_and_Embed
+              ( file : in file_type; p : in Laur_Sys; k : in natural32 ) is
+
+  -- NOTE :
+  --   This procedure does not add dummy equations in case p
+  --   is underdetermined.
+
+    use Standard_Complex_Laurentials;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'last));
+
+  begin
+   -- put("Number of equations : "); put(nq,1); new_line;
+   -- put("Number of variables : "); put(nv,1); new_line;
+    if nv < nq then
+      declare
+        sp : constant Laur_Sys := Square(p);
+        ep : Laur_Sys(sp'first..sp'last+integer32(k));
+      begin
+        Add_Slack_Symbols(nq-nv);
+       -- put_line(file,sp);
+        Add_Embed_Symbols(k);
+        ep := Slice_and_Embed(sp,k);
+        put_line(file,ep);
+      end;
+    elsif nv = nq then
+      Add_Embed_Symbols(k);
+      declare
+        ep : constant Laur_Sys(p'first..p'last+integer32(k))
+           := Slice_and_Embed(p,k);
+      begin
+        put_line(file,ep);
+      end;
+    else
+      if nv - nq > k then
+        Add_Embed_Symbols(nv-nq-k);
+        declare
+          ep : constant Laur_Sys(p'first..p'last+integer32(k))
+             := Slice_and_embed(p,k);
+        begin
+          put_line(file,ep);
+        end;
+      end if;
+    end if;
+  end Square_Slice_and_Embed;
+
   function Remove_Last_Variables
              ( p : Poly_Sys; n : natural32 ) return Poly_Sys is
 
@@ -96,6 +149,7 @@ procedure ts_embed is
 
   -- REQUIRED : n >= Number_of_Unknowns(p(i)), for i in p'range.
 
+    use Standard_Complex_Polynomials;
     res : Poly;
 
   begin
@@ -144,15 +198,15 @@ procedure ts_embed is
   --   Embeds a polynomial system, after adding linear equations
   --   and adding extra slack variables to an overconstrained system.
 
-    lp : Link_to_Poly_Sys;
+    lq : Link_to_Laur_Sys;
     file : file_type;
     k : natural32 := 0;
 
   begin
     new_line;
-    put_line("Squaring, Slicing, and Embeding a Polynomial System.");
+    put_line("Squaring, Slicing, and Embedding a Polynomial System.");
     new_line;
-    get(lp);
+    get(lq);
     new_line;
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
@@ -161,7 +215,17 @@ procedure ts_embed is
     new_line;
     put_line("See the output file for the embedded system...");
     new_line;
-    Square_Slice_and_Embed(file,lp.all,k);
+    if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      Square_Slice_and_Embed(file,lq.all,k);
+    else
+      declare
+        use Standard_Laur_Poly_Convertors;
+        p : Poly_Sys(lq'range)
+          := Positive_Laurent_Polynomial_System(lq.all);
+      begin
+        Square_Slice_and_Embed(file,p,k);
+      end;
+    end if;
     Close(file);
   end Add_Embedding;
 
@@ -195,7 +259,8 @@ procedure ts_embed is
     declare
       rp : constant Poly_Sys := Remove_Embedding(lp.all,k,ns);
       nq : constant natural32 := natural32(rp'last);
-      nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
+      nv : constant natural32
+         := Standard_Complex_Polynomials.Number_of_Unknowns(rp(rp'first));
       rsols : Solution_List;
     begin
       if k + ns > 0

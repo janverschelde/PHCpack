@@ -200,18 +200,53 @@ package Witness_Sets is
   --   in standard double, double double, and quad double precision,
   --   where z is a new variable.
 
+  procedure Store_Random_Hyperplanes
+              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                n,k : in natural32 );
+  procedure Store_Random_Hyperplanes
+              ( p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                n,k : in natural32 );
+  procedure Store_Random_Hyperplanes
+              ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                n,k : in natural32 );
+  procedure Store_Random_Hyperplanes
+              ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                n,k : in natural32 );
+  procedure Store_Random_Hyperplanes
+              ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                n,k : in natural32 );
+  procedure Store_Random_Hyperplanes
+              ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                n,k : in natural32 );
+
+  -- DESCRIPTION :
+  --   In the last k entries of p, random hyperplanes are stored,
+  --   where n is the last index in p of an input polynomial.
+
   function Slice_and_Embed
               ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                 k : natural32 )
               return Standard_Complex_Poly_Systems.Poly_Sys;
   function Slice_and_Embed
+              ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                k : natural32 )
+              return Standard_Complex_Laur_Systems.Laur_Sys;
+  function Slice_and_Embed
               ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 k : natural32 )
               return DoblDobl_Complex_Poly_Systems.Poly_Sys;
   function Slice_and_Embed
+              ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                k : natural32 )
+              return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  function Slice_and_Embed
               ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 k : natural32 )
               return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Slice_and_Embed
+              ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                k : natural32 )
+              return QuadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Adds k slices and k slack variables to the system p,
@@ -276,16 +311,22 @@ package Witness_Sets is
 
   function Square ( p : Standard_Complex_Poly_Systems.Poly_Sys )
                   return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Square ( p : Standard_Complex_Laur_Systems.Laur_Sys )
+                  return Standard_Complex_Laur_Systems.Laur_Sys;
   function Square ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
                   return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Square ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                  return DoblDobl_Complex_Laur_Systems.Laur_Sys;
   function Square ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
                   return QUadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Square ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                  return QUadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   The system on return is square, has as many equations as unknowns.
   --   If p is square, then Square(p) = p, otherwise slices or additional
   --   unknowns are added depending on whether p is has too few equations
-  --   or too few unknowns, using the routines "Add_Slice" or "Embed".
+  --   or too few unknowns.
 
   function Remove_Embedding ( p : Standard_Complex_Polynomials.Poly;
                               dim : natural32 )

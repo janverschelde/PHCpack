@@ -1,5 +1,7 @@
 Wed 21 Jun 2017 : to planes_and_polynomials added representations of
-  hyperplanes as Laurent polynomial types.
+  hyperplanes as Laurent polynomial types.  The ts_embed.adb tests the
+  embedding of Laurent systems, computed by the new operations specified
+  in witness_sets.ads and implemented in witness_sets.adb.
 
 Tue 20 Jun 2017 : extended witness_sets with operations on Laurent systems.
 

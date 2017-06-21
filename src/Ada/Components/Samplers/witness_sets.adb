@@ -774,19 +774,185 @@ package body Witness_Sets is
     return res;
   end Slice_and_Embed1;
 
+  procedure Store_Random_Hyperplanes
+              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                n,k : in natural32 ) is
+
+    use Standard_Complex_Matrices;
+
+    dim : constant integer32 := integer32(n);
+    nbr : constant integer32 := integer32(k);
+    lastidx : constant integer32 := dim+nbr;
+    cff : Matrix(1..lastidx+1,1..nbr);
+
+  begin
+    if k = 1
+     then cff := Random_Matrix(n+k+1,k);
+     else cff := Random_Orthogonal_Matrix(n+k+1,k);
+    end if;
+    for i in 1..nbr loop
+      declare
+        hyp : Standard_Complex_Vectors.Vector(0..lastidx);
+      begin
+        for j in hyp'range loop
+          hyp(j) := cff(j+1,i);
+        end loop;
+        p(dim+i) := Hyperplane(hyp);
+      end;
+    end loop;
+  end Store_Random_Hyperplanes;
+
+  procedure Store_Random_Hyperplanes
+              ( p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                n,k : in natural32 ) is
+
+    use Standard_Complex_Matrices;
+
+    dim : constant integer32 := integer32(n);
+    nbr : constant integer32 := integer32(k);
+    lastidx : constant integer32 := dim+nbr;
+    cff : Matrix(1..lastidx+1,1..nbr);
+
+  begin
+    if k = 1
+     then cff := Random_Matrix(n+k+1,k);
+     else cff := Random_Orthogonal_Matrix(n+k+1,k);
+    end if;
+    for i in 1..nbr loop
+      declare
+        hyp : Standard_Complex_Vectors.Vector(0..lastidx);
+      begin
+        for j in hyp'range loop
+          hyp(j) := cff(j+1,i);
+        end loop;
+        p(dim+i) := Hyperplane(hyp);
+      end;
+    end loop;
+  end Store_Random_Hyperplanes;
+
+  procedure Store_Random_Hyperplanes
+              ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                n,k : in natural32 ) is
+
+    use DoblDobl_Complex_Matrices;
+
+    dim : constant integer32 := integer32(n);
+    nbr : constant integer32 := integer32(k);
+    lastidx : constant integer32 := dim+nbr;
+    cff : Matrix(1..lastidx+1,1..nbr);
+
+  begin
+    if k = 1
+     then cff := Random_Matrix(n+k+1,k);
+     else cff := Random_Orthogonal_Matrix(n+k+1,k);
+    end if;
+    for i in 1..nbr loop
+      declare
+        hyp : DoblDobl_Complex_Vectors.Vector(0..lastidx);
+      begin
+        for j in hyp'range loop
+          hyp(j) := cff(j+1,i);
+        end loop;
+        p(dim+i) := Hyperplane(hyp);
+      end;
+    end loop;
+  end Store_Random_Hyperplanes;
+
+  procedure Store_Random_Hyperplanes
+              ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                n,k : in natural32 ) is
+
+    use DoblDobl_Complex_Matrices;
+
+    dim : constant integer32 := integer32(n);
+    nbr : constant integer32 := integer32(k);
+    lastidx : constant integer32 := dim+nbr;
+    cff : Matrix(1..lastidx+1,1..nbr);
+
+  begin
+    if k = 1
+     then cff := Random_Matrix(n+k+1,k);
+     else cff := Random_Orthogonal_Matrix(n+k+1,k);
+    end if;
+    for i in 1..nbr loop
+      declare
+        hyp : DoblDobl_Complex_Vectors.Vector(0..lastidx);
+      begin
+        for j in hyp'range loop
+          hyp(j) := cff(j+1,i);
+        end loop;
+        p(dim+i) := Hyperplane(hyp);
+      end;
+    end loop;
+  end Store_Random_Hyperplanes;
+
+  procedure Store_Random_Hyperplanes
+              ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                n,k : in natural32 ) is
+
+    use QuadDobl_Complex_Matrices;
+
+    dim : constant integer32 := integer32(n);
+    nbr : constant integer32 := integer32(k);
+    lastidx : constant integer32 := dim+nbr;
+    cff : Matrix(1..lastidx+1,1..nbr);
+
+  begin
+    if k = 1
+     then cff := Random_Matrix(n+k+1,k);
+     else cff := Random_Orthogonal_Matrix(n+k+1,k);
+    end if;
+    for i in 1..nbr loop
+      declare
+        hyp : QuadDobl_Complex_Vectors.Vector(0..lastidx);
+      begin
+        for j in hyp'range loop
+          hyp(j) := cff(j+1,i);
+        end loop;
+        p(dim+i) := Hyperplane(hyp);
+      end;
+    end loop;
+  end Store_Random_Hyperplanes;
+
+  procedure Store_Random_Hyperplanes
+              ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                n,k : in natural32 ) is
+
+    use QuadDobl_Complex_Matrices;
+
+    dim : constant integer32 := integer32(n);
+    nbr : constant integer32 := integer32(k);
+    lastidx : constant integer32 := dim+nbr;
+    cff : Matrix(1..lastidx+1,1..nbr);
+
+  begin
+    if k = 1
+     then cff := Random_Matrix(n+k+1,k);
+     else cff := Random_Orthogonal_Matrix(n+k+1,k);
+    end if;
+    for i in 1..nbr loop
+      declare
+        hyp : QuadDobl_Complex_Vectors.Vector(0..lastidx);
+      begin
+        for j in hyp'range loop
+          hyp(j) := cff(j+1,i);
+        end loop;
+        p(dim+i) := Hyperplane(hyp);
+      end;
+    end loop;
+  end Store_Random_Hyperplanes;
+
   function Slice_and_Embed
              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                k : natural32 )
              return Standard_Complex_Poly_Systems.Poly_Sys is
 
-    use Standard_Complex_Matrices;
     use Standard_Complex_Polynomials;
 
-    res : Standard_Complex_Poly_Systems.Poly_Sys
-            (p'first..p'last+integer32(k));
+    dim : constant integer32 := p'last + integer32(k);
+    res : Standard_Complex_Poly_Systems.Poly_Sys(p'first..dim);
     n : constant integer32 := p'length;
     t : Term;
-    slices : Matrix(1..p'last+integer32(k)+1,1..integer32(k));
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..n+integer32(k) => 0);
@@ -800,20 +966,35 @@ package body Witness_Sets is
       end loop;
     end loop;
     Clear(t);
-    if k = 1
-     then slices := Random_Matrix(natural32(p'last)+k+1,k);
-     else slices := Random_Orthogonal_Matrix(natural32(p'last)+k+1,k);
-    end if;
-    for i in 1..integer32(k) loop
-      declare
-        hyp : Standard_Complex_Vectors.Vector(0..p'last+integer32(k));
-      begin
-        for j in hyp'range loop
-          hyp(j) := slices(j+1,i);
-        end loop;
-        res(p'last+i) := Hyperplane(hyp);
-      end;
+    Store_Random_Hyperplanes(res,natural32(n),k);
+    return res;
+  end Slice_and_Embed;
+
+  function Slice_and_Embed
+             ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+               k : natural32 )
+             return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    use Standard_Complex_Laurentials;
+
+    dim : constant integer32 := p'last + integer32(k);
+    res : Standard_Complex_Laur_Systems.Laur_Sys(p'first..dim);
+    n : constant integer32 := p'length;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..n+integer32(k) => 0);
+    for i in p'range loop
+      res(i) := Add_Variables(p(i),k);
+      for j in n+1..n+integer32(k) loop
+        t.cf := Standard_Random_Numbers.Random1;
+        t.dg(j) := 1;
+        Add(res(i),t);
+        t.dg(j) := 0;
+      end loop;
     end loop;
+    Clear(t);
+    Store_Random_Hyperplanes(res,natural32(n),k);
     return res;
   end Slice_and_Embed;
 
@@ -822,14 +1003,12 @@ package body Witness_Sets is
                k : natural32 )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
-    use DoblDobl_Complex_Matrices;
     use DoblDobl_Complex_Polynomials;
 
-    res : DoblDobl_Complex_Poly_Systems.Poly_Sys
-            (p'first..p'last+integer32(k));
+    dim : constant integer32 := p'last + integer32(k);
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys (p'first..dim);
     n : constant integer32 := p'length;
     t : Term;
-    slices : Matrix(1..p'last+integer32(k)+1,1..integer32(k));
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..n+integer32(k) => 0);
@@ -843,20 +1022,35 @@ package body Witness_Sets is
       end loop;
     end loop;
     Clear(t);
-    if k = 1
-     then slices := Random_Matrix(natural32(p'last)+k+1,k);
-     else slices := Random_Orthogonal_Matrix(natural32(p'last)+k+1,k);
-    end if;
-    for i in 1..integer32(k) loop
-      declare
-        hyp : DoblDobl_Complex_Vectors.Vector(0..p'last+integer32(k));
-      begin
-        for j in hyp'range loop
-          hyp(j) := slices(j+1,i);
-        end loop;
-        res(p'last+i) := Hyperplane(hyp);
-      end;
+    Store_Random_Hyperplanes(res,natural32(n),k);
+    return res;
+  end Slice_and_Embed;
+
+  function Slice_and_Embed
+             ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+               k : natural32 )
+             return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use DoblDobl_Complex_Laurentials;
+
+    dim : constant integer32 := p'last + integer32(k);
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys (p'first..dim);
+    n : constant integer32 := p'length;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..n+integer32(k) => 0);
+    for i in p'range loop
+      res(i) := Add_Variables(p(i),k);
+      for j in n+1..n+integer32(k) loop
+        t.cf := DoblDobl_Random_Numbers.Random1;
+        t.dg(j) := 1;
+        Add(res(i),t);
+        t.dg(j) := 0;
+      end loop;
     end loop;
+    Clear(t);
+    Store_Random_Hyperplanes(res,natural32(n),k);
     return res;
   end Slice_and_Embed;
 
@@ -865,14 +1059,12 @@ package body Witness_Sets is
                k : natural32 )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys is
 
-    use QuadDobl_Complex_Matrices;
     use QuadDobl_Complex_Polynomials;
 
-    res : QuadDobl_Complex_Poly_Systems.Poly_Sys
-            (p'first..p'last+integer32(k));
+    dim : constant integer32 := p'last + integer32(k);
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'first..dim);
     n : constant integer32 := p'length;
     t : Term;
-    slices : Matrix(1..p'last+integer32(k)+1,1..integer32(k));
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..n+integer32(k) => 0);
@@ -886,20 +1078,35 @@ package body Witness_Sets is
       end loop;
     end loop;
     Clear(t);
-    if k = 1
-     then slices := Random_Matrix(natural32(p'last)+k+1,k);
-     else slices := Random_Orthogonal_Matrix(natural32(p'last)+k+1,k);
-    end if;
-    for i in 1..integer32(k) loop
-      declare
-        hyp : QuadDobl_Complex_Vectors.Vector(0..p'last+integer32(k));
-      begin
-        for j in hyp'range loop
-          hyp(j) := slices(j+1,i);
-        end loop;
-        res(p'last+i) := Hyperplane(hyp);
-      end;
+    Store_Random_Hyperplanes(res,natural32(n),k);
+    return res;
+  end Slice_and_Embed;
+
+  function Slice_and_Embed
+             ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+               k : natural32 )
+             return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use QuadDobl_Complex_Laurentials;
+
+    dim : constant integer32 := p'last + integer32(k);
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'first..dim);
+    n : constant integer32 := p'length;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..n+integer32(k) => 0);
+    for i in p'range loop
+      res(i) := Add_Variables(p(i),k);
+      for j in n+1..n+integer32(k) loop
+        t.cf := QuadDobl_Random_Numbers.Random1;
+        t.dg(j) := 1;
+        Add(res(i),t);
+        t.dg(j) := 0;
+      end loop;
     end loop;
+    Clear(t);
+    Store_Random_Hyperplanes(res,natural32(n),k);
     return res;
   end Slice_and_Embed;
 
@@ -1133,6 +1340,50 @@ package body Witness_Sets is
     end if;
   end Square;
 
+  function Square ( p : Standard_Complex_Laur_Systems.Laur_Sys )
+                  return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    use Standard_Complex_Laurentials,Standard_Complex_Laur_Systems;
+    n : constant integer32 := p'length;
+    m : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+
+  begin
+    if n < m then
+      declare
+        res : Laur_Sys(1..m);
+        hyp : Standard_Complex_Vectors.Vector(0..m);
+      begin
+        res(1..n) := p;
+        for i in 1..m-n loop
+          hyp := Random_Vector(0,m);
+          res(n+i) := Hyperplane(hyp);
+        end loop;
+        return res;
+      end;
+    elsif n > m then
+      declare
+        res : Laur_Sys(1..n);
+        k : constant natural32 := natural32(n-m);
+        t : Term;
+      begin
+        t.dg := new Standard_Integer_Vectors.Vector'(1..n => 0);
+        for i in 1..n loop
+          res(i) := Add_Variables(p(i),k);
+          for j in 1..integer32(k) loop
+            t.dg(m+j) := 1; 
+            t.cf := Standard_Random_Numbers.Random1;
+            Add(res(i),t);
+            t.dg(m+j) := 0;
+          end loop;
+        end loop;
+        Clear(t);
+        return res;
+      end;
+    else
+      return p;
+    end if;
+  end Square;
+
   function Square ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
                   return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
@@ -1177,6 +1428,50 @@ package body Witness_Sets is
     end if;
   end Square;
 
+  function Square ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                  return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use DoblDobl_Complex_Laurentials,DoblDobl_Complex_Laur_Systems;
+    n : constant integer32 := p'length;
+    m : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+
+  begin
+    if n < m then
+      declare
+        res : Laur_Sys(1..m);
+        hyp : DoblDobl_Complex_Vectors.Vector(0..m);
+      begin
+        res(1..n) := p;
+        for i in 1..m-n loop
+          hyp := Random_Vector(0,m);
+          res(n+i) := Hyperplane(hyp);
+        end loop;
+        return res;
+      end;
+    elsif n > m then
+      declare
+        res : Laur_Sys(1..n);
+        k : constant natural32 := natural32(n-m);
+        t : Term;
+      begin
+        t.dg := new Standard_Integer_Vectors.Vector'(1..n => 0);
+        for i in 1..n loop
+          res(i) := Add_Variables(p(i),k);
+          for j in 1..integer32(k) loop
+            t.dg(m+j) := 1; 
+            t.cf := DoblDobl_Random_Numbers.Random1;
+            Add(res(i),t);
+            t.dg(m+j) := 0;
+          end loop;
+        end loop;
+        Clear(t);
+        return res;
+      end;
+    else
+      return p;
+    end if;
+  end Square;
+
   function Square ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
                   return QuadDobl_Complex_Poly_Systems.Poly_Sys is
 
@@ -1204,6 +1499,50 @@ package body Witness_Sets is
         t : Term;
       begin
         t.dg := new Standard_Natural_Vectors.Vector'(1..n => 0);
+        for i in 1..n loop
+          res(i) := Add_Variables(p(i),k);
+          for j in 1..integer32(k) loop
+            t.dg(m+j) := 1; 
+            t.cf := QuadDobl_Random_Numbers.Random1;
+            Add(res(i),t);
+            t.dg(m+j) := 0;
+          end loop;
+        end loop;
+        Clear(t);
+        return res;
+      end;
+    else
+      return p;
+    end if;
+  end Square;
+
+  function Square ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                  return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use QuadDobl_Complex_Laurentials,QuadDobl_Complex_Laur_Systems;
+    n : constant integer32 := p'length;
+    m : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+
+  begin
+    if n < m then
+      declare
+        res : Laur_Sys(1..m);
+        hyp : QuadDobl_Complex_Vectors.Vector(0..m);
+      begin
+        res(1..n) := p;
+        for i in 1..m-n loop
+          hyp := Random_Vector(0,m);
+          res(n+i) := Hyperplane(hyp);
+        end loop;
+        return res;
+      end;
+    elsif n > m then
+      declare
+        res : Laur_Sys(1..n);
+        k : constant natural32 := natural32(n-m);
+        t : Term;
+      begin
+        t.dg := new Standard_Integer_Vectors.Vector'(1..n => 0);
         for i in 1..n loop
           res(i) := Add_Variables(p(i),k);
           for j in 1..integer32(k) loop
