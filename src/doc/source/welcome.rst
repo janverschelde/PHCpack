@@ -698,6 +698,11 @@ global optimization, and computational physics:
    *ASME Design Engineering Technical Conferences*,
    Chicago, IL, Sep 2-6, 2003.
 
+#. Weronika J. Swiechowicz and Yuanfang Xiang:
+   **Numerical Methods for Estimating Correlation Coefficient
+   of Trivariate Gaussians** (sponsor: Sonja Petrovic)
+   in Volume 8 of *SIAM Undergraduate Research Online (SIURO)*, 2015.
+
 #. Attila Tanács and Joakim Lindblad and Nataša Sladoje and Zoltan Ka:
    **Estimation of linear deformations of 2D and 3D fuzzy objects**.
    *Pattern Recognition* 48(4):1391-1403, 2015.
@@ -784,7 +789,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-97. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+98. Ali Baharev, Ferenc Domes, Arnold Neumaier:
     **A robust approach for finding all well-separated solutions of
     sparse systems of nonlinear equations**.
     *Numerical Algorithms*, pages 1-27, 2016 (online first).
@@ -851,7 +856,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-112. Bo Dong, Bo Yu, and Yan Yu:
+113. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -870,7 +875,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-115. B. Sturmfels:
+116. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
