@@ -1,4 +1,5 @@
-Wed 21 Jun 2017 : refactored bablvali.adb, bablvali2.adb, and bablvali4.adb.
+Wed 21 Jun 2017 : refactored bablvali.adb, bablvali2.adb, and bablvali4.adb;
+  extended these procedures for Laurent systems.
 
 Wed 7 Jun 2017 : 2.4.38 will be released, updated greeting_banners.
 

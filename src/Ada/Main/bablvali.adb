@@ -4,9 +4,11 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Communications_with_User;           use Communications_with_User;
 with File_Scanning;                      use File_Scanning;
-with Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
+with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Black_Box_Root_Refiners;
@@ -15,7 +17,7 @@ procedure bablvali ( infilename,outfilename : in string ) is
 
   procedure Read_System
               ( file : in out file_type; filename : in string;
-                lp : out Link_to_Poly_Sys; sysonfile : out boolean ) is
+                lp : out Link_to_Laur_Sys; sysonfile : out boolean ) is
 
   -- DESCRIPTION :
   --   If the filename is not empty, then the file is opened
@@ -47,7 +49,7 @@ procedure bablvali ( infilename,outfilename : in string ) is
   end Read_System;
 
   procedure Prompt_for_System
-              ( file : in out file_type; lp : out Link_to_Poly_Sys;
+              ( file : in out file_type; lp : out Link_to_Laur_Sys;
                 sysonfile : out boolean ) is
 
   -- DESCRIPTION :
@@ -74,7 +76,7 @@ procedure bablvali ( infilename,outfilename : in string ) is
       sysonfile := true;
     else
       put("Give the dimension : "); get(n);
-      lp := new Poly_Sys(1..n);
+      lp := new Laur_Sys(1..n);
       put("Give "); put(n,1); put(" "); put(n,1); 
       put_line("-variate polynomials :");
       get(natural32(n),lp.all);
@@ -83,7 +85,7 @@ procedure bablvali ( infilename,outfilename : in string ) is
     end if;
   end Prompt_for_System;
 
-  procedure Refine ( file : in out file_type; lp : in Link_to_Poly_Sys;
+  procedure Refine ( file : in out file_type; lp : in Link_to_Laur_Sys;
                      sysonfile : in boolean ) is
 
   -- DESCRIPTION :
@@ -94,7 +96,7 @@ procedure bablvali ( infilename,outfilename : in string ) is
     sols : Solution_List;
     found : boolean;
     nbvar : constant natural32
-          := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+          := Standard_Complex_Laurentials.Number_of_Unknowns(lp(lp'first));
 
   begin
     Create_Output_File(outfile,outfilename);
@@ -114,7 +116,17 @@ procedure bablvali ( infilename,outfilename : in string ) is
     if not found
      then new_line; Read(sols);
     end if;
-    Black_Box_Root_Refiners.Refine_Roots(outfile,lp.all,sols);
+    if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
+      Black_Box_Root_Refiners.Refine_Roots(outfile,lp.all,sols);
+    else
+      declare
+        use Standard_Laur_Poly_Convertors;
+        p : Poly_Sys(lp'range)
+          := Positive_Laurent_Polynomial_System(lp.all);
+      begin
+        Black_Box_Root_Refiners.Refine_Roots(outfile,p,sols);
+      end;
+    end if;
   end Refine;
 
   procedure Main is
@@ -125,7 +137,7 @@ procedure bablvali ( infilename,outfilename : in string ) is
 
     infile : file_type;
     sysonfile : boolean;
-    lp : Link_to_Poly_Sys := null;
+    lp : Link_to_Laur_Sys := null;
 
   begin
     Read_System(infile,infilename,lp,sysonfile);
