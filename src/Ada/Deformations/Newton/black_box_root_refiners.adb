@@ -71,6 +71,7 @@ package body Black_Box_Root_Refiners is
   begin
     Standard_Default_Root_Refining_Parameters
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    deflate := false; -- not available
     new_line(file);
     put_line(file,"ROOT REFINING PARAMETERS");
     Standard_Put_Root_Refining_Parameters
@@ -143,6 +144,7 @@ package body Black_Box_Root_Refiners is
   begin
     DoblDobl_Default_Root_Refining_Parameters
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    deflate := false; -- not available
     new_line(file);
     put_line(file,"ROOT REFINING PARAMETERS");
     Standard_Put_Root_Refining_Parameters
@@ -208,6 +210,7 @@ package body Black_Box_Root_Refiners is
   begin
     QuadDobl_Default_Root_Refining_Parameters
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    deflate := false; -- not available
     new_line(file);
     put_line(file,"ROOT REFINING PARAMETERS");
     Standard_Put_Root_Refining_Parameters
