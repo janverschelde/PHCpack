@@ -1,3 +1,5 @@
+Wed 21 Jun 2017 : refactored bablvali.adb, bablvali2.adb, and bablvali4.adb.
+
 Wed 7 Jun 2017 : 2.4.38 will be released, updated greeting_banners.
 
 Wed 17 May 2017 : updated greeting_banners for version 2.4.37.
