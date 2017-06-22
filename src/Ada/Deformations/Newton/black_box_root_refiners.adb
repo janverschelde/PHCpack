@@ -53,6 +53,48 @@ package body Black_Box_Root_Refiners is
 
   procedure Refine_Roots
                ( file : in file_type;
+                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                 sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+  -- NOTE : the deflate parameter is not used as deflation is not available
+  --   for Laurent systems.  No Sharpener for overdetermined problems?
+
+    use Standard_Complex_Solutions;
+
+    epsxa,epsfa,tolsing : double_float;
+    maxit,numb : natural32 := 0;
+    deflate,wout : boolean;
+    refsols : Solution_List;
+    timer : Timing_Widget;
+    dim : constant integer32 := Head_Of(sols).n;
+
+  begin
+    Standard_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    new_line(file);
+    put_line(file,"ROOT REFINING PARAMETERS");
+    Standard_Put_Root_Refining_Parameters
+      (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
+    if p'last = dim then
+      tstart(timer);
+      Reporting_Root_Refiner
+        (file,p,sols,refsols,epsxa,epsfa,tolsing,numb,maxit,false);
+      tstop(timer);
+    else
+      tstart(timer);
+      Reporting_Root_Sharpener
+        (file,p,sols,refsols,epsxa,epsfa,tolsing,numb,maxit,false);
+      tstop(timer);
+    end if;
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(refsols),natural32(Head_Of(refsols).n),refsols);
+    new_line(file);
+    print_times(file,timer,"Root refining");
+  end Refine_Roots;
+
+  procedure Refine_Roots
+               ( file : in file_type;
                  p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
 
@@ -84,6 +126,40 @@ package body Black_Box_Root_Refiners is
 
   procedure Refine_Roots
                ( file : in file_type;
+                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- NOTE : the deflate parameter is not used as deflation is not available
+  --   for Laurent systems.  No Sharpener for overdetermined problems?
+
+    use DoblDobl_Complex_Solutions;
+
+    epsxa,epsfa,tolsing : double_float;
+    maxit,numb : natural32 := 0;
+    deflate,wout : boolean;
+    refsols : Solution_List;
+    timer : Timing_Widget;
+
+  begin
+    DoblDobl_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    new_line(file);
+    put_line(file,"ROOT REFINING PARAMETERS");
+    Standard_Put_Root_Refining_Parameters
+      (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
+    tstart(timer);
+    Reporting_Root_Refiner
+      (file,p,sols,refsols,epsxa,epsfa,tolsing,numb,maxit,false);
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(refsols),natural32(Head_Of(refsols).n),refsols);
+    new_line(file);
+    print_times(file,timer,"Root refining");
+  end Refine_Roots;
+
+  procedure Refine_Roots
+               ( file : in file_type;
                  p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
@@ -105,6 +181,40 @@ package body Black_Box_Root_Refiners is
     tstart(timer);
     Reporting_Root_Refiner
       (file,p,sols,refsols,epsxa,epsfa,tolsing,numb,maxit,deflate,false);
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(refsols),natural32(Head_Of(refsols).n),refsols);
+    new_line(file);
+    print_times(file,timer,"Root refining");
+  end Refine_Roots;
+
+  procedure Refine_Roots
+               ( file : in file_type;
+                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- NOTE : the deflate parameter is not used as deflation is not available
+  --   for Laurent systems.  No Sharpener for overdetermined problems?
+
+    use QuadDobl_Complex_Solutions;
+
+    epsxa,epsfa,tolsing : double_float;
+    maxit,numb : natural32 := 0;
+    deflate,wout : boolean;
+    refsols : Solution_List;
+    timer : Timing_Widget;
+
+  begin
+    QuadDobl_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    new_line(file);
+    put_line(file,"ROOT REFINING PARAMETERS");
+    Standard_Put_Root_Refining_Parameters
+      (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
+    tstart(timer);
+    Reporting_Root_Refiner
+      (file,p,sols,refsols,epsxa,epsfa,tolsing,numb,maxit,false);
     tstop(timer);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");

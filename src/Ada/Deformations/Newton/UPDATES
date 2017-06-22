@@ -1,3 +1,6 @@
+Wed 21 Jun 2017 : to the package black_box_root_refiners, added versions
+  for Laurent polynomial systems, for use in phc -v.
+
 Thu 5 Jan 2017 : added double double and quad double versions to
   the black_box_root_refiners.
 
