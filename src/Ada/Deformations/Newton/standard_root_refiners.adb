@@ -1585,6 +1585,75 @@ package body Standard_Root_Refiners is
 
   procedure Reporting_Root_Refiner
                ( file : in file_type;
+                 p : in Laur_Sys; sols : in out Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean ) is
+
+    use Standard_Complex_Laur_Jacomats;
+
+    n : constant integer32 := p'length;
+    p_eval : Eval_Laur_Sys(1..n) := Create(p);
+    eyp : Standard_Complex_Vectors.Vector(p'range);
+    jac : Jaco_Mat(1..n,1..n) := Create(p);
+    jac_eval : Eval_Jaco_Mat(1..n,1..n) := Create(jac);
+    numb,nbdef : natural32 := 0;
+    nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
+    nbtot : constant natural32 := Length_Of(sols);
+    fail,infty : boolean;
+    sa : Solution_Array(1..integer32(nbtot)) := Create(sols);
+    initres : Standard_Floating_Vectors.Vector(sa'range);
+    t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
+                      := Standard_Condition_Tables.Create(15); 
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..n);
+    pl : Point_List;
+
+  begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :"); new_line(file);
+    put(file,nbtot,1); put(file," "); put(file,n,1); new_line(file);
+    put_bar(file);
+    for i in sa'range loop 
+      numb := 0; nbdef := 0;
+      eyp := Eval(p_eval,sa(i).v);
+      sa(i).res := Sum_Norm(eyp);
+      initres(i) := sa(i).res;
+      infty := At_Infinity(sa(i).all,false,1.0E+8);
+      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+        if wout then
+          Reporting_Newton(file,p_eval,jac_eval,sa(i).all,epsxa,epsfa,
+                           numb,max,fail);
+        else 
+          Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,numb,max,fail);
+        end if;
+      else
+        fail := true;
+      end if;
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
+      Write_Info(file,sa(i).all,initres(i),natural32(i),numb,nbdef,fail,infty);
+      Write_Type
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      Standard_Condition_Tables.Update_Corrector(t_err,sa(i).all);
+      Standard_Condition_Tables.Update_Condition(t_rco,sa(i).all);
+      Standard_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      numit := numit + numb;
+    end loop;
+    Write_Global_Info
+      (file,nbtot,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+    Deep_Clear(sols); sols := Create(sa); Clear(sa);
+    Clear(jac); Clear(p_eval); Clear(jac_eval);
+   -- Distances_Table(t_dis,sols);
+    Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco); -- ,t_dis);
+    Clear(pl);
+  end Reporting_Root_Refiner;
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
                  p : in Standard_Complex_Poly_SysFun.Evaluator;
                  j : in Standard_Complex_Jaco_Matrices.Evaluator;
                  sols,refsols : in out Solution_List;
@@ -2260,6 +2329,77 @@ package body Standard_Root_Refiners is
       Clear(jac); -- otherwise crash after Clear(nd)
     end if;
     Clear(p_eval); Clear(jac_eval);
+    Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
+    Clear(pl);
+  end Reporting_Root_Sharpener;
+
+  procedure Reporting_Root_Sharpener
+               ( file : in file_type;
+                 p : in Laur_Sys; sols : in out Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean ) is
+
+    use Standard_Complex_Laur_Jacomats;
+
+    nq : constant integer32 := p'length;
+    nv : constant integer32 := Head_Of(sols).n;
+    p_eval : Eval_Laur_Sys(1..nq) := Create(p);
+    eyp : Standard_Complex_Vectors.Vector(p'range);
+    jac : Jaco_Mat(1..nq,1..nv) := Create(p);
+    jac_eval : Eval_Jaco_Mat(1..nq,1..nv) := Create(jac);
+    numb,nbdef : natural32 := 0;
+    nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
+    nbtot : constant natural32 := Length_Of(sols);
+    fail,infty : boolean;
+    sa : Solution_Array(1..integer32(nbtot)) := Create(sols);
+    initres : Standard_Floating_Vectors.Vector(sa'range);
+    t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
+                      := Standard_Condition_Tables.Create(15); 
+    tolrnk : constant double_float := tolsing*100.0;
+    seed : integer32 := 1234567;
+    h1,h2 : Standard_Complex_Vectors.Vector(1..nv);
+    pl : Point_List;
+
+  begin
+    Standard_Random_Vectors.Random_Vector(seed,h1);
+    Standard_Random_Vectors.Random_Vector(seed,h2);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :"); new_line(file);
+    put(file,nbtot,1); put(file," "); put(file,nv,1); new_line(file);
+    put_bar(file);
+    for i in sa'range loop 
+      numb := 0; nbdef := 0;
+      eyp := Eval(p_eval,sa(i).v);
+      sa(i).res := Sum_Norm(eyp);
+      initres(i) := sa(i).res;
+      infty := At_Infinity(sa(i).all,false,1.0E+8);
+      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+        if wout then
+          Reporting_Gauss_Newton
+            (file,p_eval,jac_eval,sa(i).all,tolrnk,epsxa,epsfa,numb,max,fail);
+        else 
+          Silent_Gauss_Newton
+            (p_eval,jac_eval,sa(i).all,tolrnk,epsxa,epsfa,numb,max,fail);
+        end if;
+      else
+        fail := true;
+      end if;
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
+      Write_Info(file,sa(i).all,initres(i),natural32(i),numb,nbdef,fail,infty);
+      Write_Type
+       (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+        tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      Standard_Condition_Tables.Update_Corrector(t_err,sa(i).all);
+      Standard_Condition_Tables.Update_Condition(t_rco,sa(i).all);
+      Standard_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      numit := numit + numb;
+    end loop;
+    Write_Global_Info
+      (file,nbtot,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+    Deep_Clear(sols); sols := Create(sa); Clear(sa);
+    Clear(jac); Clear(p_eval); Clear(jac_eval);
     Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
     Clear(pl);
   end Reporting_Root_Sharpener;

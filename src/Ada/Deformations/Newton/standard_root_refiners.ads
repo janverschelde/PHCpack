@@ -413,6 +413,13 @@ package Standard_Root_Refiners is
 
   procedure Reporting_Root_Refiner
                ( file : in file_type;
+                 p : in Laur_Sys; sols : in out Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean );
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
                  p : in Laur_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
@@ -555,6 +562,13 @@ package Standard_Root_Refiners is
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  deflate : in out boolean; wout : in boolean );
+
+  procedure Reporting_Root_Sharpener
+               ( file : in file_type;
+                 p : in Laur_Sys; sols : in out Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean );
 
   procedure Reporting_Root_Sharpener
                ( file : in file_type;
