@@ -14,6 +14,10 @@ with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laurentials;
+with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
+with Standard_Laur_Poly_Convertors;
 with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
@@ -339,7 +343,10 @@ procedure mainvali ( infilename,outfilename : in string ) is
     Close(outfile);
   end Winding_Verification;
 
-  procedure Standard_Weeding_Verification is
+  procedure Standard_Weeding_Verification
+              ( infile : in out file_type;
+                lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sysonfile : in boolean ) is
 
   -- DESCRIPTION :
   --   Verifciation by refining the roots and weeding out the solution set.
@@ -347,22 +354,19 @@ procedure mainvali ( infilename,outfilename : in string ) is
     use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
 
-    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     timer : Timing_Widget;
-    infile,solsft,outfile : file_type;
+    solsft,outfile : file_type;
     n,maxit : natural32;
     ans : character;
-    sysonfile,solsfile,deflate,wout : boolean;
+    solsfile,deflate,wout : boolean;
     invar,allperms,signsym,allsigns : boolean;
     g,v : List_of_Permutations;
     sols,refsols: Standard_Complex_Solutions.Solution_List;
     epsxa,epsfa,tolsing : double_float;
-    nbequ,nbvar : natural32;
+    nbequ : constant natural32 := natural32(lp'last);
+    nbvar : constant natural32 := Number_of_Unknowns(lp(lp'first));
 
   begin
-    Read_System(infile,infilename,lp,sysonfile);
-    nbequ := natural32(lp'last);
-    nbvar := Number_of_Unknowns(lp(lp'first));
     Create_Output_File(outfile,outfilename);
     if nbequ = nbvar
      then put(outfile,nbequ,lp.all);
@@ -411,6 +415,62 @@ procedure mainvali ( infilename,outfilename : in string ) is
     new_line(outfile);
     print_times(outfile,timer,"Root Refinement");
     Close(outfile);
+  end Standard_Weeding_Verification;
+
+  procedure Standard_Weeding_Verification
+              ( infile : in out file_type;
+                lp : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sysonfile : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Verifciation by refining the roots and weeding out the solution set.
+
+    use Standard_Complex_Laurentials;
+    use Standard_Complex_Solutions;
+
+    outfile : file_type;
+    nbequ : constant natural32 := natural32(lp'last);
+    nbvar : constant natural32 := Number_of_Unknowns(lp(lp'first));
+    sols : Solution_List;
+    deflate,wout : boolean;
+    maxit : natural32;
+    epsxa,epsfa,tolsing : double_float;
+
+  begin
+    Create_Output_File(outfile,outfilename);
+    if nbequ = nbvar
+     then put(outfile,nbequ,lp.all);
+     else put(outfile,nbequ,nbvar,lp.all);
+    end if;
+    Read_Solutions(infile,sysonfile,sols);
+    Standard_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    Standard_Menu_Root_Refining_Parameters
+      (outfile,epsxa,epsfa,tolsing,maxit,deflate,wout);
+    End_of_Input_Message;
+  end Standard_Weeding_Verification;
+
+  procedure Standard_Weeding_Verification is
+
+  -- DESCRIPTION :
+  --   Verifciation by refining the roots and weeding out the solution set.
+
+    infile : file_type;
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sysonfile : boolean;
+
+    use Standard_Laur_Poly_Convertors;
+
+  begin
+    Read_System(infile,infilename,lq,sysonfile);
+    if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      Standard_Weeding_Verification(infile,lq,sysonfile);
+    else
+      lp := new Standard_Complex_Poly_Systems.Poly_Sys'
+                  (Positive_Laurent_Polynomial_System(lq.all));
+      Standard_Weeding_Verification(infile,lp,sysonfile);
+    end if;
   end Standard_Weeding_Verification;
 
   procedure Multprec_Residual_Evaluator is
