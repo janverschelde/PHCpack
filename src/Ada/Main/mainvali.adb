@@ -140,12 +140,13 @@ procedure mainvali ( infilename,outfilename : in string ) is
   end Refine_Roots;
 
   procedure Refine_Roots
-         ( file : in file_type;
-           p : in Standard_Complex_Poly_Systems.Poly_Sys;
-           solsfile : in boolean;
-           epsxa,epsfa,tolsing : in double_float;
-           maxit : in natural32; deflate : in out boolean; wout : in boolean;
-           sols,refsols : in out Standard_Complex_Solutions.Solution_List ) is
+             ( file : in file_type;
+               p : in Standard_Complex_Poly_Systems.Poly_Sys;
+               solsfile : in boolean;
+               epsxa,epsfa,tolsing : in double_float; maxit : in natural32;
+               deflate : in out boolean; wout : in boolean;
+               sols : in out Standard_Complex_Solutions.Solution_List;
+               refsols : in out Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION : 
   --   Root refinement without computing of generating solutions.
@@ -168,6 +169,40 @@ procedure mainvali ( infilename,outfilename : in string ) is
       else
         Reporting_Root_Refiner
           (file,p,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+      end if;
+    end if;
+  end Refine_Roots;
+
+  procedure Refine_Roots
+             ( file : in file_type;
+               p : in Standard_Complex_Laur_Systems.Laur_Sys;
+               solsfile : in boolean;
+               epsxa,epsfa,tolsing : in double_float; maxit : in natural32;
+               wout : in boolean;
+               sols : in out Standard_Complex_Solutions.Solution_List;
+               refsols : in out Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION : 
+  --   Root refinement without computing of generating solutions.
+
+    numit : natural32 := 0;
+
+  begin
+    if solsfile then
+      if p'last /= Standard_Complex_Solutions.Head_Of(sols).n then
+        Reporting_Root_Sharpener
+          (file,p,sols,refsols,epsxa,epsfa,tolsing,numit,maxit,wout);
+      else
+        Reporting_Root_Refiner
+          (file,p,sols,refsols,epsxa,epsfa,tolsing,numit,maxit,wout);
+      end if;
+    else
+      if p'last /= Standard_Complex_Solutions.Head_Of(sols).n then
+        Reporting_Root_Sharpener
+          (file,p,sols,epsxa,epsfa,tolsing,numit,maxit,wout);
+      else
+        Reporting_Root_Refiner
+          (file,p,sols,epsxa,epsfa,tolsing,numit,maxit,wout);
       end if;
     end if;
   end Refine_Roots;
@@ -315,13 +350,15 @@ procedure mainvali ( infilename,outfilename : in string ) is
     use Standard_Complex_Laurentials;
     use Standard_Complex_Solutions;
 
-    outfile : file_type;
+    outfile,solsft : file_type;
     nbequ : constant natural32 := natural32(lp'last);
     nbvar : constant natural32 := Number_of_Unknowns(lp(lp'first));
-    sols : Solution_List;
-    deflate,wout : boolean;
+    ans : character;
+    sols,refsols : Solution_List;
+    solsfile,deflate,wout : boolean;
     maxit : natural32;
     epsxa,epsfa,tolsing : double_float;
+    timer : Timing_Widget;
 
   begin
     Create_Output_File(outfile,outfilename);
@@ -330,12 +367,33 @@ procedure mainvali ( infilename,outfilename : in string ) is
      else put(outfile,nbequ,nbvar,lp.all);
     end if;
     Read_Solutions(infile,sysonfile,sols);
+    new_line;
+    put("Do you want the refined solutions on separate file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      solsfile := true;
+      put_line("Reading the name of the file to write the solutions on.");
+      Read_Name_and_Create_File(solsft);
+    else
+      solsfile := false;
+    end if;
     Standard_Default_Root_Refining_Parameters
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
     deflate := false; -- no deflation for Laurent systems
     Standard_Menu_Root_Refining_Parameters
       (outfile,epsxa,epsfa,tolsing,maxit,deflate,wout);
     End_of_Input_Message;
+    tstart(timer);
+    Refine_Roots(outfile,lp.all,solsfile,
+                 epsxa,epsfa,tolsing,maxit,wout,sols,refsols);
+    tstop(timer);
+    if solsfile then
+      put(solsft,Length_Of(refsols),natural32(Head_Of(refsols).n),refsols);
+      Close(solsft);
+    end if;
+    new_line(outfile);
+    print_times(outfile,timer,"Root Refinement");
+    Close(outfile);
   end Standard_Weeding_Verification;
 
   procedure Standard_Weeding_Verification is
