@@ -1,5 +1,5 @@
 Thu 22 Jun 2017 : new package prompt_for_systems with code factored out of
-  mainvali.adb.
+  mainvali.adb.  Added code for Laurent systems to prompt_for_systems.
 
 Wed 21 Jun 2017 : refactored bablvali.adb, bablvali2.adb, and bablvali4.adb;
   extended these procedures for Laurent systems.

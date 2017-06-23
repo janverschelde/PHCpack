@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
 
@@ -13,6 +14,10 @@ package Prompt_for_Systems is
   procedure Scan_System
               ( file : in out file_type; name : in string;
                 lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                onfile : out boolean );
+  procedure Scan_System
+              ( file : in out file_type; name : in string;
+                lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                 onfile : out boolean );
   procedure Scan_System
               ( file : in out file_type; name : in string;
@@ -32,6 +37,10 @@ package Prompt_for_Systems is
   procedure Read_System
               ( file : in out file_type; name : in string;
                 lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                onfile : out boolean );
+  procedure Read_System
+              ( file : in out file_type; name : in string;
+                lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                 onfile : out boolean );
   procedure Read_System
               ( file : in out file_type; name : in string;
