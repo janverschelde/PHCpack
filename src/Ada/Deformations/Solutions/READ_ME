@@ -1,4 +1,4 @@
-Solutions of systems and homotopies in PHCv2.4.34
+Solutions of systems and homotopies in PHCv2.4.39
 
 The second release introduced the solution vectors with multiprecision.
 Version 2.3 has an improved Maple interface.
@@ -34,10 +34,13 @@ quaddobl_solution_strings          : quad double solutions and strings
 multprec_solution_strings          : multprecision solutions and strings
 solution_string_splitters          : split coordinates of a solution string
 ts_solstr                          : test string representations
+------------------------------------------------------------------------------
 standard_system_and_solutions_io   : get/put standard systems and solutions
 dobldobl_system_and_solutions_io   : basic output for dd complex sys & sols
 quaddobl_system_and_solutions_io   : basic output for qd complex sys & sols
 multprec_system_and_solutions_io   : get/put multprec systems and solutions
+prompt_for_systems                 : scan, read, and prompt for system
+prompt_for_solutions               : scan, read, and prompt for solutions
 ------------------------------------------------------------------------------
 standard_solution_filters          : filters solutions subject to criteria
 dobldobl_solution_filters          : filters of double double solutions
