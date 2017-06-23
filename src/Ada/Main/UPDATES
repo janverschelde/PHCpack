@@ -1,3 +1,6 @@
+Fri 23 Jun 2017 : new package prompt_for_solutions to clean up mainvali.adb.
+  Removed deprecated documentation from the body of prompt_for_systems.
+
 Thu 22 Jun 2017 : new package prompt_for_systems with code factored out of
   mainvali.adb.  Added code for Laurent systems to prompt_for_systems.
   In mainvali.adb, started new code for verification for Laurent systems.

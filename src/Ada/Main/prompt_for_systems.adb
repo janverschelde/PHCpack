@@ -13,13 +13,6 @@ package body Prompt_for_Systems is
                ( file : in out file_type; name : in string;
                  lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                  onfile : out boolean ) is
-
-  -- DESCRIPTION :
-  --   Checks whether the given file name corresponds to a file with
-  --   a polynomial system in a correct format.
-  --   If this is the case, then onfile is true on return and lp
-  --   contains the system.
-
   begin
     if name /= "" then
       Open(file,in_file,name);
@@ -45,13 +38,6 @@ package body Prompt_for_Systems is
                ( file : in out file_type; name : in string;
                  lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                  onfile : out boolean ) is
-
-  -- DESCRIPTION :
-  --   Checks whether the given file name corresponds to a file with
-  --   a polynomial system in a correct format.
-  --   If this is the case, then onfile is true on return and lp
-  --   contains the system.
-
   begin
     if name /= "" then
       Open(file,in_file,name);
@@ -77,13 +63,6 @@ package body Prompt_for_Systems is
                ( file : in out file_type; name : in string;
                  lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                  onfile : out boolean ) is
-
-  -- DESCRIPTION :
-  --   Checks whether the given file name corresponds to a file with
-  --   a polynomial system in a correct format.
-  --   If this is the case, then onfile is true on return and lp
-  --   contains the system.
-
   begin
     if name /= "" then
       Open(file,in_file,name);
@@ -109,13 +88,6 @@ package body Prompt_for_Systems is
                ( file : in out file_type; name : in string;
                  lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                  onfile : out boolean ) is
-
-  -- DESCRIPTION :
-  --   Checks whether the given file name corresponds to a file with
-  --   a polynomial system in a correct format.
-  --   If this is the case, then onfile is true on return and lp
-  --   contains the system.
-
   begin
     if name /= "" then
       Open(file,in_file,name);

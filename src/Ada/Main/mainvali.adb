@@ -54,6 +54,7 @@ with valipoco;
 with Bye_Bye_Message;
 with Verification_of_Solutions;          use Verification_of_Solutions;
 with Prompt_for_Systems;                 use Prompt_for_Systems;
+with Prompt_for_Solutions;               use Prompt_for_Solutions;
 
 procedure mainvali ( infilename,outfilename : in string ) is
 
@@ -82,120 +83,6 @@ procedure mainvali ( infilename,outfilename : in string ) is
       put_line(i(k));
     end loop;
   end Display_Verification_Info;
-
-  procedure Scan_Solutions
-              ( file : in out file_type; sysonfile : in boolean;
-                sols : in out Standard_Complex_Solutions.Solution_List;
-                found : out boolean ) is
-  begin
-    if sysonfile then
-      Scan_and_Skip(file,"THE SOLUTIONS",found);
-      if found
-       then get(file,sols);
-       end if;
-       Close(file);
-    else
-      found := false;
-    end if;
-  exception
-    when others
-      => put_line("Something is wrong with the solutions, will ignore...");
-         Close(file);
-         found := false;
-  end Scan_Solutions;
-
-  procedure Scan_Solutions
-              ( file : in out file_type; sysonfile : in boolean;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                found : out boolean ) is
-  begin
-    if sysonfile then
-      Scan_and_Skip(file,"THE SOLUTIONS",found);
-      if found
-       then get(file,sols);
-       end if;
-       Close(file);
-    else
-      found := false;
-    end if;
-  exception
-    when others
-      => put_line("Something is wrong with the solutions, will ignore...");
-         Close(file);
-         found := false;
-  end Scan_Solutions;
-
-  procedure Scan_Solutions
-              ( file : in out file_type; sysonfile : in boolean;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                found : out boolean ) is
-  begin
-    if sysonfile then
-      Scan_and_Skip(file,"THE SOLUTIONS",found);
-      if found
-       then get(file,sols);
-       end if;
-       Close(file);
-    else
-      found := false;
-    end if;
-  exception
-    when others
-      => put_line("Something is wrong with the solutions, will ignore...");
-         Close(file);
-         found := false;
-  end Scan_Solutions;
-
-  procedure Read_Solutions
-              ( file : in out file_type; sysonfile : in boolean;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
-
-    found : boolean;
-
-  begin
-    Scan_Solutions(file,sysonfile,sols,found);
-    if not found then
-      new_line;
-      put_line("Reading the name of the file for the solutions.");
-      Read_Name_and_Open_File(file);
-      get(file,sols);
-      Close(file);
-    end if;
-  end Read_Solutions;
-
-  procedure Read_Solutions
-              ( file : in out file_type; sysonfile : in boolean;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
-
-    found : boolean;
-
-  begin
-    Scan_Solutions(file,sysonfile,sols,found);
-    if not found then
-      new_line;
-      put_line("Reading the name of the file for the solutions.");
-      Read_Name_and_Open_File(file);
-      get(file,sols);
-      Close(file);
-    end if;
-  end Read_Solutions;
-
-  procedure Read_Solutions
-              ( file : in out file_type; sysonfile : in boolean;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
-
-    found : boolean;
-
-  begin
-    Scan_Solutions(file,sysonfile,sols,found);
-    if not found then
-      new_line;
-      put_line("Reading the name of the file for the solutions.");
-      Read_Name_and_Open_File(file);
-      get(file,sols);
-      Close(file);
-    end if;
-  end Read_Solutions;
 
   procedure Refine_Roots
                  ( file : in file_type;
@@ -445,6 +332,7 @@ procedure mainvali ( infilename,outfilename : in string ) is
     Read_Solutions(infile,sysonfile,sols);
     Standard_Default_Root_Refining_Parameters
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    deflate := false; -- no deflation for Laurent systems
     Standard_Menu_Root_Refining_Parameters
       (outfile,epsxa,epsfa,tolsing,maxit,deflate,wout);
     End_of_Input_Message;
