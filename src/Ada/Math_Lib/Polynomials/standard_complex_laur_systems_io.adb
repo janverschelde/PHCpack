@@ -342,4 +342,18 @@ package body Standard_Complex_Laur_Systems_io is
     end loop;
   end put_line;
 
+  procedure Display_Format is
+
+    s : array(1..3) of string(1..65);
+
+  begin
+    s(1):="  A  complex  polynomial  system  is  denoted  by  the  dimension";
+    s(2):="followed  by  as  many  complex  multivariate  polynomials as the";
+    s(3):="dimension.  The dimension is a positive natural number.          ";
+    for i in s'range loop
+      put_line(s(i));
+    end loop;
+    Standard_Complex_Laurentials_io.Display_Format;
+  end Display_Format;
+
 end Standard_Complex_Laur_Systems_io;

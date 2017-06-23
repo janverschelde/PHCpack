@@ -614,8 +614,37 @@ package body Standard_Complex_Laurentials_io is
   end put_line;
 
   procedure Display_Format is
+
+    s : array(1..24) of string(1..65);
+
   begin
-    put_line("no information available yet ...");
+    s( 1):="  A complex multivariate  Laurent polynomial  is  a  sequence  of";
+    s( 2):="terms, separated by `+' and terminated by the semicolon `;'.  The";
+    s( 3):="brackets '(' and ')' must be used to isolate a sequence of  terms";
+    s( 4):="as a factor in a complex multivariate polynomial.                ";
+    s( 5):="  A term can be either a coefficient or a  coefficient,  followed";
+    s( 6):="by  '*'  and  a  monomial.  If in the latter case the coefficient";
+    s( 7):="equals one, then it may be omitted.                              ";
+    s( 8):="  A coefficient may be denoted  as  an  integer,  a  rational,  a";
+    s( 9):="floating-point or a complex number.                              ";
+    s(10):="  A monomial is a sequence of powers of  unknowns,  separated  by";
+    s(11):="'*'.   The power operator is represented by '**' or '^'.  It must";
+    s(12):="be followed by an integer number, eventually in round brackets.  ";
+    s(13):="If the power equals one, then it may be omitted.                 ";
+    s(14):="  An unknown can be denoted by at most 80 characters.  The  first";
+    s(15):="character  must  be a letter and the other two characters must be";
+    s(16):="different from '+', '-', '*', '^', '/', ';', '('  and  ')'.   The";
+    s(17):="letter i means sqrt(-1), whence it does not represent an unknown.";
+    s(18):="The number of unknowns may not  exceed  the  declared  dimension.";
+    s(19):="  Some  examples  of  valid  notations  of  complex  multivariate";
+    s(20):="polynomials:                                                     ";
+    s(21):="  x**2*y + 1/2*z*y**2 - 2*z + y**3 + x - 1E9/-8.E-6* y + 3;      ";
+    s(22):="  x^2*y + z*y^2 - 2*z + y^3 + x^(-1) - y**(-2) + 3;              ";
+    s(23):="  (1.01 + 2.8*i)*x1**2*x2 + x3**2*x1 - 3*x1 + 2*x2*x3 - 3;       ";
+    s(24):="  (x1^2*x2 + x3^2*x1 - 3*x1 + 2*x2*x3 - 3)*x2**2*(x2-1+i);       ";
+    for i in s'range loop
+      put_line(s(i));
+    end loop;
   end Display_Format;
 
 end Standard_Complex_Laurentials_io;

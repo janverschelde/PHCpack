@@ -86,4 +86,9 @@ package Standard_Complex_Laur_Systems_io is
   -- DESCRIPTION :
   --   A new line is started for each new monomial.
 
+  procedure Display_Format;
+
+  -- DESCRIPTION :
+  --   Displays on screen the formatting rules as on-line help facility.
+
 end Standard_Complex_Laur_Systems_io;
