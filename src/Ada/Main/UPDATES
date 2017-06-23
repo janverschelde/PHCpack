@@ -2,6 +2,8 @@ Fri 23 Jun 2017 : new package prompt_for_solutions to clean up mainvali.adb.
   Removed deprecated documentation from the body of prompt_for_systems.
   Added root refiners for Laurent systems to mainvali.adb, so the basic
   weeding verification in phc -v now accepts Laurent systems as well.
+  The procedures bablvali, bablvali2, and bablvali4 are reduced in size
+  by prompt_for_systems (extended) and prompt_for_solutions. 
 
 Thu 22 Jun 2017 : new package prompt_for_systems with code factored out of
   mainvali.adb.  Added code for Laurent systems to prompt_for_systems.

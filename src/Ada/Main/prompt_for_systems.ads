@@ -2,7 +2,9 @@ with text_io;                            use text_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 
 package Prompt_for_Systems is
 
@@ -25,7 +27,15 @@ package Prompt_for_Systems is
                 onfile : out boolean );
   procedure Scan_System
               ( file : in out file_type; name : in string;
+                lp : in out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                onfile : out boolean );
+  procedure Scan_System
+              ( file : in out file_type; name : in string;
                 lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                onfile : out boolean );
+  procedure Scan_System
+              ( file : in out file_type; name : in string;
+                lp : in out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                 onfile : out boolean );
 
   -- DESCRIPTION :
@@ -33,6 +43,7 @@ package Prompt_for_Systems is
   --   a polynomial system in a correct format.
   --   If this is the case, then onfile is true on return and lp
   --   contains the system.
+  --   The scan_system procedures are called in the read_system procedures.
 
   procedure Read_System
               ( file : in out file_type; name : in string;
@@ -48,7 +59,15 @@ package Prompt_for_Systems is
                 onfile : out boolean );
   procedure Read_System
               ( file : in out file_type; name : in string;
+                lp : in out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                onfile : out boolean );
+  procedure Read_System
+              ( file : in out file_type; name : in string;
                 lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                onfile : out boolean );
+  procedure Read_System
+              ( file : in out file_type; name : in string;
+                lp : in out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                 onfile : out boolean );
 
   -- DESCRIPTION :

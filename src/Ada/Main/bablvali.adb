@@ -10,80 +10,11 @@ with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
-with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Black_Box_Root_Refiners;
+with Prompt_for_Systems;
+with Prompt_for_Solutions;
 
 procedure bablvali ( infilename,outfilename : in string ) is
-
-  procedure Read_System
-              ( file : in out file_type; filename : in string;
-                lp : out Link_to_Laur_Sys; sysonfile : out boolean ) is
-
-  -- DESCRIPTION :
-  --   If the filename is not empty, then the file is opened
-  --   and a system is read from file.
-
-  -- ON ENTRY :
-  --   filename is the name of a file, typically infilename.
-
-  -- ON RETURN :
-  --   file     opened for input is filename is not empty,
-  --            may contain also the solutions of the system;
-  --   lp       null if there was no system on file with filename,
-  --            otherwise points to the system on file;
-  --   sysonfile is false if the reading of a system did not work,
-  --            otherwise sysonfile is true.
-
-  begin
-    if filename /= "" then
-      Open(file,in_file,filename);
-      get(file,lp);
-      sysonfile := true;
-    else
-      sysonfile := false;
-    end if;
-  exception
-    when others => put_line("Something is wrong with argument file...");
-                   sysonfile := false;
-                   lp := null; return;
-  end Read_System;
-
-  procedure Prompt_for_System
-              ( file : in out file_type; lp : out Link_to_Laur_Sys;
-                sysonfile : out boolean ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user for a file name and reads the system.
-
-  -- ON RETURN :
-  --   file     will be opened for input if the reading was okay;
-  --   lp       points to a polynomial system if reading was okay,
-  --            otherwise lp remains null;
-  --   sysonfile is true if the system was read from file;
-  --            otherwise if the system was typed in.
-
-    ans : character;
-    n : integer32 := 0;
-
-  begin
-    new_line;
-    put("Is the system on file ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      put_line("Reading the name of the input file.");
-      Read_Name_and_Open_File(file);
-      get(file,lp);
-      sysonfile := true;
-    else
-      put("Give the dimension : "); get(n);
-      lp := new Laur_Sys(1..n);
-      put("Give "); put(n,1); put(" "); put(n,1); 
-      put_line("-variate polynomials :");
-      get(natural32(n),lp.all);
-      skip_line;
-      sysonfile := false;
-    end if;
-  end Prompt_for_System;
 
   procedure Refine ( file : in out file_type; lp : in Link_to_Laur_Sys;
                      sysonfile : in boolean ) is
@@ -94,7 +25,6 @@ procedure bablvali ( infilename,outfilename : in string ) is
 
     outfile : file_type;
     sols : Solution_List;
-    found : boolean;
     nbvar : constant natural32
           := Standard_Complex_Laurentials.Number_of_Unknowns(lp(lp'first));
 
@@ -104,18 +34,7 @@ procedure bablvali ( infilename,outfilename : in string ) is
      then put(outfile,natural32(lp'last),lp.all);
      else put(outfile,natural32(lp'last),nbvar,lp.all);
     end if;
-    if sysonfile then
-      Scan_and_Skip(file,"THE SOLUTIONS",found);
-      if found
-       then get(file,sols);
-      end if;
-      Close(file);
-    else
-      found := false;
-    end if;
-    if not found
-     then new_line; Read(sols);
-    end if;
+    Prompt_for_Solutions.Read_Solutions(file,sysonfile,sols);
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
       Black_Box_Root_Refiners.Refine_Roots(outfile,lp.all,sols);
     else
@@ -140,10 +59,7 @@ procedure bablvali ( infilename,outfilename : in string ) is
     lp : Link_to_Laur_Sys := null;
 
   begin
-    Read_System(infile,infilename,lp,sysonfile);
-    if lp = null
-     then Prompt_for_System(infile,lp,sysonfile);
-    end if;
+    Prompt_for_Systems.Read_System(infile,infilename,lp,sysonfile);
     if lp /= null
      then Refine(infile,lp,sysonfile);
     end if;
