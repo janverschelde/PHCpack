@@ -1,3 +1,6 @@
+Fri 23 Jun 2016 : maindeco.adb should pass the command line parameters
+  to the square and embed procedures in drivers_to_cascade_filtering.
+
 Wed 30 Nov 2016 : fixed ts_cascade, adding nt parameter.
 
 Tue 24 May 2016 : fixed bug in drivers_to_cascade_filtering.adb,

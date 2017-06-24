@@ -15,9 +15,9 @@ package Drivers_to_Cascade_Filtering is
 --   This package contains procedures to set up the sequence of
 --   homotopies to compute generic points on all components.
 
-  procedure Standard_Square_and_Embed;
-  procedure DoblDobl_Square_and_Embed;
-  procedure QuadDobl_Square_and_Embed;
+  procedure Standard_Square_and_Embed ( iptname,optname : in string );
+  procedure DoblDobl_Square_and_Embed ( iptname,optname : in string );
+  procedure QuadDobl_Square_and_Embed ( iptname,optname : in string );
 
   -- DESCRIPTION :
   --   A system is made square by
@@ -29,11 +29,19 @@ package Drivers_to_Cascade_Filtering is
   --   square and embedded polynomial system,
   --   in standard double, double double, or quad double precision.
 
-  procedure Driver_to_Square_and_Embed;
+  -- ON ENTRY :
+  --   iptname   name of the input file, passed as command line argument;
+  --   optname   name of the output file, given as command line argument.
+
+  procedure Driver_to_Square_and_Embed ( iptname,optname : in string );
 
   -- DESCRIPTION :
   --   Prompts the user for the level of precision and then calls
   --   the proper driver procedure.
+
+  -- ON ENTRY :
+  --   iptname   name of the input file, passed as command line argument;
+  --   optname   name of the output file, given as command line argument.
 
   procedure Standard_Remove_Embedding;
   procedure DoblDobl_Remove_Embedding;
@@ -198,7 +206,7 @@ package Drivers_to_Cascade_Filtering is
   --   Does the embedding of the top dimension and runs the cascade.
 
   -- ON ENTRY :
---   nt          the number of tasks, if 0 then no multitasking,
---               otherwise nt tasks will be used to track the paths;
+  --   nt        the number of tasks, if 0 then no multitasking,
+  --             otherwise nt tasks will be used to track the paths;
 
 end Drivers_to_Cascade_Filtering;

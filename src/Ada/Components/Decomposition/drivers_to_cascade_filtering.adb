@@ -47,7 +47,7 @@ with Drivers_to_Breakup_Components;      use Drivers_to_Breakup_Components;
 
 package body Drivers_to_Cascade_Filtering is
 
-  procedure Standard_Square_and_Embed is
+  procedure Standard_Square_and_Embed ( iptname,optname : in string ) is
 
     use Standard_Complex_Poly_Systems;
 
@@ -68,7 +68,7 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
   end Standard_Square_and_Embed;
 
-  procedure DoblDobl_Square_and_Embed is
+  procedure DoblDobl_Square_and_Embed ( iptname,optname : in string ) is
 
     use DoblDobl_Complex_Poly_Systems;
 
@@ -89,7 +89,7 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
   end DoblDobl_Square_and_Embed;
 
-  procedure QuadDobl_Square_and_Embed is
+  procedure QuadDobl_Square_and_Embed ( iptname,optname : in string ) is
 
     use QuadDobl_Complex_Poly_Systems;
 
@@ -110,15 +110,15 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
   end QuadDobl_Square_and_Embed;
 
-  procedure Driver_to_Square_and_Embed is
+  procedure Driver_to_Square_and_Embed ( iptname,optname : in string ) is
 
     p : constant character := Prompt_for_Precision;
 
   begin
     case p is
-      when '0' => Standard_Square_and_Embed;
-      when '1' => DoblDobl_Square_and_Embed;
-      when '2' => QuadDobl_Square_and_Embed;
+      when '0' => Standard_Square_and_Embed(iptname,optname);
+      when '1' => DoblDobl_Square_and_Embed(iptname,optname);
+      when '2' => QuadDobl_Square_and_Embed(iptname,optname);
       when others => null;
     end case;
   end Driver_to_Square_and_Embed;
