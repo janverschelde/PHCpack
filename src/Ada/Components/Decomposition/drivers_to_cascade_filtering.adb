@@ -14,10 +14,16 @@ with Standard_Integer_Vectors;
 with Standard_Complex_VecVecs;           use Standard_Complex_VecVecs;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems;
+with Standard_Laur_Poly_Convertors;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Laur_Poly_Convertors;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Laur_Poly_Convertors;
 with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
@@ -27,6 +33,7 @@ with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with DoblDobl_Solution_Splitters;        use DoblDobl_Solution_Splitters;
 with QuadDobl_Solution_Splitters;        use QuadDobl_Solution_Splitters;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
+with Prompt_for_Systems;
 with Standard_Scaling;                   use Standard_Scaling;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
 with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
@@ -49,20 +56,25 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure Standard_Square_and_Embed ( iptname,optname : in string ) is
 
-    use Standard_Complex_Poly_Systems;
+    use Standard_Laur_Poly_Convertors;
 
-    lp,ep : Link_to_Poly_Sys;
-    file : file_type;
+    lp,ep : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq,eq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    infile,outfile : file_type;
+    sysonfile : boolean;
     k : natural32;
 
   begin
+    Prompt_for_Systems.Read_System(infile,iptname,lq,sysonfile);
+    Create_Output_File(outfile,optname);
     new_line;
-    get(lp);
-    new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file);
-    new_line;
-    Interactive_Square_and_Embed(file,lp.all,ep,k);
+    if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      Interactive_Square_and_Embed(outfile,lq.all,eq,k);     
+    else
+      lp := new Standard_Complex_Poly_Systems.Poly_Sys'
+                  (Positive_Laurent_Polynomial_System(lq.all));
+      Interactive_Square_and_Embed(outfile,lp.all,ep,k);
+    end if;
     new_line;
     put_line("See the output file for results...");
     new_line;
@@ -70,20 +82,25 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure DoblDobl_Square_and_Embed ( iptname,optname : in string ) is
 
-    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Laur_Poly_Convertors;
 
-    lp,ep : Link_to_Poly_Sys;
-    file : file_type;
+    lp,ep : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq,eq : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    infile,outfile : file_type;
+    sysonfile : boolean;
     k : natural32;
 
   begin
-    new_line;
-    get(lp);
-    new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file);
-    new_line;
-    Interactive_Square_and_Embed(file,lp.all,ep,k);
+    Prompt_for_Systems.Read_System(infile,iptname,lq,sysonfile);
+    if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      Interactive_Square_and_Embed(outfile,lq.all,eq,k);     
+    else
+      lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys'
+                  (Positive_Laurent_Polynomial_System(lq.all));
+      Create_Output_File(outfile,optname);
+      new_line;
+      Interactive_Square_and_Embed(outfile,lp.all,ep,k);
+    end if;
     new_line;
     put_line("See the output file for results...");
     new_line;
@@ -91,20 +108,25 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure QuadDobl_Square_and_Embed ( iptname,optname : in string ) is
 
-    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Laur_Poly_Convertors;
 
-    lp,ep : Link_to_Poly_Sys;
-    file : file_type;
+    lp,ep : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    infile,outfile : file_type;
+    sysonfile : boolean;
     k : natural32;
 
   begin
-    new_line;
-    get(lp);
-    new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file);
-    new_line;
-    Interactive_Square_and_Embed(file,lp.all,ep,k);
+    Prompt_for_Systems.Read_System(infile,iptname,lq,sysonfile);
+    if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      null;
+    else
+      lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'
+                  (Positive_Laurent_Polynomial_System(lq.all));
+      Create_Output_File(outfile,optname);
+      new_line;
+      Interactive_Square_and_Embed(outfile,lp.all,ep,k);
+    end if;
     new_line;
     put_line("See the output file for results...");
     new_line;

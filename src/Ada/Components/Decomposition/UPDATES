@@ -1,4 +1,7 @@
-Fri 23 Jun 2016 : maindeco.adb should pass the command line parameters
+Sat 24 Jun 2017 : added operations to square_and_embed_systems for Laurent
+  systems, used in drivers_to_cascade_filtering.adb.
+
+Fri 23 Jun 2017 : maindeco.adb should pass the command line parameters
   to the square and embed procedures in drivers_to_cascade_filtering.
 
 Wed 30 Nov 2016 : fixed ts_cascade, adding nt parameter.

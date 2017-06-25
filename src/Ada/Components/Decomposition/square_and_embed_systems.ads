@@ -3,10 +3,16 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laurentials;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laurentials;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laurentials;
+with QuadDobl_Complex_Laur_Systems;
 
 package Square_and_Embed_Systems is
 
@@ -20,12 +26,21 @@ package Square_and_Embed_Systems is
   function Restrict ( t : Standard_Complex_Polynomials.Term;
                       m,k : integer32 )
                     return Standard_Complex_Polynomials.Term;
+  function Restrict ( t : Standard_Complex_Laurentials.Term;
+                      m,k : integer32 )
+                    return Standard_Complex_Laurentials.Term;
   function Restrict ( t : DoblDobl_Complex_Polynomials.Term;
                       m,k : integer32 )
                     return DoblDobl_Complex_Polynomials.Term;
+  function Restrict ( t : DoblDobl_Complex_Laurentials.Term;
+                      m,k : integer32 )
+                    return DoblDobl_Complex_Laurentials.Term;
   function Restrict ( t : QuadDobl_Complex_Polynomials.Term;
                       m,k : integer32 )
                     return QuadDobl_Complex_Polynomials.Term;
+  function Restrict ( t : QuadDobl_Complex_Laurentials.Term;
+                      m,k : integer32 )
+                    return QuadDobl_Complex_Laurentials.Term;
 
   -- DESCRIPTION :
   --   Only the first m variables and the last k variables remain,
@@ -34,12 +49,21 @@ package Square_and_Embed_Systems is
   function Restrict ( p : Standard_Complex_Polynomials.Poly;
                       m,k : integer32 )
                     return Standard_Complex_Polynomials.Poly;
+  function Restrict ( p : Standard_Complex_Laurentials.Poly;
+                      m,k : integer32 )
+                    return Standard_Complex_Laurentials.Poly;
   function Restrict ( p : DoblDobl_Complex_Polynomials.Poly;
                       m,k : integer32 )
                     return DoblDobl_Complex_Polynomials.Poly;
+  function Restrict ( p : DoblDobl_Complex_Laurentials.Poly;
+                      m,k : integer32 )
+                    return DoblDobl_Complex_Laurentials.Poly;
   function Restrict ( p : QuadDobl_Complex_Polynomials.Poly;
                       m,k : integer32 )
                     return QuadDobl_Complex_Polynomials.Poly;
+  function Restrict ( p : QuadDobl_Complex_Laurentials.Poly;
+                      m,k : integer32 )
+                    return QuadDobl_Complex_Laurentials.Poly;
 
   -- DESCRIPTION :
   --   Restricts the polynomial to an m-dimensional subspace, spanned
@@ -53,13 +77,28 @@ package Square_and_Embed_Systems is
                 topdim : out natural32 );
   procedure Interactive_Embed_Square_System 
               ( file : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                embsys : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                topdim : out natural32 );
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 topdim : out natural32 );
   procedure Interactive_Embed_Square_System 
               ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                embsys : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                topdim : out natural32 );
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 );
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                embsys : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                 topdim : out natural32 );
 
   -- DESCRIPTION :
@@ -101,13 +140,25 @@ package Square_and_Embed_Systems is
                 nq,nv,k : natural32 )
               return Standard_Complex_Poly_Systems.Poly_Sys;
   function Full_Embed_Nonsquare_System
+              ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                nq,nv,k : natural32 )
+              return Standard_Complex_Laur_Systems.Laur_Sys;
+  function Full_Embed_Nonsquare_System
               ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 nq,nv,k : natural32 )
               return DoblDobl_Complex_Poly_Systems.Poly_Sys;
   function Full_Embed_Nonsquare_System
+              ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                nq,nv,k : natural32 )
+              return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  function Full_Embed_Nonsquare_System
               ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 nq,nv,k : natural32 )
               return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Full_Embed_Nonsquare_System
+              ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                nq,nv,k : natural32 )
+              return QuadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Constructs an embedding of a nonsquare system,
@@ -131,15 +182,33 @@ package Square_and_Embed_Systems is
                 topdim : out natural32 );
   procedure Interactive_Embed_Nonsquare_System
               ( file : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                topdim : out natural32 );
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk : in natural32;
                 embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 topdim : out natural32 );
   procedure Interactive_Embed_Nonsquare_System
               ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                topdim : out natural32 );
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk : in natural32;
                 embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 );
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                 topdim : out natural32 );
 
   -- DESCRIPTION :
@@ -179,13 +248,28 @@ package Square_and_Embed_Systems is
                 k : out natural32 );
   procedure Interactive_Square_and_Embed
               ( file : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                ep : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                k : out natural32 );
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 ep : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 k : out natural32 );
   procedure Interactive_Square_and_Embed
               ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                ep : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                k : out natural32 );
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 ep : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                k : out natural32 );
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                ep : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                 k : out natural32 );
 
   -- DESCRIPTION :

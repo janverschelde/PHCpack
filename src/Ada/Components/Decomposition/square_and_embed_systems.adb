@@ -2,11 +2,15 @@ with Communications_with_User;           use Communications_with_User;
 with Numbers_io;                         use Numbers_io;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Natural_Vectors;
+with Standard_Integer_Vectors;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
-with Witness_Sets,Witness_Sets_io;       use Witness_Sets,Witness_Sets_io;
+with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
+with Witness_Sets,Witness_Sets_io;       use Witness_Sets;
 
 package body Square_and_Embed_Systems is
 
@@ -21,6 +25,23 @@ package body Square_and_Embed_Systems is
   begin
     rt.cf := t.cf;
     rt.dg := new Standard_Natural_Vectors.Vector'(t.dg.all);
+    for i in m+1..rt.dg'last-k loop
+      rt.dg(i) := 0;
+    end loop;
+    return rt;
+  end Restrict;
+
+  function Restrict ( t : Standard_Complex_Laurentials.Term;
+                      m,k : integer32 )
+                    return Standard_Complex_Laurentials.Term is
+
+    use Standard_Complex_Laurentials;
+
+    rt : Term;
+
+  begin
+    rt.cf := t.cf;
+    rt.dg := new Standard_Integer_Vectors.Vector'(t.dg.all);
     for i in m+1..rt.dg'last-k loop
       rt.dg(i) := 0;
     end loop;
@@ -44,6 +65,23 @@ package body Square_and_Embed_Systems is
     return rt;
   end Restrict;
 
+  function Restrict ( t : DoblDobl_Complex_Laurentials.Term;
+                      m,k : integer32 )
+                    return DoblDobl_Complex_Laurentials.Term is
+
+    use DoblDobl_Complex_Laurentials;
+
+    rt : Term;
+
+  begin
+    rt.cf := t.cf;
+    rt.dg := new Standard_Integer_Vectors.Vector'(t.dg.all);
+    for i in m+1..rt.dg'last-k loop
+      rt.dg(i) := 0;
+    end loop;
+    return rt;
+  end Restrict;
+
   function Restrict ( t : QuadDobl_Complex_Polynomials.Term;
                       m,k : integer32 )
                     return QuadDobl_Complex_Polynomials.Term is
@@ -61,11 +99,52 @@ package body Square_and_Embed_Systems is
     return rt;
   end Restrict;
 
+  function Restrict ( t : QuadDobl_Complex_Laurentials.Term;
+                      m,k : integer32 )
+                    return QuadDobl_Complex_Laurentials.Term is
+
+    use QuadDobl_Complex_Laurentials;
+
+    rt : Term;
+
+  begin
+    rt.cf := t.cf;
+    rt.dg := new Standard_Integer_Vectors.Vector'(t.dg.all);
+    for i in m+1..rt.dg'last-k loop
+      rt.dg(i) := 0;
+    end loop;
+    return rt;
+  end Restrict;
+
   function Restrict ( p : Standard_Complex_Polynomials.Poly;
                       m,k : integer32 )
                     return Standard_Complex_Polynomials.Poly is
 
     use Standard_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+
+    procedure Restrict_Term ( t : in Term; continue : out boolean ) is
+
+      rt : Term := Restrict(t,m,k);
+
+    begin
+      Add(res,rt);
+      Clear(rt);
+      continue := true;
+    end Restrict_Term;
+    procedure Restrict_Terms is new Visiting_Iterator(Restrict_Term);      
+
+  begin
+    Restrict_Terms(p);
+    return res;
+  end Restrict;
+
+  function Restrict ( p : Standard_Complex_Laurentials.Poly;
+                      m,k : integer32 )
+                    return Standard_Complex_Laurentials.Poly is
+
+    use Standard_Complex_Laurentials;
 
     res : Poly := Null_Poly;
 
@@ -109,11 +188,59 @@ package body Square_and_Embed_Systems is
     return res;
   end Restrict;
 
+  function Restrict ( p : DoblDobl_Complex_Laurentials.Poly;
+                      m,k : integer32 )
+                    return DoblDobl_Complex_Laurentials.Poly is
+
+    use DoblDobl_Complex_Laurentials;
+
+    res : Poly := Null_Poly;
+
+    procedure Restrict_Term ( t : in Term; continue : out boolean ) is
+
+      rt : Term := Restrict(t,m,k);
+
+    begin
+      Add(res,rt);
+      Clear(rt);
+      continue := true;
+    end Restrict_Term;
+    procedure Restrict_Terms is new Visiting_Iterator(Restrict_Term);      
+
+  begin
+    Restrict_Terms(p);
+    return res;
+  end Restrict;
+
   function Restrict ( p : QuadDobl_Complex_Polynomials.Poly;
                       m,k : integer32 )
                     return QuadDobl_Complex_Polynomials.Poly is
 
     use QuadDobl_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+
+    procedure Restrict_Term ( t : in Term; continue : out boolean ) is
+
+      rt : Term := Restrict(t,m,k);
+
+    begin
+      Add(res,rt);
+      Clear(rt);
+      continue := true;
+    end Restrict_Term;
+    procedure Restrict_Terms is new Visiting_Iterator(Restrict_Term);      
+
+  begin
+    Restrict_Terms(p);
+    return res;
+  end Restrict;
+
+  function Restrict ( p : QuadDobl_Complex_Laurentials.Poly;
+                      m,k : integer32 )
+                    return QuadDobl_Complex_Laurentials.Poly is
+
+    use QuadDobl_Complex_Laurentials;
 
     res : Poly := Null_Poly;
 
@@ -159,7 +286,7 @@ package body Square_and_Embed_Systems is
 
   begin
     put("Give the expected top dimension : "); Read_Natural(k);
-    Add_Embed_Symbols(k); topdim := k;
+    Witness_Sets_io.Add_Embed_Symbols(k); topdim := k;
     declare
       ep : Poly_Sys(p'first..p'last+integer32(k));
     begin
@@ -170,7 +297,7 @@ package body Square_and_Embed_Systems is
         put("Give the dimension of the subspace : "); Read_Natural(m);
         put("The first "); put(m,1);
         put_line(" variables span the subspace...");
-        Determine_Order(ep);
+        Witness_Sets_io.Determine_Order(ep);
         for i in ep'last-integer32(k)+1..ep'last loop
           declare
             rp : constant Poly := Restrict(ep(i),integer32(m),integer32(k));
@@ -182,6 +309,46 @@ package body Square_and_Embed_Systems is
       end if;
       put_line(file,ep);
       embsys := new Poly_Sys'(ep);
+    end;
+  end Interactive_Embed_Square_System;
+
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                embsys : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                topdim : out natural32 ) is
+
+    use Standard_Complex_Laurentials;
+    use Standard_Complex_Laur_Systems;
+
+    k,m : natural32 := 0;
+    ans : character;
+
+  begin
+    put("Give the expected top dimension : "); Read_Natural(k);
+    Witness_Sets_io.Add_Embed_Symbols(k); topdim := k;
+    declare
+      ep : Laur_Sys(p'first..p'last+integer32(k));
+    begin
+      ep := Slice_and_Embed(p,k);
+      put("Should the slices be restricted to a subspace ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("Give the dimension of the subspace : "); Read_Natural(m);
+        put("The first "); put(m,1);
+        put_line(" variables span the subspace...");
+        Witness_Sets_io.Determine_Order(ep);
+        for i in ep'last-integer32(k)+1..ep'last loop
+          declare
+            rp : constant Poly := Restrict(ep(i),integer32(m),integer32(k));
+          begin
+            Clear(ep(i));
+            ep(i) := rp;
+          end;
+        end loop;
+      end if;
+      put_line(file,ep);
+      embsys := new Laur_Sys'(ep);
     end;
   end Interactive_Embed_Square_System;
 
@@ -199,7 +366,7 @@ package body Square_and_Embed_Systems is
 
   begin
     put("Give the expected top dimension : "); Read_Natural(k);
-    Add_Embed_Symbols(k); topdim := k;
+    Witness_Sets_io.Add_Embed_Symbols(k); topdim := k;
     declare
       ep : Poly_Sys(p'first..p'last+integer32(k));
     begin
@@ -210,7 +377,7 @@ package body Square_and_Embed_Systems is
         put("Give the dimension of the subspace : "); Read_Natural(m);
         put("The first "); put(m,1);
         put_line(" variables span the subspace...");
-        Determine_Order(ep);
+        Witness_Sets_io.Determine_Order(ep);
         for i in ep'last-integer32(k)+1..ep'last loop
           declare
             rp : constant Poly := Restrict(ep(i),integer32(m),integer32(k));
@@ -222,6 +389,46 @@ package body Square_and_Embed_Systems is
       end if;
       put_line(file,ep);
       embsys := new Poly_Sys'(ep);
+    end;
+  end Interactive_Embed_Square_System;
+
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                embsys : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                topdim : out natural32 ) is
+
+    use DoblDobl_Complex_Laurentials;
+    use DoblDobl_Complex_Laur_Systems;
+
+    k,m : natural32 := 0;
+    ans : character;
+
+  begin
+    put("Give the expected top dimension : "); Read_Natural(k);
+    Witness_Sets_io.Add_Embed_Symbols(k); topdim := k;
+    declare
+      ep : Laur_Sys(p'first..p'last+integer32(k));
+    begin
+      ep := Slice_and_Embed(p,k);
+      put("Should the slices be restricted to a subspace ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("Give the dimension of the subspace : "); Read_Natural(m);
+        put("The first "); put(m,1);
+        put_line(" variables span the subspace...");
+        Witness_Sets_io.Determine_Order(ep);
+        for i in ep'last-integer32(k)+1..ep'last loop
+          declare
+            rp : constant Poly := Restrict(ep(i),integer32(m),integer32(k));
+          begin
+            Clear(ep(i));
+            ep(i) := rp;
+          end;
+        end loop;
+      end if;
+      put_line(file,ep);
+      embsys := new Laur_Sys'(ep);
     end;
   end Interactive_Embed_Square_System;
 
@@ -239,7 +446,7 @@ package body Square_and_Embed_Systems is
 
   begin
     put("Give the expected top dimension : "); Read_Natural(k);
-    Add_Embed_Symbols(k); topdim := k;
+    Witness_Sets_io.Add_Embed_Symbols(k); topdim := k;
     declare
       ep : Poly_Sys(p'first..p'last+integer32(k));
     begin
@@ -250,7 +457,7 @@ package body Square_and_Embed_Systems is
         put("Give the dimension of the subspace : "); Read_Natural(m);
         put("The first "); put(m,1);
         put_line(" variables span the subspace...");
-        Determine_Order(ep);
+        Witness_Sets_io.Determine_Order(ep);
         for i in ep'last-integer32(k)+1..ep'last loop
           declare
             rp : constant Poly := Restrict(ep(i),integer32(m),integer32(k));
@@ -265,6 +472,46 @@ package body Square_and_Embed_Systems is
     end;
   end Interactive_Embed_Square_System;
 
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                embsys : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                topdim : out natural32 ) is
+
+    use QuadDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Laur_Systems;
+
+    k,m : natural32 := 0;
+    ans : character;
+
+  begin
+    put("Give the expected top dimension : "); Read_Natural(k);
+    Witness_Sets_io.Add_Embed_Symbols(k); topdim := k;
+    declare
+      ep : Laur_Sys(p'first..p'last+integer32(k));
+    begin
+      ep := Slice_and_Embed(p,k);
+      put("Should the slices be restricted to a subspace ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("Give the dimension of the subspace : "); Read_Natural(m);
+        put("The first "); put(m,1);
+        put_line(" variables span the subspace...");
+        Witness_Sets_io.Determine_Order(ep);
+        for i in ep'last-integer32(k)+1..ep'last loop
+          declare
+            rp : constant Poly := Restrict(ep(i),integer32(m),integer32(k));
+          begin
+            Clear(ep(i));
+            ep(i) := rp;
+          end;
+        end loop;
+      end if;
+      put_line(file,ep);
+      embsys := new Laur_Sys'(ep);
+    end;
+  end Interactive_Embed_Square_System;
+
   procedure Embed_Square_System 
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
@@ -273,7 +520,7 @@ package body Square_and_Embed_Systems is
     use Standard_Complex_Poly_Systems;
 
   begin
-    Add_Embed_Symbols(topdim);
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
     declare
       ep : Poly_Sys(p'first..p'last+integer32(topdim));
     begin
@@ -290,7 +537,7 @@ package body Square_and_Embed_Systems is
     use DoblDobl_Complex_Poly_Systems;
 
   begin
-    Add_Embed_Symbols(topdim);
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
     declare
       ep : Poly_Sys(p'first..p'last+integer32(topdim));
     begin
@@ -307,7 +554,7 @@ package body Square_and_Embed_Systems is
     use QuadDobl_Complex_Poly_Systems;
 
   begin
-    Add_Embed_Symbols(topdim);
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
     declare
       ep : Poly_Sys(p'first..p'last+integer32(topdim));
     begin
@@ -339,6 +586,38 @@ package body Square_and_Embed_Systems is
       else
         declare
           aux : Poly_Sys(p'first..p'last+d);
+        begin
+          aux := Embed_with_Dummies(p,natural32(d));
+          embedded := Slice_and_Embed(aux,k-natural32(d));
+        end;
+      end if;
+    end if;
+    return embedded;
+  end Full_Embed_Nonsquare_System;
+
+  function Full_Embed_Nonsquare_System
+              ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                nq,nv,k : natural32 )
+              return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    use Standard_Complex_Laur_Systems;
+ 
+    embedded : Laur_Sys(p'first..p'last+integer32(k));
+    d : constant integer32 := integer32(nv - nq);
+
+  begin
+    if nv < nq then
+      declare
+        sp : constant Laur_Sys := Square(p);
+      begin
+        embedded := Slice_and_Embed(sp,k);
+      end;
+    else
+      if integer32(k) <= d then
+        embedded := Embed_with_Dummies(p,k);
+      else
+        declare
+          aux : Laur_Sys(p'first..p'last+d);
         begin
           aux := Embed_with_Dummies(p,natural32(d));
           embedded := Slice_and_Embed(aux,k-natural32(d));
@@ -381,6 +660,38 @@ package body Square_and_Embed_Systems is
   end Full_Embed_Nonsquare_System;
 
   function Full_Embed_Nonsquare_System
+              ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                nq,nv,k : natural32 )
+              return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use DoblDobl_Complex_Laur_Systems;
+ 
+    embedded : Laur_Sys(p'first..p'last+integer32(k));
+    d : constant integer32 := integer32(nv - nq);
+
+  begin
+    if nv < nq then
+      declare
+        sp : constant Laur_Sys := Square(p);
+      begin
+        embedded := Slice_and_Embed(sp,k);
+      end;
+    else
+      if integer32(k) <= d then
+        embedded := Embed_with_Dummies(p,k);
+      else
+        declare
+          aux : Laur_Sys(p'first..p'last+d);
+        begin
+          aux := Embed_with_Dummies(p,natural32(d));
+          embedded := Slice_and_Embed(aux,k-natural32(d));
+        end;
+      end if;
+    end if;
+    return embedded;
+  end Full_Embed_Nonsquare_System;
+
+  function Full_Embed_Nonsquare_System
               ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 nq,nv,k : natural32 )
               return QuadDobl_Complex_Poly_Systems.Poly_Sys is
@@ -412,6 +723,38 @@ package body Square_and_Embed_Systems is
     return embedded;
   end Full_Embed_Nonsquare_System;
 
+  function Full_Embed_Nonsquare_System
+              ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                nq,nv,k : natural32 )
+              return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use QuadDobl_Complex_Laur_Systems;
+ 
+    embedded : Laur_Sys(p'first..p'last+integer32(k));
+    d : constant integer32 := integer32(nv - nq);
+
+  begin
+    if nv < nq then
+      declare
+        sp : constant Laur_Sys := Square(p);
+      begin
+        embedded := Slice_and_Embed(sp,k);
+      end;
+    else
+      if integer32(k) <= d then
+        embedded := Embed_with_Dummies(p,k);
+      else
+        declare
+          aux : Laur_Sys(p'first..p'last+d);
+        begin
+          aux := Embed_with_Dummies(p,natural32(d));
+          embedded := Slice_and_Embed(aux,k-natural32(d));
+        end;
+      end if;
+    end if;
+    return embedded;
+  end Full_Embed_Nonsquare_System;
+
   procedure Interactive_Embed_Nonsquare_System
               ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -430,14 +773,14 @@ package body Square_and_Embed_Systems is
 
   begin
     if nbequ > nbunk
-     then Add_Slack_Symbols(nbequ-nbunk);
+     then Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
     end if;
     put("Give the expected top dimension : "); Read_Integer(k);
     ns := Symbol_Table.Number;
     if ns < nbunk
-     then Add_Extra_Symbols(nbunk-ns);
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
     end if;
-    Add_Embed_Symbols(natural32(k));
+    Witness_Sets_io.Add_Embed_Symbols(natural32(k));
     topdim := natural32(k);
     declare
       ep : Poly_Sys(sp'first..sp'last+k)
@@ -449,7 +792,7 @@ package body Square_and_Embed_Systems is
         put("Give the dimension of the subspace : "); Read_Natural(m);
         put("The first "); put(m,1);
         put_line(" variables span the subspace...");
-        Determine_Order(ep);
+        Witness_Sets_io.Determine_Order(ep);
         for i in ep'last-k+1..ep'last loop
           declare
             rp : constant Poly := Restrict(ep(i),integer32(m),k);
@@ -472,6 +815,69 @@ package body Square_and_Embed_Systems is
       end if;
       put_line(file,ep);
       embsys := new Poly_Sys'(ep);
+    end;
+  end Interactive_Embed_Nonsquare_System;
+
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                topdim : out natural32 ) is
+
+    use Standard_Complex_Laurentials;
+    use Standard_Complex_Laur_Systems;
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Laur_Sys(1..integer32(max)) := Square(p);
+    m,ns : natural32;
+    k,a : integer32 := 0;
+    ans : character;
+
+  begin
+    if nbequ > nbunk
+     then Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
+    end if;
+    put("Give the expected top dimension : "); Read_Integer(k);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Witness_Sets_io.Add_Embed_Symbols(natural32(k));
+    topdim := natural32(k);
+    declare
+      ep : Laur_Sys(sp'first..sp'last+k)
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,natural32(k));
+    begin
+      put("Should the slices be restricted to a subspace ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("Give the dimension of the subspace : "); Read_Natural(m);
+        put("The first "); put(m,1);
+        put_line(" variables span the subspace...");
+        Witness_Sets_io.Determine_Order(ep);
+        for i in ep'last-k+1..ep'last loop
+          declare
+            rp : constant Poly := Restrict(ep(i),integer32(m),k);
+          begin
+            Clear(ep(i));
+            ep(i) := rp;
+          end;
+        end loop;
+        a := integer32(nbunk - nbequ) - k;
+        if a > 0 then
+          for i in ep'last-2*k-a+1..ep'last-2*k loop
+            declare
+              rp : constant Poly := Restrict(ep(i),integer32(m),k);
+            begin
+              Clear(ep(i));
+              ep(i) := rp;
+            end;
+          end loop;
+        end if; 
+      end if;
+      put_line(file,ep);
+      embsys := new Laur_Sys'(ep);
     end;
   end Interactive_Embed_Nonsquare_System;
 
@@ -493,14 +899,14 @@ package body Square_and_Embed_Systems is
 
   begin
     if nbequ > nbunk
-     then Add_Slack_Symbols(nbequ-nbunk);
+     then Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
     end if;
     put("Give the expected top dimension : "); Read_Integer(k);
     ns := Symbol_Table.Number;
     if ns < nbunk
-     then Add_Extra_Symbols(nbunk-ns);
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
     end if;
-    Add_Embed_Symbols(natural32(k));
+    Witness_Sets_io.Add_Embed_Symbols(natural32(k));
     topdim := natural32(k);
     declare
       ep : Poly_Sys(sp'first..sp'last+k)
@@ -512,7 +918,7 @@ package body Square_and_Embed_Systems is
         put("Give the dimension of the subspace : "); Read_Natural(m);
         put("The first "); put(m,1);
         put_line(" variables span the subspace...");
-        Determine_Order(ep);
+        Witness_Sets_io.Determine_Order(ep);
         for i in ep'last-k+1..ep'last loop
           declare
             rp : constant Poly := Restrict(ep(i),integer32(m),k);
@@ -540,6 +946,69 @@ package body Square_and_Embed_Systems is
 
   procedure Interactive_Embed_Nonsquare_System
               ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                topdim : out natural32 ) is
+
+    use DoblDobl_Complex_Laurentials;
+    use DoblDobl_Complex_Laur_Systems;
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Laur_Sys(1..integer32(max)) := Square(p);
+    m,ns : natural32;
+    k,a : integer32 := 0;
+    ans : character;
+
+  begin
+    if nbequ > nbunk
+     then Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
+    end if;
+    put("Give the expected top dimension : "); Read_Integer(k);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Witness_Sets_io.Add_Embed_Symbols(natural32(k));
+    topdim := natural32(k);
+    declare
+      ep : Laur_Sys(sp'first..sp'last+k)
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,natural32(k));
+    begin
+      put("Should the slices be restricted to a subspace ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("Give the dimension of the subspace : "); Read_Natural(m);
+        put("The first "); put(m,1);
+        put_line(" variables span the subspace...");
+        Witness_Sets_io.Determine_Order(ep);
+        for i in ep'last-k+1..ep'last loop
+          declare
+            rp : constant Poly := Restrict(ep(i),integer32(m),k);
+          begin
+            Clear(ep(i));
+            ep(i) := rp;
+          end;
+        end loop;
+        a := integer32(nbunk - nbequ) - k;
+        if a > 0 then
+          for i in ep'last-2*k-a+1..ep'last-2*k loop
+            declare
+              rp : constant Poly := Restrict(ep(i),integer32(m),k);
+            begin
+              Clear(ep(i));
+              ep(i) := rp;
+            end;
+          end loop;
+        end if; 
+      end if;
+      put_line(file,ep);
+      embsys := new Laur_Sys'(ep);
+    end;
+  end Interactive_Embed_Nonsquare_System;
+
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk : in natural32;
                 embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -556,14 +1025,14 @@ package body Square_and_Embed_Systems is
 
   begin
     if nbequ > nbunk
-     then Add_Slack_Symbols(nbequ-nbunk);
+     then Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
     end if;
     put("Give the expected top dimension : "); Read_Integer(k);
     ns := Symbol_Table.Number;
     if ns < nbunk
-     then Add_Extra_Symbols(nbunk-ns);
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
     end if;
-    Add_Embed_Symbols(natural32(k));
+    Witness_Sets_io.Add_Embed_Symbols(natural32(k));
     topdim := natural32(k);
     declare
       ep : Poly_Sys(sp'first..sp'last+k)
@@ -575,7 +1044,7 @@ package body Square_and_Embed_Systems is
         put("Give the dimension of the subspace : "); Read_Natural(m);
         put("The first "); put(m,1);
         put_line(" variables span the subspace...");
-        Determine_Order(ep);
+        Witness_Sets_io.Determine_Order(ep);
         for i in ep'last-k+1..ep'last loop
           declare
             rp : constant Poly := Restrict(ep(i),integer32(m),k);
@@ -601,6 +1070,69 @@ package body Square_and_Embed_Systems is
     end;
   end Interactive_Embed_Nonsquare_System;
 
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                topdim : out natural32 ) is
+
+    use QuadDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Laur_Systems;
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Laur_Sys(1..integer32(max)) := Square(p);
+    m,ns : natural32;
+    k,a : integer32 := 0;
+    ans : character;
+
+  begin
+    if nbequ > nbunk
+     then Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
+    end if;
+    put("Give the expected top dimension : "); Read_Integer(k);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Witness_Sets_io.Add_Embed_Symbols(natural32(k));
+    topdim := natural32(k);
+    declare
+      ep : Laur_Sys(sp'first..sp'last+k)
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,natural32(k));
+    begin
+      put("Should the slices be restricted to a subspace ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("Give the dimension of the subspace : "); Read_Natural(m);
+        put("The first "); put(m,1);
+        put_line(" variables span the subspace...");
+        Witness_Sets_io.Determine_Order(ep);
+        for i in ep'last-k+1..ep'last loop
+          declare
+            rp : constant Poly := Restrict(ep(i),integer32(m),k);
+          begin
+            Clear(ep(i));
+            ep(i) := rp;
+          end;
+        end loop;
+        a := integer32(nbunk - nbequ) - k;
+        if a > 0 then
+          for i in ep'last-2*k-a+1..ep'last-2*k loop
+            declare
+              rp : constant Poly := Restrict(ep(i),integer32(m),k);
+            begin
+              Clear(ep(i));
+              ep(i) := rp;
+            end;
+          end loop;
+        end if; 
+      end if;
+      put_line(file,ep);
+      embsys := new Laur_Sys'(ep);
+    end;
+  end Interactive_Embed_Nonsquare_System;
+
   procedure Embed_Nonsquare_System
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk,topdim : in natural32;
@@ -614,15 +1146,15 @@ package body Square_and_Embed_Systems is
 
   begin
     if nbequ > nbunk then
-      Add_Slack_Symbols(nbequ-nbunk);
+      Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
      -- put("added "); put(nbequ - nbunk,1); put_line(" slack variables");
     end if;
    -- put_line("The squared polynomial system :"); put_line(sp);
     ns := Symbol_Table.Number;
     if ns < nbunk
-     then Add_Extra_Symbols(nbunk-ns);
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
     end if;
-    Add_Embed_Symbols(topdim);
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
     declare
       ep : Poly_Sys(sp'first..sp'last+integer32(topdim))
          := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,topdim);
@@ -644,15 +1176,15 @@ package body Square_and_Embed_Systems is
 
   begin
     if nbequ > nbunk then
-      Add_Slack_Symbols(nbequ-nbunk);
+      Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
      -- put("added "); put(nbequ - nbunk,1); put_line(" slack variables");
     end if;
    -- put_line("The squared polynomial system :"); put_line(sp);
     ns := Symbol_Table.Number;
     if ns < nbunk
-     then Add_Extra_Symbols(nbunk-ns);
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
     end if;
-    Add_Embed_Symbols(topdim);
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
     declare
       ep : Poly_Sys(sp'first..sp'last+integer32(topdim))
          := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,topdim);
@@ -674,15 +1206,15 @@ package body Square_and_Embed_Systems is
 
   begin
     if nbequ > nbunk then
-      Add_Slack_Symbols(nbequ-nbunk);
+      Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
      -- put("added "); put(nbequ - nbunk,1); put_line(" slack variables");
     end if;
    -- put_line("The squared polynomial system :"); put_line(sp);
     ns := Symbol_Table.Number;
     if ns < nbunk
-     then Add_Extra_Symbols(nbunk-ns);
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
     end if;
-    Add_Embed_Symbols(topdim);
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
     declare
       ep : Poly_Sys(sp'first..sp'last+integer32(topdim))
          := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,topdim);
@@ -698,6 +1230,26 @@ package body Square_and_Embed_Systems is
                 k : out natural32 ) is
 
     use Standard_Complex_Polynomials;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+
+  begin
+    put("The number of equations : "); put(nq,1); new_line;
+    put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Interactive_Embed_Nonsquare_System(file,p,nq,nv,ep,k);
+     else Interactive_Embed_Square_System(file,p,ep,k);
+    end if;
+  end Interactive_Square_and_Embed;
+
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                ep : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                k : out natural32 ) is
+
+    use Standard_Complex_Laurentials;
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
@@ -733,11 +1285,51 @@ package body Square_and_Embed_Systems is
 
   procedure Interactive_Square_and_Embed
               ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                ep : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                k : out natural32 ) is
+
+    use DoblDobl_Complex_Laurentials;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+
+  begin
+    put("The number of equations : "); put(nq,1); new_line;
+    put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Interactive_Embed_Nonsquare_System(file,p,nq,nv,ep,k);
+     else Interactive_Embed_Square_System(file,p,ep,k);
+    end if;
+  end Interactive_Square_and_Embed;
+
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 ep : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 k : out natural32 ) is
 
     use QuadDobl_Complex_Polynomials;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+
+  begin
+    put("The number of equations : "); put(nq,1); new_line;
+    put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Interactive_Embed_Nonsquare_System(file,p,nq,nv,ep,k);
+     else Interactive_Embed_Square_System(file,p,ep,k);
+    end if;
+  end Interactive_Square_and_Embed;
+
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                ep : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                k : out natural32 ) is
+
+    use QuadDobl_Complex_Laurentials;
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
