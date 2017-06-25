@@ -630,10 +630,94 @@ package body Permute_Operations is
     return res;
   end "*";
 
+  function "*" ( p : Permutation; t : DoblDobl_Complex_Laurentials.Term )
+               return DoblDobl_Complex_Laurentials.Term is
+
+    res : DoblDobl_Complex_Laurentials.Term;
+    use DoblDobl_Complex_Numbers;
+
+  begin
+    res.cf := t.cf;
+    res.dg := new Standard_Integer_Vectors.Vector(t.dg'range);
+    for i in p'range loop
+      if p(i) >= 0 then
+        res.dg(i) := t.dg(p(i));
+      else
+        res.dg(i) := t.dg(-p(i));
+        res.cf := -res.cf;
+      end if;
+    end loop;
+    return res;
+  end "*";
+
+  function "*" ( p : Permutation; t : QuadDobl_Complex_Laurentials.Term )
+               return QuadDobl_Complex_Laurentials.Term is
+
+    res : QuadDobl_Complex_Laurentials.Term;
+    use QuadDobl_Complex_Numbers;
+
+  begin
+    res.cf := t.cf;
+    res.dg := new Standard_Integer_Vectors.Vector(t.dg'range);
+    for i in p'range loop
+      if p(i) >= 0 then
+        res.dg(i) := t.dg(p(i));
+      else
+        res.dg(i) := t.dg(-p(i));
+        res.cf := -res.cf;
+      end if;
+    end loop;
+    return res;
+  end "*";
+
   function "*" ( p : Permutation; s : Standard_Complex_Laurentials.Poly )
                return Standard_Complex_Laurentials.Poly is
 
     use Standard_Complex_Laurentials;
+    res : Poly := Null_Poly;
+
+    procedure Permute_Term ( t : in Term; continue : out boolean ) is
+
+      tt : Term := p*t;
+
+    begin
+      Add(res,tt);
+      Clear(tt);
+      continue := true;
+    end Permute_Term;
+    procedure Permute_Terms is new Visiting_Iterator(Permute_Term);
+
+  begin
+    Permute_Terms(s);
+    return res;
+  end "*";
+
+  function "*" ( p : Permutation; s : DoblDobl_Complex_Laurentials.Poly )
+               return DoblDobl_Complex_Laurentials.Poly is
+
+    use DoblDobl_Complex_Laurentials;
+    res : Poly := Null_Poly;
+
+    procedure Permute_Term ( t : in Term; continue : out boolean ) is
+
+      tt : Term := p*t;
+
+    begin
+      Add(res,tt);
+      Clear(tt);
+      continue := true;
+    end Permute_Term;
+    procedure Permute_Terms is new Visiting_Iterator(Permute_Term);
+
+  begin
+    Permute_Terms(s);
+    return res;
+  end "*";
+
+  function "*" ( p : Permutation; s : QuadDobl_Complex_Laurentials.Poly )
+               return QuadDobl_Complex_Laurentials.Poly is
+
+    use QuadDobl_Complex_Laurentials;
     res : Poly := Null_Poly;
 
     procedure Permute_Term ( t : in Term; continue : out boolean ) is
@@ -691,9 +775,37 @@ package body Permute_Operations is
     return res;
   end "*";
 
-  function "*" ( s : Laur_Sys; p : Permutation ) return Laur_Sys is
+  function "*" ( s : Standard_Complex_Laur_Systems.Laur_Sys;
+                 p : Permutation )
+               return Standard_Complex_Laur_Systems.Laur_Sys is
 
-    res : Laur_Sys(s'range);
+    res : Standard_Complex_Laur_Systems.Laur_Sys(s'range);
+
+  begin
+    for k in res'range loop
+      res(k) := p*s(k);
+    end loop;
+    return res;
+  end "*";
+
+  function "*" ( s : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 p : Permutation )
+               return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys(s'range);
+
+  begin
+    for k in res'range loop
+      res(k) := p*s(k);
+    end loop;
+    return res;
+  end "*";
+
+  function "*" ( s : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 p : Permutation )
+               return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys(s'range);
 
   begin
     for k in res'range loop
@@ -753,10 +865,46 @@ package body Permute_Operations is
     return r;
   end "*";
 
-  function "*" ( p : Permutation; s : Laur_Sys ) return Laur_Sys is
+  function "*" ( p : Permutation;
+                 s : Standard_Complex_Laur_Systems.Laur_Sys )
+               return Standard_Complex_Laur_Systems.Laur_Sys is
 
-    r : Laur_Sys(s'range);
+    r : Standard_Complex_Laur_Systems.Laur_Sys(s'range);
     use Standard_Complex_Laurentials;
+
+  begin
+    for i in p'range loop
+      if p(i) >= 0
+       then Copy(s(p(i)),r(i));
+       else r(i) := -s(-p(i));
+      end if;
+    end loop;
+    return r;
+  end "*";
+
+  function "*" ( p : Permutation;
+                 s : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+               return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    r : DoblDobl_Complex_Laur_Systems.Laur_Sys(s'range);
+    use DoblDobl_Complex_Laurentials;
+
+  begin
+    for i in p'range loop
+      if p(i) >= 0
+       then Copy(s(p(i)),r(i));
+       else r(i) := -s(-p(i));
+      end if;
+    end loop;
+    return r;
+  end "*";
+
+  function "*" ( p : Permutation;
+                 s : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+               return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    r : QuadDobl_Complex_Laur_Systems.Laur_Sys(s'range);
+    use QuadDobl_Complex_Laurentials;
 
   begin
     for i in p'range loop

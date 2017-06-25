@@ -1,3 +1,6 @@
+Sat 24 Jun 2017 : extended permute_operations with permutations applied
+  to Laurent systems.
+
 Fri 16 Jun 2017 : changed symmetric_randomize.adb for GNAT GPL 2017 error.
 
 Thu 10 Dec 2015 : added time stamp to mainsmvc.adb.
