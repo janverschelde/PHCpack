@@ -2,8 +2,11 @@ with text_io;                            use text_io;
 with Symbol_Table;                       use Symbol_Table;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Multprec_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
@@ -206,9 +209,15 @@ package Witness_Sets_io is
   procedure Determine_Order
                ( p : in out Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Determine_Order
+               ( p : in out Standard_Complex_Laur_Systems.Laur_Sys );
+  procedure Determine_Order
                ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys );
   procedure Determine_Order
+               ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys );
+  procedure Determine_Order
                ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Determine_Order
+               ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys );
 
   -- DESCRIPTION :
   --   The user can interactively determine the order of the variables.

@@ -13,10 +13,13 @@ with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
@@ -1412,6 +1415,30 @@ package body Witness_Sets_io is
   end Determine_Order;
 
   procedure Determine_Order
+               ( p : in out Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+    use Standard_Complex_Laurentials;
+    use Standard_Complex_Laur_Systems;
+ 
+    nbunk : constant natural32 := Number_of_Unknowns(p(p'first));
+    perm : Standard_Integer_Vectors.Vector(1..integer32(nbunk));
+    pp : Laur_Sys(p'range);
+    ans : character;
+ 
+  begin
+    put("There are "); put(nbunk,1); put(" unknowns, ordered as ");
+    Write_Symbol_Table(Standard_Output);
+    put("Do you wish to determine a new order ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      perm := Interactive_Read_Permutation(nbunk);
+      pp := p*Permutation(perm);
+      Permute_Symbol_Table(Permutation(perm));
+      Clear(p); p := pp;
+    end if;
+  end Determine_Order;
+
+  procedure Determine_Order
                ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
 
     use DoblDobl_Complex_Polynomials;
@@ -1436,6 +1463,30 @@ package body Witness_Sets_io is
   end Determine_Order;
 
   procedure Determine_Order
+               ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    use DoblDobl_Complex_Laurentials;
+    use DoblDobl_Complex_Laur_Systems;
+ 
+    nbunk : constant natural32 := Number_of_Unknowns(p(p'first));
+    perm : Standard_Integer_Vectors.Vector(1..integer32(nbunk));
+    pp : Laur_Sys(p'range);
+    ans : character;
+ 
+  begin
+    put("There are "); put(nbunk,1); put(" unknowns, ordered as ");
+    Write_Symbol_Table(Standard_Output);
+    put("Do you wish to determine a new order ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      perm := Interactive_Read_Permutation(nbunk);
+      pp := p*Permutation(perm);
+      Permute_Symbol_Table(Permutation(perm));
+      Clear(p); p := pp;
+    end if;
+  end Determine_Order;
+
+  procedure Determine_Order
                ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
 
     use QuadDobl_Complex_Polynomials;
@@ -1444,6 +1495,30 @@ package body Witness_Sets_io is
     nbunk : constant natural32 := Number_of_Unknowns(p(p'first));
     perm : Standard_Integer_Vectors.Vector(1..integer32(nbunk));
     pp : Poly_Sys(p'range);
+    ans : character;
+ 
+  begin
+    put("There are "); put(nbunk,1); put(" unknowns, ordered as ");
+    Write_Symbol_Table(Standard_Output);
+    put("Do you wish to determine a new order ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      perm := Interactive_Read_Permutation(nbunk);
+      pp := p*Permutation(perm);
+      Permute_Symbol_Table(Permutation(perm));
+      Clear(p); p := pp;
+    end if;
+  end Determine_Order;
+
+  procedure Determine_Order
+               ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    use QuadDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Laur_Systems;
+ 
+    nbunk : constant natural32 := Number_of_Unknowns(p(p'first));
+    perm : Standard_Integer_Vectors.Vector(1..integer32(nbunk));
+    pp : Laur_Sys(p'range);
     ans : character;
  
   begin

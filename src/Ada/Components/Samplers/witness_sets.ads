@@ -259,13 +259,25 @@ package Witness_Sets is
                 k : natural32 )
               return Standard_Complex_Poly_Systems.Poly_Sys;
   function Embed_with_Dummies
+              ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                k : natural32 )
+              return Standard_Complex_Laur_Systems.Laur_Sys;
+  function Embed_with_Dummies
               ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 k : natural32 )
               return DoblDobl_Complex_Poly_Systems.Poly_Sys;
   function Embed_with_Dummies
+              ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                k : natural32 )
+              return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  function Embed_with_Dummies
               ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 k : natural32 )
               return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Embed_with_Dummies
+              ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                k : natural32 )
+              return QuadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Adds k dummy slack variables with k extra equations setting those

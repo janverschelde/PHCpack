@@ -1135,6 +1135,30 @@ package body Witness_Sets is
   end Embed_with_Dummies;
 
   function Embed_with_Dummies
+              ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                k : natural32 )
+              return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    use Standard_Complex_Laurentials;
+    nvars : constant integer32 := p'length+integer32(k);
+    res : Standard_Complex_Laur_Systems.Laur_Sys
+            (p'first..p'last+integer32(k))
+        := Slice_and_Embed(p,k);
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..nvars => 0);
+    t.cf := Standard_Complex_Numbers.Create(1.0);
+    for i in 0..integer32(k)-1 loop
+      t.dg(nvars-i) := 1;
+      Clear(res(p'last-i));
+      res(p'last-i) := Create(t);
+      t.dg(nvars-i) := 0;
+    end loop;
+    return res;
+  end Embed_with_Dummies;
+
+  function Embed_with_Dummies
               ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 k : natural32 )
               return DoblDobl_Complex_Poly_Systems.Poly_Sys is
@@ -1159,6 +1183,30 @@ package body Witness_Sets is
   end Embed_with_Dummies;
 
   function Embed_with_Dummies
+              ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                k : natural32 )
+              return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use DoblDobl_Complex_Laurentials;
+    nvars : constant integer32 := p'length+integer32(k);
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys
+            (p'first..p'last+integer32(k))
+        := Slice_and_Embed(p,k);
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..nvars => 0);
+    t.cf := DoblDobl_Complex_Numbers.Create(integer(1));
+    for i in 0..integer32(k)-1 loop
+      t.dg(nvars-i) := 1;
+      Clear(res(p'last-i));
+      res(p'last-i) := Create(t);
+      t.dg(nvars-i) := 0;
+    end loop;
+    return res;
+  end Embed_with_Dummies;
+
+  function Embed_with_Dummies
               ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 k : natural32 )
               return QuadDobl_Complex_Poly_Systems.Poly_Sys is
@@ -1172,6 +1220,30 @@ package body Witness_Sets is
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..nvars => 0);
+    t.cf := QuadDobl_Complex_Numbers.Create(integer(1));
+    for i in 0..integer32(k)-1 loop
+      t.dg(nvars-i) := 1;
+      Clear(res(p'last-i));
+      res(p'last-i) := Create(t);
+      t.dg(nvars-i) := 0;
+    end loop;
+    return res;
+  end Embed_with_Dummies;
+
+  function Embed_with_Dummies
+              ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                k : natural32 )
+              return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use QuadDobl_Complex_Laurentials;
+    nvars : constant integer32 := p'length+integer32(k);
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys
+            (p'first..p'last+integer32(k))
+        := Slice_and_Embed(p,k);
+    t : Term;
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..nvars => 0);
     t.cf := QuadDobl_Complex_Numbers.Create(integer(1));
     for i in 0..integer32(k)-1 loop
       t.dg(nvars-i) := 1;
