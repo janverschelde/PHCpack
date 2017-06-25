@@ -111,20 +111,20 @@ package body Drivers_to_Cascade_Filtering is
     use QuadDobl_Laur_Poly_Convertors;
 
     lp,ep : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    lq : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    lq,eq : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
     infile,outfile : file_type;
     sysonfile : boolean;
     k : natural32;
 
   begin
     Prompt_for_Systems.Read_System(infile,iptname,lq,sysonfile);
+    Create_Output_File(outfile,optname);
+    new_line;
     if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      null;
+      Interactive_Square_and_Embed(outfile,lq.all,eq,k);
     else
       lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      Create_Output_File(outfile,optname);
-      new_line;
       Interactive_Square_and_Embed(outfile,lp.all,ep,k);
     end if;
     new_line;
