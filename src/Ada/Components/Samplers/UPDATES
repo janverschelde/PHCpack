@@ -1,3 +1,6 @@
+Sun 25 Jun 2017 : extended witness_sets and witness_sets_io with operations
+  to represent witness sets for Laurent systems.
+
 Wed 21 Jun 2017 : to planes_and_polynomials added representations of
   hyperplanes as Laurent polynomial types.  The ts_embed.adb tests the
   embedding of Laurent systems, computed by the new operations specified

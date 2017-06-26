@@ -15,12 +15,15 @@ with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
@@ -234,9 +237,57 @@ package body Witness_Sets_io is
 
   procedure Permute_Polynomial
               ( perm : in Permutation;
+                f : in out Standard_Complex_Laurentials.Poly ) is
+
+    use Standard_Complex_Laurentials;
+    res : Poly := Null_Poly;
+
+    procedure Permute_Term ( t : in Term; continue : out boolean ) is
+
+      pt : Term := perm*t;
+
+    begin
+      Add(res,pt);
+      Clear(pt);
+      continue := true;
+    end Permute_Term;
+    procedure Permute_Terms is new Visiting_Iterator(Permute_Term);
+
+  begin
+    Permute_Terms(f);
+    Clear(f);
+    f := res;
+  end Permute_Polynomial;
+
+  procedure Permute_Polynomial
+              ( perm : in Permutation;
                 f : in out DoblDobl_Complex_Polynomials.Poly ) is
 
     use DoblDobl_Complex_Polynomials;
+    res : Poly := Null_Poly;
+
+    procedure Permute_Term ( t : in Term; continue : out boolean ) is
+
+      pt : Term := perm*t;
+
+    begin
+      Add(res,pt);
+      Clear(pt);
+      continue := true;
+    end Permute_Term;
+    procedure Permute_Terms is new Visiting_Iterator(Permute_Term);
+
+  begin
+    Permute_Terms(f);
+    Clear(f);
+    f := res;
+  end Permute_Polynomial;
+
+  procedure Permute_Polynomial
+              ( perm : in Permutation;
+                f : in out DoblDobl_Complex_Laurentials.Poly ) is
+
+    use DoblDobl_Complex_Laurentials;
     res : Poly := Null_Poly;
 
     procedure Permute_Term ( t : in Term; continue : out boolean ) is
@@ -280,9 +331,42 @@ package body Witness_Sets_io is
     f := res;
   end Permute_Polynomial;
 
+  procedure Permute_Polynomial
+              ( perm : in Permutation;
+                f : in out QuadDobl_Complex_Laurentials.Poly ) is
+
+    use QuadDobl_Complex_Laurentials;
+    res : Poly := Null_Poly;
+
+    procedure Permute_Term ( t : in Term; continue : out boolean ) is
+
+      pt : Term := perm*t;
+
+    begin
+      Add(res,pt);
+      Clear(pt);
+      continue := true;
+    end Permute_Term;
+    procedure Permute_Terms is new Visiting_Iterator(Permute_Term);
+
+  begin
+    Permute_Terms(f);
+    Clear(f);
+    f := res;
+  end Permute_Polynomial;
+
   procedure Permute_Polynomial_System
               ( perm : in Permutation;
                 f : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
+  begin
+    for i in f'range loop
+      Permute_Polynomial(perm,f(i));
+    end loop;
+  end Permute_Polynomial_System;
+
+  procedure Permute_Polynomial_System
+              ( perm : in Permutation;
+                f : in out Standard_Complex_Laur_Systems.Laur_Sys ) is
   begin
     for i in f'range loop
       Permute_Polynomial(perm,f(i));
@@ -300,7 +384,25 @@ package body Witness_Sets_io is
 
   procedure Permute_Polynomial_System
               ( perm : in Permutation;
+                f : in out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    for i in f'range loop
+      Permute_Polynomial(perm,f(i));
+    end loop;
+  end Permute_Polynomial_System;
+
+  procedure Permute_Polynomial_System
+              ( perm : in Permutation;
                 f : in out QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+  begin
+    for i in f'range loop
+      Permute_Polynomial(perm,f(i));
+    end loop;
+  end Permute_Polynomial_System;
+
+  procedure Permute_Polynomial_System
+              ( perm : in Permutation;
+                f : in out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
   begin
     for i in f'range loop
       Permute_Polynomial(perm,f(i));
@@ -400,6 +502,23 @@ package body Witness_Sets_io is
     return res;
   end Swap;
 
+  function Swap ( t : Standard_Complex_Laurentials.Term; i,j : natural32 ) 
+                return Standard_Complex_Laurentials.Term is
+
+  -- DESCRIPTION :
+  --   Swaps the variables i and j in the term.
+
+    use Standard_Complex_Laurentials;
+    res : Term;
+
+  begin
+    res.cf := t.cf;
+    res.dg := new Standard_Integer_Vectors.Vector'(t.dg.all);
+    res.dg(integer32(i)) := t.dg(integer32(j));
+    res.dg(integer32(j)) := t.dg(integer32(i));
+    return res;
+  end Swap;
+
   function Swap ( t : DoblDobl_Complex_Polynomials.Term; i,j : natural32 ) 
                 return DoblDobl_Complex_Polynomials.Term is
 
@@ -412,6 +531,23 @@ package body Witness_Sets_io is
   begin
     res.cf := t.cf;
     res.dg := new Standard_Natural_Vectors.Vector'(t.dg.all);
+    res.dg(integer32(i)) := t.dg(integer32(j));
+    res.dg(integer32(j)) := t.dg(integer32(i));
+    return res;
+  end Swap;
+
+  function Swap ( t : DoblDobl_Complex_Laurentials.Term; i,j : natural32 ) 
+                return DoblDobl_Complex_Laurentials.Term is
+
+  -- DESCRIPTION :
+  --   Swaps the variables i and j in the term.
+
+    use DoblDobl_Complex_Laurentials;
+    res : Term;
+
+  begin
+    res.cf := t.cf;
+    res.dg := new Standard_Integer_Vectors.Vector'(t.dg.all);
     res.dg(integer32(i)) := t.dg(integer32(j));
     res.dg(integer32(j)) := t.dg(integer32(i));
     return res;
@@ -434,6 +570,23 @@ package body Witness_Sets_io is
     return res;
   end Swap;
 
+  function Swap ( t : QuadDobl_Complex_Laurentials.Term; i,j : natural32 ) 
+                return QuadDobl_Complex_Laurentials.Term is
+
+  -- DESCRIPTION :
+  --   Swaps the variables i and j in the term.
+
+    use QuadDobl_Complex_Laurentials;
+    res : Term;
+
+  begin
+    res.cf := t.cf;
+    res.dg := new Standard_Integer_Vectors.Vector'(t.dg.all);
+    res.dg(integer32(i)) := t.dg(integer32(j));
+    res.dg(integer32(j)) := t.dg(integer32(i));
+    return res;
+  end Swap;
+
   procedure Swap ( p : in out Standard_Complex_Polynomials.Poly;
                    i,j : in natural32 ) is
 
@@ -441,6 +594,31 @@ package body Witness_Sets_io is
   --   Swaps the variables i and j in the polynomial p.
 
     use Standard_Complex_Polynomials;
+    swp : Poly := Null_Poly;
+
+    procedure Swap_in_Term ( t : in Term; cont : out boolean ) is
+
+      nt : constant Term := Swap(t,i,j);
+
+    begin
+      Add(swp,nt);
+      cont := true;
+    end Swap_in_Term;
+    procedure Swap_in_Terms is new Visiting_Iterator(Swap_in_Term);
+
+  begin
+    Swap_in_Terms(p);
+    Clear(p);
+    p := swp;
+  end Swap;
+
+  procedure Swap ( p : in out Standard_Complex_Laurentials.Poly;
+                   i,j : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Swaps the variables i and j in the polynomial p.
+
+    use Standard_Complex_Laurentials;
     swp : Poly := Null_Poly;
 
     procedure Swap_in_Term ( t : in Term; cont : out boolean ) is
@@ -484,6 +662,31 @@ package body Witness_Sets_io is
     p := swp;
   end Swap;
 
+  procedure Swap ( p : in out DoblDobl_Complex_Laurentials.Poly;
+                   i,j : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Swaps the variables i and j in the polynomial p.
+
+    use DoblDobl_Complex_Laurentials;
+    swp : Poly := Null_Poly;
+
+    procedure Swap_in_Term ( t : in Term; cont : out boolean ) is
+
+      nt : constant Term := Swap(t,i,j);
+
+    begin
+      Add(swp,nt);
+      cont := true;
+    end Swap_in_Term;
+    procedure Swap_in_Terms is new Visiting_Iterator(Swap_in_Term);
+
+  begin
+    Swap_in_Terms(p);
+    Clear(p);
+    p := swp;
+  end Swap;
+
   procedure Swap ( p : in out QuadDobl_Complex_Polynomials.Poly;
                    i,j : in natural32 ) is
 
@@ -491,6 +694,31 @@ package body Witness_Sets_io is
   --   Swaps the variables i and j in the polynomial p.
 
     use QuadDobl_Complex_Polynomials;
+    swp : Poly := Null_Poly;
+
+    procedure Swap_in_Term ( t : in Term; cont : out boolean ) is
+
+      nt : constant Term := Swap(t,i,j);
+
+    begin
+      Add(swp,nt);
+      cont := true;
+    end Swap_in_Term;
+    procedure Swap_in_Terms is new Visiting_Iterator(Swap_in_Term);
+
+  begin
+    Swap_in_Terms(p);
+    Clear(p);
+    p := swp;
+  end Swap;
+
+  procedure Swap ( p : in out QuadDobl_Complex_Laurentials.Poly;
+                   i,j : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Swaps the variables i and j in the polynomial p.
+
+    use QuadDobl_Complex_Laurentials;
     swp : Poly := Null_Poly;
 
     procedure Swap_in_Term ( t : in Term; cont : out boolean ) is
@@ -521,6 +749,18 @@ package body Witness_Sets_io is
     end loop;
   end Swap;
 
+  procedure Swap ( p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                   i,j : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Swaps the variables i and j in every polynomial in the system p.
+
+  begin
+    for k in p'range loop
+      Swap(p(k),i,j);
+    end loop;
+  end Swap;
+
   procedure Swap ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                    i,j : in natural32 ) is
 
@@ -533,7 +773,31 @@ package body Witness_Sets_io is
     end loop;
   end Swap;
 
+  procedure Swap ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                   i,j : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Swaps the variables i and j in every polynomial in the system p.
+
+  begin
+    for k in p'range loop
+      Swap(p(k),i,j);
+    end loop;
+  end Swap;
+
   procedure Swap ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                   i,j : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Swaps the variables i and j in every polynomial in the system p.
+
+  begin
+    for k in p'range loop
+      Swap(p(k),i,j);
+    end loop;
+  end Swap;
+
+  procedure Swap ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                    i,j : in natural32 ) is
 
   -- DESCRIPTION :
@@ -854,7 +1118,39 @@ package body Witness_Sets_io is
 
   procedure Swap_Symbols_to_End
               ( n,k : in natural32; s : in string;
+                p : in out Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+    addsym : natural32 := First_Embed_Symbol(n,s);
+    last : natural32 := n;
+
+  begin
+    while addsym /= n+1-k loop
+      Swap(p,addsym,last);
+      Swap_Symbols(addsym,last);
+      addsym := First_Embed_Symbol(last,s);
+      last := last-1;
+    end loop;
+  end Swap_Symbols_to_End;
+
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    addsym : natural32 := First_Embed_Symbol(n,s);
+    last : natural32 := n;
+
+  begin
+    while addsym /= n+1-k loop
+      Swap(p,addsym,last);
+      Swap_Symbols(addsym,last);
+      addsym := First_Embed_Symbol(last,s);
+      last := last-1;
+    end loop;
+  end Swap_Symbols_to_End;
+
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
+                p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
 
     addsym : natural32 := First_Embed_Symbol(n,s);
     last : natural32 := n;
@@ -886,7 +1182,41 @@ package body Witness_Sets_io is
 
   procedure Swap_Symbols_to_End
               ( n,k : in natural32; s : in string;
+                p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    addsym : natural32 := First_Embed_Symbol(n,s);
+    last : natural32 := n;
+
+  begin
+    while addsym /= n+1-k loop
+      Swap(p,addsym,last);
+      Swap_Symbols(addsym,last);
+      addsym := First_Embed_Symbol(last,s);
+      last := last-1;
+    end loop;
+  end Swap_Symbols_to_End;
+
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    addsym : natural32 := First_Embed_Symbol(n,s);
+    last : natural32 := n;
+
+  begin
+    while addsym /= n+1-k loop
+      Swap(p,addsym,last);
+      Swap(sols,addsym,last);
+      Swap_Symbols(addsym,last);
+      addsym := First_Embed_Symbol(last,s);
+      last := last-1;
+    end loop;
+  end Swap_Symbols_to_End;
+
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
+                p : in out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List ) is
 
     addsym : natural32 := First_Embed_Symbol(n,s);
@@ -922,6 +1252,24 @@ package body Witness_Sets_io is
 
   procedure Swap_Symbols_to_End
               ( n,k : in natural32; s : in string;
+                p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    addsym : natural32 := First_Embed_Symbol(n,s);
+    last : natural32 := n;
+
+  begin
+    while addsym /= n+1-k loop
+      Swap(p,addsym,last);
+      Swap(sols,addsym,last);
+      Swap_Symbols(addsym,last);
+      addsym := First_Embed_Symbol(last,s);
+      last := last-1;
+    end loop;
+  end Swap_Symbols_to_End;
+
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
@@ -938,27 +1286,70 @@ package body Witness_Sets_io is
     end loop;
   end Swap_Symbols_to_End;
 
-  procedure Sort_Embed_Symbols
-              ( nv,n,d : in natural32;
-                f : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
+                p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
-    p : Permutation(1..integer32(nv));
+    addsym : natural32 := First_Embed_Symbol(n,s);
+    last : natural32 := n;
+
+  begin
+    while addsym /= n+1-k loop
+      Swap(p,addsym,last);
+      Swap(sols,addsym,last);
+      Swap_Symbols(addsym,last);
+      addsym := First_Embed_Symbol(last,s);
+      last := last-1;
+    end loop;
+  end Swap_Symbols_to_End;
+
+  function Permutation_for_Embed_Symbols
+             ( nv,n,d : natural32 ) return Permutation is
+
+  -- DESCRIPTION :
+  --   Returns the permutation to sort the embed symbols.
+
+    res : Permutation(1..integer32(nv));
 
   begin
     for i in 1..integer32(n) loop
-      p(i) := i;
+      res(i) := i;
     end loop;
     for i in n+1..n+d loop
       declare
         s : constant Symbol := Symbol_Table.Get(i);
         k : constant natural32 := Convert(s(3..s'last));
       begin
-        p(integer32(i)) := integer32(n+k);
+        res(integer32(i)) := integer32(n+k);
       end;
     end loop;
     for i in integer32(n+d+1)..integer32(nv) loop
-      p(i) := i;
+      res(i) := i;
     end loop;
+    return res;
+  end Permutation_for_Embed_Symbols;
+
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
+
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
+
+  begin
+    Permute_Symbol_Table(p);
+    Permute_Polynomial_System(p,f);
+  end Sort_Embed_Symbols;
+
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
+
+  begin
     Permute_Symbol_Table(p);
     Permute_Polynomial_System(p,f);
   end Sort_Embed_Symbols;
@@ -967,23 +1358,22 @@ package body Witness_Sets_io is
               ( nv,n,d : in natural32;
                 f : in out DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
 
-    p : Permutation(1..integer32(nv));
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
 
   begin
-    for i in 1..integer32(n) loop
-      p(i) := i;
-    end loop;
-    for i in n+1..n+d loop
-      declare
-        s : constant Symbol := Symbol_Table.Get(i);
-        k : constant natural32 := Convert(s(3..s'last));
-      begin
-        p(integer32(i)) := integer32(n+k);
-      end;
-    end loop;
-    for i in integer32(n+d+1)..integer32(nv) loop
-      p(i) := i;
-    end loop;
+    Permute_Symbol_Table(p);
+    Permute_Polynomial_System(p,f);
+  end Sort_Embed_Symbols;
+
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
+
+  begin
     Permute_Symbol_Table(p);
     Permute_Polynomial_System(p,f);
   end Sort_Embed_Symbols;
@@ -992,23 +1382,22 @@ package body Witness_Sets_io is
               ( nv,n,d : in natural32;
                 f : in out QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
 
-    p : Permutation(1..integer32(nv));
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
 
   begin
-    for i in 1..integer32(n) loop
-      p(i) := i;
-    end loop;
-    for i in n+1..n+d loop
-      declare
-        s : constant Symbol := Symbol_Table.Get(i);
-        k : constant natural32 := Convert(s(3..s'last));
-      begin
-        p(integer32(i)) := integer32(n+k);
-      end;
-    end loop;
-    for i in integer32(n+d+1)..integer32(nv) loop
-      p(i) := i;
-    end loop;
+    Permute_Symbol_Table(p);
+    Permute_Polynomial_System(p,f);
+  end Sort_Embed_Symbols;
+
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
+
+  begin
     Permute_Symbol_Table(p);
     Permute_Polynomial_System(p,f);
   end Sort_Embed_Symbols;
@@ -1018,30 +1407,27 @@ package body Witness_Sets_io is
                 f : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List ) is
 
-    p : Permutation(1..integer32(nv));
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
 
   begin
-   -- put("Dimension before the embedding : "); put(n,1); new_line;
-   -- put("Dimension of the solution set  : "); put(d,1); new_line;
-   -- Write_Symbol_Table(Standard_Output);
-    for i in 1..integer32(n) loop
-      p(i) := i;
-    end loop;
-    for i in n+1..n+d loop
-      declare
-        s : constant Symbol := Symbol_Table.Get(i);
-        k : constant natural32 := Convert(s(3..s'last));
-      begin
-        p(integer32(i)) := integer32(n+k);
-      end;
-    end loop;
-    for i in integer32(n+d+1)..integer32(nv) loop
-      p(i) := i;
-    end loop;
     Permute_Symbol_Table(p);
     Permute_Solutions(p,sols);
     Permute_Polynomial_System(p,f);
-   -- Write_Symbol_Table(Standard_Output);
+  end Sort_Embed_Symbols;
+
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
+
+  begin
+    Permute_Symbol_Table(p);
+    Permute_Solutions(p,sols);
+    Permute_Polynomial_System(p,f);
   end Sort_Embed_Symbols;
 
   procedure Sort_Embed_Symbols
@@ -1049,30 +1435,27 @@ package body Witness_Sets_io is
                 f : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
 
-    p : Permutation(1..integer32(nv));
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
 
   begin
-   -- put("Dimension before the embedding : "); put(n,1); new_line;
-   -- put("Dimension of the solution set  : "); put(d,1); new_line;
-   -- Write_Symbol_Table(Standard_Output);
-    for i in 1..integer32(n) loop
-      p(i) := i;
-    end loop;
-    for i in n+1..n+d loop
-      declare
-        s : constant Symbol := Symbol_Table.Get(i);
-        k : constant natural32 := Convert(s(3..s'last));
-      begin
-        p(integer32(i)) := integer32(n+k);
-      end;
-    end loop;
-    for i in integer32(n+d+1)..integer32(nv) loop
-      p(i) := i;
-    end loop;
     Permute_Symbol_Table(p);
     Permute_Solutions(p,sols);
     Permute_Polynomial_System(p,f);
-   -- Write_Symbol_Table(Standard_Output);
+  end Sort_Embed_Symbols;
+
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
+
+  begin
+    Permute_Symbol_Table(p);
+    Permute_Solutions(p,sols);
+    Permute_Polynomial_System(p,f);
   end Sort_Embed_Symbols;
 
   procedure Sort_Embed_Symbols
@@ -1080,30 +1463,27 @@ package body Witness_Sets_io is
                 f : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
-    p : Permutation(1..integer32(nv));
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
 
   begin
-   -- put("Dimension before the embedding : "); put(n,1); new_line;
-   -- put("Dimension of the solution set  : "); put(d,1); new_line;
-   -- Write_Symbol_Table(Standard_Output);
-    for i in 1..integer32(n) loop
-      p(i) := i;
-    end loop;
-    for i in n+1..n+d loop
-      declare
-        s : constant Symbol := Symbol_Table.Get(i);
-        k : constant natural32 := Convert(s(3..s'last));
-      begin
-        p(integer32(i)) := integer32(n+k);
-      end;
-    end loop;
-    for i in integer32(n+d+1)..integer32(nv) loop
-      p(i) := i;
-    end loop;
     Permute_Symbol_Table(p);
     Permute_Solutions(p,sols);
     Permute_Polynomial_System(p,f);
-   -- Write_Symbol_Table(Standard_Output);
+  end Sort_Embed_Symbols;
+
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    p : constant Permutation(1..integer32(nv))
+      := Permutation_for_Embed_Symbols(nv,n,d);
+
+  begin
+    Permute_Symbol_Table(p);
+    Permute_Solutions(p,sols);
+    Permute_Polynomial_System(p,f);
   end Sort_Embed_Symbols;
 
   procedure Standard_Read_Embedding
@@ -1120,6 +1500,37 @@ package body Witness_Sets_io is
   begin
     get(file,n); skip_line(file); -- to skip the #variables
     lp := new Poly_Sys(1..integer32(n));
+    Symbol_Table.Init(n);
+    get(file,lp.all);
+    Scan_and_Skip(file,"THE SOLUTIONS",found);
+    if found then
+      get(file,sols);
+    else 
+      new_line;
+      Read(sols);
+    end if;
+   -- Set_rco(sols);
+    dim := Count_Embed_Symbols(n,"zz");
+    Swap_Symbols_to_End(n,dim,"zz",lp.all,sols);
+    if dim > 1
+     then Sort_Embed_Symbols(n,n-dim,dim,lp.all,sols);
+    end if;
+  end Standard_Read_Embedding;
+
+  procedure Standard_Read_Embedding
+              ( file : in file_type;
+                lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    use Standard_Complex_Laur_Systems;
+
+    n : natural32 := 0;
+    found : boolean;
+
+  begin
+    get(file,n); skip_line(file); -- to skip the #variables
+    lp := new Laur_Sys(1..integer32(n));
     Symbol_Table.Init(n);
     get(file,lp.all);
     Scan_and_Skip(file,"THE SOLUTIONS",found);
@@ -1168,6 +1579,38 @@ package body Witness_Sets_io is
     end if;
   end DoblDobl_Read_Embedding;
 
+  procedure DoblDobl_Read_Embedding
+              ( file : in file_type;
+                lp : in out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    use DoblDobl_Complex_Laur_Systems;
+
+    n : natural32 := 0;
+    found : boolean;
+
+  begin
+   -- get(file,n); skip_line(file); -- to skip the #variables
+   -- lp := new Laur_Sys(1..integer32(n));
+   -- Symbol_Table.Init(n);
+    get(file,lp);
+    n := natural32(lp'last);
+    Scan_and_Skip(file,"THE SOLUTIONS",found);
+    if found then
+      get(file,sols);
+    else 
+      new_line;
+      Read(sols);
+    end if;
+   -- Set_rco(sols);
+    dim := Count_Embed_Symbols(n,"zz");
+    Swap_Symbols_to_End(n,dim,"zz",lp.all,sols);
+    if dim > 1
+     then Sort_Embed_Symbols(n,n-dim,dim,lp.all,sols);
+    end if;
+  end DoblDobl_Read_Embedding;
+
   procedure QuadDobl_Read_Embedding
               ( file : in file_type;
                 lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -1199,9 +1642,61 @@ package body Witness_Sets_io is
     end if;
   end QuadDobl_Read_Embedding;
 
+  procedure QuadDobl_Read_Embedding
+              ( file : in file_type;
+                lp : in out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    use QuadDobl_Complex_Laur_Systems;
+
+    n : natural32 := 0;
+    found : boolean;
+
+  begin
+   -- get(file,n); skip_line(file); -- to skip the #variables
+   -- lp := new Laur_Sys(1..integer32(n));
+   -- Symbol_Table.Init(n);
+    get(file,lp);
+    n := natural32(lp'last);
+    Scan_and_Skip(file,"THE SOLUTIONS",found);
+    if found then
+      get(file,sols);
+    else 
+      new_line;
+      Read(sols);
+    end if;
+   -- Set_rco(sols);
+    dim := Count_Embed_Symbols(n,"zz");
+    Swap_Symbols_to_End(n,dim,"zz",lp.all,sols);
+    if dim > 1
+     then Sort_Embed_Symbols(n,n-dim,dim,lp.all,sols);
+    end if;
+  end QuadDobl_Read_Embedding;
+
   procedure Standard_Read_Embedding
               ( file : in file_type;
                 lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                dim,nsl : out natural32 ) is
+
+    n : natural32;
+
+  begin
+    Standard_Read_Embedding(file,lp,sols,dim);
+    n := natural32(lp'last);
+    nsl := Count_Embed_Symbols(n,"ss");
+    if nsl > 0 then
+      Swap_Symbols_to_End(n-dim,nsl,"ss",lp.all,sols);
+      if nsl > 1
+       then Sort_Embed_Symbols(n,n-dim-nsl,nsl,lp.all,sols);
+      end if;
+    end if;
+  end Standard_Read_Embedding;
+
+  procedure Standard_Read_Embedding
+              ( file : in file_type;
+                lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 dim,nsl : out natural32 ) is
 
@@ -1239,9 +1734,49 @@ package body Witness_Sets_io is
     end if;
   end DoblDobl_Read_Embedding;
 
+  procedure DoblDobl_Read_Embedding
+              ( file : in file_type;
+                lp : in out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                dim,nsl : out natural32 ) is
+
+    n : natural32;
+
+  begin
+    DoblDobl_Read_Embedding(file,lp,sols,dim);
+    n := natural32(lp'last);
+    nsl := Count_Embed_Symbols(n,"ss");
+    if nsl > 0 then
+      Swap_Symbols_to_End(n-dim,nsl,"ss",lp.all,sols);
+      if nsl > 1
+       then Sort_Embed_Symbols(n,n-dim-nsl,nsl,lp.all,sols);
+      end if;
+    end if;
+  end DoblDobl_Read_Embedding;
+
   procedure QuadDobl_Read_Embedding
               ( file : in file_type;
                 lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                dim,nsl : out natural32 ) is
+
+    n : natural32;
+
+  begin
+    QuadDobl_Read_Embedding(file,lp,sols,dim);
+    n := natural32(lp'last);
+    nsl := Count_Embed_Symbols(n,"ss");
+    if nsl > 0 then
+      Swap_Symbols_to_End(n-dim,nsl,"ss",lp.all,sols);
+      if nsl > 1
+       then Sort_Embed_Symbols(n,n-dim-nsl,nsl,lp.all,sols);
+      end if;
+    end if;
+  end QuadDobl_Read_Embedding;
+
+  procedure QuadDobl_Read_Embedding
+              ( file : in file_type;
+                lp : in out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 dim,nsl : out natural32 ) is
 
@@ -1274,8 +1809,38 @@ package body Witness_Sets_io is
     close(infile);
   end Standard_Read_Embedding;
 
+  procedure Standard_Read_Embedding
+              ( lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    infile : file_type;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file for the embedded system.");
+    Read_Name_and_Open_File(infile);
+    Standard_Read_Embedding(infile,lp,sols,dim);
+    close(infile);
+  end Standard_Read_Embedding;
+
   procedure DoblDobl_Read_Embedding
               ( lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    infile : file_type;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file for the embedded system.");
+    Read_Name_and_Open_File(infile);
+    DoblDobl_Read_Embedding(infile,lp,sols,dim);
+    close(infile);
+  end DoblDobl_Read_Embedding;
+
+  procedure DoblDobl_Read_Embedding
+              ( lp : in out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 dim : out natural32 ) is
 
@@ -1304,8 +1869,39 @@ package body Witness_Sets_io is
     close(infile);
   end QuadDobl_Read_Embedding;
 
+  procedure QuadDobl_Read_Embedding
+              ( lp : in out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    infile : file_type;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file for the embedded system.");
+    Read_Name_and_Open_File(infile);
+    QuadDobl_Read_Embedding(infile,lp,sols,dim);
+    close(infile);
+  end QuadDobl_Read_Embedding;
+
   procedure Standard_Read_Embedding
               ( lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                dim,nsl : out natural32 ) is
+  begin
+    Standard_Read_Embedding(lp,sols,dim);
+    nsl := Count_Embed_Symbols(natural32(lp'last),"ss");
+    if nsl > 0 then
+      Swap_Symbols_to_End(natural32(lp'last)-dim,nsl,"ss",lp.all,sols);
+      if nsl > 1 then
+        Sort_Embed_Symbols
+          (natural32(lp'last),natural32(lp'last)-dim-nsl,nsl,lp.all,sols);
+      end if;
+    end if;
+  end Standard_Read_Embedding;
+
+  procedure Standard_Read_Embedding
+              ( lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 dim,nsl : out natural32 ) is
   begin
@@ -1336,8 +1932,40 @@ package body Witness_Sets_io is
     end if;
   end DoblDobl_Read_Embedding;
 
+  procedure DoblDobl_Read_Embedding
+              ( lp : in out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                dim,nsl : out natural32 ) is
+  begin
+    DoblDobl_Read_Embedding(lp,sols,dim);
+    nsl := Count_Embed_Symbols(natural32(lp'last),"ss");
+    if nsl > 0 then
+      Swap_Symbols_to_End(natural32(lp'last)-dim,nsl,"ss",lp.all,sols);
+      if nsl > 1 then
+        Sort_Embed_Symbols
+          (natural32(lp'last),natural32(lp'last)-dim-nsl,nsl,lp.all,sols);
+      end if;
+    end if;
+  end DoblDobl_Read_Embedding;
+
   procedure QuadDobl_Read_Embedding
               ( lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                dim,nsl : out natural32 ) is
+  begin
+    QuadDobl_Read_Embedding(lp,sols,dim);
+    nsl := Count_Embed_Symbols(natural32(lp'last),"ss");
+    if nsl > 0 then
+      Swap_Symbols_to_End(natural32(lp'last)-dim,nsl,"ss",lp.all,sols);
+      if nsl > 1 then
+        Sort_Embed_Symbols
+          (natural32(lp'last),natural32(lp'last)-dim-nsl,nsl,lp.all,sols);
+      end if;
+    end if;
+  end QuadDobl_Read_Embedding;
+
+  procedure QuadDobl_Read_Embedding
+              ( lp : in out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 dim,nsl : out natural32 ) is
   begin

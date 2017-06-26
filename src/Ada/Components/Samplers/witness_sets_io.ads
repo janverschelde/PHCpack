@@ -71,13 +71,32 @@ package Witness_Sets_io is
                 p : in out Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Swap_Symbols_to_End
               ( n,k : in natural32; s : in string;
+                p : in out Standard_Complex_Laur_Systems.Laur_Sys );
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
+                p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys );
   procedure Swap_Symbols_to_End
               ( n,k : in natural32; s : in string;
                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys );
   procedure Swap_Symbols_to_End
               ( n,k : in natural32; s : in string;
+                p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys );
+
+  -- DESCRIPTION :
+  --   Swaps the k symbols whose initial characters match s completely,
+  --   to the end of the symbol table, marked by n.
+  --   Also swaps the variables in the polynomial system p.
+
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
+                p : in out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List );
   procedure Swap_Symbols_to_End
               ( n,k : in natural32; s : in string;
@@ -85,7 +104,15 @@ package Witness_Sets_io is
                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
   procedure Swap_Symbols_to_End
               ( n,k : in natural32; s : in string;
+                p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
+                p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -98,13 +125,39 @@ package Witness_Sets_io is
                 f : in out Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Sort_Embed_Symbols
               ( nv,n,d : in natural32;
+                f : in out Standard_Complex_Laur_Systems.Laur_Sys );
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
                 f : in out DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out DoblDobl_Complex_Laur_Systems.Laur_Sys );
   procedure Sort_Embed_Symbols
               ( nv,n,d : in natural32;
                 f : in out QuadDobl_Complex_Poly_Systems.Poly_Sys );
   procedure Sort_Embed_Symbols
               ( nv,n,d : in natural32;
+                f : in out QuadDobl_Complex_Laur_Systems.Laur_Sys );
+
+  -- DESCRIPTION :
+  --   Sorts the embedded symbols in ascending order.
+
+  -- ON ENTRY :
+  --   nv       total number of variables;
+  --   n        dimension before the embedding;
+  --   d        number of embed symbols, typically: n + d = nv;
+  --   f        embedded polynomial system.
+
+  -- ON RETURN :
+  --   f        system with embedded variables sorted in ascending order.
+
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
                 f : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List );
   procedure Sort_Embed_Symbols
               ( nv,n,d : in natural32;
@@ -112,7 +165,15 @@ package Witness_Sets_io is
                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
   procedure Sort_Embed_Symbols
               ( nv,n,d : in natural32;
+                f : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
                 f : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -134,9 +195,19 @@ package Witness_Sets_io is
                  lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List;
                  dim : out natural32 );
+  procedure Standard_Read_Embedding
+               ( file : in file_type;
+                 lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : in out Standard_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
   procedure DoblDobl_Read_Embedding
                ( file : in file_type;
                  lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( file : in file_type;
+                 lp : in out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                  sols : in out DoblDobl_Complex_Solutions.Solution_List;
                  dim : out natural32 );
   procedure QuadDobl_Read_Embedding
@@ -144,14 +215,40 @@ package Witness_Sets_io is
                  lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                  sols : in out QuadDobl_Complex_Solutions.Solution_List;
                  dim : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( file : in file_type;
+                 lp : in out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+
+  -- DESCRIPTION :
+  --   Reads the embedded system and its solutions from file.
+  --   Ensures the added variables (marked with zz symbols) occur last.
+
+  -- ON RETURN :
+  --   file      the writing starts from file;
+  --   lp        pointer to the embedded polynomial system;
+  --   sols      solutions of lp;
+  --   dim       number of added variables in the embedding.
+
   procedure Standard_Read_Embedding
                ( file : in file_type;
                  lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List;
                  dim,nsl : out natural32 );
+  procedure Standard_Read_Embedding
+               ( file : in file_type;
+                 lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : in out Standard_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
   procedure DoblDobl_Read_Embedding
                ( file : in file_type;
                  lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( file : in file_type;
+                 lp : in out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                  sols : in out DoblDobl_Complex_Solutions.Solution_List;
                  dim,nsl : out natural32 );
   procedure QuadDobl_Read_Embedding
@@ -159,28 +256,9 @@ package Witness_Sets_io is
                  lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                  sols : in out QuadDobl_Complex_Solutions.Solution_List;
                  dim,nsl : out natural32 );
-  procedure Standard_Read_Embedding
-               ( lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                 sols : in out Standard_Complex_Solutions.Solution_List;
-                 dim : out natural32 );
-  procedure DoblDobl_Read_Embedding
-               ( lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                 dim : out natural32 );
   procedure QuadDobl_Read_Embedding
-               ( lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                 dim : out natural32 );
-  procedure Standard_Read_Embedding
-               ( lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                 sols : in out Standard_Complex_Solutions.Solution_List;
-                 dim,nsl : out natural32 );
-  procedure DoblDobl_Read_Embedding
-               ( lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                 dim,nsl : out natural32 );
-  procedure QuadDobl_Read_Embedding
-               ( lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+               ( file : in file_type;
+                 lp : in out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                  sols : in out QuadDobl_Complex_Solutions.Solution_List;
                  dim,nsl : out natural32 );
 
@@ -189,8 +267,76 @@ package Witness_Sets_io is
   --   Ensures the added variables (marked with zz symbols) occur last.
 
   -- ON RETURN :
-  --   file      if provided, then the writing starts from that file,
-  --             otherwise the user is asked to provide a file;
+  --   file      the writing starts from file;
+  --   lp        pointer to the embedded polynomial system;
+  --   sols      solutions of lp;
+  --   dim       number of added variables in the embedding;
+  --   nsl       number of slack variables used to square the system.
+
+  procedure Standard_Read_Embedding
+               ( lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out Standard_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure Standard_Read_Embedding
+               ( lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : in out Standard_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( lp : in out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( lp : in out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+
+  -- DESCRIPTION :
+  --   Reads the embedded system and its solutions from file.
+  --   Ensures the added variables (marked with zz symbols) occur last.
+
+  -- ON RETURN :
+  --   lp        pointer to the embedded polynomial system;
+  --   sols      solutions of lp;
+  --   dim       number of added variables in the embedding.
+
+  procedure Standard_Read_Embedding
+               ( lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out Standard_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
+  procedure Standard_Read_Embedding
+               ( lp : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : in out Standard_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( lp : in out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( lp : in out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
+
+  -- DESCRIPTION :
+  --   Reads the embedded system and its solutions from file.
+  --   Ensures the added variables (marked with zz symbols) occur last.
+
+  -- ON RETURN :
   --   lp        pointer to the embedded polynomial system;
   --   sols      solutions of lp;
   --   dim       number of added variables in the embedding;

@@ -510,6 +510,25 @@ package body Witness_Sets is
     return res;
   end Remove_Slice;
 
+  function Remove_Slice ( p : Standard_Complex_Laur_Systems.Laur_Sys )
+                        return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    use Standard_Complex_Laurentials;
+    res : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+    t : Term;
+
+  begin
+    for i in p'first..p'last-1 loop
+      Copy(p(i),res(i));
+    end loop;
+    t.dg := new Standard_Integer_Vectors.Vector'(p'range => 0);
+    t.dg(t.dg'last) := 1;
+    t.cf := Standard_Complex_Numbers.Create(1.0);
+    res(res'last) := Create(t);
+    Clear(t.dg);
+    return res;
+  end Remove_Slice;
+
   function Remove_Slice ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
                         return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
@@ -529,6 +548,25 @@ package body Witness_Sets is
     return res;
   end Remove_Slice;
 
+  function Remove_Slice ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                        return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use DoblDobl_Complex_Laurentials;
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    t : Term;
+
+  begin
+    for i in p'first..p'last-1 loop
+      Copy(p(i),res(i));
+    end loop;
+    t.dg := new Standard_Integer_Vectors.Vector'(p'range => 0);
+    t.dg(t.dg'last) := 1;
+    t.cf := DoblDobl_Complex_Numbers.Create(integer(1));
+    res(res'last) := Create(t);
+    Clear(t.dg);
+    return res;
+  end Remove_Slice;
+
   function Remove_Slice ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
                         return QuadDobl_Complex_Poly_Systems.Poly_Sys is
 
@@ -541,6 +579,25 @@ package body Witness_Sets is
       Copy(p(i),res(i));
     end loop;
     t.dg := new Standard_Natural_Vectors.Vector'(p'range => 0);
+    t.dg(t.dg'last) := 1;
+    t.cf := QuadDobl_Complex_Numbers.Create(integer(1));
+    res(res'last) := Create(t);
+    Clear(t.dg);
+    return res;
+  end Remove_Slice;
+
+  function Remove_Slice ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                        return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use QuadDobl_Complex_Laurentials;
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    t : Term;
+
+  begin
+    for i in p'first..p'last-1 loop
+      Copy(p(i),res(i));
+    end loop;
+    t.dg := new Standard_Integer_Vectors.Vector'(p'range => 0);
     t.dg(t.dg'last) := 1;
     t.cf := QuadDobl_Complex_Numbers.Create(integer(1));
     res(res'last) := Create(t);
@@ -1655,6 +1712,28 @@ package body Witness_Sets is
   end Is_Added_Term;
 
   function Is_Added_Term
+             ( t : Standard_Complex_Laurentials.Term; dim : natural32 )
+             return boolean is
+
+  -- DESCRIPTION :
+  --   This routine tells whether the term was added in the embedding,
+  --   i.e.: whether it has only nonzero degrees in the last dim positions.
+
+  begin
+    for i in t.dg'first..t.dg'last-integer32(dim) loop
+      if t.dg(i) /= 0
+       then return false;        -- term has nonzero original variable
+      end if;
+    end loop;                    -- term has no nonzero original variable
+    for i in t.dg'last-integer32(dim)+1..t.dg'last loop
+      if t.dg(i) /= 0
+       then return true;         -- moreover, term has added variable
+      end if;
+    end loop;
+    return false;                -- term is constant term
+  end Is_Added_Term;
+
+  function Is_Added_Term
              ( t : DoblDobl_Complex_Polynomials.Term; dim : natural32 )
              return boolean is
 
@@ -1677,7 +1756,51 @@ package body Witness_Sets is
   end Is_Added_Term;
 
   function Is_Added_Term
+             ( t : DoblDobl_Complex_Laurentials.Term; dim : natural32 )
+             return boolean is
+
+  -- DESCRIPTION :
+  --   This routine tells whether the term was added in the embedding,
+  --   i.e.: whether it has only nonzero degrees in the last dim positions.
+
+  begin
+    for i in t.dg'first..t.dg'last-integer32(dim) loop
+      if t.dg(i) /= 0
+       then return false;        -- term has nonzero original variable
+      end if;
+    end loop;                    -- term has no nonzero original variable
+    for i in t.dg'last-integer32(dim)+1..t.dg'last loop
+      if t.dg(i) /= 0
+       then return true;         -- moreover, term has added variable
+      end if;
+    end loop;
+    return false;                -- term is constant term
+  end Is_Added_Term;
+
+  function Is_Added_Term
              ( t : QuadDobl_Complex_Polynomials.Term; dim : natural32 )
+             return boolean is
+
+  -- DESCRIPTION :
+  --   This routine tells whether the term was added in the embedding,
+  --   i.e.: whether it has only nonzero degrees in the last dim positions.
+
+  begin
+    for i in t.dg'first..t.dg'last-integer32(dim) loop
+      if t.dg(i) /= 0
+       then return false;        -- term has nonzero original variable
+      end if;
+    end loop;                    -- term has no nonzero original variable
+    for i in t.dg'last-integer32(dim)+1..t.dg'last loop
+      if t.dg(i) /= 0
+       then return true;         -- moreover, term has added variable
+      end if;
+    end loop;
+    return false;                -- term is constant term
+  end Is_Added_Term;
+
+  function Is_Added_Term
+             ( t : QuadDobl_Complex_Laurentials.Term; dim : natural32 )
              return boolean is
 
   -- DESCRIPTION :
@@ -1725,6 +1848,33 @@ package body Witness_Sets is
     return res;
   end Remove_Embedding;
 
+  function Remove_Embedding ( p : Standard_Complex_Laurentials.Poly;
+                              dim : natural32 )
+                            return Standard_Complex_Laurentials.Poly is
+
+    use Standard_Complex_Laurentials;
+    res : Poly := Null_Poly;
+
+    procedure Remove_in_Term ( t : in Term; cont : out boolean ) is
+
+      rt : Term;
+
+    begin
+      if not Is_Added_Term(t,dim) then
+        rt.cf := t.cf;
+        rt.dg := new Standard_Integer_Vectors.Vector'
+                       (t.dg(t.dg'first..t.dg'last-integer32(dim)));
+        Add(res,rt);
+      end if;
+      cont := true;
+    end Remove_in_Term;
+    procedure Remove_in_Terms is new Visiting_Iterator(Remove_in_Term);
+
+  begin
+    Remove_in_Terms(p);
+    return res;
+  end Remove_Embedding;
+
   function Remove_Embedding ( p : DoblDobl_Complex_Polynomials.Poly;
                               dim : natural32 )
                             return DoblDobl_Complex_Polynomials.Poly is
@@ -1740,6 +1890,33 @@ package body Witness_Sets is
       if not Is_Added_Term(t,dim) then
         rt.cf := t.cf;
         rt.dg := new Standard_Natural_Vectors.Vector'
+                       (t.dg(t.dg'first..t.dg'last-integer32(dim)));
+        Add(res,rt);
+      end if;
+      cont := true;
+    end Remove_in_Term;
+    procedure Remove_in_Terms is new Visiting_Iterator(Remove_in_Term);
+
+  begin
+    Remove_in_Terms(p);
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding ( p : DoblDobl_Complex_Laurentials.Poly;
+                              dim : natural32 )
+                            return DoblDobl_Complex_Laurentials.Poly is
+
+    use DoblDobl_Complex_Laurentials;
+    res : Poly := Null_Poly;
+
+    procedure Remove_in_Term ( t : in Term; cont : out boolean ) is
+
+      rt : Term;
+
+    begin
+      if not Is_Added_Term(t,dim) then
+        rt.cf := t.cf;
+        rt.dg := new Standard_Integer_Vectors.Vector'
                        (t.dg(t.dg'first..t.dg'last-integer32(dim)));
         Add(res,rt);
       end if;
@@ -1779,11 +1956,51 @@ package body Witness_Sets is
     return res;
   end Remove_Embedding;
 
+  function Remove_Embedding ( p : QuadDobl_Complex_Laurentials.Poly;
+                              dim : natural32 )
+                            return QuadDobl_Complex_Laurentials.Poly is
+
+    use QuadDobl_Complex_Laurentials;
+    res : Poly := Null_Poly;
+
+    procedure Remove_in_Term ( t : in Term; cont : out boolean ) is
+
+      rt : Term;
+
+    begin
+      if not Is_Added_Term(t,dim) then
+        rt.cf := t.cf;
+        rt.dg := new Standard_Integer_Vectors.Vector'
+                       (t.dg(t.dg'first..t.dg'last-integer32(dim)));
+        Add(res,rt);
+      end if;
+      cont := true;
+    end Remove_in_Term;
+    procedure Remove_in_Terms is new Visiting_Iterator(Remove_in_Term);
+
+  begin
+    Remove_in_Terms(p);
+    return res;
+  end Remove_Embedding;
+
   function Number_of_Zero_Equations
              ( p : Standard_Complex_Poly_Systems.Poly_Sys ) return natural32 is
 
     res : natural32 := 0;
     use Standard_Complex_Polynomials;
+
+  begin
+    while p(p'last-integer32(res)) = Null_Poly loop
+      res := res + 1;
+    end loop;
+    return res;
+  end Number_of_Zero_Equations;
+
+  function Number_of_Zero_Equations
+             ( p : Standard_Complex_Laur_Systems.Laur_Sys ) return natural32 is
+
+    res : natural32 := 0;
+    use Standard_Complex_Laurentials;
 
   begin
     while p(p'last-integer32(res)) = Null_Poly loop
@@ -1806,10 +2023,36 @@ package body Witness_Sets is
   end Number_of_Zero_Equations;
 
   function Number_of_Zero_Equations
+             ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys ) return natural32 is
+
+    res : natural32 := 0;
+    use DoblDobl_Complex_Laurentials;
+
+  begin
+    while p(p'last-integer32(res)) = Null_Poly loop
+      res := res + 1;
+    end loop;
+    return res;
+  end Number_of_Zero_Equations;
+
+  function Number_of_Zero_Equations
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys ) return natural32 is
 
     res : natural32 := 0;
     use QuadDobl_Complex_Polynomials;
+
+  begin
+    while p(p'last-integer32(res)) = Null_Poly loop
+      res := res + 1;
+    end loop;
+    return res;
+  end Number_of_Zero_Equations;
+
+  function Number_of_Zero_Equations
+             ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys ) return natural32 is
+
+    res : natural32 := 0;
+    use QuadDobl_Complex_Laurentials;
 
   begin
     while p(p'last-integer32(res)) = Null_Poly loop
@@ -1823,6 +2066,20 @@ package body Witness_Sets is
                              return Standard_Complex_Poly_Systems.Poly_Sys is
 
     res : Standard_Complex_Poly_Systems.Poly_Sys
+            (p'first..p'last-integer32(dim));
+
+  begin
+    for i in res'range loop
+      res(i) := Remove_Embedding(p(i),dim);
+    end loop;
+    return res;
+  end Remove_Embedding1;
+
+  function Remove_Embedding1 ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                               dim : natural32 )
+                             return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    res : Standard_Complex_Laur_Systems.Laur_Sys
             (p'first..p'last-integer32(dim));
 
   begin
@@ -1846,11 +2103,39 @@ package body Witness_Sets is
     return res;
   end Remove_Embedding1;
 
+  function Remove_Embedding1 ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                               dim : natural32 )
+                             return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys
+            (p'first..p'last-integer32(dim));
+
+  begin
+    for i in res'range loop
+      res(i) := Remove_Embedding(p(i),dim);
+    end loop;
+    return res;
+  end Remove_Embedding1;
+
   function Remove_Embedding1 ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                                dim : natural32 )
                              return QuadDobl_Complex_Poly_Systems.Poly_Sys is
 
     res : QuadDobl_Complex_Poly_Systems.Poly_Sys
+            (p'first..p'last-integer32(dim));
+
+  begin
+    for i in res'range loop
+      res(i) := Remove_Embedding(p(i),dim);
+    end loop;
+    return res;
+  end Remove_Embedding1;
+
+  function Remove_Embedding1 ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                               dim : natural32 )
+                             return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys
             (p'first..p'last-integer32(dim));
 
   begin

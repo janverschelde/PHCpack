@@ -149,10 +149,16 @@ package Witness_Sets is
 
   function Remove_Slice ( p : Standard_Complex_Poly_Systems.Poly_Sys )
                         return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Slice ( p : Standard_Complex_Laur_Systems.Laur_Sys )
+                        return Standard_Complex_Laur_Systems.Laur_Sys;
   function Remove_Slice ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
                         return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Slice ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                        return DoblDobl_Complex_Laur_Systems.Laur_Sys;
   function Remove_Slice ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
                         return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Slice ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                        return QuadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Replaces the last equation of p by x_n = 0, where n = p'last. 
@@ -343,12 +349,21 @@ package Witness_Sets is
   function Remove_Embedding ( p : Standard_Complex_Polynomials.Poly;
                               dim : natural32 )
                             return Standard_Complex_Polynomials.Poly;
+  function Remove_Embedding ( p : Standard_Complex_Laurentials.Poly;
+                              dim : natural32 )
+                            return Standard_Complex_Laurentials.Poly;
   function Remove_Embedding ( p : DoblDobl_Complex_Polynomials.Poly;
                               dim : natural32 )
                             return DoblDobl_Complex_Polynomials.Poly;
+  function Remove_Embedding ( p : DoblDobl_Complex_Laurentials.Poly;
+                              dim : natural32 )
+                            return DoblDobl_Complex_Laurentials.Poly;
   function Remove_Embedding ( p : QuadDobl_Complex_Polynomials.Poly;
                               dim : natural32 )
                             return QuadDobl_Complex_Polynomials.Poly;
+  function Remove_Embedding ( p : QuadDobl_Complex_Laurentials.Poly;
+                              dim : natural32 )
+                            return QuadDobl_Complex_Laurentials.Poly;
 
   -- DESCRIPTION :
   --   Removes all dim added slack  added in the embedding.
@@ -356,12 +371,21 @@ package Witness_Sets is
   function Remove_Embedding1 ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                                dim : natural32 )
                              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Embedding1 ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                               dim : natural32 )
+                             return Standard_Complex_Laur_Systems.Laur_Sys;
   function Remove_Embedding1 ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                                dim : natural32 )
                              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Embedding1 ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                               dim : natural32 )
+                             return DoblDobl_Complex_Laur_Systems.Laur_Sys;
   function Remove_Embedding1 ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                                dim : natural32 )
                              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Embedding1 ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                               dim : natural32 )
+                             return QuadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Removes all dim added variables and the terms added to p in
@@ -371,9 +395,15 @@ package Witness_Sets is
   function Number_of_Zero_Equations 
              ( p : Standard_Complex_Poly_Systems.Poly_Sys ) return natural32;
   function Number_of_Zero_Equations 
+             ( p : Standard_Complex_Laur_Systems.Laur_Sys ) return natural32;
+  function Number_of_Zero_Equations 
              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys ) return natural32;
   function Number_of_Zero_Equations 
+             ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys ) return natural32;
+  function Number_of_Zero_Equations 
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys ) return natural32;
+  function Number_of_Zero_Equations 
+             ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the number of zero equations that may occur at the 
