@@ -162,12 +162,27 @@ package Drivers_to_Cascade_Filtering is
                  k : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( outfile,resfile : in file_type; nt : in natural32;
+                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                 sols : in Standard_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
                  k : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( outfile,resfile : in file_type; nt : in natural32;
+                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 sols : in DoblDobl_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in QuadDobl_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( outfile,resfile : in file_type; nt : in natural32;
+                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
                  k : in natural32; zerotol : in double_float );
 
@@ -197,13 +212,31 @@ package Drivers_to_Cascade_Filtering is
   procedure Witness_Generate
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
+                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                 sols : in Standard_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( name : in string; outfile : in file_type;
+                 nt : in natural32;
                  ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
                  k : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
+                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 sols : in DoblDobl_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( name : in string; outfile : in file_type;
+                 nt : in natural32;
                  ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in QuadDobl_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( name : in string; outfile : in file_type;
+                 nt : in natural32;
+                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
                  k : in natural32; zerotol : in double_float );
 
