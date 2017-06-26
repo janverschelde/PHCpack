@@ -1,3 +1,6 @@
+Sun 25 Jun 2017 : in generic_laur_poly_systems, added a type to define
+  arrays of Laurent systems.
+
 Thu 22 Jun 2017 : added Display_Format procedure to the package
   standard_complex_laur_systems_io and defined the Display_Format
   in standard_complex_laurentials_io.adb.
