@@ -314,13 +314,25 @@ package Square_and_Embed_Systems is
                n : natural32 )
              return Standard_Complex_Poly_Systems.Poly_Sys;
   function Remove_Last_Variables
+             ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+               n : natural32 )
+             return Standard_Complex_Laur_Systems.Laur_Sys;
+  function Remove_Last_Variables
              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                n : natural32 )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
   function Remove_Last_Variables
+             ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+               n : natural32 )
+             return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  function Remove_Last_Variables
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                n : natural32 )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Last_Variables
+             ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+               n : natural32 )
+             return QuadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Removes the last n variables of the system p, with functions
@@ -332,10 +344,19 @@ package Square_and_Embed_Systems is
               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 n : in natural32 );
   procedure Remove_Last_Variables
+              ( p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                n : in natural32 );
+  procedure Remove_Last_Variables
               ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 n : in natural32 );
   procedure Remove_Last_Variables
+              ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                n : in natural32 );
+  procedure Remove_Last_Variables
               ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                n : in natural32 );
+  procedure Remove_Last_Variables
+              ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 n : in natural32 );
 
   -- DESCRIPTION :
@@ -349,13 +370,25 @@ package Square_and_Embed_Systems is
                dim,ns : natural32 )
              return Standard_Complex_Poly_Systems.Poly_Sys;
   function Remove_Embedding
+             ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+               dim,ns : natural32 )
+             return Standard_Complex_Laur_Systems.Laur_Sys;
+  function Remove_Embedding
              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                dim,ns : natural32 )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
   function Remove_Embedding
+             ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+               dim,ns : natural32 )
+             return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  function Remove_Embedding
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                dim,ns : natural32 )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Embedding
+             ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+               dim,ns : natural32 )
+             return QuadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Removes the embedding and extra slack variables from the system p,

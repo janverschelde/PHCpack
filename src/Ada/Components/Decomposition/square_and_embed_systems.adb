@@ -1415,11 +1415,39 @@ package body Square_and_Embed_Systems is
   end Remove_Last_Variables;
 
   function Remove_Last_Variables
+             ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+               n : natural32 )
+             return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    res : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Remove_Embedding(p(i),n);
+    end loop;
+    return res;
+  end Remove_Last_Variables;
+
+  function Remove_Last_Variables
              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                n : natural32 )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
     res : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Remove_Embedding(p(i),n);
+    end loop;
+    return res;
+  end Remove_Last_Variables;
+
+  function Remove_Last_Variables
+             ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+               n : natural32 )
+             return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
 
   begin
     for i in p'range loop
@@ -1442,11 +1470,39 @@ package body Square_and_Embed_Systems is
     return res;
   end Remove_Last_Variables;
 
+  function Remove_Last_Variables
+             ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+               n : natural32 )
+             return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Remove_Embedding(p(i),n);
+    end loop;
+    return res;
+  end Remove_Last_Variables;
+
   procedure Remove_Last_Variables
               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 n : in natural32 ) is
 
     use Standard_Complex_Polynomials;
+    res : Poly;
+
+  begin
+    for i in p'range loop
+      res := Remove_Embedding(p(i),n);
+      Copy(res,p(i)); Clear(res);
+    end loop;
+  end Remove_Last_Variables;
+
+  procedure Remove_Last_Variables
+              ( p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                n : in natural32 ) is
+
+    use Standard_Complex_Laurentials;
     res : Poly;
 
   begin
@@ -1471,10 +1527,38 @@ package body Square_and_Embed_Systems is
   end Remove_Last_Variables;
 
   procedure Remove_Last_Variables
+              ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                n : in natural32 ) is
+
+    use DoblDobl_Complex_Laurentials;
+    res : Poly;
+
+  begin
+    for i in p'range loop
+      res := Remove_Embedding(p(i),n);
+      Copy(res,p(i)); Clear(res);
+    end loop;
+  end Remove_Last_Variables;
+
+  procedure Remove_Last_Variables
               ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 n : in natural32 ) is
 
     use QuadDobl_Complex_Polynomials;
+    res : Poly;
+
+  begin
+    for i in p'range loop
+      res := Remove_Embedding(p(i),n);
+      Copy(res,p(i)); Clear(res);
+    end loop;
+  end Remove_Last_Variables;
+
+  procedure Remove_Last_Variables
+              ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                n : in natural32 ) is
+
+    use QuadDobl_Complex_Laurentials;
     res : Poly;
 
   begin
@@ -1498,6 +1582,33 @@ package body Square_and_Embed_Systems is
         wrk : constant Poly_Sys := Remove_Embedding1(p,dim);
         nz : constant natural32 := Number_of_Zero_Equations(wrk);
         res1 : Poly_Sys(1..wrk'last-integer32(nz))
+             := wrk(1..wrk'last-integer32(nz));
+      begin
+        if ns > 0 then
+          Remove_Last_Variables(res1,ns);
+        end if;
+        return res1;
+      end;
+    elsif ns > 0 then
+      res := Remove_Last_Variables(p,ns);
+    end if;
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding
+             ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+               dim,ns : natural32 )
+             return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    use Standard_Complex_Laur_Systems;
+    res : Laur_Sys(p'range);
+
+  begin
+    if dim > 0 then
+      declare
+        wrk : constant Laur_Sys := Remove_Embedding1(p,dim);
+        nz : constant natural32 := Number_of_Zero_Equations(wrk);
+        res1 : Laur_Sys(1..wrk'last-integer32(nz))
              := wrk(1..wrk'last-integer32(nz));
       begin
         if ns > 0 then
@@ -1539,6 +1650,33 @@ package body Square_and_Embed_Systems is
   end Remove_Embedding;
 
   function Remove_Embedding
+             ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+               dim,ns : natural32 )
+             return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use DoblDobl_Complex_Laur_Systems;
+    res : Laur_Sys(p'range);
+
+  begin
+    if dim > 0 then
+      declare
+        wrk : constant Laur_Sys := Remove_Embedding1(p,dim);
+        nz : constant natural32 := Number_of_Zero_Equations(wrk);
+        res1 : Laur_Sys(1..wrk'last-integer32(nz))
+             := wrk(1..wrk'last-integer32(nz));
+      begin
+        if ns > 0 then
+          Remove_Last_Variables(res1,ns);
+        end if;
+        return res1;
+      end;
+    elsif ns > 0 then
+      res := Remove_Last_Variables(p,ns);
+    end if;
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                dim,ns : natural32 )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys is
@@ -1552,6 +1690,33 @@ package body Square_and_Embed_Systems is
         wrk : constant Poly_Sys := Remove_Embedding1(p,dim);
         nz : constant natural32 := Number_of_Zero_Equations(wrk);
         res1 : Poly_Sys(1..wrk'last-integer32(nz))
+             := wrk(1..wrk'last-integer32(nz));
+      begin
+        if ns > 0 then
+          Remove_Last_Variables(res1,ns);
+        end if;
+        return res1;
+      end;
+    elsif ns > 0 then
+      res := Remove_Last_Variables(p,ns);
+    end if;
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding
+             ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+               dim,ns : natural32 )
+             return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use QuadDobl_Complex_Laur_Systems;
+    res : Laur_Sys(p'range);
+
+  begin
+    if dim > 0 then
+      declare
+        wrk : constant Laur_Sys := Remove_Embedding1(p,dim);
+        nz : constant natural32 := Number_of_Zero_Equations(wrk);
+        res1 : Laur_Sys(1..wrk'last-integer32(nz))
              := wrk(1..wrk'last-integer32(nz));
       begin
         if ns > 0 then

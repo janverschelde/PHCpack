@@ -14,6 +14,7 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
+with Prompt_for_Systems;
 with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
 with Standard_Monomial_Maps;            use Standard_Monomial_Maps;
 with Standard_Monomial_Maps_io;         use Standard_Monomial_Maps_io;
@@ -47,58 +48,6 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
       Create_Output_File(file,outfilename,name);
     end if;
   end Read_Output_File;
-
-  procedure Read_System
-               ( filename : in string; lp : out Link_to_Poly_Sys ) is
-
-  -- DESCRIPTION :
-  --   Attempts to open the file with name in the string filename
-  --   in order to read the polynomial system on it.
-
-  -- ON ENTRY :
-  --   filename  name of file supplied by user from dispatcher.
-
-  -- ON RETURN :
-  --   lp        a polynomial system.
-
-    file : file_type;
-
-  begin
-    Open(file,in_file,filename);
-    get(file,lp);
-    Close(file);
-  exception
-    when others => new_line;
-                   put("Could not open file with name ");
-                   put(filename); put_line(".");
-                   lp := null; return;
-  end Read_System;
-
-  procedure Read_System
-               ( filename : in string; lp : out Link_to_Laur_Sys ) is
-
-  -- DESCRIPTION :
-  --   Attempts to open the file with name in the string filename
-  --   in order to read the polynomial system on it.
-
-  -- ON ENTRY :
-  --   filename  name of file supplied by user from dispatcher.
-
-  -- ON RETURN :
-  --   lp        a Laurent polynomial system.
-
-    file : file_type;
-
-  begin
-    Open(file,in_file,filename);
-    get(file,lp);
-    Close(file);
-  exception
-    when others => new_line;
-                   put("Could not open file with name ");
-                   put(filename); put_line(".");
-                   lp := null; return;
-  end Read_System;
 
   procedure Read_Two_Witness_Sets
               ( lp1,lp2 : out Link_to_Poly_Sys;
@@ -235,8 +184,9 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
 
   procedure Call_Binomial_Solver is
 
-    file : file_type;
+    infile,file : file_type;
     lp : Link_to_Laur_Sys;
+    sysonfile : boolean;
     ans : character;
     sols : Link_to_Array_of_Monomial_Map_Lists;
     fail : boolean;
@@ -244,14 +194,7 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     timer : Timing_Widget;
 
   begin
-    if infilename /= ""
-     then Read_System(infilename,lp);
-    end if;
-    if lp = null then
-      new_line;
-      put_line("Reading the polynomial system.");
-      get(lp);
-    end if;
+    Prompt_for_Systems.Read_System(infile,infilename,lp,sysonfile);
     Create_Output_File(file,outfilename);
     nv := Number_of_Unknowns(lp(lp'first));
     put(file,lp'last,1); put(file," ");
@@ -319,18 +262,12 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
   --   and if the corank is positive, via a monomial transformation
   --   as many variables as the corank can be eliminated.
 
-    file : file_type;
+    infile,file : file_type;
     lp : Link_to_Laur_Sys;
+    sysonfile : boolean;
 
   begin
-    if infilename /= ""
-     then Read_System(infilename,lp);
-    end if;
-    if lp = null then
-      new_line;
-      put_line("Reading the polynomial system.");
-      get(lp);
-    end if;
+    Prompt_for_Systems.Read_System(infile,infilename,lp,sysonfile);
     Create_Output_File(file,outfilename);
     Driver_to_Rank_Supports(file,lp.all);
   end Transform_Positive_Corank;
@@ -362,23 +299,21 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     put("Type 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, or B to choose : ");
     Ask_Alternative(ans,"0123456789AB");
     case ans is
-      when '0' => Embed_and_Cascade(nt);
+      when '0' => Embed_and_Cascade(nt,infilename,outfilename);
       when '1' => Driver_to_Square_and_Embed(infilename,outfilename);
-      when '2' => Driver_to_Witness_Generate(nt);
+      when '2' => Driver_to_Witness_Generate(nt,infilename,outfilename);
       when '3' => 
-        if infilename /= ""
-         then Read_System(infilename,lp);
-        end if;
-        if lp = null then
-          new_line;
-          put_line("Reading the polynomial system.");
-          get(lp);
-        end if;
+        declare
+          infile : file_type;
+          sysonfile : boolean;
+        begin
+          Prompt_for_Systems.Read_System(infile,infilename,lp,sysonfile);
+        end;
         Create_Output_File(file,outfilename);
         new_line;
         put("Give the top dimension : "); get(k); skip_line;
         Driver_for_Cascade_Filter(file,lp.all,integer32(k));
-      when '4' => Driver_to_Remove_Embedding;
+      when '4' => Driver_to_Remove_Embedding(infilename,outfilename);
       when '5' => Build_Diagonal_Cascade;
       when '6' => Collapse_Diagonal_System;
       when '7' => Call_Extrinsic_Diagonal_Homotopies(nt);

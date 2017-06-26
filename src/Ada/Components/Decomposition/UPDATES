@@ -1,3 +1,7 @@
+Sun 25 Jun 2017 : in maindeco.adb, passed the command line arguments for
+  the files to the drivers.  Extended drivers_to_cascade_filtering and
+  square_and_embed_systems with operations for Laurent systems.
+
 Sat 24 Jun 2017 : added operations to square_and_embed_systems for Laurent
   systems, used in drivers_to_cascade_filtering.adb.
 

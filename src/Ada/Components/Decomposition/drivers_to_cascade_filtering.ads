@@ -3,8 +3,11 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -43,24 +46,80 @@ package Drivers_to_Cascade_Filtering is
   --   iptname   name of the input file, passed as command line argument;
   --   optname   name of the output file, given as command line argument.
 
-  procedure Standard_Remove_Embedding;
-  procedure DoblDobl_Remove_Embedding;
-  procedure QuadDobl_Remove_Embedding;
+  procedure Standard_Remove_Embedding
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                k,ns : in natural32 );
+  procedure Standard_Remove_Embedding
+              ( file : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                k,ns : in natural32 );
+  procedure DoblDobl_Remove_Embedding
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                k,ns : in natural32 );
+  procedure DoblDobl_Remove_Embedding
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                k,ns : in natural32 );
+  procedure QuadDobl_Remove_Embedding
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                k,ns : in natural32 );
+  procedure QuadDobl_Remove_Embedding
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                k,ns : in natural32 );
+
+  -- DESCRIPTION :
+  --   Removes the embedding from the system p and solutions sols,
+  --   writing the resulting system and solutions to file.
+
+  -- ON ENTRY :
+  --   file     file opened for output;
+  --   p        embedded system, with slack variables;
+  --   sols     solutions of the embedded system p;
+  --   k        number of embed variables, equals the dimension;
+  --   ns       number of slack variables to make the system square.
+
+  procedure Standard_Remove_Embedding ( inpname,outname : in string );
+  procedure DoblDobl_Remove_Embedding ( inpname,outname : in string );
+  procedure QuadDobl_Remove_Embedding ( inpname,outname : in string );
 
   -- DESCRIPTION :
   --   Removes embed and slack variables from the system read on input.
   --   This operation undoes the squaring and embedding,
   --   in standard double, double double, or quad double precision.
 
-  procedure Driver_to_Remove_Embedding;
+  -- ON ENTRY :
+  --   inpname   name of the input file, passed as command line argument;
+  --   outname   name of the output file, given as command line argument.
+
+  procedure Driver_to_Remove_Embedding ( inpname,outname : in string );
 
   -- DESCRIPTION :
   --   Prompts the user for the level of precision and then calls
   --   the proper driver procedure.
 
+  -- ON ENTRY :
+  --   inpname   name of the input file, passed as command line argument;
+  --   outname   name of the output file, given as command line argument.
+
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
+                level : in natural32;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pocotime : out duration );
+  procedure Down_Continuation
+              ( file : in file_type; nt : in natural32;
+                embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 level : in natural32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pocotime : out duration );
@@ -72,7 +131,19 @@ package Drivers_to_Cascade_Filtering is
                 pocotime : out duration );
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
+                embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                level : in natural32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pocotime : out duration );
+  procedure Down_Continuation
+              ( file : in file_type; nt : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                level : in natural32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pocotime : out duration );
+  procedure Down_Continuation
+              ( file : in file_type; nt : in natural32;
+                embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 level : in natural32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pocotime : out duration );
@@ -150,20 +221,35 @@ package Drivers_to_Cascade_Filtering is
   --             equals the top dimension of the solution sets;
   --   zerotol   tolerance to decide whether a number is zero or not.
 
-  procedure Standard_Witness_Generate ( nt : in natural32 );
-  procedure DoblDobl_Witness_Generate ( nt : in natural32 );
-  procedure QuadDobl_Witness_Generate ( nt : in natural32 );
+  procedure Standard_Witness_Generate
+              ( nt : in natural32; inpname,outname : in string );
+  procedure DoblDobl_Witness_Generate
+              ( nt : in natural32; inpname,outname : in string );
+  procedure QuadDobl_Witness_Generate
+              ( nt : in natural32; inpname,outname : in string );
 
   -- DESCRIPTION :
   --   Interactive driver to call the Witness_Generate procedure,
   --   in standard double, double double, or quad double precision.
+  --   Names for the input and output file are passed at the command line.
 
-  procedure Driver_to_Witness_Generate ( nt : in natural32 );
+  -- ON ENTRY :
+  --   nt       number of tasks, if zero, then no tasking;
+  --   inpname  name of the input file;
+  --   outname  name of the output file.
+
+  procedure Driver_to_Witness_Generate
+              ( nt : in natural32; inpname,outname : in string );
 
   -- DESCRIPTION :
   --   Prompts the user for the level of the working precision and
   --   then calls the Standard, DoblDobl, or QuadDobl_Witness_Generate.
-  --   The number of tasks equals nt, set to zero for no tasking.
+  --   Names for the input and output file are passed at the command line.
+
+  -- ON ENTRY :
+  --   nt       number of tasks, if zero, then no tasking;
+  --   inpname  name of the input file;
+  --   outname  name of the output file.
 
   procedure Black_Box_Solver
                ( file : in file_type;
@@ -200,13 +286,16 @@ package Drivers_to_Cascade_Filtering is
   --   the solution set of the system p.  k is the top dimension.
   --   All results are written to the file.
 
-  procedure Embed_and_Cascade ( nt : in natural32 );
+  procedure Embed_and_Cascade
+              ( nt : in natural32; inpname,outname : in string );
 
   -- DESCRIPTION :
   --   Does the embedding of the top dimension and runs the cascade.
 
   -- ON ENTRY :
-  --   nt        the number of tasks, if 0 then no multitasking,
-  --             otherwise nt tasks will be used to track the paths;
+  --   nt       the number of tasks, if 0 then no multitasking,
+  --            otherwise nt tasks will be used to track the paths;
+  --   inpname  name of the input file;
+  --   outname  name of the output file.
 
 end Drivers_to_Cascade_Filtering;

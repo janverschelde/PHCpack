@@ -13,16 +13,19 @@ with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_VecVecs;           use Standard_Complex_VecVecs;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
-with Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
-with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with DoblDobl_Laur_Poly_Convertors;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
-with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with QuadDobl_Laur_Poly_Convertors;
 with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
 with Multprec_Complex_Poly_Systems;
@@ -76,7 +79,7 @@ package body Drivers_to_Cascade_Filtering is
       Interactive_Square_and_Embed(outfile,lp.all,ep,k);
     end if;
     new_line;
-    put_line("See the output file for results...");
+    put_line("See the output file for results ...");
     new_line;
   end Standard_Square_and_Embed;
 
@@ -102,7 +105,7 @@ package body Drivers_to_Cascade_Filtering is
       Interactive_Square_and_Embed(outfile,lp.all,ep,k);
     end if;
     new_line;
-    put_line("See the output file for results...");
+    put_line("See the output file for results ...");
     new_line;
   end DoblDobl_Square_and_Embed;
 
@@ -128,7 +131,7 @@ package body Drivers_to_Cascade_Filtering is
       Interactive_Square_and_Embed(outfile,lp.all,ep,k);
     end if;
     new_line;
-    put_line("See the output file for results...");
+    put_line("See the output file for results ...");
     new_line;
   end QuadDobl_Square_and_Embed;
 
@@ -145,157 +148,321 @@ package body Drivers_to_Cascade_Filtering is
     end case;
   end Driver_to_Square_and_Embed;
 
-  procedure Standard_Remove_Embedding is
+  procedure Standard_Remove_Embedding
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                k,ns : in natural32 ) is
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
 
-    lp : Link_to_Poly_Sys;
-    sols : Solution_List;
-    file : file_type;
-    k,ns : natural32 := 0;
+    rp : constant Poly_Sys := Remove_Embedding(p,k,ns);
+    nq : constant natural32 := natural32(rp'last);
+    nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
+    rsols : Solution_List;
 
   begin
-    new_line;
-    put_line("Removing an Embedding of a Polynomial System.");
-    Standard_Read_Embedding(lp,sols,k,ns);
-    new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file);
-    new_line;
-    put("Number of embed variables in the system : ");
-    put(k,1); new_line;
-    put("Number of extra slack variables to remove : ");
-    put(ns,1); new_line;
-    new_line;
-    put_line("See the output file for the system...");
-    new_line;
-    declare
-      rp : constant Poly_Sys := Remove_Embedding(lp.all,k,ns);
-      nq : constant natural32 := natural32(rp'last);
-      nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
-      rsols : Solution_List;
-    begin
-      if k + ns > 0
-       then rsols := Remove_Embedding(sols,k+ns);
-       else rsols := sols;
-      end if;
-      put(file,nq,1);
-      put(file," ");
-      put(file,nv,1);
-      new_line(file);
-      put(file,rp);
-      new_line(file);
-      put_line(file,"THE SOLUTIONS :");
-      put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
-    end;
-    Close(file);
+    if k + ns > 0
+     then rsols := Remove_Embedding(sols,k+ns);
+     else rsols := sols;
+    end if;
+    put(file,nq,1);
+    put(file," ");
+    put(file,nv,1);
+    new_line(file);
+    put(file,rp);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
   end Standard_Remove_Embedding;
 
-  procedure DoblDobl_Remove_Embedding is
+  procedure Standard_Remove_Embedding
+              ( file : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                k,ns : in natural32 ) is
+
+    use Standard_Complex_Laurentials;
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+
+    rp : constant Laur_Sys := Remove_Embedding(p,k,ns);
+    nq : constant natural32 := natural32(rp'last);
+    nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
+    rsols : Solution_List;
+
+  begin
+    if k + ns > 0
+     then rsols := Remove_Embedding(sols,k+ns);
+     else rsols := sols;
+    end if;
+    put(file,nq,1);
+    put(file," ");
+    put(file,nv,1);
+    new_line(file);
+    put(file,rp);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
+  end Standard_Remove_Embedding;
+
+  procedure DoblDobl_Remove_Embedding
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                k,ns : in natural32 ) is
 
     use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
 
-    lp : Link_to_Poly_Sys;
-    sols : Solution_List;
-    file : file_type;
-    k,ns : natural32 := 0;
+    rp : constant Poly_Sys := Remove_Embedding(p,k,ns);
+    nq : constant natural32 := natural32(rp'last);
+    nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
+    rsols : Solution_List;
 
   begin
-    new_line;
-    put_line("Removing an Embedding of a Polynomial System.");
-    DoblDobl_Read_Embedding(lp,sols,k,ns);
-    new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file);
-    new_line;
-    put("Number of embed variables in the system : ");
-    put(k,1); new_line;
-    put("Number of extra slack variables to remove : ");
-    put(ns,1); new_line;
-    new_line;
-    put_line("See the output file for the system...");
-    new_line;
-    declare
-      rp : constant Poly_Sys := Remove_Embedding(lp.all,k,ns);
-      nq : constant natural32 := natural32(rp'last);
-      nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
-      rsols : Solution_List;
-    begin
-      if k + ns > 0
-       then rsols := Remove_Embedding(sols,k+ns);
-       else rsols := sols;
-      end if;
-      put(file,nq,1);
-      put(file," ");
-      put(file,nv,1);
-      new_line(file);
-      put(file,rp);
-      new_line(file);
-      put_line(file,"THE SOLUTIONS :");
-      put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
-    end;
-    Close(file);
+    if k + ns > 0
+     then rsols := Remove_Embedding(sols,k+ns);
+     else rsols := sols;
+    end if;
+    put(file,nq,1);
+    put(file," ");
+    put(file,nv,1);
+    new_line(file);
+    put(file,rp);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
   end DoblDobl_Remove_Embedding;
 
-  procedure QuadDobl_Remove_Embedding is
+  procedure DoblDobl_Remove_Embedding
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                k,ns : in natural32 ) is
+
+    use DoblDobl_Complex_Laurentials;
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    rp : constant Laur_Sys := Remove_Embedding(p,k,ns);
+    nq : constant natural32 := natural32(rp'last);
+    nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
+    rsols : Solution_List;
+
+  begin
+    if k + ns > 0
+     then rsols := Remove_Embedding(sols,k+ns);
+     else rsols := sols;
+    end if;
+    put(file,nq,1);
+    put(file," ");
+    put(file,nv,1);
+    new_line(file);
+    put(file,rp);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
+  end DoblDobl_Remove_Embedding;
+
+  procedure QuadDobl_Remove_Embedding
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                k,ns : in natural32 ) is
 
     use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
 
-    lp : Link_to_Poly_Sys;
+    rp : constant Poly_Sys := Remove_Embedding(p,k,ns);
+    nq : constant natural32 := natural32(rp'last);
+    nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
+    rsols : Solution_List;
+
+  begin
+    if k + ns > 0
+     then rsols := Remove_Embedding(sols,k+ns);
+     else rsols := sols;
+    end if;
+    put(file,nq,1);
+    put(file," ");
+    put(file,nv,1);
+    new_line(file);
+    put(file,rp);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
+  end QuadDobl_Remove_Embedding;
+
+  procedure QuadDobl_Remove_Embedding
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                k,ns : in natural32 ) is
+
+    use QuadDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    rp : constant Laur_Sys := Remove_Embedding(p,k,ns);
+    nq : constant natural32 := natural32(rp'last);
+    nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
+    rsols : Solution_List;
+
+  begin
+    if k + ns > 0
+     then rsols := Remove_Embedding(sols,k+ns);
+     else rsols := sols;
+    end if;
+    put(file,nq,1);
+    put(file," ");
+    put(file,nv,1);
+    new_line(file);
+    put(file,rp);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
+  end QuadDobl_Remove_Embedding;
+
+  procedure Standard_Remove_Embedding ( inpname,outname : in string ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Laur_Systems;
+    use Standard_Laur_Poly_Convertors;
+    use Standard_Complex_Solutions;
+
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys := null;
+    lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys := null;
     sols : Solution_List;
-    file : file_type;
+    infile,outfile : file_type;
     k,ns : natural32 := 0;
 
   begin
-    new_line;
-    put_line("Removing an Embedding of a Polynomial System.");
-    QuadDobl_Read_Embedding(lp,sols,k,ns);
-    new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file);
+    if inpname /= "" then
+      Open_Input_File(infile,inpname);
+      Standard_Read_Embedding(infile,lq,sols,k,ns);
+    end if;
+    if lq = null then
+      new_line;
+      put_line("Removing an Embedding of a Polynomial System.");
+      Standard_Read_Embedding(lq,sols,k,ns);
+    end if;
+    Create_Output_File(outfile,outname);
     new_line;
     put("Number of embed variables in the system : ");
     put(k,1); new_line;
     put("Number of extra slack variables to remove : ");
     put(ns,1); new_line;
     new_line;
-    put_line("See the output file for the system...");
+    put_line("See the output file for the system ...");
     new_line;
-    declare
-      rp : constant Poly_Sys := Remove_Embedding(lp.all,k,ns);
-      nq : constant natural32 := natural32(rp'last);
-      nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
-      rsols : Solution_List;
-    begin
-      if k + ns > 0
-       then rsols := Remove_Embedding(sols,k+ns);
-       else rsols := sols;
-      end if;
-      put(file,nq,1);
-      put(file," ");
-      put(file,nv,1);
-      new_line(file);
-      put(file,rp);
-      new_line(file);
-      put_line(file,"THE SOLUTIONS :");
-      put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
-    end;
-    Close(file);
+    if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      Standard_Remove_Embedding(outfile,lq.all,sols,k,ns);
+    else
+      lp := new Standard_Complex_Poly_Systems.Poly_Sys'
+                  (Positive_Laurent_Polynomial_System(lq.all));
+      Standard_Remove_Embedding(outfile,lp.all,sols,k,ns);
+    end if;
+    Close(outfile);
+  end Standard_Remove_Embedding;
+
+  procedure DoblDobl_Remove_Embedding ( inpname,outname : in string ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Laur_Poly_Convertors;
+    use DoblDobl_Complex_Solutions;
+
+    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : Solution_List;
+    infile,outfile : file_type;
+    k,ns : natural32 := 0;
+
+  begin
+    if inpname /= "" then
+      Open_Input_File(infile,inpname);
+      DoblDobl_Read_Embedding(infile,lq,sols,k,ns);
+    end if;
+    if lq = null then
+      new_line;
+      put_line("Removing an Embedding of a Polynomial System.");
+      DoblDobl_Read_Embedding(lq,sols,k,ns);
+    end if;
+    Create_Output_File(outfile,outname);
+    new_line;
+    put("Number of embed variables in the system : ");
+    put(k,1); new_line;
+    put("Number of extra slack variables to remove : ");
+    put(ns,1); new_line;
+    new_line;
+    put_line("See the output file for the system ...");
+    new_line;
+    if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      DoblDobl_Remove_Embedding(outfile,lq.all,sols,k,ns);
+    else
+      lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys'
+                  (Positive_Laurent_Polynomial_System(lq.all));
+      DoblDobl_Remove_Embedding(outfile,lp.all,sols,k,ns);
+    end if;
+    close(outfile);
+  end DoblDobl_Remove_Embedding;
+
+  procedure QuadDobl_Remove_Embedding ( inpname,outname : in string ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Laur_Poly_Convertors;
+    use QuadDobl_Complex_Solutions;
+
+    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys := null;
+    lq : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys := null;
+    sols : Solution_List;
+    infile,outfile : file_type;
+    k,ns : natural32 := 0;
+
+  begin
+    if inpname /= "" then
+      Open_Input_File(infile,inpname);
+      QuadDobl_Read_Embedding(infile,lq,sols,k,ns);
+    end if;
+    if lq = null then
+      new_line;
+      put_line("Removing an Embedding of a Polynomial System.");
+      QuadDobl_Read_Embedding(lq,sols,k,ns);
+    end if;
+    Create_Output_File(outfile,outname);
+    new_line;
+    put("Number of embed variables in the system : ");
+    put(k,1); new_line;
+    put("Number of extra slack variables to remove : ");
+    put(ns,1); new_line;
+    new_line;
+    put_line("See the output file for the system ...");
+    new_line;
+    if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      QuadDobl_Remove_Embedding(outfile,lq.all,sols,k,ns);
+    else
+      lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'
+                  (Positive_Laurent_Polynomial_System(lq.all));
+      QuadDobl_Remove_Embedding(outfile,lp.all,sols,k,ns);
+    end if;
+    close(outfile);
   end QuadDobl_Remove_Embedding;
 
-  procedure Driver_to_Remove_Embedding is
+  procedure Driver_to_Remove_Embedding ( inpname,outname : in string ) is
 
     p : constant character := Prompt_for_Precision;
 
   begin
     case p is
-      when '0' => Standard_Remove_Embedding;
+      when '0' => Standard_Remove_Embedding(inpname,outname);
+      when '1' => DoblDobl_Remove_Embedding(inpname,outname);
+      when '2' => QuadDobl_Remove_Embedding(inpname,outname);
       when others => null;
     end case;
   end Driver_to_Remove_Embedding;
@@ -373,6 +540,35 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
+                embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
+                level : in natural32;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pocotime : out duration ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
+
+    target : constant Standard_Complex_Laur_Systems.Laur_Sys(embsys'range)
+           := Remove_Slice(embsys);
+
+  begin
+    put(file,"START SYSTEM at level "); put(file,level,1);
+    put_line(file," :"); put_line(file,embsys);
+    new_line(file);
+    put(file,"TARGET SYSTEM at level "); put(file,level,1);
+    put_line(file," :"); put_line(file,target);
+    Set_Continuation_Parameter(sols,Create(0.0));
+    if nt = 0 then
+      Black_Box_Polynomial_Continuation
+        (file,target,embsys,sols,pocotime);
+    else
+      Black_Box_Polynomial_Continuation
+        (file,integer32(nt),target,embsys,sols,pocotime);
+    end if;
+  end Down_Continuation;
+
+  procedure Down_Continuation
+              ( file : in file_type; nt : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 level : in natural32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
@@ -402,6 +598,35 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
+                embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                level : in natural32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pocotime : out duration ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+
+    target : constant DoblDobl_Complex_Laur_Systems.Laur_Sys(embsys'range)
+           := Remove_Slice(embsys);
+
+  begin
+    put(file,"START SYSTEM at level "); put(file,level,1);
+    put_line(file," :"); put_line(file,embsys);
+    new_line(file);
+    put(file,"TARGET SYSTEM at level "); put(file,level,1);
+    put_line(file," :"); put_line(file,target);
+    Set_Continuation_Parameter(sols,Create(integer(0)));
+    if nt = 0 then
+      Black_Box_Polynomial_Continuation
+        (file,target,embsys,sols,pocotime);
+    else
+      Black_Box_Polynomial_Continuation
+        (file,integer32(nt),target,embsys,sols,pocotime);
+    end if;
+  end Down_Continuation;
+
+  procedure Down_Continuation
+              ( file : in file_type; nt : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 level : in natural32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
@@ -411,6 +636,35 @@ package body Drivers_to_Cascade_Filtering is
     use QuadDobl_Complex_Solutions;
 
     target : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(embsys'range)
+           := Remove_Slice(embsys);
+
+  begin
+    put(file,"START SYSTEM at level "); put(file,level,1);
+    put_line(file," :"); put_line(file,embsys);
+    new_line(file);
+    put(file,"TARGET SYSTEM at level "); put(file,level,1);
+    put_line(file," :"); put_line(file,target);
+    Set_Continuation_Parameter(sols,Create(integer(0)));
+    if nt = 0 then
+      Black_Box_Polynomial_Continuation
+        (file,target,embsys,sols,pocotime);
+    else
+      Black_Box_Polynomial_Continuation
+        (file,integer32(nt),target,embsys,sols,pocotime);
+    end if;
+  end Down_Continuation;
+
+  procedure Down_Continuation
+              ( file : in file_type; nt : in natural32;
+                embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                level : in natural32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pocotime : out duration ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+
+    target : constant QuadDobl_Complex_Laur_Systems.Laur_Sys(embsys'range)
            := Remove_Slice(embsys);
 
   begin
@@ -860,7 +1114,8 @@ package body Drivers_to_Cascade_Filtering is
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
   end Witness_Generate;
 
-  procedure Standard_Witness_Generate ( nt : in natural32 ) is
+  procedure Standard_Witness_Generate
+              ( nt : in natural32; inpname,outname : in string ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -894,7 +1149,8 @@ package body Drivers_to_Cascade_Filtering is
     end;
   end Standard_Witness_Generate;
 
-  procedure DoblDobl_Witness_Generate ( nt : in natural32 ) is
+  procedure DoblDobl_Witness_Generate
+              ( nt : in natural32; inpname,outname : in string ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -928,7 +1184,8 @@ package body Drivers_to_Cascade_Filtering is
     end;
   end DoblDobl_Witness_Generate;
 
-  procedure QuadDobl_Witness_Generate ( nt : in natural32 ) is
+  procedure QuadDobl_Witness_Generate
+              ( nt : in natural32; inpname,outname : in string ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -962,15 +1219,16 @@ package body Drivers_to_Cascade_Filtering is
     end;
   end QuadDobl_Witness_Generate;
 
-  procedure Driver_to_Witness_Generate ( nt : in natural32 ) is
+  procedure Driver_to_Witness_Generate
+              ( nt : in natural32; inpname,outname : in string ) is
 
     p : constant character := Prompt_for_Precision;
 
   begin
     case p is
-      when '0' => Standard_Witness_Generate(nt);
-      when '1' => DoblDobl_Witness_Generate(nt);
-      when '2' => QuadDobl_Witness_Generate(nt);
+      when '0' => Standard_Witness_Generate(nt,inpname,outname);
+      when '1' => DoblDobl_Witness_Generate(nt,inpname,outname);
+      when '2' => QuadDobl_Witness_Generate(nt,inpname,outname);
       when others => null;
     end case;
   end Driver_to_Witness_Generate;
@@ -1432,7 +1690,8 @@ package body Drivers_to_Cascade_Filtering is
     Main_Driver;
   end Driver_for_Cascade_Filter;
 
-  procedure Embed_and_Cascade ( nt : in natural32 ) is
+  procedure Embed_and_Cascade
+              ( nt : in natural32; inpname,outname : in string ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
