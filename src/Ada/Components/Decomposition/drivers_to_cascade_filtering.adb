@@ -2149,48 +2149,298 @@ package body Drivers_to_Cascade_Filtering is
     Main_Driver;
   end Driver_for_Cascade_Filter;
 
-  procedure Embed_and_Cascade
-              ( nt : in natural32; inpname,outname : in string ) is
+  procedure Standard_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
 
-    lp,ep : Link_to_Poly_Sys;
-    infile,outfile : file_type;
-    sysonfile : boolean;
+    ep : Link_to_Poly_Sys;
     timer : timing_widget;
     sols : Solution_List;
-    sols0,sols1 : Solution_List;
     tol : constant double_float := 1.0E-8;
-   -- n,
     k,rc : natural32;
-    outfilename : Link_to_String;
-
+                
   begin
-    Prompt_for_Systems.Read_System(infile,inpname,lp,sysonfile);
-    Create_Output_File(outfile,outname,outfilename);
     new_line;
-    Interactive_Square_and_Embed(outfile,lp.all,ep,k);
+    Interactive_Square_and_Embed(file,p,ep,k);
     new_line;
     put_line("See the output file for results ...");
     new_line;
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(outfile,ep.all,rc,sols);
+      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(outfile,nt,ep.all,rc,sols);
+      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
       tstop(timer);
     end if;
-    new_line(outfile);
-    print_times(outfile,timer,"calling the blackbox solver for the top");
+    new_line(file);
+    print_times(file,timer,"calling the blackbox solver for the top");
     if not Is_Null(sols) then
-     -- n := natural32(Head_Of(sols).n) - k;
-     -- Filter_and_Split_Solutions
-     --   (file,sols,integer32(n),integer32(k),tol,sols0,sols1);
-      Witness_Generate(outfilename.all,outfile,nt,ep.all,sols,k,tol);
+      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
     end if;
+  end Standard_Embed_and_Cascade;
+
+  procedure DoblDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    ep : Link_to_Poly_Sys;
+    timer : timing_widget;
+    sols : Solution_List;
+    tol : constant double_float := 1.0E-8;
+    k,rc : natural32;
+                
+  begin
+    new_line;
+    Interactive_Square_and_Embed(file,p,ep,k);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
+      tstop(timer);
+    end if;
+    new_line(file);
+    print_times(file,timer,"calling the blackbox solver for the top");
+    if not Is_Null(sols) then
+      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+    end if;
+  end DoblDobl_Embed_and_Cascade;
+
+  procedure QuadDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    ep : Link_to_Poly_Sys;
+    timer : timing_widget;
+    sols : Solution_List;
+    tol : constant double_float := 1.0E-8;
+    k,rc : natural32;
+                
+  begin
+    new_line;
+    Interactive_Square_and_Embed(file,p,ep,k);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
+      tstop(timer);
+    end if;
+    new_line(file);
+    print_times(file,timer,"calling the blackbox solver for the top");
+    if not Is_Null(sols) then
+      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+    end if;
+  end QuadDobl_Embed_and_Cascade;
+
+  procedure Standard_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+
+    ep : Link_to_Laur_Sys;
+    timer : timing_widget;
+    sols : Solution_List;
+    tol : constant double_float := 1.0E-8;
+    k,rc : natural32;
+                
+  begin
+    new_line;
+    Interactive_Square_and_Embed(file,p,ep,k);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
+      tstop(timer);
+    end if;
+    new_line(file);
+    print_times(file,timer,"calling the blackbox solver for the top");
+    if not Is_Null(sols) then
+      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+    end if;
+  end Standard_Embed_and_Cascade;
+
+  procedure DoblDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    ep : Link_to_Laur_Sys;
+    timer : timing_widget;
+    sols : Solution_List;
+    tol : constant double_float := 1.0E-8;
+    k,rc : natural32;
+                
+  begin
+    new_line;
+    Interactive_Square_and_Embed(file,p,ep,k);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
+      tstop(timer);
+    end if;
+    new_line(file);
+    print_times(file,timer,"calling the blackbox solver for the top");
+    if not Is_Null(sols) then
+      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+    end if;
+  end DoblDobl_Embed_and_Cascade;
+
+  procedure QuadDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    ep : Link_to_Laur_Sys;
+    timer : timing_widget;
+    sols : Solution_List;
+    tol : constant double_float := 1.0E-8;
+    k,rc : natural32;
+                
+  begin
+    new_line;
+    Interactive_Square_and_Embed(file,p,ep,k);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
+      tstop(timer);
+    end if;
+    new_line(file);
+    print_times(file,timer,"calling the blackbox solver for the top");
+    if not Is_Null(sols) then
+      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+    end if;
+  end QuadDobl_Embed_and_Cascade;
+
+  procedure Standard_Embed_and_Cascade
+              ( nt : in natural32; inpname,outname : in string ) is
+
+    use Standard_Laur_Poly_Convertors;
+
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    infile,outfile : file_type;
+    sysonfile : boolean;
+    outfilename : Link_to_String;
+
+  begin
+    Prompt_for_Systems.Read_System(infile,inpname,lq,sysonfile);
+    Create_Output_File(outfile,outname,outfilename);
+    if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      Standard_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all);
+    else
+      lp := new Standard_Complex_Poly_Systems.Poly_Sys'
+                  (Positive_Laurent_Polynomial_System(lq.all));
+      Standard_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all);
+    end if;
+  end Standard_Embed_and_Cascade;
+
+  procedure DoblDobl_Embed_and_Cascade
+              ( nt : in natural32; inpname,outname : in string ) is
+
+    use DoblDobl_Laur_Poly_Convertors;
+
+    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    infile,outfile : file_type;
+    sysonfile : boolean;
+    outfilename : Link_to_String;
+
+  begin
+    Prompt_for_Systems.Read_System(infile,inpname,lq,sysonfile);
+    Create_Output_File(outfile,outname,outfilename);
+    if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      DoblDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all);
+    else
+      lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys'
+                  (Positive_Laurent_Polynomial_System(lq.all));
+      DoblDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all);
+    end if;
+  end DoblDobl_Embed_and_Cascade;
+
+  procedure QuadDobl_Embed_and_Cascade
+              ( nt : in natural32; inpname,outname : in string ) is
+
+    use QuadDobl_Laur_Poly_Convertors;
+
+    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    infile,outfile : file_type;
+    sysonfile : boolean;
+    outfilename : Link_to_String;
+
+  begin
+    Prompt_for_Systems.Read_System(infile,inpname,lq,sysonfile);
+    Create_Output_File(outfile,outname,outfilename);
+    if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+      QuadDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all);
+    else
+      lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'
+                  (Positive_Laurent_Polynomial_System(lq.all));
+      QuadDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all);
+    end if;
+  end QuadDobl_Embed_and_Cascade;
+
+  procedure Embed_and_Cascade
+              ( nt : in natural32; inpname,outname : in string ) is
+
+    prc : constant character := Prompt_for_Precision;
+
+
+  begin
+    case prc is
+      when '0' => Standard_Embed_and_Cascade(nt,inpname,outname);
+      when '1' => DoblDobl_Embed_and_Cascade(nt,inpname,outname);
+      when '2' => QuadDobl_Embed_and_Cascade(nt,inpname,outname);
+      when others => null;
+    end case;
   end Embed_and_Cascade;
 
 end Drivers_to_Cascade_Filtering;

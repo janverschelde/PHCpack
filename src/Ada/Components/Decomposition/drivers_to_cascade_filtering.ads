@@ -319,11 +319,60 @@ package Drivers_to_Cascade_Filtering is
   --   the solution set of the system p.  k is the top dimension.
   --   All results are written to the file.
 
+  procedure Standard_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in Standard_Complex_Poly_Systems.Poly_Sys );
+  procedure DoblDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure QuadDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Standard_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in Standard_Complex_Laur_Systems.Laur_Sys );
+  procedure DoblDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys );
+  procedure QuadDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32; 
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys );
+
+  -- DESCRIPTION :
+  --   Prompts the user to enter the top dimension, embeds the system,
+  --   and then runs a cascade of homotopies,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file     file opened for output;
+  --   name     name of the output file;
+  --   nt       number of tasks for multitasking,
+  --            if zero, then no multitasking will be used;
+  --   p        a polynomial system.
+
+  procedure Standard_Embed_and_Cascade
+              ( nt : in natural32; inpname,outname : in string );
+  procedure DoblDobl_Embed_and_Cascade
+              ( nt : in natural32; inpname,outname : in string );
+  procedure QuadDobl_Embed_and_Cascade
+              ( nt : in natural32; inpname,outname : in string );
+
+  -- DESCRIPTION :
+  --   Does the embedding of the top dimension and runs the cascade,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   nt       the number of tasks, if 0 then no multitasking,
+  --            otherwise nt tasks will be used to track the paths;
+  --   inpname  name of the input file;
+  --   outname  name of the output file.
+
   procedure Embed_and_Cascade
               ( nt : in natural32; inpname,outname : in string );
 
   -- DESCRIPTION :
-  --   Does the embedding of the top dimension and runs the cascade.
+  --   Prompts the user for the level of working precision,
+  --   does the embedding of the top dimension and runs the cascade.
 
   -- ON ENTRY :
   --   nt       the number of tasks, if 0 then no multitasking,
