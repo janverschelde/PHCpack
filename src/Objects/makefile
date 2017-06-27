@@ -190,6 +190,9 @@ ts_qdfun:
 ts_cmpexp:
 	make -f $(MAKEFILE) ts_cmpexp
 
+ts_isnan:
+	make -f $(MAKEFILE) ts_isnan
+
 # Test programs for Math_Lib/Vectors :
 
 test_vectors: ts_natvec ts_intvec ts_fltvec ts_cmpvec ts_ddvec ts_qdvec \

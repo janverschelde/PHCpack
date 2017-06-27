@@ -213,6 +213,9 @@ ts_mpcst:
 ts_numbio:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_numbio.adb -o $(BIN)/ts_numbio
 
+ts_isnan:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_isnan.adb -o $(BIN)/ts_isnan
+
 # Test programs for QD :
 
 ts_dbldbl:
