@@ -1,3 +1,6 @@
+Mon 26 Jun 2017 : modified drivers_to_cascade_filtering so phc -c uses
+  the file names passed at the command line with option 0.
+
 Sun 25 Jun 2017 : in maindeco.adb, passed the command line arguments for
   the files to the drivers.  Extended drivers_to_cascade_filtering and
   square_and_embed_systems with operations for Laurent systems.

@@ -2156,7 +2156,8 @@ package body Drivers_to_Cascade_Filtering is
     use Standard_Complex_Solutions;
 
     lp,ep : Link_to_Poly_Sys;
-    file : file_type;
+    infile,outfile : file_type;
+    sysonfile : boolean;
     timer : timing_widget;
     sols : Solution_List;
     sols0,sols1 : Solution_List;
@@ -2166,32 +2167,29 @@ package body Drivers_to_Cascade_Filtering is
     outfilename : Link_to_String;
 
   begin
+    Prompt_for_Systems.Read_System(infile,inpname,lp,sysonfile);
+    Create_Output_File(outfile,outname,outfilename);
     new_line;
-    get(lp);
+    Interactive_Square_and_Embed(outfile,lp.all,ep,k);
     new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file,outfilename);
-    new_line;
-    Interactive_Square_and_Embed(file,lp.all,ep,k);
-    new_line;
-    put_line("See the output file for results...");
+    put_line("See the output file for results ...");
     new_line;
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
+      Black_Box_Solvers.Solve(outfile,ep.all,rc,sols);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
+      Black_Box_Solvers.Solve(outfile,nt,ep.all,rc,sols);
       tstop(timer);
     end if;
-    new_line(file);
-    print_times(file,timer,"calling the blackbox solver for the top");
+    new_line(outfile);
+    print_times(outfile,timer,"calling the blackbox solver for the top");
     if not Is_Null(sols) then
      -- n := natural32(Head_Of(sols).n) - k;
      -- Filter_and_Split_Solutions
      --   (file,sols,integer32(n),integer32(k),tol,sols0,sols1);
-      Witness_Generate(outfilename.all,file,nt,ep.all,sols,k,tol);
+      Witness_Generate(outfilename.all,outfile,nt,ep.all,sols,k,tol);
     end if;
   end Embed_and_Cascade;
 
