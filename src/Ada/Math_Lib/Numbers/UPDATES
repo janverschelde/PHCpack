@@ -1,3 +1,6 @@
+Tue 27 Jun 2017 : added test program ts_isnan.adb to check how NaN is
+  generated and recognized.
+
 Sun 25 Dec 2016 : small bug in ts_fltnum.adb, in case 64-bit integer
   arithmetic was asked, fixed for next test in the loop.
 

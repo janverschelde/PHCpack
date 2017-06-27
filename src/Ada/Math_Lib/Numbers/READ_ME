@@ -1,4 +1,4 @@
-Basic number definitions, coefficient rings and fields for PHCv2.4.32
+Basic number definitions, coefficient rings and fields for PHCv2.4.39
 
 This directory was established in release 2 of PHCpack and was upgraded
 for efficiency in later versions.  In v2.3, only the i/o of multiprecision
@@ -125,6 +125,8 @@ ts_random                        : test random number generators
 ts_matfun                        : test mathematical functions
 ts_intval                        : test interval arithmetic
 ts_mpcst                         : test multiprecision version of Pi
+ts_numbio                        : reading of numbers with exception handling
+ts_isnan                         : test how NaN is recognized
 ------------------------------------------------------------------------------
 
 Natural numbers are seen as unsigned integer numbers and are also provided
