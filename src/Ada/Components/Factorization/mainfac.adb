@@ -53,6 +53,8 @@ with Drivers_to_Factor_Components;       use Drivers_to_Factor_Components;
 with Drivers_to_Factor_Polynomials;      use Drivers_to_Factor_Polynomials;
 with Driver_for_Common_Factor;
 with mainfilt;
+with Greeting_Banners;
+with Write_Seed_Number;
 
 procedure mainfac ( infilename,outfilename : in string ) is
 
@@ -209,9 +211,12 @@ procedure mainfac ( infilename,outfilename : in string ) is
     Read_Name_and_Create_File(file);
     Tune_Member_Tolerances(restol,homtol);
     new_line;
-    put_line("See the output file for results...");
+    put_line("See the output file for results ...");
     new_line;
     Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+    new_line(file);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
   end Standard_Homotopy_Membership_Test;
 
   procedure DoblDobl_Homotopy_Membership_Test is
@@ -238,9 +243,12 @@ procedure mainfac ( infilename,outfilename : in string ) is
     Read_Name_and_Create_File(file);
     Tune_Member_Tolerances(restol,homtol);
     new_line;
-    put_line("See the output file for results...");
+    put_line("See the output file for results ...");
     new_line;
     Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+    new_line(file);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
   end DoblDobl_Homotopy_Membership_Test;
 
   procedure QuadDobl_Homotopy_Membership_Test is
@@ -267,9 +275,12 @@ procedure mainfac ( infilename,outfilename : in string ) is
     Read_Name_and_Create_File(file);
     Tune_Member_Tolerances(restol,homtol);
     new_line;
-    put_line("See the output file for results...");
+    put_line("See the output file for results ...");
     new_line;
     Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+    new_line(file);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
   end QuadDobl_Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test is
@@ -764,6 +775,9 @@ procedure mainfac ( infilename,outfilename : in string ) is
         Standard_Enumerate_Decomposition(outfile,name,lp.all,sols,dim);
       end if;
     end;
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Driver_to_Breakup_Components;
 
   procedure DoblDobl_Breakup is

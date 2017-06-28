@@ -1,3 +1,6 @@
+Wed 28 Jun 2017 : added writing of seed and version number to mainfac.adb
+  for reproducible homotopy memberhip test and monodromy.
+
 Wed 10 Aug 2016 : made homotopy_membership_tests.adb completely silent if
   the verbose variable is set to false.
 
