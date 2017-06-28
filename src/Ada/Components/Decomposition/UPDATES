@@ -1,6 +1,8 @@
 Tue 17 Jun 2017 : the embedding and running of cascade with option 0 in
   phc -c now works for Laurent systems, and in several precisions,
   thanks to an extended drivers_to_cascade_filtering.
+  To drivers_to_cascade_filtering.adb, adding writing of seed number and 
+  version number for reproducible runs of the cascades.
 
 Mon 26 Jun 2017 : modified drivers_to_cascade_filtering so phc -c uses
   the file names passed at the command line with option 0.

@@ -54,6 +54,8 @@ with Continuation_Parameters;
 with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
 with Homotopy_Cascade_Filter;            use Homotopy_Cascade_Filter;
 with Drivers_to_Breakup_Components;      use Drivers_to_Breakup_Components;
+with Greeting_Banners;
+with Write_Seed_Number;
 
 package body Drivers_to_Cascade_Filtering is
 
@@ -81,6 +83,9 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Standard_Square_and_Embed;
 
   procedure DoblDobl_Square_and_Embed ( iptname,optname : in string ) is
@@ -107,6 +112,9 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end DoblDobl_Square_and_Embed;
 
   procedure QuadDobl_Square_and_Embed ( iptname,optname : in string ) is
@@ -133,6 +141,9 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end QuadDobl_Square_and_Embed;
 
   procedure Driver_to_Square_and_Embed ( iptname,optname : in string ) is
@@ -742,6 +753,9 @@ package body Drivers_to_Cascade_Filtering is
     tstop(timer);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Witness_Generate
@@ -803,6 +817,9 @@ package body Drivers_to_Cascade_Filtering is
     tstop(timer);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Witness_Generate
@@ -864,6 +881,9 @@ package body Drivers_to_Cascade_Filtering is
     tstop(timer);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Witness_Generate
@@ -925,6 +945,9 @@ package body Drivers_to_Cascade_Filtering is
     tstop(timer);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Witness_Generate
@@ -986,6 +1009,9 @@ package body Drivers_to_Cascade_Filtering is
     tstop(timer);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Witness_Generate
@@ -1047,6 +1073,9 @@ package body Drivers_to_Cascade_Filtering is
     tstop(timer);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   function Append_ck ( name : string; k : natural32 ) return string is
@@ -2380,6 +2409,9 @@ package body Drivers_to_Cascade_Filtering is
                   (Positive_Laurent_Polynomial_System(lq.all));
       Standard_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all);
     end if;
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Standard_Embed_and_Cascade;
 
   procedure DoblDobl_Embed_and_Cascade
@@ -2403,6 +2435,9 @@ package body Drivers_to_Cascade_Filtering is
                   (Positive_Laurent_Polynomial_System(lq.all));
       DoblDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all);
     end if;
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end DoblDobl_Embed_and_Cascade;
 
   procedure QuadDobl_Embed_and_Cascade
@@ -2426,6 +2461,9 @@ package body Drivers_to_Cascade_Filtering is
                   (Positive_Laurent_Polynomial_System(lq.all));
       QuadDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all);
     end if;
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end QuadDobl_Embed_and_Cascade;
 
   procedure Embed_and_Cascade
