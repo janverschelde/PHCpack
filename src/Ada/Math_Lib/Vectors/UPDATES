@@ -1,3 +1,6 @@
+Wed 28 Jun 2017 : new package valid_vector_checks to test if all components
+  of a vector are valid numbers.
+
 Sat 22 Oct 2016 : to standard_random_vectors added random generator generators
   with given seed to procedure independent sequences.
   Did the same to dobldobl_random_vectors and quaddobl_random_vectors.

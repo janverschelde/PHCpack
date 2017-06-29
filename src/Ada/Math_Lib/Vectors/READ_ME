@@ -1,4 +1,4 @@
-Vectors and vectors of vectors in PHCv2.4.28
+Vectors and vectors of vectors in PHCv2.4.39
 
 Because the directory Matrices became too big, 
 this directory was created new for PHCv2.3.33.
@@ -108,6 +108,8 @@ multprec_complex_vecvecs_io        : generic_vecvecs_io(multprec complex)
 multprec_complex_vector_tools      : format and size conversions
 multprec_complex_nesvecs           : generic_nesvecs(multprec complex)
 multprec_complex_nesvecs_io        : generic_nesvecs_io(multprec complex)
+------------------------------------------------------------------------------
+valid_vector_checks                : valid if no component is NaN
 ------------------------------------------------------------------------------
 standard_floating_two_norms        : Euclidean norms for standard floating vecs
 ------------------------------------------------------------------------------
