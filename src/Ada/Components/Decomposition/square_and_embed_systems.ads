@@ -114,13 +114,25 @@ package Square_and_Embed_Systems is
                 topdim : in natural32;
                 embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Embed_Square_System 
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                embsys : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys );
+  procedure Embed_Square_System 
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Embed_Square_System 
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                embsys : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys );
+  procedure Embed_Square_System 
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Embed_Square_System 
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                embsys : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys );
 
   -- DESCRIPTION :
   --   Noninteractive version of the previous procedure,
@@ -225,13 +237,25 @@ package Square_and_Embed_Systems is
                 nbequ,nbunk,topdim : in natural32;
                 embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Embed_Nonsquare_System
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys );
+  procedure Embed_Nonsquare_System
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk,topdim : in natural32;
                 embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Embed_Nonsquare_System
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys );
+  procedure Embed_Nonsquare_System
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk,topdim : in natural32;
                 embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Embed_Nonsquare_System
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys );
 
   -- DESCRIPTION :
   --   Noninteractive version of the above procedure,
@@ -294,13 +318,25 @@ package Square_and_Embed_Systems is
                 topdim : in natural32;
                 ep : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Square_and_Embed
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                ep : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys );
+  procedure Square_and_Embed
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 ep : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Square_and_Embed
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                ep : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys );
+  procedure Square_and_Embed
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 ep : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Square_and_Embed
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                ep : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys );
 
   -- DESCRIPTION : 
   --   Noninteractive version of the procedure above,

@@ -530,6 +530,23 @@ package body Square_and_Embed_Systems is
   end Embed_Square_System;
 
   procedure Embed_Square_System 
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                embsys : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+    use Standard_Complex_Laur_Systems;
+
+  begin
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
+    declare
+      ep : Laur_Sys(p'first..p'last+integer32(topdim));
+    begin
+      ep := Slice_and_Embed(p,topdim);
+      embsys := new Laur_Sys'(ep);
+    end;
+  end Embed_Square_System;
+
+  procedure Embed_Square_System 
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
@@ -547,6 +564,23 @@ package body Square_and_Embed_Systems is
   end Embed_Square_System;
 
   procedure Embed_Square_System 
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                embsys : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+    use DoblDobl_Complex_Laur_Systems;
+
+  begin
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
+    declare
+      ep : Laur_Sys(p'first..p'last+integer32(topdim));
+    begin
+      ep := Slice_and_Embed(p,topdim);
+      embsys := new Laur_Sys'(ep);
+    end;
+  end Embed_Square_System;
+
+  procedure Embed_Square_System 
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
@@ -560,6 +594,23 @@ package body Square_and_Embed_Systems is
     begin
       ep := Slice_and_Embed(p,topdim);
       embsys := new Poly_Sys'(ep);
+    end;
+  end Embed_Square_System;
+
+  procedure Embed_Square_System 
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                embsys : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+    use QuadDobl_Complex_Laur_Systems;
+
+  begin
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
+    declare
+      ep : Laur_Sys(p'first..p'last+integer32(topdim));
+    begin
+      ep := Slice_and_Embed(p,topdim);
+      embsys := new Laur_Sys'(ep);
     end;
   end Embed_Square_System;
 
@@ -1164,6 +1215,36 @@ package body Square_and_Embed_Systems is
   end Embed_Nonsquare_System;
 
   procedure Embed_Nonsquare_System
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+    use Standard_Complex_Laur_Systems;
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Laur_Sys(1..integer32(max)) := Square(p);
+    ns : natural32;
+
+  begin
+    if nbequ > nbunk then
+      Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
+     -- put("added "); put(nbequ - nbunk,1); put_line(" slack variables");
+    end if;
+   -- put_line("The squared polynomial system :"); put_line(sp);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
+    declare
+      ep : Laur_Sys(sp'first..sp'last+integer32(topdim))
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,topdim);
+    begin
+      embsys := new Laur_Sys'(ep);
+    end;
+  end Embed_Nonsquare_System;
+
+  procedure Embed_Nonsquare_System
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk,topdim : in natural32;
                 embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
@@ -1194,6 +1275,36 @@ package body Square_and_Embed_Systems is
   end Embed_Nonsquare_System;
 
   procedure Embed_Nonsquare_System
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+    use DoblDobl_Complex_Laur_Systems;
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Laur_Sys(1..integer32(max)) := Square(p);
+    ns : natural32;
+
+  begin
+    if nbequ > nbunk then
+      Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
+     -- put("added "); put(nbequ - nbunk,1); put_line(" slack variables");
+    end if;
+   -- put_line("The squared polynomial system :"); put_line(sp);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
+    declare
+      ep : Laur_Sys(sp'first..sp'last+integer32(topdim))
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,topdim);
+    begin
+      embsys := new Laur_Sys'(ep);
+    end;
+  end Embed_Nonsquare_System;
+
+  procedure Embed_Nonsquare_System
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk,topdim : in natural32;
                 embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
@@ -1220,6 +1331,36 @@ package body Square_and_Embed_Systems is
          := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,topdim);
     begin
       embsys := new Poly_Sys'(ep);
+    end;
+  end Embed_Nonsquare_System;
+
+  procedure Embed_Nonsquare_System
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+    use QuadDobl_Complex_Laur_Systems;
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Laur_Sys(1..integer32(max)) := Square(p);
+    ns : natural32;
+
+  begin
+    if nbequ > nbunk then
+      Witness_Sets_io.Add_Slack_Symbols(nbequ-nbunk);
+     -- put("added "); put(nbequ - nbunk,1); put_line(" slack variables");
+    end if;
+   -- put_line("The squared polynomial system :"); put_line(sp);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Witness_Sets_io.Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Witness_Sets_io.Add_Embed_Symbols(topdim);
+    declare
+      ep : Laur_Sys(sp'first..sp'last+integer32(topdim))
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,topdim);
+    begin
+      embsys := new Laur_Sys'(ep);
     end;
   end Embed_Nonsquare_System;
 
@@ -1363,6 +1504,25 @@ package body Square_and_Embed_Systems is
   end Square_and_Embed;
 
   procedure Square_and_Embed
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                ep : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+    use Standard_Complex_Laurentials;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+
+  begin
+   -- put("The number of equations : "); put(nq,1); new_line;
+   -- put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Embed_Nonsquare_System(p,nq,nv,topdim,ep);
+     else Embed_Square_System(p,topdim,ep);
+    end if;
+  end Square_and_Embed;
+
+  procedure Square_and_Embed
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 ep : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
@@ -1382,11 +1542,49 @@ package body Square_and_Embed_Systems is
   end Square_and_Embed;
 
   procedure Square_and_Embed
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                ep : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+    use DoblDobl_Complex_Laurentials;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+
+  begin
+   -- put("The number of equations : "); put(nq,1); new_line;
+   -- put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Embed_Nonsquare_System(p,nq,nv,topdim,ep);
+     else Embed_Square_System(p,topdim,ep);
+    end if;
+  end Square_and_Embed;
+
+  procedure Square_and_Embed
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 ep : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
     use QuadDobl_Complex_Polynomials;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+
+  begin
+   -- put("The number of equations : "); put(nq,1); new_line;
+   -- put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Embed_Nonsquare_System(p,nq,nv,topdim,ep);
+     else Embed_Square_System(p,topdim,ep);
+    end if;
+  end Square_and_Embed;
+
+  procedure Square_and_Embed
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                topdim : in natural32;
+                ep : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+    use QuadDobl_Complex_Laurentials;
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));

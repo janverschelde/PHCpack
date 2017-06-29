@@ -1,4 +1,7 @@
-Tue 17 Jun 2017 : the embedding and running of cascade with option 0 in
+Thu 29 Jun 2017 : added silent procedures to square_and_embed_systems to
+  square and embed Laurent polynomial systems.
+
+Tue 27 Jun 2017 : the embedding and running of cascade with option 0 in
   phc -c now works for Laurent systems, and in several precisions,
   thanks to an extended drivers_to_cascade_filtering.
   To drivers_to_cascade_filtering.adb, adding writing of seed number and 
