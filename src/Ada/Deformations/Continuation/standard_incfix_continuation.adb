@@ -4,6 +4,7 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with Valid_Vector_Checks;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Path_Trackers;             use Standard_Path_Trackers;
 with Continuation_Parameters;            use Continuation_Parameters;
@@ -48,23 +49,25 @@ package body Standard_IncFix_Continuation is
 
   begin
     while j < i loop
-      if not At_Infinity(s(j).sol.all,proj) then
-        eq := true;
-        if proj then
-          for k in x'range loop
-            if AbsVal(s(j).sol.v(k)/s(j).sol.v(x'last) - x(k)/x(x'last)) > d
-             then eq := false; exit;
-            end if;
-          end loop;
-        else
-          for k in x'range loop
-            if AbsVal(s(j).sol.v(k) - x(k)) > d
-             then eq := false; exit;
-            end if;
-          end loop;
+      if Valid_Vector_Checks.is_valid(s(j).sol.v) then
+        if not At_Infinity(s(j).sol.all,proj) then
+          eq := true;
+          if proj then
+            for k in x'range loop
+              if AbsVal(s(j).sol.v(k)/s(j).sol.v(x'last) - x(k)/x(x'last)) > d
+               then eq := false; exit;
+              end if;
+            end loop;
+          else
+            for k in x'range loop
+              if AbsVal(s(j).sol.v(k) - x(k)) > d
+               then eq := false; exit;
+              end if;
+            end loop;
+          end if;
+          exit when eq;
         end if;
       end if;
-      exit when eq;
       j := j + 1;
     end loop;
     return j;

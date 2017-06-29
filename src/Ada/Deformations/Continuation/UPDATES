@@ -1,3 +1,6 @@
+Wed 28 Jun 2017 : check added in standard_incfix_continuation.adb to see
+  if all components of a vector are valid (that is: non NaN).
+
 Sun 8 May 2016 : bug fix in quaddobl_blackbox_continuations.adb with
   the root refiner, to filter the diverging end points at the paths.
 
