@@ -787,6 +787,15 @@ function use_c2phc ( job : integer32;
 --         = 260 : given in a[0] the dimension of the embedding,
 --                 replaces the system in container for systems in quad
 --                 double precision by the embedded system.
+--         = 625 : given in a[0] the dimension of the embedding,
+--                 replaces the system in container for Laurent systems
+--                 in standard double precision by the embedded system.
+--         = 626 : given in a[0] the dimension of the embedding,
+--                 replaces the system in container for Laurent systems
+--                 in double double precision by the embedded system.
+--         = 627 : given in a[0] the dimension of the embedding,
+--                 replaces the system in container for Laurent systems
+--                 in quad double precision by the embedded system.
 --
 -- tuning continuation parameters and setting output level :
 --

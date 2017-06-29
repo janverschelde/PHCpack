@@ -1628,7 +1628,6 @@ function use_c2phc ( job : integer32;
 
   function Job66 return integer32 is -- embed standard double system
 
-    use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
@@ -1648,7 +1647,6 @@ function use_c2phc ( job : integer32;
 
   function Job129 return integer32 is -- embed double double system
 
-    use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Poly_Systems;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
@@ -1668,7 +1666,6 @@ function use_c2phc ( job : integer32;
 
   function Job260 return integer32 is -- embed quad double system
 
-    use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Poly_Systems;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
@@ -1685,6 +1682,63 @@ function use_c2phc ( job : integer32;
   exception
     when others => return 260;
   end Job260;
+
+  function Job625 return integer32 is -- embed standard double Laurent system
+
+    use Standard_Complex_Laur_Systems;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    ep : Link_to_Laur_Sys;
+
+  begin
+    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
+    Laurent_Systems_Container.Clear;
+    Laurent_Systems_Container.Initialize(ep.all);
+    Witness_Sets_io.Add_Embed_Symbols(dim);
+    return 0;
+  exception
+    when others => return 625;
+  end Job625;
+
+  function Job626 return integer32 is -- embed double double Laurent system
+
+    use DoblDobl_Complex_Laur_Systems;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    ep : Link_to_Laur_Sys;
+
+  begin
+    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
+    DoblDobl_LaurSys_Container.Clear;
+    DoblDobl_LaurSys_Container.Initialize(ep.all);
+    Witness_Sets_io.Add_Embed_Symbols(dim);
+    return 0;
+  exception
+    when others => return 626;
+  end Job626;
+
+  function Job627 return integer32 is -- embed quad double Laurent system
+
+    use QuadDobl_Complex_Laur_Systems;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+    ep : Link_to_Laur_Sys;
+
+  begin
+    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
+    QuadDobl_LaurSys_Container.Clear;
+    QuadDobl_LaurSys_Container.Initialize(ep.all);
+    Witness_Sets_io.Add_Embed_Symbols(dim);
+    return 0;
+  exception
+    when others => return 627;
+  end Job627;
 
   function Job70 return integer32 is -- interactive tuning of parameters
   begin
@@ -2527,6 +2581,10 @@ function use_c2phc ( job : integer32;
       when 622 => return use_track(55,a,b,c); -- double crude tracker
       when 623 => return use_track(56,a,b,c); -- double double crude tracker
       when 624 => return use_track(57,a,b,c); -- quad double crude tracker
+     -- embedding of Laurent systems :
+      when 625 => return Job625; -- embed standard double Laurent system
+      when 626 => return Job626; -- embed double double Laurent system
+      when 627 => return Job627; -- embed quad double Laurent system
      -- make standard monodromy breakup verbose
       when 630 => return use_c2fac(30,a,b,c);
      -- monodromy breakup in double double precision :
