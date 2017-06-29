@@ -294,6 +294,19 @@ package body Standard_Complex_Numbers is
     x.IM := res.IM/nrm;
   end Div;
 
+-- CHECK IF NaN :
+
+  function is_valid ( x : Complex_Number ) return boolean is
+  begin
+    if not is_valid(x.RE) then
+      return false;
+    elsif not is_valid(x.IM) then
+      return false;
+    else
+      return true;
+    end if;
+  end is_valid;
+
 -- DESTRUCTOR :
 
   procedure Clear ( x : in out Complex_Number ) is

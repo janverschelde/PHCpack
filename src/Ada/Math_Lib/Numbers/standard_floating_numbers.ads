@@ -45,6 +45,13 @@ package Standard_Floating_Numbers is
   procedure Div ( a : in out single_float; b : in single_float ); -- a := a/b
   procedure Div ( a : in out double_float; b : in double_float );
 
+  function Is_Valid ( x : single_float ) return boolean;
+  function Is_Valid ( x : double_float ) return boolean;
+
+  -- DESCRIPTION :
+  --   A valid number is either positive, negative, or zero,
+  --   in which case true is returned, otherwise false is returned.
+
   procedure Clear ( a : in out single_float );
   procedure Clear ( a : in out double_float );
 

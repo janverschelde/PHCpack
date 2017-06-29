@@ -110,6 +110,32 @@ package body standard_floating_numbers is
     a := a/b;
   end Div;
 
+  function Is_Valid ( x : single_float ) return boolean is
+  begin
+    if x > 0.0 then
+      return true;
+    elsif x < 0.0 then
+      return true;
+    elsif x = 0.0 then
+      return true;
+    else
+      return false;
+    end if;
+  end Is_Valid;
+
+  function Is_Valid ( x : double_float ) return boolean is
+  begin
+    if x > 0.0 then
+      return true;
+    elsif x < 0.0 then
+      return true;
+    elsif x = 0.0 then
+      return true;
+    else
+      return false;
+    end if;
+  end Is_Valid;
+
   procedure Clear ( a : in out single_float ) is
   begin
     a := 0.0;

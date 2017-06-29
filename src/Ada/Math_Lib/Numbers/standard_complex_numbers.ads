@@ -70,6 +70,14 @@ package Standard_Complex_Numbers is
   procedure Mul ( x : in out Complex_Number; y : in Complex_Number );
   procedure Div ( x : in out Complex_Number; y : in Complex_Number );
 
+-- CHECK IF NaN :
+
+  function is_valid ( x : Complex_Number ) return boolean;
+
+  -- DESCRIPTION :
+  --   A complex number is valid if both real and imaginary parts
+  --   are valid numbers.  Return true if valid, false otherwise.
+
 -- DESTRUCTOR :
 
   procedure Clear ( x : in out Complex_Number );

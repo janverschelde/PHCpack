@@ -1,5 +1,6 @@
 Wed 28 Jun 2017 : added is_valid function to ts_isnan to check whether
-  a double float is valid or not.
+  a double float is valid or not.  Updated standard_floating_numbers
+  and standard_complex_numbers with is_valid functions.
 
 Tue 27 Jun 2017 : added test program ts_isnan.adb to check how NaN is
   generated and recognized.
