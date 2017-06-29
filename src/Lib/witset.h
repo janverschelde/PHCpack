@@ -43,6 +43,24 @@ int embed_quaddobl_system ( int d );
  *   Replaces the system in the container for systems in quad double
  *   precision with its embedding of dimension d. */
 
+int embed_standard_Laurent_system ( int d );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the container for Laurent systems in standard
+ *   double precision with its embedding of dimension d. */
+
+int embed_dobldobl_Laurent_system ( int d );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the container for Laurent systems in double
+ *   double precision with its embedding of dimension d. */
+
+int embed_quaddobl_Laurent_system ( int d );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the container for Laurent systems in quad
+ *   double precision with its embedding of dimension d. */
+
 int read_witness_set ( int *n, int *dim, int *deg );
 /*
  * DESCRIPTION :

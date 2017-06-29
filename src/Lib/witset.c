@@ -53,6 +53,36 @@ int embed_quaddobl_system ( int d )
    return fail;
 }
 
+int embed_standard_Laurent_system ( int d )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc(625,&d,b,c);
+   return fail;
+}
+
+int embed_dobldobl_Laurent_system ( int d )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc(626,&d,b,c);
+   return fail;
+}
+
+int embed_quaddobl_Laurent_system ( int d )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc(627,&d,b,c);
+   return fail;
+}
+
 int read_witness_set ( int *n, int *dim, int *deg )
 {
    int fail,m;
