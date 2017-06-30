@@ -11,28 +11,11 @@ def standard_embed(nvar, topdim, pols):
     The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
-    from phcpy.phcpy2c3 import py2c_syscon_clear_standard_system
-    from phcpy.phcpy2c3 \
-    import py2c_syscon_initialize_number_of_standard_polynomials
-    from phcpy.phcpy2c3 import py2c_syscon_store_standard_polynomial
-    from phcpy.phcpy2c3 import py2c_syscon_load_standard_polynomial
     from phcpy.phcpy2c3 import py2c_embed_standard_system
-    py2c_syscon_clear_standard_system()
-    nequ = len(pols)
-    if nequ > nvar:
-        py2c_syscon_initialize_number_of_standard_polynomials(nequ)
-        nbres = nequ
-    else:
-        py2c_syscon_initialize_number_of_standard_polynomials(nvar)
-        nbres = nvar
-    for i in range(0, nequ):
-        nchar = len(pols[i])
-        py2c_syscon_store_standard_polynomial(nchar, nvar, i+1, pols[i])
+    from phcpy.interface import store_standard_system, load_standard_system
+    store_standard_system(pols, nbvar=nvar)
     py2c_embed_standard_system(topdim)
-    result = []
-    for i in range(1, nbres+topdim+1):
-        result.append(py2c_syscon_load_standard_polynomial(i))
-    return result
+    return load_standard_system()
 
 def dobldobl_embed(nvar, topdim, pols):
     r"""
@@ -42,28 +25,11 @@ def dobldobl_embed(nvar, topdim, pols):
     The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
-    from phcpy.phcpy2c3 import py2c_syscon_clear_dobldobl_system
-    from phcpy.phcpy2c3 \
-    import py2c_syscon_initialize_number_of_dobldobl_polynomials
-    from phcpy.phcpy2c3 import py2c_syscon_store_dobldobl_polynomial
-    from phcpy.phcpy2c3 import py2c_syscon_load_dobldobl_polynomial
     from phcpy.phcpy2c3 import py2c_embed_dobldobl_system
-    py2c_syscon_clear_dobldobl_system()
-    nequ = len(pols)
-    if nequ > nvar:
-        py2c_syscon_initialize_number_of_dobldobl_polynomials(nequ)
-        nbres = nequ
-    else:
-        py2c_syscon_initialize_number_of_dobldobl_polynomials(nvar)
-        nbres = nvar
-    for i in range(0, nequ):
-        nchar = len(pols[i])
-        py2c_syscon_store_dobldobl_polynomial(nchar, nvar, i+1, pols[i])
+    from phcpy.interface import store_dobldobl_system, load_dobldobl_system
+    store_dobldobl_system(pols, nbvar=nvar)
     py2c_embed_dobldobl_system(topdim)
-    result = []
-    for i in range(1, nbres+topdim+1):
-        result.append(py2c_syscon_load_dobldobl_polynomial(i))
-    return result
+    return load_dobldobl_system()
 
 def quaddobl_embed(nvar, topdim, pols):
     r"""
@@ -73,28 +39,11 @@ def quaddobl_embed(nvar, topdim, pols):
     The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
-    from phcpy.phcpy2c3 import py2c_syscon_clear_quaddobl_system
-    from phcpy.phcpy2c3 \
-    import py2c_syscon_initialize_number_of_quaddobl_polynomials
-    from phcpy.phcpy2c3 import py2c_syscon_store_quaddobl_polynomial
-    from phcpy.phcpy2c3 import py2c_syscon_load_quaddobl_polynomial
     from phcpy.phcpy2c3 import py2c_embed_quaddobl_system
-    py2c_syscon_clear_quaddobl_system()
-    nequ = len(pols)
-    if nequ > nvar:
-        py2c_syscon_initialize_number_of_quaddobl_polynomials(nequ)
-        nbres = nequ
-    else:
-        py2c_syscon_initialize_number_of_quaddobl_polynomials(nvar)
-        nbres = nvar
-    for i in range(0, nequ):
-        nchar = len(pols[i])
-        py2c_syscon_store_quaddobl_polynomial(nchar, nvar, i+1, pols[i])
+    from phcpy.interface import store_quaddobl_system, load_quaddobl_system
+    store_quaddobl_system(pols, nbvar=nvar)
     py2c_embed_quaddobl_system(topdim)
-    result = []
-    for i in range(1, nbres+topdim+1):
-        result.append(py2c_syscon_load_quaddobl_polynomial(i))
-    return result
+    return load_quaddobl_system()
 
 def embed(nvar, topdim, pols, precision='d'):
     r"""
@@ -167,7 +116,7 @@ def drop_variable_from_polynomials(pols, svar):
 
 def drop_coordinate_from_solutions(sols, nbvar, svar):
     r"""
-    Removes the variable with symbol in the string s*var*
+    Removes the variable with symbol in the string *svar*
     from the list *sols* of strings that represent solutions
     in *nbvar* variables.
     """
@@ -214,7 +163,7 @@ def standard_double_cascade_step(embsys, esols, tasks=0):
 
 def double_double_cascade_step(embsys, esols, tasks=0):
     r"""
-    Given in *embsys( an embedded polynomial system and
+    Given in *embsys* an embedded polynomial system and
     solutions with nonzero slack variables in *esols*,
     does one step in the homotopy cascade,
     with double double precision arithmetic.
@@ -435,7 +384,7 @@ def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
     coordinate of the point.  By default, *verbose* is True, and the
     working *precision* is double 'd'.  Other levels of *precision* are
     double double precision 'dd' and quad double precision 'qd'.
-    There are two tolerances: evatol is the tolerance on the residual
+    There are two tolerances: *evatol* is the tolerance on the residual
     of the evaluation of the polynomial equations at the test point.
     If the residual of the evalution is not less than *evatol*,
     then the membertest returns False.  Otherwise, the homotopy

@@ -11,28 +11,11 @@ def standard_embed(nvar, topdim, pols):
     The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
-    from phcpy.phcpy2c2 import py2c_syscon_clear_standard_system
-    from phcpy.phcpy2c2 \
-        import py2c_syscon_initialize_number_of_standard_polynomials
-    from phcpy.phcpy2c2 import py2c_syscon_store_standard_polynomial
-    from phcpy.phcpy2c2 import py2c_syscon_load_standard_polynomial
     from phcpy.phcpy2c2 import py2c_embed_standard_system
-    py2c_syscon_clear_standard_system()
-    nequ = len(pols)
-    if nequ > nvar:
-        py2c_syscon_initialize_number_of_standard_polynomials(nequ)
-        nbres = nequ
-    else:
-        py2c_syscon_initialize_number_of_standard_polynomials(nvar)
-        nbres = nvar
-    for i in range(0, nequ):
-        nchar = len(pols[i])
-        py2c_syscon_store_standard_polynomial(nchar, nvar, i+1, pols[i])
+    from phcpy.interface import store_standard_system, load_standard_system
+    store_standard_system(pols, nbvar=nvar)
     py2c_embed_standard_system(topdim)
-    result = []
-    for i in range(1, nbres+topdim+1):
-        result.append(py2c_syscon_load_standard_polynomial(i))
-    return result
+    return load_standard_system()
 
 def dobldobl_embed(nvar, topdim, pols):
     r"""
@@ -42,28 +25,11 @@ def dobldobl_embed(nvar, topdim, pols):
     The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
-    from phcpy.phcpy2c2 import py2c_syscon_clear_dobldobl_system
-    from phcpy.phcpy2c2 \
-        import py2c_syscon_initialize_number_of_dobldobl_polynomials
-    from phcpy.phcpy2c2 import py2c_syscon_store_dobldobl_polynomial
-    from phcpy.phcpy2c2 import py2c_syscon_load_dobldobl_polynomial
     from phcpy.phcpy2c2 import py2c_embed_dobldobl_system
-    py2c_syscon_clear_dobldobl_system()
-    nequ = len(pols)
-    if nequ > nvar:
-        py2c_syscon_initialize_number_of_dobldobl_polynomials(nequ)
-        nbres = nequ
-    else:
-        py2c_syscon_initialize_number_of_dobldobl_polynomials(nvar)
-        nbres = nvar
-    for i in range(0, nequ):
-        nchar = len(pols[i])
-        py2c_syscon_store_dobldobl_polynomial(nchar, nvar, i+1, pols[i])
+    from phcpy.interface import store_dobldobl_system, load_dobldobl_system
+    store_dobldobl_system(pols, nbvar=nvar)
     py2c_embed_dobldobl_system(topdim)
-    result = []
-    for i in range(1, nbres+topdim+1):
-        result.append(py2c_syscon_load_dobldobl_polynomial(i))
-    return result
+    return load_dobldobl_system()
 
 def quaddobl_embed(nvar, topdim, pols):
     r"""
@@ -73,28 +39,11 @@ def quaddobl_embed(nvar, topdim, pols):
     The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
-    from phcpy.phcpy2c2 import py2c_syscon_clear_quaddobl_system
-    from phcpy.phcpy2c2 \
-        import py2c_syscon_initialize_number_of_quaddobl_polynomials
-    from phcpy.phcpy2c2 import py2c_syscon_store_quaddobl_polynomial
-    from phcpy.phcpy2c2 import py2c_syscon_load_quaddobl_polynomial
     from phcpy.phcpy2c2 import py2c_embed_quaddobl_system
-    py2c_syscon_clear_quaddobl_system()
-    nequ = len(pols)
-    if nequ > nvar:
-        py2c_syscon_initialize_number_of_quaddobl_polynomials(nequ)
-        nbres = nequ
-    else:
-        py2c_syscon_initialize_number_of_quaddobl_polynomials(nvar)
-        nbres = nvar
-    for i in range(0, nequ):
-        nchar = len(pols[i])
-        py2c_syscon_store_quaddobl_polynomial(nchar, nvar, i+1, pols[i])
+    from phcpy.interface import store_quaddobl_system, load_quaddobl_system
+    store_quaddobl_system(pols, nbvar=nvar)
     py2c_embed_quaddobl_system(topdim)
-    result = []
-    for i in range(1, nbres+topdim+1):
-        result.append(py2c_syscon_load_quaddobl_polynomial(i))
-    return result
+    return load_quaddobl_system()
 
 def embed(nvar, topdim, pols, precision='d'):
     r"""
