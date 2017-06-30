@@ -5037,6 +5037,42 @@ static PyObject *py2c_embed_quaddobl_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_embed_standard_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int d,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
+   fail = embed_standard_Laurent_system(d);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_embed_dobldobl_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int d,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
+   fail = embed_dobldobl_Laurent_system(d);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_embed_quaddobl_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int d,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
+   fail = embed_quaddobl_Laurent_system(d);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_standard_cascade_homotopy
  ( PyObject *self, PyObject *args )
 {
@@ -8372,6 +8408,15 @@ static PyMethodDef phcpy2c3_methods[] =
     "Replaces the system with coefficients in double double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_embed_quaddobl_system", py2c_embed_quaddobl_system, METH_VARARGS,
     "Replaces the system with coefficients in quad double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_embed_standard_Laurent_system",
+     py2c_embed_standard_Laurent_system, METH_VARARGS,
+    "Replaces the Laurent system with coefficients in standard double\n precision in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_embed_dobldobl_Laurent_system",
+     py2c_embed_dobldobl_Laurent_system, METH_VARARGS,
+    "Replaces the Laurent system with coefficients in double double\n precision in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_embed_quaddobl_Laurent_system",
+     py2c_embed_quaddobl_Laurent_system, METH_VARARGS,
+    "Replaces the Laurent system with coefficients in quad double\n precision in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_standard_cascade_homotopy", py2c_standard_cascade_homotopy,
      METH_VARARGS,
     "Creates a homotopy in standard double precision using the stored\n systems to go one level down the cascade, removing one slice.\n On return is the failure code, which equals zero if all went well."},

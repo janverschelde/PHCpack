@@ -3341,6 +3341,33 @@ static PyObject *py2c_embed_quaddobl_system
  *   The dimension d is given as an integer parameter on input.
  *   On return is the failure code, which equals zero if all went well. */
 
+static PyObject *py2c_embed_standard_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system with coefficients in standard double
+ *   precision in the container with its embedding of dimension d.
+ *   The dimension d is given as an integer parameter on input.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_embed_dobldobl_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system with coefficients in double double precision
+ *   in the container with its embedding of dimension d.
+ *   The dimension d is given as an integer parameter on input.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_embed_quaddobl_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system with coefficients in quad double precision
+ *   in the container with its embedding of dimension d.
+ *   The dimension d is given as an integer parameter on input.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_standard_cascade_homotopy
  ( PyObject *self, PyObject *args );
 /*

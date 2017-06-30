@@ -1,4 +1,6 @@
 Thu 29 Jun 2017 : extended witset with function to embed Laurent systems.
+  Extended phcpy2c.h, phcpy2c2.c, and phcpy2c3.c with function to embed
+  Laurent systems.
 
 Sat 10 Jun 2017 : extended jump_track with functions to access the crude
   path trackers, tested in lib_track.  Extended phcpy2c.h, phcpy2c2.c,
