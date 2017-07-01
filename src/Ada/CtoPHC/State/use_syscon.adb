@@ -1164,17 +1164,17 @@ function use_syscon ( job : integer32;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant Standard_Complex_Polynomials.Poly
-      := Standard_PolySys_Container.Retrieve_Poly(equ);
+    p : constant Standard_Complex_Laurentials.Poly
+      := Laurent_Systems_Container.Retrieve_Poly(equ);
     sz : constant integer32
-       := integer32(Standard_Complex_Poly_Strings.Size_Limit(p));
+       := integer32(Standard_Complex_Laur_Strings.Size_Limit(p));
 
   begin
     Assign(sz,b);
     return 0;
   exception
-    when others => put_line("Exception raised in job 80 of use_syscon.");
-                   return 80;
+    when others => put_line("Exception raised in job 84 of use_syscon.");
+                   return 84;
   end Job84;
 
   function Job85 return integer32 is -- size limit of k-th dobldobl Laurential
