@@ -45,6 +45,51 @@ def quaddobl_embed(nvar, topdim, pols):
     py2c_embed_quaddobl_system(topdim)
     return load_quaddobl_system()
 
+def standard_laurent_embed(nvar, topdim, pols):
+    r"""
+    Given in *pols* a list of strings representing Laurent polynomials 
+    in *nvar* variables, with coefficients in standard double precision,
+    this function returns an embedding of *pols* of dimension *topdim*.
+    The *topdim* is the top dimension which equals the expected highest
+    dimension of a component of the solution set of the system of polynomials.
+    """
+    from phcpy.phcpy2c3 import py2c_embed_standard_Laurent_system
+    from phcpy.interface import store_standard_laurent_system
+    from phcpy.interface import load_standard_laurent_system
+    store_standard_laurent_system(pols, nbvar=nvar)
+    py2c_embed_standard_Laurent_system(topdim)
+    return load_standard_laurent_system()
+
+def dobldobl_laurent_embed(nvar, topdim, pols):
+    r"""
+    Given in *pols* a list of strings that represent Laurent polynomials 
+    in *nvar* variables, with coefficients in double double precision,
+    this function returns an embedding of *pols* of dimension *topdim*.
+    The *topdim* is the top dimension which equals the expected highest
+    dimension of a component of the solution set of the system of polynomials.
+    """
+    from phcpy.phcpy2c3 import py2c_embed_dobldobl_Laurent_system
+    from phcpy.interface import store_dobldobl_laurent_system
+    from phcpy.interface import load_dobldobl_laurent_system
+    store_dobldobl_laurent_system(pols, nbvar=nvar)
+    py2c_embed_dobldobl_Laurent_system(topdim)
+    return load_dobldobl_laurent_system()
+
+def quaddobl_laurent_embed(nvar, topdim, pols):
+    r"""
+    Given in *pols* a list of strings that represent Laurent polynomials 
+    in *nvar* variables, with coefficients in quad double precision,
+    this function returns an embedding of *pols* of dimension topdim.
+    The *topdim* is the top dimension which equals the expected highest
+    dimension of a component of the solution set of the system of polynomials.
+    """
+    from phcpy.phcpy2c3 import py2c_embed_quaddobl_Laurent_system
+    from phcpy.interface import store_quaddobl_laurent_system
+    from phcpy.interface import load_quaddobl_laurent_system
+    store_quaddobl_laurent_system(pols, nbvar=nvar)
+    py2c_embed_quaddobl_Laurent_system(topdim)
+    return load_quaddobl_laurent_system()
+
 def embed(nvar, topdim, pols, precision='d'):
     r"""
     Given in *pols* a list of strings that represent polynomials in *nvar*
@@ -62,6 +107,27 @@ def embed(nvar, topdim, pols, precision='d'):
         return dobldobl_embed(nvar, topdim, pols)
     elif(precision == 'qd'):
         return quaddobl_embed(nvar, topdim, pols)
+    else:
+        print('wrong argument for precision')
+        return None
+
+def laurent_embed(nvar, topdim, pols, precision='d'):
+    r"""
+    Given in *pols* a list of strings that represent Laurent polynomials
+    in *nvar* variables, this function returns an embedding of *pols* 
+    of dimension *topdim*.
+    The *topdim* is the top dimension which equals the expected highest
+    dimension of a component of the solution set of the system of polynomials.
+    The default *precision* of the coefficients is 'd', for standard double
+    precision.  For double double and quad double precision, set the value
+    of *precision* to 'dd' or 'qd' respectively.
+    """
+    if(precision == 'd'):
+        return standard_laurent_embed(nvar, topdim, pols)
+    elif(precision == 'dd'):
+        return dobldobl_laurent_embed(nvar, topdim, pols)
+    elif(precision == 'qd'):
+        return quaddobl_laurent_embed(nvar, topdim, pols)
     else:
         print('wrong argument for precision')
         return None
