@@ -1198,7 +1198,7 @@ function use_c2phc ( job : integer32;
       return 179;
   end Job179;
 
-  function Job439 return integer32 is -- scan for the nubmer of symbols
+  function Job439 return integer32 is -- scan for the number of symbols
 
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
@@ -1208,13 +1208,15 @@ function use_c2phc ( job : integer32;
         := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
     s : constant String(1..integer(nbc)) := C_Integer_Array_to_String(nbc,v_b);
     cnt : constant natural := String_Splitters.Count_Delimiters(s,';');
-    ls : constant Array_of_Strings(1..integer(cnt))
+    ls : Array_of_Strings(1..integer(cnt))
        := String_Splitters.Split(cnt,s,';');
     dim : natural32;
 
   begin
     dim := Parse_Dimensions.Dim(1024,ls);
     Assign(integer32(dim),a);
+    String_Splitters.Clear(ls);
+    Parse_Dimensions.Clear;
     return 0;
   exception
     when others =>

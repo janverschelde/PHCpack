@@ -1,3 +1,5 @@
+Fri 30 Jun 2017 : fixed memory leak in Job439 of use_c2phc.adb.
+
 Thu 29 Jun 2017 : to use_c2phc, added jobs to embed Laurent systems.
 
 Sat 10 Jun 2017 : added job codes for the crude path trackers in use_track
