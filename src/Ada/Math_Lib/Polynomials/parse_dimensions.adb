@@ -45,6 +45,7 @@ package body Parse_Dimensions is
 
   procedure Clear is
   begin
+    Symbol_Table.Clear;
     Clear(p);
     Clear(s);
   end Clear;
