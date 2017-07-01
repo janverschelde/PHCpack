@@ -23,11 +23,17 @@ with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;
 with Multprec_Complex_Norms_Equals;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Standard_Homotopy;
@@ -70,8 +76,14 @@ package body PHCpack_Operations is
   zero_multprec_constant : boolean;
 
   st_start_sys,st_target_sys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+  st_start_laur_sys : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+  st_target_laur_sys : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
   dd_start_sys,dd_target_sys : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+  dd_start_laur_sys : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+  dd_target_laur_sys : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
   qd_start_sys,qd_target_sys : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+  qd_start_laur_sys : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+  qd_target_laur_sys : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
   mp_start_sys,mp_target_sys : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
   st_start_sols,st_target_sols : Standard_Complex_Solutions.Solution_List;
   dd_start_sols,dd_target_sols : DoblDobl_Complex_Solutions.Solution_List;
@@ -144,6 +156,19 @@ package body PHCpack_Operations is
   end Store_Start_System;
 
   procedure Store_Start_System
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    st_start_laur_sys := new Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+    for i in p'range loop
+      Standard_Complex_Laurentials.Copy(p(i),st_start_laur_sys(i));
+    end loop;
+  exception
+    when others =>
+       put_line("Exception raised in Store_Start_System");
+       put_line("The system p is "); put(p); raise;
+  end Store_Start_System;
+
+  procedure Store_Start_System
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
   begin
     dd_start_sys := new DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
@@ -157,11 +182,37 @@ package body PHCpack_Operations is
   end Store_Start_System;
 
   procedure Store_Start_System
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    dd_start_laur_sys := new DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    for i in p'range loop
+      DoblDobl_Complex_Laurentials.Copy(p(i),dd_start_laur_sys(i));
+    end loop;
+  exception
+    when others =>
+       put_line("Exception raised in Store_Start_System");
+       put_line("The system p is "); put(p); raise;
+  end Store_Start_System;
+
+  procedure Store_Start_System
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
   begin
     qd_start_sys := new QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     for i in p'range loop
       QuadDobl_Complex_Polynomials.Copy(p(i),qd_start_sys(i));
+    end loop;
+  exception
+    when others =>
+       put_line("Exception raised in Store_Start_System");
+       put_line("The system p is "); put(p); raise;
+  end Store_Start_System;
+
+  procedure Store_Start_System
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    qd_start_laur_sys := new QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    for i in p'range loop
+      QuadDobl_Complex_Laurentials.Copy(p(i),qd_start_laur_sys(i));
     end loop;
   exception
     when others =>
@@ -224,6 +275,15 @@ package body PHCpack_Operations is
   end Store_Target_System;
 
   procedure Store_Target_System
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    st_target_laur_sys := new Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+    for i in p'range loop
+      Standard_Complex_Laurentials.Copy(p(i),st_target_laur_sys(i));
+    end loop;
+  end Store_Target_System;
+
+  procedure Store_Target_System
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
   begin
    -- put_line("in Store_Target_System ...");
@@ -236,6 +296,15 @@ package body PHCpack_Operations is
   end Store_Target_System;
 
   procedure Store_Target_System
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    dd_target_laur_sys := new DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    for i in p'range loop
+      DoblDobl_Complex_Laurentials.Copy(p(i),dd_target_laur_sys(i));
+    end loop;
+  end Store_Target_System;
+
+  procedure Store_Target_System
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
   begin
    -- put_line("in Store_Target_System ...");
@@ -245,6 +314,15 @@ package body PHCpack_Operations is
     end loop;
    -- put_line("after Store_Target_System, qd_target_sys :");
    -- put(qd_target_sys.all);
+  end Store_Target_System;
+
+  procedure Store_Target_System
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    qd_target_laur_sys := new QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    for i in p'range loop
+      QuadDobl_Complex_Laurentials.Copy(p(i),qd_target_laur_sys(i));
+    end loop;
   end Store_Target_System;
 
   procedure Store_Target_System
@@ -294,15 +372,33 @@ package body PHCpack_Operations is
   end Retrieve_Start_System;
 
   procedure Retrieve_Start_System
+              ( p : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+  begin
+    p := st_start_laur_sys;
+  end Retrieve_Start_System;
+
+  procedure Retrieve_Start_System
               ( p : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
   begin
     p := dd_start_sys;
   end Retrieve_Start_System;
 
   procedure Retrieve_Start_System
+              ( p : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+  begin
+    p := dd_start_laur_sys;
+  end Retrieve_Start_System;
+
+  procedure Retrieve_Start_System
               ( p : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
   begin
     p := qd_start_sys;
+  end Retrieve_Start_System;
+
+  procedure Retrieve_Start_System
+              ( p : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+  begin
+    p := qd_start_laur_sys;
   end Retrieve_Start_System;
 
   procedure Retrieve_Start_System
@@ -342,15 +438,33 @@ package body PHCpack_Operations is
   end Retrieve_Target_System;
 
   procedure Retrieve_Target_System
+              ( p : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+  begin
+    p := st_target_laur_sys;
+  end Retrieve_Target_System;
+
+  procedure Retrieve_Target_System
               ( p : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
   begin
     p := dd_target_sys;
   end Retrieve_Target_System;
 
   procedure Retrieve_Target_System
+              ( p : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+  begin
+    p := dd_target_laur_sys;
+  end Retrieve_Target_System;
+
+  procedure Retrieve_Target_System
               ( p : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
   begin
     p := qd_target_sys;
+  end Retrieve_Target_System;
+
+  procedure Retrieve_Target_System
+              ( p : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+  begin
+    p := qd_target_laur_sys;
   end Retrieve_Target_System;
 
   procedure Retrieve_Target_System
@@ -801,6 +915,21 @@ package body PHCpack_Operations is
       PHCpack_Operations.Create_QuadDobl_Homotopy(gamma);
     end if;
   end QuadDobl_Cascade_Homotopy;
+
+  procedure Standard_Cascade_Laurent_Homotopy is
+  begin
+    null;
+  end Standard_Cascade_Laurent_Homotopy;
+
+  procedure DoblDobl_Cascade_Laurent_Homotopy is
+  begin
+    null;
+  end DoblDobl_Cascade_Laurent_Homotopy;
+
+  procedure QuadDobl_Cascade_Laurent_Homotopy is
+  begin
+    null;
+  end QuadDobl_Cascade_Laurent_Homotopy;
 
   procedure Standard_Diagonal_Homotopy ( a,b : in natural32 ) is
 

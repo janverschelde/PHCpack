@@ -1,3 +1,6 @@
+Sat 1 Jul 2017 : added operations to phcpack_operations to store and
+  retrieve start and target Laurent systems.
+
 Fri 30 Jun 2017 : fixed memory leak in Job439 of use_c2phc.adb.
   Fixed bug in size_limit function for Laurent polynomials in standard
   double precision in use_syscon.adb.

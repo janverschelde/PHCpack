@@ -10,8 +10,11 @@ with Standard_Floating_Vectors;
 with Double_Double_Vectors;
 with Quad_Double_Vectors;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Multprec_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
@@ -56,9 +59,15 @@ package PHCpack_Operations is
   procedure Store_Start_System
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Store_Start_System
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys );
+  procedure Store_Start_System
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
   procedure Store_Start_System
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys );
+  procedure Store_Start_System
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Store_Start_System
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys );
   procedure Store_Start_System
               ( p : in Multprec_Complex_Poly_Systems.Poly_Sys );
   procedure Store_Start_Solutions
@@ -72,9 +81,15 @@ package PHCpack_Operations is
   procedure Store_Target_System
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Store_Target_System
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys );
+  procedure Store_Target_System
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
   procedure Store_Target_System
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys );
+  procedure Store_Target_System
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Store_Target_System
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys );
   procedure Store_Target_System
               ( p : in Multprec_Complex_Poly_Systems.Poly_Sys );
   procedure Store_Target_Solutions
@@ -89,9 +104,15 @@ package PHCpack_Operations is
   procedure Retrieve_Start_System
               ( p : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Retrieve_Start_System
+              ( p : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys );
+  procedure Retrieve_Start_System
               ( p : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Retrieve_Start_System
+              ( p : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys );
+  procedure Retrieve_Start_System
               ( p : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Retrieve_Start_System
+              ( p : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys );
   procedure Retrieve_Start_System
               ( p : out Multprec_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Retrieve_Start_Solutions
@@ -105,9 +126,15 @@ package PHCpack_Operations is
   procedure Retrieve_Target_System
               ( p : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Retrieve_Target_System
+              ( p : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys );
+  procedure Retrieve_Target_System
               ( p : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Retrieve_Target_System
+              ( p : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys );
+  procedure Retrieve_Target_System
               ( p : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Retrieve_Target_System
+              ( p : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys );
   procedure Retrieve_Target_System
               ( p : out Multprec_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Retrieve_Target_Solutions
@@ -163,6 +190,22 @@ package PHCpack_Operations is
   --   Creates the homotopy to go down one level in the cascade
   --   to remove one slice from the start system,
   --   in standard double, double double, or quad double precision.
+
+  -- REQUIRED :
+  --   The start system has been stored and contains at least one
+  --   slack variable and at least one slicing hyperplane at the end.
+  --   Otherwise, if there is no start system yet, then the stored 
+  --   target system will be used as start system.
+
+  procedure Standard_Cascade_Laurent_Homotopy;
+  procedure DoblDobl_Cascade_Laurent_Homotopy;
+  procedure QuadDobl_Cascade_Laurent_Homotopy;
+
+  -- DESCRIPTION :
+  --   Creates the homotopy to go down one level in the cascade
+  --   to remove one slice from the start system,
+  --   in standard double, double double, or quad double precision,
+  --   for Laurent polynomial systems.
 
   -- REQUIRED :
   --   The start system has been stored and contains at least one
