@@ -493,6 +493,24 @@ static PyObject *py2c_solve_by_multprec_homotopy_continuation
  *   On input is one integer: the number of decimal places in the precision.
  *   On return is the failure code, which is zero when all went well. */
 
+static PyObject *py2c_clear_standard_operations_data
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates all data used by solve_by_standard_homotopy_continuation. */
+
+static PyObject *py2c_clear_dobldobl_operations_data
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates all data used by solve_by_dobldobl_homotopy_continuation. */
+
+static PyObject *py2c_clear_quaddobl_operations_data
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates all data used by solve_by_quaddobl_homotopy_continuation. */
+
 /* Wrapping of crude path trackers of the jumpstart library starts here. */
 
 static PyObject *py2c_standard_crude_tracker

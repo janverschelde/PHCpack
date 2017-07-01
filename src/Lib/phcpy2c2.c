@@ -810,6 +810,42 @@ static PyObject *py2c_solve_by_multprec_homotopy_continuation
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_clear_standard_operations_data
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = clear_data();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_clear_dobldobl_operations_data
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = clear_dobldobl_data();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_clear_quaddobl_operations_data
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = clear_quaddobl_data();
+
+   return Py_BuildValue("i",fail);
+}
+
 /* Wrapping of crude path trackers of the jumpstart library starts here. */
 
 static PyObject *py2c_standard_crude_tracker
@@ -7548,6 +7584,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solve_by_multprec_homotopy_continuation",
      py2c_solve_by_multprec_homotopy_continuation, METH_VARARGS, 
     "Tracks the paths defined by the homotopy in arbitrary multiprecision.\n On input is one integer: the number of decimal places in the precision.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_clear_standard_operations_data",
+     py2c_clear_standard_operations_data, METH_VARARGS,
+    "Deallocates the data used by solve_by_standard_homotopy_continuation."},
+   {"py2c_clear_dobldobl_operations_data",
+     py2c_clear_dobldobl_operations_data, METH_VARARGS,
+    "Deallocates the data used by solve_by_dobldobl_homotopy_continuation."},
+   {"py2c_clear_quaddobl_operations_data",
+     py2c_clear_quaddobl_operations_data, METH_VARARGS,
+    "Deallocates the data used by solve_by_quaddobl_homotopy_continuation."},
    {"py2c_standard_crude_tracker", py2c_standard_crude_tracker, METH_VARARGS,
     "A crude tracker appends the end point of a path directly to\n the solutions container, without refinement or postprocessing.\n Tracking happens in standard double precision.\n On entry is the verbose parameter which is 1 or 0.\n  If 1, then the solution vectors are written to screen, otherwise\n the crude tracker stays mute.\n On return is the failure code, which is zero when all went well.\n The requirement is that\n the target system, start system, and start solutions in standard\n double precision have been initialized in the containers."},
    {"py2c_dobldobl_crude_tracker", py2c_dobldobl_crude_tracker, METH_VARARGS,
