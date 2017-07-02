@@ -71,6 +71,9 @@ package body PHCpack_Operations is
 
   empty_homotopy,zero_constant,auto_tune : boolean;
   empty_dobldobl_homotopy,empty_quaddobl_homotopy : boolean;
+  empty_standard_laurent_homotopy : boolean;
+  empty_dobldobl_laurent_homotopy : boolean;
+  empty_quaddobl_laurent_homotopy : boolean;
   empty_multprec_homotopy : boolean;
   zero_dobldobl_constant,zero_quaddobl_constant : boolean;
   zero_multprec_constant : boolean;
@@ -726,6 +729,103 @@ package body PHCpack_Operations is
     when others => put_line("exception raised when creating a homotopy");
                    raise;
   end Create_Multprec_Homotopy;
+
+  procedure Create_Standard_Laurent_Homotopy is
+
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Random_Numbers.Random1;
+
+  begin
+    Create_Standard_Laurent_Homotopy(gamma);
+  end Create_Standard_Laurent_Homotopy;
+
+  procedure Create_Standard_Laurent_Homotopy
+              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
+  begin
+    if not empty_standard_laurent_homotopy then
+      Standard_Laurent_Homotopy.Clear;
+      empty_standard_laurent_homotopy := true;
+    else
+      empty_standard_laurent_homotopy := false;
+    end if;
+    Standard_Laurent_Homotopy.Create
+      (st_target_laur_sys.all,st_start_laur_sys.all,2,gamma);
+    empty_standard_laurent_homotopy := false;
+  exception
+    when others => put_line("exception raised when creating a homotopy");
+                   raise;
+  end Create_Standard_Laurent_Homotopy;
+
+  procedure Create_DoblDobl_Laurent_Homotopy is
+
+    gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+          := DoblDobl_Random_Numbers.Random1;
+
+  begin
+    Create_DoblDobl_Laurent_Homotopy(gamma);
+  end Create_DoblDobl_Laurent_Homotopy;
+
+  procedure Create_DoblDobl_Laurent_Homotopy
+              ( gamma : in DoblDobl_Complex_Numbers.Complex_Number ) is
+
+  begin
+    if not empty_dobldobl_laurent_homotopy then
+      DoblDobl_Laurent_Homotopy.Clear;
+      empty_dobldobl_laurent_homotopy := true;
+    else
+      empty_dobldobl_laurent_homotopy := false;
+    end if;
+    DoblDobl_Laurent_Homotopy.Create
+      (dd_target_laur_sys.all,dd_start_laur_sys.all,2,gamma);
+    empty_dobldobl_laurent_homotopy := false;
+  exception
+    when others => put_line("exception raised when creating a homotopy");
+                   raise;
+  end Create_DoblDobl_Laurent_Homotopy;
+
+  procedure Create_QuadDobl_Laurent_Homotopy is
+
+    gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+          := QuadDobl_Random_Numbers.Random1;
+
+  begin
+    Create_QuadDobl_Laurent_Homotopy(gamma);
+  end Create_QuadDobl_Laurent_Homotopy;
+
+  procedure Create_QuadDobl_Laurent_Homotopy
+              ( gamma : in QuadDobl_Complex_Numbers.Complex_Number ) is
+  begin
+    if not empty_quaddobl_laurent_homotopy then
+      QuadDobl_Laurent_Homotopy.Clear;
+      empty_quaddobl_laurent_homotopy := true;
+    else
+      empty_quaddobl_laurent_homotopy := false;
+    end if;
+    QuadDobl_Laurent_Homotopy.Create
+      (qd_target_laur_sys.all,qd_start_laur_sys.all,2,gamma);
+    empty_quaddobl_laurent_homotopy := false;
+  exception
+    when others => put_line("exception raised when creating a homotopy");
+                   raise;
+  end Create_QuadDobl_Laurent_Homotopy;
+
+  procedure Clear_Standard_Laurent_Homotopy is
+  begin
+    Standard_Laurent_Homotopy.Clear;
+    empty_standard_laurent_homotopy := true;
+  end Clear_Standard_Laurent_Homotopy;
+
+  procedure Clear_DoblDobl_Laurent_Homotopy is
+  begin
+    DoblDobl_Laurent_Homotopy.Clear;
+    empty_dobldobl_laurent_homotopy := true;
+  end Clear_DoblDobl_Laurent_Homotopy;
+
+  procedure Clear_QuadDobl_Laurent_Homotopy is
+  begin
+    QuadDobl_Laurent_Homotopy.Clear;
+    empty_quaddobl_laurent_homotopy := true;
+  end Clear_QuadDobl_Laurent_Homotopy;
 
   procedure Clear_Standard_Homotopy is
   begin

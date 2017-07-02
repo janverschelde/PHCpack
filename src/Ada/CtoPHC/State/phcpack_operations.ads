@@ -182,6 +182,31 @@ package PHCpack_Operations is
   -- DESCRIPTION :
   --   Allocated memory for the linear homotopy is cleared.
 
+  procedure Create_Standard_Laurent_Homotopy;
+  procedure Create_Standard_Laurent_Homotopy
+              ( gamma : in Standard_Complex_Numbers.Complex_Number );
+  procedure Create_DoblDobl_Laurent_Homotopy;
+  procedure Create_DoblDobl_Laurent_Homotopy
+              ( gamma : in DoblDobl_Complex_Numbers.Complex_Number );
+  procedure Create_QuadDobl_Laurent_Homotopy;
+  procedure Create_QuadDobl_Laurent_Homotopy
+              ( gamma : in QuadDobl_Complex_Numbers.Complex_Number );
+
+  -- DESCRIPTION :
+  --   Creates a linear homotopy between target and start system,
+  --   which must be already stored.  If no gamma is provided, then
+  --   a random complex constant will be generated.
+
+  -- REQUIRED : start and target system have been stored.
+
+  procedure Clear_Standard_Laurent_Homotopy;
+  procedure Clear_DoblDobl_Laurent_Homotopy;
+  procedure Clear_QuadDobl_Laurent_Homotopy;
+
+  -- DESCRIPTION :
+  --   Allocated memory for the linear homotopy 
+  --   for Laurent systems is cleared.
+
   procedure Standard_Cascade_Homotopy;
   procedure DoblDobl_Cascade_Homotopy;
   procedure QuadDobl_Cascade_Homotopy;
