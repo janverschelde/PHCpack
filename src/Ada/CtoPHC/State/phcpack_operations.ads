@@ -514,20 +514,55 @@ package PHCpack_Operations is
   --   The number of decimal places in the working precision for the
   --   multiprecision version equals the value of decimals.
 
+  function Solve_by_Standard_Laurent_Homotopy_Continuation 
+             ( number_of_tasks : natural32 ) return integer32;
+  function Solve_by_DoblDobl_Laurent_Homotopy_Continuation
+             ( number_of_tasks : natural32 ) return integer32;
+  function Solve_by_QuadDobl_Laurent_Homotopy_Continuation
+             ( number_of_tasks : natural32 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Tracks the paths starting a the stored start solutions,
+  --   in standard double, double double, or quad double precision,
+  --   on the defined homotopy for Laurent polynomial systems.
+  --   Multitasking will be applied if number_of_tasks > 0,
+  --   using as many tasks as the value of number_of_tasks.
+
   procedure Standard_Clear;
 
   -- DESCRIPTION :
-  --   Deallocation of the persistent data for standard homotopies.
+  --   Deallocation of the persistent data for standard homotopies,
+  --   target, start system, and the solutions.
+
+  procedure Standard_Laurent_Clear;
+
+  -- DESCRIPTION :
+  --   Deallocation of the persistent data for standard Laurent homotopies,
+  --   target, start system, and the solutions.
 
   procedure DoblDobl_Clear;
 
   -- DESCRIPTION :
-  --   Deallocation of the persistent data for double double homotopies.
+  --   Deallocation of the persistent data for double double homotopies,
+  --   target, start system, and the solutions.
+
+  procedure DoblDobl_Laurent_Clear;
+
+  -- DESCRIPTION :
+  --   Deallocation of the persistent data for double double Laurent
+  --   homotopies, target, start system, and the solutions.
 
   procedure QuadDobl_Clear;
 
   -- DESCRIPTION :
-  --   Deallocation of the persistent data for quad double homotopies.
+  --   Deallocation of the persistent data for quad double homotopies,
+  --   target, start system, and the solutions.
+
+  procedure QuadDobl_Laurent_Clear;
+
+  -- DESCRIPTION :
+  --   Deallocation of the persistent data for quad double Laurent
+  --   homotopies, target, start system, and the solutions.
 
   procedure Multprec_Clear;
 

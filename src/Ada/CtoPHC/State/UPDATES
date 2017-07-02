@@ -1,3 +1,6 @@
+Sun 2 Jul 2017 : added definition of cascade homotopies for Laurent systems
+  in phcpack_operations.
+
 Sat 1 Jul 2017 : added operations to phcpack_operations to store and
   retrieve start and target Laurent systems.  To phcpack_operations,
   added procedure to create and clear homotopies for Laurent systems.

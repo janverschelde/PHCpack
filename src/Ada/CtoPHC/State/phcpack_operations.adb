@@ -1,6 +1,3 @@
---with Standard_Complex_Polynomials;
---use Standard_Complex_Polynomials;
-
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
@@ -69,13 +66,17 @@ package body PHCpack_Operations is
 
 -- INTERNAL DATA :
 
-  empty_homotopy,zero_constant,auto_tune : boolean;
-  empty_dobldobl_homotopy,empty_quaddobl_homotopy : boolean;
+  auto_tune : boolean;
+  empty_standard_homotopy : boolean;
+  empty_dobldobl_homotopy : boolean;
+  empty_quaddobl_homotopy : boolean;
   empty_standard_laurent_homotopy : boolean;
   empty_dobldobl_laurent_homotopy : boolean;
   empty_quaddobl_laurent_homotopy : boolean;
   empty_multprec_homotopy : boolean;
-  zero_dobldobl_constant,zero_quaddobl_constant : boolean;
+  zero_standard_constant : boolean;
+  zero_dobldobl_constant : boolean;
+  zero_quaddobl_constant : boolean;
   zero_multprec_constant : boolean;
 
   st_start_sys,st_target_sys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -99,6 +100,27 @@ package body PHCpack_Operations is
   mp_gamma_constant : Multprec_Complex_Numbers.Complex_Number;
 
 -- OPERATIONS :
+
+  procedure Initialize is
+
+  -- DESCRIPTION :
+  --   Initializes the boolean flags.
+
+  begin
+    auto_tune := true;
+    file_okay := false;
+    empty_standard_homotopy := true;
+    empty_standard_laurent_homotopy := true;
+    empty_dobldobl_homotopy := true;
+    empty_dobldobl_laurent_homotopy := true;
+    empty_quaddobl_homotopy := true;
+    empty_quaddobl_laurent_homotopy := true;
+    empty_multprec_homotopy := true;
+    zero_standard_constant := true;
+    zero_dobldobl_constant := true;
+    zero_quaddobl_constant := true;
+    zero_multprec_constant := true;
+  end Initialize;
 
   procedure Define_Output_File is
   begin
@@ -503,7 +525,7 @@ package body PHCpack_Operations is
   procedure Store_Gamma_Constant
               ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
   begin
-    zero_constant := false;
+    zero_standard_constant := false;
     st_gamma_constant := gamma;
   end Store_Gamma_Constant;
 
@@ -656,11 +678,11 @@ package body PHCpack_Operations is
   procedure Create_Standard_Homotopy
               ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
   begin
-    if not empty_homotopy then
+    if not empty_standard_homotopy then
       Standard_Homotopy.Clear;
-      empty_homotopy := true;
+      empty_standard_homotopy := true;
     else
-      empty_homotopy := false;
+      empty_standard_homotopy := false;
     end if;
    -- put_line("the target system : "); put(st_target_sys.all);
    -- put_line("the start system : "); put(st_start_sys.all);
@@ -676,7 +698,7 @@ package body PHCpack_Operations is
    -- put(" number of equations in start : "); put(st_start_sys'last,1);
    -- new_line;
     Standard_Homotopy.Create(st_target_sys.all,st_start_sys.all,2,gamma);
-    empty_homotopy := false;
+    empty_standard_homotopy := false;
   exception
     when others => put_line("exception raised when creating a homotopy");
                    raise;
@@ -830,7 +852,7 @@ package body PHCpack_Operations is
   procedure Clear_Standard_Homotopy is
   begin
     Standard_Homotopy.Clear;
-    empty_homotopy := true;
+    empty_standard_homotopy := true;
   exception 
     when others => put_line("exception raised when clearing a homotopy");
                    raise;
@@ -871,6 +893,22 @@ package body PHCpack_Operations is
   end Swap_Embed_Symbols;
 
   procedure Swap_Embed_Symbols
+              ( p : in out Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Ensures that the symbols "zz" that control the embedding occur
+  --   at the end of the symbol table, permuting the symbol table and
+  --   the order of the variables in the system p.
+
+    nvar : constant natural32 := natural32(p'last);
+    nslk : constant natural32 := Witness_Sets_io.Count_Embed_Symbols(nvar,"zz");
+
+  begin
+    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p);
+    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p);
+  end Swap_Embed_Symbols;
+
+  procedure Swap_Embed_Symbols
               ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
@@ -887,7 +925,39 @@ package body PHCpack_Operations is
   end Swap_Embed_Symbols;
 
   procedure Swap_Embed_Symbols
+              ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Ensures that the symbols "zz" that control the embedding occur
+  --   at the end of the symbol table, permuting the symbol table and
+  --   the order of the variables in the system p.
+
+    nvar : constant natural32 := natural32(p'last);
+    nslk : constant natural32 := Witness_Sets_io.Count_Embed_Symbols(nvar,"zz");
+
+  begin
+    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p);
+    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p);
+  end Swap_Embed_Symbols;
+
+  procedure Swap_Embed_Symbols
               ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Ensures that the symbols "zz" that control the embedding occur
+  --   at the end of the symbol table, permuting the symbol table and
+  --   the order of the variables in the system p.
+
+    nvar : constant natural32 := natural32(p'last);
+    nslk : constant natural32 := Witness_Sets_io.Count_Embed_Symbols(nvar,"zz");
+
+  begin
+    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p);
+    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p);
+  end Swap_Embed_Symbols;
+
+  procedure Swap_Embed_Symbols
+              ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
   --   Ensures that the symbols "zz" that control the embedding occur
@@ -1017,18 +1087,114 @@ package body PHCpack_Operations is
   end QuadDobl_Cascade_Homotopy;
 
   procedure Standard_Cascade_Laurent_Homotopy is
+
+    use Standard_Complex_Laur_Systems;
+
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Complex_Numbers.Create(1.0);
+
   begin
-    null;
+    if st_start_laur_sys /= null then
+      declare
+      begin
+        Clear(st_target_laur_sys);
+      exception
+        when others => put_line("raised exception when clearing target...");
+      end;
+      Swap_Embed_Symbols(st_start_laur_sys.all);
+      declare
+        p : constant Laur_Sys(st_start_laur_sys'range)
+          := Witness_Sets.Remove_Slice(st_start_laur_sys.all);
+      begin
+        st_target_laur_sys := new Laur_Sys'(p);
+      exception
+        when others => put_line("raised exception when removing slice...");
+                       raise;
+      end;
+      PHCpack_Operations.Create_Standard_Laurent_Homotopy(gamma);
+    elsif st_target_laur_sys /= null then
+      Swap_Embed_Symbols(st_target_laur_sys.all);
+      st_start_laur_sys := new Laur_Sys(st_target_laur_sys'range);
+      Copy(st_target_laur_sys.all,st_start_laur_sys.all);
+      Clear(st_target_laur_sys);
+      st_target_laur_sys
+        := new Laur_Sys'(Witness_Sets.Remove_Slice(st_start_laur_sys.all));
+      PHCpack_Operations.Create_Standard_Laurent_Homotopy(gamma);
+    end if;
   end Standard_Cascade_Laurent_Homotopy;
 
   procedure DoblDobl_Cascade_Laurent_Homotopy is
+
+    use DoblDobl_Complex_Laur_Systems;
+
+    gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+          := DoblDobl_Complex_Numbers.Create(integer(1));
+
   begin
-    null;
+    if dd_start_laur_sys /= null then
+      declare
+      begin
+        Clear(dd_target_laur_sys);
+      exception
+        when others => put_line("raised exception when clearing target...");
+      end;
+      Swap_Embed_Symbols(dd_start_laur_sys.all);
+      declare
+        p : constant Laur_Sys(dd_start_laur_sys'range)
+          := Witness_Sets.Remove_Slice(dd_start_laur_sys.all);
+      begin
+        dd_target_laur_sys := new Laur_Sys'(p);
+      exception
+        when others => put_line("raised exception when removing slice...");
+                       raise;
+      end;
+      PHCpack_Operations.Create_DoblDobl_Laurent_Homotopy(gamma);
+    elsif dd_target_laur_sys /= null then
+      Swap_Embed_Symbols(dd_target_laur_sys.all);
+      dd_start_laur_sys := new Laur_Sys(dd_target_laur_sys'range);
+      Copy(dd_target_laur_sys.all,dd_start_laur_sys.all);
+      Clear(dd_target_laur_sys);
+      dd_target_laur_sys
+        := new Laur_Sys'(Witness_Sets.Remove_Slice(dd_start_laur_sys.all));
+      PHCpack_Operations.Create_DoblDobl_Laurent_Homotopy(gamma);
+    end if;
   end DoblDobl_Cascade_Laurent_Homotopy;
 
   procedure QuadDobl_Cascade_Laurent_Homotopy is
+
+    use QuadDobl_Complex_Laur_Systems;
+
+    gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+          := QuadDobl_Complex_Numbers.Create(integer(1));
+
   begin
-    null;
+    if qd_start_laur_sys /= null then
+      declare
+      begin
+        Clear(qd_target_laur_sys);
+      exception
+        when others => put_line("raised exception when clearing target...");
+      end;
+      Swap_Embed_Symbols(qd_start_laur_sys.all);
+      declare
+        p : constant Laur_Sys(qd_start_laur_sys'range)
+          := Witness_Sets.Remove_Slice(qd_start_laur_sys.all);
+      begin
+        qd_target_laur_sys := new Laur_Sys'(p);
+      exception
+        when others => put_line("raised exception when removing slice...");
+                       raise;
+      end;
+      PHCpack_Operations.Create_QuadDobl_Laurent_Homotopy(gamma);
+    elsif qd_target_laur_sys /= null then
+      Swap_Embed_Symbols(qd_target_laur_sys.all);
+      qd_start_laur_sys := new Laur_Sys(qd_target_laur_sys'range);
+      Copy(qd_target_laur_sys.all,qd_start_laur_sys.all);
+      Clear(qd_target_laur_sys);
+      qd_target_laur_sys
+        := new Laur_Sys'(Witness_Sets.Remove_Slice(qd_start_laur_sys.all));
+      PHCpack_Operations.Create_QuadDobl_Laurent_Homotopy(gamma);
+    end if;
   end QuadDobl_Cascade_Laurent_Homotopy;
 
   procedure Standard_Diagonal_Homotopy ( a,b : in natural32 ) is
@@ -2105,13 +2271,13 @@ package body PHCpack_Operations is
              Standard_Homotopy.Diff,Standard_Homotopy.Diff);
 
   begin
-    if zero_constant
+    if zero_standard_constant
      then r := Create(0.793450603947633,-0.608634651572795);
      else r := st_gamma_constant;
     end if;
-    if empty_homotopy then
+    if empty_standard_homotopy then
       Standard_Homotopy.Create(st_target_sys.all,st_start_sys.all,k,r);
-      empty_homotopy := false; -- for dynamic load balancing
+      empty_standard_homotopy := false; -- for dynamic load balancing
       if file_okay then
         new_line(output_file);
         put_line(output_file,"HOMOTOPY PARAMETERS :");
@@ -2570,17 +2736,47 @@ package body PHCpack_Operations is
     return 0;
   end Solve_by_Multprec_Homotopy_Continuation;
 
+  function Solve_by_Standard_Laurent_Homotopy_Continuation
+             ( number_of_tasks : natural32 ) return integer32 is
+  begin
+    return 0;
+  end Solve_by_Standard_Laurent_Homotopy_Continuation;
+
+  function Solve_by_DoblDobl_Laurent_Homotopy_Continuation
+             ( number_of_tasks : natural32 ) return integer32 is
+  begin
+    return 0;
+  end Solve_by_DoblDobl_Laurent_Homotopy_Continuation;
+
+  function Solve_by_QuadDobl_Laurent_Homotopy_Continuation
+             ( number_of_tasks : natural32 ) return integer32 is
+  begin
+    return 0;
+  end Solve_by_QuadDobl_Laurent_Homotopy_Continuation;
+
   procedure Standard_Clear is
   begin
     Standard_Complex_Poly_Systems.Clear(st_start_sys);
     Standard_Complex_Solutions.Clear(st_start_sols);
     Standard_Complex_Poly_Systems.Clear(st_target_sys);
     Standard_Complex_Solutions.Clear(st_target_sols);
-    if not empty_homotopy then
+    if not empty_standard_homotopy then
       Standard_Homotopy.Clear;
-      empty_homotopy := true;
+      empty_standard_homotopy := true;
     end if;
   end Standard_Clear;
+
+  procedure Standard_Laurent_Clear is
+  begin
+    Standard_Complex_Laur_Systems.Clear(st_start_laur_sys);
+    Standard_Complex_Solutions.Clear(st_start_sols);
+    Standard_Complex_Laur_Systems.Clear(st_target_laur_sys);
+    Standard_Complex_Solutions.Clear(st_target_sols);
+    if not empty_standard_laurent_homotopy then
+      Standard_Laurent_Homotopy.Clear;
+      empty_standard_laurent_homotopy := true;
+    end if;
+  end Standard_Laurent_Clear;
 
   procedure DoblDobl_Clear is
   begin
@@ -2594,6 +2790,18 @@ package body PHCpack_Operations is
     end if;
   end DoblDobl_Clear;
 
+  procedure DoblDobl_Laurent_Clear is
+  begin
+    DoblDobl_Complex_Laur_Systems.Clear(dd_start_laur_sys);
+    DoblDobl_Complex_Solutions.Clear(dd_start_sols);
+    DoblDobl_Complex_Laur_Systems.Clear(dd_target_laur_sys);
+    DoblDobl_Complex_Solutions.Clear(dd_target_sols);
+    if not empty_dobldobl_laurent_homotopy then
+      DoblDobl_Laurent_Homotopy.Clear;
+      empty_dobldobl_laurent_homotopy := true;
+    end if;
+  end DoblDobl_Laurent_Clear;
+
   procedure QuadDobl_Clear is
   begin
     QuadDobl_Complex_Poly_Systems.Clear(qd_start_sys);
@@ -2606,6 +2814,18 @@ package body PHCpack_Operations is
     end if;
   end QuadDobl_Clear;
 
+  procedure QuadDobl_Laurent_Clear is
+  begin
+    QuadDobl_Complex_Laur_Systems.Clear(qd_start_laur_sys);
+    QuadDobl_Complex_Solutions.Clear(qd_start_sols);
+    QuadDobl_Complex_Laur_Systems.Clear(qd_target_laur_sys);
+    QuadDobl_Complex_Solutions.Clear(qd_target_sols);
+    if not empty_quaddobl_laurent_homotopy then
+      QuadDobl_Laurent_Homotopy.Clear;
+      empty_quaddobl_laurent_homotopy := true;
+    end if;
+  end QuadDobl_Laurent_Clear;
+
   procedure Multprec_Clear is
   begin
     Multprec_Complex_Poly_Systems.Clear(mp_start_sys);
@@ -2617,14 +2837,5 @@ package body PHCpack_Operations is
   end Multprec_Clear;
 
 begin
-  auto_tune := true;
-  file_okay := false;
-  empty_homotopy := true;
-  empty_dobldobl_homotopy := true;
-  empty_quaddobl_homotopy := true;
-  empty_multprec_homotopy := true;
-  zero_constant := true;
-  zero_dobldobl_constant := true;
-  zero_quaddobl_constant := true;
-  zero_multprec_constant := true;
+  Initialize;
 end PHCpack_Operations;
