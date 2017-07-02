@@ -8,10 +8,16 @@ with Multprec_Floating_Numbers;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
@@ -55,6 +61,21 @@ package body PHCpack_Operations_io is
     end if;
   end Read_Start_System;
 
+  procedure Read_Start_Laurent_System is
+
+    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : Standard_Complex_Solutions.Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading the start system...");
+    Standard_System_and_Solutions_io.get(p,sols);
+    PHCpack_Operations.Store_Start_System(p.all);
+    if not Standard_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Start_Solutions(sols);
+    end if;
+  end Read_Start_Laurent_System;
+
   procedure Read_DoblDobl_Start_System is
 
     p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -70,6 +91,21 @@ package body PHCpack_Operations_io is
     end if;
   end Read_DoblDobl_Start_System;
 
+  procedure Read_DoblDobl_Start_Laurent_System is
+
+    p : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading the start system...");
+    DoblDobl_System_and_Solutions_io.get(p,sols);
+    PHCpack_Operations.Store_Start_System(p.all);
+    if not DoblDobl_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Start_Solutions(sols);
+    end if;
+  end Read_DoblDobl_Start_Laurent_System;
+
   procedure Read_QuadDobl_Start_System is
 
     p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -84,6 +120,21 @@ package body PHCpack_Operations_io is
      then PHCpack_Operations.Store_Start_Solutions(sols);
     end if;
   end Read_QuadDobl_Start_System;
+
+  procedure Read_QuadDobl_Start_Laurent_System is
+
+    p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading the start system...");
+    QuadDobl_System_and_Solutions_io.get(p,sols);
+    PHCpack_Operations.Store_Start_System(p.all);
+    if not QuadDobl_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Start_Solutions(sols);
+    end if;
+  end Read_QuadDobl_Start_Laurent_System;
 
   procedure Read_Multprec_Start_System ( decimals : in natural32 ) is
 
@@ -120,6 +171,22 @@ package body PHCpack_Operations_io is
     end if;
   end Read_Start_System;
 
+  procedure Read_Start_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : Standard_Complex_Solutions.Solution_List;
+
+  begin
+    Open(file,in_file,filename);
+    Standard_System_and_Solutions_io.get(file,p,sols);
+    Close(file);
+    PHCpack_Operations.Store_Start_System(p.all);
+    if not Standard_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Start_Solutions(sols);
+    end if;
+  end Read_Start_Laurent_System;
+
   procedure Read_DoblDobl_Start_System ( filename : in string ) is
 
     file : file_type;
@@ -136,6 +203,22 @@ package body PHCpack_Operations_io is
     end if;
   end Read_DoblDobl_Start_System;
 
+  procedure Read_DoblDobl_Start_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Open(file,in_file,filename);
+    DoblDobl_System_and_Solutions_io.get(file,p,sols);
+    Close(file);
+    PHCpack_Operations.Store_Start_System(p.all);
+    if not DoblDobl_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Start_Solutions(sols);
+    end if;
+  end Read_DoblDobl_Start_Laurent_System;
+
   procedure Read_QuadDobl_Start_System ( filename : in string ) is
 
     file : file_type;
@@ -151,6 +234,22 @@ package body PHCpack_Operations_io is
      then PHCpack_Operations.Store_Start_Solutions(sols);
     end if;
   end Read_QuadDobl_Start_System;
+
+  procedure Read_QuadDobl_Start_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Open(file,in_file,filename);
+    QuadDobl_System_and_Solutions_io.get(file,p,sols);
+    Close(file);
+    PHCpack_Operations.Store_Start_System(p.all);
+    if not QuadDobl_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Start_Solutions(sols);
+    end if;
+  end Read_QuadDobl_Start_Laurent_System;
 
   procedure Read_Multprec_Start_System
               ( filename : in string; decimals : in natural32 ) is
@@ -388,6 +487,21 @@ package body PHCpack_Operations_io is
     end if;
   end Read_Target_System;
 
+  procedure Read_Target_Laurent_System is
+
+    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : Standard_Complex_Solutions.Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading the target system...");
+    Standard_System_and_Solutions_io.get(p,sols);
+    PHCpack_Operations.Store_Target_System(p.all);
+    if not Standard_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Target_Solutions(sols);
+    end if;
+  end Read_Target_Laurent_System;
+
   procedure Read_DoblDobl_Target_System is
 
     p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -403,6 +517,21 @@ package body PHCpack_Operations_io is
     end if;
   end Read_DoblDobl_Target_System;
 
+  procedure Read_DoblDobl_Target_Laurent_System is
+
+    p : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading the target system...");
+    DoblDobl_System_and_Solutions_io.get(p,sols);
+    PHCpack_Operations.Store_Target_System(p.all);
+    if not DoblDobl_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Target_Solutions(sols);
+    end if;
+  end Read_DoblDobl_Target_Laurent_System;
+
   procedure Read_QuadDobl_Target_System is
 
     p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -417,6 +546,21 @@ package body PHCpack_Operations_io is
      then PHCpack_Operations.Store_Target_Solutions(sols);
     end if;
   end Read_QuadDobl_Target_System;
+
+  procedure Read_QuadDobl_Target_Laurent_System is
+
+    p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading the target system...");
+    QuadDobl_System_and_Solutions_io.get(p,sols);
+    PHCpack_Operations.Store_Target_System(p.all);
+    if not QuadDobl_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Target_Solutions(sols);
+    end if;
+  end Read_QuadDobl_Target_Laurent_System;
 
   procedure Read_Multprec_Target_System ( decimals : in natural32 ) is
 
@@ -453,6 +597,22 @@ package body PHCpack_Operations_io is
     end if;
   end Read_Target_System;
 
+  procedure Read_Target_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : Standard_Complex_Solutions.Solution_List;
+
+  begin
+    Open(file,in_file,filename);
+    Standard_System_and_Solutions_io.get(file,p,sols);
+    Close(file);
+    PHCpack_Operations.Store_Target_System(p.all);
+    if not Standard_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Target_Solutions(sols);
+    end if;
+  end Read_Target_Laurent_System;
+
   procedure Read_DoblDobl_Target_System ( filename : in string ) is
 
     file : file_type;
@@ -469,6 +629,22 @@ package body PHCpack_Operations_io is
     end if;
   end Read_DoblDobl_Target_System;
 
+  procedure Read_DoblDobl_Target_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Open(file,in_file,filename);
+    DoblDobl_System_and_Solutions_io.get(file,p,sols);
+    Close(file);
+    PHCpack_Operations.Store_Target_System(p.all);
+    if not DoblDobl_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Target_Solutions(sols);
+    end if;
+  end Read_DoblDobl_Target_Laurent_System;
+
   procedure Read_QuadDobl_Target_System ( filename : in string ) is
 
     file : file_type;
@@ -484,6 +660,22 @@ package body PHCpack_Operations_io is
      then PHCpack_Operations.Store_Target_Solutions(sols);
     end if;
   end Read_QuadDobl_Target_System;
+
+  procedure Read_QuadDobl_Target_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Open(file,in_file,filename);
+    QuadDobl_System_and_Solutions_io.get(file,p,sols);
+    Close(file);
+    PHCpack_Operations.Store_Target_System(p.all);
+    if not QuadDobl_Complex_Solutions.Is_Null(sols)
+     then PHCpack_Operations.Store_Target_Solutions(sols);
+    end if;
+  end Read_QuadDobl_Target_Laurent_System;
 
   procedure Read_Multprec_Target_System
               ( filename : in string; decimals : in natural32 ) is
@@ -575,6 +767,21 @@ package body PHCpack_Operations_io is
     end if;
   end Write_Start_System;
 
+  procedure Write_Start_Laurent_System is
+
+    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(p);
+    if PHCpack_Operations.Is_File_Defined then
+      put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
+      put(PHCpack_Operations.output_file,natural32(p'last),p.all);
+    else
+      put_line(standard_output,"THE START SYSTEM :");
+      put(standard_output,natural32(p'last),p.all);
+    end if;
+  end Write_Start_Laurent_System;
+
   procedure Write_DoblDobl_Start_System is
 
     p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -594,6 +801,25 @@ package body PHCpack_Operations_io is
     end if;
   end Write_DoblDobl_Start_System;
 
+  procedure Write_DoblDobl_Start_Laurent_System is
+
+    p : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(p);
+    if PHCpack_Operations.Is_File_Defined then
+      put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
+      put(PHCpack_Operations.output_file,p'last,1);
+      new_line(PHCpack_Operations.output_file);
+      put(PHCpack_Operations.output_file,p.all);
+    else
+      put_line(standard_output,"THE START SYSTEM :");
+      put(standard_output,p'last,1);
+      new_line(standard_output);
+      put(standard_output,p.all);
+    end if;
+  end Write_DoblDobl_Start_Laurent_System;
+
   procedure Write_QuadDobl_Start_System is
 
     p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -612,6 +838,25 @@ package body PHCpack_Operations_io is
       put(standard_output,p.all);
     end if;
   end Write_QuadDobl_Start_System;
+
+  procedure Write_QuadDobl_Start_Laurent_System is
+
+    p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(p);
+    if PHCpack_Operations.Is_File_Defined then
+      put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
+      put(PHCpack_Operations.output_file,p'last,1);
+      new_line(PHCpack_Operations.output_file);
+      put(PHCpack_Operations.output_file,p.all);
+    else
+      put_line(standard_output,"THE START SYSTEM :");
+      put(standard_output,p'last,1);
+      new_line(standard_output);
+      put(standard_output,p.all);
+    end if;
+  end Write_QuadDobl_Start_Laurent_System;
 
   procedure Write_Multprec_Start_System is
 
@@ -645,6 +890,19 @@ package body PHCpack_Operations_io is
     Close(file);
   end Write_Start_System;
 
+  procedure Write_Start_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    Create(file,out_file,filename);
+    PHCpack_Operations.Retrieve_Start_System(p);
+    put_line(file,"THE START SYSTEM :");
+    put(file,natural32(p'last),p.all);
+    Close(file);
+  end Write_Start_Laurent_System;
+
   procedure Write_DoblDobl_Start_System ( filename : in string ) is
 
     file : file_type;
@@ -660,6 +918,21 @@ package body PHCpack_Operations_io is
     Close(file);
   end Write_DoblDobl_Start_System;
 
+  procedure Write_DoblDobl_Start_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    Create(file,out_file,filename);
+    PHCpack_Operations.Retrieve_Start_System(p);
+    put_line(file,"THE START SYSTEM :");
+    put(file,p'last,1);
+    new_line(file);
+    put(file,p.all);
+    Close(file);
+  end Write_DoblDobl_Start_Laurent_System;
+
   procedure Write_QuadDobl_Start_System ( filename : in string ) is
 
     file : file_type;
@@ -674,6 +947,21 @@ package body PHCpack_Operations_io is
     put(file,p.all);
     Close(file);
   end Write_QuadDobl_Start_System;
+
+  procedure Write_QuadDobl_Start_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    Create(file,out_file,filename);
+    PHCpack_Operations.Retrieve_Start_System(p);
+    put_line(file,"THE START SYSTEM :");
+    put(file,p'last,1);
+    new_line(file);
+    put(file,p.all);
+    Close(file);
+  end Write_QuadDobl_Start_Laurent_System;
 
   procedure Write_Multprec_Start_System ( filename : in string ) is
 
@@ -844,12 +1132,23 @@ package body PHCpack_Operations_io is
 
   begin
     PHCpack_Operations.Retrieve_Target_System(p);
- -- put_line(PHCpack_Operations.Retrieve_Output_File,"THE TARGET SYSTEM : ");
     if PHCpack_Operations.Is_File_Defined
      then put(PHCpack_Operations.output_file,natural32(p'last),p.all);
      else put(standard_output,natural32(p'last),p.all);
     end if;
   end Write_Target_System;
+
+  procedure Write_Target_Laurent_System is
+
+    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Target_System(p);
+    if PHCpack_Operations.Is_File_Defined
+     then put(PHCpack_Operations.output_file,natural32(p'last),p.all);
+     else put(standard_output,natural32(p'last),p.all);
+    end if;
+  end Write_Target_Laurent_System;
 
   procedure Write_DoblDobl_Target_System is
 
@@ -868,6 +1167,23 @@ package body PHCpack_Operations_io is
     end if;
   end Write_DoblDobl_Target_System;
 
+  procedure Write_DoblDobl_Target_Laurent_System is
+
+    p : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Target_System(p);
+    if PHCpack_Operations.Is_File_Defined then
+      put(PHCpack_Operations.output_file,p'last,1);
+      new_line(PHCpack_Operations.output_file);
+      put(PHCpack_Operations.output_file,p.all);
+    else
+      put(standard_output,p'last,1);
+      new_line(standard_output);
+      put(standard_output,p.all);
+    end if;
+  end Write_DoblDobl_Target_Laurent_System;
+
   procedure Write_QuadDobl_Target_System is
 
     p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -884,6 +1200,23 @@ package body PHCpack_Operations_io is
       put(standard_output,p.all);
     end if;
   end Write_QuadDobl_Target_System;
+
+  procedure Write_QuadDobl_Target_Laurent_System is
+
+    p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Target_System(p);
+    if PHCpack_Operations.Is_File_Defined then
+      put(PHCpack_Operations.output_file,p'last,1);
+      new_line(PHCpack_Operations.output_file);
+      put(PHCpack_Operations.output_file,p.all);
+    else
+      put(standard_output,p'last,1);
+      new_line(standard_output);
+      put(standard_output,p.all);
+    end if;
+  end Write_QuadDobl_Target_Laurent_System;
 
   procedure Write_Multprec_Target_System is
 
@@ -915,6 +1248,19 @@ package body PHCpack_Operations_io is
     Close(file);
   end Write_Target_System;
 
+  procedure Write_Target_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    Create(file,out_file,filename);
+    PHCpack_Operations.Retrieve_Target_System(p);
+    put_line(file,"THE TARGET SYSTEM :");
+    put(file,natural32(p'last),p.all);
+    Close(file);
+  end Write_Target_Laurent_System;
+
   procedure Write_DoblDobl_Target_System ( filename : in string ) is
 
     file : file_type;
@@ -930,6 +1276,21 @@ package body PHCpack_Operations_io is
     Close(file);
   end Write_DoblDobl_Target_System;
 
+  procedure Write_DoblDobl_Target_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    Create(file,out_file,filename);
+    PHCpack_Operations.Retrieve_Target_System(p);
+    put_line(file,"THE TARGET SYSTEM :");
+    put(file,p'last,1);
+    new_line(file);
+    put(file,p.all);
+    Close(file);
+  end Write_DoblDobl_Target_Laurent_System;
+
   procedure Write_QuadDobl_Target_System ( filename : in string ) is
 
     file : file_type;
@@ -944,6 +1305,21 @@ package body PHCpack_Operations_io is
     put(file,p.all);
     Close(file);
   end Write_QuadDobl_Target_System;
+
+  procedure Write_QuadDobl_Target_Laurent_System ( filename : in string ) is
+
+    file : file_type;
+    p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    Create(file,out_file,filename);
+    PHCpack_Operations.Retrieve_Target_System(p);
+    put_line(file,"THE TARGET SYSTEM :");
+    put(file,p'last,1);
+    new_line(file);
+    put(file,p.all);
+    Close(file);
+  end Write_QuadDobl_Target_Laurent_System;
 
   procedure Write_Multprec_Target_System ( filename : in string ) is
 

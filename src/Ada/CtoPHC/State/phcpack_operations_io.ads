@@ -9,12 +9,18 @@ package PHCpack_Operations_io is
 
   procedure Read_Start_System;
   procedure Read_Start_System ( filename : in string );
+  procedure Read_Start_Laurent_System;
+  procedure Read_Start_Laurent_System ( filename : in string );
 
   procedure Read_DoblDobl_Start_System;
   procedure Read_DoblDobl_Start_System ( filename : in string );
+  procedure Read_DoblDobl_Start_Laurent_System;
+  procedure Read_DoblDobl_Start_Laurent_System ( filename : in string );
 
   procedure Read_QuadDobl_Start_System;
   procedure Read_QuadDobl_Start_System ( filename : in string );
+  procedure Read_QuadDobl_Start_Laurent_System;
+  procedure Read_QuadDobl_Start_Laurent_System ( filename : in string );
 
   procedure Read_Multprec_Start_System ( decimals : in natural32 );
   procedure Read_Multprec_Start_System
@@ -82,6 +88,8 @@ package PHCpack_Operations_io is
 
   procedure Read_Target_System;
   procedure Read_Target_System ( filename : in string );
+  procedure Read_Target_Laurent_System;
+  procedure Read_Target_Laurent_System ( filename : in string );
 
   procedure Read_Target_System_without_Solutions;
   procedure Read_Target_System_without_Solutions ( filename : in string );
@@ -93,6 +101,10 @@ package PHCpack_Operations_io is
   procedure Read_DoblDobl_Target_System ( filename : in string );
   procedure Read_QuadDobl_Target_System;
   procedure Read_QuadDobl_Target_System ( filename : in string );
+  procedure Read_DoblDobl_Target_Laurent_System;
+  procedure Read_DoblDobl_Target_Laurent_System ( filename : in string );
+  procedure Read_QuadDobl_Target_Laurent_System;
+  procedure Read_QuadDobl_Target_Laurent_System ( filename : in string );
 
   procedure Read_Multprec_Target_System ( decimals : in natural32 );
   procedure Read_Multprec_Target_System
@@ -106,16 +118,22 @@ package PHCpack_Operations_io is
 
   procedure Write_Start_System;
   procedure Write_Start_System ( filename : in string );
+  procedure Write_Start_Laurent_System;
+  procedure Write_Start_Laurent_System ( filename : in string );
   procedure Write_Start_Solutions;
   procedure Write_Start_Solutions ( filename : in string );
 
   procedure Write_DoblDobl_Start_System;
   procedure Write_DoblDobl_Start_System ( filename : in string );
+  procedure Write_DoblDobl_Start_Laurent_System;
+  procedure Write_DoblDobl_Start_Laurent_System ( filename : in string );
   procedure Write_DoblDobl_Start_Solutions;
   procedure Write_DoblDobl_Start_Solutions ( filename : in string );
 
   procedure Write_QuadDobl_Start_System;
   procedure Write_QuadDobl_Start_System ( filename : in string );
+  procedure Write_QuadDobl_Start_Laurent_System;
+  procedure Write_QuadDobl_Start_Laurent_System ( filename : in string );
   procedure Write_QuadDobl_Start_Solutions;
   procedure Write_QuadDobl_Start_Solutions ( filename : in string );
 
@@ -130,16 +148,22 @@ package PHCpack_Operations_io is
 
   procedure Write_Target_System;
   procedure Write_Target_System ( filename : in string );
+  procedure Write_Target_Laurent_System;
+  procedure Write_Target_Laurent_System ( filename : in string );
   procedure Write_Target_Solutions;
   procedure Write_Target_Solutions ( filename : in string );
 
   procedure Write_DoblDobl_Target_System;
   procedure Write_DoblDobl_Target_System ( filename : in string );
+  procedure Write_DoblDobl_Target_Laurent_System;
+  procedure Write_DoblDobl_Target_Laurent_System ( filename : in string );
   procedure Write_DoblDobl_Target_Solutions;
   procedure Write_DoblDobl_Target_Solutions ( filename : in string );
 
   procedure Write_QuadDobl_Target_System;
   procedure Write_QuadDobl_Target_System ( filename : in string );
+  procedure Write_QuadDobl_Target_Laurent_System;
+  procedure Write_QuadDobl_Target_Laurent_System ( filename : in string );
   procedure Write_QuadDobl_Target_Solutions;
   procedure Write_QuadDobl_Target_Solutions ( filename : in string );
 
