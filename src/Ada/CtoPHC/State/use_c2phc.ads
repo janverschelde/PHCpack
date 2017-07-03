@@ -112,6 +112,24 @@ function use_c2phc ( job : integer32;
 --         = 497 : write the multiprecision target solutions;
 --         = 498 : clear the multiprecision data;
 --
+-- operations for systems in Laurent homotopies :
+--
+--   job   = 759 : read standard double Laurent start system;
+--         = 760 : write standard double Laurent start system;
+--         = 761 : read standard double Laurent target system;
+--         = 762 : write standard double Laurent target system;
+--         = 763 : read double double Laurent start system;
+--         = 764 : write double double Laurent start system;
+--         = 765 : read double double Laurent target system;
+--         = 766 : write double double Laurent target system;
+--         = 767 : read quad double Laurent start system;
+--         = 768 : write quad double Laurent start system;
+--         = 769 : read quad double Laurent target system;
+--         = 770 : write quad double Laurent target system;
+--         = 771 : clear data for Laurent homotopy with standard doubles;
+--         = 772 : clear data for Laurent homotopy with double doubles;
+--         = 773 : clear data for Laurent homotopy with quad doubles.
+--
 -- the operations of the systems container :
 --
 --   job   =  20 : read polynomial system and put in container;

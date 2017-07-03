@@ -1,6 +1,7 @@
 Sun 2 Jul 2017 : added definition of cascade homotopies for Laurent systems
   in phcpack_operations.  Reading and writing of start and target systems
   in homotopies of Laurent systems added to phcpack_operations_io.
+  Add 15 jobs to c_to_phcpack and use_c2phc.
 
 Sat 1 Jul 2017 : added operations to phcpack_operations to store and
   retrieve start and target Laurent systems.  To phcpack_operations,

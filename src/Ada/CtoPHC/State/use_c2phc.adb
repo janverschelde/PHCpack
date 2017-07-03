@@ -1742,6 +1742,20 @@ function use_c2phc ( job : integer32;
     when others => return 627;
   end Job627;
 
+  function Job628 return integer32 is -- create standard Laurent cascade
+  begin
+    return 0;
+  exception
+    when others => return 628;
+  end Job628;
+
+  function Job629 return integer32 is -- create dobldobl Laurent cascade
+  begin
+    return 0;
+  exception
+    when others => return 629;
+  end Job629;
+
   function Job70 return integer32 is -- interactive tuning of parameters
   begin
     if PHCpack_Operations.Is_File_Defined then
@@ -2587,6 +2601,9 @@ function use_c2phc ( job : integer32;
       when 625 => return Job625; -- embed standard double Laurent system
       when 626 => return Job626; -- embed double double Laurent system
       when 627 => return Job627; -- embed quad double Laurent system
+     -- cascade of Laurent systems :
+      when 628 => return Job628; -- create double Laurent cascade
+      when 629 => return Job629; -- create double double Laurent cascade
      -- make standard monodromy breakup verbose
       when 630 => return use_c2fac(30,a,b,c);
      -- monodromy breakup in double double precision :
@@ -2614,6 +2631,8 @@ function use_c2phc ( job : integer32;
       when 711..731 => return use_numbtrop(job-710,a,b,c);
      -- integer mixed cell configurations
       when 741..758 => return use_celcon(job-690,a,b,c);
+     -- reading, writing Laurent start and target systems
+      when 759..773 => return c_to_phcpack(job-730,0);
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
