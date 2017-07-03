@@ -504,6 +504,78 @@ int write_multprec_start_system ( void ) ;
  * DESCRIPTION :
  *   Writes the start polynomial system in multiprecision. */
 
+int read_standard_start_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the start system from file,
+ *   in standard double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+int write_standard_start_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the start Laurent system in standard double precision. */
+
+int read_standard_target_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the target system from file,
+ *   in standard double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+int write_standard_target_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the target Laurent system in standard double precision. */
+
+int read_dobldobl_start_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the start system from file,
+ *   in double double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+int write_dobldobl_start_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the start Laurent system in double double precision. */
+
+int read_dobldobl_target_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the target system from file,
+ *   in double double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+int write_dobldobl_target_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the target Laurent system in double double precision. */
+
+int read_quaddobl_start_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the start system from file,
+ *   in quad double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+int write_quaddobl_start_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the start Laurent system in quad double precision. */
+
+int read_quaddobl_target_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the target system from file,
+ *   in quad double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+int write_quaddobl_target_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the target Laurent system in quad double precision. */
+
 int write_start_solutions ( void );
 /* 
  * DESCRIPTION :
@@ -739,6 +811,21 @@ int clear_multprec_data ( void );
 /* 
  * DESCRIPTION :
  *   Clears the multiprecision data in PHCpack_Operations. */
+
+int clear_standard_Laurent_data ( void );
+/*
+ * DESCRIPTION :
+ *   Clears data for the Laurent homotopies in standard double precision. */
+
+int clear_dobldobl_Laurent_data ( void );
+/*
+ * DESCRIPTION :
+ *   Clears data for the Laurent homotopies in double double precision. */
+
+int clear_quaddobl_Laurent_data ( void );
+/*
+ * DESCRIPTION :
+ *   Clears data for the Laurent homotopies in quad double precision. */
 
 int define_output_file ( void );
 /*

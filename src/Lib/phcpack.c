@@ -740,6 +740,102 @@ int write_multprec_start_system ( void )
    return fail;
 }
 
+int read_standard_start_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(759,a,b,c);
+   return fail;
+}
+
+int write_standard_start_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(760,a,b,c);
+   return fail;
+}
+
+int read_standard_target_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(761,a,b,c);
+   return fail;
+}
+
+int write_standard_target_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(762,a,b,c);
+   return fail;
+}
+
+int read_dobldobl_start_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(763,a,b,c);
+   return fail;
+}
+
+int write_dobldobl_start_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(764,a,b,c);
+   return fail;
+}
+
+int read_dobldobl_target_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(765,a,b,c);
+   return fail;
+}
+
+int write_dobldobl_target_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(766,a,b,c);
+   return fail;
+}
+
+int read_quaddobl_start_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(767,a,b,c);
+   return fail;
+}
+
+int write_quaddobl_start_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(768,a,b,c);
+   return fail;
+}
+
+int read_quaddobl_target_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(769,a,b,c);
+   return fail;
+}
+
+int write_quaddobl_target_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(770,a,b,c);
+   return fail;
+}
+
 int write_start_solutions ( void )
 {
    int *a,*b,fail;
@@ -1041,6 +1137,30 @@ int clear_multprec_data ( void )
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(498,a,b,c);
+   return fail;
+}
+
+int clear_standard_Laurent_data ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(771,a,b,c);
+   return fail;
+}
+
+int clear_dobldobl_Laurent_data ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(772,a,b,c);
+   return fail;
+}
+
+int clear_quaddobl_Laurent_data ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(773,a,b,c);
    return fail;
 }
 
