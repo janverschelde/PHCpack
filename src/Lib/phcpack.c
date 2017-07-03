@@ -1076,6 +1076,30 @@ int solve_by_multprec_homotopy_continuation ( int decimals )
    return fail;
 }
 
+int solve_by_standard_Laurent_homotopy_continuation ( int number_of_tasks )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(774,&number_of_tasks,b,c);
+   return fail;
+}
+
+int solve_by_dobldobl_Laurent_homotopy_continuation ( int number_of_tasks )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(775,&number_of_tasks,b,c);
+   return fail;
+}
+
+int solve_by_quaddobl_Laurent_homotopy_continuation ( int number_of_tasks )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(776,&number_of_tasks,b,c);
+   return fail;
+}
+
 int write_target_solutions ( void )
 {
    int *a,*b,fail;

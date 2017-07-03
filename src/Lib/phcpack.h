@@ -772,6 +772,30 @@ int solve_by_multprec_homotopy_continuation ( int decimals );
  *   The number of decimal places in the working precision equals
  *   the value given in decimals. */
 
+int solve_by_standard_Laurent_homotopy_continuation ( int number_of_tasks );
+/* 
+ * DESCRIPTION :
+ *   Solves the target Laurent system using the Laurent start system
+ *   and its corresponding start solutions in standard double precision,
+ *   using as many tasks as the value of number_of_tasks (if positive).
+ *   If number_of_tasks is zero, then no multitasking is used. */
+
+int solve_by_dobldobl_Laurent_homotopy_continuation ( int number_of_tasks );
+/* 
+ * DESCRIPTION :
+ *   Solves the target Laurent system using the Laurent start system 
+ *   and its corresponding start solutions in double double precision,
+ *   using as many tasks as the value of number_of_tasks (if positive).
+ *   If number_of_tasks is zero, then no multitasking is used. */
+
+int solve_by_quaddobl_Laurent_homotopy_continuation ( int number_of_tasks );
+/* 
+ * DESCRIPTION :
+ *   Solves the target Laurent system using the Laurent start system
+ *   and its corresponding start solutions with quad double arithmetic,
+ *   using as many tasks as the value of number_of_tasks (if positive).
+ *   If number_of_tasks is zero, then no multitasking is used. */
+
 int write_target_solutions ( void );
 /*
  * DESCRIPTION :
