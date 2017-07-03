@@ -55,7 +55,19 @@ function C_to_PHCpack ( job : integer32;
 --            = 40 : write quad double Laurent target system;
 --            = 41 : clear data for Laurent homotopy with standard doubles;
 --            = 42 : clear data for Laurent homotopy with double doubles;
---            = 43 : clear data for Laurent homotopy with quad doubles.
+--            = 43 : clear data for Laurent homotopy with quad doubles;
+--            = 44 : solve stored Laurent target system using the stored
+--                   Laurent system in standard double precision,
+--                   using as many tasks as the value of number_of_tasks,
+--                   if that value is zero, then no multitasking is used;
+--            = 45 : solve stored Laurent target system using the stored
+--                   Laurent system in double double precision,
+--                   using as many tasks as the value of number_of_tasks,
+--                   if that value is zero, then no multitasking is used;
+--            = 46 : solve stored Laurent target system using the stored
+--                   Laurent system in quad double precision,
+--                   using as many tasks as the value of number_of_tasks,
+--                   if that value is zero, then no multitasking is used.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

@@ -98,6 +98,12 @@ begin
     when 41 => PHCpack_Operations.Standard_Laurent_Clear;
     when 42 => PHCpack_Operations.DoblDobl_Laurent_Clear;
     when 43 => PHCpack_Operations.QuadDobl_Laurent_Clear;
+    when 44 =>
+      return Solve_by_Standard_Laurent_Homotopy_Continuation(number_of_tasks);
+    when 45 =>
+      return Solve_by_DoblDobl_Laurent_Homotopy_Continuation(number_of_tasks);
+    when 46 =>
+      return Solve_by_QuadDobl_Laurent_Homotopy_Continuation(number_of_tasks);
     when others => put_line("  Sorry, this operation is not defined.");
                    return 1;
   end case;

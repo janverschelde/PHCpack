@@ -128,7 +128,19 @@ function use_c2phc ( job : integer32;
 --         = 770 : write quad double Laurent target system;
 --         = 771 : clear data for Laurent homotopy with standard doubles;
 --         = 772 : clear data for Laurent homotopy with double doubles;
---         = 773 : clear data for Laurent homotopy with quad doubles.
+--         = 773 : clear data for Laurent homotopy with quad doubles;
+--         = 774 : solve stored Laurent target system using the stored
+--                 Laurent system in standard double precision,
+--                 using as many tasks as the value of number_of_tasks,
+--                 if that value is zero, then no multitasking is used;
+--         = 775 : solve stored Laurent target system using the stored
+--                 Laurent system in double double precision,
+--                 using as many tasks as the value of number_of_tasks,
+--                 if that value is zero, then no multitasking is used;
+--         = 776 : solve stored Laurent target system using the stored
+--                 Laurent system in quad double precision,
+--                 using as many tasks as the value of number_of_tasks,
+--                 if that value is zero, then no multitasking is used.
 --
 -- the operations of the systems container :
 --

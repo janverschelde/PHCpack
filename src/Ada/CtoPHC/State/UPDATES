@@ -1,3 +1,6 @@
+Mon 3 Jul 2017 : defined three jobs in c_to_phcpack and use_c2phc to solve
+  a Laurent system with homotopy continuation.
+
 Sun 2 Jul 2017 : added definition of cascade homotopies for Laurent systems
   in phcpack_operations.  Reading and writing of start and target systems
   in homotopies of Laurent systems added to phcpack_operations_io.
