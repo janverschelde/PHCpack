@@ -980,6 +980,78 @@ int copy_multprec_container_to_start_system ( void );
  *   Copies system in container to start system,
  *   in quad double precision. */
 
+int copy_standard_Laurent_container_to_start_system ( void );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in standard double precision
+ *  from the container to the start system. */
+
+int copy_dobldobl_Laurent_container_to_start_system ( void );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in double double precision
+ *  from the container to the start system. */
+
+int copy_quaddobl_Laurent_container_to_start_system ( void );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in quad double precision
+ *  from the container to the start system. */
+
+int copy_standard_Laurent_container_to_target_system ( void );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in standard double precision
+ *  from the container to the target system. */
+
+int copy_dobldobl_Laurent_container_to_target_system ( void );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in double double precision
+ *  from the container to the target system. */
+
+int copy_quaddobl_Laurent_container_to_target_system ( void );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in quad double precision
+ *  from the container to the target system. */
+
+int copy_standard_Laurent_start_system_to_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the start Laurent system in standard double precision
+ *   to the systems container for Laurent systems. */
+
+int copy_dobldobl_Laurent_start_system_to_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the start Laurent system in double double precision
+ *   to the systems container for Laurent systems. */
+
+int copy_quaddobl_Laurent_start_system_to_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the start Laurent system in quad double precision
+ *   to the systems container for Laurent systems. */
+
+int copy_standard_Laurent_target_system_to_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the target Laurent system in standard double precision
+ *   to the systems container for Laurent systems. */
+
+int copy_dobldobl_Laurent_target_system_to_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the target Laurent system in double double precision
+ *   to the systems container for Laurent systems. */
+
+int copy_quaddobl_Laurent_target_system_to_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the target Laurent system in quad double precision
+ *   to the systems container for Laurent systems. */
+
 int copy_target_solutions_to_container ( void );
 /* 
  * DESCRIPTION :

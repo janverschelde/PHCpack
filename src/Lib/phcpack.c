@@ -1374,6 +1374,102 @@ int copy_multprec_container_to_start_system ( void )
    return fail;
 }
 
+int copy_standard_Laurent_container_to_start_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(777,a,b,c);
+   return fail;
+}
+
+int copy_dobldobl_Laurent_container_to_start_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(778,a,b,c);
+   return fail;
+}
+
+int copy_quaddobl_Laurent_container_to_start_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(779,a,b,c);
+   return fail;
+}
+
+int copy_standard_Laurent_container_to_target_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(780,a,b,c);
+   return fail;
+}
+
+int copy_dobldobl_Laurent_container_to_target_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(781,a,b,c);
+   return fail;
+}
+
+int copy_quaddobl_Laurent_container_to_target_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(782,a,b,c);
+   return fail;
+}
+
+int copy_standard_Laurent_start_system_to_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(783,a,b,c);
+   return fail;
+}
+
+int copy_dobldobl_Laurent_start_system_to_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(784,a,b,c);
+   return fail;
+}
+
+int copy_quaddobl_Laurent_start_system_to_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(785,a,b,c);
+   return fail;
+}
+
+int copy_standard_Laurent_target_system_to_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(786,a,b,c);
+   return fail;
+}
+
+int copy_dobldobl_Laurent_target_system_to_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(787,a,b,c);
+   return fail;
+}
+
+int copy_quaddobl_Laurent_target_system_to_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(788,a,b,c);
+   return fail;
+}
+
 int copy_target_solutions_to_container ( void )
 {
    int *a,*b,fail;
