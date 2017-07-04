@@ -140,7 +140,19 @@ function use_c2phc ( job : integer32;
 --         = 776 : solve stored Laurent target system using the stored
 --                 Laurent system in quad double precision,
 --                 using as many tasks as the value of number_of_tasks,
---                 if that value is zero, then no multitasking is used.
+--                 if that value is zero, then no multitasking is used;
+--         = 777 : copy standard Laurent container to start system;
+--         = 778 : copy dobldobl Laurent container to start system;
+--         = 779 : copy quaddobl Laurent container to start system;
+--         = 780 : copy standard Laurent container to target system;
+--         = 781 : copy dobldobl Laurent container to target system;
+--         = 782 : copy quaddobl Laurent container to target system;
+--         = 783 : copy standard Laurent start system to container;
+--         = 784 : copy dobldobl Laurent start system to container;
+--         = 785 : copy quaddobl Laurent start system to container;
+--         = 786 : copy standard Laurent target system to container;
+--         = 787 : copy dobldobl Laurent target system to container;
+--         = 788 : copy quaddobl Laurent target system to container.
 --
 -- the operations of the systems container :
 --

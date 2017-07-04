@@ -15,6 +15,7 @@ with Arrays_of_Floating_Vector_Lists;
 with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_SysFun;
@@ -35,7 +36,6 @@ with Multprec_Complex_Jaco_Matrices;
 with Multprec_Complex_Laur_Systems;
 with Multprec_Complex_Laur_SysFun;
 with Multprec_Complex_Laur_JacoMats;
-with Standard_Complex_Laur_Systems;
 with Standard_Laur_Poly_Convertors;
 with DoblDobl_Laur_Poly_Convertors;
 with QuadDobl_Laur_Poly_Convertors;
@@ -2343,6 +2343,156 @@ function use_c2phc ( job : integer32;
     return PHCpack_Operations.Solve_by_Multprec_Homotopy_Continuation(deci);
   end Job496;
 
+  function Job777 return integer32 is -- copy standard Laurent to start
+
+    use Standard_Complex_Laur_Systems;
+    q : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+
+  begin
+    if q = null
+     then return 777;
+     else PHCpack_Operations.Store_Start_System(q.all); return 0;
+    end if;
+  end Job777;
+
+  function Job778 return integer32 is -- copy dobldobl Laurent to start
+
+    use DoblDobl_Complex_Laur_Systems;
+    q : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+
+  begin
+    if q = null
+     then return 778;
+     else PHCpack_Operations.Store_Start_System(q.all); return 0;
+    end if;
+  end Job778;
+
+  function Job779 return integer32 is -- copy quaddobl Laurent to start
+
+    use QuadDobl_Complex_Laur_Systems;
+    q : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+
+  begin
+    if q = null
+     then return 779;
+     else PHCpack_Operations.Store_Start_System(q.all); return 0;
+    end if;
+  end Job779;
+
+  function Job780 return integer32 is -- copy standard Laurent to target
+
+    use Standard_Complex_Laur_Systems;
+    q : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+
+  begin
+    if q = null
+     then return 780;
+     else PHCpack_Operations.Store_Target_System(q.all); return 0;
+    end if;
+  end Job780;
+
+  function Job781 return integer32 is -- copy dobldobl Laurent to target
+
+    use DoblDobl_Complex_Laur_Systems;
+    q : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+
+  begin
+    if q = null
+     then return 781;
+     else PHCpack_Operations.Store_Target_System(q.all); return 0;
+    end if;
+  end Job781;
+
+  function Job782 return integer32 is -- copy quaddobl Laurent to target
+
+    use QuadDobl_Complex_Laur_Systems;
+    q : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+
+  begin
+    if q = null
+     then return 782;
+     else PHCpack_Operations.Store_Target_System(q.all); return 0;
+    end if;
+  end Job782;
+
+  function Job783 return integer32 is -- standard Laurent start to container
+
+    use Standard_Complex_Laur_Systems;
+    q : Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(q);
+    if q = null
+     then return 783;
+     else Laurent_Systems_Container.Initialize(q.all); return 0;
+    end if;
+  end Job783;
+
+  function Job784 return integer32 is -- dobldobl Laurent start to container
+
+    use DoblDobl_Complex_Laur_Systems;
+    q : Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(q);
+    if q = null
+     then return 784;
+     else DoblDobl_LaurSys_Container.Initialize(q.all); return 0;
+    end if;
+  end Job784;
+
+  function Job785 return integer32 is -- quaddobl Laurent start to container
+
+    use QuadDobl_Complex_Laur_Systems;
+    q : Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(q);
+    if q = null
+     then return 785;
+     else QuadDobl_LaurSys_Container.Initialize(q.all); return 0;
+    end if;
+  end Job785;
+
+  function Job786 return integer32 is -- standard Laurent target to container
+
+    use Standard_Complex_Laur_Systems;
+    q : Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Target_System(q);
+    if q = null
+     then return 786;
+     else Laurent_Systems_Container.Initialize(q.all); return 0;
+    end if;
+  end Job786;
+
+  function Job787 return integer32 is -- dobldobl Laurent target to container
+
+    use DoblDobl_Complex_Laur_Systems;
+    q : Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Target_System(q);
+    if q = null
+     then return 787;
+     else DoblDobl_LaurSys_Container.Initialize(q.all); return 0;
+    end if;
+  end Job787;
+
+  function Job788 return integer32 is -- quaddobl Laurent target to container
+
+    use QuadDobl_Complex_Laur_Systems;
+    q : Link_to_Laur_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Target_System(q);
+    if q = null
+     then return 788;
+     else QuadDobl_LaurSys_Container.Initialize(q.all); return 0;
+    end if;
+  end Job788;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -2633,6 +2783,19 @@ function use_c2phc ( job : integer32;
       when 741..758 => return use_celcon(job-690,a,b,c);
      -- reading, writing Laurent start and target systems
       when 759..776 => return c_to_phcpack(job-730,0);
+     -- copying Laurent systems from and into the containers
+      when 777 => return Job777; -- copy standard Laurent container to start
+      when 778 => return Job778; -- copy dobldobl Laurent container to start
+      when 779 => return Job779; -- copy quaddobl Laurent container to start
+      when 780 => return Job780; -- copy standard Laurent container to target
+      when 781 => return Job781; -- copy dobldobl Laurent container to target
+      when 782 => return Job782; -- copy quaddobl Laurent container to target
+      when 783 => return Job783; -- copy standard Laurent start to container
+      when 784 => return Job784; -- copy dobldobl Laurent start to container
+      when 785 => return Job785; -- copy quaddobl Laurent start to container
+      when 786 => return Job786; -- copy standard Laurent target to container
+      when 787 => return Job787; -- copy dobldobl Laurent target to container
+      when 788 => return Job788; -- copy quaddobl Laurent target to container
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

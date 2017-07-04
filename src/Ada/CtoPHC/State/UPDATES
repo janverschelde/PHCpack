@@ -1,3 +1,6 @@
+Tue 4 Jul 2017 : added jobs to use_c2phc.ads and use_c2phc.adb to copy
+  from and into the contains for Laurent systems.
+
 Mon 3 Jul 2017 : defined three jobs in c_to_phcpack and use_c2phc to solve
   a Laurent system with homotopy continuation.
   Define solve_by_*laurent*_continuation in phcpack_operations.adb.
