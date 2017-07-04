@@ -1,5 +1,6 @@
 Mon 3 Jul 2017 : to phcpack.h and phcpack.c, added functions to solve a
   Laurent system by homotopy continuation, tested by lib_poco.c.
+  Added write_target_solution for solving Laurent systems with doubles.
 
 Sun 2 Jul 2017 : extended phcpack.h and phcpack.c with the 15 jobs to read,       write the systems in Laurent homotopies and to clear the data.
 

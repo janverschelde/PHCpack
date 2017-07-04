@@ -86,6 +86,7 @@ int run_standard_continuation ( void )
    scanf("%d", &nbtasks);
    printf("\nSee the output file for results ...\n");
    fail = solve_by_standard_homotopy_continuation(nbtasks);
+   // fail = write_target_solutions(); // root refiner
 
    return fail;
 }
@@ -186,6 +187,7 @@ int run_standard_Laurent_continuation ( void )
    scanf("%d", &nbtasks);
    printf("\nSee the output file for results ...\n");
    fail = solve_by_standard_Laurent_homotopy_continuation(nbtasks);
+   fail = write_target_solutions();
 
    return fail;
 }
