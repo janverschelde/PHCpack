@@ -673,6 +673,150 @@ static PyObject *py2c_copy_multprec_container_to_start_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_copy_standard_Laurent_container_to_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_standard_Laurent_container_to_start_system();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_dobldobl_Laurent_container_to_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_dobldobl_Laurent_container_to_start_system();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_quaddobl_Laurent_container_to_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_quaddobl_Laurent_container_to_start_system();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_standard_Laurent_container_to_target_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_standard_Laurent_container_to_target_system();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_dobldobl_Laurent_container_to_target_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_dobldobl_Laurent_container_to_target_system();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_quaddobl_Laurent_container_to_target_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_quaddobl_Laurent_container_to_target_system();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_standard_Laurent_start_system_to_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_standard_Laurent_start_system_to_container();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_dobldobl_Laurent_start_system_to_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_dobldobl_Laurent_start_system_to_container();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_quaddobl_Laurent_start_system_to_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_quaddobl_Laurent_start_system_to_container();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_standard_Laurent_target_system_to_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_standard_Laurent_target_system_to_container();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_dobldobl_Laurent_target_system_to_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_dobldobl_Laurent_target_system_to_container();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_copy_quaddobl_Laurent_target_system_to_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = copy_quaddobl_Laurent_target_system_to_container();
+              
+   return Py_BuildValue("i",fail);
+}
+
 /* creation of homotopy and tracking all solution paths */
 
 static PyObject *py2c_create_standard_homotopy
@@ -7794,6 +7938,42 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_copy_multprec_container_to_start_system",
      py2c_copy_multprec_container_to_start_system, METH_VARARGS,
     "Copies the system in the container for systems with coefficients\n in arbitrary multiprecision to the start system."},
+   {"py2c_copy_standard_Laurent_container_to_start_system",
+     py2c_copy_standard_Laurent_container_to_start_system, METH_VARARGS,
+    "Copies the Laurent system in standard double precision\n from the container to the start system."},
+   {"py2c_copy_dobldobl_Laurent_container_to_start_system",
+     py2c_copy_dobldobl_Laurent_container_to_start_system, METH_VARARGS,
+    "Copies the Laurent system in double double precision\n from the container to the start system."},
+   {"py2c_copy_quaddobl_Laurent_container_to_start_system",
+     py2c_copy_quaddobl_Laurent_container_to_start_system, METH_VARARGS,
+    "Copies the Laurent system in quad double precision\n from the container to the start system."},
+   {"py2c_copy_standard_Laurent_container_to_target_system",
+     py2c_copy_standard_Laurent_container_to_target_system, METH_VARARGS,
+    "Copies the Laurent system in standard double precision\n from the container to the target system."},
+   {"py2c_copy_dobldobl_Laurent_container_to_target_system",
+     py2c_copy_dobldobl_Laurent_container_to_target_system, METH_VARARGS,
+    "Copies the Laurent system in double double precision\n from the container to the target system."},
+   {"py2c_copy_quaddobl_Laurent_container_to_target_system",
+     py2c_copy_quaddobl_Laurent_container_to_target_system, METH_VARARGS,
+    "Copies the Laurent system in quad double precision\n from the container to the target system."},
+   {"py2c_copy_standard_Laurent_start_system_to_container",
+     py2c_copy_standard_Laurent_start_system_to_container, METH_VARARGS,
+    "Copies the start Laurent system in standard double precision\n to the systems container for Laurent systems."},
+   {"py2c_copy_dobldobl_Laurent_start_system_to_container",
+     py2c_copy_dobldobl_Laurent_start_system_to_container, METH_VARARGS,
+    "Copies the start Laurent system in double double precision\n to the systems container for Laurent systems."},
+   {"py2c_copy_quaddobl_Laurent_start_system_to_container",
+     py2c_copy_quaddobl_Laurent_start_system_to_container, METH_VARARGS,
+    "Copies the start Laurent system in quad double precision\n to the systems container for Laurent systems."},
+   {"py2c_copy_standard_Laurent_target_system_to_container",
+     py2c_copy_standard_Laurent_target_system_to_container, METH_VARARGS,
+    "Copies the target Laurent system in standard double precision\n to the systems container for Laurent systems."},
+   {"py2c_copy_dobldobl_Laurent_target_system_to_container",
+     py2c_copy_dobldobl_Laurent_target_system_to_container, METH_VARARGS,
+    "Copies the target Laurent system in double double precision\n to the systems container for Laurent systems."},
+   {"py2c_copy_quaddobl_Laurent_target_system_to_container",
+     py2c_copy_quaddobl_Laurent_target_system_to_container, METH_VARARGS,
+    "Copies the target Laurent system in quad double precision\n to the systems container for Laurent systems."},
    {"py2c_create_standard_homotopy", py2c_create_standard_homotopy,
      METH_VARARGS,
     "Initializes the data for a homotopy in standard double precision.\n The failure code is returned, which is zero when all goes well."},

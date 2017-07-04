@@ -396,6 +396,90 @@ static PyObject *py2c_copy_multprec_container_to_start_system
  *   Copies the system in the container for systems with coefficients
  *   in arbitrary multiprecision to the start system. */
 
+static PyObject *py2c_copy_standard_Laurent_container_to_start_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in standard double precision
+ *  from the container to the start system. */
+
+static PyObject *py2c_copy_dobldobl_Laurent_container_to_start_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in double double precision
+ *  from the container to the start system. */
+
+static PyObject *py2c_copy_quaddobl_Laurent_container_to_start_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in quad double precision
+ *  from the container to the start system. */
+
+static PyObject *py2c_copy_standard_Laurent_container_to_target_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in standard double precision
+ *  from the container to the target system. */
+
+static PyObject *py2c_copy_dobldobl_Laurent_container_to_target_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in double double precision
+ *  from the container to the target system. */
+
+static PyObject *py2c_copy_quaddobl_Laurent_container_to_target_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *  Copies the Laurent system in quad double precision
+ *  from the container to the target system. */
+
+static PyObject *py2c_copy_standard_Laurent_start_system_to_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start Laurent system in standard double precision
+ *   to the systems container for Laurent systems. */
+
+static PyObject *py2c_copy_dobldobl_Laurent_start_system_to_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start Laurent system in double double precision
+ *   to the systems container for Laurent systems. */
+
+static PyObject *py2c_copy_quaddobl_Laurent_start_system_to_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start Laurent system in quad double precision
+ *   to the systems container for Laurent systems. */
+
+static PyObject *py2c_copy_standard_Laurent_target_system_to_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target Laurent system in standard double precision
+ *   to the systems container for Laurent systems. */
+
+static PyObject *py2c_copy_dobldobl_Laurent_target_system_to_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target Laurent system in double double precision
+ *   to the systems container for Laurent systems. */
+
+static PyObject *py2c_copy_quaddobl_Laurent_target_system_to_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target Laurent system in quad double precision
+ *   to the systems container for Laurent systems. */
+
 /* creation of homotopy and tracking of all solution paths */
 
 static PyObject *py2c_create_standard_homotopy
