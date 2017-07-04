@@ -2738,20 +2738,267 @@ package body PHCpack_Operations is
 
   function Solve_by_Standard_Laurent_Homotopy_Continuation
              ( number_of_tasks : natural32 ) return integer32 is
+
+    use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
+    use Standard_IncFix_Continuation;
+    use Drivers_for_Poly_Continuation;
+
+    k : natural32 := 2;
+    r : Complex_Number; 
+    epsxa : constant double_float := 1.0E-13;
+    epsfa : constant double_float := 1.0E-13;
+    tolsing : constant double_float := 1.0E-8;
+    numit : natural32 := 0;
+    max : constant natural32 := 4;
+    deflate : boolean := false;
+    timer : Timing_Widget;
+    nbequ : constant integer32 := st_target_laur_sys'last;
+    nbvar : constant integer32 
+          := Standard_Complex_Solutions.Head_Of(st_start_sols).n;
+
+    procedure Sil_Cont is
+      new Silent_Continue
+            (Max_Norm,Standard_Laurent_Homotopy.Eval,
+             Standard_Laurent_Homotopy.Diff,Standard_Laurent_Homotopy.Diff);
+
+    procedure Rep_Cont is
+      new Reporting_Continue
+            (Max_Norm,Standard_Laurent_Homotopy.Eval,
+             Standard_Laurent_Homotopy.Diff,Standard_Laurent_Homotopy.Diff);
+
   begin
+    if zero_standard_constant
+     then r := Create(0.793450603947633,-0.608634651572795);
+     else r := st_gamma_constant;
+    end if;
+    if empty_standard_laurent_homotopy then
+      Standard_Laurent_Homotopy.Create
+        (st_target_laur_sys.all,st_start_laur_sys.all,k,r);
+      empty_standard_laurent_homotopy := false; -- for dynamic load balancing
+      if file_okay then
+        new_line(output_file);
+        put_line(output_file,"HOMOTOPY PARAMETERS :");
+        put(output_file,"  k : "); put(output_file,k,2);
+        new_line(output_file);
+        put(output_file,"  gamma : "); put(output_file,r);
+        new_line(output_file); new_line(output_file);
+      end if;
+    end if;
+    if auto_tune
+     then Continuation_Parameters.Tune(0);
+    end if;
+    Standard_Complex_Solutions.Clear(st_target_sols);
+    Standard_Complex_Solutions.Copy(st_start_sols,st_target_sols);
+    Standard_Complex_Solutions.Set_Continuation_Parameter
+      (st_target_sols,Create(0.0));
+    if file_okay then
+      tstart(timer);
+      if number_of_tasks = 0 then
+        if nbequ = nbvar then
+          Rep_Cont(output_file,st_target_sols,false,target=>Create(1.0));
+        else        
+          Rep_Cont(output_file,st_target_sols,false,nbequ,target=>Create(1.0));
+        end if;
+      else
+        Silent_Multitasking_Path_Tracker
+          (st_target_sols,integer32(number_of_tasks));
+      end if;
+      if nbequ = nbvar then
+        Standard_Root_Refiners.Reporting_Root_Refiner
+          (output_file,st_target_sys.all,st_target_sols,epsxa,epsfa,
+           tolsing,numit,max,deflate,false);
+      end if;
+      tstop(timer);
+      new_line(output_file);
+      print_times(output_file,timer,"Solving by Homotopy Continuation");
+    else
+      if number_of_tasks = 0 then
+        if nbequ = nbvar
+         then Sil_Cont(st_target_sols,false,target=>Create(1.0));
+         else Sil_Cont(st_target_sols,false,nbequ,target=>Create(1.0));
+        end if;
+      else
+        Silent_Multitasking_Path_Tracker
+          (st_target_sols,integer32(number_of_tasks));
+      end if;
+      if nbequ = nbvar then
+        Standard_Root_Refiners.Silent_Root_Refiner
+          (st_target_sys.all,st_target_sols,epsxa,epsfa,tolsing,
+           numit,max,deflate);
+      end if;
+    end if;
+    Copy_Labels;
+   -- Standard_Laurent_Homotopy.Clear;  -- for dynamic load balancing
     return 0;
+  exception
+    when others => return 1;
   end Solve_by_Standard_Laurent_Homotopy_Continuation;
 
   function Solve_by_DoblDobl_Laurent_Homotopy_Continuation
              ( number_of_tasks : natural32 ) return integer32 is
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
+    use DoblDobl_IncFix_Continuation;
+    use Drivers_for_Poly_Continuation;
+
+    k : natural32 := 2;
+    r : Complex_Number; 
+    timer : Timing_Widget;
+    nbequ : constant integer32 := dd_target_laur_sys'last;
+    nbvar : constant integer32 
+          := DoblDobl_Complex_Solutions.Head_Of(dd_start_sols).n;
+
+    procedure Sil_Cont is
+      new Silent_Continue
+            (Max_Norm,DoblDobl_Laurent_Homotopy.Eval,
+             DoblDobl_Laurent_Homotopy.Diff,DoblDobl_Laurent_Homotopy.Diff);
+
+    procedure Rep_Cont is
+      new Reporting_Continue
+            (Max_Norm,DoblDobl_Laurent_Homotopy.Eval,
+             DoblDobl_Laurent_Homotopy.Diff,DoblDobl_Laurent_Homotopy.Diff);
+
   begin
+    if zero_dobldobl_constant
+     then r := DoblDobl_Complex_Numbers.Create
+                 (Double_Double_Numbers.create(0.793450603947633),
+                  Double_Double_Numbers.create(-0.608634651572795));
+     else r := dd_gamma_constant;
+    end if;
+    if empty_dobldobl_laurent_homotopy then
+      DoblDobl_Laurent_Homotopy.Create
+        (dd_target_laur_sys.all,dd_start_laur_sys.all,k,r);
+      empty_dobldobl_laurent_homotopy := false; -- for dynamic load balancing
+      if file_okay then
+        new_line(output_file);
+        put_line(output_file,"HOMOTOPY PARAMETERS :");
+        put(output_file,"  k : "); put(output_file,k,2);
+        new_line(output_file);
+        put(output_file,"  gamma : "); put(output_file,r);
+        new_line(output_file); new_line(output_file);
+      end if;
+    end if;
+    if auto_tune
+     then Continuation_Parameters.Tune(0); -- (0,32) is too severe
+    end if;
+    DoblDobl_Complex_Solutions.Clear(dd_target_sols);
+    DoblDobl_Complex_Solutions.Copy(dd_start_sols,dd_target_sols);
+    DoblDobl_Complex_Solutions.Set_Continuation_Parameter
+      (dd_target_sols,Create(integer(0)));
+    if file_okay then
+      tstart(timer);
+      if number_of_tasks = 0 then
+        if nbequ = nbvar
+         then Rep_Cont(output_file,dd_target_sols,Create(integer(1)));
+         else Rep_Cont(output_file,dd_target_sols,nbequ,Create(integer(1)));
+        end if;
+      else
+        Silent_Multitasking_Path_Tracker
+          (dd_target_sols,integer32(number_of_tasks));
+      end if;
+      tstop(timer);
+      new_line(output_file);
+      print_times(output_file,timer,"Solving by Homotopy Continuation");
+    else
+      if number_of_tasks = 0 then
+        if nbequ = nbvar
+         then Sil_Cont(dd_target_sols,Create(integer(1)));
+         else Sil_Cont(dd_target_sols,nbequ,Create(integer(1)));
+        end if;
+      else
+        Silent_Multitasking_Path_Tracker
+          (dd_target_sols,integer32(number_of_tasks));
+      end if;
+    end if;
+    Copy_DoblDobl_Labels;
+   -- DoblDobl_Homotopy.Clear;  -- for dynamic load balancing
     return 0;
+  exception
+    when others => return 1;
   end Solve_by_DoblDobl_Laurent_Homotopy_Continuation;
 
   function Solve_by_QuadDobl_Laurent_Homotopy_Continuation
              ( number_of_tasks : natural32 ) return integer32 is
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
+    use QuadDobl_IncFix_Continuation;
+    use Drivers_for_Poly_Continuation;
+
+    k : natural32 := 2;
+    r : Complex_Number; 
+    timer : Timing_Widget;
+    nbequ : constant integer32 := qd_target_laur_sys'last;
+    nbvar : constant integer32 
+          := QuadDobl_Complex_Solutions.Head_Of(qd_start_sols).n;
+
+    procedure Sil_Cont is
+      new Silent_Continue
+            (Max_Norm,QuadDobl_Laurent_Homotopy.Eval,
+             QuadDobl_Laurent_Homotopy.Diff,QuadDobl_Laurent_Homotopy.Diff);
+
+    procedure Rep_Cont is
+      new Reporting_Continue
+            (Max_Norm,QuadDobl_Laurent_Homotopy.Eval,
+             QuadDobl_Laurent_Homotopy.Diff,QuadDobl_Laurent_Homotopy.Diff);
+
   begin
+    if zero_quaddobl_constant
+     then r := QuadDobl_Complex_Numbers.Create
+                 (Quad_Double_Numbers.create(0.793450603947633),
+                  Quad_Double_Numbers.create(-0.608634651572795));
+     else r := qd_gamma_constant;
+    end if;
+    if empty_quaddobl_laurent_homotopy then
+      QuadDobl_Laurent_Homotopy.Create
+        (qd_target_laur_sys.all,qd_start_laur_sys.all,k,r);
+      empty_quaddobl_laurent_homotopy := false; -- for dynamic load balancing
+      if file_okay then
+        new_line(output_file);
+        put_line(output_file,"HOMOTOPY PARAMETERS :");
+        put(output_file,"  k : "); put(output_file,k,2);
+        new_line(output_file);
+        put(output_file,"  gamma : "); put(output_file,r);
+        new_line(output_file); new_line(output_file);
+      end if;
+    end if;
+    if auto_tune
+     then Continuation_Parameters.Tune(0); -- (0, 64) is too severe
+    end if;
+    QuadDobl_Complex_Solutions.Clear(qd_target_sols);
+    QuadDobl_Complex_Solutions.Copy(qd_start_sols,qd_target_sols);
+    QuadDobl_Complex_Solutions.Set_Continuation_Parameter
+      (qd_target_sols,Create(integer(0)));
+    if file_okay then
+      tstart(timer);
+      if number_of_tasks = 0 then
+        if nbequ = nbvar
+         then Rep_Cont(output_file,qd_target_sols,Create(integer(1)));
+         else Rep_Cont(output_file,qd_target_sols,nbequ,Create(integer(1)));
+        end if;
+      else
+        Silent_Multitasking_Path_Tracker
+          (qd_target_sols,integer32(number_of_tasks));
+      end if;
+      tstop(timer);
+      new_line(output_file);
+      print_times(output_file,timer,"Solving by Homotopy Continuation");
+    else
+      if number_of_tasks = 0 then
+        if nbequ = nbvar
+         then Sil_Cont(qd_target_sols,Create(integer(1)));
+         else Sil_Cont(qd_target_sols,nbequ,Create(integer(1)));
+        end if;
+      else
+        Silent_Multitasking_Path_Tracker
+          (qd_target_sols,integer32(number_of_tasks));
+      end if;
+    end if;
+    Copy_QuadDobl_Labels;
+   -- QuadDobl_Homotopy.Clear;  -- for dynamic load balancing
     return 0;
+  exception
+    when others => return 1;
+
   end Solve_by_QuadDobl_Laurent_Homotopy_Continuation;
 
   procedure Standard_Clear is
