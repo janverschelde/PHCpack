@@ -332,6 +332,150 @@ static PyObject *py2c_write_quaddobl_start_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_read_standard_start_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = read_standard_start_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_write_standard_start_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = write_standard_start_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_standard_target_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = read_standard_target_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_write_standard_target_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = write_standard_target_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_dobldobl_start_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = read_dobldobl_start_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_write_dobldobl_start_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = write_dobldobl_start_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_dobldobl_target_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = read_dobldobl_target_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_write_dobldobl_target_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = write_dobldobl_target_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_quaddobl_start_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = read_quaddobl_start_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_write_quaddobl_start_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = write_quaddobl_start_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_quaddobl_target_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = read_quaddobl_target_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_write_quaddobl_target_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = write_quaddobl_target_Laurent_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
 /* The wrapping of copying systems from and to containers starts here. */
 
 static PyObject *py2c_copy_standard_target_system_to_container
@@ -810,6 +954,42 @@ static PyObject *py2c_solve_by_multprec_homotopy_continuation
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_solve_by_standard_Laurent_homotopy_continuation
+ ( PyObject *self, PyObject *args )
+{
+   int fail, nbtasks = 0;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&nbtasks)) return NULL;   
+   fail = solve_by_standard_Laurent_homotopy_continuation(nbtasks);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solve_by_dobldobl_Laurent_homotopy_continuation
+ ( PyObject *self, PyObject *args )
+{
+   int fail, nbtasks = 0;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&nbtasks)) return NULL;   
+   fail = solve_by_dobldobl_Laurent_homotopy_continuation(nbtasks);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solve_by_quaddobl_Laurent_homotopy_continuation
+ ( PyObject *self, PyObject *args )
+{
+   int fail, nbtasks = 0;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&nbtasks)) return NULL;   
+   fail = solve_by_quaddobl_Laurent_homotopy_continuation(nbtasks);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_clear_standard_operations_data
  ( PyObject *self, PyObject *args )
 {
@@ -842,6 +1022,42 @@ static PyObject *py2c_clear_quaddobl_operations_data
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    fail = clear_quaddobl_data();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_clear_standard_Laurent_data
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = clear_standard_Laurent_data();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_clear_dobldobl_Laurent_data
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = clear_dobldobl_Laurent_data();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_clear_quaddobl_Laurent_data
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = clear_quaddobl_Laurent_data();
 
    return Py_BuildValue("i",fail);
 }
@@ -7472,6 +7688,42 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_write_quaddobl_start_system",
      py2c_write_quaddobl_start_system, METH_VARARGS,
     "Writes the start system as stored in quad double precision\n to screen or to the defined output file."},
+   {"py2c_read_standard_start_Laurent_system",
+     py2c_read_standard_start_Laurent_system, METH_VARARGS,
+    "Prompts the user for a file name and reads the start system from file,\n in standard double precision.\n If available on file, also its solutions will be read and stored."}, 
+   {"py2c_write_standard_start_Laurent_system",
+     py2c_write_standard_start_Laurent_system, METH_VARARGS,
+    "Writes the start Laurent system in standard double precision."},
+   {"py2c_read_standard_target_Laurent_system",
+     py2c_read_standard_target_Laurent_system, METH_VARARGS,
+    "Prompts the user for a file name and reads the target system from file,\n in standard double precision.\n If available on file, also its solutions will be read and stored."},
+   {"py2c_write_standard_target_Laurent_system",
+     py2c_write_standard_target_Laurent_system, METH_VARARGS,
+    "Writes the target Laurent system in standard double precision."},
+   {"py2c_read_dobldobl_start_Laurent_system",
+     py2c_read_dobldobl_start_Laurent_system, METH_VARARGS,
+    "Prompts the user for a file name and reads the start system from file,\n in double double precision.\n If available on file, also its solutions will be read and stored."},
+   {"py2c_write_dobldobl_start_Laurent_system",
+     py2c_write_dobldobl_start_Laurent_system, METH_VARARGS,
+    "Writes the start Laurent system in double double precision."},
+   {"py2c_read_dobldobl_target_Laurent_system",
+     py2c_read_dobldobl_target_Laurent_system, METH_VARARGS,
+    "Prompts the user for a file name and reads the target system from file,\n in double double precision.\n If available on file, also its solutions will be read and stored."},
+   {"py2c_write_dobldobl_target_Laurent_system",
+     py2c_write_dobldobl_target_Laurent_system, METH_VARARGS,
+    "Writes the target Laurent system in double double precision."},
+   {"py2c_read_quaddobl_start_Laurent_system",
+     py2c_read_quaddobl_start_Laurent_system, METH_VARARGS,
+    "Prompts the user for a file name and reads the start system from file,\n in quad double precision.\n If available on file, also its solutions will be read and stored."},
+   {"py2c_write_quaddobl_start_Laurent_system",
+     py2c_write_quaddobl_start_Laurent_system, METH_VARARGS,
+    "Writes the start Laurent system in quad double precision."},
+   {"py2c_read_quaddobl_target_Laurent_system",
+     py2c_read_quaddobl_target_Laurent_system, METH_VARARGS,
+    "Prompts the user for a file name and reads the target system from file,\n in quad double precision.\n If available on file, also its solutions will be read and stored."},
+   {"py2c_write_quaddobl_target_Laurent_system",
+     py2c_write_quaddobl_target_Laurent_system, METH_VARARGS,
+    "Writes the target Laurent system in quad double precision."},
    {"py2c_write_start_solutions", py2c_write_start_solutions, METH_VARARGS,
     "Writes the start solutions in standard double precision either to\n the screen (standard output) or to the defined output file.\n On return is the failure code, which is zero if all is well."},
    {"py2c_copy_standard_target_system_to_container",
@@ -7584,6 +7836,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solve_by_multprec_homotopy_continuation",
      py2c_solve_by_multprec_homotopy_continuation, METH_VARARGS, 
     "Tracks the paths defined by the homotopy in arbitrary multiprecision.\n On input is one integer: the number of decimal places in the precision.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_solve_by_standard_Laurent_homotopy_continuation",
+     py2c_solve_by_standard_Laurent_homotopy_continuation, METH_VARARGS,
+    "Tracks the paths defined by the homotopy in standard double precision\n to solve a Laurent system stored in the systems container,\n starting at the solutions of a stored Laurent start system.\n On input is one integer: the number of tasks for path tracking.\n If that input number is zero, then no multitasking is applied.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_solve_by_dobldobl_Laurent_homotopy_continuation",
+     py2c_solve_by_dobldobl_Laurent_homotopy_continuation, METH_VARARGS,
+    "Tracks the paths defined by the homotopy in double double precision\n to solve a Laurent system stored in the systems container,\n starting at the solutions of a stored Laurent start system.\n On input is one integer: the number of tasks for path tracking.\n If that input number is zero, then no multitasking is applied.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_solve_by_quaddobl_Laurent_homotopy_continuation",
+     py2c_solve_by_quaddobl_Laurent_homotopy_continuation, METH_VARARGS,
+    "Tracks the paths defined by the homotopy in quad double precision\n to solve a Laurent system stored in the systems container,\n starting at the solutions of a stored Laurent start system.\n On input is one integer: the number of tasks for path tracking.\n If that input number is zero, then no multitasking is applied.\n On return is the failure code, which is zero when all went well."},
    {"py2c_clear_standard_operations_data",
      py2c_clear_standard_operations_data, METH_VARARGS,
     "Deallocates the data used by solve_by_standard_homotopy_continuation."},
@@ -7593,6 +7854,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_clear_quaddobl_operations_data",
      py2c_clear_quaddobl_operations_data, METH_VARARGS,
     "Deallocates the data used by solve_by_quaddobl_homotopy_continuation."},
+   {"py2c_clear_standard_Laurent_data",
+     py2c_clear_standard_Laurent_data, METH_VARARGS,
+    "Deallocates data used to solve Laurent systems by homotopy continuation\n in standard double precision."},
+   {"py2c_clear_dobldobl_Laurent_data",
+     py2c_clear_dobldobl_Laurent_data, METH_VARARGS,
+    "Deallocates data used to solve Laurent systems by homotopy continuation\n in double double precision."},
+   {"py2c_clear_quaddobl_Laurent_data",
+     py2c_clear_quaddobl_Laurent_data, METH_VARARGS,
+    "Deallocates data used to solve Laurent systems by homotopy continuation\n in quad double precision."},
    {"py2c_standard_crude_tracker", py2c_standard_crude_tracker, METH_VARARGS,
     "A crude tracker appends the end point of a path directly to\n the solutions container, without refinement or postprocessing.\n Tracking happens in standard double precision.\n On entry is the verbose parameter which is 1 or 0.\n  If 1, then the solution vectors are written to screen, otherwise\n the crude tracker stays mute.\n On return is the failure code, which is zero when all went well.\n The requirement is that\n the target system, start system, and start solutions in standard\n double precision have been initialized in the containers."},
    {"py2c_dobldobl_crude_tracker", py2c_dobldobl_crude_tracker, METH_VARARGS,

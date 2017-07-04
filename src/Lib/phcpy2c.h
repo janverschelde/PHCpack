@@ -198,6 +198,90 @@ static PyObject *py2c_write_quaddobl_start_system
  *   Writes the start system as stored in double double precision
  *   to screen or to the defined output file. */
 
+static PyObject *py2c_read_standard_start_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the start system from file,
+ *   in standard double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+static PyObject *py2c_write_standard_start_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the start Laurent system in standard double precision. */
+
+static PyObject *py2c_read_standard_target_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the target system from file,
+ *   in standard double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+static PyObject *py2c_write_standard_target_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the target Laurent system in standard double precision. */
+
+static PyObject *py2c_read_dobldobl_start_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the start system from file,
+ *   in double double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+static PyObject *py2c_write_dobldobl_start_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the start Laurent system in double double precision. */
+
+static PyObject *py2c_read_dobldobl_target_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the target system from file,
+ *   in double double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+static PyObject *py2c_write_dobldobl_target_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the target Laurent system in double double precision. */
+
+static PyObject *py2c_read_quaddobl_start_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the start system from file,
+ *   in quad double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+static PyObject *py2c_write_quaddobl_start_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the start Laurent system in quad double precision. */
+
+static PyObject *py2c_read_quaddobl_target_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the target system from file,
+ *   in quad double precision.
+ *   If available on file, also its solutions will be read and stored. */
+
+static PyObject *py2c_write_quaddobl_target_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the target Laurent system in quad double precision. */
+
 /* copying systems from and to containers */
 
 static PyObject *py2c_copy_standard_target_system_to_container
@@ -493,6 +577,39 @@ static PyObject *py2c_solve_by_multprec_homotopy_continuation
  *   On input is one integer: the number of decimal places in the precision.
  *   On return is the failure code, which is zero when all went well. */
 
+static PyObject *py2c_solve_by_standard_Laurent_homotopy_continuation
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks the paths defined by the homotopy in standard double precision
+ *   to solve a Laurent system stored in the systems container,
+ *   starting at the solutions of a stored Laurent start system.
+ *   On input is one integer: the number of tasks for path tracking.
+ *   If that input number is zero, then no multitasking is applied.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_solve_by_dobldobl_Laurent_homotopy_continuation
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks the paths defined by the homotopy in double double precision
+ *   to solve a Laurent system stored in the systems container,
+ *   starting at the solutions of a stored Laurent start system.
+ *   On input is one integer: the number of tasks for path tracking.
+ *   If that input number is zero, then no multitasking is applied.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_solve_by_quaddobl_Laurent_homotopy_continuation
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks the paths defined by the homotopy in quad double precision
+ *   to solve a Laurent system stored in the systems container,
+ *   starting at the solutions of a stored Laurent start system.
+ *   On input is one integer: the number of tasks for path tracking.
+ *   If that input number is zero, then no multitasking is applied.
+ *   On return is the failure code, which is zero when all went well. */
+
 static PyObject *py2c_clear_standard_operations_data
  ( PyObject *self, PyObject *args );
 /*
@@ -510,6 +627,27 @@ static PyObject *py2c_clear_quaddobl_operations_data
 /*
  * DESCRIPTION :
  *   Deallocates all data used by solve_by_quaddobl_homotopy_continuation. */
+
+static PyObject *py2c_clear_standard_Laurent_data
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the data used to solve Laurent systems by homotopy 
+ *   continuation in standard double precision. */
+
+static PyObject *py2c_clear_dobldobl_Laurent_data
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the data used to solve Laurent systems by homotopy
+ *   continuation in double double precision. */
+
+static PyObject *py2c_clear_quaddobl_Laurent_data
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the data used to solve Laurent systems by homotopy
+ *   continuation in quad double precision. */
 
 /* Wrapping of crude path trackers of the jumpstart library starts here. */
 
