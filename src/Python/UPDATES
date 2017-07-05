@@ -1,3 +1,5 @@
+Wed 5 Jul 2017 : prepared files for release 0.6.8.
+
 Fri 30 Jun 2017 : shortened the code to embed systems in sets.py of PHCpy2
   and PHCpy3, using functions of the interface module.
   Applied the deallocation methods in trackers.py of PHCpy2 and PHCpy3.
