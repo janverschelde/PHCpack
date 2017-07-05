@@ -1211,9 +1211,10 @@ function use_c2phc ( job : integer32;
     ls : Array_of_Strings(1..integer(cnt))
        := String_Splitters.Split(cnt,s,';');
     dim : natural32;
+    maxvar : constant natural32 := 2*natural32(cnt); -- better than 1024
 
   begin
-    dim := Parse_Dimensions.Dim(1024,ls);
+    dim := Parse_Dimensions.Dim(maxvar,ls);
     Assign(integer32(dim),a);
     String_Splitters.Clear(ls);
     Parse_Dimensions.Clear;

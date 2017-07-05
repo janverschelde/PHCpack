@@ -1,6 +1,7 @@
 Wed 5 Jul 2017 : to use_track.adb and use_c2phc.adb, added jobs to create
   cascade homotopy for Laurent systems in double, double double, and
-  quad double precision.
+  quad double precision.  Adjusted initialization in use_c2phc.adb because
+  the default value of 1024 led to an unacceptable memory leak.
 
 Tue 4 Jul 2017 : added jobs to use_c2phc.ads and use_c2phc.adb to copy
   from and into the contains for Laurent systems.
