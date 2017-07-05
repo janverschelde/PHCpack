@@ -303,6 +303,30 @@ int create_quaddobl_cascade_homotopy ( void )
    return fail;
 }
 
+int create_standard_Laurent_cascade_homotopy ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(789,a,b,c);
+   return fail;
+}
+
+int create_dobldobl_Laurent_cascade_homotopy ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(790,a,b,c);
+   return fail;
+}
+
+int create_quaddobl_Laurent_cascade_homotopy ( void )
+{
+   int *a,*b,fail;
+   double *c;
+    fail = _ada_use_c2phc(791,a,b,c);
+   return fail;
+}
+
 /* OPERATIONS to intersect witness sets */
 
 int standard_diagonal_homotopy ( int a, int b )
