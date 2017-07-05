@@ -1,6 +1,7 @@
 Wed 5 Jul 2017 : provided the stubs in witset.c for the definition of the
   cascade homotopies for Laurent systems in standard double, double double,
-  and quad double precision.
+  and quad double precision.  Extra space in documentation of the crude
+  trackers removed in phcpy2c2.c and phcpy2c3.c.
 
 Tue 4 Jul 2017 : extended phcpy2c.h, phcpy2c2.c, and phcpy2c3.c to run
   a coefficient parameter homotopy on Laurent systems interactively.
