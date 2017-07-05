@@ -55,7 +55,8 @@ function use_track ( job : integer32;
 --                  is given in b, in a is the number of characters;
 --          =  13 : file name of linear-product start system to read 
 --                  is given in b, in a is the number of characters;
---          =  14 : create a cascade homotopy from the stored systems;
+--          =  14 : create a cascade homotopy from the stored systems,
+--                  in standard double precision;
 --          =  15 : create a diagonal homotopy from the systems stored
 --                  as target and start systems in standard double precision,
 --                  the input parameters a and b are the dimensions of 
@@ -136,6 +137,15 @@ function use_track ( job : integer32;
 --                  with extra diagnostics, provided in a:
 --                  as follows a = (#step,#fail,#iter,#syst);
 --          =  38 : create a cascade homotopy from the stored systems.
+--
+-- cascade homotopy for Laurent systems :
+--
+--   job    =  58 : defines a cascade homotopy for Laurent systems
+--                  in standard double precision;
+--          =  59 : defines a cascade homotopy for Laurent systems
+--                  in double double precision;
+--          =  60 : defines a cascade homotopy for Laurent systems
+--                  in quad double precision.
 --
 -- additional operations for diagonal homotopies ...
 --

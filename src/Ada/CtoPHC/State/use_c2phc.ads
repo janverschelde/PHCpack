@@ -152,7 +152,13 @@ function use_c2phc ( job : integer32;
 --         = 785 : copy quaddobl Laurent start system to container;
 --         = 786 : copy standard Laurent target system to container;
 --         = 787 : copy dobldobl Laurent target system to container;
---         = 788 : copy quaddobl Laurent target system to container.
+--         = 788 : copy quaddobl Laurent target system to container;
+--         = 789 : defines a cascade homotopy for Laurent systems
+--                 in standard double precision;
+--         = 790 : defines a cascade homotopy for Laurent systems
+--                 in double double precision;
+--         = 791 : defines a cascade homotopy for Laurent systems
+--                 in quad double precision.
 --
 -- the operations of the systems container :
 --

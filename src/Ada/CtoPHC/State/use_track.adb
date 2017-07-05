@@ -1184,6 +1184,13 @@ function use_track ( job : integer32;
       when 55 => return Job55; -- crude tracker in double precision
       when 56 => return Job56; -- crude tracker in double double precision
       when 57 => return Job57; -- crude tracker in quad double precision
+     -- homotopies for Laurent systems
+      when 58 =>
+        PHCpack_Operations.Standard_Cascade_Laurent_Homotopy; return 0;
+      when 59 =>
+        PHCpack_Operations.DoblDobl_Cascade_Laurent_Homotopy; return 0;
+      when 60 =>
+        PHCpack_Operations.QuadDobl_Cascade_Laurent_Homotopy; return 0;
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;
