@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.38 contains
+The public distribution for PHCpack version 2.4.39 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -29,6 +29,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.39 on 2017-07-05 : improved support for Laurent systems
 release 2.4.38 on 2017-06-07 : preliminary Pade approximant methods
 release 2.4.37 on 2017-05-17 : check on maximum power in phc -j
 release 2.4.36 on 2017-02-19 : tuning and quality control added to phc -j
