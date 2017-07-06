@@ -5480,6 +5480,42 @@ static PyObject *py2c_quaddobl_cascade_homotopy
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_standard_Laurent_cascade_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = create_standard_Laurent_cascade_homotopy();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_Laurent_cascade_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = create_dobldobl_Laurent_cascade_homotopy();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_Laurent_cascade_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = create_quaddobl_Laurent_cascade_homotopy();
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_factor_set_standard_to_mute
  ( PyObject *self, PyObject *args )
 {
@@ -8901,6 +8937,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_quaddobl_cascade_homotopy", py2c_quaddobl_cascade_homotopy,
      METH_VARARGS,
     "Creates a homotopy in quad double precision using the stored\n systems to go one level down the cascade, removing one slice.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_standard_Laurent_cascade_homotopy",
+     py2c_standard_Laurent_cascade_homotopy, METH_VARARGS,
+    "Creates a homotopy in standard double precision using the stored\n Laurent systems to go one level down the cascade, removing one slice.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_dobldobl_Laurent_cascade_homotopy",
+     py2c_dobldobl_Laurent_cascade_homotopy, METH_VARARGS,
+    " Creates a homotopy in double double precision using the stored\n Laurent systems to go one level down the cascade, removing one slice.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_quaddobl_Laurent_cascade_homotopy",
+     py2c_quaddobl_Laurent_cascade_homotopy, METH_VARARGS,
+    "Creates a homotopy in quad double precision using the stored\n Laurent systems to go one level down the cascade, removing one slice.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_factor_set_standard_to_mute",
      py2c_factor_set_standard_to_mute, METH_VARARGS,
     "Sets the state of monodromy permutations in standard double\n precision to silent."},

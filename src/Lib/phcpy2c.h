@@ -3632,6 +3632,30 @@ static PyObject *py2c_quaddobl_cascade_homotopy
  *   systems to go one level down the cascade, removing one slice.
  *   On return is the failure code, which equals zero if all went well. */
 
+static PyObject *py2c_standard_Laurent_cascade_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy in standard double precision using the stored
+ *   Laurent systems to go one level down the cascade, removing one slice.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_dobldobl_Laurent_cascade_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy in double double precision using the stored
+ *   Laurent systems to go one level down the cascade, removing one slice.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_quaddobl_Laurent_cascade_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy in quad double precision using the stored
+ *   Laurent systems to go one level down the cascade, removing one slice.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_factor_set_standard_to_mute
  ( PyObject *self, PyObject *args );
 /*
