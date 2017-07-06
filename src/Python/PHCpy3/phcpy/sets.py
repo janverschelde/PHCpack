@@ -200,9 +200,8 @@ def drop_coordinate_from_solutions(sols, nbvar, svar):
 def standard_double_cascade_step(embsys, esols, tasks=0):
     r"""
     Given in *embsys* an embedded polynomial system and
-    solutions with nonzero slack variables in *esols*,
-    does one step in the homotopy cascade,
-    with standard double precision arithmetic.
+    solutions with nonzero slack variables in *esols*, does one step 
+    in the homotopy cascade, with standard double precision arithmetic.
     The number of tasks in multithreaded path tracking is given by *tasks*.
     The default zero value of *tasks* indicates no multithreading.
     The list on return contains witness points on
@@ -230,9 +229,8 @@ def standard_double_cascade_step(embsys, esols, tasks=0):
 def double_double_cascade_step(embsys, esols, tasks=0):
     r"""
     Given in *embsys* an embedded polynomial system and
-    solutions with nonzero slack variables in *esols*,
-    does one step in the homotopy cascade,
-    with double double precision arithmetic.
+    solutions with nonzero slack variables in *esols*, does one step 
+    in the homotopy cascade, with double double precision arithmetic.
     The number of tasks in multithreaded path tracking is given by *tasks*.
     The default zero value of *tasks* indicates no multithreading.
     The list on return contains witness points on
@@ -260,9 +258,8 @@ def double_double_cascade_step(embsys, esols, tasks=0):
 def quad_double_cascade_step(embsys, esols, tasks=0):
     r"""
     Given in *embsys* an embedded polynomial system and
-    solutions with nonzero slack variables in *esols*,
-    does one step in the homotopy cascade,
-    with quad double precision arithmetic.
+    solutions with nonzero slack variables in *esols*, does one step 
+    in the homotopy cascade, with quad double precision arithmetic.
     The number of tasks in multithreaded path tracking is given by *tasks*.
     The default zero value of *tasks* indicates no multithreading.
     The list on return contains witness points on
@@ -313,6 +310,99 @@ def cascade_step(embsys, esols, precision='d', tasks=0):
     else:
         print('wrong argument for precision')
         return None
+
+def standard_double_laurent_cascade_step(embsys, esols, tasks=0):
+    r"""
+    Given in *embsys* an embedded Laurent polynomial system and
+    solutions with nonzero slack variables in *esols*, does one step
+    in the homotopy cascade, with standard double precision arithmetic.
+    The number of tasks in multithreaded path tracking is given by *tasks*.
+    The default zero value of *tasks* indicates no multithreading.
+    The list on return contains witness points on
+    lower dimensional solution components.
+    """
+    from phcpy.phcpy2c3 \
+    import py2c_copy_standard_Laurent_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_start_solutions
+    from phcpy.phcpy2c3 import py2c_standard_Laurent_cascade_homotopy
+    from phcpy.phcpy2c3 \
+    import py2c_solve_by_standard_Laurent_homotopy_continuation
+    from phcpy.phcpy2c3 import py2c_solcon_clear_standard_solutions
+    from phcpy.phcpy2c3 import py2c_copy_standard_target_solutions_to_container
+    from phcpy.interface import store_standard_laurent_system
+    from phcpy.interface import store_standard_solutions
+    from phcpy.interface import load_standard_solutions
+    store_standard_laurent_system(embsys)
+    py2c_copy_standard_Laurent_container_to_start_system()
+    store_standard_solutions(len(embsys), esols)
+    py2c_copy_standard_container_to_start_solutions()
+    py2c_standard_Laurent_cascade_homotopy()
+    py2c_solve_by_standard_Laurent_homotopy_continuation(tasks)
+    py2c_solcon_clear_standard_solutions()
+    py2c_copy_standard_target_solutions_to_container()
+    return load_standard_solutions()
+
+def double_double_laurent_cascade_step(embsys, esols, tasks=0):
+    r"""
+    Given in *embsys* an embedded Laurent polynomial system and
+    solutions with nonzero slack variables in *esols*, does one step
+    in the homotopy cascade, with double double precision arithmetic.
+    The number of tasks in multithreaded path tracking is given by *tasks*.
+    The default zero value of *tasks* indicates no multithreading.
+    The list on return contains witness points on
+    lower dimensional solution components.
+    """
+    from phcpy.phcpy2c3 \
+    import py2c_copy_dobldobl_Laurent_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_start_solutions
+    from phcpy.phcpy2c3 import py2c_dobldobl_Laurent_cascade_homotopy
+    from phcpy.phcpy2c3 \
+    import py2c_solve_by_dobldobl_Laurent_homotopy_continuation
+    from phcpy.phcpy2c3 import py2c_solcon_clear_dobldobl_solutions
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_target_solutions_to_container
+    from phcpy.interface import store_dobldobl_laurent_system
+    from phcpy.interface import store_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_solutions
+    store_dobldobl_laurent_system(embsys)
+    py2c_copy_dobldobl_Laurent_container_to_start_system()
+    store_dobldobl_solutions(len(embsys), esols)
+    py2c_copy_dobldobl_container_to_start_solutions()
+    py2c_dobldobl_Laurent_cascade_homotopy()
+    py2c_solve_by_dobldobl_Laurent_homotopy_continuation(tasks)
+    py2c_solcon_clear_dobldobl_solutions()
+    py2c_copy_dobldobl_target_solutions_to_container()
+    return load_dobldobl_solutions()
+
+def quad_double_laurent_cascade_step(embsys, esols, tasks=0):
+    r"""
+    Given in *embsys* an embedded Laurent polynomial system and
+    solutions with nonzero slack variables in *esols*, does one step
+    in the homotopy cascade, with quad double precision arithmetic.
+    The number of tasks in multithreaded path tracking is given by *tasks*.
+    The default zero value of *tasks* indicates no multithreading.
+    The list on return contains witness points on
+    lower dimensional solution components.
+    """
+    from phcpy.phcpy2c3 \
+    import py2c_copy_quaddobl_Laurent_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_start_solutions
+    from phcpy.phcpy2c3 import py2c_quaddobl_Laurent_cascade_homotopy
+    from phcpy.phcpy2c3 \
+    import py2c_solve_by_quaddobl_Laurent_homotopy_continuation
+    from phcpy.phcpy2c3 import py2c_solcon_clear_quaddobl_solutions
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_target_solutions_to_container
+    from phcpy.interface import store_quaddobl_laurent_system
+    from phcpy.interface import store_quaddobl_solutions
+    from phcpy.interface import load_quaddobl_solutions
+    store_quaddobl_laurent_system(embsys)
+    py2c_copy_quaddobl_Laurent_container_to_start_system()
+    store_quaddobl_solutions(len(embsys), esols)
+    py2c_copy_quaddobl_container_to_start_solutions()
+    py2c_quaddobl_Laurent_cascade_homotopy()
+    py2c_solve_by_quaddobl_Laurent_homotopy_continuation(tasks)
+    py2c_solcon_clear_quaddobl_solutions()
+    py2c_copy_quaddobl_target_solutions_to_container()
+    return load_quaddobl_solutions()
 
 def test_cascade():
     """
