@@ -108,6 +108,28 @@ def special_problem(eqs):
         result.append(pol + ';')
     return result
 
+def embed_and_cascade(pols, topdim):
+    """
+    Computes and solves an embedding at top dimension topdim
+    of the Laurent polynomials in pols, before running one
+    step in th cascade homotopy.
+    """
+    from phcpy.sets import laurent_embed, laurent_cascade_step
+    from phcpy.solver import solve
+    from phcpy.solutions import filter_zero_coordinates
+    embpols = laurent_embed(len(pols), topdim, pols)
+    embsols = solve(embpols)
+    print 'found', len(embsols), 'solutions at the top'
+    sols0 = filter_zero_coordinates(embsols, 'zz1', 1.0e-8, 'select')
+    sols1 = filter_zero_coordinates(embsols, 'zz1', 1.0e-8, 'remove')
+    print 'number of solutions with zero slack variable :', len(sols0) 
+    print 'number of solutions with nonzero slack variable :', len(sols1) 
+    print '... running cascade step ...'
+    sols2 = laurent_cascade_step(embpols, sols1, precision='d')
+    print '... after running the cascade ...'
+    for sol in sols2:
+        print sol
+
 def main():
     """
     Defines the equations for the sevenbar problem.
@@ -121,13 +143,19 @@ def main():
         print equ
     from phcpy.solver import solve
     sols = solve(generic)
+    print 'found', len(sols), 'solutions'
+    raw_input('hit enter to continue')
     for sol in sols:
         print sol
     special = special_problem(eqs)
     for equ in special:
         print equ
     sols = solve(special)
+    print 'found', len(sols), 'solutions'
+    raw_input('hit enter to continue')
     for sol in sols:
         print sol
+    raw_input('hit enter to continue')
+    embed_and_cascade(special, 1)
    
 main()
