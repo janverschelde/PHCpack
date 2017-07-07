@@ -1,5 +1,6 @@
-Thu 6 Jul 2017 : to sets in PHCpy2 and PHCpy3, added functions to run one
-  step of a cascade homotopy for Laurent polynomial systems.
+Thu 6 Jul 2017 : to sets.py in PHCpy2 and PHCpy3, added functions to run
+  one step of a cascade homotopy for Laurent polynomial systems.
+  Added main laurent_cascade_step() function to sets.py.
 
 Wed 5 Jul 2017 : prepared files for release 0.6.8.
 

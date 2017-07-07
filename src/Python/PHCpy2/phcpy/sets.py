@@ -404,6 +404,33 @@ def quad_double_laurent_cascade_step(embsys, esols, tasks=0):
     py2c_copy_quaddobl_target_solutions_to_container()
     return load_quaddobl_solutions()
 
+def laurent_cascade_step(embsys, esols, precision='d', tasks=0):
+    r"""
+    Given in *embsys* an embedded Laurent polynomial system and
+    solutions with nonzero slack variables in *esols*,
+    does one step in the homotopy cascade, with precision
+
+    *d*: standard double precision (1.1e-15 or 2^(-53)),
+
+    *dd*: double double precision (4.9e-32 or 2^(-104)),
+
+    *qd*: quad double precision (1.2e-63 or 2^(-209)).
+
+    The number of tasks in multithreaded path tracking is given by *tasks*.
+    The default zero value of *tasks* indicates no multithreading.
+    The list on return contains witness points on
+    lower dimensional solution components.
+    """
+    if(precision == 'd'):
+        return standard_double_laurent_cascade_step(embsys, esols, tasks)
+    elif(precision == 'dd'):
+        return double_double_laurent_cascade_step(embsys, esols, tasks)
+    elif(precision == 'qd'):
+        return quad_double_laurent_cascade_step(embsys, esols, tasks)
+    else:
+        print 'wrong argument for precision'
+        return None
+
 def test_cascade():
     """
     Does one cascade step on simple example.
