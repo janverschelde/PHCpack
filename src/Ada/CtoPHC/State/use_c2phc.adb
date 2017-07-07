@@ -2494,6 +2494,39 @@ function use_c2phc ( job : integer32;
     end if;
   end Job788;
 
+  function Job774 return integer32 is -- solve by standard Laurent continuation
+
+    use PHCpack_Operations;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nbr : constant natural32 := natural32(v_a(v_a'first));
+
+  begin
+    return Solve_by_Standard_Laurent_Homotopy_Continuation(nbr);
+  end Job774;
+
+  function Job775 return integer32 is -- solve by dobldobl Laurent continuation
+
+    use PHCpack_Operations;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nbr : constant natural32 := natural32(v_a(v_a'first));
+
+  begin
+    return Solve_by_DoblDobl_Laurent_Homotopy_Continuation(nbr);
+  end Job775;
+
+  function Job776 return integer32 is -- solve by quaddobl Laurent continuation
+
+    use PHCpack_Operations;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nbr : constant natural32 := natural32(v_a(v_a'first));
+
+  begin
+    return Solve_by_QuadDobl_Laurent_Homotopy_Continuation(nbr);
+  end Job776;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -2783,7 +2816,11 @@ function use_c2phc ( job : integer32;
      -- integer mixed cell configurations
       when 741..758 => return use_celcon(job-690,a,b,c);
      -- reading, writing Laurent start and target systems
-      when 759..776 => return c_to_phcpack(job-730,0);
+      when 759..773 => return c_to_phcpack(job-730,0);
+     -- solve by Laurent homotopy continuation
+      when 774 => return Job774; -- in standard double precision
+      when 775 => return Job775; -- in double double precision
+      when 776 => return Job776; -- in quad double precision
      -- copying Laurent systems from and into the containers
       when 777 => return Job777; -- copy standard Laurent container to start
       when 778 => return Job778; -- copy dobldobl Laurent container to start
