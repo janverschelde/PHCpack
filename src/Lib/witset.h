@@ -222,19 +222,37 @@ int create_cascade_homotopy ( void );
 /*
  * DESCRIPTION :
  *   Creates a homotopy using the stored systems to go one level down
- *   the cascade, removing one slice. */
+ *   the cascade, in standard double precision, removing one slice. */
 
 int create_dobldobl_cascade_homotopy ( void );
 /*
  * DESCRIPTION :
  *   Creates a homotopy using the stored systems to go one level down
- *   the cascade, removing one slice. */
+ *   the cascade, in double double precision, removing one slice. */
 
 int create_quaddobl_cascade_homotopy ( void );
 /*
  * DESCRIPTION :
  *   Creates a homotopy using the stored systems to go one level down
- *   the cascade, removing one slice. */
+ *   the cascade, in quad double precision, removing one slice. */
+
+int create_standard_Laurent_cascade_homotopy ( void );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy using the stored Laurent systems to go one level
+ *   down the cascade, in standard double precision, removing one slice. */
+
+int create_dobldobl_Laurent_cascade_homotopy ( void );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy using the stored Laurent systems to go one level
+ *   down the cascade, in double double precision, removing one slice. */
+
+int create_quaddobl_Laurent_cascade_homotopy ( void );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy using the stored Laurent systems to go one level
+ *   down the cascade, in quad double precision, removing one slice. */
 
 /* OPERATIONS to intersect witness sets */
 
