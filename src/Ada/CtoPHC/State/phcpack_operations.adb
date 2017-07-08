@@ -877,99 +877,117 @@ package body PHCpack_Operations is
   end Clear_QuadDobl_Homotopy;
 
   procedure Swap_Embed_Symbols
-              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
+              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   Ensures that the symbols "zz" that control the embedding occur
   --   at the end of the symbol table, permuting the symbol table and
   --   the order of the variables in the system p.
+  --   In each solution, moves the coordinates corresponding to the
+  --   embed symbols to the end.
 
     nvar : constant natural32 := natural32(p'last);
     nslk : constant natural32 := Witness_Sets_io.Count_Embed_Symbols(nvar,"zz");
 
   begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p);
-    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p);
+    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p,sols);
+    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p,sols);
   end Swap_Embed_Symbols;
 
   procedure Swap_Embed_Symbols
-              ( p : in out Standard_Complex_Laur_Systems.Laur_Sys ) is
+              ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   Ensures that the symbols "zz" that control the embedding occur
   --   at the end of the symbol table, permuting the symbol table and
   --   the order of the variables in the system p.
+  --   In each solution, moves the coordinates corresponding to the
+  --   embed symbols to the end.
 
     nvar : constant natural32 := natural32(p'last);
     nslk : constant natural32 := Witness_Sets_io.Count_Embed_Symbols(nvar,"zz");
 
   begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p);
-    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p);
+    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p,sols);
+    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p,sols);
   end Swap_Embed_Symbols;
 
   procedure Swap_Embed_Symbols
-              ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+              ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   Ensures that the symbols "zz" that control the embedding occur
   --   at the end of the symbol table, permuting the symbol table and
   --   the order of the variables in the system p.
+  --   In each solution, moves the coordinates corresponding to the
+  --   embed symbols to the end.
 
     nvar : constant natural32 := natural32(p'last);
     nslk : constant natural32 := Witness_Sets_io.Count_Embed_Symbols(nvar,"zz");
 
   begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p);
-    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p);
+    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p,sols);
+    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p,sols);
   end Swap_Embed_Symbols;
 
   procedure Swap_Embed_Symbols
-              ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+              ( p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   Ensures that the symbols "zz" that control the embedding occur
   --   at the end of the symbol table, permuting the symbol table and
   --   the order of the variables in the system p.
+  --   In each solution, moves the coordinates corresponding to the
+  --   embed symbols to the end.
 
     nvar : constant natural32 := natural32(p'last);
     nslk : constant natural32 := Witness_Sets_io.Count_Embed_Symbols(nvar,"zz");
 
   begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p);
-    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p);
+    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p,sols);
+    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p,sols);
   end Swap_Embed_Symbols;
 
   procedure Swap_Embed_Symbols
-              ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+              ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   Ensures that the symbols "zz" that control the embedding occur
   --   at the end of the symbol table, permuting the symbol table and
   --   the order of the variables in the system p.
+  --   In each solution, moves the coordinates corresponding to the
+  --   embed symbols to the end.
 
     nvar : constant natural32 := natural32(p'last);
     nslk : constant natural32 := Witness_Sets_io.Count_Embed_Symbols(nvar,"zz");
 
   begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p);
-    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p);
+    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p,sols);
+    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p,sols);
   end Swap_Embed_Symbols;
 
   procedure Swap_Embed_Symbols
-              ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+              ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   Ensures that the symbols "zz" that control the embedding occur
   --   at the end of the symbol table, permuting the symbol table and
   --   the order of the variables in the system p.
+  --   In each solution, moves the coordinates corresponding to the
+  --   embed symbols to the end.
 
     nvar : constant natural32 := natural32(p'last);
     nslk : constant natural32 := Witness_Sets_io.Count_Embed_Symbols(nvar,"zz");
 
   begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p);
-    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p);
+    Witness_Sets_io.Swap_Symbols_to_End(nvar,nslk,"zz",p,sols);
+    Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p,sols);
   end Swap_Embed_Symbols;
 
   procedure Standard_Cascade_Homotopy is
@@ -988,7 +1006,7 @@ package body PHCpack_Operations is
       exception
         when others => put_line("raised exception when clearing target...");
       end;
-      Swap_Embed_Symbols(st_start_sys.all);
+      Swap_Embed_Symbols(st_start_sys.all,st_start_sols);
       declare
         p : constant Poly_Sys(st_start_sys'range)
           := Witness_Sets.Remove_Slice(st_start_sys.all);
@@ -1000,7 +1018,7 @@ package body PHCpack_Operations is
       end;
       PHCpack_Operations.Create_Standard_Homotopy(gamma);
     elsif st_target_sys /= null then
-      Swap_Embed_Symbols(st_target_sys.all);
+      Swap_Embed_Symbols(st_target_sys.all,st_start_sols);
       st_start_sys := new Poly_Sys(st_target_sys'range);
       Copy(st_target_sys.all,st_start_sys.all);
       Clear(st_target_sys);
@@ -1026,7 +1044,7 @@ package body PHCpack_Operations is
       exception
         when others => put_line("raised exception when clearing target...");
       end;
-      Swap_Embed_Symbols(dd_start_sys.all);
+      Swap_Embed_Symbols(dd_start_sys.all,dd_start_sols);
       declare
         p : constant Poly_Sys(dd_start_sys'range)
           := Witness_Sets.Remove_Slice(dd_start_sys.all);
@@ -1038,7 +1056,7 @@ package body PHCpack_Operations is
       end;
       PHCpack_Operations.Create_DoblDobl_Homotopy(gamma);
     elsif dd_target_sys /= null then
-      Swap_Embed_Symbols(dd_target_sys.all);
+      Swap_Embed_Symbols(dd_target_sys.all,dd_start_sols);
       dd_start_sys := new Poly_Sys(dd_target_sys'range);
       Copy(dd_target_sys.all,dd_start_sys.all);
       Clear(dd_target_sys);
@@ -1064,7 +1082,7 @@ package body PHCpack_Operations is
       exception
         when others => put_line("raised exception when clearing target...");
       end;
-      Swap_Embed_Symbols(qd_start_sys.all);
+      Swap_Embed_Symbols(qd_start_sys.all,qd_start_sols);
       declare
         p : constant Poly_Sys(qd_start_sys'range)
           := Witness_Sets.Remove_Slice(qd_start_sys.all);
@@ -1076,7 +1094,7 @@ package body PHCpack_Operations is
       end;
       PHCpack_Operations.Create_QuadDobl_Homotopy(gamma);
     elsif qd_target_sys /= null then
-      Swap_Embed_Symbols(qd_target_sys.all);
+      Swap_Embed_Symbols(qd_target_sys.all,qd_start_sols);
       qd_start_sys := new Poly_Sys(qd_target_sys'range);
       Copy(qd_target_sys.all,qd_start_sys.all);
       Clear(qd_target_sys);
@@ -1101,7 +1119,7 @@ package body PHCpack_Operations is
       exception
         when others => put_line("raised exception when clearing target...");
       end;
-      Swap_Embed_Symbols(st_start_laur_sys.all);
+      Swap_Embed_Symbols(st_start_laur_sys.all,st_start_sols);
       declare
         p : constant Laur_Sys(st_start_laur_sys'range)
           := Witness_Sets.Remove_Slice(st_start_laur_sys.all);
@@ -1113,7 +1131,7 @@ package body PHCpack_Operations is
       end;
       PHCpack_Operations.Create_Standard_Laurent_Homotopy(gamma);
     elsif st_target_laur_sys /= null then
-      Swap_Embed_Symbols(st_target_laur_sys.all);
+      Swap_Embed_Symbols(st_target_laur_sys.all,st_start_sols);
       st_start_laur_sys := new Laur_Sys(st_target_laur_sys'range);
       Copy(st_target_laur_sys.all,st_start_laur_sys.all);
       Clear(st_target_laur_sys);
@@ -1138,7 +1156,7 @@ package body PHCpack_Operations is
       exception
         when others => put_line("raised exception when clearing target...");
       end;
-      Swap_Embed_Symbols(dd_start_laur_sys.all);
+      Swap_Embed_Symbols(dd_start_laur_sys.all,dd_start_sols);
       declare
         p : constant Laur_Sys(dd_start_laur_sys'range)
           := Witness_Sets.Remove_Slice(dd_start_laur_sys.all);
@@ -1150,7 +1168,7 @@ package body PHCpack_Operations is
       end;
       PHCpack_Operations.Create_DoblDobl_Laurent_Homotopy(gamma);
     elsif dd_target_laur_sys /= null then
-      Swap_Embed_Symbols(dd_target_laur_sys.all);
+      Swap_Embed_Symbols(dd_target_laur_sys.all,dd_start_sols);
       dd_start_laur_sys := new Laur_Sys(dd_target_laur_sys'range);
       Copy(dd_target_laur_sys.all,dd_start_laur_sys.all);
       Clear(dd_target_laur_sys);
@@ -1175,7 +1193,7 @@ package body PHCpack_Operations is
       exception
         when others => put_line("raised exception when clearing target...");
       end;
-      Swap_Embed_Symbols(qd_start_laur_sys.all);
+      Swap_Embed_Symbols(qd_start_laur_sys.all,qd_start_sols);
       declare
         p : constant Laur_Sys(qd_start_laur_sys'range)
           := Witness_Sets.Remove_Slice(qd_start_laur_sys.all);
@@ -1187,7 +1205,7 @@ package body PHCpack_Operations is
       end;
       PHCpack_Operations.Create_QuadDobl_Laurent_Homotopy(gamma);
     elsif qd_target_laur_sys /= null then
-      Swap_Embed_Symbols(qd_target_laur_sys.all);
+      Swap_Embed_Symbols(qd_target_laur_sys.all,qd_start_sols);
       qd_start_laur_sys := new Laur_Sys(qd_target_laur_sys'range);
       Copy(qd_target_laur_sys.all,qd_start_laur_sys.all);
       Clear(qd_target_laur_sys);

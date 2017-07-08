@@ -1,3 +1,6 @@
+Sat 8 Jul 2017 : swapping the embed symbols must occur in the systems and
+  in the start solutions, fixed in phcpack_operations.adb.
+
 Fri 7 Jul 2017 : fixed passing of number of tasks in use_c2phc.adb in the
   jobs which call the solve by Laurent homotopy continuation.
   Added jobs to use_c2phc to define Laurent homotopies.
