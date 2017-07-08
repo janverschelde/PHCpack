@@ -672,6 +672,24 @@ int create_multprec_homotopy ( void );
  *   for the multiprecision,
  *   using a randomly generated complex number to use as gamma. */
 
+int create_standard_Laurent_homotopy ( void );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy with the Laurent systems stored
+ *   as target and start in standard double precision. */
+
+int create_dobldobl_Laurent_homotopy ( void );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy with the Laurent systems stored
+ *   as target and start in double double precision. */
+
+int create_quaddobl_Laurent_homotopy ( void );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy with the Laurent systems stored
+ *   as target and start in quad double precision. */
+
 int create_homotopy_with_given_gamma ( double gamma_re, double gamma_im );
 /*
  * DESCRIPTION :

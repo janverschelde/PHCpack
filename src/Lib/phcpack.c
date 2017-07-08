@@ -961,6 +961,30 @@ int create_multprec_homotopy ( void )
    return fail;
 }
 
+int create_standard_Laurent_homotopy ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(792,a,b,c);
+   return fail;
+}
+
+int create_dobldobl_Laurent_homotopy ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(793,a,b,c);
+   return fail;
+}
+
+int create_quaddobl_Laurent_homotopy ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(794,a,b,c);
+   return fail;
+}
+
 int create_homotopy_with_given_gamma ( double gamma_re, double gamma_im )
 {
    int *a,*b,fail;

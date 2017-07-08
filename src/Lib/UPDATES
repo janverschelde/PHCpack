@@ -1,5 +1,5 @@
 Fri 7 Jul 2017 : updated witset.h with definitions of the Laurent cascade
-  homotopies.
+  homotopies.  To phcpack, added functions to define Laurent homotopies.
 
 Thu 6 Jul 2017 : added functions for the construction of cascade homotopies
   of Laurent systems in phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
