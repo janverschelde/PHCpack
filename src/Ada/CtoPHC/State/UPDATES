@@ -1,5 +1,6 @@
 Fri 7 Jul 2017 : fixed passing of number of tasks in use_c2phc.adb in the
   jobs which call the solve by Laurent homotopy continuation.
+  Added jobs to use_c2phc to define Laurent homotopies.
 
 Wed 5 Jul 2017 : to use_track.adb and use_c2phc.adb, added jobs to create
   cascade homotopy for Laurent systems in double, double double, and

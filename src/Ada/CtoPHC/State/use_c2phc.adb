@@ -2837,6 +2837,12 @@ function use_c2phc ( job : integer32;
       when 789 => return use_track(58,a,b,c); -- standard cascade Laurent htpy
       when 790 => return use_track(59,a,b,c); -- dobldobl cascade Laurent htpy
       when 791 => return use_track(60,a,b,c); -- quaddobl cascade Laurent htpy
+      when 792 =>
+        PHCpack_Operations.Create_Standard_Laurent_Homotopy; return 0;
+      when 793 =>
+        PHCpack_Operations.Create_DoblDobl_Laurent_Homotopy; return 0;
+      when 794 =>
+        PHCpack_Operations.Create_QuadDobl_Laurent_Homotopy; return 0;
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

@@ -158,7 +158,13 @@ function use_c2phc ( job : integer32;
 --         = 790 : defines a cascade homotopy for Laurent systems
 --                 in double double precision;
 --         = 791 : defines a cascade homotopy for Laurent systems
---                 in quad double precision.
+--                 in quad double precision;
+--         = 792 : creates a homotopy with the Laurent systems stored
+--                 as target and start in standard double precision;
+--         = 793 : creates a homotopy with the Laurent systems stored
+--                 as target and start in double double precision;
+--         = 794 : creates a homotopy with the Laurent systems stored
+--                 as target and start in quad double precision.
 --
 -- the operations of the systems container :
 --
