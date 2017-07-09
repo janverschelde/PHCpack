@@ -19,6 +19,7 @@ with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Witness_Sets;                       use Witness_Sets;
 with Sampling_Machine;
+with Sampling_Laurent_Machine;
 with DoblDobl_Sampling_Machine;
 with QuadDobl_Sampling_Machine;
 
@@ -159,7 +160,8 @@ package body Homotopy_Membership_Tests is
       Sampling_Machine.Sample_with_Stop
         (standard_output,genpts,x,homtol,adjsli,newsols);
     else
-      Sampling_Machine.Sample_with_Stop(genpts,x,homtol,adjsli,newsols);
+      Sampling_Machine.Sample_with_Stop
+        (genpts,x,homtol,adjsli,newsols);
     end if;
     found := false;
     tmp := newsols;
@@ -307,7 +309,8 @@ package body Homotopy_Membership_Tests is
     diff : double_float;
 
   begin
-    Sampling_Machine.Sample_with_Stop(file,genpts,x,homtol,adjsli,newsols);
+    Sampling_Machine.Sample_with_Stop
+      (file,genpts,x,homtol,adjsli,newsols);
     found := false;
     put_line(file,"  Scanning the new list of generic points :");
     tmp := newsols;
@@ -809,55 +812,48 @@ package body Homotopy_Membership_Tests is
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test 
+              ( verbose : in boolean;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts,sols : in Standard_Complex_Solutions.Solution_List;
+                restol,homtol : in double_float ) is
+  begin
+    null;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts,sols : in DoblDobl_Complex_Solutions.Solution_List;
+                restol,homtol : in double_float ) is
+  begin
+    null;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts,sols : in QuadDobl_Complex_Solutions.Solution_List;
+                restol,homtol : in double_float ) is
+  begin
+    null;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
               ( file : in file_type;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 dim : in natural32;
                 genpts,sols : in Standard_Complex_Solutions.Solution_List;
                 restol,homtol : in double_float ) is
 
-    tmp : Standard_Complex_Solutions.Solution_List := sols;
-    ls : Standard_Complex_Solutions.Link_to_Solution;
     isols,isols_last : Standard_Complex_Solutions.Solution_List;
-    sli : constant Standard_Complex_VecVecs.VecVec
-        := Witness_Sets.Slices(ep,dim);
-    success,found : boolean;
-    cnt : natural32 := 0;
 
   begin
-    Sampling_Machine.Initialize(ep);
-    Sampling_Machine.Default_Tune_Sampler(2);
-    Sampling_Machine.Default_Tune_Refiner;
-    for i in 1..Standard_Complex_Solutions.Length_Of(sols) loop
-      ls := Standard_Complex_Solutions.Head_Of(tmp);
-      put(file,"Testing point "); put(file,i,1); put(file," : ");
-      Homotopy_Membership_Test
-        (file,ep,dim,sli,genpts,ls.all,restol,homtol,success,found);
-      if success then
-        if found
-         then cnt := cnt + 1;
-         else Standard_Complex_Solutions.Append(isols,isols_last,ls.all);
-        end if;
-      end if;
-      tmp := Standard_Complex_Solutions.Tail_Of(tmp);
-    end loop;
-    Sampling_Machine.Clear;
-    put(file,"Tested ");
-    put(file,Standard_Complex_Solutions.Length_Of(sols),1); 
-    put_line(file," candidates for solutions:");
-    put(file,"  Found "); put(file,cnt,1);
-    put_line(file," solutions on the components.");
-    if not Standard_Complex_Solutions.Is_Null(isols) then
-      put(file,"  Found ");
-      put(file,Standard_Complex_Solutions.Length_Of(isols),1);
-      put_line(file," solutions not on the components.");
-      new_line(file);
-      put_line(file,"THE SOLUTIONS NOT ON THE COMPONENTS :");
-      new_line(file);
-      put(file,Standard_Complex_Solutions.Length_Of(isols),
-          natural32(Standard_Complex_Solutions.Head_Of(isols).n),isols);
-    else
-      put_line(file,"  Found no other solutions.");
-    end if;
+    Homotopy_Membership_Test
+      (file,ep,dim,genpts,sols,restol,homtol,isols,isols_last);
+    Standard_Complex_Solutions.Clear(isols);
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test 
@@ -867,49 +863,12 @@ package body Homotopy_Membership_Tests is
                 genpts,sols : in DoblDobl_Complex_Solutions.Solution_List;
                 restol,homtol : in double_float ) is
 
-    tmp : DoblDobl_Complex_Solutions.Solution_List := sols;
-    ls : DoblDobl_Complex_Solutions.Link_to_Solution;
     isols,isols_last : DoblDobl_Complex_Solutions.Solution_List;
-    sli : constant DoblDobl_Complex_VecVecs.VecVec
-        := Witness_Sets.Slices(ep,dim);
-    success,found : boolean;
-    cnt : natural32 := 0;
 
   begin
-    DoblDobl_Sampling_Machine.Initialize(ep);
-    DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
-    DoblDobl_Sampling_Machine.Default_Tune_Refiner;
-    for i in 1..DoblDobl_Complex_Solutions.Length_Of(sols) loop
-      ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
-      put(file,"Testing point "); put(file,i,1); put(file," : ");
-      Homotopy_Membership_Test
-        (file,ep,dim,sli,genpts,ls.all,restol,homtol,success,found);
-      if success then
-        if found
-         then cnt := cnt + 1;
-         else DoblDobl_Complex_Solutions.Append(isols,isols_last,ls.all);
-        end if;
-      end if;
-      tmp := DoblDobl_Complex_Solutions.Tail_Of(tmp);
-    end loop;
-    DoblDobl_Sampling_Machine.Clear;
-    put(file,"Tested ");
-    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),1); 
-    put_line(file," candidates for solutions:");
-    put(file,"  Found "); put(file,cnt,1);
-    put_line(file," solutions on the components.");
-    if not DoblDobl_Complex_Solutions.Is_Null(isols) then
-      put(file,"  Found ");
-      put(file,DoblDobl_Complex_Solutions.Length_Of(isols),1);
-      put_line(file," solutions not on the components.");
-      new_line(file);
-      put_line(file,"THE SOLUTIONS NOT ON THE COMPONENTS :");
-      new_line(file);
-      put(file,DoblDobl_Complex_Solutions.Length_Of(isols),
-          natural32(DoblDobl_Complex_Solutions.Head_Of(isols).n),isols);
-    else
-      put_line(file,"  Found no other solutions.");
-    end if;
+    Homotopy_Membership_Test
+      (file,ep,dim,genpts,sols,restol,homtol,isols,isols_last);
+    DoblDobl_Complex_Solutions.Clear(isols);
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test 
@@ -919,49 +878,42 @@ package body Homotopy_Membership_Tests is
                 genpts,sols : in QuadDobl_Complex_Solutions.Solution_List;
                 restol,homtol : in double_float ) is
 
-    tmp : QuadDobl_Complex_Solutions.Solution_List := sols;
-    ls : QuadDobl_Complex_Solutions.Link_to_Solution;
     isols,isols_last : QuadDobl_Complex_Solutions.Solution_List;
-    sli : constant QuadDobl_Complex_VecVecs.VecVec
-        := Witness_Sets.Slices(ep,dim);
-    success,found : boolean;
-    cnt : natural32 := 0;
 
   begin
-    QuadDobl_Sampling_Machine.Initialize(ep);
-    QuadDobl_Sampling_Machine.Default_Tune_Sampler(0);
-    QuadDobl_Sampling_Machine.Default_Tune_Refiner;
-    for i in 1..QuadDobl_Complex_Solutions.Length_Of(sols) loop
-      ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
-      put(file,"Testing point "); put(file,i,1); put(file," : ");
-      Homotopy_Membership_Test
-        (file,ep,dim,sli,genpts,ls.all,restol,homtol,success,found);
-      if success then
-        if found
-         then cnt := cnt + 1;
-         else QuadDobl_Complex_Solutions.Append(isols,isols_last,ls.all);
-        end if;
-      end if;
-      tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
-    end loop;
-    QuadDobl_Sampling_Machine.Clear;
-    put(file,"Tested ");
-    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),1); 
-    put_line(file," candidates for solutions:");
-    put(file,"  Found "); put(file,cnt,1);
-    put_line(file," solutions on the components.");
-    if not QuadDobl_Complex_Solutions.Is_Null(isols) then
-      put(file,"  Found ");
-      put(file,QuadDobl_Complex_Solutions.Length_Of(isols),1);
-      put_line(file," solutions not on the components.");
-      new_line(file);
-      put_line(file,"THE SOLUTIONS NOT ON THE COMPONENTS :");
-      new_line(file);
-      put(file,QuadDobl_Complex_Solutions.Length_Of(isols),
-          natural32(QuadDobl_Complex_Solutions.Head_Of(isols).n),isols);
-    else
-      put_line(file,"  Found no other solutions.");
-    end if;
+    Homotopy_Membership_Test
+      (file,ep,dim,genpts,sols,restol,homtol,isols,isols_last);
+    QuadDobl_Complex_Solutions.Clear(isols);
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test
+              ( file : in file_type;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts,sols : in Standard_Complex_Solutions.Solution_List;
+                restol,homtol : in double_float ) is
+  begin
+    null;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test
+              ( file : in file_type;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts,sols : in DoblDobl_Complex_Solutions.Solution_List;
+                restol,homtol : in double_float ) is
+  begin
+    null;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test
+              ( file : in file_type;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts,sols : in QuadDobl_Complex_Solutions.Solution_List;
+                restol,homtol : in double_float ) is
+  begin
+    null;
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test 
