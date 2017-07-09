@@ -83,7 +83,9 @@ ts_sample                         : interactive testing facility for sampler
 ------------------------------------------------------------------------------
 sampling_laurent_machine          : sampling on Laurent polynomial systems
 dobldobl_sampling_machine         : sampling in double double precision
+dobldobl_sampling_laurent_machine : sampling dobldobl Laurent systems
 quaddobl_sampling_machine         : sampling in quad double precision
+quaddobl_sampling_laurent_machine : sampling quaddobl Laurent systems
 dobldobl_sample_points            : sampled points in double double precision
 dobldobl_sample_grids             : grids of double double precision samples
 dobldobl_sample_lists             : lists of double double sample points
