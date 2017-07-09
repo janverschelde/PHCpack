@@ -12,8 +12,11 @@ with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
 with Standard_Complex_Poly_SysFun;
+with Standard_Complex_Laur_SysFun;
 with DoblDobl_Complex_Poly_SysFun;
+with DoblDobl_Complex_Laur_SysFun;
 with QuadDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Laur_SysFun;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
@@ -874,6 +877,135 @@ package body Homotopy_Membership_Tests is
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test 
+              ( verbose : in boolean;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in Standard_Complex_VecVecs.VecVec;
+                genpts : in Standard_Complex_Solutions.Solution_List;
+                x : in Standard_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+    ex : Standard_Complex_Vectors.Vector(ep'range);
+    y : Standard_Complex_Vectors.Vector(ep'range);
+    res : double_float;
+    newsli : Standard_Complex_VecVecs.VecVec(sli'range);
+
+  begin
+    ex(x'range) := x;
+    for k in x'last+1..ex'last loop
+      ex(k) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
+    y := Standard_Complex_Laur_SysFun.Eval(ep,ex);
+    res := Max_Norm(y(y'first..y'last-integer32(dim)));
+    if verbose
+     then put("residual is "); put(res); new_line;
+    end if;
+    if res <= restol then
+      success := true;
+      if verbose then
+        put("  point satisfies the equations, as residual <=");
+        put(restol,3); new_line;
+      end if;
+      newsli := Adjusted_Slices(sli,ex);
+      Homotopy_Membership_Test(verbose,genpts,ex,newsli,homtol,found);
+    else
+      success := false;
+      if verbose then
+        put("  point does not lie on the component, as residual >");
+        put(restol,3); new_line;
+      end if;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in DoblDobl_Complex_VecVecs.VecVec;
+                genpts : in DoblDobl_Complex_Solutions.Solution_List;
+                x : in DoblDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+    ex : DoblDobl_Complex_Vectors.Vector(ep'range);
+    y : DoblDobl_Complex_Vectors.Vector(ep'range);
+    res : double_double;
+    newsli : DoblDobl_Complex_VecVecs.VecVec(sli'range);
+
+  begin
+    ex(x'range) := x;
+    for k in x'last+1..ex'last loop
+      ex(k) := DoblDobl_Complex_Numbers.Create(integer(0));
+    end loop;
+    y := DoblDobl_Complex_Laur_SysFun.Eval(ep,ex);
+    res := Max_Norm(y(y'first..y'last-integer32(dim)));
+    if verbose
+     then put("residual is "); put(res); new_line;
+    end if;
+    if res <= restol then
+      success := true;
+      if verbose then
+        put("  point satisfies the equations, as residual <=");
+        put(restol,3); new_line;
+      end if;
+      newsli := Adjusted_Slices(sli,ex);
+      Homotopy_Membership_Test(verbose,genpts,ex,newsli,homtol,found);
+    else
+      success := false;
+      if verbose then
+        put("  point does not lie on the component, as residual >");
+        put(restol,3); new_line;
+      end if;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in QuadDobl_Complex_VecVecs.VecVec;
+                genpts : in QuadDobl_Complex_Solutions.Solution_List;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+    ex : QuadDobl_Complex_Vectors.Vector(ep'range);
+    y : QuadDobl_Complex_Vectors.Vector(ep'range);
+    res : quad_double;
+    newsli : QuadDobl_Complex_VecVecs.VecVec(sli'range);
+
+  begin
+    ex(x'range) := x;
+    for k in x'last+1..ex'last loop
+      ex(k) := QuadDobl_Complex_Numbers.Create(integer(0));
+    end loop;
+    y := QuadDobl_Complex_Laur_SysFun.Eval(ep,ex);
+    res := Max_Norm(y(y'first..y'last-integer32(dim)));
+    if verbose
+     then put("residual is "); put(res); new_line;
+    end if;
+    if res <= restol then
+      success := true;
+      if verbose then
+        put("  point satisfies the equations, as residual <=");
+        put(restol,3); new_line;
+      end if;
+      newsli := Adjusted_Slices(sli,ex);
+      Homotopy_Membership_Test(verbose,genpts,ex,newsli,homtol,found);
+    else
+      success := false;
+      if verbose then
+        put("  point does not lie on the component, as residual >");
+        put(restol,3); new_line;
+      end if;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
               ( file : in file_type;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 dim : in natural32;
@@ -973,6 +1105,134 @@ package body Homotopy_Membership_Tests is
        := Embed_Solution(s,ep'last);
     y : constant QuadDobl_Complex_Vectors.Vector(ep'range)
       := QuadDobl_Complex_Poly_SysFun.Eval(ep,es.v);
+    res : constant quad_double
+        := Max_Norm(y(y'first..y'last-integer32(dim)));
+    newsli : QuadDobl_Complex_VecVecs.VecVec(sli'range);
+   -- eva : Complex_Number;
+
+  begin
+   -- put_line(file,"The solution vector : "); put_line(file,es.v);
+   -- put_line(file,"The evaluation : "); put_line(file,y);
+    put(file,"residual is "); put(file,res); new_line(file);
+    if res <= restol then
+      put(file,"  point satisfies the equations, as residual <=");
+      put(file,restol,3); new_line(file);
+      success := true;
+      newsli := Adjusted_Slices(sli,es.v);
+     -- for i in newsli'range loop
+     --   put(file,"eval at adjusted slice : ");
+     --   eva := newsli(i)(0) + newsli(i)(es.v'range)*es.v;
+     --   put(file,eva); new_line(file);
+     -- end loop;
+      Homotopy_Membership_Test(file,genpts,es.v,newsli,homtol,found);
+    else
+      put(file,"  point does not lie on the component, as residual >");
+      put(file,restol,3); new_line(file);
+      success := false;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( file : in file_type;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in Standard_Complex_VecVecs.VecVec;
+                genpts : in Standard_Complex_Solutions.Solution_List;
+                s : in Standard_Complex_Solutions.Solution;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+   -- es : Solution(s.n + dim) := Embed(s,dim);
+    es : constant Standard_Complex_Solutions.Solution(ep'last)
+       := Embed_Solution(s,ep'last);
+    y : constant Standard_Complex_Vectors.Vector(ep'range)
+      := Standard_Complex_Laur_SysFun.Eval(ep,es.v);
+    res : constant double_float := Max_Norm(y(y'first..y'last-integer32(dim)));
+    newsli : Standard_Complex_VecVecs.VecVec(sli'range);
+   -- eva : Complex_Number;
+
+  begin
+   -- put_line(file,"The solution vector : "); put_line(file,es.v);
+   -- put_line(file,"The evaluation : "); put_line(file,y);
+    put(file,"residual is "); put(file,res); new_line(file);
+    if res <= restol then
+      put(file,"  point satisfies the equations, as residual <=");
+      put(file,restol,3); new_line(file);
+      success := true;
+      newsli := Adjusted_Slices(sli,es.v);
+     -- for i in newsli'range loop
+     --   put(file,"eval at adjusted slice : ");
+     --   eva := newsli(i)(0) + newsli(i)(es.v'range)*es.v;
+     --   put(file,eva); new_line(file);
+     -- end loop;
+      Homotopy_Membership_Test(file,genpts,es.v,newsli,homtol,found);
+    else
+      put(file,"  point does not lie on the component, as residual >");
+      put(file,restol,3); new_line(file);
+      success := false;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( file : in file_type;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in DoblDobl_Complex_VecVecs.VecVec;
+                genpts : in DoblDobl_Complex_Solutions.Solution_List;
+                s : in DoblDobl_Complex_Solutions.Solution;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+   -- es : Solution(s.n + dim) := Embed(s,dim);
+    es : constant DoblDobl_Complex_Solutions.Solution(ep'last)
+       := Embed_Solution(s,ep'last);
+    y : constant DoblDobl_Complex_Vectors.Vector(ep'range)
+      := DoblDobl_Complex_Laur_SysFun.Eval(ep,es.v);
+    res : constant double_double
+        := Max_Norm(y(y'first..y'last-integer32(dim)));
+    newsli : DoblDobl_Complex_VecVecs.VecVec(sli'range);
+   -- eva : Complex_Number;
+
+  begin
+   -- put_line(file,"The solution vector : "); put_line(file,es.v);
+   -- put_line(file,"The evaluation : "); put_line(file,y);
+    put(file,"residual is "); put(file,res); new_line(file);
+    if res <= restol then
+      put(file,"  point satisfies the equations, as residual <=");
+      put(file,restol,3); new_line(file);
+      success := true;
+      newsli := Adjusted_Slices(sli,es.v);
+     -- for i in newsli'range loop
+     --   put(file,"eval at adjusted slice : ");
+     --   eva := newsli(i)(0) + newsli(i)(es.v'range)*es.v;
+     --   put(file,eva); new_line(file);
+     -- end loop;
+      Homotopy_Membership_Test(file,genpts,es.v,newsli,homtol,found);
+    else
+      put(file,"  point does not lie on the component, as residual >");
+      put(file,restol,3); new_line(file);
+      success := false;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( file : in file_type;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in QuadDobl_Complex_VecVecs.VecVec;
+                genpts : in QuadDobl_Complex_Solutions.Solution_List;
+                s : in QuadDobl_Complex_Solutions.Solution;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+   -- es : Solution(s.n + dim) := Embed(s,dim);
+    es : constant QuadDobl_Complex_Solutions.Solution(ep'last)
+       := Embed_Solution(s,ep'last);
+    y : constant QuadDobl_Complex_Vectors.Vector(ep'range)
+      := QuadDobl_Complex_Laur_SysFun.Eval(ep,es.v);
     res : constant quad_double
         := Max_Norm(y(y'first..y'last-integer32(dim)));
     newsli : QuadDobl_Complex_VecVecs.VecVec(sli'range);
@@ -1133,8 +1393,40 @@ package body Homotopy_Membership_Tests is
                 dim : in natural32;
                 genpts,sols : in Standard_Complex_Solutions.Solution_List;
                 restol,homtol : in double_float ) is
+
+    tmp : Standard_Complex_Solutions.Solution_List := sols;
+    ls : Standard_Complex_Solutions.Link_to_Solution;
+    sli : constant Standard_Complex_VecVecs.VecVec
+        := Witness_Sets.Slices(ep,dim);
+    success,found : boolean;
+    cnt : natural32 := 0;
+
   begin
-    null;
+    Sampling_Laurent_Machine.Initialize(ep);
+    Sampling_Laurent_Machine.Default_Tune_Sampler(2);
+    Sampling_Laurent_Machine.Default_Tune_Refiner;
+    for i in 1..Standard_Complex_Solutions.Length_Of(sols) loop
+      ls := Standard_Complex_Solutions.Head_Of(tmp);
+      if verbose
+       then put("Testing point "); put(i,1); put(" : ");
+      end if;
+      Homotopy_Membership_Test
+        (verbose,ep,dim,sli,genpts,ls.v,restol,homtol,success,found);
+      if success then
+        if found
+         then cnt := cnt + 1;
+        end if;
+      end if;
+      tmp := Standard_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+    if verbose then
+      put("Tested ");
+      put(Standard_Complex_Solutions.Length_Of(sols),1); 
+      put_line(" candidates for solutions:");
+      put("  Found "); put(cnt,1);
+      put_line(" solutions on the components.");
+    end if;
+    Sampling_Laurent_Machine.Clear;
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test 
@@ -1143,8 +1435,40 @@ package body Homotopy_Membership_Tests is
                 dim : in natural32;
                 genpts,sols : in DoblDobl_Complex_Solutions.Solution_List;
                 restol,homtol : in double_float ) is
+
+    tmp : DoblDobl_Complex_Solutions.Solution_List := sols;
+    ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+    sli : constant DoblDobl_Complex_VecVecs.VecVec
+        := Witness_Sets.Slices(ep,dim);
+    success,found : boolean;
+    cnt : natural32 := 0;
+
   begin
-    null;
+    DoblDobl_Sampling_Laurent_Machine.Initialize(ep);
+    DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
+    DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
+    for i in 1..DoblDobl_Complex_Solutions.Length_Of(sols) loop
+      ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
+      if verbose
+       then put("Testing point "); put(i,1); put(" : ");
+      end if;
+      Homotopy_Membership_Test
+        (verbose,ep,dim,sli,genpts,ls.v,restol,homtol,success,found);
+      if success then
+        if found
+         then cnt := cnt + 1;
+        end if;
+      end if;
+      tmp := DoblDobl_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+    if verbose then
+      put("Tested ");
+      put(DoblDobl_Complex_Solutions.Length_Of(sols),1); 
+      put_line(" candidates for solutions:");
+      put("  Found "); put(cnt,1);
+      put_line(" solutions on the components.");
+    end if;
+    DoblDobl_Sampling_Laurent_Machine.Clear;
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test 
@@ -1153,8 +1477,40 @@ package body Homotopy_Membership_Tests is
                 dim : in natural32;
                 genpts,sols : in QuadDobl_Complex_Solutions.Solution_List;
                 restol,homtol : in double_float ) is
+
+    tmp : QuadDobl_Complex_Solutions.Solution_List := sols;
+    ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+    sli : constant QuadDobl_Complex_VecVecs.VecVec
+        := Witness_Sets.Slices(ep,dim);
+    success,found : boolean;
+    cnt : natural32 := 0;
+
   begin
-    null;
+    QuadDobl_Sampling_Laurent_Machine.Initialize(ep);
+    QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
+    QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
+    for i in 1..QuadDobl_Complex_Solutions.Length_Of(sols) loop
+      ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
+      if verbose
+       then put("Testing point "); put(i,1); put(" : ");
+      end if;
+      Homotopy_Membership_Test
+        (verbose,ep,dim,sli,genpts,ls.v,restol,homtol,success,found);
+      if success then
+        if found
+         then cnt := cnt + 1;
+        end if;
+      end if;
+      tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+    if verbose then
+      put("Tested ");
+      put(QuadDobl_Complex_Solutions.Length_Of(sols),1); 
+      put_line(" candidates for solutions:");
+      put("  Found "); put(cnt,1);
+      put_line(" solutions on the components.");
+    end if;
+    QuadDobl_Sampling_Laurent_Machine.Clear;
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test 
@@ -1208,8 +1564,13 @@ package body Homotopy_Membership_Tests is
                 dim : in natural32;
                 genpts,sols : in Standard_Complex_Solutions.Solution_List;
                 restol,homtol : in double_float ) is
+
+    isols,isols_last : Standard_Complex_Solutions.Solution_List;
+
   begin
-    null;
+    Homotopy_Membership_Test
+      (file,ep,dim,genpts,sols,restol,homtol,isols,isols_last);
+    Standard_Complex_Solutions.Clear(isols);
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test
@@ -1218,8 +1579,13 @@ package body Homotopy_Membership_Tests is
                 dim : in natural32;
                 genpts,sols : in DoblDobl_Complex_Solutions.Solution_List;
                 restol,homtol : in double_float ) is
+
+    isols,isols_last : DoblDobl_Complex_Solutions.Solution_List;
+
   begin
-    null;
+    Homotopy_Membership_Test
+      (file,ep,dim,genpts,sols,restol,homtol,isols,isols_last);
+    DoblDobl_Complex_Solutions.Clear(isols);
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test
@@ -1228,8 +1594,13 @@ package body Homotopy_Membership_Tests is
                 dim : in natural32;
                 genpts,sols : in QuadDobl_Complex_Solutions.Solution_List;
                 restol,homtol : in double_float ) is
+
+    isols,isols_last : QuadDobl_Complex_Solutions.Solution_List;
+
   begin
-    null;
+    Homotopy_Membership_Test
+      (file,ep,dim,genpts,sols,restol,homtol,isols,isols_last);
+    QuadDobl_Complex_Solutions.Clear(isols);
   end Homotopy_Membership_Test;
 
   procedure Homotopy_Membership_Test 
@@ -1308,8 +1679,8 @@ package body Homotopy_Membership_Tests is
     for i in 1..Standard_Complex_Solutions.Length_Of(sols) loop
       ls := Standard_Complex_Solutions.Head_Of(tmp);
       put(file,"Testing point "); put(file,i,1); put(file," : ");
-     -- Homotopy_Membership_Test
-     --   (file,ep,dim,sli,genpts,ls.all,restol,homtol,success,found);
+      Homotopy_Membership_Test
+        (file,ep,dim,sli,genpts,ls.all,restol,homtol,success,found);
       if success then
         if found
          then cnt := cnt + 1;
@@ -1414,8 +1785,8 @@ package body Homotopy_Membership_Tests is
     for i in 1..DoblDobl_Complex_Solutions.Length_Of(sols) loop
       ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
       put(file,"Testing point "); put(file,i,1); put(file," : ");
-     -- Homotopy_Membership_Test
-     --   (file,ep,dim,sli,genpts,ls.all,restol,homtol,success,found);
+      Homotopy_Membership_Test
+        (file,ep,dim,sli,genpts,ls.all,restol,homtol,success,found);
       if success then
         if found
          then cnt := cnt + 1;
@@ -1520,8 +1891,8 @@ package body Homotopy_Membership_Tests is
     for i in 1..QuadDobl_Complex_Solutions.Length_Of(sols) loop
       ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
       put(file,"Testing point "); put(file,i,1); put(file," : ");
-     -- Homotopy_Membership_Test
-     --   (file,ep,dim,sli,genpts,ls.all,restol,homtol,success,found);
+      Homotopy_Membership_Test
+        (file,ep,dim,sli,genpts,ls.all,restol,homtol,success,found);
       if success then
         if found
          then cnt := cnt + 1;

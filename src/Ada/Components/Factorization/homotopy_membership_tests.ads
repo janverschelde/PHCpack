@@ -189,7 +189,60 @@ package Homotopy_Membership_Tests is
 
   -- DESCRIPTION :
   --   This procedure performs the component test for solution s,
-  --   in standard double, double double, or quad double precision.
+  --   in standard double, double double, or quad double precision,
+  --   for a witness set defined by an ordinary polynomial system.
+
+  -- REQUIRED : the sampling machine is initialized and tuned.
+
+  -- ON ENTRY :
+  --   verbose  if true, the diagnostic output is written to screen,
+  --            if false, then the procedures remain silent;
+  --   ep       embedded polynomial system;
+  --   dim      dimension of solution components;
+  --   sli      slices that cut out the generic points;
+  --   genpts   generic points on the components;
+  --   x        coordinates of the point for testing;
+  --   restol   tolerance for residual;
+  --   homtol   tolerance for homotopy test.
+
+  -- ON RETURN :
+  --   success  true when test point satisfies the equations,
+  --            false otherwise;
+  --   found    true when homotopy test succeeds in finding a matching
+  --            generic point, found is false when not success.
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in Standard_Complex_VecVecs.VecVec;
+                genpts : in Standard_Complex_Solutions.Solution_List;
+                x : in Standard_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in DoblDobl_Complex_VecVecs.VecVec;
+                genpts : in DoblDobl_Complex_Solutions.Solution_List;
+                x : in DoblDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in QuadDobl_Complex_VecVecs.VecVec;
+                genpts : in QuadDobl_Complex_Solutions.Solution_List;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+
+  -- DESCRIPTION :
+  --   This procedure performs the component test for solution s,
+  --   in standard double, double double, or quad double precision,
+  --   for a witness set defined by a Laurent polynomial system.
 
   -- REQUIRED : the sampling machine is initialized and tuned.
 
@@ -239,7 +292,56 @@ package Homotopy_Membership_Tests is
                 success,found : out boolean );
 
   -- DESCRIPTION :
-  --   This procedure performs the component test for solution s.
+  --   This procedure performs the component test for solution s,
+  --   for a witness set defined by an ordinary polynomial system.
+
+  -- ON ENTRY :
+  --   file     for intermediate output and diagnostics;
+  --   ep       embedded polynomial system;
+  --   dim      dimension of solution components;
+  --   sli      slices that cut out the generic points;
+  --   genpts   generic points on the components;
+  --   s        point up for testing;
+  --   restol   tolerance for residual;
+  --   homtol   tolerance for homotopy test.
+
+  -- ON RETURN :
+  --   success  true when test point satisfies the equations,
+  --            false otherwise;
+  --   found    true when homotopy test succeeds in finding a matching
+  --            generic point, found is false when not success.
+
+  procedure Homotopy_Membership_Test
+              ( file : in file_type;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in Standard_Complex_VecVecs.VecVec;
+                genpts : in Standard_Complex_Solutions.Solution_List;
+                s : in Standard_Complex_Solutions.Solution;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+  procedure Homotopy_Membership_Test
+              ( file : in file_type;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in DoblDobl_Complex_VecVecs.VecVec;
+                genpts : in DoblDobl_Complex_Solutions.Solution_List;
+                s : in DoblDobl_Complex_Solutions.Solution;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+  procedure Homotopy_Membership_Test
+              ( file : in file_type;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                sli : in QuadDobl_Complex_VecVecs.VecVec;
+                genpts : in QuadDobl_Complex_Solutions.Solution_List;
+                s : in QuadDobl_Complex_Solutions.Solution;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+
+  -- DESCRIPTION :
+  --   This procedure performs the component test for solution s,
+  --   for a witness set defined by a Laurent polynomial system.
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
