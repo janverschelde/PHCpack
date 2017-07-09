@@ -1,3 +1,6 @@
+Sat 8 Jul 2017 : extended multprec_root_refiners with procedures for
+  Laurent systems.
+
 Fri 23 Jun 2017 : to standard_root_refiners, added procedures to refine
   solutions of Laurent systems, without a separate list of refined solutions.
 

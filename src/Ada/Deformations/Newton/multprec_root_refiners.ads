@@ -7,7 +7,7 @@ with Multprec_Complex_Poly_Systems;      use Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_SysFun;       use Multprec_Complex_Poly_SysFun;
 with Multprec_Complex_Jaco_Matrices;     use Multprec_Complex_Jaco_Matrices;
 with Multprec_Complex_Laur_Systems;
-with Multprec_Complex_Laur_SysFun;
+with Multprec_Complex_Laur_SysFun;       use Multprec_Complex_Laur_SysFun;
 with Multprec_Complex_Laur_JacoMats;
 with Multprec_Complex_Solutions;         use Multprec_Complex_Solutions;
 
@@ -56,14 +56,27 @@ package Multprec_Root_Refiners is
 -- NEWTON's METHOD :
 
   procedure Silent_Newton 
-               ( p_eval : in Eval_Poly_Sys; j_eval : in Eval_Jaco_Mat;
+               ( p_eval : in Eval_Poly_Sys;
+                 j_eval : in Multprec_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                 zero : in out Solution; epsxa,epsfa : in Floating_Number; 
+                 numit : in out natural32; max : in natural32;
+                 fail : out boolean );
+  procedure Silent_Newton 
+               ( p_eval : in Eval_Laur_Sys; 
+                 j_eval : in Multprec_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in Floating_Number; 
                  numit : in out natural32; max : in natural32;
                  fail : out boolean );
 
   procedure Reporting_Newton
-               ( file : in file_type;
-                 p_eval : in Eval_Poly_Sys; j_eval : in Eval_Jaco_Mat;
+               ( file : in file_type; p_eval : in Eval_Poly_Sys;
+                 j_eval : in Multprec_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                 zero : in out Solution; epsxa,epsfa : in Floating_Number;
+                 numit : in out natural32; max : in natural32;
+                 fail : out boolean );
+  procedure Reporting_Newton
+               ( file : in file_type; p_eval : in Eval_Laur_Sys;
+                 j_eval : in Multprec_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in Floating_Number;
                  numit : in out natural32; max : in natural32;
                  fail : out boolean );

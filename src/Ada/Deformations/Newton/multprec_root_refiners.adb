@@ -217,7 +217,8 @@ package body Multprec_Root_Refiners is
 -- TARGET ROUTINES, NEWTON's METHOD :
 
   procedure Silent_Newton
-               ( p_eval : in Eval_Poly_Sys; j_eval : in Eval_Jaco_Mat;
+               ( p_eval : in Eval_Poly_Sys;
+                 j_eval : in Multprec_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in Floating_Number; 
                  numit : in out natural32; max : in natural32;
                  fail : out boolean ) is
@@ -264,9 +265,9 @@ package body Multprec_Root_Refiners is
     when constraint_error => fail := true; return;
   end Silent_Newton;
 
-  procedure Reporting_Newton
-               ( file : in file_type;
-                 p_eval : in Eval_Poly_Sys; j_eval : in Eval_Jaco_Mat;
+  procedure Silent_Newton
+               ( p_eval : in Eval_Laur_Sys;
+                 j_eval : in Multprec_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in Floating_Number; 
                  numit : in out natural32; max : in natural32;
                  fail : out boolean ) is
@@ -277,6 +278,110 @@ package body Multprec_Root_Refiners is
     info : integer32;
     y,deltax : Vector(1..n);
     tmp : Floating_Number;
+
+    use Multprec_Complex_Laur_JacoMats;
+
+  begin
+    y := Eval(p_eval,zero.v);               -- y = f(zero)
+    for i in 1..max loop
+      jacobian := Eval(j_eval,zero.v); -- solve jacobian*deltax = -f(zero)
+     -- lufco(jacobian,n,ipvt,zero.rco);
+      lufac(jacobian,n,ipvt,info);
+     -- if Equal(zero.rco,0.0)
+      if info /= 0 then
+        tmp := Sum_Norm(y);
+        fail := (tmp > epsfa);
+        Clear(tmp);
+        return;                             -- singular Jacobian matrix
+      end if;
+      deltax := -y; Clear(y);
+      lusolve(jacobian,n,ipvt,deltax);  
+      Add(zero.v,deltax);                   -- make the updates
+      y := Eval(p_eval,zero.v);
+      Clear(zero.err);              Clear(zero.res);
+      zero.err := Sum_Norm(deltax); zero.res := Sum_Norm(y);
+      Clear(jacobian); Clear(deltax); 
+     -- Clear(y);
+      numit := numit + 1;
+      if ( zero.err < epsxa ) or else ( zero.res < epsfa ) then
+        fail := false; exit; -- stopping criteria
+      elsif numit >= max then
+        fail := true; exit;
+      end if;
+    end loop;
+    jacobian := Eval(j_eval,zero.v);        -- compute condition number
+    lufco(jacobian,n,ipvt,zero.rco);
+    Clear(jacobian);
+  exception
+    when constraint_error => fail := true; return;
+  end Silent_Newton;
+
+  procedure Reporting_Newton
+               ( file : in file_type; p_eval : in Eval_Poly_Sys;
+                 j_eval : in Multprec_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                 zero : in out Solution; epsxa,epsfa : in Floating_Number; 
+                 numit : in out natural32; max : in natural32;
+                 fail : out boolean ) is
+
+    n : constant integer32 := p_eval'length;
+    jacobian : Matrix(1..n,1..n);
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    y,deltax : Vector(1..n);
+    tmp : Floating_Number;
+
+  begin
+    y := Eval(p_eval,zero.v);              -- y = f(zero)
+    for i in 1..max loop
+      jacobian := Eval(j_eval,zero.v);     -- solve jacobian*deltax = -f(zero)
+      lufac(jacobian,n,ipvt,info);
+      if info /= 0 then
+        tmp := Sum_Norm(y);
+        fail := (tmp > epsfa);             -- accuracy not reached yet
+        Clear(tmp);
+        Clear(jacobian); Clear(y);
+        return;
+      end if;
+      deltax := -y; Clear(y);
+      lusolve(jacobian,n,ipvt,deltax);  
+      Add(zero.v,deltax);                  -- make the updates
+      y := Eval(p_eval,zero.v);
+      Clear(zero.err);              Clear(zero.res);
+      zero.err := Sum_Norm(deltax); zero.res := Sum_Norm(y);
+      Clear(deltax); Clear(jacobian);
+      numit := numit + 1;
+      put(file,"Step "); put(file,numit,4); new_line(file);      -- output
+      put(file," |errxa| : "); put(file,zero.err); new_line(file);
+      put(file," |errfa| : "); put(file,zero.res); new_line(file);
+      if ( zero.err < epsxa ) or else ( zero.res < epsfa ) then
+        fail := false; exit;                          -- stopping criteria
+      elsif numit >= max then
+        fail := true; exit;
+      end if;
+    end loop;
+    Clear(y);
+    jacobian := Eval(j_eval,zero.v);              -- compute condition number
+    lufco(jacobian,n,ipvt,zero.rco);
+    Clear(jacobian);
+  exception
+    when constraint_error => fail := true; return;
+  end Reporting_Newton;
+
+  procedure Reporting_Newton
+               ( file : in file_type; p_eval : in Eval_Laur_Sys;
+                 j_eval : in Multprec_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                 zero : in out Solution; epsxa,epsfa : in Floating_Number; 
+                 numit : in out natural32; max : in natural32;
+                 fail : out boolean ) is
+
+    n : constant integer32 := p_eval'length;
+    jacobian : Matrix(1..n,1..n);
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    y,deltax : Vector(1..n);
+    tmp : Floating_Number;
+
+    use Multprec_Complex_Laur_JacoMats;
 
   begin
     y := Eval(p_eval,zero.v);              -- y = f(zero)
