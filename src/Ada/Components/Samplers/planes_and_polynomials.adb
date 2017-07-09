@@ -7,6 +7,7 @@ with QuadDobl_Complex_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Complex_Numbers;           use Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Integer_Vectors;
 
 package body Planes_and_Polynomials is
 
@@ -336,6 +337,33 @@ package body Planes_and_Polynomials is
 
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..cff'last => 0);
+    if not Equal(cff(0),zero) then
+      Copy(cff(0),t.cf);
+      Add(res,t);
+    end if;
+    for i in 1..cff'last loop
+      if not Equal(cff(i),zero) then
+        t.dg(i) := 1;
+        Copy(cff(i),t.cf);
+        Add(res,t);
+        t.dg(i) := 0;
+      end if;
+    end loop;
+    Clear(t);
+    Clear(zero);
+    return res;
+  end Hyperplane;
+
+  function Hyperplane ( cff : Multprec_Complex_Vectors.Vector )
+                      return Multprec_Complex_Laurentials.Poly is
+
+    use Multprec_Complex_Laurentials;
+    res : Poly := Null_Poly;
+    t : Term;
+    zero : Multprec_Complex_Numbers.Complex_Number := Create(integer(0));
+
+  begin
+    t.dg := new Standard_Integer_Vectors.Vector'(1..cff'last => 0);
     if not Equal(cff(0),zero) then
       Copy(cff(0),t.cf);
       Add(res,t);

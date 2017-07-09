@@ -15,6 +15,7 @@ with DoblDobl_Complex_Laurentials;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Laurentials;
 with Multprec_Complex_Polynomials;
+with Multprec_Complex_Laurentials;
 with Multprec_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with Multprec_Complex_Solutions;
@@ -45,6 +46,8 @@ package Planes_and_Polynomials is
                       return DoblDobl_Complex_Laurentials.Poly;
   function Hyperplane ( cff : QuadDobl_Complex_Vectors.Vector )
                       return QuadDobl_Complex_Laurentials.Poly;
+  function Hyperplane ( cff : Multprec_Complex_Vectors.Vector )
+                      return Multprec_Complex_Laurentials.Poly;
 
   -- DESCRIPTION :
   --   Returns the representation of the hyperplane
