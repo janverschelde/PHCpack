@@ -1,5 +1,6 @@
 Sat 8 Jul 2017 : added operations on Laurent polynomials and systems in
-  standard_to_multprec_convertors.
+  standard_to_multprec_convertors.  Added a shallow_clear procedure
+  to generic_laur_poly_systems.
 
 Fri 30 Jun 2017 : fixed memory leak in parse_dimensions.adb.
 

@@ -58,5 +58,10 @@ package Generic_Laur_Poly_Systems is
 
   procedure Clear ( p : in out Laur_Sys );
   procedure Clear ( p : in out Link_to_Laur_Sys );
+  procedure Shallow_Clear ( p : in out Link_to_Laur_Sys );
+
+  -- DESCRIPTION :
+  --   Deallocation of memory, a shallow clear only releases the pointer
+  --   to the system; the system is not destroyed.
 
 end Generic_Laur_Poly_Systems;

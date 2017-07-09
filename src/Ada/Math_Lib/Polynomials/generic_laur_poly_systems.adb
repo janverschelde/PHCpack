@@ -150,15 +150,19 @@ package body Generic_Laur_Poly_Systems is
     end loop;
   end Clear;
 
+  procedure free is new unchecked_deallocation(Laur_Sys,Link_to_Laur_Sys);
+
   procedure Clear ( p : in out Link_to_Laur_Sys ) is
-
-    procedure free is new unchecked_deallocation(Laur_Sys,Link_to_Laur_Sys);
-
   begin
     if p /= null
      then Clear(p.all);
     end if;
     free(p);
   end Clear;
+
+  procedure Shallow_Clear ( p : in out Link_to_Laur_Sys ) is
+  begin
+    free(p);
+  end Shallow_Clear;
 
 end Generic_Laur_Poly_Systems;
