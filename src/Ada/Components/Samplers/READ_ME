@@ -81,6 +81,7 @@ sample_point_grids                : grids are lists of sampled point lists
 sample_point_grids_io             : input-output for sampled point grids
 ts_sample                         : interactive testing facility for sampler
 ------------------------------------------------------------------------------
+sampling_laurent_machine          : sampling on Laurent polynomial systems
 dobldobl_sampling_machine         : sampling in double double precision
 quaddobl_sampling_machine         : sampling in quad double precision
 dobldobl_sample_points            : sampled points in double double precision

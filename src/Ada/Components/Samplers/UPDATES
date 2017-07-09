@@ -1,5 +1,7 @@
 Sat 8 Jul 2017 : added function to planes_and_polynomials to represent a
   linear polynomial with multiprecision coefficients as a Laurent polynomial.
+  Added package Sampling_Laurent_Machine to sample points on solution sets
+  of Laurent polynomial systems.
   
 Sun 25 Jun 2017 : extended witness_sets and witness_sets_io with operations
   to represent witness sets for Laurent systems.
