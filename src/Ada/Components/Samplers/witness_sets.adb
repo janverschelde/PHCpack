@@ -1399,6 +1399,19 @@ package body Witness_Sets is
     return res;
   end Slices;
 
+  function Slices ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                    k : natural32 ) return Standard_Complex_VecVecs.VecVec is
+
+    res : Standard_Complex_VecVecs.VecVec(1..integer32(k));
+
+  begin
+    for i in res'range loop
+      res(i) := new Standard_Complex_Vectors.Vector'
+                      (Polynomial(p(p'last-integer32(k)+i)));
+    end loop;
+    return res;
+  end Slices;
+
   function Slices ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     k : natural32 ) return DoblDobl_Complex_VecVecs.VecVec is
 
@@ -1412,7 +1425,33 @@ package body Witness_Sets is
     return res;
   end Slices;
 
+  function Slices ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    k : natural32 ) return DoblDobl_Complex_VecVecs.VecVec is
+
+    res : DoblDobl_Complex_VecVecs.VecVec(1..integer32(k));
+
+  begin
+    for i in res'range loop
+      res(i) := new DoblDobl_Complex_Vectors.Vector'
+                      (Polynomial(p(p'last-integer32(k)+i)));
+    end loop;
+    return res;
+  end Slices;
+
   function Slices ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    k : natural32 ) return QuadDobl_Complex_VecVecs.VecVec is
+
+    res : QuadDobl_Complex_VecVecs.VecVec(1..integer32(k));
+
+  begin
+    for i in res'range loop
+      res(i) := new QuadDobl_Complex_Vectors.Vector'
+                      (Polynomial(p(p'last-integer32(k)+i)));
+    end loop;
+    return res;
+  end Slices;
+
+  function Slices ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     k : natural32 ) return QuadDobl_Complex_VecVecs.VecVec is
 
     res : QuadDobl_Complex_VecVecs.VecVec(1..integer32(k));

@@ -317,9 +317,15 @@ package Witness_Sets is
 
   function Slices ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                     k : natural32 ) return Standard_Complex_VecVecs.VecVec;
+  function Slices ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                    k : natural32 ) return Standard_Complex_VecVecs.VecVec;
   function Slices ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     k : natural32 ) return DoblDobl_Complex_VecVecs.VecVec;
+  function Slices ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    k : natural32 ) return DoblDobl_Complex_VecVecs.VecVec;
   function Slices ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    k : natural32 ) return QuadDobl_Complex_VecVecs.VecVec;
+  function Slices ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     k : natural32 ) return QuadDobl_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :

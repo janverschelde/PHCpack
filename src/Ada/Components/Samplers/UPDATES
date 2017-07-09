@@ -1,6 +1,7 @@
 Sun 9 Jul 2017 : new packages {dobldobl,quaddobl}_sampling_laurent_machine
   to work with witness sets for Laurent polynomial systems in double double
-  and quad double precision.
+  and quad double precision.  For Laurent systems, extended the packages
+  planes_and_polynomials and witness_sets.
 
 Sat 8 Jul 2017 : added function to planes_and_polynomials to represent a
   linear polynomial with multiprecision coefficients as a Laurent polynomial.

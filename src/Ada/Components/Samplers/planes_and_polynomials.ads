@@ -68,11 +68,19 @@ package Planes_and_Polynomials is
 
   function Polynomial ( p : Standard_Complex_Polynomials.Poly )
                       return Standard_Complex_Vectors.Vector;
+  function Polynomial ( p : Standard_Complex_Laurentials.Poly )
+                      return Standard_Complex_Vectors.Vector;
   function Polynomial ( p : DoblDobl_Complex_Polynomials.Poly )
+                      return DoblDobl_Complex_Vectors.Vector;
+  function Polynomial ( p : DoblDobl_Complex_Laurentials.Poly )
                       return DoblDobl_Complex_Vectors.Vector;
   function Polynomial ( p : QuadDobl_Complex_Polynomials.Poly )
                       return QuadDobl_Complex_Vectors.Vector;
+  function Polynomial ( p : QuadDobl_Complex_Laurentials.Poly )
+                      return QuadDobl_Complex_Vectors.Vector;
   function Polynomial ( p : Multprec_Complex_Polynomials.Poly )
+                      return Multprec_Complex_Vectors.Vector;
+  function Polynomial ( p : Multprec_Complex_Laurentials.Poly )
                       return Multprec_Complex_Vectors.Vector;
 
   -- DESCRIPTION :

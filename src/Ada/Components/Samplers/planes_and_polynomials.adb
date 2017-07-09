@@ -443,10 +443,74 @@ package body Planes_and_Polynomials is
     return res;
   end Polynomial;
 
+  function Polynomial ( p : Standard_Complex_Laurentials.Poly )
+                      return Standard_Complex_Vectors.Vector is
+
+    use Standard_Complex_Laurentials;
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    res : Standard_Complex_Vectors.Vector(0..n) := (0..n => Create(0.0));
+
+    procedure Scan_Term ( t : in Term; continue : out boolean ) is
+
+      found : boolean := false;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) = 1 then
+          res(i) := t.cf;
+          found := true;
+        end if;
+        exit when found;
+      end loop;
+      if not found
+       then res(0) := t.cf;
+      end if;     
+      continue := true;
+    end Scan_Term;
+    procedure Scan_Terms is new Visiting_Iterator(Scan_Term);
+
+  begin
+    Scan_Terms(p);
+    return res;
+  end Polynomial;
+
   function Polynomial ( p : DoblDobl_Complex_Polynomials.Poly )
                       return DoblDobl_Complex_Vectors.Vector is
 
     use DoblDobl_Complex_Polynomials;
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    ddzero : constant double_double := Double_Double_Numbers.Create(0.0);
+    res : DoblDobl_Complex_Vectors.Vector(0..n)
+        := (0..n => DoblDobl_Complex_Numbers.Create(ddzero));
+
+    procedure Scan_Term ( t : in Term; continue : out boolean ) is
+
+      found : boolean := false;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) = 1 then
+          res(i) := t.cf;
+          found := true;
+        end if;
+        exit when found;
+      end loop;
+      if not found
+       then res(0) := t.cf;
+      end if;     
+      continue := true;
+    end Scan_Term;
+    procedure Scan_Terms is new Visiting_Iterator(Scan_Term);
+
+  begin
+    Scan_Terms(p);
+    return res;
+  end Polynomial;
+
+  function Polynomial ( p : DoblDobl_Complex_Laurentials.Poly )
+                      return DoblDobl_Complex_Vectors.Vector is
+
+    use DoblDobl_Complex_Laurentials;
     n : constant integer32 := integer32(Number_of_Unknowns(p));
     ddzero : constant double_double := Double_Double_Numbers.Create(0.0);
     res : DoblDobl_Complex_Vectors.Vector(0..n)
@@ -509,10 +573,74 @@ package body Planes_and_Polynomials is
     return res;
   end Polynomial;
 
+  function Polynomial ( p : QuadDobl_Complex_Laurentials.Poly )
+                      return QuadDobl_Complex_Vectors.Vector is
+
+    use QuadDobl_Complex_Laurentials;
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    qdzero : constant quad_double := Quad_Double_Numbers.Create(0.0);
+    res : QuadDobl_Complex_Vectors.Vector(0..n)
+        := (0..n => QuadDobl_Complex_Numbers.Create(qdzero));
+
+    procedure Scan_Term ( t : in Term; continue : out boolean ) is
+
+      found : boolean := false;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) = 1 then
+          res(i) := t.cf;
+          found := true;
+        end if;
+        exit when found;
+      end loop;
+      if not found
+       then res(0) := t.cf;
+      end if;     
+      continue := true;
+    end Scan_Term;
+    procedure Scan_Terms is new Visiting_Iterator(Scan_Term);
+
+  begin
+    Scan_Terms(p);
+    return res;
+  end Polynomial;
+
   function Polynomial ( p : Multprec_Complex_Polynomials.Poly )
                       return Multprec_Complex_Vectors.Vector is
 
     use Multprec_Complex_Polynomials;
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    res : Multprec_Complex_Vectors.Vector(0..n) := (0..n => Create(integer(0)));
+
+    procedure Scan_Term ( t : in Term; continue : out boolean ) is
+
+      found : boolean := false;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) = 1 then
+          Copy(t.cf,res(i));
+          found := true;
+        end if;
+        exit when found;
+      end loop;
+      if not found
+       then Copy(t.cf,res(0));
+      end if;     
+      continue := true;
+    end Scan_Term;
+    procedure Scan_Terms is new Visiting_Iterator(Scan_Term);
+
+  begin
+    Scan_Terms(p);
+    return res;
+  end Polynomial;
+
+  function Polynomial ( p : Multprec_Complex_Laurentials.Poly )
+                      return Multprec_Complex_Vectors.Vector is
+
+    use Multprec_Complex_Laurentials;
     n : constant integer32 := integer32(Number_of_Unknowns(p));
     res : Multprec_Complex_Vectors.Vector(0..n) := (0..n => Create(integer(0)));
 
