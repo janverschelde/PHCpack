@@ -2847,6 +2847,16 @@ function use_c2phc ( job : integer32;
       when 795 => return use_c2mbt(3,a,b,c); -- Laurent standard membership
       when 796 => return use_c2mbt(4,a,b,c); -- Laurent dobldobl membership
       when 797 => return use_c2mbt(5,a,b,c); -- Laurent quaddobl membership
+     -- read a witness set defined by a Laurent polynomial system
+      when 798 => return use_c2fac(91,a,b,c); -- read standard Laurent witset
+      when 799 => return use_c2fac(92,a,b,c); -- read dobldobl Laurent witset
+      when 800 => return use_c2fac(93,a,b,c); -- read quaddobl Laurent witset
+      when 801 =>
+        return use_c2fac(94,a,b,c); -- read standard Laurent witset from file
+      when 802 =>
+        return use_c2fac(95,a,b,c); -- read dobldobl Laurent witset from file
+      when 803 =>
+        return use_c2fac(96,a,b,c); -- read quaddobl Laurent witset from file
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

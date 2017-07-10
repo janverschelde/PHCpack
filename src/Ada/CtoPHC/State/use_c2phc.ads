@@ -775,6 +775,63 @@ function use_c2phc ( job : integer32;
 --                 generated in quad double precision;
 --   job   = 690 : makes the factorization with quad doubles go verbose.
 --
+-- READING WITNESS SETS DEFINED BY LAURENT SYSTEMS :
+--
+--   job   = 798 : prompts for a witness set in standard double precision,
+--                 defined by a Laurent polynomial system, stores the
+--                 system in the standard Laurent systems container,
+--                 and its solutions in the standard solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--         = 799 : prompts for a witness set in double double precision,
+--                 defined by a Laurent polynomial system, stores the
+--                 system in the dobldobl Laurent systems container,
+--                 and its solutions in the dobldobl solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--         = 800 : prompts for a witness set in quad double precision,
+--                 defined by a Laurent polynomial system, stores the
+--                 system in the quaddobl Laurent systems container,
+--                 and its solutions in the quaddobl solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--         = 801 : reads a witness set defined by a Laurent system
+--                 in standard double precision from file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 stores the system in the Laurent systems container,
+--                 and its solutions in the solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set;
+--         = 802 : reads a witness set defined by a Laurent system
+--                 in double double precision from file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 stores the system in the Laurent systems container,
+--                 and its solutions in the solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set;
+--         = 803 : reads a witness set defined by a Laurent system
+--                 in quad double precision from file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 stores the system in the Laurent systems container,
+--                 and its solutions in the solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--
 -- POWER SERIES NEWTON METHOD :
 --
 --   Before calling the jobs, the systems and solutions containers

@@ -105,7 +105,7 @@ function use_c2fac ( job : integer32;
 --                 generated in standard double precision.
 --   job    = 30 : makes the factorization with standard doubles go verbose.
 --
--- ANALOGUE OPERATIONS FOR DOUBLE DOUBLE AND QUAD DOUBLE PRECISION :
+-- ANALOGUE OPERATIONS FOR DOUBLE DOUBLE PRECISION :
 --
 --   job    = 31 : prompts for a witness set in double double precision
 --                 stores the system in the dobldobl systems container,
@@ -189,7 +189,9 @@ function use_c2fac ( job : integer32;
 --                 generated in double double precision;
 --   job    = 60 : makes the factorization with double doubles go verbose.
 --
---   job    = 61 : prompts for a witness set in quad double precision
+-- ANALOGUE OPERATIONS FOR QUAD DOUBLE PRECISION :
+--
+--   job    = 61 : prompts for a witness set in quad double precision,
 --                 stores the system in the quaddobl systems container,
 --                 and its solutions in the quaddobl solutions container,
 --                 and returns in a the dimension of the ambient space
@@ -270,6 +272,63 @@ function use_c2fac ( job : integer32;
 --                 a randomly generated complex number of modulus one,
 --                 generated in quad double precision;
 --   job    = 90 : makes the factorization with quad doubles go verbose.
+--
+-- ANALOGUE OPERATIONS FOR WITNESS SETS DEFINED BY LAURENT SYSTEMS :
+--
+--   job    = 91 : prompts for a witness set in standard double precision,
+--                 defined by a Laurent polynomial system, stores the
+--                 system in the standard Laurent systems container,
+--                 and its solutions in the standard solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--          = 92 : prompts for a witness set in double double precision,
+--                 defined by a Laurent polynomial system, stores the
+--                 system in the dobldobl Laurent systems container,
+--                 and its solutions in the dobldobl solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--          = 93 : prompts for a witness set in quad double precision,
+--                 defined by a Laurent polynomial system, stores the
+--                 system in the quaddobl Laurent systems container,
+--                 and its solutions in the quaddobl solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--          = 94 : reads a witness set defined by a Laurent system
+--                 in standard double precision from file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 stores the system in the Laurent systems container,
+--                 and its solutions in the solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set;
+--          = 95 : reads a witness set defined by a Laurent system
+--                 in double double precision from file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 stores the system in the Laurent systems container,
+--                 and its solutions in the solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set;
+--          = 96 : reads a witness set defined by a Laurent system
+--                 in quad double precision from file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 stores the system in the Laurent systems container,
+--                 and its solutions in the solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set;
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
