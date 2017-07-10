@@ -18,20 +18,29 @@ with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Sampling_Machine;
+with Sampling_Laurent_Machine;
 with DoblDobl_Sampling_Machine;
+with DoblDobl_Sampling_Laurent_Machine;
 with QuadDobl_Sampling_Machine;
+with QuadDobl_Sampling_Laurent_Machine;
 with Witness_Sets;
 with Homotopy_Membership_Tests;         use Homotopy_Membership_Tests;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
+with Laurent_Systems_Container;
 with DoblDobl_PolySys_Container;
+with DoblDobl_LaurSys_Container;
 with QuadDobl_PolySys_Container;
+with QuadDobl_LaurSys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
 with QuadDobl_Solutions_Container;
@@ -299,12 +308,108 @@ function use_c2mbt ( job : integer32;
     return 0;
   end Job2;
 
+  function Job3 return integer32 is -- Laurent standard double membership test
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+
+    verbose,onp,inw : boolean;
+    nbr,dim : integer32;
+    restol,homtol : double_float;
+    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
+
+  begin
+    Sampling_Laurent_Machine.Initialize(lp.all);
+    Sampling_Laurent_Machine.Default_Tune_Sampler(2);
+    Sampling_Laurent_Machine.Default_Tune_Refiner;
+    Get_Input_Parameters(verbose,nbr,dim);
+    declare
+      tpt : Standard_Complex_Vectors.Vector(1..nbr);
+      sli : Standard_Complex_VecVecs.VecVec(1..dim)
+          := Witness_Sets.Slices(lp.all,natural32(dim));
+    begin
+      Get_Standard_Input_Values(nbr,restol,homtol,tpt);
+      Homotopy_Membership_Test
+        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      Standard_Complex_VecVecs.Clear(sli);
+    end;
+    Assign_Results(onp,inw);
+    Sampling_Laurent_Machine.Clear;
+    return 0;
+  end Job3;
+
+  function Job4 return integer32 is -- Laurent double double membership test
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    verbose,onp,inw : boolean;
+    nbr,dim : integer32;
+    restol,homtol : double_float;
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+
+  begin
+    DoblDobl_Sampling_Laurent_Machine.Initialize(lp.all);
+    DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
+    DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
+    Get_Input_Parameters(verbose,nbr,dim);
+    declare
+      tpt : DoblDobl_Complex_Vectors.Vector(1..nbr);
+      sli : DoblDobl_Complex_VecVecs.VecVec(1..dim)
+          := Witness_Sets.Slices(lp.all,natural32(dim));
+    begin
+      Get_DoblDobl_Input_Values(nbr,restol,homtol,tpt);
+      Homotopy_Membership_Test
+        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      DoblDobl_Complex_VecVecs.Clear(sli);
+    end;
+    Assign_Results(onp,inw);
+    DoblDobl_Sampling_Laurent_Machine.Clear;
+    return 0;
+  end Job4;
+
+  function Job5 return integer32 is -- Laurent quad double membership test
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    verbose,onp,inw : boolean;
+    nbr,dim : integer32;
+    restol,homtol : double_float;
+    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    QuadDobl_Sampling_Laurent_Machine.Initialize(lp.all);
+    QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
+    QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
+    Get_Input_Parameters(verbose,nbr,dim);
+    declare
+      tpt : QuadDobl_Complex_Vectors.Vector(1..nbr);
+      sli : QuadDobl_Complex_VecVecs.VecVec(1..dim)
+          := Witness_Sets.Slices(lp.all,natural32(dim));
+    begin
+      Get_QuadDobl_Input_Values(nbr,restol,homtol,tpt);
+      Homotopy_Membership_Test
+        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      QuadDobl_Complex_VecVecs.Clear(sli);
+    end;
+    Assign_Results(onp,inw);
+    QuadDobl_Sampling_Laurent_Machine.Clear;
+    return 0;
+  end Job5;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
       when 0 => return Job0; -- run membership test with standard doubles
       when 1 => return Job1; -- run membership test with double doubles
       when 2 => return Job2; -- run membership test with quad doubles
+      when 3 => return Job3; -- Laurent membership test with standard doubles
+      when 4 => return Job4; -- Laurent membership test with double doubles
+      when 5 => return Job5; -- Laurent membership test with quad doubles
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;

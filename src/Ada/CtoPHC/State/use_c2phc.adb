@@ -2843,6 +2843,10 @@ function use_c2phc ( job : integer32;
         PHCpack_Operations.Create_DoblDobl_Laurent_Homotopy; return 0;
       when 794 =>
         PHCpack_Operations.Create_QuadDobl_Laurent_Homotopy; return 0;
+     -- homotopy membership tests on Laurent systems
+      when 795 => return use_c2mbt(3,a,b,c); -- Laurent standard membership
+      when 796 => return use_c2mbt(4,a,b,c); -- Laurent dobldobl membership
+      when 797 => return use_c2mbt(5,a,b,c); -- Laurent quaddobl membership
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
