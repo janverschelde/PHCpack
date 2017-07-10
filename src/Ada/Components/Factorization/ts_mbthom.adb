@@ -297,7 +297,10 @@ procedure ts_mbthom is
       Read(sols);
     else
       put_line("Computing a random point on the solution set ...");
-      sols := Standard_Random_Point(file,lp.all,genpts,dim);
+      if out2file
+       then sols := Standard_Random_Point(file,lp.all,genpts,dim);
+       else sols := Standard_Random_Point(standard_output,lp.all,genpts,dim);
+      end if;
     end if;
     new_line;
     put_line("See the output file for results...");
@@ -347,7 +350,10 @@ procedure ts_mbthom is
       Read(sols);
     else
       put_line("Computing a random point on the solution set ...");
-      sols := DoblDobl_Random_Point(file,lp.all,genpts,dim);
+      if out2file
+       then sols := DoblDobl_Random_Point(file,lp.all,genpts,dim);
+       else sols := DoblDobl_Random_Point(standard_output,lp.all,genpts,dim);
+      end if;
     end if;
     new_line;
     put_line("See the output file for results...");
@@ -397,7 +403,10 @@ procedure ts_mbthom is
       Read(sols);
     else
       put_line("Computing a random point on the solution set ...");
-      sols := QuadDobl_Random_Point(file,lp.all,genpts,dim);
+      if out2file
+       then sols := QuadDobl_Random_Point(file,lp.all,genpts,dim);
+       else sols := QuadDobl_Random_Point(standard_output,lp.all,genpts,dim);
+      end if;
     end if;
     new_line;
     put_line("See the output file for results...");
@@ -447,7 +456,10 @@ procedure ts_mbthom is
       Read(sols);
     else
       put_line("Computing a random point on the solution set ...");
-      sols := Standard_Random_Point(file,lp.all,genpts,dim);
+      if out2file
+       then sols := Standard_Random_Point(file,lp.all,genpts,dim);
+       else sols := Standard_Random_Point(standard_output,lp.all,genpts,dim);
+      end if;
     end if;
     new_line;
     put_line("See the output file for results...");
@@ -497,7 +509,10 @@ procedure ts_mbthom is
       Read(sols);
     else
       put_line("Computing a random point on the solution set ...");
-      sols := DoblDobl_Random_Point(file,lp.all,genpts,dim);
+      if out2file
+       then sols := DoblDobl_Random_Point(file,lp.all,genpts,dim);
+       else sols := DoblDobl_Random_Point(standard_output,lp.all,genpts,dim);
+      end if;
     end if;
     new_line;
     put_line("See the output file for results...");
@@ -547,7 +562,10 @@ procedure ts_mbthom is
       Read(sols);
     else
       put_line("Computing a random point on the solution set ...");
-      sols := QuadDobl_Random_Point(file,lp.all,genpts,dim);
+      if out2file
+       then sols := QuadDobl_Random_Point(file,lp.all,genpts,dim);
+       else sols := QuadDobl_Random_Point(standard_output,lp.all,genpts,dim);
+      end if;
     end if;
     new_line;
     put_line("See the output file for results...");
