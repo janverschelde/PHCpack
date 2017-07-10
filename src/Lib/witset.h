@@ -1033,8 +1033,8 @@ int standard_homotopy_membership_test
    double *tpt, int *onsys, int *onset );
 /*
  * DESCRIPTION :
- *   Runs the homotopy membership test for a point to belong to a
- *   witness set in standard double precision.
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by an ordinary polynomial system in standard double precision.
  *
  * REQUIRED : the containers in standard double precision contain the
  *   embedded system and the corresponding generic points.
@@ -1060,8 +1060,8 @@ int dobldobl_homotopy_membership_test
    double *tpt, int *onsys, int *onset );
 /*
  * DESCRIPTION :
- *   Runs the homotopy membership test for a point to belong to a
- *   witness set in double double precision.
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by an ordinary polynomial system in double double precision.
  *
  * REQUIRED : the containers in double double precision contain the
  *   embedded system and the corresponding generic points.
@@ -1087,8 +1087,89 @@ int quaddobl_homotopy_membership_test
    double *tpt, int *onsys, int *onset );
 /*
  * DESCRIPTION :
- *   Runs the homotopy membership test for a point to belong to a
- *   witness set in quad double precision.
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by an ordinary polynomial system in quad double precision.
+ *
+ * REQUIRED : the containers in quad double precision contain the
+ *   embedded system and the corresponding generic points.
+ *
+ * ON ENTRY :
+ *   vrb      1 if extra diagnostic output needs to be written to screen,
+ *            0 if the test needs to happen in silence;
+ *   nvr      number of variables, the ambient dimension;
+ *   dim      the dimension of the witness set.
+ *   restol   tolerance on the residual for evaluating the test point;
+ *   homtol   tolerance to compare points in the membership test;
+ *   tpt      coordinates of the test point, the 8*nvr doubles store
+ *            the real and imaginary parts of every coordinate.
+ *
+ * ON RETURN :
+ *   onsys    1 if the test point satisfies the equation within restol,
+ *            0 if the residual evaluates to a value larger than restol;
+ *   onset    1 if the test point within homtol satisfies the test,
+ *            0 if all new witness points are distinct from the test point. */
+
+int standard_Laurent_homotopy_membership_test
+ ( int vrb, int nvr, int dim, double restol, double homtol,
+   double *tpt, int *onsys, int *onset );
+/*
+ * DESCRIPTION :
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by a Laurent polynomial system in standard double precision.
+ *
+ * REQUIRED : the containers in standard double precision contain the
+ *   embedded system and the corresponding generic points.
+ *
+ * ON ENTRY :
+ *   vrb      1 if extra diagnostic output needs to be written to screen,
+ *            0 if the test needs to happen in silence;
+ *   nvr      number of variables, the ambient dimension;
+ *   dim      the dimension of the witness set.
+ *   restol   tolerance on the residual for evaluating the test point;
+ *   homtol   tolerance to compare points in the membership test;
+ *   tpt      coordinates of the test point, the 2*nvr doubles store
+ *            the real and imaginary parts of every coordinate.
+ *
+ * ON RETURN :
+ *   onsys    1 if the test point satisfies the equation within restol,
+ *            0 if the residual evaluates to a value larger than restol;
+ *   onset    1 if the test point within homtol satisfies the test,
+ *            0 if all new witness points are distinct from the test point. */
+
+int dobldobl_Laurent_homotopy_membership_test
+ ( int vrb, int nvr, int dim, double restol, double homtol,
+   double *tpt, int *onsys, int *onset );
+/*
+ * DESCRIPTION :
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by a Laurent polynomial system in double double precision.
+ *
+ * REQUIRED : the containers in double double precision contain the
+ *   embedded system and the corresponding generic points.
+ *
+ * ON ENTRY :
+ *   vrb      1 if extra diagnostic output needs to be written to screen,
+ *            0 if the test needs to happen in silence;
+ *   nvr      number of variables, the ambient dimension;
+ *   dim      the dimension of the witness set.
+ *   restol   tolerance on the residual for evaluating the test point;
+ *   homtol   tolerance to compare points in the membership test;
+ *   tpt      coordinates of the test point, the 4*nvr doubles store
+ *            the real and imaginary parts of every coordinate.
+ *
+ * ON RETURN :
+ *   onsys    1 if the test point satisfies the equation within restol,
+ *            0 if the residual evaluates to a value larger than restol;
+ *   onset    1 if the test point within homtol satisfies the test,
+ *            0 if all new witness points are distinct from the test point. */
+
+int quaddobl_Laurent_homotopy_membership_test
+ ( int vrb, int nvr, int dim, double restol, double homtol,
+   double *tpt, int *onsys, int *onset );
+/*
+ * DESCRIPTION :
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by a Laurent polynomial system in quad double precision.
  *
  * REQUIRED : the containers in quad double precision contain the
  *   embedded system and the corresponding generic points.

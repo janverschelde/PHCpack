@@ -1473,3 +1473,72 @@ int quaddobl_homotopy_membership_test
 
    return fail;
 }
+
+int standard_Laurent_homotopy_membership_test
+ ( int vrb, int nvr, int dim, double restol, double homtol,
+   double *tpt, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[2];
+   double cffs[2+2*nvr];
+
+   dims[0] = nvr;
+   dims[1] = dim;
+   cffs[0] = restol;
+   cffs[1] = homtol;
+   idx = 2;
+   for(k=0; k<2*nvr; k++) cffs[idx++] = tpt[k];
+
+   fail = _ada_use_c2phc(795,&vrb,dims,cffs);
+
+   *onsys = vrb;
+   *onset = dims[0];
+
+   return fail;
+}
+
+int dobldobl_Laurent_homotopy_membership_test
+ ( int vrb, int nvr, int dim, double restol, double homtol,
+   double *tpt, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[2];
+   double cffs[2+4*nvr];
+
+   dims[0] = nvr;
+   dims[1] = dim;
+   cffs[0] = restol;
+   cffs[1] = homtol;
+   idx = 2;
+   for(k=0; k<4*nvr; k++) cffs[idx++] = tpt[k];
+
+   fail = _ada_use_c2phc(796,&vrb,dims,cffs);
+
+   *onsys = vrb;
+   *onset = dims[0];
+
+   return fail;
+}
+
+int quaddobl_Laurent_homotopy_membership_test
+ ( int vrb, int nvr, int dim, double restol, double homtol,
+   double *tpt, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[2];
+   double cffs[2+8*nvr];
+
+   dims[0] = nvr;
+   dims[1] = dim;
+   cffs[0] = restol;
+   cffs[1] = homtol;
+   idx = 2;
+   for(k=0; k<8*nvr; k++) cffs[idx++] = tpt[k];
+
+   fail = _ada_use_c2phc(797,&vrb,dims,cffs);
+
+   *onsys = vrb;
+   *onset = dims[0];
+
+   return fail;
+}

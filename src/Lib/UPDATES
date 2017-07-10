@@ -1,3 +1,6 @@
+Mon 10 Jul 2017 : extended witset with homotopy membership tests for
+  witness sets defined by Laurent polynomial systems.
+
 Fri 7 Jul 2017 : updated witset.h with definitions of the Laurent cascade
   homotopies.  To phcpack, added functions to define Laurent homotopies.
 
