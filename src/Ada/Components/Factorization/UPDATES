@@ -1,5 +1,6 @@
 Sun 9 Jul 2017 : refactored code in homotopy_membership_tests and extended
   to Laurent systems, tested by ts_mbthom.  Fixed a bug in ts_mbthom.
+  Bug fix in homotopy_membership_tests.adb.
 
 Wed 28 Jun 2017 : added writing of seed and version number to mainfac.adb
   for reproducible homotopy memberhip test and monodromy.

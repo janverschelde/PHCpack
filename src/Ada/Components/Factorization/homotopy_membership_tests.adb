@@ -908,7 +908,7 @@ package body Homotopy_Membership_Tests is
         put(restol,3); new_line;
       end if;
       newsli := Adjusted_Slices(sli,ex);
-      Homotopy_Membership_Test(verbose,genpts,ex,newsli,homtol,found);
+      Laurent_Homotopy_Membership_Test(verbose,genpts,ex,newsli,homtol,found);
     else
       success := false;
       if verbose then
@@ -951,7 +951,7 @@ package body Homotopy_Membership_Tests is
         put(restol,3); new_line;
       end if;
       newsli := Adjusted_Slices(sli,ex);
-      Homotopy_Membership_Test(verbose,genpts,ex,newsli,homtol,found);
+      Laurent_Homotopy_Membership_Test(verbose,genpts,ex,newsli,homtol,found);
     else
       success := false;
       if verbose then
@@ -994,7 +994,7 @@ package body Homotopy_Membership_Tests is
         put(restol,3); new_line;
       end if;
       newsli := Adjusted_Slices(sli,ex);
-      Homotopy_Membership_Test(verbose,genpts,ex,newsli,homtol,found);
+      Laurent_Homotopy_Membership_Test(verbose,genpts,ex,newsli,homtol,found);
     else
       success := false;
       if verbose then
@@ -1166,7 +1166,7 @@ package body Homotopy_Membership_Tests is
      --   eva := newsli(i)(0) + newsli(i)(es.v'range)*es.v;
      --   put(file,eva); new_line(file);
      -- end loop;
-      Homotopy_Membership_Test(file,genpts,es.v,newsli,homtol,found);
+      Laurent_Homotopy_Membership_Test(file,genpts,es.v,newsli,homtol,found);
     else
       put(file,"  point does not lie on the component, as residual >");
       put(file,restol,3); new_line(file);
@@ -1209,7 +1209,7 @@ package body Homotopy_Membership_Tests is
      --   eva := newsli(i)(0) + newsli(i)(es.v'range)*es.v;
      --   put(file,eva); new_line(file);
      -- end loop;
-      Homotopy_Membership_Test(file,genpts,es.v,newsli,homtol,found);
+      Laurent_Homotopy_Membership_Test(file,genpts,es.v,newsli,homtol,found);
     else
       put(file,"  point does not lie on the component, as residual >");
       put(file,restol,3); new_line(file);
@@ -1252,7 +1252,7 @@ package body Homotopy_Membership_Tests is
      --   eva := newsli(i)(0) + newsli(i)(es.v'range)*es.v;
      --   put(file,eva); new_line(file);
      -- end loop;
-      Homotopy_Membership_Test(file,genpts,es.v,newsli,homtol,found);
+      Laurent_Homotopy_Membership_Test(file,genpts,es.v,newsli,homtol,found);
     else
       put(file,"  point does not lie on the component, as residual >");
       put(file,restol,3); new_line(file);
