@@ -150,6 +150,105 @@ int read_quaddobl_witness_set_from_file
  *   dim      dimension of the solution set;
  *   deg      degree of the solution set. */
 
+int read_standard_Laurent_witness_set ( int *n, int *dim, int *deg );
+/*
+ * DESCRIPTION :
+ *   The user is prompted to give an embedded Laurent system with solutions,
+ *   which will be parsed into standard double precision.
+ *   If all goes well, on return, the standard systems container
+ *   holds an embedded system with corresponding solutions in the
+ *   standard solutions container.
+ *
+ * ON RETURN :
+ *   n        ambient dimension, i.e.: total number of variables;
+ *   dim      dimension of the solution set;
+ *   deg      degree of the solution set.  */
+
+int read_dobldobl_Laurent_witness_set ( int *n, int *dim, int *deg );
+/*
+ * DESCRIPTION :
+ *   The user is prompted to give an embedded Laurent system with solutions,
+ *   which will be parsed into double double precision.
+ *   If all goes well, on return, the dobldobl systems container
+ *   holds an embedded system with corresponding solutions in the
+ *   dobldobl solutions container.
+ *
+ * ON RETURN :
+ *   n        ambient dimension, i.e.: total number of variables;
+ *   dim      dimension of the solution set;
+ *   deg      degree of the solution set.  */
+
+int read_quaddobl_Laurent_witness_set ( int *n, int *dim, int *deg );
+/*
+ * DESCRIPTION :
+ *   The user is prompted to give an embedded Laurent system with solutions,
+ *   which will be parsed into quad double precision.
+ *   If all goes well, on return, the quaddobl systems container
+ *   holds an embedded system with corresponding solutions in the
+ *   quaddobl solutions container.
+ *
+ * ON RETURN :
+ *   n        ambient dimension, i.e.: total number of variables;
+ *   dim      dimension of the solution set;
+ *   deg      degree of the solution set.  */
+
+int read_standard_Laurent_witness_set_from_file
+ ( int m, char *s, int *n, int *dim, int *deg );
+/*
+ * DESCRIPTION :
+ *   Reads a witness set defined by a Laurent system from file, 
+ *   parsing the coefficients in standard double precision.
+ *   The system is stored in the container for Laurent systems
+ *   in standard double precision and the corresonding solutions in
+ *   the container for solutions in double double precision.
+ *
+ * ON ENTRY :
+ *   m        number of characters in the string s;
+ *   s        name of the file where the witness set is stored.
+ *
+ * ON RETURN :
+ *   n        ambient dimension, i.e.: total number of variables;
+ *   dim      dimension of the solution set;
+ *   deg      degree of the solution set. */
+
+int read_dobldobl_Laurent_witness_set_from_file
+ ( int m, char *s, int *n, int *dim, int *deg );
+/*
+ * DESCRIPTION :
+ *   Reads a witness set defined by a Laurent system from file, 
+ *   parsing the coefficients in double double precision.
+ *   The system is stored in the container for Laurent systems
+ *   in quad double precision and the corresonding solutions in
+ *   the container for solutions in double double precision.
+ *
+ * ON ENTRY :
+ *   m        number of characters in the string s;
+ *   s        name of the file where the witness set is stored.
+ *
+ * ON RETURN :
+ *   n        ambient dimension, i.e.: total number of variables;
+ *   dim      dimension of the solution set;
+ *   deg      degree of the solution set. */
+
+int read_quaddobl_Laurent_witness_set_from_file
+ ( int m, char *s, int *n, int *dim, int *deg );
+/*
+ * DESCRIPTION :
+ *   Reads a witness set defined by a Laurent system from file, 
+ *   parsing the coefficients in quad double precision.
+ *   The system is stored in the container for Laurent systems
+ *   in quad double precision and the corresonding solutions in
+ *   the container for solutions in quad double precision.
+ *
+ * ON ENTRY :
+ *   m        number of characters in the string s;
+ *   s        name of the file where the witness set is stored.
+ *
+ * ON RETURN :
+ *   n        ambient dimension, i.e.: total number of variables;
+ *   dim      dimension of the solution set;
+ *   deg      degree of the solution set. */
+
 int write_witness_set_to_file ( int m, char *s );
 /*
  * DESCRIPTION :

@@ -205,6 +205,129 @@ int read_quaddobl_witness_set_from_file
    return fail;
 }
 
+int read_standard_Laurent_witness_set ( int *n, int *dim, int *deg )
+{
+   int fail,m;
+   double *c;   
+   int d[2];
+
+   fail = _ada_use_c2phc(798,n,d,c);    /* read the witness set */
+   *dim = d[0];
+   *deg = d[1];
+   if(verbose>0) printf("The ambient dimension is %d.\n", *n); 
+   if(verbose>0) printf("The dimension of the solution set is %d.\n", d[0]); 
+   if(verbose>0) printf("The degree of the solution set is %d.\n", d[1]); 
+   if(verbose>1)
+   {
+      printf("The embedded system :\n");
+      fail = syscon_write_standard_system();
+   }
+   if(verbose>1)
+   {
+      printf("The following solutions are in container :\n");
+      fail = solcon_write_standard_solutions();
+   }
+   return fail;
+}
+
+int read_dobldobl_Laurent_witness_set ( int *n, int *dim, int *deg )
+{
+   int fail,m;
+   double *c;   
+   int d[2];
+
+   fail = _ada_use_c2phc(799,n,d,c);    /* read the witness set */
+   *dim = d[0];
+   *deg = d[1];
+   if(verbose>0) printf("The ambient dimension is %d.\n", *n); 
+   if(verbose>0) printf("The dimension of the solution set is %d.\n", d[0]); 
+   if(verbose>0) printf("The degree of the solution set is %d.\n", d[1]); 
+   if(verbose>1)
+   {
+      printf("The embedded system :\n");
+      fail = syscon_write_dobldobl_system();
+   }
+   if(verbose>1)
+   {
+      printf("The following solutions are in container :\n");
+      fail = solcon_write_dobldobl_solutions();
+   }
+   return fail;
+}
+
+int read_quaddobl_Laurent_witness_set ( int *n, int *dim, int *deg )
+{
+   int fail,m;
+   double *c;   
+   int d[2];
+
+   fail = _ada_use_c2phc(800,n,d,c);    /* read the witness set */
+   *dim = d[0];
+   *deg = d[1];
+   if(verbose>0) printf("The ambient dimension is %d.\n", *n); 
+   if(verbose>0) printf("The dimension of the solution set is %d.\n", d[0]); 
+   if(verbose>0) printf("The degree of the solution set is %d.\n", d[1]); 
+   if(verbose>1)
+   {
+      printf("The embedded system :\n");
+      fail = syscon_write_quaddobl_system();
+   }
+   if(verbose>1)
+   {
+      printf("The following solutions are in container :\n");
+      fail = solcon_write_quaddobl_solutions();
+   }
+   return fail;
+}
+
+int read_standard_Laurent_witness_set_from_file
+ ( int m, char *s, int *n, int *dim, int *deg )
+{
+   int b[m],i,fail;
+   double *c;
+
+   for (i=0; i<m; i++) b[i] = (int) s[i];
+
+   *n = m;
+   fail = _ada_use_c2phc(801,n,b,c);
+   *dim = b[0];
+   *deg = b[1];
+
+   return fail;
+}
+
+int read_dobldobl_Laurent_witness_set_from_file
+ ( int m, char *s, int *n, int *dim, int *deg )
+{
+   int b[m],i,fail;
+   double *c;
+
+   for (i=0; i<m; i++) b[i] = (int) s[i];
+
+   *n = m;
+   fail = _ada_use_c2phc(802,n,b,c);
+   *dim = b[0];
+   *deg = b[1];
+
+   return fail;
+}
+
+int read_quaddobl_Laurent_witness_set_from_file
+ ( int m, char *s, int *n, int *dim, int *deg )
+{
+   int b[m],i,fail;
+   double *c;
+
+   for (i=0; i<m; i++) b[i] = (int) s[i];
+
+   *n = m;
+   fail = _ada_use_c2phc(803,n,b,c);
+   *dim = b[0];
+   *deg = b[1];
+
+   return fail;
+}
+
 int write_witness_set_to_file ( int m, char *s )
 {
    int b[m],i,fail;
