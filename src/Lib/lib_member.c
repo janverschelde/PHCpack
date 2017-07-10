@@ -28,19 +28,43 @@ void quaddobl_read_point ( int n, double *x );
 int standard_membership_test ( void );
 /*
  * DESCRIPTION :
- *   Prompts for a witness set and a test point.
+ *   Prompts for a witness set defined by an ordinary polynomial system,
+ *   and prompts for a test point.
  *   Runs the membership test in standard double precision. */
 
 int dobldobl_membership_test ( void );
 /*
  * DESCRIPTION :
- *   Prompts for a witness set and a test point.
+ *   Prompts for a witness set defined by an ordinary polynomial system
+ *   and prompts for a test point.
  *   Runs the membership test in double double precision. */
 
 int quaddobl_membership_test ( void );
 /*
  * DESCRIPTION :
- *   Prompts for a witness set and a test point.
+ *   Prompts for a witness set defined by an ordinary polynomial system
+ *   and prompts for a test point.
+ *   Runs the membership test in quad double precision. */
+
+int standard_Laurent_membership_test ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts for a witness set defined by a Laurent polynomial system,
+ *   and prompts for a test point.
+ *   Runs the membership test in standard double precision. */
+
+int dobldobl_Laurent_membership_test ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts for a witness set defined by a Laurent polynomial system
+ *   and prompts for a test point.
+ *   Runs the membership test in double double precision. */
+
+int quaddobl_Laurent_membership_test ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts for a witness set defined by a Laurent polynomial system
+ *   and prompts for a test point.
  *   Runs the membership test in quad double precision. */
 
 int main ( int argc, char *argv[] )
@@ -58,15 +82,33 @@ int main ( int argc, char *argv[] )
    scanf("%d",&precision);
    scanf("%c",&ans); /* skip end of line character */
 
-   if(precision == 0)
-      fail = standard_membership_test();
-   else if(precision == 1)
-      fail = dobldobl_membership_test();
-   else if(precision == 2)
-      fail = quaddobl_membership_test();
-   else
-      printf("Selected precision level is not supported.\n");
+   printf("Laurent polynomial system ? (y/n) ");
+   scanf("%c",&ans);
 
+   if(ans == 'y')
+   {
+      scanf("%c",&ans); 
+      if(precision == 0)
+         fail = standard_Laurent_membership_test();
+      else if(precision == 1)
+         fail = dobldobl_Laurent_membership_test();
+      else if(precision == 2)
+         fail = quaddobl_Laurent_membership_test();
+      else
+         printf("Selected precision level is not supported.\n");
+   }
+   else
+   {
+      scanf("%c",&ans);
+      if(precision == 0)
+         fail = standard_membership_test();
+      else if(precision == 1)
+         fail = dobldobl_membership_test();
+      else if(precision == 2)
+         fail = quaddobl_membership_test();
+      else
+         printf("Selected precision level is not supported.\n");
+   }
    adafinal();
 
    return 0;
@@ -178,7 +220,6 @@ int standard_membership_test ( void )
       fail = standard_homotopy_membership_test
                (1,nv,dim,restol,homtol,tpt,&onsys,&onset);
    }
-
    return 0;
 }
 
@@ -223,7 +264,6 @@ int dobldobl_membership_test ( void )
       fail = dobldobl_homotopy_membership_test
                (1,nv,dim,restol,homtol,tpt,&onsys,&onset);
    }
-
    return 0;
 }
 
@@ -268,7 +308,137 @@ int quaddobl_membership_test ( void )
       fail = quaddobl_homotopy_membership_test
                (1,nv,dim,restol,homtol,tpt,&onsys,&onset);
    }
+   return 0;
+}
 
+int standard_Laurent_membership_test ( void )
+{
+   int fail,n,dim,deg,nv;
+   char ans;
 
+   printf("\nReading a witness set ...\n");
+   fail = read_standard_Laurent_witness_set(&n,&dim,&deg);
+   nv = n - dim;
+
+   if(verbose>0)  /* only in verbose mode */
+   {
+      printf("\nThe ambient dimension : %d.\n",n);
+      printf("The dimension of the solution set : %d.\n",dim);
+      printf("The degree of the solution set : %d.\n",deg);
+      printf("\nDo you want to see the embedded system ? (y/n) ");
+      scanf("%c",&ans);
+      if(ans == 'y')
+      {
+         printf("\nThe system read :\n");
+         fail = syscon_write_standard_Laurent_system();
+      }
+      scanf("%c",&ans); /* skip end of line character */
+      printf("\nDo you want to see the solutions ? (y/n) ");
+      scanf("%c",&ans);
+      if(ans == 'y')
+      {
+         printf("\nThe solutions read :\n");
+         fail = solcon_write_standard_solutions();
+      }
+      scanf("%c",&ans); /* skip end of line character */
+   }
+   {
+      int fail,onsys,onset;
+      double tpt[2*nv];
+      const double restol = 1.0e-6;
+      const double homtol = 1.0e-10;
+      printf("\nReading the coordinates of the test point x ...\n");
+      standard_read_point(nv,tpt);
+      fail = standard_Laurent_homotopy_membership_test
+               (1,nv,dim,restol,homtol,tpt,&onsys,&onset);
+   }
+   return 0;
+}
+
+int dobldobl_Laurent_membership_test ( void )
+{
+   int fail,n,dim,deg,nv;
+   char ans;
+
+   printf("\nReading a witness set ...\n");
+   fail = read_dobldobl_Laurent_witness_set(&n,&dim,&deg);
+   nv = n - dim;
+
+   if(verbose>0)  /* only in verbose mode */
+   {
+      printf("\nThe ambient dimension : %d.\n",n);
+      printf("The dimension of the solution set : %d.\n",dim);
+      printf("The degree of the solution set : %d.\n",deg);
+      printf("\nDo you want to see the embedded system ? (y/n) ");
+      scanf("%c",&ans);
+      if(ans == 'y')
+      {
+         printf("\nThe system read :\n");
+         fail = syscon_write_dobldobl_Laurent_system();
+      }
+      scanf("%c",&ans); /* skip end of line character */
+      printf("\nDo you want to see the solutions ? (y/n) ");
+      scanf("%c",&ans);
+      if(ans == 'y')
+      {
+         printf("\nThe solutions read :\n");
+         fail = solcon_write_dobldobl_solutions();
+      }
+      scanf("%c",&ans); /* skip end of line character */
+   }
+   {
+      int fail,onsys,onset;
+      double tpt[4*nv];
+      const double restol = 1.0e-6;
+      const double homtol = 1.0e-10;
+      printf("\nReading the coordinates of the test point x ...\n");
+      dobldobl_read_point(nv,tpt);
+      fail = dobldobl_Laurent_homotopy_membership_test
+               (1,nv,dim,restol,homtol,tpt,&onsys,&onset);
+   }
+   return 0;
+}
+
+int quaddobl_Laurent_membership_test ( void )
+{
+   int fail,n,dim,deg,nv;
+   char ans;
+
+   printf("\nReading a witness set ...\n");
+   fail = read_quaddobl_Laurent_witness_set(&n,&dim,&deg);
+   nv = n - dim;
+
+   if(verbose>0)  /* only in verbose mode */
+   {
+      printf("\nThe ambient dimension : %d.\n",n);
+      printf("The dimension of the solution set : %d.\n",dim);
+      printf("The degree of the solution set : %d.\n",deg);
+      printf("\nDo you want to see the embedded system ? (y/n) ");
+      scanf("%c",&ans);
+      if(ans == 'y')
+      {
+         printf("\nThe system read :\n");
+         fail = syscon_write_quaddobl_Laurent_system();
+      }
+      scanf("%c",&ans); /* skip end of line character */
+      printf("\nDo you want to see the solutions ? (y/n) ");
+      scanf("%c",&ans);
+      if(ans == 'y')
+      {
+         printf("\nThe solutions read :\n");
+         fail = solcon_write_quaddobl_solutions();
+      }
+      scanf("%c",&ans); /* skip end of line character */
+   }
+   {
+      int fail,onsys,onset;
+      double tpt[8*nv];
+      const double restol = 1.0e-6;
+      const double homtol = 1.0e-10;
+      printf("\nReading the coordinates of the test point x ...\n");
+      quaddobl_read_point(nv,tpt);
+      fail = quaddobl_Laurent_homotopy_membership_test
+               (1,nv,dim,restol,homtol,tpt,&onsys,&onset);
+   }
    return 0;
 }
