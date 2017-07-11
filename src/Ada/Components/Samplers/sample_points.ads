@@ -9,7 +9,10 @@ package Sample_Points is
 
 -- DESCRIPTION :
 --   This package provides an abstraction of and operations on points
---   sampled from a component of solutions to a polynomial system.
+--   sampled from a component of solutions to an ordinary polynomial system,
+--   or to a Laurent polynomial system.
+
+-- DATA STRUCTURES :
 
   type Standard_Sample is private;
   type Multprec_Sample is private;
@@ -18,6 +21,16 @@ package Sample_Points is
     array ( integer32 range <> ) of Standard_Sample;
   type Array_of_Multprec_Samples is
     array ( integer32 range <> ) of Multprec_Sample;
+
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean );
+
+  -- DESCRIPTION :
+  --   If laurent, then the witness set is assumed to be defined
+  --   by a Laurent polynomial system, otherwise, the witness set
+  --   is defined by an ordinary polynomial system.
+  --   This state determines the type of Sampling_Machine.
 
 -- CREATORS and COPY :
 

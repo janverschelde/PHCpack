@@ -1,3 +1,6 @@
+Tue 11 Jul 2017 : extended the *sample_points packages with an internal
+  state to use the Laurent sampling machine.
+
 Sun 9 Jul 2017 : new packages {dobldobl,quaddobl}_sampling_laurent_machine
   to work with witness sets for Laurent polynomial systems in double double
   and quad double precision.  For Laurent systems, extended the packages

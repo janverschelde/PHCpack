@@ -5,8 +5,13 @@ with DoblDobl_Random_Numbers;            use DoblDobl_Random_Numbers;
 with DoblDobl_Random_Vectors;            use DoblDobl_Random_Vectors;
 with Continuation_Parameters;
 with DoblDobl_Sampling_Machine;
+with DoblDobl_Sampling_Laurent_Machine;
 
 package body DoblDobl_Sample_Points is
+
+-- INTERNAL STATE :
+
+  use_laurent : boolean := false;
 
 -- DATA STRUCTURES :
 
@@ -14,6 +19,13 @@ package body DoblDobl_Sample_Points is
     point : DoblDobl_Complex_Solutions.Solution(n);
     slices : DoblDobl_Complex_VecVecs.VecVec(1..k);
   end record;
+
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean ) is
+  begin
+    use_laurent := laurent;
+  end Set_Polynomial_Type;
 
 -- AUXILIARY :
 
@@ -99,8 +111,13 @@ package body DoblDobl_Sample_Points is
   begin
     loop
       hyp := New_Slices(s1.n,s1.k);
-      DoblDobl_Sampling_Machine.Sample(s1.point,hyp,sol);
-      exit when DoblDobl_Sampling_Machine.Satisfies(sol);
+      if use_laurent then
+        DoblDobl_Sampling_Laurent_Machine.Sample(s1.point,hyp,sol);
+        exit when DoblDobl_Sampling_Laurent_Machine.Satisfies(sol);
+      else
+        DoblDobl_Sampling_Machine.Sample(s1.point,hyp,sol);
+        exit when DoblDobl_Sampling_Machine.Satisfies(sol);
+      end if;
       cnt_reruns := cnt_reruns + 1;
       exit when (cnt_reruns > Continuation_Parameters.max_reruns);
     end loop;
@@ -117,8 +134,14 @@ package body DoblDobl_Sample_Points is
   begin
     loop
       hyp := New_Slices(s1.n,s1.k);
-      DoblDobl_Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
-      exit when DoblDobl_Sampling_Machine.Satisfies(sol);
+      if use_laurent then
+        DoblDobl_Sampling_Laurent_Machine.Sample
+          (file,full_output,s1.point,hyp,sol);
+        exit when DoblDobl_Sampling_Laurent_Machine.Satisfies(sol);
+      else
+        DoblDobl_Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
+        exit when DoblDobl_Sampling_Machine.Satisfies(sol);
+      end if;
       cnt_reruns := cnt_reruns + 1;
       exit when (cnt_reruns > Continuation_Parameters.max_reruns);
     end loop;
@@ -135,8 +158,13 @@ package body DoblDobl_Sample_Points is
   begin
     loop
       hyp := Parallel_Slices(s1.n,s1.k,s1.slices);
-      DoblDobl_Sampling_Machine.Sample(s1.point,hyp,sol);
-      exit when DoblDobl_Sampling_Machine.Satisfies(sol);
+      if use_laurent then
+        DoblDobl_Sampling_Laurent_Machine.Sample(s1.point,hyp,sol);
+        exit when DoblDobl_Sampling_Laurent_Machine.Satisfies(sol);
+      else
+        DoblDobl_Sampling_Machine.Sample(s1.point,hyp,sol);
+        exit when DoblDobl_Sampling_Machine.Satisfies(sol);
+      end if;
       cnt_reruns := cnt_reruns + 1;
       exit when (cnt_reruns > Continuation_Parameters.max_reruns);
     end loop;
@@ -154,8 +182,14 @@ package body DoblDobl_Sample_Points is
   begin
     loop
       hyp := Parallel_Slices(s1.n,s1.k,s1.slices);
-      DoblDobl_Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
-      exit when DoblDobl_Sampling_Machine.Satisfies(sol);
+      if use_laurent then
+        DoblDobl_Sampling_Laurent_Machine.Sample
+          (file,full_output,s1.point,hyp,sol);
+        exit when DoblDobl_Sampling_Laurent_Machine.Satisfies(sol);
+      else
+        DoblDobl_Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
+        exit when DoblDobl_Sampling_Machine.Satisfies(sol);
+      end if;
       cnt_reruns := cnt_reruns + 1;
       exit when (cnt_reruns > Continuation_Parameters.max_reruns);
     end loop;
@@ -170,7 +204,10 @@ package body DoblDobl_Sample_Points is
     sol : DoblDobl_Complex_Solutions.Solution(s1.n);
 
   begin
-    DoblDobl_Sampling_Machine.Sample(s1.point,hyp,sol);
+    if use_laurent
+     then DoblDobl_Sampling_Laurent_Machine.Sample(s1.point,hyp,sol);
+     else DoblDobl_Sampling_Machine.Sample(s1.point,hyp,sol);
+    end if;
     s2 := Create(sol,hyp);
   end Sample_on_Slices;
 
@@ -183,7 +220,12 @@ package body DoblDobl_Sample_Points is
     sol : DoblDobl_Complex_Solutions.Solution(s1.n);
 
   begin
-    DoblDobl_Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
+    if use_laurent then
+      DoblDobl_Sampling_Laurent_Machine.Sample
+        (file,full_output,s1.point,hyp,sol);
+    else
+      DoblDobl_Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
+    end if;
     s2 := Create(sol,hyp);
   end Sample_on_Slices;
 
@@ -242,4 +284,6 @@ package body DoblDobl_Sample_Points is
     end if;
   end Deep_Clear;
 
+begin
+  use_laurent := false;
 end DoblDobl_Sample_Points;

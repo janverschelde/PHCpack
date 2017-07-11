@@ -10,10 +10,22 @@ package QuadDobl_Sample_Points is
 --   sampled from a component of solutions to a polynomial system,
 --   in quad double complex arithmetic.
 
+-- DATA STRUCTURES :
+
   type QuadDobl_Sample is private;
 
   type Array_of_QuadDobl_Samples is
     array ( integer32 range <> ) of QuadDobl_Sample;
+
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean );
+
+  -- DESCRIPTION :
+  --   If laurent, then the witness set is assumed to be defined
+  --   by a Laurent polynomial system, otherwise, the witness set
+  --   is defined by an ordinary polynomial system.
+  --   This state determines the type of Sampling_Machine.
 
 -- CREATORS and COPY :
 

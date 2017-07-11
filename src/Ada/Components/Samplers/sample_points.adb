@@ -6,8 +6,13 @@ with Standard_Random_Vectors;            use Standard_Random_Vectors;
 with Multprec_Complex_Vectors;
 with Continuation_Parameters;
 with Sampling_Machine;
+with Sampling_Laurent_Machine;
 
 package body Sample_Points is
+
+-- INTERNAL STATE :
+
+  use_laurent : boolean := false;
 
 -- DATA STRUCTURES :
 
@@ -22,6 +27,13 @@ package body Sample_Points is
     slices : Multprec_Complex_VecVecs.VecVec(1..k);
     original : Standard_Sample;
   end record;
+
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean ) is
+  begin
+    use_laurent := laurent;
+  end Set_Polynomial_Type;
 
 -- AUXILIARY :
 
@@ -139,8 +151,13 @@ package body Sample_Points is
   begin
     loop
       hyp := New_Slices(s1.n,s1.k);
-      Sampling_Machine.Sample(s1.point,hyp,sol);
-      exit when Sampling_Machine.Satisfies(sol);
+      if use_laurent then
+        Sampling_Laurent_Machine.Sample(s1.point,hyp,sol);
+        exit when Sampling_Laurent_Machine.Satisfies(sol);
+      else
+        Sampling_Machine.Sample(s1.point,hyp,sol);
+        exit when Sampling_Machine.Satisfies(sol);
+      end if;
       cnt_reruns := cnt_reruns + 1;
       exit when (cnt_reruns > Continuation_Parameters.max_reruns);
     end loop;
@@ -157,8 +174,13 @@ package body Sample_Points is
   begin
     loop
       hyp := New_Slices(s1.n,s1.k);
-      Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
-      exit when Sampling_Machine.Satisfies(sol);
+      if use_laurent then
+        Sampling_Laurent_Machine.Sample(file,full_output,s1.point,hyp,sol);
+        exit when Sampling_Laurent_Machine.Satisfies(sol);
+      else
+        Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
+        exit when Sampling_Machine.Satisfies(sol);
+      end if;
       cnt_reruns := cnt_reruns + 1;
       exit when (cnt_reruns > Continuation_Parameters.max_reruns);
     end loop;
@@ -194,8 +216,13 @@ package body Sample_Points is
   begin
     loop
       hyp := Parallel_Slices(s1.n,s1.k,s1.slices);
-      Sampling_Machine.Sample(s1.point,hyp,sol);
-      exit when Sampling_Machine.Satisfies(sol);
+      if use_laurent then
+        Sampling_Laurent_Machine.Sample(s1.point,hyp,sol);
+        exit when Sampling_Laurent_Machine.Satisfies(sol);
+      else
+        Sampling_Machine.Sample(s1.point,hyp,sol);
+        exit when Sampling_Machine.Satisfies(sol);
+      end if;
       cnt_reruns := cnt_reruns + 1;
       exit when (cnt_reruns > Continuation_Parameters.max_reruns);
     end loop;
@@ -213,8 +240,13 @@ package body Sample_Points is
   begin
     loop
       hyp := Parallel_Slices(s1.n,s1.k,s1.slices);
-      Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
-      exit when Sampling_Machine.Satisfies(sol);
+      if use_laurent then
+        Sampling_Laurent_Machine.Sample(file,full_output,s1.point,hyp,sol);
+        exit when Sampling_Laurent_Machine.Satisfies(sol);
+      else
+        Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
+        exit when Sampling_Machine.Satisfies(sol);
+      end if;
       cnt_reruns := cnt_reruns + 1;
       exit when (cnt_reruns > Continuation_Parameters.max_reruns);
     end loop;
@@ -250,7 +282,10 @@ package body Sample_Points is
     sol : Standard_Complex_Solutions.Solution(s1.n);
 
   begin
-    Sampling_Machine.Sample(s1.point,hyp,sol);
+    if use_laurent
+     then Sampling_Laurent_Machine.Sample(s1.point,hyp,sol);
+     else Sampling_Machine.Sample(s1.point,hyp,sol);
+    end if;
     s2 := Create(sol,hyp);
   end Sample_on_Slices;
 
@@ -263,7 +298,10 @@ package body Sample_Points is
     sol : Standard_Complex_Solutions.Solution(s1.n);
 
   begin
-    Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
+    if use_laurent
+     then Sampling_Laurent_Machine.Sample(file,full_output,s1.point,hyp,sol);
+     else Sampling_Machine.Sample(file,full_output,s1.point,hyp,sol);
+    end if;
     s2 := Create(sol,hyp);
   end Sample_on_Slices;
 
@@ -300,7 +338,10 @@ package body Sample_Points is
     sol : Multprec_Complex_Solutions.Solution(s1.n);
 
   begin
-    Sampling_Machine.Refine(s1.point,s1.slices,sol,hyp);
+    if use_laurent
+     then Sampling_Laurent_Machine.Refine(s1.point,s1.slices,sol,hyp);
+     else Sampling_Machine.Refine(s1.point,s1.slices,sol,hyp);
+    end if;
     s2 := Create(sol,hyp);
     s2.original := s1;
     s1.refined := s2;
@@ -313,7 +354,13 @@ package body Sample_Points is
     sol : Multprec_Complex_Solutions.Solution(s1.n);
 
   begin
-    Sampling_Machine.Refine(file,full_output,s1.point,s1.slices,sol,hyp);
+    if use_laurent then
+      Sampling_Laurent_Machine.Refine
+        (file,full_output,s1.point,s1.slices,sol,hyp);
+    else
+      Sampling_Machine.Refine
+        (file,full_output,s1.point,s1.slices,sol,hyp);
+    end if;
     s2 := Create(sol,hyp);
     s2.original := s1;
     s1.refined := s2;
@@ -321,13 +368,19 @@ package body Sample_Points is
 
   procedure Refine ( s : in out Multprec_Sample ) is
   begin
-    Sampling_Machine.Refine(s.point,s.slices);
+    if use_laurent
+     then Sampling_Laurent_Machine.Refine(s.point,s.slices);
+     else Sampling_Machine.Refine(s.point,s.slices);
+    end if;
   end Refine;
 
   procedure Refine ( file : in file_type; full_output : in boolean;
                      s : in out Multprec_Sample ) is
   begin
-    Sampling_Machine.Refine(file,full_output,s.point,s.slices);
+    if use_laurent
+     then Sampling_Laurent_Machine.Refine(file,full_output,s.point,s.slices);
+     else Sampling_Machine.Refine(file,full_output,s.point,s.slices);
+    end if;
   end Refine;
 
   procedure Refine_on_Slices
@@ -339,7 +392,10 @@ package body Sample_Points is
     s2hyp : Multprec_Complex_VecVecs.VecVec(hyp'range);
 
   begin
-    Sampling_Machine.Refine_on_Slices(s1.point,s1.slices,hyp,sol);
+    if use_laurent
+     then Sampling_Laurent_Machine.Refine_on_Slices(s1.point,s1.slices,hyp,sol);
+     else Sampling_Machine.Refine_on_Slices(s1.point,s1.slices,hyp,sol);
+    end if;
     for i in hyp'range loop
       s2hyp(i) := new Multprec_Complex_Vectors.Vector(hyp(i)'range);
       Multprec_Complex_Vectors.Copy(hyp(i).all,s2hyp(i).all);
@@ -359,8 +415,13 @@ package body Sample_Points is
     s2hyp : Multprec_Complex_VecVecs.VecVec(hyp'range);
 
   begin
-    Sampling_Machine.Refine_on_Slices
-      (file,full_output,s1.point,s1.slices,hyp,sol);
+    if use_laurent then
+      Sampling_Laurent_Machine.Refine_on_Slices
+        (file,full_output,s1.point,s1.slices,hyp,sol);
+    else
+      Sampling_Machine.Refine_on_Slices
+        (file,full_output,s1.point,s1.slices,hyp,sol);
+    end if;
     for i in hyp'range loop
       s2hyp(i) := new Multprec_Complex_Vectors.Vector(hyp(i)'range);
       Multprec_Complex_Vectors.Copy(hyp(i).all,s2hyp(i).all);
@@ -372,14 +433,22 @@ package body Sample_Points is
 
   procedure Refine_on_Slices ( s : in out Multprec_Sample ) is
   begin
-    Sampling_Machine.Refine_on_Slices(s.point,s.slices);
+    if use_laurent
+     then Sampling_Laurent_Machine.Refine_on_Slices(s.point,s.slices);
+     else Sampling_Machine.Refine_on_Slices(s.point,s.slices);
+    end if;
   end Refine_on_Slices;
 
   procedure Refine_on_Slices
                    ( file : in file_type; full_output : in boolean;
                      s : in out Multprec_Sample ) is
   begin
-    Sampling_Machine.Refine_on_Slices(file,full_output,s.point,s.slices);
+    if use_laurent then
+      Sampling_Laurent_Machine.Refine_on_Slices
+        (file,full_output,s.point,s.slices);
+    else
+      Sampling_Machine.Refine_on_Slices(file,full_output,s.point,s.slices);
+    end if;
   end Refine_on_Slices;
 
 -- SELECTORS :
@@ -495,4 +564,6 @@ package body Sample_Points is
     end if;
   end Deep_Clear;
 
+begin
+  use_laurent := false;
 end Sample_Points;
