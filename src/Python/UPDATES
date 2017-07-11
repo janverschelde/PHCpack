@@ -1,3 +1,6 @@
+Mon 11 Jul 2017 : added homotopy membership tests for witness sets defined
+  by Laurent systems in sets.py of PHCpy2 and PHCpy3.
+
 Thu 6 Jul 2017 : to sets.py in PHCpy2 and PHCpy3, added functions to run
   one step of a cascade homotopy for Laurent polynomial systems.
   Added main laurent_cascade_step() function to sets.py.

@@ -557,6 +557,84 @@ def quaddobl_membertest(wsys, gpts, dim, point, \
     result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
     return (result[2] == 1)
 
+def standard_laurent_membertest(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension *dim*, given by an embedding Laurent
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list *point*,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, *verbose* is True.
+    Calculations happen in standard double precision.
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
+    in the homotopy membership test.
+    """
+    from phcpy.interface import store_standard_laurent_system as storesys
+    from phcpy.interface import store_standard_solutions as storesols
+    from phcpy.phcpy2c3 \
+    import py2c_witset_standard_Laurent_membertest as membtest
+    storesys(wsys)
+    storesols(len(wsys), gpts)
+    nvr = len(point)//2
+    strpt = str(point)
+    nbc = len(strpt)
+    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
+    return (result[2] == 1)
+
+def dobldobl_laurent_membertest(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension *dim*, given by an embedding Laurent
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list *point*,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, *verbose* is True.
+    Calculations happen in double double precision.
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
+    in the homotopy membership test.
+    """
+    from phcpy.interface import store_dobldobl_laurent_system as storesys
+    from phcpy.interface import store_dobldobl_solutions as storesols
+    from phcpy.phcpy2c3 \
+    import py2c_witset_dobldobl_Laurent_membertest as membtest
+    storesys(wsys)
+    storesols(len(wsys), gpts)
+    nvr = len(point)//4
+    strpt = str(point)
+    nbc = len(strpt)
+    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
+    return (result[2] == 1)
+
+def quaddobl_laurent_membertest(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension *dim*, given by an embedding Laurent
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list point,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, *verbose* is True.
+    Calculations happen in quad double precision.
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
+    in the homotopy membership test.
+    """
+    from phcpy.interface import store_quaddobl_laurent_system as storesys
+    from phcpy.interface import store_quaddobl_solutions as storesols
+    from phcpy.phcpy2c3 \
+    import py2c_witset_quaddobl_Laurent_membertest as membtest
+    storesys(wsys)
+    storesols(len(wsys), gpts)
+    nvr = len(point)//8
+    strpt = str(point)
+    nbc = len(strpt)
+    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
+    return (result[2] == 1)
+
 def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
     verbose=True, precision='d'):
     r"""
@@ -586,6 +664,39 @@ def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
     elif(precision == 'qd'):
         return quaddobl_membertest(wsys, gpts, dim, point, \
                                    evatol, memtol, verbose)
+    else:
+        print('wrong argument for precision')
+        return None
+
+def laurent_membertest(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
+    r"""
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension *dim*, given by an embedding Laurent
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list *point*,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, *verbose* is True, and the
+    working *precision* is double 'd'.  Other levels of *precision* are
+    double double precision 'dd' and quad double precision 'qd'.
+    There are two tolerances: *evatol* is the tolerance on the residual
+    of the evaluation of the Laurent system at the test point.
+    If the residual of the evalution is not less than *evatol*,
+    then the membertest returns False.  Otherwise, the homotopy
+    membership test is called and the *memtol* is used to compare
+    the coordinates of the point with the newly computed generic points.
+    If there is a match between the coordinates within the given
+    tolerance *memtol*, then True is returned.
+    """
+    if(precision == 'd'):
+        return standard_laurent_membertest\
+                   (wsys, gpts, dim, point, evatol, memtol, verbose)
+    elif(precision == 'dd'):
+        return dobldobl_membertest\
+                   (wsys, gpts, dim, point, evatol, memtol, verbose)
+    elif(precision == 'qd'):
+        return quaddobl_membertest\
+                   (wsys, gpts, dim, point, evatol, memtol, verbose)
     else:
         print('wrong argument for precision')
         return None
