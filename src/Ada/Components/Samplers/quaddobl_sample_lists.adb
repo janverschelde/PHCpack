@@ -2,8 +2,20 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
 with QuadDobl_Random_Vectors;            use QuadDobl_Random_Vectors;
 with QuadDobl_Sampling_Machine;
+with QuadDobl_Sampling_Laurent_Machine;
 
 package body QuadDobl_Sample_Lists is
+
+-- INTERNAL STATE :
+
+  use_laurent : boolean := false;
+
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean ) is
+  begin
+    use_laurent := laurent;
+  end Set_Polynomial_Type;
 
 -- CREATORS :
 
@@ -117,7 +129,10 @@ package body QuadDobl_Sample_Lists is
     s2sols : QuadDobl_Complex_Solutions.Solution_List;
 
   begin
-    QuadDobl_Sampling_Machine.Sample(s1sols,hyps,s2sols);
+    if use_laurent
+     then QuadDobl_Sampling_Laurent_Machine.Sample(s1sols,hyps,s2sols);
+     else QuadDobl_Sampling_Machine.Sample(s1sols,hyps,s2sols);
+    end if;
     Create_Samples(s2sols,hyps,s2,s2_last);
     QuadDobl_Complex_Solutions.Deep_Clear(s1sols);
     QuadDobl_Complex_Solutions.Deep_Clear(s2sols);
@@ -132,7 +147,10 @@ package body QuadDobl_Sample_Lists is
     s2sols : QuadDobl_Complex_Solutions.Solution_List;
 
   begin
-    QuadDobl_Sampling_Machine.Sample(file,s1sols,hyps,s2sols);
+    if use_laurent
+     then QuadDobl_Sampling_Laurent_Machine.Sample(file,s1sols,hyps,s2sols);
+     else QuadDobl_Sampling_Machine.Sample(file,s1sols,hyps,s2sols);
+    end if;
     Create_Samples(s2sols,hyps,s2,s2_last);
     QuadDobl_Complex_Solutions.Deep_Clear(s1sols);
     QuadDobl_Complex_Solutions.Deep_Clear(s2sols);
@@ -150,7 +168,12 @@ package body QuadDobl_Sample_Lists is
     s2sols,tmp : Solution_List;
 
   begin
-    QuadDobl_Sampling_Machine.Sample_with_Stop(s1sols,x,tol,hyps,s2sols);
+    if use_laurent then
+      QuadDobl_Sampling_Laurent_Machine.Sample_with_Stop
+        (s1sols,x,tol,hyps,s2sols);
+    else
+      QuadDobl_Sampling_Machine.Sample_with_Stop(s1sols,x,tol,hyps,s2sols);
+    end if;
     tmp := s2sols;
     while not Is_Null(tmp) loop
       declare
@@ -328,4 +351,6 @@ package body QuadDobl_Sample_Lists is
     end loop;
   end Deep_Clear;
 
+begin
+  use_laurent := false;
 end QuadDobl_Sample_Lists;

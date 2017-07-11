@@ -2,8 +2,20 @@ with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with Sampling_Machine;
+with Sampling_Laurent_Machine;
 
 package body Sample_Point_Lists is
+
+-- INTERNAL STATE :
+
+  use_laurent : boolean := false;
+
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean ) is
+  begin
+    use_laurent := laurent;
+  end Set_Polynomial_Type;
 
 -- CREATORS :
 
@@ -193,7 +205,10 @@ package body Sample_Point_Lists is
     s2sols : Standard_Complex_Solutions.Solution_List;
 
   begin
-    Sampling_Machine.Sample(s1sols,hyps,s2sols);
+    if use_laurent
+     then Sampling_Laurent_Machine.Sample(s1sols,hyps,s2sols);
+     else Sampling_Machine.Sample(s1sols,hyps,s2sols);
+    end if;
     Create_Samples(s2sols,hyps,s2,s2_last);
     Standard_Complex_Solutions.Deep_Clear(s1sols);
     Standard_Complex_Solutions.Deep_Clear(s2sols);
@@ -208,7 +223,10 @@ package body Sample_Point_Lists is
     sts2,sts2_last : Standard_Sample_List;
 
   begin
-    Sampling_Machine.Sample(s1sols,hyps,s2sols);
+    if use_laurent
+     then Sampling_Laurent_Machine.Sample(s1sols,hyps,s2sols);
+     else Sampling_Machine.Sample(s1sols,hyps,s2sols);
+    end if;
     Create_Samples(s2sols,hyps,sts2,sts2_last);
     Refine(sts2,s2,s2_last);
     Standard_Complex_Solutions.Deep_Clear(s1sols);
@@ -226,7 +244,10 @@ package body Sample_Point_Lists is
     sts2,sts2_last : Standard_Sample_List;
 
   begin
-    Sampling_Machine.Sample(s1sols,sthyps,s2sols);
+    if use_laurent
+     then Sampling_Laurent_Machine.Sample(s1sols,sthyps,s2sols);
+     else Sampling_Machine.Sample(s1sols,sthyps,s2sols);
+    end if;
     Create_Samples(s2sols,sthyps,sts2,sts2_last);
     Refine_on_Slices(sts2,mphyps,s2,s2_last);
     Standard_Complex_Solutions.Deep_Clear(s1sols);
@@ -242,7 +263,10 @@ package body Sample_Point_Lists is
     s2sols : Standard_Complex_Solutions.Solution_List;
 
   begin
-    Sampling_Machine.Sample(file,s1sols,hyps,s2sols);
+    if use_laurent
+     then Sampling_Laurent_Machine.Sample(file,s1sols,hyps,s2sols);
+     else Sampling_Machine.Sample(file,s1sols,hyps,s2sols);
+    end if;
     Create_Samples(s2sols,hyps,s2,s2_last);
     Standard_Complex_Solutions.Deep_Clear(s1sols);
     Standard_Complex_Solutions.Deep_Clear(s2sols);
@@ -260,7 +284,10 @@ package body Sample_Point_Lists is
     s2sols,tmp : Solution_List;
 
   begin
-    Sampling_Machine.Sample_with_Stop(s1sols,x,tol,hyps,s2sols);
+    if use_laurent
+     then Sampling_Laurent_Machine.Sample_with_Stop(s1sols,x,tol,hyps,s2sols);
+     else Sampling_Machine.Sample_with_Stop(s1sols,x,tol,hyps,s2sols);
+    end if;
     tmp := s2sols;
     while not Is_Null(tmp) loop
       declare
@@ -617,4 +644,6 @@ package body Sample_Point_Lists is
     end loop;
   end Deep_Clear;
 
+begin
+  use_laurent := false;
 end Sample_Point_Lists;

@@ -16,11 +16,23 @@ package DoblDobl_Sample_Lists is
 --   solutions of a polynomial system, in double double precision.
 --   A grid of samples is an array of lists of samples.
 
+-- DATA STRUCTURES :
+
   package Lists_of_DoblDobl_Samples is new Generic_Lists(DoblDobl_Sample);
   type DoblDobl_Sample_List is new Lists_of_DoblDobl_Samples.List;
 
   type Array_of_DoblDobl_Sample_Lists is
     array ( integer32 range <> ) of DoblDobl_Sample_List;
+
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean );
+
+  -- DESCRIPTION :
+  --   If laurent, then the witness set is assumed to be defined
+  --   by a Laurent polynomial system, otherwise, the witness set
+  --   is defined by an ordinary polynomial system.
+  --   This state determines the type of Sampling_Machine.
 
 -- CREATORS :
 

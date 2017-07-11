@@ -18,6 +18,8 @@ package Sample_Point_Lists is
 --   solutions of a polynomial system.  A grid of samples is an array
 --   of lists of samples.
 
+-- DATA STRUCTURES :
+
   package Lists_of_Standard_Samples is new Generic_Lists(Standard_Sample);
   type Standard_Sample_List is new Lists_of_Standard_Samples.List;
   package Lists_of_Multprec_Samples is new Generic_Lists(Multprec_Sample);
@@ -27,6 +29,16 @@ package Sample_Point_Lists is
     array ( integer32 range <> ) of Standard_Sample_List;
   type Array_of_Multprec_Sample_Lists is
     array ( integer32 range <> ) of Multprec_Sample_List;
+
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean );
+
+  -- DESCRIPTION :
+  --   If laurent, then the witness set is assumed to be defined
+  --   by a Laurent polynomial system, otherwise, the witness set
+  --   is defined by an ordinary polynomial system.
+  --   This state determines the type of Sampling_Machine.
 
 -- CREATORS :
 
