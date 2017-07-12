@@ -4,6 +4,14 @@ with QuadDobl_Complex_Vector_Norms;       use QuadDobl_Complex_Vector_Norms;
 
 package body QuadDobl_Rectangular_Sample_Grids is
 
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean ) is
+  begin
+    QuadDobl_Sample_Points.Set_Polynomial_Type(laurent);
+    QuadDobl_Sample_Lists.Set_Polynomial_Type(laurent);
+  end Set_Polynomial_Type;
+
 -- ROOTS OF UNITY :
 
   function QuadDobl_Roots_of_Unity

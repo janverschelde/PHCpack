@@ -3,6 +3,14 @@ with Sample_Points;                     use Sample_Points;
 
 package body Sample_Point_Grids is
 
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean ) is
+  begin
+    Sample_Points.Set_Polynomial_Type(laurent);
+    Sample_Point_Lists.Set_Polynomial_Type(laurent);
+  end Set_Polynomial_Type;
+
 -- CREATORS AS TYPE CONVERTORS :
 
   function Create ( grid : Standard_Sample_Grid )

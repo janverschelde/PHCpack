@@ -20,6 +20,17 @@ package Sample_Point_Grids is
   type Standard_Sample_Grid is new Lists_of_Standard_Sample_Lists.List;
   type Multprec_Sample_Grid is new Lists_of_Multprec_Sample_Lists.List;
 
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean );
+
+  -- DESCRIPTION :
+  --   If laurent, then the witness set is assumed to be defined
+  --   by a Laurent polynomial system, otherwise, the witness set
+  --   is defined by an ordinary polynomial system.
+  --   This state determines the type of Sampling_Machine in the
+  --   packages Sample_Points and Sample_Point_Lists.
+
 -- CREATORS AS TYPE CONVERTORS :
 
   function Create ( grid : Standard_Sample_Grid )

@@ -12,6 +12,14 @@ package body Rectangular_Sample_Grids is
 -- WARNING :
 --   roots of unity conflicted with multi-precision divided differences!
 
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean ) is
+  begin
+    Sample_Points.Set_Polynomial_Type(laurent);
+    Sample_Point_Lists.Set_Polynomial_Type(laurent);
+  end Set_Polynomial_Type;
+
 -- ROOTS OF UNITY :
 
   function Standard_Roots_of_Unity

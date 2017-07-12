@@ -14,6 +14,17 @@ package QuadDobl_Rectangular_Sample_Grids is
 --   A rectangular sample grid has its samples on parallel slices.
 --   This package provides creators, diagnostics and selectors.
 
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean );
+
+  -- DESCRIPTION :
+  --   If laurent, then the witness set is assumed to be defined
+  --   by a Laurent polynomial system, otherwise, the witness set
+  --   is defined by an ordinary polynomial system.
+  --   This state determines the type of Sampling_Machine in the
+  --   packages Sample_Points and Sample_Point_Lists.
+
 -- CREATORS :
 
   function Create1 ( sps : QuadDobl_Sample_List; m : natural32 )

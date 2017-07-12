@@ -3,6 +3,14 @@ with QuadDobl_Sample_Points;            use QuadDobl_Sample_Points;
 
 package body QuadDobl_Sample_Grids is
 
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean ) is
+  begin
+    QuadDobl_Sample_Points.Set_Polynomial_Type(laurent);
+    QuadDobl_Sample_Lists.Set_Polynomial_Type(laurent);
+  end Set_Polynomial_Type;
+
 -- CREATORS AS TYPE CONVERTORS :
 
   function Create ( grid : QuadDobl_Sample_Grid )

@@ -1,5 +1,7 @@
 Tue 11 Jul 2017 : extended the *sample_points packages with an internal
   state to use the Laurent sampling machine, and also the *lists.a* packages.
+  Extended the *sample_grids and the *rectangular_sample_grids packages
+  in the same manner.
 
 Sun 9 Jul 2017 : new packages {dobldobl,quaddobl}_sampling_laurent_machine
   to work with witness sets for Laurent polynomial systems in double double

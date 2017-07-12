@@ -4,6 +4,14 @@ with DoblDobl_Complex_Vector_Norms;       use DoblDobl_Complex_Vector_Norms;
 
 package body DoblDobl_Rectangular_Sample_Grids is
 
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean ) is
+  begin
+    DoblDobl_Sample_Points.Set_Polynomial_Type(laurent);
+    DoblDobl_Sample_Lists.Set_Polynomial_Type(laurent);
+  end Set_Polynomial_Type;
+
 -- ROOTS OF UNITY :
 
   function DoblDobl_Roots_of_Unity

@@ -3,6 +3,14 @@ with DoblDobl_Sample_Points;            use DoblDobl_Sample_Points;
 
 package body DoblDobl_Sample_Grids is
 
+-- THE STATE IS POLYNOMIAL OR LAURENT :
+
+  procedure Set_Polynomial_Type ( laurent : in boolean ) is
+  begin
+    DoblDobl_Sample_Points.Set_Polynomial_Type(laurent);
+    DoblDobl_Sample_Lists.Set_Polynomial_Type(laurent);
+  end Set_Polynomial_Type;
+
 -- CREATORS AS TYPE CONVERTORS :
 
   function Create ( grid : DoblDobl_Sample_Grid )
