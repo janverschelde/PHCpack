@@ -2,15 +2,9 @@ with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Double_Double_Numbers;             use Double_Double_Numbers;
-with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
-with Standard_Complex_VecVecs;
-with DoblDobl_Complex_VecVecs;
-with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -21,20 +15,11 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Witness_Sets,Witness_Sets_io;      use Witness_Sets,Witness_Sets_io;
-with Sampling_Machine; 
-with Sampling_Laurent_Machine;
-with DoblDobl_Sampling_Machine; 
-with DoblDobl_Sampling_Laurent_Machine; 
-with QuadDobl_Sampling_Machine; 
-with QuadDobl_Sampling_Laurent_Machine; 
-with Drivers_to_Grid_Creators;          use Drivers_to_Grid_Creators;
 with Sample_Point_Lists;                use Sample_Point_Lists;
 with DoblDobl_Sample_Lists;             use DoblDobl_Sample_Lists;
 with QuadDobl_Sample_Lists;             use QuadDobl_Sample_Lists;
-with Rectangular_Sample_Grids;
-with DoblDobl_Rectangular_Sample_Grids;
-with QuadDobl_Rectangular_Sample_Grids;
 with Combinatorial_Factorization;       use Combinatorial_Factorization;
+with Drivers_to_Breakup_Solutions;      use Drivers_to_Breakup_Solutions;
 
 procedure ts_combfac is
 
@@ -69,150 +54,6 @@ procedure ts_combfac is
   function Seek is new Search_Factorization_with_Output(Ask_Factor);
 
 -- AUXILIARIES FOR LINEAR TRACE CERTIFICATES :
-
-  function Create ( file : file_type;
-                    p : Standard_Complex_Poly_Systems.Poly_Sys;
-                    sols : Standard_Complex_Solutions.Solution_List;
-                    dim : natural32 )
-                  return Array_of_Standard_Sample_Lists is
-
-  -- DESCRIPTION :
-  --   Returns a grid of sample points needed for linear traces.
-
-    res : Array_of_Standard_Sample_Lists(0..2);
-    sli : constant Standard_Complex_VecVecs.VecVec := Slices(p,dim);
-    sps : constant Standard_Sample_List := Create(sols,sli);
-    eps,dist : double_float;
-
-  begin
-    Sampling_Machine.Initialize(p);
-    Sampling_Machine.Default_Tune_Sampler(0);
-    Sampling_Machine.Default_Tune_Refiner;
-    Standard_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
-    Sampling_Machine.Clear;
-    return res;
-  end Create;
-
-  function Create ( file : file_type;
-                    p : Standard_Complex_Laur_Systems.Laur_Sys;
-                    sols : Standard_Complex_Solutions.Solution_List;
-                    dim : natural32 )
-                  return Array_of_Standard_Sample_Lists is
-
-  -- DESCRIPTION :
-  --   Returns a grid of sample points needed for linear traces,
-  --   for a witness set defined by a Laurent polynomial system.
-
-    res : Array_of_Standard_Sample_Lists(0..2);
-    sli : constant Standard_Complex_VecVecs.VecVec := Slices(p,dim);
-    sps : constant Standard_Sample_List := Create(sols,sli);
-    eps,dist : double_float;
-
-  begin
-    Sampling_Laurent_Machine.Initialize(p);
-    Sampling_Laurent_Machine.Default_Tune_Sampler(0);
-    Sampling_Laurent_Machine.Default_Tune_Refiner;
-    Rectangular_Sample_Grids.Set_Polynomial_Type(true);
-    Standard_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
-    Sampling_Laurent_Machine.Clear;
-    return res;
-  end Create;
-
-  function Create ( file : file_type;
-                    p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                    sols : DoblDobl_Complex_Solutions.Solution_List;
-                    dim : natural32 )
-                  return Array_of_DoblDobl_Sample_Lists is
-
-  -- DESCRIPTION :
-  --   Returns a grid of sample points needed for linear traces.
-
-    res : Array_of_DoblDobl_Sample_Lists(0..2);
-    sli : constant DoblDobl_Complex_VecVecs.VecVec := Slices(p,dim);
-    sps : constant DoblDobl_Sample_List := Create(sols,sli);
-    eps,dist : double_double;
-
-  begin
-    DoblDobl_Sampling_Machine.Initialize(p);
-    DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
-    DoblDobl_Sampling_Machine.Default_Tune_Refiner;
-    DoblDobl_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
-    DoblDobl_Sampling_Machine.Clear;
-    return res;
-  end Create;
-
-  function Create ( file : file_type;
-                    p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                    sols : DoblDobl_Complex_Solutions.Solution_List;
-                    dim : natural32 )
-                  return Array_of_DoblDobl_Sample_Lists is
-
-  -- DESCRIPTION :
-  --   Returns a grid of sample points needed for linear traces,
-  --   for a witness set defined by a Laurent polynomial system.
-
-    res : Array_of_DoblDobl_Sample_Lists(0..2);
-    sli : constant DoblDobl_Complex_VecVecs.VecVec := Slices(p,dim);
-    sps : constant DoblDobl_Sample_List := Create(sols,sli);
-    eps,dist : double_double;
-
-  begin
-    DoblDobl_Sampling_Laurent_Machine.Initialize(p);
-    DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
-    DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
-    DoblDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(true);
-    DoblDobl_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
-    DoblDobl_Sampling_Laurent_Machine.Clear;
-    return res;
-  end Create;
-
-  function Create ( file : file_type;
-                    p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                    sols : QuadDobl_Complex_Solutions.Solution_List;
-                    dim : natural32 )
-                  return Array_of_QuadDobl_Sample_Lists is
-
-  -- DESCRIPTION :
-  --   Returns a grid of sample points needed for linear traces.
-
-    res : Array_of_QuadDobl_Sample_Lists(0..2);
-    sli : constant QuadDobl_Complex_VecVecs.VecVec := Slices(p,dim);
-    sps : constant QuadDobl_Sample_List := Create(sols,sli);
-    eps,dist : quad_double;
-
-  begin
-    QuadDobl_Sampling_Machine.Initialize(p);
-    QuadDobl_Sampling_Machine.Default_Tune_Sampler(0);
-    QuadDobl_Sampling_Machine.Default_Tune_Refiner;
-    QuadDobl_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
-    QuadDobl_Sampling_Machine.Clear;
-    return res;
-  end Create;
-
-  function Create ( file : file_type;
-                    p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                    sols : QuadDobl_Complex_Solutions.Solution_List;
-                    dim : natural32 )
-                  return Array_of_QuadDobl_Sample_Lists is
-
-  -- DESCRIPTION :
-  --   Returns a grid of sample points needed for linear traces,
-  --   for a witness set defined by a Laurent polynomial system.
-
-    res : Array_of_QuadDobl_Sample_Lists(0..2);
-    sli : constant QuadDobl_Complex_VecVecs.VecVec := Slices(p,dim);
-    sps : constant QuadDobl_Sample_List := Create(sols,sli);
-    eps,dist : quad_double;
-
-  begin
-    QuadDobl_Sampling_Laurent_Machine.Initialize(p);
-    QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
-    QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
-    QuadDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(true);
-    QuadDobl_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
-    QuadDobl_Sampling_Laurent_Machine.Clear;
-    return res;
-  end Create;
 
   procedure Standard_Factor is
 
