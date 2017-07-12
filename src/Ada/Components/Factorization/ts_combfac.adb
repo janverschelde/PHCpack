@@ -254,11 +254,11 @@ procedure ts_combfac is
   --   computed in standard double precision, for a witness set defined
   --   by a Laurent polynomial system.
 
-    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
 
     file : file_type;
-    lp : Link_to_Poly_Sys;
+    lp : Link_to_Laur_Sys;
     sols : Solution_List;
     dim,n : natural32;
     grid : Array_of_Standard_Sample_Lists(0..2);
