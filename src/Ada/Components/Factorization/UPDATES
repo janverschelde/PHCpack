@@ -1,3 +1,6 @@
+Tue 11 Jul 2017 : updated ts_combfac.adb with test routines for the 
+  combinatorial factorization of witness sets defined by Laurent systems.
+
 Sun 9 Jul 2017 : refactored code in homotopy_membership_tests and extended
   to Laurent systems, tested by ts_mbthom.  Fixed a bug in ts_mbthom.
   Bug fix in homotopy_membership_tests.adb.
