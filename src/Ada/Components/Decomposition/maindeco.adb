@@ -31,24 +31,6 @@ with Driver_to_Rank_Supports;
 
 procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
 
-  procedure Read_Output_File
-              ( file : in out file_type;
-                name : out Link_to_String ) is
-
-  -- DESCRIPTION :
-  --   If the outfilename is empty, then the user will be prompted
-  --   to enter a name for the output file.
-
-  begin
-    if outfilename = "" then
-      new_line;
-      put_line("Reading the name of the output file.");
-      Read_Name_and_Create_File(file,name);
-    else
-      Create_Output_File(file,outfilename,name);
-    end if;
-  end Read_Output_File;
-
   procedure Read_Two_Witness_Sets
               ( lp1,lp2 : out Link_to_Poly_Sys;
                 sols1,sols2 : out Solution_List;
@@ -114,7 +96,7 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     Extrinsic_Diagonal_Homotopies_io.Write(lsym2.all);
     sols1 := Remove_Embedding(esols1,dim1);
     sols2 := Remove_Embedding(esols2,dim2);
-    Read_Output_File(file,name);
+    Create_Output_File(file,outfilename,name);
     new_line;
     Driver_for_Continuation_Parameters(file);
     new_line;
@@ -150,7 +132,7 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     new_line;
     put_line("Executing diagonal homotopies intrinsically...");
     Read_Two_Witness_Sets(lp1,lp2,sols1,sols2,dim1,dim2);
-    Read_Output_File(file,name);
+    Create_Output_File(file,outfilename,name);
     new_line;
     put("Do you want the version using generics ? (y/n) ");
     Ask_Yes_or_No(ans);
