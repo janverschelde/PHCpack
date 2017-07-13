@@ -1,3 +1,7 @@
+Thu 13 Jul 2017 : moved code from mainfac.adb to witness_sets_io.
+  Updated drivers_to_breakup_solutions so the names of the input and
+  output files passed at the command line are taken into account.
+
 Wed 12 Jul 2017 : new package drivers_to_breakup_solutions with code
   refactored from ts_combfac.adb and mainfac.adb.
   Extended drivers_to_breakup_solutions and drivers_to_factor_components

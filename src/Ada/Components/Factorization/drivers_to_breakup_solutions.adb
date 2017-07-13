@@ -714,100 +714,184 @@ package body Drivers_to_Breakup_Solutions is
     return ans;
   end Prompt_for_Method;
 
-  procedure Standard_Breakup is
+  procedure Standard_Breakup
+              ( file : in file_type; name : in string;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    ans : constant character := Prompt_for_Method;
+
+  begin
+    if ans = '1' then
+      Standard_Monodromy_Decomposition(file,name,p,sols,dim);
+    else
+      new_line;
+      put_line("See the output file for results...");
+      new_line;
+      Standard_Enumerate_Decomposition(file,name,p,sols,dim);
+    end if;
+  end Standard_Breakup;
+
+  procedure DoblDobl_Breakup
+              ( file : in file_type; name : in string;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    ans : constant character := Prompt_for_Method;
+
+  begin
+    if ans = '1' then
+      DoblDobl_Monodromy_Decomposition(file,name,p,sols,dim);
+    else
+      new_line;
+      put_line("See the output file for results...");
+      new_line;
+      DoblDobl_Enumerate_Decomposition(file,name,p,sols,dim);
+    end if;
+  end DoblDobl_Breakup;
+
+  procedure QuadDobl_Breakup
+              ( file : in file_type; name : in string;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    ans : constant character := Prompt_for_Method;
+
+  begin
+    if ans = '1' then
+      QuadDobl_Monodromy_Decomposition(file,name,p,sols,dim);
+    else
+      new_line;
+      put_line("See the output file for results...");
+      new_line;
+      QuadDobl_Enumerate_Decomposition(file,name,p,sols,dim);
+    end if;
+  end QuadDobl_Breakup;
+
+  procedure Standard_Breakup ( infilename,outfilename : in string ) is
 
     infile,outfile : file_type;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
     dim : natural32;
-    ans : character;
 
   begin
-    new_line;
-    put_line("Reading the name of the file with embedding...");
-    declare
-      name : constant string := Read_String;
-    begin
-      Open_Input_File(infile,name);
-      Witness_Sets_io.Standard_Read_Embedding(infile,lp,sols,dim);
-      new_line;
-      put_line("Reading the name of the output file...");
-      Read_Name_and_Create_File(outfile);
-      ans := Prompt_for_Method;
-      if ans = '1' then
-        Standard_Monodromy_Decomposition(outfile,name,lp.all,sols,dim);
+    if infilename /= "" then
+      Witness_Sets_io.Standard_Read_Embedding(infilename,lp,sols,dim);
+      if outfilename /= "" then
+        Create_Output_File(outfile,outfilename);
       else
         new_line;
-        put_line("See the output file for results...");
-        new_line;
-        Standard_Enumerate_Decomposition(outfile,name,lp.all,sols,dim);
+        put_line("Reading the name of the output file...");
+        Read_Name_and_Create_File(outfile);
       end if;
-    end;
+      Standard_Breakup(outfile,infilename,lp.all,sols,dim);
+    else
+      new_line;
+      put_line("Reading the name of the file with embedding...");
+      declare
+        name : constant string := Read_String;
+      begin
+        Open_Input_File(infile,name);
+        Witness_Sets_io.Standard_Read_Embedding(infile,lp,sols,dim);
+        if outfilename /= "" then
+          Create_Output_File(outfile,outfilename);
+        else
+          new_line;
+          put_line("Reading the name of the output file...");
+          Read_Name_and_Create_File(outfile);
+        end if;
+        Standard_Breakup(outfile,name,lp.all,sols,dim);
+      end;
+    end if;
     new_line(outfile);
     Write_Seed_Number(outfile);
     put_line(outfile,Greeting_Banners.Version);
   end Standard_Breakup;
 
-  procedure DoblDobl_Breakup is
+  procedure DoblDobl_Breakup ( infilename,outfilename : in string ) is
 
     infile,outfile : file_type;
     lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     dim : natural32;
-    ans : character;
 
   begin
-    new_line;
-    put_line("Reading the name of the file with embedding...");
-    declare
-      name : constant string := Read_String;
-    begin
-      Open_Input_File(infile,name);
-      Witness_Sets_io.DoblDobl_Read_Embedding(infile,lp,sols,dim);
-      new_line;
-      put_line("Reading the name of the output file...");
-      Read_Name_and_Create_File(outfile);
-      ans := Prompt_for_Method;
-      if ans = '1' then
-        DoblDobl_Monodromy_Decomposition(outfile,name,lp.all,sols,dim);
+    if infilename /= "" then
+      Witness_Sets_io.DoblDobl_Read_Embedding(infilename,lp,sols,dim);
+      if outfilename /= "" then
+        Create_Output_File(outfile,outfilename);
       else
         new_line;
-        put_line("See the output file for results...");
-        new_line;
-        DoblDobl_Enumerate_Decomposition(outfile,name,lp.all,sols,dim);
+        put_line("Reading the name of the output file...");
+        Read_Name_and_Create_File(outfile);
       end if;
-    end;
+      DoblDobl_Breakup(outfile,infilename,lp.all,sols,dim);
+    else
+      new_line;
+      put_line("Reading the name of the file with embedding...");
+      declare
+        name : constant string := Read_String;
+      begin
+        Open_Input_File(infile,name);
+        Witness_Sets_io.DoblDobl_Read_Embedding(infile,lp,sols,dim);
+        if outfilename /= "" then
+          Create_Output_File(outfile,outfilename);
+        else
+          new_line;
+          put_line("Reading the name of the output file...");
+          Read_Name_and_Create_File(outfile);
+        end if;
+        DoblDobl_Breakup(outfile,name,lp.all,sols,dim);
+      end;
+    end if;
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end DoblDobl_Breakup;
 
-  procedure QuadDobl_Breakup is
+  procedure QuadDobl_Breakup ( infilename,outfilename : in string ) is
 
     infile,outfile : file_type;
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     dim : natural32;
-    ans : character;
 
   begin
-    new_line;
-    put_line("Reading the name of the file with embedding...");
-    declare
-      name : constant string := Read_String;
-    begin
-      Open_Input_File(infile,name);
-      Witness_Sets_io.QuadDobl_Read_Embedding(infile,lp,sols,dim);
-      new_line;
-      put_line("Reading the name of the output file...");
-      Read_Name_and_Create_File(outfile);
-      ans := Prompt_for_Method;
-      if ans = '1' then
-        QuadDobl_Monodromy_Decomposition(outfile,name,lp.all,sols,dim);
+    if infilename /= "" then
+      Witness_Sets_io.QuadDobl_Read_Embedding(infilename,lp,sols,dim);
+      if outfilename /= "" then
+        Create_Output_File(outfile,outfilename);
       else
         new_line;
-        put_line("See the output file for results...");
-        new_line;
-        QuadDobl_Enumerate_Decomposition(outfile,name,lp.all,sols,dim);
+        put_line("Reading the name of the output file...");
+        Read_Name_and_Create_File(outfile);
       end if;
-    end;
+      QuadDobl_Breakup(outfile,infilename,lp.all,sols,dim);
+    else
+      new_line;
+      put_line("Reading the name of the file with the embedding...");
+      declare
+        name : constant string := Read_String;
+      begin
+        Open_Input_File(infile,name);
+        Witness_Sets_io.QuadDobl_Read_Embedding(infile,lp,sols,dim);
+        if outfilename /= "" then
+          Create_Output_File(outfile,outfilename);
+        else
+          new_line;
+          put_line("Reading the name of the output file...");
+          Read_Name_and_Create_File(outfile);
+        end if;
+        QuadDobl_Breakup(outfile,name,lp.all,sols,dim);
+      end;
+    end if;
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end QuadDobl_Breakup;
 
 end Drivers_to_Breakup_Solutions;

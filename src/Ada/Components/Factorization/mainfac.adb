@@ -59,108 +59,6 @@ with Write_Seed_Number;
 
 procedure mainfac ( infilename,outfilename : in string ) is
 
-  procedure Read_Embedding
-               ( filename : in string;
-                 lp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                 sols : out Standard_Complex_Solutions.Solution_List;
-                 dim : out natural32 ) is
-
-  -- DESCRIPTION :
-  --   Attempts to open the file with name in the string filename
-  --   in order to read the embedding.
-
-  -- ON ENTRY :
-  --   filename  name of file supplied by user from dispatcher.
-
-  -- ON RETURN :
-  --   lp        sliced and embedded polynomial system;
-  --   sols      list of generic points on the slices;
-  --   dim       dimension of the solution component, or in case of
-  --             one polynomial, this is the number of variables.
-
-    file : file_type;
-
-  begin
-    Open(file,in_file,filename);
-    Standard_Read_Embedding(file,lp,sols,dim);
-    Close(file);
-  exception
-    when others => new_line;
-                   put("Could not open file with name ");
-                   put(filename); put_line(".");
-                   put("Or incorrect formats of system/solutions in ");
-                   put(filename); put_line(".");
-                   lp := null; return;
-  end Read_Embedding;
-
-  procedure Read_Embedding
-               ( filename : in string;
-                 lp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                 dim : out natural32 ) is
-
-  -- DESCRIPTION :
-  --   Attempts to open the file with name in the string filename
-  --   in order to read the embedding.
-
-  -- ON ENTRY :
-  --   filename  name of file supplied by user from dispatcher.
-
-  -- ON RETURN :
-  --   lp        sliced and embedded polynomial system;
-  --   sols      list of generic points on the slices;
-  --   dim       dimension of the solution component, or in case of
-  --             one polynomial, this is the number of variables.
-
-    file : file_type;
-
-  begin
-    Open(file,in_file,filename);
-    DoblDobl_Read_Embedding(file,lp,sols,dim);
-    Close(file);
-  exception
-    when others => new_line;
-                   put("Could not open file with name ");
-                   put(filename); put_line(".");
-                   put("Or incorrect formats of system/solutions in ");
-                   put(filename); put_line(".");
-                   lp := null; return;
-  end Read_Embedding;
-
-  procedure Read_Embedding
-               ( filename : in string;
-                 lp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                 dim : out natural32 ) is
-
-  -- DESCRIPTION :
-  --   Attempts to open the file with name in the string filename
-  --   in order to read the embedding.
-
-  -- ON ENTRY :
-  --   filename  name of file supplied by user from dispatcher.
-
-  -- ON RETURN :
-  --   lp        sliced and embedded polynomial system;
-  --   sols      list of generic points on the slices;
-  --   dim       dimension of the solution component, or in case of
-  --             one polynomial, this is the number of variables.
-
-    file : file_type;
-
-  begin
-    Open(file,in_file,filename);
-    QuadDobl_Read_Embedding(file,lp,sols,dim);
-    Close(file);
-  exception
-    when others => new_line;
-                   put("Could not open file with name ");
-                   put(filename); put_line(".");
-                   put("Or incorrect formats of system/solutions in ");
-                   put(filename); put_line(".");
-                   lp := null; return;
-  end Read_Embedding;
-
   procedure Tune_Member_Tolerances ( restol,homtol : in out double_float ) is
 
   -- DESCRIPTION :
@@ -555,7 +453,7 @@ procedure mainfac ( infilename,outfilename : in string ) is
     case ans is
       when '0' => mainfilt(infilename,outfilename);
       when '1' => Homotopy_Membership_Test;
-      when '2' => Standard_Breakup;
+      when '2' => Standard_Breakup(infilename,outfilename);
       when '3' => Trace_Form_Interpolation;
       when '4' => Incremental_Interpolation;
       when '5' => Eliminate_Variables;
@@ -565,8 +463,8 @@ procedure mainfac ( infilename,outfilename : in string ) is
          else Driver_to_Factor_Polynomial(infilename);
         end if;
       when '7' => Driver_for_Common_Factor;
-      when '8' => DoblDobl_Breakup;
-      when '9' => QuadDobl_Breakup;
+      when '8' => DoblDobl_Breakup(infilename,outfilename);
+      when '9' => QuadDobl_Breakup(infilename,outfilename);
       when others => null;
     end case;
   end Main;

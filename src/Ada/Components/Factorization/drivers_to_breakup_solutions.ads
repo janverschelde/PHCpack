@@ -293,15 +293,39 @@ package Drivers_to_Breakup_Solutions is
   --   and combinatorial enumeration.
   --   Returns '1' for monodromy and '2' for enumeration.
 
-  procedure Standard_Breakup;
-  procedure DoblDobl_Breakup;
-  procedure QuadDobl_Breakup;
+  procedure Standard_Breakup
+              ( file : in file_type; name : in string;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+  procedure DoblDobl_Breakup
+              ( file : in file_type; name : in string;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+  procedure QuadDobl_Breakup
+              ( file : in file_type; name : in string;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+
+  -- ON ENTRY :
+  --   file     file which must be opened for output;
+  --   name     prefix for the output file names for the factors;
+  --   p        embedded polynomial system of the witness set;
+  --   sols     generic points in the witness set;
+  --   dim      dimension of the solution set.
+
+  procedure Standard_Breakup ( infilename,outfilename : in string );
+  procedure DoblDobl_Breakup ( infilename,outfilename : in string );
+  procedure QuadDobl_Breakup ( infilename,outfilename : in string );
 
   -- DESCRIPTION :
-  --   Prompts the user for a filtered witness set a computes
+  --   Reads a witness set from the file with name infilename if not empty,
+  --   otherwise prompts the user for a filtered witness set a computes
   --   its numerical irreducible decomposition,
   --   in standard double, double double, or quad double precision.
   --   Reads the embedded polynomial system, display the factorization menu
-  --   and either does monodromy loops or enumerates factors.
+  --   and either does monodromy loops or enumerates factors.  
 
 end Drivers_to_Breakup_Solutions;
