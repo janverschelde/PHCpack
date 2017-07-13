@@ -19,8 +19,11 @@ with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
 with Witness_Sets;                      use Witness_Sets;
 with Sampling_Machine; 
+with Sampling_Laurent_Machine; 
 with DoblDobl_Sampling_Machine; 
+with DoblDobl_Sampling_Laurent_Machine; 
 with QuadDobl_Sampling_Machine; 
+with QuadDobl_Sampling_Laurent_Machine; 
 with Sample_Points;                     use Sample_Points;
 with Sample_Point_Grids;                use Sample_Point_Grids;
 with DoblDobl_Sample_Points;            use DoblDobl_Sample_Points;
@@ -37,6 +40,10 @@ with DoblDobl_Trace_Interpolators;      use DoblDobl_Trace_Interpolators;
 with QuadDobl_Trace_Interpolators;      use QuadDobl_Trace_Interpolators;
 
 package body Monodromy_Component_Breakup is
+
+-- INTERNAL STATE :
+
+  use_laurent : boolean := false;
 
 -- AUXILIARY ROUTINES FOR MONODROMY :
 
@@ -473,6 +480,102 @@ package body Monodromy_Component_Breakup is
     return res;
   end Create;
 
+  function Create ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                    sols : Standard_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_Standard_Sample_Lists is
+
+    res : Array_of_Standard_Sample_Lists(0..2);
+    sli : constant Standard_Complex_VecVecs.VecVec := Slices(p,dim);
+    sps : constant Standard_Sample_List := Create(sols,sli);
+
+  begin
+    res := Create1(sps,2);
+    return res;
+  end Create;
+
+  function Create ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    sols : DoblDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_DoblDobl_Sample_Lists is
+
+    res : Array_of_DoblDobl_Sample_Lists(0..2);
+    sli : constant DoblDobl_Complex_VecVecs.VecVec := Slices(p,dim);
+    sps : constant DoblDobl_Sample_List := Create(sols,sli);
+
+  begin
+    res := Create1(sps,2);
+    return res;
+  end Create;
+
+  function Create ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    sols : QuadDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_QuadDobl_Sample_Lists is
+
+    res : Array_of_QuadDobl_Sample_Lists(0..2);
+    sli : constant QuadDobl_Complex_VecVecs.VecVec := Slices(p,dim);
+    sps : constant QuadDobl_Sample_List := Create(sols,sli);
+
+  begin
+    res := Create1(sps,2);
+    return res;
+  end Create;
+
+  function Create ( file : file_type;
+                    p : Standard_Complex_Laur_Systems.Laur_Sys;
+                    sols : Standard_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_Standard_Sample_Lists is
+
+    res : Array_of_Standard_Sample_Lists(0..2);
+    sli : constant Standard_Complex_VecVecs.VecVec := Slices(p,dim);
+    sps : constant Standard_Sample_List := Create(sols,sli);
+    eps,dist : double_float;
+
+  begin
+    new_line(file);
+    put_line(file,"GRID CREATION FOR LINEAR TRACES VALIDATION");
+    Standard_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
+    return res;
+  end Create;
+
+  function Create ( file : file_type;
+                    p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    sols : DoblDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_DoblDobl_Sample_Lists is
+
+    res : Array_of_DoblDobl_Sample_Lists(0..2);
+    sli : constant DoblDobl_Complex_VecVecs.VecVec := Slices(p,dim);
+    sps : constant DoblDobl_Sample_List := Create(sols,sli);
+    eps,dist : double_double;
+
+  begin
+    new_line(file);
+    put_line(file,"GRID CREATION FOR LINEAR TRACES VALIDATION");
+    DoblDobl_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
+    return res;
+  end Create;
+
+  function Create ( file : file_type;
+                    p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    sols : QuadDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_QuadDobl_Sample_Lists is
+
+    res : Array_of_QuadDobl_Sample_Lists(0..2);
+    sli : constant QuadDobl_Complex_VecVecs.VecVec := Slices(p,dim);
+    sps : constant QuadDobl_Sample_List := Create(sols,sli);
+    eps,dist : quad_double;
+
+  begin
+    new_line(file);
+    put_line(file,"GRID CREATION FOR LINEAR TRACES VALIDATION");
+    QuadDobl_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
+    return res;
+  end Create;
+
 -- VALIDATION OF BREAKUP WITH LINEAR TRACES :
 
   function Trace_Sum_Difference
@@ -807,14 +910,20 @@ package body Monodromy_Component_Breakup is
         newsps,newsps_last : Standard_Sample_List;
       begin
         Sample(sps,newhyp,newsps,newsps_last);
-        Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else Sampling_Machine.Change_Slices(newhyp);
+        end if;
         Sample(newsps,hyp,mapsps,mapsps_last);
         Update(f,nf,cnt,nit,tol,k0,rvk,len,mapsps);
         Deep_Clear(mapsps);
         done := Is_Factorization(tol,f.all,grid);
         exit when (done or (cnt >= threshold) or (nf = 1));
         tmp := sl;                                -- from new to old lists
-        Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else Sampling_Machine.Change_Slices(newhyp);
+        end if;
         while not Is_Null(tmp) loop
           prevsps := Head_Of(tmp);
           k0 := Keys(rvk,len,prevsps);
@@ -829,7 +938,10 @@ package body Monodromy_Component_Breakup is
         exit when (done or (cnt >= threshold) or (nf = 1));
         Append(sl,sl_last,newsps);
       end;
-      Sampling_Machine.Change_Slices(hyp);
+      if use_laurent
+       then Sampling_Laurent_Machine.Change_Slices(hyp);
+       else Sampling_Machine.Change_Slices(hyp);
+      end if;
     end loop;
   end Monodromy_Breakup;
 
@@ -861,14 +973,20 @@ package body Monodromy_Component_Breakup is
         newsps,newsps_last : Standard_Sample_List;
       begin
         Sample(sps,newhyp,newsps,newsps_last);
-        Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else Sampling_Machine.Change_Slices(newhyp);
+        end if;
         Sample(newsps,hyp,mapsps,mapsps_last);
         Update(file,f,nf,cnt,nit,tol,k0,rvk,len,mapsps);
         Deep_Clear(mapsps);
         done := Is_Factorization(file,tol,f.all,grid);
         exit when (done or (cnt >= threshold) or (nf = 1));
         tmp := sl;                                -- from new to old lists
-        Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else Sampling_Machine.Change_Slices(newhyp);
+        end if;
         while not Is_Null(tmp) loop
           prevsps := Head_Of(tmp);
           k0 := Keys(rvk,len,prevsps);
@@ -883,7 +1001,10 @@ package body Monodromy_Component_Breakup is
         exit when (done or (cnt >= threshold) or (nf = 1));
         Append(sl,sl_last,newsps);
       end;
-      Sampling_Machine.Change_Slices(hyp);
+      if use_laurent
+       then Sampling_Laurent_Machine.Change_Slices(hyp);
+       else Sampling_Machine.Change_Slices(hyp);
+      end if;
     end loop;
     put(file,"Number of monodromy loops : "); put(file,nit,1);
     new_line(file);
@@ -916,14 +1037,20 @@ package body Monodromy_Component_Breakup is
         newsps,newsps_last : DoblDobl_Sample_List;
       begin
         Sample(sps,newhyp,newsps,newsps_last);
-        DoblDobl_Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then DoblDobl_Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else DoblDobl_Sampling_Machine.Change_Slices(newhyp);
+        end if;
         Sample(newsps,hyp,mapsps,mapsps_last);
         Update(f,nf,cnt,nit,tol,k0,rvk,len,mapsps);
         Deep_Clear(mapsps);
         done := Is_Factorization(tol,f.all,grid);
         exit when (done or (cnt >= threshold) or (nf = 1));
         tmp := sl;                                -- from new to old lists
-        DoblDobl_Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then DoblDobl_Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else DoblDobl_Sampling_Machine.Change_Slices(newhyp);
+        end if;
         while not Is_Null(tmp) loop
           prevsps := Head_Of(tmp);
           k0 := Keys(rvk,len,prevsps);
@@ -938,7 +1065,10 @@ package body Monodromy_Component_Breakup is
         exit when (done or (cnt >= threshold) or (nf = 1));
         Append(sl,sl_last,newsps);
       end;
-      DoblDobl_Sampling_Machine.Change_Slices(hyp);
+      if use_laurent
+       then DoblDobl_Sampling_Laurent_Machine.Change_Slices(hyp);
+       else DoblDobl_Sampling_Machine.Change_Slices(hyp);
+      end if;
     end loop;
   end Monodromy_Breakup;
 
@@ -970,14 +1100,20 @@ package body Monodromy_Component_Breakup is
         newsps,newsps_last : DoblDobl_Sample_List;
       begin
         Sample(sps,newhyp,newsps,newsps_last);
-        DoblDobl_Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then DoblDobl_Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else DoblDobl_Sampling_Machine.Change_Slices(newhyp);
+        end if;
         Sample(newsps,hyp,mapsps,mapsps_last);
         Update(file,f,nf,cnt,nit,tol,k0,rvk,len,mapsps);
         Deep_Clear(mapsps);
         done := Is_Factorization(file,tol,f.all,grid);
         exit when (done or (cnt >= threshold) or (nf = 1));
         tmp := sl;                                -- from new to old lists
-        DoblDobl_Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then DoblDobl_Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else DoblDobl_Sampling_Machine.Change_Slices(newhyp);
+        end if;
         while not Is_Null(tmp) loop
           prevsps := Head_Of(tmp);
           k0 := Keys(rvk,len,prevsps);
@@ -992,7 +1128,10 @@ package body Monodromy_Component_Breakup is
         exit when (done or (cnt >= threshold) or (nf = 1));
         Append(sl,sl_last,newsps);
       end;
-      DoblDobl_Sampling_Machine.Change_Slices(hyp);
+      if use_laurent
+       then DoblDobl_Sampling_Laurent_Machine.Change_Slices(hyp);
+       else DoblDobl_Sampling_Machine.Change_Slices(hyp);
+      end if;
     end loop;
     put(file,"Number of monodromy loops : "); put(file,nit,1);
     new_line(file);
@@ -1025,14 +1164,20 @@ package body Monodromy_Component_Breakup is
         newsps,newsps_last : QuadDobl_Sample_List;
       begin
         Sample(sps,newhyp,newsps,newsps_last);
-        QuadDobl_Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then QuadDobl_Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else QuadDobl_Sampling_Machine.Change_Slices(newhyp);
+        end if;
         Sample(newsps,hyp,mapsps,mapsps_last);
         Update(f,nf,cnt,nit,tol,k0,rvk,len,mapsps);
         Deep_Clear(mapsps);
         done := Is_Factorization(tol,f.all,grid);
         exit when (done or (cnt >= threshold) or (nf = 1));
         tmp := sl;                                -- from new to old lists
-        QuadDobl_Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then QuadDobl_Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else QuadDobl_Sampling_Machine.Change_Slices(newhyp);
+        end if;
         while not Is_Null(tmp) loop
           prevsps := Head_Of(tmp);
           k0 := Keys(rvk,len,prevsps);
@@ -1047,7 +1192,10 @@ package body Monodromy_Component_Breakup is
         exit when (done or (cnt >= threshold) or (nf = 1));
         Append(sl,sl_last,newsps);
       end;
-      QuadDobl_Sampling_Machine.Change_Slices(hyp);
+      if use_laurent
+       then QuadDobl_Sampling_Laurent_Machine.Change_Slices(hyp);
+       else QuadDobl_Sampling_Machine.Change_Slices(hyp);
+      end if;
     end loop;
   end Monodromy_Breakup;
 
@@ -1079,14 +1227,20 @@ package body Monodromy_Component_Breakup is
         newsps,newsps_last : QuadDobl_Sample_List;
       begin
         Sample(sps,newhyp,newsps,newsps_last);
-        QuadDobl_Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then QuadDobl_Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else QuadDobl_Sampling_Machine.Change_Slices(newhyp);
+        end if;
         Sample(newsps,hyp,mapsps,mapsps_last);
         Update(file,f,nf,cnt,nit,tol,k0,rvk,len,mapsps);
         Deep_Clear(mapsps);
         done := Is_Factorization(file,tol,f.all,grid);
         exit when (done or (cnt >= threshold) or (nf = 1));
         tmp := sl;                                -- from new to old lists
-        QuadDobl_Sampling_Machine.Change_Slices(newhyp);
+        if use_laurent
+         then QuadDobl_Sampling_Laurent_Machine.Change_Slices(newhyp);
+         else QuadDobl_Sampling_Machine.Change_Slices(newhyp);
+        end if;
         while not Is_Null(tmp) loop
           prevsps := Head_Of(tmp);
           k0 := Keys(rvk,len,prevsps);
@@ -1101,7 +1255,10 @@ package body Monodromy_Component_Breakup is
         exit when (done or (cnt >= threshold) or (nf = 1));
         Append(sl,sl_last,newsps);
       end;
-      QuadDobl_Sampling_Machine.Change_Slices(hyp);
+      if use_laurent
+       then QuadDobl_Sampling_Laurent_Machine.Change_Slices(hyp);
+       else QuadDobl_Sampling_Machine.Change_Slices(hyp);
+      end if;
     end loop;
     put(file,"Number of monodromy loops : "); put(file,nit,1);
     new_line(file);
@@ -1119,6 +1276,7 @@ package body Monodromy_Component_Breakup is
     tol : constant double_float := 1.0E-8;
 
   begin
+    use_laurent := false;
     f := Init_Factors(d);
     Monodromy_Breakup(grid,dim,t,tol,f);
   end Factor;
@@ -1135,6 +1293,7 @@ package body Monodromy_Component_Breakup is
     tol : constant double_float := 1.0E-8;
 
   begin
+    use_laurent := false;
     new_line(file);
     put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
     new_line(file);
@@ -1157,6 +1316,7 @@ package body Monodromy_Component_Breakup is
     tol : constant double_float := 1.0E-8;
 
   begin
+    use_laurent := false;
     f := Init_Factors(d);
     Monodromy_Breakup(grid,dim,t,tol,f);
   end Factor;
@@ -1173,6 +1333,7 @@ package body Monodromy_Component_Breakup is
     tol : constant double_float := 1.0E-8;
 
   begin
+    use_laurent := false;
     new_line(file);
     put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
     new_line(file);
@@ -1195,6 +1356,7 @@ package body Monodromy_Component_Breakup is
     tol : constant double_float := 1.0E-8;
 
   begin
+    use_laurent := false;
     f := Init_Factors(d);
     Monodromy_Breakup(grid,dim,t,tol,f);
   end Factor;
@@ -1211,6 +1373,7 @@ package body Monodromy_Component_Breakup is
     tol : constant double_float := 1.0E-8;
 
   begin
+    use_laurent := false;
     new_line(file);
     put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
     new_line(file);
@@ -1223,4 +1386,126 @@ package body Monodromy_Component_Breakup is
     new_line(file);
   end Factor;
 
+  procedure Factor ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_Standard_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+    d : constant natural32 := Length_Of(grid(grid'first));
+    t : constant natural32 := 10;
+    tol : constant double_float := 1.0E-8;
+
+  begin
+    use_laurent := true;
+    f := Init_Factors(d);
+    Monodromy_Breakup(grid,dim,t,tol,f);
+  end Factor;
+
+  procedure Factor ( file : in file_type;
+                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_Standard_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+    timer : Timing_Widget;
+    d : constant natural32 := Length_Of(grid(grid'first));
+    t : constant natural32 := 10;
+    tol : constant double_float := 1.0E-8;
+
+  begin
+    use_laurent := true;
+    new_line(file);
+    put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
+    new_line(file);
+    tstart(timer);
+    f := Init_Factors(d);
+    Monodromy_Breakup(file,grid,dim,t,tol,f);
+    tstop(timer);
+    new_line(file);
+    print_times(file,timer,"Monodromy Factorization");
+    new_line(file);
+  end Factor;
+
+  procedure Factor ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_DoblDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+    d : constant natural32 := Length_Of(grid(grid'first));
+    t : constant natural32 := 10;
+    tol : constant double_float := 1.0E-8;
+
+  begin
+    use_laurent := true;
+    f := Init_Factors(d);
+    Monodromy_Breakup(grid,dim,t,tol,f);
+  end Factor;
+
+  procedure Factor ( file : in file_type;
+                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_DoblDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+    timer : Timing_Widget;
+    d : constant natural32 := Length_Of(grid(grid'first));
+    t : constant natural32 := 10;
+    tol : constant double_float := 1.0E-8;
+
+  begin
+    use_laurent := true;
+    new_line(file);
+    put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
+    new_line(file);
+    tstart(timer);
+    f := Init_Factors(d);
+    Monodromy_Breakup(file,grid,dim,t,tol,f);
+    tstop(timer);
+    new_line(file);
+    print_times(file,timer,"Monodromy Factorization");
+    new_line(file);
+  end Factor;
+
+  procedure Factor ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_QuadDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+    d : constant natural32 := Length_Of(grid(grid'first));
+    t : constant natural32 := 10;
+    tol : constant double_float := 1.0E-8;
+
+  begin
+    use_laurent := true;
+    f := Init_Factors(d);
+    Monodromy_Breakup(grid,dim,t,tol,f);
+  end Factor;
+
+  procedure Factor ( file : in file_type;
+                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_QuadDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+    timer : Timing_Widget;
+    d : constant natural32 := Length_Of(grid(grid'first));
+    t : constant natural32 := 10;
+    tol : constant double_float := 1.0E-8;
+
+  begin
+    use_laurent := true;
+    new_line(file);
+    put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
+    new_line(file);
+    tstart(timer);
+    f := Init_Factors(d);
+    Monodromy_Breakup(file,grid,dim,t,tol,f);
+    tstop(timer);
+    new_line(file);
+    print_times(file,timer,"Monodromy Factorization");
+    new_line(file);
+  end Factor;
+
+begin
+  use_laurent := false;
 end Monodromy_Component_Breakup;

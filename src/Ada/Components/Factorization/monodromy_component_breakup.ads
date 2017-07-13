@@ -6,8 +6,11 @@ with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -57,7 +60,45 @@ package Monodromy_Component_Breakup is
 
   -- DESCRIPTION :
   --   Returns a grid of sample points needed for linear traces
-  --   in standard double, double double, or quad double precision.
+  --   in standard double, double double, or quad double precision,
+  --   for witness sets defined by an ordinary polynomial system.
+
+  -- REQUIRED : the sampling machine is initialized and tuned.
+
+  function Create ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                    sols : Standard_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_Standard_Sample_Lists;
+  function Create ( file : file_type;
+                    p : Standard_Complex_Laur_Systems.Laur_Sys;
+                    sols : Standard_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_Standard_Sample_Lists;
+
+  function Create ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    sols : DoblDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_DoblDobl_Sample_Lists;
+  function Create ( file : file_type;
+                    p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    sols : DoblDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_DoblDobl_Sample_Lists;
+
+  function Create ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    sols : QuadDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_QuadDobl_Sample_Lists;
+  function Create ( file : file_type;
+                    p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    sols : QuadDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_QuadDobl_Sample_Lists;
+
+  -- DESCRIPTION :
+  --   Returns a grid of sample points needed for linear traces
+  --   in standard double, double double, or quad double precision,
+  --   for witness sets defined by a Laurent polynomial system.
 
   -- REQUIRED : the sampling machine is initialized and tuned.
 
@@ -215,7 +256,8 @@ package Monodromy_Component_Breakup is
 
   -- DESCRIPTION :
   --   Applies monodromy loops starting at sps to compute the factorization f,
-  --   in standard double, double double, or quad double precision.
+  --   in standard double, double double, or quad double precision,
+  --   for witness sets defined by an ordinary polynomial system.
  
   -- REQUIRED : the sampling machine is initialized and tuned.
 
@@ -267,6 +309,53 @@ package Monodromy_Component_Breakup is
   --   Applies monodromy loops to factor a pure dimensional solution set
   --   into irreducible components, in standard double, double double,
   --   or quad double precision.
+
+  -- REQUIRED : the sampling machine is initialized and tuned.
+
+  -- ON ENTRY :
+  --   file          for intermediate output and diagnostics;
+  --   p             embedded polynomial system;
+  --   dim           dimension of the solution set;
+  --   grid          grid for the linear traces.
+
+  -- ON RETURN :
+  --   f             irreducible decomposition of witness point set.
+
+  procedure Factor ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_Standard_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Factor ( file : in file_type;
+                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_Standard_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+
+  procedure Factor ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_DoblDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Factor ( file : in file_type;
+                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_DoblDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+
+  procedure Factor ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_QuadDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Factor ( file : in file_type;
+                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_QuadDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Applies monodromy loops to factor a pure dimensional solution set
+  --   into irreducible components, in standard double, double double,
+  --   or quad double precision, for witness sets defined by Laurent
+  --   polynomial systems.
 
   -- REQUIRED : the sampling machine is initialized and tuned.
 
