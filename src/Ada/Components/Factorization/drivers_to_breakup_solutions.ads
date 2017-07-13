@@ -309,6 +309,41 @@ package Drivers_to_Breakup_Solutions is
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 dim : in natural32 );
 
+  -- DESCRIPTION :
+  --   Prompts the user for method (combinatorial or monodromy)
+  --   and then factors the given witness set,
+  --   defined by an ordinary polynomial system,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file     file which must be opened for output;
+  --   name     prefix for the output file names for the factors;
+  --   p        embedded polynomial system of the witness set;
+  --   sols     generic points in the witness set;
+  --   dim      dimension of the solution set.
+
+  procedure Standard_Breakup
+              ( file : in file_type; name : in string;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+  procedure DoblDobl_Breakup
+              ( file : in file_type; name : in string;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+  procedure QuadDobl_Breakup
+              ( file : in file_type; name : in string;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+
+  -- DESCRIPTION :
+  --   Prompts the user for method (combinatorial or monodromy)
+  --   and then factors the given witness set,
+  --   defined by a Laurent polynomial system,
+  --   in standard double, double double, or quad double precision.
+
   -- ON ENTRY :
   --   file     file which must be opened for output;
   --   name     prefix for the output file names for the factors;

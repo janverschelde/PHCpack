@@ -14,6 +14,9 @@ with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Laur_Systems_io;  use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Laur_Systems_io;  use QuadDobl_Complex_Laur_Systems_io;
+with Standard_Laur_Poly_Convertors;
+with DoblDobl_Laur_Poly_Convertors;
+with QuadDobl_Laur_Poly_Convertors;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
@@ -700,6 +703,63 @@ package body Drivers_to_Breakup_Solutions is
     Standard_Natural_VecVecs.Deep_Clear(f);
   end QuadDobl_Monodromy_Decomposition;
 
+  procedure Standard_Monodromy_Decomposition
+              ( file : in file_type; name : in string;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    f : Standard_Natural_VecVecs.Link_to_VecVec;
+    bp : Standard_Complex_Laur_Systems.Laur_Sys(ep'range);
+
+    use Drivers_to_Factor_Components;
+ 
+  begin
+    Standard_Complex_Laur_Systems.Copy(ep,bp);
+    Call_Monodromy_Breakup(file,ep,sols,dim,f);
+    Write_Witness_Sets_for_Factors(name,bp,sols,dim,f.all);
+    Standard_Complex_Laur_Systems.Clear(bp);
+    Standard_Natural_VecVecs.Deep_Clear(f);
+  end Standard_Monodromy_Decomposition;
+
+  procedure DoblDobl_Monodromy_Decomposition
+              ( file : in file_type; name : in string;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    f : Standard_Natural_VecVecs.Link_to_VecVec;
+    bp : DoblDobl_Complex_Laur_Systems.Laur_Sys(ep'range);
+
+    use Drivers_to_Factor_Components;
+ 
+  begin
+    DoblDobl_Complex_Laur_Systems.Copy(ep,bp);
+    Call_Monodromy_Breakup(file,ep,sols,dim,f);
+    Write_Witness_Sets_for_Factors(name,bp,sols,dim,f.all);
+    DoblDobl_Complex_Laur_Systems.Clear(bp);
+    Standard_Natural_VecVecs.Deep_Clear(f);
+  end DoblDobl_Monodromy_Decomposition;
+
+  procedure QuadDobl_Monodromy_Decomposition
+              ( file : in file_type; name : in string;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    f : Standard_Natural_VecVecs.Link_to_VecVec;
+    bp : QuadDobl_Complex_Laur_Systems.Laur_Sys(ep'range);
+
+    use Drivers_to_Factor_Components;
+ 
+  begin
+    QuadDobl_Complex_Laur_Systems.Copy(ep,bp);
+    Call_Monodromy_Breakup(file,ep,sols,dim,f);
+    Write_Witness_Sets_for_Factors(name,bp,sols,dim,f.all);
+    QuadDobl_Complex_Laur_Systems.Clear(bp);
+    Standard_Natural_VecVecs.Deep_Clear(f);
+  end QuadDobl_Monodromy_Decomposition;
+
   function Prompt_for_Method return character is
 
     ans : character;
@@ -771,24 +831,84 @@ package body Drivers_to_Breakup_Solutions is
     end if;
   end QuadDobl_Breakup;
 
+  procedure Standard_Breakup
+              ( file : in file_type; name : in string;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    ans : constant character := Prompt_for_Method;
+
+  begin
+    if ans = '1' then
+      Standard_Monodromy_Decomposition(file,name,p,sols,dim);
+    else
+      new_line;
+      put_line("See the output file for results...");
+      new_line;
+      Standard_Enumerate_Decomposition(file,name,p,sols,dim);
+    end if;
+  end Standard_Breakup;
+
+  procedure DoblDobl_Breakup
+              ( file : in file_type; name : in string;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    ans : constant character := Prompt_for_Method;
+
+  begin
+    if ans = '1' then
+      DoblDobl_Monodromy_Decomposition(file,name,p,sols,dim);
+    else
+      new_line;
+      put_line("See the output file for results...");
+      new_line;
+      DoblDobl_Enumerate_Decomposition(file,name,p,sols,dim);
+    end if;
+  end DoblDobl_Breakup;
+
+  procedure QuadDobl_Breakup
+              ( file : in file_type; name : in string;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    ans : constant character := Prompt_for_Method;
+
+  begin
+    if ans = '1' then
+      QuadDobl_Monodromy_Decomposition(file,name,p,sols,dim);
+    else
+      new_line;
+      put_line("See the output file for results...");
+      new_line;
+      QuadDobl_Enumerate_Decomposition(file,name,p,sols,dim);
+    end if;
+  end QuadDobl_Breakup;
+
   procedure Standard_Breakup ( infilename,outfilename : in string ) is
+
+    use Standard_Laur_Poly_Convertors;
 
     infile,outfile : file_type;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
     dim : natural32;
 
   begin
     if infilename /= "" then
-      Witness_Sets_io.Standard_Read_Embedding(infilename,lp,sols,dim);
-      if outfilename /= "" then
-        Create_Output_File(outfile,outfilename);
+      Witness_Sets_io.Standard_Read_Embedding(infilename,lq,sols,dim);
+      Create_Output_File(outfile,outfilename);
+      if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+        Standard_Breakup(outfile,infilename,lq.all,sols,dim);
       else
-        new_line;
-        put_line("Reading the name of the output file...");
-        Read_Name_and_Create_File(outfile);
+        lp := new Standard_Complex_Poly_Systems.Poly_Sys'
+                    (Positive_Laurent_Polynomial_System(lq.all));
+        Standard_Breakup(outfile,infilename,lp.all,sols,dim);
       end if;
-      Standard_Breakup(outfile,infilename,lp.all,sols,dim);
     else
       new_line;
       put_line("Reading the name of the file with embedding...");
@@ -796,15 +916,15 @@ package body Drivers_to_Breakup_Solutions is
         name : constant string := Read_String;
       begin
         Open_Input_File(infile,name);
-        Witness_Sets_io.Standard_Read_Embedding(infile,lp,sols,dim);
-        if outfilename /= "" then
-          Create_Output_File(outfile,outfilename);
+        Witness_Sets_io.Standard_Read_Embedding(infile,lq,sols,dim);
+        Create_Output_File(outfile,outfilename);
+        if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+          Standard_Breakup(outfile,infilename,lq.all,sols,dim);
         else
-          new_line;
-          put_line("Reading the name of the output file...");
-          Read_Name_and_Create_File(outfile);
+          lp := new Standard_Complex_Poly_Systems.Poly_Sys'
+                      (Positive_Laurent_Polynomial_System(lq.all));
+          Standard_Breakup(outfile,name,lp.all,sols,dim);
         end if;
-        Standard_Breakup(outfile,name,lp.all,sols,dim);
       end;
     end if;
     new_line(outfile);
@@ -814,22 +934,25 @@ package body Drivers_to_Breakup_Solutions is
 
   procedure DoblDobl_Breakup ( infilename,outfilename : in string ) is
 
+    use DoblDobl_Laur_Poly_Convertors;
+
     infile,outfile : file_type;
     lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     dim : natural32;
 
   begin
     if infilename /= "" then
-      Witness_Sets_io.DoblDobl_Read_Embedding(infilename,lp,sols,dim);
-      if outfilename /= "" then
-        Create_Output_File(outfile,outfilename);
+      Witness_Sets_io.DoblDobl_Read_Embedding(infilename,lq,sols,dim);
+      Create_Output_File(outfile,outfilename);
+      if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+        DoblDobl_Breakup(outfile,infilename,lq.all,sols,dim);
       else
-        new_line;
-        put_line("Reading the name of the output file...");
-        Read_Name_and_Create_File(outfile);
+        lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys'
+                    (Positive_Laurent_Polynomial_System(lq.all));
+        DoblDobl_Breakup(outfile,infilename,lp.all,sols,dim);
       end if;
-      DoblDobl_Breakup(outfile,infilename,lp.all,sols,dim);
     else
       new_line;
       put_line("Reading the name of the file with embedding...");
@@ -837,15 +960,15 @@ package body Drivers_to_Breakup_Solutions is
         name : constant string := Read_String;
       begin
         Open_Input_File(infile,name);
-        Witness_Sets_io.DoblDobl_Read_Embedding(infile,lp,sols,dim);
-        if outfilename /= "" then
-          Create_Output_File(outfile,outfilename);
+        Witness_Sets_io.DoblDobl_Read_Embedding(infile,lq,sols,dim);
+        Create_Output_File(outfile,outfilename);
+        if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+          DoblDobl_Breakup(outfile,name,lq.all,sols,dim);
         else
-          new_line;
-          put_line("Reading the name of the output file...");
-          Read_Name_and_Create_File(outfile);
+          lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys'
+                      (Positive_Laurent_Polynomial_System(lq.all));
+          DoblDobl_Breakup(outfile,name,lp.all,sols,dim);
         end if;
-        DoblDobl_Breakup(outfile,name,lp.all,sols,dim);
       end;
     end if;
     new_line(outfile);
@@ -855,22 +978,25 @@ package body Drivers_to_Breakup_Solutions is
 
   procedure QuadDobl_Breakup ( infilename,outfilename : in string ) is
 
+    use QuadDobl_Laur_Poly_Convertors;
+
     infile,outfile : file_type;
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    lq : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     dim : natural32;
 
   begin
     if infilename /= "" then
-      Witness_Sets_io.QuadDobl_Read_Embedding(infilename,lp,sols,dim);
-      if outfilename /= "" then
-        Create_Output_File(outfile,outfilename);
+      Witness_Sets_io.QuadDobl_Read_Embedding(infilename,lq,sols,dim);
+      Create_Output_File(outfile,outfilename);
+      if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+        QuadDobl_Breakup(outfile,infilename,lq.all,sols,dim);
       else
-        new_line;
-        put_line("Reading the name of the output file...");
-        Read_Name_and_Create_File(outfile);
+        lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'
+                    (Positive_Laurent_Polynomial_System(lq.all));
+        QuadDobl_Breakup(outfile,infilename,lp.all,sols,dim);
       end if;
-      QuadDobl_Breakup(outfile,infilename,lp.all,sols,dim);
     else
       new_line;
       put_line("Reading the name of the file with the embedding...");
@@ -878,15 +1004,15 @@ package body Drivers_to_Breakup_Solutions is
         name : constant string := Read_String;
       begin
         Open_Input_File(infile,name);
-        Witness_Sets_io.QuadDobl_Read_Embedding(infile,lp,sols,dim);
-        if outfilename /= "" then
-          Create_Output_File(outfile,outfilename);
+        Witness_Sets_io.QuadDobl_Read_Embedding(infile,lq,sols,dim);
+        Create_Output_File(outfile,outfilename);
+        if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
+          QuadDobl_Breakup(outfile,name,lq.all,sols,dim);
         else
-          new_line;
-          put_line("Reading the name of the output file...");
-          Read_Name_and_Create_File(outfile);
+          lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'
+                      (Positive_Laurent_Polynomial_System(lq.all));
+          QuadDobl_Breakup(outfile,name,lp.all,sols,dim);
         end if;
-        QuadDobl_Breakup(outfile,name,lp.all,sols,dim);
       end;
     end if;
     new_line(outfile);

@@ -1,6 +1,9 @@
 Thu 13 Jul 2017 : moved code from mainfac.adb to witness_sets_io.
   Updated drivers_to_breakup_solutions so the names of the input and
   output files passed at the command line are taken into account.
+  In monodromy_component_breakup.adb, fixed the flag for Laurent systems,
+  tested by ts_newfac.  Extended drivers_to_breakup_solution so phc -f
+  now factors witness sets defined by Laurent polynomial systems.
 
 Wed 12 Jul 2017 : new package drivers_to_breakup_solutions with code
   refactored from ts_combfac.adb and mainfac.adb.
