@@ -394,6 +394,7 @@ package body Monodromy_Component_Breakup is
     sps : constant Standard_Sample_List := Create(sols,sli);
 
   begin
+    Rectangular_Sample_Grids.Set_Polynomial_Type(false);
     res := Create1(sps,2);
     return res;
   end Create;
@@ -408,6 +409,7 @@ package body Monodromy_Component_Breakup is
     sps : constant DoblDobl_Sample_List := Create(sols,sli);
 
   begin
+    DoblDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(false);
     res := Create1(sps,2);
     return res;
   end Create;
@@ -422,6 +424,7 @@ package body Monodromy_Component_Breakup is
     sps : constant QuadDobl_Sample_List := Create(sols,sli);
 
   begin
+    QuadDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(false);
     res := Create1(sps,2);
     return res;
   end Create;
@@ -440,6 +443,7 @@ package body Monodromy_Component_Breakup is
   begin
     new_line(file);
     put_line(file,"GRID CREATION FOR LINEAR TRACES VALIDATION");
+    Rectangular_Sample_Grids.Set_Polynomial_Type(false);
     Standard_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
     return res;
   end Create;
@@ -458,6 +462,7 @@ package body Monodromy_Component_Breakup is
   begin
     new_line(file);
     put_line(file,"GRID CREATION FOR LINEAR TRACES VALIDATION");
+    DoblDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(false);
     DoblDobl_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
     return res;
   end Create;
@@ -476,6 +481,7 @@ package body Monodromy_Component_Breakup is
   begin
     new_line(file);
     put_line(file,"GRID CREATION FOR LINEAR TRACES VALIDATION");
+    QuadDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(false);
     QuadDobl_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
     return res;
   end Create;
@@ -490,6 +496,7 @@ package body Monodromy_Component_Breakup is
     sps : constant Standard_Sample_List := Create(sols,sli);
 
   begin
+    Rectangular_Sample_Grids.Set_Polynomial_Type(true);
     res := Create1(sps,2);
     return res;
   end Create;
@@ -504,6 +511,7 @@ package body Monodromy_Component_Breakup is
     sps : constant DoblDobl_Sample_List := Create(sols,sli);
 
   begin
+    DoblDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(true);
     res := Create1(sps,2);
     return res;
   end Create;
@@ -518,6 +526,7 @@ package body Monodromy_Component_Breakup is
     sps : constant QuadDobl_Sample_List := Create(sols,sli);
 
   begin
+    QuadDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(true);
     res := Create1(sps,2);
     return res;
   end Create;
@@ -536,6 +545,7 @@ package body Monodromy_Component_Breakup is
   begin
     new_line(file);
     put_line(file,"GRID CREATION FOR LINEAR TRACES VALIDATION");
+    Rectangular_Sample_Grids.Set_Polynomial_Type(true);
     Standard_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
     return res;
   end Create;
@@ -554,6 +564,7 @@ package body Monodromy_Component_Breakup is
   begin
     new_line(file);
     put_line(file,"GRID CREATION FOR LINEAR TRACES VALIDATION");
+    DoblDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(true);
     DoblDobl_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
     return res;
   end Create;
@@ -572,6 +583,7 @@ package body Monodromy_Component_Breakup is
   begin
     new_line(file);
     put_line(file,"GRID CREATION FOR LINEAR TRACES VALIDATION");
+    QuadDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(true);
     QuadDobl_Rectangular_Grid_Creator(file,sps,2,res,eps,dist);
     return res;
   end Create;
