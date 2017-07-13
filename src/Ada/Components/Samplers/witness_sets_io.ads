@@ -342,6 +342,66 @@ package Witness_Sets_io is
   --   dim       number of added variables in the embedding;
   --   nsl       number of slack variables used to square the system.
 
+  procedure Standard_Read_Embedding
+               ( name : in string;
+                 lp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : out Standard_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( name : in string;
+                 lp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : out DoblDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( name : in string;
+                 lp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : out QuadDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+
+  -- DESCRIPTION :
+  --   Attempts to open the file with name in the string filename to read
+  --   a witness set defined by an ordinary polynomial system.
+  --   If an exception occurs, the user is prompted for a file.
+
+  -- ON ENTRY :
+  --   filename  name of a file with a witness set.
+
+  -- ON RETURN :
+  --   lp        sliced and embedded polynomial system;
+  --   sols      list of generic points on the slices;
+  --   dim       dimension of the solution component, or in case of
+  --             one polynomial, this is the number of variables.
+
+  procedure Standard_Read_Embedding
+               ( name : in string;
+                 lp : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : out Standard_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( name : in string;
+                 lp : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : out DoblDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( name : in string;
+                 lp : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 sols : out QuadDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+
+  -- DESCRIPTION :
+  --   Attempts to open the file with name in the string filename to read
+  --   a witness set defined by a Laurent polynomial system.
+  --   If an exception occurs, the user is prompted for a file.
+
+  -- ON ENTRY :
+  --   filename  name of a file with a witness set.
+
+  -- ON RETURN :
+  --   lp        sliced and embedded polynomial system;
+  --   sols      list of generic points on the slices;
+  --   dim       dimension of the solution component, or in case of
+  --             one polynomial, this is the number of variables.
+
   procedure Get_Multprec_System 
                ( stsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                  mpsys : in out Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;

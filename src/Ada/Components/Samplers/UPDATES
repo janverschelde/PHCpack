@@ -1,3 +1,7 @@
+Thu 13 Jul 2017 : added procedures to witness_sets_io which take the name
+  of a file on input, with code taken from mainfac, and extended to read
+  also witness sets defined by a Laurent polynomial system.
+
 Tue 11 Jul 2017 : extended the *sample_points packages with an internal
   state to use the Laurent sampling machine, and also the *lists.a* packages.
   Extended the *sample_grids and the *rectangular_sample_grids packages

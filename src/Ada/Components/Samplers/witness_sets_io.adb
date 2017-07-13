@@ -1980,6 +1980,132 @@ package body Witness_Sets_io is
     end if;
   end QuadDobl_Read_Embedding;
 
+  procedure Standard_Read_Embedding
+              ( name : in string;
+                lp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    file : file_type;
+
+  begin
+    Open(file,in_file,name);
+    Standard_Read_Embedding(file,lp,sols,dim);
+    Close(file);
+  exception
+    when others =>
+      new_line;
+      put("Could not open file with name "); put(name); put_line(".");
+      put("Or incorrect formats of system/solutions in ");
+      put(name); put_line(".");
+      Standard_Read_Embedding(lp,sols,dim);
+  end Standard_Read_Embedding;
+
+  procedure DoblDobl_Read_Embedding
+              ( name : in string;
+                lp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    file : file_type;
+
+  begin
+    Open(file,in_file,name);
+    DoblDobl_Read_Embedding(file,lp,sols,dim);
+    Close(file);
+  exception
+    when others =>
+      new_line;
+      put("Could not open file with name "); put(name); put_line(".");
+      put("Or incorrect formats of system/solutions in ");
+      put(name); put_line(".");
+      DoblDobl_Read_Embedding(lp,sols,dim);
+  end DoblDobl_Read_Embedding;
+
+  procedure QuadDobl_Read_Embedding
+              ( name : in string;
+                lp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    file : file_type;
+
+  begin
+    Open(file,in_file,name);
+    QuadDobl_Read_Embedding(file,lp,sols,dim);
+    Close(file);
+  exception
+    when others =>
+      new_line;
+      put("Could not open file with name "); put(name); put_line(".");
+      put("Or incorrect formats of system/solutions in ");
+      put(name); put_line(".");
+      QuadDobl_Read_Embedding(lp,sols,dim);
+  end QuadDobl_Read_Embedding;
+
+  procedure Standard_Read_Embedding
+              ( name : in string;
+                lp : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    file : file_type;
+
+  begin
+    Open(file,in_file,name);
+    Standard_Read_Embedding(file,lp,sols,dim);
+    Close(file);
+  exception
+    when others =>
+      new_line;
+      put("Could not open file with name "); put(name); put_line(".");
+      put("Or incorrect formats of system/solutions in ");
+      put(name); put_line(".");
+      Standard_Read_Embedding(lp,sols,dim);
+  end Standard_Read_Embedding;
+
+  procedure DoblDobl_Read_Embedding
+              ( name : in string;
+                lp : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    file : file_type;
+
+  begin
+    Open(file,in_file,name);
+    DoblDobl_Read_Embedding(file,lp,sols,dim);
+    Close(file);
+  exception
+    when others =>
+      new_line;
+      put("Could not open file with name "); put(name); put_line(".");
+      put("Or incorrect formats of system/solutions in ");
+      put(name); put_line(".");
+      DoblDobl_Read_Embedding(lp,sols,dim);
+  end DoblDobl_Read_Embedding;
+
+  procedure QuadDobl_Read_Embedding
+              ( name : in string;
+                lp : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                dim : out natural32 ) is
+
+    file : file_type;
+
+  begin
+    Open(file,in_file,name);
+    QuadDobl_Read_Embedding(file,lp,sols,dim);
+    Close(file);
+  exception
+    when others =>
+      new_line;
+      put("Could not open file with name "); put(name); put_line(".");
+      put("Or incorrect formats of system/solutions in ");
+      put(name); put_line(".");
+      QuadDobl_Read_Embedding(lp,sols,dim);
+  end QuadDobl_Read_Embedding;
+
   procedure Get_Multprec_System 
               ( stsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 mpsys : in out Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
