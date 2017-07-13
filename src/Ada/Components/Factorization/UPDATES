@@ -1,5 +1,7 @@
 Wed 12 Jul 2017 : new package drivers_to_breakup_solutions with code
   refactored from ts_combfac.adb and mainfac.adb.
+  Extended drivers_to_breakup_solutions and drivers_to_factor_components
+  with versions for Laurent sytems.
 
 Tue 11 Jul 2017 : updated ts_combfac.adb with test routines for the 
   combinatorial factorization of witness sets defined by Laurent systems.

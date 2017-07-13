@@ -9,8 +9,11 @@ with Standard_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laur_Systems_io;  use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laur_Systems_io;  use QuadDobl_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
@@ -215,6 +218,60 @@ package body Drivers_to_Breakup_Solutions is
     Standard_Natural_VecVecs.Deep_Clear(lf);
   end QuadDobl_Enumerate_Decomposition;
 
+  procedure Standard_Enumerate_Decomposition
+              ( file : in file_type;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    grid : Array_of_Standard_Sample_Lists(0..2) := Create(file,ep,sols,dim);
+    n : constant natural32 := Standard_Complex_Solutions.Length_Of(sols);
+    f : constant Standard_Natural_VecVecs.VecVec
+      := Combinatorial_Factorization.Factor(file,n,grid);
+    lf : Standard_Natural_VecVecs.Link_to_VecVec
+       := new Standard_Natural_VecVecs.VecVec'(f);
+ 
+  begin
+    Deep_Clear(grid);
+    Standard_Natural_VecVecs.Deep_Clear(lf);
+  end Standard_Enumerate_Decomposition;
+
+  procedure DoblDobl_Enumerate_Decomposition
+              ( file : in file_type;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    grid : Array_of_DoblDobl_Sample_Lists(0..2) := Create(file,ep,sols,dim);
+    n : constant natural32 := DoblDobl_Complex_Solutions.Length_Of(sols);
+    f : constant Standard_Natural_VecVecs.VecVec
+      := Combinatorial_Factorization.Factor(file,n,grid);
+    lf : Standard_Natural_VecVecs.Link_to_VecVec
+       := new Standard_Natural_VecVecs.VecVec'(f);
+ 
+  begin
+    Deep_Clear(grid);
+    Standard_Natural_VecVecs.Deep_Clear(lf);
+  end DoblDobl_Enumerate_Decomposition;
+
+  procedure QuadDobl_Enumerate_Decomposition
+              ( file : in file_type;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    grid : Array_of_QuadDobl_Sample_Lists(0..2) := Create(file,ep,sols,dim);
+    n : constant natural32 := QuadDobl_Complex_Solutions.Length_Of(sols);
+    f : constant Standard_Natural_VecVecs.VecVec
+      := Combinatorial_Factorization.Factor(file,n,grid);
+    lf : Standard_Natural_VecVecs.Link_to_VecVec
+       := new Standard_Natural_VecVecs.VecVec'(f);
+ 
+  begin
+    Deep_Clear(grid);
+    Standard_Natural_VecVecs.Deep_Clear(lf);
+  end QuadDobl_Enumerate_Decomposition;
+
   function Append_fk ( name : string; k : natural32 ) return string is
 
     strk : constant string := convert(integer32(k));
@@ -376,6 +433,102 @@ package body Drivers_to_Breakup_Solutions is
     end loop;
   end Write_Witness_Sets_for_Factors;
 
+  procedure Write_Witness_Sets_for_Factors
+              ( name : in string; 
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32; f : in Standard_Natural_VecVecs.VecVec ) is
+
+    use Standard_Natural_Vectors;
+
+    k : natural32 := 0;
+
+  begin
+    for i in f'range loop
+      if f(i) /= null then
+        k := k+1;
+        declare
+          file : file_type;
+          filename : constant string := Append_fk(name,k);
+          ws : Standard_Complex_Solutions.Solution_List;
+        begin
+          create(file,out_file,filename);
+          put_line(file,p);
+          new_line(file);
+          put_line(file,"THE SOLUTIONS :");
+          ws := Select_Witness_Set_for_Factor(sols,f(i).all);
+          put(file,Standard_Complex_Solutions.Length_Of(ws),
+              natural32(Standard_Complex_Solutions.Head_Of(ws).n),ws);
+          close(file);
+        end;
+      end if;
+    end loop;
+  end Write_Witness_Sets_for_Factors;
+
+  procedure Write_Witness_Sets_for_Factors
+              ( name : in string; 
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32; f : in Standard_Natural_VecVecs.VecVec ) is
+
+    use Standard_Natural_Vectors;
+
+    k : natural32 := 0;
+
+  begin
+    for i in f'range loop
+      if f(i) /= null then
+        k := k+1;
+        declare
+          file : file_type;
+          filename : constant string := Append_fk(name,k);
+          ws : DoblDobl_Complex_Solutions.Solution_List;
+        begin
+          create(file,out_file,filename);
+          put_line(file,p);
+          new_line(file);
+          put_line(file,"THE SOLUTIONS :");
+          ws := Select_Witness_Set_for_Factor(sols,f(i).all);
+          put(file,DoblDobl_Complex_Solutions.Length_Of(ws),
+              natural32(DoblDobl_Complex_Solutions.Head_Of(ws).n),ws);
+          close(file);
+        end;
+      end if;
+    end loop;
+  end Write_Witness_Sets_for_Factors;
+
+  procedure Write_Witness_Sets_for_Factors
+              ( name : in string; 
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32; f : in Standard_Natural_VecVecs.VecVec ) is
+
+    use Standard_Natural_Vectors;
+
+    k : natural32 := 0;
+
+  begin
+    for i in f'range loop
+      if f(i) /= null then
+        k := k+1;
+        declare
+          file : file_type;
+          filename : constant string := Append_fk(name,k);
+          ws : QuadDobl_Complex_Solutions.Solution_List;
+        begin
+          create(file,out_file,filename);
+          put_line(file,p);
+          new_line(file);
+          put_line(file,"THE SOLUTIONS :");
+          ws := Select_Witness_Set_for_Factor(sols,f(i).all);
+          put(file,QuadDobl_Complex_Solutions.Length_Of(ws),
+              natural32(QuadDobl_Complex_Solutions.Head_Of(ws).n),ws);
+          close(file);
+        end;
+      end if;
+    end loop;
+  end Write_Witness_Sets_for_Factors;
+
   procedure Standard_Enumerate_Decomposition
               ( file : in file_type; name : in string;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -417,6 +570,63 @@ package body Drivers_to_Breakup_Solutions is
   procedure QuadDobl_Enumerate_Decomposition
               ( file : in file_type; name : in string;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    grid : Array_of_QuadDobl_Sample_Lists(0..2) := Create(file,ep,sols,dim);
+    n : constant natural32 := QuadDobl_Complex_Solutions.Length_Of(sols);
+    f : constant Standard_Natural_VecVecs.VecVec
+      := Combinatorial_Factorization.Factor(file,n,grid);
+    lf : Standard_Natural_VecVecs.Link_to_VecVec
+       := new Standard_Natural_VecVecs.VecVec'(f);
+ 
+  begin
+    Deep_Clear(grid);
+    Write_Witness_Sets_for_Factors(name,ep,sols,dim,f);
+    Standard_Natural_VecVecs.Deep_Clear(lf);
+  end QuadDobl_Enumerate_Decomposition;
+
+  procedure Standard_Enumerate_Decomposition
+              ( file : in file_type; name : in string;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    grid : Array_of_Standard_Sample_Lists(0..2) := Create(file,ep,sols,dim);
+    n : constant natural32 := Standard_Complex_Solutions.Length_Of(sols);
+    f : constant Standard_Natural_VecVecs.VecVec
+      := Combinatorial_Factorization.Factor(file,n,grid);
+    lf : Standard_Natural_VecVecs.Link_to_VecVec
+       := new Standard_Natural_VecVecs.VecVec'(f);
+ 
+  begin
+    Deep_Clear(grid);
+    Write_Witness_Sets_for_Factors(name,ep,sols,dim,f);
+    Standard_Natural_VecVecs.Deep_Clear(lf);
+  end Standard_Enumerate_Decomposition;
+
+  procedure DoblDobl_Enumerate_Decomposition
+              ( file : in file_type; name : in string;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    grid : Array_of_DoblDobl_Sample_Lists(0..2) := Create(file,ep,sols,dim);
+    n : constant natural32 := DoblDobl_Complex_Solutions.Length_Of(sols);
+    f : constant Standard_Natural_VecVecs.VecVec
+      := Combinatorial_Factorization.Factor(file,n,grid);
+    lf : Standard_Natural_VecVecs.Link_to_VecVec
+       := new Standard_Natural_VecVecs.VecVec'(f);
+ 
+  begin
+    Deep_Clear(grid);
+    Write_Witness_Sets_for_Factors(name,ep,sols,dim,f);
+    Standard_Natural_VecVecs.Deep_Clear(lf);
+  end DoblDobl_Enumerate_Decomposition;
+
+  procedure QuadDobl_Enumerate_Decomposition
+              ( file : in file_type; name : in string;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 dim : in natural32 ) is
 

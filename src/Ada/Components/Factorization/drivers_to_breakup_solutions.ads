@@ -97,7 +97,36 @@ package Drivers_to_Breakup_Solutions is
 
   -- DESCRIPTION :
   --   Factors a component using linear traces combinatorially,
-  --   in standard double, double double, or quad double precision.
+  --   in standard double, double double, or quad double precision,
+  --   for a witness set defined by an ordinary polynomial system.
+  --   All output is written to the single output file.
+
+  -- ON ENTRY :
+  --   file     file which must be opened for output;
+  --   ep       embedded polynomial system of the witness set;
+  --   sols     generic points in the witness set;
+  --   dim      dimension of the solution set.
+
+  procedure Standard_Enumerate_Decomposition
+              ( file : in file_type;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+  procedure DoblDobl_Enumerate_Decomposition
+              ( file : in file_type;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+  procedure QuadDobl_Enumerate_Decomposition
+              ( file : in file_type;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+
+  -- DESCRIPTION :
+  --   Factors a component using linear traces combinatorially,
+  --   in standard double, double double, or quad double precision,
+  --   for a witness set defined by a Laurent polynomial system.
   --   All output is written to the single output file.
 
   -- ON ENTRY :
@@ -146,7 +175,28 @@ package Drivers_to_Breakup_Solutions is
 
   -- DESCRIPTION  :
   --   Writes a witness set for every irreducible factor of the
-  --   embedded system p with corresponding solutions in sols.
+  --   embedded polynomial system p with corresponding solutions in sols.
+  --   The factorization is given in f.
+
+  procedure Write_Witness_Sets_for_Factors
+              ( name : in string; 
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32; f : in Standard_Natural_VecVecs.VecVec );
+  procedure Write_Witness_Sets_for_Factors
+              ( name : in string; 
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32; f : in Standard_Natural_VecVecs.VecVec );
+  procedure Write_Witness_Sets_for_Factors
+              ( name : in string; 
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32; f : in Standard_Natural_VecVecs.VecVec );
+
+  -- DESCRIPTION  :
+  --   Writes a witness set for every irreducible factor of the
+  --   embedded Laurent system p with corresponding solutions in sols.
   --   The factorization is given in f.
 
   procedure Standard_Enumerate_Decomposition
@@ -167,7 +217,38 @@ package Drivers_to_Breakup_Solutions is
 
   -- DESCRIPTION :
   --   Factors a component using linear traces combinatorially,
-  --   in standard double, double double, or quad double precision.
+  --   in standard double, double double, or quad double precision,
+  --   for a witness set defined by an ordinary polynomial system.
+  --   Each irreducible factor is written as a witness set to a 
+  --   separate file, with the same prefix name.
+
+  -- ON ENTRY :
+  --   file     file which must be opened for output;
+  --   name     prefix for the output file names for the factors;
+  --   ep       embedded polynomial system of the witness set;
+  --   sols     generic points in the witness set;
+  --   dim      dimension of the solution set.
+
+  procedure Standard_Enumerate_Decomposition
+              ( file : in file_type; name : in string;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+  procedure DoblDobl_Enumerate_Decomposition
+              ( file : in file_type; name : in string;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+  procedure QuadDobl_Enumerate_Decomposition
+              ( file : in file_type; name : in string;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+
+  -- DESCRIPTION :
+  --   Factors a component using linear traces combinatorially,
+  --   in standard double, double double, or quad double precision,
+  --   for a witness set defined by a Laurent system.
   --   Each irreducible factor is written as a witness set to a 
   --   separate file, with the same prefix name.
 
