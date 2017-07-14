@@ -2864,8 +2864,8 @@ function use_c2phc ( job : integer32;
       when 806 => return use_c2fac(99,a,b,c); -- init quaddobl Laurent sampler
      -- copy embedded system from sampler to container
       when 807 => return use_c2fac(100,a,b,c); -- standard Laurent copy
-      when 808 => return use_c2fac(102,a,b,c); -- dobldobl Laurent copy
-      when 809 => return use_c2fac(103,a,b,c); -- quaddobl Laurent copy
+      when 808 => return use_c2fac(101,a,b,c); -- dobldobl Laurent copy
+      when 809 => return use_c2fac(102,a,b,c); -- quaddobl Laurent copy
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

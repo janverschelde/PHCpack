@@ -5,6 +5,7 @@ Thu 13 Jul 2017 : extended {standard,dobldobl,quaddobl}_sampling_operations
   use_c2mbt.adb, use_celcon.adb, use_giftwrap.adb, use_mapcon.adb,
   use_syscon.adb, and ts_syscon.adb.  Jobs added to use_c2fac
   and use_c2phc to copy embedded systems from sampler to container.
+  Bug fix in use_c2phc.adb with misaligned job codes.
 
 Mon 10 Jul 2017 : extended use_c2mbt with jobs to run homotopy membership
   tests on witness sets defined by Laurent polynomial systems.
