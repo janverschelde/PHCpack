@@ -1,3 +1,7 @@
+Fri 14 Jul 2017 : normalization of function names in witset changed
+  parallel_monodromy.c, manage_components.c, monodromyMPI.c, mpi2fac.c,
+  mpi2fac_s.c, and mpi2fac_d.c.
+
 Fri 9 Sep 2016 : updates in mpi2cell_d.c and mpi2cell_s.c because of
   renamings of functions in celcon.
 

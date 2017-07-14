@@ -95,14 +95,15 @@ int monodromy_breakup ( int myid, int n, int dim, int deg, int nbloops,
    solutions_distribute(myid,deg,n,numprocs,&mysolnum);
    
    MPI_Bcast(&dim,1,MPI_INT,0,MPI_COMM_WORLD);
-   fail = initialize_sampler(dim);
+   fail = initialize_standard_sampler(dim);
 
    if(myid == 0)
    {
       fail = validate_solutions();                   /* sanity check */
-      fail = initialize_monodromy(nbloops,deg,dim);  /* initialize traces */
+      fail = initialize_standard_monodromy(nbloops,deg,dim);
+      /* initialize traces */
       if(v>1) print_solutions(myid);
-      fail = store_solutions();
+      fail = store_standard_solutions();
    }
 
    for(i=1; i<=2; i++)
@@ -113,8 +114,8 @@ int monodromy_breakup ( int myid, int n, int dim, int deg, int nbloops,
      f_track_paths(myid,deg,n,numprocs,mysolnum,trackwtime);
      if(myid == 0)
      {
-        fail = store_solutions();
-        fail = restore_solutions();
+        fail = store_standard_solutions();
+        fail = restore_standard_solutions();
      }
      solutions_distribute(myid,deg,n,numprocs,&mysolnum);
      if(myid == 0) f_swap_slices(myid);
@@ -138,8 +139,8 @@ int monodromy_breakup ( int myid, int n, int dim, int deg, int nbloops,
       if(myid == 0)
       {
          if(v>1) print_solutions(myid);
-         fail = store_solutions();
-         fail = monodromy_permutation(deg,&done);
+         fail = store_standard_solutions();
+         fail = standard_monodromy_permutation(deg,&done);
          solcon_clear_standard_solutions();
       }
 
@@ -156,7 +157,7 @@ int monodromy_breakup ( int myid, int n, int dim, int deg, int nbloops,
       {
          if(myid != 0) f_swap_slices(myid);
          slices_broadcast(myid,dim,n);               /* new slices */
-         if(myid == 0) fail = restore_solutions();
+         if(myid == 0) fail = restore_standard_solutions();
          MPI_Bcast(&deg,1,MPI_INT,0,MPI_COMM_WORLD);  
          solutions_distribute(myid,deg,n,numprocs,&mysolnum);
       }

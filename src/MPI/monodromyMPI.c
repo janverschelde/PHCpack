@@ -82,7 +82,7 @@ int main( int argc, char *argv[] )
   MPI_Bcast(&deg,1,MPI_INT,0,MPI_COMM_WORLD);
   if (v>=1) printf("Node %d: went through bcast of degree,dim,#slices.\n",myid);
 
-  fail = initialize_monodromy(max_nb_slices,deg,dim);
+  fail = initialize_standard_monodromy(max_nb_slices,deg,dim);
   fail = build_trace_grid(myid,n,dim,deg,numprocs,&trackwtime);
 
   MPI_Barrier(MPI_COMM_WORLD);  /* wait for finish build_trace_grid */
@@ -300,7 +300,8 @@ void run_slave(int n)
       if (v>=3) printf("S_%d: tracking label %d from slice %d to slice %d\n", 
 	     st.num, st.start_label, st.sliceA, st.sliceB);
       
-      fail = sample_loop(st.sliceA,st.sliceB,st.start_label,&target_label);
+      fail = standard_sample_loop
+               (st.sliceA,st.sliceB,st.start_label,&target_label);
 
       // end_point = (rand() % n) + 1; // simulate the discovery of the endpoint
 

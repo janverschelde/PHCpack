@@ -26,7 +26,7 @@ void f_swap_slices ( int myid )
    int fail;
 
    if(v>0) printf("Node %d is swapping slices ...\n",myid);
-   fail = swap_slices();
+   fail = swap_standard_slices();
 }
 
 void slices_broadcast ( int myid, int k, int n )
@@ -44,7 +44,7 @@ void slices_broadcast ( int myid, int k, int n )
          }
          MPI_Bcast(r,2,MPI_DOUBLE,0,MPI_COMM_WORLD);
          if(v>0) printf("Node %d received %.15lf + %.15lf*I\n",myid,r[0],r[1]);
-         fail = assign_coefficient_of_slice(i,j,r);
+         fail = assign_standard_coefficient_of_slice(i,j,r);
       }
 }
 
@@ -67,7 +67,7 @@ void trace_slice_broadcast ( int myid, int first )
       }
    }
    MPI_Bcast(r,2,MPI_DOUBLE,0,MPI_COMM_WORLD);
-   fail = assign_coefficient_of_slice(i,j,r);
+   fail = assign_standard_coefficient_of_slice(i,j,r);
 }
 
 void gamma_broadcast ( int myid, int n )
@@ -102,7 +102,7 @@ int witness_set_distribute ( int myid, int n, int dim, int deg, int np )
    monomials_broadcast(myid,n);
    if(v>1) if(myid == 0) print_solutions(myid);
    solutions_distribute(myid,deg,n,np,&mysolnum);
-   fail = initialize_sampler(dim);
+   fail = initialize_standard_sampler(dim);
 
    if(v>0) printf("Node %d is leaving witness_set_distribute.\n",myid);
 
@@ -118,7 +118,7 @@ void f_track_paths ( int myid, int deg, int n, int numprocs, int mysolnum,
    if(myid != 0) 
    {
       startwtime = MPI_Wtime();
-      fail = sample_to_new_slices();          /* do path tracking */
+      fail = standard_sample_to_new_slices();      /* do path tracking */
       if(v>0) printf("Node %d done tracking %d paths.\n",myid,mysolnum);
       if(v>1) printf("Solutions computed by node %d : \n",myid);
       if(v>1) fail = solcon_write_solutions();
@@ -133,8 +133,8 @@ void f_track_paths ( int myid, int deg, int n, int numprocs, int mysolnum,
          printf("Root node has solutions in its container :\n");
          fail = solcon_write_solutions();
       }
-      fail = swap_slices();
-      fail = witness_set_to_system_container();
+      fail = swap_standard_slices();
+      fail = standard_witness_set_to_system_container();
       fail = validate_solutions();
    }
 }
@@ -152,7 +152,7 @@ int build_trace_grid ( int myid, int n, int dim, int deg,
    {
       fail = validate_solutions();               /* sanity check */
       if(v>1) print_solutions(myid);
-      fail = store_solutions();
+      fail = store_standard_solutions();
    }
 
    solutions_distribute(myid,deg,n,numprocs,&mysolnum);
@@ -164,8 +164,8 @@ int build_trace_grid ( int myid, int n, int dim, int deg,
      f_track_paths(myid,deg,n,numprocs,mysolnum,trackwtime);
      if(myid == 0)
      {
-        fail = store_solutions();
-        fail = restore_solutions();
+        fail = store_standard_solutions();
+        fail = restore_standard_solutions();
      }
      solutions_distribute(myid,deg,n,numprocs,&mysolnum);
      if(myid == 0) f_swap_slices(myid);
@@ -173,7 +173,7 @@ int build_trace_grid ( int myid, int n, int dim, int deg,
 
    if(myid == 0)
    {
-      fail = trace_grid_diagnostics(&err,&dis);
+      fail = standard_trace_grid_diagnostics(&err,&dis);
       printf("maximal error on samples in trace grid : %.2e\n",err);
       printf("minimal distance between samples in grid : %.2e\n",dis);
       if((err > tol)||(dis < tol)) return 1;
@@ -204,7 +204,7 @@ void trace_grid_broadcast ( int myid, int d, int n )
       if(myid != 0) 
       {
          f_swap_slices(myid);
-	 fail = store_solutions();
+	 fail = store_standard_solutions();
       }
    }
 }
@@ -250,7 +250,7 @@ int track_paths_to_new_slices ( int myid, int nb_slices, int d, int k, int n,
    {
 /* if(v>0) */ if(myid == 0) printf("Tracking to slice #\%d...\n",i);
 
-      if(myid == 0) fail = restore_solutions();
+      if(myid == 0) fail = restore_standard_solutions();
       /* gamma_broadcast(myid,n); */
       fail = set_target_hyperplane_sections(i);
       solutions_distribute(myid,d,n,numprocs,&mysolnum);
@@ -259,9 +259,9 @@ int track_paths_to_new_slices ( int myid, int nb_slices, int d, int k, int n,
 
 /* if(v>0) */ if(myid == 0) printf("Broadcasting the solutions ...\n");
 
-      if(myid == 0) fail = store_solutions();
+      if(myid == 0) fail = store_standard_solutions();
       solutions_broadcast(myid,d,n);
-      if(myid != 0) fail = store_solutions();
+      if(myid != 0) fail = store_standard_solutions();
    }
 }
 
@@ -295,7 +295,7 @@ void interactive_trace_test ( int myid )
          printf("The labels");
          for(i=0; i<k; i++) printf(" %d",f[i]);
 
-         fail = trace_sum_difference(k,f,&d);
+         fail = standard_trace_sum_difference(k,f,&d);
          printf(" have trace sum difference %.2e\n",d);
 
          if(dest != 0)
@@ -311,7 +311,7 @@ void interactive_trace_test ( int myid )
          MPI_Recv(&k,1,MPI_INT,0,SEND_SMUL,MPI_COMM_WORLD,&status);
          f = (int*)calloc(k,sizeof(int));
          MPI_Recv(f,k,MPI_INT,0,SEND_SMUL,MPI_COMM_WORLD,&status);
-         fail = trace_sum_difference(k,f,&d);
+         fail = standard_trace_sum_difference(k,f,&d);
 	 printf("Node %d computes trace sum difference %.2e\n",myid,d);
          MPI_Send(&d,1,MPI_DOUBLE,0,0,MPI_COMM_WORLD);
       }
@@ -420,8 +420,8 @@ void interactive_track_to_make_loops ( int myid )
          printf("Node %d received (%d,%d,%d) from Node 0.\n",
                 dest,start_slice,target_slice,start_label);
 
-         fail = sample_loop(start_slice,target_slice,
-                            start_label,&target_label);
+         fail = standard_sample_loop
+                  (start_slice,target_slice,start_label,&target_label);
          printf("Node %d computes label of the target solution : %d.\n",
                 dest,target_label);
 

@@ -117,7 +117,7 @@ bool is_irreducible(COMPONENT* c)
 { 
    int fail;
    double d;
-   fail = trace_sum_difference(c->size, c->pts, &d);
+   fail = standard_trace_sum_difference(c->size, c->pts, &d);
    if (v>=3) printf("Comp #%d: has trace sum difference %.2e\n",c->num,d);
    return d<TRACE_TOLERANCE;
 }

@@ -140,7 +140,7 @@ int initialize_slices ( int myid, int n, int dim, int deg, int nb_slices,
 {
    int fail;
 
-   fail = initialize_monodromy(nb_slices,deg,dim);
+   fail = initialize_standard_monodromy(nb_slices,deg,dim);
    fail = witness_set_distribute(myid,n,dim,deg,numprocs);
    MPI_Barrier(MPI_COMM_WORLD);  /* initialization of sampler done */
    all_slices_broadcast(myid,nb_slices,dim,n);
@@ -390,7 +390,8 @@ void run_slave(int n, double* trackwtime)
 	     st.num, st.start_label, st.sliceA, st.sliceB);
 
       startwtime = MPI_Wtime();
-      fail = sample_loop(st.sliceA,st.sliceB,st.start_label,&target_label);
+      fail = standard_sample_loop
+               (st.sliceA,st.sliceB,st.start_label,&target_label);
       endwtime = MPI_Wtime();
       *trackwtime += (endwtime - startwtime);
       
