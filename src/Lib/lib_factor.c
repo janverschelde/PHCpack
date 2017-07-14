@@ -40,43 +40,58 @@ int store_standard_gammas ( int n );
  *   Generates n random complex coefficients in standard double precision
  *   and stores these coefficients into the monodromy breakup machine. */
 
-int standard_monodromy_breakup ( int nbloops, int n, int k, int d );
+int standard_monodromy_breakup
+ ( int islaurent, int nbloops, int n, int k, int d );
 /*
  * DESCRIPTION :
- *   Uses nbloops to break up a k-dimensional set of degree d in n-space,
- *   in standard double precision. */ 
+ *   Uses at most nbloops to break up a k-dimensional set of degree d
+ *   in n-space, in standard double precision.
+ *   If the witness set is defined by a Laurent polynomial system,
+ *   then islaurent must be equal to one. */
 
-int dobldobl_monodromy_breakup ( int nbloops, int n, int k, int d );
+int dobldobl_monodromy_breakup
+ ( int islaurent, int nbloops, int n, int k, int d );
 /*
  * DESCRIPTION :
- *   Uses nbloops to break up a k-dimensional set of degree d in n-space,
- *   in double double precision. */ 
+ *   Uses at most nbloops to break up a k-dimensional set of degree d 
+ *   in n-space, in double double precision.
+ *   If the witness set is defined by a Laurent polynomial system,
+ *   then islaurent must be equal to one. */ 
 
-int quaddobl_monodromy_breakup ( int nbloops, int n, int k, int d );
+int quaddobl_monodromy_breakup
+ ( int islaurent, int nbloops, int n, int k, int d );
 /*
  * DESCRIPTION :
- *   Uses nbloops to break up a k-dimensional set of degree d in n-space,
- *   in quad double precision. */ 
+ *   Uses at most nbloops to break up a k-dimensional set of degree d
+ *   in n-space, in quad double precision.
+ *   If the witness set is defined by a Laurent polynomial system,
+ *   then islaurent must be equal to one. */ 
 
-int standard_test ( void );
+int standard_test ( int islaurent );
 /*
  * DESCRIPTION :
- *   Performs the monodromy breakup in standard double precision. */
+ *   Performs the monodromy breakup in standard double precision.
+ *   If islaurent equals one , then the witness set is defined by
+ *   a Laurent polynomial system. */
 
-int dobldobl_test ( void );
+int dobldobl_test ( int islaurent );
 /*
  * DESCRIPTION :
- *   Performs the monodromy breakup in double double precision. */
+ *   Performs the monodromy breakup in double double precision.
+ *   If islaurent equals one, then the witness set is defined by
+ *   a Laurent polynomial system. */
 
-int quaddobl_test ( void );
+int quaddobl_test ( int isluarent );
 /*
  * DESCRIPTION :
- *   Performs the monodromy breakup in quad double precision. */
+ *   Performs the monodromy breakup in quad double precision.
+ *   If islaurent equals one, then the witness set is defined by
+ *   a Laurent polynomial system. */
 
 int main ( int argc, char *argv[] )
 {
    char ans;
-   int precision,fail;
+   int precision,fail,laurent;
    int seed = time(NULL);
 
    adainit();
@@ -93,12 +108,17 @@ int main ( int argc, char *argv[] )
 
    scanf("%c",&ans); /* skip end of line character */
 
+   printf("\nLaurent polynomial system ? (y/n) ");
+   scanf("%c",&ans);
+   laurent = (ans == 'y');
+   scanf("%c",&ans); /* skip end of line character */
+
    if(precision == 0)
-      fail = standard_test();
+      fail = standard_test(laurent);
    else if(precision == 1)
-      fail = dobldobl_test();
+      fail = dobldobl_test(laurent);
    else if(precision == 2)
-      fail = quaddobl_test();
+      fail = quaddobl_test(laurent);
    else
       printf("Selected precision level is not supported.\n");
 
@@ -189,12 +209,16 @@ int store_quaddobl_gammas ( int n )
    store_quaddobl_gamma(n,re_gamma,im_gamma);
 }
 
-int standard_monodromy_breakup ( int nbloops, int n, int k, int d )
+int standard_monodromy_breakup 
+ ( int islaurent, int nbloops, int n, int k, int d )
 {
    int fail,i,j,done;
    double err,dis;
 
-   fail = initialize_sampler(k);
+   if(islaurent == 1)
+      fail = initialize_standard_Laurent_sampler(k);
+   else
+      fail = initialize_sampler(k);
    fail = initialize_monodromy(nbloops,d,k);
    if(verbose>0)
       printf("\nInitialized sampler and monodromy permutations ...\n");
@@ -258,12 +282,16 @@ int standard_monodromy_breakup ( int nbloops, int n, int k, int d )
    return fail;
 }
 
-int dobldobl_monodromy_breakup ( int nbloops, int n, int k, int d )
+int dobldobl_monodromy_breakup
+ ( int islaurent, int nbloops, int n, int k, int d )
 {
    int fail,i,j,done;
    double err,dis;
 
-   fail = initialize_dobldobl_sampler(k);
+   if(islaurent == 1)
+      fail = initialize_dobldobl_Laurent_sampler(k);
+   else
+      fail = initialize_dobldobl_sampler(k);
    fail = initialize_dobldobl_monodromy(nbloops,d,k);
    if(verbose>0)
       printf("\nInitialized sampler and monodromy permutations ...\n");
@@ -329,12 +357,16 @@ int dobldobl_monodromy_breakup ( int nbloops, int n, int k, int d )
    return fail;
 }
 
-int quaddobl_monodromy_breakup ( int nbloops, int n, int k, int d )
+int quaddobl_monodromy_breakup
+ ( int islaurent, int nbloops, int n, int k, int d )
 {
    int fail,i,j,done;
    double err,dis;
 
-   fail = initialize_quaddobl_sampler(k);
+   if(islaurent == 1)
+      fail = initialize_quaddobl_Laurent_sampler(k);
+   else
+      fail = initialize_quaddobl_sampler(k);
    fail = initialize_quaddobl_monodromy(nbloops,d,k);
    if(verbose>0)
       printf("\nInitialized sampler and monodromy permutations ...\n");
@@ -400,13 +432,17 @@ int quaddobl_monodromy_breakup ( int nbloops, int n, int k, int d )
    return fail;
 }
 
-int standard_test ( void )
+int standard_test ( int islaurent )
 {
    int fail,n,dim,deg,nbloops,kind;
    char ans;
 
    printf("\nReading a witness set ...\n");
-   fail = read_witness_set(&n,&dim,&deg);
+   if(islaurent == 1)
+      fail = read_standard_Laurent_witness_set(&n,&dim,&deg);
+   else
+      fail = read_witness_set(&n,&dim,&deg);
+
    printf("\nMENU for the kind of output :\n");
    printf("  0. remain silent with no intermediate output;\n");
    printf("  1. all intermediate output goes to screen;\n");
@@ -428,29 +464,36 @@ int standard_test ( void )
       if(ans == 'y')
       {
          printf("\nThe system read :\n");
-         fail = print_system();
+         if(islaurent == 1)
+            fail = syscon_write_standard_Laurent_system();
+         else
+            fail = syscon_write_standard_system();
       }
    }
 
    fail = assign_labels(n,deg,0);
 
-   printf("\nGive the number of loops : ");
+   printf("\nGive the maximum number of loops : ");
    scanf("%d",&nbloops);
 
-   fail = standard_monodromy_breakup(nbloops,n,dim,deg);
+   fail = standard_monodromy_breakup(islaurent,nbloops,n,dim,deg);
 
    if(kind == 2) printf("See the output file for results.\n");
 
    return 0;
 }
 
-int dobldobl_test ( void )
+int dobldobl_test ( int islaurent )
 {
    int fail,n,dim,deg,nbloops,kind;
    char ans;
 
    printf("\nReading a witness set ...\n");
-   fail = read_dobldobl_witness_set(&n,&dim,&deg);
+   if(islaurent == 1)
+      fail = read_dobldobl_Laurent_witness_set(&n,&dim,&deg);
+   else
+      fail = read_dobldobl_witness_set(&n,&dim,&deg);
+
    printf("\nMENU for the kind of output :\n");
    printf("  0. remain silent with no intermediate output;\n");
    printf("  1. all intermediate output goes to screen;\n");
@@ -472,29 +515,35 @@ int dobldobl_test ( void )
       if(ans == 'y')
       {
          printf("\nThe system read :\n");
-         fail = syscon_write_dobldobl_system();
+         if(islaurent == 1)
+            fail = syscon_write_dobldobl_Laurent_system();
+         else
+            fail = syscon_write_dobldobl_system();
       }
    }
-
    fail = dobldobl_assign_labels(n,deg);
 
-   printf("\nGive the number of loops : ");
+   printf("\nGive the maximum number of loops : ");
    scanf("%d",&nbloops);
 
-   fail = dobldobl_monodromy_breakup(nbloops,n,dim,deg);
+   fail = dobldobl_monodromy_breakup(islaurent,nbloops,n,dim,deg);
 
    if(kind == 2) printf("See the output file for results.\n");
 
    return 0;
 }
 
-int quaddobl_test ( void )
+int quaddobl_test ( int islaurent )
 {
    int fail,n,dim,deg,nbloops,kind;
    char ans;
 
    printf("\nReading a witness set ...\n");
-   fail = read_quaddobl_witness_set(&n,&dim,&deg);
+   if(islaurent == 1)
+      fail = read_quaddobl_Laurent_witness_set(&n,&dim,&deg);
+   else
+      fail = read_quaddobl_witness_set(&n,&dim,&deg);
+
    printf("\nMENU for the kind of output :\n");
    printf("  0. remain silent with no intermediate output;\n");
    printf("  1. all intermediate output goes to screen;\n");
@@ -516,16 +565,18 @@ int quaddobl_test ( void )
       if(ans == 'y')
       {
          printf("\nThe system read :\n");
-         fail = syscon_write_quaddobl_system();
+         if(islaurent == 1)
+            fail = syscon_write_quaddobl_Laurent_system();
+         else
+            fail = syscon_write_quaddobl_system();
       }
    }
-
    fail = quaddobl_assign_labels(n,deg);
 
-   printf("\nGive the number of loops : ");
+   printf("\nGive the maximum number of loops : ");
    scanf("%d",&nbloops);
 
-   fail = quaddobl_monodromy_breakup(nbloops,n,dim,deg);
+   fail = quaddobl_monodromy_breakup(islaurent,nbloops,n,dim,deg);
 
    if(kind == 2) printf("See the output file for results.\n");
 
