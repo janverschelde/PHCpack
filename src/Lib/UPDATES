@@ -1,5 +1,6 @@
 Fri 14 Jul 2017 : started modification in lib_factor.c to accept Laurent
-  polynomial systems.
+  polynomial systems.  Normalized names of functions in witset,
+  which changed lib_factor.c.
 
 Thu 13 Jul 2017 : added an initializer of the samplers for witness sets
   defined by the Laurent systems to witset and phcpy2c.h, phcpy2c2.c,

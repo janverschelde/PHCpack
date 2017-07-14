@@ -299,7 +299,7 @@ int read_a_witness_set ( int k, int *n, int *dim, int *deg );
  *   dim      dimension of the solution set;
  *   deg      degree of the solution set.  */
 
-int witness_set_to_system_container ( void );
+int standard_witness_set_to_system_container ( void );
 /*
  * DESCRIPTION :
  *   Copies the embedded system of the witness set from the sampler
@@ -572,7 +572,7 @@ int str2list ( int n, char *s, int *d );
  * REQUIRED : 
  *   d has space enough to store all numbers in s. */
 
-int set_state_to_silent ( void );
+int set_standard_state_to_silent ( void );
 /*
  * DESCRIPTION :
  *   Sets the state of monodromy permutations in standard double
@@ -634,7 +634,7 @@ int quaddobl_assign_labels ( int n, int nbsols );
  *   Assigns a unique label between 1 and nbsols to the multiplicity field
  *   for each solution in the quad double solutions container. */
 
-int initialize_sampler ( int dim );
+int initialize_standard_sampler ( int dim );
 /*
  * DESCRIPTION :
  *   Initializes the sampling machine with a witness set, defined by
@@ -700,7 +700,7 @@ int initialize_quaddobl_Laurent_sampler ( int dim );
  * ON ENTRY :
  *   dim      dimension of the witness set.  */
 
-int initialize_monodromy ( int n, int d, int k );
+int initialize_standard_monodromy ( int n, int d, int k );
 /* 
  * DESCRIPTION :
  *   Initialize the package Standard_Monodromy_Permutations for n loops,
@@ -718,7 +718,7 @@ int initialize_quaddobl_monodromy ( int n, int d, int k );
  *   Initialize the package QuadDobl_Monodromy_Permutations for n loops,
  *   to factor a k-dimensional solution component of degree d.  */
 
-int trace_grid_diagnostics ( double *err, double *dis );
+int standard_trace_grid_diagnostics ( double *err, double *dis );
 /*
  * DESCRIPTION :
  *   Returns the maximal error on the samples in the trace grid
@@ -805,7 +805,7 @@ int store_quaddobl_gamma ( int n, double *re_gamma, double *im_gamma );
  *   gamma = re_gamma + im_gamma*I into the sampler.
  *   The parameters re_gamma and im_gamma point to 4*n doubles. */
 
-int assign_coefficient_of_slice ( int i, int j, double *r );
+int assign_standard_coefficient_of_slice ( int i, int j, double *r );
 /*
  * DESCRIPTION :
  *   Assigns r[0] + r[1]*I as j-th coefficient of slice i. */
@@ -862,7 +862,7 @@ int set_target_hyperplane_sections ( int i );
  *   The target slices are set to the i-th hyperplane sections,
  *   which must be previously stored in the sampler. */
 
-int new_slices ( int k, int n );
+int new_standard_slices ( int k, int n );
 /*
  * DESCRIPTION :
  *   Generates k random hyperplanes in standard double precision
@@ -880,7 +880,7 @@ int new_quaddobl_slices ( int k, int n );
  *   Generates k random hyperplanes in quad double precision
  *   in n-space. */
 
-int swap_slices ( void );
+int swap_standard_slices ( void );
 /* 
  * DESCRIPTION :
  *   Swaps the current slices with new slices and takes new solutions
@@ -898,7 +898,7 @@ int swap_quaddobl_slices ( void );
  *   Swaps the current slices with new slices and takes new solutions
  *   as start to turn back, in quad double precision. */
 
-int store_solutions ( void );
+int store_standard_solutions ( void );
 /* 
  * DESCRIPTION :
  *   Stores the solutions in the container to the data maintained
@@ -916,7 +916,7 @@ int store_quaddobl_solutions ( void );
  *   Stores the solutions in the container to the data maintained
  *   by the package QuadDobl_Monodromy_Permutations. */
 
-int restore_solutions ( void );
+int restore_standard_solutions ( void );
 /*
  * DESCRIPTION :
  *   Restores first initialized solutions in standard double precision
@@ -949,7 +949,7 @@ int in_slice ( int label, int slice, int *position );
  *   The return value of this function is zero after successful execution,
  *   otherwise an exception has occurred. */
 
-int sample_to_new_slices ( void );
+int standard_sample_to_new_slices ( void );
 /* 
  * DESCRIPTION :
  *   The sampler computes a new witness set for new slices,
@@ -967,7 +967,7 @@ int quaddobl_sample_to_new_slices ( void );
  *   The sampler computes a new witness set for new slices,
  *   in quad double precision. */
 
-int track_paths ( void );
+int standard_track_paths ( void );
 /* 
  * DESCRIPTION :
  *   Tracks as many paths as defined by witness set,
@@ -985,8 +985,9 @@ int quaddobl_track_paths ( void );
  *   Tracks as many paths as defined by witness set,
  *   in quad double precision. */
 
-int sample_loop ( int start_slice, int target_slice,
-                  int start_label, int *target_label );
+int standard_sample_loop
+ ( int start_slice, int target_slice,
+   int start_label, int *target_label );
 /*
  * DESCRIPTION :
  *   Tracks one path, in standard double precision,
@@ -1020,7 +1021,7 @@ int quaddobl_sample_loop
  *   On return is in target_label the label of the solution 
  *   on the target slice, matching with the end of the path. */
 
-int trace_sum_difference ( int n, int *f, double *d );
+int standard_trace_sum_difference ( int n, int *f, double *d );
 /*
  * DESCRIPTION :
  *   Returns in d the difference between the actual sum at the samples
@@ -1041,7 +1042,7 @@ int quaddobl_trace_sum_difference ( int n, int *f, double *d );
  *   defined by the labels to the generic points in f (f is of dimension n),
  *   and the trace sum, in quad double precision. */
 
-int number_of_irreducible_factors ( int *nf );
+int number_of_standard_factors ( int *nf );
 /*
  * DESCRIPTION :
  *   Returns in nf the number of irreducible factors in the standard
@@ -1059,7 +1060,7 @@ int number_of_quaddobl_factors ( int *nf );
  *   Returns in nf the number of irreducible factors in the quad
  *   double precision decomposition of the witness set. */
 
-int witness_points_of_irreducible_factor ( int k, int *d, int *w );
+int witness_points_of_standard_factor ( int k, int *d, int *w );
 /*
  * DESCRIPTION :
  *   Given in k an index of an irreducible component,
@@ -1083,7 +1084,7 @@ int witness_points_of_quaddobl_factor ( int k, int *d, int *w );
  *   returns in d the degree of that component and in w 
  *   d labels of witness points that span the component. */
 
-int permutation_after_loop ( int d, int *permutation );
+int permutation_after_standard_loop ( int d, int *permutation );
 /*
  * DESCRIPTION :
  *   For a set of degree d, computes the permutation using the solutions
@@ -1107,7 +1108,8 @@ int permutation_after_quaddobl_loop ( int d, int *permutation );
  *   The permutation is an array of d integers,
  *   returned in the variable permutation. */
 
-int update_decomposition ( int d, int *permutation, int *nf, int *done );
+int update_standard_decomposition
+ ( int d, int *permutation, int *nf, int *done );
 /*
  * DESCRIPTION :
  *   Updates the decomposition with the given permutation of d elements,
@@ -1139,7 +1141,7 @@ int update_quaddobl_decomposition
  *   If the current decomposition is certified, then done == 1 on return,
  *   otherwise done == 0. */
 
-int monodromy_permutation ( int d, int *done );
+int standard_monodromy_permutation ( int d, int *done );
 /*
  * DESCRIPTION :
  *   Computes the permutation by last stored solution,

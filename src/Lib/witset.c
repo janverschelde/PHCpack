@@ -378,7 +378,7 @@ int read_a_witness_set ( int k, int *n, int *dim, int *deg )
    return fail;
 }
 
-int witness_set_to_system_container ( void )
+int standard_witness_set_to_system_container ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -687,7 +687,7 @@ int str2list ( int n, char *s, int *d )
    return ind;
 }
 
-int set_state_to_silent ( void )
+int set_standard_state_to_silent ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -801,7 +801,7 @@ int quaddobl_assign_labels ( int n, int nbsols )
    return fail;
 }
 
-int initialize_sampler ( int dim )
+int initialize_standard_sampler ( int dim )
 {
    int *b,fail;
    double *c;
@@ -861,7 +861,7 @@ int initialize_quaddobl_Laurent_sampler ( int dim )
    return fail;
 }
 
-int initialize_monodromy ( int n, int d, int k )
+int initialize_standard_monodromy ( int n, int d, int k )
 {
    int fail;
    double *c;
@@ -900,7 +900,7 @@ int initialize_quaddobl_monodromy ( int n, int d, int k )
    return fail;
 }
 
-int trace_grid_diagnostics ( double *err, double *dis )
+int standard_trace_grid_diagnostics ( double *err, double *dis )
 {
    int *a,*b,fail;
    double c[2];
@@ -1029,7 +1029,7 @@ int store_quaddobl_gamma ( int n, double *re_gamma, double *im_gamma )
    return fail;
 }
 
-int assign_coefficient_of_slice ( int i, int j, double *r )
+int assign_standard_coefficient_of_slice ( int i, int j, double *r )
 {
    int fail;
    fail = _ada_use_c2phc(43,&i,&j,r);
@@ -1082,7 +1082,7 @@ int set_target_hyperplane_sections ( int i )
    return fail;
 }
 
-int new_slices ( int k, int n )
+int new_standard_slices ( int k, int n )
 {
    int i,j,fail;
    double r[2];
@@ -1127,7 +1127,7 @@ int new_quaddobl_slices ( int k, int n )
    return fail;
 }
 
-int swap_slices ( void )
+int swap_standard_slices ( void )
 {
    double *c;
    int fail,*a,*b;
@@ -1151,7 +1151,7 @@ int swap_quaddobl_slices ( void )
    return fail;
 }
 
-int store_solutions ( void )
+int store_standard_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -1175,7 +1175,7 @@ int store_quaddobl_solutions ( void )
    return fail;
 }
 
-int restore_solutions ( void )
+int restore_standard_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -1219,7 +1219,7 @@ int in_slice ( int label, int slice, int *position )
    return fail;
 }
 
-int sample_to_new_slices ( void )
+int standard_sample_to_new_slices ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -1243,16 +1243,16 @@ int quaddobl_sample_to_new_slices ( void )
    return fail;
 }
 
-int track_paths ( void )
+int standard_track_paths ( void )
 {
    int fail;
 
-   fail = sample_to_new_slices();            /* do path tracking */
+   fail = standard_sample_to_new_slices();            /* do path tracking */
    if(verbose>0) printf("Done tracking.\n");
    if(verbose>1) printf("Solutions computed :\n");
    if(verbose>1) fail = solcon_write_standard_solutions();
-   fail = swap_slices();                     /* swap start with new slices */
-   fail = witness_set_to_system_container();
+   fail = swap_standard_slices();           /* swap start with new slices */
+   fail = standard_witness_set_to_system_container();
    fail = validate_solutions();
 
    return fail;
@@ -1290,8 +1290,9 @@ int quaddobl_track_paths ( void )
    return fail;
 }
 
-int sample_loop ( int start_slice, int target_slice,
-                  int start_label, int *target_label )
+int standard_sample_loop
+ ( int start_slice, int target_slice,
+   int start_label, int *target_label )
 {
    int a[2],fail;
    double *c;
@@ -1334,7 +1335,7 @@ int quaddobl_sample_loop
    return fail;
 }
 
-int trace_sum_difference ( int n, int *f, double *d )
+int standard_trace_sum_difference ( int n, int *f, double *d )
 {
    int fail;
    fail = _ada_use_c2phc(57,&n,f,d);
@@ -1355,7 +1356,7 @@ int quaddobl_trace_sum_difference ( int n, int *f, double *d )
    return fail;
 }
 
-int number_of_irreducible_factors ( int *nf )
+int number_of_standard_factors ( int *nf )
 {
    int *b,fail;
    double *c;
@@ -1385,7 +1386,7 @@ int number_of_quaddobl_factors ( int *nf )
    return fail;
 }
 
-int witness_points_of_irreducible_factor ( int k, int *d, int *w )
+int witness_points_of_standard_factor ( int k, int *d, int *w )
 {
    int fail;
    double *c;
@@ -1418,7 +1419,7 @@ int witness_points_of_quaddobl_factor ( int k, int *d, int *w )
    return fail;
 }
 
-int permutation_after_loop ( int d, int *permutation )
+int permutation_after_standard_loop ( int d, int *permutation )
 {
    int *a,fail;
    double *c;
@@ -1448,7 +1449,8 @@ int permutation_after_quaddobl_loop ( int d, int *permutation )
    return fail;
 }
 
-int update_decomposition ( int d, int *permutation, int *nf, int *done )
+int update_standard_decomposition
+ ( int d, int *permutation, int *nf, int *done )
 {
    int fail;
    int *b;
@@ -1489,7 +1491,7 @@ int update_quaddobl_decomposition
    return fail;
 }
 
-int monodromy_permutation ( int d, int *done )
+int standard_monodromy_permutation ( int d, int *done )
 {
    int *a,*b,fail,i;
    int permutation[d];

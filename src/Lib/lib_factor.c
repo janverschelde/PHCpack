@@ -138,7 +138,7 @@ int set_standard_trace_slice ( int first )
    else
       r[0] = +1.0;
 
-   fail = assign_coefficient_of_slice(0,0,r);
+   fail = assign_standard_coefficient_of_slice(0,0,r);
 
    return fail;
 }
@@ -218,24 +218,24 @@ int standard_monodromy_breakup
    if(islaurent == 1)
       fail = initialize_standard_Laurent_sampler(k);
    else
-      fail = initialize_sampler(k);
-   fail = initialize_monodromy(nbloops,d,k);
+      fail = initialize_standard_sampler(k);
+   fail = initialize_standard_monodromy(nbloops,d,k);
    if(verbose>0)
       printf("\nInitialized sampler and monodromy permutations ...\n");
 
-   fail = store_solutions();  /* store in monodromy permutations */
+   fail = store_standard_solutions();  /* store in monodromy permutations */
 
    printf("... initializing the grid in standard double precision ...\n");
    for(i=1; i<=2; i++)        /* initialize grid for trace validation */
    {
       fail = set_standard_trace_slice(i);   /* fix constant of slice */
       fail = store_standard_gammas(n);  /* generate random gamma constants */
-      fail = track_paths();
-      fail = store_solutions();   /* store solutions in the grid */
-      fail = restore_solutions(); /* use original solutions at start */
-      fail = swap_slices();       /* go back to original slices */
+      fail = standard_track_paths();
+      fail = store_standard_solutions();   /* store solutions in the grid */
+      fail = restore_standard_solutions(); /* use original solutions at start */
+      fail = swap_standard_slices();       /* go back to original slices */
    }
-   fail = trace_grid_diagnostics(&err,&dis);
+   fail = standard_trace_grid_diagnostics(&err,&dis);
    printf("Trace grid diagnostics : \n");
    printf("  largest error of the samples : %.3e\n", err);
    printf("  smallest distance between samples : %.3e\n", dis);
@@ -243,36 +243,36 @@ int standard_monodromy_breakup
    for(i=1; (i<=nbloops) && (done==0); i++)  /* perform monodromy loops */
    {
       printf("... starting loop #\%d in standard double precision ...\n",i);
-      fail = new_slices(k,n);
+      fail = new_standard_slices(k,n);
       fail = store_standard_gammas(n);
-      fail = track_paths();     /* swapping slices happens here */
+      fail = standard_track_paths();     /* swapping slices happens here */
       fail = solcon_clear_standard_solutions();
       fail = store_standard_gammas(n);
-      fail = track_paths();
-      fail = store_solutions();
+      fail = standard_track_paths();
+      fail = store_standard_solutions();
       {
          int permutation[d];
-         fail = permutation_after_loop(d,permutation);
+         fail = permutation_after_standard_loop(d,permutation);
          printf("the permutation at step %d:",i);
          for(j=0; j<d; j++) printf(" %d",permutation[j]);
          printf("\n");
       }
-      fail = monodromy_permutation(d,&done);
+      fail = standard_monodromy_permutation(d,&done);
       {
          int nf,deg,jp,w[d];
          double trace_difference;
-         fail = number_of_irreducible_factors(&nf);
+         fail = number_of_standard_factors(&nf);
          printf("number of irreducible factors : %d\n",nf);
          for(j=1; j<=nf; j++)
          {
-            fail = witness_points_of_irreducible_factor(j,&deg,w);
+            fail = witness_points_of_standard_factor(j,&deg,w);
             printf(" %d :",j);
             for(jp=0; jp<deg; jp++) printf(" %d",w[jp]);
-            fail = trace_sum_difference(deg,w,&trace_difference);
+            fail = standard_trace_sum_difference(deg,w,&trace_difference);
             printf(" : %.3e\n",trace_difference);
          }
       }
-      fail = restore_solutions();
+      fail = restore_standard_solutions();
    }
    if(done==1)
       printf("Found factorization using %d loops.\n", i-1);
@@ -451,7 +451,7 @@ int standard_test ( int islaurent )
 
    scanf("%c",&ans); /* skip end of line character */
 
-   if(kind == 0) fail = set_state_to_silent();
+   if(kind == 0) fail = set_standard_state_to_silent();
    if(kind == 2) fail = define_output_file();
 
    if(verbose>0)  /* only in verbose mode */
@@ -502,7 +502,7 @@ int dobldobl_test ( int islaurent )
 
    scanf("%c",&ans); /* skip end of line character */
 
-   if(kind == 0) fail = set_state_to_silent();
+   if(kind == 0) fail = set_dobldobl_state_to_silent();
    if(kind == 2) fail = define_output_file();
 
    if(verbose>0)  /* only in verbose mode */
@@ -552,7 +552,7 @@ int quaddobl_test ( int islaurent )
 
    scanf("%c",&ans); /* skip end of line character */
 
-   if(kind == 0) fail = set_state_to_silent();
+   if(kind == 0) fail = set_quaddobl_state_to_silent();
    if(kind == 2) fail = define_output_file();
 
    if(verbose>0)  /* only in verbose mode */
