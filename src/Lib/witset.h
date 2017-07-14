@@ -637,8 +637,10 @@ int quaddobl_assign_labels ( int n, int nbsols );
 int initialize_sampler ( int dim );
 /*
  * DESCRIPTION :
- *   Initializes the sampling machine with a witness set,
- *   in standard double precision.
+ *   Initializes the sampling machine with a witness set, defined by
+ *   an ordinary polynomial system, in standard double precision.
+ *   The embedded system is taken from the polynomial systems container
+ *   and the generic points from the solutions container.
  *
  * ON ENTRY :
  *   dim      dimension of the witness set.  */
@@ -646,8 +648,10 @@ int initialize_sampler ( int dim );
 int initialize_dobldobl_sampler ( int dim );
 /*
  * DESCRIPTION :
- *   Initializes the sampling machine with a witness set,
- *   in double double precision.
+ *   Initializes the sampling machine with a witness set, defined by
+ *   an ordinary polynomial system, in double double precision.
+ *   The embedded system is taken from the polynomial systems container
+ *   and the generic points from the solutions container.
  *
  * ON ENTRY :
  *   dim      dimension of the witness set.  */
@@ -655,8 +659,43 @@ int initialize_dobldobl_sampler ( int dim );
 int initialize_quaddobl_sampler ( int dim );
 /*
  * DESCRIPTION :
- *   Initializes the sampling machine with a witness set,
- *   in quad double precision.
+ *   Initializes the sampling machine with a witness set, defined by
+ *   an ordinary polynomial system, in quad double precision.
+ *   The embedded system is taken from the polynomial systems container
+ *   and the generic points from the solutions container.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the witness set.  */
+
+int initialize_standard_Laurent_sampler ( int dim );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set, defined by
+ *   a Laurent polynomial system, in standard double precision.
+ *   The embedded system is taken from the Laurent systems container
+ *   and the generic points from the solutions container.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the witness set.  */
+
+int initialize_dobldobl_Laurent_sampler ( int dim );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set, defined by
+ *   a Laurent polynomial system, in double double precision.
+ *   The embedded system is taken from the Laurent systems container
+ *   and the generic points from the solutions container.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the witness set.  */
+
+int initialize_quaddobl_Laurent_sampler ( int dim );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set, defined by
+ *   a Laurent polynomial system, in quad double precision.
+ *   The embedded system is taken from the Laurent systems container
+ *   and the generic points from the solutions container.
  *
  * ON ENTRY :
  *   dim      dimension of the witness set.  */

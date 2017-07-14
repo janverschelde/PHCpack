@@ -831,6 +831,36 @@ int initialize_quaddobl_sampler ( int dim )
    return fail;
 }
 
+int initialize_standard_Laurent_sampler ( int dim )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(804,&dim,b,c);        /* initialize sampler */
+
+   return fail;
+}
+
+int initialize_dobldobl_Laurent_sampler ( int dim )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(805,&dim,b,c);        /* initialize sampler */
+
+   return fail;
+}
+
+int initialize_quaddobl_Laurent_sampler ( int dim )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(806,&dim,b,c);        /* initialize sampler */
+
+   return fail;
+}
+
 int initialize_monodromy ( int n, int d, int k )
 {
    int fail;

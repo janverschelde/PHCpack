@@ -5698,6 +5698,42 @@ static PyObject *py2c_factor_initialize_quaddobl_sampler
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_factor_initialize_standard_Laurent_sampler
+ ( PyObject *self, PyObject *args )
+{
+   int k,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = initialize_standard_Laurent_sampler(k);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_initialize_dobldobl_Laurent_sampler
+ ( PyObject *self, PyObject *args )
+{
+   int k,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = initialize_dobldobl_Laurent_sampler(k);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_initialize_quaddobl_Laurent_sampler
+ ( PyObject *self, PyObject *args )
+{
+   int k,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = initialize_quaddobl_Laurent_sampler(k);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_factor_initialize_standard_monodromy
  ( PyObject *self, PyObject *args )
 {
@@ -9058,13 +9094,22 @@ static PyMethodDef phcpy2c3_methods[] =
     "Assigns labels, replacing the multiplicity field of each solution\n in quad double precision stored in the container.\n On entry are two integers:\n 1) n, the number of coordinates of the solutions;\n 2) nbsols, the number of solutions in the container.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_factor_initialize_standard_sampler",
      py2c_factor_initialize_standard_sampler, METH_VARARGS,
-    "Initializes the sampling machine with a witness set,\n in standard double precision.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
+    "Initializes the sampling machine with a witness set,\n defined by an ordinary polynomial system in standard double precision.\n The embedded system is taken from the polynomial systems container\n and the generic points from the solutions container.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
    {"py2c_factor_initialize_dobldobl_sampler",
      py2c_factor_initialize_dobldobl_sampler, METH_VARARGS,
-    "Initializes the sampling machine with a witness set,\n in double double precision.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
+    "Initializes the sampling machine with a witness set,\n defined by an ordinary polynomial system in double double precision.\n The embedded system is taken from the polynomial systems container\n and the generic points from the solutions container.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
    {"py2c_factor_initialize_quaddobl_sampler",
      py2c_factor_initialize_quaddobl_sampler, METH_VARARGS,
-    "Initializes the sampling machine with a witness set,\n in quad double precision.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
+    "Initializes the sampling machine with a witness set,\n defined by an ordinary polynomial system in quad double precision.\n The embedded system is taken from the polynomial systems container\n and the generic points from the solutions container.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
+   {"py2c_factor_initialize_standard_Laurent_sampler",
+     py2c_factor_initialize_standard_Laurent_sampler, METH_VARARGS,
+    "Initializes the sampling machine with a witness set,\n defined by a Laurent polynomial system in standard double precision.\n The embedded system is taken from the Laurent systems container\n and the generic points from the solutions container.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
+   {"py2c_factor_initialize_dobldobl_Laurent_sampler",
+     py2c_factor_initialize_dobldobl_Laurent_sampler, METH_VARARGS,
+    "Initializes the sampling machine with a witness set,\n defined by a Laurent polynomial system in double double precision.\n The embedded system is taken from the Laurent systems container\n and the generic points from the solutions container.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
+   {"py2c_factor_initialize_quaddobl_Laurent_sampler",
+     py2c_factor_initialize_quaddobl_Laurent_sampler, METH_VARARGS,
+    "Initializes the sampling machine with a witness set,\n defined by a Laurent polynomial system in quad double precision.\n The embedded system is taken from the Laurent systems container\n and the generic points from the solutions container.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
    {"py2c_factor_initialize_standard_monodromy",
      py2c_factor_initialize_standard_monodromy, METH_VARARGS,
     "Initializes the internal data structures for n loops,\n to factor a k-dimensional solution component of degree d,\n in standard double precision.\n There are three integers on input, in the following order:\n 1) n, the number of loops;\n 2) d, the degree of the solution set;\n 3) k, the dimensional of the solution set.\n On return is the failure code, which equals zero when all went well."},

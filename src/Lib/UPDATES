@@ -1,3 +1,7 @@
+Thu 13 Jul 2017 : added an initializer of the samplers for witness sets
+  defined by the Laurent systems to witset and phcpy2c.h, phcpy2c2.c,
+  and phcpy2c3.c.
+
 Mon 10 Jul 2017 : extended witset with homotopy membership tests for
   witness sets defined by Laurent polynomial systems.
   Added functions to witset to read witness sets defined by Laurent systems.

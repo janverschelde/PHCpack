@@ -3746,7 +3746,9 @@ static PyObject *py2c_factor_initialize_standard_sampler
 /*
  * DESCRIPTION :
  *   Initializes the sampling machine with a witness set,
- *   in standard double precision.
+ *   defined by an ordinary polynomial system in standard double precision.
+ *   The embedded system is taken from the polynomial systems container
+ *   and the generic points are taken from the solutions container.
  *   On entry is the dimension or the number of hyperplanes
  *   to intersect the positive dimensional solution set with. */
 
@@ -3755,7 +3757,9 @@ static PyObject *py2c_factor_initialize_dobldobl_sampler
 /*
  * DESCRIPTION :
  *   Initializes the sampling machine with a witness set,
- *   in double double precision.
+ *   defined by an ordinary polynomial system in double double precision.
+ *   The embedded system is taken from the polynomial systems container
+ *   and the generic points are taken from the solutions container.
  *   On entry is the dimension or the number of hyperplanes
  *   to intersect the positive dimensional solution set with. */
 
@@ -3764,7 +3768,42 @@ static PyObject *py2c_factor_initialize_quaddobl_sampler
 /*
  * DESCRIPTION :
  *   Initializes the sampling machine with a witness set,
- *   in quad double precision.
+ *   defined by an ordinary polynomial system in quad double precision.
+ *   The embedded system is taken from the polynomial systems container
+ *   and the generic points are taken from the solutions container.
+ *   On entry is the dimension or the number of hyperplanes
+ *   to intersect the positive dimensional solution set with. */
+
+static PyObject *py2c_factor_initialize_standard_Laurent_sampler
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set,
+ *   defined by a Laurent polynomial system in standard double precision.
+ *   The embedded system is taken from the Laurent systems container
+ *   and the generic points are taken from the solutions container.
+ *   On entry is the dimension or the number of hyperplanes
+ *   to intersect the positive dimensional solution set with. */
+
+static PyObject *py2c_factor_initialize_dobldobl_Laurent_sampler
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set,
+ *   defined by a Laurent polynomial system in double double precision.
+ *   The embedded system is taken from the Laurent systems container
+ *   and the generic points are taken from the solutions container.
+ *   On entry is the dimension or the number of hyperplanes
+ *   to intersect the positive dimensional solution set with. */
+
+static PyObject *py2c_factor_initialize_quaddobl_Laurent_sampler
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set,
+ *   defined by a Laurent polynomial system in quad double precision.
+ *   The embedded system is taken from the Laurent systems container
+ *   and the generic points are taken from the solutions container.
  *   On entry is the dimension or the number of hyperplanes
  *   to intersect the positive dimensional solution set with. */
 
