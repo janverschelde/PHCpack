@@ -317,6 +317,24 @@ int quaddobl_witness_set_to_system_container ( void );
  *   Copies the embedded system of the witness set from the sampler
  *   to the systems container in quad double precision. */
 
+int standard_witness_set_to_Laurent_system_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the embedded system of the witness set from the sampler
+ *   to the Laurent systems container in standard double precision. */
+
+int dobldobl_witness_set_to_Laurent_system_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the embedded system of the witness set from the sampler
+ *   to the Laurent systems container in double double precision. */
+
+int quaddobl_witness_set_to_Laurent_system_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the embedded system of the witness set from the sampler
+ *   to the Laurent systems container in quad double precision. */
+
 int create_cascade_homotopy ( void );
 /*
  * DESCRIPTION :
@@ -967,23 +985,29 @@ int quaddobl_sample_to_new_slices ( void );
  *   The sampler computes a new witness set for new slices,
  *   in quad double precision. */
 
-int standard_track_paths ( void );
+int standard_track_paths ( int islaurent );
 /* 
  * DESCRIPTION :
  *   Tracks as many paths as defined by witness set,
- *   in standard double precision. */
+ *   in standard double precision.
+ *   If islaurent equals one, then a Laurent system defines
+ *   the witness set. */
 
-int dobldobl_track_paths ( void );
+int dobldobl_track_paths ( int islaurent );
 /* 
  * DESCRIPTION :
  *   Tracks as many paths as defined by witness set,
- *   in double double precision. */
+ *   in double double precision.
+ *   If islaurent equals one, then a Laurent system defines
+ *   the witness set. */
 
-int quaddobl_track_paths ( void );
+int quaddobl_track_paths ( int islaurent );
 /* 
  * DESCRIPTION :
  *   Tracks as many paths as defined by witness set,
- *   in quad double precision. */
+ *   in quad double precision.
+ *   If islaurent equals one, then a Laurent system defines
+ *   the witness set. */
 
 int standard_sample_loop
  ( int start_slice, int target_slice,

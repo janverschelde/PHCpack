@@ -230,7 +230,7 @@ int standard_monodromy_breakup
    {
       fail = set_standard_trace_slice(i);   /* fix constant of slice */
       fail = store_standard_gammas(n);  /* generate random gamma constants */
-      fail = standard_track_paths();
+      fail = standard_track_paths(islaurent);
       fail = store_standard_solutions();   /* store solutions in the grid */
       fail = restore_standard_solutions(); /* use original solutions at start */
       fail = swap_standard_slices();       /* go back to original slices */
@@ -245,10 +245,10 @@ int standard_monodromy_breakup
       printf("... starting loop #\%d in standard double precision ...\n",i);
       fail = new_standard_slices(k,n);
       fail = store_standard_gammas(n);
-      fail = standard_track_paths();     /* swapping slices happens here */
+      fail = standard_track_paths(islaurent);  /* swapping slices happens */
       fail = solcon_clear_standard_solutions();
       fail = store_standard_gammas(n);
-      fail = standard_track_paths();
+      fail = standard_track_paths(islaurent);
       fail = store_standard_solutions();
       {
          int permutation[d];
@@ -303,7 +303,7 @@ int dobldobl_monodromy_breakup
    {
       fail = set_dobldobl_trace_slice(i);   /* fix constant of slice */
       fail = store_dobldobl_gammas(n);  /* generate random gamma constants */
-      fail = dobldobl_track_paths();
+      fail = dobldobl_track_paths(islaurent);
       fail = store_dobldobl_solutions();   /* store solutions in the grid */
       fail = restore_dobldobl_solutions(); /* use original sols at start */
       fail = swap_dobldobl_slices();       /* go back to original slices */
@@ -318,10 +318,10 @@ int dobldobl_monodromy_breakup
       printf("... starting loop #\%d in double double precision ...\n",i);
       fail = new_dobldobl_slices(k,n);
       fail = store_dobldobl_gammas(n);
-      fail = dobldobl_track_paths();     /* swapping slices happens here */
+      fail = dobldobl_track_paths(islaurent); /* swapping slices happens */
       fail = solcon_clear_dobldobl_solutions();
       fail = store_dobldobl_gammas(n);
-      fail = dobldobl_track_paths();
+      fail = dobldobl_track_paths(islaurent);
       fail = store_dobldobl_solutions();
       {
          int permutation[d];
@@ -378,7 +378,7 @@ int quaddobl_monodromy_breakup
    {
       fail = set_quaddobl_trace_slice(i);   /* fix constant of slice */
       fail = store_quaddobl_gammas(n);  /* generate random gamma constants */
-      fail = quaddobl_track_paths();
+      fail = quaddobl_track_paths(islaurent);
       fail = store_quaddobl_solutions();   /* store solutions in the grid */
       fail = restore_quaddobl_solutions(); /* use original sols at start */
       fail = swap_quaddobl_slices();       /* go back to original slices */
@@ -393,10 +393,10 @@ int quaddobl_monodromy_breakup
       printf("... starting loop #\%d in quad double precision ...\n",i);
       fail = new_quaddobl_slices(k,n);
       fail = store_quaddobl_gammas(n);
-      fail = quaddobl_track_paths();     /* swapping slices happens here */
+      fail = quaddobl_track_paths(islaurent); /* swapping slices happens */
       fail = solcon_clear_quaddobl_solutions();
       fail = store_quaddobl_gammas(n);
-      fail = quaddobl_track_paths();
+      fail = quaddobl_track_paths(islaurent);
       fail = store_quaddobl_solutions();
       {
          int permutation[d];

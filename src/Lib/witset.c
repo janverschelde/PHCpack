@@ -402,6 +402,30 @@ int quaddobl_witness_set_to_system_container ( void )
    return fail;
 }
 
+int standard_witness_set_to_Laurent_system_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(807,a,b,c);   /* copy system to container */
+   return fail;
+}
+
+int dobldobl_witness_set_to_Laurent_system_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(808,a,b,c);   /* copy system to container */
+   return fail;
+}
+
+int quaddobl_witness_set_to_Laurent_system_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(809,a,b,c);   /* copy system to container */
+   return fail;
+}
+
 int create_cascade_homotopy ( void )
 {
    int *a,*b,fail;
@@ -1243,7 +1267,7 @@ int quaddobl_sample_to_new_slices ( void )
    return fail;
 }
 
-int standard_track_paths ( void )
+int standard_track_paths ( int islaurent )
 {
    int fail;
 
@@ -1252,13 +1276,21 @@ int standard_track_paths ( void )
    if(verbose>1) printf("Solutions computed :\n");
    if(verbose>1) fail = solcon_write_standard_solutions();
    fail = swap_standard_slices();           /* swap start with new slices */
-   fail = standard_witness_set_to_system_container();
-   fail = validate_solutions();
 
+   if(islaurent == 1)
+   {
+      fail = standard_witness_set_to_Laurent_system_container();
+      fail = standard_Newton_Laurent_step();
+   }
+   else
+   {
+      fail = standard_witness_set_to_system_container();
+      fail = standard_Newton_step();
+   }
    return fail;
 }
 
-int dobldobl_track_paths ( void )
+int dobldobl_track_paths ( int islaurent )
 {
    int *a,*b,fail;
    double *c;
@@ -1268,13 +1300,21 @@ int dobldobl_track_paths ( void )
    if(verbose>1) printf("Solutions computed :\n");
    if(verbose>1) fail = solcon_write_dobldobl_solutions();
    fail = swap_dobldobl_slices();            /* swap start with new slices */
-   fail = dobldobl_witness_set_to_system_container();
-   fail = dobldobl_Newton_step();
 
+   if(islaurent == 1) 
+   {
+      fail = dobldobl_witness_set_to_Laurent_system_container();
+      fail = dobldobl_Newton_Laurent_step();
+   }
+   else
+   {
+      fail = dobldobl_witness_set_to_system_container();
+      fail = dobldobl_Newton_step();
+   }
    return fail;
 }
 
-int quaddobl_track_paths ( void )
+int quaddobl_track_paths ( int islaurent )
 {
    int *a,*b,fail;
    double *c;
@@ -1284,9 +1324,17 @@ int quaddobl_track_paths ( void )
    if(verbose>1) printf("Solutions computed :\n");
    if(verbose>1) fail = solcon_write_quaddobl_solutions();
    fail = swap_quaddobl_slices();            /* swap start with new slices */
-   fail = quaddobl_witness_set_to_system_container();
-   fail = quaddobl_Newton_step();
 
+   if(islaurent == 1)
+   {
+      fail = quaddobl_witness_set_to_Laurent_system_container();
+      fail = quaddobl_Newton_Laurent_step();
+   }
+   else
+   {
+      fail = quaddobl_witness_set_to_system_container();
+      fail = quaddobl_Newton_step();
+   }
    return fail;
 }
 
