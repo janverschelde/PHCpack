@@ -5523,7 +5523,7 @@ static PyObject *py2c_factor_set_standard_to_mute
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = set_state_to_silent();
+   fail = set_standard_state_to_silent();
 
    return Py_BuildValue("i",fail);
 }
@@ -5644,7 +5644,7 @@ static PyObject *py2c_factor_initialize_standard_sampler
 
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = initialize_sampler(k);
+   fail = initialize_standard_sampler(k);
 
    return Py_BuildValue("i",fail);
 }
@@ -5716,7 +5716,7 @@ static PyObject *py2c_factor_initialize_standard_monodromy
 
    initialize();
    if(!PyArg_ParseTuple(args,"iii",&n,&d,&k)) return NULL;
-   fail = initialize_monodromy(n,d,k);
+   fail = initialize_standard_monodromy(n,d,k);
 
    return Py_BuildValue("i",fail);
 }
@@ -5753,7 +5753,7 @@ static PyObject *py2c_factor_standard_trace_grid_diagnostics
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = trace_grid_diagnostics(&err,&dis);
+   fail = standard_trace_grid_diagnostics(&err,&dis);
 
    return Py_BuildValue("(d,d)",err,dis);
 }
@@ -5791,7 +5791,7 @@ static PyObject *py2c_factor_store_standard_solutions
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = store_solutions();
+   fail = store_standard_solutions();
 
    return Py_BuildValue("i",fail);
 }
@@ -5827,7 +5827,7 @@ static PyObject *py2c_factor_restore_standard_solutions
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = restore_solutions();
+   fail = restore_standard_solutions();
 
    return Py_BuildValue("i",fail);
 }
@@ -5864,7 +5864,7 @@ static PyObject *py2c_factor_standard_track_paths
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = track_paths();
+   fail = standard_track_paths();
 
    return Py_BuildValue("i",fail);
 }
@@ -5900,7 +5900,7 @@ static PyObject *py2c_factor_swap_standard_slices
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = swap_slices();
+   fail = swap_standard_slices();
 
    return Py_BuildValue("i",fail);
 }
@@ -5936,7 +5936,7 @@ static PyObject *py2c_factor_new_standard_slices
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&k,&n)) return NULL;
-   fail = new_slices(k,n);
+   fail = new_standard_slices(k,n);
 
    return Py_BuildValue("i",fail);
 }
@@ -5980,7 +5980,7 @@ static PyObject *py2c_factor_set_standard_trace_slice
    else
       r[0] = +1.0;
 
-   fail = assign_coefficient_of_slice(0,0,r);
+   fail = assign_standard_coefficient_of_slice(0,0,r);
 
    return Py_BuildValue("i",fail);
 }
@@ -6098,7 +6098,7 @@ static PyObject *py2c_factor_permutation_after_standard_loop
       int i,permutation[d];
       char s[d*10];
 
-      fail = permutation_after_loop(d,permutation);
+      fail = permutation_after_standard_loop(d,permutation);
    /* printf("the permutation :");
       for(i=0; i<d; i++) printf(" %d",permutation[i]);
       printf("\n"); */
@@ -6183,7 +6183,7 @@ static PyObject *py2c_factor_update_standard_decomposition
       for(i=0; i<nb; i++) printf(" %d",perm[i]);
       printf("\n"); */
 
-      fail = update_decomposition(d,perm,nf,&done);
+      fail = update_standard_decomposition(d,perm,nf,&done);
    /* printf("number of factors : %d -> %d\n",nf[0],nf[1]); */
    }
    return Py_BuildValue("i",done);
@@ -6253,7 +6253,7 @@ static PyObject *py2c_factor_number_of_standard_components
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
 
-   fail = number_of_irreducible_factors(&nf);
+   fail = number_of_standard_factors(&nf);
 
    return Py_BuildValue("i",nf);
 }
@@ -6297,7 +6297,7 @@ static PyObject *py2c_factor_witness_points_of_standard_component
       int w[totdeg];
       char s[10*totdeg];
 
-      fail = witness_points_of_irreducible_factor(k,&deg,w);
+      fail = witness_points_of_standard_factor(k,&deg,w);
 
       nb = list2str(deg,w,s);
       result = (char*)calloc(nb,sizeof(char));
@@ -6367,7 +6367,7 @@ static PyObject *py2c_factor_standard_trace_sum_difference
       for(i=0; i<nb; i++) printf(" %d",witset[i]);
       printf("\n"); */
 
-      fail = trace_sum_difference(nb,witset,&tsd);
+      fail = standard_trace_sum_difference(nb,witset,&tsd);
    /* printf("trace sum difference : %.3e\n",tsd); */
    }
    return Py_BuildValue("d",tsd);
