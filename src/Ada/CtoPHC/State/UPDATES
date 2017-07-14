@@ -1,3 +1,7 @@
+Thu 13 Jul 2017 : extended {standard,dobldobl,quaddobl}_sampling_operations
+  with initializer for Laurent systems, and added the initializer jobs to
+  use_c2fac and use_c2phc.
+
 Mon 10 Jul 2017 : extended use_c2mbt with jobs to run homotopy membership
   tests on witness sets defined by Laurent polynomial systems.
   Copied the corresponding jobs to use_c2phc.

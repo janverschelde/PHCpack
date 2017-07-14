@@ -2,6 +2,7 @@ with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with DoblDobl_Complex_Numbers;            use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_VecVecs;            use DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Poly_Systems;       use DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;       use DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Solutions;          use DoblDobl_Complex_Solutions;
 
 package DoblDobl_Sampling_Operations is
@@ -12,6 +13,8 @@ package DoblDobl_Sampling_Operations is
 --   in double double precision.
 
   procedure Initialize ( p : in Poly_Sys; sols : in Solution_List;
+                         k : in integer32 );
+  procedure Initialize ( p : in Laur_Sys; sols : in Solution_List;
                          k : in integer32 );
 
   -- DESCRIPTION :

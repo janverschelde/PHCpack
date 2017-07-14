@@ -1869,6 +1869,63 @@ function use_c2fac ( job : integer32;
       return 803;
   end Job96;
 
+  function Job97 return integer32 is -- initializes standard Laurent sampler
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+
+    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant integer32 := integer32(va(va'first));
+
+  begin
+    Standard_Sampling_Operations.Initialize(lp.all,sols,dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at initializing standard Laurent sampler.");
+      return 804;
+  end Job97;
+
+  function Job98 return integer32 is -- initializes dobldobl Laurent sampler
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant integer32 := integer32(va(va'first));
+
+  begin
+    DoblDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at initializing dobldobl Laurent sampler.");
+      return 805;
+  end Job98;
+
+  function Job99 return integer32 is -- initializes quaddobl Laurent sampler
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant integer32 := integer32(va(va'first));
+
+  begin
+    QuadDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at initializing quaddobl Laurent sampler.");
+      return 806;
+  end Job99;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -1965,6 +2022,9 @@ function use_c2fac ( job : integer32;
       when 94 => return Job94; -- read standard Laurent witness set from file
       when 95 => return Job95; -- read dobldobl Laurent witness set from file
       when 96 => return Job95; -- read quaddobl Laurent witness set from file
+      when 97 => return Job97; -- initialize standard Laurent sampler
+      when 98 => return Job98; -- initialize dobldobl Laurent sampler
+      when 99 => return Job99; -- initialize quaddobl Laurent sampler
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;

@@ -2834,6 +2834,7 @@ function use_c2phc ( job : integer32;
       when 786 => return Job786; -- copy standard Laurent target to container
       when 787 => return Job787; -- copy dobldobl Laurent target to container
       when 788 => return Job788; -- copy quaddobl Laurent target to container
+     -- cascades for Laurent homotopies
       when 789 => return use_track(58,a,b,c); -- standard cascade Laurent htpy
       when 790 => return use_track(59,a,b,c); -- dobldobl cascade Laurent htpy
       when 791 => return use_track(60,a,b,c); -- quaddobl cascade Laurent htpy
@@ -2857,6 +2858,10 @@ function use_c2phc ( job : integer32;
         return use_c2fac(95,a,b,c); -- read dobldobl Laurent witset from file
       when 803 =>
         return use_c2fac(96,a,b,c); -- read quaddobl Laurent witset from file
+     -- monodromy factorization on witness sets defined by Laurent systems
+      when 804 => return use_c2fac(97,a,b,c); -- init standard Laurent sampler
+      when 805 => return use_c2fac(98,a,b,c); -- init dobldobl Laurent sampler
+      when 806 => return use_c2fac(99,a,b,c); -- init quaddobl Laurent sampler
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

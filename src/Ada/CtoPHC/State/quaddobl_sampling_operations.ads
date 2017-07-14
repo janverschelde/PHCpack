@@ -2,6 +2,7 @@ with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with QuadDobl_Complex_Numbers;            use QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_VecVecs;            use QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Poly_Systems;       use QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;       use QuadDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Solutions;          use QuadDobl_Complex_Solutions;
 
 package QuadDobl_Sampling_Operations is
@@ -12,6 +13,8 @@ package QuadDobl_Sampling_Operations is
 --   in quad double precision.
 
   procedure Initialize ( p : in Poly_Sys; sols : in Solution_List;
+                         k : in integer32 );
+  procedure Initialize ( p : in Laur_Sys; sols : in Solution_List;
                          k : in integer32 );
 
   -- DESCRIPTION :

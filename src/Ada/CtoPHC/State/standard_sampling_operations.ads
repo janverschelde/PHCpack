@@ -2,6 +2,7 @@ with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
 with Standard_Complex_VecVecs;            use Standard_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;       use Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;       use Standard_Complex_Laur_Systems;
 with Standard_Complex_Solutions;          use Standard_Complex_Solutions;
 
 package Standard_Sampling_Operations is
@@ -12,6 +13,8 @@ package Standard_Sampling_Operations is
 --   in standard double precision.
 
   procedure Initialize ( p : in Poly_Sys; sols : in Solution_List;
+                         k : in integer32 );
+  procedure Initialize ( p : in Laur_Sys; sols : in Solution_List;
                          k : in integer32 );
 
   -- DESCRIPTION :

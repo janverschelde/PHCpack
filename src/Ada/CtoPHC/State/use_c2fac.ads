@@ -329,6 +329,18 @@ function use_c2fac ( job : integer32;
 --                 and in b the following two numbers:
 --                   b[0] : dimension of the solution set;
 --                   b[1] : degree of the solution set;
+--          = 97 : takes the Laurent system and the solutions from the
+--                 containers in standard double precision,
+--                 and initializes the Laurent sampling machine, on input,
+--                 the dimension of the witness set must be in a;
+--          = 98 : takes the Laurent system and the solutions from the
+--                 containers in double double precision,
+--                 and initializes the Laurent sampling machine, on input,
+--                 the dimension of the witness set must be in a;
+--          = 99 : takes the Laurent system and the solutions from the
+--                 containers in quad double precision,
+--                 and initializes the Laurent sampling machine, on input,
+--                 the dimension of the witness set must be in a.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

@@ -3,6 +3,7 @@ with DoblDobl_Random_Numbers;           use DoblDobl_Random_Numbers;
 with DoblDobl_Complex_Vectors;          use DoblDobl_Complex_Vectors;
 with Witness_Sets;                      use Witness_Sets;
 with DoblDobl_Sampling_Machine;
+with DoblDobl_Sampling_Laurent_Machine;
 with DoblDobl_Solutions_Container;
 
 package body DoblDobl_Sampling_Operations is
@@ -16,6 +17,7 @@ package body DoblDobl_Sampling_Operations is
   gamma : Link_to_Vector;
   hyperplane_sections : Link_to_Array_of_VecVecs;
   nb_sections : natural32 := 0;
+  use_laurent : boolean := false;
 
 -- OPERATIONS :
 
@@ -25,9 +27,41 @@ package body DoblDobl_Sampling_Operations is
     n : constant integer32 := p'last;
 
   begin
+    use_laurent := false;
     DoblDobl_Sampling_Machine.Initialize(p);
     DoblDobl_Sampling_Machine.Default_Tune_Sampler(2);
     DoblDobl_Sampling_Machine.Default_Tune_Refiner;
+   -- put("initializing sampling machine with #solutions = ");
+   -- put(Length_Of(sols),1); new_line;
+    dimension := natural32(k);
+    start_slices := new VecVec'(Slices(p,natural32(k)));
+    new_slices := new VecVec(1..k);
+    for i in 1..k loop
+      new_slices(i) := new Vector'(start_slices(i).all);
+    end loop;
+    gamma := new Vector(1..n);
+    for i in 1..n loop
+      gamma(i) := Create(integer32(1));
+    end loop;
+   -- put("  k = "); put(k,1);
+   -- put("  d = "); put(Length_Of(sols),1); new_line;
+    Copy(sols,original_solutions);
+    Copy(original_solutions,start_samples);
+           -- start_samples := original_solutions;
+   -- put("number of start samples : ");
+   -- put(Length_Of(start_samples),1); new_line;
+  end Initialize;
+
+  procedure Initialize ( p : in Laur_Sys; sols : in Solution_List;
+                         k : in integer32 ) is
+
+    n : constant integer32 := p'last;
+
+  begin
+    use_laurent := true;
+    DoblDobl_Sampling_Laurent_Machine.Initialize(p);
+    DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(2);
+    DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
    -- put("initializing sampling machine with #solutions = ");
    -- put(Length_Of(sols),1); new_line;
     dimension := natural32(k);
@@ -105,7 +139,10 @@ package body DoblDobl_Sampling_Operations is
         end loop;
       end if;
     end if;
-    DoblDobl_Sampling_Machine.Change_Slices(start_slices.all);
+    if use_laurent
+     then DoblDobl_Sampling_Laurent_Machine.Change_Slices(start_slices.all);
+     else DoblDobl_Sampling_Machine.Change_Slices(start_slices.all);
+    end if;
    -- put_line("changed slices in DoblDobl_Sampling_Machine, leaving ...");
   end Set_Target_Slices;
 
@@ -150,7 +187,10 @@ package body DoblDobl_Sampling_Operations is
     new_samples := start_samples;
     start_samples := tmp_samples;
     Set_Continuation_Parameter(start_samples,Create(integer32(0)));
-    DoblDobl_Sampling_Machine.Change_Slices(start_slices.all);
+    if use_laurent
+     then DoblDobl_Sampling_Laurent_Machine.Change_Slices(start_slices.all);
+     else DoblDobl_Sampling_Machine.Change_Slices(start_slices.all);
+    end if;
   end Swap_Slices;
 
   procedure Sample is
@@ -161,8 +201,13 @@ package body DoblDobl_Sampling_Operations is
    -- put("Number of start solutions : ");
    -- put(Length_Of(start_samples),1); new_line;
     Set_Continuation_Parameter(start_samples,Create(integer32(0)));
-    DoblDobl_Sampling_Machine.Sample
-     (start_samples,new_slices.all,gamma.all,new_samples);
+    if use_laurent then
+      DoblDobl_Sampling_Laurent_Machine.Sample
+        (start_samples,new_slices.all,gamma.all,new_samples);
+    else
+      DoblDobl_Sampling_Machine.Sample
+        (start_samples,new_slices.all,gamma.all,new_samples);
+    end if;
    -- put_line("Computed solutions : ");
    -- put(standard_output,
    --     Length_Of(new_samples),Head_Of(new_samples).n,new_samples);
@@ -191,12 +236,20 @@ package body DoblDobl_Sampling_Operations is
       -- put_line("The start solution :"); put(s.all);
       Construct(s,start_sols);
       Set_Continuation_Parameter(start_sols,Create(integer32(0)));
-      DoblDobl_Sampling_Machine.Change_Slices(start_slices.all);
+      if use_laurent
+       then DoblDobl_Sampling_Laurent_Machine.Change_Slices(start_slices.all);
+       else DoblDobl_Sampling_Machine.Change_Slices(start_slices.all);
+      end if;
       for i in gamma'range loop
         gamma(i) := Random1;
       end loop;
-      DoblDobl_Sampling_Machine.Sample
-        (start_sols,new_slices.all,gamma.all,target_sols);
+      if use_laurent then
+        DoblDobl_Sampling_Laurent_Machine.Sample
+          (start_sols,new_slices.all,gamma.all,target_sols);
+      else
+        DoblDobl_Sampling_Machine.Sample
+          (start_sols,new_slices.all,gamma.all,target_sols);
+      end if;
       -- put_line("The computed solution :");
       -- put(Head_Of(target_sols).all);
       return Head_Of(target_sols);
@@ -205,7 +258,10 @@ package body DoblDobl_Sampling_Operations is
 
   procedure Clear is
   begin
-    DoblDobl_Sampling_Machine.Clear;
+    if use_laurent
+     then DoblDobl_Sampling_Laurent_Machine.Clear;
+     else DoblDobl_Sampling_Machine.Clear;
+    end if;
     dimension := 0;
   end Clear;
 
