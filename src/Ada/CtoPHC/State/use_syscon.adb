@@ -51,7 +51,7 @@ with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
 with Multprec_PolySys_Container;
-with Laurent_Systems_Container;
+with Standard_LaurSys_Container;
 with DoblDobl_LaurSys_Container;
 with QuadDobl_LaurSys_Container;
 with Multprec_LaurSys_Container;
@@ -82,7 +82,7 @@ function use_syscon ( job : integer32;
     new_line;
     put_line("Reading a Laurent polynomial system...");
     get(lp);
-    Laurent_Systems_Container.Initialize(lp.all);
+    Standard_LaurSys_Container.Initialize(lp.all);
     return 0;
   end Job100;
 
@@ -181,7 +181,7 @@ function use_syscon ( job : integer32;
   function Job101 return integer32 is -- write system in container
    
     use Standard_Complex_Laur_Systems;
-    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
 
   begin
     if lp /= null then
@@ -297,7 +297,7 @@ function use_syscon ( job : integer32;
 
   function Job102 return integer32 is -- return dimension of Laurent system
   begin
-    Assign(integer32(Laurent_Systems_Container.Dimension),a);
+    Assign(integer32(Standard_LaurSys_Container.Dimension),a);
     return 0;
   end Job102;
 
@@ -354,7 +354,7 @@ function use_syscon ( job : integer32;
     n : constant integer32 := integer32(v(v'first));
 
   begin
-    Laurent_Systems_Container.Initialize(n);
+    Standard_LaurSys_Container.Initialize(n);
     Symbol_Table.Init(natural32(n));
     return 0;
   end Job103;
@@ -445,7 +445,7 @@ function use_syscon ( job : integer32;
     i : constant integer32 := integer32(v(v'first+1));
 
   begin
-    Assign(integer32(Laurent_Systems_Container.Number_of_Terms(i)),a);
+    Assign(integer32(Standard_LaurSys_Container.Number_of_Terms(i)),a);
     return 0;
   end Job104;
 
@@ -543,7 +543,7 @@ function use_syscon ( job : integer32;
     i : constant integer32 := integer32(v(1));
     j : constant natural32 := natural32(v(2));
     t : constant Standard_Complex_Laurentials.Term 
-      := Laurent_Systems_Container.Retrieve_Term(i,j);
+      := Standard_LaurSys_Container.Retrieve_Term(i,j);
 
   begin
     Assign(t.cf,c);
@@ -656,7 +656,7 @@ function use_syscon ( job : integer32;
     Assign(c,t.cf);
     Assign(natural32(n),b,e);
     t.dg := new Standard_Integer_Vectors.Vector'(e);
-    Laurent_Systems_Container.Add_Term(i,t);
+    Standard_LaurSys_Container.Add_Term(i,t);
     return 0;
   end Job106;
 
@@ -753,7 +753,7 @@ function use_syscon ( job : integer32;
 
   function Job107 return integer32 is -- clears the container
   begin
-    Laurent_Systems_Container.Clear;
+    Standard_LaurSys_Container.Clear;
     return 0;
   end Job107;
 
@@ -890,7 +890,7 @@ function use_syscon ( job : integer32;
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant Standard_Complex_Laurentials.Poly
-      := Laurent_Systems_Container.Retrieve_Poly(equ);
+      := Standard_LaurSys_Container.Retrieve_Poly(equ);
     s : constant string := Standard_Complex_Laur_Strings.Write(p);
     sv : constant Standard_Integer_Vectors.Vector
        := String_to_Integer_Vector(s);
@@ -1049,7 +1049,7 @@ function use_syscon ( job : integer32;
    --   put_line("symbol table is okay");
     end if;
     p := Standard_Complex_Laur_Strings.Parse(n,s);
-    Laurent_Systems_Container.Add_Poly(k,p);
+    Standard_LaurSys_Container.Add_Poly(k,p);
     Standard_Complex_Laurentials.Clear(p);
     return 0;
   end Job74;
@@ -1165,7 +1165,7 @@ function use_syscon ( job : integer32;
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant Standard_Complex_Laurentials.Poly
-      := Laurent_Systems_Container.Retrieve_Poly(equ);
+      := Standard_LaurSys_Container.Retrieve_Poly(equ);
     sz : constant integer32
        := integer32(Standard_Complex_Laur_Strings.Size_Limit(p));
 

@@ -5,11 +5,11 @@ with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_SysFun;      use Standard_Complex_Laur_SysFun;
 with Standard_Complex_Laur_JacoMats;    use Standard_Complex_Laur_JacoMats;
 
-package Laurent_Systems_Container is
+package Standard_LaurSys_Container is
 
 -- DESCRIPTION :
 --   This package provides a container for a Laurent polynomial system,
---   designed for the interface with C.
+--   with coefficients in standard double precision, for the C interface.
 
 -- CREATORS :
 
@@ -110,4 +110,4 @@ package Laurent_Systems_Container is
   -- DESCRIPTION :
   --   Clears the container: its polynomial system and evaluator.
 
-end Laurent_Systems_Container;
+end Standard_LaurSys_Container;

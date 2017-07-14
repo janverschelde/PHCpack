@@ -843,6 +843,12 @@ function use_c2phc ( job : integer32;
 --                 containers in quad double precision,
 --                 and initializes the Laurent sampling machine, on input,
 --                 the dimension of the witness set must be in a.
+--         = 807 : copy embedded system from sampler to Laurent systems
+--                 container, for coefficients in standard double precision;
+--         = 808 : copy embedded system from sampler to Laurent systems
+--                 container, for coefficients in double double precision;
+--         = 809 : copy embedded system from sampler to Laurent systems
+--                 container, for coefficients in quad double precision.
 --
 -- POWER SERIES NEWTON METHOD :
 --

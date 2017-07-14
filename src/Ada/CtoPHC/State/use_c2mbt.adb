@@ -36,7 +36,7 @@ with Witness_Sets;
 with Homotopy_Membership_Tests;         use Homotopy_Membership_Tests;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
-with Laurent_Systems_Container;
+with Standard_LaurSys_Container;
 with DoblDobl_PolySys_Container;
 with DoblDobl_LaurSys_Container;
 with QuadDobl_PolySys_Container;
@@ -316,7 +316,7 @@ function use_c2mbt ( job : integer32;
     verbose,onp,inw : boolean;
     nbr,dim : integer32;
     restol,homtol : double_float;
-    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
 
   begin

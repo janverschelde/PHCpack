@@ -8,7 +8,7 @@ with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
 --with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
-with Laurent_Systems_Container;
+with Standard_LaurSys_Container;
 with Standard_Monomial_Maps;            use Standard_Monomial_Maps;
 with Standard_Monomial_Maps_io;
 with Black_Box_Binomial_Solvers;        use Black_Box_Binomial_Solvers;
@@ -22,7 +22,7 @@ function use_mapcon ( job : integer32;
 
   function Job0 return integer32 is -- solve binomial system
 
-    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     sols : Link_to_Array_of_Monomial_Map_Lists;
     fail : boolean;
     val : constant C_Integer_Array := C_intarrs.Value(a);

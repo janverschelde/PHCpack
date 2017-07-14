@@ -40,7 +40,7 @@ with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
 with Multprec_PolySys_Container;
-with Laurent_Systems_Container;
+with Standard_LaurSys_Container;
 with DoblDobl_LaurSys_Container;
 with QuadDobl_LaurSys_Container;
 with Multprec_LaurSys_Container;
@@ -191,16 +191,16 @@ procedure ts_syscon is
 
     use Standard_Complex_Laurentials;
 
-    n : constant natural32 := Laurent_Systems_Container.Dimension;
+    n : constant natural32 := Standard_LaurSys_Container.Dimension;
     m : natural32;
    -- lp : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
 
   begin
     put("Dimension of the system : "); put(n,1); new_line;
-   -- lp := Laurent_Systems_Container.Retrieve;
+   -- lp := Standard_LaurSys_Container.Retrieve;
    -- put_line("The Laurent polynomial system : "); put(lp.all);
     for i in 1..integer32(n) loop
-      m := Laurent_Systems_Container.Number_of_Terms(i);
+      m := Standard_LaurSys_Container.Number_of_Terms(i);
       put("Number of terms in polynomial "); put(i,1);
       put(" : "); put(m,1); new_line;
       declare
@@ -208,14 +208,14 @@ procedure ts_syscon is
       begin
         for j in 1..m loop
           declare
-            t : Term := Laurent_Systems_Container.Retrieve_Term(i,j);
+            t : Term := Standard_LaurSys_Container.Retrieve_Term(i,j);
           begin
             Add(p,t);
             Clear(t);
           end;
         end loop;
         put(p); new_line;
-        put(Laurent_Systems_Container.Retrieve(i)); new_line;
+        put(Standard_LaurSys_Container.Retrieve(i)); new_line;
       end;
     end loop;
   end Standard_Test_Laurent_Retrievals;
@@ -451,19 +451,19 @@ procedure ts_syscon is
 
     procedure Add_Term ( t : in Term; continue : out boolean ) is
     begin
-      Laurent_Systems_Container.Add_Term(ind,t);
+      Standard_LaurSys_Container.Add_Term(ind,t);
       continue := true;
     end Add_Term;
     procedure Add_Terms is new Visiting_Iterator(Add_Term);
 
   begin
-    Laurent_Systems_Container.Initialize(p'last);
+    Standard_LaurSys_Container.Initialize(p'last);
     for i in p'range loop
       ind := i;
       Add_Terms(p(i));
     end loop;
     put_line("The Laurent polynomial system : ");
-    put(Laurent_Systems_Container.Retrieve.all);
+    put(Standard_LaurSys_Container.Retrieve.all);
   end Standard_Test_Laurent_Additions;
 
   procedure DoblDobl_Test_Laurent_Additions
@@ -600,9 +600,9 @@ procedure ts_syscon is
         Multprec_Test_Additions(mp_lp.all);
       when '5' =>
         get(st_lq);
-        Laurent_Systems_Container.Initialize(st_lq.all);
+        Standard_LaurSys_Container.Initialize(st_lq.all);
         Standard_Test_Laurent_Retrievals;
-        Laurent_Systems_Container.Clear;
+        Standard_LaurSys_Container.Clear;
         Standard_Test_Laurent_Additions(st_lq.all);
       when '6' =>
         get(dd_lq);

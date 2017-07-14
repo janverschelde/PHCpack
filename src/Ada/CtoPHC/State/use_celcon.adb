@@ -41,7 +41,7 @@ with PHCpack_Operations;
 with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
-with Laurent_Systems_Container;
+with Standard_LaurSys_Container;
 with DoblDobl_LaurSys_Container;
 with QuadDobl_LaurSys_Container;
 with Standard_Solutions_Container;
@@ -736,7 +736,7 @@ function use_celcon ( job : integer32;
     lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
        := Standard_PolySys_Container.Retrieve;
     lq : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
-       := Laurent_Systems_Container.Retrieve;
+       := Standard_LaurSys_Container.Retrieve;
     use Standard_Complex_Poly_Systems,Standard_Complex_Laur_Systems;
 
   begin

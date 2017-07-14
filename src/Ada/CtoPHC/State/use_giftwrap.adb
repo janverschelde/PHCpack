@@ -13,7 +13,7 @@ with Multprec_Lattice_3d_Facets;
 with Multprec_Lattice_4d_Facets;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
-with Laurent_Systems_Container;
+with Standard_LaurSys_Container;
 with Lists_of_Integer_Vectors;
 with Supports_of_Polynomial_Systems;
 with Standard_Initial_Forms;
@@ -205,7 +205,7 @@ function use_giftwrap ( job : integer32;
   function Job7 return integer32 is -- returns length of string of support
 
     lp : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
-       := Laurent_Systems_Container.retrieve;
+       := Standard_LaurSys_Container.retrieve;
     sup : Lists_of_Integer_Vectors.List;
 
   begin
@@ -259,7 +259,7 @@ function use_giftwrap ( job : integer32;
     strnrm : String(1..integer(nbc));
     normal : Standard_Integer_Vectors.Vector(1..dim);
     lp : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
-       := Laurent_Systems_Container.retrieve;
+       := Standard_LaurSys_Container.retrieve;
 
   begin
     strnrm := C_Integer_Array_to_String(natural32(nbc),v_b);
@@ -272,8 +272,8 @@ function use_giftwrap ( job : integer32;
     begin
       q := Standard_Initial_Forms.Initial(lp.all,normal);
      -- put_line("The initial form : "); put_line(q);
-      Laurent_Systems_Container.Clear;
-      Laurent_Systems_Container.Initialize(q);
+      Standard_LaurSys_Container.Clear;
+      Standard_LaurSys_Container.Initialize(q);
       Standard_Complex_Laur_Systems.Clear(q);
     end;
     return 0;

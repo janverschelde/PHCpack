@@ -1,7 +1,7 @@
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;          use Standard_Integer_Vectors;
 
-package body Laurent_Systems_Container is
+package body Standard_LaurSys_Container is
 
 -- INTERNAL DATA :
 
@@ -160,4 +160,4 @@ begin
   ep := null;
   jm := null;
   ej := null;
-end Laurent_Systems_Container;
+end Standard_LaurSys_Container;

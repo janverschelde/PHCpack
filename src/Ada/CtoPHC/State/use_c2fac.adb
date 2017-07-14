@@ -28,13 +28,16 @@ with Standard_System_and_Solutions_io;
 with DoblDobl_System_and_Solutions_io;
 with QuadDobl_System_and_Solutions_io;
 with Sampling_Machine;
+with Sampling_Laurent_Machine;
 with DoblDobl_Sampling_Machine;
+with DoblDobl_Sampling_Laurent_Machine;
 with QuadDobl_Sampling_Machine;
+with QuadDobl_Sampling_Laurent_Machine;
 with Witness_Sets_io;                   use Witness_Sets_io;
 with Monodromy_Partitions;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
-with Laurent_Systems_Container;
+with Standard_LaurSys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_PolySys_Container;
 with DoblDobl_LaurSys_Container;
@@ -225,7 +228,7 @@ function use_c2fac ( job : integer32;
 
   begin
     Standard_Read_Embedding(p,sols,dim);
-    Laurent_Systems_Container.Initialize(p.all);
+    Standard_LaurSys_Container.Initialize(p.all);
     Standard_Solutions_Container.Initialize(sols);
     data(1) := dim;
     data(2) := Length_Of(sols);
@@ -1783,7 +1786,7 @@ function use_c2fac ( job : integer32;
   begin
     Open(file,in_file,filename);
     Standard_Read_Embedding(file,p,sols,dim);
-    Laurent_Systems_Container.Initialize(p.all);
+    Standard_LaurSys_Container.Initialize(p.all);
     Standard_Solutions_Container.Initialize(sols);
     data(1) := dim;
     data(2) := Length_Of(sols);
@@ -1874,7 +1877,7 @@ function use_c2fac ( job : integer32;
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
 
-    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
     va : constant C_Integer_Array := C_intarrs.Value(a);
     dim : constant integer32 := integer32(va(va'first));
@@ -1926,105 +1929,155 @@ function use_c2fac ( job : integer32;
       return 806;
   end Job99;
 
+  function Job100 return integer32 is -- standard sampler -> laur container
+
+     use Standard_Complex_Laur_Systems;
+
+     p : constant Laur_Sys := Sampling_Laurent_Machine.Embedded_System;
+
+  begin
+    Standard_LaurSys_Container.Initialize(p);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at copy standard sampler -> Laurent container.");
+      return 807;
+  end Job100;
+
+  function Job101 return integer32 is -- dobldobl sampler -> laur container
+
+     use DoblDobl_Complex_Laur_Systems;
+
+     p : constant Laur_Sys
+       := DoblDobl_Sampling_Laurent_Machine.Embedded_System;
+
+  begin
+    DoblDobl_LaurSys_Container.Initialize(p);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at copy dobldoblsampler -> Laurent container.");
+      return 808;
+  end Job101;
+
+  function Job102 return integer32 is -- quaddobl sampler -> laur container
+
+     use QuadDobl_Complex_Laur_Systems;
+
+     p : constant Laur_Sys
+       := QuadDobl_Sampling_Laurent_Machine.Embedded_System;
+
+  begin
+    QuadDobl_LaurSys_Container.Initialize(p);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at copy dobldoblsampler -> Laurent container.");
+      return 808;
+  end Job102;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
-      when  0 => Write_Menu; return 0;
-      when  1 => return Job1; -- read witness set in double precision
-      when  2 => return Job2; -- initialize standard sampling machine
-      when  3 => return Job3; -- assigning standard coefficient of slice
-      when  4 => return Job4; -- store standard double gamma constant
-      when  5 => Standard_Sampling_Operations.Sample; return 0;
-      when  6 => Standard_Sampling_Operations.Swap_Slices; return 0;
-      when  7 => return Job7; -- copy from standard sampler to container
-      when  8 => return Job8; -- copy first standard solutions to container
-      when  9 => return Job9; -- standard solutions from grid to container
-      when 10 => return Job10; -- initializing Monodromy_Permutations
-      when 11 => return Job11; -- standard solutions to Monodromy_Permutations
-      when 12 => return Job12; -- compute standard monodromy permutation
-      when 13 => return Job13; -- update with standard permutation
-      when 14 => return Job14; -- writes the standard decomposition
-      when 15 => return Job15; -- apply standard linear trace test
-      when 16 => return Job16; -- return standard trace grid diagnostics
-      when 17 => return Job17; -- comparing standard trace sum differences
-      when 18 => return Job18; -- finding index of solution label
-      when 19 => return Job19; -- init slices in Standard_Sampling_Operations
-      when 20 => return Job20; -- adding new slice to Sampling_Operations
-      when 21 => return Job21; -- returning coefficients of a slice
-      when 22 => return Job22; -- setting standard target slices
-      when 23 => return Job23; -- one sampling loop in double precision
-      when 24 => return Job24; -- reads standard witness set from file
-      when 25 => return Job25; -- writes standard witness set to file
-      when 26 => return Job26; -- returns number of standard factors
-      when 27 => return Job27; -- returns labels in standard component
-      when 28 => return Job28; -- make standard monodromy permutations silent
-      when 29 => return Job29; -- standard random complex number
-      when 30 => return Job30; -- make standard monodromy permutations verbose 
-      when 31 => return Job31; -- read witness set in double double precision
-      when 32 => return Job32; -- initialize dobldobl sampling machine
-      when 33 => return Job33; -- assign dobldobl coefficient of slice
-      when 34 => return Job34; -- store double double gamma constant
-      when 35 => DoblDobl_Sampling_Operations.Sample; return 0;
-      when 36 => DoblDobl_Sampling_Operations.Swap_Slices; return 0;
-      when 37 => return Job37; -- copy from dobldobl sampler to container
-      when 38 => return Job38; -- copy first dobldobl solutions to container
-      when 39 => return Job39; -- dobldobl solutions from grid to container
-      when 40 => return Job40; -- initialize dobldobl monodromy permutations
-      when 41 => return Job41; -- dobldobl solutions to Monodromy_Permutations
-      when 42 => return Job42; -- compute dobldobl monodromy permutation
-      when 43 => return Job43; -- update with dobldobl permutation
-      when 44 => return Job44; -- writes the dobldobl decomposition
-      when 45 => return Job45; -- apply dobldobl linear trace test
-      when 46 => return Job46; -- return dobldobl trace grid diagnostics
-      when 47 => return Job47; -- comparing dobldobl trace sum differences
-      when 48 => return Job48; -- index of dobldobl solution label
-      when 49 => return Job49; -- init slices in DoblDobl_Sampling_Operations
-      when 52 => return Job52; -- setting dobldobl target slices
-      when 53 => return Job53; -- one sampling loop in dobldobl precision
-      when 54 => return Job54; -- reads dobldobl witness set from file
-      when 55 => return Job55; -- writes dobldobl witness set to file
-      when 56 => return Job56; -- returns number of dobldobl factors
-      when 57 => return Job57; -- returns labels in dobldobl component
-      when 58 => return Job58; -- make dobldobl monodromy permutations silent
-      when 59 => return Job59; -- random dobldobl complex number
-      when 60 => return Job60; -- make dobldobl monodromy permutations verbose 
-      when 61 => return Job61; -- read witness set in quad double precision
-      when 62 => return Job62; -- initialize quaddobl sampling machine
-      when 63 => return Job63; -- assign quaddobl coefficient of slice
-      when 64 => return Job64; -- store quaddobl gamma constant
-      when 65 => QuadDobl_Sampling_Operations.Sample; return 0;
-      when 66 => QuadDobl_Sampling_Operations.Swap_Slices; return 0;
-      when 67 => return Job67; -- copy from quaddobl sampler to container
-      when 68 => return Job68; -- copy first quaddobl solutions to container
-      when 69 => return Job69; -- quaddobl solutions from grid to container
-      when 70 => return Job70; -- initialize quaddobl monodromy permutations
-      when 71 => return Job71; -- quaddobl solutions to Monodromy_Permutations
-      when 72 => return Job72; -- compute quaddobl monodromy permutation
-      when 73 => return Job73; -- update with quaddobl permutation
-      when 74 => return Job74; -- writes the quaddobl decomposition
-      when 75 => return Job75; -- apply quaddobl linear trace test
-      when 76 => return Job76; -- return quaddobl trace grid diagnostics
-      when 77 => return Job77; -- comparing quaddobl trace sum differences
-      when 78 => return Job78; -- index of quaddobl solution label
-      when 79 => return Job79; -- init slices in QuadDobl_Sampling_Operations
-      when 82 => return Job82; -- setting quaddobl target slices
-      when 83 => return Job23; -- one sampling loop in quaddobl precision
-      when 84 => return Job84; -- reads quaddobl witness set from file
-      when 85 => return Job85; -- writes quaddobl witness set to file
-      when 86 => return Job86; -- returns number of quaddobl factors
-      when 87 => return Job87; -- returns labels in quaddobl component
-      when 88 => return Job88; -- make quaddobl monodromy permutations silent
-      when 89 => return Job89; -- random quaddobl complex number
-      when 90 => return Job90; -- make quaddobl monodromy permutations verbose 
-      when 91 => return Job91; -- prompt for standard Laurent witness set
-      when 92 => return Job92; -- prompt for dobldobl Laurent witness set
-      when 93 => return Job93; -- prompt for quaddobl Laurent witness set
-      when 94 => return Job94; -- read standard Laurent witness set from file
-      when 95 => return Job95; -- read dobldobl Laurent witness set from file
-      when 96 => return Job95; -- read quaddobl Laurent witness set from file
-      when 97 => return Job97; -- initialize standard Laurent sampler
-      when 98 => return Job98; -- initialize dobldobl Laurent sampler
-      when 99 => return Job99; -- initialize quaddobl Laurent sampler
+      when   0 => Write_Menu; return 0;
+      when   1 => return Job1; -- read witness set in double precision
+      when   2 => return Job2; -- initialize standard sampling machine
+      when   3 => return Job3; -- assigning standard coefficient of slice
+      when   4 => return Job4; -- store standard double gamma constant
+      when   5 => Standard_Sampling_Operations.Sample; return 0;
+      when   6 => Standard_Sampling_Operations.Swap_Slices; return 0;
+      when   7 => return Job7; -- copy from standard sampler to container
+      when   8 => return Job8; -- copy first standard solutions to container
+      when   9 => return Job9; -- standard solutions from grid to container
+      when  10 => return Job10; -- initializing Monodromy_Permutations
+      when  11 => return Job11; -- standard solutions to Monodromy_Permutations
+      when  12 => return Job12; -- compute standard monodromy permutation
+      when  13 => return Job13; -- update with standard permutation
+      when  14 => return Job14; -- writes the standard decomposition
+      when  15 => return Job15; -- apply standard linear trace test
+      when  16 => return Job16; -- return standard trace grid diagnostics
+      when  17 => return Job17; -- comparing standard trace sum differences
+      when  18 => return Job18; -- finding index of solution label
+      when  19 => return Job19; -- init slices in Standard_Sampling_Operations
+      when  20 => return Job20; -- adding new slice to Sampling_Operations
+      when  21 => return Job21; -- returning coefficients of a slice
+      when  22 => return Job22; -- setting standard target slices
+      when  23 => return Job23; -- one sampling loop in double precision
+      when  24 => return Job24; -- reads standard witness set from file
+      when  25 => return Job25; -- writes standard witness set to file
+      when  26 => return Job26; -- returns number of standard factors
+      when  27 => return Job27; -- returns labels in standard component
+      when  28 => return Job28; -- make standard monodromy permutations silent
+      when  29 => return Job29; -- standard random complex number
+      when  30 => return Job30; -- make standard monodromy permutations verbose 
+      when  31 => return Job31; -- read witness set in double double precision
+      when  32 => return Job32; -- initialize dobldobl sampling machine
+      when  33 => return Job33; -- assign dobldobl coefficient of slice
+      when  34 => return Job34; -- store double double gamma constant
+      when  35 => DoblDobl_Sampling_Operations.Sample; return 0;
+      when  36 => DoblDobl_Sampling_Operations.Swap_Slices; return 0;
+      when  37 => return Job37; -- copy from dobldobl sampler to container
+      when  38 => return Job38; -- copy first dobldobl solutions to container
+      when  39 => return Job39; -- dobldobl solutions from grid to container
+      when  40 => return Job40; -- initialize dobldobl monodromy permutations
+      when  41 => return Job41; -- dobldobl solutions to Monodromy_Permutations
+      when  42 => return Job42; -- compute dobldobl monodromy permutation
+      when  43 => return Job43; -- update with dobldobl permutation
+      when  44 => return Job44; -- writes the dobldobl decomposition
+      when  45 => return Job45; -- apply dobldobl linear trace test
+      when  46 => return Job46; -- return dobldobl trace grid diagnostics
+      when  47 => return Job47; -- comparing dobldobl trace sum differences
+      when  48 => return Job48; -- index of dobldobl solution label
+      when  49 => return Job49; -- init slices in DoblDobl_Sampling_Operations
+      when  52 => return Job52; -- setting dobldobl target slices
+      when  53 => return Job53; -- one sampling loop in dobldobl precision
+      when  54 => return Job54; -- reads dobldobl witness set from file
+      when  55 => return Job55; -- writes dobldobl witness set to file
+      when  56 => return Job56; -- returns number of dobldobl factors
+      when  57 => return Job57; -- returns labels in dobldobl component
+      when  58 => return Job58; -- make dobldobl monodromy permutations silent
+      when  59 => return Job59; -- random dobldobl complex number
+      when  60 => return Job60; -- make dobldobl monodromy permutations verbose 
+      when  61 => return Job61; -- read witness set in quad double precision
+      when  62 => return Job62; -- initialize quaddobl sampling machine
+      when  63 => return Job63; -- assign quaddobl coefficient of slice
+      when  64 => return Job64; -- store quaddobl gamma constant
+      when  65 => QuadDobl_Sampling_Operations.Sample; return 0;
+      when  66 => QuadDobl_Sampling_Operations.Swap_Slices; return 0;
+      when  67 => return Job67; -- copy from quaddobl sampler to container
+      when  68 => return Job68; -- copy first quaddobl solutions to container
+      when  69 => return Job69; -- quaddobl solutions from grid to container
+      when  70 => return Job70; -- initialize quaddobl monodromy permutations
+      when  71 => return Job71; -- quaddobl solutions to Monodromy_Permutations
+      when  72 => return Job72; -- compute quaddobl monodromy permutation
+      when  73 => return Job73; -- update with quaddobl permutation
+      when  74 => return Job74; -- writes the quaddobl decomposition
+      when  75 => return Job75; -- apply quaddobl linear trace test
+      when  76 => return Job76; -- return quaddobl trace grid diagnostics
+      when  77 => return Job77; -- comparing quaddobl trace sum differences
+      when  78 => return Job78; -- index of quaddobl solution label
+      when  79 => return Job79; -- init slices in QuadDobl_Sampling_Operations
+      when  82 => return Job82; -- setting quaddobl target slices
+      when  83 => return Job23; -- one sampling loop in quaddobl precision
+      when  84 => return Job84; -- reads quaddobl witness set from file
+      when  85 => return Job85; -- writes quaddobl witness set to file
+      when  86 => return Job86; -- returns number of quaddobl factors
+      when  87 => return Job87; -- returns labels in quaddobl component
+      when  88 => return Job88; -- make quaddobl monodromy permutations silent
+      when  89 => return Job89; -- random quaddobl complex number
+      when  90 => return Job90; -- make quaddobl monodromy permutations verbose 
+      when  91 => return Job91; -- prompt for standard Laurent witness set
+      when  92 => return Job92; -- prompt for dobldobl Laurent witness set
+      when  93 => return Job93; -- prompt for quaddobl Laurent witness set
+      when  94 => return Job94; -- read standard Laurent witness set from file
+      when  95 => return Job95; -- read dobldobl Laurent witness set from file
+      when  96 => return Job95; -- read quaddobl Laurent witness set from file
+      when  97 => return Job97; -- initialize standard Laurent sampler
+      when  98 => return Job98; -- initialize dobldobl Laurent sampler
+      when  99 => return Job99; -- initialize quaddobl Laurent sampler
+      when 100 => return Job100; -- standard sampler -> Laurent container
+      when 101 => return Job101; -- dobldobl sampler -> Laurent container
+      when 102 => return Job102; -- quaddobl sampler -> Laurent container
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;

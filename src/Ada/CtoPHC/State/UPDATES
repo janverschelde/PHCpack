@@ -1,6 +1,10 @@
 Thu 13 Jul 2017 : extended {standard,dobldobl,quaddobl}_sampling_operations
   with initializer for Laurent systems, and added the initializer jobs to
-  use_c2fac and use_c2phc.
+  use_c2fac and use_c2phc.  Renaming of Laurent_Systems_Container into
+  Standard_LaurSys_Container changed use_c2fac.adb, use_c2phc.adb,
+  use_c2mbt.adb, use_celcon.adb, use_giftwrap.adb, use_mapcon.adb,
+  use_syscon.adb, and ts_syscon.adb.  Jobs added to use_c2fac
+  and use_c2phc to copy embedded systems from sampler to container.
 
 Mon 10 Jul 2017 : extended use_c2mbt with jobs to run homotopy membership
   tests on witness sets defined by Laurent polynomial systems.

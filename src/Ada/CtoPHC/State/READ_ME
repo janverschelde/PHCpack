@@ -21,7 +21,7 @@ standard_polysys_container       : management of Ada polynomial systems
 dobldobl_polysys_container       : polynomial systems with double doubles
 quaddobl_polysys_container       : polynomial systems with quad doubles
 multprec_polysys_container       : multiprecision poly system container
-laurent_systems_container        : management of Ada Laurent systems
+standard_laursys_container       : management of Ada Laurent systems
 dobldobl_laursys_container       : for Laurent systems with dobldobl coeffs
 quaddobl_laursys_container       : for Laurent systems with quaddobl coeffs
 multprec_laursys_container       : for Laurent systems with multprec coeffs

@@ -66,13 +66,13 @@ with Greeting_Banners;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 -- with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_PolySys_Container;
+with Standard_LaurSys_Container;
 with DoblDobl_PolySys_Container;
 with DoblDobl_LaurSys_Container;
 with QuadDobl_PolySys_Container;
 with QuadDobl_LaurSys_Container;
 with Multprec_PolySys_Container;
 with Multprec_LaurSys_Container;
-with Laurent_Systems_Container;
 with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
 with QuadDobl_Solutions_Container;
@@ -1503,7 +1503,7 @@ function use_c2phc ( job : integer32;
 
     use Standard_Complex_Laur_Systems,Standard_Complex_Solutions;
     use Standard_Root_Refiners;
-    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     sols : Solution_List := Standard_Solutions_Container.Retrieve;
     refsols : Solution_List;
 
@@ -1692,13 +1692,13 @@ function use_c2phc ( job : integer32;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     dim : constant natural32 := natural32(v_a(v_a'first));
-    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     ep : Link_to_Laur_Sys;
 
   begin
     Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
-    Laurent_Systems_Container.Clear;
-    Laurent_Systems_Container.Initialize(ep.all);
+    Standard_LaurSys_Container.Clear;
+    Standard_LaurSys_Container.Initialize(ep.all);
     Witness_Sets_io.Add_Embed_Symbols(dim);
     return 0;
   exception
@@ -1831,7 +1831,7 @@ function use_c2phc ( job : integer32;
     silval : constant natural32 := natural32(v_b(v_b'first));
     silent : constant boolean := (silval = 1);
     ntasks : constant natural32 := natural32(v_b(v_b'first+1));
-    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
     rc : natural32;
@@ -2058,7 +2058,7 @@ function use_c2phc ( job : integer32;
         (lp.all,mix,perm,iprm,lifsup,mixsub,mv);
     else
       declare
-        lq : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+        lq : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
       begin
         Black_Box_Mixed_Volume_Computation
           (lq.all,mix,perm,iprm,lifsup,mixsub,mv);
@@ -2347,7 +2347,7 @@ function use_c2phc ( job : integer32;
   function Job777 return integer32 is -- copy standard Laurent to start
 
     use Standard_Complex_Laur_Systems;
-    q : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    q : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
 
   begin
     if q = null
@@ -2383,7 +2383,7 @@ function use_c2phc ( job : integer32;
   function Job780 return integer32 is -- copy standard Laurent to target
 
     use Standard_Complex_Laur_Systems;
-    q : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    q : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
 
   begin
     if q = null
@@ -2425,7 +2425,7 @@ function use_c2phc ( job : integer32;
     PHCpack_Operations.Retrieve_Start_System(q);
     if q = null
      then return 783;
-     else Laurent_Systems_Container.Initialize(q.all); return 0;
+     else Standard_LaurSys_Container.Initialize(q.all); return 0;
     end if;
   end Job783;
 
@@ -2464,7 +2464,7 @@ function use_c2phc ( job : integer32;
     PHCpack_Operations.Retrieve_Target_System(q);
     if q = null
      then return 786;
-     else Laurent_Systems_Container.Initialize(q.all); return 0;
+     else Standard_LaurSys_Container.Initialize(q.all); return 0;
     end if;
   end Job786;
 
@@ -2862,6 +2862,10 @@ function use_c2phc ( job : integer32;
       when 804 => return use_c2fac(97,a,b,c); -- init standard Laurent sampler
       when 805 => return use_c2fac(98,a,b,c); -- init dobldobl Laurent sampler
       when 806 => return use_c2fac(99,a,b,c); -- init quaddobl Laurent sampler
+     -- copy embedded system from sampler to container
+      when 807 => return use_c2fac(100,a,b,c); -- standard Laurent copy
+      when 808 => return use_c2fac(102,a,b,c); -- dobldobl Laurent copy
+      when 809 => return use_c2fac(103,a,b,c); -- quaddobl Laurent copy
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
