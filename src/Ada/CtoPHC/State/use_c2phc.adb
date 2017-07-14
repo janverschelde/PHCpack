@@ -1505,12 +1505,13 @@ function use_c2phc ( job : integer32;
     use Standard_Root_Refiners;
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     sols : Solution_List := Standard_Solutions_Container.Retrieve;
-    refsols : Solution_List;
+    work,refsols : Solution_List;
 
   begin
     if lp = null or Is_Null(sols) then
       return 326;             
     else
+      Copy(sols,work); -- must work on a copy!
       declare
         nbequ : constant integer32 := lp'last;
         nbvar : constant integer32 := Head_Of(sols).n;
@@ -1520,12 +1521,12 @@ function use_c2phc ( job : integer32;
         nit : natural32 := 0;
       begin
         if nbequ = nbvar then
-          Silent_Root_Refiner(lp.all,sols,refsols,epsxa,epsfa,tolsi,nit,1);
+          Silent_Root_Refiner(lp.all,work,refsols,epsxa,epsfa,tolsi,nit,1);
         else
-          Silent_Root_Sharpener(lp.all,sols,refsols,epsxa,epsfa,tolsi,nit,1);
+          Silent_Root_Sharpener(lp.all,work,refsols,epsxa,epsfa,tolsi,nit,1);
         end if;
         Standard_Solutions_Container.Clear;
-        Standard_Solutions_Container.Initialize(sols);
+        Standard_Solutions_Container.Initialize(work);
       exception
         when others => return 326;
       end;
