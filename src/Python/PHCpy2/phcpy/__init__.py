@@ -31,13 +31,16 @@ trackers
    a given start system with known solutions and a target system.
 sweepers
    homotopies to sweep a real parameter range in natural parameter homotopies.
-maps
-   module to work with monomial maps, defined as solution of systems
-   that have exactly two monomials in every equation (binomial systems).
+tuning
+   parameters and numerical tolerances of the trackers and sweepers
+   are tuned by the functions in the tuning module.
 sets
    offers tools to work with positive dimensional solution sets.
 cascades
    homotopies to compute candidate generic points on all components.
+factor
+   separates generic points in a witness set according to the
+   irreducible factors in a solution set.
 examples
    defines some interesting examples taken from the research literature,
    the test() solves all systems, performing a regression test.
@@ -50,10 +53,16 @@ schubert
 polytopes
    functions to work with Newton polytopes, to compute mixed volumes
    of Newton polytopes, given by tuples of support sets.
-dashboard
-   prototype of a graphical user interface with Tkinter.
+tropisms
+   tropisms are the leading exponents of the power series solutions
+   and can be computed by polyhedral end games.
+maps
+   module to work with monomial maps, defined as solution of systems
+   that have exactly two monomials in every equation (binomial systems).
 series
    Newton's method on truncated power series solutions.
+dashboard
+   prototype of a graphical user interface with Tkinter.
 server
    defines a simple client/server interaction to solve random trinomials.
 

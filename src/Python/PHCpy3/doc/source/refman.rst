@@ -118,6 +118,12 @@ functions in the module cascades
 .. automodule:: cascades
    :members:
 
+functions in the module factor
+------------------------------
+
+.. automodule:: factor
+   :members:
+
 some interesting families and examples
 ======================================
 
