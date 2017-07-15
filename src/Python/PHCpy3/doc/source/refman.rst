@@ -112,6 +112,12 @@ functions in the module sets
 .. automodule:: sets
    :members:
 
+functions in the module cascades
+--------------------------------
+
+.. automodule:: cascades
+   :members:
+
 some interesting families and examples
 ======================================
 

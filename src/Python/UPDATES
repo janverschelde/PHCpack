@@ -1,6 +1,8 @@
 Sat 15 Jul 2017 : moved the cascade homotopies from the sets module into
   the new module cascades.p, extended __init__.py and modified setup.py,
   all for Python 2.  Did the same for Python 3 in PHCpy3.
+  Added the autodoc for the new cascade module to refman.rst in the
+  source of the documentation in the PHCpy2 and PHCpy3 folders.
 
 Fri 14 Jul 2017 : in sets.py, added a parameter to the calls to the
   functions *_track_paths(), to take into account the islaurent flag.
