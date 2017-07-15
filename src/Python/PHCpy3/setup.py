@@ -21,8 +21,8 @@ setup(
     packages = ['phcpy'] ,
     py_modules = ['phcpy/interface', 'phcpy/solver', 'phcpy/solutions', \
         'phcpy/trackers', 'phcpy/sweepers', 'phcpy/tuning', 'phcpy/tropisms', \
-        'phcpy/sets', 'phcpy/maps', 'phcpy/schubert' , 'phcpy/polytopes', \
-        'phcpy/server', 'phcpy/examples', 'phcpy/families', \
+        'phcpy/sets', 'phcpy/cascades', 'phcpy/maps', 'phcpy/schubert' ,
+        'phcpy/polytopes', 'phcpy/server', 'phcpy/examples', 'phcpy/families', \
         'phcpy/dashboard', 'phcpy/series' ] ,
     license = 'GNU GENERAL PUBLIC LICENSE version 3' ,
     data_files = [(get_python_lib()+'/phcpy', ['phcpy/phcpy2c3.so'])] ,

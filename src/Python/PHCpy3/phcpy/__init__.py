@@ -29,11 +29,15 @@ interface
 trackers
    offers functions to track solution paths defined by a homotopy between
    a given start system with known solutions and a target system.
+sweepers
+   homotopies to sweep a real parameter range in natural parameter homotopies.
 maps
    module to work with monomial maps, defined as solution of systems
    that have exactly two monomials in every equation (binomial systems).
 sets
    offers tools to work with positive dimensional solution sets.
+cascades
+   homotopies to compute candidate generic points on all components.
 examples
    defines some interesting examples taken from the research literature,
    the test() solves all systems, performing a regression test.
