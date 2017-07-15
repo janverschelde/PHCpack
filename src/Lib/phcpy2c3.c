@@ -5885,11 +5885,11 @@ static PyObject *py2c_factor_restore_quaddobl_solutions
 static PyObject *py2c_factor_standard_track_paths
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int islaurent,fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = standard_track_paths();
+   if(!PyArg_ParseTuple(args,"i",&islaurent)) return NULL;
+   fail = standard_track_paths(islaurent);
 
    return Py_BuildValue("i",fail);
 }
@@ -5897,11 +5897,11 @@ static PyObject *py2c_factor_standard_track_paths
 static PyObject *py2c_factor_dobldobl_track_paths
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int islaurent,fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = dobldobl_track_paths();
+   if(!PyArg_ParseTuple(args,"i",&islaurent)) return NULL;
+   fail = dobldobl_track_paths(islaurent);
 
    return Py_BuildValue("i",fail);
 }
@@ -5909,11 +5909,11 @@ static PyObject *py2c_factor_dobldobl_track_paths
 static PyObject *py2c_factor_quaddobl_track_paths
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int islaurent,fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = quaddobl_track_paths();
+   if(!PyArg_ParseTuple(args,"i",&islaurent)) return NULL;
+   fail = quaddobl_track_paths(islaurent);
 
    return Py_BuildValue("i",fail);
 }
@@ -9148,13 +9148,13 @@ static PyMethodDef phcpy2c3_methods[] =
     "Restores the first initialized solutions, in quad double precision,\n from sampler to the container."},
    {"py2c_factor_standard_track_paths",
      py2c_factor_standard_track_paths, METH_VARARGS,
-    "Tracks as many paths as defined by witness set,\n in standard double precision.\n On return is the failure code, which is zero when all went well."},
+    "Tracks as many paths as defined by witness set,\n in standard double precision.\n On input is an integer, which must be 1 if the witness set is\n defined by a Laurent polynomial system.\n On return is the failure code, which is zero when all went well."},
    {"py2c_factor_dobldobl_track_paths",
      py2c_factor_dobldobl_track_paths, METH_VARARGS,
-    "Tracks as many paths as defined by witness set,\n in double double precision.\n On return is the failure code, which is zero when all went well."},
+    "Tracks as many paths as defined by witness set,\n in double double precision.\n On input is an integer, which must be 1 if the witness set is\n defined by a Laurent polynomial system.\n On return is the failure code, which is zero when all went well."},
    {"py2c_factor_quaddobl_track_paths",
      py2c_factor_quaddobl_track_paths, METH_VARARGS,
-    "Tracks as many paths as defined by witness set,\n in quad double precision.\n On return is the failure code, which is zero when all went well."},
+    "Tracks as many paths as defined by witness set,\n in quad double precision.\n On input is an integer, which must be 1 if the witness set is\n defined by a Laurent polynomial system.\n On return is the failure code, which is zero when all went well."},
    {"py2c_factor_swap_standard_slices",
      py2c_factor_swap_standard_slices, METH_VARARGS,
     "Swaps the current slices with new slices and takes new solutions\n as start to turn back, in standard double precision.\n On return is the failure code, which is zero when all went well."},

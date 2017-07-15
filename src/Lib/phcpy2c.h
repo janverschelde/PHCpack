@@ -3921,6 +3921,8 @@ static PyObject *py2c_factor_standard_track_paths
  * DESCRIPTION :
  *   Tracks as many paths as defined by witness set,
  *   in standard double precision.
+ *   On input is an integer, which must be 1 if the witness set is
+ *   defined by a Laurent polynomial system.
  *   On return is the failure code, which is zero when all went well. */
 
 static PyObject *py2c_factor_dobldobl_track_paths
@@ -3929,6 +3931,8 @@ static PyObject *py2c_factor_dobldobl_track_paths
  * DESCRIPTION :
  *   Tracks as many paths as defined by witness set,
  *   in double double precision.
+ *   On input is an integer, which must be 1 if the witness set is
+ *   defined by a Laurent polynomial system.
  *   On return is the failure code, which is zero when all went well. */
 
 static PyObject *py2c_factor_quaddobl_track_paths
@@ -3937,6 +3941,8 @@ static PyObject *py2c_factor_quaddobl_track_paths
  * DESCRIPTION :
  *   Tracks as many paths as defined by witness set,
  *   in quad double precision.
+ *   On input is an integer, which must be 1 if the witness set is
+ *   defined by a Laurent polynomial system.
  *   On return is the failure code, which is zero when all went well. */
 
 static PyObject *py2c_factor_swap_standard_slices

@@ -3,6 +3,8 @@ Fri 14 Jul 2017 : started modification in lib_factor.c to accept Laurent
   which changed lib_factor.c.  This also changed phcpy2c2.c and phcpy2c3.c.
   Extended witset with copying of witness sets from the samplers to the
   Laurent systems containers, lib_factor.c works for Laurent systems!
+  In phcpy2c.h, phcpy2c2.c, and phcpy2c3.c, modified the track_paths
+  functions to take into account the islaurent flag.
 
 Thu 13 Jul 2017 : added an initializer of the samplers for witness sets
   defined by the Laurent systems to witset and phcpy2c.h, phcpy2c2.c,
