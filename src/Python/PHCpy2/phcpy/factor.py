@@ -68,11 +68,14 @@ def decomposition(deg, precision='d'):
         print 'wrong level of precision'
         return None
 
-def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
+def standard_monodromy_breakup(embsys, esols, dim, \
+    islaurent=0, verbose=True, nbloops=0):
     r"""
     Applies the monodromy breakup algorithm in standard double precision
     to factor the d-dimensional algebraic set represented by the
     embedded system *embsys* and its solutions *esols*.
+    If the embedded polynomial system is a Laurent system,
+    then islaurent must equal one, the default is zero.
     If *verbose* is False, then no output is written.
     If *nbloops* equals zero, then the user is prompted to give
     the maximum number of loops.
@@ -82,6 +85,7 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.phcpy2c2 import py2c_factor_standard_assign_labels
     from phcpy.phcpy2c2 import py2c_factor_initialize_standard_monodromy
     from phcpy.phcpy2c2 import py2c_factor_initialize_standard_sampler
+    from phcpy.phcpy2c2 import py2c_factor_initialize_standard_Laurent_sampler
     from phcpy.phcpy2c2 import py2c_factor_standard_trace_grid_diagnostics
     from phcpy.phcpy2c2 import py2c_factor_set_standard_trace_slice
     from phcpy.phcpy2c2 import py2c_factor_store_standard_gammas
@@ -109,7 +113,10 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     py2c_factor_standard_assign_labels(nvar, deg)
     if(verbose):
         py2c_solcon_write_standard_solutions()
-    py2c_factor_initialize_standard_sampler(dim)
+    if(islaurent == 1):
+        py2c_factor_initialize_standard_Laurent_sampler(dim)
+    else:
+        py2c_factor_initialize_standard_sampler(dim)
     if(nbloops == 0):
         strnbloops = raw_input('give the maximum number of loops : ')
         nbloops = int(strnbloops)
@@ -120,7 +127,7 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     for i in range(1, 3):
         py2c_factor_set_standard_trace_slice(i)
         py2c_factor_store_standard_gammas(nvar)
-        py2c_factor_standard_track_paths(0)
+        py2c_factor_standard_track_paths(islaurent)
         py2c_factor_store_standard_solutions()
         py2c_factor_restore_standard_solutions()
         py2c_factor_swap_standard_slices()
@@ -133,10 +140,10 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
             print '... starting loop %d ...' % i
         py2c_factor_new_standard_slices(dim, nvar)
         py2c_factor_store_standard_gammas(nvar)
-        py2c_factor_standard_track_paths(0)
+        py2c_factor_standard_track_paths(islaurent)
         py2c_solcon_clear_standard_solutions()
         py2c_factor_store_standard_gammas(nvar)
-        py2c_factor_standard_track_paths(0)
+        py2c_factor_standard_track_paths(islaurent)
         py2c_factor_store_standard_solutions()
         sprm = py2c_factor_permutation_after_standard_loop(deg)
         if(verbose):
@@ -153,11 +160,14 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
             break
         py2c_factor_restore_standard_solutions()
 
-def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
+def dobldobl_monodromy_breakup(embsys, esols, dim, \
+    islaurent=0, verbose=True, nbloops=0):
     r"""
     Applies the monodromy breakup algorithm in double double precision
     to factor the d-dimensional algebraic set represented by the embedded
     system *embsys* and its solutions *esols*.
+    If the embedded polynomial system is a Laurent system,
+    then islaurent must equal one, the default is zero.
     If *verbose* is False, then no output is written.
     If *nbloops* equals zero, then the user is prompted to give
     the maximum number of loops.
@@ -167,6 +177,7 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.phcpy2c2 import py2c_factor_dobldobl_assign_labels
     from phcpy.phcpy2c2 import py2c_factor_initialize_dobldobl_monodromy
     from phcpy.phcpy2c2 import py2c_factor_initialize_dobldobl_sampler
+    from phcpy.phcpy2c2 import py2c_factor_initialize_dobldobl_Laurent_sampler
     from phcpy.phcpy2c2 import py2c_factor_dobldobl_trace_grid_diagnostics
     from phcpy.phcpy2c2 import py2c_factor_set_dobldobl_trace_slice
     from phcpy.phcpy2c2 import py2c_factor_store_dobldobl_gammas
@@ -194,7 +205,10 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     py2c_factor_dobldobl_assign_labels(nvar, deg)
     if(verbose):
         py2c_solcon_write_dobldobl_solutions()
-    py2c_factor_initialize_dobldobl_sampler(dim)
+    if(islaurent == 1):
+        py2c_factor_initialize_dobldobl_sampler(dim)
+    else:
+        py2c_factor_initialize_dobldobl_Laurent_sampler(dim)
     if(nbloops == 0):
         strnbloops = raw_input('give the maximum number of loops : ')
         nbloops = int(strnbloops)
@@ -205,7 +219,7 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     for i in range(1, 3):
         py2c_factor_set_dobldobl_trace_slice(i)
         py2c_factor_store_dobldobl_gammas(nvar)
-        py2c_factor_dobldobl_track_paths(0)
+        py2c_factor_dobldobl_track_paths(islaurent)
         py2c_factor_store_dobldobl_solutions()
         py2c_factor_restore_dobldobl_solutions()
         py2c_factor_swap_dobldobl_slices()
@@ -218,10 +232,10 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
             print '... starting loop %d ...' % i
         py2c_factor_new_dobldobl_slices(dim, nvar)
         py2c_factor_store_dobldobl_gammas(nvar)
-        py2c_factor_dobldobl_track_paths(0)
+        py2c_factor_dobldobl_track_paths(islaurent)
         py2c_solcon_clear_dobldobl_solutions()
         py2c_factor_store_dobldobl_gammas(nvar)
-        py2c_factor_dobldobl_track_paths(0)
+        py2c_factor_dobldobl_track_paths(islaurent)
         py2c_factor_store_dobldobl_solutions()
         sprm = py2c_factor_permutation_after_dobldobl_loop(deg)
         if(verbose):
@@ -238,11 +252,14 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
             break
         py2c_factor_restore_dobldobl_solutions()
 
-def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
+def quaddobl_monodromy_breakup(embsys, esols, dim, \
+    islaurent=0, verbose=True, nbloops=0):
     r"""
     Applies the monodromy breakup algorithm in quad double precision
     to factor the d-dimensional algebraic set represented by the embedded
     system *embsys* and its solutions *esols*.
+    If the embedded polynomial system is a Laurent system,
+    then islaurent must equal one, the default is zero.
     If *verbose* is False, then no output is written.
     If *nbloops* equals zero, then the user is prompted to give
     the maximum number of loops.
@@ -252,6 +269,7 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.phcpy2c2 import py2c_factor_quaddobl_assign_labels
     from phcpy.phcpy2c2 import py2c_factor_initialize_quaddobl_monodromy
     from phcpy.phcpy2c2 import py2c_factor_initialize_quaddobl_sampler
+    from phcpy.phcpy2c2 import py2c_factor_initialize_quaddobl_Laurent_sampler
     from phcpy.phcpy2c2 import py2c_factor_quaddobl_trace_grid_diagnostics
     from phcpy.phcpy2c2 import py2c_factor_set_quaddobl_trace_slice
     from phcpy.phcpy2c2 import py2c_factor_store_quaddobl_gammas
@@ -279,7 +297,10 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     py2c_factor_quaddobl_assign_labels(nvar, deg)
     if(verbose):
         py2c_solcon_write_quaddobl_solutions()
-    py2c_factor_initialize_quaddobl_sampler(dim)
+    if(islaurent == 1):
+        py2c_factor_initialize_quaddobl_Laurent_sampler(dim)
+    else:
+        py2c_factor_initialize_quaddobl_sampler(dim)
     if(nbloops == 0):
         strnbloops = raw_input('give the maximum number of loops : ')
         nbloops = int(strnbloops)
@@ -290,7 +311,7 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     for i in range(1, 3):
         py2c_factor_set_quaddobl_trace_slice(i)
         py2c_factor_store_quaddobl_gammas(nvar)
-        py2c_factor_quaddobl_track_paths(0)
+        py2c_factor_quaddobl_track_paths(islarent)
         py2c_factor_store_quaddobl_solutions()
         py2c_factor_restore_quaddobl_solutions()
         py2c_factor_swap_quaddobl_slices()
@@ -303,10 +324,10 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
             print '... starting loop %d ...' % i
         py2c_factor_new_quaddobl_slices(dim, nvar)
         py2c_factor_store_quaddobl_gammas(nvar)
-        py2c_factor_quaddobl_track_paths(0)
+        py2c_factor_quaddobl_track_paths(islaurent)
         py2c_solcon_clear_quaddobl_solutions()
         py2c_factor_store_quaddobl_gammas(nvar)
-        py2c_factor_quaddobl_track_paths(0)
+        py2c_factor_quaddobl_track_paths(islaurent)
         py2c_factor_store_quaddobl_solutions()
         sprm = py2c_factor_permutation_after_quaddobl_loop(deg)
         if(verbose):
@@ -323,10 +344,13 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
             break
         py2c_factor_restore_quaddobl_solutions()
 
-def monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0, prec='d'):
+def monodromy_breakup(embsys, esols, dim, \
+    islaurent=0, verbose=True, nbloops=0, prec='d'):
     r"""
     Applies the monodromy breakup algorithm to factor the d-dimensional
     set represented by the embedded system *embsys* and its solutions *esols*.
+    If the embedded polynomial system is a Laurent system,
+    then islaurent must equal one, the default is zero.
     If *verbose* is False, then no output is written.
     If *nbloops* equals zero, then the user is prompted to give
     the maximum number of loops.
@@ -335,31 +359,40 @@ def monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0, prec='d'):
     double double precision 'dd' and quad double precision 'qd'.
     """
     if(prec == 'd'):
-        standard_monodromy_breakup(embsys, esols, dim, verbose, nbloops)
+        standard_monodromy_breakup\
+            (embsys, esols, dim, islaurent, verbose, nbloops)
     elif(prec == 'dd'):
-        dobldobl_monodromy_breakup(embsys, esols, dim, verbose, nbloops)
+        dobldobl_monodromy_breakup\
+            (embsys, esols, dim, islaurent, verbose, nbloops)
     elif(prec == 'qd'):
-        quaddobl_monodromy_breakup(embsys, esols, dim, verbose, nbloops)
+        quaddobl_monodromy_breakup\
+            (embsys, esols, dim, islaurent, verbose, nbloops)
     else:
         print 'wrong argument for precision'
 
-def factor(dim, witsys, witsols, verbose=True, nbloops=20, precision='d'):
+def factor(dim, witsys, witsols, \
+    islaurent=0, verbose=True, nbloops=20, precision='d'):
     r"""
     Applies monodromy to factor an equidimensional algebraic set,
     given as a witness sets, with the embedded polynomials in *witsys*,
     and corresponding generic points in *witsols*.
+    If the embedded polynomial system is a Laurent system,
+    then islaurent must equal one, the default is zero.
     The dimension of the algebraic set is given in *dim*.
     The default precision is double 'd'.  Other valid values for precision
     are 'dd' for double double, or 'qd' for quad double.
     """
     if(precision == 'd'):
-        standard_monodromy_breakup(witsys, witsols, dim, verbose, nbloops)
+        standard_monodromy_breakup\
+            (witsys, witsols, dim, islaurent, verbose, nbloops)
         return decomposition(len(witsols))
     elif(precision == 'dd'):
-        dobldobl_monodromy_breakup(witsys, witsols, dim, verbose, nbloops)
+        dobldobl_monodromy_breakup\
+            (witsys, witsols, dim, islaurent, verbose, nbloops)
         return decomposition(len(witsols), 'dd')
     elif(precision == 'dd'):
-        quaddobl_monodromy_breakup(witsys, witsols, dim, verbose, nbloops)
+        quaddobl_monodromy_breakup\
+            (witsys, witsols, dim, islaurent, verbose, nbloops)
         return decomposition(len(witsols), 'qd')
     else:
         print 'wrong level of precision'
@@ -380,7 +413,8 @@ def test_monodromy(prc='d'):
     sols = solve(embsys, silent=True, precision=prc)
     # for sol in sols: print sol
     print 'the degree is', len(sols)
-    monodromy_breakup(embsys, sols, 1, prec=prc)
+    monodromy_breakup(embsys, sols, 1, \
+        islaurent=0, verbose=True, nbloops=0, prec=prc)
 
 def test_factor():
     """

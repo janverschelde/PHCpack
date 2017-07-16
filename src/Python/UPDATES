@@ -1,5 +1,7 @@
 Sun 16 Jul 2017 : to sets added functions to drop variables and coordinates
   in double double and quad double precision.  This changed cascades.
+  Extended the functions in factor.py to decompose witness sets defined
+  by a Laurent system.
 
 Sat 15 Jul 2017 : moved the cascade homotopies from the sets module into
   the new module cascades.p, extended __init__.py and modified setup.py,
