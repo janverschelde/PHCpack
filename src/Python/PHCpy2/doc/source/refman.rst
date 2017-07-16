@@ -124,6 +124,12 @@ functions in the module factor
 .. automodule:: factor
    :members:
 
+functions in the module diagonal
+--------------------------------
+
+.. automodule:: diagonal
+   :members:
+
 some interesting families and examples
 ======================================
 

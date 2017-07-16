@@ -21,7 +21,7 @@ setup(
     packages = ['phcpy'] ,
     py_modules = ['phcpy/interface', 'phcpy/solver', 'phcpy/solutions', \
         'phcpy/trackers', 'phcpy/sweepers', 'phcpy/tuning', \
-        'phcpy/sets', 'phcpy/cascades', 'phcpy/factor', \
+        'phcpy/sets', 'phcpy/cascades', 'phcpy/factor', 'phcpy/diagonal', \
         'phcpy/polytopes', 'phcpy/tropisms', 'phcpy/maps', 'phcpy/series', \
         'phcpy/examples', 'phcpy/families', 'phcpy/schubert' , \
         'phcpy/dashboard', 'phcpy/server' ],

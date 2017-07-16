@@ -41,6 +41,9 @@ cascades
 factor
    separates generic points in a witness set according to the
    irreducible factors in a solution set.
+diagonal
+   given two witness sets, diagonal homotopies compute the intersection
+   of the given sets.
 examples
    defines some interesting examples taken from the research literature,
    the test() solves all systems, performing a regression test.
