@@ -165,11 +165,11 @@ def witness_set_of_hypersurface(nvar, hpol, precision='d'):
         print 'wrong argument for precision'
         return None
 
-def drop_variable_from_polynomials(pols, svar):
+def drop_variable_from_standard_polynomials(pols, svar):
     r"""
     Removes the variable with symbol in the string *svar*
-    from the list *pols* of strings that represented
-    polynomials in several variables.
+    from the list *pols* of strings that represent polynomials
+    in several variables, with coefficients in standard double precision.
     Note that the system in *pols* must be square.
     """
     from phcpy.phcpy2c2 import py2c_syscon_standard_drop_variable_by_name
@@ -180,11 +180,41 @@ def drop_variable_from_polynomials(pols, svar):
     py2c_syscon_remove_symbol_name(len(svar), svar)
     return load_standard_system()
 
-def drop_coordinate_from_solutions(sols, nbvar, svar):
+def drop_variable_from_dobldobl_polynomials(pols, svar):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent polynomials
+    in several variables, with coefficients in double double precision.
+    Note that the system in *pols* must be square.
+    """
+    from phcpy.phcpy2c2 import py2c_syscon_dobldobl_drop_variable_by_name
+    from phcpy.phcpy2c2 import py2c_syscon_remove_symbol_name
+    from phcpy.interface import store_dobldobl_system, load_dobldobl_system
+    store_dobldobl_system(pols)
+    py2c_syscon_dobldobl_drop_variable_by_name(len(svar), svar)
+    py2c_syscon_remove_symbol_name(len(svar), svar)
+    return load_dobldobl_system()
+
+def drop_variable_from_quaddobl_polynomials(pols, svar):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent polynomials
+    in several variables, with coefficients in quad double precision.
+    Note that the system in *pols* must be square.
+    """
+    from phcpy.phcpy2c2 import py2c_syscon_quaddobl_drop_variable_by_name
+    from phcpy.phcpy2c2 import py2c_syscon_remove_symbol_name
+    from phcpy.interface import store_quaddobl_system, load_quaddobl_system
+    store_quaddobl_system(pols)
+    py2c_syscon_quaddobl_drop_variable_by_name(len(svar), svar)
+    py2c_syscon_remove_symbol_name(len(svar), svar)
+    return load_quaddobl_system()
+
+def drop_coordinate_from_standard_solutions(sols, nbvar, svar):
     r"""
     Removes the variable with symbol in the string *svar*
     from the list *sols* of strings that represent solutions
-    in *nbvar* variables.
+    in *nbvar* variables, in standard double precision.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
     from phcpy.phcpy2c2 import py2c_solcon_standard_drop_coordinate_by_name
@@ -196,6 +226,40 @@ def drop_coordinate_from_solutions(sols, nbvar, svar):
     py2c_solcon_standard_drop_coordinate_by_name(len(svar), svar)
     py2c_syscon_remove_symbol_name(len(svar), svar)
     return load_standard_solutions()
+
+def drop_coordinate_from_dobldobl_solutions(sols, nbvar, svar):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *sols* of strings that represent solutions
+    in *nbvar* variables, in double double precision.
+    """
+    from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
+    from phcpy.phcpy2c2 import py2c_solcon_dobldobl_drop_coordinate_by_name
+    from phcpy.phcpy2c2 import py2c_syscon_remove_symbol_name
+    from phcpy.interface import store_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_solutions
+    py2c_syscon_clear_symbol_table()
+    store_dobldobl_solutions(nbvar, sols)
+    py2c_solcon_dobldobl_drop_coordinate_by_name(len(svar), svar)
+    py2c_syscon_remove_symbol_name(len(svar), svar)
+    return load_dobldobl_solutions()
+
+def drop_coordinate_from_quaddobl_solutions(sols, nbvar, svar):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *sols* of strings that represent solutions
+    in *nbvar* variables, in quad double precision.
+    """
+    from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
+    from phcpy.phcpy2c2 import py2c_solcon_quaddobl_drop_coordinate_by_name
+    from phcpy.phcpy2c2 import py2c_syscon_remove_symbol_name
+    from phcpy.interface import store_quaddobl_solutions
+    from phcpy.interface import load_quaddobl_solutions
+    py2c_syscon_clear_symbol_table()
+    store_quaddobl_solutions(nbvar, sols)
+    py2c_solcon_quaddobl_drop_coordinate_by_name(len(svar), svar)
+    py2c_syscon_remove_symbol_name(len(svar), svar)
+    return load_quaddobl_solutions()
 
 def standard_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):

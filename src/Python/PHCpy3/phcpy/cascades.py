@@ -247,8 +247,8 @@ def test_cascade():
     """
     from phcpy.solver import solve
     from phcpy.sets import embed
-    from phcpy.sets import drop_variable_from_polynomials
-    from phcpy.sets import drop_coordinate_from_solutions
+    from phcpy.sets import drop_variable_from_standard_polynomials
+    from phcpy.sets import drop_coordinate_from_standard_solutions
     pols = ['(x - 1)*(y-x^2);', \
             '(x - 1)*(z-x^3);', \
             '(x^2 - 1)*(y-x^2);' ]
@@ -280,11 +280,11 @@ def test_cascade():
     print('... after running the cascade ...')
     for sol in s2c:
         print(sol)
-    wp1 = drop_variable_from_polynomials(embpols, 'zz2')
+    wp1 = drop_variable_from_standard_polynomials(embpols, 'zz2')
     print('the 1-dimensional embedding :')
     for pol in wp1:
         print(pol)
-    ws1 = drop_coordinate_from_solutions(s2c, len(embpols), 'zz2')
+    ws1 = drop_coordinate_from_standard_solutions(s2c, len(embpols), 'zz2')
     ws1f1 = filter_zero_coordinates(ws1, 'zz1', 1.0e-8, 'select')
     ws1f2 = filter_regular(ws1f1, 1.0e-8, 'select')
     print('the witness points :')
