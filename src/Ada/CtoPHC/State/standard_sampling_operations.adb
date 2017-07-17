@@ -4,6 +4,7 @@ with Standard_Complex_Vectors;          use Standard_Complex_Vectors;
 with Witness_Sets;                      use Witness_Sets;
 with Sampling_Machine;
 with Sampling_Laurent_Machine;
+with Rectangular_Sample_Grids;
 with Standard_Solutions_Container;
 
 package body Standard_Sampling_Operations is
@@ -28,6 +29,7 @@ package body Standard_Sampling_Operations is
 
   begin
     use_laurent := false;
+    Rectangular_Sample_Grids.Set_Polynomial_Type(false);
     Sampling_Machine.Initialize(p);
     Sampling_Machine.Default_Tune_Sampler(2);
     Sampling_Machine.Default_Tune_Refiner;
@@ -59,6 +61,7 @@ package body Standard_Sampling_Operations is
 
   begin
     use_laurent := true;
+    Rectangular_Sample_Grids.Set_Polynomial_Type(true);
     Sampling_Laurent_Machine.Initialize(p);
     Sampling_Laurent_Machine.Default_Tune_Sampler(2);
     Sampling_Laurent_Machine.Default_Tune_Refiner;

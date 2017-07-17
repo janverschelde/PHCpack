@@ -1,3 +1,6 @@
+Mon 17 Jul 2017 : added initialization of the polynomial type to the
+  standard_sampling_operations.adb.
+
 Thu 13 Jul 2017 : extended {standard,dobldobl,quaddobl}_sampling_operations
   with initializer for Laurent systems, and added the initializer jobs to
   use_c2fac and use_c2phc.  Renaming of Laurent_Systems_Container into
