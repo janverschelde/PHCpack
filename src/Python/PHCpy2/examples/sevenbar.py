@@ -112,9 +112,12 @@ def embed_and_cascade(pols, topdim):
     """
     Computes and solves an embedding at top dimension topdim
     of the Laurent polynomials in pols, before running one
-    step in th cascade homotopy.
+    step in the cascade homotopy.
+    Returns the embedded system, the three generic points,
+    and the unfiltered solutions at the end of the cascade.
     """
-    from phcpy.sets import laurent_embed, laurent_cascade_step
+    from phcpy.sets import laurent_embed
+    from phcpy.cascades import laurent_cascade_step
     from phcpy.solver import solve
     from phcpy.solutions import filter_zero_coordinates
     embpols = laurent_embed(len(pols), topdim, pols)
@@ -124,11 +127,25 @@ def embed_and_cascade(pols, topdim):
     sols1 = filter_zero_coordinates(embsols, 'zz1', 1.0e-8, 'remove')
     print 'number of solutions with zero slack variable :', len(sols0) 
     print 'number of solutions with nonzero slack variable :', len(sols1) 
+    for sol in sols1:
+        print sol
+    raw_input('hit enter to continue')
     print '... running cascade step ...'
     sols2 = laurent_cascade_step(embpols, sols1, precision='d')
     print '... after running the cascade ...'
     for sol in sols2:
         print sol
+    return (embpols, sols0, sols1)
+
+def monodromy_factor(witpols, witpnts):
+    """
+    Given the polynomials and points in the witness set,
+    in witpols and witpnts respectively, applies monodromy
+    to factor the witness set.
+    """
+    from phcpy.factor import factor
+    fac = factor(1, witpols, witpnts, 1)
+    print 'the factorization :', fac
 
 def main():
     """
@@ -156,6 +173,7 @@ def main():
     for sol in sols:
         print sol
     raw_input('hit enter to continue')
-    embed_and_cascade(special, 1)
+    (embpols, sols0, sols1) = embed_and_cascade(special, 1)
+    monodromy_factor(embpols, sols0)
    
 main()
