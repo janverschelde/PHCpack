@@ -22,4 +22,5 @@ fourbar          : design of a 4-bar mechanism, another use case
 touchcircle      : tangent lines to a circle, another use case
 fourlines        : two lines meet four general lines, another use case
 tangents4spheres : sage setup to solve the tangents to 4 spheres problem
+sevenbar         : illustration of numerical irreducible decomposition
 -------------------------------------------------------------------------------
