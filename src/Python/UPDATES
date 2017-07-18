@@ -1,3 +1,6 @@
+Mon 17 Jul 2017 : to the function in the factor module, stored the embedded
+  system before the initialization of the monodromy breakup sampler.
+
 Sun 16 Jul 2017 : to sets added functions to drop variables and coordinates
   in double double and quad double precision.  This changed cascades.
   Extended the functions in factor.py to decompose witness sets defined

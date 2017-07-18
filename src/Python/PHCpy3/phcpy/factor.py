@@ -100,6 +100,8 @@ def standard_monodromy_breakup(embsys, esols, dim, \
     from phcpy.phcpy2c3 import py2c_solcon_write_standard_solutions
     from phcpy.phcpy2c3 import py2c_solcon_clear_standard_solutions
     from phcpy.interface import store_standard_solutions
+    from phcpy.interface import store_standard_system
+    from phcpy.interface import store_standard_laurent_system
     if(verbose):
         print('... applying monodromy factorization with standard doubles ...')
         py2c_factor_set_standard_to_verbose()
@@ -114,8 +116,10 @@ def standard_monodromy_breakup(embsys, esols, dim, \
     if(verbose):
         py2c_solcon_write_standard_solutions()
     if(islaurent == 1):
+        store_standard_laurent_system(embsys)
         py2c_factor_initialize_standard_Laurent_sampler(dim)
     else:
+        store_standard_system(embsys)
         py2c_factor_initialize_standard_sampler(dim)
     if(nbloops == 0):
         strnbloops = input('give the maximum number of loops : ')
@@ -192,6 +196,8 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, \
     from phcpy.phcpy2c3 import py2c_solcon_write_dobldobl_solutions
     from phcpy.phcpy2c3 import py2c_solcon_clear_dobldobl_solutions
     from phcpy.interface import store_dobldobl_solutions
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.interface import store_dobldobl_laurent_system
     if(verbose):
         print('... applying monodromy factorization with double doubles ...')
         py2c_factor_set_dobldobl_to_verbose()
@@ -206,8 +212,10 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, \
     if(verbose):
         py2c_solcon_write_dobldobl_solutions()
     if(islaurent == 1):
+        store_dobldobl_laurent_system(embsys)
         py2c_factor_initialize_dobldobl_Laurent_sampler(dim)
     else:
+        store_dobldobl_system(embsys)
         py2c_factor_initialize_dobldobl_sampler(dim)
     if(nbloops == 0):
         strnbloops = input('give the maximum number of loops : ')
@@ -284,6 +292,8 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, \
     from phcpy.phcpy2c3 import py2c_solcon_write_quaddobl_solutions
     from phcpy.phcpy2c3 import py2c_solcon_clear_quaddobl_solutions
     from phcpy.interface import store_quaddobl_solutions
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.interface import store_quaddobl_laurent_system
     if(verbose):
         print('... applying monodromy factorization with quad doubles ...')
         py2c_factor_set_quaddobl_to_verbose()
@@ -298,8 +308,10 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, \
     if(verbose):
         py2c_solcon_write_quaddobl_solutions()
     if(islaurent == 1):
+        store_quaddobl_laurent_system(embsys)
         py2c_factor_initialize_quaddobl_Laurent_sampler(dim)
     else:
+        store_quaddobl_system(embsys)
         py2c_factor_initialize_quaddobl_sampler(dim)
     if(nbloops == 0):
         strnbloops = input('give the maximum number of loops : ')
