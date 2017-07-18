@@ -1,4 +1,4 @@
-phcpy 0.6.8 offers a simple Python interface to PHCv2.4.39
+phcpy 0.6.9 offers a simple Python interface to PHCv2.4.40
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -33,23 +33,26 @@ The package phcpy is defined in the directory PHCpy.
 The directory PHCpy3 contains the version of phcpy for Python 3.5.
 
 ------------------------------------------------------------------------------
-file name               : short description
+file name              : short description
 ------------------------------------------------------------------------------
-examples.py             : some interesting benchmark examples
-dashboard.py            : prototypes a graphical user interface
-families.py             : a couple of families of systems
-interface.py            : load/store data to C interface with PHCpack
-maps.py                 : monomial maps as solutions of binomials
-polytopes               : convex hulls and mixed volumes of Newton polytopes
-schubert.py             : numerical Schubert calculus
-sets.py                 : manipulate algebraic sets
-solutions.py            : PHCpack solution string into dictionary
-solver.py               : use of C extension module phcpy2c
-sweepers.py             : homotopies to sweep through parameter space
-trackers.py             : path trackers
-tropisms.py             : numerically computed tropisms
-series                  : power series solutions with Newton's method
-phcwulf.py              : client/server for beowulf clusters
+cascades.py            : homotopies to compute generic points
+examples.py            : some interesting benchmark examples
+dashboard.py           : prototypes a graphical user interface
+diagonal.py            : homotopies to intersect solution sets
+factor.py              : factor pure dimensional set into irreducibles
+families.py            : a couple of families of systems
+interface.py           : load/store data to C interface with PHCpack
+maps.py                : monomial maps as solutions of binomials
+polytopes              : convex hulls and mixed volumes of Newton polytopes
+schubert.py            : numerical Schubert calculus
+series                 : power series solutions with Newton's method
+sets.py                : manipulate algebraic sets
+solutions.py           : PHCpack solution string into dictionary
+solver.py              : use of C extension module phcpy2c
+sweepers.py            : homotopies to sweep through parameter space
+trackers.py            : path trackers
+tropisms.py            : numerically computed tropisms
+server.py              : client/server for beowulf clusters
 ------------------------------------------------------------------------------
 
 The modules examples, solver, solutions provide tests which are executed
@@ -57,6 +60,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.6.9 : 2017-07-18 : new modules cascades, factor, and diagonal
 0.6.8 : 2017-07-05 : improved support for Laurent polynomial systems
 0.6.7 : 2017-06-07 : preliminary version of Pade approximant methods
 0.6.6 : 2017-05-17 : added tangents to 4 spheres as a use case
