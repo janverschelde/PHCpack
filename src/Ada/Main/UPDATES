@@ -1,3 +1,5 @@
+Wed 18 Jul 2017 : adjusted greeting_banners for version 2.4.40.
+
 Wed 5 Jul 2017 : adjusted greeting_banners for version 2.4.39.
 
 Fri 23 Jun 2017 : new package prompt_for_solutions to clean up mainvali.adb.
