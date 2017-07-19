@@ -1,5 +1,7 @@
 Tue 18 Jul 2017 : prepared files for version 0.6.9 of phcpy, adjusting
   setup.py, __init__.py, and conf.py in the PHCpy2 and PHCpy3 folders.
+  Corrected the documentation for the new modules, factor, cascades,
+  and diagonal.
 
 Mon 17 Jul 2017 : to the function in the factor module, stored the embedded
   system before the initialization of the monodromy breakup sampler.

@@ -1,8 +1,8 @@
 positive dimensional solution sets
 ==================================
 
-The module sets.py provides some functionality of PHCpack
-to work with positive dimensional solution sets.
+The modules **sets**, **cascades**, **factor**, and **diagonal** provide 
+some functionality to work with positive dimensional solution sets.
 
 For isolated solutions, the main outcome of the numerical solver is 
 a list of points, given as tuples of values for the coordinates.
@@ -36,13 +36,19 @@ point belongs to any given factor in the decomposition.
 witness sets
 ------------
 
-A witness set is a data structure to represent a positive dimensional
-solution set.  A witness set consists of an embedding of the polynomial
-equations that define the solution set, augmented with as many generic
-linear equations as the dimension of the solution set.
-Witness points are solutions in the intersection of the original
-polynomial equations and the generic linear equations.
-The number of witness points equals the degree of the solution set.
+A *witness set* is a data structure to represent a positive dimensional
+solution set, which is stored as a tuple of two items:
+
+1. An *embedding* of the polynomial equations that define the solution set,
+   augmented with as many generic linear equations as the dimension of 
+   the solution set.
+   To every linear equation corresponds one *slack variable*.
+
+2. Witness points are solutions in the intersection of the original
+   polynomial equations and the generic linear equations.
+   For generic coefficients of the added linear equations,
+   we obtain *generic points* on the solution set.
+   The number of witness points equals the degree of the solution set.
 
 In the example below we consider the twisted cubic:
 
@@ -57,7 +63,9 @@ In the example below we consider the twisted cubic:
    'x^3 - z + (9.35464826338593E-01-3.53419805165623E-01*i)*zz1;'
 
 The last equation of the embedded system is a linear equation
-with randomly generated complex coefficient.  Continuing the session:
+with randomly generated complex coefficient.
+The ``zz1`` denotes the slack variable.
+Continuing the session:
 
 ::
 
@@ -271,7 +279,6 @@ We filter the solutions, as follows:
 
 ::
 
-
    >>> from phcpy.solutions import filter_zero_coordinates as filter
    >>> topsols0 = filter(topsols, 'zz2', 1.0e-8, 'select')
    >>> topsols1 = filter(topsols, 'zz2', 1.0e-8, 'remove')
@@ -286,7 +293,7 @@ the lower dimensional components of the solution set.
 
 ::
 
-   >>> from phcpy.sets import cascade_step
+   >>> from phcpy.cascades import cascade_step
    >>> lvl1sols = cascade_step(topemb, topsols1)
 
 After the filtering, we must drop variables, coordinates,
@@ -366,7 +373,7 @@ we see ``3`` as the outcome of ``len(s)``.
 
 ::
 
-   >>> from phcpy.sets import factor
+   >>> from phcpy.factor import factor
    >>> f = factor(1, w, s)
    >>> f
 
@@ -431,7 +438,7 @@ method to compute a witness set for the intersection:
 
 ::
 
-   >>> from phcpy.sets import diagonal_solver as diagsolve
+   >>> from phcpy.diagonal import diagonal_solver as diagsolve
    >>> quawit = diagsolve(3, 2, spheqs, sphpts, 2, cyleqs, cylpts)
    >>> quaeqs, quapts = quawit
    >>> for pol in quaeqs:
