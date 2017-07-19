@@ -114,6 +114,25 @@ to make overdetermined polynomial systems *square*,
 that is: having as many equations as unknowns.
 Only solutions with zero slack variables matter.
 
+There are four homotopies which involve witness sets.
+
+1. Given a witness set and a point, a *homotopy membership test*
+   decides whether the point lies on the solution set represented
+   by the witness set.
+
+2. Given all solutions with nonzero values for the slack variables
+   of an embedded system, a *cascade homotopy* takes those solutions
+   as the start points of solution paths leading to generic points
+   on lower dimensional solution sets.
+
+3. Given a witness set, a *monodromy homotopy* separates the
+   generic points in the witness set according to the irreducible
+   factors of the solution set.
+
+4. Given two witness sets, a *diagonal homotopy* computes witness set
+   representations for all components of the intersection of the two
+   given witness sets.
+
 homotopy membership test
 ------------------------
 
