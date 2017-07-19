@@ -7,7 +7,10 @@ with Planes_and_Polynomials;            use Planes_and_Polynomials;
 
 package body QuadDobl_Diagonal_Polynomials is
 
-  function Create ( n,i : integer32 ) return Term is
+  function Create
+             ( n,i : integer32 ) return QuadDobl_Complex_Polynomials.Term is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Term;
  
@@ -18,7 +21,10 @@ package body QuadDobl_Diagonal_Polynomials is
     return res;
   end Create;
 
-  function Create ( n,i : integer32 ) return Poly is
+  function Create
+             ( n,i : integer32 ) return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
 
     res_term : constant Term := Create(n,i);
     res : constant Poly := Create(res_term);
@@ -27,7 +33,11 @@ package body QuadDobl_Diagonal_Polynomials is
     return res;
   end Create;
 
-  function Insert_Variables ( n : integer32; t : Term ) return Term is
+  function Insert_Variables
+             ( n : integer32; t : QuadDobl_Complex_Polynomials.Term )
+             return QuadDobl_Complex_Polynomials.Term is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Term;
 
@@ -43,7 +53,11 @@ package body QuadDobl_Diagonal_Polynomials is
     return res;
   end Insert_Variables;
 
-  function Insert_Variables ( n : integer32; p : Poly ) return Poly is
+  function Insert_Variables
+             ( n : integer32; p : QuadDobl_Complex_Polynomials.Poly )
+             return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Poly := Null_Poly;
 
@@ -74,7 +88,11 @@ package body QuadDobl_Diagonal_Polynomials is
     return res;
   end Insert_Variables;
 
-  function Append_Variables ( n : integer32; t : Term ) return Term is
+  function Append_Variables
+             ( n : integer32; t : QuadDobl_Complex_Polynomials.Term )
+             return QuadDobl_Complex_Polynomials.Term is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Term;
 
@@ -88,7 +106,11 @@ package body QuadDobl_Diagonal_Polynomials is
     return res;
   end Append_Variables;
 
-  function Append_Variables ( n : integer32; p : Poly ) return Poly is
+  function Append_Variables
+             ( n : integer32; p : QuadDobl_Complex_Polynomials.Poly )
+             return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Poly := Null_Poly;
 
@@ -119,7 +141,9 @@ package body QuadDobl_Diagonal_Polynomials is
     return res;
   end Append_Variables;
 
-  function Is_Slack ( t : Term; n : integer32 ) return boolean is
+  function Is_Slack
+             ( t : QuadDobl_Complex_Polynomials.Term; n : integer32 )
+             return boolean is
 
   -- DESCRIPTION :
   --   Returns true if there are any variables with indices > n.
@@ -133,7 +157,11 @@ package body QuadDobl_Diagonal_Polynomials is
     return false;
   end Is_Slack;
 
-  function Truncate ( t : Term; n : integer32 ) return Term is
+  function Truncate
+             ( t : QuadDobl_Complex_Polynomials.Term; n : integer32 )
+             return QuadDobl_Complex_Polynomials.Term is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Term;
 
@@ -144,7 +172,11 @@ package body QuadDobl_Diagonal_Polynomials is
     return res;
   end Truncate;
 
-  function Truncate ( p : Poly; n : integer32 ) return Poly is
+  function Truncate
+             ( p : QuadDobl_Complex_Polynomials.Poly; n : integer32 )
+             return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Poly := Null_Poly;
 
@@ -167,7 +199,11 @@ package body QuadDobl_Diagonal_Polynomials is
     return res;
   end Truncate;
 
-  function Collapse ( t : Term; n : integer32 ) return Term is
+  function Collapse
+             ( t : QuadDobl_Complex_Polynomials.Term; n : integer32 )
+             return QuadDobl_Complex_Polynomials.Term is
+
+    use QuadDobl_Complex_Polynomials;
 
     rt : Term;
     done : boolean := false;
@@ -187,7 +223,11 @@ package body QuadDobl_Diagonal_Polynomials is
     return rt;
   end Collapse;
 
-  function Collapse ( p : Poly; n : integer32 ) return Poly is
+  function Collapse
+             ( p : QuadDobl_Complex_Polynomials.Poly; n : integer32 )
+             return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Poly := Null_Poly;
 
@@ -221,7 +261,12 @@ package body QuadDobl_Diagonal_Polynomials is
     return res;
   end Collapse;
 
-  function Collapse ( t : Term; n : integer32; q : Permutation ) return Term is
+  function Collapse
+             ( t : QuadDobl_Complex_Polynomials.Term;
+               n : integer32; q : Permutation )
+             return QuadDobl_Complex_Polynomials.Term is
+
+    use QuadDobl_Complex_Polynomials;
 
     rt : Term;
     first : boolean := false;
@@ -246,7 +291,12 @@ package body QuadDobl_Diagonal_Polynomials is
     return rt;
   end Collapse;
 
-  function Collapse ( p : Poly; n : integer32; q : Permutation ) return Poly is
+  function Collapse
+             ( p : QuadDobl_Complex_Polynomials.Poly;
+               n : integer32; q : Permutation )
+             return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Poly := Null_Poly;
 
@@ -282,6 +332,8 @@ package body QuadDobl_Diagonal_Polynomials is
   end Collapse;
 
   function Diagonal ( n : integer32 ) return Poly_Sys is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Poly_Sys(1..n);
     t : Term;
