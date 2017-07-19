@@ -1,5 +1,6 @@
 Wed 19 Jul 2017 : in the packages *_diagonal_polynomials, removed the global
   use clause on the polynomials, to make room for Laurent polynomials.
+  Added operations on Laurent polynomials to standard_diagonal_polynomials.
 
 Thu 13 Jul 2017 : in maindeco.adb, used the proper create_output_file
   from communications_with_user.
