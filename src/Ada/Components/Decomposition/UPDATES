@@ -1,3 +1,6 @@
+Thu 20 Jul 2017 : in extrinsic_diagonal_homotopies, added the definition of
+  the first type of diagonal homotopy for Laurent polynomial systems.
+
 Wed 19 Jul 2017 : in the packages *_diagonal_polynomials, removed the global
   use clause on the polynomials, to make room for Laurent polynomials.
   Added operations on Laurent polynomials to standard_diagonal_polynomials;

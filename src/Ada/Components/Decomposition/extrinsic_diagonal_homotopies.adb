@@ -14,8 +14,11 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with Witness_Sets;                      use Witness_Sets;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
 with Planes_and_Polynomials;            use Planes_and_Polynomials;
 with Standard_Diagonal_Polynomials;
 with Standard_Diagonal_Solutions;
@@ -70,6 +73,45 @@ package body Extrinsic_Diagonal_Homotopies is
                a,b : natural32 ) return natural32 is
 
     use QuadDobl_Complex_Polynomials;
+
+    n1 : constant natural32 := Number_of_Unknowns(p1e(p1e'first));
+    n2 : constant natural32 := Number_of_Unknowns(p2e(p2e'first));
+
+  begin
+    return Cascade_Dimension(n1,n2,a,b);
+  end Cascade_Dimension;
+
+  function Cascade_Dimension
+             ( p1e,p2e : Standard_Complex_Laur_Systems.Laur_Sys;
+               a,b : natural32 ) return natural32 is
+
+    use Standard_Complex_Laurentials;
+
+    n1 : constant natural32 := Number_of_Unknowns(p1e(p1e'first));
+    n2 : constant natural32 := Number_of_Unknowns(p2e(p2e'first));
+
+  begin
+    return Cascade_Dimension(n1,n2,a,b);
+  end Cascade_Dimension;
+
+  function Cascade_Dimension
+             ( p1e,p2e : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+               a,b : natural32 ) return natural32 is
+
+    use DoblDobl_Complex_Laurentials;
+
+    n1 : constant natural32 := Number_of_Unknowns(p1e(p1e'first));
+    n2 : constant natural32 := Number_of_Unknowns(p2e(p2e'first));
+
+  begin
+    return Cascade_Dimension(n1,n2,a,b);
+  end Cascade_Dimension;
+
+  function Cascade_Dimension
+             ( p1e,p2e : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+               a,b : natural32 ) return natural32 is
+
+    use QuadDobl_Complex_Laurentials;
 
     n1 : constant natural32 := Number_of_Unknowns(p1e(p1e'first));
     n2 : constant natural32 := Number_of_Unknowns(p2e(p2e'first));
@@ -235,6 +277,210 @@ package body Extrinsic_Diagonal_Homotopies is
     rp : constant Poly_Sys := Product(n1,n2,rp1,rp2);
     dia : constant Poly_Sys := Diagonal(n1);
     cdi : constant Poly_Sys
+        := Complete(natural32(2*n1),natural32(2*n1)-a-b,dia);
+    s1 : constant VecVec := Slices(p1e,a);
+    s2 : constant VecVec := Slices(p2e,b);
+    sli : constant VecVec := Random_Hyperplanes(b,natural32(target'last));
+    ind_start,ind_target : integer32 := 0;
+
+  begin
+    for i in rp'range loop             -- product of two systems
+      ind_start := ind_start + 1;
+      start(ind_start) := Append_Variables(integer32(b),rp(i));
+      Copy(start(ind_start),target(ind_start));
+    end loop;
+    ind_target := ind_start;
+    for i in cdi'range loop            -- fill in the diagonal to target
+      ind_target := ind_target + 1 ;
+      target(ind_target) := Add_Embedding(cdi(i),b);
+    end loop;
+    for i in s1'range loop             -- add hyperplanes of s1 to start
+      ind_start := ind_start + 1;
+      declare
+        hp : Poly := Hyperplane(s1(i)(0..n1));
+        rhp : Poly := Append_Variables(n2,hp);
+      begin
+        start(ind_start) := Add_Embedding(rhp,b);
+        Clear(hp); Clear(rhp);
+      end;
+    end loop;
+    for i in s2'range loop             -- add hyperplanes of s2 to start
+      ind_start := ind_start + 1;
+      declare
+        hp : Poly := Hyperplane(s2(i)(0..n2));
+        rhp : Poly := Insert_Variables(n1,hp);
+      begin
+        start(ind_start) := Add_Embedding(rhp,b);
+        Clear(hp); Clear(rhp);
+      end;
+    end loop;
+    for i in 1..integer32(b) loop      -- add dummy slacks to start
+      ind_start := ind_start + 1;
+      start(ind_start) := Create(start'last,start'last-integer32(b)+i);
+    end loop;
+    for i in 1..integer32(b) loop      -- add random hyperplanes to target
+      ind_target := ind_target + 1;
+      target(ind_target) := Hyperplane(sli(i).all);
+    end loop;
+  end Cascade1;
+
+  procedure Cascade1
+              ( p1e,p2e : in Standard_Complex_Laur_Systems.Laur_Sys;
+                a,b : in natural32;
+                start,target : out Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+    use Standard_Complex_VecVecs;
+    use Standard_Complex_Laurentials;
+    use Standard_Complex_Laur_Systems;
+    use Standard_Diagonal_Polynomials;
+
+    p1 : constant Laur_Sys := Remove_Embedding1(p1e,a);
+    p2 : constant Laur_Sys := Remove_Embedding1(p2e,b);
+    n1 : constant integer32 := integer32(Number_of_Unknowns(p1(p1'first)));
+    n2 : constant integer32 := integer32(Number_of_Unknowns(p2(p2'first)));
+    nz1 : constant integer32 := integer32(Number_of_Zero_Equations(p1));
+    nz2 : constant integer32 := integer32(Number_of_Zero_Equations(p2));
+    rp1 : constant Laur_Sys := Complete(natural32(n1),a,p1(1..p1'last-nz1));
+    rp2 : constant Laur_Sys := Complete(natural32(n2),b,p2(1..p2'last-nz2));
+    rp : constant Laur_Sys := Product(n1,n2,rp1,rp2);
+    dia : constant Laur_Sys := Diagonal(n1);
+    cdi : constant Laur_Sys
+        := Complete(natural32(2*n1),natural32(2*n1)-a-b,dia);
+    s1 : constant VecVec := Slices(p1e,a);
+    s2 : constant VecVec := Slices(p2e,b);
+    sli : constant VecVec := Random_Hyperplanes(b,natural32(target'last));
+    ind_start,ind_target : integer32 := 0;
+
+  begin
+    for i in rp'range loop             -- product of two systems
+      ind_start := ind_start + 1;
+      start(ind_start) := Append_Variables(integer32(b),rp(i));
+      Copy(start(ind_start),target(ind_start));
+    end loop;
+    ind_target := ind_start;
+    for i in cdi'range loop            -- fill in the diagonal to target
+      ind_target := ind_target + 1 ;
+      target(ind_target) := Add_Embedding(cdi(i),b);
+    end loop;
+    for i in s1'range loop             -- add hyperplanes of s1 to start
+      ind_start := ind_start + 1;
+      declare
+        hp : Poly := Hyperplane(s1(i)(0..n1));
+        rhp : Poly := Append_Variables(n2,hp);
+      begin
+        start(ind_start) := Add_Embedding(rhp,b);
+        Clear(hp); Clear(rhp);
+      end;
+    end loop;
+    for i in s2'range loop             -- add hyperplanes of s2 to start
+      ind_start := ind_start + 1;
+      declare
+        hp : Poly := Hyperplane(s2(i)(0..n2));
+        rhp : Poly := Insert_Variables(n1,hp);
+      begin
+        start(ind_start) := Add_Embedding(rhp,b);
+        Clear(hp); Clear(rhp);
+      end;
+    end loop;
+    for i in 1..integer32(b) loop      -- add dummy slacks to start
+      ind_start := ind_start + 1;
+      start(ind_start) := Create(start'last,start'last-integer32(b)+i);
+    end loop;
+    for i in 1..integer32(b) loop      -- add random hyperplanes to target
+      ind_target := ind_target + 1;
+      target(ind_target) := Hyperplane(sli(i).all);
+    end loop;
+  end Cascade1;
+
+  procedure Cascade1
+              ( p1e,p2e : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                a,b : in natural32;
+                start,target : out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    use DoblDobl_Complex_VecVecs;
+    use DoblDobl_Complex_Laurentials;
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Diagonal_Polynomials;
+
+    p1 : constant Laur_Sys := Remove_Embedding1(p1e,a);
+    p2 : constant Laur_Sys := Remove_Embedding1(p2e,b);
+    n1 : constant integer32 := integer32(Number_of_Unknowns(p1(p1'first)));
+    n2 : constant integer32 := integer32(Number_of_Unknowns(p2(p2'first)));
+    nz1 : constant integer32 := integer32(Number_of_Zero_Equations(p1));
+    nz2 : constant integer32 := integer32(Number_of_Zero_Equations(p2));
+    rp1 : constant Laur_Sys := Complete(natural32(n1),a,p1(1..p1'last-nz1));
+    rp2 : constant Laur_Sys := Complete(natural32(n2),b,p2(1..p2'last-nz2));
+    rp : constant Laur_Sys := Product(n1,n2,rp1,rp2);
+    dia : constant Laur_Sys := Diagonal(n1);
+    cdi : constant Laur_Sys
+        := Complete(natural32(2*n1),natural32(2*n1)-a-b,dia);
+    s1 : constant VecVec := Slices(p1e,a);
+    s2 : constant VecVec := Slices(p2e,b);
+    sli : constant VecVec := Random_Hyperplanes(b,natural32(target'last));
+    ind_start,ind_target : integer32 := 0;
+
+  begin
+    for i in rp'range loop             -- product of two systems
+      ind_start := ind_start + 1;
+      start(ind_start) := Append_Variables(integer32(b),rp(i));
+      Copy(start(ind_start),target(ind_start));
+    end loop;
+    ind_target := ind_start;
+    for i in cdi'range loop            -- fill in the diagonal to target
+      ind_target := ind_target + 1 ;
+      target(ind_target) := Add_Embedding(cdi(i),b);
+    end loop;
+    for i in s1'range loop             -- add hyperplanes of s1 to start
+      ind_start := ind_start + 1;
+      declare
+        hp : Poly := Hyperplane(s1(i)(0..n1));
+        rhp : Poly := Append_Variables(n2,hp);
+      begin
+        start(ind_start) := Add_Embedding(rhp,b);
+        Clear(hp); Clear(rhp);
+      end;
+    end loop;
+    for i in s2'range loop             -- add hyperplanes of s2 to start
+      ind_start := ind_start + 1;
+      declare
+        hp : Poly := Hyperplane(s2(i)(0..n2));
+        rhp : Poly := Insert_Variables(n1,hp);
+      begin
+        start(ind_start) := Add_Embedding(rhp,b);
+        Clear(hp); Clear(rhp);
+      end;
+    end loop;
+    for i in 1..integer32(b) loop      -- add dummy slacks to start
+      ind_start := ind_start + 1;
+      start(ind_start) := Create(start'last,start'last-integer32(b)+i);
+    end loop;
+    for i in 1..integer32(b) loop      -- add random hyperplanes to target
+      ind_target := ind_target + 1;
+      target(ind_target) := Hyperplane(sli(i).all);
+    end loop;
+  end Cascade1;
+
+  procedure Cascade1
+              ( p1e,p2e : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                a,b : in natural32;
+                start,target : out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    use QuadDobl_Complex_VecVecs;
+    use QuadDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Diagonal_Polynomials;
+
+    p1 : constant Laur_Sys := Remove_Embedding1(p1e,a);
+    p2 : constant Laur_Sys := Remove_Embedding1(p2e,b);
+    n1 : constant integer32 := integer32(Number_of_Unknowns(p1(p1'first)));
+    n2 : constant integer32 := integer32(Number_of_Unknowns(p2(p2'first)));
+    nz1 : constant integer32 := integer32(Number_of_Zero_Equations(p1));
+    nz2 : constant integer32 := integer32(Number_of_Zero_Equations(p2));
+    rp1 : constant Laur_Sys := Complete(natural32(n1),a,p1(1..p1'last-nz1));
+    rp2 : constant Laur_Sys := Complete(natural32(n2),b,p2(1..p2'last-nz2));
+    rp : constant Laur_Sys := Product(n1,n2,rp1,rp2);
+    dia : constant Laur_Sys := Diagonal(n1);
+    cdi : constant Laur_Sys
         := Complete(natural32(2*n1),natural32(2*n1)-a-b,dia);
     s1 : constant VecVec := Slices(p1e,a);
     s2 : constant VecVec := Slices(p2e,b);
