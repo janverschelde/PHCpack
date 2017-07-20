@@ -2277,6 +2277,99 @@ package body Witness_Sets is
     return res;
   end Complete;
 
+  function Complete ( n,k : natural32;
+                      p : Standard_Complex_Laur_Systems.Laur_Sys )
+                    return Standard_Complex_Laur_Systems.Laur_Sys is
+
+    res : Standard_Complex_Laur_Systems.Laur_Sys(1..integer32(n-k));
+    use Standard_Complex_Laurentials;
+
+  begin
+    if p'last = integer32(n-k) then
+      Standard_Complex_Laur_Systems.Copy(p,res);
+    else
+      declare
+        rnd : Standard_Complex_Numbers.Complex_Number;
+        extra : Poly;
+      begin
+        for i in 1..integer32(n-k) loop
+          Copy(p(i),res(i));
+        end loop;
+        for i in integer32(n-k)+1..p'last loop
+          for j in res'range loop
+            rnd := Standard_Random_Numbers.Random1;
+            extra := rnd*p(i);
+            Add(res(j),extra);
+            Clear(extra);
+          end loop;
+        end loop;
+      end;
+    end if;
+    return res;
+  end Complete;
+
+  function Complete ( n,k : natural32;
+                      p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                    return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys(1..integer32(n-k));
+    use DoblDobl_Complex_Laurentials;
+
+  begin
+    if p'last = integer32(n-k) then
+      DoblDobl_Complex_Laur_Systems.Copy(p,res);
+    else
+      declare
+        rnd : DoblDobl_Complex_Numbers.Complex_Number;
+        extra : Poly;
+      begin
+        for i in 1..integer32(n-k) loop
+          Copy(p(i),res(i));
+        end loop;
+        for i in integer32(n-k)+1..p'last loop
+          for j in res'range loop
+            rnd := DoblDobl_Random_Numbers.Random1;
+            extra := rnd*p(i);
+            Add(res(j),extra);
+            Clear(extra);
+          end loop;
+        end loop;
+      end;
+    end if;
+    return res;
+  end Complete;
+
+  function Complete ( n,k : natural32;
+                      p : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                    return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys(1..integer32(n-k));
+    use QuadDobl_Complex_Laurentials;
+
+  begin
+    if p'last = integer32(n-k) then
+      QuadDobl_Complex_Laur_Systems.Copy(p,res);
+    else
+      declare
+        rnd : QuadDobl_Complex_Numbers.Complex_Number;
+        extra : Poly;
+      begin
+        for i in 1..integer32(n-k) loop
+          Copy(p(i),res(i));
+        end loop;
+        for i in integer32(n-k)+1..p'last loop
+          for j in res'range loop
+            rnd := QuadDobl_Random_Numbers.Random1;
+            extra := rnd*p(i);
+            Add(res(j),extra);
+            Clear(extra);
+          end loop;
+        end loop;
+      end;
+    end if;
+    return res;
+  end Complete;
+
 -- OPERATIONS ON SOLUTION LISTS :
 
   function Add_Component

@@ -1,3 +1,6 @@
+Thu 20 Jul 2017 : extended witness_sets with a complete function for
+  Laurent polynomial systems.
+
 Thu 13 Jul 2017 : added procedures to witness_sets_io which take the name
   of a file on input, with code taken from mainfac, and extended to read
   also witness sets defined by a Laurent polynomial system.

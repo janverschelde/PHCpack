@@ -437,6 +437,29 @@ package Witness_Sets is
   -- ON RETURN :
   --   n-k equations which also define the solution component.
   --   In case p'length is already n-k, a copy of p is returned.
+  
+  function Complete ( n,k : natural32;
+                      p : Standard_Complex_Laur_Systems.Laur_Sys )
+                    return Standard_Complex_Laur_Systems.Laur_Sys;
+  function Complete ( n,k : natural32;
+                      p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                    return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  function Complete ( n,k : natural32;
+                      p : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                    return QuadDobl_Complex_Laur_Systems.Laur_Sys;
+
+  -- DESCRIPTION :
+  --   When p is not a complete intersection, random multiples of the
+  --   extra polynomials are added to have n-k equations on return.
+
+  -- ON ENTRY :
+  --   n         number of variables;
+  --   k         dimension of the solution component;
+  --   p         polynomial system.
+
+  -- ON RETURN :
+  --   n-k equations which also define the solution component.
+  --   In case p'length is already n-k, a copy of p is returned.
 
 -- OPERATIONS ON SOLUTION LISTS :
 
