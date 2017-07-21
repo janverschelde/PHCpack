@@ -1,3 +1,6 @@
+Fri 21 Jul 2017 : completed the extension in extrinsic_diagonal_homotopies
+  for witness sets defined by Laurent systems.
+
 Thu 20 Jul 2017 : in extrinsic_diagonal_homotopies, added the definition of
   the first type of diagonal homotopy for Laurent polynomial systems.
 
