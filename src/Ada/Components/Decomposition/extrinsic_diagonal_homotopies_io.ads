@@ -4,6 +4,7 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Permutations;                      use Permutations;
 with Symbol_Table;                      use Symbol_Table;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 
 package Extrinsic_Diagonal_Homotopies_io is
@@ -154,6 +155,9 @@ package Extrinsic_Diagonal_Homotopies_io is
   procedure Write_Witness_Set
               ( file : in file_type; name : in string; d : in natural32;
                 p : in Poly_Sys; sols : in Solution_List );
+  procedure Write_Witness_Set
+              ( file : in file_type; name : in string; d : in natural32;
+                p : in Laur_Sys; sols : in Solution_List );
 
   -- DESCRIPTION :
   --   Writes the witness set of dimenension d defined by the system p

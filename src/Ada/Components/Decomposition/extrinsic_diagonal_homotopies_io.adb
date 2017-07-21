@@ -2,6 +2,7 @@ with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Symbol_Table_io;
 with Characters_and_Numbers;
 with Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions_io;       use Standard_Complex_Solutions_io;
 
 package body Extrinsic_Diagonal_Homotopies_io is
@@ -322,6 +323,26 @@ package body Extrinsic_Diagonal_Homotopies_io is
     create(witfile,out_file,filename);
     put(witfile,p'last,1); new_line(witfile);
     Standard_Complex_Poly_Systems_io.put(witfile,p);
+    new_line(witfile);
+    put_line(witfile,"THE SOLUTIONS :");
+    put(witfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    close(witfile);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; name : in string; d : in natural32;
+                p : in Laur_Sys; sols : in Solution_List ) is
+
+    strd : constant string
+         := Characters_and_Numbers.convert(integer32(d));
+    filename : constant string := name & "_sw" & strd;
+    witfile : file_type;
+
+  begin
+    put(file,"writing to file "); put(file,filename); new_line(file);
+    create(witfile,out_file,filename);
+    put(witfile,p'last,1); new_line(witfile);
+    Standard_Complex_Laur_Systems_io.put(witfile,p);
     new_line(witfile);
     put_line(witfile,"THE SOLUTIONS :");
     put(witfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
