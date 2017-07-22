@@ -22,8 +22,8 @@ procedure ts_cascade is
     put("Type 1 or 2 to choose : ");
     Ask_Alternative(ans,"12");
     case ans is
-      when '1' => Driver_to_Square_and_Embed;
-      when '2' => Driver_to_Witness_Generate(0);
+      when '1' => Driver_to_Square_and_Embed("",""); -- empty file names
+      when '2' => Driver_to_Witness_Generate(0,"","");
       when others => null;
     end case;
   end Main;
