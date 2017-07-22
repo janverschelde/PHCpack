@@ -12,7 +12,7 @@ with Standard_Random_Matrices;
 with Standard_Plane_Representations;    use Standard_Plane_Representations;
 with Standard_Plane_Operations;         use Standard_Plane_Operations;
 with Standard_Cascading_Planes;         use Standard_Cascading_Planes;
-with Diagonal_Homotopy_Continuation;    use Diagonal_Homotopy_Continuation;
+with Intrinsic_Diagonal_Continuation;   use Intrinsic_Diagonal_Continuation;
 
 procedure ts_intdia is
 

@@ -10,7 +10,8 @@ with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Witness_Sets;                      use Witness_Sets;
 with Standard_Plane_Representations;    use Standard_Plane_Representations;
 with Standard_Intrinsic_Solutions;      use Standard_Intrinsic_Solutions;
-with Diagonal_Homotopy_Continuation;    use Diagonal_Homotopy_Continuation;
+with Intrinsic_Diagonal_Continuation;   use Intrinsic_Diagonal_Continuation;
+with Extrinsic_Diagonal_Continuation;   use Extrinsic_Diagonal_Continuation;
 
 package body Drivers_to_Intersect_Varieties is
 
@@ -136,7 +137,7 @@ package body Drivers_to_Intersect_Varieties is
     plane : Matrix(1..integer32(n),0..m);
 
     procedure Diagonal_Homotopy is new
-      Diagonal_Homotopy_Continuation.Generic_Diagonal_Homotopy(fA,jfA,fB,jfB);
+      Intrinsic_Diagonal_Continuation.Generic_Diagonal_Homotopy(fA,jfA,fB,jfB);
 
   begin
     Diagonal_Homotopy(file,

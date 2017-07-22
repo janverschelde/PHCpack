@@ -34,7 +34,8 @@ p_intrinsic_diagonal_continuation: premature intrinsic diagonal continuation
 p_intrinsic_diagonal_homotopies  : premature intrinsic diagonal homotopies
 p_intrinsic_diagonal_solvers     : solving with intrinsic diagonal homotopies
 ts_diahom                        : test on diagonal homotopies
-diagonal_homotopy_continuation   : diagonal homotopies to intersect witsets
+extrinsic_diagonal_continuation  : track paths of extrinsic diagonal homotopies
+intrinsic_diagonal_continuation  : track paths of intrinsic diagonal homotopies
 driver_to_intersect_varieties    : driver to intrinsic diagonal homotopies
 ts_intdia                        : test to intersect varieties intrinsically
 jumpstart_diagonal_homotopies    : jumpstart to intersect varieties

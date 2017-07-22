@@ -6,7 +6,7 @@ with Standard_Complex_Matrices;         use Standard_Complex_Matrices;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 
-package Diagonal_Homotopy_Continuation is
+package Intrinsic_Diagonal_Continuation is
 
 -- DESCRIPTION :
 --   A diagonal homotopy allows to compute witness sets for all components
@@ -57,30 +57,6 @@ package Diagonal_Homotopy_Continuation is
   --   sols     solutions at the last dimensional intersection component;
   --   plane    defines witness set for last dimensional component.
 
-  procedure Extrinsic_Diagonal_Homotopy
-              ( file : in file_type; name : in string; report : in boolean;
-                p1e,p2e : in Poly_Sys; a,b : in natural32;
-                sols1,sols2 : in Solution_List );
-
-  -- DESCRIPTION :
-  --   Runs the diagonal homotopy algorithm in extrinsic coordinates
-  --   to intersect a-dimensional witness set (p1e,sols1)
-  --   with the b-dimensional witness set (p2e,sols2).
-
-  -- ON ENTRY :
-  --   file     for intermediate output and diagnostics;
-  --   name     name of the output file, will be used as prefix to write
-  --            the (super) witness sets;
-  --   report   flag to ask for intermediate output during path following;
-  --   p1e      1st embedded polynomial system;
-  --   p2e      2nd embedded polynomial system;
-  --   a        dimension of the 1st witness set;
-  --   b        dimension of the 2nd witness set;
-  --   sols1    witness points on the 1st component, without embedding;
-  --   sols2    witness points on the 2nd component, without embedding.
-
-  -- REQUIRED : a >= b.
-
   generic
 
     with function fA ( x : Vector ) return Vector;
@@ -114,4 +90,4 @@ package Diagonal_Homotopy_Continuation is
   --   sols     solutions at the last dimensional intersection component;
   --   plane    defines witness set for last dimensional component.
 
-end Diagonal_Homotopy_Continuation;
+end Intrinsic_Diagonal_Continuation;

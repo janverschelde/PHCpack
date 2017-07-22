@@ -1,5 +1,8 @@
 Sat 22 Jul 2017 : fixed ts_cascade.adb for added parameters to the driver
-  procedures.
+  procedures.  Splitted diagonal_homotopy_continuation into two new packages:
+  extrinsic_diagonal_continuation and intrinsic_diagonal_continuation.
+  This changed drivers_to_intersect_varieties.adb, maindeco.adb, and
+  ts_intdia.adb.
 
 Fri 21 Jul 2017 : completed the extension in extrinsic_diagonal_homotopies
   for witness sets defined by Laurent systems.  Extended the writing of
