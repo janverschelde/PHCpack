@@ -1,3 +1,6 @@
+Sat 22 Jul 2017 : updated equation_by_equation_solvers.adb for the splitting
+  of the code in the package diagonal_homotopy_continuation.
+
 Sun 15 Nov 2015 : updates in hypersurfaces_and_filters for double double and
   quad double arithmetic, new mainhyp2 and mainhyp4 for phc -l2 and -l4.
 
