@@ -1,3 +1,6 @@
+Sun 23 Jul 2017 : improved specification of extrinsic_diagonal_continuation,
+  moving documentation of procedures from body to specification.
+
 Sat 22 Jul 2017 : fixed ts_cascade.adb for added parameters to the driver
   procedures.  Splitted diagonal_homotopy_continuation into two new packages:
   extrinsic_diagonal_continuation and intrinsic_diagonal_continuation.

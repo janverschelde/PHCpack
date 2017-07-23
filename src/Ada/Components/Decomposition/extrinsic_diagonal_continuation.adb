@@ -1,13 +1,12 @@
 with Timing_Package;                    use Timing_Package;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Random_Numbers;           use Standard_Random_Numbers;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
-with Standard_Complex_VecVecs;          use Standard_Complex_VecVecs;
 with Standard_Random_Vectors;           use Standard_Random_Vectors;
 with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
+with Standard_Complex_Matrices;         use Standard_Complex_Matrices;
 with Standard_Random_Matrices;
 with Standard_Natural_Vectors;
 with Symbol_Table;
@@ -161,166 +160,9 @@ package body Extrinsic_Diagonal_Continuation is
     return res;
   end Collapse;
 
-  procedure Singular_Filter
-              ( file : in file_type;
-                sols : in out Solution_List; tol : in double_float ) is
-
-    len : constant natural32 := Length_Of(sols);
-    sing,regu : Solution_List;
-
-  begin
-    R_Singular_Filter(file,sols,tol,sing,regu);
-   -- S_Singular_Filter(sols,tol,sing,regu);
-    put(file,"Tested "); put(file,len,1); put(file," solutions, found ");
-    put(file,Length_Of(regu),1); put(file," regular and ");
-    put(file,Length_Of(sing),1); put_line(file," singular.");
-    Clear(sols);
-    sols := regu;
-  end Singular_Filter;
-
-  procedure Scan_Failed_Paths
-              ( file : in file_type; sols : in Solution_List;
-                p1,p2 : in Matrix ) is
-
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    cnt : natural32 := 0;
-    p : Matrix(p1'range(1),p2'range);
-
-  begin
-    new_line(file);
-    put_line(file,"THE FAILED SOLUTION PATHS : ");
-    for i in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      if REAL_PART(ls.t) < 1.0 then
-        cnt := cnt + 1;
-        put(file,"solution "); put(file,i,1);
-        put(file," is failed path ");
-        put(file,cnt,1); put_line(file," :");
-        put(file,ls.all);
-        new_line(file);
-        for j in p'range(1) loop
-          for k in p'range(2) loop
-            p(j,k) := p1(j,k)*(Create(1.0)-ls.t) + p2(j,k)*ls.t;
-          end loop;
-        end loop;
-        declare
-          x : constant Vector := Affine_Expand(ls.v,p);
-        begin
-          put_line(file,"The expanded vector : ");
-          put_line(file,x);
-        end;
-      end if;
-      tmp := Tail_Of(tmp);
-    end loop;
-  end Scan_Failed_Paths;
-
---  procedure Copy_Offset ( p : in Matrix; q : out Matrix ) is
---
---  -- DESCRIPTION :
---  --   Copies offset vector from p to q.
---
---  begin
---    for i in q'range(1) loop
---      q(i,0) := p(i,0);
---    end loop;
---  end Copy_Offset;
-
---  procedure Copy_Directions ( p : in Matrix; q : out Matrix ) is
---
---  -- DESCRIPTION :
---  --   Copies directions from p to q.
---
---  begin
---    for i in q'range(1) loop
---      for j in 1..q'last(2) loop
---        q(i,j) := p(i,j);
---      end loop;
---    end loop;
---  end Copy_Directions;
-
---  procedure Copy_Direction ( p : in Matrix; k : in natural;
---                             q : out Matrix ) is
---
---  -- DESCRIPTION :
---  --   Copies the kth direction vector from p to q.
---
---  -- REQUIRED : k <= p'last(2) = q'last(2).
---
---  begin
---    for i in q'range(1) loop
---      q(i,k) := p(i,k);
---    end loop;
---  end Copy_Direction;
-
---  procedure Start_Intrinsic_Cascade_the_Long_Way
---              ( file : in file_type; report : in boolean;
---                ef : in Eval_Poly_Sys; sjf : in Eval_Jaco_Mat;
---                stapla,tarpla : in Matrix; psols : in out Solution_List ) is
---
---  -- DESCRIPTION :
---  --   This is an experimental procedure to overcome the problems
---  --   with starting the cascade using intrinsic coordinates.
---  --   The suffix "the_Long_Way" reflects the attempt to move over
---  --   the directions one after the other, which failed badly.
---
---    len1,len2 : natural;
---    backsols : Solution_List;
---    wrkpla,endpla : Matrix(stapla'range(1),stapla'range(2));
---
---  begin
---   -- new_line(file);
---   -- put_line(file,"Path Tracking to Start the Cascade");
---   -- new_line(file);
---   -- put_line(file,"Refining the roots at the start...");
---    Refine_Roots(file,ef,sjf,stapla,psols);
---    wrkpla := stapla;
---    Copy_Directions(stapla,endpla); -- Copy_Offset(stapla,endpla);
---    Copy_Offset(tarpla,endpla);     -- Copy_Directions(tarpla,endpla);
---    for i in 0..tarpla'last(2) loop
---      len1 := Length_Of(psols);
---      new_line(file);
---      put(file,"Tracking "); put(file,len1,1);
---      put(file," paths to start the cascade, stage ");
---      put(file,i,1); put_line(file," ...");
---      Intrinsic_Track_Paths(file,report,ef,sjf,wrkpla,endpla,psols);
---      Copy(psols,backsols);
---      new_line(file);
---      put_line(file,"Refining the roots at the target...");
---      Refine_Roots(file,ef,sjf,endpla,psols);
---      len2 := Length_Of(psols);
---      if len1 = len2
---       then put(file,"No paths lost in Start of the Cascade, stage ");
---            put(file,i,1); put_line(file,".  OK");
---       else put(file,len1-len2,1);
---            put(file," paths lost in Start of the Cascade, stage ");
---            put(file,i,1); put_line(file,".  BUG!!!");
---            Scan_Failed_Paths(file,backsols,wrkpla,endpla);
---      end if;
---      wrkpla := endpla;
---     -- Copy_Directions(tarpla,endpla); --Copy_Offset(tarpla,endpla);
---      if i < tarpla'last(2)
---       then Copy_Direction(tarpla,i+1,endpla);
---      end if;
---    end loop;
---  end Start_Intrinsic_Cascade_the_Long_Way;
-
   procedure Start_Extrinsic_Cascade
               ( file : in file_type; report : in boolean;
                 p,q : in Poly_Sys; sols : in out Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Does the path following to start the extrinsic cascade.
-
-  -- ON ENTRY :
-  --   file     for output and intermediate diagnostics;
-  --   report   if reporting version of path trackers is needed;
-  --   p        target polynomial system;
-  --   q        system to start the cascade;
-  --   sols     solutions of the start system q.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of converging paths.
 
    -- pocotime : duration := 0.0;
 
@@ -441,25 +283,6 @@ package body Extrinsic_Diagonal_Continuation is
                 q : in Poly_Sys; sols : in out Solution_List;
                 p1,p2 : in Poly_Sys; sli : in VecVec;
                 tol : in double_float; n,k : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Does one path following stage down in the extrinsic cascade.
-
-  -- ON ENTRY :
-  --   file     for diagnostics and intermediate results;
-  --   name     to write the (super) witness sets to;
-  --   report   flag to ask for intermediate output of path trackers;
-  --   q        embedded system, serves as start system;
-  --   sols     start solutions, all with nonzero slack variable;
-  --   p1       original system of the 1st witness set;
-  --   p2       original system of the 2nd witness set;
-  --   sli      set of k hyperplanes for the top embedding;
-  --   tol      tolerance used by the filter;
-  --   n        dimension of the ambient space;
-  --   k        top dimension.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the paths.
 
     start,target,wrk : Link_to_Poly_Sys;
     p : constant Poly_Sys(q'range) := Remove_Slice(q);
