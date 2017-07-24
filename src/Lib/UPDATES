@@ -1,3 +1,6 @@
+Mon 24 Jul 2017 : added functions to witset to define diagonal homotopies
+  for Laurent polynomial systems.
+
 Fri 14 Jul 2017 : started modification in lib_factor.c to accept Laurent
   polynomial systems.  Normalized names of functions in witset,
   which changed lib_factor.c.  This also changed phcpy2c2.c and phcpy2c3.c.

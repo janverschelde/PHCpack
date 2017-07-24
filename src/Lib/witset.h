@@ -400,6 +400,36 @@ int quaddobl_diagonal_homotopy ( int a, int b );
  *   in quad double precision define the witness sets for these
  *   two solution sets. */
 
+int standard_diagonal_Laurent_homotopy ( int a, int b );
+/*
+ * DESCRIPTION :
+ *   Creates a diagonal homotopy to intersect two solution sets of
+ *   dimensions a and b respectively, where a >= b,
+ *   defined by Laurent polynomial systems.
+ *   The Laurent systems stored as target and start system in the
+ *   container in standard double precision define the witness sets
+ *   for these two solution sets. */
+
+int dobldobl_diagonal_Laurent_homotopy ( int a, int b );
+/*
+ * DESCRIPTION :
+ *   Creates a diagonal homotopy to intersect two solution sets of
+ *   dimensions a and b respectively, where a >= b,
+ *   defined by Laurent polynomial systems.
+ *   The Laurent systems stored as target and start system in the
+ *   container in double double precision define the witness sets
+ *   for these two solution sets. */
+
+int quaddobl_diagonal_Laurent_homotopy ( int a, int b );
+/*
+ * DESCRIPTION :
+ *   Creates a diagonal homotopy to intersect two solution sets of
+ *   dimensions a and b respectively, where a >= b,
+ *   defined by Laurent polynomial systems.
+ *   The Laurent systems stored as target and start system in the
+ *   container in quad double precision define the witness sets 
+ *   for these two solution sets. */
+
 int standard_diagonal_cascade_solutions ( int a, int b );
 /*
  * DESCRIPTION :

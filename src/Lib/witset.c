@@ -500,6 +500,30 @@ int quaddobl_diagonal_homotopy ( int a, int b )
    return fail;
 }
 
+int standard_diagonal_Laurent_homotopy ( int a, int b )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(810,&a,&b,c);
+   return fail;
+}
+
+int dobldobl_diagonal_Laurent_homotopy ( int a, int b )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(811,&a,&b,c);
+   return fail;
+}
+
+int quaddobl_diagonal_Laurent_homotopy ( int a, int b )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(812,&a,&b,c);
+   return fail;
+}
+
 int standard_diagonal_cascade_solutions ( int a, int b )
 {
    int fail;
