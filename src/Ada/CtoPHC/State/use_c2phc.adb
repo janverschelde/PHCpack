@@ -2867,6 +2867,10 @@ function use_c2phc ( job : integer32;
       when 807 => return use_c2fac(100,a,b,c); -- standard Laurent copy
       when 808 => return use_c2fac(101,a,b,c); -- dobldobl Laurent copy
       when 809 => return use_c2fac(102,a,b,c); -- quaddobl Laurent copy
+     -- construct a diagonal Laurent homotopy
+      when 810 => return use_track(61,a,b,c); -- standard diagonal Laurent htp
+      when 811 => return use_track(62,a,b,c); -- dobldobl diagonal Laurent htp
+      when 812 => return use_track(63,a,b,c); -- quaddobl diagonal Laurent htp
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

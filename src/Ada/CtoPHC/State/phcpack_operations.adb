@@ -1362,6 +1362,171 @@ package body PHCpack_Operations is
     PHCpack_Operations.Create_QuadDobl_Homotopy(gamma);
   end QuadDobl_Diagonal_Homotopy;
 
+  procedure Standard_Diagonal_Laurent_Homotopy ( a,b : in natural32 ) is
+
+    use Standard_Complex_Laur_Systems;
+
+    cd : natural32;
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Complex_Numbers.Create(1.0);
+
+  begin
+   -- new_line;
+   -- put("Intersecting sets of dimension ");
+   -- put(a,1); put(" and "); put(b,1); put_line(".");
+    if a >= b then
+      cd := Cascade_Dimension
+              (st_target_laur_sys.all,st_start_laur_sys.all,a,b);
+     -- put("The dimension of the cascade : "); put(cd,1); new_line;
+     -- put("target system :" ); put(st_target_laur_sys.all);
+     -- put("start system :" ); put(st_start_laur_sys.all);
+      declare
+        start,target : Laur_Sys(1..integer32(cd));
+      begin
+       -- put_line("before extrinsic cascade homotopy...");
+        Extrinsic_Cascade_Homotopy
+          (st_target_laur_sys.all,st_start_laur_sys.all,a,b,start,target);
+       -- put_line("after extrinsic cascade : ");
+       -- put_line("start system : "); put(start);
+       -- put_line("target system : "); put(target);
+        declare
+        begin
+          Clear(st_start_laur_sys);
+          st_start_laur_sys := new Laur_Sys'(start);
+          Clear(st_target_laur_sys);
+          st_target_laur_sys := new Laur_Sys'(target);
+        exception 
+          when others =>
+            put_line("exception raised in clear"); raise;
+        end;
+      end;
+    else
+      cd := Cascade_Dimension
+              (st_start_laur_sys.all,st_target_laur_sys.all,b,a);
+      declare
+        start,target : Laur_Sys(1..integer32(cd));
+      begin
+        Extrinsic_Cascade_Homotopy
+          (st_start_laur_sys.all,st_target_laur_sys.all,b,a,start,target);
+        Clear(st_start_laur_sys);
+        st_start_laur_sys := new Laur_Sys'(start);
+        Clear(st_target_laur_sys);
+        st_target_laur_sys := new Laur_Sys'(target);
+      end;
+    end if;
+    PHCpack_Operations.Create_Standard_Laurent_Homotopy(gamma);
+  end Standard_Diagonal_Laurent_Homotopy;
+
+  procedure DoblDobl_Diagonal_Laurent_Homotopy ( a,b : in natural32 ) is
+
+    use DoblDobl_Complex_Laur_Systems;
+
+    cd : natural32;
+    gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+          := DoblDobl_Complex_Numbers.Create(integer(1));
+
+  begin
+   -- new_line;
+   -- put("Intersecting sets of dimension ");
+   -- put(a,1); put(" and "); put(b,1); put_line(".");
+    if a >= b then
+      cd := Cascade_Dimension
+              (dd_target_laur_sys.all,dd_start_laur_sys.all,a,b);
+     -- put("The dimension of the cascade : "); put(cd,1); new_line;
+     -- put("target system :" ); put(dd_target_sys.all);
+     -- put("start system :" ); put(dd_start_sys.all);
+      declare
+        start,target : Laur_Sys(1..integer32(cd));
+      begin
+       -- put_line("before extrinsic cascade homotopy...");
+        Extrinsic_Cascade_Homotopy
+          (dd_target_laur_sys.all,dd_start_laur_sys.all,a,b,start,target);
+       -- put_line("after extrinsic cascade : ");
+       -- put_line("start system : "); put(start);
+       -- put_line("target system : "); put(target);
+        declare
+        begin
+          Clear(dd_start_laur_sys);
+          dd_start_laur_sys := new Laur_Sys'(start);
+          Clear(dd_target_laur_sys);
+          dd_target_laur_sys := new Laur_Sys'(target);
+        exception 
+          when others =>
+            put_line("exception raised in clear"); raise;
+        end;
+      end;
+    else
+      cd := Cascade_Dimension
+              (dd_start_laur_sys.all,dd_target_laur_sys.all,b,a);
+      declare
+        start,target : Laur_Sys(1..integer32(cd));
+      begin
+        Extrinsic_Cascade_Homotopy
+          (dd_start_laur_sys.all,dd_target_laur_sys.all,b,a,start,target);
+        Clear(dd_start_laur_sys);
+        dd_start_laur_sys := new Laur_Sys'(start);
+        Clear(dd_target_laur_sys);
+        dd_target_laur_sys := new Laur_Sys'(target);
+      end;
+    end if;
+    PHCpack_Operations.Create_DoblDobl_Laurent_Homotopy(gamma);
+  end DoblDobl_Diagonal_Laurent_Homotopy;
+
+  procedure QuadDobl_Diagonal_Laurent_Homotopy ( a,b : in natural32 ) is
+
+    use QuadDobl_Complex_Laur_Systems;
+
+    cd : natural32;
+    gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+          := QuadDobl_Complex_Numbers.Create(integer(1));
+
+  begin
+   -- new_line;
+   -- put("Intersecting sets of dimension ");
+   -- put(a,1); put(" and "); put(b,1); put_line(".");
+    if a >= b then
+      cd := Cascade_Dimension
+              (qd_target_laur_sys.all,qd_start_laur_sys.all,a,b);
+     -- put("The dimension of the cascade : "); put(cd,1); new_line;
+     -- put("target system :" ); put(qd_target_sys.all);
+     -- put("start system :" ); put(qd_start_sys.all);
+      declare
+        start,target : Laur_Sys(1..integer32(cd));
+      begin
+       -- put_line("before extrinsic cascade homotopy...");
+        Extrinsic_Cascade_Homotopy
+          (qd_target_laur_sys.all,qd_start_laur_sys.all,a,b,start,target);
+       -- put_line("after extrinsic cascade : ");
+       -- put_line("start system : "); put(start);
+       -- put_line("target system : "); put(target);
+        declare
+        begin
+          Clear(qd_start_laur_sys);
+          qd_start_laur_sys := new Laur_Sys'(start);
+          Clear(qd_target_laur_sys);
+          qd_target_laur_sys := new Laur_Sys'(target);
+        exception 
+          when others =>
+            put_line("exception raised in clear"); raise;
+        end;
+      end;
+    else
+      cd := Cascade_Dimension
+              (qd_start_laur_sys.all,qd_target_laur_sys.all,b,a);
+      declare
+        start,target : Laur_Sys(1..integer32(cd));
+      begin
+        Extrinsic_Cascade_Homotopy
+          (qd_start_laur_sys.all,qd_target_laur_sys.all,b,a,start,target);
+        Clear(qd_start_laur_sys);
+        qd_start_laur_sys := new Laur_Sys'(start);
+        Clear(qd_target_laur_sys);
+        qd_target_laur_sys := new Laur_Sys'(target);
+      end;
+    end if;
+    PHCpack_Operations.Create_QuadDobl_Laurent_Homotopy(gamma);
+  end QuadDobl_Diagonal_Laurent_Homotopy;
+
   procedure Standard_Diagonal_Cascade_Solutions ( a,b : in natural32 ) is
 
     use Standard_Complex_Polynomials,Standard_Complex_Solutions;

@@ -147,6 +147,21 @@ function use_track ( job : integer32;
 --          =  60 : defines a cascade homotopy for Laurent systems
 --                  in quad double precision.
 --
+-- diagonal homotopies for Laurent systems :
+--
+--   job    =  61 : make a diagonal homotopy from the Laurent systems stored
+--                  as target and start systems in standard double precision,
+--                  the input parameters a and b are the dimensions of 
+--                  the witness sets;
+--          =  62 : make a diagonal homotopy from the Laurent systems stored
+--                  as target and start systems in double double precision,
+--                  the input parameters a and b are the dimensions of 
+--                  the witness sets;
+--          =  63 : make a diagonal homotopy from the Laurent systems stored
+--                  as target and start systems in quad double precision,
+--                  the input parameters a and b are the dimensions of 
+--                  the witness sets.
+--
 -- additional operations for diagonal homotopies ...
 --
 --   job    =  40 : given in a[0] the number n of variables, 

@@ -1,3 +1,6 @@
+Mon 24 Jul 2017 : defined procedures in phcpack_operations to define a
+  diagonal homotopy for Laurent systems, added jobs to use_track & use_c2phc.
+
 Mon 17 Jul 2017 : added initialization of the polynomial type to the
   standard_sampling_operations.adb.
 

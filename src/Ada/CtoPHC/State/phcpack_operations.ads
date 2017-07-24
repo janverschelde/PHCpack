@@ -245,6 +245,29 @@ package PHCpack_Operations is
   -- DESCRIPTION :
   --   Creates the homotopy to start the cascade in a diagonal homotopy
   --   to intersect two positive dimensional solution sets,
+  --   defined by ordinary polynomial systems,
+  --   in standard double, double double, or quad double precision.
+
+  -- REQUIRED :
+  --   The target and start system stored internally have their symbols
+  --   matched and the dimensions are sorted: a >= b.
+
+  -- ON ENTRY :
+  --   a        dimension of the first set stored as the target system;
+  --   b        dimension of the second set stored as the start system.
+
+  -- ON RETURN :
+  --   The start system is the system to start the cascade and
+  --   the target system is the system read to perform a cascade on.
+
+  procedure Standard_Diagonal_Laurent_Homotopy ( a,b : in natural32 );
+  procedure DoblDobl_Diagonal_Laurent_Homotopy ( a,b : in natural32 );
+  procedure QuadDobl_Diagonal_Laurent_Homotopy ( a,b : in natural32 );
+
+  -- DESCRIPTION :
+  --   Creates the homotopy to start the cascade in a diagonal homotopy
+  --   to intersect two positive dimensional solution sets,
+  --   defined by Laurent polynomial systems,
   --   in standard double, double double, or quad double precision.
 
   -- REQUIRED :

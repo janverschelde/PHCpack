@@ -850,6 +850,21 @@ function use_c2phc ( job : integer32;
 --         = 809 : copy embedded system from sampler to Laurent systems
 --                 container, for coefficients in quad double precision.
 --
+-- diagonal homotopies for Laurent systems :
+--
+--   job   = 810 : make a diagonal homotopy from the Laurent systems stored
+--                 as target and start systems in standard double precision,
+--                 the input parameters a and b are the dimensions of 
+--                 the witness sets;
+--         = 811 : make a diagonal homotopy from the Laurent systems stored
+--                 as target and start systems in double double precision,
+--                the input parameters a and b are the dimensions of 
+--                  the witness sets;
+--         = 812 : make a diagonal homotopy from the Laurent systems stored
+--                 as target and start systems in quad double precision,
+--                 the input parameters a and b are the dimensions of 
+--                 the witness sets.
+--
 -- POWER SERIES NEWTON METHOD :
 --
 --   Before calling the jobs, the systems and solutions containers

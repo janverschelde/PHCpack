@@ -577,6 +577,54 @@ function use_track ( job : integer32;
       return 44;
   end Job44;
 
+  function Job61 return integer32 is -- standard diagonal Laurent homotopy
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    a_dim : constant natural32 := natural32(v_a(v_a'first));
+    b_dim : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    PHCpack_Operations.Standard_Diagonal_Laurent_Homotopy(a_dim,b_dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at standard diagonal Laurent homotopy.");
+      return 61;
+  end Job61;
+
+  function Job62 return integer32 is -- dobldobl diagonal Laurent homotopy
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    a_dim : constant natural32 := natural32(v_a(v_a'first));
+    b_dim : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    PHCpack_Operations.DoblDobl_Diagonal_Laurent_Homotopy(a_dim,b_dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at dobldobl diagonal Laurent homotopy.");
+      return 62;
+  end Job62;
+
+  function Job63 return integer32 is -- quaddobl diagonal Laurent homotopy
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    a_dim : constant natural32 := natural32(v_a(v_a'first));
+    b_dim : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    PHCpack_Operations.QuadDobl_Diagonal_Laurent_Homotopy(a_dim,b_dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at quaddobl diagonal Laurent homotopy.");
+      return 63;
+  end Job63;
+
   function Job16 return integer32 is -- read a witness set
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
@@ -1191,6 +1239,9 @@ function use_track ( job : integer32;
         PHCpack_Operations.DoblDobl_Cascade_Laurent_Homotopy; return 0;
       when 60 =>
         PHCpack_Operations.QuadDobl_Cascade_Laurent_Homotopy; return 0;
+      when 61 => return Job61; -- standard diagonal Laurent homotopy
+      when 62 => return Job62; -- dobldobl diagonal Laurent homotopy
+      when 63 => return Job63; -- quaddobl diagonal Laurent homotopy
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;
