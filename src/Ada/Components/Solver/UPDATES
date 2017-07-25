@@ -1,3 +1,6 @@
+Tue 25 Jul 2017 : extended mainhyp, mainhyp2, mainhyp4, so phc -l, phc -l2,
+  and phc -l4 accept Laurent polynomials on input.
+
 Sat 22 Jul 2017 : updated equation_by_equation_solvers.adb for the splitting
   of the code in the package diagonal_homotopy_continuation.
 

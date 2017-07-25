@@ -5,7 +5,7 @@ procedure mainhyp ( polyfile,logfile : in string );
 --   as called by the main dispatcher of PHCpack.
 
 -- ON ENTRY :
---   polyfile     file with one polynomial in several variables
+--   polyfile     file with one (Laurent) polynomial in several variables;
 --   logfile      file name to write diagnostics on.
 
 -- ON RETURN :

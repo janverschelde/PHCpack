@@ -9,8 +9,11 @@ with QuadDobl_Complex_Vectors;          use QuadDobl_Complex_Vectors;
 with QuadDobl_Random_Vectors;           use QuadDobl_Random_Vectors;
 with QuadDobl_Complex_Matrices;         use QuadDobl_Complex_Matrices;
 with Symbol_Table;
-with QuadDobl_Complex_Polynomials;      use QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials_io;   use QuadDobl_Complex_Polynomials_io;
+with QuadDobl_Complex_Laurentials;
+with QuadDobl_Complex_Laurentials_io;   use QuadDobl_Complex_Laurentials_io;
+with QuadDobl_Laur_Poly_Convertors;
 with QuadDobl_Complex_Poly_Functions;   use QuadDobl_Complex_Poly_Functions;
 with QuadDobl_Complex_Poly_Systems;     use QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;        use QuadDobl_Complex_Solutions;
@@ -19,13 +22,24 @@ with Intrinsic_Witness_Sets_io;         use Intrinsic_Witness_Sets_io;
 
 procedure mainhyp4 ( polyfile,logfile : in string ) is
 
-  procedure Create_Witness_Set
+  procedure Make_Witness_Set
               ( file : in file_type; name : in string;
-                n : in natural32; p : in Poly ) is
+                n : in natural32;
+                p : in QuadDobl_Complex_Polynomials.Poly ) is
 
   -- DESCRIPTION :
   --   Generates a random offset and random direction vector
-  --   and then computes all roots of a univariate problem.
+  --   and then computes all roots of a univariate problem
+  --   to make a witness set for the hypersurface defined by p.
+
+  -- ON ENTRY :
+  --   file     file which must be opened for output;
+  --   name     name of the input file, used as prefix
+  --            for the witness set;
+  --   n        number of variables in the polynomial p;
+  --   p        an ordinary polynomial p in n veriables.
+
+    use QuadDobl_Complex_Polynomials;
 
     d : constant integer32 := Degree(p);
     f : Eval_Poly := Create(p);
@@ -48,32 +62,73 @@ procedure mainhyp4 ( polyfile,logfile : in string ) is
       plane(i,1) := v(i);
     end loop;
     Write_Witness_Set(file,name,n,n-1,sys,s,plane);
-  end Create_Witness_Set;
+  end Make_Witness_Set;
 
-  procedure Main is
+  procedure Read_Input_Polynomial
+              ( name : out Link_to_String;
+                n : out natural32;
+                p : out QuadDobl_Complex_Laurentials.Poly ) is
 
   -- DESCRIPTION :
-  --   If the strings with the file names are empty,
-  --   then the user is promped to provide file names.
+  --   Read the polynomial from polyfile, or 
+  --   if polyfile is the empty string, then prompts the user
+  --   for a file name to read the polynomial from.
 
-    infile,outfile : file_type;
-    n : natural32 := 0;
-    p : Poly;
-    name : Link_to_String;
+  -- ON RETURN :
+  --   name     name of the input file;
+  --   n        number of variables in the polynomial;
+  --   p        the polynomial read.
+
+    use QuadDobl_Complex_Laurentials;
+
+    infile : file_type;
+    m : natural32 := 0;
+    q : Poly;
+    filename : Link_to_String;
 
   begin
     if polyfile = "" then
       new_line;
       put_line("Reading the name of the file with the polynomial.");
-      Read_Name_and_Open_File(infile,name);
+      Read_Name_and_Open_File(infile,filename);
     else
-      Open_Input_File(infile,polyfile,name);
+      Open_Input_File(infile,polyfile,filename);
     end if;
-    get(infile,n);   -- skip the 1
-    get(infile,n);   -- get the number of variables
-    Symbol_Table.Init(n);
-    get(infile,p);
-   -- put("the polynomial : "); put(p); new_line;
+    get(infile,m);   -- skip the 1
+    get(infile,m);   -- get the number of variables
+    Symbol_Table.Init(m);
+    get(infile,q);
+    put("number of variables : "); put(m,1); new_line;
+    put("the polynomial : "); put(q); new_line;
+    n := m;
+    p := q;
+    name := filename;
+  exception
+    when others =>
+      put_line("An error occurred with the polynomial on input.");
+  end Read_Input_Polynomial;
+
+  procedure Main is
+
+  -- DESCRIPTION :
+  --   Reads the input and checks whether the input polynomial
+  --   is a genuine Laurent polynomial.
+
+    infile,outfile : file_type;
+    n : natural32 := 0;
+    p : QuadDobl_Complex_Polynomials.Poly;
+    q : QuadDobl_Complex_Laurentials.Poly;
+    name : Link_to_String;
+
+  begin
+    Read_Input_Polynomial(name,n,q);
+    if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(q) then
+      put_line("Processing of Laurent polynomials not yet supported.");
+      return;
+    else
+      p := QuadDobl_Laur_Poly_Convertors.Positive_Laurent_Polynomial(q);
+    end if;
+    put_line("The input polynomial p :"); put(p);
     if logfile = "" then
       new_line;
       put_line("Reading the name of the output file.");
@@ -81,7 +136,7 @@ procedure mainhyp4 ( polyfile,logfile : in string ) is
     else
       Create_Output_File(outfile,logfile);
     end if;
-    Create_Witness_Set(outfile,name.all,n,p);
+    Make_Witness_Set(outfile,name.all,n,p);
   end Main;
 
 begin
