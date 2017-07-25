@@ -7,6 +7,22 @@ package QuadDobl_Complex_Laurentials_io is
 --   This package provides very basic output routines for Laurent polynomials
 --   with double double complex coefficients.
 
+-- THE INPUT OPERATIONS :
+
+  procedure get ( p : out Poly );
+  procedure get ( file : in file_type; p : out Poly );
+
+  -- DESCRIPTION :
+  --   Reads a multivariate polynomial from standard input or from file.
+
+  -- ON ENTRY :
+  --   file     optional file, must be opened for input.
+
+  -- ON RETURN :
+  --   p        Laurent polynomial in several variables.
+
+-- THE OUTPUT OPERATIONS :
+
   procedure put ( p : in Poly );
   procedure put ( file : in file_type; p : in Poly );
 

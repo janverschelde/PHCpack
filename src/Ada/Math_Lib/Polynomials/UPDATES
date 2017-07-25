@@ -1,3 +1,6 @@
+Tue 25 Jul 2017 : provided basic input procedures for Laurent polynomials,
+  in {dobldobl,quaddobl}_complex_laurentials_io.
+
 Sun 16 Jul 2017 : the clear in parse_dimensions.adb should not clear the
   symbol table as this creates problems for the names_of_variables()
   function in the solver module of phcpy.

@@ -8,6 +8,18 @@ with Symbol_Table,Symbol_Table_io;
 
 package body QuadDobl_Complex_Laurentials_io is
 
+-- THE INPUT OPERATIONS :
+
+  procedure get ( p : out Poly ) is
+  begin
+    get(standard_input,p);
+  end get;
+
+  procedure get ( file : in file_type; p : out Poly ) is
+  begin
+    null;
+  end get;
+
 -- AUXILIARIES FOR OUTPUT ROUTINES :
 
   function All_Zeroes ( d : Degrees ) return boolean is
