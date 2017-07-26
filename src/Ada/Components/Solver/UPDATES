@@ -1,3 +1,6 @@
+Wed 26 Jul 2017 : started making of the witness set procedure in mainhyp.adb,
+  for Laurent polynomials.
+
 Tue 25 Jul 2017 : extended mainhyp, mainhyp2, mainhyp4, so phc -l, phc -l2,
   and phc -l4 accept Laurent polynomials on input.
 
