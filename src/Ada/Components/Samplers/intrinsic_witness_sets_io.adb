@@ -9,6 +9,7 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Integer_Vectors;
 with Standard_Random_Numbers;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
@@ -16,12 +17,18 @@ with QuadDobl_Complex_Vectors;
 with Standard_Complex_VecVecs;           use Standard_Complex_VecVecs;
 --with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
@@ -124,8 +131,8 @@ package body Intrinsic_Witness_Sets_io is
              return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
   -- DESCRIPTION :
-  --   Returns an embedding of a polynomial system, with n original
-  --   variables, to encode a solution set of dimension d.
+  --   Returns an embedding of an ordinary polynomial system,
+  --   with n original variables, to encode a solution set of dimension d.
   --   The matrix slices is the coefficient matrix of the linear equations,
   --   to be added to the system f.
 
@@ -179,8 +186,8 @@ package body Intrinsic_Witness_Sets_io is
              return QuadDobl_Complex_Poly_Systems.Poly_Sys is
 
   -- DESCRIPTION :
-  --   Returns an embedding of a polynomial system, with n original
-  --   variables, to encode a solution set of dimension d.
+  --   Returns an embedding of an ordinary polynomial system,
+  --   with n original variables, to encode a solution set of dimension d.
   --   The matrix slices is the coefficient matrix of the linear equations,
   --   to be added to the system f.
 
@@ -206,6 +213,169 @@ package body Intrinsic_Witness_Sets_io is
       begin
         t.cf := Create(one);
         t.dg := new Standard_Natural_Vectors.Vector'(1..nd => 0);
+        for i in f'last+1..integer32(n) loop
+          ind := ind + 1;
+          t.dg(ind) := 1;
+          res(i) := Create(t);
+          t.dg(ind) := 0;
+        end loop;
+      end;
+    end if;
+    for i in 1..integer32(d) loop           -- add the slices
+      for j in 0..integer32(n) loop
+        cff(j) := slices(i,j);
+      end loop;
+      for j in 1..integer32(d) loop
+        cff(integer32(n)+j) := Create(zero); 
+      end loop;
+      cff(integer32(n)+i) := Create(one);
+      res(integer32(n)+i) := Hyperplane(cff);
+    end loop;
+    return res;
+  end Embed_System;
+
+  function Embed_System
+             ( f : in Standard_Complex_Laur_Systems.Laur_Sys;
+               n,d : in natural32;
+               slices : in Standard_Complex_Matrices.Matrix )
+             return Standard_Complex_Laur_Systems.Laur_Sys is
+
+  -- DESCRIPTION :
+  --   Returns an embedding of a Laurent polynomial system,
+  --   with n original variables, to encode a solution set of dimension d.
+  --   The matrix slices is the coefficient matrix of the linear equations,
+  --   to be added to the system f.
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Laurentials;
+    use Standard_Complex_Laur_Systems;
+
+    nd : constant integer32 := integer32(n+d);
+    res : Laur_Sys(1..nd);
+    cff : Vector(0..nd);
+
+  begin
+    for i in f'range loop                   -- embed polynomial system
+      res(i) := Add_Embedding(f(i),d);
+    end loop;
+    if f'last < integer32(n) then           -- add dummy equations
+      declare
+        t : Term;
+        ind : integer32 := integer32(n);
+      begin
+        t.cf := Create(1.0);
+        t.dg := new Standard_Integer_Vectors.Vector'(1..nd => 0);
+        for i in f'last+1..integer32(n) loop
+          ind := ind + 1;
+          t.dg(ind) := 1;
+          res(i) := Create(t);
+          t.dg(ind) := 0;
+        end loop;
+      end;
+    end if;
+    for i in 1..integer32(d) loop           -- add the slices
+      for j in 0..integer32(n) loop
+        cff(j) := slices(i,j);
+      end loop;
+      for j in 1..integer32(d) loop
+        cff(integer32(n)+j) := Create(0.0); 
+      end loop;
+      cff(integer32(n)+i) := Create(1.0);
+      res(integer32(n)+i) := Hyperplane(cff);
+    end loop;
+    return res;
+  end Embed_System;
+
+  function Embed_System
+             ( f : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+               n,d : in natural32;
+               slices : in DoblDobl_Complex_Matrices.Matrix )
+             return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+  -- DESCRIPTION :
+  --   Returns an embedding of a Laurent polynomial system,
+  --   with n original variables, to encode a solution set of dimension d.
+  --   The matrix slices is the coefficient matrix of the linear equations,
+  --   to be added to the system f.
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Vectors;
+    use DoblDobl_Complex_Laurentials;
+    use DoblDobl_Complex_Laur_Systems;
+
+    nd : constant integer32 := integer32(n+d);
+    res : Laur_Sys(1..nd);
+    cff : Vector(0..nd);
+    one : constant double_double := create(1.0);
+    zero : constant double_double := create(0.0);
+
+  begin
+    for i in f'range loop                   -- embed polynomial system
+      res(i) := Add_Embedding(f(i),d);
+    end loop;
+    if f'last < integer32(n) then           -- add dummy equations
+      declare
+        t : Term;
+        ind : integer32 := integer32(n);
+      begin
+        t.cf := Create(one);
+        t.dg := new Standard_Integer_Vectors.Vector'(1..nd => 0);
+        for i in f'last+1..integer32(n) loop
+          ind := ind + 1;
+          t.dg(ind) := 1;
+          res(i) := Create(t);
+          t.dg(ind) := 0;
+        end loop;
+      end;
+    end if;
+    for i in 1..integer32(d) loop           -- add the slices
+      for j in 0..integer32(n) loop
+        cff(j) := slices(i,j);
+      end loop;
+      for j in 1..integer32(d) loop
+        cff(integer32(n)+j) := Create(zero); 
+      end loop;
+      cff(integer32(n)+i) := Create(one);
+      res(integer32(n)+i) := Hyperplane(cff);
+    end loop;
+    return res;
+  end Embed_System;
+
+  function Embed_System
+             ( f : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+               n,d : in natural32;
+               slices : in QuadDobl_Complex_Matrices.Matrix )
+             return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+  -- DESCRIPTION :
+  --   Returns an embedding of a Laurent polynomial system,
+  --   with n original variables, to encode a solution set of dimension d.
+  --   The matrix slices is the coefficient matrix of the linear equations,
+  --   to be added to the system f.
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Laur_Systems;
+
+    nd : constant integer32 := integer32(n+d);
+    res : Laur_Sys(1..nd);
+    cff : Vector(0..nd);
+    one : constant quad_double := create(1.0);
+    zero : constant quad_double := create(0.0);
+
+  begin
+    for i in f'range loop                   -- embed polynomial system
+      res(i) := Add_Embedding(f(i),d);
+    end loop;
+    if f'last < integer32(n) then           -- add dummy equations
+      declare
+        t : Term;
+        ind : integer32 := integer32(n);
+      begin
+        t.cf := Create(one);
+        t.dg := new Standard_Integer_Vectors.Vector'(1..nd => 0);
         for i in f'last+1..integer32(n) loop
           ind := ind + 1;
           t.dg(ind) := 1;
@@ -981,6 +1151,174 @@ package body Intrinsic_Witness_Sets_io is
    -- put(witfile,natural32(sys'last),sys);
     put(witfile,natural32(sys'last),1); new_line(witfile);
     put(witfile,sys);
+    new_line(witfile);
+    put(witfile,"TITLE : witness set of dimension "); 
+    put(witfile,d,1); new_line(witfile);
+   -- put_line(witfile,", see " & filename & " for diagnostics."); 
+    new_line(witfile);
+    put_line(witfile,"THE SOLUTIONS :");
+    new_line(witfile);
+    put(witfile,Length_Of(esols),natural32(Head_Of(esols).n),esols);
+    close(witfile);
+    Clear(wsols); Clear(esols);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                f : in Standard_Complex_Laur_Systems.Laur_Sys;
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+    use Standard_Intrinsic_Solutions;
+
+    witname : constant string := Append_wd(filename,d);
+    witfile : file_type;
+    wsols : Solution_List := Expand(s,p);
+    esols : Solution_List := Add_Embedding(wsols,d);
+    slices : constant Matrix(1..integer32(d),0..integer32(nv)) := Equations(p);
+    sys : constant Laur_Sys(1..integer32(nv+d))
+        := Embed_System(f,nv,d,slices);
+
+  begin
+    declare
+    begin
+      Create(witfile,out_file,witname);
+      put(file,"See the file " & witname & " for solutions of dimension ");
+      put(file,d,1); put_line(file,".");
+    exception
+      when others =>
+         put_line("Could not create the file " & witname & "...");
+         declare
+           pin : integer32 := Standard_Random_Numbers.Random(1000,9999);
+           new_witname : constant string := Append_wd(witname,natural32(pin));
+         begin
+           Create(witfile,out_file,new_witname);
+           put(file,"See the file " & new_witname
+                  & " for solutions of dimension ");
+           put(file,d,1); put_line(file,".");
+           put_line("...created the file " & new_witname & " instead.");
+         end;
+    end;
+    if Symbol_Table.Number < nv+d
+     then Add_Embed_Symbols(d);
+    end if;
+    put(witfile,natural32(sys'last),sys);
+    new_line(witfile);
+    put(witfile,"TITLE : witness set of dimension "); 
+    put(witfile,d,1); new_line(witfile);
+   -- put_line(witfile,", see " & filename & " for diagnostics."); 
+    new_line(witfile);
+    put_line(witfile,"THE SOLUTIONS :");
+    new_line(witfile);
+    put(witfile,Length_Of(esols),natural32(Head_Of(esols).n),esols);
+    close(witfile);
+    Clear(wsols); Clear(esols);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                f : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List;
+                p : in DoblDobl_Complex_Matrices.Matrix ) is
+
+    use DoblDobl_Complex_Matrices;
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Intrinsic_Solutions;
+
+    witname : constant string := Append_wd(filename,d);
+    witfile : file_type;
+    wsols : Solution_List := Expand(s,p);
+    esols : Solution_List := Add_Embedding(wsols,d);
+    slices : constant Matrix(1..integer32(d),0..integer32(nv)) := Equations(p);
+    sys : constant Laur_Sys(1..integer32(nv+d))
+        := Embed_System(f,nv,d,slices);
+
+  begin
+    declare
+    begin
+      Create(witfile,out_file,witname);
+      put(file,"See the file " & witname & " for solutions of dimension ");
+      put(file,d,1); put_line(file,".");
+    exception
+      when others =>
+         put_line("Could not create the file " & witname & "...");
+         declare
+           pin : integer32 := Standard_Random_Numbers.Random(1000,9999);
+           new_witname : constant string := Append_wd(witname,natural32(pin));
+         begin
+           Create(witfile,out_file,new_witname);
+           put(file,"See the file " & new_witname
+                  & " for solutions of dimension ");
+           put(file,d,1); put_line(file,".");
+           put_line("...created the file " & new_witname & " instead.");
+         end;
+    end;
+    if Symbol_Table.Number < nv+d
+     then Add_Embed_Symbols(d);
+    end if;
+    put(witfile,natural32(sys'last),sys);
+    new_line(witfile);
+    put(witfile,"TITLE : witness set of dimension "); 
+    put(witfile,d,1); new_line(witfile);
+   -- put_line(witfile,", see " & filename & " for diagnostics."); 
+    new_line(witfile);
+    put_line(witfile,"THE SOLUTIONS :");
+    new_line(witfile);
+    put(witfile,Length_Of(esols),natural32(Head_Of(esols).n),esols);
+    close(witfile);
+    Clear(wsols); Clear(esols);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                f : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List;
+                p : in QuadDobl_Complex_Matrices.Matrix ) is
+
+    use QuadDobl_Complex_Matrices;
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Intrinsic_Solutions;
+
+    witname : constant string := Append_wd(filename,d);
+    witfile : file_type;
+    wsols : Solution_List := Expand(s,p);
+    esols : Solution_List := Add_Embedding(wsols,d);
+    slices : constant Matrix(1..integer32(d),0..integer32(nv)) := Equations(p);
+    sys : constant Laur_Sys(1..integer32(nv+d))
+        := Embed_System(f,nv,d,slices);
+
+  begin
+    declare
+    begin
+      Create(witfile,out_file,witname);
+      put(file,"See the file " & witname & " for solutions of dimension ");
+      put(file,d,1); put_line(file,".");
+    exception
+      when others =>
+         put_line("Could not create the file " & witname & "...");
+         declare
+           pin : integer32 := Standard_Random_Numbers.Random(1000,9999);
+           new_witname : constant string := Append_wd(witname,natural32(pin));
+         begin
+           Create(witfile,out_file,new_witname);
+           put(file,"See the file " & new_witname
+                  & " for solutions of dimension ");
+           put(file,d,1); put_line(file,".");
+           put_line("...created the file " & new_witname & " instead.");
+         end;
+    end;
+    if Symbol_Table.Number < nv+d
+     then Add_Embed_Symbols(d);
+    end if;
+    put(witfile,natural32(sys'last),sys);
     new_line(witfile);
     put(witfile,"TITLE : witness set of dimension "); 
     put(witfile,d,1); new_line(witfile);

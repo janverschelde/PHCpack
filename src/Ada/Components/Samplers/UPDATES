@@ -1,3 +1,7 @@
+Wed 26 Jul 2017 : extended intrinsic_witness_sets_io with procedures to
+  write a witness set for a Laurent system with the solutions represented
+  in intrinsic coordinates.
+
 Thu 20 Jul 2017 : extended witness_sets with a complete function for
   Laurent polynomial systems.
 

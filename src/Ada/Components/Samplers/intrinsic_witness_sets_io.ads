@@ -5,8 +5,11 @@ with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
 with Standard_Complex_VecMats;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -166,7 +169,33 @@ package Intrinsic_Witness_Sets_io is
   -- DESCRIPTION :
   --   Writes a witness set to file with name given in filename
   --   concatenated with _wd, where d is the dimension of the set,
-  --   in standard double, double double, or quad double precision.
+  --   in standard double, double double, or quad double precision,
+  --   for a set defined by an ordinary polynomial system.
+
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                f : in Standard_Complex_Laur_Systems.Laur_Sys;
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix );
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                f : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List;
+                p : in DoblDobl_Complex_Matrices.Matrix );
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                f : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List;
+                p : in QuadDobl_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Writes a witness set to file with name given in filename
+  --   concatenated with _wd, where d is the dimension of the set,
+  --   in standard double, double double, or quad double precision,
+  --   for a set defined by a Laurent polynomial system.
 
 -- OUTPUT OF AN ARRAY OF WITNESS SETS :
 
