@@ -5,6 +5,7 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
+with Standard_Integer_Vectors;
 with DoblDobl_Complex_Vectors;          use DoblDobl_Complex_Vectors;
 with DoblDobl_Random_Vectors;           use DoblDobl_Random_Vectors;
 with DoblDobl_Complex_Matrices;         use DoblDobl_Complex_Matrices;
@@ -14,8 +15,10 @@ with DoblDobl_Complex_Polynomials_io;   use DoblDobl_Complex_Polynomials_io;
 with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laurentials_io;   use DoblDobl_Complex_Laurentials_io;
 with DoblDobl_Laur_Poly_Convertors;
-with DoblDobl_Complex_Poly_Functions;   use DoblDobl_Complex_Poly_Functions;
+with DoblDobl_Complex_Poly_Functions;
+with DoblDobl_Complex_Laur_Functions;
 with DoblDobl_Complex_Poly_Systems;     use DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;     use DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Solutions;        use DoblDobl_Complex_Solutions;
 with Hypersurfaces_and_Filters;         use Hypersurfaces_and_Filters;
 with Intrinsic_Witness_Sets_io;         use Intrinsic_Witness_Sets_io;
@@ -40,6 +43,7 @@ procedure mainhyp2 ( polyfile,logfile : in string ) is
   --   p        an ordinary polynomial p in n veriables.
 
     use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Functions;
 
     d : constant integer32 := Degree(p);
     f : Eval_Poly := Create(p);
@@ -62,6 +66,60 @@ procedure mainhyp2 ( polyfile,logfile : in string ) is
       plane(i,1) := v(i);
     end loop;
     Write_Witness_Set(file,name,n,n-1,sys,s,plane);
+  end Make_Witness_Set;
+
+  procedure Make_Witness_Set
+              ( file : in file_type; name : in string;
+                n : in natural32;
+                p : in DoblDobl_Complex_Laurentials.Poly ) is
+
+  -- DESCRIPTION :
+  --   Makes a witness set for the hypersurface defined by p,
+  --   where p is a Laurent polynomial.
+
+  -- ON ENTRY :
+  --   file     file which must be opened for output;
+  --   name     name of the input file, used as prefix
+  --            for the witness set;
+  --   n        number of variables in the polynomial p;
+  --   p        a Laurent polynomial in n veriables.
+
+    use DoblDobl_Complex_Laurentials;
+    use DoblDobl_Complex_Laur_Functions;
+
+    maxdegs : constant Standard_Integer_Vectors.Link_to_Vector
+            := Standard_Integer_Vectors.Link_to_Vector(Maximal_Degrees(p));
+    mindegs : constant Standard_Integer_Vectors.Link_to_Vector
+            := Standard_Integer_Vectors.Link_to_Vector(Minimal_Degrees(p));
+    maxdeg : constant integer32 := Standard_Integer_Vectors.Sum(maxdegs);
+    mindeg : constant integer32 := Standard_Integer_Vectors.Sum(mindegs);
+    d : integer32 := maxdeg - mindeg;
+    f : Eval_Poly := Create(p);
+    b,v : Vector(1..integer32(n));
+    s : Solution_List;
+    res : double_double;
+    plane : Matrix(1..integer32(n),0..1);
+    sys : Laur_Sys(1..1);
+
+  begin
+    if d < 0
+     then d := -d;
+    end if;
+    b := Random_Vector(1,integer32(n));
+    v := Random_Vector(1,integer32(n));
+   -- put_line("Calling RP_Hypersurface_Witness_Set...");
+   -- RP_Hypersurface_Witness_Set(file,n,natural32(d),f,b,v,s,res);
+   -- put_line("...finished with RP_Hypersurface_Witness_Set.");
+    Clear(f);   
+    sys(1) := p;
+    for i in b'range loop
+      plane(i,0) := b(i);
+      plane(i,1) := v(i);
+    end loop;
+   -- put_line("writing the witness set to file ...");
+    Write_Witness_Set(file,name,n,n-1,sys,s,plane);
+ -- exception
+ --   when others => put_line("Exception in Make_Witness_Set"); raise;
   end Make_Witness_Set;
 
   procedure Read_Input_Polynomial
@@ -119,10 +177,12 @@ procedure mainhyp2 ( polyfile,logfile : in string ) is
     p : DoblDobl_Complex_Polynomials.Poly;
     q : DoblDobl_Complex_Laurentials.Poly;
     name : Link_to_String;
+    laurent : boolean;
 
   begin
     Read_Input_Polynomial(name,n,q);
-    if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(q) then
+    laurent := DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(q);
+    if laurent then
       put_line("Processing of Laurent polynomials not yet supported.");
       return;
     else
@@ -136,7 +196,10 @@ procedure mainhyp2 ( polyfile,logfile : in string ) is
     else
       Create_Output_File(outfile,logfile);
     end if;
-    Make_Witness_Set(outfile,name.all,n,p);
+    if laurent
+     then Make_Witness_Set(outfile,name.all,n,q);
+     else Make_Witness_Set(outfile,name.all,n,p);
+    end if;
   end Main;
 
 begin

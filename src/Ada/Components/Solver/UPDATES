@@ -1,3 +1,5 @@
+Thu 27 Jul 2017 : made similar changes to mainhyp2.adb as done to mainhyp.adb.
+
 Wed 26 Jul 2017 : started making of the witness set procedure in mainhyp.adb,
   for Laurent polynomials.
 
