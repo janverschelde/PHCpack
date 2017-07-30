@@ -173,4 +173,12 @@ package body QuadDobl_Hypersurface_Witdrivers is
     esols := Embedded_Extrinsic_Solutions(n,b,v,t);
   end Silent_Root_Finder;
 
+  procedure Silent_Root_Finder
+               ( p : in QuadDobl_Complex_Laurentials.Poly;
+                 eps : in quad_double; fail : out boolean;
+                 e : out Link_to_Laur_Sys; esols : out Solution_List ) is
+  begin
+    null;
+  end Silent_Root_Finder;
+
 end QuadDobl_Hypersurface_Witdrivers;

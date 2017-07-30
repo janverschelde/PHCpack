@@ -3,7 +3,9 @@ with Standard_Integer_Numbers;        use Standard_Integer_Numbers;
 with Quad_Double_Numbers;             use Quad_Double_Numbers;
 with QuadDobl_Complex_Vectors;        use QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Poly_Systems;   use QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;   use QuadDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Solutions;      use QuadDobl_Complex_Solutions;
 
 package QuadDobl_Hypersurface_Witdrivers is
@@ -54,10 +56,29 @@ package QuadDobl_Hypersurface_Witdrivers is
                  e : out Link_to_Poly_Sys; esols : out Solution_List );
 
   -- DESCRIPTION :
-  --   Computes a witness set for p and writes it to file.
+  --   Computes a witness set for p, an ordinary polynomial in several
+  --   variables, without intermediate output.
 
   -- ON ENTRY :
-  --   p         a polynomial in several variables;
+  --   p         an ordinary polynomial in several variables;
+  --   eps       accuracy requirement for univariate root finder.
+
+  -- ON RETURN :
+  --   fail      true if accuracy is not met, false otherwise;
+  --   e         embedded polynomial system;
+  --   esols     witness points.
+
+  procedure Silent_Root_Finder
+               ( p : in QuadDobl_Complex_Laurentials.Poly;
+                 eps : in quad_double; fail : out boolean;
+                 e : out Link_to_Laur_Sys; esols : out Solution_List );
+
+  -- DESCRIPTION :
+  --   Computes a witness set for p, a Laurent polynomial in several
+  --   variables, without intermediate output.
+
+  -- ON ENTRY :
+  --   p         an ordinary polynomial in several variables;
   --   eps       accuracy requirement for univariate root finder.
 
   -- ON RETURN :

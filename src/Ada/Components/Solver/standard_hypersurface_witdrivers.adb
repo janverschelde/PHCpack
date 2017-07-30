@@ -173,4 +173,12 @@ package body Standard_Hypersurface_Witdrivers is
     esols := Embedded_Extrinsic_Solutions(n,b,v,t);
   end Silent_Root_Finder;
 
+  procedure Silent_Root_Finder
+               ( p : in Standard_Complex_Laurentials.Poly;
+                 eps : in double_float; fail : out boolean;
+                 e : out Link_to_Laur_Sys; esols : out Solution_List ) is
+  begin
+    null;
+  end Silent_Root_Finder;
+
 end Standard_Hypersurface_Witdrivers;

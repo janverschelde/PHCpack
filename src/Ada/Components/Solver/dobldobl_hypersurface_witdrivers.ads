@@ -3,7 +3,9 @@ with Standard_Integer_Numbers;        use Standard_Integer_Numbers;
 with Double_Double_Numbers;           use Double_Double_Numbers;
 with DoblDobl_Complex_Vectors;        use DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Systems;   use DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;   use DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Solutions;      use DoblDobl_Complex_Solutions;
 
 package DoblDobl_Hypersurface_Witdrivers is
@@ -54,10 +56,29 @@ package DoblDobl_Hypersurface_Witdrivers is
                  e : out Link_to_Poly_Sys; esols : out Solution_List );
 
   -- DESCRIPTION :
-  --   Computes a witness set for p and writes it to file.
+  --   Computes a witness set for p, an ordinary polynomial in several
+  --   variables, without intermediate output.
 
   -- ON ENTRY :
-  --   p         a polynomial in several variables;
+  --   p         an ordinary polynomial in several variables;
+  --   eps       accuracy requirement for univariate root finder.
+
+  -- ON RETURN :
+  --   fail      true if accuracy is not met, false otherwise;
+  --   e         embedded polynomial system;
+  --   esols     witness points.
+
+  procedure Silent_Root_Finder
+               ( p : in DoblDobl_Complex_Laurentials.Poly;
+                 eps : in double_double; fail : out boolean;
+                 e : out Link_to_Laur_Sys; esols : out Solution_List );
+
+  -- DESCRIPTION :
+  --   Computes a witness set for p, a Laurent polynomial in several
+  --   variables, without intermediate output.
+
+  -- ON ENTRY :
+  --   p         a Laurent polynomial in several variables;
   --   eps       accuracy requirement for univariate root finder.
 
   -- ON RETURN :
