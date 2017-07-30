@@ -2,7 +2,7 @@ with text_io;                         use text_io;
 with Standard_Integer_Numbers;        use Standard_Integer_Numbers;
 with Double_Double_Numbers;           use Double_Double_Numbers;
 with DoblDobl_Complex_Vectors;        use DoblDobl_Complex_Vectors;
-with DoblDobl_Complex_Polynomials;    use DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;   use DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;      use DoblDobl_Complex_Solutions;
 
@@ -14,14 +14,16 @@ package DoblDobl_Hypersurface_Witdrivers is
 --   in double double precision.
 
   function Embedded_System 
-               ( n : in integer32; p : in Poly; b,v,t : in Vector )
+               ( n : in integer32;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 b,v,t : in Vector )
                return Poly_Sys;
 
   -- DESCRIPTION :
   --   Returns the embedded system in the extrinsic format,
   --   converting the intrinsic line x = b + t*v.
 
-  procedure Call_Root_Finder ( p : in Poly );
+  procedure Call_Root_Finder ( p : in DoblDobl_Complex_Polynomials.Poly );
 
   -- DESCRIPTION :
   --   Interactive driver to compute a witness set for p
@@ -29,7 +31,9 @@ package DoblDobl_Hypersurface_Witdrivers is
   --   The user is prompted for information.
 
   procedure Call_Root_Finder
-               ( file : in file_type; p : in Poly; output : in boolean;
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 output : in boolean;
                  eps : in double_double; fail : out boolean );
 
   -- DESCRIPTION :
@@ -45,7 +49,8 @@ package DoblDobl_Hypersurface_Witdrivers is
   --   fail      true if accuracy is not met, false otherwise.
 
   procedure Silent_Root_Finder
-               ( p : in Poly; eps : in double_double; fail : out boolean;
+               ( p : in DoblDobl_Complex_Polynomials.Poly;
+                 eps : in double_double; fail : out boolean;
                  e : out Link_to_Poly_Sys; esols : out Solution_List );
 
   -- DESCRIPTION :

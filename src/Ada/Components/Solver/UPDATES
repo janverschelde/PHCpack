@@ -1,3 +1,8 @@
+Sun 30 Jul 2017 : added calls to convertor functions in mainhyp.adb,
+  mainhyp2.adb, and mainhyp4.adb so basic versions of phc -l, phc -l2,
+  and phc -l4 work.  Adjusted declarations in *hypersurface_witdrivers*
+  to make room for Laurent polynomials.
+
 Thu 27 Jul 2017 : made similar changes to mainhyp2.adb as done to mainhyp.adb;
   and did the similar changes also to mainhyp4.adb, to prepare to compute
   witness sets for hypersurfaces defined by Laurent polynomials, in double

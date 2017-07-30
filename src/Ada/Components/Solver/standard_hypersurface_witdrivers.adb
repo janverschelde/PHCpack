@@ -24,8 +24,12 @@ with Standard_Hypersurface_Witsets_io;  use Standard_Hypersurface_Witsets_io;
 package body Standard_Hypersurface_Witdrivers is
 
   function Embedded_System 
-               ( n : in integer32; p : in Poly; b,v,t : in Vector )
+               ( n : in integer32;
+                 p : in Standard_Complex_Polynomials.Poly;
+                 b,v,t : in Vector )
                return Poly_Sys is
+
+    use Standard_Complex_Polynomials;
 
     dim : constant integer32 := 2*n-1;
     ep : constant Poly := Add_Embedding(p,natural32(n-1));
@@ -50,7 +54,9 @@ package body Standard_Hypersurface_Witdrivers is
     return res;
   end Embedded_System;
 
-  procedure Call_Root_Finder ( p : in Poly ) is
+  procedure Call_Root_Finder ( p : in Standard_Complex_Polynomials.Poly ) is
+
+    use Standard_Complex_Polynomials;
 
     n : constant integer32 := integer32(Number_of_Unknowns(p));
     ep : constant Eval_Poly := Create(p);
@@ -98,8 +104,12 @@ package body Standard_Hypersurface_Witdrivers is
   end Call_Root_Finder;
 
   procedure Call_Root_Finder
-               ( file : in file_type; p : in Poly; output : in boolean;
+               ( file : in file_type;
+                 p : in Standard_Complex_Polynomials.Poly;
+                 output : in boolean;
                  eps : in double_float; fail : out boolean ) is
+
+    use Standard_Complex_Polynomials;
 
     n : constant integer32 := integer32(Number_of_Unknowns(p));
     ep : constant Eval_Poly := Create(p);
@@ -136,8 +146,11 @@ package body Standard_Hypersurface_Witdrivers is
   end Call_Root_Finder;
 
   procedure Silent_Root_Finder
-               ( p : in Poly; eps : in double_float; fail : out boolean;
+               ( p : in Standard_Complex_Polynomials.Poly;
+                 eps : in double_float; fail : out boolean;
                  e : out Link_to_Poly_Sys; esols : out Solution_List ) is
+
+    use Standard_Complex_Polynomials;
 
     n : constant integer32 := integer32(Number_of_Unknowns(p));
     ep : constant Eval_Poly := Create(p);

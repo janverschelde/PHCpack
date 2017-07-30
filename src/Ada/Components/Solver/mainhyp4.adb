@@ -85,7 +85,7 @@ procedure mainhyp4 ( polyfile,logfile : in string ) is
   --   p        a Laurent polynomial in n veriables.
 
     use QuadDobl_Complex_Laurentials;
-    use QuadDobl_Complex_Laur_Functions;
+    use QuadDobl_Complex_Poly_Functions;
 
     maxdegs : constant Standard_Integer_Vectors.Link_to_Vector
             := Standard_Integer_Vectors.Link_to_Vector(Maximal_Degrees(p));
@@ -94,7 +94,9 @@ procedure mainhyp4 ( polyfile,logfile : in string ) is
     maxdeg : constant integer32 := Standard_Integer_Vectors.Sum(maxdegs);
     mindeg : constant integer32 := Standard_Integer_Vectors.Sum(mindegs);
     d : integer32 := maxdeg - mindeg;
-    f : Eval_Poly := Create(p);
+    q : QuadDobl_Complex_Polynomials.Poly
+      := QuadDobl_Laur_Poly_Convertors.Laurent_Polynomial_to_Polynomial(p);
+    f : Eval_Poly := Create(q);
     b,v : Vector(1..integer32(n));
     s : Solution_List;
     res : quad_double;
@@ -108,9 +110,8 @@ procedure mainhyp4 ( polyfile,logfile : in string ) is
     b := Random_Vector(1,integer32(n));
     v := Random_Vector(1,integer32(n));
    -- put_line("Calling RP_Hypersurface_Witness_Set...");
-   -- RP_Hypersurface_Witness_Set(file,n,natural32(d),f,b,v,s,res);
+    RP_Hypersurface_Witness_Set(file,n,natural32(d),f,b,v,s,res);
    -- put_line("...finished with RP_Hypersurface_Witness_Set.");
-    Clear(f);   
     sys(1) := p;
     for i in b'range loop
       plane(i,0) := b(i);
@@ -118,6 +119,8 @@ procedure mainhyp4 ( polyfile,logfile : in string ) is
     end loop;
    -- put_line("writing the witness set to file ...");
     Write_Witness_Set(file,name,n,n-1,sys,s,plane);
+    QuadDobl_Complex_Polynomials.Clear(q);
+    Clear(f);
  -- exception
  --   when others => put_line("Exception in Make_Witness_Set"); raise;
   end Make_Witness_Set;
@@ -156,8 +159,8 @@ procedure mainhyp4 ( polyfile,logfile : in string ) is
     get(infile,m);   -- get the number of variables
     Symbol_Table.Init(m);
     get(infile,q);
-    put("number of variables : "); put(m,1); new_line;
-    put("the polynomial : "); put(q); new_line;
+   -- put("number of variables : "); put(m,1); new_line;
+   -- put("the polynomial : "); put(q); new_line;
     n := m;
     p := q;
     name := filename;
@@ -183,12 +186,11 @@ procedure mainhyp4 ( polyfile,logfile : in string ) is
     Read_Input_Polynomial(name,n,q);
     laurent := QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(q);
     if laurent then
-      put_line("Processing of Laurent polynomials not yet supported.");
-      return;
+      null; -- put_line("The input polynomial q :"); put(q);
     else
       p := QuadDobl_Laur_Poly_Convertors.Positive_Laurent_Polynomial(q);
+     -- put_line("The input polynomial p :"); put(p);
     end if;
-    put_line("The input polynomial p :"); put(p);
     if logfile = "" then
       new_line;
       put_line("Reading the name of the output file.");
