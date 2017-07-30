@@ -238,6 +238,28 @@ function use_track ( job : integer32;
 --   job    =  57 : crude path trackers in quad double precision,
 --                  if a[0] = 1, then verbose, otherwise mute.
 --
+-- Jobs to make witness sets for Laurent polynomials,
+-- in standard double, double double, and quad double precision :
+--
+--   job    =  64 : given in a[0] the number n of variables, 
+--                        in a[1] the number of characters stored in b,
+--                  where b represents a Laurent polynomial in n variables,
+--                  places a witness set in the systems and solutions
+--                  container in standard double precision for the Laurent
+--                  polynomial stored in b;
+--          =  65 : given in a[0] the number n of variables, 
+--                        in a[1] the number of characters stored in b,
+--                  where b represents a Laurent polynomial in n variables,
+--                  places a witness set in the systems and solutions
+--                  container in double double precision for the Laurent
+--                  polynomial stored in b;
+--          =  66 : given in a[0] the number n of variables, 
+--                        in a[1] the number of characters stored in b,
+--                  where b represents a Laurent polynomial in n variables,
+--                  places a witness set in the systems and solutions
+--                  container in quad double precision for the Laurent
+--                  polynomial stored in b.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   e.g.: job not in the right range.

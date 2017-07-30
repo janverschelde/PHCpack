@@ -2871,6 +2871,10 @@ function use_c2phc ( job : integer32;
       when 810 => return use_track(61,a,b,c); -- standard diagonal Laurent htp
       when 811 => return use_track(62,a,b,c); -- dobldobl diagonal Laurent htp
       when 812 => return use_track(63,a,b,c); -- quaddobl diagonal Laurent htp
+     -- witness sets for Laurent polynomials
+      when 813 => return use_track(64,a,b,c); -- standard witset for Laurent
+      when 814 => return use_track(65,a,b,c); -- dobldobl witset for Laurent
+      when 815 => return use_track(66,a,b,c); -- quaddobl witset for Laurent
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

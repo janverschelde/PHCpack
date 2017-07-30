@@ -858,12 +858,34 @@ function use_c2phc ( job : integer32;
 --                 the witness sets;
 --         = 811 : make a diagonal homotopy from the Laurent systems stored
 --                 as target and start systems in double double precision,
---                the input parameters a and b are the dimensions of 
---                  the witness sets;
+--                 the input parameters a and b are the dimensions of 
+--                 the witness sets;
 --         = 812 : make a diagonal homotopy from the Laurent systems stored
 --                 as target and start systems in quad double precision,
 --                 the input parameters a and b are the dimensions of 
 --                 the witness sets.
+--
+-- Jobs to make witness sets for Laurent polynomials,
+-- in standard double, double double, and quad double precision :
+--
+--   job   = 813 : given in a[0] the number n of variables, 
+--                       in a[1] the number of characters stored in b,
+--                 where b represents a Laurent polynomial in n variables,
+--                 places a witness set in the systems and solutions
+--                 container in standard double precision for the Laurent
+--                 polynomial stored in b;
+--         = 814 : given in a[0] the number n of variables, 
+--                       in a[1] the number of characters stored in b,
+--                 where b represents a Laurent polynomial in n variables,
+--                 places a witness set in the systems and solutions
+--                 container in double double precision for the Laurent
+--                 polynomial stored in b;
+--         = 815 : given in a[0] the number n of variables, 
+--                       in a[1] the number of characters stored in b,
+--                 where b represents a Laurent polynomial in n variables,
+--                 places a witness set in the systems and solutions
+--                 container in quad double precision for the Laurent
+--                 polynomial stored in b.
 --
 -- POWER SERIES NEWTON METHOD :
 --
