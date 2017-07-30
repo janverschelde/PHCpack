@@ -5,6 +5,9 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
 with Symbol_Table,Symbol_Table_io;
+with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
+with Multprec_Complex_Laurentials;
+with Multprec_Complex_Laurentials_io;
 
 package body QuadDobl_Complex_Laurentials_io is
 
@@ -16,8 +19,14 @@ package body QuadDobl_Complex_Laurentials_io is
   end get;
 
   procedure get ( file : in file_type; p : out Poly ) is
+
+    mp : Multprec_Complex_Laurentials.Poly;
+
   begin
-    null;
+    Multprec_Complex_Laurentials_io.Set_Working_Precision(10);
+    Multprec_Complex_Laurentials_io.get(file,mp);
+    p := Multprec_Laurential_to_QuadDobl_Complex(mp);
+    Multprec_Complex_Laurentials.Clear(mp);
   end get;
 
 -- AUXILIARIES FOR OUTPUT ROUTINES :

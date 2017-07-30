@@ -1,3 +1,5 @@
+Sun 30 Jul 2017 : defined the get in quaddobl_complex_laurentials_io.adb.
+
 Tue 25 Jul 2017 : provided basic input procedures for Laurent polynomials,
   in {dobldobl,quaddobl}_complex_laurentials_io.
 
