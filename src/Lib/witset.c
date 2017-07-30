@@ -625,6 +625,54 @@ int quaddobl_witset_of_hypersurface ( int nv, int nc, char *p )
    return fail;
 }
 
+int standard_witset_of_Laurent_hypersurface ( int nv, int nc, char *p )
+{
+   int i,fail,a[2],b[nc];
+   double *c;
+
+   /* printf("nv = %d, nc = %d\n",nv,nc); */
+   /* printf("p = %s\n",p); */
+   a[0] = nv;
+   a[1] = nc;
+   for(i=0; i<nc; i++) b[i] = (int) p[i];
+
+   fail = _ada_use_c2phc(813,a,b,c);
+
+   return fail;
+}
+
+int dobldobl_witset_of_Laurent_hypersurface ( int nv, int nc, char *p )
+{
+   int i,fail,a[2],b[nc];
+   double *c;
+
+   /* printf("nv = %d, nc = %d\n",nv,nc); */
+   /* printf("p = %s\n",p); */
+   a[0] = nv;
+   a[1] = nc;
+   for(i=0; i<nc; i++) b[i] = (int) p[i];
+
+   fail = _ada_use_c2phc(814,a,b,c);
+
+   return fail;
+}
+
+int quaddobl_witset_of_Laurent_hypersurface ( int nv, int nc, char *p )
+{
+   int i,fail,a[2],b[nc];
+   double *c;
+
+   /* printf("nv = %d, nc = %d\n",nv,nc); */
+   /* printf("p = %s\n",p); */
+   a[0] = nv;
+   a[1] = nc;
+   for(i=0; i<nc; i++) b[i] = (int) p[i];
+
+   fail = _ada_use_c2phc(815,a,b,c);
+
+   return fail;
+}
+
 int diagonal_symbols_doubler ( int n, int d, int nc, char *s )
 {
    int k,fail = 0;

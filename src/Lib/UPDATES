@@ -1,3 +1,7 @@
+Sun 30 Jul 2017 : added functions to witset to make a witness set for
+  hypersurfaces defined by Laurent polynomials.  Added the three new functions
+  to phcpy2c.h, phcpy2c2.c, and phcpy2c3.c, for the Python interface.
+
 Mon 24 Jul 2017 : added functions to witset to define diagonal homotopies
   for Laurent polynomial systems.
 

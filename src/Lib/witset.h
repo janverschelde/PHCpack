@@ -485,12 +485,13 @@ int standard_witset_of_hypersurface ( int nv, int nc, char *p );
  *   Given in the string p of nc characters a polynomial in nv variables,
  *   terminated by a semicolon, the systems and solutions container in
  *   standard double precision on return contain a witness set for the
- *   hypersurface defined by p.
+ *   hypersurface defined by the ordinary polynomial in p.
  *
  * ON ENTRY :
  *   nv      the number of variables of the polynomials;
  *   nc      the number of characters in the string p;
- *   p       string representation of a polynomials, terminates with ';'. */
+ *   p       string representation of an ordinary polynomial in several
+ *           variables, terminates with ';'. */
 
 int dobldobl_witset_of_hypersurface ( int nv, int nc, char *p );
 /*
@@ -498,12 +499,13 @@ int dobldobl_witset_of_hypersurface ( int nv, int nc, char *p );
  *   Given in the string p of nc characters a polynomial in nv variables,
  *   terminated by a semicolon, the systems and solutions container in
  *   double double precision on return contain a witness set for the
- *   hypersurface defined by p.
+ *   hypersurface defined by the ordinary polynomial in p.
  *
  * ON ENTRY :
  *   nv      the number of variables of the polynomials;
  *   nc      the number of characters in the string p;
- *   p       string representation of a polynomials, terminates with ';'. */
+ *   p       string representation of an ordinary polynomials in several
+ *           variables, terminates with ';'. */
 
 int quaddobl_witset_of_hypersurface ( int nv, int nc, char *p );
 /*
@@ -511,12 +513,55 @@ int quaddobl_witset_of_hypersurface ( int nv, int nc, char *p );
  *   Given in the string p of nc characters a polynomial in nv variables,
  *   terminated by a semicolon, the systems and solutions container in
  *   quad double precision on return contain a witness set for the
- *   hypersurface defined by p.
+ *   hypersurface defined by the ordinary polynomial in p.
  *
  * ON ENTRY :
  *   nv      the number of variables of the polynomials;
  *   nc      the number of characters in the string p;
- *   p       string representation of a polynomials, terminates with ';'. */
+ *   p       string representation of an ordinary polynomial in several
+ *           variables, terminates with ';'. */
+
+int standard_witset_of_Laurent_hypersurface ( int nv, int nc, char *p );
+/*
+ * DESCRIPTION :
+ *   Given in the string p of nc characters a polynomial in nv variables,
+ *   terminated by a semicolon, the systems and solutions container in
+ *   standard double precision on return contain a witness set for the
+ *   hypersurface defined by the Laurent polynomial in p.
+ *
+ * ON ENTRY :
+ *   nv      the number of variables of the polynomials;
+ *   nc      the number of characters in the string p;
+ *   p       string representation of a Laurent polynomial in several
+ *           veriables, terminates with ';'. */
+
+int dobldobl_witset_of_Laurent_hypersurface ( int nv, int nc, char *p );
+/*
+ * DESCRIPTION :
+ *   Given in the string p of nc characters a polynomial in nv variables,
+ *   terminated by a semicolon, the systems and solutions container in
+ *   double double precision on return contain a witness set for the
+ *   hypersurface defined by the Laurent polynomial in p.
+ *
+ * ON ENTRY :
+ *   nv      the number of variables of the polynomials;
+ *   nc      the number of characters in the string p;
+ *   p       string representation of a Laurent polynomial in several
+ *           variables, terminates with ';'. */
+
+int quaddobl_witset_of_Laurent_hypersurface ( int nv, int nc, char *p );
+/*
+ * DESCRIPTION :
+ *   Given in the string p of nc characters a polynomial in nv variables,
+ *   terminated by a semicolon, the systems and solutions container in
+ *   quad double precision on return contain a witness set for the
+ *   hypersurface defined by the Laurent polynomial in p.
+ *
+ * ON ENTRY :
+ *   nv      the number of variables of the polynomials;
+ *   nc      the number of characters in the string p;
+ *   p       string representation of a Laurent polynomial in several
+ *           variables, terminates with ';'. */
 
 int diagonal_symbols_doubler ( int n, int d, int nc, char *s );
 /*

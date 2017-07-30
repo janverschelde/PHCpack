@@ -1,5 +1,5 @@
 /* This file contains the definitions of the prototypes in phcpy2c.h,
-   for use in version 3.5 of Python. */
+   for use in version 3.5 (and higher) of Python. */
 
 #include <Python.h>
 #include <stdio.h>
@@ -6600,6 +6600,45 @@ static PyObject *py2c_quaddobl_witset_of_hypersurface
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_standard_witset_of_Laurent_hypersurface
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nv,nc;
+   char *p;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nv,&nc,&p)) return NULL;
+   fail = standard_witset_of_Laurent_hypersurface(nv,nc,p);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_witset_of_Laurent_hypersurface
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nv,nc;
+   char *p;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nv,&nc,&p)) return NULL;
+   fail = dobldobl_witset_of_Laurent_hypersurface(nv,nc,p);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_witset_of_Laurent_hypersurface
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nv,nc;
+   char *p;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nv,&nc,&p)) return NULL;
+   fail = quaddobl_witset_of_Laurent_hypersurface(nv,nc,p);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_standard_diagonal_homotopy
  ( PyObject *self, PyObject *args )
 {
@@ -9254,15 +9293,24 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_witset_quaddobl_Laurent_membertest",
      py2c_witset_quaddobl_Laurent_membertest, METH_VARARGS,
     "Executes the homotopy membership test for a point to belong to\n a witness set defined by a Laurent polynomial system\n in quad double precision.\n The containers in quad double precision must contain the embedded\n Laurent system and its corresponding solutions for the witness set\n of a positive dimensional solution set.\n On entry are the seven parameters, the first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of the point as a list with as\n many as 8*nvr doubles for the real and imaginary parts of the\n quad double precision coordinates of the test point.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
-   {"py2c_standard_witset_of_hypersurface", py2c_standard_witset_of_hypersurface,
-     METH_VARARGS,
-    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in standard double precision on return contain a witness set for\n the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_dobldobl_witset_of_hypersurface", py2c_dobldobl_witset_of_hypersurface,
-     METH_VARARGS,
-    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in double double precision on return contain a witness set for\n the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_quaddobl_witset_of_hypersurface", py2c_quaddobl_witset_of_hypersurface,
-     METH_VARARGS,
-    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in quad double precision on return contain a witness set for\n the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_standard_witset_of_hypersurface",
+     py2c_standard_witset_of_hypersurface, METH_VARARGS,
+    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in standard double precision on return contain a witness set for\n the hypersurface defined by the ordinary polynomial in p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of an ordinary polynomial in several\n variables, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_dobldobl_witset_of_hypersurface",
+     py2c_dobldobl_witset_of_hypersurface, METH_VARARGS,
+    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in double double precision on return contain a witness set for\n the hypersurface defined by the ordinary polynomial in p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of an ordinary polynomial in several\n variables, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_quaddobl_witset_of_hypersurface",
+     py2c_quaddobl_witset_of_hypersurface, METH_VARARGS,
+    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in quad double precision on return contain a witness set for\n the hypersurface defined by the ordinary polynomial in p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of an ordinary polynomial in several\n variables, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_standard_witset_of_Laurent_hypersurface",
+     py2c_standard_witset_of_Laurent_hypersurface, METH_VARARGS,
+    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in standard double precision on return contain a witness set for\n the hypersurface defined by the Laurent polynomial in p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a Laurent polynomial in several\n variables, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_dobldobl_witset_of_Laurent_hypersurface",
+     py2c_dobldobl_witset_of_Laurent_hypersurface, METH_VARARGS,
+    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in double double precision on return contain a witness set for\n the hypersurface defined by the Laurent polynomial in p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a Laurent polynomial in several\n variables, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_quaddobl_witset_of_Laurent_hypersurface",
+     py2c_quaddobl_witset_of_Laurent_hypersurface, METH_VARARGS,
+    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in quad double precision on return contain a witness set for\n the hypersurface defined by the Laurent polynomial in p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a Laurent polynomial in several\n variables, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_standard_diagonal_homotopy", py2c_standard_diagonal_homotopy,
      METH_VARARGS,
     "Creates a diagonal homotopy to intersect two solution sets of\n dimensions a and b respectively, where a >= b.\n The two input parameters are values for a and b.\n The systems stored as target and start system in the container,\n in standard double precision, define the witness sets for\n these two solution sets."},
