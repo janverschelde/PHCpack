@@ -13,6 +13,8 @@ with QuadDobl_Complex_Vector_Norms;     use QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Polynomials_io;   use QuadDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Poly_Functions;   use QuadDobl_Complex_Poly_Functions;
+with QuadDobl_Laur_Poly_Convertors;
+with QuadDobl_Poly_Laur_Convertors;
 with QuadDobl_Embed_Polynomials;        use QuadDobl_Embed_Polynomials;
 with QuadDobl_Plane_Representations;    use QuadDobl_Plane_Representations;
 with Planes_and_Polynomials;            use Planes_and_Polynomials;
@@ -177,8 +179,25 @@ package body QuadDobl_Hypersurface_Witdrivers is
                ( p : in QuadDobl_Complex_Laurentials.Poly;
                  eps : in quad_double; fail : out boolean;
                  e : out Link_to_Laur_Sys; esols : out Solution_List ) is
+
+    q : QuadDobl_Complex_Polynomials.Poly;
+    eq : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
   begin
-    null;
+    if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(p) then
+      q := QuadDobl_Laur_Poly_Convertors.Positive_Laurent_Polynomial(p);
+    else
+      q := QuadDobl_Laur_Poly_Convertors.Laurent_Polynomial_to_Polynomial(p);
+    end if;
+    Silent_Root_Finder(q,eps,fail,eq,esols);
+    declare
+      use QuadDobl_Poly_Laur_Convertors;
+      s : Laur_Sys(eq'range) := Polynomial_to_Laurent_System(eq.all);
+    begin
+      e := new Laur_Sys'(s);
+    end;
+    QuadDobl_Complex_Polynomials.Clear(q);
+    Clear(eq);
   end Silent_Root_Finder;
 
 end QuadDobl_Hypersurface_Witdrivers;

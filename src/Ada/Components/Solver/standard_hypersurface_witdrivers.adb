@@ -13,6 +13,8 @@ with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Polynomials_io;   use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
+with Standard_Laur_Poly_Convertors;
+with Standard_Poly_Laur_Convertors;
 with Standard_Embed_Polynomials;        use Standard_Embed_Polynomials;
 with Standard_Plane_Representations;    use Standard_Plane_Representations;
 with Planes_and_Polynomials;            use Planes_and_Polynomials;
@@ -177,8 +179,25 @@ package body Standard_Hypersurface_Witdrivers is
                ( p : in Standard_Complex_Laurentials.Poly;
                  eps : in double_float; fail : out boolean;
                  e : out Link_to_Laur_Sys; esols : out Solution_List ) is
+
+    q : Standard_Complex_Polynomials.Poly;
+    eq : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+
   begin
-    null;
+    if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(p) then
+      q := Standard_Laur_Poly_Convertors.Positive_Laurent_Polynomial(p);
+    else
+      q := Standard_Laur_Poly_Convertors.Laurent_Polynomial_to_Polynomial(p);
+    end if;
+    Silent_Root_Finder(q,eps,fail,eq,esols);
+    declare
+      use Standard_Poly_Laur_Convertors;
+      s : Laur_Sys(eq'range) := Polynomial_to_Laurent_System(eq.all);
+    begin
+      e := new Laur_Sys'(s);
+    end;
+    Standard_Complex_Polynomials.Clear(q);
+    Clear(eq);
   end Silent_Root_Finder;
 
 end Standard_Hypersurface_Witdrivers;

@@ -1,3 +1,6 @@
+Mon 31 Jul 2017 : added the type conversions to the Silent_Root_Finder
+  procedures in the *hypersurface_witdrivers.adb packages.
+
 Sun 30 Jul 2017 : added calls to convertor functions in mainhyp.adb,
   mainhyp2.adb, and mainhyp4.adb so basic versions of phc -l, phc -l2,
   and phc -l4 work.  Adjusted declarations in *hypersurface_witdrivers*

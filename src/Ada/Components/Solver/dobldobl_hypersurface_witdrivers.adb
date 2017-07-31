@@ -13,6 +13,8 @@ with DoblDobl_Complex_Vector_Norms;     use DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Polynomials_io;   use DoblDobl_Complex_Polynomials_io;
 with DoblDobl_Complex_Poly_Functions;   use DoblDobl_Complex_Poly_Functions;
+with DoblDobl_Laur_Poly_Convertors;
+with DoblDobl_Poly_Laur_Convertors;
 with DoblDobl_Embed_Polynomials;        use DoblDobl_Embed_Polynomials;
 with DoblDobl_Plane_Representations;    use DoblDobl_Plane_Representations;
 with Planes_and_Polynomials;            use Planes_and_Polynomials;
@@ -177,8 +179,25 @@ package body DoblDobl_Hypersurface_Witdrivers is
                ( p : in DoblDobl_Complex_Laurentials.Poly;
                  eps : in double_double; fail : out boolean;
                  e : out Link_to_Laur_Sys; esols : out Solution_List ) is
+
+    q : DoblDobl_Complex_Polynomials.Poly;
+    eq : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
   begin
-    null;
+    if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(p) then
+      q := DoblDobl_Laur_Poly_Convertors.Positive_Laurent_Polynomial(p);
+    else
+      q := DoblDobl_Laur_Poly_Convertors.Laurent_Polynomial_to_Polynomial(p);
+    end if;
+    Silent_Root_Finder(q,eps,fail,eq,esols);
+    declare
+      use DoblDobl_Poly_Laur_Convertors;
+      s : Laur_Sys(eq'range) := Polynomial_to_Laurent_System(eq.all);
+    begin
+      e := new Laur_Sys'(s);
+    end;
+    DoblDobl_Complex_Polynomials.Clear(q);
+    Clear(eq);
   end Silent_Root_Finder;
 
 end DoblDobl_Hypersurface_Witdrivers;
