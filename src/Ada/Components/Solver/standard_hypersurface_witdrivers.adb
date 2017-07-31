@@ -180,14 +180,18 @@ package body Standard_Hypersurface_Witdrivers is
                  eps : in double_float; fail : out boolean;
                  e : out Link_to_Laur_Sys; esols : out Solution_List ) is
 
+    n : constant natural32
+      := Standard_Complex_Laurentials.Number_of_Unknowns(p);
     q : Standard_Complex_Polynomials.Poly;
     eq : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    laurent : constant boolean
+            := Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(p);
 
   begin
-    if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(p) then
-      q := Standard_Laur_Poly_Convertors.Positive_Laurent_Polynomial(p);
-    else
+    if laurent then
       q := Standard_Laur_Poly_Convertors.Laurent_Polynomial_to_Polynomial(p);
+    else
+      q := Standard_Laur_Poly_Convertors.Positive_Laurent_Polynomial(p);
     end if;
     Silent_Root_Finder(q,eps,fail,eq,esols);
     declare
@@ -195,6 +199,10 @@ package body Standard_Hypersurface_Witdrivers is
       s : Laur_Sys(eq'range) := Polynomial_to_Laurent_System(eq.all);
     begin
       e := new Laur_Sys'(s);
+      if laurent then
+        Standard_Complex_Laurentials.Clear(e(1));
+        e(1) := Witness_Sets.Add_Embedding(p,natural32(e'last)-n);
+      end if;
     end;
     Standard_Complex_Polynomials.Clear(q);
     Clear(eq);
