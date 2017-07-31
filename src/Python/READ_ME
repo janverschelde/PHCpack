@@ -1,4 +1,4 @@
-phcpy 0.6.9 offers a simple Python interface to PHCv2.4.40
+phcpy 0.7.0 offers a simple Python interface to PHCv2.4.41
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -27,7 +27,9 @@ See the setup.py file for the specific shared object modules needed
 to install for the specific precision levels.
 
 Version 0.3.7 provided the key tools to compute a numerical
-irreducible decomposition.
+irreducible decomposition.  In version 0.6.9, the code in the module sets
+was redistributed, leading to three new modules: cascades, factor, and
+diagonal.  Better support for Laurent polynomials was added as well.
 
 The package phcpy is defined in the directory PHCpy.
 The directory PHCpy3 contains the version of phcpy for Python 3.5.
@@ -60,6 +62,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.7.0 : 2017-07-31 : witness sets defined by Laurent polynomials
 0.6.9 : 2017-07-18 : new modules cascades, factor, and diagonal
 0.6.8 : 2017-07-05 : improved support for Laurent polynomial systems
 0.6.7 : 2017-06-07 : preliminary version of Pade approximant methods
