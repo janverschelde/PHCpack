@@ -165,6 +165,38 @@ def witness_set_of_hypersurface(nvar, hpol, precision='d'):
         print('wrong argument for precision')
         return None
 
+def witness_set_of_laurent_hypersurface(nvar, hpol, precision='d'):
+    r"""
+    Given in *hpol* the string representation of a laurent polynomial
+    in *nvar* variables (ending with a semicolon),
+    on return is an embedded system and its solutions
+    which represents a witness set for *hpol*.
+    The number of solutions on return may differ from the actual degree
+    of hpol if the polynomial represented by hpol has negative exponents.
+    Three different precisions are supported, by default double ('d'),
+    or otherwise double double ('dd') or quad double ('qd').
+    """
+    if(precision == 'd'):
+        from phcpy.phcpy2c3 import py2c_standard_witset_of_Laurent_hypersurface
+        from phcpy.interface import load_standard_laurent_system
+        from phcpy.interface import load_standard_solutions
+        py2c_standard_witset_of_Laurent_hypersurface(nvar, len(hpol), hpol)
+        return (load_standard_laurent_system(), load_standard_solutions())
+    elif(precision == 'dd'):
+        from phcpy.phcpy2c3 import py2c_dobldobl_witset_of_Laurent_hypersurface
+        from phcpy.interface import load_dobldobl_laurent_system
+        from phcpy.interface import load_dobldobl_solutions
+        py2c_dobldobl_witset_of_Laurent_hypersurface(nvar, len(hpol), hpol)
+        return (load_dobldobl_laurent_system(), load_dobldobl_solutions())
+    elif(precision == 'qd'):
+        from phcpy.phcpy2c3 import py2c_quaddobl_witset_of_Laurent_hypersurface
+        from phcpy.interface import load_quaddobl_laurent_system
+        from phcpy.interface import load_quaddobl_solutions
+        py2c_quaddobl_witset_of_Laurent_hypersurface(nvar, len(hpol), hpol)
+        return (load_quaddobl_laurent_system(), load_quaddobl_solutions())
+    else:
+        print('wrong argument for precision')
+
 def drop_variable_from_standard_polynomials(pols, svar):
     r"""
     Removes the variable with symbol in the string *svar*
