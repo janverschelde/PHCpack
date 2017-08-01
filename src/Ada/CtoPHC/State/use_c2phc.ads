@@ -887,6 +887,45 @@ function use_c2phc ( job : integer32;
 --                 container in quad double precision for the Laurent
 --                 polynomial stored in b.
 --
+-- SWAPPING SLACK VARIABLES TO THE END :
+--
+--   job   = 816 : given in a[0] is the total number of variables
+--                 and in b[0] is the number of slack variables,
+--                 swaps the slack variables to the end in the symbol table
+--                 for the polynomial system with standard double precision
+--                 coefficients and its corresponding solutions,
+--                 as needed for the working with the witness set;
+--         = 817 : given in a[0] is the total number of variables
+--                 and in b[0] is the number of slack variables,
+--                 swaps the slack variables to the end in the symbol table
+--                 for the polynomial system with double double precision
+--                 coefficients and its corresponding solutions,
+--                 as needed for the working with the witness set;
+--         = 818 : given in a[0] is the total number of variables
+--                 and in b[0] is the number of slack variables,
+--                 swaps the slack variables to the end in the symbol table
+--                 for the polynomial system with quad double precision
+--                 coefficients and its corresponding solutions,
+--                 as needed for the working with the witness set;
+--         = 819 : given in a[0] is the total number of variables
+--                 and in b[0] is the number of slack variables,
+--                 swaps the slack variables to the end in the symbol table
+--                 for the Laurent system with standard double precision
+--                 coefficients and its corresponding solutions,
+--                 as needed for the working with the witness set;
+--         = 820 : given in a[0] is the total number of variables
+--                 and in b[0] is the number of slack variables,
+--                 swaps the slack variables to the end in the symbol table
+--                 for the Laurent system with double double precision
+--                 coefficients and its corresponding solutions,
+--                 as needed for the working with the witness set;
+--         = 821 : given in a[0] is the total number of variables
+--                 and in b[0] is the number of slack variables,
+--                 swaps the slack variables to the end in the symbol table
+--                 for the Laurent system with quad double precision
+--                 coefficients and its corresponding solutions,
+--                 as needed for the working with the witness set.
+--
 -- POWER SERIES NEWTON METHOD :
 --
 --   Before calling the jobs, the systems and solutions containers

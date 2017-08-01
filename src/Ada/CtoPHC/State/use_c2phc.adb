@@ -2528,6 +2528,102 @@ function use_c2phc ( job : integer32;
     return Solve_by_QuadDobl_Laurent_Homotopy_Continuation(nbr);
   end Job776;
 
+  function Job816 return integer32 is -- swap slacks for standard witset
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    dim : constant natural32 := natural32(v_b(v_b'first));
+    p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Standard_PolySys_Container.Retrieve;
+    sols : Standard_Complex_Solutions.Solution_List
+         := Standard_Solutions_Container.Retrieve;
+
+  begin
+    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
+    return 0;
+  end Job816;
+
+  function Job817 return integer32 is -- swap slacks for dobldobl witset
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    dim : constant natural32 := natural32(v_b(v_b'first));
+    p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := DoblDobl_PolySys_Container.Retrieve;
+    sols : DoblDobl_Complex_Solutions.Solution_List
+         := DoblDobl_Solutions_Container.Retrieve;
+
+  begin
+    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
+    return 0;
+  end Job817;
+
+  function Job818 return integer32 is -- swap slacks for quaddobl witset
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    dim : constant natural32 := natural32(v_b(v_b'first));
+    p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := QuadDobl_PolySys_Container.Retrieve;
+    sols : QuadDobl_Complex_Solutions.Solution_List
+         := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
+    return 0;
+  end Job818;
+
+  function Job819 return integer32 is -- swap slacks for standard witset
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    dim : constant natural32 := natural32(v_b(v_b'first));
+    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys
+      := Standard_LaurSys_Container.Retrieve;
+    sols : Standard_Complex_Solutions.Solution_List
+         := Standard_Solutions_Container.Retrieve;
+
+  begin
+    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
+    return 0;
+  end Job819;
+
+  function Job820 return integer32 is -- swap slacks for dobldobl witset
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    dim : constant natural32 := natural32(v_b(v_b'first));
+    p : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys
+      := DoblDobl_LaurSys_Container.Retrieve;
+    sols : DoblDobl_Complex_Solutions.Solution_List
+         := DoblDobl_Solutions_Container.Retrieve;
+
+  begin
+    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
+    return 0;
+  end Job820;
+
+  function Job821 return integer32 is -- swap slacks for quaddobl witset
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    dim : constant natural32 := natural32(v_b(v_b'first));
+    p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys
+      := QuadDobl_LaurSys_Container.Retrieve;
+    sols : QuadDobl_Complex_Solutions.Solution_List
+         := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
+    return 0;
+  end Job821;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -2875,6 +2971,13 @@ function use_c2phc ( job : integer32;
       when 813 => return use_track(64,a,b,c); -- standard witset for Laurent
       when 814 => return use_track(65,a,b,c); -- dobldobl witset for Laurent
       when 815 => return use_track(66,a,b,c); -- quaddobl witset for Laurent
+     -- swap slack variables to the end
+      when 816 => return Job816; -- swap slack for standard witset
+      when 817 => return Job817; -- swap slack for dobldobl witset
+      when 818 => return Job818; -- swap slack for quaddobl witset
+     -- when 819 => return Job819; -- swap slack for standard Laurent witset
+     -- when 820 => return Job820; -- swap slack for dobldobl Laurent witset
+     -- when 821 => return Job821; -- swap slack for quaddobl Laurent witset
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
