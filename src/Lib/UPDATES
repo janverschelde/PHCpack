@@ -1,3 +1,6 @@
+Tue 1 Aug 2017 : added six functions to witset to swap the symbols for the 
+  slack variables to the end for witness set processing.
+
 Sun 30 Jul 2017 : added functions to witset to make a witness set for
   hypersurfaces defined by Laurent polynomials.  Added the three new functions
   to phcpy2c.h, phcpy2c2.c, and phcpy2c3.c, for the Python interface.

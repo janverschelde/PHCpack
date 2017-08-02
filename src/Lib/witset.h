@@ -335,6 +335,72 @@ int quaddobl_witness_set_to_Laurent_system_container ( void );
  *   Copies the embedded system of the witness set from the sampler
  *   to the Laurent systems container in quad double precision. */
 
+int swap_symbols_for_standard_witness_set ( int nvr, int dim );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the polynomial system with standard 
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   nvr : the total number of variables; and
+ *   dim : the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
+int swap_symbols_for_dobldobl_witness_set ( int nvr, int dim );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the polynomial system with double
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   nvr : the total number of variables; and
+ *   dim : the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
+int swap_symbols_for_quaddobl_witness_set ( int nvr, int dim );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the polynomial system with quad
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   nvr : the total number of variables; and
+ *   dim : the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
+int swap_symbols_for_standard_Laurent_witness_set ( int nvr, int dim );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the Laurent system with standard 
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   nvr : the total number of variables; and
+ *   dim : the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
+int swap_symbols_for_dobldobl_Laurent_witness_set ( int nvr, int dim );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the Laurent system with double
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   nvr : the total number of variables; and
+ *   dim : the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
+int swap_symbols_for_quaddobl_Laurent_witness_set ( int nvr, int dim );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the Laurent system with quad
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   nvr : the total number of variables; and
+ *   dim : the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
 int create_cascade_homotopy ( void );
 /*
  * DESCRIPTION :

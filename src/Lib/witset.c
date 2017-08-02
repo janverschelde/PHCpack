@@ -426,6 +426,54 @@ int quaddobl_witness_set_to_Laurent_system_container ( void )
    return fail;
 }
 
+int swap_symbols_for_standard_witness_set ( int nvr, int dim )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(816,&nvr,&dim,c);
+   return fail;
+}
+
+int swap_symbols_for_dobldobl_witness_set ( int nvr, int dim )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(817,&nvr,&dim,c);
+   return fail;
+}
+
+int swap_symbols_for_quaddobl_witness_set ( int nvr, int dim )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(818,&nvr,&dim,c);
+   return fail;
+}
+
+int swap_symbols_for_standard_Laurent_witness_set ( int nvr, int dim )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(819,&nvr,&dim,c);
+   return fail;
+}
+
+int swap_symbols_for_dobldobl_Laurent_witness_set ( int nvr, int dim )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(820,&nvr,&dim,c);
+   return fail;
+}
+
+int swap_symbols_for_quaddobl_Laurent_witness_set ( int nvr, int dim )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(821,&nvr,&dim,c);
+   return fail;
+}
+
 int create_cascade_homotopy ( void )
 {
    int *a,*b,fail;
