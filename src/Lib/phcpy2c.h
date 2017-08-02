@@ -3608,6 +3608,78 @@ static PyObject *py2c_embed_quaddobl_Laurent_system
  *   The dimension d is given as an integer parameter on input.
  *   On return is the failure code, which equals zero if all went well. */
 
+static PyObject *py2c_swap_symbols_for_standard_witness_set
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the polynomial system with standard 
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   two integers: the total number of variables; and
+ *   the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
+static PyObject *py2c_swap_symbols_for_dobldobl_witness_set
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the polynomial system with double
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   two integers: the total number of variables; and
+ *   the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
+static PyObject *py2c_swap_symbols_for_quaddobl_witness_set
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the polynomial system with quad
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   two integers: the total number of variables; and
+ *   the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
+static PyObject *py2c_swap_symbols_for_standard_Laurent_witness_set
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the Laurent system with standard 
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   two integers: the total number of variables; and
+ *   the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
+static PyObject *py2c_swap_symbols_for_dobldobl_Laurent_witness_set
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the Laurent system with double
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   two integers: the total number of variables; and
+ *   the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
+static PyObject *py2c_swap_symbols_for_quaddobl_Laurent_witness_set
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the slack variables in the Laurent system with quad
+ *   double precision coefficients and its corresponding solutions in the 
+ *   containers so the slack variables appear at the end.  On input are
+ *   two integers: the total number of variables; and
+ *   the number of slack variables, or the dimension of the set.
+ *   This permutation is necessary to consider the system and solutions
+ *   stored in containers as a witness set. */
+
 static PyObject *py2c_standard_cascade_homotopy
  ( PyObject *self, PyObject *args );
 /*

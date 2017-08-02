@@ -5469,6 +5469,78 @@ static PyObject *py2c_embed_quaddobl_Laurent_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_swap_symbols_for_standard_witness_set
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nvr,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nvr,&dim)) return NULL;
+   fail = swap_symbols_for_standard_witness_set(nvr,dim);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_swap_symbols_for_dobldobl_witness_set
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nvr,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nvr,&dim)) return NULL;
+   fail = swap_symbols_for_dobldobl_witness_set(nvr,dim);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_swap_symbols_for_quaddobl_witness_set
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nvr,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nvr,&dim)) return NULL;
+   fail = swap_symbols_for_quaddobl_witness_set(nvr,dim);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_swap_symbols_for_standard_Laurent_witness_set
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nvr,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nvr,&dim)) return NULL;
+   fail = swap_symbols_for_standard_Laurent_witness_set(nvr,dim);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_swap_symbols_for_dobldobl_Laurent_witness_set
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nvr,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nvr,&dim)) return NULL;
+   fail = swap_symbols_for_dobldobl_Laurent_witness_set(nvr,dim);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_swap_symbols_for_quaddobl_Laurent_witness_set
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nvr,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nvr,&dim)) return NULL;
+   fail = swap_symbols_for_quaddobl_Laurent_witness_set(nvr,dim);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_standard_cascade_homotopy
  ( PyObject *self, PyObject *args )
 {
@@ -9083,6 +9155,24 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_embed_quaddobl_Laurent_system",
      py2c_embed_quaddobl_Laurent_system, METH_VARARGS,
     "Replaces the Laurent system with coefficients in quad double\n precision in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_swap_symbols_for_standard_witness_set",
+     py2c_swap_symbols_for_standard_witness_set, METH_VARARGS,
+    "Permutes the slack variables in the polynomial system with standard\n double precision coefficients and its corresponding solutions in the\n containers so the slack variables appear at the end.  On input are\n two integers: the total number of variables; and\n the number of slack variables, or the dimension of the set.\n This permutation is necessary to consider the system and solutions\n stored in containers as a witness set."},
+   {"py2c_swap_symbols_for_dobldobl_witness_set",
+     py2c_swap_symbols_for_dobldobl_witness_set, METH_VARARGS,
+    "Permutes the slack variables in the polynomial system with double\n double precision coefficients and its corresponding solutions in the\n containers so the slack variables appear at the end.  On input are\n two integers: the total number of variables; and\n the number of slack variables, or the dimension of the set.\n This permutation is necessary to consider the system and solutions\n stored in containers as a witness set."},
+   {"py2c_swap_symbols_for_quaddobl_witness_set",
+     py2c_swap_symbols_for_quaddobl_witness_set, METH_VARARGS,
+    "Permutes the slack variables in the polynomial system with quad\n double precision coefficients and its corresponding solutions in the\n containers so the slack variables appear at the end.  On input are\n two integers: the total number of variables; and\n the number of slack variables, or the dimension of the set.\n This permutation is necessary to consider the system and solutions\n stored in containers as a witness set."},
+   {"py2c_swap_symbols_for_standard_Laurent_witness_set",
+     py2c_swap_symbols_for_standard_Laurent_witness_set, METH_VARARGS,
+    "Permutes the slack variables in the Laurent system with standard\n double precision coefficients and its corresponding solutions in the\n containers so the slack variables appear at the end.  On input are\n two integers: the total number of variables; and\n the number of slack variables, or the dimension of the set.\n This permutation is necessary to consider the system and solutions\n stored in containers as a witness set."},
+   {"py2c_swap_symbols_for_dobldobl_Laurent_witness_set",
+     py2c_swap_symbols_for_dobldobl_Laurent_witness_set, METH_VARARGS,
+    "Permutes the slack variables in the Laurent system with double\n double precision coefficients and its corresponding solutions in the\n containers so the slack variables appear at the end.  On input are\n two integers: the total number of variables; and\n the number of slack variables, or the dimension of the set.\n This permutation is necessary to consider the system and solutions\n stored in containers as a witness set."},
+   {"py2c_swap_symbols_for_quaddobl_Laurent_witness_set",
+     py2c_swap_symbols_for_quaddobl_Laurent_witness_set, METH_VARARGS,
+    "Permutes the slack variables in the Laurent system with quad\n double precision coefficients and its corresponding solutions in the\n containers so the slack variables appear at the end.  On input are\n two integers: the total number of variables; and\n the number of slack variables, or the dimension of the set.\n This permutation is necessary to consider the system and solutions\n stored in containers as a witness set."},
    {"py2c_standard_cascade_homotopy", py2c_standard_cascade_homotopy,
      METH_VARARGS,
     "Creates a homotopy in standard double precision using the stored\n systems to go one level down the cascade, removing one slice.\n On return is the failure code, which equals zero if all went well."},
