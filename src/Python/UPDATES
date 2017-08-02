@@ -1,5 +1,6 @@
 Wed 2 Aug 2017 : added six functions to the python2 interface module to store
   witness sets, with the swapping of the symbols for the slack variables.
+  Did the same additions to the python3 interface module.
 
 Mon 31 Jul 2017 : added function to make a witness set of a hypersurface
   defined by a Laurent polynomial to sets.py in the PHCpy2 and PHCpy3 folders.

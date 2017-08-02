@@ -637,3 +637,243 @@ def load_multprec_solutions():
         if(ind == 0):
             break
     return result
+
+def store_standard_witness_set(nbvar, dim, pols, sols):
+    r"""
+    Given in *nbar* is the total number of variables in the list of
+    polynomials in *pols* and its list of solutions in *sols*.
+    The coefficients in the polynomials and the coordinates of the
+    solutions will be parsed and stored in standard double precision.
+    The parameter *dim* equals the number of slack variables used in
+    the embedding of *pols* and *sols*.  This *dim* also equals the
+    dimension of the solution set represented by the witness set
+    given by the lists *pols* and *sols*.
+    The symbols for the slack variables are swapped to the end of the
+    symbol table in both the polynomials and the solutions.
+    """
+    from phcpy.phcpy2c3 import py2c_swap_symbols_for_standard_witness_set
+    store_standard_system(pols)
+    store_standard_solutions(len(pols), sols)
+    py2c_swap_symbols_for_standard_witness_set(nbvar, dim)
+
+def store_dobldobl_witness_set(nbvar, dim, pols, sols):
+    r"""
+    Given in *nbar* is the total number of variables in the list of
+    polynomials in *pols* and its list of solutions in *sols*.
+    The coefficients in the polynomials and the coordinates of the
+    solutions will be parsed and stored in double double precision.
+    The parameter *dim* equals the number of slack variables used in
+    the embedding of *pols* and *sols*.  This *dim* also equals the
+    dimension of the solution set represented by the witness set
+    given by the lists *pols* and *sols*.
+    The symbols for the slack variables are swapped to the end of the
+    symbol table in both the polynomials and the solutions.
+    """
+    from phcpy.phcpy2c3 import py2c_swap_symbols_for_dobldobl_witness_set
+    store_dobldobl_system(pols)
+    store_dobldobl_solutions(len(pols), sols)
+    py2c_swap_symbols_for_dobldobl_witness_set(nbvar, dim)
+
+def store_quaddobl_witness_set(nbvar, dim, pols, sols):
+    r"""
+    Given in *nbar* is the total number of variables in the list of
+    polynomials in *pols* and its list of solutions in *sols*.
+    The coefficients in the polynomials and the coordinates of the
+    solutions will be parsed and stored in quad double precision.
+    The parameter *dim* equals the number of slack variables used in
+    the embedding of *pols* and *sols*.  This *dim* also equals the
+    dimension of the solution set represented by the witness set
+    given by the lists *pols* and *sols*.
+    The symbols for the slack variables are swapped to the end of the
+    symbol table in both the polynomials and the solutions.
+    """
+    from phcpy.phcpy2c3 import py2c_swap_symbols_for_quaddobl_witness_set
+    store_quaddobl_system(pols)
+    store_quaddobl_solutions(len(pols), sols)
+    py2c_swap_symbols_for_quaddobl_witness_set(nbvar, dim)
+
+def store_standard_laurent_witness_set(nbvar, dim, pols, sols):
+    r"""
+    Given in *nbar* is the total number of variables in the list of
+    Laurent polynomials in *pols* and its list of solutions in *sols*.
+    The coefficients in the Laurent polynomials and the coordinates of the
+    solutions will be parsed and stored in standard double precision.
+    The parameter *dim* equals the number of slack variables used in
+    the embedding of *pols* and *sols*.  This *dim* also equals the
+    dimension of the solution set represented by the witness set
+    given by the lists *pols* and *sols*.
+    The symbols for the slack variables are swapped to the end of the
+    symbol table in both the Laurent polynomials and the solutions.
+    """
+    from phcpy.phcpy2c3 \
+    import py2c_swap_symbols_for_standard_Laurent_witness_set
+    store_standard_laurent_system(pols)
+    store_standard_solutions(len(pols), sols)
+    py2c_swap_symbols_for_standard_Laurent_witness_set(nbvar, dim)
+
+def store_dobldobl_laurent_witness_set(nbvar, dim, pols, sols):
+    r"""
+    Given in *nbar* is the total number of variables in the list of
+    Laurent polynomials in *pols* and its list of solutions in *sols*.
+    The coefficients in the Laurent polynomials and the coordinates of the
+    solutions will be parsed and stored in double double precision.
+    The parameter *dim* equals the number of slack variables used in
+    the embedding of *pols* and *sols*.  This *dim* also equals the
+    dimension of the solution set represented by the witness set
+    given by the lists *pols* and *sols*.
+    The symbols for the slack variables are swapped to the end of the
+    symbol table in both the Laurent polynomials and the solutions.
+    """
+    from phcpy.phcpy2c3 \
+    import py2c_swap_symbols_for_dobldobl_Laurent_witness_set
+    store_dobldobl_laurent_system(pols)
+    store_dobldobl_solutions(len(pols), sols)
+    py2c_swap_symbols_for_dobldobl_Laurent_witness_set(nbvar, dim)
+
+def store_quaddobl_laurent_witness_set(nbvar, dim, pols, sols):
+    r"""
+    Given in *nbar* is the total number of variables in the list of
+    Laurent polynomials in *pols* and its list of solutions in *sols*.
+    The coefficients in the Laurent polynomials and the coordinates of the
+    solutions will be parsed and stored in quad double precision.
+    The parameter *dim* equals the number of slack variables used in
+    the embedding of *pols* and *sols*.  This *dim* also equals the
+    dimension of the solution set represented by the witness set
+    given by the lists *pols* and *sols*.
+    The symbols for the slack variables are swapped to the end of the
+    symbol table in both the Laurent polynomials and the solutions.
+    """
+    from phcpy.phcpy2c3 \
+    import py2c_swap_symbols_for_quaddobl_Laurent_witness_set
+    store_quaddobl_laurent_system(pols)
+    store_quaddobl_solutions(len(pols), sols)
+    py2c_swap_symbols_for_quaddobl_Laurent_witness_set(nbvar, dim)
+
+def test(prc='d', laurent=False):
+    """
+    Tests the storing of a witness set for the twisted cubic.
+    The embedding induces the order x, y, zz1, z on the variables.
+    After storing the witness set, the order is x, y, z, zz1,
+    in both the system and solutions.
+    The default precision prc is double 'd'.
+    Other supported precisions are double double 'dd' and quad double 'qd'.
+    """
+    print('testing the storing of a witness set for the twisted cubic')
+    e0 = 'x^2 - y + (9.22092060529474E-01 + 3.86970582743067E-01*i)*zz1;'
+    e1 = 'x^3 - z + (6.47649182027044E-01-7.61938670117025E-01*i)*zz1;'
+    e2 = 'zz1;'
+    e3 = ' + (-7.98273302152795E-01-6.02295388551227E-01*i)*x' + \
+         ' + (-9.99580934345184E-01 + 2.89474643727148E-02*i)*y' + \
+         ' + (9.36299591763384E-01 + 3.51202326962281E-01*i)*z' + \
+         ' + (8.34685978078231E-01-5.50726173338063E-01*i)*zz1' + \
+         ' + (-6.91333588932132E-01 + 7.22535721479719E-01*i);'
+    pols = [e0, e1, e2, e3]
+    s0 = \
+"""
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x :  1.68397283871286E+00  -3.40775544483616E-01
+ y :  2.71963654980455E+00  -1.14771352201599E+00
+ zz1 : -2.76305054422513E-32  -1.43165074087146E-32
+ z :  4.18868138066541E+00  -2.85950402375559E+00
+== err :  1.663E-15 = rco :  1.823E-02 = res :  2.109E-15 =
+"""
+    s1 = \
+"""
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x : -7.91596946923866E-01  -6.16514124459453E-01
+ y :  2.46536060721179E-01   9.76061397315087E-01
+ zz1 :  0.00000000000000E+00   0.00000000000000E+00
+ z :  4.06598444810859E-01  -9.24640185748066E-01
+== err :  2.293E-16 = rco :  8.842E-02 = res :  2.776E-16 =
+"""
+    s2 = \
+"""
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x :  3.33649121255065E-02   5.79131019739152E-01
+ y : -3.34279520662967E-01   3.86453111655036E-02
+ zz1 : -2.66882752423716E-33   9.35041489367531E-33
+ z : -3.35339052956912E-02  -1.92302242268359E-01
+== err :  1.570E-16 = rco :  8.857E-02 = res :  1.457E-16 =
+"""
+    sols = [s0[1:-1], s1[1:-1], s2[1:-1]]
+    if laurent:
+        if prc == 'd':
+            store_standard_laurent_system(pols)
+            pols = load_standard_laurent_system()
+        elif prc == 'dd':
+            store_dobldobl_laurent_system(pols)
+            pols = load_dobldobl_laurent_system()
+        elif prc == 'qd':
+            store_quaddobl_laurent_system(pols)
+            pols = load_quaddobl_laurent_system()
+        else:
+            print('invalid precision level')
+    else:
+        if prc == 'd':
+            store_standard_system(pols)
+            pols = load_standard_system()
+        elif prc == 'dd':
+            store_dobldobl_system(pols)
+            pols = load_dobldobl_system()
+        elif prc == 'qd':
+            store_quaddobl_system(pols)
+            pols = load_quaddobl_system()
+        else:
+            print('invalid precision level')
+    print('the embedded polynomials :')
+    for pol in pols:
+        print(pol)
+    print('the generic points :')
+    for sol in sols:
+        print(sol)
+    input('hit enter to continue')
+    if laurent:
+        if prc == 'd':
+            store_standard_laurent_witness_set(4, 1, pols, sols)
+            storedpols = load_standard_laurent_system()
+        elif prc == 'dd':
+            store_dobldobl_laurent_witness_set(4, 1, pols, sols)
+            storedpols = load_dobldobl_laurent_system()
+        elif prc == 'qd':
+            store_quaddobl_laurent_witness_set(4, 1, pols, sols)
+            storedpols = load_quaddobl_laurent_system()
+        else:
+            print('invalid precision level')
+    else:
+        if prc == 'd':
+            store_standard_witness_set(4, 1, pols, sols)
+            storedpols = load_standard_system()
+        elif prc == 'dd':
+            store_dobldobl_witness_set(4, 1, pols, sols)
+            storedpols = load_dobldobl_system()
+        elif prc == 'qd':
+            store_quaddobl_witness_set(4, 1, pols, sols)
+            storedpols = load_quaddobl_system()
+        else:
+            print('invalid precision level')
+    for pol in storedpols:
+        print(pol)
+    if prc == 'd':
+        storedsols = load_standard_solutions()
+    elif prc == 'dd':
+        storedsols = load_dobldobl_solutions()
+    elif prc == 'qd':
+        storedsols = load_quaddobl_solutions()
+    else:
+        print('invalid precision level')
+    for sol in storedsols:
+        print(sol)
+
+if __name__ == "__main__":
+    test('d')
+    test('d', True)
+    test('dd')
+    test('dd', True)
+    test('qd')
+    test('qd', True)
