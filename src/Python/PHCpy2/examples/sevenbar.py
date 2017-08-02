@@ -143,10 +143,6 @@ def monodromy_factor(witpols, witpnts):
     in witpols and witpnts respectively, applies monodromy
     to factor the witness set.
     """
-    # patch to initialize the symbol table
-    smbpol = 't1 + t2 + t3 + t6 + t4 + t5 + zz1' \
-           + ' - t1 - t2 - t3 - t6 - t4 - t5 - zz1'
-    witpols[0] = smbpol + witpols[0]
     from phcpy.factor import factor
     print 'the enbedded Laurent polynomial system :'
     for pol in witpols:
