@@ -3,7 +3,6 @@ with text_io;                           use text_io;
 with String_Splitters;                  use String_Splitters;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
--- with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
@@ -2975,9 +2974,9 @@ function use_c2phc ( job : integer32;
       when 816 => return Job816; -- swap slack for standard witset
       when 817 => return Job817; -- swap slack for dobldobl witset
       when 818 => return Job818; -- swap slack for quaddobl witset
-     -- when 819 => return Job819; -- swap slack for standard Laurent witset
-     -- when 820 => return Job820; -- swap slack for dobldobl Laurent witset
-     -- when 821 => return Job821; -- swap slack for quaddobl Laurent witset
+      when 819 => return Job819; -- swap slack for standard Laurent witset
+      when 820 => return Job820; -- swap slack for dobldobl Laurent witset
+      when 821 => return Job821; -- swap slack for quaddobl Laurent witset
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
