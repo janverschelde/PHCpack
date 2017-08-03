@@ -313,7 +313,7 @@ the lower dimensional components of the solution set.
 ::
 
    >>> from phcpy.cascades import cascade_step
-   >>> lvl1sols = cascade_step(topemb, topsols1)
+   >>> lvl1sols = cascade_step(2, topemb, topsols1)
 
 After the filtering, we must drop variables, coordinates,
 and hyperplane for the next level in the cascade.
@@ -346,7 +346,7 @@ previous cascade.
 
 ::
 
-   >>> lvl2sols = cascade_step(lvl1emb, lvl1sols1)
+   >>> lvl2sols = cascade_step(1, lvl1emb, lvl1sols1)
    >>> lvl2solsdrop = drop1sols(lvl2sols, len(lvl1emb), 'zz1')
    >>> for sol in reglvl2solsdrop:
    ...     print(sol)

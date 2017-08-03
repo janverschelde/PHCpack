@@ -1,5 +1,6 @@
 Thu 3 Aug 2017 : used store-witness-set functions in the cascades module,
-  both in the python2 and python3 versions.
+  both in the python2 and python3 versions.  Updated the documentation of
+  the cascade_step in posdimsols.rst for the extra dimension parameter.
 
 Wed 2 Aug 2017 : added six functions to the python2 interface module to store
   witness sets, with the swapping of the symbols for the slack variables.
