@@ -308,11 +308,9 @@ def standard_membertest(wsys, gpts, dim, point, \
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
     """
-    from phcpy.interface import store_standard_system as storesys
-    from phcpy.interface import store_standard_solutions as storesols
+    from phcpy.interface import store_standard_witness_set
     from phcpy.phcpy2c2 import py2c_witset_standard_membertest as membtest
-    storesys(wsys)
-    storesols(len(wsys), gpts)
+    store_standard_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/2
     strpt = str(point)
     nbc = len(strpt)
@@ -333,11 +331,10 @@ def dobldobl_membertest(wsys, gpts, dim, point, \
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
     """
-    from phcpy.interface import store_dobldobl_system as storesys
-    from phcpy.interface import store_dobldobl_solutions as storesols
+    from phcpy.interface import store_dobldobl_witness_set
     from phcpy.phcpy2c2 import py2c_witset_dobldobl_membertest as membtest
     storesys(wsys)
-    storesols(len(wsys), gpts)
+    store_dobldobl_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/4
     strpt = str(point)
     nbc = len(strpt)
@@ -358,11 +355,9 @@ def quaddobl_membertest(wsys, gpts, dim, point, \
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
     """
-    from phcpy.interface import store_quaddobl_system as storesys
-    from phcpy.interface import store_quaddobl_solutions as storesols
+    from phcpy.interface import store_quaddobl_witness_set
     from phcpy.phcpy2c2 import py2c_witset_quaddobl_membertest as membtest
-    storesys(wsys)
-    storesols(len(wsys), gpts)
+    store_quaddobl_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/8
     strpt = str(point)
     nbc = len(strpt)
@@ -435,12 +430,10 @@ def quaddobl_laurent_membertest(wsys, gpts, dim, point, \
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
     """
-    from phcpy.interface import store_quaddobl_laurent_system as storesys
-    from phcpy.interface import store_quaddobl_solutions as storesols
+    from phcpy.interface import store_quaddobl_store_laurent_witness_set
     from phcpy.phcpy2c2 \
     import py2c_witset_quaddobl_Laurent_membertest as membtest
-    storesys(wsys)
-    storesols(len(wsys), gpts)
+    store_laurent_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/8
     strpt = str(point)
     nbc = len(strpt)
@@ -586,6 +579,10 @@ def is_member(wsys, gpts, dim, solpt, evatol=1.0e-6, memtol=1.0e-6, \
     newsys = [newpol0] + wsys[1:]
     return membertest(newsys, gpts, dim, solval, evatol, memtol, \
                       verbose, precision)
+    """
+    return membertest(wsys, gpts, dim, solval, evatol, memtol, \
+                      verbose, precision)
+    """
 
 def test_member(prc='d'):
     """
@@ -623,8 +620,13 @@ def test_ismember(prc='d'):
     twisted = ['x^2 - y;', 'x^3 - z;']
     twiste1 = embed(3, 1, twisted)
     twtsols = solve(twiste1, precision=prc)
+    print 'the embedded system :'
+    for pol in twiste1:
+        print pol
+    print 'the generic points :'
     for sol in twtsols:
         print sol
+    raw_input('hit enter to continue')
     print(is_member(twiste1, twtsols, 1, twtsols[0], precision=prc))
     outsol = make_solution(['x', 'y', 'z'], [1, 2, 3])
     print(is_member(twiste1, twtsols, 1, outsol, precision=prc))
