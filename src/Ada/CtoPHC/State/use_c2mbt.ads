@@ -10,8 +10,12 @@ function use_c2mbt ( job : integer32;
 -- DESCRIPTION :
 --   Provides a gateway from C to the operations in PHCpack
 --   to run a homotopy membership test to decide whether a given point
---   belongs to a positive dimensional algebraic set,
---   represented by a witness set.
+--   belongs to a positive dimensional algebraic set, represented by a 
+--   witness set, in double, double double, or quad double precision,
+--   defined by an ordinary or a Laurent polynomial system.
+--   The test point is either given as a sequence of doubles,
+--   or as a string representation of a solution in symbolic format,
+--   with the symbols for the variables of the coordinates.
 
 -- ON ENTRY :
 --   job    =  0 : runs the membership test in standard double precision,
@@ -122,6 +126,27 @@ function use_c2mbt ( job : integer32;
 --                 0 if failure, or 1 if success,
 --                 on return in b is the result of the membership test:
 --                 0 if failure, or 1 if success.
+--   job    =  6 : runs the membership test in standard double precision,
+--                 for a witness set stored in the standard containers,
+--                 defined by an ordinary polynomial systems,
+--                 on input in a[0] is the verbose flag:
+--                 0 for no output, or 1 for diagnostic intermediate output,
+--                 on input in a[1] is the dimension n of the test point,
+--                 which equals the number of complex coordinates,
+--                 in a[2] is the dimension of the witness set,
+--                 and in a[3] is the number of characters in the string
+--                 representation of the test point, as a solution;
+--                 on input in b are the a[3] integers which encode the
+--                 characters of the string representation of the solution,
+--                 which stores the coordinates of the test point,
+--                 in standard double precision,
+--                 on input in c are the two tolerances:
+--                 first on the residual for the evaluation,
+--                 second on the tolerance on the membership,
+--                 on return in a is the result of the evaluation test:
+--                 0 if failure, or 1 if success,
+--                 on return in b is the result of the membership test:
+--                 0 if failure, or 1 if success;
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

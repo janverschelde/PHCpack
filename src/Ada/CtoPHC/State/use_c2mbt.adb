@@ -24,6 +24,7 @@ with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
+with Standard_Solution_Strings;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Sampling_Machine;
@@ -73,6 +74,53 @@ function use_c2mbt ( job : integer32;
     dim := integer32(vb(vb'first+1));
    -- put("dim = "); put(dim,1); new_line;
   end Get_Input_Parameters;
+
+  procedure Get_Input_Integers
+              ( verbose : out boolean;
+                nbr,dim,nbc : out integer32 ) is
+
+  -- DESCRIPTION :
+  --   Extracts the input parameters from the a input,
+  --   expecting four integers on input.
+
+  -- ON RETURN :
+  --   verbose  flag to determine the verbosity of the test;
+  --   nbr      number of coordinates in the test point;
+  --   dim      dimension of the witness set.
+  --   nbc      number of characters in the input string.
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(4));
+    vrb : constant integer32 := integer32(va(va'first));
+
+  begin
+    verbose := (vrb = 1);
+    nbr := integer32(va(va'first+1));
+   -- put("nbr = "); put(nbr,1); new_line;
+    dim := integer32(va(va'first+2));
+   -- put("dim = "); put(dim,1); new_line;
+    nbc := integer32(va(va'first+3));
+   -- put("nbc = "); put(nbc,1); new_line;
+  end Get_Input_Integers;
+
+  procedure Get_Input_Tolerances
+              ( restol,homtol : out double_float ) is
+
+  -- DESCRIPTION :
+  --   Extracts the values in the parameter c on input
+  --   for the tolerances in the homotopy membership test.
+
+  -- ON RETURN :
+  --   restol   tolerance on the residual of the evaluation;
+  --   homtol   tolerance on the membership for the new generic points.
+
+    vc : constant C_Double_Array
+       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(2));
+
+  begin
+    restol := double_float(vc(0));
+    homtol := double_float(vc(1));
+  end Get_Input_Tolerances;
 
   procedure Get_Standard_Input_Values
               ( nbr : in integer32; restol,homtol : out double_float;
@@ -189,6 +237,40 @@ function use_c2mbt ( job : integer32;
       ind := ind + 8;
     end loop;
   end Get_QuadDobl_Input_Values;
+
+  procedure Standard_Parse_Test_Point
+              ( nbr,nbc : in integer32;
+                pt : out Standard_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Extracts the values in the parameter b on input,
+  --   for a test point given in standard double precision.
+
+  -- ON ENTRY :
+  --   nbr      the dimension of the test point.
+  --   nbc      the number of characters in the string representation
+  --            of the solution which containes the test point.
+ 
+  -- ON RETURN :
+  --   pt       coordinates of the test point.
+
+    vb : constant C_Integer_Array
+       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
+    str : constant string := C_Integer_Array_to_String(natural32(nbc),vb);
+    sol : Standard_Complex_Solutions.Solution(nbr);
+    idx : integer := str'first;
+    fail : boolean;
+
+  begin
+    Standard_Solution_Strings.Parse(str,idx,natural32(nbr),sol,fail);
+    if not fail then
+      for k in sol.v'range loop
+        pt(k) := sol.v(k);
+      end loop;
+    end if;
+   -- put_line("The coordinates of the test point : ");
+   -- put_line(pt);
+  end Standard_Parse_Test_Point;
 
   procedure Assign_Results
               ( onpolsys,inwitset : in boolean ) is
@@ -401,6 +483,38 @@ function use_c2mbt ( job : integer32;
     return 0;
   end Job5;
 
+  function Job6 return integer32 is -- standard double ismember test
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+
+    verbose,onp,inw : boolean;
+    nbr,dim,nbc : integer32;
+    restol,homtol : double_float;
+    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
+
+  begin
+    Sampling_Machine.Initialize(lp.all);
+    Sampling_Machine.Default_Tune_Sampler(2);
+    Sampling_Machine.Default_Tune_Refiner;
+    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Tolerances(restol,homtol);
+    declare
+      tpt : Standard_Complex_Vectors.Vector(1..nbr);
+      sli : Standard_Complex_VecVecs.VecVec(1..dim)
+          := Witness_Sets.Slices(lp.all,natural32(dim));
+    begin
+      Standard_Parse_Test_Point(nbr,nbc,tpt);
+      Homotopy_Membership_Test
+        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      Standard_Complex_VecVecs.Clear(sli);
+    end;
+    Assign_Results(onp,inw);
+    Sampling_Machine.Clear;
+    return 0;
+  end Job6;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -410,6 +524,7 @@ function use_c2mbt ( job : integer32;
       when 3 => return Job3; -- Laurent membership test with standard doubles
       when 4 => return Job4; -- Laurent membership test with double doubles
       when 5 => return Job5; -- Laurent membership test with quad doubles
+      when 6 => return Job6; -- run ismember test with standard doubles
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;

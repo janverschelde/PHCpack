@@ -2977,6 +2977,8 @@ function use_c2phc ( job : integer32;
       when 819 => return Job819; -- swap slack for standard Laurent witset
       when 820 => return Job820; -- swap slack for dobldobl Laurent witset
       when 821 => return Job821; -- swap slack for quaddobl Laurent witset
+     -- homotopy membership tests with symbolic test points
+      when 822 => return use_c2mbt(6,a,b,c); -- standard ismember test
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
