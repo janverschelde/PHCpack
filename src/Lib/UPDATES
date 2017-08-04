@@ -1,3 +1,5 @@
+Fri 4 Aug 2017 : used the job code in witset.c for the homotopy ismember test.
+
 Thu 3 Aug 2017 : added a prototype and a shell of a function definition to
   apply the homotopy membership test with the test point represented as a
   symbolic solution string.

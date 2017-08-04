@@ -1884,7 +1884,7 @@ int standard_homotopy_ismember
 
    for(k=0; k<nbc; k++) testsol[k] = (int) tpt[k];
 
-   // fail = _ada_use_c2phc(537,dims,testsol,tols);
+   fail = _ada_use_c2phc(822,dims,testsol,tols);
 
    *onsys = vrb;
    *onset = dims[0];
