@@ -1,3 +1,7 @@
+Thu 3 Aug 2017 : added a prototype and a shell of a function definition to
+  apply the homotopy membership test with the test point represented as a
+  symbolic solution string.
+
 Tue 1 Aug 2017 : added six functions to witset to swap the symbols for the 
   slack variables to the end for witness set processing.  Added these six
   functions to phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
