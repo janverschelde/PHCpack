@@ -1,3 +1,6 @@
+Fri 4 Aug 2017 : added a function ismember to the module sets, a function
+  which takes the test points as a PHCpack solution string.
+
 Thu 3 Aug 2017 : used store-witness-set functions in the cascades module,
   both in the python2 and python3 versions.  Updated the documentation of
   the cascade_step in posdimsols.rst for the extra dimension parameter.

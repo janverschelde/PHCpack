@@ -506,6 +506,28 @@ def laurent_membertest(wsys, gpts, dim, point, \
         print 'wrong argument for precision'
         return None
 
+def standard_ismember(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Applies the homotopy membership test for a *point* to belong to
+    a witness set of dimension *dim*, given by an embedding polynomial
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the string *point*,
+    which is the string representation of a solution in PHCpack format,
+    with symbols of the variables before the values of the coordinaes.
+    By default, *verbose* is True.
+    Calculations happen in standard double precision.
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
+    in the homotopy membership test.
+    """
+    from phcpy.interface import store_standard_witness_set
+    from phcpy.phcpy2c2 import py2c_witset_standard_ismember as membtest
+    store_standard_witness_set(len(wsys), dim, wsys, gpts)
+    nbc = len(point)
+    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
+    return (result[2] == 1)
+
 def is_slackvar(var):
     r"""
     Given in *var* is a string with a variable name.
