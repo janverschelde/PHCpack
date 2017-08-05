@@ -1,4 +1,6 @@
 Fri 4 Aug 2017 : used the job code in witset.c for the homotopy ismember test.
+  Added function prototype to phcpy2c.h and its definition in phcpy2c2.c,
+  for the homotopy ismember test with the test point in a symbolic string.
 
 Thu 3 Aug 2017 : added a prototype and a shell of a function definition to
   apply the homotopy membership test with the test point represented as a
