@@ -1,5 +1,7 @@
 Sat 5 Aug 2017 : added print statements to use_c2mbt.adb if verbose is true.
   Fixed a bug in the get_input_integers of use_c2mbt.adb.
+  Added 5 jobs to use_c2mbt and use_c2phc for the double double, quad double,
+  and versions for witness sets defined by Laurent polynomial systems.
 
 Fri 4 Aug 2017 : extended use_c2mbt and use_c2phc with a job for a homotopy
   membership test, taking a solution string on input.

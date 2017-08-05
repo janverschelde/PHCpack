@@ -2979,6 +2979,11 @@ function use_c2phc ( job : integer32;
       when 821 => return Job821; -- swap slack for quaddobl Laurent witset
      -- homotopy membership tests with symbolic test points
       when 822 => return use_c2mbt(6,a,b,c); -- standard ismember test
+      when 823 => return use_c2mbt(7,a,b,c); -- dobldobl ismember test
+      when 824 => return use_c2mbt(8,a,b,c); -- quaddobl ismember test
+      when 825 => return use_c2mbt(9,a,b,c);  -- standard Laurent ismember test
+      when 826 => return use_c2mbt(10,a,b,c); -- dobldobl Laurent ismember test
+      when 827 => return use_c2mbt(11,a,b,c); -- quaddobl Laurent ismember test
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

@@ -13,8 +13,10 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
@@ -26,7 +28,11 @@ with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;
 with Standard_Solution_Strings;
 with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;
+with DoblDobl_Solution_Strings;
 with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;
+with QuadDobl_Solution_Strings;
 with Sampling_Machine;
 with Sampling_Laurent_Machine;
 with DoblDobl_Sampling_Machine;
@@ -285,7 +291,7 @@ function use_c2mbt ( job : integer32;
     Standard_Solution_Strings.Parse(str,idx,natural32(nbr),sol,fail);
     if verbose then
       put_line("in use_c2mbt, the parsed solution for the test point :");
-      Standard_Complex_Solutions_io.put(sol);
+      Standard_Complex_Solutions_io.put(sol); new_line;
     end if;
     if not fail then
       for k in sol.v'range loop
@@ -297,6 +303,96 @@ function use_c2mbt ( job : integer32;
       Standard_Complex_Vectors_io.put_line(pt);
     end if;
   end Standard_Parse_Test_Point;
+
+  procedure DoblDobl_Parse_Test_Point
+              ( verbose : in boolean; nbr,nbc : in integer32;
+                pt : out DoblDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Extracts the values in the parameter b on input,
+  --   for a test point given in double double precision.
+
+  -- ON ENTRY :
+  --   verbose  if verbose, then debugging info is written;
+  --   nbr      the dimension of the test point;
+  --   nbc      the number of characters in the string representation
+  --            of the solution which containes the test point.
+ 
+  -- ON RETURN :
+  --   pt       coordinates of the test point.
+
+    vb : constant C_Integer_Array
+       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
+    str : constant string := C_Integer_Array_to_String(natural32(nbc),vb);
+    sol : DoblDobl_Complex_Solutions.Solution(nbr);
+    idx : integer := str'first;
+    fail : boolean;
+
+  begin
+    if verbose then
+      put_line("in use_c2mbt, the string for the test point :");
+      put_line(str);
+    end if;
+    DoblDobl_Solution_Strings.Parse(str,idx,natural32(nbr),sol,fail);
+    if verbose then
+      put_line("in use_c2mbt, the parsed solution for the test point :");
+      DoblDobl_Complex_Solutions_io.put(sol); new_line;
+    end if;
+    if not fail then
+      for k in sol.v'range loop
+        pt(k) := sol.v(k);
+      end loop;
+    end if;
+    if verbose then
+      put_line("in use_c2mbt, the coordinates of the test point : ");
+      DoblDobl_Complex_Vectors_io.put_line(pt);
+    end if;
+  end DoblDobl_Parse_Test_Point;
+
+  procedure QuadDobl_Parse_Test_Point
+              ( verbose : in boolean; nbr,nbc : in integer32;
+                pt : out QuadDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Extracts the values in the parameter b on input,
+  --   for a test point given in double double precision.
+
+  -- ON ENTRY :
+  --   verbose  if verbose, then debugging info is written;
+  --   nbr      the dimension of the test point;
+  --   nbc      the number of characters in the string representation
+  --            of the solution which containes the test point.
+ 
+  -- ON RETURN :
+  --   pt       coordinates of the test point.
+
+    vb : constant C_Integer_Array
+       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
+    str : constant string := C_Integer_Array_to_String(natural32(nbc),vb);
+    sol : QuadDobl_Complex_Solutions.Solution(nbr);
+    idx : integer := str'first;
+    fail : boolean;
+
+  begin
+    if verbose then
+      put_line("in use_c2mbt, the string for the test point :");
+      put_line(str);
+    end if;
+    QuadDobl_Solution_Strings.Parse(str,idx,natural32(nbr),sol,fail);
+    if verbose then
+      put_line("in use_c2mbt, the parsed solution for the test point :");
+      QuadDobl_Complex_Solutions_io.put(sol); new_line;
+    end if;
+    if not fail then
+      for k in sol.v'range loop
+        pt(k) := sol.v(k);
+      end loop;
+    end if;
+    if verbose then
+      put_line("in use_c2mbt, the coordinates of the test point : ");
+      QuadDobl_Complex_Vectors_io.put_line(pt);
+    end if;
+  end QuadDobl_Parse_Test_Point;
 
   procedure Assign_Results
               ( onpolsys,inwitset : in boolean ) is
@@ -541,6 +637,166 @@ function use_c2mbt ( job : integer32;
     return 0;
   end Job6;
 
+  function Job7 return integer32 is -- double double ismember test
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    verbose,onp,inw : boolean;
+    nbr,dim,nbc : integer32;
+    restol,homtol : double_float;
+    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+
+  begin
+    DoblDobl_Sampling_Machine.Initialize(lp.all);
+    DoblDobl_Sampling_Machine.Default_Tune_Sampler(2);
+    DoblDobl_Sampling_Machine.Default_Tune_Refiner;
+    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Tolerances(verbose,restol,homtol);
+    declare
+      tpt : DoblDobl_Complex_Vectors.Vector(1..nbr);
+      sli : DoblDobl_Complex_VecVecs.VecVec(1..dim)
+          := Witness_Sets.Slices(lp.all,natural32(dim));
+    begin
+      DoblDobl_Parse_Test_Point(verbose,nbr,nbc,tpt);
+      Homotopy_Membership_Test
+        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      DoblDobl_Complex_VecVecs.Clear(sli);
+    end;
+    Assign_Results(onp,inw);
+    DoblDobl_Sampling_Machine.Clear;
+    return 0;
+  end Job7;
+
+  function Job8 return integer32 is -- quad double ismember test
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    verbose,onp,inw : boolean;
+    nbr,dim,nbc : integer32;
+    restol,homtol : double_float;
+    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    QuadDobl_Sampling_Machine.Initialize(lp.all);
+    QuadDobl_Sampling_Machine.Default_Tune_Sampler(2);
+    QuadDobl_Sampling_Machine.Default_Tune_Refiner;
+    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Tolerances(verbose,restol,homtol);
+    declare
+      tpt : QuadDobl_Complex_Vectors.Vector(1..nbr);
+      sli : QuadDobl_Complex_VecVecs.VecVec(1..dim)
+          := Witness_Sets.Slices(lp.all,natural32(dim));
+    begin
+      QuadDobl_Parse_Test_Point(verbose,nbr,nbc,tpt);
+      Homotopy_Membership_Test
+        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      QuadDobl_Complex_VecVecs.Clear(sli);
+    end;
+    Assign_Results(onp,inw);
+    QuadDobl_Sampling_Machine.Clear;
+    return 0;
+  end Job8;
+
+  function Job9 return integer32 is -- standard double Laurent ismember test
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+
+    verbose,onp,inw : boolean;
+    nbr,dim,nbc : integer32;
+    restol,homtol : double_float;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
+
+  begin
+    Sampling_Laurent_Machine.Initialize(lp.all);
+    Sampling_Laurent_Machine.Default_Tune_Sampler(2);
+    Sampling_Laurent_Machine.Default_Tune_Refiner;
+    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Tolerances(verbose,restol,homtol);
+    declare
+      tpt : Standard_Complex_Vectors.Vector(1..nbr);
+      sli : Standard_Complex_VecVecs.VecVec(1..dim)
+          := Witness_Sets.Slices(lp.all,natural32(dim));
+    begin
+      Standard_Parse_Test_Point(verbose,nbr,nbc,tpt);
+      Homotopy_Membership_Test
+        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      Standard_Complex_VecVecs.Clear(sli);
+    end;
+    Assign_Results(onp,inw);
+    Sampling_Laurent_Machine.Clear;
+    return 0;
+  end Job9;
+
+  function Job10 return integer32 is -- double double Laurent ismember test
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    verbose,onp,inw : boolean;
+    nbr,dim,nbc : integer32;
+    restol,homtol : double_float;
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+
+  begin
+    DoblDobl_Sampling_Laurent_Machine.Initialize(lp.all);
+    DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(2);
+    DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
+    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Tolerances(verbose,restol,homtol);
+    declare
+      tpt : DoblDobl_Complex_Vectors.Vector(1..nbr);
+      sli : DoblDobl_Complex_VecVecs.VecVec(1..dim)
+          := Witness_Sets.Slices(lp.all,natural32(dim));
+    begin
+      DoblDobl_Parse_Test_Point(verbose,nbr,nbc,tpt);
+      Homotopy_Membership_Test
+        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      DoblDobl_Complex_VecVecs.Clear(sli);
+    end;
+    Assign_Results(onp,inw);
+    DoblDobl_Sampling_Laurent_Machine.Clear;
+    return 0;
+  end Job10;
+
+  function Job11 return integer32 is -- quad double Laurent ismember test
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    verbose,onp,inw : boolean;
+    nbr,dim,nbc : integer32;
+    restol,homtol : double_float;
+    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    QuadDobl_Sampling_Laurent_Machine.Initialize(lp.all);
+    QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(2);
+    QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
+    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Tolerances(verbose,restol,homtol);
+    declare
+      tpt : QuadDobl_Complex_Vectors.Vector(1..nbr);
+      sli : QuadDobl_Complex_VecVecs.VecVec(1..dim)
+          := Witness_Sets.Slices(lp.all,natural32(dim));
+    begin
+      QuadDobl_Parse_Test_Point(verbose,nbr,nbc,tpt);
+      Homotopy_Membership_Test
+        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      QuadDobl_Complex_VecVecs.Clear(sli);
+    end;
+    Assign_Results(onp,inw);
+    QuadDobl_Sampling_Laurent_Machine.Clear;
+    return 0;
+  end Job11;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -551,6 +807,11 @@ function use_c2mbt ( job : integer32;
       when 4 => return Job4; -- Laurent membership test with double doubles
       when 5 => return Job5; -- Laurent membership test with quad doubles
       when 6 => return Job6; -- run ismember test with standard doubles
+      when 7 => return Job7; -- run ismember test with double doubles
+      when 8 => return Job8; -- run ismember test with quad doubles
+      when 9 => return Job9; -- Laurent ismember test with standard doubles
+      when 10 => return Job10; -- Laurent ismember test with double doubles
+      when 11 => return Job11; -- Laurent ismember test with quad doubles
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;
