@@ -1,3 +1,5 @@
+Sat 5 Aug 2017 : added print statements to use_c2mbt.adb if verbose is true.
+
 Fri 4 Aug 2017 : extended use_c2mbt and use_c2phc with a job for a homotopy
   membership test, taking a solution string on input.
 

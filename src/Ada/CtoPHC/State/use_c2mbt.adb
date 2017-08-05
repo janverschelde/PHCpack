@@ -1,17 +1,16 @@
 with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
---with Standard_Integer_Numbers_io;
--- use Standard_Integer_Numbers_io;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
---with Standard_Complex_Vectors_io;
--- use Standard_Complex_Vectors_io;
+with Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
@@ -24,6 +23,7 @@ with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;
 with Standard_Solution_Strings;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -96,19 +96,28 @@ function use_c2mbt ( job : integer32;
   begin
     verbose := (vrb = 1);
     nbr := integer32(va(va'first+1));
-   -- put("nbr = "); put(nbr,1); new_line;
+    if verbose
+     then put("in use_c2mbt, nbr = "); put(nbr,1); new_line;
+    end if;
     dim := integer32(va(va'first+2));
-   -- put("dim = "); put(dim,1); new_line;
+    if verbose
+     then put("in use_c2mbt, dim = "); put(dim,1); new_line;
+    end if;
     nbc := integer32(va(va'first+3));
-   -- put("nbc = "); put(nbc,1); new_line;
+    if verbose
+     then put("in use_c2mbt, nbc = "); put(nbc,1); new_line;
+    end if;
   end Get_Input_Integers;
 
   procedure Get_Input_Tolerances
-              ( restol,homtol : out double_float ) is
+              ( verbose : in boolean; restol,homtol : out double_float ) is
 
   -- DESCRIPTION :
   --   Extracts the values in the parameter c on input
   --   for the tolerances in the homotopy membership test.
+
+  -- ON ENTRY :
+  --   verbose  if verbose, then the values of the tolerance are written.
 
   -- ON RETURN :
   --   restol   tolerance on the residual of the evaluation;
@@ -119,7 +128,13 @@ function use_c2mbt ( job : integer32;
 
   begin
     restol := double_float(vc(0));
+    if verbose
+     then put("in use_c2mbt, restol = "); put(restol,3); new_line;
+    end if;
     homtol := double_float(vc(1));
+    if verbose
+     then put("in use_c2mbt, homtol = "); put(homtol,3); new_line;
+    end if;
   end Get_Input_Tolerances;
 
   procedure Get_Standard_Input_Values
@@ -239,7 +254,7 @@ function use_c2mbt ( job : integer32;
   end Get_QuadDobl_Input_Values;
 
   procedure Standard_Parse_Test_Point
-              ( nbr,nbc : in integer32;
+              ( verbose : in boolean; nbr,nbc : in integer32;
                 pt : out Standard_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -247,7 +262,8 @@ function use_c2mbt ( job : integer32;
   --   for a test point given in standard double precision.
 
   -- ON ENTRY :
-  --   nbr      the dimension of the test point.
+  --   verbose  if verbose, then debugging info is written;
+  --   nbr      the dimension of the test point;
   --   nbc      the number of characters in the string representation
   --            of the solution which containes the test point.
  
@@ -262,14 +278,24 @@ function use_c2mbt ( job : integer32;
     fail : boolean;
 
   begin
+    if verbose then
+      put_line("in use_c2mbt, the string for the test point :");
+      put_line(str);
+    end if;
     Standard_Solution_Strings.Parse(str,idx,natural32(nbr),sol,fail);
+    if verbose then
+      put_line("in use_c2mbt, the parsed solution for the test point :");
+      Standard_Complex_Solutions_io.put(sol);
+    end if;
     if not fail then
       for k in sol.v'range loop
         pt(k) := sol.v(k);
       end loop;
     end if;
-   -- put_line("The coordinates of the test point : ");
-   -- put_line(pt);
+    if verbose then
+      put_line("in use_c2mbt, the coordinates of the test point : ");
+      Standard_Complex_Vectors_io.put_line(pt);
+    end if;
   end Standard_Parse_Test_Point;
 
   procedure Assign_Results
@@ -499,13 +525,13 @@ function use_c2mbt ( job : integer32;
     Sampling_Machine.Default_Tune_Sampler(2);
     Sampling_Machine.Default_Tune_Refiner;
     Get_Input_Integers(verbose,nbr,dim,nbc);
-    Get_Input_Tolerances(restol,homtol);
+    Get_Input_Tolerances(verbose,restol,homtol);
     declare
       tpt : Standard_Complex_Vectors.Vector(1..nbr);
       sli : Standard_Complex_VecVecs.VecVec(1..dim)
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
-      Standard_Parse_Test_Point(nbr,nbc,tpt);
+      Standard_Parse_Test_Point(verbose,nbr,nbc,tpt);
       Homotopy_Membership_Test
         (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
       Standard_Complex_VecVecs.Clear(sli);
