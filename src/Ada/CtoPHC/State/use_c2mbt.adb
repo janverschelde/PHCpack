@@ -90,7 +90,7 @@ function use_c2mbt ( job : integer32;
   --   nbc      number of characters in the input string.
 
     va : constant C_Integer_Array
-       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(4));
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
     vrb : constant integer32 := integer32(va(va'first));
 
   begin
