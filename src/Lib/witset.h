@@ -1516,8 +1516,153 @@ int standard_homotopy_ismember
  *   defined by an ordinary polynomial system in standard double precision,
  *   where the test point is given as a string in PHCpack format.
  *
+ * REQUIRED : the containers in standard double precision contain the
+ *   embedded system and the corresponding generic points.
+ *
+ * ON ENTRY :
+ *   vrb      1 if extra diagnostic output needs to be written to screen,
+ *            0 if the test needs to happen in silence;
+ *   nvr      number of variables, the ambient dimension;
+ *   dim      the dimension of the witness set;
+ *   nbc      number of characters in the string tpt;
+ *   tpt      characters in the string representation for the test point
+ *            as a solution in symbolic format with variable names;
+ *   restol   tolerance on the residual for evaluating the test point;
+ *   homtol   tolerance to compare points in the membership test.
+ *
+ * ON RETURN :
+ *   onsys    1 if the test point satisfies the equation within restol,
+ *            0 if the residual evaluates to a value larger than restol;
+ *   onset    1 if the test point within homtol satisfies the test,
+ *            0 if all new witness points are distinct from the test point. */
+
+int dobldobl_homotopy_ismember
+ ( int vrb, int nvr, int dim, int nbc, char *tpt,
+   double restol, double homtol, int *onsys, int *onset );
+/*
+ * DESCRIPTION :
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by an ordinary polynomial system in double double precision,
+ *   where the test point is given as a string in PHCpack format.
+ *
+ * REQUIRED : the containers in double double precision contain the
+ *   embedded system and the corresponding generic points.
+ *
+ * ON ENTRY :
+ *   vrb      1 if extra diagnostic output needs to be written to screen,
+ *            0 if the test needs to happen in silence;
+ *   nvr      number of variables, the ambient dimension;
+ *   dim      the dimension of the witness set;
+ *   nbc      number of characters in the string tpt;
+ *   tpt      characters in the string representation for the test point
+ *            as a solution in symbolic format with variable names;
+ *   restol   tolerance on the residual for evaluating the test point;
+ *   homtol   tolerance to compare points in the membership test.
+ *
+ * ON RETURN :
+ *   onsys    1 if the test point satisfies the equation within restol,
+ *            0 if the residual evaluates to a value larger than restol;
+ *   onset    1 if the test point within homtol satisfies the test,
+ *            0 if all new witness points are distinct from the test point. */
+
+int quaddobl_homotopy_ismember
+ ( int vrb, int nvr, int dim, int nbc, char *tpt,
+   double restol, double homtol, int *onsys, int *onset );
+/*
+ * DESCRIPTION :
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by an ordinary polynomial system in quad double precision,
+ *   where the test point is given as a string in PHCpack format.
+ *
  * REQUIRED : the containers in quad double precision contain the
  *   embedded system and the corresponding generic points.
+ *
+ * ON ENTRY :
+ *   vrb      1 if extra diagnostic output needs to be written to screen,
+ *            0 if the test needs to happen in silence;
+ *   nvr      number of variables, the ambient dimension;
+ *   dim      the dimension of the witness set;
+ *   nbc      number of characters in the string tpt;
+ *   tpt      characters in the string representation for the test point
+ *            as a solution in symbolic format with variable names;
+ *   restol   tolerance on the residual for evaluating the test point;
+ *   homtol   tolerance to compare points in the membership test.
+ *
+ * ON RETURN :
+ *   onsys    1 if the test point satisfies the equation within restol,
+ *            0 if the residual evaluates to a value larger than restol;
+ *   onset    1 if the test point within homtol satisfies the test,
+ *            0 if all new witness points are distinct from the test point. */
+
+int standard_Laurent_homotopy_ismember
+ ( int vrb, int nvr, int dim, int nbc, char *tpt,
+   double restol, double homtol, int *onsys, int *onset );
+/*
+ * DESCRIPTION :
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by a Laurent polynomial system in standard double precision,
+ *   where the test point is given as a string in PHCpack format.
+ *
+ * REQUIRED : the containers in standard double precision contain the
+ *   embedded Laurent system and the corresponding generic points.
+ *
+ * ON ENTRY :
+ *   vrb      1 if extra diagnostic output needs to be written to screen,
+ *            0 if the test needs to happen in silence;
+ *   nvr      number of variables, the ambient dimension;
+ *   dim      the dimension of the witness set;
+ *   nbc      number of characters in the string tpt;
+ *   tpt      characters in the string representation for the test point
+ *            as a solution in symbolic format with variable names;
+ *   restol   tolerance on the residual for evaluating the test point;
+ *   homtol   tolerance to compare points in the membership test.
+ *
+ * ON RETURN :
+ *   onsys    1 if the test point satisfies the equation within restol,
+ *            0 if the residual evaluates to a value larger than restol;
+ *   onset    1 if the test point within homtol satisfies the test,
+ *            0 if all new witness points are distinct from the test point. */
+
+int dobldobl_Laurent_homotopy_ismember
+ ( int vrb, int nvr, int dim, int nbc, char *tpt,
+   double restol, double homtol, int *onsys, int *onset );
+/*
+ * DESCRIPTION :
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by a Laurent polynomial system in double double precision,
+ *   where the test point is given as a string in PHCpack format.
+ *
+ * REQUIRED : the containers in double double precision contain the
+ *   embedded Laurent system and the corresponding generic points.
+ *
+ * ON ENTRY :
+ *   vrb      1 if extra diagnostic output needs to be written to screen,
+ *            0 if the test needs to happen in silence;
+ *   nvr      number of variables, the ambient dimension;
+ *   dim      the dimension of the witness set;
+ *   nbc      number of characters in the string tpt;
+ *   tpt      characters in the string representation for the test point
+ *            as a solution in symbolic format with variable names;
+ *   restol   tolerance on the residual for evaluating the test point;
+ *   homtol   tolerance to compare points in the membership test.
+ *
+ * ON RETURN :
+ *   onsys    1 if the test point satisfies the equation within restol,
+ *            0 if the residual evaluates to a value larger than restol;
+ *   onset    1 if the test point within homtol satisfies the test,
+ *            0 if all new witness points are distinct from the test point. */
+
+int quaddobl_Laurent_homotopy_ismember
+ ( int vrb, int nvr, int dim, int nbc, char *tpt,
+   double restol, double homtol, int *onsys, int *onset );
+/*
+ * DESCRIPTION :
+ *   Runs the homotopy membership test for a point to belong to a witness set
+ *   defined by a Laurent polynomial system in quad double precision,
+ *   where the test point is given as a string in PHCpack format.
+ *
+ * REQUIRED : the containers in quad double precision contain the
+ *   embedded Laurent system and the corresponding generic points.
  *
  * ON ENTRY :
  *   vrb      1 if extra diagnostic output needs to be written to screen,

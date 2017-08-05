@@ -6633,6 +6633,90 @@ static PyObject *py2c_witset_quaddobl_Laurent_membertest
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
 
+static PyObject *py2c_witset_standard_ismember
+ ( PyObject *self, PyObject *args )
+{
+   int v,n,d,m,fail,onp,ins;
+   double r,h;
+   char *p;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   fail = standard_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+
+   return Py_BuildValue("(i,i,i)",fail,onp,ins);
+}
+
+static PyObject *py2c_witset_dobldobl_ismember
+ ( PyObject *self, PyObject *args )
+{
+   int v,n,d,m,fail,onp,ins;
+   double r,h;
+   char *p;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   fail = dobldobl_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+
+   return Py_BuildValue("(i,i,i)",fail,onp,ins);
+}
+
+static PyObject *py2c_witset_quaddobl_ismember
+ ( PyObject *self, PyObject *args )
+{
+   int v,n,d,m,fail,onp,ins;
+   double r,h;
+   char *p;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   fail = quaddobl_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+
+   return Py_BuildValue("(i,i,i)",fail,onp,ins);
+}
+
+static PyObject *py2c_witset_standard_Laurent_ismember
+ ( PyObject *self, PyObject *args )
+{
+   int v,n,d,m,fail,onp,ins;
+   double r,h;
+   char *p;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   fail = standard_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+
+   return Py_BuildValue("(i,i,i)",fail,onp,ins);
+}
+
+static PyObject *py2c_witset_dobldobl_Laurent_ismember
+ ( PyObject *self, PyObject *args )
+{
+   int v,n,d,m,fail,onp,ins;
+   double r,h;
+   char *p;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   fail = dobldobl_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+
+   return Py_BuildValue("(i,i,i)",fail,onp,ins);
+}
+
+static PyObject *py2c_witset_quaddobl_Laurent_ismember
+ ( PyObject *self, PyObject *args )
+{
+   int v,n,d,m,fail,onp,ins;
+   double r,h;
+   char *p;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   fail = quaddobl_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+
+   return Py_BuildValue("(i,i,i)",fail,onp,ins);
+}
+
 static PyObject *py2c_standard_witset_of_hypersurface
  ( PyObject *self, PyObject *args )
 {
@@ -9383,6 +9467,24 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_witset_quaddobl_Laurent_membertest",
      py2c_witset_quaddobl_Laurent_membertest, METH_VARARGS,
     "Executes the homotopy membership test for a point to belong to\n a witness set defined by a Laurent polynomial system\n in quad double precision.\n The containers in quad double precision must contain the embedded\n Laurent system and its corresponding solutions for the witness set\n of a positive dimensional solution set.\n On entry are the seven parameters, the first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of the point as a list with as\n many as 8*nvr doubles for the real and imaginary parts of the\n quad double precision coordinates of the test point.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
+   {"py2c_witset_standard_ismember",
+     py2c_witset_standard_ismember, METH_VARARGS,
+    "Runs the homotopy membership test for a point to belong to a witness set\n defined by an ordinary polynomial system in standard double precision,\n where the test point is given as a string in PHCpack format.\n The containers in standard double precision must contain the\n embedded system and the corresponding generic points.\n On entry are seven parameters.  The first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point,\n the test point is represented as a solution string in symbolic format,\n including the symbols for the variables, before the coordinates;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of a solution which contains\n the coordinates of the test point in symbolic format.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
+   {"py2c_witset_dobldobl_ismember",
+     py2c_witset_dobldobl_ismember, METH_VARARGS,
+    "Runs the homotopy membership test for a point to belong to a witness set\n defined by an ordinary polynomial system in double double precision,\n where the test point is given as a string in PHCpack format.\n The containers in double double precision must contain the\n embedded system and the corresponding generic points.\n On entry are seven parameters.  The first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point,\n the test point is represented as a solution string in symbolic format,\n including the symbols for the variables, before the coordinates;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of a solution which contains\n the coordinates of the test point in symbolic format.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
+   {"py2c_witset_quaddobl_ismember",
+     py2c_witset_quaddobl_ismember, METH_VARARGS,
+    "Runs the homotopy membership test for a point to belong to a witness set\n defined by an ordinary polynomial system in quad double precision,\n where the test point is given as a string in PHCpack format.\n The containers in quad double precision must contain the\n embedded system and the corresponding generic points.\n On entry are seven parameters.  The first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point,\n the test point is represented as a solution string in symbolic format,\n including the symbols for the variables, before the coordinates;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of a solution which contains\n the coordinates of the test point in symbolic format.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
+   {"py2c_witset_standard_Laurent_ismember",
+     py2c_witset_standard_Laurent_ismember, METH_VARARGS,
+    "Runs the homotopy membership test for a point to belong to a witness set\n defined by a Laurent polynomial system in standard double precision,\n where the test point is given as a string in PHCpack format.\n The containers in standard double precision must contain the\n embedded Laurent system and the corresponding generic points.\n On entry are seven parameters.  The first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point,\n the test point is represented as a solution string in symbolic format,\n including the symbols for the variables, before the coordinates;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of a solution which contains\n the coordinates of the test point in symbolic format.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
+   {"py2c_witset_dobldobl_Laurent_ismember",
+     py2c_witset_dobldobl_Laurent_ismember, METH_VARARGS,
+    "Runs the homotopy membership test for a point to belong to a witness set\n defined by a Laurent polynomial system in double double precision,\n where the test point is given as a string in PHCpack format.\n The containers in double double precision must contain the\n embedded Laurent system and the corresponding generic points.\n On entry are seven parameters.  The first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point,\n the test point is represented as a solution string in symbolic format,\n including the symbols for the variables, before the coordinates;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of a solution which contains\n the coordinates of the test point in symbolic format.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
+   {"py2c_witset_quaddobl_Laurent_ismember",
+     py2c_witset_quaddobl_Laurent_ismember, METH_VARARGS,
+    "Runs the homotopy membership test for a point to belong to a witness set\n defined by a Laurent polynomial system in quad double precision,\n where the test point is given as a string in PHCpack format.\n The containers in quad double precision must contain the\n embedded Laurent system and the corresponding generic points.\n On entry are seven parameters.  The first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point,\n the test point is represented as a solution string in symbolic format,\n including the symbols for the variables, before the coordinates;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of a solution which contains\n the coordinates of the test point in symbolic format.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
    {"py2c_standard_witset_of_hypersurface",
      py2c_standard_witset_of_hypersurface, METH_VARARGS,
     "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in standard double precision on return contain a witness set for\n the hypersurface defined by the ordinary polynomial in p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of an ordinary polynomial in several\n variables, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},

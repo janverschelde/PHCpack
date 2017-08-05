@@ -1891,3 +1891,133 @@ int standard_homotopy_ismember
 
    return fail;
 }
+
+int dobldobl_homotopy_ismember
+ ( int vrb, int nvr, int dim, int nbc, char *tpt,
+   double restol, double homtol, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[4];
+   double tols[2];
+   int testsol[nbc];
+
+   dims[0] = vrb;
+   dims[1] = nvr;
+   dims[2] = dim;
+   dims[3] = nbc;
+   tols[0] = restol;
+   tols[1] = homtol;
+
+   for(k=0; k<nbc; k++) testsol[k] = (int) tpt[k];
+
+   fail = _ada_use_c2phc(823,dims,testsol,tols);
+
+   *onsys = vrb;
+   *onset = dims[0];
+
+   return fail;
+}
+
+int quaddobl_homotopy_ismember
+ ( int vrb, int nvr, int dim, int nbc, char *tpt,
+   double restol, double homtol, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[4];
+   double tols[2];
+   int testsol[nbc];
+
+   dims[0] = vrb;
+   dims[1] = nvr;
+   dims[2] = dim;
+   dims[3] = nbc;
+   tols[0] = restol;
+   tols[1] = homtol;
+
+   for(k=0; k<nbc; k++) testsol[k] = (int) tpt[k];
+
+   fail = _ada_use_c2phc(824,dims,testsol,tols);
+
+   *onsys = vrb;
+   *onset = dims[0];
+
+   return fail;
+}
+
+int standard_Laurent_homotopy_ismember
+ ( int vrb, int nvr, int dim, int nbc, char *tpt,
+   double restol, double homtol, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[4];
+   double tols[2];
+   int testsol[nbc];
+
+   dims[0] = vrb;
+   dims[1] = nvr;
+   dims[2] = dim;
+   dims[3] = nbc;
+   tols[0] = restol;
+   tols[1] = homtol;
+
+   for(k=0; k<nbc; k++) testsol[k] = (int) tpt[k];
+
+   fail = _ada_use_c2phc(825,dims,testsol,tols);
+
+   *onsys = vrb;
+   *onset = dims[0];
+
+   return fail;
+}
+
+int dobldobl_Laurent_homotopy_ismember
+ ( int vrb, int nvr, int dim, int nbc, char *tpt,
+   double restol, double homtol, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[4];
+   double tols[2];
+   int testsol[nbc];
+
+   dims[0] = vrb;
+   dims[1] = nvr;
+   dims[2] = dim;
+   dims[3] = nbc;
+   tols[0] = restol;
+   tols[1] = homtol;
+
+   for(k=0; k<nbc; k++) testsol[k] = (int) tpt[k];
+
+   fail = _ada_use_c2phc(826,dims,testsol,tols);
+
+   *onsys = vrb;
+   *onset = dims[0];
+
+   return fail;
+}
+
+int quaddobl_Laurent_homotopy_ismember
+ ( int vrb, int nvr, int dim, int nbc, char *tpt,
+   double restol, double homtol, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[4];
+   double tols[2];
+   int testsol[nbc];
+
+   dims[0] = vrb;
+   dims[1] = nvr;
+   dims[2] = dim;
+   dims[3] = nbc;
+   tols[0] = restol;
+   tols[1] = homtol;
+
+   for(k=0; k<nbc; k++) testsol[k] = (int) tpt[k];
+
+   fail = _ada_use_c2phc(827,dims,testsol,tols);
+
+   *onsys = vrb;
+   *onset = dims[0];
+
+   return fail;
+}
