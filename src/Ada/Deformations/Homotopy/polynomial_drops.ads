@@ -4,9 +4,13 @@ with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 
 package Polynomial_Drops is
 
@@ -21,8 +25,12 @@ package Polynomial_Drops is
                 return Standard_Complex_Laurentials.Term;
   function Drop ( t : DoblDobl_Complex_Polynomials.Term; k : integer32 )
                 return DoblDobl_Complex_Polynomials.Term;
+  function Drop ( t : DoblDobl_Complex_Laurentials.Term; k : integer32 )
+                return DoblDobl_Complex_Laurentials.Term;
   function Drop ( t : QuadDobl_Complex_Polynomials.Term; k : integer32 )
                 return QuadDobl_Complex_Polynomials.Term;
+  function Drop ( t : QuadDobl_Complex_Laurentials.Term; k : integer32 )
+                return QuadDobl_Complex_Laurentials.Term;
 
   -- DESCRIPTION :
   --   Removes the k-th variable from the term t.
@@ -31,10 +39,16 @@ package Polynomial_Drops is
 
   function Drop ( p : Standard_Complex_Polynomials.Poly; k : integer32 )
                 return Standard_Complex_Polynomials.Poly;
+  function Drop ( p : Standard_Complex_Laurentials.Poly; k : integer32 )
+                return Standard_Complex_Laurentials.Poly;
   function Drop ( p : DoblDobl_Complex_Polynomials.Poly; k : integer32 )
                 return DoblDobl_Complex_Polynomials.Poly;
+  function Drop ( p : DoblDobl_Complex_Laurentials.Poly; k : integer32 )
+                return DoblDobl_Complex_Laurentials.Poly;
   function Drop ( p : QuadDobl_Complex_Polynomials.Poly; k : integer32 )
                 return QuadDobl_Complex_Polynomials.Poly;
+  function Drop ( p : QuadDobl_Complex_Laurentials.Poly; k : integer32 )
+                return QuadDobl_Complex_Laurentials.Poly;
 
   -- DESCRIPTION :
   --   Removes the k-th variable from the polynomial p.
@@ -50,6 +64,19 @@ package Polynomial_Drops is
 
   -- DESCRIPTION :
   --   Removes the k-th variable from the polynomial system p.
+  --   Only those terms for which t.dg(k) = 0 in p remain!
+
+  -- REQUIRED : k is in the range of variables.
+
+  function Drop ( p : Standard_Complex_Laur_Systems.Laur_Sys; k : integer32 )
+                return Standard_Complex_Laur_Systems.Laur_Sys;
+  function Drop ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys; k : integer32 )
+                return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  function Drop ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys; k : integer32 )
+                return QuadDobl_Complex_Laur_Systems.Laur_Sys;
+
+  -- DESCRIPTION :
+  --   Removes the k-th variable from the Laurent polynomial system p.
   --   Only those terms for which t.dg(k) = 0 in p remain!
 
   -- REQUIRED : k is in the range of variables.
