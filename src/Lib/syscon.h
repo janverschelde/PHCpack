@@ -854,4 +854,43 @@ int syscon_quaddobl_drop_variable_by_name ( int nc, char *s );
  *   with the same system that has that variable dropped
  *   corresponding to the name in the string s of nc characters long. */
 
+int syscon_standard_Laurent_drop_variable_by_index ( int k );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the standard double precision container 
+ *   with the same Laurent system that has its k-th variable dropped. */
+
+int syscon_standard_Laurent_drop_variable_by_name ( int nc, char *s );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the standard double precision container 
+ *   with the same Laurent system that have that variable dropped
+ *   corresponding to the name in the string s of nc characters long. */
+
+int syscon_dobldobl_Laurent_drop_variable_by_index ( int k );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the double double precision container 
+ *   with the same Laurent system that has its k-th variable dropped. */
+
+int syscon_dobldobl_Laurent_drop_variable_by_name ( int nc, char *s );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the double double precision container 
+ *   with the same Laurent system that has that variable dropped
+ *   corresponding to the name in the string s of nc characters long. */
+
+int syscon_quaddobl_Laurent_drop_variable_by_index ( int k );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the quad double precision container 
+ *   with the same Laurent system that has its k-th variable dropped. */
+
+int syscon_quaddobl_Laurent_drop_variable_by_name ( int nc, char *s );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the quad double precision container 
+ *   with the same Laurent system that has that variable dropped
+ *   corresponding to the name in the string s of nc characters long. */
+
 #endif

@@ -1,3 +1,6 @@
+Sun 6 Aug 2017 : added functions to syscon, phcpy2c.h, phcpy2c2, and 
+  phcpy2c3.c to drop a variable from a Laurent polynomial system.
+
 Sat 5 Aug 2017 : extended witset, phcpy2c.h, phcpy2c2.c, and phcpy2c3.c with
   functions to run the homotopy membership test on a test point given as a
   solution string, in double double and quad double precision, and also for

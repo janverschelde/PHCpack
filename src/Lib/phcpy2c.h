@@ -1944,6 +1944,69 @@ static PyObject *py2c_syscon_quaddobl_drop_variable_by_name
  *   2) s, a string that holds the name of the variable.
  *   On return is the failure code, which equals zero if all went well. */
 
+static PyObject *py2c_syscon_standard_Laurent_drop_variable_by_index
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the standard double precision container 
+ *   with the same Laurent system that has its k-th variable dropped.
+ *   The index k of the vaiable is given as an input parameter.
+ *   On return is the failure code, which equals zero if all went well.  */
+
+static PyObject *py2c_syscon_standard_Laurent_drop_variable_by_name
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the standard double precision container 
+ *   with the same Laurent system that have that variable dropped
+ *   corresponding to the name in the string s of nc characters long.
+ *   The function has two input parameters, an integer and a string:
+ *   1) nc, the number of characters in the string with the name;
+ *   2) s, a string that holds the name of the variable.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_syscon_dobldobl_Laurent_drop_variable_by_index
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the double double precision container 
+ *   with the same Laurent system that has its k-th variable dropped.
+ *   The index k of the vaiable is given as an input parameter.
+ *   On return is the failure code, which equals zero if all went well.  */
+
+static PyObject *py2c_syscon_dobldobl_Laurent_drop_variable_by_name
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the double double precision container 
+ *   with the same Laurent system that have that variable dropped
+ *   corresponding to the name in the string s of nc characters long.
+ *   The function has two input parameters, an integer and a string:
+ *   1) nc, the number of characters in the string with the name;
+ *   2) s, a string that holds the name of the variable.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_syscon_quaddobl_Laurent_drop_variable_by_index
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the quad double precision container 
+ *   with the same Laurent system that has its k-th variable dropped.
+ *   The index k of the vaiable is given as an input parameter.
+ *   On return is the failure code, which equals zero if all went well.  */
+
+static PyObject *py2c_syscon_quaddobl_Laurent_drop_variable_by_name
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the Laurent system in the quad double precision container 
+ *   with the same Laurent system that have that variable dropped
+ *   corresponding to the name in the string s of nc characters long.
+ *   The function has two input parameters, an integer and a string:
+ *   1) nc, the number of characters in the string with the name;
+ *   2) s, a string that holds the name of the variable.
+ *   On return is the failure code, which equals zero if all went well. */
+
 /* The wrapping of functions with prototypes in solcon.h starts here. */
 
 static PyObject *py2c_solcon_read_standard_solutions

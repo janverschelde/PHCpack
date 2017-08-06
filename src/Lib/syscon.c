@@ -1035,3 +1035,57 @@ int syscon_quaddobl_drop_variable_by_name ( int nc, char *s )
    fail = _ada_use_c2phc(311,&nc,b,c);
    return fail;
 }
+
+int syscon_standard_Laurent_drop_variable_by_index ( int k )
+{ 
+   int fail,*b;
+   double *c;
+   fail = _ada_use_c2phc(828,&k,b,c);
+   return fail;
+}
+
+int syscon_standard_Laurent_drop_variable_by_name ( int nc, char *s )
+{ 
+   int fail,i;
+   int b[nc];
+   double *c;
+   for(i=0; i<nc; i++) b[i] = (int) s[i];
+   fail = _ada_use_c2phc(831,&nc,b,c);
+   return fail;
+}
+
+int syscon_dobldobl_Laurent_drop_variable_by_index ( int k )
+{ 
+   int fail,*b;
+   double *c;
+   fail = _ada_use_c2phc(829,&k,b,c);
+   return fail;
+}
+
+int syscon_dobldobl_Laurent_drop_variable_by_name ( int nc, char *s )
+{ 
+   int fail,i;
+   int b[nc];
+   double *c;
+   for(i=0; i<nc; i++) b[i] = (int) s[i];
+   fail = _ada_use_c2phc(832,&nc,b,c);
+   return fail;
+}
+
+int syscon_quaddobl_Laurent_drop_variable_by_index ( int k )
+{ 
+   int fail,*b;
+   double *c;
+   fail = _ada_use_c2phc(830,&k,b,c);
+   return fail;
+}
+
+int syscon_quaddobl_Laurent_drop_variable_by_name ( int nc, char *s )
+{ 
+   int fail,i;
+   int b[nc];
+   double *c;
+   for(i=0; i<nc; i++) b[i] = (int) s[i];
+   fail = _ada_use_c2phc(833,&nc,b,c);
+   return fail;
+}

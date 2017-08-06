@@ -2872,6 +2872,81 @@ static PyObject *py2c_syscon_quaddobl_drop_variable_by_name
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_syscon_standard_Laurent_drop_variable_by_index
+ ( PyObject *self, PyObject *args )
+{
+   int k,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = syscon_standard_Laurent_drop_variable_by_index(k);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_standard_Laurent_drop_variable_by_name
+ ( PyObject *self, PyObject *args )
+{
+   int nc,fail;
+   char *s;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nc,&s)) return NULL;
+   fail = syscon_standard_Laurent_drop_variable_by_name(nc,s);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_dobldobl_Laurent_drop_variable_by_index
+ ( PyObject *self, PyObject *args )
+{
+   int k,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = syscon_dobldobl_Laurent_drop_variable_by_index(k);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_dobldobl_Laurent_drop_variable_by_name
+ ( PyObject *self, PyObject *args )
+{
+   int nc,fail;
+   char *s;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nc,&s)) return NULL;
+   fail = syscon_dobldobl_Laurent_drop_variable_by_name(nc,s);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_quaddobl_Laurent_drop_variable_by_index
+ ( PyObject *self, PyObject *args )
+{
+   int k,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = syscon_quaddobl_Laurent_drop_variable_by_index(k);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_quaddobl_Laurent_drop_variable_by_name
+ ( PyObject *self, PyObject *args )
+{
+   int nc,fail;
+   char *s;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nc,&s)) return NULL;
+   fail = syscon_quaddobl_Laurent_drop_variable_by_name(nc,s);
+
+   return Py_BuildValue("i",fail);
+}
+
 /* The wrapping of the functions in solcon.h starts from here. */
 
 static PyObject *py2c_solcon_read_standard_solutions
@@ -8789,6 +8864,24 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_syscon_quaddobl_drop_variable_by_name",
      py2c_syscon_quaddobl_drop_variable_by_name, METH_VARARGS,
     "Replaces the system in the quad double precision container\n with the same system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syscon_standard_Laurent_drop_variable_by_index",
+     py2c_syscon_standard_Laurent_drop_variable_by_index, METH_VARARGS,
+    "Replaces the Laurent system in the standard double precision container\n with the same Laurent system that has its k-th variable dropped.\n The index k of the vaiable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syscon_standard_Laurent_drop_variable_by_name",
+     py2c_syscon_standard_Laurent_drop_variable_by_name, METH_VARARGS,
+    "Replaces the Laurent system in the standard double precision container\n with the same Laurent system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syscon_dobldobl_Laurent_drop_variable_by_index",
+     py2c_syscon_dobldobl_Laurent_drop_variable_by_index, METH_VARARGS,
+    "Replaces the Laurent system in the double double precision container\n with the same Laurent system that has its k-th variable dropped.\n The index k of the vaiable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syscon_dobldobl_Laurent_drop_variable_by_name",
+     py2c_syscon_dobldobl_Laurent_drop_variable_by_name, METH_VARARGS,
+    "Replaces the Laurent system in the double double precision container\n with the same Laurent system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syscon_quaddobl_Laurent_drop_variable_by_index",
+     py2c_syscon_quaddobl_Laurent_drop_variable_by_index, METH_VARARGS,
+    "Replaces the Laurent system in the quad double precision container\n with the same Laurent system that has its k-th variable dropped.\n The index k of the vaiable is given as an input parameter.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syscon_quaddobl_Laurent_drop_variable_by_name",
+     py2c_syscon_quaddobl_Laurent_drop_variable_by_name, METH_VARARGS,
+    "Replaces the Laurent system in the quad double precision container\n with the same Laurent system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_solcon_length_standard_solution_string",
      py2c_solcon_length_standard_solution_string,
      METH_VARARGS,
