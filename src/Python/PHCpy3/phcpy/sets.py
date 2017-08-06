@@ -447,7 +447,7 @@ def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
     double double precision 'dd' and quad double precision 'qd'.
     There are two tolerances: *evatol* is the tolerance on the residual
     of the evaluation of the polynomial equations at the test point.
-    If the residual of the evalution is not less than *evatol*,
+    If the residual of the evaluation is not less than *evatol*,
     then the membertest returns False.  Otherwise, the homotopy
     membership test is called and the *memtol* is used to compare
     the coordinates of the point with the newly computed generic points.
@@ -480,7 +480,7 @@ def laurent_membertest(wsys, gpts, dim, point, \
     double double precision 'dd' and quad double precision 'qd'.
     There are two tolerances: *evatol* is the tolerance on the residual
     of the evaluation of the Laurent system at the test point.
-    If the residual of the evalution is not less than *evatol*,
+    If the residual of the evaluation is not less than *evatol*,
     then the membertest returns False.  Otherwise, the homotopy
     membership test is called and the *memtol* is used to compare
     the coordinates of the point with the newly computed generic points.
@@ -508,7 +508,7 @@ def standard_ismember(wsys, gpts, dim, point, \
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the string *point*,
     which is the string representation of a solution in PHCpack format,
-    with symbols of the variables before the values of the coordinaes.
+    with symbols of the variables before the values of the coordinates.
     By default, *verbose* is True.
     Calculations happen in standard double precision.
     The default values for the evaluation (*evatol*) and the membership
@@ -534,7 +534,7 @@ def dobldobl_ismember(wsys, gpts, dim, point, \
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the string *point*,
     which is the string representation of a solution in PHCpack format,
-    with symbols of the variables before the values of the coordinaes.
+    with symbols of the variables before the values of the coordinates.
     By default, *verbose* is True.
     Calculations happen in double double precision.
     The default values for the evaluation (*evatol*) and the membership
@@ -560,7 +560,7 @@ def quaddobl_ismember(wsys, gpts, dim, point, \
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the string *point*,
     which is the string representation of a solution in PHCpack format,
-    with symbols of the variables before the values of the coordinaes.
+    with symbols of the variables before the values of the coordinates.
     By default, *verbose* is True.
     Calculations happen in quad double precision.
     The default values for the evaluation (*evatol*) and the membership
@@ -570,6 +570,87 @@ def quaddobl_ismember(wsys, gpts, dim, point, \
     from phcpy.interface import store_quaddobl_witness_set
     from phcpy.phcpy2c3 import py2c_witset_quaddobl_ismember as membtest
     store_quaddobl_witness_set(len(wsys), dim, wsys, gpts)
+    nbc = len(point)
+    nvr = len(wsys) - dim # test point should not have slack variables
+    if verbose:
+        print('calling quaddobl_ismember with test point :')
+        print(point)
+    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
+    return (result[2] == 1)
+
+def standard_laurent_ismember(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Applies the homotopy membership test for a *point* to belong to
+    a witness set of dimension *dim*, given by an embedding polynomial
+    Laurent system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the string *point*,
+    which is the string representation of a solution in PHCpack format,
+    with symbols of the variables before the values of the coordinates.
+    By default, *verbose* is True.
+    Calculations happen in standard double precision.
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
+    in the homotopy membership test.
+    """
+    from phcpy.interface import store_standard_laurent_witness_set
+    from phcpy.phcpy2c3 \
+    import py2c_witset_standard_Laurent_ismember as membtest
+    store_standard_laurent_witness_set(len(wsys), dim, wsys, gpts)
+    nbc = len(point)
+    nvr = len(wsys) - dim # test point should not have slack variables
+    if verbose:
+        print('calling standard_ismember with test point :')
+        print(point)
+    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
+    return (result[2] == 1)
+
+def dobldobl_laurent_ismember(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Applies the homotopy membership test for a *point* to belong to
+    a witness set of dimension *dim*, given by an embedding polynomial
+    Laurent system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the string *point*,
+    which is the string representation of a solution in PHCpack format,
+    with symbols of the variables before the values of the coordinates.
+    By default, *verbose* is True.
+    Calculations happen in double double precision.
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
+    in the homotopy membership test.
+    """
+    from phcpy.interface import store_dobldobl_laurent_witness_set
+    from phcpy.phcpy2c3 \
+    import py2c_witset_dobldobl_Laurent_ismember as membtest
+    store_dobldobl_laurent_witness_set(len(wsys), dim, wsys, gpts)
+    nbc = len(point)
+    nvr = len(wsys) - dim # test point should not have slack variables
+    if verbose:
+        print('calling dobldobl_ismember with test point :')
+        print(point)
+    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
+    return (result[2] == 1)
+
+def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Applies the homotopy membership test for a *point* to belong to
+    a witness set of dimension *dim*, given by an embedding polynomial
+    Laurent system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the string *point*,
+    which is the string representation of a solution in PHCpack format,
+    with symbols of the variables before the values of the coordinates.
+    By default, *verbose* is True.
+    Calculations happen in quad double precision.
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
+    in the homotopy membership test.
+    """
+    from phcpy.interface import store_quaddobl_laurent_witness_set
+    from phcpy.phcpy2c3 \
+    import py2c_witset_quaddobl_Laurent_ismember as membtest
+    store_quaddobl_laurent_witness_set(len(wsys), dim, wsys, gpts)
     nbc = len(point)
     nvr = len(wsys) - dim # test point should not have slack variables
     if verbose:
@@ -679,7 +760,7 @@ def test_member(prc='d'):
     print(membertest(twiste1, twtsols, 1, inpoint, precision=prc))
     print(membertest(twiste1, twtsols, 1, outpoint, precision=prc))
 
-def test_ismember(prc='d'):
+def test_ismember(prc='d', laurent=True):
     """
     To test the membertest wrapper, we take the twisted cubic again.
     """
@@ -696,25 +777,45 @@ def test_ismember(prc='d'):
     dicpt = strsol2dict(genpt)
     coord = [dicpt['x'], dicpt['y'], dicpt['z']]
     tstpt = make_solution(['x', 'y', 'z'], coord)
-    if prc == 'd':
-        print(standard_ismember(twiste1, twtsols, 1, tstpt))
-    elif prc == 'dd':
-        print(dobldobl_ismember(twiste1, twtsols, 1, tstpt))
-    elif prc == 'qd':
-        print(quaddobl_ismember(twiste1, twtsols, 1, tstpt))
+    if laurent:
+        if prc == 'd':
+            print(standard_laurent_ismember(twiste1, twtsols, 1, tstpt))
+        elif prc == 'dd':
+            print(dobldobl_laurent_ismember(twiste1, twtsols, 1, tstpt))
+        elif prc == 'qd':
+            print(quaddobl_laurent_ismember(twiste1, twtsols, 1, tstpt))
+        else:
+            print( 'wrong level of precision')
     else:
-        print( 'wrong level of precision')
+        if prc == 'd':
+            print(standard_ismember(twiste1, twtsols, 1, tstpt))
+        elif prc == 'dd':
+            print(dobldobl_ismember(twiste1, twtsols, 1, tstpt))
+        elif prc == 'qd':
+            print(quaddobl_ismember(twiste1, twtsols, 1, tstpt))
+        else:
+            print( 'wrong level of precision')
     input('hit enter to continue')
     outsol = make_solution(['x', 'y', 'z'], [1, 2, 3])
     # print(is_member(twiste1, twtsols, 1, outsol, precision=prc))
-    if prc == 'd':
-        print(standard_ismember(twiste1, twtsols, 1, outsol))
-    elif prc == 'dd':
-        print(dobldobl_ismember(twiste1, twtsols, 1, outsol))
-    elif prc == 'qd':
-        print(quaddobl_ismember(twiste1, twtsols, 1, outsol))
+    if laurent:
+        if prc == 'd':
+            print(standard_laurent_ismember(twiste1, twtsols, 1, outsol))
+        elif prc == 'dd':
+            print(dobldobl_laurent_ismember(twiste1, twtsols, 1, outsol))
+        elif prc == 'qd':
+            print(quaddobl_laurent_ismember(twiste1, twtsols, 1, outsol))
+        else:
+            print('wrong level of precision')
     else:
-        print('wrong level of precision')
+        if prc == 'd':
+            print(standard_ismember(twiste1, twtsols, 1, outsol))
+        elif prc == 'dd':
+            print(dobldobl_ismember(twiste1, twtsols, 1, outsol))
+        elif prc == 'qd':
+            print(quaddobl_ismember(twiste1, twtsols, 1, outsol))
+        else:
+            print('wrong level of precision')
 
 def test():
     """
