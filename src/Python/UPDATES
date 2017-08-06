@@ -1,4 +1,5 @@
-Sat 5 Aug 2017 : extended the python2 module sets with membership tests.
+Sat 5 Aug 2017 : extended the python2 module sets with membership tests
+  and extended the python3 module sets as well.
 
 Fri 4 Aug 2017 : added a function ismember to the module sets, a function
   which takes the test points as a PHCpack solution string.
