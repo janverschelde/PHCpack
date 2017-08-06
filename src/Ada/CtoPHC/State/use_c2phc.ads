@@ -286,23 +286,41 @@ function use_c2phc ( job : integer32;
 --                       the k-th polynomial in the container,
 --                 this is the reverse of operation 448.   
 --
--- the operations to drop variables from a polynomial :
+-- the operations to drop variables from a polynomial system :
 --  
 --   job   = 306 : replaces the system in the standard double container
---                  by a system with variable of index a[0] removed;
+--                 by a system with variable of index a[0] removed;
 --         = 307 : replaces the system in the double double container
---                  by a system with variable of index a[0] removed;
+--                 by a system with variable of index a[0] removed;
 --         = 308 : replaces the system in the quad double container
 --                 by a system with variable of index a[0] removed;
 --         = 309 : replaces the system in the standard double container
---                  by a system with variable with name in b and
---                  number of characters in a[0] removed;
+--                 by a system with variable with name in b and
+--                 number of characters in a[0] removed;
 --         = 310 : replaces the system in the double double container
---                  by a system with variable with name in b and
---                  number of characters in a[0] removed;
+--                 by a system with variable with name in b and
+--                 number of characters in a[0] removed;
 --         = 311 : replaces the system in the quad double container
---                  by a system with variable with name in b and
---                  number of characters in a[0] removed;
+--                 by a system with variable with name in b and
+--                 number of characters in a[0] removed.
+--
+-- the operations to drop variables from a Laurent polynomial system :
+--  
+--   job   = 828 : replaces the Laurent system in the standard dobl container
+--                 by a Laurent system with variable of index a[0] removed;
+--         = 829 : replaces the Laurent system in the double double container
+--                 by a Laurent system with variable of index a[0] removed;
+--         = 830 : replaces the Laurent system in the quad double container
+--                 by a Laurent system with variable of index a[0] removed;
+--         = 831 : replaces the Laurent system in the standard dobl container
+--                 by a Laurent system with variable with name in b and
+--                 number of characters in a[0] removed;
+--         = 832 : replaces the Laurent system in the double double container
+--                 by a Laurent system with variable with name in b and
+--                 number of characters in a[0] removed;
+--         = 833 : replaces the Laurent system in the quad double container
+--                 by a Laurent system with variable with name in b and
+--                 number of characters in a[0] removed.
 --
 -- the operations in the solutions container :
 --

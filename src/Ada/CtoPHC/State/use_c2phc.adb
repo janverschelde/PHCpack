@@ -2984,6 +2984,13 @@ function use_c2phc ( job : integer32;
       when 825 => return use_c2mbt(9,a,b,c);  -- standard Laurent ismember test
       when 826 => return use_c2mbt(10,a,b,c); -- dobldobl Laurent ismember test
       when 827 => return use_c2mbt(11,a,b,c); -- quaddobl Laurent ismember test
+     -- dropping a variable from Laurent polynomial systems
+      when 828 => return use_syscon(22,a,b,c); -- st Laurent drop var by idx
+      when 829 => return use_syscon(23,a,b,c); -- dd Laurent drop var by idx
+      when 830 => return use_syscon(24,a,b,c); -- qd Laurent drop var by idx
+      when 831 => return use_syscon(25,a,b,c); -- st Laurent drop var by name
+      when 832 => return use_syscon(26,a,b,c); -- dd Laurent drop var by name
+      when 833 => return use_syscon(27,a,b,c); -- qd Laurent drop var by name
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

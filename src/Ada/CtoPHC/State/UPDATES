@@ -1,3 +1,6 @@
+Sun 6 Aug 2017 : added jobs to use_syscon and use_c2phc to drop variables
+  of Laurent polynomial systems.
+
 Sat 5 Aug 2017 : added print statements to use_c2mbt.adb if verbose is true.
   Fixed a bug in the get_input_integers of use_c2mbt.adb.
   Added 5 jobs to use_c2mbt and use_c2phc for the double double, quad double,

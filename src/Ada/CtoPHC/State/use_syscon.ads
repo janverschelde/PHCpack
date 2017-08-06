@@ -270,7 +270,7 @@ function use_syscon ( job : integer32;
 --                  the multprec Laurent systems container, returns in b
 --                  the size limit of the k-th multprec Laurent polynomial.
 --
--- the operations to drop variables from a polynomial :
+-- the operations to drop variables from a polynomial system :
 --  
 --   job    =  12 : replaces the system in the standard double container
 --                  by a system with variable of index a[0] removed;
@@ -286,6 +286,24 @@ function use_syscon ( job : integer32;
 --                  number of characters in a[0] removed;
 --          =  17 : replaces the system in the quad double container
 --                  by a system with variable with name in b and
+--                  number of characters in a[0] removed;
+--
+-- the operations to drop variables from a Laurent polynomial system :
+--  
+--   job    =  22 : replaces the Laurent system in the standard dobl container
+--                  by a Laurent system with variable of index a[0] removed;
+--          =  23 : replaces the Laurent system in the double double container
+--                  by a Laurent system with variable of index a[0] removed;
+--          =  24 : replaces the Laurent system in the quad double container
+--                  by a Laurent system with variable of index a[0] removed;
+--          =  25 : replaces the Laurent system in the standard dobl container
+--                  by a Laurent system with variable with name in b and
+--                  number of characters in a[0] removed;
+--          =  26 : replaces the Laurent system in the double double container
+--                  by a Laurent system with variable with name in b and
+--                  number of characters in a[0] removed;
+--          =  27 : replaces the Laurent system in the quad double container
+--                  by a Laurent system with variable with name in b and
 --                  number of characters in a[0] removed;
 --
 -- operations on reading systems with given file name :

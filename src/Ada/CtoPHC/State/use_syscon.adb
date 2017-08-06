@@ -1548,7 +1548,7 @@ function use_syscon ( job : integer32;
     return 0;
   end Job14;
 
-  function Job15 return integer32 is -- drop variable by name
+  function Job15 return integer32 is -- standard drop variable by name
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     nc : constant natural := natural(v_a(v_a'first));
@@ -1576,7 +1576,7 @@ function use_syscon ( job : integer32;
     return 0;
   end Job15;
 
-  function Job16 return integer32 is -- drop variable by name
+  function Job16 return integer32 is -- dobldobl drop variable by name
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     nc : constant natural := natural(v_a(v_a'first));
@@ -1603,7 +1603,7 @@ function use_syscon ( job : integer32;
     return 0;
   end Job16;
 
-  function Job17 return integer32 is -- drop variable by name
+  function Job17 return integer32 is -- quaddobl drop variable by name
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     nc : constant natural := natural(v_a(v_a'first));
@@ -1629,6 +1629,130 @@ function use_syscon ( job : integer32;
     QuadDobl_PolySys_Container.Initialize(dropped);
     return 0;
   end Job17;
+
+  function Job22 return integer32 is -- drop standard Laurent variable by idx
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    ind : constant integer32 := integer32(v_a(v_a'first));
+    use Standard_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
+    dropped : constant Laur_Sys(lp'range) := Polynomial_Drops.Drop(lp.all,ind);
+
+  begin
+    Standard_LaurSys_Container.Clear;
+    Standard_LaurSys_Container.Initialize(dropped);
+    return 0;
+  end Job22;
+
+  function Job23 return integer32 is -- drop dobldobl Laurent variable by idx
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    ind : constant integer32 := integer32(v_a(v_a'first));
+    use DoblDobl_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    dropped : constant Laur_Sys(lp'range) := Polynomial_Drops.Drop(lp.all,ind);
+
+  begin
+    DoblDobl_LaurSys_Container.Clear;
+    DoblDobl_LaurSys_Container.Initialize(dropped);
+    return 0;
+  end Job23;
+
+  function Job24 return integer32 is -- drop quaddobl Laurent variable by idx
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    ind : constant integer32 := integer32(v_a(v_a'first));
+    use QuadDobl_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+    dropped : constant Laur_Sys(lp'range) := Polynomial_Drops.Drop(lp.all,ind);
+
+  begin
+    QuadDobl_LaurSys_Container.Clear;
+    QuadDobl_LaurSys_Container.Initialize(dropped);
+    return 0;
+  end Job24;
+
+  function Job25 return integer32 is -- standard Laurent drop variable by name
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc)
+       := C_Integer_Array_to_String(natural32(nc),vb);   
+    sb : Symbol_Table.Symbol;
+    ind : natural32;
+    use Standard_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
+    dropped : Laur_Sys(lp'range);
+
+  begin
+    for i in 1..nc loop
+      sb(i) := sv(i);
+    end loop;
+    for i in nc+1..sb'last loop
+      sb(i) := ' ';
+    end loop;
+    ind := Symbol_Table.Get(sb);
+    dropped := Polynomial_Drops.Drop(lp.all,integer32(ind));
+    Standard_LaurSys_Container.Clear;
+    Standard_LaurSys_Container.Initialize(dropped);
+    return 0;
+  end Job25;
+
+  function Job26 return integer32 is -- dobldobl Laurent drop variable by name
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+    sb : Symbol_Table.Symbol;
+    ind : natural32;
+    use DoblDobl_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    dropped : Laur_Sys(lp'range);
+
+  begin
+    for i in 1..nc loop
+      sb(i) := sv(i);
+    end loop;
+    for i in nc+1..sb'last loop
+      sb(i) := ' ';
+    end loop;
+    ind := Symbol_Table.Get(sb);
+    dropped := Polynomial_Drops.Drop(lp.all,integer32(ind));
+    DoblDobl_LaurSys_Container.Clear;
+    DoblDobl_LaurSys_Container.Initialize(dropped);
+    return 0;
+  end Job26;
+
+  function Job27 return integer32 is -- quaddobl Laurent drop variable by name
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+    sb : Symbol_Table.Symbol;
+    ind : natural32;
+    use Quaddobl_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+    dropped : Laur_Sys(lp'range);
+
+  begin
+    for i in 1..nc loop
+      sb(i) := sv(i);
+    end loop;
+    for i in nc+1..sb'last loop
+      sb(i) := ' ';
+    end loop;
+    ind := Symbol_Table.Get(sb);
+    dropped := Polynomial_Drops.Drop(lp.all,integer32(ind));
+    QuadDobl_LaurSys_Container.Clear;
+    QuadDobl_LaurSys_Container.Initialize(dropped);
+    return 0;
+  end Job27;
 
   function Job540 return integer32 is -- read standard system from file
 
@@ -1780,6 +1904,13 @@ function use_syscon ( job : integer32;
       when 17 => return Job17; -- quaddobl drop variable by name
      -- degrees of polynomials :
       when 20 => return Job20;   -- degree of standard polynomial
+     -- dropping variables from Laurent polynomials
+      when 22 => return Job22; -- standard Laurent drop variable by index
+      when 23 => return Job23; -- dobldobl Laurent drop variable by index
+      when 24 => return Job24; -- quaddobl Laurent drop variable by index
+      when 25 => return Job25; -- standard Laurent drop variable by name
+      when 26 => return Job26; -- dobldobl Laurent drop variable by name
+      when 27 => return Job27; -- quaddobl Laurent drop variable by name
      -- jobs for standard double complex Laurent polynomials :
       when 100 => return Job100; -- read system into container
       when 101 => return Job101; -- write system in container
