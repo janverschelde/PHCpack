@@ -1,6 +1,13 @@
 """
 This module exports routines of PHCpack to manipulate
 positive dimensional solution sets of polynomial systems.
+The embed functions add slack variables and random hyperplanes.
+The number of slack variables equals the number of random hyperplanes,
+which in turn equals the dimension of the solution set.
+The drop functions remove the added slack variables from the polynomials
+and the coordinates of the solutions.
+Given a witness set and a point, a homotopy membership determines whether
+the point belongs to the solution set represented by the witness set.
 """
 
 def standard_embed(nvar, topdim, pols):
@@ -242,6 +249,57 @@ def drop_variable_from_quaddobl_polynomials(pols, svar):
     py2c_syscon_quaddobl_drop_variable_by_name(len(svar), svar)
     py2c_syscon_remove_symbol_name(len(svar), svar)
     return load_quaddobl_system()
+
+def drop_variable_from_standard_laurent_polynomials(pols, svar):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent Laurent polynomials
+    in several variables, with coefficients in standard double precision.
+    Note that the system in *pols* must be square.
+    """
+    from phcpy.phcpy2c2 \
+    import py2c_syscon_standard_Laurent_drop_variable_by_name
+    from phcpy.phcpy2c2 import py2c_syscon_remove_symbol_name
+    from phcpy.interface import store_standard_laurent_system
+    from phcpy.interface import load_standard_laurent_system
+    store_standard_laurent_system(pols)
+    py2c_syscon_standard_Laurent_drop_variable_by_name(len(svar), svar)
+    py2c_syscon_remove_symbol_name(len(svar), svar)
+    return load_standard_laurent_system()
+
+def drop_variable_from_dobldobl_laurent_polynomials(pols, svar):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent Laurent polynomials
+    in several variables, with coefficients in double double precision.
+    Note that the system in *pols* must be square.
+    """
+    from phcpy.phcpy2c2 \
+    import py2c_syscon_dobldobl_Laurent_drop_variable_by_name
+    from phcpy.phcpy2c2 import py2c_syscon_remove_symbol_name
+    from phcpy.interface import store_dobldobl_laurent_system
+    from phcpy.interface import load_dobldobl_laurent_system
+    store_dobldobl_laurent_system(pols)
+    py2c_syscon_dobldobl_Laurent_drop_variable_by_name(len(svar), svar)
+    py2c_syscon_remove_symbol_name(len(svar), svar)
+    return load_dobldobl_laurent_system()
+
+def drop_variable_from_quaddobl_laurent_polynomials(pols, svar):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent Laurent polynomials
+    in several variables, with coefficients in quad double precision.
+    Note that the system in *pols* must be square.
+    """
+    from phcpy.phcpy2c2 \
+    import py2c_syscon_quaddobl_Laurent_drop_variable_by_name
+    from phcpy.phcpy2c2 import py2c_syscon_remove_symbol_name
+    from phcpy.interface import store_quaddobl_laurent_system
+    from phcpy.interface import load_quaddobl_laurent_system
+    store_quaddobl_laurent_system(pols)
+    py2c_syscon_quaddobl_Laurent_drop_variable_by_name(len(svar), svar)
+    py2c_syscon_remove_symbol_name(len(svar), svar)
+    return load_quaddobl_laurent_system()
 
 def drop_coordinate_from_standard_solutions(sols, nbvar, svar):
     r"""

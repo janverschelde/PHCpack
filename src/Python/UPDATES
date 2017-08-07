@@ -1,6 +1,8 @@
 Sun 6 Aug 2017 : to the module sets in the PHCpy2 and PHCpy3 folders,
   added functions to run the homotopy membership test for Laurent systems,
   with the test point given in the symbolic representation of a solution.
+  Added functions to the module sets for python2 and python3, to drop
+  a variable from a Laurent system.
 
 Sat 5 Aug 2017 : extended the python2 module sets with membership tests
   and extended the python3 module sets as well.
