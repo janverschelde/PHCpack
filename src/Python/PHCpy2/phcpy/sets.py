@@ -391,7 +391,6 @@ def dobldobl_membertest(wsys, gpts, dim, point, \
     """
     from phcpy.interface import store_dobldobl_witness_set
     from phcpy.phcpy2c2 import py2c_witset_dobldobl_membertest as membtest
-    storesys(wsys)
     store_dobldobl_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/4
     strpt = str(point)
@@ -436,12 +435,10 @@ def standard_laurent_membertest(wsys, gpts, dim, point, \
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
     """
-    from phcpy.interface import store_standard_laurent_system as storesys
-    from phcpy.interface import store_standard_solutions as storesols
+    from phcpy.interface import store_standard_laurent_witness_set
     from phcpy.phcpy2c2 \
     import py2c_witset_standard_Laurent_membertest as membtest
-    storesys(wsys)
-    storesols(len(wsys), gpts)
+    store_standard_laurent_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/2
     strpt = str(point)
     nbc = len(strpt)
@@ -462,12 +459,10 @@ def dobldobl_laurent_membertest(wsys, gpts, dim, point, \
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
     """
-    from phcpy.interface import store_dobldobl_laurent_system as storesys
-    from phcpy.interface import store_dobldobl_solutions as storesols
+    from phcpy.interface import store_dobldobl_laurent_witness_set
     from phcpy.phcpy2c2 \
     import py2c_witset_dobldobl_Laurent_membertest as membtest
-    storesys(wsys)
-    storesols(len(wsys), gpts)
+    store_dobldobl_laurent_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/4
     strpt = str(point)
     nbc = len(strpt)
