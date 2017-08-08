@@ -1,5 +1,6 @@
 Mon 7 Aug 2017 : bug fix in sets.py for python2.  Added an illustrative
   example for the witness generate, illusex.py, to the examples in PHCpy2.
+  Added a split_filter function to the cascades modules for python2 and 3.
 
 Sun 6 Aug 2017 : to the module sets in the PHCpy2 and PHCpy3 folders,
   added functions to run the homotopy membership test for Laurent systems,

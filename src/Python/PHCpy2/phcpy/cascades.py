@@ -251,6 +251,28 @@ def laurent_cascade_step(dim, embsys, esols, precision='d', tasks=0):
         print 'wrong argument for precision'
         return None
 
+def split_filter(sols, dim, tol, verbose=True):
+    r"""
+    Given in *sols* is a list of solutions of dimension *dim*,
+    which contain a variable with name 'zz' + str(*dim*),
+    which is the name of the last slack variable.
+    The tolerance *tol* is used to split the list of solution in two.
+    On return is a tuple of two lists of solutions (possibly empty).
+    The first list of solutions has the last slack variable equal
+    to zero (with respect to the tolerance *tol) and the last slack
+    variable of each solution in the second list has a magnitude
+    larger than *tol*.
+    If *verbose*, then the length of each solution list is printed.
+    """
+    from phcpy.solutions import filter_zero_coordinates as filter
+    lastslack = 'zz' + str(dim)
+    zerosols = filter(sols, lastslack, tol, 'select')
+    nonzsols = filter(sols, lastslack, tol, 'remove')
+    if verbose:
+        print 'number of candidate generic points :', len(zerosols)
+        print 'number of nonsolutions :', len(nonzsols)
+    return (zerosols, nonzsols)
+
 def test_cascade():
     """
     Does one cascade step on simple example.
@@ -275,15 +297,15 @@ def test_cascade():
         print sol
     print 'number of solutions :', len(sols)
     raw_input('hit enter to continue...')
-    from phcpy.solutions import filter_zero_coordinates, filter_regular
-    sols0 = filter_zero_coordinates(sols, 'zz1', 1.0e-8, 'select')
-    sols1 = filter_zero_coordinates(sols, 'zz1', 1.0e-8, 'remove')
+    (sols0, sols1) = split_filter(sols, 1, 1.0e-8)
+    raw_input('hit enter to continue...')
     print 'solutions with zero slack variables :'
     for sol in sols0:
         print sol
     print 'solutions with nonzero slack variables :'
     for sol in sols1:
         print sol
+    from phcpy.solutions import filter_regular
     print len(sols), '=' , len(sols0), '+', len(sols1)
     rs1 = filter_regular(sols1, 1.0e-8, 'select')
     print 'number of nonsolutions :', len(rs1)
@@ -298,6 +320,7 @@ def test_cascade():
     for pol in wp1:
         print pol
     ws1 = drop_coordinate_from_standard_solutions(s2c, len(embpols), 'zz2')
+    from phcpy.solutions import filter_zero_coordinates
     ws1f1 = filter_zero_coordinates(ws1, 'zz1', 1.0e-8, 'select')
     ws1f2 = filter_regular(ws1f1, 1.0e-8, 'select')
     print 'the witness points :'
