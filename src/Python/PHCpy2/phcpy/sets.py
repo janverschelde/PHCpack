@@ -356,7 +356,7 @@ def standard_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding polynomial
+    a witness set of dimension *dim*, given by an embedded polynomial
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
@@ -379,7 +379,7 @@ def dobldobl_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding polynomial
+    a witness set of dimension *dim*, given by an embedded polynomial
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
@@ -402,7 +402,7 @@ def quaddobl_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding polynomial
+    a witness set of dimension *dim*, given by an embedded polynomial
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
@@ -425,7 +425,7 @@ def standard_laurent_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding Laurent
+    a witness set of dimension *dim*, given by an embedded Laurent
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
@@ -449,7 +449,7 @@ def dobldobl_laurent_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding Laurent
+    a witness set of dimension *dim*, given by an embedded Laurent
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
@@ -473,7 +473,7 @@ def quaddobl_laurent_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding Laurent
+    a witness set of dimension *dim*, given by an embedded Laurent
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
@@ -497,7 +497,7 @@ def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
     verbose=True, precision='d'):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding polynomial
+    a witness set of dimension *dim*, given by an embedded polynomial
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
@@ -530,7 +530,7 @@ def laurent_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding Laurent
+    a witness set of dimension *dim*, given by an embedded Laurent
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
@@ -563,7 +563,7 @@ def standard_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding polynomial
+    a witness set of dimension *dim*, given by an embedded polynomial
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the string *point*,
     which is the string representation of a solution in PHCpack format,
@@ -589,7 +589,7 @@ def dobldobl_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding polynomial
+    a witness set of dimension *dim*, given by an embedded polynomial
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the string *point*,
     which is the string representation of a solution in PHCpack format,
@@ -615,7 +615,7 @@ def quaddobl_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding polynomial
+    a witness set of dimension *dim*, given by an embedded polynomial
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the string *point*,
     which is the string representation of a solution in PHCpack format,
@@ -641,7 +641,7 @@ def standard_laurent_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding polynomial
+    a witness set of dimension *dim*, given by an embedded polynomial
     Laurent system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the string *point*,
     which is the string representation of a solution in PHCpack format,
@@ -668,7 +668,7 @@ def dobldobl_laurent_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding polynomial
+    a witness set of dimension *dim*, given by an embedded polynomial
     Laurent system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the string *point*,
     which is the string representation of a solution in PHCpack format,
@@ -695,7 +695,7 @@ def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Applies the homotopy membership test for a *point* to belong to
-    a witness set of dimension *dim*, given by an embedding polynomial
+    a witness set of dimension *dim*, given by an embedded polynomial
     Laurent system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the string *point*,
     which is the string representation of a solution in PHCpack format,
@@ -717,6 +717,188 @@ def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
         print point
     result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
     return (result[2] == 1)
+
+def standard_ismember_filter(wsys, gpts, dim, points, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Given in *wsys* and *gpts* is a witness set of dimension *dim*,
+    where *wsys* is an embedded polynomial system,
+    and in *points* a list of strings.  The strings represent points
+    as solutions in PHCpack format.  The homotopy membership test is
+    applied to each point in the list *points*.  The list on return
+    contains the points that do NOT belong to the witness set.
+    Points that belong to the witness set are considered junk.
+    Calculations happen in standard double precision.
+    """
+    result = []
+    for point in points:
+        if not standard_ismember(wsys, gpts, dim, point, \
+                                 evatol, memtol, verbose):
+            result.append(point)
+    return result
+
+def dobldobl_ismember_filter(wsys, gpts, dim, points, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Given in *wsys* and *gpts* is a witness set of dimension *dim*,
+    where *wsys* is an embedded polynomial system,
+    and in *points* a list of strings.  The strings represent points
+    as solutions in PHCpack format.  The homotopy membership test is
+    applied to each point in the list *points*.  The list on return
+    contains the points that do NOT belong to the witness set.
+    Points that belong to the witness set are considered junk.
+    Calculations happen in double double precision.
+    """
+    result = []
+    for point in points:
+        if not dobldobl_ismember(wsys, gpts, dim, point, \
+                                 evatol, memtol, verbose):
+            result.append(point)
+    return result
+
+def quaddobl_ismember_filter(wsys, gpts, dim, points, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Given in *wsys* and *gpts* is a witness set of dimension *dim*,
+    where *wsys* is an embedded polynomial system,
+    and in *points* a list of strings.  The strings represent points
+    as solutions in PHCpack format.  The homotopy membership test is
+    applied to each point in the list *points*.  The list on return
+    contains the points that do NOT belong to the witness set.
+    Points that belong to the witness set are considered junk.
+    Calculations happen in quad double precision.
+    """
+    result = []
+    for point in points:
+        if not quaddobl_ismember(wsys, gpts, dim, point, \
+                                 evatol, memtol, verbose):
+            result.append(point)
+    return result
+
+def standard_laurent_ismember_filter(wsys, gpts, dim, points, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Given in *wsys* and *gpts* is a witness set of dimension *dim*,
+    where *wsys* is an embedded Laurent polynomial system,
+    and in *points* a list of strings.  The strings represent points
+    as solutions in PHCpack format.  The homotopy membership test is
+    applied to each point in the list *points*.  The list on return
+    contains the points that do NOT belong to the witness set.
+    Points that belong to the witness set are considered junk.
+    Calculations happen in standard double precision.
+    """
+    result = []
+    for point in points:
+        if not standard_ismember(wsys, gpts, dim, point, \
+                                 evatol, memtol, verbose):
+            result.append(point)
+    return result
+
+def dobldobl_laurent_ismember_filter(wsys, gpts, dim, points, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Given in *wsys* and *gpts* is a witness set of dimension *dim*,
+    where *wsys* is an embedded Laurent polynomial system,
+    and in *points* a list of strings.  The strings represent points
+    as solutions in PHCpack format.  The homotopy membership test is
+    applied to each point in the list *points*.  The list on return
+    contains the points that do NOT belong to the witness set.
+    Points that belong to the witness set are considered junk.
+    Calculations happen in double double precision.
+    """
+    result = []
+    for point in points:
+        if not dobldobl_ismember(wsys, gpts, dim, point, \
+                                 evatol, memtol, verbose):
+            result.append(point)
+    return result
+
+def quaddobl_laurent_ismember_filter(wsys, gpts, dim, points, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Given in *wsys* and *gpts* is a witness set of dimension *dim*,
+    where *wsys* is an embedded Laurent polynomial system,
+    and in *points* a list of strings.  The strings represent points
+    as solutions in PHCpack format.  The homotopy membership test is
+    applied to each point in the list *points*.  The list on return
+    contains the points that do NOT belong to the witness set.
+    Points that belong to the witness set are considered junk.
+    Calculations happen in quad double precision.
+    """
+    result = []
+    for point in points:
+        if not quaddobl_ismember(wsys, gpts, dim, point, \
+                                 evatol, memtol, verbose):
+            result.append(point)
+    return result
+
+def ismember_filter(wsys, gpts, dim, points, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
+    r"""
+    Filters *points* so the list on return contains only those points
+    which do not belong to the witness set of dimension *dim*,
+    given by an embedded polynomial system in *wsys*,
+    with corresponding generic points in *gpts*.
+    The list *points* is a list of strings.  Each string is the
+    symbolic string representation of a solution.
+    By default, *verbose* is True, and the precision is double 'd'.
+    Other levels of precision are double double precision 'dd' 
+    and quad double precision 'qd'.
+    There are two tolerances: *evatol* is the tolerance on the residual
+    of the evaluation of the polynomial equations at the test point.
+    If the residual of the evaluation is not less than *evatol*,
+    then the point is not a member.  Otherwise, the homotopy
+    membership test is called and the *memtol* is used to compare
+    the coordinates of the point with the newly computed generic points.
+    If there is a match between the coordinates within the given
+    tolerance *memtol*, then the points is a member and filtered out.
+    """
+    if(precision == 'd'):
+        return standard_ismember_filter(wsys, gpts, dim, points, \
+                                        evatol, memtol, verbose)
+    elif(precision == 'dd'):
+        return dobldobl_ismember_filter(wsys, gpts, dim, points, \
+                                        evatol, memtol, verbose)
+    elif(precision == 'qd'):
+        return quaddobl_ismember_filter(wsys, gpts, dim, points, \
+                                        evatol, memtol, verbose)
+    else:
+        print 'wrong argument for precision'
+        return points
+
+def laurent_ismember_filter(wsys, gpts, dim, points, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
+    r"""
+    Filters *points* so the list on return contains only those points
+    which do not belong to the witness set of dimension *dim*,
+    given by an embedded Laurent polynomial system in *wsys*,
+    with corresponding generic points in *gpts*.
+    The list *points* is a list of strings.  Each string is the
+    symbolic string representation of a solution.
+    By default, *verbose* is True, and the precision is double 'd'.
+    Other levels of precision are double double precision 'dd' 
+    and quad double precision 'qd'.
+    There are two tolerances: *evatol* is the tolerance on the residual
+    of the evaluation of the polynomial equations at the test point.
+    If the residual of the evaluation is not less than *evatol*,
+    then the point is not a member.  Otherwise, the homotopy
+    membership test is called and the *memtol* is used to compare
+    the coordinates of the point with the newly computed generic points.
+    If there is a match between the coordinates within the given
+    tolerance *memtol*, then the point is a member and filtered out.
+    """
+    if(precision == 'd'):
+        return standard_laurent_ismember_filter\
+                   (wsys, gpts, dim, points, evatol, memtol, verbose)
+    elif(precision == 'dd'):
+        return dobldobl_laurent_ismember_filter\
+                   (wsys, gpts, dim, points, evatol, memtol, verbose)
+    elif(precision == 'qd'):
+        return quaddobl_laurent_ismember_filter\
+                   (wsys, gpts, dim, points, evatol, memtol, verbose)
+    else:
+        print 'wrong argument for precision'
+        return points
 
 def is_slackvar(var):
     r"""
