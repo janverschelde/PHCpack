@@ -1,6 +1,7 @@
 Tue 8 Aug 2017 : added top_cascade() to the cascades module for python2 and 3,
   developed in the illustrated example illusex.py.  Added a cascade_filter()
   function in cascades.py in PHCpy2 and PHCpy3, updated illusex.py.
+  The function laurent_top_cascade() is tested on the sevenbar.py example.
 
 Mon 7 Aug 2017 : bug fix in sets.py for python2.  Added an illustrative
   example for the witness generate, illusex.py, to the examples in PHCpy2.

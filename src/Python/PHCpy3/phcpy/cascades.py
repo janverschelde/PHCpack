@@ -296,6 +296,38 @@ def top_cascade(nvr, dim, pols, tol, nbtasks=0, prc='d', verbose=True):
     (sols0, sols1) = split_filter(topsols, dim, tol)
     return (topemb, sols0, sols1)
 
+def laurent_top_cascade(nvr, dim, pols, tol, \
+    nbtasks=0, prc='d', verbose=True):
+    r"""
+    Constructs an embedding of the Laurent polynomials in *pols*,
+    with the number of variables in *pols* equal to *nvr*,
+    where *dim* is the top dimension of the solution set.
+    Applies the blackbox solver to the embedded system.
+    The tolerance *tol* is used to split the solution list in the list
+    of generic points and the nonsolutions for use in the cascade.
+    Returns a tuple with three items:
+    1) the embedded system,
+    2) the solutions with zero last coordinate w.r.t. tol,
+    3) the solutions with nonzero last coordinate w.r.t. tol.
+    The three parameters are
+    1) *nbtasks* is the number of tasks, 0 if no multitasking;
+    2) the working precision *prc*, 'd' for double, 'dd' for double double,
+       or 'qd' for quad double;
+    3) if *verbose*, then some output is written to screen.
+    """
+    from phcpy.sets import laurent_embed
+    from phcpy.solver import solve
+    from phcpy.cascades import split_filter
+    topemb = laurent_embed(nvr, dim, pols)
+    if verbose:
+        print('solving the embedded system at the top ...')
+    slt = not verbose
+    topsols = solve(topemb, silent=slt, tasks=nbtasks, precision=prc)
+    if verbose:
+         print('number of solutions found :', len(topsols))
+    (sols0, sols1) = split_filter(topsols, dim, tol)
+    return (topemb, sols0, sols1)
+
 def cascade_filter(dim, embpols, nonsols, tol, \
     nbtasks=0, prc='d', verbose=True):
     r"""

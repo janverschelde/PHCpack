@@ -116,22 +116,14 @@ def embed_and_cascade(pols, topdim):
     Returns the embedded system, the three generic points,
     and the unfiltered solutions at the end of the cascade.
     """
-    from phcpy.sets import laurent_embed
-    from phcpy.cascades import laurent_cascade_step
-    from phcpy.solver import solve
-    from phcpy.solutions import filter_zero_coordinates
-    embpols = laurent_embed(len(pols), topdim, pols)
-    embsols = solve(embpols)
-    print('found', len(embsols), 'solutions at the top')
-    sols0 = filter_zero_coordinates(embsols, 'zz1', 1.0e-8, 'select')
-    sols1 = filter_zero_coordinates(embsols, 'zz1', 1.0e-8, 'remove')
-    print('number of solutions with zero slack variable :', len(sols0)) 
-    print('number of solutions with nonzero slack variable :', len(sols1)) 
+    from phcpy.cascades import laurent_top_cascade, laurent_cascade_step
+    (embpols, sols0, sols1) \
+        = laurent_top_cascade(len(pols), topdim, pols, 1.0e-08)
     for sol in sols1:
         print(sol)
     input('hit enter to continue')
     print('... running cascade step ...')
-    sols2 = laurent_cascade_step(embpols, sols1, precision='d')
+    sols2 = laurent_cascade_step(1, embpols, sols1, precision='d')
     print('... after running the cascade ...')
     for sol in sols2:
         print(sol)
