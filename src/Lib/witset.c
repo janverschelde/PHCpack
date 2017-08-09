@@ -1886,8 +1886,8 @@ int standard_homotopy_ismember
 
    fail = _ada_use_c2phc(822,dims,testsol,tols);
 
-   *onsys = vrb;
-   *onset = dims[0];
+   *onsys = dims[0];
+   *onset = testsol[0];
 
    return fail;
 }
@@ -1912,8 +1912,8 @@ int dobldobl_homotopy_ismember
 
    fail = _ada_use_c2phc(823,dims,testsol,tols);
 
-   *onsys = vrb;
-   *onset = dims[0];
+   *onsys = dims[0];
+   *onset = testsol[0];
 
    return fail;
 }
@@ -1938,8 +1938,8 @@ int quaddobl_homotopy_ismember
 
    fail = _ada_use_c2phc(824,dims,testsol,tols);
 
-   *onsys = vrb;
-   *onset = dims[0];
+   *onsys = dims[0];
+   *onset = testsol[0];
 
    return fail;
 }
@@ -1964,8 +1964,8 @@ int standard_Laurent_homotopy_ismember
 
    fail = _ada_use_c2phc(825,dims,testsol,tols);
 
-   *onsys = vrb;
-   *onset = dims[0];
+   *onsys = dims[0];
+   *onset = testsol[0];
 
    return fail;
 }
@@ -1990,8 +1990,8 @@ int dobldobl_Laurent_homotopy_ismember
 
    fail = _ada_use_c2phc(826,dims,testsol,tols);
 
-   *onsys = vrb;
-   *onset = dims[0];
+   *onsys = dims[0];
+   *onset = testsol[0];
 
    return fail;
 }
@@ -2016,8 +2016,8 @@ int quaddobl_Laurent_homotopy_ismember
 
    fail = _ada_use_c2phc(827,dims,testsol,tols);
 
-   *onsys = vrb;
-   *onset = dims[0];
+   *onsys = dims[0];
+   *onset = testsol[0];
 
    return fail;
 }

@@ -1,3 +1,6 @@
+Wed 9 Aug 2017 : bug fixed in witset.c, in the return of values after
+  the call to the interface homotopy_ismember functions.
+
 Sun 6 Aug 2017 : added functions to syscon, phcpy2c.h, phcpy2c2, and 
   phcpy2c3.c to drop a variable from a Laurent polynomial system.
 
