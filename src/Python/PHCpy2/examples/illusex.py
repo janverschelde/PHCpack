@@ -6,26 +6,12 @@ generic points on all components, on all dimensions of the solution set.
 pols = ['(x^2 + y^2 + z^2 - 1)*(y - x^2)*(x - 0.5);', \
         '(x^2 + y^2 + z^2 - 1)*(z - x^3)*(y - 0.5);', \
         '(x^2 + y^2 + z^2 - 1)*(z - x*y)*(z - 0.5);']
-"""
-Initialization: embed and solve at the top dimension.
-"""
-from phcpy.sets import embed
-topemb = embed(3, 2, pols)
-from phcpy.solver import solve
-print 'solving the embedded system at the top ...'
-topsols = solve(topemb, silent=True)
-print 'number of solutions found :', len(topsols)
+from phcpy.cascades import top_cascade
+(topemb, topsols0, topsols1) = top_cascade(3, 2, pols, 1.0e-8)
 from phcpy.solutions import filter_zero_coordinates as filter
-"""
-Filter the solutions with zero slack.
-"""
-topsols0 = filter(topsols, 'zz2', 1.0e-8, 'select')
-topsols1 = filter(topsols, 'zz2', 1.0e-8, 'remove')
-print 'number of solutions with zero slacks :', len(topsols0)
 print 'generic points on the two dimensional surface :'
 for sol in topsols0:
     print sol
-print 'number of nonsolutions :', len(topsols1)
 raw_input('hit enter to continue')
 """
 Run the cascade with the nonsolutions.

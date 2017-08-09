@@ -265,6 +265,37 @@ def split_filter(sols, dim, tol, verbose=True):
         print('number of nonsolutions :', len(nonzsols))
     return (zerosols, nonzsols)
 
+def top_cascade(nvr, dim, pols, tol, nbtasks=0, prc='d', verbose=True):
+    """
+    Constructs an embedding of the polynomials in pols,
+    with the number of variables in pols equal to nvr,
+    where dim is the top dimension of the solution set.
+    Applies the blackbox solver to the embedded system.
+    The tolerance is used to split the solution list in the list
+    of generic points and the nonsolutions for use in the cascade.
+    Returns a tuple with three items:
+    1) the embedded system;
+    2) the solutions with zero last coordinate w.r.t. tol;
+    3) the solutions with nonzero last coordinate w.r.t. tol;
+    The three parameters are
+    1) nbtasks is the number of tasks, 0 if no multitasking;
+    2) the working precision prc, 'd' for double, 'dd' for double double,
+       or 'qd' for quad double;
+    3) if verbose, then some output is written to screen
+    """
+    from phcpy.sets import embed
+    from phcpy.solver import solve
+    from phcpy.cascades import split_filter
+    topemb = embed(nvr, dim, pols)
+    if verbose:
+        print('solving the embedded system at the top ...')
+    slt = not verbose
+    topsols = solve(topemb, silent=slt, tasks=nbtasks, precision=prc)
+    if verbose:
+         print('number of solutions found :', len(topsols))
+    (sols0, sols1) = split_filter(topsols, dim, tol)
+    return (topemb, sols0, sols1)
+
 def test_cascade():
     """
     Does one cascade step on simple example.
@@ -280,24 +311,16 @@ def test_cascade():
             '(x - 1)*(z-x^3);', \
             '(x^2 - 1)*(y-x^2);' ]
     print(pols)
-    embpols = embed(3, 2, pols)
+    (embpols, sols0, sols1) = top_cascade(3, 2, pols, 1.0e-8)
     print('the embedded system :')
     print(embpols)
-    input('hit enter to continue...')
-    sols = solve(embpols, silent=True)
-    for sol in sols:
-        print(sol)
-    print('number of solutions :', len(sols))
-    input('hit enter to continue...')
-    (sols0, sols1) = split_filter(sols, 1, 1.0e-8)
-    input('hit enter to continue...')
-    print('solutions with zero slack variables :')
+    print('the generic points :')
     for sol in sols0:
         print(sol)
+    input('hit enter to continue...')
     print('solutions with nonzero slack variables :')
     for sol in sols1:
         print(sol)
-    print(len(sols), '=' , len(sols0), '+', len(sols1))
     from phcpy.solutions import filter_zero_coordinates, filter_regular
     rs1 = filter_regular(sols1, 1.0e-8, 'select')
     print('number of nonsolutions :', len(rs1))

@@ -1,3 +1,6 @@
+Tue 8 Aug 2017 : added top_cascade() to the cascades module for python2 and 3,
+  developed in the illustrated example illusex.py.
+
 Mon 7 Aug 2017 : bug fix in sets.py for python2.  Added an illustrative
   example for the witness generate, illusex.py, to the examples in PHCpy2.
   Added a split_filter function to the cascades modules for python2 and 3.
