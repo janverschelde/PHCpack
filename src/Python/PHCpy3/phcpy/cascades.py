@@ -266,22 +266,22 @@ def split_filter(sols, dim, tol, verbose=True):
     return (zerosols, nonzsols)
 
 def top_cascade(nvr, dim, pols, tol, nbtasks=0, prc='d', verbose=True):
-    """
-    Constructs an embedding of the polynomials in pols,
-    with the number of variables in pols equal to nvr,
-    where dim is the top dimension of the solution set.
+    r"""
+    Constructs an embedding of the polynomials in *pols*,
+    with the number of variables in *pols* equal to *nvr*,
+    where *dim* is the top dimension of the solution set.
     Applies the blackbox solver to the embedded system.
-    The tolerance is used to split the solution list in the list
+    The tolerance *tol* is used to split the solution list in the list
     of generic points and the nonsolutions for use in the cascade.
     Returns a tuple with three items:
-    1) the embedded system;
-    2) the solutions with zero last coordinate w.r.t. tol;
-    3) the solutions with nonzero last coordinate w.r.t. tol;
+    1) the embedded system,
+    2) the solutions with zero last coordinate w.r.t. tol,
+    3) the solutions with nonzero last coordinate w.r.t. tol.
     The three parameters are
-    1) nbtasks is the number of tasks, 0 if no multitasking;
-    2) the working precision prc, 'd' for double, 'dd' for double double,
+    1) *nbtasks* is the number of tasks, 0 if no multitasking;
+    2) the working precision *prc*, 'd' for double, 'dd' for double double,
        or 'qd' for quad double;
-    3) if verbose, then some output is written to screen
+    3) if *verbose*, then some output is written to screen.
     """
     from phcpy.sets import embed
     from phcpy.solver import solve
@@ -295,6 +295,32 @@ def top_cascade(nvr, dim, pols, tol, nbtasks=0, prc='d', verbose=True):
          print('number of solutions found :', len(topsols))
     (sols0, sols1) = split_filter(topsols, dim, tol)
     return (topemb, sols0, sols1)
+
+def cascade_filter(dim, embpols, nonsols, tol, \
+    nbtasks=0, prc='d', verbose=True):
+    r"""
+    Runs one step in the cascade homotopy defined by the embedding
+    in *embpols*, starting at the solutions in *nonsols*,
+    removing the last hyperplane from *embpols* at dimension *dim*.
+    The tolerance *tol* is used to split filter the solutions.
+    By default, the precision *prc* is double ('d').  Other valid values
+    for *prc* are 'dd' (for double double) and 'qd' (for quad double).
+    If *verbose*, then some output is written to screen.
+    """
+    from phcpy.cascades import cascade_step, split_filter
+    from phcpy.sets import drop_variable_from_standard_polynomials as drop1poly
+    from phcpy.sets import drop_coordinate_from_standard_solutions as drop1sols
+    if verbose:
+        print('running a cascade with %d paths ...' % len(nonsols))
+    sols = cascade_step(dim, embpols, nonsols, precision=prc, tasks=nbtasks)
+    dimslackvar = 'zz' + str(dim)
+    embdown = drop1poly(embpols, dimslackvar)
+    solsdrop = drop1sols(sols, len(embpols), dimslackvar)
+    if dim <= 1:
+        return (embdown[:-1], solsdrop)
+    else:
+        (sols0, sols1) = split_filter(solsdrop, dim-1, tol, verbose)
+        return (embdown[:-1], sols0, sols1) 
 
 def test_cascade():
     """
@@ -321,24 +347,14 @@ def test_cascade():
     print('solutions with nonzero slack variables :')
     for sol in sols1:
         print(sol)
-    from phcpy.solutions import filter_zero_coordinates, filter_regular
-    rs1 = filter_regular(sols1, 1.0e-8, 'select')
-    print('number of nonsolutions :', len(rs1))
     input('hit enter to continue...')
     print('... running cascade step ...')
-    s2c = cascade_step(2, embpols, rs1, precision='d')
-    print('... after running the cascade ...')
-    for sol in s2c:
-        print(sol)
-    wp1 = drop_variable_from_standard_polynomials(embpols, 'zz2')
+    (wp1, ws0, ws1) = cascade_filter(2, embpols, sols1, 1.0e-8)
     print('the 1-dimensional embedding :')
     for pol in wp1:
         print(pol)
-    ws1 = drop_coordinate_from_standard_solutions(s2c, len(embpols), 'zz2')
-    ws1f1 = filter_zero_coordinates(ws1, 'zz1', 1.0e-8, 'select')
-    ws1f2 = filter_regular(ws1f1, 1.0e-8, 'select')
-    print('the witness points :')
-    for sol in ws1f2:
+    print('the candidate witness points :')
+    for sol in ws0:
         print(sol)
 
 def test():
