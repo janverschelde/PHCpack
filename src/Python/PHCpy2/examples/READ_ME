@@ -23,6 +23,6 @@ touchcircle      : tangent lines to a circle, another use case
 fourlines        : two lines meet four general lines, another use case
 tangents4spheres : sage setup to solve the tangents to 4 spheres problem
 cyclic4          : runs a membership test on the witness set of cyclic 4-roots
-illusex          : witness generate on an illustrative example
+illusex2         : witness generate on an illustrative example
 sevenbar         : illustration of numerical irreducible decomposition
 -------------------------------------------------------------------------------

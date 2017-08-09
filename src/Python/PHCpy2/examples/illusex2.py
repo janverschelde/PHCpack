@@ -1,6 +1,6 @@
 """
 Illustrative example for a numerical irreducible decomposition.
-The script illustrates a two-stage cascade to compute candidate
+This python2 script illustrates a two-stage cascade to compute candidate
 generic points on all components, on all dimensions of the solution set.
 """
 pols = ['(x^2 + y^2 + z^2 - 1)*(y - x^2)*(x - 0.5);', \
@@ -8,7 +8,6 @@ pols = ['(x^2 + y^2 + z^2 - 1)*(y - x^2)*(x - 0.5);', \
         '(x^2 + y^2 + z^2 - 1)*(z - x*y)*(z - 0.5);']
 from phcpy.cascades import top_cascade, cascade_filter
 (topemb, topsols0, topsols1) = top_cascade(3, 2, pols, 1.0e-8)
-from phcpy.solutions import filter_zero_coordinates as filter
 print 'generic points on the two dimensional surface :'
 for sol in topsols0:
     print sol
