@@ -789,8 +789,8 @@ def standard_laurent_ismember_filter(wsys, gpts, dim, points, \
     """
     result = []
     for point in points:
-        if not standard_ismember(wsys, gpts, dim, point, \
-                                 evatol, memtol, verbose):
+        if not standard_laurent_ismember(wsys, gpts, dim, point, \
+                                         evatol, memtol, verbose):
             result.append(point)
     return result
 
@@ -808,8 +808,8 @@ def dobldobl_laurent_ismember_filter(wsys, gpts, dim, points, \
     """
     result = []
     for point in points:
-        if not dobldobl_ismember(wsys, gpts, dim, point, \
-                                 evatol, memtol, verbose):
+        if not dobldobl_laurent_ismember(wsys, gpts, dim, point, \
+                                         evatol, memtol, verbose):
             result.append(point)
     return result
 
@@ -827,8 +827,8 @@ def quaddobl_laurent_ismember_filter(wsys, gpts, dim, points, \
     """
     result = []
     for point in points:
-        if not quaddobl_ismember(wsys, gpts, dim, point, \
-                                 evatol, memtol, verbose):
+        if not quaddobl_laurent_ismember(wsys, gpts, dim, point, \
+                                         evatol, memtol, verbose):
             result.append(point)
     return result
 

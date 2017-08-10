@@ -2,6 +2,7 @@ Wed 9 Aug 2017 : added ismember_filter() functions to the sets module in
   the PHCpy2 folder, tested in the illusex2.py script.  Did the same for
   the python3 versions, updating sets.py and the illusex3.py script.
   Added laurent_cascade_filter to the cascades module for python2 and 3.
+  Bug fixed in laurent_ismember_filter() functions in the sets module.
 
 Tue 8 Aug 2017 : added top_cascade() to the cascades module for python2 and 3,
   developed in the illustrated example illusex.py.  Added a cascade_filter()
