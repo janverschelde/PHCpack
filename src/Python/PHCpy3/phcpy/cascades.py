@@ -285,7 +285,6 @@ def top_cascade(nvr, dim, pols, tol, nbtasks=0, prc='d', verbose=True):
     """
     from phcpy.sets import embed
     from phcpy.solver import solve
-    from phcpy.cascades import split_filter
     topemb = embed(nvr, dim, pols)
     if verbose:
         print('solving the embedded system at the top ...')
@@ -317,7 +316,6 @@ def laurent_top_cascade(nvr, dim, pols, tol, \
     """
     from phcpy.sets import laurent_embed
     from phcpy.solver import solve
-    from phcpy.cascades import split_filter
     topemb = laurent_embed(nvr, dim, pols)
     if verbose:
         print('solving the embedded system at the top ...')
@@ -331,20 +329,77 @@ def laurent_top_cascade(nvr, dim, pols, tol, \
 def cascade_filter(dim, embpols, nonsols, tol, \
     nbtasks=0, prc='d', verbose=True):
     r"""
-    Runs one step in the cascade homotopy defined by the embedding
-    in *embpols*, starting at the solutions in *nonsols*,
+    Runs one step in the cascade homotopy defined by the embedding of
+    polynomials in *embpols*, starting at the solutions in *nonsols*,
     removing the last hyperplane from *embpols* at dimension *dim*.
     The tolerance *tol* is used to split filter the solutions.
     By default, the precision *prc* is double ('d').  Other valid values
     for *prc* are 'dd' (for double double) and 'qd' (for quad double).
     If *verbose*, then some output is written to screen.
     """
-    from phcpy.cascades import cascade_step, split_filter
-    from phcpy.sets import drop_variable_from_standard_polynomials as drop1poly
-    from phcpy.sets import drop_coordinate_from_standard_solutions as drop1sols
+    if(prc=='d'):
+        from phcpy.sets \
+        import drop_variable_from_standard_polynomials as drop1poly
+        from phcpy.sets \
+        import drop_coordinate_from_standard_solutions as drop1sols
+    elif(prc=='dd'):
+        from phcpy.sets \
+        import drop_variable_from_dobldobl_polynomials as drop1poly
+        from phcpy.sets \
+        import drop_coordinate_from_dobldobl_solutions as drop1sols
+    elif(prc=='qd'):
+        from phcpy.sets \
+        import drop_variable_from_quaddobl_polynomials as drop1poly
+        from phcpy.sets \
+        import drop_coordinate_from_quaddobl_solutions as drop1sols
+    else:
+        print('invalid value for precision as argument for prc')
+        return
     if verbose:
         print('running a cascade with %d paths ...' % len(nonsols))
     sols = cascade_step(dim, embpols, nonsols, precision=prc, tasks=nbtasks)
+    dimslackvar = 'zz' + str(dim)
+    embdown = drop1poly(embpols, dimslackvar)
+    solsdrop = drop1sols(sols, len(embpols), dimslackvar)
+    if dim <= 1:
+        return (embdown[:-1], solsdrop)
+    else:
+        (sols0, sols1) = split_filter(solsdrop, dim-1, tol, verbose)
+        return (embdown[:-1], sols0, sols1) 
+
+def laurent_cascade_filter(dim, embpols, nonsols, tol, \
+    nbtasks=0, prc='d', verbose=True):
+    r"""
+    Runs one step in the cascade homotopy defined by the embedding of
+    Laurent polynomials in *embpols*, starting at the solutions in *nonsols*,
+    removing the last hyperplane from *embpols* at dimension *dim*.
+    The tolerance *tol* is used to split filter the solutions.
+    By default, the precision *prc* is double ('d').  Other valid values
+    for *prc* are 'dd' (for double double) and 'qd' (for quad double).
+    If *verbose*, then some output is written to screen.
+    """
+    if(prc=='d'):
+        from phcpy.sets \
+        import drop_variable_from_standard_laurent_polynomials as drop1poly
+        from phcpy.sets \
+        import drop_coordinate_from_standard_solutions as drop1sols
+    elif(prc=='dd'):
+        from phcpy.sets \
+        import drop_variable_from_dobldobl_laurent_polynomials as drop1poly
+        from phcpy.sets \
+        import drop_coordinate_from_dobldobl_solutions as drop1sols
+    elif(prc=='qd'):
+        from phcpy.sets \
+        import drop_variable_from_quaddobl_laurent_polynomials as drop1poly
+        from phcpy.sets \
+        import drop_coordinate_from_quaddobl_solutions as drop1sols
+    else:
+        print('invalid value for precision as argument for prc')
+        return
+    if verbose:
+        print('running a cascade with %d paths ...' % len(nonsols))
+    sols = laurent_cascade_step\
+               (dim, embpols, nonsols, precision=prc, tasks=nbtasks)
     dimslackvar = 'zz' + str(dim)
     embdown = drop1poly(embpols, dimslackvar)
     solsdrop = drop1sols(sols, len(embpols), dimslackvar)
