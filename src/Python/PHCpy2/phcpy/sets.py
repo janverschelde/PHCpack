@@ -573,6 +573,10 @@ def standard_ismember(wsys, gpts, dim, point, \
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
+    Returns a tuple of two booleans.  The first boolean is True if the
+    point satisfies the equations, otherwise it is False.  The second
+    boolean is True if the point belongs to the witness set,
+    otherwise, the second boolean is False.
     """
     from phcpy.interface import store_standard_witness_set
     from phcpy.phcpy2c2 import py2c_witset_standard_ismember as membtest
@@ -583,7 +587,8 @@ def standard_ismember(wsys, gpts, dim, point, \
         print 'calling standard_ismember with test point :'
         print point
     result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
-    return (result[2] == 1)
+    (fail, onpolsys, inwitset) = result
+    return (onpolsys, inwitset)
 
 def dobldobl_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
@@ -599,6 +604,10 @@ def dobldobl_ismember(wsys, gpts, dim, point, \
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
+    Returns a tuple of two booleans.  The first boolean is True if the
+    point satisfies the equations, otherwise it is False.  The second
+    boolean is True if the point belongs to the witness set,
+    otherwise, the second boolean is False.
     """
     from phcpy.interface import store_dobldobl_witness_set
     from phcpy.phcpy2c2 import py2c_witset_dobldobl_ismember as membtest
@@ -609,7 +618,8 @@ def dobldobl_ismember(wsys, gpts, dim, point, \
         print 'calling dobldobl_ismember with test point :'
         print point
     result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
-    return (result[2] == 1)
+    (fail, onpolsys, inwitset) = result
+    return (onpolsys, inwitset)
 
 def quaddobl_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
@@ -625,6 +635,10 @@ def quaddobl_ismember(wsys, gpts, dim, point, \
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
+    Returns a tuple of two booleans.  The first boolean is True if the
+    point satisfies the equations, otherwise it is False.  The second
+    boolean is True if the point belongs to the witness set,
+    otherwise, the second boolean is False.
     """
     from phcpy.interface import store_quaddobl_witness_set
     from phcpy.phcpy2c2 import py2c_witset_quaddobl_ismember as membtest
@@ -635,7 +649,8 @@ def quaddobl_ismember(wsys, gpts, dim, point, \
         print 'calling quaddobl_ismember with test point :'
         print point
     result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
-    return (result[2] == 1)
+    (fail, onpolsys, inwitset) = result
+    return (onpolsys, inwitset)
 
 def standard_laurent_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
@@ -651,6 +666,10 @@ def standard_laurent_ismember(wsys, gpts, dim, point, \
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
+    Returns a tuple of two booleans.  The first boolean is True if the
+    point satisfies the equations, otherwise it is False.  The second
+    boolean is True if the point belongs to the witness set,
+    otherwise, the second boolean is False.
     """
     from phcpy.interface import store_standard_laurent_witness_set
     from phcpy.phcpy2c2 \
@@ -662,7 +681,8 @@ def standard_laurent_ismember(wsys, gpts, dim, point, \
         print 'calling standard_ismember with test point :'
         print point
     result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
-    return (result[2] == 1)
+    (fail, onpolsys, inwitset) = result
+    return (onpolsys, inwitset)
 
 def dobldobl_laurent_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
@@ -678,6 +698,10 @@ def dobldobl_laurent_ismember(wsys, gpts, dim, point, \
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
+    Returns a tuple of two booleans.  The first boolean is True if the
+    point satisfies the equations, otherwise it is False.  The second
+    boolean is True if the point belongs to the witness set,
+    otherwise, the second boolean is False.
     """
     from phcpy.interface import store_dobldobl_laurent_witness_set
     from phcpy.phcpy2c2 \
@@ -689,7 +713,8 @@ def dobldobl_laurent_ismember(wsys, gpts, dim, point, \
         print 'calling dobldobl_ismember with test point :'
         print point
     result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
-    return (result[2] == 1)
+    (fail, onpolsys, inwitset) = result
+    return (onpolsys, inwitset)
 
 def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
@@ -705,6 +730,10 @@ def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
     in the homotopy membership test.
+    Returns a tuple of two booleans.  The first boolean is True if the
+    point satisfies the equations, otherwise it is False.  The second
+    boolean is True if the point belongs to the witness set,
+    otherwise, the second boolean is False.
     """
     from phcpy.interface import store_quaddobl_laurent_witness_set
     from phcpy.phcpy2c2 \
@@ -716,7 +745,8 @@ def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
         print 'calling quaddobl_ismember with test point :'
         print point
     result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
-    return (result[2] == 1)
+    (fail, onpolsys, inwitset) = result
+    return (onpolsys, inwitset)
 
 def standard_ismember_filter(wsys, gpts, dim, points, \
     evatol=1.0e-6, memtol=1.0e-6, verbose=True):
@@ -732,8 +762,10 @@ def standard_ismember_filter(wsys, gpts, dim, points, \
     """
     result = []
     for point in points:
-        if not standard_ismember(wsys, gpts, dim, point, \
-                                 evatol, memtol, verbose):
+        tst = standard_ismember(wsys, gpts, dim, point, \
+                                evatol, memtol, verbose)
+        (isgood, ismember) = tst
+        if isgood and not ismember:
             result.append(point)
     return result
 
@@ -751,8 +783,10 @@ def dobldobl_ismember_filter(wsys, gpts, dim, points, \
     """
     result = []
     for point in points:
-        if not dobldobl_ismember(wsys, gpts, dim, point, \
-                                 evatol, memtol, verbose):
+        tst = dobldobl_ismember(wsys, gpts, dim, point, \
+                                evatol, memtol, verbose)
+        (isgood, ismember) = tst
+        if isgood and not ismember:
             result.append(point)
     return result
 
@@ -770,8 +804,10 @@ def quaddobl_ismember_filter(wsys, gpts, dim, points, \
     """
     result = []
     for point in points:
-        if not quaddobl_ismember(wsys, gpts, dim, point, \
-                                 evatol, memtol, verbose):
+        tst = quaddobl_ismember(wsys, gpts, dim, point, \
+                                evatol, memtol, verbose)
+        (isgood, ismember) = tst
+        if isgood and not ismember:
             result.append(point)
     return result
 
@@ -789,8 +825,10 @@ def standard_laurent_ismember_filter(wsys, gpts, dim, points, \
     """
     result = []
     for point in points:
-        if not standard_laurent_ismember(wsys, gpts, dim, point, \
-                                         evatol, memtol, verbose):
+        tst = standard_laurent_ismember(wsys, gpts, dim, point, \
+                                        evatol, memtol, verbose)
+        (isgood, ismember) = tst
+        if isgood and not ismember:
             result.append(point)
     return result
 
@@ -808,8 +846,10 @@ def dobldobl_laurent_ismember_filter(wsys, gpts, dim, points, \
     """
     result = []
     for point in points:
-        if not dobldobl_laurent_ismember(wsys, gpts, dim, point, \
-                                         evatol, memtol, verbose):
+        tst = dobldobl_laurent_ismember(wsys, gpts, dim, point, \
+                                        evatol, memtol, verbose)
+        (isgood, ismember) = tst
+        if isgood and not ismember:
             result.append(point)
     return result
 
@@ -827,8 +867,10 @@ def quaddobl_laurent_ismember_filter(wsys, gpts, dim, points, \
     """
     result = []
     for point in points:
-        if not quaddobl_laurent_ismember(wsys, gpts, dim, point, \
-                                         evatol, memtol, verbose):
+        tst = quaddobl_laurent_ismember(wsys, gpts, dim, point, \
+                                        evatol, memtol, verbose)
+        (isgood, ismember) = tst
+        if isgood and not ismember:
             result.append(point)
     return result
 
