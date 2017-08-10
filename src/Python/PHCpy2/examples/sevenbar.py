@@ -114,19 +114,23 @@ def embed_and_cascade(pols, topdim):
     of the Laurent polynomials in pols, before running one
     step in the cascade homotopy.
     Returns the embedded system, the three generic points,
-    and the unfiltered solutions at the end of the cascade.
+    and the filtered solutions at the end of the cascade.
     """
-    from phcpy.cascades import laurent_top_cascade, laurent_cascade_step
+    from phcpy.sets import laurent_ismember_filter
+    from phcpy.cascades import laurent_top_cascade, laurent_cascade_filter
     (embpols, sols0, sols1) \
         = laurent_top_cascade(len(pols), topdim, pols, 1.0e-08)
     for sol in sols1:
         print sol
     raw_input('hit enter to continue')
     print '... running cascade step ...'
-    sols2 = laurent_cascade_step(1, embpols, sols1, precision='d')
+    (embdown, sols2) = laurent_cascade_filter(1, embpols, sols1, 1.0e-8)
+    filtsols2 = laurent_ismember_filter(embpols, sols0, 1, sols2)
     print '... after running the cascade ...'
-    for sol in sols2:
+    for sol in filtsols2:
         print sol
+    print 'found %d isolated solutions' % len(filtsols2)
+    raw_input('hit enter to continue')
     return (embpols, sols0, sols1)
 
 def monodromy_factor(witpols, witpnts):
