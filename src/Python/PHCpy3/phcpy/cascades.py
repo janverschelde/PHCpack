@@ -409,32 +409,47 @@ def laurent_cascade_filter(dim, embpols, nonsols, tol, \
         (sols0, sols1) = split_filter(solsdrop, dim-1, tol, verbose)
         return (embdown[:-1], sols0, sols1) 
 
-def run_cascade(nvr, dim, pols, tol):
-    """
-    Runs a cascade on the polynomials pols,
-    in the number of variables equal to nvr,
-    starting at the top dimension dim.
+def run_cascade(nvr, dim, pols, \
+    tol=1.0e-8, evatol=1.0e-6, memtol=1.0e-6, \
+    tasks=0, prc='d', verbose=True):
+    r"""
+    Runs a cascade on the polynomials *pols*,
+    in the number of variables equal to *nvr*,
+    starting at the top dimension *dim*.
     Returns a dictionary with as keys the dimensions
     and as values the tuples with the embedded systems
     and the corresponding generic points.
+    Three tolerance parameters have default values on input:
+    *tol* is used to decide which slack variables are zero,
+    *evatol* is the tolerance on the residual to filter junk points,
+    *memtol* is the tolerance for the homotopy membership test.
+    The number of tasks is given by *tasks* (0 for no multitasking)
+    and the default precision is double.  Other supported values
+    for *prc* are 'dd' for double double and 'qd' for quad double.
+    If *verbose*, then a summary of the filtering is printed.
     """
     from phcpy.sets import ismember_filter
     from phcpy.cascades import top_cascade, cascade_filter
     result = {}
-    (topemb, topsols, nonsols) = top_cascade(nvr, dim, pols, tol)
+    (topemb, topsols, nonsols) \
+        = top_cascade(nvr, dim, pols, tol, tasks, prc, verbose)
     result[dim] = (topemb, topsols)
     for idx in range(3, 0, -1):
         emb = result[idx][0]
         if(idx == 1):
-            (embp, sols) = cascade_filter(idx, emb, nonsols, tol)
+            (embp, sols) \
+                = cascade_filter(idx, emb, nonsols, tol, tasks, prc, verbose)
         else:
-            (embp, sols, nonsols) = cascade_filter(idx, emb, nonsols, tol)
+            (embp, sols, nonsols) \
+                = cascade_filter(idx, emb, nonsols, tol, tasks, prc, verbose)
         dims = list(result.keys())
         dims.sort(reverse=True)
         for dim in dims:
             (epols, esols) = result[dim]
-            sols = ismember_filter(epols, esols, dim, sols, verbose=False)
-            print('number of generic points after filtering :', len(sols))
+            sols = ismember_filter(epols, esols, dim, sols, \
+                                   evatol, memtol, False, prc)
+            if verbose:
+                print('number of generic points after filtering :', len(sols))
         result[idx-1] = (embp, sols)
     return result
 
