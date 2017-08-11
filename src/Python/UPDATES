@@ -2,6 +2,7 @@ Thu 10 Aug 2017 : the ismember() tests return a tuple of booleans, in order
   to filter also the end points of diverging paths, with are junk points;
   updated the sets modules, both for python2 and python3.
   Used the filters in the sevenbar.py in the examples of PHCpy2 and PHCpy3.
+  Added a run_cascade function and a test to cascades.py in PHCpy2/phcpy.
 
 Wed 9 Aug 2017 : added ismember_filter() functions to the sets module in
   the PHCpy2 folder, tested in the illusex2.py script.  Did the same for

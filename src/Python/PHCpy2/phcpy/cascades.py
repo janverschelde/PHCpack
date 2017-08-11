@@ -417,6 +417,50 @@ def laurent_cascade_filter(dim, embpols, nonsols, tol, \
         (sols0, sols1) = split_filter(solsdrop, dim-1, tol, verbose)
         return (embdown[:-1], sols0, sols1) 
 
+def run_cascade(nvr, dim, pols, tol):
+    """
+    Runs a cascade on the polynomials pols,
+    in the number of variables equal to nvr,
+    starting at the top dimension dim.
+    Returns a dictionary with as keys the dimensions
+    and as values the tuples with the embedded systems
+    and the corresponding generic points.
+    """
+    from phcpy.sets import ismember_filter
+    from phcpy.cascades import top_cascade, cascade_filter
+    result = {}
+    (topemb, topsols, nonsols) = top_cascade(nvr, dim, pols, tol)
+    result[dim] = (topemb, topsols)
+    for idx in range(3, 0, -1):
+        emb = result[idx][0]
+        if(idx == 1):
+            (embp, sols) = cascade_filter(idx, emb, nonsols, tol)
+        else:
+            (embp, sols, nonsols) = cascade_filter(idx, emb, nonsols, tol)
+        dims = result.keys()
+        dims.sort(reverse=True)
+        for dim in dims:
+            (epols, esols) = result[dim]
+            sols = ismember_filter(epols, esols, dim, sols, verbose=False)
+            print 'number of generic points after filtering :', len(sols)
+        result[idx-1] = (embp, sols)
+    return result
+
+def test_run_cascade():
+    """
+    Runs the cascade on a list of polynomials.
+    """
+    pols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
+            '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
+            '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
+            '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
+    deco = run_cascade(4, 3, pols, 1.0e-8)
+    dims = deco.keys()
+    dims.sort(reverse=True)
+    for dim in dims:
+        (epols, esols) = deco[dim]
+        print '#generic points at dimension', dim, ':', len(esols)
+
 def test_cascade():
     """
     Does one cascade step on simple example.
@@ -459,7 +503,8 @@ def test():
     """
     from phcpy.phcpy2c2 import py2c_set_seed
     py2c_set_seed(234798272)
-    test_cascade()
+    # test_cascade()
+    test_run_cascade()
 
 if __name__ == "__main__":
     test()
