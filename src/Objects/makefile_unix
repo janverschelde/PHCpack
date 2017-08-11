@@ -5,9 +5,10 @@
 # general directory structure of the library of PHCpack.
 # The targets are then listed, grouped by each directory.
 
-# The makefile works on RHEL 6.6, with python2.6, openmpi, and GNATGPL 2016.
+# The makefile works on RHEL 6.6, Centos Linux 7.3,
+# with python2.6, python3, openmpi, # GNAT GPL 2016 and 2017.
 
-# Location of Python for 2.7 and 3.5, development headers for phcpy
+# Location of Python for 2.7 and 3.6 development headers for phcpy
 
 PYTHON=/usr/include/python2.7
 PYTHON3=/usr/local/include/python3.6m
@@ -18,11 +19,17 @@ SAGEPYTHONLIB=/home/microway/Downloads/sage-7.3/local/lib
 
 # The location of the adalib folder for the GNATGPL compiler:
 
-ADALIB=/usr/gnat/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib
+# for GNAT GPL 2016 :
+# ADALIB=/usr/gnat-gpl-2016/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib
+# FOR GNAT GPL 2017 :
+ADALIB=/usr/gnat/lib/gcc/x86_64-pc-linux-gnu/6.3.1/adalib
 
 # The location of the g++ compiler
 
-gpp=/usr/bin/g++
+# before GNAT GPL 2017 :
+# gpp=/usr/bin/g++
+# for GNAT GPL 2017 :
+gpp=g++
 
 # The location of the MPI:
 
