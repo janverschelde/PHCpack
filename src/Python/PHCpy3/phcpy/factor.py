@@ -410,6 +410,36 @@ def factor(dim, witsys, witsols, \
         print('wrong level of precision')
         return None
 
+def decompose(deco, islaurent=0, verbose=True, nbloops=20, precision='d'):
+    r"""
+    Given in *deco* is a dictionary with as keys the dimension
+    and as value a tuple with an embedded (Laurent) polynomial system
+    and its corresponding solutions as the second item in the tuple.
+    Each item in the dictionary is decomposed into irreducible factors.
+    If the embedded polynomial system is a Laurent system,
+    then islaurent must equal one, the default is zero.
+    The default precision is double 'd'.  Other valid values for precision
+    are 'dd' for double double, or 'qd' for quad double.
+    Returns the dictionary deco, but each tuple (except for dimension 0)
+    is extended with the partition of the generic points with the linear
+    trace difference to represented the irreducible decomposition.
+    """
+    result = {}
+    dims = list(deco.keys())
+    dims.sort(reverse=True)
+    for dim in dims:
+        (pols, sols) = deco[dim]
+        if(dim == 0):
+            result[dim] = (pols, sols) # copy the isolated solutions
+        else:
+            factors = factor(dim, pols, sols, \
+                islaurent, verbose, nbloops, precision)
+            if verbose:
+                print('the factorization at dimension', dim)
+                print(factors)
+            result[dim] = (pols, sols, factors)
+    return result
+
 def test_monodromy(prc='d'):
     """
     Runs a test on applying monodromy loops
@@ -436,6 +466,29 @@ def test_factor():
     fac = factor(1, wsys, wsols)
     print(fac)
 
+def test_decompose():
+    """
+    Runs a test on the decompose() function.
+    """
+    from cascades import run_cascade
+    pols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
+            '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
+            '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
+            '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
+    deco = run_cascade(4, 3, pols, 1.0e-8)
+    fadc = decompose(deco)
+    dims = list(deco.keys())
+    dims.sort(reverse=True)
+    for dim in dims:
+        if dim > 0:
+            (pols, sols, fact) = fadc[dim]
+            print('the factorization at dimension', dim, \
+                ' #components :', len(fact))
+            print(fact)
+        else:
+            (pols, sols) = fadc[dim]
+            print('the number of isolated solutions :', len(sols))
+
 def test():
     """
     Sets the seed for the random number generators
@@ -443,7 +496,8 @@ def test():
     """
     from phcpy.phcpy2c3 import py2c_set_seed
     py2c_set_seed(234798272)
-    test_monodromy()
+    # test_monodromy()
+    test_decompose()
 
 if __name__ == "__main__":
     test()
