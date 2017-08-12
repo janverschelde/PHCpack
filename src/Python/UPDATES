@@ -1,6 +1,7 @@
 Fri 11 Aug 2017 : added parameters to the run_cascade() function in the
   python2 and python3 cascades modules.  Added a decompose() function to
-  the factor module in the PHCpy2 and PHCpy3 folders.
+  the factor module in the PHCpy2 and PHCpy3 folders.  Augmented the
+  run_cascade() with an islaurent option for python 2 and 3.
 
 Thu 10 Aug 2017 : the ismember() tests return a tuple of booleans, in order
   to filter also the end points of diverging paths, with are junk points;

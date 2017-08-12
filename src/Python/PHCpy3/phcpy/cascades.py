@@ -409,13 +409,14 @@ def laurent_cascade_filter(dim, embpols, nonsols, tol, \
         (sols0, sols1) = split_filter(solsdrop, dim-1, tol, verbose)
         return (embdown[:-1], sols0, sols1) 
 
-def run_cascade(nvr, dim, pols, \
+def run_cascade(nvr, dim, pols, islaurent=False, \
     tol=1.0e-8, evatol=1.0e-6, memtol=1.0e-6, \
     tasks=0, prc='d', verbose=True):
     r"""
     Runs a cascade on the polynomials *pols*,
     in the number of variables equal to *nvr*,
     starting at the top dimension *dim*.
+    If islaurent, then the polynomials in *pols* may have negative exponents.
     Returns a dictionary with as keys the dimensions
     and as values the tuples with the embedded systems
     and the corresponding generic points.
@@ -428,26 +429,43 @@ def run_cascade(nvr, dim, pols, \
     for *prc* are 'dd' for double double and 'qd' for quad double.
     If *verbose*, then a summary of the filtering is printed.
     """
-    from phcpy.sets import ismember_filter
-    from phcpy.cascades import top_cascade, cascade_filter
+    from phcpy.sets import ismember_filter, laurent_ismember_filter
+    from phcpy.cascades import top_cascade, laurent_top_cascade
+    from phcpy.cascades import cascade_filter, laurent_cascade_filter
     result = {}
-    (topemb, topsols, nonsols) \
-        = top_cascade(nvr, dim, pols, tol, tasks, prc, verbose)
+    if islaurent:
+        (topemb, topsols, nonsols) \
+            = laurent_top_cascade(nvr, dim, pols, tol, tasks, prc, verbose)
+    else:
+        (topemb, topsols, nonsols) \
+            = top_cascade(nvr, dim, pols, tol, tasks, prc, verbose)
     result[dim] = (topemb, topsols)
     for idx in range(3, 0, -1):
         emb = result[idx][0]
         if(idx == 1):
-            (embp, sols) \
-                = cascade_filter(idx, emb, nonsols, tol, tasks, prc, verbose)
+            if islaurent:
+                (embp, sols) = laurent_cascade_filter\
+                    (idx, emb, nonsols, tol, tasks, prc, verbose)
+            else:
+                (embp, sols) = cascade_filter\
+                    (idx, emb, nonsols, tol, tasks, prc, verbose)
         else:
-            (embp, sols, nonsols) \
-                = cascade_filter(idx, emb, nonsols, tol, tasks, prc, verbose)
+            if islaurent:
+                (embp, sols, nonsols) = laurent_cascade_filter\
+                    (idx, emb, nonsols, tol, tasks, prc, verbose)
+            else:
+                (embp, sols, nonsols) = cascade_filter\
+                    (idx, emb, nonsols, tol, tasks, prc, verbose)
         dims = list(result.keys())
         dims.sort(reverse=True)
         for dim in dims:
             (epols, esols) = result[dim]
-            sols = ismember_filter(epols, esols, dim, sols, \
-                                   evatol, memtol, False, prc)
+            if islaurent:
+                sols = laurent_ismember_filter(epols, esols, dim, sols, \
+                                               evatol, memtol, False, prc)
+            else:
+                sols = ismember_filter(epols, esols, dim, sols, \
+                                       evatol, memtol, False, prc)
             if verbose:
                 print('number of generic points after filtering :', len(sols))
         result[idx-1] = (embp, sols)
@@ -461,7 +479,7 @@ def test_run_cascade():
             '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
             '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
             '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
-    deco = run_cascade(4, 3, pols, 1.0e-8)
+    deco = run_cascade(4, 3, pols)
     dims = list(deco.keys())
     dims.sort(reverse=True)
     for dim in dims:
