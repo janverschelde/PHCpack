@@ -1,3 +1,5 @@
+Sat 12 Aug 2017 : added a solve() to factor.py in the PHCpy2/phcpy folder.
+
 Fri 11 Aug 2017 : added parameters to the run_cascade() function in the
   python2 and python3 cascades modules.  Added a decompose() function to
   the factor module in the PHCpy2 and PHCpy3 folders.  Augmented the
