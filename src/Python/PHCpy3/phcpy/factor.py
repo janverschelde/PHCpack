@@ -440,6 +440,53 @@ def decompose(deco, islaurent=0, verbose=True, nbloops=20, precision='d'):
             result[dim] = (pols, sols, factors)
     return result
 
+def write_decomposition(deco):
+    r"""
+    Given in *deco* is a dictionary where the keys are dimensions.
+    For each dimension, there is a tuple with a witness set representation
+    of the solution set at that dimension.
+    The decomposition in *deco* is written.
+    """
+    dims = list(deco.keys())
+    dims.sort(reverse=True)
+    for dim in dims:
+        if dim > 0:
+            (pols, sols, fact) = deco[dim]
+            print('the factorization at dimension', dim, \
+                ' #components :', len(fact))
+            print(fact)
+        else:
+            (pols, sols) = deco[dim]
+            print('the number of isolated solutions :', len(sols))
+
+def solve(nvr, dim, pols, islaurent=False, \
+    precision='d', tasks=0, nbloops=20, \
+    tol=1.0e-8, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    r"""
+    Computes a numerical irreducible decomposition for the polynomials
+    in the list *pols*, where *nvr* is the number of variables in *pols*.
+    The top dimension (the highest dimension of the solution set) is
+    given in *dim* and could be by default set to *nvr*-1.
+    If *islaurent*, then *pols* is considered a Laurent polynomial system
+    and negative exponents may occur.
+    The default precision is double 'd'.  Other valid values for precision
+    are 'dd' for double double, or 'qd' for quad double.
+    On return is a dictionary.  The keys in the dictionary are dimensions.
+    For each dimension, a tuple represents a witness set.
+    For dimension zero, the solution list contains the isolated solutions.
+    For each nonzero dimension, the generic points in the witness set are
+    partitioned according to the irreducible factors of the solution set
+    at that dimension.
+    """
+    from cascades import run_cascade
+    deco = run_cascade(nvr, dim, pols, islaurent, \
+               tol=1.0e-8, evatol=evatol, memtol=memtol, \
+               tasks=tasks, prc=precision, verbose=verbose)
+    fadc = decompose(deco, islaurent=int(islaurent), verbose=verbose, \
+               nbloops=nbloops, precision=precision)
+    if verbose:
+        write_decomposition(fadc)
+
 def test_monodromy(prc='d'):
     """
     Runs a test on applying monodromy loops
@@ -477,17 +524,17 @@ def test_decompose():
             '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
     deco = run_cascade(4, 3, pols, 1.0e-8)
     fadc = decompose(deco)
-    dims = list(deco.keys())
-    dims.sort(reverse=True)
-    for dim in dims:
-        if dim > 0:
-            (pols, sols, fact) = fadc[dim]
-            print('the factorization at dimension', dim, \
-                ' #components :', len(fact))
-            print(fact)
-        else:
-            (pols, sols) = fadc[dim]
-            print('the number of isolated solutions :', len(sols))
+    write_decomposition(fadc)
+
+def test_solve():
+    """
+    Runs a test on the solve() function.
+    """
+    pols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
+            '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
+            '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
+            '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
+    deco = solve(4, 3, pols)
 
 def test():
     """
@@ -497,7 +544,8 @@ def test():
     from phcpy.phcpy2c3 import py2c_set_seed
     py2c_set_seed(234798272)
     # test_monodromy()
-    test_decompose()
+    # test_decompose()
+    test_solve()
 
 if __name__ == "__main__":
     test()
