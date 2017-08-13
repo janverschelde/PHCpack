@@ -135,9 +135,10 @@ def standard_monodromy_breakup(embsys, esols, dim, \
         py2c_factor_restore_standard_solutions()
         py2c_factor_swap_standard_slices()
     (err, dis) = py2c_factor_standard_trace_grid_diagnostics()
-    print('The diagnostics of the trace grid :')
-    print('  largest error on the samples :', err)
-    print('  smallest distance between the samples :', dis)
+    if(verbose):
+        print('The diagnostics of the trace grid :')
+        print('  largest error on the samples :', err)
+        print('  smallest distance between the samples :', dis)
     for i in range(1, nbloops+1):
         if(verbose):
             print('... starting loop %d ...' % i)
@@ -231,9 +232,10 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, \
         py2c_factor_restore_dobldobl_solutions()
         py2c_factor_swap_dobldobl_slices()
     (err, dis) = py2c_factor_dobldobl_trace_grid_diagnostics()
-    print('The diagnostics of the trace grid :')
-    print('  largest error on the samples :', err)
-    print('  smallest distance between the samples :', dis)
+    if(verbose):
+        print('The diagnostics of the trace grid :')
+        print('  largest error on the samples :', err)
+        print('  smallest distance between the samples :', dis)
     for i in range(1, nbloops+1):
         if(verbose):
             print('... starting loop %d ...' % i)
@@ -328,9 +330,10 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, \
         py2c_factor_restore_quaddobl_solutions()
         py2c_factor_swap_quaddobl_slices()
     (err, dis) = py2c_factor_quaddobl_trace_grid_diagnostics()
-    print('The diagnostics of the trace grid :')
-    print('  largest error on the samples :', err)
-    print('  smallest distance between the samples :', dis)
+    if(verbose):
+        print('The diagnostics of the trace grid :')
+        print('  largest error on the samples :', err)
+        print('  smallest distance between the samples :', dis)
     for i in range(1, nbloops+1):
         if(verbose):
             print('... starting loop %d ...' % i)
@@ -478,7 +481,7 @@ def solve(nvr, dim, pols, islaurent=False, \
     partitioned according to the irreducible factors of the solution set
     at that dimension.
     """
-    from cascades import run_cascade
+    from phcpy.cascades import run_cascade
     deco = run_cascade(nvr, dim, pols, islaurent, \
                tol=1.0e-8, evatol=evatol, memtol=memtol, \
                tasks=tasks, prc=precision, verbose=verbose)
@@ -486,6 +489,7 @@ def solve(nvr, dim, pols, islaurent=False, \
                nbloops=nbloops, precision=precision)
     if verbose:
         write_decomposition(fadc)
+    return fadc
 
 def test_monodromy(prc='d'):
     """

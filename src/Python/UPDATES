@@ -3,6 +3,7 @@ Sat 12 Aug 2017 : added a solve() to factor.py in the PHCpy2/phcpy folder,
   Bug fixed in the run_cascade() functions of the cascades module.
   Rearranged documentation strings in the *top_cascade() functions in the
   cascades module, because of complaint of sphinx.
+  Many fixes in the factor module.
 
 Fri 11 Aug 2017 : added parameters to the run_cascade() function in the
   python2 and python3 cascades modules.  Added a decompose() function to
