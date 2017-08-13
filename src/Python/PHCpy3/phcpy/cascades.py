@@ -274,14 +274,21 @@ def top_cascade(nvr, dim, pols, tol, nbtasks=0, prc='d', verbose=True):
     The tolerance *tol* is used to split the solution list in the list
     of generic points and the nonsolutions for use in the cascade.
     Returns a tuple with three items:
-    1) the embedded system,
-    2) the solutions with zero last coordinate w.r.t. tol,
-    3) the solutions with nonzero last coordinate w.r.t. tol.
+
+    1. the embedded system,
+
+    2. the solutions with zero last coordinate w.r.t. *tol*,
+
+    3. the solutions with nonzero last coordinate w.r.t. *tol*.
+
     The three parameters are
-    1) *nbtasks* is the number of tasks, 0 if no multitasking;
-    2) the working precision *prc*, 'd' for double, 'dd' for double double,
+
+    1. *nbtasks* is the number of tasks, 0 if no multitasking;
+
+    2. the working precision *prc*, 'd' for double, 'dd' for double double,
        or 'qd' for quad double;
-    3) if *verbose*, then some output is written to screen.
+
+    3. if *verbose*, then some output is written to screen.
     """
     from phcpy.sets import embed
     from phcpy.solver import solve
@@ -305,14 +312,21 @@ def laurent_top_cascade(nvr, dim, pols, tol, \
     The tolerance *tol* is used to split the solution list in the list
     of generic points and the nonsolutions for use in the cascade.
     Returns a tuple with three items:
-    1) the embedded system,
-    2) the solutions with zero last coordinate w.r.t. tol,
-    3) the solutions with nonzero last coordinate w.r.t. tol.
+
+    1. the embedded system,
+
+    2. the solutions with zero last coordinate w.r.t. *tol*,
+
+    3. the solutions with nonzero last coordinate w.r.t. *tol*.
+
     The three parameters are
-    1) *nbtasks* is the number of tasks, 0 if no multitasking;
-    2) the working precision *prc*, 'd' for double, 'dd' for double double,
+
+    1. *nbtasks* is the number of tasks, 0 if no multitasking;
+
+    2. the working precision *prc*, 'd' for double, 'dd' for double double,
        or 'qd' for quad double;
-    3) if *verbose*, then some output is written to screen.
+
+    3. if *verbose*, then some output is written to screen.
     """
     from phcpy.sets import laurent_embed
     from phcpy.solver import solve
