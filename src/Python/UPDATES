@@ -1,3 +1,6 @@
+Sun 13 Aug 2017 : updated setup.py, __init__.py, and conf.py for version
+  0.7.1 of phcpy for python2 and python3.
+
 Sat 12 Aug 2017 : added a solve() to factor.py in the PHCpy2/phcpy folder,
   and did the same addition to factor.py for the python3 version of phcpy.
   Bug fixed in the run_cascade() functions of the cascades module.
