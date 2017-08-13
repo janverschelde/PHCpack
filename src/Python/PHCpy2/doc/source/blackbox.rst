@@ -2,9 +2,9 @@ a blackbox solver for isolated solutions
 ========================================
 
 The package phcpy depends on the shared object file phcpy2c.so.
-The module **phcpy.solver**
+The module **solver**
 exports the blackbox solver of PHCpack, a fast mixed volume
-calculator, and several methods to predict the number of isolated
+calculator, and several functions to predict the number of isolated
 solutions of a polynomial system.  
 The `test_solver()` function of the module generates two trinomials 
 (a polynomial with three monomials)
@@ -16,7 +16,10 @@ of variables in the polynomials.  The blackbox solver then returns
 a list of numerical approximations to the isolated solutions of the
 input polynomial system.  Some capabilities of PHCpack to deal with
 positive dimensional solution sets are exported by 
-the module **phcpy.sets**.
+the modules **sets**, **cascades**, **factor**, and **diagonal**.
+In particular, the ``solve()`` function in the **factor** module
+computes a numerical irreducible decomposition of the solution set
+of the polynomial system.
 
 solving random trinomials
 -------------------------

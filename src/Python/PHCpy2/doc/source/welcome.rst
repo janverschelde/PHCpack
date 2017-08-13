@@ -304,8 +304,8 @@ about this document
 ===================
 
 This document arose as an exercise in exploring restructured text and Sphinx.
-All good software document consists of four items: an installation guide,
-a getting started, a tutorial, and a reference manual.
+All good software documents contain the following four items: 
+an installation guide, a getting started, a tutorial, and a reference manual.
 This document combines all four.
 In its current state, phcpy is a collection of modules, with a focus
 on exporting the functionality of PHCpack.  The design is functional.

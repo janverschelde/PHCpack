@@ -3,6 +3,10 @@ positive dimensional solution sets
 
 The modules **sets**, **cascades**, **factor**, and **diagonal** provide 
 some functionality to work with positive dimensional solution sets.
+In particular, the **solve** function of the **factor** module computes
+a numerical irreducible decomposition of the solution set of a polynomial
+system.  Also polynomials that have variables raised to negative powers,
+so-called *Laurent polynomials* are supported.
 
 For isolated solutions, the main outcome of the numerical solver is 
 a list of points, given as tuples of values for the coordinates.
@@ -351,8 +355,13 @@ previous cascade.
    >>> for sol in reglvl2solsdrop:
    ...     print(sol)
 
-To perform the filtering of the solutions properly, we apply
-a membership test.
+To perform the filtering of the solutions properly,
+we apply a membership test, defined in the **sets** module.
+
+The function ``run_cascade()`` takes on input the number of variables
+in the polynomials and the top dimenion of the solution set.
+Starting at the top dimension, a witness set representation for
+each pure dimensional component of the solution set is computed.
 
 factoring into irreducibles
 ---------------------------
@@ -421,6 +430,40 @@ respectively in double double and quad double precision:
 
 The witness set ``(w, s)`` should also have been computed in
 double double and quad double precision.
+
+The function ``decompose()`` takes the output of the ``run_cascade()``
+function of the *cascades* module and factors every witness set for
+the pure dimensional components into irreducible factors.
+The functions ``run_cascade()`` and ``decompose()`` lead to a
+numerical irreducible decomposition of the solution set.
+
+numerical irreducible decomposition
+-----------------------------------
+
+Consider the polynomials defined by the list ``pols`` as follows:
+
+::
+
+    >>> pols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
+                '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
+                '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
+                '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
+    >>> from phcpy.factor import solve, write_decomposition
+    >>> deco = solve(4, 3, pols, verbose=False)
+    >>> write_decomposition(deco)
+
+We see the common factor ``x1-1`` which defines a three dimensional
+solution plane.  The factor ``x1-2`` leads to a two dimensional
+solution plane, with the additional factor ``x2-1``.
+Furthermore, the system in ``pols`` has twelve lines as solutions
+and four isolated solution points.
+
+The first argument ``4`` in the ``solve(4, 3, pols, verbose=False)`` is the
+number of variables in the polynomials in ``pols``.
+The second argument ``3`` equals the top dimension of the solution set.
+The ``write_decomposition()`` confirms there is one three dimensional
+linear component, one two dimensional linear component, twelve lines,
+and four isolated solutions.
 
 diagonal homotopies
 -------------------
