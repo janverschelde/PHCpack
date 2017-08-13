@@ -20,6 +20,7 @@ def store_standard_system(polsys, **nbvar):
     from phcpy.phcpy2c2 import py2c_syscon_store_standard_polynomial
     py2c_syscon_clear_standard_system()
     dim = len(polsys)
+    fail = 0
     py2c_syscon_initialize_number_of_standard_polynomials(dim)
     for cnt in range(0, dim):
         pol = polsys[cnt]
@@ -49,6 +50,7 @@ def store_dobldobl_system(polsys, **nbvar):
     from phcpy.phcpy2c2 import py2c_syscon_store_dobldobl_polynomial
     py2c_syscon_clear_dobldobl_system()
     dim = len(polsys)
+    fail = 0
     py2c_syscon_initialize_number_of_dobldobl_polynomials(dim)
     for cnt in range(0, dim):
         pol = polsys[cnt]
@@ -78,6 +80,7 @@ def store_quaddobl_system(polsys, **nbvar):
     from phcpy.phcpy2c2 import py2c_syscon_store_quaddobl_polynomial
     py2c_syscon_clear_quaddobl_system()
     dim = len(polsys)
+    fail = 0
     py2c_syscon_initialize_number_of_quaddobl_polynomials(dim)
     for cnt in range(0, dim):
         pol = polsys[cnt]
@@ -109,6 +112,7 @@ def store_multprec_system(polsys, decimals, **nbvar):
     from phcpy.phcpy2c2 import py2c_syscon_store_multprec_polynomial
     py2c_syscon_clear_multprec_system()
     dim = len(polsys)
+    fail = 0
     py2c_syscon_initialize_number_of_multprec_polynomials(dim)
     for cnt in range(0, dim):
         pol = polsys[cnt]
@@ -192,6 +196,7 @@ def store_standard_laurent_system(polsys, **nbvar):
     from phcpy.phcpy2c2 import py2c_syscon_store_standard_Laurential
     py2c_syscon_clear_standard_Laurent_system()
     dim = len(polsys)
+    fail = 0
     py2c_syscon_initialize_number_of_standard_Laurentials(dim)
     for cnt in range(0, dim):
         pol = polsys[cnt]
@@ -221,6 +226,7 @@ def store_dobldobl_laurent_system(polsys, **nbvar):
     from phcpy.phcpy2c2 import py2c_syscon_store_dobldobl_Laurential
     py2c_syscon_clear_dobldobl_Laurent_system()
     dim = len(polsys)
+    fail = 0
     py2c_syscon_initialize_number_of_dobldobl_Laurentials(dim)
     for cnt in range(0, dim):
         pol = polsys[cnt]
@@ -250,6 +256,7 @@ def store_quaddobl_laurent_system(polsys, **nbvar):
     from phcpy.phcpy2c2 import py2c_syscon_store_quaddobl_Laurential
     py2c_syscon_clear_quaddobl_Laurent_system()
     dim = len(polsys)
+    fail = 0
     py2c_syscon_initialize_number_of_quaddobl_Laurentials(dim)
     for cnt in range(0, dim):
         pol = polsys[cnt]
@@ -281,6 +288,7 @@ def store_multprec_laurent_system(polsys, decimals, **nbvar):
     from phcpy.phcpy2c2 import py2c_syscon_store_multprec_Laurential
     py2c_syscon_clear_multprec_Laurent_system()
     dim = len(polsys)
+    fail = 0
     py2c_syscon_initialize_number_of_multprec_Laurentials(dim)
     for cnt in range(0, dim):
         pol = polsys[cnt]
@@ -484,6 +492,7 @@ def store_standard_solutions(nvar, sols):
     from phcpy.phcpy2c2 import py2c_solcon_clear_standard_solutions
     from phcpy.phcpy2c2 import py2c_solcon_append_standard_solution_string
     py2c_solcon_clear_standard_solutions()
+    fail = 0
     for ind in range(0, len(sols)):
         fail = py2c_solcon_append_standard_solution_string\
                    (nvar, len(sols[ind]), sols[ind])
@@ -501,6 +510,7 @@ def store_dobldobl_solutions(nvar, sols):
     from phcpy.phcpy2c2 import py2c_solcon_clear_dobldobl_solutions
     from phcpy.phcpy2c2 import py2c_solcon_append_dobldobl_solution_string
     py2c_solcon_clear_dobldobl_solutions()
+    fail = 0
     for ind in range(0, len(sols)):
         fail = py2c_solcon_append_dobldobl_solution_string\
                    (nvar, len(sols[ind]), sols[ind])
@@ -518,6 +528,7 @@ def store_quaddobl_solutions(nvar, sols):
     from phcpy.phcpy2c2 import py2c_solcon_clear_quaddobl_solutions
     from phcpy.phcpy2c2 import py2c_solcon_append_quaddobl_solution_string
     py2c_solcon_clear_quaddobl_solutions()
+    fail = 0
     for ind in range(0, len(sols)):
         fail = py2c_solcon_append_quaddobl_solution_string\
                    (nvar, len(sols[ind]), sols[ind])
@@ -535,6 +546,7 @@ def store_multprec_solutions(nvar, sols):
     from phcpy.phcpy2c2 import py2c_solcon_clear_multprec_solutions
     from phcpy.phcpy2c2 import py2c_solcon_append_multprec_solution_string
     py2c_solcon_clear_multprec_solutions()
+    fail = 0
     for ind in range(0, len(sols)):
         fail = py2c_solcon_append_multprec_solution_string\
                    (nvar, len(sols[ind]), sols[ind])
