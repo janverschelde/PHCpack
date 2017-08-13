@@ -5,6 +5,8 @@ Sat 12 Aug 2017 : added a solve() to factor.py in the PHCpy2/phcpy folder,
   cascades module, because of complaint of sphinx.
   Many fixes in the factor module.  In the interface module, initialized the
   failure code in the store_* functions, so storing nothing does not crash.
+  Passed the verbose flag properly in the top_cascade routines so the
+  split_filter() remains silent if verbose is set to False.
 
 Fri 11 Aug 2017 : added parameters to the run_cascade() function in the
   python2 and python3 cascades modules.  Added a decompose() function to

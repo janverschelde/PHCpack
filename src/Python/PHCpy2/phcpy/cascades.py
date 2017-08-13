@@ -307,7 +307,7 @@ def top_cascade(nvr, dim, pols, tol, nbtasks=0, prc='d', verbose=True):
     topsols = solve(topemb, silent=slt, tasks=nbtasks, precision=prc)
     if verbose:
          print 'number of solutions found :', len(topsols)
-    (sols0, sols1) = split_filter(topsols, dim, tol)
+    (sols0, sols1) = split_filter(topsols, dim, tol, verbose=verbose)
     return (topemb, sols0, sols1)
 
 def laurent_top_cascade(nvr, dim, pols, tol, \
@@ -345,7 +345,7 @@ def laurent_top_cascade(nvr, dim, pols, tol, \
     topsols = solve(topemb, silent=slt, tasks=nbtasks, precision=prc)
     if verbose:
          print 'number of solutions found :', len(topsols)
-    (sols0, sols1) = split_filter(topsols, dim, tol)
+    (sols0, sols1) = split_filter(topsols, dim, tol, verbose=verbose)
     return (topemb, sols0, sols1)
 
 def cascade_filter(dim, embpols, nonsols, tol, \
