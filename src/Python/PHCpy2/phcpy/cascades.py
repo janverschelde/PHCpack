@@ -448,7 +448,7 @@ def run_cascade(nvr, dim, pols, islaurent=False, \
         (topemb, topsols, nonsols) \
             = top_cascade(nvr, dim, pols, tol, tasks, prc, verbose)
     result[dim] = (topemb, topsols)
-    for idx in range(3, 0, -1):
+    for idx in range(dim, 0, -1):
         emb = result[idx][0]
         if(idx == 1):
             if islaurent:
