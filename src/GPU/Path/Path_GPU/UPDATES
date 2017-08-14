@@ -1,3 +1,6 @@
+Mon 14 Aug 2017 : reformattings in mgs_large_block.cu, mgs_large_row.cu,
+  and mgs_large_row_reduce.cu.
+
 Fri 17 Feb 2017 : more reformattings in mgs_small.cu.
 
 Thu 16 Feb 2017 : finished reformatting in path_gpu_data.h.
