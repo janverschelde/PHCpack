@@ -1,5 +1,5 @@
 Mon 14 Aug 2017 : reformattings in mgs_large_block.cu, mgs_large_row.cu,
-  and mgs_large_row_reduce.cu.
+  and mgs_large_row_reduce.cu.  Continued reformatting in mgs_small.cu.
 
 Fri 17 Feb 2017 : more reformattings in mgs_small.cu.
 
