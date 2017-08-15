@@ -1,577 +1,661 @@
 //#include "eval_mon_single.cu"
 
-__global__ void eval_coef_mult_kernel(GT* workspace_coef, const GT* coef_orig, int n_path, \
-		GT* t, GT* one_minor_t, int n_coef) {
-	//__shared__ GT div_diff_sh[shmemsize];
-    int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
-	int tidx = threadIdx.x;
-	int path_idx = bidx + tidx;
+__global__ void eval_coef_mult_kernel
+ ( GT* workspace_coef, const GT* coef_orig, int n_path, 
+   GT* t, GT* one_minor_t, int n_coef )
+{
+   //__shared__ GT div_diff_sh[shmemsize];
+   int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
+   int tidx = threadIdx.x;
+   int path_idx = bidx + tidx;
 
-	if(path_idx<n_path){
-		int coef_idx = blockIdx.z;
-		workspace_coef += coef_idx*n_path;
-		t += path_idx;
-		one_minor_t += path_idx;
+   if(path_idx<n_path)
+   {
+      int coef_idx = blockIdx.z;
+      workspace_coef += coef_idx*n_path;
+      t += path_idx;
+      one_minor_t += path_idx;
 
-		/*int path_idx = blockIdx.z;
-		 x_predictor += path_idx*np_predictor*dim;
-		 t_predictor += path_idx*np_predictor;
-		 x_new += path_idx*dim;*/
+      /*int path_idx = blockIdx.z;
+        x_predictor += path_idx*np_predictor*dim;
+        t_predictor += path_idx*np_predictor;
+        x_new += path_idx*dim;*/
 
-		//workspace_coef[idx] = coef_orig[idx];
-		// XXX align coef later (*t)*coef_orig[idx] + (*one_minor_t)*coef_orig[idx+n_coef]
-		//workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx] + (*one_minor_t)*coef_orig[2*coef_idx+1];
-		workspace_coef[path_idx] = (*t)*coef_orig[coef_idx] + (*one_minor_t)*coef_orig[coef_idx+n_coef];
-	}
+      // workspace_coef[idx] = coef_orig[idx];
+      // XXX align coef later (*t)*coef_orig[idx]
+      // + (*one_minor_t)*coef_orig[idx+n_coef]
+      // workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx]
+      // + (*one_minor_t)*coef_orig[2*coef_idx+1];
+      workspace_coef[path_idx] = (*t)*coef_orig[coef_idx]
+         + (*one_minor_t)*coef_orig[coef_idx+n_coef];
+   }
 }
 
-__global__ void eval_coef_mult_kernel2(GT* workspace_coef, const GT* coef_orig, int n_path, int n_path_all, \
-		GT* t, GT* one_minor_t, int n_coef) {
-	//__shared__ GT div_diff_sh[shmemsize];
-    int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
-	int tidx = threadIdx.x;
-	int path_idx = bidx + tidx;
+__global__ void eval_coef_mult_kernel2
+ ( GT* workspace_coef, const GT* coef_orig, int n_path, int n_path_all,
+   GT* t, GT* one_minor_t, int n_coef )
+{
+   //__shared__ GT div_diff_sh[shmemsize];
+   int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
+   int tidx = threadIdx.x;
+   int path_idx = bidx + tidx;
 
-	if(path_idx<n_path){
-		int coef_idx = blockIdx.z;
-		workspace_coef += coef_idx*n_path_all;
-		t += path_idx;
-		one_minor_t += path_idx;
+   if(path_idx<n_path)
+   {
+      int coef_idx = blockIdx.z;
+      workspace_coef += coef_idx*n_path_all;
+      t += path_idx;
+      one_minor_t += path_idx;
 
-		/*int path_idx = blockIdx.z;
-		 x_predictor += path_idx*np_predictor*dim;
-		 t_predictor += path_idx*np_predictor;
-		 x_new += path_idx*dim;*/
+      /*int path_idx = blockIdx.z;
+        x_predictor += path_idx*np_predictor*dim;
+        t_predictor += path_idx*np_predictor;
+        x_new += path_idx*dim;*/
 
-		//workspace_coef[idx] = coef_orig[idx];
-		// XXX align coef later (*t)*coef_orig[idx] + (*one_minor_t)*coef_orig[idx+n_coef]
-		//workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx] + (*one_minor_t)*coef_orig[2*coef_idx+1];
-		workspace_coef[path_idx] = (*t)*coef_orig[coef_idx] + (*one_minor_t)*coef_orig[coef_idx+n_coef];
-	}
+      // workspace_coef[idx] = coef_orig[idx];
+      // XXX align coef later (*t)*coef_orig[idx]
+      //  + (*one_minor_t)*coef_orig[idx+n_coef]
+      // workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx]
+      //  + (*one_minor_t)*coef_orig[2*coef_idx+1];
+      workspace_coef[path_idx] = (*t)*coef_orig[coef_idx]
+         + (*one_minor_t)*coef_orig[coef_idx+n_coef];
+   }
 }
 
-__global__ void eval_coef_mult_kernel(GT* workspace_coef, const GT* coef_orig, int n_path, \
-		GT* t, GT* one_minor_t, int workspace_size, int* x_t_idx, int n_coef) {
-	//__shared__ GT div_diff_sh[shmemsize];
-    int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
-	int tidx = threadIdx.x;
-	int path_idx = bidx + tidx;
+__global__ void eval_coef_mult_kernel
+ ( GT* workspace_coef, const GT* coef_orig, int n_path,
+   GT* t, GT* one_minor_t, int workspace_size, int* x_t_idx, int n_coef )
+{
+   //__shared__ GT div_diff_sh[shmemsize];
+   int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
+   int tidx = threadIdx.x;
+   int path_idx = bidx + tidx;
 
-	if(path_idx<n_path){
-		int coef_idx = blockIdx.z;
-		workspace_coef += coef_idx*n_path;
-		t += path_idx*workspace_size + x_t_idx[path_idx];
-		one_minor_t += path_idx*workspace_size;
+   if(path_idx<n_path)
+   {
+      int coef_idx = blockIdx.z;
+      workspace_coef += coef_idx*n_path;
+      t += path_idx*workspace_size + x_t_idx[path_idx];
+      one_minor_t += path_idx*workspace_size;
 
-		/*int path_idx = blockIdx.z;
-		 x_predictor += path_idx*np_predictor*dim;
-		 t_predictor += path_idx*np_predictor;
-		 x_new += path_idx*dim;*/
+      /*int path_idx = blockIdx.z;
+        x_predictor += path_idx*np_predictor*dim;
+        t_predictor += path_idx*np_predictor;
+        x_new += path_idx*dim;*/
 
-		//workspace_coef[idx] = coef_orig[idx];
-		// XXX align coef later (*t)*coef_orig[idx] + (*one_minor_t)*coef_orig[idx+n_coef]
-		//workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx] + (*one_minor_t)*coef_orig[2*coef_idx+1];
-		workspace_coef[path_idx] = (*t)*coef_orig[coef_idx] + (*one_minor_t)*coef_orig[coef_idx+n_coef];
-	}
-}
-
-// Mon evalutaion and differentiation on GPU
-__global__ void eval_mon_single_mult_kernel(GT* workspace_mon, GT* x, GT*workspace_coef, \
-                           int* mon_pos_start, unsigned short* mon_pos, \
-                           int n_path) {
-	int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + threadIdx.x;
-
-	if(path_idx < n_path){
-		int mon_idx = blockIdx.z;
-		workspace_mon += path_idx;
-		x += path_idx;
-		workspace_coef += path_idx;
-
-		int tmp_start = mon_pos_start[mon_idx];
-		GT* deri = workspace_mon + tmp_start*n_path;
-		unsigned short* pos = mon_pos + tmp_start;
-
-		GT tmp = workspace_coef[mon_idx*n_path];
-		deri[n_path] = tmp;
-		deri[0] = x[pos[1]*n_path]*tmp;
-
-		//deri[n_path] = GT(2.0,2.0);
-		//deri[0] = GT(3.0,3.0);
-	}
+      // workspace_coef[idx] = coef_orig[idx];
+      // XXX align coef later (*t)*coef_orig[idx]
+      //  + (*one_minor_t)*coef_orig[idx+n_coef]
+      // workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx]
+      //  + (*one_minor_t)*coef_orig[2*coef_idx+1];
+      workspace_coef[path_idx] = (*t)*coef_orig[coef_idx]
+         + (*one_minor_t)*coef_orig[coef_idx+n_coef];
+   }
 }
 
 // Mon evalutaion and differentiation on GPU
-__global__ void eval_mon_single_mult_kernel2(GT* workspace_mon, GT* x, GT*workspace_coef, \
-                           int* mon_pos_start, unsigned short* mon_pos, \
-                           int n_path, int n_path_all) {
-	int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + threadIdx.x;
+__global__ void eval_mon_single_mult_kernel
+ ( GT* workspace_mon, GT* x, GT*workspace_coef, int* mon_pos_start,
+   unsigned short* mon_pos, int n_path)
+{
+   int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + threadIdx.x;
 
-	if(path_idx < n_path){
-		int mon_idx = blockIdx.z;
-		workspace_mon += path_idx;
-		x += path_idx;
-		workspace_coef += path_idx;
+   if(path_idx < n_path)
+   {
+      int mon_idx = blockIdx.z;
+      workspace_mon += path_idx;
+      x += path_idx;
+      workspace_coef += path_idx;
 
-		int tmp_start = mon_pos_start[mon_idx];
-		GT* deri = workspace_mon + tmp_start*n_path_all;
-		unsigned short* pos = mon_pos + tmp_start;
+      int tmp_start = mon_pos_start[mon_idx];
+      GT* deri = workspace_mon + tmp_start*n_path;
+      unsigned short* pos = mon_pos + tmp_start;
 
-		GT tmp = workspace_coef[mon_idx*n_path_all];
-		deri[n_path_all] = tmp;
-		deri[0] = x[pos[1]*n_path]*tmp;
+      GT tmp = workspace_coef[mon_idx*n_path];
+      deri[n_path] = tmp;
+      deri[0] = x[pos[1]*n_path]*tmp;
 
-		//deri[n_path] = GT(2.0,2.0);
-		//deri[0] = GT(3.0,3.0);
-	}
-}
-
-__global__ void eval_mon_seq_mult_kernel(GT* workspace_mon, GT* x, GT* workspace_coef,
-int* mon_pos_start, unsigned short* mon_pos, int n_path) {
-	__shared__ int pos[512];
-
-	int t_idx = threadIdx.x;
-	int BS = blockDim.x;
-	int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS + t_idx;
-
-	int mon_idx = blockIdx.z;
-	workspace_mon += path_idx;
-	x += path_idx;
-	workspace_coef += path_idx;
-
-	int tmp_start = mon_pos_start[mon_idx];
-	unsigned short* pos_tmp = mon_pos + tmp_start;
-
-	int n_var = pos_tmp[0];
-	int rnd = (n_var-1)/BS+1;
-	if(rnd>1){
-		for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++){
-			pos[t_idx+1] = pos_tmp[t_idx+1]*n_path;
-			t_idx += BS;
-		}
-	}
-	if(t_idx<n_var){
-		pos[t_idx+1] = pos_tmp[t_idx+1]*n_path;
-	}
-	__syncthreads();
-
-	if(path_idx < n_path){
-		GT* deri = workspace_mon + tmp_start*n_path;
-		GT tmp = x[pos[1]];
-
-		GT* deri_tmp = deri + n_path;
-		deri_tmp[n_path] = tmp;
-
-		for(int i=2; i<n_var; i++) {
-			tmp *= x[pos[i]];
-			deri_tmp[i*n_path] = tmp;
-		}
-
-		tmp = workspace_coef[mon_idx*n_path];
-
-		for(int i=n_var; i>1; i--) {
-			deri[i*n_path] *= tmp;
-			tmp *= x[pos[i]];
-		}
-		deri[n_path] = tmp;
-		deri[0] = x[pos[1]]*tmp;
-	}
-}
-
-__global__ void eval_mon_seq_mult_kernel2(GT* workspace_mon, GT* x, GT* workspace_coef,
-int* mon_pos_start, unsigned short* mon_pos, int n_path, int n_path_all) {
-	__shared__ int pos[512];
-
-	int t_idx = threadIdx.x;
-	int BS = blockDim.x;
-	int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS + t_idx;
-
-	int mon_idx = blockIdx.z;
-	workspace_mon += path_idx;
-	x += path_idx;
-	workspace_coef += path_idx;
-
-	int tmp_start = mon_pos_start[mon_idx];
-	unsigned short* pos_tmp = mon_pos + tmp_start;
-
-	int n_var = pos_tmp[0];
-	int rnd = (n_var-1)/BS+1;
-	if(rnd>1){
-		for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++){
-			pos[t_idx+1] = pos_tmp[t_idx+1]*n_path;
-			t_idx += BS;
-		}
-	}
-	if(t_idx<n_var){
-		pos[t_idx+1] = pos_tmp[t_idx+1]*n_path;
-	}
-	__syncthreads();
-
-	if(path_idx < n_path){
-		GT* deri = workspace_mon + tmp_start*n_path_all;
-		GT tmp = x[pos[1]];
-
-		GT* deri_tmp = deri + n_path_all;
-		deri_tmp[n_path_all] = tmp;
-
-		for(int i=2; i<n_var; i++) {
-			tmp *= x[pos[i]];
-			deri_tmp[i*n_path_all] = tmp;
-		}
-
-		tmp = workspace_coef[mon_idx*n_path_all];
-
-		for(int i=n_var; i>1; i--) {
-			deri[i*n_path_all] *= tmp;
-			tmp *= x[pos[i]];
-		}
-		deri[n_path_all] = tmp;
-		deri[0] = x[pos[1]]*tmp;
-	}
-}
-
-
-
-// Mon evalutaion and differentiation on GPU
-__global__ void eval_sum_seq_mult_kernel(GT* workspace_matrix, GT* workspace_sum, \
-		int* sum_pos, int* sum_pos_start, int n_path) {
-	__shared__ int pos[512];
-	int t_idx = threadIdx.x;
-	int BS = blockDim.x;
-	int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS + t_idx;
-	int sum_idx = blockIdx.z;
-	workspace_matrix += path_idx;
-	workspace_sum += path_idx;
-
-	int* pos_tmp = sum_pos + sum_pos_start[sum_idx];
-	int n_var = *pos_tmp;
-
-	int rnd = n_var/BS+1;
-	if(rnd>1){
-		for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++){
-			pos[t_idx] = pos_tmp[t_idx+1]*n_path;
-			t_idx += BS;
-		}
-	}
-	if(t_idx<=n_var){
-		pos[t_idx] = pos_tmp[t_idx+1]*n_path;
-	}
-	__syncthreads();
-
-
-	if(path_idx < n_path){
-		GT tmp = workspace_sum[pos[0]];
-
-		for(int i=1; i<n_var; i++) {
-			tmp += workspace_sum[pos[i]];
-		}
-
-		workspace_matrix[pos[n_var]] = tmp;
-	}
+      // deri[n_path] = GT(2.0,2.0);
+      // deri[0] = GT(3.0,3.0);
+   }
 }
 
 // Mon evalutaion and differentiation on GPU
-__global__ void eval_sum_seq_mult_kernel2(GT* workspace_matrix, GT* workspace_sum, \
-		int* sum_pos, int* sum_pos_start, int n_path, int n_path_all) {
-	__shared__ int pos[512];
-	int t_idx = threadIdx.x;
-	int BS = blockDim.x;
-	int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS + t_idx;
-	int sum_idx = blockIdx.z;
-	workspace_matrix += path_idx;
-	workspace_sum += path_idx;
+__global__ void eval_mon_single_mult_kernel2
+ ( GT* workspace_mon, GT* x, GT*workspace_coef, int* mon_pos_start,
+   unsigned short* mon_pos, int n_path, int n_path_all )
+{
+   int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + threadIdx.x;
 
-	int* pos_tmp = sum_pos + sum_pos_start[sum_idx];
-	int n_var = *pos_tmp;
+   if(path_idx < n_path)
+   {
+      int mon_idx = blockIdx.z;
+      workspace_mon += path_idx;
+      x += path_idx;
+      workspace_coef += path_idx;
 
-	int rnd = n_var/BS+1;
-	if(rnd>1){
-		for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++){
-			pos[t_idx] = pos_tmp[t_idx+1]*n_path_all;
-			t_idx += BS;
-		}
-	}
-	if(t_idx<=n_var){
-		pos[t_idx] = pos_tmp[t_idx+1]*n_path_all;
-	}
-	__syncthreads();
+      int tmp_start = mon_pos_start[mon_idx];
+      GT* deri = workspace_mon + tmp_start*n_path_all;
+      unsigned short* pos = mon_pos + tmp_start;
 
+      GT tmp = workspace_coef[mon_idx*n_path_all];
+      deri[n_path_all] = tmp;
+      deri[0] = x[pos[1]*n_path]*tmp;
 
-	if(path_idx < n_path){
-		GT tmp = workspace_sum[pos[0]];
-
-		for(int i=1; i<n_var; i++) {
-			tmp += workspace_sum[pos[i]];
-		}
-
-		workspace_matrix[pos[n_var]] = tmp;
-	}
+      // deri[n_path] = GT(2.0,2.0);
+      // deri[0] = GT(3.0,3.0);
+   }
 }
 
+__global__ void eval_mon_seq_mult_kernel
+ ( GT* workspace_mon, GT* x, GT* workspace_coef,
+   int* mon_pos_start, unsigned short* mon_pos, int n_path )
+{
+   __shared__ int pos[512];
+
+   int t_idx = threadIdx.x;
+   int BS = blockDim.x;
+   int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS + t_idx;
+
+   int mon_idx = blockIdx.z;
+   workspace_mon += path_idx;
+   x += path_idx;
+   workspace_coef += path_idx;
+
+   int tmp_start = mon_pos_start[mon_idx];
+   unsigned short* pos_tmp = mon_pos + tmp_start;
+
+   int n_var = pos_tmp[0];
+   int rnd = (n_var-1)/BS+1;
+   if(rnd>1)
+   {
+      for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++)
+      {
+         pos[t_idx+1] = pos_tmp[t_idx+1]*n_path;
+         t_idx += BS;
+      }
+   }
+   if(t_idx<n_var)
+   {
+      pos[t_idx+1] = pos_tmp[t_idx+1]*n_path;
+   }
+   __syncthreads();
+
+   if(path_idx < n_path)
+   {
+      GT* deri = workspace_mon + tmp_start*n_path;
+      GT tmp = x[pos[1]];
+
+      GT* deri_tmp = deri + n_path;
+      deri_tmp[n_path] = tmp;
+
+      for(int i=2; i<n_var; i++) 
+      {
+         tmp *= x[pos[i]];
+         deri_tmp[i*n_path] = tmp;
+      }
+      tmp = workspace_coef[mon_idx*n_path];
+
+      for(int i=n_var; i>1; i--) 
+      {
+         deri[i*n_path] *= tmp;
+         tmp *= x[pos[i]];
+      }
+      deri[n_path] = tmp;
+      deri[0] = x[pos[1]]*tmp;
+   }
+}
+
+__global__ void eval_mon_seq_mult_kernel2
+ ( GT* workspace_mon, GT* x, GT* workspace_coef, int* mon_pos_start,
+   unsigned short* mon_pos, int n_path, int n_path_all )
+{
+   __shared__ int pos[512];
+
+   int t_idx = threadIdx.x;
+   int BS = blockDim.x;
+   int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS + t_idx;
+
+   int mon_idx = blockIdx.z;
+   workspace_mon += path_idx;
+   x += path_idx;
+   workspace_coef += path_idx;
+
+   int tmp_start = mon_pos_start[mon_idx];
+   unsigned short* pos_tmp = mon_pos + tmp_start;
+
+   int n_var = pos_tmp[0];
+   int rnd = (n_var-1)/BS+1;
+   if(rnd>1)
+   {
+      for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++)
+      {
+         pos[t_idx+1] = pos_tmp[t_idx+1]*n_path;
+         t_idx += BS;
+      }
+   }
+   if(t_idx<n_var)
+   {
+      pos[t_idx+1] = pos_tmp[t_idx+1]*n_path;
+   }
+   __syncthreads();
+
+   if(path_idx < n_path)
+   {
+	GT* deri = workspace_mon + tmp_start*n_path_all;
+	GT tmp = x[pos[1]];
+
+        GT* deri_tmp = deri + n_path_all;
+        deri_tmp[n_path_all] = tmp;
+
+        for(int i=2; i<n_var; i++)
+        {
+           tmp *= x[pos[i]];
+           deri_tmp[i*n_path_all] = tmp;
+        }
+
+        tmp = workspace_coef[mon_idx*n_path_all];
+
+        for(int i=n_var; i>1; i--)
+        {
+           deri[i*n_path_all] *= tmp;
+           tmp *= x[pos[i]];
+        }
+        deri[n_path_all] = tmp;
+        deri[0] = x[pos[1]]*tmp;
+   }
+}
 
 // Mon evalutaion and differentiation on GPU
-/*__global__ void eval_sum_seq_mult_transpose_kernel(GT* workspace_matrix, GT* workspace_sum, \
-		int* sum_pos, int* sum_pos_start, int n_path, int n_sum, int sum_trunk) {
-    __shared__ GT tile[16][17];
-    int pos_output[16];
+__global__ void eval_sum_seq_mult_kernel
+ ( GT* workspace_matrix, GT* workspace_sum, int* sum_pos,
+   int* sum_pos_start, int n_path )
+{
+   __shared__ int pos[512];
+   int t_idx = threadIdx.x;
+   int BS = blockDim.x;
+   int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS + t_idx;
+   int sum_idx = blockIdx.z;
+   workspace_matrix += path_idx;
+   workspace_sum += path_idx;
 
-    int t_idx = threadIdx.x;
+   int* pos_tmp = sum_pos + sum_pos_start[sum_idx];
+   int n_var = *pos_tmp;
 
-    int path_trunk_idx = gridDim.x*blockIdx.y+blockIdx.x;
-    int path_trunk = blockDim.x;
-	int path_idx = path_trunk_idx*path_trunk + t_idx;
+   int rnd = n_var/BS+1;
+   if(rnd>1)
+   {
+      for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++)
+      {
+         pos[t_idx] = pos_tmp[t_idx+1]*n_path;
+         t_idx += BS;
+      }
+   }
+   if(t_idx<=n_var)
+   {
+      pos[t_idx] = pos_tmp[t_idx+1]*n_path;
+   }
+   __syncthreads();
 
-	int sum_trunk_idx = blockIdx.z;
-	int sum_start_idx = sum_trunk_idx*sum_trunk;
-	int sum_end_idx = sum_start_idx + sum_trunk;
-	if(n_sum < sum_end_idx){
-		sum_end_idx = n_sum;
-	}
+   if(path_idx < n_path)
+   {
+      GT tmp = workspace_sum[pos[0]];
 
-	if(path_idx < n_path){
-		workspace_matrix += path_idx;
-		workspace_sum += path_idx;
-		for(int sum_idx=sum_start_idx; sum_idx<sum_end_idx; sum_idx++){
-			int* pos = sum_pos + sum_pos_start[sum_idx];
-			int n_var = *pos++;
+      for(int i=1; i<n_var; i++)
+      {
+         tmp += workspace_sum[pos[i]];
+      }
+      workspace_matrix[pos[n_var]] = tmp;
+   }
+}
 
-			GT tmp = workspace_sum[(*pos++)*n_path];
+// Mon evalutaion and differentiation on GPU
+__global__ void eval_sum_seq_mult_kernel2
+ ( GT* workspace_matrix, GT* workspace_sum, int* sum_pos, 
+   int* sum_pos_start, int n_path, int n_path_all )
+{
+   __shared__ int pos[512];
+   int t_idx = threadIdx.x;
+   int BS = blockDim.x;
+   int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS + t_idx;
+   int sum_idx = blockIdx.z;
+   workspace_matrix += path_idx;
+   workspace_sum += path_idx;
 
-			for(int i=1; i<n_var; i++) {
-				tmp += workspace_sum[(*pos++)*n_path];
-			}
-			workspace_matrix[(*pos)*n_path] = tmp;
-			if(t_idx == 0){
-				pos_output[sum_idx-sum_start_idx] = *pos;
-			}
-		}
-	}
+   int* pos_tmp = sum_pos + sum_pos_start[sum_idx];
+   int n_var = *pos_tmp;
 
-	int n_sum_remain = sum_end_idx - sum_start_idx;
-	if(t_idx < n_sum_remain){
-		// postponed instruction summations are ordered by number of terms, need to be changed.
-	}
+   int rnd = n_var/BS+1;
+   if(rnd>1)
+   {
+      for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++)
+      {
+         pos[t_idx] = pos_tmp[t_idx+1]*n_path_all;
+         t_idx += BS;
+      }
+   }
+   if(t_idx<=n_var)
+   {
+      pos[t_idx] = pos_tmp[t_idx+1]*n_path_all;
+   }
+   __syncthreads();
+
+   if(path_idx < n_path)
+   {
+      GT tmp = workspace_sum[pos[0]];
+
+      for(int i=1; i<n_var; i++)
+      {
+         tmp += workspace_sum[pos[i]];
+      }
+      workspace_matrix[pos[n_var]] = tmp;
+   }
+}
+
+// Mon evalutaion and differentiation on GPU
+/*__global__ void eval_sum_seq_mult_transpose_kernel
+ ( GT* workspace_matrix, GT* workspace_sum, int* sum_pos, int* sum_pos_start,
+   int n_path, int n_sum, int sum_trunk )
+{
+   __shared__ GT tile[16][17];
+   int pos_output[16];
+
+   int t_idx = threadIdx.x;
+
+   int path_trunk_idx = gridDim.x*blockIdx.y+blockIdx.x;
+   int path_trunk = blockDim.x;
+   int path_idx = path_trunk_idx*path_trunk + t_idx;
+
+   int sum_trunk_idx = blockIdx.z;
+   int sum_start_idx = sum_trunk_idx*sum_trunk;
+   int sum_end_idx = sum_start_idx + sum_trunk;
+   if(n_sum < sum_end_idx)
+   {
+      sum_end_idx = n_sum;
+   }
+   if(path_idx < n_path)
+   {
+      workspace_matrix += path_idx;
+      workspace_sum += path_idx;
+      for(int sum_idx=sum_start_idx; sum_idx<sum_end_idx; sum_idx++)
+      {
+         int* pos = sum_pos + sum_pos_start[sum_idx];
+         int n_var = *pos++;
+
+         GT tmp = workspace_sum[(*pos++)*n_path];
+
+         for(int i=1; i<n_var; i++) 
+         {
+            tmp += workspace_sum[(*pos++)*n_path];
+         }
+         workspace_matrix[(*pos)*n_path] = tmp;
+         if(t_idx == 0)
+         {
+            pos_output[sum_idx-sum_start_idx] = *pos;
+         }
+      }
+   }
+   int n_sum_remain = sum_end_idx - sum_start_idx;
+   if(t_idx < n_sum_remain)
+   {
+      // postponed instruction summations are ordered by number of terms,
+      // need to be changed.
+   }
 }*/
 
-__global__ void eval_mult_init_zero(GT* x_array, GT* t_array, GT* one_minor_t,\
-		GT* x_mult, GT* t_mult, GT* one_minor_t_mult,\
-		int workspace_size, int* path_idx_mult, int* x_t_idx_mult, int n_path, int dim,\
-		GT* matrix_mult, int n_sum_zero, int* sum_zeros){
+__global__ void eval_mult_init_zero
+ ( GT* x_array, GT* t_array, GT* one_minor_t, GT* x_mult, GT* t_mult,
+   GT* one_minor_t_mult, int workspace_size, int* path_idx_mult,
+   int* x_t_idx_mult, int n_path, int dim, GT* matrix_mult,
+   int n_sum_zero, int* sum_zeros )
+{
+   __shared__ int zero_pos[512];
 
-	__shared__ int zero_pos[512];
+   int t_idx = threadIdx.x;
+   int BS = blockDim.x;
+   int eval_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS+t_idx;
 
-	int t_idx = threadIdx.x;
-	int BS = blockDim.x;
-	int eval_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS+t_idx;
+   int rnd = (n_sum_zero-1)/BS+1;
+   if(rnd>1)
+   {
+      for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++)
+      {
+         zero_pos[t_idx] = sum_zeros[t_idx]*n_path;
+         t_idx += BS;
+      }
+   }
+   if(t_idx<n_sum_zero)
+   {
+      zero_pos[t_idx] = sum_zeros[t_idx]*n_path;
+   }
+   __syncthreads();
 
-	int rnd = (n_sum_zero-1)/BS+1;
-	if(rnd>1){
-		for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++){
-			zero_pos[t_idx] = sum_zeros[t_idx]*n_path;
-			t_idx += BS;
-		}
-	}
-	if(t_idx<n_sum_zero){
-		zero_pos[t_idx] = sum_zeros[t_idx]*n_path;
-	}
-	__syncthreads();
-
-	if(eval_idx < n_path){
-		matrix_mult += eval_idx;
-		for(int zero_idx=0; zero_idx<n_sum_zero; zero_idx++){
-			int m_idx = zero_pos[zero_idx];
-			matrix_mult[m_idx] = GT(0.0,0.0);
-		}
-	}
+   if(eval_idx < n_path)
+   {
+      matrix_mult += eval_idx;
+      for(int zero_idx=0; zero_idx<n_sum_zero; zero_idx++)
+      {
+         int m_idx = zero_pos[zero_idx];
+         matrix_mult[m_idx] = GT(0.0,0.0);
+      }
+   }
 }
 
-__global__ void eval_mult_init_zero2(GT* x_array, GT* t_array, GT* one_minor_t,\
-		GT* x_mult, GT* t_mult, GT* one_minor_t_mult,\
-		int workspace_size, int* path_idx_mult, int* x_t_idx_mult, int n_path, int dim,\
-		GT* matrix_mult, int n_sum_zero, int* sum_zeros){
+__global__ void eval_mult_init_zero2
+ ( GT* x_array, GT* t_array, GT* one_minor_t, GT* x_mult, GT* t_mult,
+   GT* one_minor_t_mult, int workspace_size, int* path_idx_mult,
+   int* x_t_idx_mult, int n_path, int dim, GT* matrix_mult,
+   int n_sum_zero, int* sum_zeros )
+{
+   __shared__ int zero_pos[512];
 
-	__shared__ int zero_pos[512];
+   int t_idx = threadIdx.x;
+   int BS = blockDim.x;
+   int eval_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS+t_idx;
 
-	int t_idx = threadIdx.x;
-	int BS = blockDim.x;
-	int eval_idx = (gridDim.x*blockIdx.y+blockIdx.x)*BS+t_idx;
+   int rnd = (n_sum_zero-1)/BS+1;
+   if(rnd>1)
+   {
+      for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++)
+      {
+         zero_pos[t_idx] = sum_zeros[t_idx]*n_path;
+         t_idx += BS;
+      }
+   }
+   if(t_idx<n_sum_zero)
+   {
+      zero_pos[t_idx] = sum_zeros[t_idx]*n_path;
+   }
+   __syncthreads();
 
-	int rnd = (n_sum_zero-1)/BS+1;
-	if(rnd>1){
-		for(int rnd_idx=0; rnd_idx<rnd-1; rnd_idx++){
-			zero_pos[t_idx] = sum_zeros[t_idx]*n_path;
-			t_idx += BS;
-		}
-	}
-	if(t_idx<n_sum_zero){
-		zero_pos[t_idx] = sum_zeros[t_idx]*n_path;
-	}
-	__syncthreads();
-
-	if(eval_idx < n_path){
-		matrix_mult += eval_idx;
-		for(int zero_idx=0; zero_idx<n_sum_zero; zero_idx++){
-			int m_idx = zero_pos[zero_idx];
-			matrix_mult[m_idx] = GT(0.0,0.0);
-		}
-	}
+   if(eval_idx < n_path)
+   {
+      matrix_mult += eval_idx;
+      for(int zero_idx=0; zero_idx<n_sum_zero; zero_idx++)
+      {
+         int m_idx = zero_pos[zero_idx];
+         matrix_mult[m_idx] = GT(0.0,0.0);
+      }
+   }
 }
 
-__global__ void eval_mult_init(GT* x_array, GT* t_array, GT* one_minor_t,\
-		GT* x_mult, GT* t_mult, GT* one_minor_t_mult,\
-		int workspace_size, int* path_idx_mult, int* x_t_idx_mult, int n_path, int dim){
+__global__ void eval_mult_init
+ ( GT* x_array, GT* t_array, GT* one_minor_t, GT* x_mult, GT* t_mult,
+   GT* one_minor_t_mult, int workspace_size, int* path_idx_mult,
+   int* x_t_idx_mult, int n_path, int dim )
+{
+   int eval_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + threadIdx.x;
+   if(eval_idx < n_path)
+   {
+      int path_idx = path_idx_mult[eval_idx];
 
-	int eval_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + threadIdx.x;
-	if(eval_idx < n_path){
-		int path_idx = path_idx_mult[eval_idx];
+      GT* t = t_array + workspace_size*path_idx + x_t_idx_mult[path_idx];
+      one_minor_t += workspace_size*path_idx;
 
-		GT* t = t_array + workspace_size*path_idx + x_t_idx_mult[path_idx];
-		one_minor_t += workspace_size*path_idx;
+      t_mult[eval_idx] = *t;
+      one_minor_t_mult[eval_idx] = *one_minor_t;
+      x_mult += eval_idx;
+      GT* x = x_array + workspace_size*path_idx + x_t_idx_mult[path_idx]*dim;
 
-		t_mult[eval_idx] = *t;
-		one_minor_t_mult[eval_idx] = *one_minor_t;
-		x_mult += eval_idx;
-		GT* x = x_array + workspace_size*path_idx + x_t_idx_mult[path_idx]*dim;
-
-		for(int var_idx=0; var_idx<dim; var_idx++){
-			x_mult[var_idx*n_path] = x[var_idx];
-		}
-	}
+      for(int var_idx=0; var_idx<dim; var_idx++)
+      {
+         x_mult[var_idx*n_path] = x[var_idx];
+      }
+   }
 }
 
-__global__ void eval_mult_end(GT* matrix_mult, GT* matrix, int matrix_dim, \
-		int workspace_size, int* path_idx_mult, int n_path){
+__global__ void eval_mult_end
+ ( GT* matrix_mult, GT* matrix, int matrix_dim, int workspace_size,
+   int* path_idx_mult, int n_path )
+{
 
-	int eval_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + threadIdx.x;
-	if(eval_idx < n_path){
-		int path_idx = path_idx_mult[eval_idx];
-		matrix_mult += eval_idx;
-		matrix += workspace_size*path_idx;
+   int eval_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + threadIdx.x;
+   if(eval_idx < n_path)
+   {
+      int path_idx = path_idx_mult[eval_idx];
+      matrix_mult += eval_idx;
+      matrix += workspace_size*path_idx;
 
-		for(int var_idx=0; var_idx<matrix_dim; var_idx++){
-			matrix[var_idx] = matrix_mult[var_idx*n_path];
-		}
-	}
-
+      for(int var_idx=0; var_idx<matrix_dim; var_idx++)
+      {
+         matrix[var_idx] = matrix_mult[var_idx*n_path];
+      }
+   }
 }
 
-__global__ void eval_mult_end(GT* matrix_mult, GT* matrix, int matrix_dim, \
-		int workspace_size, int* path_idx_mult, int n_path, int trunk){
+__global__ void eval_mult_end
+ ( GT* matrix_mult, GT* matrix, int matrix_dim, int workspace_size,
+   int* path_idx_mult, int n_path, int trunk )
+{
+   int eval_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + threadIdx.x;
+   if(eval_idx < n_path)
+   {
+      int trunk_id = blockIdx.z;
+      int path_idx = path_idx_mult[eval_idx];
+      matrix_mult += eval_idx;
+      matrix += workspace_size*path_idx;
 
-	int eval_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + threadIdx.x;
-	if(eval_idx < n_path){
-		int trunk_id = blockIdx.z;
-		int path_idx = path_idx_mult[eval_idx];
-		matrix_mult += eval_idx;
-		matrix += workspace_size*path_idx;
-
-		int start = trunk_id * trunk;
-		int end = start + trunk;
-		if(end>matrix_dim){
-			end = matrix_dim;
-		}
-		for(int var_idx=start; var_idx<end; var_idx++){
-			matrix[var_idx] = matrix_mult[var_idx*n_path];
-		}
-	}
-
+      int start = trunk_id * trunk;
+      int end = start + trunk;
+      if(end>matrix_dim)
+      {
+         end = matrix_dim;
+      }
+      for(int var_idx=start; var_idx<end; var_idx++)
+      {
+         matrix[var_idx] = matrix_mult[var_idx*n_path];
+      }
+   }
 }
 
-__global__ void eval_mult_end2(GT* matrix_mult, GT* matrix, int matrix_dim, \
-		int workspace_size, int* path_idx_mult, int n_path, int var_trunk){
+__global__ void eval_mult_end2
+ ( GT* matrix_mult, GT* matrix, int matrix_dim, int workspace_size,
+   int* path_idx_mult, int n_path, int var_trunk )
+{
+   __shared__ GT tile[16][17];
 
-    __shared__ GT tile[16][17];
+   int t_idx = threadIdx.x;
+   int sys_trunk= blockDim.x;
+   int var_trunk_idx = blockIdx.z;
+   int sys_trunk_idx = gridDim.x*blockIdx.y+blockIdx.x;
 
-	int t_idx = threadIdx.x;
-	int sys_trunk= blockDim.x;
-	int var_trunk_idx = blockIdx.z;
-	int sys_trunk_idx = gridDim.x*blockIdx.y+blockIdx.x;
+   int n_path_remain = n_path - sys_trunk_idx*sys_trunk;
 
-	int n_path_remain = n_path - sys_trunk_idx*sys_trunk;
+   if(t_idx < n_path_remain)
+   {
+      int start = var_trunk_idx * var_trunk;
+      int end = start + var_trunk;
+      if(end > matrix_dim)
+      {
+         end = matrix_dim;
+      }
+      matrix_mult += sys_trunk_idx*sys_trunk+t_idx;
+      for(int var_idx=start; var_idx<end; var_idx++)
+      {
+         tile[var_idx-start][t_idx] = matrix_mult[var_idx*n_path];
+      }
+   }
+   __syncthreads();
 
-	if(t_idx < n_path_remain){
-		int start = var_trunk_idx * var_trunk;
-		int end = start + var_trunk;
-		if(end > matrix_dim){
-			end = matrix_dim;
-		}
+   int n_var_remain = matrix_dim - var_trunk_idx*var_trunk;
 
-		matrix_mult += sys_trunk_idx*sys_trunk+t_idx;
-		for(int var_idx=start; var_idx<end; var_idx++){
-			tile[var_idx-start][t_idx] = matrix_mult[var_idx*n_path];
-		}
-	}
-	__syncthreads();
-
-	int n_var_remain = matrix_dim - var_trunk_idx*var_trunk;
-
-	if(t_idx < n_var_remain){
-		int start = sys_trunk_idx * sys_trunk;
-		int end = start + sys_trunk;
-		if(end > n_path){
-			end = n_path;
-		}
-		matrix += var_trunk_idx*var_trunk+t_idx;
-		for (int sys_idx=start; sys_idx<end; sys_idx++)
-		{
-			int path_idx = path_idx_mult[sys_idx];
-			matrix[path_idx*workspace_size] = tile[t_idx][sys_idx-start];
-		}
-	}
+   if(t_idx < n_var_remain)
+   {
+      int start = sys_trunk_idx * sys_trunk;
+      int end = start + sys_trunk;
+      if(end > n_path)
+      {
+         end = n_path;
+      }
+      matrix += var_trunk_idx*var_trunk+t_idx;
+      for(int sys_idx=start; sys_idx<end; sys_idx++)
+      {
+         int path_idx = path_idx_mult[sys_idx];
+         matrix[path_idx*workspace_size] = tile[t_idx][sys_idx-start];
+      }
+   }
 }
 
-__global__ void eval_mult_end3(GT* matrix_mult, GT* matrix, int matrix_dim, \
-		int workspace_size, int* path_idx_mult, int n_path, int n_path_all, int var_trunk){
+__global__ void eval_mult_end3
+ ( GT* matrix_mult, GT* matrix, int matrix_dim, int workspace_size,
+   int* path_idx_mult, int n_path, int n_path_all, int var_trunk )
+{
+   __shared__ GT tile[16][17];
 
-    __shared__ GT tile[16][17];
+   int t_idx = threadIdx.x;
+   int sys_trunk= blockDim.x;
+   int var_trunk_idx = blockIdx.z;
+   int sys_trunk_idx = gridDim.x*blockIdx.y+blockIdx.x;
 
-	int t_idx = threadIdx.x;
-	int sys_trunk= blockDim.x;
-	int var_trunk_idx = blockIdx.z;
-	int sys_trunk_idx = gridDim.x*blockIdx.y+blockIdx.x;
+   int n_path_remain = n_path - sys_trunk_idx*sys_trunk;
 
-	int n_path_remain = n_path - sys_trunk_idx*sys_trunk;
+   if(t_idx < n_path_remain)
+   {
+      int start = var_trunk_idx * var_trunk;
+      int end = start + var_trunk;
+      if(end > matrix_dim)
+      {
+         end = matrix_dim;
+      }
+      matrix_mult += sys_trunk_idx*sys_trunk+t_idx;
+      for(int var_idx=start; var_idx<end; var_idx++)
+      {
+         tile[var_idx-start][t_idx] = matrix_mult[var_idx*n_path_all];
+      }
+   }
+   __syncthreads();
 
-	if(t_idx < n_path_remain){
-		int start = var_trunk_idx * var_trunk;
-		int end = start + var_trunk;
-		if(end > matrix_dim){
-			end = matrix_dim;
-		}
+   int n_var_remain = matrix_dim - var_trunk_idx*var_trunk;
 
-		matrix_mult += sys_trunk_idx*sys_trunk+t_idx;
-		for(int var_idx=start; var_idx<end; var_idx++){
-			tile[var_idx-start][t_idx] = matrix_mult[var_idx*n_path_all];
-		}
-	}
-	__syncthreads();
-
-	int n_var_remain = matrix_dim - var_trunk_idx*var_trunk;
-
-	if(t_idx < n_var_remain){
-		int start = sys_trunk_idx * sys_trunk;
-		int end = start + sys_trunk;
-		if(end > n_path){
-			end = n_path;
-		}
-		matrix += var_trunk_idx*var_trunk+t_idx;
-		for (int sys_idx=start; sys_idx<end; sys_idx++)
-		{
-			int path_idx = path_idx_mult[sys_idx];
-			matrix[path_idx*workspace_size] = tile[t_idx][sys_idx-start];
-		}
-	}
+   if(t_idx < n_var_remain)
+   {
+      int start = sys_trunk_idx * sys_trunk;
+      int end = start + sys_trunk;
+      if(end > n_path)
+      {
+         end = n_path;
+      }
+      matrix += var_trunk_idx*var_trunk+t_idx;
+      for(int sys_idx=start; sys_idx<end; sys_idx++)
+      {
+         int path_idx = path_idx_mult[sys_idx];
+         matrix[path_idx*workspace_size] = tile[t_idx][sys_idx-start];
+      }
+   }
 }
 
-void eval_mult(GPUWorkspace& workspace, const GPUInst& inst){
-	int n_path = workspace.n_path_continuous;
-	int n_path_all = workspace.n_path;
-	//std::cout << "n_path_continuous = " << workspace.n_path_continuous << std::endl;
-	//std::cout << "n_path_all = " << n_path_all << std::endl;
+void eval_mult ( GPUWorkspace& workspace, const GPUInst& inst )
+{
+   int n_path = workspace.n_path_continuous;
+   int n_path_all = workspace.n_path;
+   // std::cout << "n_path_continuous = " << workspace.n_path_continuous
+   // << std::endl;
+   // std::cout << "n_path_all = " << n_path_all << std::endl;
 
-	//workspace.mon = workspace.coef + workspace.n_coef*n_path_all;
-	//workspace.sum = workspace.mon - workspace.n_constant*n_path_all;
+   // workspace.mon = workspace.coef + workspace.n_coef*n_path_all;
+   // workspace.sum = workspace.mon - workspace.n_constant*n_path_all;
 
-	//dim3 init_grid = get_grid(n_path, inst.coef_BS, 1);
+   // dim3 init_grid = get_grid(n_path, inst.coef_BS, 1);
 
 	//eval_mult_init_zero<<<init_grid, inst.coef_BS>>>(workspace.x_array, workspace.t_array, workspace.one_minor_t, \
 			workspace.x_mult, workspace.newton_t_mult, workspace.one_minor_t, \
@@ -688,85 +772,90 @@ void eval_mult(GPUWorkspace& workspace, const GPUInst& inst){
 			workspace.n_matrix, workspace.path_idx, n_path, n_path_all, transpose_trunk);
 }
 
+__global__ void eval_mult_eq
+ ( GT* matrix_mult, GT* x_mult, GT* workspace_eq, int* eq_pos_start,
+   int* mon_pos_start_eq, GT* coef_eq, GT* t_mult, GT* one_minor_t_mult,
+   unsigned short* mon_pos_eq, int n_path, int dim, int n_eq )
+{
+   __shared__ GT eq[11][16];
+   __shared__ int mon_pos[11];
 
-__global__ void eval_mult_eq(GT* matrix_mult, GT* x_mult, GT* workspace_eq, int* eq_pos_start, \
-		int* mon_pos_start_eq, GT* coef_eq, GT* t_mult, GT* one_minor_t_mult, unsigned short* mon_pos_eq,\
-		int n_path, int dim, int n_eq){
+   int t_idx = threadIdx.x;
+   int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + t_idx;
+   int eq_idx = blockIdx.z;
 
-	__shared__ GT eq[11][16];
-	__shared__ int mon_pos[11];
+   // init constant
+   int coef_pos;
+   if(path_idx < n_path)
+   {
+      coef_pos =  2*eq_pos_start[eq_idx];
+      eq[dim][t_idx] = t_mult[path_idx]*coef_eq[coef_pos++]
+         + one_minor_t_mult[path_idx]*coef_eq[coef_pos++];
+      // init 0 in Jacobian
+      for(int var_idx=0; var_idx<dim; var_idx++)
+      {
+         eq[var_idx][t_idx] = GT(0.0,0.0);
+      }
+      x_mult += path_idx;
+   }
+   int* mon_pos_start = mon_pos_start_eq+eq_pos_start[eq_idx];
+   int n_mon = *mon_pos_start++;
 
-	int t_idx = threadIdx.x;
-	int path_idx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x + t_idx;
-	int eq_idx = blockIdx.z;
+   for(int mon_idx=0; mon_idx<n_mon; mon_idx++)
+   {
+      int tmp_start = *mon_pos_start++;
+      unsigned short* mon_pos_tmp = mon_pos_eq+tmp_start;
 
-	// init constant
-	int coef_pos;
-	if(path_idx < n_path){
-		coef_pos =  2*eq_pos_start[eq_idx];
-		eq[dim][t_idx] = t_mult[path_idx]*coef_eq[coef_pos++]\
-				+ one_minor_t_mult[path_idx]*coef_eq[coef_pos++];
-		// init 0 in Jacobian
-		for(int var_idx=0; var_idx<dim; var_idx++){
-			eq[var_idx][t_idx] = GT(0.0,0.0);
-		}
-		x_mult += path_idx;
-	}
+      int n_var = mon_pos_tmp[0];
+      if(t_idx<n_var)
+      {
+         mon_pos[t_idx+1] = mon_pos_tmp[t_idx+1];
+      }
+      if(path_idx < n_path)
+      {
+         GT* deri = workspace_eq + tmp_start*n_path + path_idx;
+         GT tmp = x_mult[mon_pos[1]*n_path];
 
-	int* mon_pos_start = mon_pos_start_eq+eq_pos_start[eq_idx];
-	int n_mon = *mon_pos_start++;
+         deri[n_path] = tmp;
 
-	for(int mon_idx=0; mon_idx<n_mon; mon_idx++){
-		int tmp_start = *mon_pos_start++;
-		unsigned short* mon_pos_tmp = mon_pos_eq+tmp_start;
+         for(int var_idx=2; var_idx<n_var; var_idx++) 
+         {
+            tmp *= x_mult[mon_pos[var_idx]*n_path];
+            deri[var_idx*n_path] =tmp;
+         }
+         // compute coef
+         tmp = t_mult[path_idx]*coef_eq[coef_pos++]
+             + one_minor_t_mult[path_idx]*coef_eq[coef_pos++];
 
-		int n_var = mon_pos_tmp[0];
-		if(t_idx<n_var){
-			mon_pos[t_idx+1] = mon_pos_tmp[t_idx+1];
-		}
-
-		if(path_idx < n_path){
-			GT* deri = workspace_eq + tmp_start*n_path + path_idx;
-			GT tmp = x_mult[mon_pos[1]*n_path];
-
-			deri[n_path] = tmp;
-
-			for(int var_idx=2; var_idx<n_var; var_idx++) {
-				tmp *= x_mult[mon_pos[var_idx]*n_path];
-				deri[var_idx*n_path] =tmp;
-			}
-
-			// compute coef
-			tmp = t_mult[path_idx]*coef_eq[coef_pos++]\
-					+ one_minor_t_mult[path_idx]*coef_eq[coef_pos++];
-
-			deri -= n_path;
-			for(int var_idx=n_var; var_idx>1; var_idx--) {
-				int tmp_var = mon_pos[var_idx];
-				eq[tmp_var][t_idx] += deri[var_idx*n_path]*tmp;
-				tmp *= x_mult[tmp_var*n_path];
-			}
-			eq[mon_pos[1]][t_idx] +=  tmp;
-			eq[dim][t_idx] += x_mult[mon_pos[1]*n_path]*tmp;
-
-		}
-	}
-
-	if(path_idx < n_path){
-		for(int var_idx=0; var_idx<=dim; var_idx++){
-			int output_idx = var_idx*n_eq+eq_idx;
-			matrix_mult[output_idx*n_path+path_idx] = eq[var_idx][t_idx];
-		}
-	}
+         deri -= n_path;
+         for(int var_idx=n_var; var_idx>1; var_idx--) 
+         {
+            int tmp_var = mon_pos[var_idx];
+            eq[tmp_var][t_idx] += deri[var_idx*n_path]*tmp;
+            tmp *= x_mult[tmp_var*n_path];
+         }
+         eq[mon_pos[1]][t_idx] +=  tmp;
+         eq[dim][t_idx] += x_mult[mon_pos[1]*n_path]*tmp;
+      }
+   }
+   if(path_idx < n_path)
+   {
+      for(int var_idx=0; var_idx<=dim; var_idx++)
+      {
+         int output_idx = var_idx*n_eq+eq_idx;
+         matrix_mult[output_idx*n_path+path_idx] = eq[var_idx][t_idx];
+      }
+   }
 }
 
-void eval_mult_eq(GPUWorkspace& workspace, const GPUInst& inst){
-	int n_path = workspace.n_path_continuous;
-	int eval_mult_eq_BS = 16;
+void eval_mult_eq ( GPUWorkspace& workspace, const GPUInst& inst )
+{
+   int n_path = workspace.n_path_continuous;
+   int eval_mult_eq_BS = 16;
 
-	dim3 init_grid = get_grid(n_path, inst.coef_BS, 1);
+   dim3 init_grid = get_grid(n_path, inst.coef_BS, 1);
 
-	eval_mult_init<<<init_grid, inst.coef_BS>>>(workspace.x_array, workspace.t_array, workspace.one_minor_t, \
+   eval_mult_init<<<init_grid, inst.coef_BS>>>(workspace.x_array, workspace.t_array, workspace.one_minor_t, \
 			workspace.x_mult, workspace.newton_t_mult, workspace.one_minor_t, \
 			workspace.workspace_size, workspace.path_idx, workspace.x_t_idx_mult, n_path, inst.dim);
 
@@ -784,24 +873,26 @@ void eval_mult_eq(GPUWorkspace& workspace, const GPUInst& inst){
 			workspace.workspace_size, workspace.path_idx, n_path, transpose_trunk);
 }
 
-__global__ void eval_eq_kernel0(GT* workspace_mon, GT* x_mult, GT* matrix_mult,
-int* mon_pos_start, unsigned short* mon_pos, int workspace_size, int n_matrix, int dim) {
-	__shared__ GT eq[11];
-	__shared__ GT x[10];
+__global__ void eval_eq_kernel0
+ ( GT* workspace_mon, GT* x_mult, GT* matrix_mult, int* mon_pos_start,
+   unsigned short* mon_pos, int workspace_size, int n_matrix, int dim )
+{
+   __shared__ GT eq[11];
+   __shared__ GT x[10];
 
-	int t_idx = threadIdx.x;
-	int BS = blockDim.x;
-	int eq_idx = gridDim.x*blockIdx.y+blockIdx.x;
-	int path_idx = blockIdx.z;
+   int t_idx = threadIdx.x;
+   int BS = blockDim.x;
+   int eq_idx = gridDim.x*blockIdx.y+blockIdx.x;
+   int path_idx = blockIdx.z;
 
-	x_mult += path_idx*dim;
-	workspace_mon += path_idx*workspace_size;
-	matrix_mult += path_idx*n_matrix;
+   x_mult += path_idx*dim;
+   workspace_mon += path_idx*workspace_size;
+   matrix_mult += path_idx*n_matrix;
 
-	int mon_idx = t_idx;
+   int mon_idx = t_idx;
 
-	int tmp_start = mon_pos_start[mon_idx+dim*eq_idx];
-	unsigned short* pos = mon_pos + tmp_start;
+   int tmp_start = mon_pos_start[mon_idx+dim*eq_idx];
+   unsigned short* pos = mon_pos + tmp_start;
 
 	x[t_idx] = x_mult[t_idx];
 	eq[t_idx] = GT(0.0,0.0);
@@ -835,30 +926,33 @@ int* mon_pos_start, unsigned short* mon_pos, int workspace_size, int n_matrix, i
 	matrix_mult[t_idx+10*eq_idx] = eq[t_idx];
 }
 
-__global__ void eval_eq_kernel(GT* workspace_mon, GT* x_mult, GT* matrix_mult,
-int* mon_pos_start_block, unsigned short* mon_pos_block, int workspace_size, int n_matrix, int dim, int n_eq_per_warp) {
-	__shared__ GT eq[30];
-	__shared__ GT x[30];
+__global__ void eval_eq_kernel
+ ( GT* workspace_mon, GT* x_mult, GT* matrix_mult, int* mon_pos_start_block,
+   unsigned short* mon_pos_block, int workspace_size, int n_matrix, int dim,
+   int n_eq_per_warp )
+{
+   __shared__ GT eq[30];
+   __shared__ GT x[30];
 
-	int t_idx = threadIdx.x;
-	int BS = blockDim.x;
+   int t_idx = threadIdx.x;
+   int BS = blockDim.x;
 
-	int warp_path_idx = t_idx/dim;
+   int warp_path_idx = t_idx/dim;
 
-	int eq_idx = gridDim.x*blockIdx.y+blockIdx.x;
-	int path_idx = blockIdx.z*n_eq_per_warp;
+   int eq_idx = gridDim.x*blockIdx.y+blockIdx.x;
+   int path_idx = blockIdx.z*n_eq_per_warp;
 
-	x_mult += path_idx*dim;
-	workspace_mon += path_idx*workspace_size;
-	matrix_mult += path_idx*n_matrix;
+   x_mult += path_idx*dim;
+   workspace_mon += path_idx*workspace_size;
+   matrix_mult += path_idx*n_matrix;
 
-	int mon_idx = t_idx-warp_path_idx*dim;
+   int mon_idx = t_idx-warp_path_idx*dim;
 
-	int tmp_start = mon_pos_start_block[eq_idx];
-	unsigned short* pos = mon_pos_block + tmp_start+mon_idx;
+   int tmp_start = mon_pos_start_block[eq_idx];
+   unsigned short* pos = mon_pos_block + tmp_start+mon_idx;
 
-	x[t_idx] = x_mult[t_idx];
-	eq[t_idx] = GT(0.0,0.0);
+   x[t_idx] = x_mult[t_idx];
+   eq[t_idx] = GT(0.0,0.0);
 
 	//if(path_idx < n_path){
 
@@ -890,27 +984,29 @@ int* mon_pos_start_block, unsigned short* mon_pos_block, int workspace_size, int
 	matrix_mult[t_idx+n_eq_per_warp*dim*eq_idx] = eq[t_idx];
 }
 
-__global__ void eval_eq_kernel1(GT* workspace_mon, GT* x_mult, GT* matrix_mult,
-int* mon_pos_start_block, unsigned short* mon_pos_block, int workspace_size, int n_matrix, int dim) {
-	__shared__ GT eq[11];
-	__shared__ GT x[10];
+__global__ void eval_eq_kernel1
+ ( GT* workspace_mon, GT* x_mult, GT* matrix_mult, int* mon_pos_start_block,
+   unsigned short* mon_pos_block, int workspace_size, int n_matrix, int dim )
+{
+   __shared__ GT eq[11];
+   __shared__ GT x[10];
 
-	int t_idx = threadIdx.x;
-	int BS = blockDim.x;
-	int eq_idx = gridDim.x*blockIdx.y+blockIdx.x;
-	int path_idx = blockIdx.z;
+   int t_idx = threadIdx.x;
+   int BS = blockDim.x;
+   int eq_idx = gridDim.x*blockIdx.y+blockIdx.x;
+   int path_idx = blockIdx.z;
 
-	x_mult += path_idx*dim;
-	workspace_mon += path_idx*workspace_size;
-	matrix_mult += path_idx*n_matrix;
+   x_mult += path_idx*dim;
+   workspace_mon += path_idx*workspace_size;
+   matrix_mult += path_idx*n_matrix;
 
-	int mon_idx = t_idx;
+   int mon_idx = t_idx;
 
-	int tmp_start = mon_pos_start_block[eq_idx];
-	unsigned short* pos = mon_pos_block + tmp_start+t_idx;
+   int tmp_start = mon_pos_start_block[eq_idx];
+   unsigned short* pos = mon_pos_block + tmp_start+t_idx;
 
-	x[t_idx] = x_mult[t_idx];
-	eq[t_idx] = GT(0.0,0.0);
+   x[t_idx] = x_mult[t_idx];
+   eq[t_idx] = GT(0.0,0.0);
 
 	//if(path_idx < n_path){
 
@@ -941,7 +1037,8 @@ int* mon_pos_start_block, unsigned short* mon_pos_block, int workspace_size, int
 	matrix_mult[t_idx+10*eq_idx] = eq[t_idx];
 }
 
-void eval_eq(GPUWorkspace& workspace, const GPUInst& inst){
+void eval_eq ( GPUWorkspace& workspace, const GPUInst& inst )
+{
 	//std::cout << "workspace.n_path_continuous = " << workspace.n_path_continuous << std::endl;
 	int n_path = workspace.n_path_continuous;
 
