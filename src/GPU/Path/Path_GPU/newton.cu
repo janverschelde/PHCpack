@@ -248,7 +248,7 @@ __global__ void max_relative_double_kernel2
 __global__ void max_relative_double_kernel3
  ( GT* sol, int dim, int n_path_continuous, int n_path, int* path_idx_mult,
    double* max_array, double* max_array_last,
-   double* r_max_array, double* max_x)
+   double* r_max_array, double* max_x )
 {
    // __shared__ double x_norm[max_array_size];
    int idx = blockIdx.x*blockDim.x + threadIdx.x;
@@ -1024,223 +1024,289 @@ bool newton
 
    for(int path_idx=0; path_idx<n_path; path_idx++)
    {
-		workspace.newton_success_host[path_idx] = workspace.path_success_host[path_idx];
-		//std::cout << "workspace.success_host[path_idx] = " \
-				  << workspace.success_host[path_idx] << std::endl;
-	}
-	cudaMemcpy(workspace.newton_success, workspace.newton_success_host, n_path*sizeof(int),
-				cudaMemcpyHostToDevice);
+      workspace.newton_success_host[path_idx]
+         = workspace.path_success_host[path_idx];
+      // std::cout << "workspace.success_host[path_idx] = "
+      // << workspace.success_host[path_idx] << std::endl;
+   }
+   cudaMemcpy(workspace.newton_success, workspace.newton_success_host,
+              n_path*sizeof(int), cudaMemcpyHostToDevice);
 
-	int n_path_continuous = 0;
-	//std::cout << "newton_success" << std::endl;
-	for(int path_idx=0; path_idx<n_path; path_idx++){
-		//std::cout << path_idx << " " << workspace.newton_success_host[path_idx] << std::endl;
-		if(workspace.newton_success_host[path_idx] == 0){
-			workspace.path_idx_host[n_path_continuous] = path_idx;
-			n_path_continuous += 1;
-		}
-	}
-	workspace.n_path_continuous = n_path_continuous;
+   int n_path_continuous = 0;
+   // std::cout << "newton_success" << std::endl;
+   for(int path_idx=0; path_idx<n_path; path_idx++)
+   {
+      // std::cout << path_idx << " "
+      // << workspace.newton_success_host[path_idx] << std::endl;
+      if(workspace.newton_success_host[path_idx] == 0)
+      {
+         workspace.path_idx_host[n_path_continuous] = path_idx;
+         n_path_continuous += 1;
+      }
+   }
+   workspace.n_path_continuous = n_path_continuous;
 
-	/*if(debug){
-		std::cout << "n_path_continuous" << std::endl;
-		for(int path_idx=0; path_idx<n_path_continuous; path_idx++){
-			std::cout << path_idx << " " << workspace.path_idx_host[path_idx] << std::endl;
-		}
-	}*/
-	cudaMemcpy(workspace.path_idx, workspace.path_idx_host, n_path*sizeof(int), \
-				cudaMemcpyHostToDevice);
+   /*if(debug)
+     {
+        std::cout << "n_path_continuous" << std::endl;
+        for(int path_idx=0; path_idx<n_path_continuous; path_idx++)
+        {
+           std::cout << path_idx << " "
+                     << workspace.path_idx_host[path_idx] << std::endl;
+        }
+     }*/
+   cudaMemcpy(workspace.path_idx, workspace.path_idx_host, n_path*sizeof(int),
+              cudaMemcpyHostToDevice);
 
-	dim3 max_grid = get_grid(n_path_continuous,inst.predict_BS,1);
-	max_x_double_kernel<<<max_grid, inst.predict_BS>>>(workspace.x_array, inst.dim, \
-			n_path_continuous, workspace.max_x_gpu, workspace.workspace_size, \
-			workspace.x_t_idx_mult, workspace.path_idx);
+   dim3 max_grid = get_grid(n_path_continuous,inst.predict_BS,1);
+   max_x_double_kernel<<<max_grid, inst.predict_BS>>>
+      (workspace.x_array, inst.dim, n_path_continuous, workspace.max_x_gpu,
+       workspace.workspace_size, workspace.x_t_idx_mult, workspace.path_idx);
 
-	if(debug){
-		cudaMemcpy(workspace.max_x_host, workspace.max_x_gpu, n_path*sizeof(double),
-				cudaMemcpyDeviceToHost);
+   if(debug)
+   {
+      cudaMemcpy(workspace.max_x_host, workspace.max_x_gpu,
+                 n_path*sizeof(double), cudaMemcpyDeviceToHost);
 
-		for(int path_idx=0; path_idx<n_path; path_idx++){
-			//if(path_idx == path_idx_test){
-				std::cout << "       max_x_gpu " << path_idx << "= " << workspace.max_x_host[path_idx] << std::endl;
-			//}
-		}
-	}
+      for(int path_idx=0; path_idx<n_path; path_idx++)
+      {
+         // if(path_idx == path_idx_test){
+         std::cout << "       max_x_gpu " << path_idx << "= "
+                   << workspace.max_x_host[path_idx] << std::endl;
+         //}
+      }
+   }
+   eval(workspace, inst);
+   inst.n_eval_GPU++;
 
-	eval(workspace, inst);
-	inst.n_eval_GPU++;
+   max_relative_double_kernel<<<max_grid, inst.predict_BS>>>
+      (workspace.f_val, inst.n_eq, n_path_continuous,
+       workspace.max_f_val_gpu, workspace.r_max_f_val_gpu,
+       workspace.max_x_gpu, workspace.workspace_size, workspace.path_idx);
 
-	max_relative_double_kernel<<<max_grid, inst.predict_BS>>>(workspace.f_val, inst.n_eq,\
-			n_path_continuous, workspace.max_f_val_gpu, workspace.r_max_f_val_gpu, workspace.max_x_gpu, \
-			workspace.workspace_size, workspace.path_idx);
+   if(debug)
+   {
+      cudaMemcpy(workspace.max_f_val_host, workspace.max_f_val_gpu,
+                 n_path*sizeof(double), cudaMemcpyDeviceToHost);
+      cudaMemcpy(workspace.r_max_f_val_host, workspace.r_max_f_val_gpu,
+                 n_path*sizeof(double), cudaMemcpyDeviceToHost);
 
-	if(debug){
-		cudaMemcpy(workspace.max_f_val_host, workspace.max_f_val_gpu, n_path*sizeof(double),
-				cudaMemcpyDeviceToHost);
-		cudaMemcpy(workspace.r_max_f_val_host, workspace.r_max_f_val_gpu, n_path*sizeof(double),
-				cudaMemcpyDeviceToHost);
+      for(int path_idx=0; path_idx<n_path; path_idx++)
+      {
+         std::cout << "       max_f_value " << path_idx << " = "
+                   << workspace.max_f_val_host[path_idx]
+                   << " " << workspace.r_max_f_val_host[path_idx]
+                   << std::endl;
+      }
+   }
+   dim3 check_grid = get_grid(n_path,inst.predict_BS,1);
 
-		for(int path_idx=0; path_idx<n_path; path_idx++){
-			std::cout << "       max_f_value " << path_idx << " = " << workspace.max_f_val_host[path_idx] \
-					<< " " << workspace.r_max_f_val_host[path_idx] << std::endl;
-		}
-	}
+   for(int it_idx = 0; it_idx < path_parameter.max_it; it_idx++)
+   {
+      if(debug)
+      {
+         std::cout << "  Iteration " << it_idx << std::endl;
+      }
+      if(inst.dim <= BS_QR)
+      {
+         mgs_small_dynamic_idx(workspace.V, workspace.R, workspace.sol,
+            inst.n_eq, inst.dim+1, workspace.small_mgs_size,
+            workspace.n_matrix, workspace.n_matrix_R, n_path_continuous,
+            workspace.path_idx);
+         // array_max_double_kernel<<<1,inst.dim>>>
+         //    (workspace.sol, inst.dim, dimLog2, max_delta_x_gpu);
+         /*
+           CT** sol_gpu = new CT*[n_path];
+           CT** matrix_gpu_q = new CT*[n_path];
+           CT** matrix_gpu_r = new CT*[n_path];
+           for(int path_idx=0; path_idx<n_path; path_idx++)
+           {
+              sol_gpu[path_idx] = workspace.get_sol(path_idx);
+              for(int var_idx=0; var_idx<inst.dim; var_idx++)
+              {
+                 std::cout << path_idx << " " << var_idx
+                           << " " << sol_gpu[path_idx][var_idx];
+              }
+              matrix_gpu_q[path_idx] = workspace.get_matrix(path_idx);
+              matrix_gpu_r[path_idx] = workspace.get_matrix_r(path_idx);
+           }*/
+         max_relative_double_kernel<<<max_grid, inst.predict_BS>>>
+            (workspace.sol, inst.dim, n_path_continuous,
+             workspace.max_delta_x_gpu, workspace.r_max_delta_x_gpu,
+             workspace.max_x_gpu, workspace.workspace_size,
+             workspace.path_idx);
+      }
+      else
+      {
+         mgs_large_block(workspace.V, workspace.R, workspace.P,
+                         workspace.sol, inst.n_eq, inst.dim+1);
+         // array_max_double_kernel<<<1,inst.dim>>>
+         //    (workspace.sol, inst.dim, dimLog2, max_delta_x_gpu);
+      }
+      if(debug)
+      {
+         cudaMemcpy(workspace.max_delta_x_host, workspace.max_delta_x_gpu,
+                    n_path*sizeof(double), cudaMemcpyDeviceToHost);
+         cudaMemcpy(workspace.r_max_delta_x_host,
+                    workspace.r_max_delta_x_gpu, n_path*sizeof(double),
+                    cudaMemcpyDeviceToHost);
 
-	dim3 check_grid = get_grid(n_path,inst.predict_BS,1);
+         for(int path_idx=0; path_idx<n_path; path_idx++)
+         {
+            // if(path_idx == path_idx_test){
+            std::cout << "       max_delta_x " << path_idx
+                      << " = " << workspace.max_delta_x_host[path_idx]
+                      << " " << workspace.r_max_delta_x_host[path_idx]
+                      << std::endl;
+            //}
+         }
+      }
+      update_x_kernel<<<n_path_continuous, inst.dim>>>
+         (workspace.x_array, workspace.sol, inst.dim, 
+          workspace.workspace_size, workspace.x_t_idx_mult,
+          workspace.path_idx);
 
-	for (int it_idx = 0; it_idx < path_parameter.max_it; it_idx++) {
-		if(debug){
-			std::cout << "  Iteration " << it_idx << std::endl;
-		}
-		if(inst.dim <= BS_QR){
-			mgs_small_dynamic_idx(workspace.V, workspace.R, workspace.sol, inst.n_eq, inst.dim+1,\
-					workspace.small_mgs_size, workspace.n_matrix, workspace.n_matrix_R, n_path_continuous, workspace.path_idx);
-			//array_max_double_kernel<<<1,inst.dim>>>(workspace.sol, inst.dim, dimLog2, max_delta_x_gpu);
-			/*CT** sol_gpu = new CT*[n_path];
-			CT** matrix_gpu_q = new CT*[n_path];
-			CT** matrix_gpu_r = new CT*[n_path];
-			for(int path_idx=0; path_idx<n_path; path_idx++){
-				sol_gpu[path_idx] = workspace.get_sol(path_idx);
-				for(int var_idx=0; var_idx<inst.dim; var_idx++){
-					std::cout << path_idx << " " << var_idx << " " << sol_gpu[path_idx][var_idx];
-				}
-				matrix_gpu_q[path_idx] = workspace.get_matrix(path_idx);
-				matrix_gpu_r[path_idx] = workspace.get_matrix_r(path_idx);
-			}*/
-			max_relative_double_kernel<<<max_grid, inst.predict_BS>>>(workspace.sol, inst.dim, n_path_continuous, \
-					workspace.max_delta_x_gpu, workspace.r_max_delta_x_gpu, workspace.max_x_gpu, \
-					workspace.workspace_size, workspace.path_idx);
-		}
-		else{
-			mgs_large_block(workspace.V, workspace.R, workspace.P, workspace.sol, inst.n_eq, inst.dim+1);
-			//array_max_double_kernel<<<1,inst.dim>>>(workspace.sol, inst.dim, dimLog2, max_delta_x_gpu);
-		}
+      // workspace.print_x_mult();
+      check_kernel<<<check_grid, inst.predict_BS>>>
+         (workspace.max_delta_x_gpu, workspace.r_max_delta_x_gpu,
+          workspace.newton_success, n_path, workspace.end_range,
+          path_parameter.err_min_round_off,
+          path_parameter.err_min_round_off_refine);
 
-		if(debug){
-			cudaMemcpy(workspace.max_delta_x_host, workspace.max_delta_x_gpu, n_path*sizeof(double),
-					cudaMemcpyDeviceToHost);
-			cudaMemcpy(workspace.r_max_delta_x_host, workspace.r_max_delta_x_gpu, n_path*sizeof(double),
-					cudaMemcpyDeviceToHost);
+      cudaMemcpy(workspace.newton_success_host, workspace.newton_success,
+                 n_path*sizeof(int), cudaMemcpyDeviceToHost);
 
-			for(int path_idx=0; path_idx<n_path; path_idx++){
-				//if(path_idx == path_idx_test){
-					std::cout << "       max_delta_x " << path_idx << " = " << workspace.max_delta_x_host[path_idx] \
-							<< " " <<  workspace.r_max_delta_x_host[path_idx] << std::endl;
-				//}
-			}
-		}
+      n_path_continuous = 0;
+      // std::cout << "newton_success" << std::endl;
+      for(int path_idx=0; path_idx<n_path; path_idx++)
+      {
+         // std::cout << path_idx << " "
+         // << workspace.newton_success_host[path_idx] << std::endl;
+         if(workspace.newton_success_host[path_idx] == 0)
+         {
+            workspace.path_idx_host[n_path_continuous] = path_idx;
+            n_path_continuous += 1;
+         }
+      }
+      workspace.n_path_continuous = n_path_continuous;
+      max_grid = get_grid(n_path_continuous,inst.predict_BS,1);
+      /*
+        std::cout << "n_path_continuous" << std::endl;
+        for(int path_idx=0; path_idx<n_path_continuous; path_idx++)
+        {
+           std::cout << path_idx << " "
+                     << workspace.path_idx_host[path_idx] << std::endl;
+        }
+       */
+      cudaMemcpy(workspace.path_idx, workspace.path_idx_host,
+                 n_path*sizeof(int), cudaMemcpyHostToDevice);
 
- 		update_x_kernel<<<n_path_continuous, inst.dim>>>(workspace.x_array, workspace.sol, inst.dim, \
- 				workspace.workspace_size, workspace.x_t_idx_mult, workspace.path_idx);
+      // std::cout << "Correct X:" << std::endl;
+      // workspace.print_x_mult();
 
- 		//workspace.print_x_mult();
-		check_kernel<<<check_grid, inst.predict_BS>>>(workspace.max_delta_x_gpu, workspace.r_max_delta_x_gpu, \
-				workspace.newton_success, n_path, workspace.end_range, path_parameter.err_min_round_off, path_parameter.err_min_round_off_refine);
+      max_x_double_kernel<<<max_grid, inst.predict_BS>>>
+         (workspace.x_array, inst.dim, n_path_continuous,
+          workspace.max_x_gpu, workspace.workspace_size,
+          workspace.x_t_idx_mult, workspace.path_idx);
 
-		cudaMemcpy(workspace.newton_success_host, workspace.newton_success, n_path*sizeof(int), \
-				cudaMemcpyDeviceToHost);
+      if(debug)
+      {
+         cudaMemcpy(workspace.max_x_host, workspace.max_x_gpu,
+                    n_path*sizeof(double), cudaMemcpyDeviceToHost);
+         for(int path_idx=0; path_idx<n_path; path_idx++)
+         {
+            // if(path_idx == path_idx_test){
+            std::cout << "       max_x_gpu " << path_idx << "= "
+                      << workspace.max_x_host[path_idx] << std::endl;
+            //}
+         }
+      }
+      /*
+        cudaMemcpy(max_x_host, max_x_gpu, n_path*sizeof(double),
+                   cudaMemcpyDeviceToHost);
 
-		n_path_continuous = 0;
-		//std::cout << "newton_success" << std::endl;
-		for(int path_idx=0; path_idx<n_path; path_idx++){
-			//std::cout << path_idx << " " << workspace.newton_success_host[path_idx] << std::endl;
-			if(workspace.newton_success_host[path_idx] == 0){
-				workspace.path_idx_host[n_path_continuous] = path_idx;
-				n_path_continuous += 1;
-			}
-		}
-		workspace.n_path_continuous = n_path_continuous;
-		max_grid = get_grid(n_path_continuous,inst.predict_BS,1);
-		/*std::cout << "n_path_continuous" << std::endl;
-		for(int path_idx=0; path_idx<n_path_continuous; path_idx++){
-			std::cout << path_idx << " " << workspace.path_idx_host[path_idx] << std::endl;
-		}*/
-		cudaMemcpy(workspace.path_idx, workspace.path_idx_host, n_path*sizeof(int), \
-					cudaMemcpyHostToDevice);
+        for(int path_idx=0; path_idx<n_path; path_idx++)
+        {
+           std::cout << "       max_x_gpu " << path_idx << "= "
+                     << max_x_host[path_idx] << std::endl;
+        }
+       */
+      eval(workspace, inst);
+      // inst.n_eval_GPU++;
 
- 		//std::cout << "Correct X:" << std::endl;
- 		//workspace.print_x_mult();
+      max_relative_double_kernel<<<max_grid, inst.predict_BS>>>
+         (workspace.f_val, inst.n_eq, n_path_continuous,
+          workspace.max_f_val_gpu, workspace.r_max_f_val_gpu,
+          workspace.max_x_gpu, workspace.workspace_size, workspace.path_idx);
 
- 		max_x_double_kernel<<<max_grid, inst.predict_BS>>>(workspace.x_array, inst.dim, \
- 				n_path_continuous, workspace.max_x_gpu, workspace.workspace_size, \
- 				workspace.x_t_idx_mult, workspace.path_idx);
+      check_kernel<<<check_grid, inst.predict_BS>>>
+         (workspace.max_f_val_gpu, workspace.r_max_f_val_gpu,
+          workspace.newton_success, n_path, workspace.end_range,
+          path_parameter.err_min_round_off,
+          path_parameter.err_min_round_off_refine);
 
- 		if(debug){
- 			cudaMemcpy(workspace.max_x_host, workspace.max_x_gpu, n_path*sizeof(double),
- 					cudaMemcpyDeviceToHost);
- 			for(int path_idx=0; path_idx<n_path; path_idx++){
- 				//if(path_idx == path_idx_test){
- 					std::cout << "       max_x_gpu " << path_idx << "= " << workspace.max_x_host[path_idx] << std::endl;
- 				//}
- 			}
- 		}
+      cudaMemcpy(workspace.newton_success_host, workspace.newton_success,
+                 n_path*sizeof(int), cudaMemcpyDeviceToHost);
 
- 		/*cudaMemcpy(max_x_host, max_x_gpu, n_path*sizeof(double),
- 				cudaMemcpyDeviceToHost);
+      n_path_continuous = 0;
+      // std::cout << "newton_success" << std::endl;
+      for(int path_idx=0; path_idx<n_path; path_idx++)
+      {
+         // std::cout << path_idx << " "
+         // << workspace.newton_success_host[path_idx] << std::endl;
+         if(workspace.newton_success_host[path_idx] == 0)
+         {
+            workspace.path_idx_host[n_path_continuous] = path_idx;
+            n_path_continuous += 1;
+         }
+      }
+      workspace.n_path_continuous = n_path_continuous;
+      max_grid = get_grid(n_path_continuous,inst.predict_BS,1);
+      std::cout << "n_path_continuous" << std::endl;
+      for(int path_idx=0; path_idx<n_path_continuous; path_idx++)
+      {
+         std::cout << path_idx << " "
+                   << workspace.path_idx_host[path_idx] << std::endl;
+      }
+      cudaMemcpy(workspace.path_idx, workspace.path_idx_host,
+                 n_path*sizeof(int), cudaMemcpyHostToDevice);
 
- 		for(int path_idx=0; path_idx<n_path; path_idx++){
- 			std::cout << "       max_x_gpu " << path_idx << "= " << max_x_host[path_idx] << std::endl;
- 		}*/
+      if(debug)
+      {
+         cudaMemcpy(workspace.max_f_val_host, workspace.max_f_val_gpu,
+                    n_path*sizeof(double), cudaMemcpyDeviceToHost);
+         cudaMemcpy(workspace.r_max_f_val_host, workspace.r_max_f_val_gpu,
+                    n_path*sizeof(double), cudaMemcpyDeviceToHost);
 
- 		eval(workspace, inst);
- 		//inst.n_eval_GPU++;
+         for(int path_idx=0; path_idx<n_path; path_idx++)
+         {
+            // if(path_idx == path_idx_test){
+            std::cout << "       max_f_value " << path_idx
+                      << " = " << workspace.max_f_val_host[path_idx]
+                      << " " <<  workspace.r_max_f_val_host[path_idx]
+                      << std::endl;
+            //}
+         }
+      }
+   }
+   dim3 check_grid2 = get_grid(n_path,inst.predict_BS,1);
+   check_kernel<<<check_grid, inst.predict_BS>>>
+      (workspace.max_f_val_gpu, workspace.r_max_f_val_gpu,
+       workspace.max_delta_x_gpu, workspace.r_max_delta_x_gpu,
+       workspace.path_success, workspace.newton_success,
+       workspace.n_point_mult, workspace.x_t_idx_mult, workspace.n_array,
+       workspace.workspace_size, n_path, workspace.end_range,
+       path_parameter.err_min_round_off,
+       path_parameter.err_min_round_off_refine);
 
- 		max_relative_double_kernel<<<max_grid, inst.predict_BS>>>(workspace.f_val, inst.n_eq, \
- 				n_path_continuous, workspace.max_f_val_gpu, workspace.r_max_f_val_gpu, workspace.max_x_gpu, \
- 				workspace.workspace_size, workspace.path_idx);
+   cudaMemcpy(workspace.newton_success_host, workspace.newton_success,
+              n_path*sizeof(int), cudaMemcpyDeviceToHost);
 
-		check_kernel<<<check_grid, inst.predict_BS>>>(workspace.max_f_val_gpu, workspace.r_max_f_val_gpu, \
-				workspace.newton_success, n_path, workspace.end_range, path_parameter.err_min_round_off, path_parameter.err_min_round_off_refine);
-
-		cudaMemcpy(workspace.newton_success_host, workspace.newton_success, n_path*sizeof(int),
-				cudaMemcpyDeviceToHost);
-
-		n_path_continuous = 0;
-		//std::cout << "newton_success" << std::endl;
-		for(int path_idx=0; path_idx<n_path; path_idx++){
-			//std::cout << path_idx << " " << workspace.newton_success_host[path_idx] << std::endl;
-			if(workspace.newton_success_host[path_idx] == 0){
-				workspace.path_idx_host[n_path_continuous] = path_idx;
-				n_path_continuous += 1;
-			}
-		}
-		workspace.n_path_continuous = n_path_continuous;
-		max_grid = get_grid(n_path_continuous,inst.predict_BS,1);
-		std::cout << "n_path_continuous" << std::endl;
-		for(int path_idx=0; path_idx<n_path_continuous; path_idx++){
-			std::cout << path_idx << " " << workspace.path_idx_host[path_idx] << std::endl;
-		}
-		cudaMemcpy(workspace.path_idx, workspace.path_idx_host, n_path*sizeof(int),
-					cudaMemcpyHostToDevice);
-
-		if(debug){
-			cudaMemcpy(workspace.max_f_val_host, workspace.max_f_val_gpu, n_path*sizeof(double),
-					cudaMemcpyDeviceToHost);
-			cudaMemcpy(workspace.r_max_f_val_host, workspace.r_max_f_val_gpu, n_path*sizeof(double),
-					cudaMemcpyDeviceToHost);
-
-			for(int path_idx=0; path_idx<n_path; path_idx++){
-				//if(path_idx == path_idx_test){
-					std::cout << "       max_f_value " << path_idx << " = " << workspace.max_f_val_host[path_idx] \
-							<< " " <<  workspace.r_max_f_val_host[path_idx] << std::endl;
-				//}
-			}
-		}
-
-	}
-
-	dim3 check_grid2 = get_grid(n_path,inst.predict_BS,1);
-	check_kernel<<<check_grid, inst.predict_BS>>>(workspace.max_f_val_gpu, workspace.r_max_f_val_gpu,workspace. max_delta_x_gpu, \
-			workspace.r_max_delta_x_gpu, workspace.path_success, workspace.newton_success, workspace.n_point_mult, workspace.x_t_idx_mult, workspace.n_array, \
-			workspace.workspace_size, n_path, workspace.end_range, path_parameter.err_min_round_off, path_parameter.err_min_round_off_refine);
-
-	cudaMemcpy(workspace.newton_success_host, workspace.newton_success, n_path*sizeof(int),
-			cudaMemcpyDeviceToHost);
-
-	if(debug){
-		std::cout << workspace.newton_success_host[path_idx_test] << std::endl;
-	}
-	return true;
+   if(debug)
+   {
+      std::cout << workspace.newton_success_host[path_idx_test] << std::endl;
+   }
+   return true;
 }
 
 bool newton_align
