@@ -1,5 +1,6 @@
 Tue 15 Aug 2017 : reformatted the first half of eval_mult.cu.  Continued the 
   reformatting of code in newton.cu, completed reformatting of newton.cu.
+  Did more reformatting to eval_mult.cu.
 
 Mon 14 Aug 2017 : reformattings in mgs_large_block.cu, mgs_large_row.cu,
   and mgs_large_row_reduce.cu.  Continued reformatting in mgs_small.cu.
