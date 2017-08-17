@@ -5,6 +5,9 @@ file name              : short description
 -------------------------------------------------------------------------------
 mgs_large_norm         : kernels to compute the norm of large vectors
 -------------------------------------------------------------------------------
+eval                   : evaluation of monomials
+eval_coef              : kernels to evaluate coefficients of homotopies
+-------------------------------------------------------------------------------
 path_gpu_data          : defines workspace for trackers on the device
 path_gpu               : tracking of one single path
 path_gpu_mult          : tracking many solution paths
