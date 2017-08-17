@@ -1,4 +1,5 @@
-Thu 17 Aug 2017 : completed the reformatting of eval_eq.cu.
+Thu 17 Aug 2017 : completed the reformatting of eval_eq.cu and of
+  eval_mult.cu.
 
 Wed 16 Aug 2017 : reformatted eval_mon_single.cu and eval_mon_tree.cu.
   Reformatted eval_mon_d.cu, eval_mon_seq.cu, and eval_mon_seq_align.cu.
