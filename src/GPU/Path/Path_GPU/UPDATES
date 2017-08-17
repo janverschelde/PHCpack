@@ -1,4 +1,5 @@
 Wed 16 Aug 2017 : reformatted eval_mon_single.cu and eval_mon_tree.cu.
+  Reformatted eval_mon_d.cu.
 
 Tue 15 Aug 2017 : reformatted the first half of eval_mult.cu.  Continued the 
   reformatting of code in newton.cu, completed reformatting of newton.cu.
