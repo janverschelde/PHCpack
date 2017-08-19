@@ -1,4 +1,5 @@
-Fri 18 Aug 2017 : started reformatting of mgs_small_origin.cu.
+Fri 18 Aug 2017 : started reformatting of mgs_small_origin.cu and completed
+  it along with the reformatting of mgs_large_old.cu.
 
 Thu 17 Aug 2017 : completed the reformatting of eval_eq.cu and of
   eval_mult.cu, and of mgs_large_block_reduce.cu.
