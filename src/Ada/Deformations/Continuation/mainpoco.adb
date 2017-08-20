@@ -4,7 +4,11 @@ with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_to_Real_Poly;
 with Standard_Complex_Poly_Systems;
@@ -16,16 +20,24 @@ with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
 with Standard_System_Readers;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_to_Real_Poly;
 with DoblDobl_Complex_Poly_Strings;
+with DoblDobl_Complex_Laur_Strings;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_to_Real_Poly;
 with QuadDobl_Complex_Poly_Strings;
+with QuadDobl_Complex_Laur_Strings;
 with String_System_Readers;
 with Symbol_Table;
 with Standard_Complex_Laur_Strings;
 with Standard_Homotopy;
 with Standard_Laurent_Homotopy;
+with DoblDobl_Homotopy;
+with DoblDobl_Laurent_Homotopy;
+with QuadDobl_Homotopy;
+with QuadDobl_Laurent_Homotopy;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
@@ -36,6 +48,8 @@ with Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Projective_Transformations;         use Projective_Transformations;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
+with DoblDobl_Root_Refiners;             use DoblDobl_Root_Refiners;
+with QuadDobl_Root_Refiners;             use QuadDobl_Root_Refiners;
 with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
 with Standard_Parameter_Systems;         use Standard_Parameter_Systems;
 with DoblDobl_Parameter_Systems;         use DoblDobl_Parameter_Systems;
@@ -117,6 +131,106 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Refine_Solutions
               ( outft : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                target : in Complex_Number;
+                sols,refsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                solsfile : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Calls the double double precision root refiners.
+
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-12;
+    nb : natural32 := 0;
+    deflate : boolean := false;
+    ddtre : constant double_double := create(REAL_PART(target));
+    ddtim : constant double_double := create(IMAG_PART(target));
+    ddtarget : DoblDobl_Complex_Numbers.Complex_Number
+             := DoblDobl_Complex_Numbers.Create(ddtre,ddtim);
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+  begin
+    if Head_Of(sols).n > p'last
+     then Affine_Transformation(sols);
+    end if;
+    if target = Create(1.0) then
+      if solsfile then
+        Reporting_Root_Refiner
+          (outft,p,sols,refsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+      else
+        Reporting_Root_Refiner
+          (outft,p,sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+      end if;
+    else
+      declare
+        pt : Poly_Sys(p'range);
+      begin
+        pt := DoblDobl_Homotopy.Eval(ddtarget);
+        if solsfile then
+          Reporting_Root_Refiner
+            (outft,pt,sols,refsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+        else
+          Reporting_Root_Refiner
+            (outft,pt,sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+        end if;
+        Clear(pt);
+      end;
+    end if;
+  end Refine_Solutions;
+
+  procedure Refine_Solutions
+              ( outft : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                target : in Complex_Number;
+                sols,refsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                solsfile : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Calls the quad double precision root refiners.
+
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-16;
+    nb : natural32 := 0;
+    deflate : boolean := false;
+    qdtre : constant quad_double := create(REAL_PART(target));
+    qdtim : constant quad_double := create(IMAG_PART(target));
+    qdtarget : QuadDobl_Complex_Numbers.Complex_Number
+             := QuadDobl_Complex_Numbers.Create(qdtre,qdtim);
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+  begin
+    if Head_Of(sols).n > p'last
+     then Affine_Transformation(sols);
+    end if;
+    if target = Create(1.0) then
+      if solsfile then
+        Reporting_Root_Refiner
+          (outft,p,sols,refsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+      else
+        Reporting_Root_Refiner
+          (outft,p,sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+      end if;
+    else
+      declare
+        pt : Poly_Sys(p'range);
+      begin
+        pt := QuadDobl_Homotopy.Eval(qdtarget);
+        if solsfile then
+          Reporting_Root_Refiner
+            (outft,pt,sols,refsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+        else
+          Reporting_Root_Refiner
+            (outft,pt,sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+        end if;
+        Clear(pt);
+      end;
+    end if;
+  end Refine_Solutions;
+
+  procedure Refine_Solutions
+              ( outft : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 target : in Complex_Number;
                 sols,refsols : in out Standard_Complex_Solutions.Solution_List;
@@ -166,6 +280,104 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
        --  else Reporting_Root_Refiner
        --         (outft,pt,sols,epsxa,epsfa,tolsing,nb,5,false);
        -- end if;
+        Clear(pt);
+      end;
+    end if;
+  end Refine_Solutions;
+
+  procedure Refine_Solutions
+              ( outft : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                target : in Complex_Number;
+                sols,refsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                solsfile : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Calls the double double precision root refiners.
+
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-12;
+    nb : natural32 := 0;
+    ddtre : constant double_double := create(REAL_PART(target));
+    ddtim : constant double_double := create(IMAG_PART(target));
+    ddtarget : DoblDobl_Complex_Numbers.Complex_Number
+             := DoblDobl_Complex_Numbers.Create(ddtre,ddtim);
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+
+  begin
+    if Head_Of(sols).n > p'last
+     then Affine_Transformation(sols);
+    end if;
+    if target = Create(1.0) then
+      if solsfile then
+        Reporting_Root_Refiner
+          (outft,p,sols,refsols,epsxa,epsfa,tolsing,nb,5,false);
+      else
+        Reporting_Root_Refiner
+          (outft,p,sols,epsxa,epsfa,tolsing,nb,5,false);
+      end if;
+    else
+      declare
+        pt : Laur_Sys(p'range);
+      begin
+        pt := DoblDobl_Laurent_Homotopy.Eval(ddtarget);
+        if solsfile then
+          Reporting_Root_Refiner
+            (outft,pt,sols,refsols,epsxa,epsfa,tolsing,nb,5,false);
+        else
+          Reporting_Root_Refiner
+            (outft,pt,sols,epsxa,epsfa,tolsing,nb,5,false);
+        end if;
+        Clear(pt);
+      end;
+    end if;
+  end Refine_Solutions;
+
+  procedure Refine_Solutions
+              ( outft : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                target : in Complex_Number;
+                sols,refsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                solsfile : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Calls the quad double precision root refiners.
+
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-12;
+    nb : natural32 := 0;
+    qdtre : constant quad_double := create(REAL_PART(target));
+    qdtim : constant quad_double := create(IMAG_PART(target));
+    qdtarget : QuadDobl_Complex_Numbers.Complex_Number
+             := QuadDobl_Complex_Numbers.Create(qdtre,qdtim);
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+
+  begin
+    if Head_Of(sols).n > p'last
+     then Affine_Transformation(sols);
+    end if;
+    if target = Create(1.0) then
+      if solsfile then
+        Reporting_Root_Refiner
+          (outft,p,sols,refsols,epsxa,epsfa,tolsing,nb,5,false);
+      else
+        Reporting_Root_Refiner
+          (outft,p,sols,epsxa,epsfa,tolsing,nb,5,false);
+      end if;
+    else
+      declare
+        pt : Laur_Sys(p'range);
+      begin
+        pt := QuadDobl_Laurent_Homotopy.Eval(qdtarget);
+        if solsfile then
+          Reporting_Root_Refiner
+            (outft,pt,sols,refsols,epsxa,epsfa,tolsing,nb,5,false);
+        else
+          Reporting_Root_Refiner
+            (outft,pt,sols,epsxa,epsfa,tolsing,nb,5,false);
+        end if;
         Clear(pt);
       end;
     end if;
@@ -224,12 +436,15 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
     solsft,outft : file_type;
     sols,refsols : Solution_List;
-    ddsols : DoblDobl_Complex_Solutions.Solution_List;
-    qdsols : QuadDobl_Complex_Solutions.Solution_List;
+    ddsols,ddrefsols : DoblDobl_Complex_Solutions.Solution_List;
+    qdsols,qdrefsols : QuadDobl_Complex_Solutions.Solution_List;
     mpsols : Multprec_Complex_Solutions.Solution_List;
     solsfile : boolean;
     ans : character;
     target : Complex_Number;
+    nv_p : natural32;
+    dd_p : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+    qd_p : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
 
   begin
     Create_Output_File(outft,outfilename);
@@ -255,6 +470,14 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
        then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
        else Refine_Solutions(outft,p,target,sols,refsols,solsfile,nbequ);
       end if;
+    elsif DoblDobl_Complex_Solutions.Length_Of(ddsols) > 0 then
+      nv_p := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+      dd_p := DoblDobl_Complex_Poly_Strings.Parse(nv_p,ls.all);
+      Refine_Solutions(outft,dd_p,target,ddsols,ddrefsols,solsfile);
+    elsif QuadDobl_Complex_Solutions.Length_Of(qdsols) > 0 then
+      nv_p := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+      qd_p := QuadDobl_Complex_Poly_Strings.Parse(nv_p,ls.all);
+      Refine_Solutions(outft,qd_p,target,qdsols,qdrefsols,solsfile);
     end if;
     new_line(outft);
     Write_Seed_Number(outft);
@@ -262,7 +485,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
    -- put(outft,Bye_Bye_Message);
     Close(outft);
     if solsfile then
-      Write_Solutions(solsft,refsols,ddsols,qdsols,mpsols);
+      Write_Solutions(solsft,refsols,ddrefsols,qdrefsols,mpsols);
       Close(solsft);
     end if;
   end Secant_Homotopy;
@@ -280,12 +503,15 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
     solsft,outft : file_type;
     sols,refsols : Solution_List;
-    ddsols : DoblDobl_Complex_Solutions.Solution_List;
-    qdsols : QuadDobl_Complex_Solutions.Solution_List;
+    ddsols,ddrefsols : DoblDobl_Complex_Solutions.Solution_List;
+    qdsols,qdrefsols : QuadDobl_Complex_Solutions.Solution_List;
     mpsols : Multprec_Complex_Solutions.Solution_List;
     solsfile : boolean;
     ans : character;
     target : Complex_Number;
+    nv_p : natural32;
+    dd_p : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    qd_p : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
 
   begin
     Create_Output_File(outft,outfilename);
@@ -310,13 +536,21 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
        then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
        else Refine_Solutions(outft,p,target,sols,refsols,solsfile,nbequ);
       end if;
+    elsif DoblDobl_Complex_Solutions.Length_Of(ddsols) > 0 then
+      nv_p := Standard_Complex_Laurentials.Number_of_Unknowns(p(p'first));
+      dd_p := DoblDobl_Complex_Laur_Strings.Parse(nv_p,ls.all);
+      Refine_Solutions(outft,dd_p,target,ddsols,ddrefsols,solsfile);
+    elsif QuadDobl_Complex_Solutions.Length_Of(qdsols) > 0 then
+      nv_p := Standard_Complex_Laurentials.Number_of_Unknowns(p(p'first));
+      qd_p := QuadDobl_Complex_Laur_Strings.Parse(nv_p,ls.all);
+      Refine_Solutions(outft,qd_p,target,qdsols,qdrefsols,solsfile);
     end if;
     Write_Seed_Number(outft);
     put_line(outft,Greeting_Banners.Version);
    -- put(outft,Bye_Bye_Message);
     Close(outft);
     if solsfile then
-      Write_Solutions(solsft,refsols,ddsols,qdsols,mpsols);
+      Write_Solutions(solsft,refsols,ddrefsols,qdrefsols,mpsols);
       Close(solsft);
     end if;
   end Secant_Homotopy;
