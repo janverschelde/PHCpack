@@ -7,8 +7,14 @@ mgs_large_norm         : kernels to compute the norm of large vectors
 -------------------------------------------------------------------------------
 eval                   : evaluation of monomials
 eval_coef              : kernels to evaluate coefficients of homotopies
+eval_sum               : branch between two methods to evaluate the sum
+eval_sum_seq           : sequential method to sum
+eval_sum_tree          : tree method to sum
 -------------------------------------------------------------------------------
 path_gpu_data          : defines workspace for trackers on the device
 path_gpu               : tracking of one single path
 path_gpu_mult          : tracking many solution paths
+path_init              : initialization of the data structures
+-------------------------------------------------------------------------------
+predict.cu             : kernels to predict solutions along a path
 -------------------------------------------------------------------------------
