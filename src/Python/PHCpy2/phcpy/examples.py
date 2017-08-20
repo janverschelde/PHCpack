@@ -872,132 +872,143 @@ def sevenbar():
 def solve_binomials():
     """
     Runs the test on solving the binomials example.
+    Asserts that the number of solutions equals 20.
     """
     from phcpy.solver import solve
-    print '\nsolving a random binomial system...'
+    print('\nsolving a random binomial system...')
     pols = binomials()
     sols = solve(pols)
     assert len(sols) == 20
-    print 'test on binomial system passed'
+    print('test on binomial system passed')
 
 def solve_cyclic7():
     """
     Runs the test on solving the cyclic 7-roots problem.
+    Asserts that the number of solutions equals 924.
     """
     from phcpy.solver import solve
-    print '\nsolving the cyclic 7-roots problem...'
+    print('\nsolving the cyclic 7-roots problem...')
     pols = cyclic7()
     sols = solve(pols)
     assert len(sols) == 924
-    print 'test on cyclic 7-roots passed'
+    print('test on cyclic 7-roots passed')
 
 def solve_sysd1():
     """
     Runs the test on solving the benchmark problem D1.
+    Asserts that the number of solutions equals 48.
     """
     from phcpy.solver import solve
-    print '\nsolving the benchmark problem D1...'
+    print('\nsolving the benchmark problem D1...')
     pols = sysd1()
     sols = solve(pols)
     assert len(sols) == 48
-    print 'test on benchmark problem D1 passed'
+    print('test on benchmark problem D1 passed')
 
 def solve_fbrfive4():
     """
     Runs the test on solving a generic 4-bar problem.
+    Asserts that the number of solutions equals 36.
     """
     from phcpy.solver import solve
-    print '\nsolving a generic 5-point 4-bar design problem...'
+    print('\nsolving a generic 5-point 4-bar design problem...')
     pols = fbrfive4()
     sols = solve(pols)
     assert len(sols) == 36
-    print 'test on 4-bar system passed'
+    print('test on 4-bar system passed')
 
 def solve_game4two():
     """
     Runs the test on solving the Nash equilibrium problem.
+    Asserts that the number of solutions equals 9.
     """
     from phcpy.solver import solve
-    print '\ncomputing all Nash equilibria...'
+    print('\ncomputing all Nash equilibria...')
     pols = game4two()
     sols = solve(pols)
     assert len(sols) == 9
-    print 'test on Nash equilibria for 4 players passed'
+    print('test on Nash equilibria for 4 players passed')
 
 def solve_katsura6():
     """
     Runs the test on solving the katsura6 problem.
+    Asserts that the number of solutions equals 64.
     """
     from phcpy.solver import solve
-    print '\nsolving a problem in magnetism...'
+    print('\nsolving a problem in magnetism...')
     pols = katsura6()
     sols = solve(pols)
     assert len(sols) == 64
-    print 'test on a problem in magnetism passed'
+    print('test on a problem in magnetism passed')
 
 def solve_noon3():
     """
     Test on solving the noon3 system.
+    Asserts that the number of solutions equals 21.
     """
     from phcpy.solver import solve
-    print '\nsolving a neural network model...'
+    print('\nsolving a neural network model...')
     pols = noon3()
     sols = solve(pols)
     assert len(sols) == 21
-    print 'test on a neural network model passed'
+    print('test on a neural network model passed')
 
 def solve_rps10():
     """
     Test on solving a mechanical design problem.
+    Asserts that the number of solutions equals 1024.
     """
     from phcpy.solver import solve
-    print '\nsolving a mechanical design problem...'
+    print('\nsolving a mechanical design problem...')
     pols = rps10()
     sols = solve(pols)
     assert len(sols) == 1024
-    print 'test on RPS serial chains problem passed'
+    print('test on RPS serial chains problem passed')
 
 def solve_stewgou40():
     """
     Test on solving a fully reall Stewart-Gough platform.
+    Asserts that the number of solutions equals 40.
     """
     from phcpy.solver import solve
-    print '\nsolving a fully real Stewart-Gough platform...'
+    print('\nsolving a fully real Stewart-Gough platform...')
     pols = stewgou40()
     sols = solve(pols)
     assert len(sols) == 40
-    print 'test on real Stewart-Gough platform passed'
+    print('test on real Stewart-Gough platform passed')
 
 def solve_tangents():
     """
     Test on solving the tangents to 4 spheres problem.
+    Asserts that the number of solutions equals 6.
     """
     from phcpy.solver import solve
-    print '\ncomputing all tangent lines to 4 spheres...'
+    print('\ncomputing all tangent lines to 4 spheres...')
     pols = tangents()
     sols = solve(pols)
     assert len(sols) == 6
-    print 'test on multiple tangent lines to spheres passed'
+    print('test on multiple tangent lines to spheres passed')
 
 def solve_sevenbar():
     """
     Test on solving a special 7-bar problem.
+    Asserts that the number of isolated solutions equals 6
+    and that there are three generic points at a curve.
     """
     from phcpy.factor import solve
-    print '\nsolving a special 7-bar problem...'
+    print('\nsolving a special 7-bar problem...')
     pols = sevenbar()
-    sols = solve(6, 1, pols, islaurent=True, verbose=True)
-    # assert len(sols[1][1]) == 3
-    # assert len(sols[0][1]) == 6
-    print 'test on solving special 7-bar problem passed'
+    sols = solve(6, 1, pols, islaurent=True, verbose=False)
+    assert len(sols[1][1]) == 3
+    assert len(sols[0][1]) == 6
+    print('test on solving special 7-bar problem passed')
 
 def test():
     """
     Solves the systems and tests on their number of solutions.
     """
-    from phcpy.phcpy2c2 import py2c_set_seed
+    from phcpy.phcpy2c3 import py2c_set_seed
     py2c_set_seed(834798278)
-    import solver, factor
     solve_binomials()
     solve_cyclic7()
     solve_sysd1()
