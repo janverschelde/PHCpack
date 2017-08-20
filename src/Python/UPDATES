@@ -4,7 +4,8 @@ Sun 20 Aug 2017 : extended the examples.py module in PHCpy2/phcpy with
   the failure should not cause a break out of the loop.  Replaced the break
   in interface.py with an error message.  Updates the examples modules for
   the Python 2 and 3 versions of phcpy.  Added references to the sevenbar()
-  documentation string in the examples module.
+  documentation string in the examples module.  Adjusted setup.py, conf.py,
+  and __init__.py for version 0.7.2 of phcpy.
 
 Sun 13 Aug 2017 : updated setup.py, __init__.py, and conf.py for version
   0.7.1 of phcpy for python2 and python3.
