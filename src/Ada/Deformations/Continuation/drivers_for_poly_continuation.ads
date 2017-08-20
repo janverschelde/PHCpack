@@ -78,6 +78,8 @@ package Drivers_for_Poly_Continuation is
                   prclvl : in natural32;
                   ls : in String_Splitters.Link_to_Array_of_Strings;
                   sols : out Standard_Complex_Solutions.Solution_list;
+                  ddsols : out DoblDobl_Complex_Solutions.Solution_list;
+                  qdsols : out QuadDobl_Complex_Solutions.Solution_list;
                   mpsols : out Multprec_Complex_Solutions.Solution_list;
                   target : out Complex_Number );
   procedure Driver_for_Laurent_Continuation
@@ -86,6 +88,8 @@ package Drivers_for_Poly_Continuation is
                   prclvl : in natural32;
                   ls : in String_Splitters.Link_to_Array_of_Strings;
                   sols : out Standard_Complex_Solutions.Solution_list;
+                  ddsols : out DoblDobl_Complex_Solutions.Solution_list;
+                  qdsols : out QuadDobl_Complex_Solutions.Solution_list;
                   mpsols : out Multprec_Complex_Solutions.Solution_list;
                   target : out Complex_Number );
 
@@ -103,8 +107,14 @@ package Drivers_for_Poly_Continuation is
   --   ls         string representations of the input polynomials.
 
   -- ON RETURN :
-  --   sols       the computed solutions;
-  --   mpsols     multi-precision representation of the solutions.
+  --   sols       the computed solutions in standard double precision,
+  --              if the precision is set to double;
+  --   ddsols     double double precision representation of the solutions,
+  --              if the precision is set to double double;
+  --   qdsols     quad double precision representation of the solutions,
+  --              if the precision is set to quad double;
+  --   mpsols     multiprecision representation of the solutions,
+  --              if the precision is set to an arbitrary number of decimals.
 
   procedure Driver_for_Parameter_Continuation
                 ( file : in file_type;

@@ -1,3 +1,7 @@
+Sat 19 Aug 2017 : added parameters to drivers_for_poly_continuation and
+  updated mainpoco.adb so the end solutions are written to separate file
+  in case the precision is higher than double.
+
 Wed 28 Jun 2017 : check added in standard_incfix_continuation.adb to see
   if all components of a vector are valid (that is: non NaN).
 

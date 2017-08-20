@@ -33,6 +33,7 @@ with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions;
+with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Projective_Transformations;         use Projective_Transformations;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
@@ -170,6 +171,46 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     end if;
   end Refine_Solutions;
 
+  procedure Write_Solutions
+             ( solsft : in file_type;
+               stsols : in Standard_Complex_Solutions.Solution_List;
+               ddsols : in DoblDobl_Complex_Solutions.Solution_List;
+               qdsols : in QuadDobl_Complex_Solutions.Solution_List;
+               mpsols : in Multprec_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Writes the nonempty solution list to file solsft.
+
+    len : natural32;
+
+  begin
+    len := Standard_Complex_Solutions.Length_Of(stsols);
+    if len > 0 then
+      put(solsft,len,
+          natural32(Standard_Complex_Solutions.Head_Of(stsols).n),stsols);
+    else
+      len := DoblDobl_Complex_Solutions.Length_Of(ddsols);
+      if len > 0 then
+        put(solsft,len,
+            natural32(DoblDobl_Complex_Solutions.Head_Of(ddsols).n),ddsols);
+      else
+        len := QuadDobl_Complex_Solutions.Length_Of(qdsols);
+        if len > 0 then
+          put(solsft,len,
+              natural32(QuadDobl_Complex_Solutions.Head_Of(qdsols).n),
+              qdsols);
+        else
+          len := Multprec_Complex_Solutions.Length_Of(mpsols);
+          if len > 0 then
+            put(solsft,len,
+                natural32(Multprec_Complex_Solutions.Head_Of(mpsols).n),
+                mpsols);
+          end if;
+        end if;
+      end if;
+    end if;
+  end Write_Solutions;
+
   procedure Secant_Homotopy
               ( nbequ,nbvar : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -183,9 +224,10 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
     solsft,outft : file_type;
     sols,refsols : Solution_List;
+    ddsols : DoblDobl_Complex_Solutions.Solution_List;
+    qdsols : QuadDobl_Complex_Solutions.Solution_List;
     mpsols : Multprec_Complex_Solutions.Solution_List;
     solsfile : boolean;
-    len : natural32;
     ans : character;
     target : Complex_Number;
 
@@ -206,7 +248,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     else
       solsfile := false;
     end if;
-    Driver_for_Polynomial_Continuation(outft,p,prclvl,ls,sols,mpsols,target);
+    Driver_for_Polynomial_Continuation
+      (outft,p,prclvl,ls,sols,ddsols,qdsols,mpsols,target);
     if Length_Of(sols) > 0 then
       if nbequ = nbvar
        then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
@@ -219,10 +262,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
    -- put(outft,Bye_Bye_Message);
     Close(outft);
     if solsfile then
-      len := Length_Of(refsols);
-      if len > 0
-       then put(solsft,len,natural32(Head_Of(refsols).n),refsols);
-      end if;
+      Write_Solutions(solsft,refsols,ddsols,qdsols,mpsols);
       Close(solsft);
     end if;
   end Secant_Homotopy;
@@ -240,9 +280,10 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
     solsft,outft : file_type;
     sols,refsols : Solution_List;
+    ddsols : DoblDobl_Complex_Solutions.Solution_List;
+    qdsols : QuadDobl_Complex_Solutions.Solution_List;
     mpsols : Multprec_Complex_Solutions.Solution_List;
     solsfile : boolean;
-    len : natural32;
     ans : character;
     target : Complex_Number;
 
@@ -262,7 +303,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     else
       solsfile := false;
     end if;
-    Driver_for_Laurent_Continuation(outft,p,prclvl,ls,sols,mpsols,target);
+    Driver_for_Laurent_Continuation
+      (outft,p,prclvl,ls,sols,ddsols,qdsols,mpsols,target);
     if Length_Of(sols) > 0 then
       if nbequ = nbvar
        then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
@@ -274,10 +316,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
    -- put(outft,Bye_Bye_Message);
     Close(outft);
     if solsfile then
-      len := Length_Of(refsols);
-      if len > 0
-       then put(solsft,len,natural32(Head_Of(refsols).n),refsols);
-      end if;
+      Write_Solutions(solsft,refsols,ddsols,qdsols,mpsols);
       Close(solsft);
     end if;
   end Secant_Homotopy;

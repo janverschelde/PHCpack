@@ -927,6 +927,8 @@ package body Drivers_for_Poly_Continuation is
                   prclvl : in natural32;
                   ls : in String_Splitters.Link_to_Array_of_Strings;
                   sols : out Standard_Complex_Solutions.Solution_List;
+                  ddsols : out DoblDobl_Complex_Solutions.Solution_List;
+                  qdsols : out QuadDobl_Complex_Solutions.Solution_List;
                   mpsols : out Multprec_Complex_Solutions.Solution_List;
                   target : out Complex_Number ) is
 
@@ -966,25 +968,17 @@ package body Drivers_for_Poly_Continuation is
       end if;
       sols := qsols;
     elsif deci <= 32 then
-      declare
-        dd_qsols : DoblDobl_Complex_Solutions.Solution_List
-                 := DoblDobl_Complex_Solutions.Create(qsols);
-      begin
-        if nbequ = nbvar
-         then Driver_for_DoblDobl_Continuation(file,dd_qsols,target=>t);
-         else Driver_for_DoblDobl_Continuation(file,dd_qsols,nbequ,target=>t);
-        end if;
-      end;
+      ddsols := DoblDobl_Complex_Solutions.Create(qsols);
+      if nbequ = nbvar
+       then Driver_for_DoblDobl_Continuation(file,ddsols,target=>t);
+       else Driver_for_DoblDobl_Continuation(file,ddsols,nbequ,target=>t);
+      end if;
     elsif deci <= 64 then
-      declare
-        qd_qsols : QuadDobl_Complex_Solutions.Solution_List
-                 := QuadDobl_Complex_Solutions.Create(qsols);
-      begin
-        if nbequ = nbvar
-         then Driver_for_QuadDobl_Continuation(file,qd_qsols,target=>t);
-         else Driver_for_QuadDobl_Continuation(file,qd_qsols,nbequ,target=>t);
-        end if;
-      end;
+      qdsols := QuadDobl_Complex_Solutions.Create(qsols);
+      if nbequ = nbvar
+       then Driver_for_QuadDobl_Continuation(file,qdsols,target=>t);
+       else Driver_for_QuadDobl_Continuation(file,qdsols,nbequ,target=>t);
+      end if;
     else
       mqsols := Multprec_Complex_Solutions.Create(qsols);
       size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
@@ -1002,6 +996,8 @@ package body Drivers_for_Poly_Continuation is
                   prclvl : in natural32;
                   ls : in String_Splitters.Link_to_Array_of_Strings;
                   sols : out Standard_Complex_Solutions.Solution_list;
+                  ddsols : out DoblDobl_Complex_Solutions.Solution_list;
+                  qdsols : out QuadDobl_Complex_Solutions.Solution_list;
                   mpsols : out Multprec_Complex_Solutions.Solution_list;
                   target : out Complex_Number ) is
 
@@ -1010,10 +1006,8 @@ package body Drivers_for_Poly_Continuation is
     pp,q : Laur_Sys(p'range);
     t : Complex_Number;
     qsols : Solution_List;
-   -- mqsols : Multprec_Complex_Solutions.Solution_List;
     proj : boolean;
     deci : natural32 := 0;
-   -- size : natural;
     rsols : Solution_List;
     nbequ,nbvar : integer32;
 
@@ -1041,34 +1035,25 @@ package body Drivers_for_Poly_Continuation is
        else Driver_for_Standard_Laurent_Continuation(file,qsols,proj,nbequ,t);
       end if;
     elsif deci <= 32 then
-      declare
-        dd_qsols : DoblDobl_Complex_Solutions.Solution_List
-                 := DoblDobl_Complex_Solutions.Create(qsols);
-      begin
-        if nbequ = nbvar
-         then Driver_for_DoblDobl_Laurent_Continuation(file,dd_qsols,target=>t);
-         else Driver_for_DoblDobl_Laurent_Continuation(file,dd_qsols,nbequ,t);
-        end if;
-      end;
+      ddsols := DoblDobl_Complex_Solutions.Create(qsols);
+      if nbequ = nbvar
+       then Driver_for_DoblDobl_Laurent_Continuation(file,ddsols,target=>t);
+       else Driver_for_DoblDobl_Laurent_Continuation(file,ddsols,nbequ,t);
+      end if;
     elsif deci <= 64 then
-      declare
-        qd_qsols : QuadDobl_Complex_Solutions.Solution_List
-                 := QuadDobl_Complex_Solutions.Create(qsols);
-      begin
-        if nbequ = nbvar
-         then Driver_for_QuadDobl_Laurent_Continuation(file,qd_qsols,target=>t);
-         else Driver_for_QuadDobl_Laurent_Continuation(file,qd_qsols,nbequ,t);
-        end if;
-      end;
-    end if;
-    sols := qsols;
-   -- else
-   --   mqsols := Multprec_Complex_Solutions.Create(qsols);
+      qdsols := QuadDobl_Complex_Solutions.Create(qsols);
+      if nbequ = nbvar
+       then Driver_for_QuadDobl_Laurent_Continuation(file,qdsols,target=>t);
+       else Driver_for_QuadDobl_Laurent_Continuation(file,qdsols,nbequ,t);
+      end if;
+    else
+      mpsols := Multprec_Complex_Solutions.Create(qsols);
    --   size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
    --   Multprec_Complex_Solutions.Set_Size(mqsols,size);
    --   Driver_for_Multprec_Continuation(file,mqsols,proj,deci,t);
    --   mpsols := mqsols;
-   -- end if;
+    end if;
+    sols := qsols;
    -- Homotopy.Clear;  --> clearing here creates difficulties for root refiner
     target := t;
   end Driver_for_Laurent_Continuation;
