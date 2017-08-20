@@ -855,6 +855,13 @@ def sevenbar():
     """
     Returns the list of strings which represent Laurent polynomials for a
     special sevenbar mechanism that has isolated solutions and a cubic curve.
+    A reference for the general case is the paper by Carlo Innocenti:
+    Polynomial solution to the position analysis of the 7-line Assur kinematic
+    chain with one quaternary link, in Mech. Mach. Theory, Vol. 30, No. 8,
+    pages 1295-1303, 1995.  The special case was introduced in the paper
+    with title: Numerical decomposition of the solution sets of polynomial
+    systems into irreducible components, SIAM J. Numer. Anal. 38(6):2022-2046,
+    2001, by Andrew Sommese, Jan Verschelde, and Charles Wampler.
     """
     pol1 = "0.710358341606049*t1 + 0.46*t2 - 0.41*t3 + 0.240761300555115" \
          + " + 1.07248215701824*I;"
@@ -875,11 +882,11 @@ def solve_binomials():
     Asserts that the number of solutions equals 20.
     """
     from phcpy.solver import solve
-    print('\nsolving a random binomial system...')
+    print '\nsolving a random binomial system...'
     pols = binomials()
     sols = solve(pols)
     assert len(sols) == 20
-    print('test on binomial system passed')
+    print 'test on binomial system passed'
 
 def solve_cyclic7():
     """
@@ -887,11 +894,11 @@ def solve_cyclic7():
     Asserts that the number of solutions equals 924.
     """
     from phcpy.solver import solve
-    print('\nsolving the cyclic 7-roots problem...')
+    print '\nsolving the cyclic 7-roots problem...'
     pols = cyclic7()
     sols = solve(pols)
     assert len(sols) == 924
-    print('test on cyclic 7-roots passed')
+    print 'test on cyclic 7-roots passed'
 
 def solve_sysd1():
     """
@@ -899,11 +906,11 @@ def solve_sysd1():
     Asserts that the number of solutions equals 48.
     """
     from phcpy.solver import solve
-    print('\nsolving the benchmark problem D1...')
+    print '\nsolving the benchmark problem D1...'
     pols = sysd1()
     sols = solve(pols)
     assert len(sols) == 48
-    print('test on benchmark problem D1 passed')
+    print 'test on benchmark problem D1 passed'
 
 def solve_fbrfive4():
     """
@@ -911,11 +918,11 @@ def solve_fbrfive4():
     Asserts that the number of solutions equals 36.
     """
     from phcpy.solver import solve
-    print('\nsolving a generic 5-point 4-bar design problem...')
+    print '\nsolving a generic 5-point 4-bar design problem...'
     pols = fbrfive4()
     sols = solve(pols)
     assert len(sols) == 36
-    print('test on 4-bar system passed')
+    print 'test on 4-bar system passed'
 
 def solve_game4two():
     """
@@ -923,11 +930,11 @@ def solve_game4two():
     Asserts that the number of solutions equals 9.
     """
     from phcpy.solver import solve
-    print('\ncomputing all Nash equilibria...')
+    print '\ncomputing all Nash equilibria...'
     pols = game4two()
     sols = solve(pols)
     assert len(sols) == 9
-    print('test on Nash equilibria for 4 players passed')
+    print 'test on Nash equilibria for 4 players passed'
 
 def solve_katsura6():
     """
@@ -935,11 +942,11 @@ def solve_katsura6():
     Asserts that the number of solutions equals 64.
     """
     from phcpy.solver import solve
-    print('\nsolving a problem in magnetism...')
+    print '\nsolving a problem in magnetism...'
     pols = katsura6()
     sols = solve(pols)
     assert len(sols) == 64
-    print('test on a problem in magnetism passed')
+    print 'test on a problem in magnetism passed'
 
 def solve_noon3():
     """
@@ -947,11 +954,11 @@ def solve_noon3():
     Asserts that the number of solutions equals 21.
     """
     from phcpy.solver import solve
-    print('\nsolving a neural network model...')
+    print '\nsolving a neural network model...'
     pols = noon3()
     sols = solve(pols)
     assert len(sols) == 21
-    print('test on a neural network model passed')
+    print 'test on a neural network model passed'
 
 def solve_rps10():
     """
@@ -959,11 +966,11 @@ def solve_rps10():
     Asserts that the number of solutions equals 1024.
     """
     from phcpy.solver import solve
-    print('\nsolving a mechanical design problem...')
+    print '\nsolving a mechanical design problem...'
     pols = rps10()
     sols = solve(pols)
     assert len(sols) == 1024
-    print('test on RPS serial chains problem passed')
+    print 'test on RPS serial chains problem passed'
 
 def solve_stewgou40():
     """
@@ -971,11 +978,11 @@ def solve_stewgou40():
     Asserts that the number of solutions equals 40.
     """
     from phcpy.solver import solve
-    print('\nsolving a fully real Stewart-Gough platform...')
+    print '\nsolving a fully real Stewart-Gough platform...'
     pols = stewgou40()
     sols = solve(pols)
     assert len(sols) == 40
-    print('test on real Stewart-Gough platform passed')
+    print 'test on real Stewart-Gough platform passed'
 
 def solve_tangents():
     """
@@ -983,11 +990,11 @@ def solve_tangents():
     Asserts that the number of solutions equals 6.
     """
     from phcpy.solver import solve
-    print('\ncomputing all tangent lines to 4 spheres...')
+    print '\ncomputing all tangent lines to 4 spheres...'
     pols = tangents()
     sols = solve(pols)
     assert len(sols) == 6
-    print('test on multiple tangent lines to spheres passed')
+    print 'test on multiple tangent lines to spheres passed'
 
 def solve_sevenbar():
     """
@@ -996,18 +1003,18 @@ def solve_sevenbar():
     and that there are three generic points at a curve.
     """
     from phcpy.factor import solve
-    print('\nsolving a special 7-bar problem...')
+    print '\nsolving a special 7-bar problem...'
     pols = sevenbar()
     sols = solve(6, 1, pols, islaurent=True, verbose=False)
     assert len(sols[1][1]) == 3
     assert len(sols[0][1]) == 6
-    print('test on solving special 7-bar problem passed')
+    print 'test on solving special 7-bar problem passed'
 
 def test():
     """
     Solves the systems and tests on their number of solutions.
     """
-    from phcpy.phcpy2c3 import py2c_set_seed
+    from phcpy.phcpy2c2 import py2c_set_seed
     py2c_set_seed(834798278)
     solve_binomials()
     solve_cyclic7()

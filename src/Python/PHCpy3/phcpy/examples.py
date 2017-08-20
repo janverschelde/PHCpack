@@ -855,6 +855,13 @@ def sevenbar():
     """
     Returns the list of strings which represent Laurent polynomials for a
     special sevenbar mechanism that has isolated solutions and a cubic curve.
+    A reference for the general case is the paper by Carlo Innocenti:
+    Polynomial solution to the position analysis of the 7-line Assur kinematic
+    chain with one quaternary link, in Mech. Mach. Theory, Vol. 30, No. 8,
+    pages 1295-1303, 1995.  The special case was introduced in the paper
+    with title: Numerical decomposition of the solution sets of polynomial
+    systems into irreducible components, SIAM J. Numer. Anal. 38(6):2022-2046,
+    2001, by Andrew Sommese, Jan Verschelde, and Charles Wampler.
     """
     pol1 = "0.710358341606049*t1 + 0.46*t2 - 0.41*t3 + 0.240761300555115" \
          + " + 1.07248215701824*I;"
