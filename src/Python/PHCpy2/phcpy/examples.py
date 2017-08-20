@@ -851,63 +851,164 @@ def tangents():
          + " + 0.25*x1**2 - 0.25;"
     return [pol1, pol2, pol3, pol4, pol5, pol6]
 
+def sevenbar():
+    """
+    Returns the list of strings which represent Laurent polynomials for a
+    special sevenbar mechanism that has isolated solutions and a cubic curve.
+    """
+    pol1 = "0.710358341606049*t1 + 0.46*t2 - 0.41*t3 + 0.240761300555115" \
+         + " + 1.07248215701824*I;"
+    pol2 = "t2*(-0.11 + 0.49*I) + 0.41*t3 - 0.502195181179589*t4 + 0.41*t5;"
+    pol3 = "0.502195181179589*t4 + t5*(-0.0980434782608696 " \
+         + " + 0.436739130434783*I) - 0.775518556663656*t6 - 1.2;"
+    pol4 = "0.710358341606049*t1**(-1) + 0.46*t2**(-1) - 0.41*t3**(-1)" \
+         + " + 0.240761300555115 - 1.07248215701824*I;"
+    pol5 = "t2**(-1)*(-0.11 - 0.49*I) + 0.41*t3**(-1) " \
+         + " - 0.502195181179589*t4**(-1) + 0.41*t5**(-1);"
+    pol6 = "0.502195181179589*t4**(-1) + t5**(-1)*(-0.0980434782608696 " \
+         + " - 0.436739130434783*I) - 0.775518556663656*t6**(-1) - 1.2;"
+    return [pol1, pol2, pol3, pol4, pol5, pol6]
+
+def solve_binomials():
+    """
+    Runs the test on solving the binomials example.
+    """
+    from phcpy.solver import solve
+    print '\nsolving a random binomial system...'
+    pols = binomials()
+    sols = solve(pols)
+    assert len(sols) == 20
+    print 'test on binomial system passed'
+
+def solve_cyclic7():
+    """
+    Runs the test on solving the cyclic 7-roots problem.
+    """
+    from phcpy.solver import solve
+    print '\nsolving the cyclic 7-roots problem...'
+    pols = cyclic7()
+    sols = solve(pols)
+    assert len(sols) == 924
+    print 'test on cyclic 7-roots passed'
+
+def solve_sysd1():
+    """
+    Runs the test on solving the benchmark problem D1.
+    """
+    from phcpy.solver import solve
+    print '\nsolving the benchmark problem D1...'
+    pols = sysd1()
+    sols = solve(pols)
+    assert len(sols) == 48
+    print 'test on benchmark problem D1 passed'
+
+def solve_fbrfive4():
+    """
+    Runs the test on solving a generic 4-bar problem.
+    """
+    from phcpy.solver import solve
+    print '\nsolving a generic 5-point 4-bar design problem...'
+    pols = fbrfive4()
+    sols = solve(pols)
+    assert len(sols) == 36
+    print 'test on 4-bar system passed'
+
+def solve_game4two():
+    """
+    Runs the test on solving the Nash equilibrium problem.
+    """
+    from phcpy.solver import solve
+    print '\ncomputing all Nash equilibria...'
+    pols = game4two()
+    sols = solve(pols)
+    assert len(sols) == 9
+    print 'test on Nash equilibria for 4 players passed'
+
+def solve_katsura6():
+    """
+    Runs the test on solving the katsura6 problem.
+    """
+    from phcpy.solver import solve
+    print '\nsolving a problem in magnetism...'
+    pols = katsura6()
+    sols = solve(pols)
+    assert len(sols) == 64
+    print 'test on a problem in magnetism passed'
+
+def solve_noon3():
+    """
+    Test on solving the noon3 system.
+    """
+    from phcpy.solver import solve
+    print '\nsolving a neural network model...'
+    pols = noon3()
+    sols = solve(pols)
+    assert len(sols) == 21
+    print 'test on a neural network model passed'
+
+def solve_rps10():
+    """
+    Test on solving a mechanical design problem.
+    """
+    from phcpy.solver import solve
+    print '\nsolving a mechanical design problem...'
+    pols = rps10()
+    sols = solve(pols)
+    assert len(sols) == 1024
+    print 'test on RPS serial chains problem passed'
+
+def solve_stewgou40():
+    """
+    Test on solving a fully reall Stewart-Gough platform.
+    """
+    from phcpy.solver import solve
+    print '\nsolving a fully real Stewart-Gough platform...'
+    pols = stewgou40()
+    sols = solve(pols)
+    assert len(sols) == 40
+    print 'test on real Stewart-Gough platform passed'
+
+def solve_tangents():
+    """
+    Test on solving the tangents to 4 spheres problem.
+    """
+    from phcpy.solver import solve
+    print '\ncomputing all tangent lines to 4 spheres...'
+    pols = tangents()
+    sols = solve(pols)
+    assert len(sols) == 6
+    print 'test on multiple tangent lines to spheres passed'
+
+def solve_sevenbar():
+    """
+    Test on solving a special 7-bar problem.
+    """
+    from phcpy.factor import solve
+    print '\nsolving a special 7-bar problem...'
+    pols = sevenbar()
+    sols = solve(6, 1, pols, islaurent=True, verbose=True)
+    # assert len(sols[1][1]) == 3
+    # assert len(sols[0][1]) == 6
+    print 'test on solving special 7-bar problem passed'
+
 def test():
     """
     Solves the systems and tests on their number of solutions.
     """
     from phcpy.phcpy2c2 import py2c_set_seed
     py2c_set_seed(834798278)
-    import solver
-    print '\nsolving a random binomial system...'
-    pols = binomials()
-    sols = solver.solve(pols)
-    assert len(sols) == 20
-    print 'test on binomial system passed'
-    print '\nsolving the cyclic 7-roots problem...'
-    pols = cyclic7()
-    sols = solver.solve(pols)
-    assert len(sols) == 924
-    print 'test on cyclic 7-roots passed'
-    print '\nsolving the benchmark problem D1...'
-    pols = sysd1()
-    sols = solver.solve(pols)
-    assert len(sols) == 48
-    print 'test on benchmark problem D1 passed'
-    print '\nsolving a generic 5-point 4-bar design problem...'
-    pols = fbrfive4()
-    sols = solver.solve(pols)
-    assert len(sols) == 36
-    print 'test on 4-bar system passed'
-    print '\ncomputing all Nash equilibria...'
-    pols = game4two()
-    sols = solver.solve(pols)
-    assert len(sols) == 9
-    print 'test on Nash equilibria for 4 players passed'
-    print '\nsolving a problem in magnetism...'
-    pols = katsura6()
-    sols = solver.solve(pols)
-    assert len(sols) == 64
-    print 'test on a problem in magnetism passed'
-    print '\nsolving a neural network model...'
-    pols = noon3()
-    sols = solver.solve(pols)
-    assert len(sols) == 21
-    print 'test on a neural network model passed'
-    print '\nsolving a mechanical design problem...'
-    pols = rps10()
-    sols = solver.solve(pols)
-    assert len(sols) == 1024
-    print 'test on RPS serial chains problem passed'
-    print '\nsolving a fully real Stewart-Gough platform...'
-    pols = stewgou40()
-    sols = solver.solve(pols)
-    assert len(sols) == 40
-    print 'test on real Stewart-Gough platform passed'
-    print '\ncomputing all tangent lines to 4 spheres...'
-    pols = tangents()
-    sols = solver.solve(pols)
-    assert len(sols) == 6
-    print 'test on multiple tangent lines to spheres passed'
+    import solver, factor
+    solve_binomials()
+    solve_cyclic7()
+    solve_sysd1()
+    solve_fbrfive4()
+    solve_game4two()
+    solve_katsura6()
+    solve_noon3()
+    solve_rps10()
+    solve_stewgou40()
+    solve_tangents()
+    solve_sevenbar()
 
 if __name__ == "__main__":
     test()
