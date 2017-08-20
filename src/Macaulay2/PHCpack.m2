@@ -174,7 +174,7 @@ getFilename = () -> (
   filename
 )
 
-parseSolutions = method(TypicalValue => Sequence, Options => {Bits => 53})
+parseSolutions = method(TypicalValue => Sequence, Options => {Bits => 53, computingPrecision => 1})
 parseSolutions (String,Ring) := o -> (s,R) -> (
   -- parses solutions in PHCpack format 
   -- IN:  s = string of solutions in PHCmaple format 
@@ -182,7 +182,15 @@ parseSolutions (String,Ring) := o -> (s,R) -> (
   -- OUT: List of solutions, each of type Point, 
   --      carrying also other diagnostic information about each.
   oldprec := defaultPrecision;
-  defaultPrecision = o.Bits;
+  
+  -- If we are working in double double or quad double, we need to have
+  -- sufficient precision while parsing the solutions.
+  if o.computingPrecision == 2 then
+  	defaultPrecision = 120
+  else if o.computingPrecision == 4 then
+  	defaultPrecision = 250
+  else
+    defaultPrecision = o.Bits;
   L := get s; 
   L = replace("=", "=>", L);
   L = replace("I", "ii", L);
@@ -1144,11 +1152,11 @@ solveSystem List := List =>  o->system -> (
   -- parse and output the solutions:
   local result;
   if n == numgens R then (
-    result = parseSolutions(solnsfile, R)
+    result = parseSolutions(solnsfile, R, computingPrecision => o.computingPrecision)
   )
   else (
     slackRing := (coefficientRing R)(gens R | slackVars);
-    result = parseSolutions(solnsfile, slackRing);
+    result = parseSolutions(solnsfile, slackRing, computingPrecision => o.computingPrecision);
 
     stdio << "*** after parseSolutions, ring has " << gens R << " ***" << endl;
 
@@ -1296,7 +1304,7 @@ topWitnessSet (List,ZZ) := o->(system,dimension) -> (
 -- TRACK PATHS --
 -----------------
 
-trackPaths = method(TypicalValue => List, Options=>{gamma=>0, tDegree=>2, Verbose => false, numThreads=>0, seeProgress=>false, interactive => false, saveSettingsPath => "", loadSettingsPath => "", intermediateSolutions => false})
+trackPaths = method(TypicalValue => List, Options=>{gamma=>0, tDegree=>2, Verbose => false, numThreads=>0, seeProgress=>false, interactive => false, saveSettingsPath => "", loadSettingsPath => "", intermediateSolutions => false, computingPrecision => 1})
 trackPaths (List,List,List) := List => o -> (T,S,Ssols) -> (
   -- IN: T, target system to be solved;
   --     S, start system with solutions in Ssols;
@@ -1314,25 +1322,29 @@ trackPaths (List,List,List) := List => o -> (T,S,Ssols) -> (
   if (o.loadSettingsPath != "") and o.interactive then
     error "You cannot both load settings and be in interactive mode. Please reset your options.";
 
+  if not member(o.computingPrecision,{1,2,4}) then
+    error "Precision must be set to 1, 2, or 4.";
+
   R := ring first T;
   n := #T;
-  targetfile := temporaryFileName() | "PHCtarget";
+  filename := getFilename();
+  targetfile := filename | "PHCtarget";
   systemToFile(T,targetfile);
 
-  outfile := temporaryFileName() | "PHCoutput";
+  outfile := filename | "PHCoutput";
   if not (o.numThreads > 1) then (
-    startfile := temporaryFileName() | "PHCstart";
+    startfile := filename | "PHCstart";
     systemToFile(S,startfile);
-    Ssolsfile := temporaryFileName() | "PHCstartsols";
+    Ssolsfile := filename | "PHCstartsols";
     solutionsToFile(Ssols,R,Ssolsfile);
   )
   else (
-    startandsolutionfile := temporaryFileName() | "PHCstartandsols";
+    startandsolutionfile := filename | "PHCstartandsols";
     systemToFile(S,startandsolutionfile);
     solutionsToFile(Ssols, R, startandsolutionfile, Append=>true);
   );
-  Tsolsfile := temporaryFileName() | "PHCtargetsols";
-  batchfile := temporaryFileName() | "PHCbat";
+  Tsolsfile := filename | "PHCtargetsols";
+  batchfile := filename | "PHCbat";
   if o.Verbose then
     stdio << "using temporary files " << outfile
           << " and " << Tsolsfile << endl;
@@ -1385,6 +1397,14 @@ trackPaths (List,List,List) := List => o -> (T,S,Ssols) -> (
       bat << "a" << endl << realPart o.gamma << endl;
       bat << imaginaryPart o.gamma << endl;
     );
+    -- set the precision to double double or quad double, if requested.
+    if (o.computingPrecision == 1) then
+      bat << "d" << endl << "16" << endl
+    else if (o.computingPrecision == 2) then
+      bat << "d" << endl << "32" << endl
+    else if (o.computingPrecision == 4) then
+      bat << "d" << endl << "64" << endl;
+    
     bat << "0" << endl;
     -- second menu 
     bat << "0" << endl; -- exit for now
@@ -1425,7 +1445,7 @@ trackPaths (List,List,List) := List => o -> (T,S,Ssols) -> (
   if o.intermediateSolutions then (
       return parseIntermediateSolutions(outfile,R);
   );
-  result := parseSolutions(Tsolsfile, R);
+  result := parseSolutions(Tsolsfile, R, computingPrecision => o.computingPrecision);
   if n > numgens R then (
     result = apply(result, s->(
       if any(drop(first s, numgens R), x->abs x > 0.01) 
