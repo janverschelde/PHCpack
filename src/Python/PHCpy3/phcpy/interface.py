@@ -497,7 +497,8 @@ def store_standard_solutions(nvar, sols):
         fail = py2c_solcon_append_standard_solution_string\
                    (nvar, len(sols[ind]), sols[ind])
         if(fail != 0):
-            break
+            # break
+            print('Solution at position', ind, 'is not appended.')
     return fail
 
 def store_dobldobl_solutions(nvar, sols):
@@ -515,7 +516,8 @@ def store_dobldobl_solutions(nvar, sols):
         fail = py2c_solcon_append_dobldobl_solution_string\
                    (nvar, len(sols[ind]), sols[ind])
         if(fail != 0):
-            break
+            # break
+            print('Solution at position', ind, 'is not appended.')
     return fail
 
 def store_quaddobl_solutions(nvar, sols):
@@ -533,7 +535,8 @@ def store_quaddobl_solutions(nvar, sols):
         fail = py2c_solcon_append_quaddobl_solution_string\
                    (nvar, len(sols[ind]), sols[ind])
         if(fail != 0):
-            break
+            # break
+            print('Solution at position', ind, 'is not appended.')
     return fail
 
 def store_multprec_solutions(nvar, sols):
@@ -551,7 +554,8 @@ def store_multprec_solutions(nvar, sols):
         fail = py2c_solcon_append_multprec_solution_string\
                    (nvar, len(sols[ind]), sols[ind])
         if(fail != 0):
-            break
+            # break
+            print('Solution at position', ind, 'is not appended.')
     return fail
 
 def load_standard_solutions():
