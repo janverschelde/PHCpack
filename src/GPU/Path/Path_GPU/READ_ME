@@ -3,6 +3,8 @@ This directory contains the code for the path tracker on the device.
 -------------------------------------------------------------------------------
 file name              : short description
 -------------------------------------------------------------------------------
+cuda_set               : sets the cuda device
+-------------------------------------------------------------------------------
 mgs_large_norm         : kernels to compute the norm of large vectors
 -------------------------------------------------------------------------------
 eval                   : evaluation of monomials
@@ -17,4 +19,7 @@ path_gpu_mult          : tracking many solution paths
 path_init              : initialization of the data structures
 -------------------------------------------------------------------------------
 predict.cu             : kernels to predict solutions along a path
+-------------------------------------------------------------------------------
+newton.cu              : kernels which define Newton's method
+newton_origin.cu       : original code for Newton's method
 -------------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+Mon 21 Aug 2017 : reformatted newton_origin.cu.
+
 Sun 20 Aug 2017 : reformatted path_init.cu.
 
 Fri 18 Aug 2017 : started reformatting of mgs_small_origin.cu and completed
