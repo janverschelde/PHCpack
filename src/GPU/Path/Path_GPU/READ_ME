@@ -1,25 +1,56 @@
 This directory contains the code for the path tracker on the device.
 
+The two basic building blocks are
+(1) the Modified Gram-Schmidt method (MGS) to solve a linear system,
+    which may have more equations than unknowns; and
+(2) evaluation methods for monomials, polynomials, and homotopies.
+
+The next layer then consists in the predictor and the corrector methods.
+The predictor is a simple 4-th order extrapolator.  
+The corrector applies Newton's method.
+
+The top program is contained in the code in path_gpu.cu,
+with prototypes in path_gpu.h.
+
 -------------------------------------------------------------------------------
 file name              : short description
 -------------------------------------------------------------------------------
 cuda_set               : sets the cuda device
 -------------------------------------------------------------------------------
+mgs                    : main code to call the kernels for the MGS method
+mgs_large              : includes the kernels in mgs_large_block
 mgs_large_norm         : kernels to compute the norm of large vectors
+mgs_large_row          : row reduction for large dimensional problems
+mgs_large_row_reduce   : kernels for row reduction in rounds
+mgs_large_backsub      : backsubstitution kernels
+mgs_large_block        : block MGS method for large dimensional problems
+mgs_large_block_reduce : block reduction for large dimensional problems
+mgs_large_old          : old code for large dimensional MGS method
+mgs_small              : running MGS method for small dimensions
+mgs_small_origin       : original kernels for small dimensional MGS method
 -------------------------------------------------------------------------------
 eval                   : evaluation of monomials
+eval_base              : kernels to evaluate with a basic method
 eval_coef              : kernels to evaluate coefficients of homotopies
+eval_mon_single        : eval & diff of single monomial 
+eval_mon_seq           : sequential eval & diff of monomials
+eval_mon_seq_align     : aligned sequential eval & diff of monomials
+eval_mon_tree          : tree method to evaluation a monomial
+eval_mon_d             : double precision version to eval & diff monomials
+eval_mon_dd            : eval & diff monomials in double double precision
+eval_mon_qd            : eval & diff monomials in quad double precision
 eval_sum               : branch between two methods to evaluate the sum
 eval_sum_seq           : sequential method to sum
 eval_sum_tree          : tree method to sum
+eval_eq                : eval & diff of polynomial equations
+eval_mult              : evaluation and differentiation for many paths
+-------------------------------------------------------------------------------
+predict.cu             : kernels to predict solutions along a path
+newton.cu              : kernels which define Newton's method
+newton_origin.cu       : original code for Newton's method
 -------------------------------------------------------------------------------
 path_gpu_data          : defines workspace for trackers on the device
 path_gpu               : tracking of one single path
 path_gpu_mult          : tracking many solution paths
 path_init              : initialization of the data structures
--------------------------------------------------------------------------------
-predict.cu             : kernels to predict solutions along a path
--------------------------------------------------------------------------------
-newton.cu              : kernels which define Newton's method
-newton_origin.cu       : original code for Newton's method
 -------------------------------------------------------------------------------
