@@ -33,3 +33,7 @@ complex_gqd.cu     : complex arithmetic in quad double precision
 -------------------------------------------------------------------------------
 test_complexsqrt_d : test complex square root on device in double precision
 -------------------------------------------------------------------------------
+complexD.h         : templated prototypes for complex arithmetic on the device
+complexD.cu        : templated cuda code for complex arithmetic on the device
+test_complexdsqrt  : tests complexD, runs sqrt with Newton's method
+-------------------------------------------------------------------------------
