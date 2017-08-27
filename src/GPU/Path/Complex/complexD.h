@@ -4,6 +4,8 @@
 #ifndef __COMPLEXD_H__
 #define __COMPLEXD_H__
 
+#include "gqd_type.h"
+
 template <class T>
 class complexD
 {

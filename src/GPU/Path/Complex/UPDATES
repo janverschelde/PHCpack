@@ -1,6 +1,7 @@
 Sun 27 Aug 2017 : defined templated class in complexD.h with definitions
   in complexD.cu for complex arithmetic on the device, tested by a run
-  of Newton's method in test_complexdsqrt.cu.
+  of Newton's method in test_complexdsqrt.cu.  Included the gqd_type.h
+  in complexD.h, extended test_complexdsqrt.cu for dd/qd precision.
 
 Sat 26 Aug 2017 : reformatted complex_gd.h, complex_gdd.h, complex_gqd.h,
   removed superfluous complexH.hpp.  Reformatted complex.h, complex.cu,
