@@ -1,4 +1,4 @@
-Complex arithmetic for the Path library in PHCv2.3.34.
+Complex arithmetic for the Path library in PHCv2.4.44.
 
 Definitions of complex types and arithmetic, with templates,
 ready for double, double double, and quad double precision.
@@ -20,4 +20,14 @@ file name          : short description
 -------------------------------------------------------------------------------
 complexH.h         : templated code for complex arithmetic on the host
 test_complexH.cpp  : runs Newton's method for the square root on the host
+-------------------------------------------------------------------------------
+complex.h          : defines complex type for computations on the device
+complex.cu         : conditional include, based on precision flag
+-------------------------------------------------------------------------------
+complex_gd.h       : class definition for double precision complex numbers
+complex_gd.cu      : complex arithmetic in double precision
+complex_gdd.h      : class for double double precision complex numbers
+complex_gdd.cu     : complex arithmetic in double double precision
+complex_gqd.h      : class for quad double precision complex numbers
+complex_gqd.cu     : complex arithmetic in quad double precision
 -------------------------------------------------------------------------------

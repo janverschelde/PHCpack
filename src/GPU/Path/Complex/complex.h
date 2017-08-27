@@ -4,7 +4,6 @@
 #ifndef __COMPLEX_H__
 #define __COMPLEX_H__
 
-
 #define cd  0
 #define cdd 1
 #define cqd 2
@@ -14,4 +13,3 @@
 #include "complex_gqd.h"
 
 #endif /*__COMPLEX_H__*/
-

@@ -1,9 +1,4 @@
-/*
- * complex.cu
- *
- *  Created on: Feb 1, 2015
- *      Author: yxc
- */
+/* complex.cu created by yxc on Feb 1, 2015, with edits by jv */
 
 #ifndef COMPLEX_CU_
 #define COMPLEX_CU_
@@ -17,6 +12,5 @@
 #elif(path_precision == 2)
 #include "complex_gqd.cu"
 #endif
-
 
 #endif /* COMPLEX_CU_ */
