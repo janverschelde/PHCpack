@@ -31,3 +31,5 @@ complex_gdd.cu     : complex arithmetic in double double precision
 complex_gqd.h      : class for quad double precision complex numbers
 complex_gqd.cu     : complex arithmetic in quad double precision
 -------------------------------------------------------------------------------
+test_complexsqrt_d : test complex square root on device in double precision
+-------------------------------------------------------------------------------

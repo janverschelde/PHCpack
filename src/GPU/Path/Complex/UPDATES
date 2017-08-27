@@ -1,6 +1,8 @@
 Sat 26 Aug 2017 : reformatted complex_gd.h, complex_gdd.h, complex_gqd.h,
   removed superfluous complexH.hpp.  Reformatted complex.h, complex.cu,
   complex_gd.cu, complex_gdd.cu, and complex_gqd.cu.
+  Add test program test_complexsqrt_d.cu, to test complex_gd.cu,
+  also updated the makefile.
 
 Sat 21 Jan 2017 : reformatted code in complexH.h.
   Adjusted the use_complex.cpp from PED to the test_complexH.cpp,
