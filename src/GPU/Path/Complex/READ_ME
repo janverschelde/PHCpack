@@ -14,3 +14,10 @@ The GQD library is the version of the QD library for GPUs
 and types on the host are different from types on the device.
 The utilities gqd_qd_util provide functions to convert from
 tuples on the device into types on the host.
+
+-------------------------------------------------------------------------------
+file name          : short description
+-------------------------------------------------------------------------------
+complexH.h         : templated code for complex arithmetic on the host
+test_complexH.cpp  : runs Newton's method for the square root on the host
+-------------------------------------------------------------------------------
