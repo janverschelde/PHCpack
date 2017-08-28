@@ -12,7 +12,7 @@ class complexD
    public:
 
       __device__ complexD(){};
-      __device__ complexD ( double, double );
+      __device__ complexD ( T, T );
       __device__ complexD operator+ ( complexD );
       __device__ complexD operator* ( complexD );
       __device__ complexD operator- ( complexD );
@@ -26,8 +26,8 @@ class complexD
       __device__ double norm1_double();
       __device__ void init_imag();
 
-      double real;
-      double imag;
+      T real;
+      T imag;
 };
 
 #endif /* __COMPLEXD_H__ */

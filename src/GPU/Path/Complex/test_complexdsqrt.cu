@@ -4,9 +4,10 @@
 #include <ctime>
 #include <iostream>
 #include <iomanip>
-#include "complexH.h"
+#include <gdd_basic.cu>
+#include <gqd_basic.cu>
 #include "complexD.cu"
-#include <qd/qd_real.h>
+#include "complexH.h"
 
 template <class realH, class realD>
 int test ( int dim, int blk, int frq, int prc, int tst );

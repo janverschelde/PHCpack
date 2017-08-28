@@ -1,3 +1,7 @@
+Mon 28 Aug 2017 : bug fixes in complexD.h, complexD.cu, needed for the entire
+  compilation of gqd2qd_convertors.cpp.  The program test_complexdsqrt.cu
+  works for three different levels of precision, updated makefile.
+
 Sun 27 Aug 2017 : defined templated class in complexD.h with definitions
   in complexD.cu for complex arithmetic on the device, tested by a run
   of Newton's method in test_complexdsqrt.cu.  Included the gqd_type.h

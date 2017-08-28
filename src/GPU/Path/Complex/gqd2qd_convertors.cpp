@@ -52,7 +52,7 @@ void complex_gd2d ( complexD<double> *a, complexH<double> *b )
    b->real = a->real;
    b->imag = a->imag;
 }
-/*
+
 void complex_dd2gdd ( complexH<dd_real> *a, complexD<gdd_real> *b )
 {
    real_dd2gdd(&(a->real),&(b->real));
@@ -67,11 +67,8 @@ void complex_gdd2dd ( complexD<gdd_real> *a, complexH<dd_real> *b )
 
 void complex_qd2gqd ( complexH<qd_real> *a, complexD<gqd_real> *b )
 {
-   qd_real *re = &(a->real);
-   qd_real *im = &(a->imag);
-
-   real_qd2gqd(re,&(b->real));
-   real_qd2gqd(im,&(b->imag));
+   real_qd2gqd(&(a->real),&(b->real));
+   real_qd2gqd(&(a->imag),&(b->imag));
 }
 
 void complex_gqd2qd ( complexD<gqd_real> *a, complexH<qd_real> *b )
@@ -79,4 +76,3 @@ void complex_gqd2qd ( complexD<gqd_real> *a, complexH<qd_real> *b )
    real_gqd2qd(&(a->real),&(b->real));
    real_gqd2qd(&(a->imag),&(b->imag));
 }
-*/

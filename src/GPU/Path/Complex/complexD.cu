@@ -6,7 +6,7 @@
 #include "complexD.h"
 
 template <class T>
-__device__ complexD<T>::complexD<T> ( double a, double b )
+__device__ complexD<T>::complexD<T> ( T a, T b )
 {
    real = a;
    imag = b;
