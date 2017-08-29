@@ -3,11 +3,14 @@
 #ifndef __PATH_GPU_MGS_LARGE_NORM_CU__
 #define __PATH_GPU_MGS_LARGE_NORM_CU__
 
+#include "r_pos.cu"
+
 template <class ComplexType, class RealType>
 __global__ void mgs_large_normalize_kernel1
  ( ComplexType* v, ComplexType* R, int rows, int rowsLog2, int cols,
    int pivot, int rnd, int rndLog2, int BS, int BSLog2, RealType *pivnorm,
-   int lastBSLog2, RealType* sums_global )
+   int lastBSLog2, RealType* sums_global,
+   int maxrounds=128, int shmemsize=512 ) // defaults for double precision
 {
    int b = blockIdx.x;
    int j = threadIdx.x;
@@ -26,7 +29,7 @@ __global__ void mgs_large_normalize_kernel1
       ComplexType tmp_piv = v[pivot*rows+i];
       shv[j] = tmp_piv.real*tmp_piv.real + tmp_piv.imag*tmp_piv.imag;
    }
-   int half_size = 1 << (BSLog2);// sum for the norm
+   int half_size = 1 << (BSLog2); // sum for the norm
 
    if(half_size > 16) 
    {
@@ -55,16 +58,17 @@ template <class ComplexType, class RealType>
 __global__ void mgs_large_normalize_kernel2
  ( ComplexType* v, ComplexType* R, int rows, int rowsLog2, int cols,
    int pivot, int rnd, int rndLog2, int BS, int BSLog2, RealType *pivnorm,
-   int lastBSLog2, RealType* sums_global )
+   int lastBSLog2, RealType* sums_global,
+   int maxrounds=128, int shmemsize=512 ) // defaults for double precision
 {
    int b = blockIdx.x;
    int j = threadIdx.x;
    int i = b*BS + j;
 
-   __shared__ T sums[maxrounds];// partial sums in rounds
+   __shared__ RealType sums[maxrounds]; // partial sums in rounds
    // maxrounds 32 reduce sync
 
-   RealType newpivnorm;// norm of the pivot
+   RealType newpivnorm; // norm of the pivot
 
    if(j < rnd)
    {

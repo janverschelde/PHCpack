@@ -1,1 +1,4 @@
+Tue 29 Aug 2017 : added the definition of the utility function r_pos.cu
+  and defaults to mgs_large_norm.cu so it compiles, see the makefile.
+
 Mon 28 Aug 2017 : made a templated version of mgs_large_norm.cu
