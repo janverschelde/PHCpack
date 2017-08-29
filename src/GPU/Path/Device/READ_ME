@@ -1,0 +1,10 @@
+Code to run on the host in the Path library, in PHCv2.4.44
+
+This directory is the reworked PATH_GPU subdirectory of the Path directory.
+The code is reworked to use templates properly.
+
+-------------------------------------------------------------------------------
+file name              : short description
+-------------------------------------------------------------------------------
+mgs_large_norm         : kernels to compute the norm of large vectors
+-------------------------------------------------------------------------------

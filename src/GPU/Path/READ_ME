@@ -1,4 +1,4 @@
-Accelerated Path Tracking in the software package PHCv2.4.34
+Accelerated Path Tracking in the software package PHCv2.4.44
 
 The code is developed on the NVIDIA K20C with g++ and the CUDA SDK.
 It requires the QD and the GQD libraries.
@@ -7,11 +7,12 @@ The subdirectories, in alphabetical order are as follows:
 
 bin           : for standalone binaries, apart from the PHCv2/bin
 Complex       : tempated C++ code for complex arithmetic
-Objects       : contains makefiles and .o files
 DefineTypesD  : headers specific for double precision
 DefineTypesDD : headers specific for double double precision
 DefineTypesQD : headers specific for quad double precision
+Device        : revised Path_GPU with templates
 Host          : revised Path_CPU with proper templated code
+Objects       : contains makefiles and .o files
 Main          : main programs
 Path_CPU      : path tracking on the host, the CPU
 Path_GPU      : path tracking on the device, the GPU
