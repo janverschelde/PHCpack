@@ -17,5 +17,8 @@ mgs_large_norm.o:
 mgs_large_row_reduce.o:
 	nvcc $(GQDFLAG) $(SDKFLAG) -c mgs_large_row_reduce.cu
 
+mgs_large_backsub.o:
+	nvcc $(GQDFLAG) $(SDKFLAG) -c mgs_large_backsub.cu
+
 clean:
 	/bin/rm -f -r *.o

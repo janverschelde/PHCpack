@@ -1,3 +1,6 @@
+Wed 30 Aug 2017 : added BS_QR as a parameter in mgs_large_row_reduce.cu,
+  provided templated version of mgs_large_backsub.cu, updated makefile.
+
 Tue 29 Aug 2017 : added the definition of the utility function r_pos.cu
   and defaults to mgs_large_norm.cu so it compiles, see the makefile.
   Added #ifndef statement to r_pos.cu to prevent multiple includes.

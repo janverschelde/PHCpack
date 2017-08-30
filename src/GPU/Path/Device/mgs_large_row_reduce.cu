@@ -5,14 +5,12 @@
 
 #include "r_pos.cu"
 
-#define BS_QR 256
-
 template <class ComplexType, class RealType>
 __global__ void mgs_large_row_reduce_kernel
  ( ComplexType* v, ComplexType* R, int cols, int rows, int rowsLog2,
    int pivot, int rnd, int rndLog2, int BS, int BSLog2, 
    RealType *pivnorm, int lastBSLog2, int piv_end = 0,
-   int maxrounds=128 ) // default for double precision
+   int maxrounds=128, int BS_QR=256 ) // defaults for double precision
 {
    int b = blockIdx.x + 1 + piv_end;
    int j = threadIdx.x;

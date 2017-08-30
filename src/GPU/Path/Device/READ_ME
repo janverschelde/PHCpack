@@ -8,4 +8,6 @@ file name              : short description
 -------------------------------------------------------------------------------
 r_pos                  : position calculation
 mgs_large_norm         : kernels to compute the norm of large vectors
+mgs_large_row_reduce   : kernels for row reduction in rounds
+mgs_large_backsub      : backsubstitution kernels
 -------------------------------------------------------------------------------
