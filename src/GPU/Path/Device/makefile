@@ -14,5 +14,8 @@ gpp=/usr/bin/g++
 mgs_large_norm.o:
 	nvcc $(GQDFLAG) $(SDKFLAG) -c mgs_large_norm.cu
 
+mgs_large_row_reduce.o:
+	nvcc $(GQDFLAG) $(SDKFLAG) -c mgs_large_row_reduce.cu
+
 clean:
 	/bin/rm -f -r *.o
