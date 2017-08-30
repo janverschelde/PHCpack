@@ -23,5 +23,8 @@ mgs_large_backsub.o:
 mgs_large_row.o:
 	nvcc $(GQDFLAG) $(SDKFLAG) -c mgs_large_row.cu
 
+mgs_large_block_reduce.o:
+	nvcc $(GQDFLAG) $(SDKFLAG) -c mgs_large_block_reduce.cu
+
 clean:
 	/bin/rm -f -r *.o

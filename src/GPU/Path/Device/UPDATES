@@ -3,7 +3,8 @@ Wed 30 Aug 2017 : added BS_QR as a parameter in mgs_large_row_reduce.cu,
   Fixed underscore in the definition of the name in r_pos.cu.
   Added the function log2ceil, prototyped in log2ceil.h and defined in
   log2ceil.cpp, needed in mgs_large_row.cu, which is now templated,
-  updated the makefile.
+  updated the makefile.  Added auxiliary get_grid.h and get_grid.cu,
+  needed in mgs_large_block_reduce.cu, now templated, update makefile.
 
 Tue 29 Aug 2017 : added the definition of the utility function r_pos.cu
   and defaults to mgs_large_norm.cu so it compiles, see the makefile.

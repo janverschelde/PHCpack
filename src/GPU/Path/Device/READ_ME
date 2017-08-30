@@ -12,4 +12,6 @@ mgs_large_row_reduce   : kernels for row reduction in rounds
 mgs_large_backsub      : backsubstitution kernels
 log2ceil               : function to compute the ceil of the 2-logarithm
 mgs_large_row          : kernels for large row reduction
+get_grid               : auxiliary functions for mgs_large_block_reduce
+mgs_large_block_reduce : kernels for block reduction for large problems
 -------------------------------------------------------------------------------
