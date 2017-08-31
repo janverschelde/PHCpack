@@ -3,7 +3,7 @@
 #ifndef __PATH_GPU_MGS_LARGE_BACKSUB_CU__
 #define __PATH_GPU_MGS_LARGE_BACKSUB_CU__
 
-template <class ComplexType, class RealType>
+template <class ComplexType>
 __global__ void mgs_large_backsubstitution_kernel1
  ( ComplexType* R, ComplexType* x, int dim, int pivot, int BS0, int BS,
    int BS_QR_Back=256 ) // default value for double precision
@@ -32,7 +32,7 @@ __global__ void mgs_large_backsubstitution_kernel1
    x[offset+tidx] = sol[tidx];
 }
 
-template <class ComplexType, class RealType>
+template <class ComplexType>
 __global__ void mgs_large_backsubstitution_kernel2
  ( ComplexType* R, ComplexType* x, int dim, int pivot, int BS0, int BS,
    int BS_QR_Back=256 ) // default value for double precision
@@ -65,7 +65,7 @@ __global__ void mgs_large_backsubstitution_kernel2
    R[offset-block_offset+tidx] = update;
 }
 
-template <class ComplexType, class RealType>
+template <class ComplexType>
 void mgs_large_backsubstitution
  ( ComplexType* R, ComplexType* sol, int rows, int cols,
    int BS_QR_Back=256 ) // default value for double precision
@@ -82,10 +82,10 @@ void mgs_large_backsubstitution
    {
       // std::cout<< "piv = " << piv << std::endl;
       if(piv==rf-2) BS_col = BS;
-      mgs_large_backsubstitution_kernel1<ComplexType,RealType><<<1,BS_col>>>
+      mgs_large_backsubstitution_kernel1<ComplexType><<<1,BS_col>>>
          (R,sol,cols-1,piv,BS_col,BS);
       if(piv==0) break;
-      mgs_large_backsubstitution_kernel2<ComplexType,RealType><<<piv,BS>>>
+      mgs_large_backsubstitution_kernel2<ComplexType><<<piv,BS>>>
         (R,sol,cols-1,piv,BS_col,BS);
    }
 }
