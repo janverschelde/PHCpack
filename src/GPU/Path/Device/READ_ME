@@ -14,4 +14,5 @@ log2ceil               : function to compute the ceil of the 2-logarithm
 mgs_large_row          : kernels for large row reduction
 get_grid               : auxiliary functions for mgs_large_block_reduce
 mgs_large_block_reduce : kernels for block reduction for large problems
+mgs_large_block        : kernels for block MGS method for large problems
 -------------------------------------------------------------------------------
