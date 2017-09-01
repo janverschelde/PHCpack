@@ -200,10 +200,9 @@ single polytope.
    >>> from phcpy.polytopes import random_points as rp
    >>> from phcpy.polytopes import mixed_volume as mv
    >>> p1 = rp(3, 5, -9, 9)
-   >>> p1
+   >>> print p1
    [(3, 7, -3), (-1, 0, 8), (-6, -6, 8), (-6, 9, 4), (-3, 4, -7)]
-   >>> tp1 = tuple([p1])
-   >>> mv([3], tp1)
+   >>> mv([3], [p1])
    2107
 
 The volume is normalized, so the standard unit simplex has volume one.
