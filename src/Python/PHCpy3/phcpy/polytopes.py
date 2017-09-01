@@ -303,7 +303,7 @@ def check_mixture(mixture, points):
 
 def mixed_volume(mixture, points, checkin=True):
     r"""
-    Returns the mixed volume of the tuple in *points*.
+    Returns the mixed volume of the list of lists in *points*.
     Both *mixture* and *points* have the same length.
     The list *mixture* counts the number of times each support
     in *points* should be counted.
@@ -313,6 +313,13 @@ def mixed_volume(mixture, points, checkin=True):
     mixed volume is its coefficient.
     If checkin, then the mixture will be tested to match the length
     of each point in points.
+    Examples:
+    >>> q1 = [(1, 1), (1, 0), (0, 1), (0, 0)]
+    >>> q2 = [(2, 2), (1, 0), (0, 1)]
+    >>> mv([1, 1], [q1, q2])
+    4
+    >>> mv([2], [q1])
+    2
     """
     from phcpy.phcpy2c3 import py2c_celcon_initialize_supports as init
     from phcpy.phcpy2c3 import py2c_celcon_set_type_of_mixture as setmix

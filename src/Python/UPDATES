@@ -1,5 +1,7 @@
 Thu 31 Aug 2017 : fixed a bug in the a documentation block in newtopes.rst,
   both in the source of the python2 and python3 documentation.
+  Improved the documentation string of the mixed_volume function in the
+  polytopes module, with two examples.
 
 Sun 20 Aug 2017 : extended the examples.py module in PHCpy2/phcpy with
   the special sevenbar example, added new functions, refactoring the main
