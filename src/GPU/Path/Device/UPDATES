@@ -1,3 +1,5 @@
+Fri 1 Sep 2017 : added templated version of mgs_small.cu, updated makefile.
+
 Wed 30 Aug 2017 : added BS_QR as a parameter in mgs_large_row_reduce.cu,
   provided templated version of mgs_large_backsub.cu, updated makefile.
   Fixed underscore in the definition of the name in r_pos.cu.

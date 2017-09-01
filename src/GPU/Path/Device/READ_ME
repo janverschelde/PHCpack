@@ -15,4 +15,5 @@ mgs_large_row          : kernels for large row reduction
 get_grid               : auxiliary functions for mgs_large_block_reduce
 mgs_large_block_reduce : kernels for block reduction for large problems
 mgs_large_block        : kernels for block MGS method for large problems
+mgs_small              : kernels for MGS method for small problems
 -------------------------------------------------------------------------------
