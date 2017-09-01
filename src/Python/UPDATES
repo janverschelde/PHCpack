@@ -3,6 +3,7 @@ Thu 31 Aug 2017 : fixed a bug in the a documentation block in newtopes.rst,
   Improved the documentation string of the mixed_volume function in the
   polytopes module, with two examples.  Fixed another documentation block
   in newtopes.rst with an example of a volume computation.
+  For Sage, forced the type of the values in make_solution in blackbox.rst.
 
 Sun 20 Aug 2017 : extended the examples.py module in PHCpy2/phcpy with
   the special sevenbar example, added new functions, refactoring the main

@@ -189,7 +189,7 @@ that has a nonzero imaginary part.
 ::
 
    >>> from phcpy.solutions import make_solution
-   >>> s0 = make_solution(['x', 'y'], [1, complex(0, 1)])
+   >>> s0 = make_solution(['x', 'y'], [complex(1,0), complex(0, 1)])
    >>> print s0
    t : 0.0 0.0
    m : 1
@@ -197,7 +197,7 @@ that has a nonzero imaginary part.
     x : 1.000000000000000E+00  0.0
     y : 0.000000000000000E+00  1.000000000000000E+00
    == err : 0.0 = rco : 1.0 = res : 0.0 ==
-   >>> s1 = make_solution(['x', 'y'], [2, 3])
+   >>> s1 = make_solution(['x', 'y'], [float(2), float(3)])
    >>> print s1
    t : 0.0 0.0
    m : 1
@@ -367,7 +367,7 @@ of Newton's method:
 
    >>> p = ['(29/16)*x^3 - 2*x*y;', 'x^2 - y;']
    >>> from phcpy.solutions import make_solution
-   >>> s = make_solution(['x','y'],[1.0e-6,1.0e-6])
+   >>> s = make_solution(['x','y'],[float(1.0e-6),float(1.0e-6)])
    >>> print s
    t : 0.0 0.0
    m : 1
@@ -411,7 +411,7 @@ decide the numerical rank.  Consider the following session:
 
    from phcpy.solutions import make_solution
    from phcpy.solver import standard_deflate
-   sol = make_solution(['x', 'y'], [1.0e-6, 1.0e-6])
+   sol = make_solution(['x', 'y'], [float(1.0e-6), float(1.0e-6)])
    print sol
    pols = ['x**2;', 'x*y;', 'y**2;']
    sols = standard_deflate(pols, [sol], tolrnk=1.0e-8)
