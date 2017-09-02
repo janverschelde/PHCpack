@@ -337,10 +337,6 @@ global optimization, and computational physics:
    commuting matrices**,
    *Applied Mathematics and Computation* 224(1): 564-580, 2013.
 
-#. Ada Boralevi, Jasper van Doornmalen, Jan Draisma, Michiel E. Hostenbach,
-   and Bor Plestenjak: **Uniform Determinantal Representations**.
-   arXiv:1607.04873v1 [math.ac] 17 Jul 2016
-
 #. Guy Bresler, Dustin Cartwright, David Tse:
    **Feasibility of Interference Alignment for the MIMO interference
    channel**.
@@ -789,10 +785,14 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-98. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+97. Ali Baharev, Ferenc Domes, Arnold Neumaier:
     **A robust approach for finding all well-separated solutions of
     sparse systems of nonlinear equations**.
     *Numerical Algorithms*, pages 1-27, 2016 (online first).
+
+#. Ada Boralevi, Jasper van Doornmalen, Jan Draisma, Michiel E. Hochstenbach,
+   and Bor Plestenjak: **Uniform Determinantal Representations**.
+   *SIAM J. Appl. Algebra Geometry*, vol. 1, pages 415-441, 2017.
 
 #. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
    and Jeff Sommars: **Solving polynomial systems via homotopy continuation
