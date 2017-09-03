@@ -1,3 +1,5 @@
+Sat 2 Sep 2017 : added the cuda_set.h and cuda_set.cu, copied from Path_GPU.
+
 Fri 1 Sep 2017 : added templated version of mgs_small.cu, updated makefile.
 
 Wed 30 Aug 2017 : added BS_QR as a parameter in mgs_large_row_reduce.cu,
