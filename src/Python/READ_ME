@@ -33,6 +33,8 @@ diagonal.  Better support for Laurent polynomials was added as well.
 
 The package phcpy is defined in the directory PHCpy.
 The directory PHCpy3 contains the version of phcpy for Python 3.5.
+The directory Jupyter contains an extension of the Jupyter notebook,
+which defines the menus for using phcpy in Sage and python.
 
 ------------------------------------------------------------------------------
 file name              : short description

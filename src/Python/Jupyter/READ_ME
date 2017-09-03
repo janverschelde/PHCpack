@@ -1,0 +1,9 @@
+The file custom.js in this folder defines the menu PHCpy in the notebook
+extension for the Jupyter notebook running sage.
+
+The file custom.js should be placed in the .jupyter/custom folder
+and the jupyter_contrib_nbextensions must be installed
+and the extension snippets_menu must be enabled.
+
+The first version of the file custom.js was written by Jasmine Otto
+in the summer of 2017.
