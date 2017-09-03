@@ -8,19 +8,15 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     'name' : 'blackbox',
     'sub-menu' : [
         {
-        'name' : "solving random trinomials",
+        'name' : "solving trinomials",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.solver import random_trinomials", "f = random_trinomials()"],
+            'name' : "solving a random case",
+            'snippet' : ["from phcpy.solver import random_trinomials", "f = random_trinomials()", "for pol in f: print pol", "from phcpy.solver import solve", "sols = solve(f, silent=True)", "for sol in sols: print sol", "print len(sols), \"solutions found\""],
             },
             {
-            'name' : "1",
-            'snippet' : ["terms = f[0].split('+(')", "for t in terms: print(t)"],
-            },
-            {
-            'name' : "2",
-            'snippet' : ["from phcpy.solver import solve", "s = solve(f, silent=True)", "len(s)", "print(s[2])"],
+            'name' : "solving a specific case",
+            'snippet' : ["f = ['x*y^2 + y - 3;', 'x^3 - y + 1;']", "from phcpy.solver import solve", "sols = solve(f)", "for sol in sols: print sol"],
             }],
         },
         {
