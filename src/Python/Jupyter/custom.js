@@ -71,12 +71,12 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "Newton's method and deflation",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["p = ['(29/16)*x^3 - 2*x*y;', 'x^2 - y;']", "from phcpy.solutions import make_solution", "s = make_solution(['x','y'],[1.0e-6,1.0e-6])", "print(s)", "from phcpy.solver import newton_step", "s2 = newton_step(p,[s])", "print(s2[0])", "s3 = newton_step(p,s2)", "print(s3[0])", "from phcpy.solver import deflate", "sd = deflate(p,[s])", "print(sd[0])"],
+            'name' : "the Griewank-Osborne example",
+            'snippet' : ["p = ['(29/16)*x^3 - 2*x*y;', 'x^2 - y;']", "from phcpy.solutions import make_solution", "s = make_solution(['x', 'y'],[float(1.0e-6), float(1.0e-6)])", "print s", "from phcpy.solver import newton_step", "s2 = newton_step(p, [s])", "print s2[0]", "s3 = newton_step(p, s2)", "print s3[0]", "from phcpy.solver import standard_deflate", "sd = standard_deflate(p, [s])", "print sd[0]"],
             },
             {
-            'name' : "1",
-            'snippet' : ["from phcpy.solutions import make_solution", "from phcpy.solver import standard_deflate", "sol = make_solution(['x', 'y'], [1.0e-6, 1.0e-6])", "print(sol)", "pols = ['x**2;', 'x*y;', 'y**2;']", "sols = standard_deflate(pols, [sol], tolrnk=1.0e-8)", "print(sols[0])", "sols = standard_deflate(pols, [sol], tolrnk=1.0e-4)", "print(sols[0])"],
+            'name' : "deflating an overconstrained system",
+            'snippet' : ["from phcpy.solutions import make_solution", "from phcpy.solver import standard_deflate", "sol = make_solution(['x', 'y'], [float(1.0e-6), float(1.0e-6)])", "print sol", "pols = ['x**2;', 'x*y;', 'y**2;']", "sols = standard_deflate(pols, [sol], tolrnk=1.0e-8)", "print sols[0]", "sols = standard_deflate(pols, [sol], tolrnk=1.0e-4)", "print sols[0]"],
             }],
         },
         {
@@ -104,12 +104,12 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "a simple example",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.solver import total_degree", "from phcpy.solver import total_degree_start_system", "from phcpy.trackers import track", "p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']", "d = total_degree(p)", "d", "(q, qsols) = total_degree_start_system(p)", "len(qsols)", "q", "s = track(p, q, qsols)", "len(s)", "for sol in s: print(sol)"],
+            'name' : "a total degree start system",
+            'snippet' : ["from phcpy.solver import total_degree", "from phcpy.solver import total_degree_start_system", "from phcpy.trackers import track", "p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']", "d = total_degree(p)", "print 'the total degree :', d", "(q, qsols) = total_degree_start_system(p)", "print 'the number of start solutions :', len(qsols)", "print 'the start system :', q", "s = track(p, q, qsols)", "print 'the number of solutions :', len(s)", "for sol in s: print sol"],
             },
             {
-            'name' : "1",
-            'snippet' : ["from phcpy.solver import total_degree_start_system", "from phcpy.trackers import track", "p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']", "(q,qsols) = total_degree_start_system(p)", "s1 = track(p, q, [qsols[2]])", "print(s1[0])", "s2 = track(p,q,[qsols[2]])", "print(s2[0])"],
+            'name' : "track one solution path",
+            'snippet' : ["from phcpy.solver import total_degree_start_system", "from phcpy.trackers import track", "p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']", "(q,qsols) = total_degree_start_system(p)", "s1 = track(p, q, [qsols[2]])", "print s1[0]", "s2 = track(p, q,[qsols[2]])", "print s2[0]"],
             }],
         },
         {
@@ -237,12 +237,12 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "witness sets",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["twisted = ['x^2 - y;', 'x^3 - z;']", "from phcpy.sets import embed", "e = embed(3,1,twisted)", "e[0]", "e[1]"],
+            'name' : "embedding the twisted cubic",
+            'snippet' : ["twisted = ['x^2 - y;', 'x^3 - z;']", "from phcpy.sets import embed", "e = embed(3,1,twisted)", "for pol in e: print pol"],
             },
             {
-            'name' : "1",
-            'snippet' : ["terms = e[-1].split(')*')", "for t in terms: print(t)", "from phcpy.solver import solve", "s = solve(e, silent=True)", "len(s)", "for sol in s: print(sol)"],
+            'name' : "a witness set for the twisted cubic",
+            'snippet' : ["twisted = ['x^2 - y;', 'x^3 - z;']", "from phcpy.sets import embed", "e = embed(3,1,twisted)", "from phcpy.solver import solve", "s = solve(e, silent=True)", "print 'number of generic points :', len(s)", "for sol in s: print sol"],
             }],
         },
         {
@@ -326,6 +326,14 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
             }],
         },
         {
+        'name' : "numerical irreducible decomposition",
+        'sub-menu' : [
+            {
+            'name' : "an example",
+            'snippet' : [ "pol0 = '(x1-1)*(x1-2)*(x1-3)*(x1-4);'", "pol1 = '(x1-1)*(x2-1)*(x2-2)*(x2-3);'", "pol2 = '(x1-1)*(x1-2)*(x3-1)*(x3-2);'", "pol3 = '(x1-1)*(x2-1)*(x3-1)*(x4-1);'", "pols = [pol0, pol1, pol2, pol3]", "from phcpy.factor import solve, write_decomposition", "deco = solve(4, 3, pols, verbose=False)", "write_decomposition(deco)"],
+            }],
+        },
+        {
         'name' : "diagonal homotopies",
         'sub-menu' : [
             {
@@ -394,7 +402,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     },
 
     {
-    'name' : 'newtopes',
+    'name' : 'Newton polytopes',
     'sub-menu' : [
         {
         'name' : "convex hulls of lattice polytopes",
@@ -428,24 +436,20 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "mixed volumes",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : [" \\begin{array}{rcl}", "   vol(\\lambda_1 P_1 + \\lambda_2 P_2 + \\lambda_3 P_3)  ", "   & = & V(P_1, P_1, P_1) \\lambda_1^3 \\\\", "   & + & V(P_1, P_1, P_2) \\lambda_1^2 \\lambda_2 \\\\", "   & + & V(P_1, P_2, P_2) \\lambda_1 \\lambda_2^2 \\\\", "   & + & V(P_1, P_2, P_3) \\lambda_1 \\lambda_2 \\lambda_3 \\\\", "   & + & V(P_2, P_2, P_2) \\lambda_2^3 \\\\", "   & + & V(P_2, P_2, P_3) \\lambda_2^2 \\lambda_3 \\\\", "   & + & V(P_2, P_3, P_3) \\lambda_2 \\lambda_3^2 \\\\", "   & + & V(P_3, P_3, P_3) \\lambda_3^3", " \\end{array}"],
+            'name' : "volume of one random polytope",
+            'snippet' : ["from phcpy.polytopes import random_points as rp", "from phcpy.polytopes import mixed_volume as mv", "p1 = rp(3, 5, -9, 9)", "print p1", "mv([3], [p1])"],
             },
             {
-            'name' : "1",
-            'snippet' : ["from phcpy.polytopes import random_points as rp", "from phcpy.polytopes import mixed_volume as mv", "p1 = rp(3, 5, -9, 9)", "p1", "tp1 = tuple([p1])", "mv([3], tp1)"],
-            },
-            {
-            'name' : "2",
-            'snippet' : ["p2 = rp(3, 5, -9, 9)", "mv([2, 1],(p1, p2))", "mv([1, 2],(p1, p2))"],
+            'name' : "mixed volume of two random polytopes",
+            'snippet' : ["from phcpy.polytopes import random_points as rp", "from phcpy.polytopes import mixed_volume as mv", "p1 = rp(3, 5, -9, 9); p2 = rp(3, 5, -9, 9)", "mv([2, 1],[p1, p2])", "mv([1, 2],[p1, p2])"],
             }],
         },
         {
         'name' : "solving binomial systems",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["f = [ 'x**2*y - z*x;', 'x**2*z - y**2*x;' ]", "from phcpy.maps import binomial_solver", "from phcpy.maps import solve_binomials", "maps = solve_binomials(3,f)", "for map in maps: print(map)"],
+            'name' : "solution curves are maps",
+            'snippet' : ["f = [ 'x**2*y - z*x;', 'x**2*z - y**2*x;' ]", "from phcpy.maps import solve_binomials", "maps = solve_binomials(3, f)", "for map in maps: print map"],
             }],
         },
         {

@@ -7,3 +7,6 @@ and the extension snippets_menu must be enabled.
 
 The first version of the file custom.js was written by Jasmine Otto
 in the summer of 2017.
+
+Note that the code snippets are for Python 2, as this is still the
+default version of Python in Sage.
