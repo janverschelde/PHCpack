@@ -283,7 +283,7 @@ as follows:
 
 ::
 
-   >>> from phcpy.phcpy2c import py2c_set_seed
+   >>> from phcpy.phcpy2c3 import py2c_set_seed
    >>> py2c_set_seed(2013)
    0
 
@@ -291,7 +291,7 @@ The above session continues as
 
 ::
 
-   >>> from phcpy.phcpy2c import py2c_get_seed
+   >>> from phcpy.phcpy2c3 import py2c_get_seed
    >>> py2c_get_seed()
    2013
 
