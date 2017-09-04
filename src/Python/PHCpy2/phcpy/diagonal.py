@@ -311,8 +311,8 @@ def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
     from phcpy.interface import load_standard_system as loadsys
     from phcpy.phcpy2c2 import py2c_extrinsic_top_diagonal_dimension
     from phcpy.solutions import filter_vanishing
-    from phcpy.sets import drop_coordinate_from_solutions
-    from phcpy.sets import drop_variable_from_polynomials
+    from phcpy.sets import drop_coordinate_from_standard_solutions
+    from phcpy.sets import drop_variable_from_standard_polynomials
     from phcpy.cascades import standard_double_cascade_step
     topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
     kdm = len(sys1) - dm1
@@ -336,7 +336,7 @@ def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
             print sol
         raw_input('hit enter to continue')
     for k in range(topdiagdim, 0, -1):
-        endsols = standard_double_cascade_step(topsys, startsols)
+        endsols = standard_double_cascade_step(k, topsys, startsols)
         if verbose:
             print 'after running cascade step %d :' % k
             for sol in endsols:
@@ -347,13 +347,14 @@ def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
             raw_input('hit enter to continue')
         slack = 'zz' + str(k)
         nbvar = len(topsys)
-        endsolsf2 = drop_coordinate_from_solutions(endsolsf1, nbvar, slack)
+        endsolsf2 = drop_coordinate_from_standard_solutions\
+            (endsolsf1, nbvar, slack)
         if verbose:
             print 'after dropping the slack coordinate from the solutions :'
             for sol in endsolsf2:
                 print sol
             raw_input('hit enter to continue')
-        nextsys = drop_variable_from_polynomials(topsys, slack)
+        nextsys = drop_variable_from_standard_polynomials(topsys, slack)
         if verbose:
             print 'after dropping the variable', slack, 'from the system :'
             for pol in nextsys:
@@ -383,8 +384,8 @@ def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
     from phcpy.interface import load_dobldobl_system as loadsys
     from phcpy.phcpy2c2 import py2c_extrinsic_top_diagonal_dimension
     from phcpy.solutions import filter_vanishing
-    from phcpy.sets import drop_coordinate_from_solutions
-    from phcpy.sets import drop_variable_from_polynomials
+    from phcpy.sets import drop_coordinate_from_dobldobl_solutions
+    from phcpy.sets import drop_variable_from_dobldobl_polynomials
     from phcpy.cascades import double_double_cascade_step
     topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
     kdm = len(sys1) - dm1
@@ -408,7 +409,7 @@ def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
             print sol
         raw_input('hit enter to continue')
     for k in range(topdiagdim, 0, -1):
-        endsols = double_double_cascade_step(topsys, startsols)
+        endsols = double_double_cascade_step(k, topsys, startsols)
         if verbose:
             print 'after running cascade step %d :' % k
             for sol in endsols:
@@ -419,13 +420,14 @@ def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
             raw_input('hit enter to continue')
         slack = 'zz' + str(k)
         nbvar = len(topsys)
-        endsolsf2 = drop_coordinate_from_solutions(endsolsf1, nbvar, slack)
+        endsolsf2 = drop_coordinate_from_dobldobl_solutions\
+            (endsolsf1, nbvar, slack)
         if verbose:
             print 'after dropping the slack coordinate from the solutions :'
             for sol in endsolsf2:
                 print sol
             raw_input('hit enter to continue')
-        nextsys = drop_variable_from_polynomials(topsys, slack)
+        nextsys = drop_variable_from_dobldobl_polynomials(topsys, slack)
         if verbose:
             print 'after dropping the variable', slack, 'from the system :'
             for pol in nextsys:
@@ -455,8 +457,8 @@ def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
     from phcpy.interface import load_quaddobl_system as loadsys
     from phcpy.phcpy2c2 import py2c_extrinsic_top_diagonal_dimension
     from phcpy.solutions import filter_vanishing
-    from phcpy.sets import drop_coordinate_from_solutions
-    from phcpy.sets import drop_variable_from_polynomials
+    from phcpy.sets import drop_coordinate_from_quaddobl_solutions
+    from phcpy.sets import drop_variable_from_quaddobl_polynomials
     from phcpy.cascades import quad_double_cascade_step
     topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
     kdm = len(sys1) - dm1
@@ -480,7 +482,7 @@ def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
             print sol
         raw_input('hit enter to continue')
     for k in range(topdiagdim, 0, -1):
-        endsols = quad_double_cascade_step(topsys, startsols)
+        endsols = quad_double_cascade_step(k, topsys, startsols)
         if verbose:
             print 'after running cascade step %d :' % k
             for sol in endsols:
@@ -491,13 +493,14 @@ def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, \
             raw_input('hit enter to continue')
         slack = 'zz' + str(k)
         nbvar = len(topsys)
-        endsolsf2 = drop_coordinate_from_solutions(endsolsf1, nbvar, slack)
+        endsolsf2 = drop_coordinate_from_quaddobl_solutions\
+            (endsolsf1, nbvar, slack)
         if verbose:
             print 'after dropping the slack coordinate from the solutions :'
             for sol in endsolsf2:
                 print sol
             raw_input('hit enter to continue')
-        nextsys = drop_variable_from_polynomials(topsys, slack)
+        nextsys = drop_variable_from_quaddobl_polynomials(topsys, slack)
         if verbose:
             print 'after dropping the variable', slack, 'from the system :'
             for pol in nextsys:
@@ -570,7 +573,7 @@ def test():
     """
     from phcpy.phcpy2c2 import py2c_set_seed
     py2c_set_seed(234798272)
-    test_diaghom('qd')
+    test_diaghom('dd')
 
 if __name__ == "__main__":
     test()
