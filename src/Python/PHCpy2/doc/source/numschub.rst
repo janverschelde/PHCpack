@@ -41,10 +41,10 @@ that produce 2-planes meeting 8 given 2-planes at random interpolation points:
 
 ::
 
-   >>> from phcpy.schubert import *
+   >>> from phcpy.schubert import pieri_root_count
    >>> (m,p,q) = (2,2,1)
    >>> n = m*p + q*(m+p)
-   >>> r = Pieri_root_count(m,p,q)
+   >>> r = pieri_root_count(m,p,q)
    Pieri root count for (2, 2, 1) is 8
    the localization poset :
    n = 0 : ([3 4],[3 4],1)([2 5],[2 5],1)
@@ -56,9 +56,11 @@ that produce 2-planes meeting 8 given 2-planes at random interpolation points:
    n = 6 : ([1 3],[4 6],8)
    n = 7 : 
    n = 8 : ([1 2],[4 7],8)
+   >>> from phcpy.schubert import random_complex_matrix
    >>> L = [random_complex_matrix(m+p,m) for k in range(n)]
    >>> points = random_complex_matrix(n,1)
-   >>> (f,fsols) = run_Pieri_homotopies(m,p,q,L,points)
+   >>> from phcpy.schubert run_pieri_homotopies
+   >>> (f,fsols) = run_pieri_homotopies(m,p,q,L,points)
 
 The function **test()** of the module ``schubert``
 runs an interactive session to solve instances that
