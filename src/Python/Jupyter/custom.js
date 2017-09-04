@@ -20,51 +20,43 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
             }],
         },
         {
-        'name' : "representations of solutions of polynomial systems ",
+        'name' : "representations of isolated solutions",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["print(s[0])", "from phcpy.solutions import strsol2dict", "d = strsol2dict(s[0])", "d.keys()", "d['x1']"],
+            'name' : "from string to dictionary",
+            'snippet' : ["p = ['x + y - 1;', '2*x - 3*y + 1;']", "from phcpy.solver import solve", "sols = solve(p)", "print sols[0]", "from phcpy.solutions import strsol2dict", "dsol = strsol2dict(sols[0])", "print dsol.keys()", "for key in dsol.keys(): print 'the value for', key, 'is', dsol[key]"],
             },
             {
-            'name' : "1",
-            'snippet' : ["from phcpy.solutions import evaluate", "e = evaluate(f,d)", "for x in e: print(x)"],
+            'name' : "verify by evaluation",
+            'snippet' : ["p = ['x + y - 1;', '2*x - 3*y + 1;']", "from phcpy.solver import solve", "sols = solve(p)", "from phcpy.solutions import strsol2dict, evaluate", "dsol = strsol2dict(sols[0])", "eva = evaluate(p, dsol)", "for val in eva: print val"],
             },
             {
-            'name' : "2",
-            'snippet' : ["from phcpy.solutions import make_solution", "s0 = make_solution(['x', 'y'], [1, complex(0, 1)])", "print(s0)", "s1 = make_solution(['x', 'y'], [2, 3])", "print(s1)"],
+            'name' : "making a solution",
+            'snippet' : ["from phcpy.solutions import make_solution", "s0 = make_solution(['x', 'y'], [float(3.14), complex(0, 2.7)])", "print s0", "s1 = make_solution(['x', 'y'], [int(2), int(3)])", "print s1"],
             },
             {
-            'name' : "3",
-            'snippet' : ["from phcpy.solutions import is_real, filter_real", "is_real(s0, 1.0e-8)", "is_real(s1, 1.0e-8)", "realsols = filter_real([s0, s1], 1.0e-8, 'select')", "for sol in realsols: print(sol)"],
+            'name' : "filtering solution lists",
+            'snippet' : ["from phcpy.solutions import make_solution, is_real, filter_real",  "s0 = make_solution(['x', 'y'], [float(3.14), complex(0, 2.7)])", "print is_real(s0, 1.0e-8)", "s1 = make_solution(['x', 'y'], [int(2), int(3)])", "print is_real(s1, 1.0e-8)", "realsols = filter_real([s0, s1], 1.0e-8, 'select')", "for sol in realsols: print sol"],
             },
             {
-            'name' : "4",
-            'snippet' : ["from phcpy.solver import solve", "p = ['x**2 - 3*y + 1;', 'x*y - 3;']", "s = solve(p, silent=True)", "print(s[0])"],
-            },
-            {
-            'name' : "5",
-            'snippet' : ["from phcpy.solutions import coordinates, make_solution", "(names, values) = coordinates(s[0])", "names", "values", "s0 = make_solution(names, values)", "print(s0)"],
+            'name' : "coordinates, names and values",
+            'snippet' : ["from phcpy.solver import solve", "p = ['x**2 - 3*y + 1;', 'x*y - 3;']", "s = solve(p, silent=True)", "print(s[0])", "from phcpy.solutions import coordinates, make_solution", "(names, values) = coordinates(s[0])", "print names", "print values", "s0 = make_solution(names, values)", "print s0"],
             }],
         },
         {
         'name' : "reproducible runs with fixed seeds",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.phcpy2c import py2c_set_seed", "py2c_set_seed(2013)"],
-            },
-            {
-            'name' : "1",
-            'snippet' : ["from phcpy.phcpy2c import py2c_get_seed", "py2c_get_seed()"],
+            'name' : "fixing and retrieving the seed",
+            'snippet' : ["from phcpy.phcpy2c2 import py2c_set_seed", "py2c_set_seed(2013)", "from phcpy.phcpy2c2 import py2c_get_seed", "print py2c_get_seed()"],
             }],
         },
         {
         'name' : "root counting methods",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["f = ['x^3*y^2 + x*y^2 + x^2;', 'x^5 + x^2*y^3 + y^2;']", "from phcpy.solver import total_degree", "total_degree(f)", "from phcpy.solver import m_homogeneous_bezout_number as mbz", "mbz(f)", "from phcpy.solver import linear_product_root_count as lrc", "lrc(f)", "from phcpy.solver import mixed_volume", "mixed_volume(f, stable=True)"],
+            'name' : "four different root counts",
+            'snippet' : ["f = ['x^3*y^2 + x*y^2 + x^2;', 'x^5 + x^2*y^3 + y^2;']", "from phcpy.solver import total_degree", "print 'the total degree :', total_degree(f)", "from phcpy.solver import m_homogeneous_bezout_number as mbz", "(bz, part) = mbz(f)", "print 'a multihomogeneous Bezout number :', bz", "from phcpy.solver import linear_product_root_count as lrc", "print 'a linear-product root count :', lrc(f, silent=True)", "from phcpy.solver import mixed_volume", "(mv, smv) = mixed_volume(f, stable=True)", "print 'the mixed volume :', mv", "print 'the stable mixed volume :', smv"],
             }],
         },
         {
@@ -83,16 +75,12 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "equation and variable scaling",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.solver import solve", "p = ['0.000001*x^2 + 0.000004*y^2 - 4;', '0.000002*y^2 - 0.001*x;']", "psols = solve(p, silent=True)", "print(psols[0])"],
+            'name' : "solving without scaling",
+            'snippet' : ["from phcpy.solver import solve", "p = ['0.000001*x^2 + 0.000004*y^2 - 4;', '0.000002*y^2 - 0.001*x;']", "psols = solve(p, silent=True)", "print psols[0]"],
             },
             {
-            'name' : "1",
-            'snippet' : ["from phcpy.solver import standard_scale_system as scalesys", "from phcpy.solver import standard_scale_solutions as scalesols", "(q, c) = scalesys(p)", "q[0]", "q[1]"],
-            },
-            {
-            'name' : "2",
-            'snippet' : ["qsols = solve(q, silent=True)", "ssols = scalesols(len(q), qsols, c)", "for sol in ssols: print(sol)"],
+            'name' : "solving after scaling",
+            'snippet' : ["p = ['0.000001*x^2 + 0.000004*y^2 - 4;', '0.000002*y^2 - 0.001*x;']", "from phcpy.solver import standard_scale_system as scalesys", "from phcpy.solver import standard_scale_solutions as scalesols", "(q, c) = scalesys(p)", "for pol in q: print pol", "qsols = solve(q, silent=True)", "ssols = scalesols(len(q), qsols, c)", "for sol in ssols: print sol"],
             }],
         }],
     },
@@ -352,26 +340,22 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     },
 
     {
-    'name' : 'examfams',
+    'name' : 'families of systems',
     'sub-menu' : [
         {
-        'name' : "interactive regression testing",
+        'name' : "systems in a paper by Noonburg",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.examples import noon3", "f = noon3()", "for p in f: print(p)"],
-            },
-            {
-            'name' : "1",
-            'snippet' : ["from phcpy.solver import solve", "s = solve(f,silent=True)", "len(s)", "print(s[0])"],
+            'name' : "for linear-product start systems",
+            'snippet' : ["from phcpy.examples import noon3", "f = noon3()", "for p in f: print p", "from phcpy.solver import solve", "sols = solve(f)", "print 'the number of solutions :', len(sols)"],
             }],
         },
         {
         'name' : "the cyclic n-roots problem",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.families import cyclic", "c4 = cyclic(4)", "for p in c4: print(p)"],
+            'name' : "for polyhedral homotopies",
+            'snippet' : ["from phcpy.families import cyclic", "c5 = cyclic(5)", "for p in c5: print p", "from phcpy.solver import solve", "sols = solve(c5)", "print 'the number of solutions :', len(sols)"],
             }],
         }],
     },
@@ -463,7 +447,6 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
             }],
         }],
     },
-
     {
     'name' : 'the extension module',
     'sub-menu' : [
