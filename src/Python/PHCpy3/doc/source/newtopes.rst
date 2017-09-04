@@ -286,7 +286,7 @@ In the session below, the output is formatted with continuation symbols.
 
 ::
 
-   >>> from series import standard_newton_series
+   >>> from phcpy.series import standard_newton_series
    >>> sersols = standard_newton_series(vivplane, sols, verbose=False)
    >>> sersols[0]
    ['s;', '3.12500000000000E-02*s^8 + 6.25000000000000E-02*s^6 \
