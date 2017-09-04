@@ -1,6 +1,8 @@
 Sun 3 Sep 2017 : added a new folder Jupyter into the src/Python directory,
   with the custom.js file to define the menu Jupyter notebook extension.
-  Fixed the blackbox coding blocks in custom.js.
+  Fixed the blackbox coding blocks in custom.js.  Corrected the blackbox.rst
+  in the PHCpy2 and PHCpy3, fixing the "from solver import deflate" into
+  "from solver import standard_deflate".
 
 Thu 31 Aug 2017 : fixed a bug in the a documentation block in newtopes.rst,
   both in the source of the python2 and python3 documentation.

@@ -394,7 +394,7 @@ of Newton's method:
     x :  6.66666604160106E-07   0.00000000000000E+00
     y :  3.33333270859482E-13   0.00000000000000E+00
    == err :  3.333E-07 = rco :  2.778E-14 = res :  1.111E-13 =
-   >>> from phcpy.solver import deflate
+   >>> from phcpy.solver import standard_deflate
    >>> sd = deflate(p,[s])
    >>> print sd[0]
    t :  0.00000000000000E+00   0.00000000000000E+00
