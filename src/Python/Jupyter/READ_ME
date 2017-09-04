@@ -1,5 +1,5 @@
 The file custom.js in this folder defines the menu PHCpy in the notebook
-extension for the Jupyter notebook running sage.
+extension for the Jupyter notebook running SageMath.
 
 The file custom.js should be placed in the .jupyter/custom folder
 and the jupyter_contrib_nbextensions must be installed
@@ -9,4 +9,4 @@ The first version of the file custom.js was written by Jasmine Otto
 in the summer of 2017.
 
 Note that the code snippets are for Python 2, as this is still the
-default version of Python in Sage.
+default version of Python in SageMath.

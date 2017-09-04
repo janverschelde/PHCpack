@@ -5,7 +5,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'sub-menu-direction' : 'left',
         'sub-menu' : [
     {
-    'name' : 'blackbox',
+    'name' : 'blackbox solver',
     'sub-menu' : [
         {
         'name' : "solving trinomials",
@@ -98,7 +98,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     },
 
     {
-    'name' : 'pathtrack',
+    'name' : 'path trackers',
     'sub-menu' : [
         {
         'name' : "a simple example",
@@ -231,7 +231,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     },
 
     {
-    'name' : 'posdimsols',
+    'name' : 'solution sets',
     'sub-menu' : [
         {
         'name' : "witness sets",
@@ -375,32 +375,30 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
             }],
         }],
     },
-
     {
-    'name' : 'numschub',
+    'name' : 'Schubert calculus',
     'sub-menu' : [
         {
         'name' : "Pieri homotopies",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.schubert import *", "(m,p,q) = (2,2,1)", "n = m*p + q*(m+p)", "r = Pieri_root_count(m,p,q)", "L = [random_complex_matrix(m+p,m) for k in range(n)]", "points = random_complex_matrix(n,1)", "(f,fsols) = run_Pieri_homotopies(m,p,q,L,points)"],
+            'name' : "curves in the Grassmannian",
+            'snippet' : ["from phcpy.schubert import pieri_root_count, random_complex_matrix", "(m,p,q) = (2,2,1)", "n = m*p + q*(m+p)", "r = pieri_root_count(m,p,q)", "L = [random_complex_matrix(m+p,m) for k in range(n)]", "points = random_complex_matrix(n,1)", "from phcpy.schubert import run_pieri_homotopies", "(f,fsols) = run_pieri_homotopies(m,p,q,L,points)", "print 'number of solutions :', len(fsols)"],
             }],
         },
         {
-        'name' : "Littlewood-Richardson homotopies ",
+        'name' : "Littlewood-Richardson homotopies",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.schubert import resolve_schubert_conditions as rsc", "brackets = [[2,4,6],[2,4,6],[2,4,6]]", "rsc(6,3,brackets)"],
+            'name' : "resolving Schubert conditions",
+            'snippet' : ["from phcpy.schubert import resolve_schubert_conditions as rsc", "brackets = [[2, 4, 6], [2, 4, 6], [2, 4, 6]]", "rsc(6, 3, brackets)"],
             },
             {
-            'name' : "1",
-            'snippet' : ["from phcpy.schubert import littlewood_richardson_homotopies as lrh", "(count, flags, sys, sols) = lrh(6, 3, brackets, verbose=False)", "count", "for sol in sols: print(sol)", " len(sys)"],
+            'name' : "solving a generic instance",
+            'snippet' : ["brackets = [[2, 4, 6], [2, 4, 6], [2, 4, 6]]", "from phcpy.schubert import littlewood_richardson_homotopies as lrh", "(count, flags, sys, sols) = lrh(6, 3, brackets, verbose=False)", "print 'the root count :', count", "for sol in sols: print(sol)", "print 'the number of solutions :', len(sols)"],
             }],
         }],
     },
-
     {
     'name' : 'Newton polytopes',
     'sub-menu' : [
@@ -467,26 +465,22 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     },
 
     {
-    'name' : 'modphcpy2c3',
+    'name' : 'the extension module',
     'sub-menu' : [
         {
-        'name' : "design of the Python to C interface",
-        'sub-menu' : [],
-        },
-        {
-        'name' : "the interface to PHCpack",
+        'name' : "the module interface",
         'sub-menu' : [
             {
-            'name' : "0",
+            'name' : "storing and loading a system",
             'snippet' : ["from phcpy.interface import store_standard_system, load_standard_system", "store_standard_system(['x^2 - 1/3;'])", "load_standard_system()"],
             }],
         },
         {
-        'name' : "wrappers to the C interface to PHCpack",
+        'name' : "wrappers to the C interface",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.phcpy2c3 import py2c_syscon_read_standard_system as readsys", "from phcpy.phcpy2c3 import py2c_syscon_write_standard_system as writesys", "readsys()"],
+            'name' : "reading and writing a system",
+            'snippet' : ["from phcpy.phcpy2c2 import py2c_syscon_read_standard_system as readsys", "readsys()", "from phcpy.phcpy2c2 import py2c_syscon_write_standard_system as writesys", "writesys()"],
             }],
         }],
     }],

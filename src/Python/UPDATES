@@ -1,5 +1,7 @@
 Mon 4 Sep 2017 : fixed the code in the documentation blocks for the
   Pieri homotopies in the file numschub.rst in the PHCpy2 and PHCpy3 folders.
+  Fixed snippets for the Schubert calculus and the extension module,
+  in the file Jupyter/custom.js.
 
 Sun 3 Sep 2017 : added a new folder Jupyter into the src/Python directory,
   with the custom.js file to define the menu Jupyter notebook extension.
