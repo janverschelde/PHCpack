@@ -237,80 +237,32 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "homotopy membership test",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.families import cyclic", "c4 = cyclic(4)", "from phcpy.sets import embed", "c4e1 = embed(4, 1, c4)", "from phcpy.solver import solve", "sols = solve(c4e1)", "from phcpy.solutions import filter_zero_coordinates as filter", "genpts = filter(sols, 'zz1', 1.0e-8, 'select')", "for sol in genpts:"],
+            'name' : "cyclic 4-roots on coordinates",
+            'snippet' : ["from phcpy.families import cyclic", "c4 = cyclic(4)", "from phcpy.sets import embed", "c4e1 = embed(4, 1, c4)", "from phcpy.solver import solve", "sols = solve(c4e1)", "from phcpy.solutions import filter_zero_coordinates as filter", "genpts = filter(sols, 'zz1', 1.0e-8, 'select')", "for sol in genpts: print sol", "point0 = [1, 0, -1, 0, 1, 0, -1, 0]", "from phcpy.sets import membertest", "print 'point0 :', point0", "print 'Is point0 a member ?', membertest(c4e1, genpts, 1, point0)", "point1 = [1, 0, 1, 0, -1, 0, -1, 0]", "print 'point1 :', point1", "print 'Is point1 a member ?', membertest(c4e1, genpts, 1, point1)"],
             },
             {
-            'name' : "1",
-            'snippet' : ["point = [1, 0, -1, 0, 1, 0, -1, 0]", "from phcpy.sets import membertest", "membertest(c4e1, genpts, 1, point)"],
-            },
-            {
-            'name' : "2",
-            'snippet' : ["point = [-1, 0, -1, 0, 1, 0, 1, 0]", "membertest(c4e1, genpts, 1, point)"],
-            },
-            {
-            'name' : "3",
-            'snippet' : ["ddpoint = [-1, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]"],
-            },
-            {
-            'name' : "4",
-            'snippet' : ["membertest(c4e1, genpts, 1, ddpoint, memtol=1.e-12, precision='dd')"],
+            'name' : "cyclic 4-roots on solutions",
+            'snippet' : ["from phcpy.families import cyclic", "c4 = cyclic(4)", "from phcpy.sets import embed", "c4e1 = embed(4, 1, c4)", "from phcpy.solver import solve", "sols = solve(c4e1)", "from phcpy.solutions import filter_zero_coordinates as filter", "genpts = filter(sols, 'zz1', 1.0e-8, 'select')", "for sol in genpts: print sol", "names = ['x0', 'x1', 'x2', 'x3']", "coord0 = [complex(1, 0), complex(-1, 0), complex(1, 0), complex(-1, 0)]", "from phcpy.solutions import make_solution", "point0 = make_solution(names, coord0)", "from phcpy.sets import is_member", "print 'point0 :'", "print point0", "print 'Is point0 a member ?', is_member(c4e1, genpts, 1, point0, verbose=False)", "coord1 = [complex(1, 0), complex(1, 0), complex(-1, 0), complex(-1, 0)]", "point1 = make_solution(names, coord1)", "print 'point1 :'", "print point1", "print 'Is point1 a member ?', is_member(c4e1, genpts, 1, point1, verbose=False)"],
             }],
         },
         {
         'name' : "cascade of homotopies",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["pols = ['(x^2 + y^2 + z^2 - 1)*(y - x^2)*(x - 0.5);', \\"],
+            'name' : "an illustrative example",
+            'snippet' : ["pol1 = '(x^2 + y^2 + z^2 - 1)*(y - x^2)*(x - 0.5);'", "pol2 = '(x^2 + y^2 + z^2 - 1)*(z - x^3)*(y - 0.5);'", "pol3 = '(x^2 + y^2 + z^2 - 1)*(z - x*y)*(z - 0.5);'", "pols = [pol1, pol2, pol3]", "from phcpy.cascades import run_cascade", "otp = run_cascade(3, 2, pols)", "dims = otp.keys()", "dims.sort(reverse=True)", "for dim in dims: print 'number of solutions at dimension', dim, ':', len(otp[dim][1])"]
             },
             {
-            'name' : "1",
-            'snippet' : ["from phcpy.sets import embed", "topemb = embed(3, 2, pols)", "from phcpy.solver import solve", "topsols = solve(topemb, silent=True)"],
-            },
-            {
-            'name' : "2",
-            'snippet' : ["from phcpy.solutions import filter_zero_coordinates as filter", "topsols0 = filter(topsols, 'zz2', 1.0e-8, 'select')", "topsols1 = filter(topsols, 'zz2', 1.0e-8, 'remove')", "print('generic points on the two dimensional surface :')", "for sol in topsols0:"],
-            },
-            {
-            'name' : "3",
-            'snippet' : ["from phcpy.sets import cascade_step", "lvl1sols = cascade_step(topemb, topsols1)"],
-            },
-            {
-            'name' : "4",
-            'snippet' : ["from phcpy.sets import drop_variable_from_polynomials as drop1poly", "from phcpy.sets import drop_coordinate_from_solutions as drop1sols", "lvl1emb = drop1poly(topemb, 'zz2')", "lvl1emb = lvl1emb[:-1]  # dropping the last polynomial", "lvl1solsdrop = drop1sols(lvl1sols, len(topemb), 'zz2')", "lvl1sols0 = filter(lvl1solsdrop, 'zz1', 1.0e-8, 'select') ", "lvl1sols1 = filter(lvl1solsdrop, 'zz1', 1.0e-8, 'remove') "],
-            },
-            {
-            'name' : "5",
-            'snippet' : ["from phcpy.solutions import filter_regular as regfilt", "reglvl1sols0 = regfilt(lvl1sols0, 1.0e-8, 'select')", "for sol in reglvl1sols0:"],
-            },
-            {
-            'name' : "6",
-            'snippet' : ["lvl2sols = cascade_step(lvl1emb, lvl1sols1)", "lvl2solsdrop = drop1sols(lvl2sols, len(lvl1emb), 'zz1')", "for sol in reglvl2solsdrop:"],
+            'name' : "a Laurent system",
+            'snippet' : ["pol1 = '0.710358341606049*t1 + 0.46*t2 - 0.41*t3 + 0.240761300555115 + 1.07248215701824*I;'", "pol2 = 't2*(-0.11 + 0.49*I) + 0.41*t3 - 0.502195181179589*t4 + 0.41*t5;'", "pol3 = '0.502195181179589*t4 + t5*(-0.0980434782608696 + 0.436739130434783*I) - 0.775518556663656*t6 - 1.2;'", "pol4 = '0.710358341606049*t1**(-1) + 0.46*t2**(-1) - 0.41*t3**(-1) + 0.240761300555115 - 1.07248215701824*I;'", "pol5 = 't2**(-1)*(-0.11 - 0.49*I) + 0.41*t3**(-1) - 0.502195181179589*t4**(-1) + 0.41*t5**(-1);'", "pol6 = '0.502195181179589*t4**(-1) + t5**(-1)*(-0.0980434782608696 - 0.436739130434783*I) - 0.775518556663656*t6**(-1) - 1.2;'", "pols = [pol1, pol2, pol3, pol4, pol5, pol6]", "from phcpy.cascades import run_cascade", "otp = run_cascade(6, 1, pols, islaurent=True)", "(epols, esols) = otp[1]", "print 'the generic points at a 1-dimensional curve :'", "for sol in esols: print sol"]
             }],
         },
         {
         'name' : "factoring into irreducibles",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["p = '(x+1)*(x^2 + y^2 + 1);'"],
-            },
-            {
-            'name' : "1",
-            'snippet' : ["from phcpy.sets import witness_set_of_hypersurface as wh", "(w, s) = wh(2, p)", "len(s)"],
-            },
-            {
-            'name' : "2",
-            'snippet' : ["from phcpy.sets import factor", "f = factor(1, w, s)", "f"],
-            },
-            {
-            'name' : "3",
-            'snippet' : ["[([1, 2], 8.537360146292391e-15), ([3], 2.1316282072803006e-14)]"],
-            },
-            {
-            'name' : "4",
-            'snippet' : ["f = factor(1, w, s, precision='dd')", "f = factor(1, w, s, precision='qd')"],
+            'name' : "factoring a cubic polynomial",
+            'snippet' : ["p = '(x+1)*(x^2 + y^2 + 1);'", "from phcpy.sets import witness_set_of_hypersurface as wh", "(w, s) = wh(2, p)", "print 'number of witness points :', len(s)", "from phcpy.factor import factor", "f = factor(1, w, s)", "for fact in f: print fact"],
             }],
         },
         {
@@ -325,20 +277,11 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "diagonal homotopies",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["sph = 'x^2 + y^2 + z^2 - 1;'", "cyl = 'x^2 + y - y + (z - 0.5)^2 - 1;'"],
-            },
-            {
-            'name' : "1",
-            'snippet' : ["from phcpy.sets import witness_set_of_hypersurface as witsurf", "sphwit = witsurf(3, sph)", "spheqs, sphpts = sphwit", "cylwit = witsurf(3, cyl)", "cyleqs, cylpts = cylwit"],
-            },
-            {
-            'name' : "2",
-            'snippet' : ["from phcpy.sets import diagonal_solver as diagsolve", "quawit = diagsolve(3, 2, spheqs, sphpts, 2, cyleqs, cylpts)", "quaeqs, quapts = quawit", "for pol in quaeqs:", "for sol in quapts:"],
+            'name' : "sphere intersected with a cylinder",
+            'snippet' : ["sph = 'x^2 + y^2 + z^2 - 1;'", "cyl = 'x^2 + y - y + (z - 0.5)^2 - 1;'", "from phcpy.sets import witness_set_of_hypersurface as witsurf", "sphwit = witsurf(3, sph)", "spheqs, sphpts = sphwit", "cylwit = witsurf(3, cyl)", "cyleqs, cylpts = cylwit", "from phcpy.diagonal import diagonal_solver as diagsolve", "quawit = diagsolve(3, 2, spheqs, sphpts, 2, cyleqs, cylpts, verbose=False)", "quaeqs, quapts = quawit", "for pol in quaeqs: print pol", "for sol in quapts: print sol"],
             }],
         }],
     },
-
     {
     'name' : 'families of systems',
     'sub-menu' : [
@@ -390,28 +333,12 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "convex hulls of lattice polytopes",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.polytopes import random_points as rp", "from phcpy.polytopes import planar_convex_hull as pch", "points = rp(2,7,-9,9)", "points", "(vertices, normals) = pch(points)", "vertices", "normals"],
+            'name' : "vertices and edge normals",
+            'snippet' : ["from phcpy.polytopes import random_points as rp", "from phcpy.polytopes import planar_convex_hull as pch", "points = rp(2, 7, -9, 9)", "for point in points: print point", "(vertices, normals) = pch(points)", "print 'the vertex points :', vertices", "print 'the edge normals :', normals"],
             },
             {
-            'name' : "1",
-            'snippet' : [" 9 - 2 \\times 8 = 5 - 2 \\times 6 = -7 "],
-            },
-            {
-            'name' : "2",
-            'snippet' : [" x_1 - 2 x_2 \\geq -7"],
-            },
-            {
-            'name' : "3",
-            'snippet' : ["from phcpy.polytopes import random_points as rp", "points = rp(3,10,-9,9)", "for point in points: print(point)", "from phcpy.polytopes import convex_hull as ch", "facets = ch(3, points)", "for facet in facets: print(facet)"],
-            },
-            {
-            'name' : "4",
-            'snippet' : ["90 x_1 - 65 x_2 - 6 x_3 \\geq -597"],
-            },
-            {
-            'name' : "5",
-            'snippet' : ["vertices = []", "for facet in facets:", "vertices", "len(vertices)"],
+            'name' : "facets in 3-space",
+            'snippet' : ["from phcpy.polytopes import random_points as rp", "points = rp(3, 10, -9, 9)", "for point in points: print point", "from phcpy.polytopes import convex_hull as ch", "facets = ch(3, points)", "for facet in facets: print facet"],
             }],
         },
         {
@@ -438,12 +365,8 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "power series solutions",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["vivplane = ['(1-s)*y + s*(y-1);',", "vivs0 = vivplane + ['s;']", "from phcpy.solver import solve", "sols = solve(vivs0, silent=True)", "print(sols[0])", ""],
-            },
-            {
-            'name' : "1",
-            'snippet' : ["from series import standard_newton_series", "sersols = standard_newton_series(vivplane, sols, verbose=False)", "sersols[0]", ""],
+            'name' : "intersecting the Viviani curve",
+            'snippet' : ["plane = '(1-s)*y + s*(y-1);'", "vp0 = 'x^2 + y^2 + z^2 - 4;'", "vp1 = '(x-1)^2 + y^2 - 1;'", "vivplane = [plane, vp0, vp1]", "vivs0 = vivplane + ['s;']", "from phcpy.solver import solve", "sols = solve(vivs0, silent=True)", "for sol in sols: print sol", "from phcpy.series import standard_newton_series", "sersols = standard_newton_series(vivplane, sols, verbose=False)", "for srs in sersols: print srs"],
             }],
         }],
     },

@@ -5,6 +5,7 @@ Mon 4 Sep 2017 : fixed the code in the documentation blocks for the
   in the file blackbox.rst in PHCpy2 and PHCpy3 folders.  All snippets in
   the blackbox solver work.  Fixed import phcpy.series in newtopes.rst.
   Updated diagonal.py for the drop_coordinate_ and drop_variable_ functions.
+  In custom.js, fixed all snippets for the solution sets menu.
 
 Sun 3 Sep 2017 : added a new folder Jupyter into the src/Python directory,
   with the custom.js file to define the menu Jupyter notebook extension.
