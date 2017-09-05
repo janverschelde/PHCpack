@@ -52,6 +52,14 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
             }],
         },
         {
+        'name' : "shared memory parallelism",
+        'sub-menu' : [
+            {
+            'name' : "solving with 4 tasks",
+            'snippet' : ["from phcpy.solver import solve", "from phcpy.families import cyclic", "nbrt = 4 # number of tasks", "pols = cyclic(6)", "print 'solving the cyclic 6-roots problem :'", "for pol in pols: print pol", "from time import time", "starttime = time()", "sols = solve(pols, silent=True)", "stoptime = time()", "elapsed = stoptime - starttime", "print 'solving with no multitasking :'", "print 'elapsed time : %.2f seconds' % elapsed", "starttime = time()", "sols = solve(pols, silent=True, tasks=nbrt)", "stoptime = time()", "elapsed = stoptime - starttime", "print 'solving with %d tasks :' % nbrt", "print 'elapsed time : %.2f seconds' % elapsed" ],
+            }],
+        },
+        {
         'name' : "root counting methods",
         'sub-menu' : [
             {
@@ -140,12 +148,8 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "multitasked path tracking",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["$ time python trackcyclic7.py", "number of start solutions : 924", "starting the path tracking with 1 task(s) ...", "tracked 924 solution paths"],
-            },
-            {
-            'name' : "1",
-            'snippet' : ["from sys import argv", "if(len(argv) == 1):", "    nbtasks = 1", "else:", "    nbtasks = eval(argv[1])", "from phcpy.phcpy2c import py2c_read_standard_target_system_from_file", "from phcpy.phcpy2c import py2c_read_standard_start_system_from_file", "from phcpy.phcpy2c import py2c_copy_target_system_to_container", "from phcpy.phcpy2c import py2c_copy_start_system_to_container", "from phcpy.phcpy2c import py2c_copy_start_solutions_to_container", "from phcpy.phcpy2c import py2c_solcon_number_of_solutions", "from phcpy.solver import load_standard_system, load_standard_solutions", "from phcpy.trackers import standard_double_track", "cyclic7 = '/Users/jan/PHCv2/Demo/cyclic7'", "cyclic7q = '/Users/jan/PHCv2/Demo/cyclic7q'", "fail = py2c_read_standard_target_system_from_file(len(cyclic7),cyclic7)", "fail = py2c_copy_target_system_to_container()", "target = load_standard_system()", "fail = py2c_read_standard_start_system_from_file(len(cyclic7q),cyclic7q)", "fail = py2c_copy_start_system_to_container()", "start = load_standard_system()", "fail = py2c_copy_start_solutions_to_container()", "sols = load_standard_solutions()", "print('number of start solutions :', py2c_solcon_number_of_solutions())", "print('starting the path tracking with', nbtasks, 'task(s) ...')", "endsols = standard_double_track(target, start, sols, 0, nbtasks)", "print('tracked', len(endsols), 'solution paths')"],
+            'name' : "tracking with 4 tasks",
+            'snippet' : ["from phcpy.solver import random_linear_product_system as rlps", "from phcpy.families import noon", "from phcpy.trackers import track", "nbrt = 4 # number of tasks", "pols = noon(5)", "print 'solving the 5-variable Noonburg system :'", "for pol in pols: print pol", "(startpols, startsols) = rlps(pols)", "print 'number of paths :', len(startsols)", "from time import time", "starttime = time()", "sols = track(pols, startpols, startsols)", "stoptime = time()", "elapsed = stoptime - starttime", "print 'elapsed time with no multitasking : %.2f seconds' % elapsed", "starttime = time()", "sols = track(pols, startpols, startsols, tasks=nbrt)", "stoptime = time()", "elapsed = stoptime - starttime", "print 'elapsed time with %d tasks : %.2f seconds' % (nbrt, elapsed)"],
             }],
         },
         {
