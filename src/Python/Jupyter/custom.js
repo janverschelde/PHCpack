@@ -104,44 +104,36 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "fixing the gamma constant",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["s3 = track(p, q, [qsols[2]], gamma=complex(0.824372806319,0.56604723848934))", "print(s3[0])"],
+            'name' : "specifying the gamma parameter",
+            'snippet' : ["from phcpy.solver import total_degree_start_system", "from phcpy.trackers import track", "p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']", "(q, qsols) = total_degree_start_system(p)", "s3 = track(p, q, [qsols[2]], gamma=complex(0.824372806319,0.56604723848934))", "print 'the solution at the end:'", "print s3[0]"],
             }],
         },
         {
         'name' : "give the next solution on a path",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.solver import total_degree_start_system", "p = ['x**2 + 4*x**2 - 4;', '2*y**2 - x;']", "(q, s) = total_degree_start_system(p)", "from phcpy.trackers import initialize_standard_tracker", "from phcpy.trackers import initialize_standard_solution", "from phcpy.trackers import next_standard_solution", "initialize_standard_tracker(p, q)", "initialize_standard_solution(len(p), s[0])", "s1 = next_standard_solution()", "print(s1)", "print(next_standard_solution())", "print(next_standard_solution())"],
+            'name' : "tracking with a generator",
+            'snippet' : ["from phcpy.solver import total_degree_start_system", "p = ['x**2 + 4*x**2 - 4;', '2*y**2 - x;']", "(q, s) = total_degree_start_system(p)", "from phcpy.trackers import initialize_standard_tracker", "from phcpy.trackers import initialize_standard_solution", "from phcpy.trackers import next_standard_solution", "initialize_standard_tracker(p, q)", "initialize_standard_solution(len(p), s[0])", "s1 = next_standard_solution()", "print 'the next point on the solution path :'", "print s1", "print next_standard_solution()", "print next_standard_solution()", "initialize_standard_solution(len(p), s[1])", "points = [next_standard_solution() for i in range(11)]", "from phcpy.solutions import strsol2dict", "dicpts = [strsol2dict(sol) for sol in points]", "xvals = [sol['x'] for sol in dicpts]", "for x in xvals: print(x)"],
             },
             {
-            'name' : "1",
-            'snippet' : ["initialize_standard_solution(len(p), s[1])", "points = [next_standard_solution() for i in range(11)]", "from phcpy.solutions import strsol2dict", "dicpts = [strsol2dict(sol) for sol in points]", "xvals = [sol['x'] for sol in dicpts]", "for x in xvals: print(x)"],
-            },
-            {
-            'name' : "2",
-            'snippet' : ["p = ['x^2 + y - 3;', 'x + 0.125*y^2 - 1.5;']", "print('constructing a total degree start system ...')", "from phcpy.solver import total_degree_start_system as tds", "q, qsols = tds(p)", "print('number of start solutions :', len(qsols))", "from phcpy.trackers import initialize_standard_tracker", "from phcpy.trackers import initialize_standard_solution", "from phcpy.trackers import next_standard_solution", "initialize_standard_tracker(p, q, False)", "from phcpy.solutions import strsol2dict", "import matplotlib.pyplot as plt", "plt.ion()", "fig = plt.figure()", "for k in range(len(qsols)):", "    if(k == 0):", "        axs = fig.add_subplot(221)", "    elif(k == 1):", "        axs = fig.add_subplot(222)", "    elif(k == 2):", "        axs = fig.add_subplot(223)", "    elif(k == 3):", "        axs = fig.add_subplot(224)", "    startsol = qsols[k]", "    initialize_standard_solution(len(p),startsol)", "    dictsol = strsol2dict(startsol)", "    xpoints =  [dictsol['x']]", "    ypoints =  [dictsol['y']]", "    for k in range(300):", "        ns = next_standard_solution()", "        dictsol = strsol2dict(ns)", "        xpoints.append(dictsol['x'])", "        ypoints.append(dictsol['y'])", "        tval = eval(dictsol['t'].lstrip().split(' ')[0])", "        if(tval == 1.0):", "            break", "    print(ns)", "    xre = [point.real for point in xpoints]", "    yre = [point.real for point in ypoints]", "    axs.set_xlim(min(xre)-0.3, max(xre)+0.3)", "    axs.set_ylim(min(yre)-0.3, max(yre)+0.3)", "    dots, = axs.plot(xre,yre,'r-')", "    fig.canvas.draw()", "fig.canvas.draw()", "ans = raw_input('hit return to exit')"],
+            'name' : "plotting trajectories",
+            'snippet' : ["p = ['x^2 + y - 3;', 'x + 0.125*y^2 - 1.5;']", "print 'constructing a total degree start system ...'", "from phcpy.solver import total_degree_start_system as tds", "q, qsols = tds(p)", "print 'number of start solutions :', len(qsols)", "from phcpy.trackers import initialize_standard_tracker", "from phcpy.trackers import initialize_standard_solution", "from phcpy.trackers import next_standard_solution", "initialize_standard_tracker(p, q, False)", "from phcpy.solutions import strsol2dict", "import matplotlib.pyplot as plt", "plt.ion()", "fig = plt.figure()", "for k in range(len(qsols)):", "    if(k == 0):", "        axs = fig.add_subplot(221)", "    elif(k == 1):", "        axs = fig.add_subplot(222)", "    elif(k == 2):", "        axs = fig.add_subplot(223)", "    elif(k == 3):", "        axs = fig.add_subplot(224)", "    startsol = qsols[k]", "    initialize_standard_solution(len(p),startsol)", "    dictsol = strsol2dict(startsol)", "    xpoints =  [dictsol['x']]", "    ypoints =  [dictsol['y']]", "    for k in range(300):", "        ns = next_standard_solution()", "        dictsol = strsol2dict(ns)", "        xpoints.append(dictsol['x'])", "        ypoints.append(dictsol['y'])", "        tval = eval(dictsol['t'].lstrip().split(' ')[0])", "        if(tval == 1.0):", "            break", "    print(ns)", "    xre = [point.real for point in xpoints]", "    yre = [point.real for point in ypoints]", "    axs.set_xlim(min(xre)-0.3, max(xre)+0.3)", "    axs.set_ylim(min(yre)-0.3, max(yre)+0.3)", "    dots, = axs.plot(xre,yre,'r-')", "    fig.canvas.draw()", "fig.canvas.draw()"],
             }],
         },
         {
         'name' : "solving with polyhedral homotopies",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["p = ['x^3*y^2 - 3*x^3 + 7;','x*y^3 + 6*y^3 - 9;']", "from phcpy.solver import mixed_volume", "mixed_volume(p)", "from phcpy.solver import random_coefficient_system", "(q,qsols) = random_coefficient_system(silent=True)", "len(qsols)", "from phcpy.trackers import track", "psols = track(p,q,qsols)", "len(psols)", "print(psols[4])"],
+            'name' : "solving a random coefficient system",
+            'snippet' : ["p = ['x^3*y^2 - 3*x^3 + 7;','x*y^3 + 6*y^3 - 9;']", "from phcpy.solver import mixed_volume", "print 'the mixed volume :', mixed_volume(p)", "from phcpy.solver import random_coefficient_system", "(q,qsols) = random_coefficient_system(silent=True)", "print 'the number of start solutions :', len(qsols)", "from phcpy.trackers import track", "psols = track(p, q, qsols)", "print 'the number of solutions at the end :', len(psols)", "for sol in psols: print sol"],
             }],
         },
         {
         'name' : "Newton's method at higher precision",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["psols_dd = newton_step(p,psols,precision='dd')"],
-            },
-            {
-            'name' : "1",
-            'snippet' : ["p = ['x*y^3 + y - 2;', 'x^3*y + x - 8;']", "from phcpy.solver import linear_product_root_count", "r = linear_product_root_count(p)", "from phcpy.solver import random_linear_product_system", "(q,qsols) = random_linear_product_system(p)", "len(qsols)", "from phcpy.trackers import track", "psols = track(p,q,qsols)", "len(psols)", "from phcpy.solver import newton_step", "psols_dd = newton_step(p,psols,precision='dd')"],
+            'name' : "using a linear-product start system",
+            'snippet' : ["p = ['x*y^3 + y - 2;', 'x^3*y + x - 8;']", "from phcpy.solver import linear_product_root_count", "r = linear_product_root_count(p)", "from phcpy.solver import random_linear_product_system", "(q, qsols) = random_linear_product_system(p)", "print 'the number of start solutions :', len(qsols)", "from phcpy.trackers import track", "psols = track(p,q,qsols)", "print 'the number of end solutions :', len(psols)", "from phcpy.solver import newton_step", "psols_dd = newton_step(p,psols,precision='dd')", "print 'the solutions in double double precision :'", "for sol in psols_dd: print sol"],
             }],
         },
         {
@@ -168,52 +160,25 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'name' : "sweep homotopies",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["circle = ['x^2 + y^2 - 1;', 'y*(1-s) + (y-2)*s;']"],
-            },
-            {
-            'name' : "1",
-            'snippet' : ["from phcpy.solutions import make_solution as makesol", "first = makesol(['x', 'y', 's'], [1, 0, 0])", "second = makesol(['x', 'y', 's'], [-1, 0, 0])", "startsols = [first, second]", "from phcpy.sweepers import standard_real_sweep as sweep", "newsols = sweep(circle, startsols)", "print(newsols[0])"],
-            },
-            {
-            'name' : "2",
-            'snippet' : ["t :  0.00000000000000E+00   0.00000000000000E+00", "m : 1", "the solution for t :", " x : -2.46519032881566E-32   0.00000000000000E+00", " y :  1.00000000000000E+00   0.00000000000000E+00", " s :  5.00000000000000E-01   0.00000000000000E+00", "== err :  0.000E+00 = rco :  1.000E+00 = res :  0.000E+00 ="],
+            'name' : "towards a quadratic turning point",
+            'snippet' : ["circle = ['x^2 + y^2 - 1;', 'y*(1-s) + (y-2)*s;']",
+            "from phcpy.solutions import make_solution as makesol", "first = makesol(['x', 'y', 's'], [float(1), float(0), float(0)])", "second = makesol(['x', 'y', 's'], [float(-1), float(0), float(0)])", "startsols = [first, second]", "from phcpy.sweepers import standard_real_sweep as sweep", "newsols = sweep(circle, startsols)", "print newsols[0]"],
             }],
         },
         {
         'name' : "real versus complex sweeps",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["circle = ['x^2 + y^2 - 1;']", "from phcpy.solutions import make_solution as makesol", "first = makesol(['x', 'y'], [1, 0])", "second = makesol(['x', 'y'], [-1, 0])", "startsols = [first, second]", "par = ['y']", "start = [0, 0] ", "target = [2, 0]", "from phcpy.sweepers import standard_complex_sweep as sweep", "newsols = sweep(circle, startsols, 2, par, start, target)"],
-            },
-            {
-            'name' : "1",
-            'snippet' : ["print(newsols[0])"],
+            'name' : "complex parameter homotopy continuation",
+            'snippet' : ["circle = ['x^2 + y^2 - 1;']", "from phcpy.solutions import make_solution as makesol", "first = makesol(['x', 'y'], [float(1), float(0)])", "second = makesol(['x', 'y'], [float(-1), float(0)])", "startsols = [first, second]", "par = ['y']", "start = [0, 0] ", "target = [2, 0]", "from phcpy.sweepers import standard_complex_sweep as sweep", "newsols = sweep(circle, startsols, 2, par, start, target)", "print newsols[0]"],
             }],
-        },
-        {
-        'name' : "tuning parameters, settings, and tolerances",
-        'sub-menu' : [],
         },
         {
         'name' : "a polyhedral end game",
         'sub-menu' : [
             {
-            'name' : "0",
-            'snippet' : ["from phcpy.tuning import order_endgame_extrapolator_set as set", "set(4)"],
-            },
-            {
-            'name' : "1",
-            'snippet' : ["from phcpy.tuning import order_endgame_extrapolator_get as get", "get()"],
-            },
-            {
-            'name' : "2",
-            'snippet' : ["f = ['x + y^3 - 1;', 'x + y^3 + 1;']", "from phcpy.solver import mixed_volume as mv", "from phcpy.solver import random_coefficient_system as rcs", "mv(f)", "(g, gsols) = rcs(f)", "len(gsols)"],
-            },
-            {
-            'name' : "3",
-            'snippet' : ["from phcpy.trackers import standard_double_track as track", "sols = track(f, g, gsols)", "from phcpy.tropisms import standard_retrieve as retrieve", "(w, d, e) = retrieve(len(sols), len(f))", "w"],
+            'name' : "numerical tropism computation",
+            'snippet' : ["from phcpy.tuning import order_endgame_extrapolator_set as set", "set(4)", "from phcpy.tuning import order_endgame_extrapolator_get as get", "get()", "f = ['x + y^3 - 1;', 'x + y^3 + 1;']", "from phcpy.solver import mixed_volume as mv", "from phcpy.solver import random_coefficient_system as rcs", "print 'the mixed volume :', mv(f)", "(g, gsols) = rcs(f)", "print 'the number of start solutions :', len(gsols)", "from phcpy.trackers import standard_double_track as track", "sols = track(f, g, gsols)", "from phcpy.tropisms import standard_retrieve as retrieve", "(w, d, e) = retrieve(len(sols), len(f))", "print 'the numerical direction :', d", "print 'the error :', e", "print w"],
             }],
         }],
     },
