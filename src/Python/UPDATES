@@ -1,6 +1,8 @@
 Tue 5 Sep 2017 : added two code snippets to custom.js to illustrate the use
   of multitasking in the solver and the path tracker.  Removed the GPU snippet
   from the path trackers in the file custom.js, as not ready for production.
+  Prepared __init__.py, setup.py, and conf.py for version 0.7.3 of phcpy,
+  in both the PHCpy2 and PHCpy3 folders.
 
 Mon 4 Sep 2017 : fixed the code in the documentation blocks for the
   Pieri homotopies in the file numschub.rst in the PHCpy2 and PHCpy3 folders.
