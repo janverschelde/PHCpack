@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.42 contains
+The public distribution for PHCpack version 2.4.44 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -29,6 +29,8 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.44 on 2017-09-05 : code snippets for Jupyter/SageMath kernel
+release 2.4.43 on 2017-08-20 : bug fix in phc -p for dd/qd precision
 release 2.4.42 on 2017-08-13 : phcpy has numerical irreducible decomposition
 release 2.4.41 on 2017-07-31 : phc -l,l2,l3 accept Laurent polynomials
 release 2.4.40 on 2017-07-18 : monodromy for Laurent system witness sets
