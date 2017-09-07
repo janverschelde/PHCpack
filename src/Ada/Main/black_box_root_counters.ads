@@ -99,27 +99,6 @@ package Black_Box_Root_Counters is
   --   stbmcc    extra stable mixed cells that contribute to stmv;
   --   rocotime  is the time it took to compute the root count.
 
-  procedure Write_Root_Counts
-               ( file : in file_type; no_mv : in boolean;
-                 d : in natural64; mp_d : in Natural_Number;
-                 m : in natural32; bz,bs : in natural64;
-                 mv,smv : in natural32; z : in Partition );
-
-  -- DESCRIPTION :
-  --   Writes root counts and set structures to file.
-
-  -- ON ENTRY :
-  --   file      to write root counts on (could be standard_output);
-  --   no_mv     if no mixed volume was computed;
-  --   d         total degree;
-  --   mp_d      multiprecision version of total degree (if overflow);
-  --   m         number of sets in the m-homogeneous Bezout number;
-  --   bz        m-homogeneous Bezout number;
-  --   bs        set structure Bezout bound;
-  --   mv        mixed volume;
-  --   smv       stable mixed volume;
-  --   z         partition of variables for m-homogeneous Bezout number.
-
   procedure Count_Roots 
                ( file : in file_type;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
