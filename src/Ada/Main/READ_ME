@@ -31,9 +31,13 @@ driver_for_root_refining     : calls the root refiners
 -------------------------------------------------------------------------------
 greeting_banners             : defines banners to welcome the user
 ts_greet                     : prints the PHCpack version string
+-------------------------------------------------------------------------------
+root_counters_output         : writes root counts to file and to string
 black_box_root_counters      : performs several root counts
+ts_blkroco                   : tests black box root counters output
 bablroco                     : calls the black-box root counter
 mainroco                     : calls interactive root-counting driver
+-------------------------------------------------------------------------------
 maintrack                    : jumpstart path tracking
 mainvali                     : menu-driver for validating the results
 bablvali                     : black-box version of validation

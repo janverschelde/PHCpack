@@ -1,6 +1,6 @@
 Wed 6 Sep 2017 : factored the write_root_counts out of the package
-  black_box_root_counters into a new package root_counters_output,
-  tested by ts_blkroco.adb.
+  black_box_root_counters into a new package root_counters_output;
+  added to_string function to root_counters_output, tested by ts_blkroco.
 
 Tue 5 Aug 2017 : adjusted greeting_banners for version 2.4.44.
 

@@ -39,6 +39,15 @@ procedure ts_blkroco is
                 zz,nz,stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
     Write_Root_Counts
       (standard_output,deg,tode,mptode,nz,mhbz,setb,mivo,stmv,zz);
+    declare
+      rocos : constant string
+            := Root_Counts_to_String
+                 (deg,tode,mptode,nz,mhbz,setb,mivo,stmv,zz);
+    begin
+      new_line;
+      put_line("The string representation of the root counts :");
+      put_line(rocos);
+    end;
   end Count;
 
   procedure Main is
