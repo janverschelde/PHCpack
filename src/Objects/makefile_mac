@@ -23,7 +23,7 @@ gpp=/usr/bin/g++
 # To extend sage on Mac OS X with python, we must link with the python
 # of the Sage distribution, which is defined here:
 
-SAGEPYTHONLIB=/Users/jan/Downloads/sage-7.6/local/lib
+SAGEPYTHONLIB=/Users/jan/Downloads/sage-8.0/local/lib
 
 # The location of the QD library
 
@@ -2081,6 +2081,10 @@ ts_mtmva:
 ts_drivroco:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivroco.adb \
               -o $(BIN)/ts_drivroco
+
+ts_blkroco:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_blkroco.adb \
+              -o $(BIN)/ts_blkroco
 
 use_phc:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_phc.adb -o $(BIN)/use_phc

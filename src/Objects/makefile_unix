@@ -20,16 +20,16 @@ SAGEPYTHONLIB=/home/microway/Downloads/sage-7.3/local/lib
 # The location of the adalib folder for the GNATGPL compiler:
 
 # for GNAT GPL 2016 :
-# ADALIB=/usr/gnat-gpl-2016/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib
+ADALIB=/usr/gnat-gpl-2016/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib
 # FOR GNAT GPL 2017 :
-ADALIB=/usr/gnat/lib/gcc/x86_64-pc-linux-gnu/6.3.1/adalib
+# ADALIB=/usr/gnat/lib/gcc/x86_64-pc-linux-gnu/6.3.1/adalib
 
 # The location of the g++ compiler
 
 # before GNAT GPL 2017 :
-# gpp=/usr/bin/g++
+gpp=/usr/bin/g++
 # for GNAT GPL 2017 :
-gpp=g++
+# gpp=g++
 
 # The location of the MPI:
 
@@ -2566,6 +2566,10 @@ ts_mtmva:
 ts_drivroco:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivroco.adb \
               -o $(BIN)/ts_drivroco
+
+ts_blkroco:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_blkroco.adb \
+              -o $(BIN)/ts_blkroco
 
 use_phc:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) use_phc.adb \
