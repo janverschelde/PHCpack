@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Ada.Calendar;
+with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
@@ -24,6 +25,8 @@ package Black_Box_Solvers is
 --   3) without multitasking or with multitasking (2),
 --   4) in double, double double, or quad double precision (3).
 --   The combinations result in 24 Solve procedures.
+--   Six other Solve procedures write the computed root counts to string
+--   rather than to screen or to file.
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
@@ -51,6 +54,31 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
+
+  procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Solve ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Calls the blackbox solver to solve the polynomial system p,
+  --   without output to file, available for three levels of precision:
+  --   standard double, double double, and quad double.
+
+  -- ON INPUT :
+  --   p            a polynomial system.
+
+  -- ON RETURN :
+  --   rc           root count used in the homotopy to solve p;
+  --   rocos        string with the root count information,
+  --                displayed in the format as when silent is false
+  --                in the other above solve procedures;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type;
@@ -106,6 +134,30 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
+
+  procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Solve ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Calls the blackbox solver to solve the Laurent system p,
+  --   without multitasking and without intermediate output to file,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON INPUT :
+  --   p            a Laurent polynomial system.
+
+  -- ON RETURN :
+  --   rc           root count used in the homotopy to solve p;
+  --   rocos        information about the root counts, in the same format
+  --                as the above solve procedures with false for silent;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type;
