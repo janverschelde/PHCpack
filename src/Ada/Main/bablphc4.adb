@@ -21,6 +21,7 @@ with QuadDobl_System_Readers;
 with QuadDobl_Complex_Solutions;         use QuadDobl_Complex_Solutions;
 with Black_Box_Binomial_Solvers;         use Black_Box_Binomial_Solvers;
 with Greeting_Banners;
+with Black_Box_Solver_Cases;
 with Black_Box_Solvers;                  use Black_Box_Solvers;
 with bablsolve;
 
@@ -42,6 +43,8 @@ procedure bablphc4 ( nt : in natural32; infilename,outfilename : in string ) is
       := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
     fail : boolean;
 
+    use Black_Box_Solver_Cases;
+
   begin
     if p'last = p'first then
       Single_Main(infilename,outfilename,p(p'first),append_sols);
@@ -62,6 +65,9 @@ procedure bablphc4 ( nt : in natural32; infilename,outfilename : in string ) is
   end Solve;
 
   procedure Solve ( p : in Link_to_Laur_Sys; append_sols : in boolean ) is
+
+    use Black_Box_Solver_Cases;
+
   begin
     Square_Main(nt,infilename,outfilename,start_moment,p,append_sols);
   end Solve;

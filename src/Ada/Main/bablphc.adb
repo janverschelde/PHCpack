@@ -23,6 +23,7 @@ with Standard_Monomial_Maps;             use Standard_Monomial_Maps;
 with Standard_Monomial_Maps_io;          use Standard_Monomial_Maps_io;
 with Black_Box_Binomial_Solvers;         use Black_Box_Binomial_Solvers;
 with Greeting_Banners;
+with Black_Box_Solver_Cases;
 with Black_Box_Solvers;                  use Black_Box_Solvers;
 with bablsolve;
 
@@ -113,7 +114,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
       if append_sols then
         Append_Toric_Binomial_Solutions_to_Input_File(infilename,d,M.all,c);
       end if;
-      Black_Box_Solvers.Ask_Output_File(outfile,outfilename,to_file);
+      Black_Box_Solver_Cases.Ask_Output_File(outfile,outfilename,to_file);
       ended_moment := Ada.Calendar.Clock;
       if to_file then
         Write_Toric_Binomial_Solutions(outfile,d,M.all,c);
@@ -160,7 +161,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
     ended_moment : Ada.Calendar.Time;
 
   begin
-    Black_Box_Solvers.Ask_Output_File(outfile,outfilename,to_file);
+    Black_Box_Solver_Cases.Ask_Output_File(outfile,outfilename,to_file);
     if to_file then
       put(outfile,p'last,1); put(outfile," ");
       put(outfile,Number_of_Unknowns(p(p'first)),1); new_line(outfile);
@@ -233,6 +234,8 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
       := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
     fail : boolean;
 
+    use Black_Box_Solver_Cases;
+
   begin
    -- put_line("in bablphc.Solve for regular polynomial system");
     if p'last = p'first then
@@ -253,6 +256,8 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
   procedure Solve ( p : in Link_to_Laur_Sys; append_sols : in boolean ) is
 
     fail : boolean;
+
+    use Black_Box_Solver_Cases;
 
   begin
    -- put_line("in bablphc.Solve for Laurent polynomial system");
