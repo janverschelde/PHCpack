@@ -18,6 +18,12 @@ package Black_Box_Solvers is
 
 -- DESCRIPTION :
 --   This package contains the solve operations for the blackbox solver.
+--   The solvers arise in several flavors:
+--   1) silent (true or false) or with output to file (2),
+--   2) for ordinary polynomial or Laurent systems (2),
+--   3) without multitasking or with multitasking (2),
+--   4) in double, double double, or quad double precision (3).
+--   The combinations result in 24 Solve procedures.
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
@@ -38,14 +44,14 @@ package Black_Box_Solvers is
   --   standard double, double double, and quad double.
 
   -- ON INPUT :
-  --   p        a polynomial system, or a system with Laurent polynomials;
-  --   silent   if true, then the computed root counts will not be shown,
-  --            if false, then the user will see the computed root counts
-  --            displayed on screen.
+  --   p            a polynomial system;
+  --   silent       if true, then the computed root counts will not be shown,
+  --                if false, then the user will see the computed root counts
+  --                displayed on screen.
 
   -- ON RETURN :
-  --   rc       root count used in the homotopy to solve p;
-  --   sols     solutions found at the end of the paths.
+  --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -64,15 +70,15 @@ package Black_Box_Solvers is
   --   Calls the blackbox solver to solve the polynomial system p.
 
   -- ON INPUT :
-  --   file     must be opened for output;
-  --   p        a polynomial system, or a system with Laurent polynomials;
-  --   silent   if true, then the computed root counts will not be shown,
-  --            if false, then the user will see the computed root counts
-  --            displayed on screen.
+  --   file         must be opened for output;
+  --   p            a polynomial system;
+  --   silent       if true, then the computed root counts will not be shown,
+  --                if false, then the user will see the computed root counts
+  --                displayed on screen.
 
   -- ON RETURN :
-  --   rc       root count used in the homotopy to solve p;
-  --   sols     solutions found at the end of the paths.
+  --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
 
   procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
@@ -93,14 +99,14 @@ package Black_Box_Solvers is
   --   in standard double, double double, or quad double precision.
 
   -- ON INPUT :
-  --   p        a polynomial system, or a system with Laurent polynomials;
-  --   silent   if true, then the computed root counts will not be shown,
-  --            if false, then the user will see the computed root counts
-  --            displayed on screen.
+  --   p            a Laurent polynomial system;
+  --   silent       if true, then the computed root counts will not be shown,
+  --                if false, then the user will see the computed root counts
+  --                displayed on screen.
 
   -- ON RETURN :
-  --   rc       root count used in the homotopy to solve p;
-  --   sols     solutions found at the end of the paths.
+  --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -121,12 +127,12 @@ package Black_Box_Solvers is
   --   in standard double, double double, or quad double precision.
 
   -- ON INPUT :
-  --   file     must be opened for output;
-  --   p        a Laurent polynomial system.
+  --   file         must be opened for output;
+  --   p            a Laurent polynomial system.
 
   -- ON RETURN :
-  --   rc       root count used in the homotopy to solve p;
-  --   sols     solutions found at the end of the paths.
+  --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
 
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -150,12 +156,12 @@ package Black_Box_Solvers is
   --   standard double, double double, or quad double arithmetic.
 
   -- ON INPUT :
-  --    nt      number of tasks for multithreading, 0 if no multitasking;
-  --    p       a polynomial system.
+  --    nt          number of tasks for multithreading, 0 if no multitasking;
+  --    p           a polynomial system.
 
   -- ON RETURN :
-  --   rc       root count used in the homotopy to solve p;
-  --   sols     solutions found at the end of the paths.
+  --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -176,13 +182,13 @@ package Black_Box_Solvers is
   --   standard double, double double, or quad double arithmetic.
 
   -- ON INPUT :
-  --   file     must be opened for output;
-  --   nt       number of tasks for multithreading, 0 if no multitasking;
-  --   p        a polynomial system.
+  --   file         must be opened for output;
+  --   nt           number of tasks for multithreading, 0 if no multitasking;
+  --   p            a polynomial system.
 
   -- ON RETURN :
-  --   rc       root count used in the homotopy to solve p;
-  --   sols     solutions found at the end of the paths.
+  --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
 
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -206,15 +212,15 @@ package Black_Box_Solvers is
   --   in standard double, double double, or quad double precision.
 
   -- ON INPUT :
-  --   nt       number of tasks for multithreading, 0 if no multitasking;
-  --   p        a polynomial system, or a system with Laurent polynomials;
-  --   silent   if true, then the computed root counts will not be shown,
-  --            if false, then the user will see the computed root counts
-  --            displayed on screen.
+  --   nt           number of tasks for multithreading, 0 if no multitasking;
+  --   p            a Laurent polynomial system;
+  --   silent       if true, then the computed root counts will not be shown,
+  --                if false, then the user will see the computed root counts
+  --                displayed on screen.
 
   -- ON RETURN :
-  --   rc       root count used in the homotopy to solve p;
-  --   sols     solutions found at the end of the paths.
+  --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -235,12 +241,12 @@ package Black_Box_Solvers is
   --   with intermediate output written to file.
 
   -- ON INPUT :
-  --   file     must be opened for output;
-  --   nt       number of tasks for multithreading, 0 if no multitasking;
-  --   p        a Laurent polynomial system.
+  --   file         must be opened for output;
+  --   nt           number of tasks for multithreading, 0 if no multitasking;
+  --   p            a Laurent polynomial system.
 
   -- ON RETURN :
-  --   rc       root count used in the homotopy to solve p;
-  --   sols     solutions found at the end of the paths.
+  --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
 
 end Black_Box_Solvers;
