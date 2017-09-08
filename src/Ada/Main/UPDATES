@@ -2,6 +2,8 @@ Thu 7 Sep 2017 : separated from black_box_solvers the utilities and special
   cases into the new package black_box_solver_cases.  This changed also the
   procedures bablphc.adb, bablphc2.adb, and bablphc4.adb.
   Improved the documentation in the black_box_solvers.ads.
+  Added three procedures to black_box_root_counters to write the root counts
+  to string, tested by ts_blkroco.adb.
 
 Wed 6 Sep 2017 : factored the write_root_counts out of the package
   black_box_root_counters into a new package root_counters_output;

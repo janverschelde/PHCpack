@@ -931,6 +931,141 @@ package body Black_Box_Root_Counters is
                    raise;
   end Black_Box_Root_Counting;
 
+  procedure Black_Box_Root_Counting 
+               ( nt : in integer32;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 rocos : out Link_to_String;
+                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    d,bz,bs,wrc : natural64;
+    mv,smv : natural32;
+    z : partition(1..natural32(p'last));
+    nz : natural32;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    stlb : double_float;
+    lifsup : Link_to_Array_of_Lists;
+    no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
+    mptdeg : Natural_Number;
+
+    use Root_Counters_Output;
+
+  begin
+    Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+    declare
+      rcs : constant string
+          := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
+    begin
+      rocos := new string'(rcs);
+    end;
+    Construct_Start_System
+      (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
+       q,qsols,qsols0,hocotime);
+    rc := natural32(wrc);
+    Clear(z);
+    Clear(mix);
+    Deep_Clear(lifsup);
+    Deep_Clear(orgmcc);
+    Deep_Clear(stbmcc);
+  exception
+    when others => put_line("exception raised in black box root counting");
+                   raise;
+  end Black_Box_Root_Counting;
+
+  procedure Black_Box_Root_Counting
+               ( nt : in integer32;
+                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 rocos : out Link_to_String;
+                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    d,bz,bs,wrc : natural64;
+    mv,smv : natural32;
+    z : partition(1..natural32(p'last));
+    nz : natural32;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    stlb : double_float;
+    lifsup : Link_to_Array_of_Lists;
+    no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
+    mptdeg : Natural_Number;
+
+    use Root_Counters_Output;
+
+  begin
+    Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+    declare
+      rcs : constant string
+          := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
+    begin
+      rocos := new string'(rcs);
+    end;
+    Construct_Start_System
+      (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
+       q,qsols,qsols0,hocotime);
+    rc := natural32(wrc);
+    Clear(z);
+    Clear(mix);
+    Deep_Clear(lifsup);
+    Deep_Clear(orgmcc);
+    Deep_Clear(stbmcc);
+  exception
+    when others => put_line("exception raised in black box root counting");
+                   raise;
+  end Black_Box_Root_Counting;
+
+  procedure Black_Box_Root_Counting
+               ( nt : in integer32;
+                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 rocos : out Link_to_String;
+                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    d,bz,bs,wrc : natural64;
+    mv,smv : natural32;
+    z : partition(1..natural32(p'last));
+    nz : natural32;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    stlb : double_float;
+    lifsup : Link_to_Array_of_Lists;
+    no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
+    mptdeg : Natural_Number;
+
+    use Root_Counters_Output;
+
+  begin
+    Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+    declare
+      rcs : constant string
+          := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
+    begin
+      rocos := new string'(rcs);
+    end;
+    Construct_Start_System
+      (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
+       q,qsols,qsols0,hocotime);
+    rc := natural32(wrc);
+    Clear(z);
+    Clear(mix);
+    Deep_Clear(lifsup);
+    Deep_Clear(orgmcc);
+    Deep_Clear(stbmcc);
+  exception
+    when others => put_line("exception raised in black box root counting");
+                   raise;
+  end Black_Box_Root_Counting;
+
   procedure Black_Box_Root_Counting
                ( file : in file_type; nt : in integer32;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;

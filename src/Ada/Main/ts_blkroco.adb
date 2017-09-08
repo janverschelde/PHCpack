@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -6,6 +7,7 @@ with Standard_Integer_Vectors;           use Standard_Integer_Vectors;
 with Arrays_of_Floating_Vector_Lists;    use Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Solutions;
 with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
@@ -50,6 +52,25 @@ procedure ts_blkroco is
     end;
   end Count;
 
+  procedure Black_Box_Count ( p : in out Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Calls the black box root count procudure,
+  --   which also constructs a start system.
+
+    rc : natural32;
+    rocos : Link_to_String;
+    q : Poly_Sys(p'range);
+    qsols,qsols0 : Standard_Complex_Solutions.Solution_List;
+    rtm,htm : duration;
+
+  begin
+    Black_Box_Root_Counting(0,p,false,rc,rocos,q,qsols,qsols0,rtm,htm);
+    new_line;
+    put_line("The string from the black box root counter :");
+    put_line(rocos.all);
+  end Black_Box_Count;
+
   procedure Main is
 
     lp : Link_to_Poly_Sys;
@@ -60,6 +81,7 @@ procedure ts_blkroco is
     new_line;
     put_line("Your polynomial system :"); put(lp.all);
     Count(lp.all);
+    Black_Box_Count(lp.all);
   end Main;
 
 begin

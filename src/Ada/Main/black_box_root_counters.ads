@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -303,6 +304,90 @@ package Black_Box_Root_Counters is
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration );
 
+  -- DESCRIPTION :
+  --   Calculates four different root counts: total degree, m-homogeneous
+  --   Bezout number, generalized Bezout number based on set structure,
+  --   and mixed volume.  Heuristics are used for the Bezout numbers.
+  --   Returns the start system with lowest root count and least amount
+  --   of work, which means that linear-product start systems are preferred,
+  --   when Bezout numbers equal the mixed volume.
+  --   In case the mixed volume is zero because of a equation with only
+  --   one monomial, the smallest Bezout bound is returned.
+
+  -- ON ENTRY :
+  --   nt        number of tasks for polyhedral homotopy continuation,
+  --             if 0, then sequential execution;
+  --   silent    if silent, then the computed root counts will not be shown
+  --             on screen, otherwise, the root counter remains silent;
+  --   p         a polynomial system.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   deg       if true, then only degree bounds are used,
+  --             otherwise also the mixed volume is computed;
+  --   rc        root count, Bezout number or stable mixed volume,
+  --             rc = Length_Of(qsols) + Length_Of(qsols0);
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   qsols0    solutions of q, with zero components;
+  --   rocotime  is elapsed user cpu time for computation of the root counts;
+  --   hocotime  is elapsed user cpu time for construction of start system.
+
+  procedure Black_Box_Root_Counting 
+               ( nt : in integer32;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 rocos : out Link_to_String;
+                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration );
+  procedure Black_Box_Root_Counting 
+               ( nt : in integer32;
+                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 rocos : out Link_to_String;
+                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration );
+  procedure Black_Box_Root_Counting 
+               ( nt : in integer32;
+                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 rocos : out Link_to_String;
+                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration );
+
+  -- DESCRIPTION :
+  --   Calculates four different root counts: total degree, m-homogeneous
+  --   Bezout number, generalized Bezout number based on set structure,
+  --   and mixed volume.  Heuristics are used for the Bezout numbers.
+  --   Returns the start system with lowest root count and least amount
+  --   of work, which means that linear-product start systems are preferred,
+  --   when Bezout numbers equal the mixed volume.
+  --   In case the mixed volume is zero because of a equation with only
+  --   one monomial, the smallest Bezout bound is returned.
+
+  -- ON ENTRY :
+  --   nt        number of tasks for polyhedral homotopy continuation,
+  --             if 0, then sequential execution;
+  --   p         a polynomial system.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   deg       if true, then only degree bounds are used,
+  --             otherwise also the mixed volume is computed;
+  --   rc        root count, Bezout number or stable mixed volume,
+  --             rc = Length_Of(qsols) + Length_Of(qsols0);
+  --   rocos     string with the information about the root counts,
+  --             with the same information as the above procedures
+  --             when silent equals false;
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   qsols0    solutions of q, with zero components;
+  --   rocotime  is elapsed user cpu time for computation of the root counts;
+  --   hocotime  is elapsed user cpu time for construction of start system.
+
   procedure Black_Box_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
@@ -339,8 +424,6 @@ package Black_Box_Root_Counters is
   --   file      must be opened for output;
   --   nt        number of tasks for polyhedral homotopy continuation,
   --             if 0, then sequential execution;
-  --   silent    if silent, then the computed root counts will not be shown
-  --             on screen, otherwise, the root counter remains silent;
   --   p         a polynomial system.
 
   -- ON RETURN :
@@ -377,6 +460,25 @@ package Black_Box_Root_Counters is
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration );
 
+  -- DESCRIPTION :
+  --   Wrapper to a mixed-volume computation for a Laurent polynomial system.
+
+  -- ON ENTRY :
+  --   nt        number of tasks for polyhedral homotopy continuation,
+  --             if 0, then sequential execution;
+  --   silent    if silent, then the mixed volume will not be written
+  --             to screen, otherwise, if silent, then the user will
+  --             be shown the mixed volume on screen;
+  --   p         a Laurent polynomial system.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   rc        the root count is the mixed volume, equals Lenght_Of(qsols);
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   rocotime  is elapsed user cpu time for computation of the root counts;
+  --   hocotime  is elapsed user cpu time for construction of start system.
+
   procedure Black_Box_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out Standard_Complex_Laur_Systems.Laur_Sys;
@@ -404,9 +506,6 @@ package Black_Box_Root_Counters is
 
   -- ON ENTRY :
   --   file      must be opened for output;
-  --   silent    if silent, then the mixed volume will not be written
-  --             to screen, otherwise, if silent, then the user will
-  --             be shown the mixed volume on screen;
   --   nt        number of tasks for polyhedral homotopy continuation,
   --             if 0, then sequential execution;
   --   p         a Laurent polynomial system.
