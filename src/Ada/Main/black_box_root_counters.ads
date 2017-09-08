@@ -480,6 +480,46 @@ package Black_Box_Root_Counters is
   --   hocotime  is elapsed user cpu time for construction of start system.
 
   procedure Black_Box_Root_Counting 
+               ( nt : in integer32;
+                 p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out Standard_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration );
+  procedure Black_Box_Root_Counting 
+               ( nt : in integer32;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration );
+  procedure Black_Box_Root_Counting 
+               ( nt : in integer32;
+                 p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration );
+
+  -- DESCRIPTION :
+  --   Wrapper to a mixed-volume computation for a Laurent polynomial system.
+
+  -- ON ENTRY :
+  --   nt        number of tasks for polyhedral homotopy continuation,
+  --             if 0, then sequential execution;
+  --   p         a Laurent polynomial system.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   rc        the root count is the mixed volume, equals Length_Of(qsols);
+  --   rocos     information about the root count, identical what the
+  --             above procedures write when silent is false;
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   rocotime  is elapsed user cpu time for computation of the root counts;
+  --   hocotime  is elapsed user cpu time for construction of start system.
+
+  procedure Black_Box_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out Standard_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;

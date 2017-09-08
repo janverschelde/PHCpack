@@ -1,6 +1,7 @@
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
+with Characters_and_Numbers;
 with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
 with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
@@ -1241,6 +1242,90 @@ package body Black_Box_Root_Counters is
     if not silent
      then put("mixed volume : "); put(rc,1); new_line;
     end if;
+    rocotime := Elapsed_User_Time(timer);
+    tstart(timer);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    tstop(timer);
+    Standard_Complex_Laur_Systems.Clear(sp);
+    hocotime := Elapsed_User_Time(timer);
+  end Black_Box_Root_Counting;
+
+  procedure Black_Box_Root_Counting 
+               ( nt : in integer32;
+                 p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out Standard_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    timer : Timing_Widget;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    lifsup : Link_to_Array_of_Lists;
+    mixsub : Mixed_Subdivision;
+
+  begin
+    tstart(timer);
+    Black_Box_Mixed_Volume_Computation(p,mix,perm,iprm,lifsup,mixsub,rc);
+    tstop(timer);
+    Append(rocos,"mixed volume : ");
+    Append(rocos,Characters_and_Numbers.nConvert(rc));
+    rocotime := Elapsed_User_Time(timer);
+    tstart(timer);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    tstop(timer);
+    hocotime := Elapsed_User_Time(timer);
+  end Black_Box_Root_Counting;
+
+  procedure Black_Box_Root_Counting 
+               ( nt : in integer32;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    timer : Timing_Widget;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    lifsup : Link_to_Array_of_Lists;
+    mixsub : Mixed_Subdivision;
+    sp : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
+       := DoblDobl_Complex_to_Standard_Laur_Sys(p);
+
+  begin
+    tstart(timer);
+    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
+    tstop(timer);
+    Append(rocos,"mixed volume : ");
+    Append(rocos,Characters_and_Numbers.nConvert(rc));
+    rocotime := Elapsed_User_Time(timer);
+    tstart(timer);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    tstop(timer);
+    Standard_Complex_Laur_Systems.Clear(sp);
+    hocotime := Elapsed_User_Time(timer);
+  end Black_Box_Root_Counting;
+
+  procedure Black_Box_Root_Counting 
+               ( nt : in integer32;
+                 p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    timer : Timing_Widget;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    lifsup : Link_to_Array_of_Lists;
+    mixsub : Mixed_Subdivision;
+    sp : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
+       := QuadDobl_Complex_to_Standard_Laur_Sys(p);
+
+  begin
+    tstart(timer);
+    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
+    tstop(timer);
+    Append(rocos,"mixed volume : ");
+    Append(rocos,Characters_and_Numbers.nConvert(rc));
     rocotime := Elapsed_User_Time(timer);
     tstart(timer);
     Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
