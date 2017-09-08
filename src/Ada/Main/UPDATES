@@ -1,3 +1,6 @@
+Fri 8 Sep 2017 : added solve_for_special_cases to black_box_solver_cases,
+  for making the code in black_box_solvers.adb shorter.
+
 Thu 7 Sep 2017 : separated from black_box_solvers the utilities and special
   cases into the new package black_box_solver_cases.  This changed also the
   procedures bablphc.adb, bablphc2.adb, and bablphc4.adb.
