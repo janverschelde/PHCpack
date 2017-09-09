@@ -103,11 +103,11 @@ def is_square(pols):
     nbreqs = len(pols)
     return nbrvar == nbreqs
 
-def standard_solve(pols, silent=False, tasks=0):
+def standard_solve(pols, verbose=True, tasks=0):
     r"""
     Calls the blackbox solver.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
-    To make the solver silent, set the flag *silent* to True.
+    To make the solver silent, set the flag *verbose* to False.
     The number of tasks for multithreading is given by *tasks*.
     The default zero value for *tasks* indicates no multithreading.
     The solving happens in standard double precision arithmetic.
@@ -127,14 +127,15 @@ def standard_solve(pols, silent=False, tasks=0):
         pol = pols[ind]
         nchar = len(pol)
         py2c_syscon_store_standard_Laurential(nchar, dim, ind+1, pol)
+    silent = not verbose
     py2c_solve_standard_Laurent_system(silent, tasks)
     return load_standard_solutions()
 
-def dobldobl_solve(pols, silent=False, tasks=0):
+def dobldobl_solve(pols, verbose=True, tasks=0):
     r"""
     Calls the blackbox solver.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
-    To make the solver silent, set the flag *silent* to True.
+    To make the solver silent, set the flag *verbose* to False.
     The number of tasks for multithreading is given by *tasks*.
     The default zero value for *tasks* indicates no multithreading.
     The solving happens in double double precision arithmetic.
@@ -154,14 +155,15 @@ def dobldobl_solve(pols, silent=False, tasks=0):
         pol = pols[ind]
         nchar = len(pol)
         py2c_syscon_store_dobldobl_Laurential(nchar, dim, ind+1, pol)
+    silent = not verbose
     py2c_solve_dobldobl_Laurent_system(silent, tasks)
     return load_dobldobl_solutions()
 
-def quaddobl_solve(pols, silent=False, tasks=0):
+def quaddobl_solve(pols, verbose=True, tasks=0):
     r"""
     Calls the blackbox solver.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
-    To make the solver silent, set the flag *silent* to True.
+    To make the solver silent, set the flag *verbose* to False.
     The number of tasks for multithreading is given by *tasks*.
     The default zero value for *tasks* indicates no multithreading.
     The solving happens in quad double precision arithmetic.
@@ -181,6 +183,7 @@ def quaddobl_solve(pols, silent=False, tasks=0):
         pol = pols[ind]
         nchar = len(pol)
         py2c_syscon_store_quaddobl_Laurential(nchar, dim, ind+1, pol)
+    silent = not verbose
     py2c_solve_quaddobl_Laurent_system(silent, tasks)
     return load_quaddobl_solutions()
 
@@ -200,11 +203,11 @@ def solve_checkin(pols, msg):
         print 'Either correct the input, or use the module sets'
         print 'to solve polynomial systems that are not square.'
 
-def solve(pols, silent=False, tasks=0, precision='d', checkin=True):
+def solve(pols, verbose=True, tasks=0, precision='d', checkin=True):
     r"""
     Calls the blackbox solver.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
-    To make the solver silent, set the flag *silent* to True.
+    To make the solver silent, set the flag *verbose* to False.
     The number of tasks for multithreading is given by *tasks*.
     The default zero value for *tasks* indicates no multithreading.
     Three levels of precision are supported:
@@ -222,11 +225,11 @@ def solve(pols, silent=False, tasks=0, precision='d', checkin=True):
         if not solve_checkin(pols, errmsg):
             return None
     if(precision == 'd'):
-        return standard_solve(pols, silent, tasks)
+        return standard_solve(pols, verbose, tasks)
     elif(precision == 'dd'):
-        return dobldobl_solve(pols, silent, tasks)
+        return dobldobl_solve(pols, verbose, tasks)
     elif(precision == 'qd'):
-        return quaddobl_solve(pols, silent, tasks)
+        return quaddobl_solve(pols, verbose, tasks)
     else:
         print 'wrong level of precision, use d, dd, or qd'
 

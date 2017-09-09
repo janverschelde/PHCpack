@@ -1,3 +1,6 @@
+Fri 8 Sep 2017 : replaced the silent option of the solve function in the
+  solver module by a verbose option.
+
 Tue 5 Sep 2017 : added two code snippets to custom.js to illustrate the use
   of multitasking in the solver and the path tracker.  Removed the GPU snippet
   from the path trackers in the file custom.js, as not ready for production.
