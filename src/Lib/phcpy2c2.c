@@ -1427,11 +1427,12 @@ static PyObject *py2c_copy_multprec_container_to_start_solutions
 static PyObject *py2c_solve_standard_system
  ( PyObject *self, PyObject *args )
 {
-   int fail,rc,silent,nbtasks = 0;
+   int fail,rc,nrc,silent,nbtasks = 0;
+   char rocos[1024];
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&silent,&nbtasks)) return NULL;
-   fail = solve_standard_system(&rc,silent,nbtasks);
+   fail = solve_standard_system(&rc,silent,&nrc,rocos,nbtasks);
    return Py_BuildValue("i",rc);
 }
 
@@ -1452,55 +1453,60 @@ static PyObject *py2c_scan_for_symbols
 static PyObject *py2c_solve_dobldobl_system
  ( PyObject *self, PyObject *args )
 {
-   int fail,rc,silent,nbtasks = 0;
+   int fail,rc,nrc,silent,nbtasks = 0;
+   char rocos[1024];
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&silent,&nbtasks)) return NULL;
-   fail = solve_dobldobl_system(&rc,silent,nbtasks);
+   fail = solve_dobldobl_system(&rc,silent,&nrc,rocos,nbtasks);
    return Py_BuildValue("i",rc);
 }
 
 static PyObject *py2c_solve_quaddobl_system
  ( PyObject *self, PyObject *args )
 {
-   int fail,rc,silent,nbtasks = 0;
+   int fail,rc,nrc,silent,nbtasks = 0;
+   char rocos[1024];
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&silent,&nbtasks)) return NULL;
-   fail = solve_quaddobl_system(&rc,silent,nbtasks);
+   fail = solve_quaddobl_system(&rc,silent,&nrc,rocos,nbtasks);
    return Py_BuildValue("i",rc);
 }
 
 static PyObject *py2c_solve_standard_Laurent_system
  ( PyObject *self, PyObject *args )
 {
-   int silent,fail,rc,nbtasks = 0;
+   int silent,fail,rc,nrc,nbtasks = 0;
+   char rocos[1024];
 
    initialize();
    if (!PyArg_ParseTuple(args,"ii",&silent,&nbtasks)) return NULL;
-   fail = solve_standard_Laurent_system(&rc,silent,nbtasks);
+   fail = solve_standard_Laurent_system(&rc,silent,&nrc,rocos,nbtasks);
    return Py_BuildValue("i",rc);
 }
 
 static PyObject *py2c_solve_dobldobl_Laurent_system
  ( PyObject *self, PyObject *args )
 {
-   int silent,fail,rc,nbtasks = 0;
+   int silent,fail,rc,nrc,nbtasks = 0;
+   char rocos[1024];
 
    initialize();
    if (!PyArg_ParseTuple(args,"ii",&silent,&nbtasks)) return NULL;
-   fail = solve_dobldobl_Laurent_system(&rc,silent,nbtasks);
+   fail = solve_dobldobl_Laurent_system(&rc,silent,&nrc,rocos,nbtasks);
    return Py_BuildValue("i",rc);
 }
 
 static PyObject *py2c_solve_quaddobl_Laurent_system
  ( PyObject *self, PyObject *args )
 {
-   int silent,fail,rc,nbtasks = 0;
+   int silent,fail,rc,nrc,nbtasks = 0;
+   char rocos[1024];
 
    initialize();
    if (!PyArg_ParseTuple(args,"ii",&silent,&nbtasks)) return NULL;
-   fail = solve_quaddobl_Laurent_system(&rc,silent,nbtasks);
+   fail = solve_quaddobl_Laurent_system(&rc,silent,&nrc,rocos,nbtasks);
    return Py_BuildValue("i",rc);
 }
 

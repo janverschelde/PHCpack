@@ -905,8 +905,8 @@ static PyObject *py2c_solve_standard_system
  * DESCRIPTION :
  *   Calls the blackbox solver on the system stored in the container for
  *   systems with coefficients in standard double precision.
- *   One integer is expected on input: the number of tasks.
- *   If that number is zero, then no multitasking is applied.
+ *   Two integers are expected on input: (1) silent or not (0 or 1)
+ *   and (2) the number of tasks, if 0, then no multitasking.
  *   On return, the container for solutions in standard double precision
  *   contains the solutions to the system in the standard systems container. */
 
@@ -927,8 +927,8 @@ static PyObject *py2c_solve_dobldobl_system
  * DESCRIPTION :
  *   Calls the blackbox solver on the system stored in the container for
  *   systems with coefficients in double double precision.
- *   One integer is expected on input: the number of tasks.
- *   If that number is zero, then no multitasking is applied.
+ *   Two integers are expected on input: (1) silent or not (0 or 1)
+ *   and (2) the number of tasks, if 0, the no multitasking.
  *   On return, the container for solutions in double double precision
  *   contains the solutions to the system in the dobldobl systems container. */
 
@@ -938,8 +938,8 @@ static PyObject *py2c_solve_quaddobl_system
  * DESCRIPTION :
  *   Calls the blackbox solver on the system stored in the container for
  *   systems with coefficients in quad double precision.
- *   One integer is expected on input: the number of tasks.
- *   If that number is zero, then no multitasking is applied.
+ *   Two integers are expected on input: (1) silent or not (0 or 1)
+ *   and (2) the number of tasks, if 0, then no multitasking.
  *   On return, the container for solutions in quad double precision
  *   contains the solutions to the system in the quaddobl systems container. */
 

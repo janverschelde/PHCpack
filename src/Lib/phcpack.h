@@ -41,77 +41,119 @@ int get_seed ( int *seed );
  *   This function enables reproducible runs which may be useful
  *   for debugging and testing benchmark problems. */
 
-int solve_standard_system ( int *root_count, int silent, int nbtasks );
+int solve_standard_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the standard double polynomial systems
  *   container.  The solutions on return are in the solution container.
- *   The integer on return is the root count used in the homotopy.
- *   If silent == 1, then the solver will not write the computed root
- *   counts to screen, otherwise, if silent == 0, the user will see
- *   the computed root counts to screen.
- *   The number of tasks nbtasks is the number of threads that will be used,
- *   if zero, then there will be no multitasking. */
+ *
+ * ON ENTRY :
+ *   silent     if 1, then the solver will not write the computed root
+ *              counts to screen, otherwise, if 0, the user will see
+ *              the computed root counts to screen.
+ *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *
+ * ON RETURN :
+ *   root_count is the root count used in the homotopy;
+ *   nrcs       the number of characters in rocos, only if silent = 0;
+ *   rocos      string with the output of the root counters, of size nrcs,
+ *              but only if silent = 0. */
 
-int solve_dobldobl_system ( int *root_count, int silent, int nbtasks );
+int solve_dobldobl_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the double double polynomial systems
  *   container.  The solutions on return are in the solution container.
- *   The integer on return is the root count used in the homotopy.
- *   If silent == 1, then the solver will not write the computed root
- *   counts to screen, otherwise, if silent == 0, the user will see
- *   the computed root counts to screen.
- *   The number of tasks nbtasks is the number of threads that will be used,
- *   if zero, then there will be no multitasking. */
+ *
+ * ON ENTRY :
+ *   silent     if 1, then the solver will not write the computed root
+ *              counts to screen, otherwise, if 0, the user will see
+ *              the computed root counts to screen.
+ *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *
+ * ON RETURN :
+ *   root_count is the root count used in the homotopy;
+ *   nrcs       the number of characters in rocos, only if silent = 0;
+ *   rocos      string with the output of the root counters, of size nrcs,
+ *              but only if silent = 0. */
 
-int solve_quaddobl_system ( int *root_count, int silent, int nbtasks );
+int solve_quaddobl_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the quad double polynomial systems
  *   container.  The solutions on return are in the solution container.
- *   The integer on return is the root count used in the homotopy.
- *   If silent == 1, then the solver will not write the computed root
- *   counts to screen, otherwise, if silent == 0, the user will see
- *   the computed root counts to screen.
- *   The number of tasks nbtasks is the number of threads that will be used,
- *   if zero, then there will be no multitasking. */
+ *
+ * ON ENTRY :
+ *   silent     if 1, then the solver will not write the computed root
+ *              counts to screen, otherwise, if 0, the user will see
+ *              the computed root counts to screen.
+ *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *
+ * ON RETURN :
+ *   root_count is the root count used in the homotopy;
+ *   nrcs       the number of characters in rocos, only if silent = 0;
+ *   rocos      string with the output of the root counters, of size nrcs,
+ *              but only if silent = 0. */
 
-int solve_standard_Laurent_system ( int *root_count, int silent, int nbtasks );
+int solve_standard_Laurent_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the standard double Laurent systems
  *   container.  The solutions on return are in the solution container.
- *   If silent == 1, then the solver will not write the computed root
- *   counts to screen, otherwise, if silent == 0, the user will see
- *   the computed root counts to screen.
- *   The integer on return is the root count used in the homotopy.
- *   The number of tasks nbtasks is the number of threads that will be used,
- *   if zero, then there will be no multitasking. */
+ *
+ * ON ENTRY :
+ *   silent     if 1, then the solver will not write the computed root
+ *              counts to screen, otherwise, if 0, the user will see
+ *              the computed root counts to screen.
+ *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *
+ * ON RETURN :
+ *   root_count is the root count used in the homotopy;
+ *   nrcs       the number of characters in rocos, only if silent = 0;
+ *   rocos      string with the output of the root counters, of size nrcs,
+ *              but only if silent = 0. */
 
-int solve_dobldobl_Laurent_system ( int *root_count, int silent, int nbtasks );
+int solve_dobldobl_Laurent_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the double double Laurent systems
  *   container.  The solutions on return are in the solution container.
- *   If silent == 1, then the solver will not write the computed root
- *   counts to screen, otherwise, if silent == 0, the user will see
- *   the computed root counts to screen.
- *   The integer on return is the root count used in the homotopy.
- *   The number of tasks nbtasks is the number of threads that will be used,
- *   if zero, then there will be no multitasking. */
+ *
+ * ON ENTRY :
+ *   silent     if 1, then the solver will not write the computed root
+ *              counts to screen, otherwise, if 0, the user will see
+ *              the computed root counts to screen.
+ *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *
+ * ON RETURN :
+ *   root_count is the root count used in the homotopy;
+ *   nrcs       the number of characters in rocos, only if silent = 0;
+ *   rocos      string with the output of the root counters, of size nrcs,
+ *              but only if silent = 0. */
 
-int solve_quaddobl_Laurent_system ( int *root_count, int silent, int nbtasks );
+int solve_quaddobl_Laurent_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the quad double Laurent systems
  *   container.  The solutions on return are in the solution container.
- *   If silent == 1, then the solver will not write the computed root
- *   counts to screen, otherwise, if silent == 0, the user will see
- *   the computed root counts to screen.
- *   The integer on return is the root count used in the homotopy.
- *   The number of tasks nbtasks is the number of threads that will be used,
- *   if zero, then there will be no multitasking. */
+ *
+ * ON ENTRY :
+ *   silent     if 1, then the solver will not write the computed root
+ *              counts to screen, otherwise, if 0, the user will see
+ *              the computed root counts to screen.
+ *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *
+ * ON RETURN :
+ *   root_count is the root count used in the homotopy;
+ *   nrcs       the number of characters in rocos, only if silent = 0;
+ *   rocos      string with the output of the root counters, of size nrcs,
+ *              but only if silent = 0. */
 
 int mixed_volume ( int *mv );
 /*

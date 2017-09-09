@@ -44,7 +44,8 @@ int get_seed ( int *seed )
    return fail;
 }
 
-int solve_standard_system ( int *root_count, int silent, int nbtasks )
+int solve_standard_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
    int fail;
    int b[2];
@@ -58,7 +59,8 @@ int solve_standard_system ( int *root_count, int silent, int nbtasks )
    return fail;
 }
 
-int solve_dobldobl_system ( int *root_count, int silent, int nbtasks )
+int solve_dobldobl_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
    int fail;
    int b[2];
@@ -72,7 +74,8 @@ int solve_dobldobl_system ( int *root_count, int silent, int nbtasks )
    return fail;
 }
 
-int solve_quaddobl_system ( int *root_count, int silent, int nbtasks )
+int solve_quaddobl_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
    int fail;
    int b[2];
@@ -86,7 +89,8 @@ int solve_quaddobl_system ( int *root_count, int silent, int nbtasks )
    return fail;
 }
 
-int solve_standard_Laurent_system ( int *root_count, int silent, int nbtasks )
+int solve_standard_Laurent_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
    int fail;
    int b[2];
@@ -100,7 +104,8 @@ int solve_standard_Laurent_system ( int *root_count, int silent, int nbtasks )
    return fail;
 }
 
-int solve_dobldobl_Laurent_system ( int *root_count, int silent, int nbtasks )
+int solve_dobldobl_Laurent_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
    int fail;
    int b[2];
@@ -114,7 +119,8 @@ int solve_dobldobl_Laurent_system ( int *root_count, int silent, int nbtasks )
    return fail;
 }
 
-int solve_quaddobl_Laurent_system ( int *root_count, int silent, int nbtasks )
+int solve_quaddobl_Laurent_system
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
    int fail;
    int b[2];
