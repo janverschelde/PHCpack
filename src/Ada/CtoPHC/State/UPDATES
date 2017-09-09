@@ -1,3 +1,6 @@
+Sat 9 Sep 2017 : in the blackbox solver, called the link_to_string to prepare
+  moving the writing the root counters output to the Python code.
+
 Sun 6 Aug 2017 : added jobs to use_syscon and use_c2phc to drop variables
   of Laurent polynomial systems.
 

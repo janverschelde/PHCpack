@@ -1848,13 +1848,42 @@ function use_c2phc ( job : integer32;
       return 75;
     end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-      Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+     -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      if silent then
+        Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      else
+        declare
+          lsroco : Link_to_String;
+        begin
+          Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+          new_line;
+          put_line("ROOT COUNTS :");
+          new_line;
+          put_line(lsroco.all);
+          Clear(lsroco);
+        end;
+      end if;
     else
       declare
         use Standard_Laur_Poly_Convertors;
-        p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
+        p : Poly_Sys(lp'range) := Positive_Laurent_Polynomial_System(lp.all);
       begin
-        Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+       -- Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+        if silent then
+          Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+        else
+          declare
+            lsroco : Link_to_String;
+          begin
+            Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
+            new_line;
+            put_line("ROOT COUNTS :");
+            new_line;
+            put_line(lsroco.all);
+            Clear(lsroco);
+          end;
+        end if;
+        Standard_Complex_Poly_Systems.Clear(p);
       end;
     end if;
     Assign(integer32(rc),a);
