@@ -26,7 +26,8 @@ package Black_Box_Solvers is
 --   4) in double, double double, or quad double precision (3).
 --   The combinations result in 24 Solve procedures.
 --   Six other Solve procedures write the computed root counts to string
---   rather than to screen or to file.
+--   rather than to screen or to file.  Six other multitasked Solve
+--   procedures return also the root counter string.
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
@@ -209,10 +210,41 @@ package Black_Box_Solvers is
 
   -- ON INPUT :
   --    nt          number of tasks for multithreading, 0 if no multitasking;
+  --    silent      if not silent, then root counting information will be
+  --                written the standard output;
   --    p           a polynomial system.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
+
+  procedure Solve ( nt : in natural32;
+                    p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Solve ( nt : in natural32;
+                    p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Solve ( nt : in natural32;
+                    p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Calls the blackbox solver to solve the polynomial system p,
+  --   using nt tasks, without output to file, and with
+  --   standard double, double double, or quad double arithmetic.
+
+  -- ON INPUT :
+  --    nt          number of tasks for multithreading, 0 if no multitasking;
+  --    p           a polynomial system.
+
+  -- ON RETURN :
+  --   rc           root count used in the homotopy to solve p;
+  --   rocos        string with the root count information,
+  --                displayed in the format as when silent is false
+  --                in the other above solve procedures;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type; nt : in natural32;
@@ -272,6 +304,35 @@ package Black_Box_Solvers is
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
+  --   sols         solutions found at the end of the paths.
+
+  procedure Solve ( nt : in natural32;
+                    p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Solve ( nt : in natural32;
+                    p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Solve ( nt : in natural32;
+                    p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Calls the blackbox solver to solve the polynomial system p,
+  --   with nt tasks and no intermediate output to file,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON INPUT :
+  --   nt           number of tasks for multithreading, 0 if no multitasking;
+  --   p            a Laurent polynomial system.
+
+  -- ON RETURN :
+  --   rc           root count used in the homotopy to solve p;
+  --   rocos        string with the root count information,
+  --                displayed in the format as when silent is false
+  --                in the other above solve procedures;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type; nt : in natural32;
