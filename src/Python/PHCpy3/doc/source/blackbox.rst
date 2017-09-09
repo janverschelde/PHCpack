@@ -33,26 +33,14 @@ monomials with random complex coefficients.
 
    >>> from phcpy.solver import random_trinomials
    >>> f = random_trinomials()
+   >>> for pol in f: print(pol)
 
-To see what the polynomials in f look like, 
-let us print its terms (splitting on the `+(` 
-to avoid long swirling lines in the output):
-
-::
-   
-   >>> terms = f[0].split('+(')
-   >>> for t in terms: print(t)
-   ...
-   -0.991457094247+0.13043324065066*i)*x^0*y^5
-   -0.0509953121395-0.99869889262970*i)*x^5*y^3
-   0.232308584664+0.97264213433887*i)*x^4*y^4;
-
-To solve the system defined by f, we call the blackbox solver:
+To solve the system defined by ``f``, we call the blackbox solver:
 
 ::
 
    >>> from phcpy.solver import solve
-   >>> s = solve(f, silent=True)
+   >>> s = solve(f, verbose=False)
    >>> len(s)
    15
    >>> print(s[2])
@@ -69,7 +57,7 @@ The module **phcpy.solutions** (documented in the next section)
 offers a function to evaluate the solutions
 in the polynomials given as strings.
 
-By default, the option ``silent`` is set to ``False`` and the solver
+By default, the option ``verbose`` is set to ``True`` and the solver
 prints the computed root counts.  Other options of the solver are
 
 1. **tasks**: the number of tasks for multithreaded path tracking.
@@ -240,7 +228,7 @@ We start by solving a simple system.
 
    >>> from phcpy.solver import solve
    >>> p = ['x**2 - 3*y + 1;', 'x*y - 3;']
-   >>> s = solve(p, silent=True)
+   >>> s = solve(p, verbose=False)
    >>> print(s[0])
    t :  1.00000000000000E+00   1.14297839516487E+00
    m : 1
@@ -443,7 +431,7 @@ Applied Mathematics, 2009.  We consider a simple example.
 
    >>> from phcpy.solver import solve
    >>> p = ['0.000001*x^2 + 0.000004*y^2 - 4;', '0.000002*y^2 - 0.001*x;']
-   >>> psols = solve(p, silent=True)
+   >>> psols = solve(p, verbose=False)
    >>> print(psols[0])
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
@@ -473,7 +461,7 @@ of the scaled system into the original coordinates.
 
 ::
 
-   >>> qsols = solve(q, silent=True)
+   >>> qsols = solve(q, verbose=False)
    >>> ssols = scalesols(len(q), qsols, c)
    >>> for sol in ssols: print(sol)
    ... 
