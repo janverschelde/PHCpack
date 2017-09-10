@@ -578,7 +578,7 @@ def m_homogeneous_start_system(pols, partition, checkin=True):
     sols = load_standard_solutions()
     return (result, sols)
 
-def linear_product_root_count(pols, silent=False):
+def linear_product_root_count(pols, verbose=True):
     r"""
     Given in *pols* a list of string representations of polynomials,
     returns a linear-product root count based on a supporting
@@ -586,17 +586,16 @@ def linear_product_root_count(pols, silent=False):
     an upper bound for the number of isolated solutions.
     """
     from phcpy.phcpy2c2 import py2c_product_supporting_set_structure
-    from phcpy.phcpy2c2 import py2c_product_write_set_structure
+    from phcpy.phcpy2c2 import py2c_product_set_structure_string
     from phcpy.phcpy2c2 import py2c_product_linear_product_root_count
     from phcpy.interface import store_standard_system
     store_standard_system(pols)
     py2c_product_supporting_set_structure()
-    if not silent:
-        print 'a supporting set structure :'
-        py2c_product_write_set_structure()
     root_count = py2c_product_linear_product_root_count()
-    if not silent:
+    if verbose:
         print 'the root count :', root_count
+        print 'based on the supporting set structure :'
+        print py2c_product_set_structure_string()
     return root_count
 
 def random_linear_product_system(pols, tosolve=True, checkin=True):
@@ -655,7 +654,7 @@ def mixed_volume(pols, stable=False):
     else:
         return py2c_mixed_volume(stable)
 
-def standard_random_coefficient_system(silent=False):
+def standard_random_coefficient_system(verbose=True):
     r"""
     Runs the polyhedral homotopies and returns a random coefficient
     system based on the contents of the cell container,
@@ -682,10 +681,10 @@ def standard_random_coefficient_system(silent=False):
     py2c_solcon_clear_standard_solutions()
     for cell in range(1, nbcells+1):
         mixvol = py2c_celcon_solve_standard_start_system(cell)
-        if not silent:
+        if verbose:
             print 'system %d has %d solutions' % (cell, mixvol)
         for j in range(1, mixvol+1):
-            if not silent:
+            if verbose:
                 print '-> tracking path %d out of %d' % (j, mixvol)
             py2c_celcon_track_standard_solution_path(cell, j, 0)
             py2c_celcon_copy_target_standard_solution_to_container(cell, j)
@@ -694,7 +693,7 @@ def standard_random_coefficient_system(silent=False):
     # newton_step(result, sols)
     return (result, sols)
 
-def dobldobl_random_coefficient_system(silent=False):
+def dobldobl_random_coefficient_system(verbose=True):
     r"""
     Runs the polyhedral homotopies and returns a random coefficient
     system based on the contents of the cell container,
@@ -721,10 +720,10 @@ def dobldobl_random_coefficient_system(silent=False):
     py2c_solcon_clear_dobldobl_solutions()
     for cell in range(1, nbcells+1):
         mixvol = py2c_celcon_solve_dobldobl_start_system(cell)
-        if not silent:
+        if verbose:
             print 'system %d has %d solutions' % (cell, mixvol)
         for j in range(1, mixvol+1):
-            if not silent:
+            if verbose:
                 print '-> tracking path %d out of %d' % (j, mixvol)
             py2c_celcon_track_dobldobl_solution_path(cell, j, 0)
             py2c_celcon_copy_target_dobldobl_solution_to_container(cell, j)
@@ -733,7 +732,7 @@ def dobldobl_random_coefficient_system(silent=False):
     # newton_step(result, sols)
     return (result, sols)
 
-def quaddobl_random_coefficient_system(silent=False):
+def quaddobl_random_coefficient_system(verbose=True):
     r"""
     Runs the polyhedral homotopies and returns a random coefficient
     system based on the contents of the cell container,
@@ -760,10 +759,10 @@ def quaddobl_random_coefficient_system(silent=False):
     py2c_solcon_clear_quaddobl_solutions()
     for cell in range(1, nbcells+1):
         mixvol = py2c_celcon_solve_quaddobl_start_system(cell)
-        if not silent:
+        if verbose:
             print 'system %d has %d solutions' % (cell, mixvol)
         for j in range(1, mixvol+1):
-            if not silent:
+            if verbose:
                 print '-> tracking path %d out of %d' % (j, mixvol)
             py2c_celcon_track_quaddobl_solution_path(cell, j, 0)
             py2c_celcon_copy_target_quaddobl_solution_to_container(cell, j)
@@ -772,7 +771,7 @@ def quaddobl_random_coefficient_system(silent=False):
     # newton_step(result, sols)
     return (result, sols)
 
-def random_coefficient_system(silent=False, precision='d'):
+def random_coefficient_system(verbose=True, precision='d'):
     r"""
     Runs the polyhedral homotopies and returns a random coefficient
     system based on the contents of the cell container.
@@ -786,11 +785,11 @@ def random_coefficient_system(silent=False, precision='d'):
     *qd*: quad double precision (1.2e-63 or 2^(-209)).
     """
     if(precision == 'd'):
-        return standard_random_coefficient_system(silent)
+        return standard_random_coefficient_system(verbose)
     elif(precision == 'dd'):
-        return dobldobl_random_coefficient_system(silent)
+        return dobldobl_random_coefficient_system(verbose)
     elif(precision == 'qd'):
-        return quaddobl_random_coefficient_system(silent)
+        return quaddobl_random_coefficient_system(verbose)
     else:
         print 'wrong value for precision'
 

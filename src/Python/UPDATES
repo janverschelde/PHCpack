@@ -1,6 +1,9 @@
 Sun 10 Sep 2017 : the solve functions in the solver module print the root
   counter output strings, both for the python 2 and 3 versions.
   In solver.py, the solver should not print empty strings for special cases.
+  Instead of calling a function to write the set structure, a function is
+  called which returns the set structure string in solver.py; replaced the
+  silent argument by verbose in solver.py.
 
 Fri 8 Sep 2017 : replaced the silent option of the solve function in the
   solver module by a verbose option.  Updated the documentation.
