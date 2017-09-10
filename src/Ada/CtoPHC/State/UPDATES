@@ -1,5 +1,8 @@
 Sat 9 Sep 2017 : in the blackbox solver, called the link_to_string to prepare
-  moving the writing the root counters output to the Python code.
+  moving the writing the root counters output to the Python code, and then
+  changed use_c2phc.adb more so all blackbox solvers return the string in b;
+  fixed the documentation in use_c2phc.ads, describing the input and output
+  parameters for the blackbox solvers.
 
 Sun 6 Aug 2017 : added jobs to use_syscon and use_c2phc to drop variables
   of Laurent polynomial systems.

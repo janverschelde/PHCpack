@@ -1049,7 +1049,13 @@ function use_c2phc ( job : integer32;
 --                   b : string converted to an integer array,
 --         =  75 : solves the Laurent system in the system container
 --                 with the blackbox solver in standard double precision
---                 and puts the solutions into the solution container;
+--                 and puts the solutions into the solution container,
+--                 the two parameters on entry are as follows:
+--                   a[0] : 1 or 2 for to be silent or not,
+--                   a[1] : the number of tasks,
+--                 on return in a[0] is the root count and if not silent,
+--                 then a[1] contains the number of characters in b,
+--                 where b is the root counter output string;
 --         =  76 : puts a polynomial given as a string in the system 
 --                 container, with the input parameters as follows:
 --                   a[0] : number of characters in the string,
@@ -1059,7 +1065,13 @@ function use_c2phc ( job : integer32;
 --                 this operation is the reverse of job 67;
 --         =  77 : solves the polynomial system in the system container
 --                 with the blackbox solver in standard double precision
---                 and puts the solutions into the solution container;
+--                 and puts the solutions into the solution container,
+--                 the two parameters on entry are as follows:
+--                   a[0] : 1 or 2 for to be silent or not,
+--                   a[1] : the number of tasks,
+--                 on return in a[0] is the root count and if not silent,
+--                 then a[1] contains the number of characters in b,
+--                 where b is the root counter output string;
 --         =  78 : computes the mixed volume for the system in the systems
 --                 container and fills the cells container with the regular
 --                 mixed-cell configuration constructed for the mixed volume.
@@ -1068,16 +1080,40 @@ function use_c2phc ( job : integer32;
 --                 the mixed cells.
 --         = 700 : solves the polynomial system in the system container
 --                 with the blackbox solver in double double precision 
---                 and puts the solutions into the solution container;
+--                 and puts the solutions into the solution container,
+--                 the two parameters on entry are as follows:
+--                   a[0] : 1 or 2 for to be silent or not,
+--                   a[1] : the number of tasks,
+--                 on return in a[0] is the root count and if not silent,
+--                 then a[1] contains the number of characters in b,
+--                 where b is the root counter output string;
 --         = 701 : solves the Laurent system in the system container
 --                 with the blackbox solver in double double precision 
---                 and puts the solutions into the solution container;
+--                 and puts the solutions into the solution container,
+--                 the two parameters on entry are as follows:
+--                   a[0] : 1 or 2 for to be silent or not,
+--                   a[1] : the number of tasks,
+--                 on return in a[0] is the root count and if not silent,
+--                 then a[1] contains the number of characters in b,
+--                 where b is the root counter output string;
 --         = 702 : solves the polynomial system in the system container
 --                 with the blackbox solver in quad double precision 
---                 and puts the solutions into the solution container;
+--                 and puts the solutions into the solution container,
+--                 the two parameters on entry are as follows:
+--                   a[0] : 1 or 2 for to be silent or not,
+--                   a[1] : the number of tasks,
+--                 on return in a[0] is the root count and if not silent,
+--                 then a[1] contains the number of characters in b,
+--                 where b is the root counter output string;
 --         = 703 : solves the Laurent system in the system container
 --                 with the blackbox solver in quad double precision 
---                 and puts the solutions into the solution container.
+--                 and puts the solutions into the solution container,
+--                 the two parameters on entry are as follows:
+--                   a[0] : 1 or 2 for to be silent or not,
+--                   a[1] : the number of tasks,
+--                 on return in a[0] is the root count and if not silent,
+--                 then a[1] contains the number of characters in b,
+--                 where b is the root counter output string.
 --
 -- the size limit of the string representation of a polynomial :
 -- 

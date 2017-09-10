@@ -1834,7 +1834,9 @@ function use_c2phc ( job : integer32;
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc : natural32;
+    rc,nr : natural32;
+    rcnr : Standard_Integer_Vectors.Vector(1..2);
+    lsroco : Link_to_String;
     sols : Solution_List;
 
   begin
@@ -1852,16 +1854,15 @@ function use_c2phc ( job : integer32;
       if silent then
         Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
       else
+        Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+        nr := natural32(lsroco'last);
         declare
-          lsroco : Link_to_String;
+          sv : constant Standard_Integer_Vectors.Vector
+             := String_to_Integer_Vector(lsroco.all);
         begin
-          Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-          new_line;
-          put_line("ROOT COUNTS :");
-          new_line;
-          put_line(lsroco.all);
-          Clear(lsroco);
+          Assign(sv,b);
         end;
+        Clear(lsroco);
       end if;
     else
       declare
@@ -1872,21 +1873,23 @@ function use_c2phc ( job : integer32;
         if silent then
           Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
         else
+          Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
+          nr := natural32(lsroco'last);
           declare
-            lsroco : Link_to_String;
+            sv : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(lsroco.all);
           begin
-            Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
-            new_line;
-            put_line("ROOT COUNTS :");
-            new_line;
-            put_line(lsroco.all);
-            Clear(lsroco);
+            Assign(sv,b);
           end;
+          Clear(lsroco);
         end if;
         Standard_Complex_Poly_Systems.Clear(p);
       end;
     end if;
-    Assign(integer32(rc),a);
+   -- Assign(integer32(rc),a);
+    rcnr(1) := integer32(rc);
+    rcnr(2) := integer32(nr);
+    Assign(rcnr,a);
     Standard_Solutions_Container.Initialize(sols);
     return 0;
   end Job75;
@@ -1905,8 +1908,10 @@ function use_c2phc ( job : integer32;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc : natural32;
+    rc,nr : natural32;
+    rcnr : Standard_Integer_Vectors.Vector(1..2);
     sols : Solution_List;
+    lsroco : Link_to_String;
 
   begin
    -- put("Dimension of the system in the container : "); put(n,1); new_line;
@@ -1917,8 +1922,25 @@ function use_c2phc ( job : integer32;
       put_line("The system is underdetermined, add linear equations.");
       return 77;
     end if;
-    Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-    Assign(integer32(rc),a);
+   -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+    if silent then
+      Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+    else
+      Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+      nr := natural32(lsroco'last); -- Assign(nr,a);
+      declare
+        sv : constant Standard_Integer_Vectors.Vector
+           := String_to_Integer_Vector(lsroco.all);
+      begin
+        Assign(sv,b);
+      end;
+      Clear(lsroco);
+    end if;
+   -- Assign(integer32(rc),a);
+   -- put("nr = "); put(integer32(nr),1); new_line;
+    rcnr(1) := integer32(rc);
+    rcnr(2) := integer32(nr);
+    Assign(rcnr,a);
     Standard_Solutions_Container.Initialize(sols);
     return 0;
   end Job77;
@@ -1936,7 +1958,9 @@ function use_c2phc ( job : integer32;
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc : natural32;
+    rc,nr : natural32;
+    rcnr : Standard_Integer_Vectors.Vector(1..2);
+    lsroco : Link_to_String;
     sols : Solution_List;
 
   begin
@@ -1948,8 +1972,22 @@ function use_c2phc ( job : integer32;
       put_line("The system is underdetermined, add linear equations.");
       return 700;
     end if;
-    Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-    Assign(integer32(rc),a);
+    if silent then
+      Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+    else
+      Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+      nr := natural32(lsroco'last); 
+      declare
+        sv : constant Standard_Integer_Vectors.Vector
+           := String_to_Integer_Vector(lsroco.all);
+      begin
+        Assign(sv,b);
+      end;
+      Clear(lsroco);
+    end if;
+    rcnr(1) := integer32(rc);
+    rcnr(2) := integer32(nr);
+    Assign(rcnr,a);
     DoblDobl_Solutions_Container.Initialize(sols);
     return 0;
   end Job700;
@@ -1968,7 +2006,9 @@ function use_c2phc ( job : integer32;
     lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc : natural32;
+    rc,nr : natural32;
+    rcnr : Standard_Integer_Vectors.Vector(1..2);
+    lsroco : Link_to_String;
     sols : Solution_List;
 
   begin
@@ -1982,16 +2022,42 @@ function use_c2phc ( job : integer32;
       return 701;
     end if;
     if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-      Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      if silent then
+        Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      else
+        Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+        nr := natural32(lsroco'last);
+        declare
+          sv : constant Standard_Integer_Vectors.Vector
+             := String_to_Integer_Vector(lsroco.all);
+        begin
+          Assign(sv,b);
+        end;
+        Clear(lsroco);
+      end if;
     else
       declare
         use DoblDobl_Laur_Poly_Convertors;
         p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
       begin
-        Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+        if silent then
+          Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+        else
+          Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
+          nr := natural32(lsroco'last);
+          declare
+            sv : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(lsroco.all);
+          begin
+            Assign(sv,b);
+          end;
+          Clear(lsroco);
+        end if;
       end;
     end if;
-    Assign(integer32(rc),a);
+    rcnr(1) := integer32(rc);
+    rcnr(2) := integer32(nr);
+    Assign(rcnr,a);
     DoblDobl_Solutions_Container.Initialize(sols);
     return 0;
   end Job701;
@@ -2009,7 +2075,9 @@ function use_c2phc ( job : integer32;
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc : natural32;
+    rc,nr : natural32;
+    rcnr : Standard_Integer_Vectors.Vector(1..2);
+    lsroco : Link_to_String;
     sols : Solution_List;
 
   begin
@@ -2021,8 +2089,22 @@ function use_c2phc ( job : integer32;
       put_line("The system is underdetermined, add linear equations.");
       return 702;
     end if;
-    Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-    Assign(integer32(rc),a);
+    if silent then
+      Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+    else
+      Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+      nr := natural32(lsroco'last);
+      declare
+        sv : constant Standard_Integer_Vectors.Vector
+           := String_to_Integer_Vector(lsroco.all);
+      begin
+        Assign(sv,b);
+      end;
+      Clear(lsroco);
+    end if;
+    rcnr(1) := integer32(rc);
+    rcnr(2) := integer32(nr);
+    Assign(rcnr,a);
     QuadDobl_Solutions_Container.Initialize(sols);
     return 0;
   end Job702;
@@ -2041,7 +2123,9 @@ function use_c2phc ( job : integer32;
     lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
-    rc : natural32;
+    rc,nr : natural32;
+    rcnr : Standard_Integer_Vectors.Vector(1..2);
+    lsroco : Link_to_String;
     sols : Solution_List;
 
   begin
@@ -2055,16 +2139,42 @@ function use_c2phc ( job : integer32;
       return 703;
     end if;
     if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-      Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      if silent then
+        Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      else
+        Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+        nr := natural32(lsroco'last);
+        declare
+          sv : constant Standard_Integer_Vectors.Vector
+             := String_to_Integer_Vector(lsroco.all);
+        begin
+          Assign(sv,b);
+        end;
+        Clear(lsroco);
+      end if;
     else
       declare
         use QuadDobl_Laur_Poly_Convertors;
         p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
       begin
-        Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+        if silent then
+          Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+        else
+          Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
+          nr := natural32(lsroco'last);
+          declare
+            sv : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(lsroco.all);
+          begin
+            Assign(sv,b);
+          end;
+          Clear(lsroco);
+        end if;
       end;
     end if;
-    Assign(integer32(rc),a);
+    rcnr(1) := integer32(rc);
+    rcnr(2) := integer32(nr);
+    Assign(rcnr,a);
     QuadDobl_Solutions_Container.Initialize(sols);
     return 0;
   end Job703;
