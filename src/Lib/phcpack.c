@@ -19,7 +19,7 @@ int version_string ( int *n, char *s )
    fail = _ada_use_c2phc(999,n,b,c);
 
    for(i=0; i<(*n); i++) s[i] = (char) b[i];
-   s[*n+1] = '\0';
+   s[*n] = '\0';
 
    return fail;
 }
@@ -63,7 +63,7 @@ int solve_standard_system
    {
       *nrcs = a[1];
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
-      rocos[*nrcs+1] = '\0';
+      rocos[*nrcs] = '\0';
    }
 
    return fail;
@@ -88,7 +88,7 @@ int solve_dobldobl_system
    {
       *nrcs = a[1];
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
-      rocos[*nrcs+1] = '\0';
+      rocos[*nrcs] = '\0';
    }
 
    return fail;
@@ -113,7 +113,7 @@ int solve_quaddobl_system
    {
       *nrcs = a[1];
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
-      rocos[*nrcs+1] = '\0';
+      rocos[*nrcs] = '\0';
    }
 
    return fail;
@@ -138,7 +138,7 @@ int solve_standard_Laurent_system
    {
       *nrcs = a[1];
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
-      rocos[*nrcs+1] = '\0';
+      rocos[*nrcs] = '\0';
    }
    return fail;
 }
@@ -162,7 +162,7 @@ int solve_dobldobl_Laurent_system
    {
       *nrcs = a[1];
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
-      rocos[*nrcs+1] = '\0';
+      rocos[*nrcs] = '\0';
    }
 
    return fail;
@@ -187,7 +187,7 @@ int solve_quaddobl_Laurent_system
    {
       *nrcs = a[1];
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
-      rocos[*nrcs+1] = '\0';
+      rocos[*nrcs] = '\0';
    }
 
    return fail;
