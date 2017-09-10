@@ -79,7 +79,8 @@ package Black_Box_Solvers is
   --   rc           root count used in the homotopy to solve p;
   --   rocos        string with the root count information,
   --                displayed in the format as when silent is false
-  --                in the other above solve procedures;
+  --                in the other above solve procedures,
+  --                rocos is null if p is one of the special cases!;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type;
@@ -158,7 +159,8 @@ package Black_Box_Solvers is
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
   --   rocos        information about the root counts, in the same format
-  --                as the above solve procedures with false for silent;
+  --                as the above solve procedures with false for silent,
+  --                rocos is null if p is one of the special cases!;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type;
@@ -244,7 +246,8 @@ package Black_Box_Solvers is
   --   rc           root count used in the homotopy to solve p;
   --   rocos        string with the root count information,
   --                displayed in the format as when silent is false
-  --                in the other above solve procedures;
+  --                in the other above solve procedures,
+  --                rocos is null if p is one of the special cases!;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type; nt : in natural32;
@@ -332,7 +335,8 @@ package Black_Box_Solvers is
   --   rc           root count used in the homotopy to solve p;
   --   rocos        string with the root count information,
   --                displayed in the format as when silent is false
-  --                in the other above solve procedures;
+  --                in the other above solve procedures,
+  --                rocos is null if p is one of the special cases!;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( file : in file_type; nt : in natural32;

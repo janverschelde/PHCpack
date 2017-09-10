@@ -1,3 +1,7 @@
+Sun 10 Sep 2017 : in the specifications of the black box solvers, in the
+  file black_box_solvers.ads, placed the warning that the root counters
+  output string is empty if the system is a special case.
+
 Sat 9 Sep 2017 : to black_box_solvers, added the root counter information
   string to the multitasked solvers.
 
