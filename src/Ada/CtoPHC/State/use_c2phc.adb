@@ -1855,14 +1855,18 @@ function use_c2phc ( job : integer32;
         Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
       else
         Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-        nr := natural32(lsroco'last);
-        declare
-          sv : constant Standard_Integer_Vectors.Vector
-             := String_to_Integer_Vector(lsroco.all);
-        begin
-          Assign(sv,b);
-        end;
-        Clear(lsroco);
+        if lsroco = null then
+          nr := 0;
+        else
+          nr := natural32(lsroco'last);
+          declare
+            sv : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(lsroco.all);
+          begin
+            Assign(sv,b);
+          end;
+          Clear(lsroco);
+        end if;
       end if;
     else
       declare
@@ -1874,14 +1878,18 @@ function use_c2phc ( job : integer32;
           Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
         else
           Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
-          nr := natural32(lsroco'last);
-          declare
-            sv : constant Standard_Integer_Vectors.Vector
-               := String_to_Integer_Vector(lsroco.all);
-          begin
-            Assign(sv,b);
-          end;
-          Clear(lsroco);
+          if lsroco = null then
+            nr := 0;
+          else
+            nr := natural32(lsroco'last);
+            declare
+              sv : constant Standard_Integer_Vectors.Vector
+                 := String_to_Integer_Vector(lsroco.all);
+            begin
+              Assign(sv,b);
+            end;
+            Clear(lsroco);
+          end if;
         end if;
         Standard_Complex_Poly_Systems.Clear(p);
       end;
@@ -1927,14 +1935,18 @@ function use_c2phc ( job : integer32;
       Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
     else
       Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-      nr := natural32(lsroco'last); -- Assign(nr,a);
-      declare
-        sv : constant Standard_Integer_Vectors.Vector
-           := String_to_Integer_Vector(lsroco.all);
-      begin
-        Assign(sv,b);
-      end;
-      Clear(lsroco);
+      if lsroco = null then
+        nr := 0;
+      else
+        nr := natural32(lsroco'last);
+        declare
+          sv : constant Standard_Integer_Vectors.Vector
+             := String_to_Integer_Vector(lsroco.all);
+        begin
+          Assign(sv,b);
+        end;
+        Clear(lsroco);
+      end if;
     end if;
    -- Assign(integer32(rc),a);
    -- put("nr = "); put(integer32(nr),1); new_line;
@@ -1976,14 +1988,18 @@ function use_c2phc ( job : integer32;
       Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
     else
       Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-      nr := natural32(lsroco'last); 
-      declare
-        sv : constant Standard_Integer_Vectors.Vector
-           := String_to_Integer_Vector(lsroco.all);
-      begin
-        Assign(sv,b);
-      end;
-      Clear(lsroco);
+      if lsroco = null then
+        nr := 0;
+      else
+        nr := natural32(lsroco'last); 
+        declare
+          sv : constant Standard_Integer_Vectors.Vector
+             := String_to_Integer_Vector(lsroco.all);
+        begin
+          Assign(sv,b);
+        end;
+        Clear(lsroco);
+      end if;
     end if;
     rcnr(1) := integer32(rc);
     rcnr(2) := integer32(nr);
@@ -2026,14 +2042,18 @@ function use_c2phc ( job : integer32;
         Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
       else
         Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-        nr := natural32(lsroco'last);
-        declare
-          sv : constant Standard_Integer_Vectors.Vector
-             := String_to_Integer_Vector(lsroco.all);
-        begin
-          Assign(sv,b);
-        end;
-        Clear(lsroco);
+        if lsroco = null then
+          nr := 0;
+        else
+          nr := natural32(lsroco'last);
+          declare
+            sv : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(lsroco.all);
+          begin
+            Assign(sv,b);
+          end;
+          Clear(lsroco);
+        end if;
       end if;
     else
       declare
@@ -2044,14 +2064,18 @@ function use_c2phc ( job : integer32;
           Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
         else
           Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
-          nr := natural32(lsroco'last);
-          declare
-            sv : constant Standard_Integer_Vectors.Vector
-               := String_to_Integer_Vector(lsroco.all);
-          begin
-            Assign(sv,b);
-          end;
-          Clear(lsroco);
+          if lsroco = null then
+            nr := 0;
+          else
+            nr := natural32(lsroco'last);
+            declare
+              sv : constant Standard_Integer_Vectors.Vector
+                 := String_to_Integer_Vector(lsroco.all);
+            begin
+              Assign(sv,b);
+            end;
+            Clear(lsroco);
+          end if;
         end if;
       end;
     end if;
@@ -2093,14 +2117,18 @@ function use_c2phc ( job : integer32;
       Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
     else
       Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-      nr := natural32(lsroco'last);
-      declare
-        sv : constant Standard_Integer_Vectors.Vector
-           := String_to_Integer_Vector(lsroco.all);
-      begin
-        Assign(sv,b);
-      end;
-      Clear(lsroco);
+      if lsroco = null then
+        nr := 0;
+      else
+        nr := natural32(lsroco'last);
+        declare
+          sv : constant Standard_Integer_Vectors.Vector
+             := String_to_Integer_Vector(lsroco.all);
+        begin
+          Assign(sv,b);
+        end;
+        Clear(lsroco);
+      end if;
     end if;
     rcnr(1) := integer32(rc);
     rcnr(2) := integer32(nr);
@@ -2143,14 +2171,18 @@ function use_c2phc ( job : integer32;
         Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
       else
         Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-        nr := natural32(lsroco'last);
-        declare
-          sv : constant Standard_Integer_Vectors.Vector
-             := String_to_Integer_Vector(lsroco.all);
-        begin
-          Assign(sv,b);
-        end;
-        Clear(lsroco);
+        if lsroco = null then
+          nr := 0;
+        else
+          nr := natural32(lsroco'last);
+          declare
+            sv : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(lsroco.all);
+          begin
+            Assign(sv,b);
+          end;
+          Clear(lsroco);
+        end if;
       end if;
     else
       declare
@@ -2161,14 +2193,18 @@ function use_c2phc ( job : integer32;
           Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
         else
           Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
-          nr := natural32(lsroco'last);
-          declare
-            sv : constant Standard_Integer_Vectors.Vector
-               := String_to_Integer_Vector(lsroco.all);
-          begin
-            Assign(sv,b);
-          end;
-          Clear(lsroco);
+          if lsroco = null then
+            nr := 0;
+          else
+            nr := natural32(lsroco'last);
+            declare
+              sv : constant Standard_Integer_Vectors.Vector
+                 := String_to_Integer_Vector(lsroco.all);
+            begin
+              Assign(sv,b);
+            end;
+            Clear(lsroco);
+          end if;
         end if;
       end;
     end if;

@@ -1,3 +1,6 @@
+Sun 10 Sep 2017 : in use_c2phc.adb, tested the root counters output string
+  for null before further processing.
+
 Sat 9 Sep 2017 : in the blackbox solver, called the link_to_string to prepare
   moving the writing the root counters output to the Python code, and then
   changed use_c2phc.adb more so all blackbox solvers return the string in b;
