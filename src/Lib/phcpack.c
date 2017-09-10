@@ -47,14 +47,24 @@ int get_seed ( int *seed )
 int solve_standard_system
  ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
-   int fail;
-   int b[2];
+   int fail,i;
+   int a[2];
+   int b[1024];
    double *c;
 
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc(77,root_count,b,c);
+   fail = _ada_use_c2phc(77,a,b,c);
+
+   *root_count = a[0];
+
+   if(silent == 0)
+   {
+      *nrcs = a[1];
+      for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
+      rocos[*nrcs+1] = '\0';
+   }
 
    return fail;
 }
@@ -62,14 +72,24 @@ int solve_standard_system
 int solve_dobldobl_system
  ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
-   int fail;
-   int b[2];
+   int fail,i;
+   int a[2];
+   int b[1024];
    double *c;
 
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc(700,root_count,b,c);
+   fail = _ada_use_c2phc(700,a,b,c);
+
+   *root_count = a[0];
+
+   if(silent == 0)
+   {
+      *nrcs = a[1];
+      for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
+      rocos[*nrcs+1] = '\0';
+   }
 
    return fail;
 }
@@ -77,14 +97,24 @@ int solve_dobldobl_system
 int solve_quaddobl_system
  ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
-   int fail;
-   int b[2];
+   int fail,i;
+   int a[2];
+   int b[1024];
    double *c;
 
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc(702,root_count,b,c);
+   fail = _ada_use_c2phc(702,a,b,c);
+
+   *root_count = a[0];
+
+   if(silent == 0)
+   {
+      *nrcs = a[1];
+      for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
+      rocos[*nrcs+1] = '\0';
+   }
 
    return fail;
 }
@@ -92,29 +122,48 @@ int solve_quaddobl_system
 int solve_standard_Laurent_system
  ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
-   int fail;
-   int b[2];
+   int fail,i;
+   int a[2];
+   int b[1024];
    double *c;
 
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc(75,root_count,b,c);
+   fail = _ada_use_c2phc(75,a,b,c);
 
+   *root_count = a[0];
+
+   if(silent == 0)
+   {
+      *nrcs = a[1];
+      for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
+      rocos[*nrcs+1] = '\0';
+   }
    return fail;
 }
 
 int solve_dobldobl_Laurent_system
  ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
-   int fail;
-   int b[2];
+   int fail,i;
+   int a[2];
+   int b[1024];
    double *c;
 
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc(701,root_count,b,c);
+   fail = _ada_use_c2phc(701,a,b,c);
+
+   *root_count = a[0];
+
+   if(silent == 0)
+   {
+      *nrcs = a[1];
+      for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
+      rocos[*nrcs+1] = '\0';
+   }
 
    return fail;
 }
@@ -122,14 +171,24 @@ int solve_dobldobl_Laurent_system
 int solve_quaddobl_Laurent_system
  ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
 {
-   int fail;
-   int b[2];
+   int fail,i;
+   int a[2];
+   int b[1024];
    double *c;
 
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc(703,root_count,b,c);
+   fail = _ada_use_c2phc(703,a,b,c);
+
+   *root_count = a[0];
+
+   if(silent == 0)
+   {
+      *nrcs = a[1];
+      for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
+      rocos[*nrcs+1] = '\0';
+   }
 
    return fail;
 }

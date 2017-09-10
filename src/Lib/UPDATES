@@ -1,5 +1,7 @@
 Sat 9 Sep 2017 : added two parameters to the blackbox solvers in phcpack.h,
   phcpack.c, which modified phc_solve.c, phcpy2c.h, phcpy2c2.c and phcpy2c3.c.
+  Updated phcpack.c with the collection of the root counter output strings
+  returned by the blackbox solvers, tested by phc_solve.c.
 
 Wed 9 Aug 2017 : bug fixed in witset.c, in the return of values after
   the call to the interface homotopy_ismember functions.

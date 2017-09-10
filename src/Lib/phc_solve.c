@@ -90,7 +90,7 @@ int main ( int argc, char *argv[] )
 
 int input_output_on_files ( int precision )
 {
-   int fail,rc,nrc,nbtasks;
+   int fail,rc,nrc,nbtasks,i;
    char rocos[1024];
 
    if(precision == 0)
@@ -100,6 +100,8 @@ int input_output_on_files ( int precision )
       fail = syscon_write_standard_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       fail = solve_standard_system(&rc,0,&nrc,rocos,nbtasks);
+      printf("\nROOT COUNTS :\n");
+      for(i=0; i<nrc; i++) printf("%c",rocos[i]);
       printf("\nThe root count : %d\n",rc);
       printf("\nThe solutions :\n");
       fail = solcon_write_standard_solutions();
@@ -111,6 +113,8 @@ int input_output_on_files ( int precision )
       fail = syscon_write_dobldobl_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       fail = solve_dobldobl_system(&rc,0,&nrc,rocos,nbtasks);
+      printf("\nROOT COUNTS :\n");
+      for(i=0; i<nrc; i++) printf("%c",rocos[i]);
       printf("\nThe root count : %d\n",rc);
       printf("\nThe solutions :\n");
       fail = solcon_write_dobldobl_solutions();
@@ -122,6 +126,8 @@ int input_output_on_files ( int precision )
       fail = syscon_write_quaddobl_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       fail = solve_quaddobl_system(&rc,0,&nrc,rocos,nbtasks);
+      printf("\nROOT COUNTS :\n");
+      for(i=0; i<nrc; i++) printf("%c",rocos[i]);
       printf("\nThe root count : %d\n",rc);
       printf("\nThe solutions :\n");
       fail = solcon_write_quaddobl_solutions();
@@ -132,7 +138,7 @@ int input_output_on_files ( int precision )
 
 int Laurent_input_output_on_files ( int precision )
 {
-   int fail,rc,nrc,nbtasks;
+   int fail,rc,nrc,nbtasks,i;
    char rocos[1024];
 
    if(precision == 0)
@@ -142,6 +148,8 @@ int Laurent_input_output_on_files ( int precision )
       fail = syscon_write_standard_Laurent_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       fail = solve_standard_Laurent_system(&rc,0,&nrc,rocos,nbtasks);
+      printf("\nROOT COUNTS :\n");
+      for(i=0; i<nrc; i++) printf("%c",rocos[i]);
       printf("\nThe root count : %d\n",rc);
       printf("\nThe solutions :\n");
       fail = solcon_write_standard_solutions();
@@ -153,6 +161,8 @@ int Laurent_input_output_on_files ( int precision )
       fail = syscon_write_dobldobl_Laurent_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       fail = solve_dobldobl_Laurent_system(&rc,0,&nrc,rocos,nbtasks);
+      printf("\nROOT COUNTS :\n");
+      for(i=0; i<nrc; i++) printf("%c",rocos[i]);
       printf("\nThe root count : %d\n",rc);
       printf("\nThe solutions :\n");
       fail = solcon_write_dobldobl_solutions();
@@ -164,6 +174,8 @@ int Laurent_input_output_on_files ( int precision )
       fail = syscon_write_quaddobl_Laurent_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       fail = solve_quaddobl_Laurent_system(&rc,0,&nrc,rocos,nbtasks);
+      printf("\nROOT COUNTS :\n");
+      for(i=0; i<nrc; i++) printf("%c",rocos[i]);
       printf("\nThe root count : %d\n",rc);
       printf("\nThe solutions :\n");
       fail = solcon_write_quaddobl_solutions();
@@ -197,6 +209,8 @@ int standard_interactive_input_output ( void )
    syscon_write_standard_system();
    printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
    fail = solve_standard_system(&rc,0,&nrc,rocos,nbtasks);
+   printf("\nTHE ROOT COUNTS :\n");
+   for(i=0; i<nrc; i++) printf("%c",rocos[i]);
    printf("\nThe root count : %d\n",rc);
    /* printf("\nThe solutions :\n");
    fail = solcon_write_standard_solutions(); */
