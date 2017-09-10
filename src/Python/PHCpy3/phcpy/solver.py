@@ -132,7 +132,8 @@ def standard_solve(pols, verbose=True, tasks=0):
         py2c_solve_standard_Laurent_system(silent, tasks)
     else:
         (rc, counts) = py2c_solve_standard_Laurent_system(silent, tasks)
-        print(counts)
+        if counts != "":
+            print(counts)
     return load_standard_solutions()
 
 def dobldobl_solve(pols, verbose=True, tasks=0):
@@ -164,7 +165,8 @@ def dobldobl_solve(pols, verbose=True, tasks=0):
         py2c_solve_dobldobl_Laurent_system(silent, tasks)
     else:
         (rc, counts) = py2c_solve_dobldobl_Laurent_system(silent, tasks)
-        print(counts)
+        if counts != "":
+            print(counts)
     return load_dobldobl_solutions()
 
 def quaddobl_solve(pols, verbose=True, tasks=0):
@@ -196,7 +198,8 @@ def quaddobl_solve(pols, verbose=True, tasks=0):
         py2c_solve_quaddobl_Laurent_system(silent, tasks)
     else:
         (rc, counts) = py2c_solve_quaddobl_Laurent_system(silent, tasks)
-        print(counts)
+        if counts != "":
+            print(counts)
     return load_quaddobl_solutions()
 
 def solve_checkin(pols, msg):
