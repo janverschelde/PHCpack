@@ -58,7 +58,27 @@ offers a function to evaluate the solutions
 in the polynomials given as strings.
 
 By default, the option ``verbose`` is set to ``True`` and the solver
-prints the computed root counts.  Other options of the solver are
+prints the computed root counts.  The four computed root counts are
+
+1. The **total degree** is the product of the degrees of the polynomials
+   in the system.
+
+2. The **multi-homogeneous Bezout number** is computed on a partition
+   of the set of unknowns.
+
+3. A general **linear-product Bezout number** leads to a start system
+   which is a product of linear polynomials with random coefficients.
+
+4. The **mixed volume** is the mixed volume of the tuple of Newton
+   polytopes of the system.  The mixed volume bounds the solutions
+   with all coordinates different from zero.  The number of all
+   affine solutions is bounded by the **stable mixed volume**.
+
+For sparse polynomial systems, the mixed volume is a generically
+sharp root count, i.e.: exact when the coefficients of the polynomial
+system are sufficiently generic.
+
+Other options of the solver are
 
 1. **tasks**: the number of tasks for multithreaded path tracking.
    Solving sufficiently large systems on 4 processor cores may
