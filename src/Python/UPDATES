@@ -3,6 +3,7 @@ Tue 12 Sep 2017 : extended the definition of the blackbox solver, in the
   Added an example to blackbox.rst to illustrate the value of rco.
   The start of the user manual chapter in userman.rst summarizes the
   inventory and the structure of the chapter.
+  Updated setup.py, __init__.py, and conf.py for version 0.7.4 of phcpy.
 
 Mon 11 Sep 2017 : added documentation about the four computed root counts
   of the blackbox solver.
