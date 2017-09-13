@@ -12,7 +12,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'sub-menu' : [
             {
             'name' : "solving a random case",
-            'snippet' : ["from phcpy.solver import random_trinomials", "f = random_trinomials()", "for pol in f: print pol", "from phcpy.solver import solve", "sols = solve(f, silent=True)", "for sol in sols: print sol", "print len(sols), \"solutions found\""],
+            'snippet' : ["from phcpy.solver import random_trinomials", "f = random_trinomials()", "for pol in f: print pol", "from phcpy.solver import solve", "sols = solve(f, verbose=False)", "for sol in sols: print sol", "print len(sols), \"solutions found\""],
             },
             {
             'name' : "solving a specific case",
@@ -40,7 +40,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
             },
             {
             'name' : "coordinates, names and values",
-            'snippet' : ["from phcpy.solver import solve", "p = ['x**2 - 3*y + 1;', 'x*y - 3;']", "s = solve(p, silent=True)", "print(s[0])", "from phcpy.solutions import coordinates, make_solution", "(names, values) = coordinates(s[0])", "print names", "print values", "s0 = make_solution(names, values)", "print s0"],
+            'snippet' : ["from phcpy.solver import solve", "p = ['x^2*y^2 + x + 1;', 'x^2*y^2 + y + 1;']", "s = solve(p)", "print(s[0])", "from phcpy.solutions import coordinates, make_solution", "(names, values) = coordinates(s[0])", "print names", "print values", "s0 = make_solution(names, values)", "print s0"],
             }],
         },
         {
@@ -56,7 +56,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'sub-menu' : [
             {
             'name' : "solving with 4 tasks",
-            'snippet' : ["from phcpy.solver import solve", "from phcpy.families import cyclic", "nbrt = 4 # number of tasks", "pols = cyclic(6)", "print 'solving the cyclic 6-roots problem :'", "for pol in pols: print pol", "from time import time", "starttime = time()", "sols = solve(pols, silent=True)", "stoptime = time()", "elapsed = stoptime - starttime", "print 'solving with no multitasking :'", "print 'elapsed time : %.2f seconds' % elapsed", "starttime = time()", "sols = solve(pols, silent=True, tasks=nbrt)", "stoptime = time()", "elapsed = stoptime - starttime", "print 'solving with %d tasks :' % nbrt", "print 'elapsed time : %.2f seconds' % elapsed" ],
+            'snippet' : ["from phcpy.solver import solve", "from phcpy.families import cyclic", "nbrt = 4 # number of tasks", "pols = cyclic(6)", "print 'solving the cyclic 6-roots problem :'", "for pol in pols: print pol", "from time import time", "starttime = time()", "sols = solve(pols, verbose=False)", "stoptime = time()", "elapsed = stoptime - starttime", "print 'solving with no multitasking :'", "print 'elapsed time : %.2f seconds' % elapsed", "starttime = time()", "sols = solve(pols, verbose=False, tasks=nbrt)", "stoptime = time()", "elapsed = stoptime - starttime", "print 'solving with %d tasks :' % nbrt", "print 'elapsed time : %.2f seconds' % elapsed" ],
             }],
         },
         {
@@ -64,7 +64,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'sub-menu' : [
             {
             'name' : "four different root counts",
-            'snippet' : ["f = ['x^3*y^2 + x*y^2 + x^2;', 'x^5 + x^2*y^3 + y^2;']", "from phcpy.solver import total_degree", "print 'the total degree :', total_degree(f)", "from phcpy.solver import m_homogeneous_bezout_number as mbz", "(bz, part) = mbz(f)", "print 'a multihomogeneous Bezout number :', bz", "from phcpy.solver import linear_product_root_count as lrc", "print 'a linear-product root count :', lrc(f, silent=True)", "from phcpy.solver import mixed_volume", "(mv, smv) = mixed_volume(f, stable=True)", "print 'the mixed volume :', mv", "print 'the stable mixed volume :', smv"],
+            'snippet' : ["f = ['x^3*y^2 + x*y^2 + x^2;', 'x^5 + x^2*y^3 + y^2;']", "from phcpy.solver import total_degree", "print 'the total degree :', total_degree(f)", "from phcpy.solver import m_homogeneous_bezout_number as mbz", "(bz, part) = mbz(f)", "print 'a multihomogeneous Bezout number :', bz", "from phcpy.solver import linear_product_root_count as lrc", "print 'a linear-product root count :', lrc(f, verbose=False)", "from phcpy.solver import mixed_volume", "(mv, smv) = mixed_volume(f, stable=True)", "print 'the mixed volume :', mv", "print 'the stable mixed volume :', smv"],
             }],
         },
         {
@@ -84,11 +84,11 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'sub-menu' : [
             {
             'name' : "solving without scaling",
-            'snippet' : ["from phcpy.solver import solve", "p = ['0.000001*x^2 + 0.000004*y^2 - 4;', '0.000002*y^2 - 0.001*x;']", "psols = solve(p, silent=True)", "print psols[0]"],
+            'snippet' : ["from phcpy.solver import solve", "p = ['0.000001*x^2 + 0.000004*y^2 - 4;', '0.000002*y^2 - 0.001*x;']", "psols = solve(p, verbose=False)", "print psols[0]"],
             },
             {
             'name' : "solving after scaling",
-            'snippet' : ["p = ['0.000001*x^2 + 0.000004*y^2 - 4;', '0.000002*y^2 - 0.001*x;']", "from phcpy.solver import standard_scale_system as scalesys", "from phcpy.solver import standard_scale_solutions as scalesols", "(q, c) = scalesys(p)", "for pol in q: print pol", "qsols = solve(q, silent=True)", "ssols = scalesols(len(q), qsols, c)", "for sol in ssols: print sol"],
+            'snippet' : ["p = ['0.000001*x^2 + 0.000004*y^2 - 4;', '0.000002*y^2 - 0.001*x;']", "from phcpy.solver import standard_scale_system as scalesys", "from phcpy.solver import standard_scale_solutions as scalesols", "(q, c) = scalesys(p)", "for pol in q: print pol", "qsols = solve(q, verbose=False)", "ssols = scalesols(len(q), qsols, c)", "for sol in ssols: print sol"],
             }],
         }],
     },
@@ -133,7 +133,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'sub-menu' : [
             {
             'name' : "solving a random coefficient system",
-            'snippet' : ["p = ['x^3*y^2 - 3*x^3 + 7;','x*y^3 + 6*y^3 - 9;']", "from phcpy.solver import mixed_volume", "print 'the mixed volume :', mixed_volume(p)", "from phcpy.solver import random_coefficient_system", "(q,qsols) = random_coefficient_system(silent=True)", "print 'the number of start solutions :', len(qsols)", "from phcpy.trackers import track", "psols = track(p, q, qsols)", "print 'the number of solutions at the end :', len(psols)", "for sol in psols: print sol"],
+            'snippet' : ["p = ['x^3*y^2 - 3*x^3 + 7;','x*y^3 + 6*y^3 - 9;']", "from phcpy.solver import mixed_volume", "print 'the mixed volume :', mixed_volume(p)", "from phcpy.solver import random_coefficient_system", "(q,qsols) = random_coefficient_system(verbose=False)", "print 'the number of start solutions :', len(qsols)", "from phcpy.trackers import track", "psols = track(p, q, qsols)", "print 'the number of solutions at the end :', len(psols)", "for sol in psols: print sol"],
             }],
         },
         {
@@ -191,7 +191,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
             },
             {
             'name' : "a witness set for the twisted cubic",
-            'snippet' : ["twisted = ['x^2 - y;', 'x^3 - z;']", "from phcpy.sets import embed", "e = embed(3,1,twisted)", "from phcpy.solver import solve", "s = solve(e, silent=True)", "print 'number of generic points :', len(s)", "for sol in s: print sol"],
+            'snippet' : ["twisted = ['x^2 - y;', 'x^3 - z;']", "from phcpy.sets import embed", "e = embed(3,1,twisted)", "from phcpy.solver import solve", "s = solve(e, verbose=False)", "print 'number of generic points :', len(s)", "for sol in s: print sol"],
             }],
         },
         {
@@ -327,7 +327,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         'sub-menu' : [
             {
             'name' : "intersecting the Viviani curve",
-            'snippet' : ["plane = '(1-s)*y + s*(y-1);'", "vp0 = 'x^2 + y^2 + z^2 - 4;'", "vp1 = '(x-1)^2 + y^2 - 1;'", "vivplane = [plane, vp0, vp1]", "vivs0 = vivplane + ['s;']", "from phcpy.solver import solve", "sols = solve(vivs0, silent=True)", "for sol in sols: print sol", "from phcpy.series import standard_newton_series", "sersols = standard_newton_series(vivplane, sols, verbose=False)", "for srs in sersols: print srs"],
+            'snippet' : ["plane = '(1-s)*y + s*(y-1);'", "vp0 = 'x^2 + y^2 + z^2 - 4;'", "vp1 = '(x-1)^2 + y^2 - 1;'", "vivplane = [plane, vp0, vp1]", "vivs0 = vivplane + ['s;']", "from phcpy.solver import solve", "sols = solve(vivs0, verbose=False)", "for sol in sols: print sol", "from phcpy.series import standard_newton_series", "sersols = standard_newton_series(vivplane, sols, verbose=False)", "for srs in sersols: print srs"],
             }],
         }],
     },
