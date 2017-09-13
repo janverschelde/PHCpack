@@ -503,7 +503,7 @@ def test_monodromy(prc='d'):
     # patch : make sure zz1 is last symbol!
     embsys[0] = 'x - x + y - y + z - z + ' + embsys[0]
     print(embsys)
-    sols = solve(embsys, silent=True, precision=prc)
+    sols = solve(embsys, verbose=False, precision=prc)
     # for sol in sols: print sol
     print('the degree is', len(sols))
     monodromy_breakup(embsys, sols, 1, islaurent=0, verbose=True, prec=prc)

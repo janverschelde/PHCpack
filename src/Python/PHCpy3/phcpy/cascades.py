@@ -295,8 +295,7 @@ def top_cascade(nvr, dim, pols, tol, nbtasks=0, prc='d', verbose=True):
     topemb = embed(nvr, dim, pols)
     if verbose:
         print('solving the embedded system at the top ...')
-    slt = not verbose
-    topsols = solve(topemb, silent=slt, tasks=nbtasks, precision=prc)
+    topsols = solve(topemb, verbose=verbose, tasks=nbtasks, precision=prc)
     if verbose:
          print('number of solutions found :', len(topsols))
     (sols0, sols1) = split_filter(topsols, dim, tol, verbose=verbose)
@@ -333,8 +332,7 @@ def laurent_top_cascade(nvr, dim, pols, tol, \
     topemb = laurent_embed(nvr, dim, pols)
     if verbose:
         print('solving the embedded system at the top ...')
-    slt = not verbose
-    topsols = solve(topemb, silent=slt, tasks=nbtasks, precision=prc)
+    topsols = solve(topemb, verbose=verbose, tasks=nbtasks, precision=prc)
     if verbose:
          print('number of solutions found :', len(topsols))
     (sols0, sols1) = split_filter(topsols, dim, tol, verbose=verbose)
