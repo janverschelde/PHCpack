@@ -21,8 +21,24 @@ In particular, the ``solve()`` function in the **factor** module
 computes a numerical irreducible decomposition of the solution set
 of the polynomial system.
 
-solving random trinomials
--------------------------
+The first of the six subsections describes the basic application
+of the ``solve`` function.  The output of ``solve`` is a list of
+strings, with each string representing a solution of the polynomial
+system given on input.  This string representation is explained in
+the second subsection.  The solver depends on the choice of random
+constants.  In the third subsection, the fixing of the seed for
+the random number generators is demonstrated, for reproducible runs.
+An important aspect is the construction of a start system,
+which corresponds to the root counting method.
+Functions to count the roots in various ways are explained
+in the fourth subsection.  In the fifth subsection, we demonstrate
+the application of deflation to restore the quadratic convergence
+of Newton's method for isolated singularities. 
+Equation and variable scaling improves the numerical conditioning
+of the solutions, as illustrated in the last subsection.
+
+solving random trinomials and a particular trinomial system
+-----------------------------------------------------------
 
 Polynomials and solutions are represented as strings.
 Below is an illustration of a session with the blackbox solver
@@ -100,6 +116,30 @@ Other options of the solver are
    only square systems.  See the section on positive dimensional
    solution sets for functions that deal with overdetermined or
    underdetermined polynomial systems.
+
+Last and certainly not least, the first argument of ``solve`` is
+a list of strings.  Each string in the list represents a polynomial
+in several variables.  Consider the example below:
+
+::
+
+   >>> from phcpy.solver import solve
+   >>> p = ['x^2*y^2 + x + 1;', 'x^2*y^2 + y + 1;']
+   >>> s = solve(p)
+   total degree : 16
+   2-homogeneous Bezout number : 8
+     with with partition : { x }{ y }
+   general linear-product Bezout number : 8
+     based on the set structure :
+        { x }{ x }{ y }{ y }
+        { x }{ x }{ y }{ y }
+   mixed volume : 4
+   stable mixed volume : 4
+   >>>
+
+What is printed to screen by ``s = solve(p)`` is an example of
+the four different types of root counts.
+The structure of the output in ``s`` is described in the next section.
 
 representations of solutions of polynomial systems 
 --------------------------------------------------
