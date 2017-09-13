@@ -187,6 +187,73 @@ places in the approximate solution.
 For example, if `rco` equals `1.0E-8`, then the last 8 decimal places
 in the coordinates of the solution could be wrong.
 
+The best numerically conditioned linear systems arise when the
+normals to the coefficient vectors of the linear equations are
+perpendicular to each other, as in the next session:
+
+::
+
+   >>> from phcpy.solver import solve
+   >>> p = ['x + y - 1;', 'x - y - 1;']
+   >>> s = solve(p)
+   >>> print s[0]
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x :  1.00000000000000E+00   0.00000000000000E+00
+    y :  0.00000000000000E+00  -0.00000000000000E+00
+   == err :  2.220E-16 = rco :  5.000E-01 = res :  0.000E+00 =
+
+The value of `rco` is ``5.0E-1`` which implies that the
+condition number is bounded by 2, as `rco` is an estimate
+for the inverse of the condition number.
+Roundoff errors are doubled at most.
+
+At the opposite end of the best numerically conditioned linear systems
+are those where the the normals to the coefficient vectors of the
+linear equations are almost parallel to each other,
+as illustrated in the next example:
+
+::
+
+   >>> from phcpy.solver import solve
+   >>> p = ['x + y - 1;', 'x + 0.999*y - 1;']
+   >>> s = solve(p)
+   >>> print s[0]
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x :  1.00000000000000E+00   0.00000000000000E+00
+    y :  0.00000000000000E+00  -0.00000000000000E+00
+   == err :  2.220E-16 = rco :  2.501E-04 = res :  0.000E+00 =
+
+The reported estimate for the inverse of the condition number
+`rco` is 2.5E-4, which implies that the condition number is
+estimated at 4,000.  Thus for this example, roundoff errors
+may magnify thousandfold.  In the next example, the condition
+number becomes a 10-digit number:
+
+::
+
+   >>> from phcpy.solver import solve
+   >>> p = ['x + y - 1;', 'x + 0.999999999*y - 1;']
+   >>> s = solve(p)
+   >>> print s[0]
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x :  1.00000000000000E+00   0.00000000000000E+00
+    y :  0.00000000000000E+00  -0.00000000000000E+00
+   == err :  2.220E-16 = rco :  2.500E-10 = res :  0.000E+00 =
+
+Note that the actual value of the solution remains (1,0),
+which on the one hand indicates that the condition number is
+a pessimistic bound on the accuracy of the solution.
+But on the other hand, (1,0) may give the false security that 
+the solution is right, because the problem on input is very close 
+to a linear system which has infinitely many solutions 
+(the line ``x + y - 1 = 0``) and not the isolated point (1,0).
+
 For a solution of the example ``noon3`` from the module examples,
 we convert the PHCpack format solution string to a dictionary as follows:
 
