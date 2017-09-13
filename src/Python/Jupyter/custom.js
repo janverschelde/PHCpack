@@ -16,7 +16,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
             },
             {
             'name' : "solving a specific case",
-            'snippet' : ["f = ['x*y^2 + y - 3;', 'x^3 - y + 1;']", "from phcpy.solver import solve", "sols = solve(f)", "for sol in sols: print sol"],
+            'snippet' : ["f = ['x^2*y^2 + 2*x - 1;', 'x^2*y^2 - 3*y + 1;']", "from phcpy.solver import solve", "sols = solve(f)", "for sol in sols: print sol"],
             }],
         },
         {
