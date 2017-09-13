@@ -1,6 +1,8 @@
 Tue 12 Sep 2017 : extended the definition of the blackbox solver, in the
   source file blackbox.rst of the Sphinx documentation of python 2 and 3.
   Added an example to blackbox.rst to illustrate the value of rco.
+  The start of the user manual chapter in userman.rst summarizes the
+  inventory and the structure of the chapter.
 
 Mon 11 Sep 2017 : added documentation about the four computed root counts
   of the blackbox solver.
