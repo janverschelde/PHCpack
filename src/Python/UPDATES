@@ -1,5 +1,6 @@
 Wed 13 Sep 2017 : corrected the silent= option into the verbose= options into
   the calls to the solve function in cascades.py and factor.py.
+  Fixed the test_factor function in the factor module.
 
 Tue 12 Sep 2017 : extended the definition of the blackbox solver, in the
   source file blackbox.rst of the Sphinx documentation of python 2 and 3.

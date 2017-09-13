@@ -512,6 +512,7 @@ def test_factor():
     """
     Simple test on the factor method.
     """
+    from phcpy.sets import witness_set_of_hypersurface
     hyp = '(x+1)*(x^2 + y^2 + 1);'
     (wsys, wsols) = witness_set_of_hypersurface(2, hyp)
     fac = factor(1, wsys, wsols)
