@@ -242,6 +242,8 @@ and the Sage python interpreter could be extended with version 0.6.2.
 Better support of Laurent polynomial systems was added in version 0.6.8.
 In version 0.6.9, the large module sets.py was divided up, leading to
 the new modules cascades.py, factor.py, and diagonal.py.
+Code snippets for jupyter notebook menu extensions were defined
+in version 0.7.4.
 
 references
 ==========
