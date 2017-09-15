@@ -38,3 +38,6 @@ The restructured text source for the documentation for PHCpack starts at
 <https://github.com/janverschelde/PHCpack/tree/master/src/doc/source>
 and for phcpy at
 <https://github.com/janverschelde/PHCpack/tree/master/src/Python/PHCpy3/doc/source>.
+
+To try phcpy in a python or SageMath kernel of a jupyter notebook,
+visit <http://www.phcpack.org>.
