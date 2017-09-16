@@ -2262,6 +2262,16 @@ lib_scale_cpp:
 	gnatlink -C use_c2phc phcpack.o syscon.o scalers.o lib_scale.o \
                  -o $(BIN)/lib_scale -lm --LINK=g++
 
+lib_reduce:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/reducers.c
+	gcc -c $(PHCLib)/lib_reduce.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o reducers.o lib_reduce.o \
+                 -o $(BIN)/lib_reduce -lm
+
 lib_conpar:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
