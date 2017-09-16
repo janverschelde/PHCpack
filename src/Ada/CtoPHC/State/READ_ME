@@ -1,4 +1,4 @@
-Calling PHCpack from C as a state machine in PHCv2.4.42
+Calling PHCpack from C as a state machine in PHCv2.4.46
 
 This directory was created in release 2.3 as subdirectory to CtoPHC.
 The idea for using PHCpack as a state machine originated from the need
@@ -56,6 +56,7 @@ c_to_phcpack                     : Ada routine as gateway to the machine
 ts_c2str.c                       : test on having phc write C strings
 use_track                        : access to jumpstarting path trackers
 use_scaling                      : access to scaling systems and solutions
+use_reduction                    : reduction of system to lower total degree
 ------------------------------------------------------------------------------
 pieri_homotopy                   : Pieri homotopies as a state machine
 ts_pirhom                        : interactive test on pieri_homotopy

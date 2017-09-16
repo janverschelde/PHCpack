@@ -1,3 +1,6 @@
+Fri 15 Sep 2017 : new procedure use_reduction, to interface the reduction
+  of the coefficient matrix of a polynomial system.
+
 Sun 10 Sep 2017 : in use_c2phc.adb, tested the root counters output string
   for null before further processing.
 

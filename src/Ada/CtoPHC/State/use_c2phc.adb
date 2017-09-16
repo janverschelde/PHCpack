@@ -83,6 +83,7 @@ with C_to_PHCpack;
 with use_syscon,use_syspool;
 with use_solcon,use_solpool;
 with use_scaling;
+with use_reduction;
 with use_c2pieri,use_c2lrhom;
 with use_c2fac,use_c2mbt;
 with use_roco;
