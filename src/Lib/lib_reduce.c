@@ -53,6 +53,9 @@ int standard_reducer ( void )
    {
       printf("\nThe system in the container : \n");
       fail = syscon_write_standard_system();
+      fail = standard_reduce_system(1);
+      printf("\nThe system after reduction : \n");
+      fail = syscon_write_standard_system();
    }
    return fail;
 }

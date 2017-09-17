@@ -1,3 +1,5 @@
+Sun 17 Sep 2017 : reducers.c calls the linear reduction, tested by lib_reduce.
+
 Fri 15 Sep 2017 : new reducers.h and reducers.c, with test in lib_reduce.c.
 
 Sun 10 Sep 2017 : fixed the placement of end of string symbols in phcpack.c,
