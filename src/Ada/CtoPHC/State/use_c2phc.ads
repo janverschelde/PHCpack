@@ -2462,6 +2462,16 @@ function use_c2phc ( job : integer32;
 --                 note that n/8 is the dimension of the complex vector,
 --                 and n/8 is then also the dimension of the solutions;
 --
+--  Reduction of system to obtain a lower total degree :
+--
+--   job =   707 : reduces the system in the standard container,
+--                 applying row reduction on the coefficient matrix:
+--                 on input in a is either 0 or 1:
+--                 0 : triangulation of the coefficient matrix,
+--                 1 : makes the coefficient matrix diagonal;
+--                 the system in the container is replaced by the
+--                 reduced system.
+--
 --  Operating a sweep homotopy :
 --
 --   job =   610 : defines the indices of the variables that serve
