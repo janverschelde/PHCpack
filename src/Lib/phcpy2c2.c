@@ -4597,7 +4597,33 @@ static PyObject *py2c_linear_reduce_standard_system
    initialize();
    if(!PyArg_ParseTuple(args,"i",&diag)) return NULL;
 
-   fail = standard_reduce_system(diag);
+   fail = standard_row_reduce_system(diag);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_linear_reduce_dobldobl_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,diag;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&diag)) return NULL;
+
+   fail = dobldobl_row_reduce_system(diag);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_linear_reduce_quaddobl_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,diag;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&diag)) return NULL;
+
+   fail = quaddobl_row_reduce_system(diag);
 
    return Py_BuildValue("i",fail);
 }
@@ -9204,6 +9230,12 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_linear_reduce_standard_system",
      py2c_linear_reduce_standard_system, METH_VARARGS,
     "Applies linear reduction on the coefficient matrix of the system\n in the container for standard double precision.\n There is one integer parameter: whether to diagonalize or not."},
+   {"py2c_linear_reduce_dobldobl_system",
+     py2c_linear_reduce_dobldobl_system, METH_VARARGS,
+    "Applies linear reduction on the coefficient matrix of the system\n in the container for double double precision.\n There is one integer parameter: whether to diagonalize or not."},
+   {"py2c_linear_reduce_quaddobl_system",
+     py2c_linear_reduce_quaddobl_system, METH_VARARGS,
+    "Applies linear reduction on the coefficient matrix of the system\n in the container for quad double precision.\n There is one integer parameter: whether to diagonalize or not."},
    {"py2c_sweep_define_parameters_numerically",
      py2c_sweep_define_parameters_numerically, METH_VARARGS,
     "Defines the indices to the variables that serve as parameters\n numerically, that is: via integer indices.\n On entry are three integer numbers and a string.\n The string is a string representation of a Python list of integers,\n The three integers are the number of equations, the number of variables,\n and the number of parameters.  The number of variables m includes the\n number of parameters.  Then there should be as many as m indices in\n the list of integers to define which of the variables are parameters."},

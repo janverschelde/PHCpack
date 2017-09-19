@@ -14,8 +14,20 @@ int greetings( void );
 int standard_reducer ( void );
 /*
  * DESCRIPTION :
- *   Prompts the user for a system and performs the scaling
+ *   Prompts the user for a system and performs linear reduction
  *   with standard double precision arithmetic. */
+
+int dobldobl_reducer ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a system and performs linear reduction
+ *   with double double precision arithmetic. */
+
+int quaddobl_reducer ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a system and performs linear reduction
+ *   with quad double precision arithmetic. */
 
 int main ( int argc, char *argv[] )
 {
@@ -25,7 +37,19 @@ int main ( int argc, char *argv[] )
 
    fail = greetings();
 
-   fail = standard_reducer();
+   printf("\nMENU for the precision of linear reduction :\n"); 
+   printf("  0. use standard double precision arithmetic; or\n");
+   printf("  1. use double double precision arithmetic; or\n");
+   printf("  2. use quad double precision arithmetic.\n");
+   printf("Type 0, 1, or 2 to make your choice : ");
+   scanf("%d",&choice);
+
+   if(choice == 0)
+      fail = standard_reducer();
+   else if(choice == 1)
+      fail = dobldobl_reducer();
+   else if(choice == 2)
+      fail = quaddobl_reducer();
 
    adafinal();
 
@@ -53,9 +77,41 @@ int standard_reducer ( void )
    {
       printf("\nThe system in the container : \n");
       fail = syscon_write_standard_system();
-      fail = standard_reduce_system(1);
+      fail = standard_row_reduce_system(1);
       printf("\nThe system after reduction : \n");
       fail = syscon_write_standard_system();
+   }
+   return fail;
+}
+
+int dobldobl_reducer ( void )
+{
+   int fail,dim,i;
+
+   fail = syscon_read_dobldobl_system();
+   if(fail == 0)
+   {
+      printf("\nThe system in the container : \n");
+      fail = syscon_write_dobldobl_system();
+      fail = dobldobl_row_reduce_system(1);
+      printf("\nThe system after reduction : \n");
+      fail = syscon_write_dobldobl_system();
+   }
+   return fail;
+}
+
+int quaddobl_reducer ( void )
+{
+   int fail,dim,i;
+
+   fail = syscon_read_quaddobl_system();
+   if(fail == 0)
+   {
+      printf("\nThe system in the container : \n");
+      fail = syscon_write_quaddobl_system();
+      fail = quaddobl_row_reduce_system(1);
+      printf("\nThe system after reduction : \n");
+      fail = syscon_write_quaddobl_system();
    }
    return fail;
 }

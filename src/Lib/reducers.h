@@ -16,13 +16,45 @@ extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
 extern void adafinal( void );
 #endif
 
-int standard_reduce_system ( int diag );
+int standard_row_reduce_system ( int diag );
 /*
  * DESCRIPTION :
  *   Applies row reduction to the coefficient matrix of the polynomial
- *   system in the standard systems container,
+ *   system in the standard double systems container,
  *   with standard double precision arithmetic.
  *   The system in the standard systems container is replaced by
+ *   the reduced system.
+ *
+ * REQUIRED :
+ *   An equal number of equations as variables is assumed.
+ *
+ * ON ENTRY :
+ *   diag     1 if the coefficient matrix needs to be diagonalized,
+ *            0 if bringing in triangular form suffices. */
+
+int dobldobl_row_reduce_system ( int diag );
+/*
+ * DESCRIPTION :
+ *   Applies row reduction to the coefficient matrix of the polynomial
+ *   system in the double double systems container,
+ *   with double double precision arithmetic.
+ *   The system in the double double systems container is replaced by
+ *   the reduced system.
+ *
+ * REQUIRED :
+ *   An equal number of equations as variables is assumed.
+ *
+ * ON ENTRY :
+ *   diag     1 if the coefficient matrix needs to be diagonalized,
+ *            0 if bringing in triangular form suffices. */
+
+int quaddobl_row_reduce_system ( int diag );
+/*
+ * DESCRIPTION :
+ *   Applies row reduction to the coefficient matrix of the polynomial
+ *   system in the quad double systems container,
+ *   with quad double precision arithmetic.
+ *   The system in the quad double systems container is replaced by
  *   the reduced system.
  *
  * REQUIRED :

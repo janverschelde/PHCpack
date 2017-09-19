@@ -1,5 +1,7 @@
 Tue 19 Sep 2017 : added call to the linear reduction in phcpy2c.h, phcpy2c2.c,
-  and phcpy2c3.c.
+  and phcpy2c3.c.  Functions added to reducers.h, reducers.c, lib_reduce.c,
+  phcpy2c.h, phcpy2c2.c, and phcpy2c3.c for double doubles and quad doubles.
+  Fixed a type error in the precision menu for lib_scale.c.
 
 Sun 17 Sep 2017 : reducers.c calls the linear reduction, tested by lib_reduce.
 

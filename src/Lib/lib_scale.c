@@ -42,7 +42,7 @@ int main ( int argc, char *argv[] )
    printf("  0. use standard double precision arithmetic; or\n");
    printf("  1. use double double precision arithmetic; or\n");
    printf("  2. use quad double precision arithmetic.\n");
-   printf("Type 1, 2, or 3 to make your choice : ");
+   printf("Type 0, 1, or 2 to make your choice : ");
    scanf("%d",&choice);
 
    if(choice == 0)

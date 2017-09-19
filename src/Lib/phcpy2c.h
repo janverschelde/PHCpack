@@ -3081,6 +3081,22 @@ static PyObject *py2c_linear_reduce_standard_system
  *   in the container for standard double precision.
  *   There is one integer parameter: whether to diagonalize or not. */
 
+static PyObject *py2c_linear_reduce_dobldobl_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies linear reduction on the coefficient matrix of the system
+ *   in the container for double double precision.
+ *   There is one integer parameter: whether to diagonalize or not. */
+
+static PyObject *py2c_linear_reduce_quaddobl_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies linear reduction on the coefficient matrix of the system
+ *   in the container for quad double precision.
+ *   There is one integer parameter: whether to diagonalize or not. */
+
 /* The wrapping of the functions with prototypes in sweep.h starts here. */
 
 static PyObject *py2c_sweep_define_parameters_numerically
