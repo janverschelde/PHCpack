@@ -48,6 +48,8 @@ ts_drivscal                        : calls the driver
 mainscal                           : scaling tool, as called by phc
 reduction_of_polynomials           : S-polynomials and R-polynomials
 standard_linear_reduction          : utilities for double precision reduction
+dobldobl_linear_reduction          : utilities for dobldobl precision reduction
+quaddobl_linear_reduction          : utilities for quaddobl precision reduction
 reduction_of_polynomial_systems    : linear and nonlinear reduction
 reduction_of_nonsquare_systems     : transform overconstrained into square
 drivers_for_reduction              : menu-drivers for reducing systems

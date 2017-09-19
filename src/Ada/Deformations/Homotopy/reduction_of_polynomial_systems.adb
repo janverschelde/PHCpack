@@ -2,16 +2,28 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
-with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
+with Standard_Complex_Matrices;
+with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
+with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
+with Standard_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials;
 with Reduction_of_Polynomials;           use Reduction_of_Polynomials;
-with Standard_Linear_Reduction;          use Standard_Linear_Reduction;
+with Standard_Linear_Reduction;
+with DoblDobl_Linear_Reduction;
+with QuadDobl_Linear_Reduction;
 
 package body Reduction_of_Polynomial_Systems is
 
-  procedure Reduce ( p : in out Poly_Sys;
+  procedure Reduce ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                      diagonal,inconsistent,infinite : in out boolean ) is
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Polynomials;
+    use Standard_Linear_Reduction;
 
     n : constant integer32 := p'length;
     max_terms : constant integer32 := integer32(Sum_Number_of_Terms(p));
@@ -45,8 +57,156 @@ package body Reduction_of_Polynomial_Systems is
     end if;
   end Reduce;
 
-  procedure Sparse_Reduce ( p : in out Poly_Sys;
+  procedure Reduce ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                     diagonal,inconsistent,infinite : in out boolean ) is
+
+    use DoblDobl_Complex_Matrices;
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Linear_Reduction;
+
+    n : constant integer32 := p'length;
+    max_terms : constant integer32 := integer32(Sum_Number_of_Terms(p));
+    columns : Degrees_Array(1..max_terms);
+    numb_columns : natural32 := 0;
+    mat : Matrix(p'range,1..max_terms);
+
+  begin
+    Coefficient_Matrix(p,mat,columns,numb_columns,diagonal);
+    if diagonal then
+      inconsistent := false;
+      infinite := false;
+    else
+      declare
+        coeffmat : Matrix(p'range,1..integer32(numb_columns));
+        tol : constant double_float := 10.0**(-8);
+      begin
+        for i in coeffmat'range(1) loop
+          for j in coeffmat'range(2) loop
+            coeffmat(i,j) := mat(i,j);
+          end loop;
+        end loop;
+        Triangulate(coeffmat,tol,n,integer32(numb_columns));
+        Make_Polynomial_System(p,coeffmat,columns,numb_columns,
+                               inconsistent,infinite);
+        for i in 1..integer32(numb_Columns) loop
+          Standard_Natural_Vectors.Clear
+            (Standard_Natural_Vectors.Link_to_Vector(columns(i)));
+        end loop;
+      end;
+    end if;
+  end Reduce;
+
+  procedure Reduce ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                     diagonal,inconsistent,infinite : in out boolean ) is
+
+    use QuadDobl_Complex_Matrices;
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Linear_Reduction;
+
+    n : constant integer32 := p'length;
+    max_terms : constant integer32 := integer32(Sum_Number_of_Terms(p));
+    columns : Degrees_Array(1..max_terms);
+    numb_columns : natural32 := 0;
+    mat : Matrix(p'range,1..max_terms);
+
+  begin
+    Coefficient_Matrix(p,mat,columns,numb_columns,diagonal);
+    if diagonal then
+      inconsistent := false;
+      infinite := false;
+    else
+      declare
+        coeffmat : Matrix(p'range,1..integer32(numb_columns));
+        tol : constant double_float := 10.0**(-8);
+      begin
+        for i in coeffmat'range(1) loop
+          for j in coeffmat'range(2) loop
+            coeffmat(i,j) := mat(i,j);
+          end loop;
+        end loop;
+        Triangulate(coeffmat,tol,n,integer32(numb_columns));
+        Make_Polynomial_System(p,coeffmat,columns,numb_columns,
+                               inconsistent,infinite);
+        for i in 1..integer32(numb_Columns) loop
+          Standard_Natural_Vectors.Clear
+            (Standard_Natural_Vectors.Link_to_Vector(columns(i)));
+        end loop;
+      end;
+    end if;
+  end Reduce;
+
+  procedure Sparse_Reduce ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                             inconsistent,infinite : in out boolean ) is
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Polynomials;
+    use Standard_Linear_Reduction;
+
+    n : constant integer32 := p'length;
+    max_terms : constant integer32 := integer32(Sum_Number_of_Terms(p));
+    columns : Degrees_Array(1..max_terms);
+    numb_columns : natural32 := 0;
+    mat : Matrix(1..n,1..max_terms);
+
+  begin
+    Coefficient_Matrix(p,mat,columns,numb_columns);
+    declare
+      coeffmat : Matrix(p'range,1..integer32(numb_columns));
+    begin
+      for i in coeffmat'range(1) loop
+        for j in coeffmat'range(2) loop
+          coeffmat(i,j) := mat(i,j);
+        end loop;
+      end loop;
+      Diagonalize(coeffmat,n,integer32(numb_Columns));
+      Make_Polynomial_System(p,coeffmat,columns,numb_columns,
+                             inconsistent,infinite);
+      for i in 1..integer32(numb_columns) loop
+        Standard_Natural_Vectors.Clear
+          (Standard_Natural_Vectors.Link_to_Vector(columns(i)));
+      end loop;
+    end;
+  end Sparse_Reduce;
+
+  procedure Sparse_Reduce ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                            inconsistent,infinite : in out boolean ) is
+
+    use DoblDobl_Complex_Matrices;
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Linear_Reduction;
+
+    n : constant integer32 := p'length;
+    max_terms : constant integer32 := integer32(Sum_Number_of_Terms(p));
+    columns : Degrees_Array(1..max_terms);
+    numb_columns : natural32 := 0;
+    mat : Matrix(1..n,1..max_terms);
+
+  begin
+    Coefficient_Matrix(p,mat,columns,numb_columns);
+    declare
+      coeffmat : Matrix(p'range,1..integer32(numb_columns));
+    begin
+      for i in coeffmat'range(1) loop
+        for j in coeffmat'range(2) loop
+          coeffmat(i,j) := mat(i,j);
+        end loop;
+      end loop;
+      Diagonalize(coeffmat,n,integer32(numb_Columns));
+      Make_Polynomial_System(p,coeffmat,columns,numb_columns,
+                             inconsistent,infinite);
+      for i in 1..integer32(numb_columns) loop
+        Standard_Natural_Vectors.Clear
+          (Standard_Natural_Vectors.Link_to_Vector(columns(i)));
+      end loop;
+    end;
+  end Sparse_Reduce;
+
+  procedure Sparse_Reduce ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                            inconsistent,infinite : in out boolean ) is
+
+    use QuadDobl_Complex_Matrices;
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Linear_Reduction;
 
     n : constant integer32 := p'length;
     max_terms : constant integer32 := integer32(Sum_Number_of_Terms(p));
@@ -76,7 +236,11 @@ package body Reduction_of_Polynomial_Systems is
 
 -- NONLINEAR REDUCTION :
 
-  function Total_Degree ( p : Poly_Sys ) return natural32 is
+  function Total_Degree
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys )
+             return natural32 is
+
+    use Standard_Complex_Polynomials;
 
     d : natural32 := 1;
     tmp : integer32;
@@ -91,7 +255,8 @@ package body Reduction_of_Polynomial_Systems is
     return d;
   end Total_Degree;
 
-  function LEQ ( d1,d2 : Degrees ) return boolean is
+  function LEQ ( d1,d2 : Standard_Complex_Polynomials.Degrees )
+               return boolean is
 
   -- DESCRIPTION :
   --   Returns true if all degrees of d1 are lower than
@@ -106,10 +271,14 @@ package body Reduction_of_Polynomial_Systems is
     return true;
   end LEQ;
 
-  function Leading_Term ( p : Poly ) return Term is
+  function Leading_Term
+             ( p : Standard_Complex_Polynomials.Poly )
+             return Standard_Complex_Polynomials.Term is
 
   -- DESCRIPTION :
   --   Returns the leading term of the polynomial p.
+
+    use Standard_Complex_Polynomials;
 
     tf : Term;
 
@@ -124,11 +293,15 @@ package body Reduction_of_Polynomial_Systems is
     return tf;
   end Leading_Term;
 
-  function Can_Be_Eliminated ( p : Poly_Sys; j : integer32 ) return boolean is
+  function Can_Be_Eliminated
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys; j : integer32 )
+             return boolean is
 
   -- DESCRIPTION :
   --   returns true if the degree of the j-th unknown in each equation 
   --   is zero.
+
+    use Standard_Complex_Polynomials;
 
   begin
     for i in p'range loop
@@ -139,11 +312,14 @@ package body Reduction_of_Polynomial_Systems is
     return true;
   end Can_Be_Eliminated;
 
-  procedure Shift_Null_Polynomial ( p : in out Poly_Sys ) is
+  procedure Shift_Null_Polynomial
+              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
   --   The null polynomial in the system p will be shifted down
   --   towards the end.
+
+    use Standard_Complex_Polynomials;
 
   begin
     for i in p'range loop
@@ -156,10 +332,14 @@ package body Reduction_of_Polynomial_Systems is
     end loop;
   end Shift_Null_Polynomial;
 
-  procedure Eliminate ( p : in out Poly; j : in integer32 ) is
+  procedure Eliminate
+              ( p : in out Standard_Complex_Polynomials.Poly;
+                j : in integer32 ) is
 
   -- DESCRIPTION :
   --   The j-th unknown will be eliminated out of the polynomial p
+
+    use Standard_Complex_Polynomials;
 
     n : constant integer32 := integer32(Number_Of_Unknowns(p));
 
@@ -184,7 +364,9 @@ package body Reduction_of_Polynomial_Systems is
     Eliminate_Terms(p);
   end Eliminate;
         
-  procedure Eliminate ( p : in out Poly_Sys; j : in integer32 ) is
+  procedure Eliminate
+              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                j : in integer32 ) is
 
   -- DESCRIPTION :
   --   The j-th unknown will be eliminated out of each equation.
@@ -195,13 +377,18 @@ package body Reduction_of_Polynomial_Systems is
     end loop;
   end Eliminate;
     
-  procedure Replace ( p : in out Poly_Sys; pp : in Poly; i : in integer32 ) is
+  procedure Replace
+              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                pp : in Standard_Complex_Polynomials.Poly;
+                i : in integer32 ) is
 
   -- DESCRIPTION :
   --   This procedure replaces the i-th polynomial in the system p
   --   by the polynomial pp.  If pp is a null polynomial then the procedure
   --   tries to eliminate an unknown, in order to have as much equations
   --   as there are unknowns.
+
+    use Standard_Complex_Polynomials;
 
     tmp : natural32;
 
@@ -221,7 +408,10 @@ package body Reduction_of_Polynomial_Systems is
     end if;
   end Replace;
 
-  function red ( p,b1,b2 : Poly ) return Poly is
+  function red ( p,b1,b2 : Standard_Complex_Polynomials.Poly )
+               return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Polynomials;
 
     Rpb1 : Poly := Rpoly(p,b1);
 
@@ -238,24 +428,32 @@ package body Reduction_of_Polynomial_Systems is
     end if;
   end red;
 
-  function Reduce ( p,b1,b2 : Poly ) return Poly is
+  function Reduce ( p,b1,b2 : Standard_Complex_Polynomials.Poly )
+                  return Standard_Complex_Polynomials.Poly is
 
   -- DESCRIPTION :
   --   returns p mod < b1,b2 >
 
+    use Standard_Complex_Polynomials;
+
     temp : Poly := red(p,b1,b2);
+
   begin
-    if Number_Of_Unknowns(temp) = 0
-     then return Null_Poly;
-     else Clear(temp);
-          return red(p,b2,b1);
+    if Number_Of_Unknowns(temp) = 0 then
+      return Null_Poly;
+    else
+      Clear(temp);
+      return red(p,b2,b1); 
     end if;
   end Reduce;
 
-  function Simple_Criterium ( p1,p2 : Poly ) return boolean is
+  function Simple_Criterium
+             ( p1,p2 : Standard_Complex_Polynomials.Poly ) return boolean is
 
   -- DESCRIPTION :
   --   returns true if lcm(in(p1),in(p2)) = in(p1), if in(p2) | in(p1).
+
+    use Standard_Complex_Polynomials;
 
     lt1,lt2 : Term;
     res : boolean;
@@ -268,12 +466,15 @@ package body Reduction_of_Polynomial_Systems is
     return res;
   end Simple_Criterium;
 
-  procedure Rpoly_Criterium ( p,b1,b2 : in Poly; cnt : in out natural32;
-                              res : out boolean ) is
+  procedure Rpoly_Criterium
+              ( p,b1,b2 : in Standard_Complex_Polynomials.Poly;
+                cnt : in out natural32; res : out boolean ) is
 
   -- DESCRIPTION :
   --   Applies the R-polynomial criterium and counts the number of 
   --   R-polynomials computed.
+
+    use Standard_Complex_Polynomials;
 
     Rpb1 : Poly := Rpoly(p,b1);
     Rpb2 : Poly;
@@ -308,10 +509,13 @@ package body Reduction_of_Polynomial_Systems is
     end if;
   end Rpoly_Criterium;
 
-  function Criterium ( p,q,s : Poly ) return boolean is
+  function Criterium
+             ( p,q,s : Standard_Complex_Polynomials.Poly ) return boolean is
 
   -- DESCRIPTION :
   --   returns true if p may be replaced by s.
+
+    use Standard_Complex_Polynomials;
 
   begin
     if Simple_Criterium(p,q) then
@@ -327,8 +531,9 @@ package body Reduction_of_Polynomial_Systems is
     end if;
   end Criterium;
 
-  procedure Criterium ( p,q,s : in Poly; cnt : in out natural32;
-                        res : out boolean ) is
+  procedure Criterium
+              ( p,q,s : in Standard_Complex_Polynomials.Poly;
+                cnt : in out natural32; res : out boolean ) is
 
   -- DESCRIPTION :
   --   returns true if p may be replaced by s.
@@ -340,11 +545,14 @@ package body Reduction_of_Polynomial_Systems is
     end if;
   end Criterium;
 
-  procedure Reduce ( p : in Poly_Sys; res : in out Poly_Sys;
+  procedure Reduce ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                     res : in out Standard_Complex_Poly_Systems.Poly_Sys;
                      cnt_eq : in out natural32; max_eq : in natural32;
                      cnt_sp : in out natural32; max_sp : in natural32;
                      cnt_rp : in out natural32; max_rp : in natural32 ) is
 
+    use Standard_Complex_Polynomials;
+ 
     S : Poly;
     n : constant integer32 := p'last - p'first + 1;
     dS,dpi,dpj : integer32;
@@ -354,24 +562,25 @@ package body Reduction_of_Polynomial_Systems is
 
     -- DESCRIPTION : try to replace p_i by S
 
-      p_red : Poly_Sys(1..n);
+      p_red : Standard_Complex_Poly_Systems.Poly_Sys(1..n);
 
     begin
       if cnt_eq > max_eq then return; end if;
       if cnt_sp > max_sp then return; end if;
-      Clear(p_red); Copy(p,p_red);
+      Standard_Complex_Poly_Systems.Clear(p_red);
+      Standard_Complex_Poly_Systems.Copy(p,p_red);
       Replace(p_red,S,i);
      -- put("replaced polynomial p("); put(i,1); put_line(").");
       if dS = 0 then
         return;
       elsif Total_Degree(p_red) < Total_Degree(res) then
-        Copy(p_red,res); 
+        Standard_Complex_Poly_Systems.Copy(p_red,res); 
         Reduce(p_red,res,cnt_eq,max_eq,cnt_sp,max_sp,cnt_rp,max_rp);
       elsif cnt_eq <= max_eq then
         cnt_eq := cnt_eq + 1;
         Reduce(p_red,res,cnt_eq,max_eq,cnt_sp,max_sp,cnt_rp,max_rp);
       end if;
-      Clear(p_red);
+      Standard_Complex_Poly_Systems.Clear(p_red);
     end try;
 
   begin
@@ -409,9 +618,12 @@ package body Reduction_of_Polynomial_Systems is
     end loop;
   end Reduce;
 
-  procedure Sparse_Reduce ( p : in Poly_Sys; res : in out Poly_Sys;
-                            cnt_eq : in out natural32;
-                            max_eq : in natural32 ) is
+  procedure Sparse_Reduce
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                res : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                cnt_eq : in out natural32; max_eq : in natural32 ) is
+
+    use Standard_Complex_Polynomials;
 
     S : Poly;
     n : constant integer32 := p'last - p'first + 1;
@@ -421,12 +633,13 @@ package body Reduction_of_Polynomial_Systems is
 
     -- DESCRIPTION : try to replace p_i by S
 
-      p_red : Poly_Sys(1..n);
+      p_red : Standard_Complex_Poly_Systems.Poly_Sys(1..n);
       inconsistent,infinite : boolean := false;
 
     begin
       if cnt_eq > max_eq then return; end if;
-      Clear(p_red); Copy(p,p_red);
+      Standard_Complex_Poly_Systems.Clear(p_red);
+      Standard_Complex_Poly_Systems.Copy(p,p_red);
       Replace(p_red,S,i);
       if dS /= 0
        then Sparse_Reduce(p_red,inconsistent,infinite);
@@ -434,13 +647,13 @@ package body Reduction_of_Polynomial_Systems is
       if dS = 0 or inconsistent then
         cnt_eq := max_eq + 1; return;
       elsif Total_Degree(p_red) < Total_Degree(res) then
-        Copy(p_red,res); 
+        Standard_Complex_Poly_Systems.Copy(p_red,res); 
         Sparse_Reduce(p_red,res,cnt_eq,max_eq);
       else
         cnt_eq := cnt_eq + 1;
         Sparse_Reduce(p_red,res,cnt_eq,max_eq);
       end if;
-      Clear(p_red);
+      Standard_Complex_Poly_Systems.Clear(p_red);
     end try;
 
   begin

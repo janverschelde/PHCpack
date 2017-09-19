@@ -1,24 +1,32 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems; 
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 
 package Reduction_of_Polynomial_Systems is
 
 -- DESCRIPTION :
 --   Linear and nonlinear reduction to reduce the total degree.
 
-  function Total_Degree ( p : Poly_Sys ) return natural32;
+  function Total_Degree
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the total degree of the polynomial system,
   --   i.e. the product of the degrees of the polynomials.
  
-  procedure Reduce ( p : in out Poly_Sys;
+  procedure Reduce ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                     diagonal,inconsistent,infinite : in out boolean );
+  procedure Reduce ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                     diagonal,inconsistent,infinite : in out boolean );
+  procedure Reduce ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                      diagonal,inconsistent,infinite : in out boolean );
 
   -- DESCRIPTION :
   --   This procedure tries to lower the total degree of p by means
-  --   of linear reduction.
+  --   of linear reduction, in standard double, double double, or
+  --   quad double precision.
 
   -- ON ENTRY : 
   --   p             a polynomial system.
@@ -30,14 +38,19 @@ package Reduction_of_Polynomial_Systems is
   --   infinite      is true if some equations of the original system
   --                 disappeared during the reduction process.
 
-  procedure Sparse_Reduce ( p : in out Poly_Sys;
+  procedure Sparse_Reduce ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                            inconsistent,infinite : in out boolean );
+  procedure Sparse_Reduce ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                            inconsistent,infinite : in out boolean );
+  procedure Sparse_Reduce ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                             inconsistent,infinite : in out boolean );
 
   -- DESCRIPTION :
   --   This procedure makes the coefficient matrix of p as sparse as
-  --   possible.
+  --   possible, in double, double double, or quad double precision.
 
-  procedure Reduce ( p : in Poly_Sys; res : in out Poly_Sys;
+  procedure Reduce ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                     res : in out Standard_Complex_Poly_Systems.Poly_Sys;
                      cnt_eq : in out natural32; max_eq : in natural32;
                      cnt_sp : in out natural32; max_sp : in natural32;
                      cnt_rp : in out natural32; max_rp : in natural32 );
@@ -49,23 +62,25 @@ package Reduction_of_Polynomial_Systems is
   -- REQUIRED : the counters must equal 0, on entry.
 
   -- ON ENTRY :
-  --   p              a polynomial system;
-  --   cnt_eq         counts the number of equal degree substitutions;
-  --   max_eq         limit on the number of equal degree substitutions;
-  --   cnt_sp         counts the number of S-polynomial computations;
-  --   max_sp         limit on the number of S-polynomial computations.
-  --   cnt_rp         counts the number of R-polynomial computations;
-  --   max_rp         limit on the number of R-polynomial computations.
+  --   p             a polynomial system;
+  --   cnt_eq        counts the number of equal degree substitutions;
+  --   max_eq        limit on the number of equal degree substitutions;
+  --   cnt_sp        counts the number of S-polynomial computations;
+  --   max_sp        limit on the number of S-polynomial computations.
+  --   cnt_rp        counts the number of R-polynomial computations;
+  --   max_rp        limit on the number of R-polynomial computations.
 
   -- ON RETURN :
-  --   res            the reduced system;
-  --   cnt_eq         the number of equal degree substitutions;
-  --   cnt_sp         the number of computed S-polynomials;
-  --   cnt_rp         the number of computed R-polynomials.
+  --   res           the reduced system;
+  --   cnt_eq        the number of equal degree substitutions;
+  --   cnt_sp        the number of computed S-polynomials;
+  --   cnt_rp        the number of computed R-polynomials.
 
-  procedure Sparse_Reduce ( p : in Poly_Sys; res : in out Poly_Sys;
-                            cnt_eq : in out natural32;
-                            max_eq : in natural32 );
+  procedure Sparse_Reduce
+                   ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                     res : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                     cnt_eq : in out natural32;
+                     max_eq : in natural32 );
 
   -- DESCRIPTION :
   --   the polynomial system is reduced by computing S-polynomials.

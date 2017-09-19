@@ -1,5 +1,7 @@
 Tue 19 Sep 2017 : moved the with standard_complex_linear_solvers from
   specification to body in standard_linear_reduction.
+  New packages dobldobl_linear_reduction and quaddobl_linear_reduction,
+  applied in reduction_of_polynomial_systems.
 
 Thu 14 Sep 2017 : new package standard_linear_reduction with code factored
   out of the package reduction_of_polynomial_systems.adb.
