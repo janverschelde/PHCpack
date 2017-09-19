@@ -3084,7 +3084,9 @@ function use_c2phc ( job : integer32;
       when 705 => return use_series(8,a,b,c); -- Pade with double doubles
       when 706 => return use_series(9,a,b,c); -- Pade with quad doubles
      -- reduction of polynomial systems
-      when 707 => return use_reduction(1,a,b,c); -- linear reduction
+      when 707 => return use_reduction(1,a,b,c); -- standard linear reduction
+      when 708 => return use_reduction(2,a,b,c); -- dobldobl linear reduction
+      when 709 => return use_reduction(3,a,b,c); -- quaddobl linear reduction
      -- container for numerically computed tropisms
       when 711..731 => return use_numbtrop(job-710,a,b,c);
      -- integer mixed cell configurations

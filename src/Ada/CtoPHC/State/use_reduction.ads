@@ -12,12 +12,29 @@ function use_reduction ( job : integer32;
 
 -- ON ENTRY :
 --   job =     1 : reduces the system in the standard container,
---                 applying row reduction on the coefficient matrix:
+--                 applying row reduction in standard double precision,
+--                 on the coefficient matrix:
 --                 on input in a is either 0 or 1:
 --                 0 : triangulation of the coefficient matrix,
 --                 1 : makes the coefficient matrix diagonal;
---                 the system in the container is replaced by the
---                 reduced system.
+--                 the system in the standard container is replaced
+--                 by the reduced system;
+--       =     2 : reduces the system in the dobldobl container,
+--                 applying row reduction in double double precision,
+--                 on the coefficient matrix:
+--                 on input in a is either 0 or 1:
+--                 0 : triangulation of the coefficient matrix,
+--                 1 : makes the coefficient matrix diagonal;
+--                 the system in the dobldobl container is replaced
+--                 by the reduced system;
+--       =     3 : reduces the system in the quaddobl container,
+--                 applying row reduction in quad double precision,
+--                 on the coefficient matrix:
+--                 on input in a is either 0 or 1:
+--                 0 : triangulation of the coefficient matrix,
+--                 1 : makes the coefficient matrix diagonal;
+--                 the system in the quaddobl container is replaced
+--                 by the reduced system.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

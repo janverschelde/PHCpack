@@ -1,3 +1,6 @@
+Tue 19 Sep 2017 : added two jobs to use_reduction and use_c2phc to apply
+  linear reduction in double double and quad double precision.
+
 Sun 17 Sep 2017 : added job code in use_c2phc for the linear reduction.
 
 Fri 15 Sep 2017 : new procedure use_reduction, to interface the reduction
