@@ -1032,6 +1032,20 @@ def quaddobl_scale_solutions(nvar, sols, cffs):
     py2c_scale_quaddobl_solutions(len(cffs), str(cffs))
     return load_quaddobl_solutions()
 
+def standard_linear_reduction(pols, diagonalize=True):
+    r"""
+    Applies row reduction in standard double precision on the coefficient
+    matrix of the polynomials in the list *pols*.
+    If diagonalize, then the coefficient matrix will be made diagonal.
+    On return is the list of reduced polynomials.
+    """
+    from phcpy.interface import store_standard_system, load_standard_system
+    from phcpy.phcpy2c3 import py2c_linear_reduce_standard_system
+    store_standard_system(pols)
+    fail = py2c_linear_reduce_standard_system(int(diagonalize))
+    rpol = load_standard_system()
+    return rpol
+
 def test_scale():
     """
     Performs a basic test on variable scaling.
@@ -1083,6 +1097,19 @@ def test_scale():
     print('the solutions of the original problem :')
     for sol in orgpsols:
         print(sol)
+
+def test_reduce():
+    """
+    Tests the reduction of the coefficient matrix of a system.
+    """
+    pols = ['x^2*y^2 + x + 1;', 'x^2*y^2 + y + 1;']
+    print('reducing a polynomial system :')
+    for pol in pols:
+        print(pol)
+    redu = standard_linear_reduction(pols)
+    print('the reduced polynomials :')
+    for pol in redu:
+        print(pol)
 
 def test_dobldobl_polyhedral_homotopy():
     """
