@@ -2,7 +2,6 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
-with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 
@@ -13,6 +12,7 @@ package Standard_Linear_Reduction is
 --   a polynomial system may lead to a system with a lower total degree.
 --   The operations in this package are utilities to build the
 --   coefficient matrix and to reconstruct the system after row reduction.
+--   The row reduction happens in standard double precision.
 
   mach_eps : constant double_float := 1.0E-13;
 

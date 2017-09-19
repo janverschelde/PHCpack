@@ -1,5 +1,6 @@
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 
 package body Standard_Linear_Reduction is
 
