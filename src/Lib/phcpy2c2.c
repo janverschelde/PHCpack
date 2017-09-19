@@ -15,6 +15,7 @@
 #include "celcon.h"
 #include "intcelcon.h"
 #include "scalers.h"
+#include "reducers.h"
 #include "numbtrop.h"
 #include "sweep.h"
 #include "witset.h"
@@ -4438,7 +4439,7 @@ static PyObject *py2c_intcelcon_clear_mixed_cell_configuration
    return Py_BuildValue("i",fail);
 }
 
-/* The wrapping of the functions with prototypes in scale.h starts here. */
+/* The wrapping of the functions with prototypes in scalers.h starts here. */
 
 static PyObject *py2c_scale_standard_system
  ( PyObject *self, PyObject *args )
@@ -4583,6 +4584,21 @@ static PyObject *py2c_scale_quaddobl_solutions
       str2dbllist(dim,cff,scf);
       fail = quaddobl_scale_solutions(dim,10,scf);
    }
+   return Py_BuildValue("i",fail);
+}
+
+/* The wrapping of the functions with prototypes in reducers.h starts here. */
+
+static PyObject *py2c_linear_reduce_standard_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,diag;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&diag)) return NULL;
+
+   fail = standard_reduce_system(diag);
+
    return Py_BuildValue("i",fail);
 }
 
@@ -9185,6 +9201,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_scale_quaddobl_solutions",
      py2c_scale_quaddobl_solutions, METH_VARARGS,
     "Replaces the solutions in the quaddobl solutions container with\n the scaled solutions, scaled with quad double precision arithmetic,\n using the given scaling coefficients.\n On entry are two parameters: an integer and a string.\n The integer contains the number of elements in the list\n of scaling coefficients (doubles) stored in the string.\n The format of the string is the Python string representation\n of a list of doubles, i.e.: starting with [ and ending with ]."},
+   {"py2c_linear_reduce_standard_system",
+     py2c_linear_reduce_standard_system, METH_VARARGS,
+    "Applies linear reduction on the coefficient matrix of the system\n in the container for standard double precision.\n There is one integer parameter: whether to diagonalize or not."},
    {"py2c_sweep_define_parameters_numerically",
      py2c_sweep_define_parameters_numerically, METH_VARARGS,
     "Defines the indices to the variables that serve as parameters\n numerically, that is: via integer indices.\n On entry are three integer numbers and a string.\n The string is a string representation of a Python list of integers,\n The three integers are the number of equations, the number of variables,\n and the number of parameters.  The number of variables m includes the\n number of parameters.  Then there should be as many as m indices in\n the list of integers to define which of the variables are parameters."},

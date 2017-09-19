@@ -3071,6 +3071,16 @@ static PyObject *py2c_scale_quaddobl_solutions
  *   The format of the string is the Python string representation
  *   of a list of doubles, i.e.: starting with '[' and ending with ']'. */
 
+/* The wrapping of functions with prototypes in reducers.h starts here. */
+
+static PyObject *py2c_linear_reduce_standard_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies linear reduction on the coefficient matrix of the system
+ *   in the container for standard double precision.
+ *   There is one integer parameter: whether to diagonalize or not. */
+
 /* The wrapping of the functions with prototypes in sweep.h starts here. */
 
 static PyObject *py2c_sweep_define_parameters_numerically
