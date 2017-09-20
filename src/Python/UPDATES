@@ -1,5 +1,5 @@
 Tue 19 Sep 2017 : added a simple linear reduction to the solver modules
-  for python 2 and 3.
+  for python 2 and 3.  Added double double and quad double versions.
 
 Wed 13 Sep 2017 : corrected the silent= option into the verbose= options into
   the calls to the solve function in cascades.py and factor.py.

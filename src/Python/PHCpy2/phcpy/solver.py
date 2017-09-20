@@ -1026,6 +1026,8 @@ def standard_linear_reduction(pols, diagonalize=True):
     r"""
     Applies row reduction in standard double precision on the coefficient
     matrix of the polynomials in the list *pols*.
+    As the monomials are sorted in the total degree order,
+    the total degree may decrease as a result of linear reduction.
     If diagonalize, then the coefficient matrix will be made diagonal.
     On return is the list of reduced polynomials.
     """
@@ -1034,6 +1036,38 @@ def standard_linear_reduction(pols, diagonalize=True):
     store_standard_system(pols)
     fail = py2c_linear_reduce_standard_system(int(diagonalize))
     rpol = load_standard_system()
+    return rpol
+
+def dobldobl_linear_reduction(pols, diagonalize=True):
+    r"""
+    Applies row reduction in double double precision on the coefficient
+    matrix of the polynomials in the list *pols*.
+    As the monomials are sorted in the total degree order,
+    the total degree may decrease as a result of linear reduction.
+    If diagonalize, then the coefficient matrix will be made diagonal.
+    On return is the list of reduced polynomials.
+    """
+    from phcpy.interface import store_dobldobl_system, load_dobldobl_system
+    from phcpy.phcpy2c2 import py2c_linear_reduce_dobldobl_system
+    store_dobldobl_system(pols)
+    fail = py2c_linear_reduce_dobldobl_system(int(diagonalize))
+    rpol = load_dobldobl_system()
+    return rpol
+
+def quaddobl_linear_reduction(pols, diagonalize=True):
+    r"""
+    Applies row reduction in quad double precision on the coefficient
+    matrix of the polynomials in the list *pols*.
+    As the monomials are sorted in the total degree order,
+    the total degree may decrease as a result of linear reduction.
+    If diagonalize, then the coefficient matrix will be made diagonal.
+    On return is the list of reduced polynomials.
+    """
+    from phcpy.interface import store_quaddobl_system, load_quaddobl_system
+    from phcpy.phcpy2c2 import py2c_linear_reduce_quaddobl_system
+    store_quaddobl_system(pols)
+    fail = py2c_linear_reduce_quaddobl_system(int(diagonalize))
+    rpol = load_quaddobl_system()
     return rpol
 
 def test_scale():
@@ -1088,7 +1122,7 @@ def test_scale():
     for sol in orgpsols:
         print sol
 
-def test_reduce():
+def test_reduce(precision='d'):
     """
     Tests the reduction of the coefficient matrix of a system.
     """
@@ -1096,7 +1130,14 @@ def test_reduce():
     print 'reducing a polynomial system :'
     for pol in pols:
         print pol
-    redu = standard_linear_reduction(pols)
+    if(precision == 'd'):
+        redu = standard_linear_reduction(pols)
+    elif(precision == 'dd'):
+        redu = dobldobl_linear_reduction(pols)
+    elif(precision == 'qd'):
+        redu = quaddobl_linear_reduction(pols)
+    else:
+        print 'invalid argument for the precision'
     print 'the reduced polynomials :'
     for pol in redu:
         print pol
