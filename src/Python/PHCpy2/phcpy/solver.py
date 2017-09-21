@@ -1028,7 +1028,7 @@ def standard_linear_reduction(pols, diagonalize=True):
     matrix of the polynomials in the list *pols*.
     As the monomials are sorted in the total degree order,
     the total degree may decrease as a result of linear reduction.
-    If diagonalize, then the coefficient matrix will be made diagonal.
+    If *diagonalize*, then the coefficient matrix will be made diagonal.
     On return is the list of reduced polynomials.
     """
     from phcpy.interface import store_standard_system, load_standard_system
@@ -1044,7 +1044,7 @@ def dobldobl_linear_reduction(pols, diagonalize=True):
     matrix of the polynomials in the list *pols*.
     As the monomials are sorted in the total degree order,
     the total degree may decrease as a result of linear reduction.
-    If diagonalize, then the coefficient matrix will be made diagonal.
+    If *diagonalize*, then the coefficient matrix will be made diagonal.
     On return is the list of reduced polynomials.
     """
     from phcpy.interface import store_dobldobl_system, load_dobldobl_system
@@ -1060,7 +1060,7 @@ def quaddobl_linear_reduction(pols, diagonalize=True):
     matrix of the polynomials in the list *pols*.
     As the monomials are sorted in the total degree order,
     the total degree may decrease as a result of linear reduction.
-    If diagonalize, then the coefficient matrix will be made diagonal.
+    If *diagonalize*, then the coefficient matrix will be made diagonal.
     On return is the list of reduced polynomials.
     """
     from phcpy.interface import store_quaddobl_system, load_quaddobl_system
@@ -1069,6 +1069,25 @@ def quaddobl_linear_reduction(pols, diagonalize=True):
     fail = py2c_linear_reduce_quaddobl_system(int(diagonalize))
     rpol = load_quaddobl_system()
     return rpol
+
+def linear_reduce(pols, diagonalize=True, precision='d'):
+    """
+    Applies row reduction to the coefficient matrix of the polynomials
+    in the list *pols*.  As the monomials are sorted by total degree,
+    the Bezout bound may decrease as a result of this row reduction.
+    By default, if *diagonalize*, the coefficient matrix will be made
+    diagonal.  The default precision is double precision.
+    Other available precisions are double double ('dd')
+    and quad double ('qd').
+    """
+    if(precision == 'd'):
+        return standard_linear_reduction(pols, diagonalize)
+    elif(precision == 'dd'):
+        return dobldobl_linear_reduction(pols, diagonalize)
+    elif(precision == 'qd'):
+        return quaddobl_linear_reduction(pols, diagonalize)
+    else:
+        print 'invalid argument for the precision'
 
 def test_scale():
     """
@@ -1130,14 +1149,7 @@ def test_reduce(precision='d'):
     print 'reducing a polynomial system :'
     for pol in pols:
         print pol
-    if(precision == 'd'):
-        redu = standard_linear_reduction(pols)
-    elif(precision == 'dd'):
-        redu = dobldobl_linear_reduction(pols)
-    elif(precision == 'qd'):
-        redu = quaddobl_linear_reduction(pols)
-    else:
-        print 'invalid argument for the precision'
+    redu = linear_reduce(pols, True, precision)
     print 'the reduced polynomials :'
     for pol in redu:
         print pol
