@@ -6,6 +6,8 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Total_Degree_Start_Systems;         use Total_Degree_Start_Systems;
 with Reduction_of_Polynomial_Systems;    use Reduction_of_Polynomial_Systems;
 with Reduction_of_Nonsquare_Systems;     use Reduction_of_Nonsquare_Systems;
@@ -153,9 +155,103 @@ package body Drivers_for_Reduction is
     end if;
   end Write_Diagnostics;
 
+  procedure Write_Diagnostics
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 diagonal,inconsistent,infinite : in boolean;
+                 d : out natural32 ) is
+
+  -- DESCRIPTION :
+  --   Writes diagnostics after reduction.
+
+    b : natural32;
+
+  begin
+    if not diagonal then
+      if inconsistent then
+        put_line("  Inconsistent system: no solutions.");
+        put_line(file,"  Inconsistent system: no solutions.");
+      elsif infinite then
+        put("  Probably an infinite number");
+        put_line(" of solutions.");
+        put(file,"  Probably an infinite number");
+        put_line(file," of solutions.");
+      else
+        put("  The total degree is ");
+        put(file,"  The total degree is ");
+        b := Total_Degree(p);
+        put(b,1); put(file,b,1);
+        put_line("."); put_line(file,".");
+        d := b;
+      end if;
+    else
+      put_line("  No initial terms could be eliminated.");
+      put_line(file,"  No initial terms could be eliminated.");
+    end if;
+  end Write_Diagnostics;
+
+  procedure Write_Diagnostics
+               ( file : in file_type;
+                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 diagonal,inconsistent,infinite : in boolean;
+                 d : out natural32 ) is
+
+  -- DESCRIPTION :
+  --   Writes diagnostics after reduction.
+
+    b : natural32;
+
+  begin
+    if not diagonal then
+      if inconsistent then
+        put_line("  Inconsistent system: no solutions.");
+        put_line(file,"  Inconsistent system: no solutions.");
+      elsif infinite then
+        put("  Probably an infinite number");
+        put_line(" of solutions.");
+        put(file,"  Probably an infinite number");
+        put_line(file," of solutions.");
+      else
+        put("  The total degree is ");
+        put(file,"  The total degree is ");
+        b := Total_Degree(p);
+        put(b,1); put(file,b,1);
+        put_line("."); put_line(file,".");
+        d := b;
+      end if;
+    else
+      put_line("  No initial terms could be eliminated.");
+      put_line(file,"  No initial terms could be eliminated.");
+    end if;
+  end Write_Diagnostics;
+
   procedure Write_Results
               ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                timer : in Timing_Widget; banner : in string ) is
+  begin
+    new_line(file);
+    put_line(file,"THE REDUCED SYSTEM :");
+    put(file,natural32(p'last),p);
+    new_line(file);
+    print_times(file,timer,banner);
+  end Write_Results;
+
+  procedure Write_Results
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                timer : in Timing_Widget; banner : in string ) is
+  begin
+    new_line(file);
+    put_line(file,"THE REDUCED SYSTEM :");
+    put(file,natural32(p'last),p);
+    new_line(file);
+    print_times(file,timer,banner);
+  end Write_Results;
+
+  procedure Write_Results
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 timer : in Timing_Widget; banner : in string ) is
   begin
     new_line(file);
@@ -183,9 +279,83 @@ package body Drivers_for_Reduction is
     Write_Results(file,p,timer,"Linear Reduction");
   end Driver_for_Linear_Reduction;
 
+  procedure Driver_for_Linear_Reduction
+              ( file : in file_type;
+                p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                d : out natural32 ) is
+
+    timer : Timing_Widget;
+    diagonal,inconsistent,infinite : boolean := false;
+
+  begin
+    new_line(file);
+    put_line(file,"LINEAR REDUCTION : ");
+    tstart(timer);
+    Reduce(p,diagonal,inconsistent,infinite);
+    tstop(timer);
+    Write_Diagnostics(file,p,diagonal,inconsistent,infinite,d);
+    Write_Results(file,p,timer,"Linear Reduction");
+  end Driver_for_Linear_Reduction;
+
+  procedure Driver_for_Linear_Reduction
+              ( file : in file_type;
+                p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                d : out natural32 ) is
+
+    timer : Timing_Widget;
+    diagonal,inconsistent,infinite : boolean := false;
+
+  begin
+    new_line(file);
+    put_line(file,"LINEAR REDUCTION : ");
+    tstart(timer);
+    Reduce(p,diagonal,inconsistent,infinite);
+    tstop(timer);
+    Write_Diagnostics(file,p,diagonal,inconsistent,infinite,d);
+    Write_Results(file,p,timer,"Linear Reduction");
+  end Driver_for_Linear_Reduction;
+
   procedure Driver_for_Sparse_Linear_Reduction
               ( file : in file_type;
                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                d : out natural32 ) is
+
+    timer : Timing_Widget;
+    diagonal : constant boolean := false;
+    inconsistent,infinite : boolean := false;
+
+  begin
+    new_line(file);
+    put_line(file,"SPARSE LINEAR REDUCTION : ");
+    tstart(timer);
+    Sparse_Reduce(p,inconsistent,infinite);
+    tstop(timer);
+    Write_Diagnostics(file,p,diagonal,inconsistent,infinite,d);
+    Write_Results(file,p,timer,"Sparse Reduction");
+  end Driver_for_Sparse_Linear_Reduction;
+
+  procedure Driver_for_Sparse_Linear_Reduction
+              ( file : in file_type;
+                p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                d : out natural32 ) is
+
+    timer : Timing_Widget;
+    diagonal : constant boolean := false;
+    inconsistent,infinite : boolean := false;
+
+  begin
+    new_line(file);
+    put_line(file,"SPARSE LINEAR REDUCTION : ");
+    tstart(timer);
+    Sparse_Reduce(p,inconsistent,infinite);
+    tstop(timer);
+    Write_Diagnostics(file,p,diagonal,inconsistent,infinite,d);
+    Write_Results(file,p,timer,"Sparse Reduction");
+  end Driver_for_Sparse_Linear_Reduction;
+
+  procedure Driver_for_Sparse_Linear_Reduction
+              ( file : in file_type;
+                p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 d : out natural32 ) is
 
     timer : Timing_Widget;

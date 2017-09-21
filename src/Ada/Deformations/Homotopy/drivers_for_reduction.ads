@@ -1,6 +1,8 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 
 package Drivers_for_Reduction is
 
@@ -17,17 +19,35 @@ package Drivers_for_Reduction is
                ( file : in file_type; 
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  d : out natural32 );
+  procedure Driver_for_Linear_Reduction
+               ( file : in file_type; 
+                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 d : out natural32 );
+  procedure Driver_for_Linear_Reduction
+               ( file : in file_type; 
+                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 d : out natural32 );
 
   -- DESCRIPTION :
-  --   The coefficient matrix of the system is triangulated.
+  --   The coefficient matrix of the system is triangulated,
+  --   in standard double, double double, or quad double precision.
 
   procedure Driver_for_Sparse_Linear_Reduction
                ( file : in file_type;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  d : out natural32 );
+  procedure Driver_for_Sparse_Linear_Reduction
+               ( file : in file_type;
+                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 d : out natural32 );
+  procedure Driver_for_Sparse_Linear_Reduction
+               ( file : in file_type;
+                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 d : out natural32 );
 
   -- DESCRIPTION :
-  --   The coefficient matrix of the system is diagonalized. 
+  --   The coefficient matrix of the system is diagonalized,
+  --   in standard double, double double, or quad double precision.
 
   procedure Driver_for_Nonlinear_Reduction
                ( file : in file_type;
