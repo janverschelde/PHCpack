@@ -1,0 +1,150 @@
+Thu 21 Sep 2017 : added total_degree() functions to the package
+  total_degree_start_systems.
+
+Sun 22 Dec 2013 : new package m_homogeneous_permanent_factors extracted
+  out of ts_permstar.
+
+Sat 21 Dec 2013 : exported Cardinalities in m_homogeneous_bezout_numbers
+  and the Patch was most likely wrong!  New ts_permstar.adb prepares jobs
+  for efficient solution of m-homogeneous linear-product start system.
+
+Sun 15 Dec 2013 : refactored drivers_for_m_homogenization.adb moving
+  Universe to sets_of_unknowns and Patch to m_homogeneous_bezout_numbers.
+  Added parsing to set_of_unknowns_strings, tested in ts_strpart.
+
+Sat 14 Dec 2013 : fixed strange formatting in sets_of_unknowns_io.adb in
+  case of an empty symbol table.  New packages sets_of_unknowns_strings
+  and partitions_of_sets_strings, tested by ts_strpart.
+
+Thu 12 Dec 2013 : new package set_structure_strings, tested by ts_strset.
+  Changed clear in set_structure.adb because if the set structure is empty,
+  there should be no crash if clear is executed.  To verify whether a
+  set structure supports a polynomial system, there is a new package
+  supporting_set_structure.
+
+Tue 17 Sep 2013 : added multiprecision total degree function to
+  m_homogeneous_bezout_numbers, changed drivers_for_m_homogenization.adb
+  for a compiler warning.
+
+Thu 13 Jun 2013 : because of the introduction of natural32 and integer32,
+  about half of all files in the directory changed.
+
+Mon 13 May 2013 : updated standard_linear_product_system for 64-bit counting,
+  which led to modifications in ts_prodsys.adb.
+
+Fri 29 Mar 2012 (or 2013?) : update in ts_prodsys.adb to count the roots when
+  generating a set structure.
+
+Wed 1 Jun 2011 : changed sets_of_unknowns.adb, sets_of_unknowns_io.ad, and
+  degrees_in_sets_of_unknowns.adb, multi_homogeneous_start_systems.adb
+  for warnings.
+
+Sun 29 May 2011 : changed random_product_start_systems.adb and
+  set_structure.adb for warnings.
+
+Mon 23 May 2011 : extended total_degree_start_systems with Root for double
+  double and quad double numbers, changed ts_startsys.adb for warnings.
+  Created {dobldobl,quaddobl}_linear_product_system.
+  Changed standard_linear_prod_planes to export one function.
+
+Sun 22 May 2011 : modified ts_prodsys.adb, ts_drivss.adb, ts_permanent.adb
+  for warnings.  Changed standard_complex_poly_lists_io.adb to ignore the
+  closing bracket when reading a linear-product system, adding a special
+  Read_Polynomial copied over from standard_complex_polynomials_io.adb.
+
+Sun 19 Dec 2010 : ts_drivmhom.adb did not compile because of the 64-bit
+  natural type for the total degree.  Because of a serious bug, changed
+  m_homogeneous_bezout_numbers.adb and drivers_for_m_homogenization.adb.
+  Modified interpolating_homotopies.adb for GNAT GPL 2010 compiler warnings.
+
+Mon 21 Sep 2009 : extended m_homogeneous_bezout_numbers with 64-bit
+  calculation of the total degree, updated degrees_in_sets_of_unknowns,
+  and drivers_for_m_homogenization.
+
+Thu 3 Jan 2008 : because of warnings given by GNAT GPL 2006, changed
+  drivers_for_multi_homogenization.adb, drivers_for_set_structures.adb,
+  m_homogeneous_bezout_numbers.adb, total_degree_start_systems.adb,
+  degree_sets_tables.adb, set_structure.ad*, standard_linear_product_system.a*
+
+Sun 16 Dec 2007 : added gradient and jacobian functions to
+  standard_complex_prod_planes, tested by ts_prodsys.adb.
+
+Sat 8 Dec 2007 : standard_complex_prod_planes now contain Eval, tested
+  by ts_prodsys.adb.
+
+Wed 31 Oct 2007 : added write_multiplicities to ts_prodsys.adb,
+   now possible to compute set structure bounds much faster.
+
+Tue 16 Oct 2007 : added timer to enumerators in ts_prodsys.adb.
+
+Fri 1 Jun 2007 : added one routine to multi_homogeneous_start_systems to
+  output the start system in a linear-product format.  Also updated the
+  drivers_for_multi_homogenization and ts_drivmuho.adb.
+  Also extended m_homogeneous_start_systems to output product formats.
+
+Sat 26 May 2007 : changed drivers_for_multi_homogenization.adb a little.
+
+Fri 2 Feb 2007 : added "Count_All_Roots" to standard_linear_product_system,
+  because the blackbox solver on cyclic 10-roots took all night...
+
+Mon 1 Jan 2007 : ts_prodsys.adb appends solutions to linear-product system;
+  extended the Create in total_degree_start_systems.ads and added a Get_Next
+  with memory to standard_linear_product_system.
+
+Sun 31 Dec 2006 : fixed bugs in standard_linear_product_system.adb,
+  tested by ts_prodsys.adb.
+
+Fri 29 Dec 2006 : cleaned up ts_prodsys.adb, now also enumerates solutions;
+  Extended lexicographic_root_enumeration to invert the root enumerator of
+  standard_linear_product_system, tested by ts_prodsys.adb.
+
+Thu 28 Dec 2006 : improved root counting in ts_prodsys.adb, using
+  incremental row reduction.  Warning in standard_complex_prod_planes.adb
+  fixed, added enumerator in standard_linear_product_system.ads.
+
+Wed 27 Dec 2006 : cosmetic change in drivers_for_m_homogenization.adb.
+
+Tue 26 Dec 2006 : partitions_of_sets_of_unknowns.adb did not have an
+  exception handler when the #partitions is too large.  Extended
+  m_homogeneous_start_systems with a procedure which does not solve,
+  modified drivers_for_m_homogenization.adb.
+
+Tue 3 Oct 2006 : changed drivers_for_set_structures.adb, so that now phc -r
+  prints start system in product form and user is left with choice to
+  postpone the solution of the start system.
+
+Tue 4 Apr 2006 : added timer to ts_prodsys.adb.
+
+Fri 31 Mar 2006 : updated ts_prodsys.adb with silent counter and reading of
+  a set structure required change in drivers_for_set_structures.ads.
+
+Sat 25 Mar 2006 : added function "Coefficients" to total_degree_start_systems.
+
+Thu 23 Mar 2006 : random_product_system is standard_linear_product_system:
+  m_homogeneous_start_systems.adb, multi_homogeneous_start_systems.adb,
+  drivers_for_set_structures.adb, standard_complex_prod_planes, and
+  random_product_start_systems, standard_linear_product_system_io all
+  changed because of this.  New package "Lexicographic_Root_Enumeration"
+  extracted from code of total_degree_start_systems.
+
+Tue 21 Mar 2006 : renamed ts_propol.adb into ts_prodsys.adb.
+  The total_degree_start_systems is now completely rewritten,
+  also ts_startsys.adb is more serious.  Modified random_product_system
+  and create standard_complex_prod_planes, tested by ts_prodsys.
+
+Mon 20 Mar 2006 : updates on poly_lists, prod_systems and ts_propol.adb.
+  Redesigned total_degree_start_systems to allow for jumpstarting,
+  also changed ts_startsys.adb.
+
+Sun 19 Mar 2006 : created ts_propol.adb to develop tools to work with
+  products of polynomials, represented by standard_complex_poly_lists +io.
+  Created the package standard_complex_prod_systems, with io.
+
+Fri 17 Feb 2006 : created ts_permanent.adb to chase a bug in the permanent
+  computation, which got fixed in Math_Lib/Matrices directory.
+
+Wed 20 Sep 2000 : patched error in heuristic partitioner for m-homogenization;
+  changed the file drivers_for_m_homogenization.adb.
+
+Thu 26 Dec 2002 : changed random_product_start_systems and set_structure_io 
+  to deal with single polynomials instead of only with polynomial systems.

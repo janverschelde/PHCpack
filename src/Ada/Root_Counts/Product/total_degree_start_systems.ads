@@ -43,6 +43,16 @@ package Total_Degree_Start_Systems is
   --   Returns the product of the elements in d.
   --   Product(Degrees(p)) computes the total degree of the system p.
 
+  function Total_Degree
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys ) return natural32;
+  function Total_Degree
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys ) return natural32;
+  function Total_Degree
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys ) return natural32;
+
+  -- DESCRIPTION :
+  --   Returns the total degree of the polynomial system p.
+
 -- CREATE THE SYSTEM :
 
   function Start_System

@@ -82,6 +82,27 @@ package body Total_Degree_Start_Systems is
     return res;
   end Product;
 
+  function Total_Degree
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys )
+             return natural32 is
+  begin
+    return Product(Degrees(p));
+  end Total_Degree;
+
+  function Total_Degree
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+             return natural32 is
+  begin
+    return Product(Degrees(p));
+  end Total_Degree;
+
+  function Total_Degree
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+             return natural32 is
+  begin
+    return Product(Degrees(p));
+  end Total_Degree;
+
 -- CREATE THE SYSTEM :
 
   function Start_System
