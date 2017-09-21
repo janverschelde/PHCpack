@@ -1,3 +1,6 @@
+Wed 20 Sep 2017 : updated drivers_for_reduction to prepare for the inclusion
+  of drivers for double double and quad double precision.
+
 Tue 19 Sep 2017 : moved the with standard_complex_linear_solvers from
   specification to body in standard_linear_reduction.
   New packages dobldobl_linear_reduction and quaddobl_linear_reduction,

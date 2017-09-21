@@ -1,6 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
 
 package Drivers_for_Reduction is
 
@@ -14,32 +14,39 @@ package Drivers_for_Reduction is
   --   Displays information about reduction on screen.
 
   procedure Driver_for_Linear_Reduction
-               ( file : in file_type; p : in out Poly_Sys; d : out natural32 );
+               ( file : in file_type; 
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 d : out natural32 );
 
   -- DESCRIPTION :
   --   The coefficient matrix of the system is triangulated.
 
   procedure Driver_for_Sparse_Linear_Reduction
-               ( file : in file_type; p : in out Poly_Sys; d : out natural32 );
+               ( file : in file_type;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 d : out natural32 );
 
   -- DESCRIPTION :
   --   The coefficient matrix of the system is diagonalized. 
 
   procedure Driver_for_Nonlinear_Reduction
-               ( file : in file_type; p : in out Poly_Sys; d : out natural32 );
+               ( file : in file_type;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 d : out natural32 );
 
   -- DESCRIPTION :
   --   Combinations of S-polynomials are used to lower the total degree.
 
   procedure Driver_for_Overconstrained_Reduction
-               ( p : in out Poly_Sys );
+               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys );
 
   -- DESCRIPTION :
   --   Random combinations are added.
 
   procedure Driver_for_Reduction 
-               ( file : in file_type; p : in out Poly_Sys; d : out natural32;
-                 exit_option : in boolean );
+               ( file : in file_type;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 d : out natural32; exit_option : in boolean );
 
   -- DESCRIPTION :
   --   This is an interactive driver for the reduction procedures.

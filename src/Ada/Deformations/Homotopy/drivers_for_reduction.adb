@@ -65,7 +65,8 @@ package body Drivers_for_Reduction is
     end loop;
   end Display_Menu;
 
-  procedure Rationalize ( p : in out Poly_Sys ) is
+  procedure Rationalize
+              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
   --   Shortens the exponent vectors when an unknown disappears.
@@ -117,7 +118,8 @@ package body Drivers_for_Reduction is
   end Rationalize;
 
   procedure Write_Diagnostics
-               ( file : in file_type; p : in Poly_Sys;
+               ( file : in file_type;
+                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  diagonal,inconsistent,infinite : in boolean;
                  d : out natural32 ) is
 
@@ -150,8 +152,10 @@ package body Drivers_for_Reduction is
     end if;
   end Write_Diagnostics;
 
-  procedure Write_Results ( file : in file_type; p : in Poly_Sys;
-                            timer : in Timing_Widget; banner : in string ) is
+  procedure Write_Results
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                timer : in Timing_Widget; banner : in string ) is
   begin
     new_line(file);
     put_line(file,"THE REDUCED SYSTEM :");
@@ -161,7 +165,9 @@ package body Drivers_for_Reduction is
   end Write_Results;
 
   procedure Driver_for_Linear_Reduction
-              ( file : in file_type; p : in out Poly_Sys; d : out natural32 ) is
+              ( file : in file_type;
+                p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                d : out natural32 ) is
 
     timer : Timing_Widget;
     diagonal,inconsistent,infinite : boolean := false;
@@ -177,7 +183,9 @@ package body Drivers_for_Reduction is
   end Driver_for_Linear_Reduction;
 
   procedure Driver_for_Sparse_Linear_Reduction
-              ( file : in file_type; p : in out Poly_Sys; d : out natural32 ) is
+              ( file : in file_type;
+                p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                d : out natural32 ) is
 
     timer : Timing_Widget;
     diagonal : constant boolean := false;
@@ -195,7 +203,10 @@ package body Drivers_for_Reduction is
 
   procedure Driver_for_Nonlinear_Reduction
                 ( file : in file_type;
-                  p : in out Poly_Sys; d : out natural32 ) is
+                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                  d : out natural32 ) is
+
+    use Standard_Complex_Poly_Systems;
 
     res : Poly_Sys(p'range);
    -- sparse : boolean;
@@ -207,7 +218,6 @@ package body Drivers_for_Reduction is
   begin
     Rationalize(p);
     Clear(res); Copy(p,res);
-
     new_line(file);
     put_line(file,"NONLINEAR REDUCTION :");
     put("  Give the limit on #equal degree replacements : ");
@@ -222,7 +232,6 @@ package body Drivers_for_Reduction is
     put(file,max_sp,1); new_line(file);
     put(file,"  The limit on #computed R-polynomials : ");
     put(file,max_rp,1); new_line(file);
-
    -- sparse := false;
     tstart(timer);
    -- if sparse
@@ -237,7 +246,6 @@ package body Drivers_for_Reduction is
     put(file,"The total degree is "); put(file,b,1);
     put_line("."); put_line(file,".");
     d := b;
-
     new_line(file); 
     put_line(file,"Amount of arithmetic work");
     put(file,"   #equal replacements     : ");
@@ -247,7 +255,6 @@ package body Drivers_for_Reduction is
     put(file,"   #computed R-polynomials : ");
     put(file,cnt_rp,4); new_line(file);
     new_line(file);
-
     put_line(file,"The reduced system :");
     put(file,p'length,p);
     new_line(file);
@@ -256,7 +263,9 @@ package body Drivers_for_Reduction is
   end Driver_for_Nonlinear_Reduction;
 
   procedure Driver_for_Overconstrained_Reduction
-                ( p : in out Poly_Sys ) is
+              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     ans : character;
     n : constant integer32 := p'length;
@@ -287,8 +296,9 @@ package body Drivers_for_Reduction is
   end Driver_for_Overconstrained_Reduction;
 
   procedure Driver_for_Reduction
-               ( file : in file_type; p : in out Poly_Sys; d : out natural32;
-                 exit_option : in boolean ) is
+              ( file : in file_type;
+                p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                d : out natural32; exit_option : in boolean ) is
 
     n : constant natural32 := natural32(p'length);
     ans : character := '0';
