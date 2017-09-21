@@ -625,3 +625,27 @@ coefficients, we may have to perform the scaling in higher precision,
 such as available in the functions
 ``dobldobl_scale_system`` and ``quaddobl_scale_system``,
 respectively with double double and quad double arithmetic.
+
+reduction of polynomial systems
+-------------------------------
+
+Applying row reduction on the coefficient matrix of a polynomial system
+may lead to a system with fewer monomials and a lower root count.
+Consider for example the following session:
+
+::
+
+   >>> p = ['x**2*y**2 + x + 1;', 'x**2*y**2 + y + 1;']
+   >>> from phcpy.solver import linear_reduce
+   >>> r = linear_reduce(p)
+   >>> for pol in r: print(pol)
+
+The printed polynomials are 
+``x^2*y^2 + y + 1;`` and ``+ x - y;``
+showing that, while the system is invariant under swapping
+of ``x`` and ``y``, all solutions are fixed points as both
+coordinates for all four solutions will be the same.
+
+The precision of the row reduction is increased to double double
+by providing the argument ``precision='dd'`` and to quad double
+via the argument ``precision='qd'``.

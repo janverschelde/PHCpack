@@ -1,4 +1,5 @@
-Wed 20 Sep 2017 : added wrapper function, linear_reduce, to the solver.py.
+Wed 20 Sep 2017 : added wrapper function, linear_reduce, to the solver.py,
+  wrote short section in the user manual to document linear_reduce.
 
 Tue 19 Sep 2017 : added a simple linear reduction to the solver modules
   for python 2 and 3.  Added double double and quad double versions.
