@@ -1,4 +1,6 @@
 Thu 21 Sep 2017 : used the standard_system_readers in mainred.adb.
+  Removed the total_degree function out of reduction_of_polynomial_systems,
+  which changed drivers_for_reduction.adb.
 
 Wed 20 Sep 2017 : updated drivers_for_reduction to prepare for the inclusion
   of drivers for double double and quad double precision.

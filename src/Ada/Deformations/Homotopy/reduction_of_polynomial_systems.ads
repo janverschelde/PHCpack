@@ -9,13 +9,6 @@ package Reduction_of_Polynomial_Systems is
 -- DESCRIPTION :
 --   Linear and nonlinear reduction to reduce the total degree.
 
-  function Total_Degree
-             ( p : Standard_Complex_Poly_Systems.Poly_Sys ) return natural32;
-
-  -- DESCRIPTION :
-  --   Returns the total degree of the polynomial system,
-  --   i.e. the product of the degrees of the polynomials.
- 
   procedure Reduce ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                      diagonal,inconsistent,infinite : in out boolean );
   procedure Reduce ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;

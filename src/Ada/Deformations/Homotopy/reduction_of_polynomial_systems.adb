@@ -11,6 +11,7 @@ with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with Standard_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials;
+with Total_Degree_Start_Systems;         use Total_Degree_Start_Systems;
 with Reduction_of_Polynomials;           use Reduction_of_Polynomials;
 with Standard_Linear_Reduction;
 with DoblDobl_Linear_Reduction;
@@ -236,25 +237,6 @@ package body Reduction_of_Polynomial_Systems is
 
 -- NONLINEAR REDUCTION :
 
-  function Total_Degree
-             ( p : Standard_Complex_Poly_Systems.Poly_Sys )
-             return natural32 is
-
-    use Standard_Complex_Polynomials;
-
-    d : natural32 := 1;
-    tmp : integer32;
-
-  begin
-    for i in p'range loop
-      tmp := Degree(p(i));
-      if tmp >= 0
-       then d := d*natural32(tmp);
-      end if;
-    end loop;
-    return d;
-  end Total_Degree;
-
   function LEQ ( d1,d2 : Standard_Complex_Polynomials.Degrees )
                return boolean is
 
@@ -345,7 +327,8 @@ package body Reduction_of_Polynomial_Systems is
 
     procedure Eliminate_Term (t : in out Term; continue : out boolean) is
 
-      d : constant Degrees := new Standard_Natural_Vectors.Vector(1..(n-1));
+      d : constant Standard_Complex_Polynomials.Degrees
+        := new Standard_Natural_Vectors.Vector(1..(n-1));
 
     begin
       for i in 1..(j-1) loop

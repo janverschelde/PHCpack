@@ -6,6 +6,7 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Total_Degree_Start_Systems;         use Total_Degree_Start_Systems;
 with Reduction_of_Polynomial_Systems;    use Reduction_of_Polynomial_Systems;
 with Reduction_of_Nonsquare_Systems;     use Reduction_of_Nonsquare_Systems;
 
@@ -78,7 +79,7 @@ package body Drivers_for_Reduction is
 
       procedure rat_term ( t : in out Term; cont : out boolean ) is
 
-        tmp : constant Degrees
+        tmp : constant Standard_Complex_Polynomials.Degrees
             := new Standard_Natural_Vectors.Vector'(1..n-1 => 0);
 
       begin
