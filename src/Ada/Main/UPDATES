@@ -1,3 +1,5 @@
+Fri 22 Sep 2017 : added options -d2 and -d4 to dispatch.adb.
+
 Tue 12 Sep 2017 : adjusted the greeting_banners for version 2.4.45.
 
 Sun 10 Sep 2017 : in the specifications of the black box solvers, in the

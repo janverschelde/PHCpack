@@ -9,6 +9,7 @@ with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Random_Numbers; -- to handle zero seed
 with Greeting_Banners;
 with mainscal,mainred;        -- scaling and reduction
+with mainred2,mainred4;       -- reduction for double double and quad doubles
 with mainroco,bablroco;       -- general root counting
 with mainsmvc,babldmvc;       -- mixed-volume computation
 with maintrack;               -- path tracking
@@ -326,13 +327,21 @@ procedure Dispatch is
     bbprc : constant natural32 := Scan_Precision('b');
     valiprc : constant natural32 := Scan_Precision('v');
     contprc : constant natural32 := Scan_Precision('p');
+    redprc : constant natural32 := Scan_Precision('d');
 
   begin
    -- put("The blackbox precision : "); put(bbprc,1); new_line;
     case option2 is
       when 'h' | '-' => Greeting_Banners.help4blackbox;
       when 's'    => mainscal(file1,file2);
-      when 'd'    => mainred(file1,file2);
+      when 'd'    => 
+        if redprc = 2 then
+          mainred2(file1,file2);
+        elsif redprc = 4 then
+          mainred4(file1,file2);
+        else
+          mainred(file1,file2);
+        end if;
       when 'r'    =>
         case option3 is
           when 't' => bablroco(Number_of_Tasks,file1,file2);
@@ -394,9 +403,17 @@ procedure Dispatch is
   -- DESCRIPTION :
   --   This dispatcher is called when the first option is 'd'.
 
+    redprc : constant natural32 := Scan_Precision('d');
+
   begin
     put_line(welcome); put_line(reduban);
-    mainred(infile,outfile);
+    if redprc = 2 then
+      mainred2(infile,outfile);
+    elsif redprc = 4 then
+      mainred4(infile,outfile);
+    else
+      mainred(infile,outfile);
+    end if;
   end Reduction_Dispatcher;
 
   procedure Root_Count_Dispatcher
