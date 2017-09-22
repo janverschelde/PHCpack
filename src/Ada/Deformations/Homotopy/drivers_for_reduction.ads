@@ -67,9 +67,18 @@ package Drivers_for_Reduction is
                ( file : in file_type;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  d : out natural32; exit_option : in boolean );
+  procedure Driver_for_Reduction 
+               ( file : in file_type;
+                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 d : out natural32; exit_option : in boolean );
+  procedure Driver_for_Reduction 
+               ( file : in file_type;
+                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 d : out natural32; exit_option : in boolean );
 
   -- DESCRIPTION :
-  --   This is an interactive driver for the reduction procedures.
+  --   This is an interactive driver for the reduction procedures,
+  --   for systems in double, double double, and quad double precision.
 
   -- ON ENTRY :
   --   file         a file to write intermediate results and diagnostics on;

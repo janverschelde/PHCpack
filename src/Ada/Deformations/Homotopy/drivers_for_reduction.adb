@@ -488,4 +488,38 @@ package body Drivers_for_Reduction is
     end if;
   end Driver_for_Reduction;
 
+  procedure Driver_for_Reduction
+              ( file : in file_type;
+                p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                d : out natural32; exit_option : in boolean ) is
+
+    n : constant natural32 := natural32(p'length);
+    ans : character := '0';
+
+  begin
+    Display_Menu(exit_option,ans);
+    case ans is
+      when '1' => Driver_for_Linear_Reduction(file,p,d);
+      when '2' => Driver_for_Sparse_Linear_Reduction(file,p,d);
+      when others => null;
+    end case;
+  end Driver_for_Reduction;
+
+  procedure Driver_for_Reduction
+              ( file : in file_type;
+                p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                d : out natural32; exit_option : in boolean ) is
+
+    n : constant natural32 := natural32(p'length);
+    ans : character := '0';
+
+  begin
+    Display_Menu(exit_option,ans);
+    case ans is
+      when '1' => Driver_for_Linear_Reduction(file,p,d);
+      when '2' => Driver_for_Sparse_Linear_Reduction(file,p,d);
+      when others => null;
+    end case;
+  end Driver_for_Reduction;
+
 end Drivers_for_Reduction;
