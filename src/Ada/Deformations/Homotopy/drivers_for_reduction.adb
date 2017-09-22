@@ -38,6 +38,10 @@ package body Drivers_for_Reduction is
 
   procedure Display_Menu ( exit_opt : in boolean; ans : in out character ) is
 
+  -- DESCRIPTION :
+  --   Shows the general menu for reduction methods,
+  --   prompting for a selection.
+
     m : array(0..3) of string(1..65);
 
   begin
@@ -67,6 +71,42 @@ package body Drivers_for_Reduction is
       exit when ans /= 'i';
     end loop;
   end Display_Menu;
+
+  procedure Linear_Display_Menu
+              ( exit_opt : in boolean; ans : in out character ) is
+
+  -- DESCRIPTION :
+  --   Shows the restricted menu for linear reduction methods,
+  --   prompting for a selection.
+
+    m : array(0..2) of string(1..65);
+
+  begin
+    m(0):="  0 : No Reduction            : leave the menu                   ";
+    m(1):="  1 : Linear Reduction        : triangulate coefficient matrix   ";
+    m(2):="  2 : Sparse Linear Reduction : diagonalize coefficient matrix   ";
+    loop
+      new_line;
+      put_line("MENU for Reducing Polynomial Systems :");
+      if exit_opt then
+        for i in m'range loop
+          put_line(m(i));
+        end loop;
+        put("Type 0, 1 or 2 to select reduction : ");
+        Ask_Alternative(ans,"012");
+      else
+        for i in 1..m'last loop
+          put_line(m(i));
+        end loop;
+        put("Type 1 or 2 to select reduction : ");
+        Ask_Alternative(ans,"12");
+      end if;
+      if ans = 'i'
+       then new_line; Display_Info;
+      end if;
+      exit when ans /= 'i';
+    end loop;
+  end Linear_Display_Menu;
 
   procedure Rationalize
               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
@@ -497,7 +537,7 @@ package body Drivers_for_Reduction is
     ans : character := '0';
 
   begin
-    Display_Menu(exit_option,ans);
+    Linear_Display_Menu(exit_option,ans);
     case ans is
       when '1' => Driver_for_Linear_Reduction(file,p,d);
       when '2' => Driver_for_Sparse_Linear_Reduction(file,p,d);
@@ -514,7 +554,7 @@ package body Drivers_for_Reduction is
     ans : character := '0';
 
   begin
-    Display_Menu(exit_option,ans);
+    Linear_Display_Menu(exit_option,ans);
     case ans is
       when '1' => Driver_for_Linear_Reduction(file,p,d);
       when '2' => Driver_for_Sparse_Linear_Reduction(file,p,d);

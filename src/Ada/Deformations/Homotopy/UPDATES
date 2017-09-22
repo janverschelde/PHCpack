@@ -1,5 +1,6 @@
 Fri 22 Sep 2017 : added main drivers for double double and quad doubles
-  to drivers_for_reduction.
+  to drivers_for_reduction.  New procedures mainred2 and mainred4 to be
+  called by the dispatch procedure, which define phc -d2 and phc -d4.
 
 Thu 21 Sep 2017 : used the standard_system_readers in mainred.adb.
   Removed the total_degree function out of reduction_of_polynomial_systems,

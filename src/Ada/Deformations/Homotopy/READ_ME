@@ -54,6 +54,8 @@ reduction_of_polynomial_systems    : linear and nonlinear reduction
 reduction_of_nonsquare_systems     : transform overconstrained into square
 drivers_for_reduction              : menu-drivers for reducing systems
 mainred                            : reduction tool, as called by phc
+mainred2                           : reduction in double double precision
+mainred4                           : reduction in quad double precision
 ------------------------------------------------------------------------------
 standard_linear_poly_solvers       : solve linear polynomial systems
 ts_linsol                          : test on the linear poly solvers
