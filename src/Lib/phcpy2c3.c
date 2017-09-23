@@ -4631,6 +4631,20 @@ static PyObject *py2c_linear_reduce_quaddobl_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_nonlinear_reduce_standard_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,eqmax,spmax,rpmax,eqcnt,spcnt,rpcnt;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&eqmax,spmax,rpmax)) return NULL;
+
+   fail = standard_nonlinear_reduce_system
+             (eqmax,spmax,rpmax,&eqcnt,&spcnt,&rpcnt);
+
+   return Py_BuildValue("(i,i,i)",eqcnt,spcnt,rpcnt);
+}
+
 /* The wrapping of the functions with prototypes in sweep.h starts here. */
 
 static PyObject *py2c_sweep_define_parameters_numerically
@@ -9255,6 +9269,9 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_linear_reduce_quaddobl_system",
      py2c_linear_reduce_quaddobl_system, METH_VARARGS,
     "Applies linear reduction on the coefficient matrix of the system\n in the container for quad double precision.\n There is one integer parameter: whether to diagonalize or not."},
+   {"py2c_nonlinear_reduce_standard_system",
+     py2c_nonlinear_reduce_standard_system, METH_VARARGS,
+    "Applies nonlinear reduction on the system in the container\n for standard double precision.\n Three integer numbers are expected on input:\n (1) the maximum number of equal degree replacements,\n (2) the maximum number of computed S-polynomials,\n (3) the maximum number of computed R-polynomials.\n The system in the standard container is replace by the reduced system.\n Three numbers are returned:\n (1) the number of equal degree replacements,\n (2) the number of computed S-polynomials,\n (3) the number of computed R-polynomials."},
    {"py2c_sweep_define_parameters_numerically",
      py2c_sweep_define_parameters_numerically, METH_VARARGS,
     "Defines the indices to the variables that serve as parameters\n numerically, that is: via integer indices.\n On entry are three integer numbers and a string.\n The string is a string representation of a Python list of integers,\n The three integers are the number of equations, the number of variables,\n and the number of parameters.  The number of variables m includes the\n number of parameters.  Then there should be as many as m indices in\n the list of integers to define which of the variables are parameters."},

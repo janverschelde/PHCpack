@@ -3097,6 +3097,22 @@ static PyObject *py2c_linear_reduce_quaddobl_system
  *   in the container for quad double precision.
  *   There is one integer parameter: whether to diagonalize or not. */
 
+static PyObject *py2c_nonlinear_reduce_standard_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies nonlinear reduction on the system in the container 
+ *   for standard double precision.
+ *   Three integer numbers are expected on input:
+ *   (1) the maximum number of equal degree replacements,
+ *   (2) the maximum number of computed S-polynomials,
+ *   (3) the maximum number of computed R-polynomials.
+ *   The system in the standard container is replace by the reduced system.
+ *   Three numbers are returned:
+ *   (1) the number of equal degree replacements,
+ *   (2) the number of computed S-polynomials,
+ *   (3) the number of computed R-polynomials. */
+
 /* The wrapping of the functions with prototypes in sweep.h starts here. */
 
 static PyObject *py2c_sweep_define_parameters_numerically
