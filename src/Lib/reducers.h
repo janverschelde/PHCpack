@@ -64,4 +64,23 @@ int quaddobl_row_reduce_system ( int diag );
  *   diag     1 if the coefficient matrix needs to be diagonalized,
  *            0 if bringing in triangular form suffices. */
 
+int standard_nonlinear_reduce_system
+ ( int eqmax, int spmax, int rpmax, int *eqcnt, int *spcnt, int *rpcnt );
+/*
+ * DESCRIPTION :
+ *   Applies nonlinear reduction to the system in the standard container.
+ *
+ * REQUIRED :
+ *   The system is square, as many equations as variables is assumed.
+ *
+ * ON ENTRY :
+ *   eqmax    the maximal number of equal degree replacements;
+ *   spmax    the maximal number of computed S-polynomials;
+ *   rpmax    the maximal number of computed R-polynomials.
+ *
+ * ON RETURN :
+ *   eqcnt    the number of equal degree replacements;
+ *   spcnt    the number of computed S-polynomials;
+ *   rpcnt    the number of computed R-polynomials. */
+
 #endif

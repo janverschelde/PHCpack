@@ -29,6 +29,12 @@ int quaddobl_reducer ( void );
  *   Prompts the user for a system and performs linear reduction
  *   with quad double precision arithmetic. */
 
+int standard_nonlinear_reducer ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a system and performs nonlinear reduction
+ *   with standard double precision arithmetic. */
+
 int main ( int argc, char *argv[] )
 {
    int fail,choice;
@@ -37,11 +43,12 @@ int main ( int argc, char *argv[] )
 
    fail = greetings();
 
-   printf("\nMENU for the precision of linear reduction :\n"); 
-   printf("  0. use standard double precision arithmetic; or\n");
-   printf("  1. use double double precision arithmetic; or\n");
-   printf("  2. use quad double precision arithmetic.\n");
-   printf("Type 0, 1, or 2 to make your choice : ");
+   printf("\nMENU for reduction :\n"); 
+   printf("  0. linear reduction in double precision arithmetic\n");
+   printf("  1. linear reduction in double double precision arithmetic\n");
+   printf("  2. linear reduction in quad double precision arithmetic\n");
+   printf("  3. nonlinear reduction in double precision arithmetic\n");
+   printf("Type 0, 1, 2, or 3 to make your choice : ");
    scanf("%d",&choice);
 
    if(choice == 0)
@@ -50,6 +57,8 @@ int main ( int argc, char *argv[] )
       fail = dobldobl_reducer();
    else if(choice == 2)
       fail = quaddobl_reducer();
+   else if(choice == 3)
+      fail = standard_nonlinear_reducer();
 
    adafinal();
 
@@ -112,6 +121,27 @@ int quaddobl_reducer ( void )
       fail = quaddobl_row_reduce_system(1);
       printf("\nThe system after reduction : \n");
       fail = syscon_write_quaddobl_system();
+   }
+   return fail;
+}
+
+int standard_nonlinear_reducer ( void )
+{
+   int fail,dim,i;
+   const int eqmax = 100;
+   const int spmax = 100;
+   const int rpmax = 100;
+   int eqcnt,spcnt,rpcnt;
+
+   fail = syscon_read_standard_system();
+   if(fail == 0)
+   {
+      printf("\nThe system in the container : \n");
+      fail = syscon_write_standard_system();
+      fail = standard_nonlinear_reduce_system
+                (eqmax,spmax,rpmax,&eqcnt,&spcnt,&rpcnt);
+      printf("\nThe system after reduction : \n");
+      fail = syscon_write_standard_system();
    }
    return fail;
 }

@@ -32,3 +32,24 @@ int quaddobl_row_reduce_system ( int diag )
 
    return 0;
 }
+
+int standard_nonlinear_reduce_system
+ ( int eqmax, int spmax, int rpmax, int *eqcnt, int *spcnt, int *rpcnt )
+{
+   int fail;
+   int max[3];
+   int cnt[3];
+   double *c;
+
+   max[0] = eqmax;
+   max[1] = spmax;
+   max[2] = rpmax;
+
+   fail = _ada_use_c2phc(710,max,cnt,c);
+
+   *eqcnt = cnt[0];
+   *spcnt = cnt[1];
+   *rpcnt = cnt[2];
+
+   return 0;
+}
