@@ -135,7 +135,7 @@ function use_reduction ( job : integer32;
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception
-    when others => put("Exception raised in use_scaling handling job ");
+    when others => put("Exception raised in use_reduction handling job ");
                    put(job+706,1); put_line(".  Will not ignore."); raise;
   end Handle_Jobs;
 
