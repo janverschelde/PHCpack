@@ -3087,6 +3087,7 @@ function use_c2phc ( job : integer32;
       when 707 => return use_reduction(1,a,b,c); -- standard linear reduction
       when 708 => return use_reduction(2,a,b,c); -- dobldobl linear reduction
       when 709 => return use_reduction(3,a,b,c); -- quaddobl linear reduction
+      when 710 => return use_reduction(4,a,b,c); -- standard nonlinear reduce
      -- container for numerically computed tropisms
       when 711..731 => return use_numbtrop(job-710,a,b,c);
      -- integer mixed cell configurations

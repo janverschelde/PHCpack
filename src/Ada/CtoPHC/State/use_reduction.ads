@@ -35,6 +35,17 @@ function use_reduction ( job : integer32;
 --                 1 : makes the coefficient matrix diagonal;
 --                 the system in the quaddobl container is replaced
 --                 by the reduced system.
+--       =     4 : applies nonlinear reduction to the systems in the
+--                 standard double container, on input in a are three limits:
+--                 (1) the maximum number of equal degree replacements,
+--                 (2) the maximum number of computed S-polynomials, and
+--                 (3) the maximum number of computed R-polynomials;
+--                 on return in b are three counters:
+--                 (1) the number of equal degree replacements,
+--                 (2) the number of computed S-polynomials, and
+--                 (3) the number of computed R-polynomials;
+--                 the system in the standard container is replaced
+--                 by the reduced system.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

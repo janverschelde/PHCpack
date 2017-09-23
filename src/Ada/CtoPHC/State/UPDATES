@@ -1,3 +1,6 @@
+Sat 23 Sep 2017 : added job for nonlinear reduction to use_reduction and
+  to use_c2phc.
+
 Tue 19 Sep 2017 : added two jobs to use_reduction and use_c2phc to apply
   linear reduction in double double and quad double precision.
 
