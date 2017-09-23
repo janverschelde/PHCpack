@@ -4634,7 +4634,7 @@ static PyObject *py2c_nonlinear_reduce_standard_system
    int fail,eqmax,spmax,rpmax,eqcnt,spcnt,rpcnt;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iii",&eqmax,spmax,rpmax)) return NULL;
+   if(!PyArg_ParseTuple(args,"iii",&eqmax,&spmax,&rpmax)) return NULL;
 
    fail = standard_nonlinear_reduce_system
              (eqmax,spmax,rpmax,&eqcnt,&spcnt,&rpcnt);

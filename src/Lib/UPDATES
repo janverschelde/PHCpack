@@ -1,6 +1,8 @@
 Sat 23 Sep 2017 : added nonlinear reduction to reducers.h, reducers.c,
   tested by lib_reduce.c.  Updated phcpy2c.h, phcpy2c2, and phcpy2c3.c
   with a wrapper to the new nonlinear reduce function.
+  Fixed addressing in the retrieval of the arguments in nonlinear reduction
+  in phcpy2c2.c and phcpy2c3.c.
 
 Tue 19 Sep 2017 : added call to the linear reduction in phcpy2c.h, phcpy2c2.c,
   and phcpy2c3.c.  Functions added to reducers.h, reducers.c, lib_reduce.c,
