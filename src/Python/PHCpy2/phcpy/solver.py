@@ -1070,6 +1070,31 @@ def quaddobl_linear_reduction(pols, diagonalize=True):
     rpol = load_quaddobl_system()
     return rpol
 
+def standard_nonlinear_reduction(pols, eqmax=100, spmax=100, rpmax=100, \
+    verbose=True):
+    r"""
+    Applies nonlinear reduction in standard double precision on 
+    the polynomials in the list *pols*.  In addition to *pols*,
+    three integers are part of the input:
+    *eqmax* is the maximum number of equal degree replacements,
+    *spmax* is the maximum number of computed S-polynomials,
+    *rpmax* is the maximum number of computed R-polynomials.
+    By default, *verbose* is True and the counts of equal degree
+    replacements, computed S-polynomials and R-polynomials are written.
+    On return is the list of reduced polynomials.
+    """
+    from phcpy.interface import store_standard_system, load_standard_system
+    from phcpy.phcpy2c2 import py2c_nonlinear_reduce_standard_system
+    store_standard_system(pols)
+    (eqcnt, spcnt, rpcnt) \
+        = py2c_nonlinear_reduce_standard_system(eqmax,spmax,rpmax)
+    if verbose:
+        print 'number of equal degree replacements :', eqcnt
+        print 'number of computed S-polynomials :', spcnt
+        print 'number of computed R-polynomials :', rpcnt
+    rpol = load_standard_system()
+    return rpol
+
 def linear_reduce(pols, diagonalize=True, precision='d'):
     """
     Applies row reduction to the coefficient matrix of the polynomials
@@ -1150,6 +1175,19 @@ def test_reduce(precision='d'):
     for pol in pols:
         print pol
     redu = linear_reduce(pols, True, precision)
+    print 'the reduced polynomials :'
+    for pol in redu:
+        print pol
+
+def test_nonlinear_reduce():
+    """
+    Tests nonlinear reduction on a simple example.
+    """
+    pols = ['x^3 - x;', 'x^2*y + 1;']
+    print 'reducing a polynomial system :'
+    for pol in pols:
+        print pol
+    redu = standard_nonlinear_reduction(pols)
     print 'the reduced polynomials :'
     for pol in redu:
         print pol
