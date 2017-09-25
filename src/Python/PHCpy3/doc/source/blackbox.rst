@@ -649,3 +649,21 @@ coordinates for all four solutions will be the same.
 The precision of the row reduction is increased to double double
 by providing the argument ``precision='dd'`` and to quad double
 via the argument ``precision='qd'``.
+
+Nonlinear reduction computes S-polynomials to eliminate the leading term
+and then, if a criterion with R-polynomials is satisfied, replaces one
+of the polynomials in the system by the S-polynomial.
+Consider the session below:
+
+::
+
+   >>> from phcpy.solver import standard_nonlinear_reduction as reduce
+   >>> pols = ['x^3 - x;', 'x^2*y + 1;']
+   >>> redu = reduce(pols)
+   number of equal degree replacements : 5
+   number of computed S-polynomials : 9
+   number of computed R-polynomials : 16
+   >>> for pol in redu: print(pol)
+
+What is printed are the polynomials ``+ y + 1;``
+and ``+ x^2 - 1;`` which allows to read off the solutions.

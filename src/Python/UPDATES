@@ -1,3 +1,6 @@
+Sun 24 Sep 2017 : added a short paragraph about nonlinear reduction in the
+  documentation file blackbox.rst for python 2 and 3.
+
 Sat 23 Sep 2017 : to the solver module for python2 and python3 added a
   function for nonlinear reduction, along with a simple test.
 
