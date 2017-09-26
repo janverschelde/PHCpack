@@ -1,3 +1,5 @@
+Tue 26 Sep 2017 : added embed_and_cascade to compsolve.adb.
+
 Mon 25 Sep 2017 : to dispatch.adb, added the option -B, which calls compsolve,
   to compute a numerical irreducible decomposition in blackbox mode.
   The procedure compsolve will be similar to bablphc, but then for positive
