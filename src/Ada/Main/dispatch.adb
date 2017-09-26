@@ -18,6 +18,7 @@ with bablpoco2,bablpoco4;     -- double double and quad double continuation
 with mainadep;                -- path tracking with algorithmic differentiation
 with mainphc,bablphc;         -- main phc driver + blackbox
 with bablphc2,bablphc4;       -- blackbox in double double and quad double
+with compsolve;               -- numerical irreducible decomposition as -B
 with mainvali,bablvali;       -- verification tool
 with bablvali2,bablvali4;     -- verification with dd and qd
 with mainenum,bablenum;       -- numerical Schubert calculus
@@ -66,7 +67,7 @@ procedure Dispatch is
 
 -- AVAILABLE OPTIONS :
 
-  options : constant string := "0asdpqmrvbekcxyzftwlgo-huj";
+  options : constant string := "bB0asdpqmrvekcxyzftwlgo-huj";
   -- 0 : zero seed for repeatable runs
   -- a : solve => equation-by-equation solver
   -- b : batch or black box processing
@@ -387,6 +388,21 @@ procedure Dispatch is
         end case;
     end case;
   end Black_Box_Dispatcher;
+
+  procedure Component_Solver
+              ( option2 : in character; file1,file2 : in string ) is
+
+  -- DESCRIPTION :
+  --   This procedure handles the option '-B' to compute the numerical
+  --   irreducible decomposition in a blackbox solver.
+  --   The second option is '-t' for the number of tasks.
+
+  begin
+    if option2 = 't'
+     then compsolve(Number_of_Tasks,file1,file2);
+     else compsolve(0,file1,file2);
+    end if;
+  end Component_Solver;
 
   procedure Scaling_Dispatcher ( infile,outfile : in string ) is
 
@@ -751,6 +767,7 @@ procedure Dispatch is
                        mainsolve(f1,f2);
                      end if;
       when 'b'    => Black_Box_Dispatcher(o2,o3,f1,f2,f3);
+      when 'B'    => Component_Solver(o2,f1,f2);
       when 'c'    => Decomposition_Dispatcher(o2,f1,f2);
       when 'd'    => if o2 = 'h' or o2 = '-'
                       then Greeting_Banners.help4reduction;
