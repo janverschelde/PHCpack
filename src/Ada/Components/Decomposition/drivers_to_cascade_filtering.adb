@@ -10,6 +10,7 @@ with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Natural_VecVecs;
 with Standard_Integer_Vectors;
 with Standard_Complex_VecVecs;           use Standard_Complex_VecVecs;
 with Standard_Complex_Polynomials;
@@ -694,12 +695,63 @@ package body Drivers_to_Cascade_Filtering is
     end if;
   end Down_Continuation;
 
+  procedure Update_Path_Counts
+              ( cnts : in out Standard_Natural_VecVecs.VecVec;
+                dim,nsols,nsols0,nsols1 : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Updates the vector of path counts with the result of the
+  --   cascade filtering at the dimension dim.
+
+  -- ON ENTRY :
+  --   cnts     vector with a range which includes dim;
+  --   dim      the current dimension;
+  --   nsols    number of solutions filtered;
+  --   nsols0   number of solutions with zero slack variables;
+  --   nsols1   number of solutions with nonzero slack variables.
+
+  -- ON RETURN :
+  --   cnts     cnts(dim) points to the vector with the three numbers
+  --            nsols, nsols0, and nsols1.
+  --
+    counts : Standard_Natural_Vectors.Vector(1..3);
+
+  begin
+    counts(1) := nsols;
+    counts(2) := nsols0;
+    counts(3) := nsols1;
+    cnts(integer32(dim)) := new Standard_Natural_Vectors.Vector'(counts);
+  end Update_Path_Counts;
+
+  procedure Write_Path_Counts
+              ( file : in file_type;
+                cnts : in Standard_Natural_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Writes the path counts in cnts to file.
+
+  begin
+    new_line(file);
+    put(file,"dim : ");
+    put(file," #paths : ");
+    put(file,"slack=0 : ");
+    put(file,"slack!=0");
+    new_line(file);
+    put_line(file,"----+---------+---------+---------");
+    for i in reverse cnts'range loop
+      put(file,i,3);
+      put(file," : "); put(file,cnts(i)(1),7);
+      put(file," : "); put(file,cnts(i)(2),7);
+      put(file," : "); put(file,cnts(i)(3),7);
+      new_line(file);
+    end loop;
+  end Write_Path_Counts;
+
   procedure Witness_Generate
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32;
-                zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -709,6 +761,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -718,6 +771,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
@@ -727,6 +782,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         new_line(resfile);
         put_line(resfile,embsys(i-1).all);
         if i = 1 then
@@ -751,6 +809,7 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
     new_line(outfile);
@@ -762,8 +821,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32;
-                zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
@@ -773,6 +831,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -782,6 +841,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
@@ -791,6 +852,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         new_line(resfile);
         put_line(resfile,embsys(i-1).all);
         if i = 1 then
@@ -815,6 +879,7 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
     new_line(outfile);
@@ -826,8 +891,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32;
-                zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -837,6 +901,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -846,6 +911,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
@@ -855,6 +922,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         new_line(resfile);
         put_line(resfile,embsys(i-1).all);
         if i = 1 then
@@ -879,6 +949,7 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
     new_line(outfile);
@@ -890,8 +961,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32;
-                zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use DoblDobl_Complex_Laur_Systems;
     use DoblDobl_Complex_Solutions;
@@ -901,6 +971,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -910,6 +981,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
@@ -919,6 +992,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         new_line(resfile);
         put_line(resfile,embsys(i-1).all);
         if i = 1 then
@@ -943,6 +1019,7 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
     new_line(outfile);
@@ -954,8 +1031,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32;
-                zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -965,6 +1041,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -974,6 +1051,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
@@ -983,6 +1062,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         new_line(resfile);
         put_line(resfile,embsys(i-1).all);
         if i = 1 then
@@ -1007,6 +1089,7 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
     new_line(outfile);
@@ -1018,8 +1101,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32;
-                zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use QuadDobl_Complex_Laur_Systems;
     use QuadDobl_Complex_Solutions;
@@ -1029,6 +1111,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -1038,6 +1121,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
@@ -1047,6 +1132,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         new_line(resfile);
         put_line(resfile,embsys(i-1).all);
         if i = 1 then
@@ -1071,6 +1159,7 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
     new_line(outfile);
@@ -1230,6 +1319,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -1239,6 +1329,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
@@ -1247,6 +1339,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         if i = 1 then
           if not Is_Null(sols1) then
             declare
@@ -1269,8 +1364,12 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Witness_Generate
@@ -1288,6 +1387,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -1297,6 +1397,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
@@ -1305,6 +1407,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         if i = 1 then
           if not Is_Null(sols1) then
             declare
@@ -1327,8 +1432,12 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Witness_Generate
@@ -1346,6 +1455,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -1355,6 +1465,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
@@ -1363,6 +1475,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         if i = 1 then
           if not Is_Null(sols1) then
             declare
@@ -1385,8 +1500,12 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Witness_Generate
@@ -1404,6 +1523,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -1413,6 +1533,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
@@ -1421,6 +1543,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         if i = 1 then
           if not Is_Null(sols1) then
             declare
@@ -1443,8 +1568,12 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Witness_Generate
@@ -1462,6 +1591,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -1471,6 +1601,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
@@ -1479,6 +1611,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         if i = 1 then
           if not Is_Null(sols1) then
             declare
@@ -1501,8 +1636,12 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Witness_Generate
@@ -1520,6 +1659,7 @@ package body Drivers_to_Cascade_Filtering is
     n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
+    pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
@@ -1529,6 +1669,8 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
     Filter_and_Split_Solutions
       (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
@@ -1537,6 +1679,9 @@ package body Drivers_to_Cascade_Filtering is
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
         if i = 1 then
           if not Is_Null(sols1) then
             declare
@@ -1559,8 +1704,12 @@ package body Drivers_to_Cascade_Filtering is
       Clear(sols0);
     end if;
     tstop(timer);
+    Write_Path_Counts(outfile,pathcnts);
     new_line(outfile);
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+    new_line(outfile);
+    Write_Seed_Number(outfile);
+    put_line(outfile,Greeting_Banners.Version);
   end Witness_Generate;
 
   procedure Standard_Witness_Generate
