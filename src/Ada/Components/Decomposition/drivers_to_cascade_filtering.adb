@@ -698,7 +698,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                k : in natural32;
+                topdim : in natural32;
                 zerotol : in double_float ) is
 
     use Standard_Complex_Poly_Systems;
@@ -706,23 +706,23 @@ package body Drivers_to_Cascade_Filtering is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Poly_Sys(0..integer32(k));
+    embsys : Array_of_Poly_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Poly_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Poly_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -762,7 +762,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                k : in natural32;
+                topdim : in natural32;
                 zerotol : in double_float ) is
 
     use Standard_Complex_Laur_Systems;
@@ -770,23 +770,23 @@ package body Drivers_to_Cascade_Filtering is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Laur_Sys(0..integer32(k));
+    embsys : Array_of_Laur_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Laur_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Laur_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -826,7 +826,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                k : in natural32;
+                topdim : in natural32;
                 zerotol : in double_float ) is
 
     use DoblDobl_Complex_Poly_Systems;
@@ -834,23 +834,23 @@ package body Drivers_to_Cascade_Filtering is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Poly_Sys(0..integer32(k));
+    embsys : Array_of_Poly_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Poly_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Poly_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -890,7 +890,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                k : in natural32;
+                topdim : in natural32;
                 zerotol : in double_float ) is
 
     use DoblDobl_Complex_Laur_Systems;
@@ -898,23 +898,23 @@ package body Drivers_to_Cascade_Filtering is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Laur_Sys(0..integer32(k));
+    embsys : Array_of_Laur_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Laur_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Laur_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -954,7 +954,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                k : in natural32;
+                topdim : in natural32;
                 zerotol : in double_float ) is
 
     use QuadDobl_Complex_Poly_Systems;
@@ -962,23 +962,23 @@ package body Drivers_to_Cascade_Filtering is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Poly_Sys(0..integer32(k));
+    embsys : Array_of_Poly_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Poly_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Poly_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -1018,7 +1018,7 @@ package body Drivers_to_Cascade_Filtering is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                k : in natural32;
+                topdim : in natural32;
                 zerotol : in double_float ) is
 
     use QuadDobl_Complex_Laur_Systems;
@@ -1026,23 +1026,23 @@ package body Drivers_to_Cascade_Filtering is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Laur_Sys(0..integer32(k));
+    embsys : Array_of_Laur_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Laur_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Laur_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
     put_line(resfile,ep);
     Write_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -1220,29 +1220,29 @@ package body Drivers_to_Cascade_Filtering is
                 nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                k : in natural32; zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Poly_Sys(0..integer32(k));
+    embsys : Array_of_Poly_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Poly_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Poly_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
-    Write_Witness_Superset(name,ep,sols0,k);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -1278,29 +1278,29 @@ package body Drivers_to_Cascade_Filtering is
                 nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                k : in natural32; zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Laur_Sys(0..integer32(k));
+    embsys : Array_of_Laur_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Laur_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Laur_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
-    Write_Witness_Superset(name,ep,sols0,k);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -1336,29 +1336,29 @@ package body Drivers_to_Cascade_Filtering is
                 nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                k : in natural32; zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Poly_Sys(0..integer32(k));
+    embsys : Array_of_Poly_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Poly_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Poly_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
-    Write_Witness_Superset(name,ep,sols0,k);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -1394,29 +1394,29 @@ package body Drivers_to_Cascade_Filtering is
                 nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                k : in natural32; zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use DoblDobl_Complex_Laur_Systems;
     use DoblDobl_Complex_Solutions;
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Laur_Sys(0..integer32(k));
+    embsys : Array_of_Laur_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Laur_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Laur_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
-    Write_Witness_Superset(name,ep,sols0,k);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -1452,29 +1452,29 @@ package body Drivers_to_Cascade_Filtering is
                 nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                k : in natural32; zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Poly_Sys(0..integer32(k));
+    embsys : Array_of_Poly_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Poly_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Poly_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
-    Write_Witness_Superset(name,ep,sols0,k);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
@@ -1510,29 +1510,29 @@ package body Drivers_to_Cascade_Filtering is
                 nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                k : in natural32; zerotol : in double_float ) is
+                topdim : in natural32; zerotol : in double_float ) is
 
     use QuadDobl_Complex_Laur_Systems;
     use QuadDobl_Complex_Solutions;
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-k;
+    n : constant natural32 := natural32(ep'last)-topdim;
     pocotime : duration;
-    embsys : Array_of_Laur_Sys(0..integer32(k));
+    embsys : Array_of_Laur_Sys(0..integer32(topdim));
 
   begin
     tstart(timer);
-    embsys(integer32(k)) := new Laur_Sys'(ep);
-    for i in 0..k-1 loop
-      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,k-i));
+    embsys(integer32(topdim)) := new Laur_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
     Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
-    Write_Witness_Superset(name,ep,sols0,k);
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(k) loop
+      for i in reverse 1..integer32(topdim) loop
         Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions

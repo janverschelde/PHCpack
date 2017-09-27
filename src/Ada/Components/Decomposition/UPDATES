@@ -1,3 +1,6 @@
+Wed 27 Sep 2017 : renaming of the variable k into topdim, to make the
+  drivers_to_cascade_filtering more readable.
+
 Sun 23 Jul 2017 : improved specification of extrinsic_diagonal_continuation,
   moving documentation of procedures from body to specification.
 

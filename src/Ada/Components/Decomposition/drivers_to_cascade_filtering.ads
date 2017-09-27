@@ -159,32 +159,32 @@ package Drivers_to_Cascade_Filtering is
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
 
   -- DESCRIPTION :
   --   Calculates candidate witness points on every component,
@@ -199,7 +199,7 @@ package Drivers_to_Cascade_Filtering is
   --   nt        number of tasks, set to zero for no tasking;
   --   ep        embedded polynomial system;
   --   sols      solutions to the system ep (unfiltered);
-  --   k         number of slack variables and random hyperplanes,
+  --   topdim    number of slack variables and random hyperplanes,
   --             equals the top dimension of the solution sets;
   --   zerotol   tolerance to decide whether a number is zero or not.
 
@@ -208,37 +208,37 @@ package Drivers_to_Cascade_Filtering is
                  nt : in natural32;
                  ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
                  ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
                  ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
                  ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
                  ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
   procedure Witness_Generate
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
                  ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
-                 k : in natural32; zerotol : in double_float );
+                 topdim : in natural32; zerotol : in double_float );
 
   -- DESCRIPTION :
   --   This witness generate writes the witness supersets to files,
@@ -250,7 +250,7 @@ package Drivers_to_Cascade_Filtering is
   --   nt        number of tasks for multitasking, set to zero for no tasking;
   --   ep        embedded polynomial system;
   --   sols      solutions to the system ep (unfiltered);
-  --   k         number of slack variables and random hyperplanes,
+  --   topdim    number of slack variables and random hyperplanes,
   --             equals the top dimension of the solution sets;
   --   zerotol   tolerance to decide whether a number is zero or not.
 
