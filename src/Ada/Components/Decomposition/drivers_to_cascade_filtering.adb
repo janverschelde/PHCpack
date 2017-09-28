@@ -55,6 +55,7 @@ with Continuation_Parameters;
 with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
 with Homotopy_Cascade_Filter;            use Homotopy_Cascade_Filter;
 with Drivers_to_Breakup_Components;      use Drivers_to_Breakup_Components;
+with Path_Counts_Table;                  use Path_Counts_Table;
 with Greeting_Banners;
 with Write_Seed_Number;
 
@@ -694,58 +695,6 @@ package body Drivers_to_Cascade_Filtering is
         (file,integer32(nt),target,embsys,sols,pocotime);
     end if;
   end Down_Continuation;
-
-  procedure Update_Path_Counts
-              ( cnts : in out Standard_Natural_VecVecs.VecVec;
-                dim,nsols,nsols0,nsols1 : in natural32 ) is
-
-  -- DESCRIPTION :
-  --   Updates the vector of path counts with the result of the
-  --   cascade filtering at the dimension dim.
-
-  -- ON ENTRY :
-  --   cnts     vector with a range which includes dim;
-  --   dim      the current dimension;
-  --   nsols    number of solutions filtered;
-  --   nsols0   number of solutions with zero slack variables;
-  --   nsols1   number of solutions with nonzero slack variables.
-
-  -- ON RETURN :
-  --   cnts     cnts(dim) points to the vector with the three numbers
-  --            nsols, nsols0, and nsols1.
-  --
-    counts : Standard_Natural_Vectors.Vector(1..3);
-
-  begin
-    counts(1) := nsols;
-    counts(2) := nsols0;
-    counts(3) := nsols1;
-    cnts(integer32(dim)) := new Standard_Natural_Vectors.Vector'(counts);
-  end Update_Path_Counts;
-
-  procedure Write_Path_Counts
-              ( file : in file_type;
-                cnts : in Standard_Natural_VecVecs.VecVec ) is
-
-  -- DESCRIPTION :
-  --   Writes the path counts in cnts to file.
-
-  begin
-    new_line(file);
-    put(file,"dim : ");
-    put(file," #paths : ");
-    put(file,"slack=0 : ");
-    put(file,"slack!=0");
-    new_line(file);
-    put_line(file,"----+---------+---------+---------");
-    for i in reverse cnts'range loop
-      put(file,i,3);
-      put(file," : "); put(file,cnts(i)(1),7);
-      put(file," : "); put(file,cnts(i)(2),7);
-      put(file," : "); put(file,cnts(i)(3),7);
-      new_line(file);
-    end loop;
-  end Write_Path_Counts;
 
   procedure Witness_Generate
               ( outfile,resfile : in file_type; nt : in natural32;

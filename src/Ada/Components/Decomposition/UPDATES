@@ -1,7 +1,8 @@
 Wed 27 Sep 2017 : renaming of the variable k into topdim, to make the
   drivers_to_cascade_filtering more readable.  Added counting of the
   solutions after filtering to drivers_to_cascade_filtering.adb,
-  with the writing of a report at the end.
+  with the writing of a report at the end.  New package path_counts_table,
+  with the code for the updating a writing the path counts.
 
 Sun 23 Jul 2017 : improved specification of extrinsic_diagonal_continuation,
   moving documentation of procedures from body to specification.
