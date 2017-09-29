@@ -1,3 +1,5 @@
+Thu 28 Sep 2017 : adjusted greeting_banners for version 2.4.46.
+
 Tue 26 Sep 2017 : added embed_and_cascade to compsolve.adb.
 
 Mon 25 Sep 2017 : to dispatch.adb, added the option -B, which calls compsolve,
