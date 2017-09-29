@@ -357,6 +357,11 @@ global optimization, and computational physics:
    analysis problems on planar linkages**.
    *Mechanism and Machine Theory* 54: 116-131, 2012.
 
+#. Zachary Charles and Nigel Boston:
+   **Exploiting algebraic structure in global optimization and the
+   Belgian chocolate problem**.
+   arXiv:1708.08114 [math.OC] 27 Aug 2017.
+
 #. Tom Creemers, Josep M. Porta, Lluis Ros, and Federico Thomas:
    **Fast Multiresolutive Approximations of Planar Linkage Configuration
    Spaces**. *IEEE 2006 International Conference on Robotics and Automation.*
@@ -785,7 +790,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-97. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+98. Ali Baharev, Ferenc Domes, Arnold Neumaier:
     **A robust approach for finding all well-separated solutions of
     sparse systems of nonlinear equations**.
     *Numerical Algorithms*, pages 1-27, 2016 (online first).
@@ -856,7 +861,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-113. Bo Dong, Bo Yu, and Yan Yu:
+114. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -875,7 +880,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-116. B. Sturmfels:
+117. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 

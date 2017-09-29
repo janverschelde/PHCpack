@@ -226,6 +226,15 @@ For a numerical irreducible decomposition of all solutions,
 including the positive dimensional ones, consider the options
 ``-a``, ``-c``, and ``-f``.
 
+phc -B : numerical irreducible decomposition in blackbox mode
+=============================================================
+
+The ``-B`` option does currently the same as option ``0``
+of ``phc -c``, that is: track all path defined by a cascade homotopy
+to compute candidate generic points on all components of the
+solution set.  In the near future, new releases will compute
+a complete numerical irreducible decomposition.
+
 phc -c : irreducible decomposition for solution components     
 ==========================================================
 
