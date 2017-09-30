@@ -1,3 +1,6 @@
+Sat 30 Sep 2017 : added help4compsolve in greeting_banners, phc -B -h and
+  phc -h -B provide help after changes to dispatch.adb.
+
 Thu 28 Sep 2017 : adjusted greeting_banners for version 2.4.46.
 
 Tue 26 Sep 2017 : added embed_and_cascade to compsolve.adb.

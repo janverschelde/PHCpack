@@ -91,6 +91,12 @@ package Greeting_Banners is
   -- DESCRIPTION :
   --   Writes information about the blackbox solver.
 
+  procedure help4compsolve;
+
+  -- DESCRIPTION :
+  --   Writes information about computing a numerical irreducible
+  --   decomposition in blackbox mode.
+
   procedure help4components;
 
   -- DESCRIPTION :

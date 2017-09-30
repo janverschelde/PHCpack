@@ -395,12 +395,17 @@ procedure Dispatch is
   -- DESCRIPTION :
   --   This procedure handles the option '-B' to compute the numerical
   --   irreducible decomposition in a blackbox solver.
-  --   The second option is '-t' for the number of tasks.
+  --   The second option is either '-t' for the number of tasks,
+  --   or '-h' for help.
 
   begin
-    if option2 = 't'
-     then compsolve(Number_of_Tasks,file1,file2);
-     else compsolve(0,file1,file2);
+    put_line(welcome);
+    if option2 = 't' then
+      compsolve(Number_of_Tasks,file1,file2);
+    elsif option2 = 'h' then
+      Greeting_Banners.help4compsolve;
+    else 
+      compsolve(0,file1,file2);
     end if;
   end Component_Solver;
 
@@ -726,6 +731,7 @@ procedure Dispatch is
       when '0' => Greeting_Banners.help4setseed;
       when 'a' => Greeting_Banners.help4eqnbyeqn;
       when 'b' => Greeting_Banners.help4blackbox;
+      when 'B' => Greeting_Banners.help4compsolve;
       when 'c' => Greeting_Banners.help4components;
       when 'd' => Greeting_Banners.help4reduction;
       when 'e' => Greeting_Banners.help4enumeration;

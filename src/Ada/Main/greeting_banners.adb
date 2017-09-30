@@ -142,6 +142,21 @@ package body Greeting_Banners is
     put_line("solver and for a numerical irreducible decomposition.");
   end help4blackbox;
 
+  procedure help4compsolve is
+  begin
+    put_line("phc -B gives a blackbox numerical irreducible decomposition.");
+    new_line;
+    put_line("A numerical irreducible decomposition represents the solution");
+    put_line("set of a polynomial system as a sequence of witness sets.");
+    put_line("Each witness set in a numerical irreducible decomposition");
+    put_line("represents one irreducible factor of the solution set.");
+    new_line;
+    put_line("A menu driven approach to compute a numerical irreducible");
+    put_line("decompositon is provided via the options -c and -f.");
+    put_line("In blackbox mode, the user does not have to know the various");
+    put_line("stages in the computation and the tolerance settings.");
+  end help4compsolve;
+
   procedure help4components is
   begin
     put_line("phc -c provides a numerical irreducible decomposition.");
