@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Add_and_Remove_Embedding;           use Add_and_Remove_Embedding;
 with Drivers_to_Cascade_Filtering;       use Drivers_to_Cascade_Filtering;
 
 procedure ts_cascade is

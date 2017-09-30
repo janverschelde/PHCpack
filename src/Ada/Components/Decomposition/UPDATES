@@ -1,3 +1,7 @@
+Fri 29 Sep 2017 : new package add_and_remove_embedding with code taken out
+  of drivers_to_cascade_filtering.  This changed the test ts_cascade.adb
+  and maindeco.adb.
+
 Wed 27 Sep 2017 : renaming of the variable k into topdim, to make the
   drivers_to_cascade_filtering more readable.  Added counting of the
   solutions after filtering to drivers_to_cascade_filtering.adb,

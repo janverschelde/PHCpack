@@ -22,6 +22,7 @@ with Standard_Monomial_Map_Filters;
 with Black_Box_Binomial_Solvers;        use Black_Box_Binomial_Solvers;
 with Witness_Sets,Witness_Sets_io;      use Witness_Sets,Witness_Sets_io;
 with Intrinsic_Witness_Sets_io;         use Intrinsic_Witness_Sets_io;
+with Add_and_Remove_Embedding;
 with Intrinsic_Diagonal_Continuation;   use Intrinsic_Diagonal_Continuation;
 with Extrinsic_Diagonal_Continuation;   use Extrinsic_Diagonal_Continuation;
 with Drivers_to_Cascade_Filtering;      use Drivers_to_Cascade_Filtering;
@@ -261,6 +262,8 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     file : file_type;
     lp : Link_to_Poly_Sys;
     k : natural32 := 0;
+
+    use Add_and_Remove_Embedding;
 
   begin
     new_line;
