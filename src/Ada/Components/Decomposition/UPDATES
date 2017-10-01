@@ -3,6 +3,8 @@ Sat 30 Sep 2017 : moved the array_of_duration out of the packages
   New drivers_to_witness_generate to collect the code for the original
   witness generate/classify method, moved out of drivers_to_cascade_filtering,
   which changed maindeco.adb and ts_irdeco.adb.
+  Separated code out of drivers_to_cascade_filtering into a new package
+  cascade_homotopies.
 
 Fri 29 Sep 2017 : new package add_and_remove_embedding with code taken out
   of drivers_to_cascade_filtering.  This changed the test ts_cascade.adb

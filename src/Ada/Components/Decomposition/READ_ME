@@ -61,6 +61,7 @@ multprec_irreducible_decomp_io   : output of hypersurfaces and components
 homotopy_cascade_filter          : witness generate + classify
 square_and_embed_systems         : squaring and embedding systems
 path_counts_table                : counts the paths with zero & nonzero slacks
+cascade_homotopies               : versions of cascade homotopies
 drivers_to_cascade_filtering     : drivers to cascade of homotopies 
 ts_cascade                       : calls the cascade routine
 ------------------------------------------------------------------------------
