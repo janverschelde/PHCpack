@@ -191,41 +191,6 @@ package Drivers_to_Cascade_Filtering is
   --   inpname  name of the input file;
   --   outname  name of the output file.
 
-  procedure Black_Box_Solver
-               ( file : in file_type;
-                 sys : in Standard_Complex_Poly_Systems.Poly_Sys;
-                 deg : in boolean;
-                 sols : out Standard_Complex_Solutions.Solution_List;
-                 rc : out natural32; totaltime : out duration );
- 
-  -- DESCRIPTION :
-  --   The black-box solver consists of the following stages:
-  --     1) root-counting, when deg is true then degrees are used
-  --     2) construction of start system; and
-  --     3) path following to the actual target system.
-  --   Several diagnostics and intermediate results are written to file.
-
-  -- ON ENTRY :
-  --   file      output file for diagnostics and intermediate results;
-  --   sys       a square polynomial system;
-  --   deg       flag to indicate when degrees or polytopes are used
-  --             to count roots and construct the start system;
- 
-  -- ON RETURN :
-  --   rc        root count equals the number of paths followed;
-  --   sols      solutions found at the end of the paths;
-  --   totaltime is the total cpu time used in computing the results.
-
-  procedure Driver_for_Cascade_Filter
-               ( file : in file_type;
-                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                 k : in integer32 );
-  
-  -- DESCRIPTION :
-  --   Performs a cascade of homotopies to find generic points on
-  --   the solution set of the system p.  k is the top dimension.
-  --   All results are written to the file.
-
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
                 p : in Standard_Complex_Poly_Systems.Poly_Sys );

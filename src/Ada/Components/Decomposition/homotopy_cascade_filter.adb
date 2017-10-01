@@ -1,4 +1,3 @@
-with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
@@ -171,7 +170,7 @@ package body Homotopy_Cascade_Filter is
         Remove_Component(sols0);
         Standard_Update_Hypersurfaces
           (file,soco,n,k,natural32(i-1),itp,skewproj,embp(i-1).all,sols0,
-           tol_sing,clatimes(i-1),fp,fp_last);
+           tol_sing,clatimes(integer(i)-1),fp,fp_last);
       end if;
     end Top_Component;
 
@@ -196,12 +195,13 @@ package body Homotopy_Cascade_Filter is
         Remove_Component(rem_sols);
         Standard_Update_Hypersurfaces
           (file,soco,n,k,natural32(i-1),itp,skewproj,embp(i-1).all,rem_sols,
-           tol_sing,clatimes(i-1),fp,fp_last);
+           tol_sing,clatimes(integer(i)-1),fp,fp_last);
       end if;
       new_line(file);
       print_times(file,comptesttimer,"Component Membership Test");
       new_line(file);
-      clatimes(i-1) := clatimes(i-1) + Elapsed_User_Time(comptesttimer);
+      clatimes(integer(i)-1)
+        := clatimes(integer(i)-1) + Elapsed_User_Time(comptesttimer);
     end General_Component;
 
     procedure Bottom_Component ( i : in integer32 ) is
@@ -238,7 +238,7 @@ package body Homotopy_Cascade_Filter is
   begin
     for i in reverse 1..integer32(k) loop
       npa(i-1) := Length_Of(sols); 
-      Down_Continuation(file,embp(i).all,i,sols,gentimes(i-1));
+      Down_Continuation(file,embp(i).all,i,sols,gentimes(integer(i)-1));
       Clear(sols0); Clear(sols1);
       Filter_and_Split_Solutions
         (file,sols,integer32(n),i-1,tol,sols0,sols1);
@@ -290,7 +290,7 @@ package body Homotopy_Cascade_Filter is
         Remove_Component(sols0);
         Multprec_Update_Hypersurfaces
           (file,soco,n,k,natural32(i-1),size,itp,skewproj,embp(i-1).all,orgsys,
-           sols0,tol_sing,clatimes(i-1),fp,fp_last);
+           sols0,tol_sing,clatimes(integer(i)-1),fp,fp_last);
       end if;
     end Top_Component;
 
@@ -315,12 +315,13 @@ package body Homotopy_Cascade_Filter is
         Remove_Component(rem_sols);
         Multprec_Update_Hypersurfaces
           (file,soco,n,k,natural32(i-1),size,itp,skewproj,embp(i-1).all,orgsys,
-           rem_sols,tol_sing,clatimes(i-1),fp,fp_last);
+           rem_sols,tol_sing,clatimes(integer(i)-1),fp,fp_last);
       end if;
       new_line(file);
       print_times(file,comptesttimer,"Component Membership Test");
       new_line(file);
-      clatimes(i-1) := clatimes(i-1) + Elapsed_User_Time(comptesttimer);
+      clatimes(integer(i)-1)
+        := clatimes(integer(i)-1) + Elapsed_User_Time(comptesttimer);
     end General_Component;
 
     procedure Bottom_Component ( i : in integer32 ) is
@@ -357,7 +358,7 @@ package body Homotopy_Cascade_Filter is
   begin
     for i in reverse 1..integer32(k) loop
       npa(i-1) := Length_Of(sols); 
-      Down_Continuation(file,embp(i).all,i,sols,gentimes(i-1));
+      Down_Continuation(file,embp(i).all,i,sols,gentimes(integer(i)-1));
       Clear(sols0); Clear(sols1);
       Filter_and_Split_Solutions
         (file,sols,integer32(n),i-1,tol,sols0,sols1);

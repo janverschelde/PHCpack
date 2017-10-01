@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -19,9 +20,6 @@ package Witness_Generate_and_Classify is
 --       Witness_Generate into generic points, grouped per irreducible
 --       component, and junk points on higher dimensional components.
 --    3) Witness_Generate_Classify interlaces Generate and Classify.
-
-  type Array_of_Duration is array ( integer32 range <> ) of duration;
-  -- for book keeping to keep track of the cost of each stage
 
   procedure Witness_Generate
                ( file : in file_type;

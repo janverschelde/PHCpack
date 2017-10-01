@@ -75,7 +75,7 @@ procedure ts_irdeco is
       put(file,flowtab(i,2),5); put(file,"  | ");
       put(file,flowtab(i,3),5); put(file,"  | ");
       put(file,flowtab(i,4),5); put(file,"  |    ");
-      print_hms(file,timings(i)); put_line(file,"     |");
+      print_hms(file,timings(integer(i))); put_line(file,"     |");
     end loop;
     put_line(file,b0);
     put(file,"  | total | ");
@@ -140,13 +140,13 @@ procedure ts_irdeco is
         put(file,"  | level ");
         put(file,n-1,1);  put(file,"    |");
         Write(file,fp,n-1);
-        put(file," "); print_hms(file,timings(n-1));
+        put(file," "); print_hms(file,timings(integer(n)-1));
         put_line(file,"  |");
         for i in reverse 0..n-2 loop
           put(file,"  |       ");
           put(file,i,1);  put(file,"    |");
           Write(file,fp,i);
-          put(file," "); print_hms(file,timings(i));
+          put(file," "); print_hms(file,timings(integer(i)));
           put_line(file,"  |");
         end loop;
       end if;
@@ -237,7 +237,7 @@ procedure ts_irdeco is
     dc : Standard_Irreducible_Decomposition;
     degroco : boolean;
     tol : constant double_float := 1.0E-12;
-    timings : Array_of_Duration(0..k);
+    timings : Array_of_Duration(0..integer(k));
     flowtab : Standard_Natural_Matrices.Matrix(0..k,1..4);
     ans : character;
 
@@ -296,7 +296,7 @@ procedure ts_irdeco is
     full_output : boolean := false;
     stoptol,membtol : double_float;
     k : constant integer32 := Top_Dimension(dc);
-    clatims : Array_of_Duration(0..k) := (0..k => 0.0);
+    clatims : Array_of_Duration(0..integer(k)) := (0..integer(k) => 0.0);
     fp,fp_last : List;
     deci,size,threshold : natural32 := 0;
     p : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
@@ -379,7 +379,8 @@ procedure ts_irdeco is
     full_output : boolean := false;
     zerotol : constant double_float := 1.0E-10;
     membtol,stoptol : double_float;
-    gentims,clatims : Array_of_Duration(0..k) := (0..k => 0.0);
+    gentims,clatims
+      : Array_of_Duration(0..integer(k)) := (0..integer(k) => 0.0);
     flowtab : Standard_Natural_Matrices.Matrix(0..k,1..4);
     method,deci,size : natural32 := 0;
     ans : character;

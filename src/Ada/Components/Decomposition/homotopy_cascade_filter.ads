@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -15,11 +16,6 @@ package Homotopy_Cascade_Filter is
 -- DESCRIPTION :
 --   This package provides routines to perform the witness generate and
 --   classify, using a cascade of homotopies to filter solution lists.
-
--- DATA STRUCTURE :
-
-  type Array_of_Duration is array ( integer32 range <> ) of duration;
-  -- for bookkeeping purposes, keep track of the cost of each stage
 
 -- INITIALIZE, UPDATE, AND MAIN LOOP :
 

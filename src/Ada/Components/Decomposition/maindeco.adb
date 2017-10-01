@@ -22,6 +22,7 @@ with Standard_Monomial_Map_Filters;
 with Black_Box_Binomial_Solvers;        use Black_Box_Binomial_Solvers;
 with Witness_Sets,Witness_Sets_io;      use Witness_Sets,Witness_Sets_io;
 with Intrinsic_Witness_Sets_io;         use Intrinsic_Witness_Sets_io;
+with Drivers_to_Witness_Generate;       use Drivers_to_Witness_Generate;
 with Add_and_Remove_Embedding;
 with Intrinsic_Diagonal_Continuation;   use Intrinsic_Diagonal_Continuation;
 with Extrinsic_Diagonal_Continuation;   use Extrinsic_Diagonal_Continuation;

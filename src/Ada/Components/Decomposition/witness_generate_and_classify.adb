@@ -1,4 +1,3 @@
-with Timing_Package;                     use Timing_Package;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
@@ -157,7 +156,7 @@ package body Witness_Generate_and_Classify is
   begin
     Add_Embed_Symbols(natural32(k));
     gentims := (gentims'range => 0.0);
-    Black_Box_Solver(file,ep(k).all,degroco,sols,rc,gentims(k));
+    Black_Box_Solver(file,ep(k).all,degroco,sols,rc,gentims(integer(k)));
     dc := Create(ep);
     Filter_and_Split_Solutions(file,sols,n,k,zerotol,sols0,sols1);
     Update_Flow_Table(flowtab,k,sols,sols0,sols1);
@@ -172,7 +171,7 @@ package body Witness_Generate_and_Classify is
     if not Is_Null(sols1) then
       Copy(sols1,sols);
       for i in reverse 1..k loop
-        Down_Continuation(file,ep(i).all,i,sols,gentims(i-1));
+        Down_Continuation(file,ep(i).all,i,sols,gentims(integer(i)-1));
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions(file,sols,n,i-1,zerotol,sols0,sols1);
         Update_Flow_Table(flowtab,i-1,sols,sols0,sols1);
@@ -220,7 +219,7 @@ package body Witness_Generate_and_Classify is
      else Monodromy_Breakup(file,dc,k,threshold,membtol,fp,fp_last);
     end if;
     tstop(timer);
-    clatims(k) := Elapsed_User_Time(timer);
+    clatims(integer(k)) := Elapsed_User_Time(timer);
     for i in reverse 1..(k-1) loop
       tstart(timer);
       if method < 4 then
@@ -231,7 +230,7 @@ package body Witness_Generate_and_Classify is
         Monodromy_Breakup(file,dc,i,threshold,membtol,fp,fp_last);
       end if;
       tstop(timer);
-      clatims(i) := Elapsed_User_Time(timer);
+      clatims(integer(i)) := Elapsed_User_Time(timer);
     end loop;
     tstart(timer);
     if method < 4
@@ -257,13 +256,13 @@ package body Witness_Generate_and_Classify is
     tstart(timer);
     Breakup(file,full_output,dc,k,method,size,stoptol,membtol,fp,fp_last);
     tstop(timer);
-    clatims(k) := Elapsed_User_Time(timer);
+    clatims(integer(k)) := Elapsed_User_Time(timer);
     for i in reverse 1..(k-1) loop
       tstart(timer);
       Filter(file,dc,i,membtol,fp,fp_last,cnt);
       Breakup(file,full_output,dc,i,method,size,stoptol,membtol,fp,fp_last);
       tstop(timer);
-      clatims(i) := Elapsed_User_Time(timer);
+      clatims(integer(i)) := Elapsed_User_Time(timer);
     end loop;
     tstart(timer);
     Filter(file,dc,0,membtol,fp,fp_last,cnt);
@@ -292,7 +291,7 @@ package body Witness_Generate_and_Classify is
   begin
     Add_Embed_Symbols(natural32(k));
     gentims := (gentims'range => 0.0);
-    Black_Box_Solver(file,ep(k).all,degroco,sols,rc,gentims(k));
+    Black_Box_Solver(file,ep(k).all,degroco,sols,rc,gentims(integer(k)));
     dc := Create(ep);
     Filter_and_Split_Solutions(file,sols,n,k,zerotol,sols0,sols1);
     Update_Flow_Table(flowtab,k,sols,sols0,sols1);
@@ -306,12 +305,12 @@ package body Witness_Generate_and_Classify is
       tstart(timer);
       Breakup(file,full_output,dc,k,method,stoptol,membtol,fp,fp_last);
       tstop(timer);
-      clatims(k) := Elapsed_User_Time(timer);
+      clatims(integer(k)) := Elapsed_User_Time(timer);
     end if;
     if not Is_Null(sols1) then
       Copy(sols1,sols);
       for i in reverse 1..k loop
-        Down_Continuation(file,ep(i).all,i,sols,gentims(i-1));
+        Down_Continuation(file,ep(i).all,i,sols,gentims(integer(i)-1));
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions(file,sols,n,i-1,zerotol,sols0,sols1);
         Update_Flow_Table(flowtab,i-1,sols,sols0,sols1);
@@ -339,7 +338,7 @@ package body Witness_Generate_and_Classify is
             Filter(file,dc,i-1,membtol,fp,fp_last,cnt);
             Breakup(file,full_output,dc,i-1,method,stoptol,membtol,fp,fp_last);
             tstop(timer);
-            clatims(i-1) := Elapsed_User_Time(timer);
+            clatims(integer(i)-1) := Elapsed_User_Time(timer);
             Update_Flow_Table(flowtab,i-1,cnt);
           end if;
         end if;
@@ -373,7 +372,7 @@ package body Witness_Generate_and_Classify is
   begin
     Add_Embed_Symbols(natural32(k));
     gentims := (gentims'range => 0.0);
-    Black_Box_Solver(file,ep(k).all,degroco,sols,rc,gentims(k));
+    Black_Box_Solver(file,ep(k).all,degroco,sols,rc,gentims(integer(k)));
     dc := Create(ep);
     Add_Original(dc,mp);
     Filter_and_Split_Solutions(file,sols,n,k,zerotol,sols0,sols1);
@@ -388,12 +387,12 @@ package body Witness_Generate_and_Classify is
       tstart(timer);
       Breakup(file,full_output,dc,k,method,size,stoptol,membtol,fp,fp_last);
       tstop(timer);
-      clatims(k) := Elapsed_User_Time(timer);
+      clatims(integer(k)) := Elapsed_User_Time(timer);
     end if;
     if not Is_Null(sols1) then
       Copy(sols1,sols);
       for i in reverse 1..k loop
-        Down_Continuation(file,ep(i).all,i,sols,gentims(i-1));
+        Down_Continuation(file,ep(i).all,i,sols,gentims(integer(i)-1));
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions(file,sols,n,i-1,zerotol,sols0,sols1);
         Update_Flow_Table(flowtab,i-1,sols,sols0,sols1);
@@ -422,7 +421,7 @@ package body Witness_Generate_and_Classify is
             Breakup(file,full_output,dc,i-1,method,size,
                     stoptol,membtol,fp,fp_last);
             tstop(timer);
-            clatims(i-1) := Elapsed_User_Time(timer);
+            clatims(integer(i)-1) := Elapsed_User_Time(timer);
             Update_Flow_Table(flowtab,i-1,cnt);
           end if;
         end if;
