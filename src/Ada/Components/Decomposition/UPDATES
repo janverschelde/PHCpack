@@ -1,3 +1,7 @@
+Sun 1 Oct 2017 : new packages cascade_homotopy_steps and cascade_homotopies_io
+  with code move out of cascade_homotopies.  In cascade_homotopy_steps, added
+  silent versions of running the continuation procedures.
+
 Sat 30 Sep 2017 : moved the array_of_duration out of the packages
   homotopy_cascade_filter and witness_generate_and_classify.
   New drivers_to_witness_generate to collect the code for the original
