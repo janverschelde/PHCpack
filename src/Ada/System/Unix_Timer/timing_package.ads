@@ -1,4 +1,4 @@
-with text_io;                 use text_io;
+with text_io;                            use text_io;
 
 package Timing_Package is
 
@@ -8,6 +8,8 @@ package Timing_Package is
 -- ACKNOWLEGMENT :
 --   Originally developed by Dave Emery (emery@aries.mitre.org),
 --   but modified by me.
+
+  type Array_of_Duration is array ( integer range <> ) of duration;
 
   type Timing_Widget is private;
 

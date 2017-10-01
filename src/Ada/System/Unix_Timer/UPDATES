@@ -1,0 +1,13 @@
+Sat 30 Sep 2017 : added array_of_duration to timing_package.ads.
+
+Sun 29 May 2011 : for warnings, changed unix_resource_usage.adb.
+
+Mon 1 Jun 2009 : fixed unix_resource_usage.ad* for x86_64.
+
+Sun 31 May 2009 : using long_integer on x86_64 for definition in timeval
+  makes crash go away.
+
+Thu 3 Jan 2008 : because of warnings given by GNAT GPL 2006, changed
+   unix_resource_usage.a* and timing_package.a*.
+
+Wed 2 Jan 2008 : changed timing_package.adb because warnings in GNAT GPL 2006.
