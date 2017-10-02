@@ -50,10 +50,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -120,10 +120,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -190,10 +190,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -260,10 +260,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -330,10 +330,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -400,10 +400,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -470,10 +470,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -538,10 +538,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -606,10 +606,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -674,10 +674,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -742,10 +742,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));
@@ -810,10 +810,10 @@ package body Cascade_Homotopies is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(topdim) loop
-        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
-        Filter_and_Split_Solutions
-          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        Down_Continuation
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+           wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
            Length_Of(wsols),Length_Of(sols0),Length_Of(sols1));

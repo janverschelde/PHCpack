@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -25,8 +26,9 @@ package Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -37,17 +39,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -59,17 +65,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -80,17 +90,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded Laurent polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -102,17 +116,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded Laurent polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -123,17 +141,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -145,17 +167,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -166,17 +192,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded Laurent polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -188,17 +218,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded Laurent polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -209,17 +243,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -231,17 +269,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -252,17 +294,21 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded Laurent polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32;
+                level : in natural32; zerotol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
@@ -274,10 +320,13 @@ package Cascade_Homotopy_Steps is
   --   nt       the number of tasks, for no tasking set nt = 0;
   --   embsys   the embedded Laurent polynomial system;
   --   level    equals the current dimension in the cascade;
+  --   zerotol  is the tolerance whether the slack variable is zero or not;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
   --   sols     solutions at the end of the homotopy;
+  --   sols0    solutions with zero slack variable;
+  --   sols1    solutions with nonzero slack variable;
   --   time     the elapsed CPU time.
 
 end Cascade_Homotopy_Steps;
