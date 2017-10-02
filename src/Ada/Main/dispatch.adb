@@ -399,7 +399,6 @@ procedure Dispatch is
   --   or '-h' for help.
 
   begin
-    put_line(welcome);
     if option2 = 't' then
       compsolve(Number_of_Tasks,file1,file2);
     elsif option2 = 'h' then

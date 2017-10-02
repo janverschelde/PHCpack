@@ -21,10 +21,10 @@ procedure compsolve
     append_sols : boolean := false;
     p : Link_to_Poly_Sys;
     q : Link_to_Laur_Sys;
+    tofile : character;
 
   begin
     Standard_System_Readers.Read_System(infile,infilename,q);
-    Create_Output_File(outfile,outfilename,outname);
     if q = null then
       put_line(Greeting_Banners.welcome & ".");
       put("Numerical irreducible decomposition solver");
@@ -34,13 +34,20 @@ procedure compsolve
       end if;
       put_line(", in double precision.");
       new_line; get(q);
+      new_line;
+      if outfilename /= "" then
+        tofile := 'y';
+      else
+        put("Do you want the output to file ? (y/n) ");
+        Ask_Yes_or_No(tofile); -- will be 'y' if yes
+      end if;
+      Create_Output_File(outfile,outfilename,outname);
     else
       Scan_and_Skip(infile,"SOLUTIONS",append_sols);
       append_sols := not append_sols;
       close(infile);
     end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(q.all) then
-      put_line("computing the numerical irreducible dcomposition ...");
       Standard_Embed_and_Cascade(outfile,outname.all,nt,q.all);
     else
       declare
@@ -49,7 +56,6 @@ procedure compsolve
           := Positive_Laurent_Polynomial_System(q.all);
       begin
         p := new Poly_Sys'(t);
-        put_line("computing the numerical irreducible decomposition ...");
         Standard_Embed_and_Cascade(outfile,outname.all,nt,p.all);
       end;
     end if;
