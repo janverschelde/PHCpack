@@ -3,6 +3,7 @@ Sun 1 Oct 2017 : new packages cascade_homotopy_steps and cascade_homotopies_io
   silent versions of running the continuation procedures.
   Moved the splitting on the slack variable of the solutions from
   cascade_homotopies.adb to cascade_homotopy_steps.
+  Added silent version of witness generate to cascade_homotopies.
 
 Sat 30 Sep 2017 : moved the array_of_duration out of the packages
   homotopy_cascade_filter and witness_generate_and_classify.

@@ -1,6 +1,4 @@
-with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
@@ -845,6 +843,306 @@ package body Cascade_Homotopies is
     new_line(outfile);
     Write_Seed_Number(outfile);
     put_line(outfile,Greeting_Banners.Version);
+  end Witness_Generate;
+
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+
+    timer : Timing_Widget;
+    wsols,sols0,sols1 : Solution_List;
+    n : constant natural32 := natural32(ep'last)-topdim;
+    pocotime : duration;
+
+  begin
+    tstart(timer);
+    embsys(integer32(topdim)) := new Poly_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
+    end loop;
+    Filter_and_Split_Solutions
+      (sols,integer32(n),integer32(topdim),zerotol,
+       esols0(integer32(topdim)),sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
+       Length_Of(sols1));
+    if not Is_Null(sols1) then
+      Copy(sols1,wsols);
+      for i in reverse 1..integer32(topdim) loop
+        Clear(sols1);
+        Down_Continuation
+          (nt,embsys(i).all,natural32(i),zerotol,
+           wsols,esols0(i-1),sols1,pocotime);
+        times(integer(i)) := pocotime;
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(esols0(i-1)),Length_Of(sols1));
+        Clear(wsols);
+        exit when Is_Null(sols1);
+        wsols := Remove_Component(sols1);
+      end loop;
+    end if;
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
+  end Witness_Generate;
+
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+
+    timer : Timing_Widget;
+    wsols,sols0,sols1 : Solution_List;
+    n : constant natural32 := natural32(ep'last)-topdim;
+    pocotime : duration;
+
+  begin
+    tstart(timer);
+    embsys(integer32(topdim)) := new Laur_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
+    end loop;
+    Filter_and_Split_Solutions
+      (sols,integer32(n),integer32(topdim),zerotol,
+       esols0(integer32(topdim)),sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
+       Length_Of(sols1));
+    if not Is_Null(sols1) then
+      Copy(sols1,wsols);
+      for i in reverse 1..integer32(topdim) loop
+        Clear(sols1);
+        Down_Continuation
+          (nt,embsys(i).all,natural32(i),zerotol,
+           wsols,esols0(i-1),sols1,pocotime);
+        times(integer(i)) := pocotime;
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(esols0(i-1)),Length_Of(sols1));
+        Clear(wsols);
+        exit when Is_Null(sols1);
+        wsols := Remove_Component(sols1);
+      end loop;
+    end if;
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
+  end Witness_Generate;
+
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    wsols,sols0,sols1 : Solution_List;
+    n : constant natural32 := natural32(ep'last)-topdim;
+    pocotime : duration;
+
+  begin
+    tstart(timer);
+    embsys(integer32(topdim)) := new Poly_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
+    end loop;
+    Filter_and_Split_Solutions
+      (sols,integer32(n),integer32(topdim),zerotol,
+       esols0(integer32(topdim)),sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
+       Length_Of(sols1));
+    if not Is_Null(sols1) then
+      Copy(sols1,wsols);
+      for i in reverse 1..integer32(topdim) loop
+        Clear(sols1);
+        Down_Continuation
+          (nt,embsys(i).all,natural32(i),zerotol,
+           wsols,esols0(i-1),sols1,pocotime);
+        times(integer(i)) := pocotime;
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(esols0(i-1)),Length_Of(sols1));
+        Clear(wsols);
+        exit when Is_Null(sols1);
+        wsols := Remove_Component(sols1);
+      end loop;
+    end if;
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
+  end Witness_Generate;
+
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    wsols,sols0,sols1 : Solution_List;
+    n : constant natural32 := natural32(ep'last)-topdim;
+    pocotime : duration;
+
+  begin
+    tstart(timer);
+    embsys(integer32(topdim)) := new Laur_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
+    end loop;
+    Filter_and_Split_Solutions
+      (sols,integer32(n),integer32(topdim),zerotol,
+       esols0(integer32(topdim)),sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
+       Length_Of(sols1));
+    if not Is_Null(sols1) then
+      Copy(sols1,wsols);
+      for i in reverse 1..integer32(topdim) loop
+        Clear(sols1);
+        Down_Continuation
+          (nt,embsys(i).all,natural32(i),zerotol,
+           wsols,esols0(i-1),sols1,pocotime);
+        times(integer(i)) := pocotime;
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(esols0(i-1)),Length_Of(sols1));
+        Clear(wsols);
+        exit when Is_Null(sols1);
+        wsols := Remove_Component(sols1);
+      end loop;
+    end if;
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
+  end Witness_Generate;
+
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    wsols,sols0,sols1 : Solution_List;
+    n : constant natural32 := natural32(ep'last)-topdim;
+    pocotime : duration;
+
+  begin
+    tstart(timer);
+    embsys(integer32(topdim)) := new Poly_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
+    end loop;
+    Filter_and_Split_Solutions
+      (sols,integer32(n),integer32(topdim),zerotol,
+       esols0(integer32(topdim)),sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
+       Length_Of(sols1));
+    if not Is_Null(sols1) then
+      Copy(sols1,wsols);
+      for i in reverse 1..integer32(topdim) loop
+        Clear(sols1);
+        Down_Continuation
+          (nt,embsys(i).all,natural32(i),zerotol,
+           wsols,esols0(i-1),sols1,pocotime);
+        times(integer(i)) := pocotime;
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(esols0(i-1)),Length_Of(sols1));
+        Clear(wsols);
+        exit when Is_Null(sols1);
+        wsols := Remove_Component(sols1);
+      end loop;
+    end if;
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
+  end Witness_Generate;
+
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    wsols,sols0,sols1 : Solution_List;
+    n : constant natural32 := natural32(ep'last)-topdim;
+    pocotime : duration;
+
+  begin
+    tstart(timer);
+    embsys(integer32(topdim)) := new Laur_Sys'(ep);
+    for i in 0..topdim-1 loop
+      embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
+    end loop;
+    Filter_and_Split_Solutions
+      (sols,integer32(n),integer32(topdim),zerotol,
+       esols0(integer32(topdim)),sols1);
+    Update_Path_Counts
+      (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
+       Length_Of(sols1));
+    if not Is_Null(sols1) then
+      Copy(sols1,wsols);
+      for i in reverse 1..integer32(topdim) loop
+        Clear(sols1);
+        Down_Continuation
+          (nt,embsys(i).all,natural32(i),zerotol,
+           wsols,esols0(i-1),sols1,pocotime);
+        times(integer(i)) := pocotime;
+        Update_Path_Counts
+          (pathcnts,natural32(i-1),
+           Length_Of(wsols),Length_Of(esols0(i-1)),Length_Of(sols1));
+        Clear(wsols);
+        exit when Is_Null(sols1);
+        wsols := Remove_Component(sols1);
+      end loop;
+    end if;
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
   end Witness_Generate;
 
 end Cascade_Homotopies;

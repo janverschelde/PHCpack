@@ -1,7 +1,9 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -122,5 +124,79 @@ package Cascade_Homotopies is
   --   topdim    number of slack variables and random hyperplanes,
   --             equals the top dimension of the solution sets;
   --   zerotol   tolerance to decide whether a number is zero or not.
+
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Generate
+              ( nt : in natural32;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                topdim : in natural32; zerotol : in double_float;
+                embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+
+  -- DESCRIPTION :
+  --   Silent version of the witness generate to compute witness supersets,
+  --   in double, double double, and quad double precision.
+
+  -- ON ENTRY :
+  --   nt        number of tasks for multitasking, set to zero for no tasking;
+  --   ep        embedded polynomial system;
+  --   sols      solutions to the system ep (unfiltered);
+  --   topdim    number of slack variables and random hyperplanes,
+  --             equals the top dimension of the solution sets;
+  --   zerotol   tolerance to decide whether a number is zero or not.
+
+  -- ON RETURN :
+  --   embsys    sequence of embedded polynomial systems;
+  --   esols0    candidate witness points at each dimension;
+  --   pathcnts  table with path counts during the cascade homotopies;
+  --   times     CPU time at each stage in the cascade homotopy;
+  --   alltime   the total elapsed CPU time.
 
 end Cascade_Homotopies;
