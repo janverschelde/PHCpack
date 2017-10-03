@@ -1,5 +1,6 @@
 Mon 2 Oct 2017 : rearranged prompting for output file in comosolve.adb and
   removed writing of welcome banner before calling compsolve in dispatch.adb.
+  Fixed order of greeting.
 
 Sat 30 Sep 2017 : added help4compsolve in greeting_banners, phc -B -h and
   phc -h -B provide help after changes to dispatch.adb.

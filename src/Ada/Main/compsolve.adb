@@ -14,11 +14,31 @@ with Drivers_to_Cascade_Filtering;      use Drivers_to_Cascade_Filtering;
 procedure compsolve
             ( nt : in natural32; infilename,outfilename : in string ) is
 
+  procedure Write_Greeting ( nbtasks : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Writes the greeting and the number of tasks in nbtasks,
+  --   or writes no tasking, followed by the precision.
+
+  begin
+    put_line(Greeting_Banners.welcome & ".");
+    put("Numerical irreducible decomposition solver");
+    if nbtasks = 0
+     then put(", no tasking");
+     else put(", with "); put(nbtasks,1); put(" tasks");
+    end if;
+    put_line(", in double precision.");
+  end Write_Greeting;
+
   procedure Main is
+
+  -- DESCRIPTION :
+  --   Processing of the input and the output file name arguments.
 
     infile,outfile : file_type;
     outname : Link_to_String;
     append_sols : boolean := false;
+    greeted : boolean := false;
     p : Link_to_Poly_Sys;
     q : Link_to_Laur_Sys;
     tofile : character;
@@ -26,29 +46,33 @@ procedure compsolve
   begin
     Standard_System_Readers.Read_System(infile,infilename,q);
     if q = null then
-      put_line(Greeting_Banners.welcome & ".");
-      put("Numerical irreducible decomposition solver");
-      if nt = 0
-       then put(", no tasking");
-       else put(", with "); put(nt,1); put(" tasks");
-      end if;
-      put_line(", in double precision.");
+      greeted := true;
+      Write_Greeting(nt);
       new_line; get(q);
       new_line;
-      if outfilename /= "" then
-        tofile := 'y';
-      else
-        put("Do you want the output to file ? (y/n) ");
-        Ask_Yes_or_No(tofile); -- will be 'y' if yes
-      end if;
-      Create_Output_File(outfile,outfilename,outname);
     else
       Scan_and_Skip(infile,"SOLUTIONS",append_sols);
       append_sols := not append_sols;
       close(infile);
     end if;
+    if outfilename /= "" then
+      tofile := 'y';
+    else
+      if not greeted then
+        Write_Greeting(nt); new_line;
+        greeted := true;
+      end if;
+      put("Do you want the output to file ? (y/n) ");
+      Ask_Yes_or_No(tofile); -- will be 'y' if yes
+    end if;
+    if tofile = 'y'
+     then Create_Output_File(outfile,outfilename,outname);
+    end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(q.all) then
-      Standard_Embed_and_Cascade(outfile,outname.all,nt,q.all);
+      if tofile = 'y'
+       then Standard_Embed_and_Cascade(outfile,outname.all,nt,q.all);
+       else Standard_Embed_and_Cascade(nt,q.all);
+      end if;
     else
       declare
         use Standard_Laur_Poly_Convertors;
@@ -56,7 +80,10 @@ procedure compsolve
           := Positive_Laurent_Polynomial_System(q.all);
       begin
         p := new Poly_Sys'(t);
-        Standard_Embed_and_Cascade(outfile,outname.all,nt,p.all);
+        if tofile = 'y'
+         then Standard_Embed_and_Cascade(outfile,outname.all,nt,p.all);
+         else Standard_Embed_and_Cascade(nt,p.all);
+        end if;
       end;
     end if;
   end Main;
