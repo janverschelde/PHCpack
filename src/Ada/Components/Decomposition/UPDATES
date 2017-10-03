@@ -1,3 +1,6 @@
+Tue 3 Oct 2017 : more complete versions for the silent procedures in
+  drivers_to_cascade_filtering.adb.
+
 Mon 2 Oct 2017 : provided silent procedures in drivers_to_cascade_filtering.
 
 Sun 1 Oct 2017 : new packages cascade_homotopy_steps and cascade_homotopies_io

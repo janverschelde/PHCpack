@@ -1,8 +1,13 @@
 with String_Splitters;                   use String_Splitters;
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Natural_VecVecs;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
@@ -22,6 +27,7 @@ with Continuation_Parameters;
 with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
 with Greeting_Banners;
 with Write_Seed_Number;
+with Path_Counts_Table;
 with Cascade_Homotopies;                 use Cascade_Homotopies;
 
 package body Drivers_to_Cascade_Filtering is
@@ -397,15 +403,111 @@ package body Drivers_to_Cascade_Filtering is
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Solutions;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+    topdim : natural32 := 0;
+    embsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    timer : Timing_Widget;
+    rc : natural32;
+    rocos : Link_to_String;
+    sols : Solution_List;
+    topsoltime : duration;
+
   begin
-    null;
+    put("The number of equations : "); put(nq,1); new_line;
+    put("The number of variables : "); put(nv,1); new_line;
+    put("Give the expected top dimension : "); get(topdim);
+    Square_and_Embed(p,topdim,embsys);
+    new_line;
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
+      tstop(timer);
+    end if;
+    put_line("THE ROOT COUNTS :"); put_line(rocos.all);
+    topsoltime := Elapsed_User_Time(timer);
+    put("The CPU time for the solver : ");
+    print_hms(standard_output,topsoltime); new_line;
+    if not Is_Null(sols) then
+      put("Found "); put(Length_Of(sols),1);
+      put_line(" solutions at the top dimension.");
+      declare
+        ns : constant integer32 := integer32(topdim);
+        tol : constant double_float := 1.0E-8;
+        ep : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
+        gpts : Array_of_Solution_Lists(0..ns);
+        pc : Standard_Natural_VecVecs.VecVec(0..ns);
+        tm : Array_of_Duration(0..integer(ns));
+        alltime : duration;
+      begin
+        Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
+        new_line;
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc);
+      end;
+    end if;
   end Standard_Embed_and_Cascade;
 
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+    use Standard_Complex_Laurentials;
+    use Standard_Complex_Solutions;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+    topdim : natural32 := 0;
+    embsys : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    timer : Timing_Widget;
+    rc : natural32;
+    rocos : Link_to_String;
+    sols : Solution_List;
+    topsoltime : duration;
+
   begin
-    null;
+    put("The number of equations : "); put(nq,1); new_line;
+    put("The number of variables : "); put(nv,1); new_line;
+    put("Give the expected top dimension : "); get(topdim);
+    Square_and_Embed(p,topdim,embsys);
+    new_line;
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
+      tstop(timer);
+    end if;
+    put_line("THE ROOT COUNTS :"); put_line(rocos.all);
+    topsoltime := Elapsed_User_Time(timer);
+    put("The CPU time for the solver : ");
+    print_hms(standard_output,topsoltime); new_line;
+    if not Is_Null(sols) then
+      put("Found "); put(Length_Of(sols),1);
+      put_line(" solutions at the top dimension.");
+      declare
+        ns : constant integer32 := integer32(topdim);
+        tol : constant double_float := 1.0E-8;
+        ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
+        gpts : Array_of_Solution_Lists(0..ns);
+        pc : Standard_Natural_VecVecs.VecVec(0..ns);
+        tm : Array_of_Duration(0..integer(ns));
+        alltime : duration;
+      begin
+        Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
+        new_line;
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc);
+      end;
+    end if;
   end Standard_Embed_and_Cascade;
 
   procedure Standard_Embed_and_Cascade
