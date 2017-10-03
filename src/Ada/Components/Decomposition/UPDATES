@@ -1,3 +1,5 @@
+Mon 2 Oct 2017 : provided silent procedures in drivers_to_cascade_filtering.
+
 Sun 1 Oct 2017 : new packages cascade_homotopy_steps and cascade_homotopies_io
   with code move out of cascade_homotopies.  In cascade_homotopy_steps, added
   silent versions of running the continuation procedures.

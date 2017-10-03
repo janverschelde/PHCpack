@@ -71,7 +71,24 @@ package Drivers_to_Cascade_Filtering is
   --   name     name of the output file;
   --   nt       number of tasks for multitasking,
   --            if zero, then no multitasking will be used;
-  --   p        a polynomial system.
+  --   p        an ordinary or a Laurent polynomial system.
+
+  procedure Standard_Embed_and_Cascade
+              ( nt : in natural32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys );
+  procedure Standard_Embed_and_Cascade
+              ( nt : in natural32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys );
+
+  -- DESCRIPTION :
+  --   Prompts the user to enter the top dimension, embeds the system,
+  --   and then runs a cascade of homotopies, in double precision.
+  --   All output is written to screen.
+
+  -- ON ENTRY :
+  --   nt       number of tasks for multitasking,
+  --            if zero, then no multitasking will be used;
+  --   p        an ordinary or a Laurent polynomial system.
 
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32; inpname,outname : in string );

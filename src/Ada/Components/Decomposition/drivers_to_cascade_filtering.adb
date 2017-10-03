@@ -395,6 +395,20 @@ package body Drivers_to_Cascade_Filtering is
   end QuadDobl_Embed_and_Cascade;
 
   procedure Standard_Embed_and_Cascade
+              ( nt : in natural32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
+  begin
+    null;
+  end Standard_Embed_and_Cascade;
+
+  procedure Standard_Embed_and_Cascade
+              ( nt : in natural32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    null;
+  end Standard_Embed_and_Cascade;
+
+  procedure Standard_Embed_and_Cascade
               ( nt : in natural32; inpname,outname : in string ) is
 
     use Standard_Laur_Poly_Convertors;
@@ -476,7 +490,6 @@ package body Drivers_to_Cascade_Filtering is
               ( nt : in natural32; inpname,outname : in string ) is
 
     prc : constant character := Prompt_for_Precision;
-
 
   begin
     case prc is
