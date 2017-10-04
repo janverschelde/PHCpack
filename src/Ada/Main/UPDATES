@@ -1,3 +1,6 @@
+Tue 3 Oct 2017 : added double double and quad double versions of compsolve,
+  compsolve2 and compsolve4 to define -B2 and -B4 in dispatch.adb.
+
 Mon 2 Oct 2017 : rearranged prompting for output file in comosolve.adb and
   removed writing of welcome banner before calling compsolve in dispatch.adb.
   Fixed order of greeting.

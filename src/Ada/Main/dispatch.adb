@@ -19,6 +19,7 @@ with mainadep;                -- path tracking with algorithmic differentiation
 with mainphc,bablphc;         -- main phc driver + blackbox
 with bablphc2,bablphc4;       -- blackbox in double double and quad double
 with compsolve;               -- numerical irreducible decomposition as -B
+with compsolve2,compsolve4;   -- dobldobl and quaddobl versions, -B2 and -B4
 with mainvali,bablvali;       -- verification tool
 with bablvali2,bablvali4;     -- verification with dd and qd
 with mainenum,bablenum;       -- numerical Schubert calculus
@@ -395,16 +396,28 @@ procedure Dispatch is
   -- DESCRIPTION :
   --   This procedure handles the option '-B' to compute the numerical
   --   irreducible decomposition in a blackbox solver.
+  --   Double double and quad double precisions are applied
+  --   respectively for -B2 and -B4.
   --   The second option is either '-t' for the number of tasks,
   --   or '-h' for help.
 
+    compprc : constant natural32 := Scan_Precision('B');
+
   begin
     if option2 = 't' then
-      compsolve(Number_of_Tasks,file1,file2);
+      case compprc is
+        when 2 => compsolve2(Number_of_Tasks,file1,file2);
+        when 4 => compsolve4(Number_of_Tasks,file1,file2);
+        when others => compsolve(Number_of_Tasks,file1,file2);
+      end case;
     elsif option2 = 'h' then
       Greeting_Banners.help4compsolve;
     else 
-      compsolve(0,file1,file2);
+      case compprc is
+        when 2 => compsolve2(0,file1,file2);
+        when 4 => compsolve4(0,file1,file2);
+        when others => compsolve(0,file1,file2);
+      end case;
     end if;
   end Component_Solver;
 
