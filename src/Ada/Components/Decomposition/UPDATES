@@ -1,5 +1,6 @@
 Tue 3 Oct 2017 : more complete versions for the silent procedures in
-  drivers_to_cascade_filtering.adb.
+  drivers_to_cascade_filtering.adb.  Added double double and quad double
+  versions to drivers_to_cascade_filtering.
 
 Mon 2 Oct 2017 : provided silent procedures in drivers_to_cascade_filtering.
 

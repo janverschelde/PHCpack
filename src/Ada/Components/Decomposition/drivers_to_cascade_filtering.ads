@@ -79,10 +79,23 @@ package Drivers_to_Cascade_Filtering is
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys );
+  procedure DoblDobl_Embed_and_Cascade
+              ( nt : in natural32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure DoblDobl_Embed_and_Cascade
+              ( nt : in natural32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys );
+  procedure QuadDobl_Embed_and_Cascade
+              ( nt : in natural32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure QuadDobl_Embed_and_Cascade
+              ( nt : in natural32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys );
 
   -- DESCRIPTION :
   --   Prompts the user to enter the top dimension, embeds the system,
-  --   and then runs a cascade of homotopies, in double precision.
+  --   and then runs a cascade of homotopies,
+  --   in double, double double, or quad double precision.
   --   All output is written to screen.
 
   -- ON ENTRY :
