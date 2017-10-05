@@ -326,10 +326,22 @@ procedure ts_mbthom is
     dim : natural32;
     restol : constant double_float := 1.0E-10;
     homtol : constant double_float := 1.0E-6;
+    out2file : boolean;
     ans : character;
 
   begin
     Standard_Read_Embedding(lp,genpts,dim);
+    new_line;
+    put("Do you want the output to a file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      out2file := false;
+    else
+      out2file := true;
+      new_line;
+      put_line("Reading the name of the output file.");
+      Read_Name_and_Create_File(file);
+    end if;
     new_line;
     put_line("MENU for test points : ");
     put_line("  0. generate a random point on the solution set; or");
@@ -340,17 +352,34 @@ procedure ts_mbthom is
       Read(sols);
     else
       put_line("Computing a random point on the solution set ...");
-      sols := Standard_Random_Point(standard_output,lp.all,genpts,dim);
+      if out2file
+       then sols := Standard_Random_Point(file,lp.all,genpts,dim);
+       else sols := Standard_Random_Point(standard_output,lp.all,genpts,dim);
+      end if;
     end if;
-    new_line;
-    put("Verbose ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    Homotopy_Membership_Filters.Filter
-      (ans = 'y',lp.all,genpts,dim,restol,homtol,sols,mempts,outpts);
-    put("Number of points that are member : ");
-    put(Standard_Complex_Solutions.Length_Of(mempts),1); new_line;
-    put("Number of points that are outside : ");
-    put(Standard_Complex_Solutions.Length_Of(outpts),1); new_line;
+    if out2file then
+      new_line;
+      put_line("See the output file for results ...");
+      new_line;
+      Homotopy_Membership_Filters.Filter
+        (file,lp.all,genpts,dim,restol,homtol,sols,mempts,outpts);
+      put(file,"Number of points that are member : ");
+      put(file,Standard_Complex_Solutions.Length_Of(mempts),1);
+      new_line(file);
+      put(file,"Number of points that are outside : ");
+      put(file,Standard_Complex_Solutions.Length_Of(outpts),1);
+      new_line(file);
+    else
+      new_line;
+      put("Verbose ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      Homotopy_Membership_Filters.Filter
+        (ans = 'y',lp.all,genpts,dim,restol,homtol,sols,mempts,outpts);
+      put("Number of points that are member : ");
+      put(Standard_Complex_Solutions.Length_Of(mempts),1); new_line;
+      put("Number of points that are outside : ");
+      put(Standard_Complex_Solutions.Length_Of(outpts),1); new_line;
+    end if;
   end Standard_Membership_Filter;
 
   procedure DoblDobl_Membership is
