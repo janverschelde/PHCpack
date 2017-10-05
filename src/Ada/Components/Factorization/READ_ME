@@ -1,4 +1,4 @@
-Factorization into Irreducible Components with PHCv2.4.40
+Factorization into Irreducible Components with PHCv2.4.47
 
 This directory is entirely new in release 2.1.  Changes in release 2.2:
 * random polynomials are now in Math_Lib/Polynomials;
@@ -36,7 +36,8 @@ ts_rwpoly                        : test on rewriting
 combinatorial_factorization      : factorization with linear traces only
 ts_combfac                       : test on combinatorial factorization
 ------------------------------------------------------------------------------
-homotopy_memberhip_tests         : test to decide membership to witness set
+homotopy_membership_tests        : test to decide membership to witness set
+homotopy_membership_filters      : splitting solutions with membership test
 ts_mbthom                        : test on the homotopy membership test
 ------------------------------------------------------------------------------
 monodromy_partitions             : management of partitions of witness points
