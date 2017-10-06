@@ -33,6 +33,7 @@ with Greeting_Banners;
 with Write_Seed_Number;
 with Path_Counts_Table;
 with Cascade_Homotopies;                 use Cascade_Homotopies;
+with Cascade_Homotopy_Filters;
 
 package body Drivers_to_Cascade_Filtering is
 
