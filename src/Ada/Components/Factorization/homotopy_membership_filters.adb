@@ -607,4 +607,149 @@ package body Homotopy_Membership_Filters is
     end loop;
   end Filter;
 
+  procedure Filter
+              ( verbose : in boolean;
+                eqs : in Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
+                pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                topdim : in integer32; restol,homtol : in double_float ) is
+  begin
+    for dim in reverse 0..topdim-1 loop
+      for witdim in reverse dim+1..topdim loop
+        if not Standard_Complex_Solutions.Is_Null(pts(witdim)) then
+          if not Standard_Complex_Solutions.Is_Null(pts(dim)) then
+            if verbose then
+              put("Filtering junk at dimension "); put(dim,1);
+              put(" with witness sets at dimension "); put(witdim,1); new_line;
+            end if;   
+            declare
+              mempts,outpts : Standard_Complex_Solutions.Solution_List;
+            begin
+              Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
+                     restol,homtol,pts(dim),mempts,outpts);
+              Standard_Complex_Solutions.Clear(mempts); -- members are junk
+              Standard_Complex_Solutions.Clear(pts(witdim));
+              pts(witdim) := outpts; -- points not on higher dimensional sets
+            end;
+          end if;
+        end if;
+      end loop;
+    end loop;
+  end Filter;
+
+  procedure Filter
+              ( verbose : in boolean;
+                eqs : in DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim : in integer32; restol,homtol : in double_float ) is
+  begin
+    for dim in reverse 0..topdim-1 loop
+      for witdim in reverse dim+1..topdim loop
+        if not DoblDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+          if not DoblDobl_Complex_Solutions.Is_Null(pts(dim)) then
+            if verbose then
+              put("Filtering junk at dimension "); put(dim,1);
+              put(" with witness sets at dimension "); put(witdim,1); new_line;
+            end if;   
+            declare
+              mempts,outpts : DoblDobl_Complex_Solutions.Solution_List;
+            begin
+              Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
+                     restol,homtol,pts(dim),mempts,outpts);
+              DoblDobl_Complex_Solutions.Clear(mempts); -- members are junk
+              DoblDobl_Complex_Solutions.Clear(pts(witdim));
+              pts(witdim) := outpts; -- points not on higher dimensional sets
+            end;
+          end if;
+        end if;
+      end loop;
+    end loop;
+  end Filter;
+
+  procedure Filter
+              ( verbose : in boolean;
+                eqs : in DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim : in integer32; restol,homtol : in double_float ) is
+  begin
+    for dim in reverse 0..topdim-1 loop
+      for witdim in reverse dim+1..topdim loop
+        if not DoblDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+          if not DoblDobl_Complex_Solutions.Is_Null(pts(dim)) then
+            if verbose then
+              put("Filtering junk at dimension "); put(dim,1);
+              put(" with witness sets at dimension "); put(witdim,1); new_line;
+            end if;   
+            declare
+              mempts,outpts : DoblDobl_Complex_Solutions.Solution_List;
+            begin
+              Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
+                     restol,homtol,pts(dim),mempts,outpts);
+              DoblDobl_Complex_Solutions.Clear(mempts); -- members are junk
+              DoblDobl_Complex_Solutions.Clear(pts(witdim));
+              pts(witdim) := outpts; -- points not on higher dimensional sets
+            end;
+          end if;
+        end if;
+      end loop;
+    end loop;
+  end Filter;
+
+  procedure Filter
+              ( verbose : in boolean;
+                eqs : in QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim : in integer32; restol,homtol : in double_float ) is
+  begin
+    for dim in reverse 0..topdim-1 loop
+      for witdim in reverse dim+1..topdim loop
+        if not QuadDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+          if not QuadDobl_Complex_Solutions.Is_Null(pts(dim)) then
+            if verbose then
+              put("Filtering junk at dimension "); put(dim,1);
+              put(" with witness sets at dimension "); put(witdim,1); new_line;
+            end if;   
+            declare
+              mempts,outpts : QuadDobl_Complex_Solutions.Solution_List;
+            begin
+              Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
+                     restol,homtol,pts(dim),mempts,outpts);
+              QuadDobl_Complex_Solutions.Clear(mempts); -- members are junk
+              QuadDobl_Complex_Solutions.Clear(pts(witdim));
+              pts(witdim) := outpts; -- points not on higher dimensional sets
+            end;
+          end if;
+        end if;
+      end loop;
+    end loop;
+  end Filter;
+
+  procedure Filter
+              ( verbose : in boolean;
+                eqs : in QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim : in integer32; restol,homtol : in double_float ) is
+  begin
+    for dim in reverse 0..topdim-1 loop
+      for witdim in reverse dim+1..topdim loop
+        if not QuadDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+          if not QuadDobl_Complex_Solutions.Is_Null(pts(dim)) then
+            if verbose then
+              put("Filtering junk at dimension "); put(dim,1);
+              put(" with witness sets at dimension "); put(witdim,1); new_line;
+            end if;   
+            declare
+              mempts,outpts : QuadDobl_Complex_Solutions.Solution_List;
+            begin
+              Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
+                     restol,homtol,pts(dim),mempts,outpts);
+              QuadDobl_Complex_Solutions.Clear(mempts); -- members are junk
+              QuadDobl_Complex_Solutions.Clear(pts(witdim));
+              pts(witdim) := outpts; -- points not on higher dimensional sets
+            end;
+          end if;
+        end if;
+      end loop;
+    end loop;
+  end Filter;
+
 end Homotopy_Membership_Filters;

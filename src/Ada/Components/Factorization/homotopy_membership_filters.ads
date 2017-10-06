@@ -166,10 +166,37 @@ package Homotopy_Membership_Filters is
                 eqs : in Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 topdim : in integer32; restol,homtol : in double_float );
+  procedure Filter
+              ( verbose : in boolean;
+                eqs : in Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
+                pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                topdim : in integer32; restol,homtol : in double_float );
+  procedure Filter
+              ( verbose : in boolean;
+                eqs : in DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim : in integer32; restol,homtol : in double_float );
+  procedure Filter
+              ( verbose : in boolean;
+                eqs : in DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim : in integer32; restol,homtol : in double_float );
+  procedure Filter
+              ( verbose : in boolean;
+                eqs : in QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim : in integer32; restol,homtol : in double_float );
+  procedure Filter
+              ( verbose : in boolean;
+                eqs : in QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim : in integer32; restol,homtol : in double_float );
 
   -- DESCRIPTION :
   --   Junk points are removed from the given witness supersets,
-  --   running successive homotopy membership filters.
+  --   running successive homotopy membership filters,
+  --   in double, double double, or quad double precision,
+  --   for witness sets defined by ordinary or Laurent systems.
 
   -- ON ENTRY :
   --   verbose  if true then output is written to screen,
