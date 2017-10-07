@@ -463,7 +463,7 @@ package body Drivers_to_Cascade_Filtering is
         else
           Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
       end;
     end if;
   end Standard_Embed_and_Cascade;
@@ -526,7 +526,7 @@ package body Drivers_to_Cascade_Filtering is
         else
           Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
       end;
     end if;
   end Standard_Embed_and_Cascade;
@@ -589,7 +589,7 @@ package body Drivers_to_Cascade_Filtering is
         else
           Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
       end;
     end if;
   end DoblDobl_Embed_and_Cascade;
@@ -652,7 +652,7 @@ package body Drivers_to_Cascade_Filtering is
         else
           Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
       end;
     end if;
   end DoblDobl_Embed_and_Cascade;
@@ -715,7 +715,7 @@ package body Drivers_to_Cascade_Filtering is
         else
           Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
       end;
     end if;
   end QuadDobl_Embed_and_Cascade;
@@ -778,7 +778,7 @@ package body Drivers_to_Cascade_Filtering is
         else
           Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
       end;
     end if;
   end QuadDobl_Embed_and_Cascade;

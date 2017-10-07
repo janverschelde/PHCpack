@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_VecVecs;
 
@@ -30,7 +31,6 @@ package Path_Counts_Table is
   -- ON RETURN :
   --   cnts     cnts(dim) points to the vector with the three numbers
   --            nsols, nsols0, and nsols1.
-  --
 
   procedure Write_Path_Counts
               ( file : in file_type;
@@ -38,5 +38,18 @@ package Path_Counts_Table is
 
   -- DESCRIPTION :
   --   Writes the path counts in cnts to file.
+
+  procedure Write_Path_Counts
+              ( file : in file_type;
+                cnts : in Standard_Natural_VecVecs.VecVec;
+                times : in Array_of_Duration; totaltime : in duration );
+
+  -- DESCRIPTION :
+  --   Writes the path counts in cnts to file,
+  --   with the elapsed CPU user time at each stage,
+  --   and the sums for each count.
+  --   The totaltime is the total elapsed CPU user time.
+
+  -- REQUIRED : times'range = cnts'range.
 
 end Path_Counts_Table;
