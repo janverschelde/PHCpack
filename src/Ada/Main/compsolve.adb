@@ -71,7 +71,7 @@ procedure compsolve
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(q.all) then
       if tofile = 'y'
        then Standard_Embed_and_Cascade(outfile,outname.all,nt,q.all);
-       else Standard_Embed_and_Cascade(nt,q.all);
+       else Standard_Embed_and_Cascade(nt,q.all,true);
       end if;
     else
       declare
@@ -82,7 +82,7 @@ procedure compsolve
         p := new Poly_Sys'(t);
         if tofile = 'y'
          then Standard_Embed_and_Cascade(outfile,outname.all,nt,p.all);
-         else Standard_Embed_and_Cascade(nt,p.all);
+         else Standard_Embed_and_Cascade(nt,p.all,true);
         end if;
       end;
     end if;
