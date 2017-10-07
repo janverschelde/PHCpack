@@ -1,4 +1,5 @@
 with Cascade_Homotopies;                 use Cascade_Homotopies;
+with Homotopy_Membership_Filters;        use Homotopy_Membership_Filters;
 
 package body Cascade_Homotopy_Filters is
 
@@ -141,6 +142,7 @@ package body Cascade_Homotopy_Filters is
   begin
     Witness_Generate
       (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -156,6 +158,7 @@ package body Cascade_Homotopy_Filters is
   begin
     Witness_Generate
       (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -171,6 +174,7 @@ package body Cascade_Homotopy_Filters is
   begin
     Witness_Generate
       (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -186,6 +190,7 @@ package body Cascade_Homotopy_Filters is
   begin
     Witness_Generate
       (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -201,6 +206,7 @@ package body Cascade_Homotopy_Filters is
   begin
     Witness_Generate
       (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -216,6 +222,7 @@ package body Cascade_Homotopy_Filters is
   begin
     Witness_Generate
       (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
   end Witness_Filter;
 
 end Cascade_Homotopy_Filters;

@@ -1,5 +1,6 @@
 Fri 6 Oct 2017 : new package cascade_homotopy_filters, to be called in the
-  drivers_to_cascade_filtering.adb.
+  drivers_to_cascade_filtering.adb.  Added calls to the filters in
+  cascade_homotopy_filters.adb, updated drivers_to_cascade_filtering.
 
 Tue 3 Oct 2017 : more complete versions for the silent procedures in
   drivers_to_cascade_filtering.adb.  Added double double and quad double
