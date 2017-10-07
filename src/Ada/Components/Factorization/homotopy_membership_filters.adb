@@ -38,8 +38,8 @@ package body Homotopy_Membership_Filters is
     Sampling_Machine.Default_Tune_Refiner;
     for i in 1..Standard_Complex_Solutions.Length_Of(totest) loop
       ls := Standard_Complex_Solutions.Head_Of(tmp);
-      if verbose
-       then put("Testing point "); put(i,1); put(" : ");
+      if verbose then
+        put("Testing point "); put(i,1); put_line(" : ");
       end if;
       Homotopy_Membership_Test
         (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
@@ -88,7 +88,7 @@ package body Homotopy_Membership_Filters is
     for i in 1..Standard_Complex_Solutions.Length_Of(totest) loop
       ls := Standard_Complex_Solutions.Head_Of(tmp);
       if verbose
-       then put("Testing point "); put(i,1); put(" : ");
+       then put("Testing point "); put(i,1); put_line(" : ");
       end if;
       Homotopy_Membership_Test
         (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
@@ -137,7 +137,7 @@ package body Homotopy_Membership_Filters is
     for i in 1..DoblDobl_Complex_Solutions.Length_Of(totest) loop
       ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
       if verbose
-       then put("Testing point "); put(i,1); put(" : ");
+       then put("Testing point "); put(i,1); put_line(" : ");
       end if;
       Homotopy_Membership_Test
         (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
@@ -186,7 +186,7 @@ package body Homotopy_Membership_Filters is
     for i in 1..DoblDobl_Complex_Solutions.Length_Of(totest) loop
       ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
       if verbose
-       then put("Testing point "); put(i,1); put(" : ");
+       then put("Testing point "); put(i,1); put_line(" : ");
       end if;
       Homotopy_Membership_Test
         (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
@@ -235,7 +235,7 @@ package body Homotopy_Membership_Filters is
     for i in 1..QuadDobl_Complex_Solutions.Length_Of(totest) loop
       ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
       if verbose
-       then put("Testing point "); put(i,1); put(" : ");
+       then put("Testing point "); put(i,1); put_line(" : ");
       end if;
       Homotopy_Membership_Test
         (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
@@ -284,7 +284,7 @@ package body Homotopy_Membership_Filters is
     for i in 1..QuadDobl_Complex_Solutions.Length_Of(totest) loop
       ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
       if verbose
-       then put("Testing point "); put(i,1); put(" : ");
+       then put("Testing point "); put(i,1); put_line(" : ");
       end if;
       Homotopy_Membership_Test
         (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
@@ -588,15 +588,14 @@ package body Homotopy_Membership_Filters is
       for witdim in reverse dim+1..topdim loop
         if not Standard_Complex_Solutions.Is_Null(pts(witdim)) then
           if not Standard_Complex_Solutions.Is_Null(pts(dim)) then
-           -- if verbose then
+            if verbose then
               put("Filtering junk at dimension "); put(dim,1);
               put(" with witness sets at dimension "); put(witdim,1); new_line;
-           -- end if;   
+            end if;   
             declare
               mempts,outpts : Standard_Complex_Solutions.Solution_List;
             begin
-             -- Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
-              Filter(true,eqs(witdim).all,pts(witdim),natural32(witdim),
+              Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
                      restol,homtol,pts(dim),mempts,outpts);
               Standard_Complex_Solutions.Clear(mempts); -- members are junk
               Standard_Complex_Solutions.Clear(pts(dim));

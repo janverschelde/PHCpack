@@ -398,7 +398,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..Standard_Complex_Solutions.Length_Of(newsols) loop
       test_sol := Standard_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(verbose,i,diff,homtol);
       exit when found;
@@ -431,7 +431,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..Standard_Complex_Solutions.Length_Of(newsols) loop
       test_sol := Standard_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(verbose,i,diff,homtol);
       exit when found;
@@ -464,7 +464,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..DoblDobl_Complex_Solutions.Length_Of(newsols) loop
       test_sol := DoblDobl_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(verbose,i,diff,homtol);
       exit when found;
@@ -497,7 +497,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..DoblDobl_Complex_Solutions.Length_Of(newsols) loop
       test_sol := DoblDobl_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(verbose,i,diff,homtol);
       exit when found;
@@ -530,7 +530,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..QuadDobl_Complex_Solutions.Length_Of(newsols) loop
       test_sol := QuadDobl_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(verbose,i,diff,homtol);
       exit when found;
@@ -563,7 +563,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..QuadDobl_Complex_Solutions.Length_Of(newsols) loop
       test_sol := QuadDobl_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(verbose,i,diff,homtol);
       exit when found;
@@ -592,7 +592,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..Standard_Complex_Solutions.Length_Of(newsols) loop
       test_sol := Standard_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(file,i,diff,homtol);
       exit when found;
@@ -621,7 +621,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..Standard_Complex_Solutions.Length_Of(newsols) loop
       test_sol := Standard_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(file,i,diff,homtol);
       exit when found;
@@ -650,7 +650,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..DoblDobl_Complex_Solutions.Length_Of(newsols) loop
       test_sol := DoblDobl_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(file,i,diff,homtol);
       exit when found;
@@ -679,7 +679,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..DoblDobl_Complex_Solutions.Length_Of(newsols) loop
       test_sol := DoblDobl_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(file,i,diff,homtol);
       exit when found;
@@ -708,7 +708,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..QuadDobl_Complex_Solutions.Length_Of(newsols) loop
       test_sol := QuadDobl_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(file,i,diff,homtol);
       exit when found;
@@ -737,7 +737,7 @@ package body Homotopy_Membership_Tests is
     tmp := newsols;
     for i in 1..QuadDobl_Complex_Solutions.Length_Of(newsols) loop
       test_sol := QuadDobl_Complex_Solutions.Head_Of(tmp);
-      difference := test_sol.v - x;
+      difference := test_sol.v(x'range) - x;
       diff := Max_Norm(difference);
       found := Is_Member(file,i,diff,homtol);
       exit when found;
