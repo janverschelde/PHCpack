@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -165,32 +166,38 @@ package Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float );
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration );
   procedure Filter
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float );
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration );
   procedure Filter
               ( verbose : in boolean;
                 eqs : in DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float );
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration );
   procedure Filter
               ( verbose : in boolean;
                 eqs : in DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float );
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration );
   procedure Filter
               ( verbose : in boolean;
                 eqs : in QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float );
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration );
   procedure Filter
               ( verbose : in boolean;
                 eqs : in QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float );
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration );
 
   -- DESCRIPTION :
   --   Junk points are removed from the given witness supersets,
@@ -210,5 +217,7 @@ package Homotopy_Membership_Filters is
 
   -- ON RETURN :
   --   pts      points on higher dimensional sets are removed.
+  --   times    elapsed CPU user time at each stage;
+  --   alltime  the total elapsed CPU user time.
 
 end Homotopy_Membership_Filters;

@@ -582,9 +582,15 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float ) is
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    total_timer,level_timer : Timing_Widget;
+
   begin
+    tstart(total_timer);
     for dim in reverse 0..topdim-1 loop
+      tstart(level_timer);
       for witdim in reverse dim+1..topdim loop
         if not Standard_Complex_Solutions.Is_Null(pts(witdim)) then
           if not Standard_Complex_Solutions.Is_Null(pts(dim)) then
@@ -604,16 +610,26 @@ package body Homotopy_Membership_Filters is
           end if;
         end if;
       end loop;
+      tstop(level_timer);
+      times(integer(dim)) := Elapsed_User_Time(level_timer);
     end loop;
+    tstop(total_timer);
+    alltime := Elapsed_User_Time(total_timer);
   end Filter;
 
   procedure Filter
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float ) is
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    total_timer,level_timer : Timing_Widget;
+
   begin
+    tstart(total_timer);
     for dim in reverse 0..topdim-1 loop
+      tstart(level_timer);
       for witdim in reverse dim+1..topdim loop
         if not Standard_Complex_Solutions.Is_Null(pts(witdim)) then
           if not Standard_Complex_Solutions.Is_Null(pts(dim)) then
@@ -633,16 +649,26 @@ package body Homotopy_Membership_Filters is
           end if;
         end if;
       end loop;
+      tstop(level_timer);
+      times(integer(dim)) := Elapsed_User_Time(level_timer);
     end loop;
+    tstop(total_timer);
+    alltime := Elapsed_User_Time(total_timer);
   end Filter;
 
   procedure Filter
               ( verbose : in boolean;
                 eqs : in DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float ) is
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    total_timer,level_timer : Timing_Widget;
+
   begin
+    tstart(total_timer);
     for dim in reverse 0..topdim-1 loop
+      tstart(level_timer);
       for witdim in reverse dim+1..topdim loop
         if not DoblDobl_Complex_Solutions.Is_Null(pts(witdim)) then
           if not DoblDobl_Complex_Solutions.Is_Null(pts(dim)) then
@@ -662,16 +688,26 @@ package body Homotopy_Membership_Filters is
           end if;
         end if;
       end loop;
+      tstop(level_timer);
+      times(integer(dim)) := Elapsed_User_Time(level_timer);
     end loop;
+    tstop(total_timer);
+    alltime := Elapsed_User_Time(total_timer);
   end Filter;
 
   procedure Filter
               ( verbose : in boolean;
                 eqs : in DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float ) is
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    total_timer,level_timer : Timing_Widget;
+
   begin
+    tstart(total_timer);
     for dim in reverse 0..topdim-1 loop
+      tstart(level_timer);
       for witdim in reverse dim+1..topdim loop
         if not DoblDobl_Complex_Solutions.Is_Null(pts(witdim)) then
           if not DoblDobl_Complex_Solutions.Is_Null(pts(dim)) then
@@ -691,16 +727,26 @@ package body Homotopy_Membership_Filters is
           end if;
         end if;
       end loop;
+      tstop(level_timer);
+      times(integer(dim)) := Elapsed_User_Time(level_timer);
     end loop;
+    tstop(total_timer);
+    alltime := Elapsed_User_Time(total_timer);
   end Filter;
 
   procedure Filter
               ( verbose : in boolean;
                 eqs : in QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float ) is
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    total_timer,level_timer : Timing_Widget;
+
   begin
+    tstart(total_timer);
     for dim in reverse 0..topdim-1 loop
+      tstart(level_timer);
       for witdim in reverse dim+1..topdim loop
         if not QuadDobl_Complex_Solutions.Is_Null(pts(witdim)) then
           if not QuadDobl_Complex_Solutions.Is_Null(pts(dim)) then
@@ -720,16 +766,26 @@ package body Homotopy_Membership_Filters is
           end if;
         end if;
       end loop;
+      tstop(level_timer);
+      times(integer(dim)) := Elapsed_User_Time(level_timer);
     end loop;
+    tstop(total_timer);
+    alltime := Elapsed_User_Time(total_timer);
   end Filter;
 
   procedure Filter
               ( verbose : in boolean;
                 eqs : in QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float ) is
+                topdim : in integer32; restol,homtol : in double_float;
+                times : out Array_of_Duration; alltime : out duration ) is
+
+    total_timer,level_timer : Timing_Widget;
+
   begin
+    tstart(total_timer);
     for dim in reverse 0..topdim-1 loop
+      tstart(level_timer);
       for witdim in reverse dim+1..topdim loop
         if not QuadDobl_Complex_Solutions.Is_Null(pts(witdim)) then
           if not QuadDobl_Complex_Solutions.Is_Null(pts(dim)) then
@@ -749,7 +805,11 @@ package body Homotopy_Membership_Filters is
           end if;
         end if;
       end loop;
+      tstop(level_timer);
+      times(integer(dim)) := Elapsed_User_Time(level_timer);
     end loop;
+    tstop(total_timer);
+    alltime := Elapsed_User_Time(total_timer);
   end Filter;
 
 end Homotopy_Membership_Filters;
