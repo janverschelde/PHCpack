@@ -23,7 +23,7 @@ package body Homotopy_Membership_Filters is
                 mempts : out Standard_Complex_Solutions.Solution_List;
                 outpts : out Standard_Complex_Solutions.Solution_List ) is
 
-    tmp : Standard_Complex_Solutions.Solution_List := pts;
+    tmp : Standard_Complex_Solutions.Solution_List := totest;
     mempts_last : Standard_Complex_Solutions.Solution_List := mempts;
     outpts_last : Standard_Complex_Solutions.Solution_List := outpts;
     ls : Standard_Complex_Solutions.Link_to_Solution;
@@ -72,7 +72,7 @@ package body Homotopy_Membership_Filters is
                 mempts : out Standard_Complex_Solutions.Solution_List;
                 outpts : out Standard_Complex_Solutions.Solution_List ) is
 
-    tmp : Standard_Complex_Solutions.Solution_List := pts;
+    tmp : Standard_Complex_Solutions.Solution_List := totest;
     mempts_last : Standard_Complex_Solutions.Solution_List := mempts;
     outpts_last : Standard_Complex_Solutions.Solution_List := outpts;
     ls : Standard_Complex_Solutions.Link_to_Solution;
@@ -121,7 +121,7 @@ package body Homotopy_Membership_Filters is
                 mempts : out DoblDobl_Complex_Solutions.Solution_List;
                 outpts : out DoblDobl_Complex_Solutions.Solution_List ) is
 
-    tmp : DoblDobl_Complex_Solutions.Solution_List := pts;
+    tmp : DoblDobl_Complex_Solutions.Solution_List := totest;
     mempts_last : DoblDobl_Complex_Solutions.Solution_List := mempts;
     outpts_last : DoblDobl_Complex_Solutions.Solution_List := outpts;
     ls : DoblDobl_Complex_Solutions.Link_to_Solution;
@@ -170,7 +170,7 @@ package body Homotopy_Membership_Filters is
                 mempts : out DoblDobl_Complex_Solutions.Solution_List;
                 outpts : out DoblDobl_Complex_Solutions.Solution_List ) is
 
-    tmp : DoblDobl_Complex_Solutions.Solution_List := pts;
+    tmp : DoblDobl_Complex_Solutions.Solution_List := totest;
     mempts_last : DoblDobl_Complex_Solutions.Solution_List := mempts;
     outpts_last : DoblDobl_Complex_Solutions.Solution_List := outpts;
     ls : DoblDobl_Complex_Solutions.Link_to_Solution;
@@ -219,7 +219,7 @@ package body Homotopy_Membership_Filters is
                 mempts : out QuadDobl_Complex_Solutions.Solution_List;
                 outpts : out QuadDobl_Complex_Solutions.Solution_List ) is
 
-    tmp : QuadDobl_Complex_Solutions.Solution_List := pts;
+    tmp : QuadDobl_Complex_Solutions.Solution_List := totest;
     mempts_last : QuadDobl_Complex_Solutions.Solution_List := mempts;
     outpts_last : QuadDobl_Complex_Solutions.Solution_List := outpts;
     ls : QuadDobl_Complex_Solutions.Link_to_Solution;
@@ -268,7 +268,7 @@ package body Homotopy_Membership_Filters is
                 mempts : out QuadDobl_Complex_Solutions.Solution_List;
                 outpts : out QuadDobl_Complex_Solutions.Solution_List ) is
 
-    tmp : QuadDobl_Complex_Solutions.Solution_List := pts;
+    tmp : QuadDobl_Complex_Solutions.Solution_List := totest;
     mempts_last : QuadDobl_Complex_Solutions.Solution_List := mempts;
     outpts_last : QuadDobl_Complex_Solutions.Solution_List := outpts;
     ls : QuadDobl_Complex_Solutions.Link_to_Solution;
@@ -588,18 +588,19 @@ package body Homotopy_Membership_Filters is
       for witdim in reverse dim+1..topdim loop
         if not Standard_Complex_Solutions.Is_Null(pts(witdim)) then
           if not Standard_Complex_Solutions.Is_Null(pts(dim)) then
-            if verbose then
+           -- if verbose then
               put("Filtering junk at dimension "); put(dim,1);
               put(" with witness sets at dimension "); put(witdim,1); new_line;
-            end if;   
+           -- end if;   
             declare
               mempts,outpts : Standard_Complex_Solutions.Solution_List;
             begin
-              Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
+             -- Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
+              Filter(true,eqs(witdim).all,pts(witdim),natural32(witdim),
                      restol,homtol,pts(dim),mempts,outpts);
               Standard_Complex_Solutions.Clear(mempts); -- members are junk
-              Standard_Complex_Solutions.Clear(pts(witdim));
-              pts(witdim) := outpts; -- points not on higher dimensional sets
+              Standard_Complex_Solutions.Clear(pts(dim));
+              pts(dim) := outpts; -- points not on higher dimensional sets
             end;
           end if;
         end if;
@@ -627,8 +628,8 @@ package body Homotopy_Membership_Filters is
               Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
                      restol,homtol,pts(dim),mempts,outpts);
               Standard_Complex_Solutions.Clear(mempts); -- members are junk
-              Standard_Complex_Solutions.Clear(pts(witdim));
-              pts(witdim) := outpts; -- points not on higher dimensional sets
+              Standard_Complex_Solutions.Clear(pts(dim));
+              pts(dim) := outpts; -- points not on higher dimensional sets
             end;
           end if;
         end if;
@@ -656,8 +657,8 @@ package body Homotopy_Membership_Filters is
               Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
                      restol,homtol,pts(dim),mempts,outpts);
               DoblDobl_Complex_Solutions.Clear(mempts); -- members are junk
-              DoblDobl_Complex_Solutions.Clear(pts(witdim));
-              pts(witdim) := outpts; -- points not on higher dimensional sets
+              DoblDobl_Complex_Solutions.Clear(pts(dim));
+              pts(dim) := outpts; -- points not on higher dimensional sets
             end;
           end if;
         end if;
@@ -685,8 +686,8 @@ package body Homotopy_Membership_Filters is
               Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
                      restol,homtol,pts(dim),mempts,outpts);
               DoblDobl_Complex_Solutions.Clear(mempts); -- members are junk
-              DoblDobl_Complex_Solutions.Clear(pts(witdim));
-              pts(witdim) := outpts; -- points not on higher dimensional sets
+              DoblDobl_Complex_Solutions.Clear(pts(dim));
+              pts(dim) := outpts; -- points not on higher dimensional sets
             end;
           end if;
         end if;
@@ -714,8 +715,8 @@ package body Homotopy_Membership_Filters is
               Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
                      restol,homtol,pts(dim),mempts,outpts);
               QuadDobl_Complex_Solutions.Clear(mempts); -- members are junk
-              QuadDobl_Complex_Solutions.Clear(pts(witdim));
-              pts(witdim) := outpts; -- points not on higher dimensional sets
+              QuadDobl_Complex_Solutions.Clear(pts(dim));
+              pts(dim) := outpts; -- points not on higher dimensional sets
             end;
           end if;
         end if;
@@ -743,8 +744,8 @@ package body Homotopy_Membership_Filters is
               Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
                      restol,homtol,pts(dim),mempts,outpts);
               QuadDobl_Complex_Solutions.Clear(mempts); -- members are junk
-              QuadDobl_Complex_Solutions.Clear(pts(witdim));
-              pts(witdim) := outpts; -- points not on higher dimensional sets
+              QuadDobl_Complex_Solutions.Clear(pts(dim));
+              pts(dim) := outpts; -- points not on higher dimensional sets
             end;
           end if;
         end if;
