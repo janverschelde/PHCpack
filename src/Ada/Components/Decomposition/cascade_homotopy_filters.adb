@@ -137,12 +137,22 @@ package body Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration ) is
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration ) is
+
+    timer : Timing_Widget;
+
   begin
+    castms := (castms'range => 0.0);
+    filtms := (filtms'range => 0.0);
+    tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
+      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+           filtcnts,filtms,totfil);
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -153,12 +163,22 @@ package body Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration ) is
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration ) is
+
+    timer : Timing_Widget;
+
   begin
+    castms := (castms'range => 0.0);
+    filtms := (filtms'range => 0.0);
+    tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
+      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+           filtcnts,filtms,totfil);
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -169,12 +189,22 @@ package body Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration ) is
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration ) is
+
+    timer : Timing_Widget;
+
   begin
+    castms := (castms'range => 0.0);
+    filtms := (filtms'range => 0.0);
+    tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
+      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+           filtcnts,filtms,totfil);
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -185,12 +215,22 @@ package body Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration ) is
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration ) is
+
+    timer : Timing_Widget;
+
   begin
+    castms := (castms'range => 0.0);
+    filtms := (filtms'range => 0.0);
+    tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
+      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+           filtcnts,filtms,totfil);
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -201,12 +241,22 @@ package body Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration ) is
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration ) is
+
+    timer : Timing_Widget;
+
   begin
+    castms := (castms'range => 0.0);
+    filtms := (filtms'range => 0.0);
+    tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
+      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+           filtcnts,filtms,totfil);
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -217,12 +267,22 @@ package body Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration ) is
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration ) is
+
+    timer : Timing_Widget;
+
   begin
+    castms := (castms'range => 0.0);
+    filtms := (filtms'range => 0.0);
+    tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,times,alltime);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol);
+      (nt,ep,sols,topdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+           filtcnts,filtms,totfil);
+    tstop(timer);
+    alltime := Elapsed_User_Time(timer);
   end Witness_Filter;
 
 end Cascade_Homotopy_Filters;

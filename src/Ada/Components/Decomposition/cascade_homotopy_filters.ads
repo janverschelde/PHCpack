@@ -158,8 +158,9 @@ package Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration );
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration );
   procedure Witness_Filter
               ( nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -168,8 +169,9 @@ package Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration );
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration );
   procedure Witness_Filter
               ( nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -178,8 +180,9 @@ package Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration );
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration );
   procedure Witness_Filter
               ( nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -188,8 +191,9 @@ package Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration );
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration );
   procedure Witness_Filter
               ( nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -198,8 +202,9 @@ package Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration );
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration );
   procedure Witness_Filter
               ( nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
@@ -208,8 +213,9 @@ package Cascade_Homotopy_Filters is
                 restol,homtol : in double_float;
                 embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                pathcnts : out Standard_Natural_VecVecs.VecVec;
-                times : out Array_of_Duration; alltime : out duration );
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration );
 
   -- DESCRIPTION :
   --   Silent version of the witness generate to compute witness supersets,
@@ -233,7 +239,11 @@ package Cascade_Homotopy_Filters is
   --   embsys    sequence of embedded polynomial systems;
   --   esols0    witness points at each dimension;
   --   pathcnts  table with path counts during the cascade homotopies;
-  --   times     CPU time at each stage in the cascade homotopy;
+  --   filtcnts  counts of the witness points after each junk removal;
+  --   castms    CPU time at each stage in the cascade homotopy;
+  --   filtms    CPU time at each stage of the homotopy membership filters;
+  --   totcas    total CPU time for running the cascade homotopies;
+  --   totfil    total CPU time for the homotopy memberhip filters;
   --   alltime   the total elapsed CPU time.
 
 end Cascade_Homotopy_Filters;

@@ -52,4 +52,15 @@ package Path_Counts_Table is
 
   -- REQUIRED : times'range = cnts'range.
 
+  procedure Write_Filter_Counts
+              ( file : in file_type;
+                cnts : in Standard_Natural_VecVecs.VecVec;
+                times : in Array_of_Duration; totaltime : in duration );
+
+  -- DESCRIPTION :
+  --   Writes the number of points in each stage of the homotopy filter,
+  --   for all dimensions.  The counts in cnts are triangular,
+  --   as there is no filtering needed at the top dimension, and at
+  --   dimension 0, there are as many stages as the top dimension minus one.
+
 end Path_Counts_Table;

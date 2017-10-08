@@ -438,7 +438,8 @@ package body Drivers_to_Cascade_Filtering is
       Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
       tstop(timer);
     end if;
-    put_line("THE ROOT COUNTS :"); put_line(rocos.all);
+    put_line("THE ROOT COUNTS :");
+    new_line; put_line(rocos.all);
     topsoltime := Elapsed_User_Time(timer);
     new_line;
     put("The CPU time for the solver : ");
@@ -453,17 +454,31 @@ package body Drivers_to_Cascade_Filtering is
         homtol : constant double_float := 1.0E-8;
         ep : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
         gpts : Array_of_Solution_Lists(0..ns);
-        pc : Standard_Natural_VecVecs.VecVec(0..ns);
-        tm : Array_of_Duration(0..integer(ns));
-        alltime : duration;
+        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+        castm : Array_of_Duration(0..integer(ns));
+        filtm : Array_of_Duration(0..integer(ns));
+        totcas,totfil,alltime : duration;
       begin
         if filter then
           Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,tm,alltime);
+            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+             castm,filtm,totcas,totfil,alltime);
         else
-          Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
+          Witness_Generate
+            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+        if filter then
+          Path_Counts_Table.Write_Filter_Counts
+            (standard_output,fc,filtm,totfil);
+        end if;
+        new_line;
+        put("The CPU time for the cascade filters : ");
+        if filter 
+         then print_hms(standard_output,alltime);
+         else print_hms(standard_output,totcas);
+        end if;
+        new_line;
       end;
     end if;
   end Standard_Embed_and_Cascade;
@@ -516,17 +531,20 @@ package body Drivers_to_Cascade_Filtering is
         homtol : constant double_float := 1.0E-8;
         ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
         gpts : Array_of_Solution_Lists(0..ns);
-        pc : Standard_Natural_VecVecs.VecVec(0..ns);
-        tm : Array_of_Duration(0..integer(ns));
-        alltime : duration;
+        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+        castm : Array_of_Duration(0..integer(ns));
+        filtm : Array_of_Duration(0..integer(ns)-1);
+        totcas,totfil,alltime : duration;
       begin
         if filter then
           Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,tm,alltime);
+            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+             castm,filtm,totcas,totfil,alltime);
         else
-          Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
+          Witness_Generate
+            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
       end;
     end if;
   end Standard_Embed_and_Cascade;
@@ -579,17 +597,20 @@ package body Drivers_to_Cascade_Filtering is
         homtol : constant double_float := 1.0E-8;
         ep : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
         gpts : Array_of_Solution_Lists(0..ns);
-        pc : Standard_Natural_VecVecs.VecVec(0..ns);
-        tm : Array_of_Duration(0..integer(ns));
-        alltime : duration;
+        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+        castm : Array_of_Duration(0..integer(ns));
+        filtm : Array_of_Duration(0..integer(ns)-1);
+        totcas,totfil,alltime : duration;
       begin
         if filter then
           Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,tm,alltime);
+            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+             castm,filtm,totcas,totfil,alltime);
         else
-          Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
+          Witness_Generate
+            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
       end;
     end if;
   end DoblDobl_Embed_and_Cascade;
@@ -642,17 +663,20 @@ package body Drivers_to_Cascade_Filtering is
         homtol : constant double_float := 1.0E-8;
         ep : DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
         gpts : Array_of_Solution_Lists(0..ns);
-        pc : Standard_Natural_VecVecs.VecVec(0..ns);
-        tm : Array_of_Duration(0..integer(ns));
-        alltime : duration;
+        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+        castm : Array_of_Duration(0..integer(ns));
+        filtm : Array_of_Duration(0..integer(ns)-1);
+        totcas,totfil,alltime : duration;
       begin
         if filter then
           Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,tm,alltime);
+            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+             castm,filtm,totcas,totfil,alltime);
         else
-          Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
+          Witness_Generate
+            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
       end;
     end if;
   end DoblDobl_Embed_and_Cascade;
@@ -705,17 +729,20 @@ package body Drivers_to_Cascade_Filtering is
         homtol : constant double_float := 1.0E-8;
         ep : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
         gpts : Array_of_Solution_Lists(0..ns);
-        pc : Standard_Natural_VecVecs.VecVec(0..ns);
-        tm : Array_of_Duration(0..integer(ns));
-        alltime : duration;
+        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+        castm : Array_of_Duration(0..integer(ns));
+        filtm : Array_of_Duration(0..integer(ns)-1);
+        totcas,totfil,alltime : duration;
       begin
         if filter then
           Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,tm,alltime);
+            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+             castm,filtm,totcas,totfil,alltime);
         else
-          Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
+          Witness_Generate
+            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
       end;
     end if;
   end QuadDobl_Embed_and_Cascade;
@@ -768,17 +795,20 @@ package body Drivers_to_Cascade_Filtering is
         homtol : constant double_float := 1.0E-8;
         ep : QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
         gpts : Array_of_Solution_Lists(0..ns);
-        pc : Standard_Natural_VecVecs.VecVec(0..ns);
-        tm : Array_of_Duration(0..integer(ns));
-        alltime : duration;
+        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+        castm : Array_of_Duration(0..integer(ns));
+        filtm : Array_of_Duration(0..integer(ns)-1);
+        totcas,totfil,alltime : duration;
       begin
         if filter then
           Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,tm,alltime);
+            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+             castm,filtm,totcas,totfil,alltime);
         else
-          Witness_Generate(nt,embsys.all,sols,topdim,tol,ep,gpts,pc,tm,alltime);
+          Witness_Generate
+            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,tm,alltime);
+        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
       end;
     end if;
   end QuadDobl_Embed_and_Cascade;
