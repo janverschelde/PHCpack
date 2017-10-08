@@ -1,6 +1,8 @@
 Sat 7 Oct 2017 : fixed a bug in homotopy_membership_tests.adb, removed
   debugging printing in homotopy_membership_filters.adb.
   Timings are returned in the homotopy_membership_filters.
+  Added counters on the number of witness points in each stage of the
+  junk removal filtering in homotopy_membership_filters.
 
 Thu 5 Oct 2017 : extended homotopy_membership_filters with procedures which
   write their output to file, tested by ts_mbthom.adb.  Added filters to

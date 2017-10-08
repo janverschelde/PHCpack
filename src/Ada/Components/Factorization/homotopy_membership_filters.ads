@@ -3,6 +3,7 @@ with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -167,36 +168,42 @@ package Homotopy_Membership_Filters is
                 eqs : in Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 topdim : in integer32; restol,homtol : in double_float;
+                filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration );
   procedure Filter
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 topdim : in integer32; restol,homtol : in double_float;
+                filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration );
   procedure Filter
               ( verbose : in boolean;
                 eqs : in DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 topdim : in integer32; restol,homtol : in double_float;
+                filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration );
   procedure Filter
               ( verbose : in boolean;
                 eqs : in DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 topdim : in integer32; restol,homtol : in double_float;
+                filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration );
   procedure Filter
               ( verbose : in boolean;
                 eqs : in QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
                 topdim : in integer32; restol,homtol : in double_float;
+                filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration );
   procedure Filter
               ( verbose : in boolean;
                 eqs : in QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
                 topdim : in integer32; restol,homtol : in double_float;
+                filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration );
 
   -- DESCRIPTION :
@@ -217,6 +224,8 @@ package Homotopy_Membership_Filters is
 
   -- ON RETURN :
   --   pts      points on higher dimensional sets are removed.
+  --   filcnt   counts the number of solutions left at each stage
+  --            after filtering the junk points, array of range 0..topdim;
   --   times    elapsed CPU user time at each stage;
   --   alltime  the total elapsed CPU user time.
 
