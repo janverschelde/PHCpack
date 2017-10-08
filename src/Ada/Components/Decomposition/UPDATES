@@ -1,9 +1,12 @@
+Sat 7 Oct 2017 : Updated cascade_homotopy_filters with filter counts.
+  Added the writing of the times and filter counts to path_counts_table,
+  with updated calls in drivers_to_cascade_filtering.adb.
+  At the last level in the cascade in cascade_homotopy_steps, there is
+  no split filter any more, only a vanishing filter.
+
 Fri 6 Oct 2017 : new package cascade_homotopy_filters, to be called in the
   drivers_to_cascade_filtering.adb.  Added calls to the filters in
   cascade_homotopy_filters.adb, updated drivers_to_cascade_filtering.
-  Updated cascade_homotopy_filters with filter counts.
-  Added the writing of the times and filter counts to path_counts_table,
-  with updated calls in drivers_to_cascade_filtering.adb.
 
 Tue 3 Oct 2017 : more complete versions for the silent procedures in
   drivers_to_cascade_filtering.adb.  Added double double and quad double

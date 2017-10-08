@@ -9,6 +9,9 @@ with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
+with Standard_Solution_Filters;          use Standard_Solution_Filters;
+with DoblDobl_Solution_Filters;          use DoblDobl_Solution_Filters;
+with QuadDobl_Solution_Filters;          use QuadDobl_Solution_Filters;
 with Standard_Solution_Splitters;        use Standard_Solution_Splitters;
 with DoblDobl_Solution_Splitters;        use DoblDobl_Solution_Splitters;
 with QuadDobl_Solution_Splitters;        use QuadDobl_Solution_Splitters;
@@ -43,8 +46,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -76,8 +83,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (file,integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- at least one slack variable left
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -103,8 +114,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- at least one slack variable left
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -136,8 +151,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (file,integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- at least one slack variable left
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -163,8 +182,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- at least one slack variable left
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -196,8 +219,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (file,integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- at least one slack variable left
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -223,8 +250,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- at least one slack variable left
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -256,8 +287,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (file,integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- at least one slack variable left
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -283,8 +318,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- at least one slack variable left
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -316,8 +355,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (file,integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- ast least one slack variable left
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -343,8 +386,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- at least one slack variable left
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -376,8 +423,12 @@ package body Cascade_Homotopy_Steps is
       Black_Box_Polynomial_Continuation
         (file,integer32(nt),target,embsys,sols,time);
     end if;
-    Filter_and_Split_Solutions
-      (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    if level > 1 then -- at least one slack variable left
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+    else
+      sols0 := Vanishing_Filter(sols,zerotol);
+    end if;
   end Down_Continuation;
 
 end Cascade_Homotopy_Steps;
