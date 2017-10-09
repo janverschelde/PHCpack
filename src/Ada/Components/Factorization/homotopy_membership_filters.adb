@@ -620,6 +620,10 @@ package body Homotopy_Membership_Filters is
                 pts(dim) := outpts; -- points not on higher dimensional sets
                 idx := idx + 1;
                 cnt(idx) := Standard_Complex_Solutions.Length_Of(pts(dim));
+                if verbose then
+                  put("Junk removal : "); put(cnt(idx-1),1);
+                  put(" -> "); put(cnt(idx),1); new_line;
+                end if;
               end;
             end if;
           end if;
@@ -674,6 +678,10 @@ package body Homotopy_Membership_Filters is
                 pts(dim) := outpts; -- points not on higher dimensional sets
                 idx := idx + 1;
                 cnt(idx) := Standard_Complex_Solutions.Length_Of(pts(dim));
+                if verbose then
+                  put("Junk removal : "); put(cnt(idx-1),1);
+                  put(" -> "); put(cnt(idx),1); new_line;
+                end if;
               end;
             end if;
           end if;
@@ -728,6 +736,10 @@ package body Homotopy_Membership_Filters is
                 pts(dim) := outpts; -- points not on higher dimensional sets
                 idx := idx + 1;
                 cnt(idx) := DoblDobl_Complex_Solutions.Length_Of(pts(dim));
+                if verbose then
+                  put("Junk removal : "); put(cnt(idx-1),1);
+                  put(" -> "); put(cnt(idx),1); new_line;
+                end if;
               end;
             end if;
           end if;
@@ -782,6 +794,10 @@ package body Homotopy_Membership_Filters is
                 pts(dim) := outpts; -- points not on higher dimensional sets
                 idx := idx + 1;
                 cnt(idx) := DoblDobl_Complex_Solutions.Length_Of(pts(dim));
+                if verbose then
+                  put("Junk removal : "); put(cnt(idx-1),1);
+                  put(" -> "); put(cnt(idx),1); new_line;
+                end if;
               end;
             end if;
           end if;
@@ -836,6 +852,10 @@ package body Homotopy_Membership_Filters is
                 pts(dim) := outpts; -- points not on higher dimensional sets
                 idx := idx + 1;
                 cnt(idx) := QuadDobl_Complex_Solutions.Length_Of(pts(dim));
+                if verbose then
+                  put("Junk removal : "); put(cnt(idx-1),1);
+                  put(" -> "); put(cnt(idx),1); new_line;
+                end if;
               end;
             end if;
           end if;
@@ -890,6 +910,10 @@ package body Homotopy_Membership_Filters is
                 pts(dim) := outpts; -- points not on higher dimensional sets
                 idx := idx + 1;
                 cnt(idx) := QuadDobl_Complex_Solutions.Length_Of(pts(dim));
+                if verbose then
+                  put("Junk removal : "); put(cnt(idx-1),1);
+                  put(" -> "); put(cnt(idx),1); new_line;
+                end if;
               end;
             end if;
           end if;

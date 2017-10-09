@@ -1,3 +1,6 @@
+Sun 8 Oct 2017 : added extra information in the verbose mode in the
+  homotopy_membership_filters.adb.
+
 Sat 7 Oct 2017 : fixed a bug in homotopy_membership_tests.adb, removed
   debugging printing in homotopy_membership_filters.adb.
   Timings are returned in the homotopy_membership_filters.
