@@ -1,3 +1,9 @@
+Sun 8 Oct 2017 : fixed messages in compsolve.adb, compsolve2.adb, and
+  compsolve4.adb regarding the precision.
+
+Fri 6 Oct 2017 : updated compsolve.adb, compsolve2.adb, and compsolve4.adb
+  for the addition of the witness filter.
+
 Tue 3 Oct 2017 : added double double and quad double versions of compsolve,
   compsolve2 and compsolve4 to define -B2 and -B4 in dispatch.adb.
 

@@ -22,7 +22,7 @@ procedure compsolve
 
   begin
     put_line(Greeting_Banners.welcome & ".");
-    put("Numerical irreducible decomposition solver");
+    put("Numerical irreducible decomposition");
     if nbtasks = 0
      then put(", no tasking");
      else put(", with "); put(nbtasks,1); put(" tasks");

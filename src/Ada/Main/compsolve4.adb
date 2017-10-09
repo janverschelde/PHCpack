@@ -22,12 +22,12 @@ procedure compsolve4
 
   begin
     put_line(Greeting_Banners.welcome & ".");
-    put("Numerical irreducible decomposition solver");
+    put("Numerical irreducible decomposition");
     if nbtasks = 0
      then put(", no tasking");
      else put(", with "); put(nbtasks,1); put(" tasks");
     end if;
-    put_line(", in double precision.");
+    put_line(", in quad double precision.");
   end Write_Greeting;
 
   procedure Main is
