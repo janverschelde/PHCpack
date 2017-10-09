@@ -83,7 +83,7 @@ package body Path_Counts_Table is
     put(file,"dim | ");
     put(file," CPU user time");
     new_line(file);
-    put_line(file,"----+---------------");
+    put_line(file,"----+----------------+");
     for i in reverse cnts'range loop
       put(file,i,3);
       put(file," | "); print_hms(file,times(integer(i)));
@@ -95,7 +95,7 @@ package body Path_Counts_Table is
       end loop;
       new_line(file);
     end loop;
-    put_line(file,"----+---------------");
+    put_line(file,"----+----------------+");
     put(file,"sum | "); 
     print_hms(file,totaltime);
     new_line(file);

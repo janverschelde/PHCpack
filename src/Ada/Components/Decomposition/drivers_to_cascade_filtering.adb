@@ -478,7 +478,6 @@ package body Drivers_to_Cascade_Filtering is
          then print_hms(standard_output,alltime);
          else print_hms(standard_output,totcas);
         end if;
-        new_line;
       end;
     end if;
   end Standard_Embed_and_Cascade;
@@ -545,6 +544,16 @@ package body Drivers_to_Cascade_Filtering is
             (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
         Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+        if filter then
+          Path_Counts_Table.Write_Filter_Counts
+            (standard_output,fc,filtm,totfil);
+        end if;
+        new_line;
+        put("The CPU time for the cascade filters : ");
+        if filter 
+         then print_hms(standard_output,alltime);
+         else print_hms(standard_output,totcas);
+        end if;
       end;
     end if;
   end Standard_Embed_and_Cascade;
@@ -611,6 +620,16 @@ package body Drivers_to_Cascade_Filtering is
             (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
         Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+        if filter then
+          Path_Counts_Table.Write_Filter_Counts
+            (standard_output,fc,filtm,totfil);
+        end if;
+        new_line;
+        put("The CPU time for the cascade filters : ");
+        if filter 
+         then print_hms(standard_output,alltime);
+         else print_hms(standard_output,totcas);
+        end if;
       end;
     end if;
   end DoblDobl_Embed_and_Cascade;
@@ -677,6 +696,16 @@ package body Drivers_to_Cascade_Filtering is
             (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
         Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+        if filter then
+          Path_Counts_Table.Write_Filter_Counts
+            (standard_output,fc,filtm,totfil);
+        end if;
+        new_line;
+        put("The CPU time for the cascade filters : ");
+        if filter 
+         then print_hms(standard_output,alltime);
+         else print_hms(standard_output,totcas);
+        end if;
       end;
     end if;
   end DoblDobl_Embed_and_Cascade;
@@ -743,6 +772,16 @@ package body Drivers_to_Cascade_Filtering is
             (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
         Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+        if filter then
+          Path_Counts_Table.Write_Filter_Counts
+            (standard_output,fc,filtm,totfil);
+        end if;
+        new_line;
+        put("The CPU time for the cascade filters : ");
+        if filter 
+         then print_hms(standard_output,alltime);
+         else print_hms(standard_output,totcas);
+        end if;
       end;
     end if;
   end QuadDobl_Embed_and_Cascade;
@@ -809,6 +848,16 @@ package body Drivers_to_Cascade_Filtering is
             (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
         end if;
         Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+        if filter then
+          Path_Counts_Table.Write_Filter_Counts
+            (standard_output,fc,filtm,totfil);
+        end if;
+        new_line;
+        put("The CPU time for the cascade filters : ");
+        if filter 
+         then print_hms(standard_output,alltime);
+         else print_hms(standard_output,totcas);
+        end if;
       end;
     end if;
   end QuadDobl_Embed_and_Cascade;

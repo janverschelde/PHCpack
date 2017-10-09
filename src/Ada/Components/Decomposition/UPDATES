@@ -3,6 +3,8 @@ Sun 8 Oct 2017 : added writing of the timing information to the procedures
   writes to file and also return the superwitness sets.
   Fixed bug in cascade_homotopies.adb: must remove the last coordinate
   in the solutions with zero slack variable after one continuation stage.
+  Added writing of the filter counters to drivers_to_cascade_filtering.adb
+  and updated the layout in path_counts_table.adb.
 
 Sat 7 Oct 2017 : Updated cascade_homotopy_filters with filter counts.
   Added the writing of the times and filter counts to path_counts_table,
