@@ -1,3 +1,6 @@
+Mon 9 Oct 2017 : updated path_counts_table.adb so no constraint_error 
+  happens at empty levels.
+
 Sun 8 Oct 2017 : added writing of the timing information to the procedures
   which write to file in cascade_homotopies, added one procedure which
   writes to file and also return the superwitness sets.
