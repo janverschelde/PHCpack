@@ -976,8 +976,8 @@ package body Cascade_Homotopies is
       for i in reverse 1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,
-           wsols,esols0(i-1),sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+        esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -1026,8 +1026,8 @@ package body Cascade_Homotopies is
       for i in reverse 1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,
-           wsols,esols0(i-1),sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+        esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -1076,8 +1076,8 @@ package body Cascade_Homotopies is
       for i in reverse 1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,
-           wsols,esols0(i-1),sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+        esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -1126,8 +1126,8 @@ package body Cascade_Homotopies is
       for i in reverse 1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,
-           wsols,esols0(i-1),sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+        esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -1176,8 +1176,8 @@ package body Cascade_Homotopies is
       for i in reverse 1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,
-           wsols,esols0(i-1),sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+        esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -1226,8 +1226,8 @@ package body Cascade_Homotopies is
       for i in reverse 1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,
-           wsols,esols0(i-1),sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+        esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
           (pathcnts,natural32(i-1),
