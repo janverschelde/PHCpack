@@ -23,7 +23,9 @@ with QuadDobl_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;
 with Standard_Solution_Manipulators;
 with DoblDobl_Complex_Solutions;
+with DoblDobl_Solution_Manipulators;
 with QuadDobl_Complex_Solutions;
+with QuadDobl_Solution_Manipulators;
 with Prompt_for_Systems;
 with Black_Box_Solvers;
 with Witness_Sets_io;                    use Witness_Sets_io;
@@ -262,6 +264,7 @@ package body Drivers_to_Cascade_Filtering is
       tstart(timer);
       Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
       tstop(timer);
+      DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
@@ -297,6 +300,7 @@ package body Drivers_to_Cascade_Filtering is
       tstart(timer);
       Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
       tstop(timer);
+      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
@@ -368,6 +372,7 @@ package body Drivers_to_Cascade_Filtering is
       tstart(timer);
       Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
       tstop(timer);
+      DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
@@ -403,6 +408,7 @@ package body Drivers_to_Cascade_Filtering is
       tstart(timer);
       Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
       tstop(timer);
+      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
@@ -599,6 +605,7 @@ package body Drivers_to_Cascade_Filtering is
       tstart(timer);
       Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
       tstop(timer);
+      DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     put_line("THE ROOT COUNTS :");
     new_line; put_line(rocos.all);
@@ -676,6 +683,7 @@ package body Drivers_to_Cascade_Filtering is
       tstart(timer);
       Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
       tstop(timer);
+      DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     put_line("THE ROOT COUNTS :");
     new_line; put_line(rocos.all);
@@ -753,6 +761,7 @@ package body Drivers_to_Cascade_Filtering is
       tstart(timer);
       Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
       tstop(timer);
+      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     put_line("THE ROOT COUNTS :");
     new_line; put_line(rocos.all);
@@ -830,6 +839,7 @@ package body Drivers_to_Cascade_Filtering is
       tstart(timer);
       Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
       tstop(timer);
+      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     put_line("THE ROOT COUNTS :");
     new_line; put_line(rocos.all);
