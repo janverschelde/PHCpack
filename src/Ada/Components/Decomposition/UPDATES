@@ -1,5 +1,8 @@
 Mon 9 Oct 2017 : updated path_counts_table.adb so no constraint_error 
-  happens at empty levels.
+  happens at empty levels.  Applied remove_imaginary_target to the solutions
+  computed with multitasking in cascade_homotopy_steps.adb and in
+  drivers_to_cascade_filtering.adb.  Removed debugging output from
+  the code in cascade_homotopies.adb.
 
 Sun 8 Oct 2017 : added writing of the timing information to the procedures
   which write to file in cascade_homotopies, added one procedure which

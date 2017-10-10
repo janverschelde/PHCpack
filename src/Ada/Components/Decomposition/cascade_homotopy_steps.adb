@@ -12,6 +12,7 @@ with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with Standard_Solution_Filters;          use Standard_Solution_Filters;
 with DoblDobl_Solution_Filters;          use DoblDobl_Solution_Filters;
 with QuadDobl_Solution_Filters;          use QuadDobl_Solution_Filters;
+with Standard_Solution_Manipulators;     use Standard_Solution_Manipulators;
 with Standard_Solution_Splitters;        use Standard_Solution_Splitters;
 with DoblDobl_Solution_Splitters;        use DoblDobl_Solution_Splitters;
 with QuadDobl_Solution_Splitters;        use QuadDobl_Solution_Splitters;
@@ -45,6 +46,7 @@ package body Cascade_Homotopy_Steps is
     else
       Black_Box_Polynomial_Continuation
         (integer32(nt),target,embsys,sols,time);
+      Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then
       Filter_and_Split_Solutions
@@ -82,6 +84,7 @@ package body Cascade_Homotopy_Steps is
     else
       Black_Box_Polynomial_Continuation
         (file,integer32(nt),target,embsys,sols,time);
+      Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
       Filter_and_Split_Solutions
@@ -113,6 +116,7 @@ package body Cascade_Homotopy_Steps is
     else
       Black_Box_Polynomial_Continuation
         (integer32(nt),target,embsys,sols,time);
+      Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
       Filter_and_Split_Solutions
@@ -150,6 +154,7 @@ package body Cascade_Homotopy_Steps is
     else
       Black_Box_Polynomial_Continuation
         (file,integer32(nt),target,embsys,sols,time);
+      Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
       Filter_and_Split_Solutions

@@ -15,6 +15,9 @@ with Write_Seed_Number;
 with Cascade_Homotopy_Steps;             use Cascade_Homotopy_Steps;
 with Cascade_Homotopies_io;              use Cascade_Homotopies_io;
 
+with Standard_Complex_Solutions_io;
+ use Standard_Complex_Solutions_io;
+
 package body Cascade_Homotopies is
 
   procedure Witness_Generate
