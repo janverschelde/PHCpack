@@ -1,3 +1,6 @@
+Mon 9 Oct 2017 : new package standard_solution_manipulators to remove the
+  imaginary part of the target.
+
 Fri 23 Jun 2017 : moved packages prompt_for_systems and prompt_for_solutions
   from the Main folder to the Solutions folder.
 
