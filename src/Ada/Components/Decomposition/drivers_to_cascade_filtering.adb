@@ -547,7 +547,7 @@ package body Drivers_to_Cascade_Filtering is
         gpts : Array_of_Solution_Lists(0..ns);
         pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
         castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns)-1);
+        filtm : Array_of_Duration(0..integer(ns));
         totcas,totfil,alltime : duration;
       begin
         if filter then
@@ -625,7 +625,7 @@ package body Drivers_to_Cascade_Filtering is
         gpts : Array_of_Solution_Lists(0..ns);
         pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
         castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns)-1);
+        filtm : Array_of_Duration(0..integer(ns));
         totcas,totfil,alltime : duration;
       begin
         if filter then
@@ -703,7 +703,7 @@ package body Drivers_to_Cascade_Filtering is
         gpts : Array_of_Solution_Lists(0..ns);
         pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
         castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns)-1);
+        filtm : Array_of_Duration(0..integer(ns));
         totcas,totfil,alltime : duration;
       begin
         if filter then
@@ -781,7 +781,7 @@ package body Drivers_to_Cascade_Filtering is
         gpts : Array_of_Solution_Lists(0..ns);
         pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
         castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns)-1);
+        filtm : Array_of_Duration(0..integer(ns));
         totcas,totfil,alltime : duration;
       begin
         if filter then
@@ -859,7 +859,7 @@ package body Drivers_to_Cascade_Filtering is
         gpts : Array_of_Solution_Lists(0..ns);
         pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
         castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns)-1);
+        filtm : Array_of_Duration(0..integer(ns));
         totcas,totfil,alltime : duration;
       begin
         if filter then
