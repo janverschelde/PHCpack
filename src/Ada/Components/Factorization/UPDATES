@@ -1,3 +1,6 @@
+Tue 10 Oct 2017 : new package monodromy_homotopies to encapsulate the
+  classification of the witness sets for an irreducible decomposition.
+
 Sun 8 Oct 2017 : added extra information in the verbose mode in the
   homotopy_membership_filters.adb.
 

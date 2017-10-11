@@ -55,7 +55,8 @@ ts_newfac                        : calls monodromy component breakup routines
 ------------------------------------------------------------------------------
 ts_ifactor                       : factorization in intrinsic coordinates
 ------------------------------------------------------------------------------
-homotopy_membership_tests        : membership test using sampling homotopy
+monodromy_homotopies             : exports witness_factor procedures
+------------------------------------------------------------------------------
 drivers_to_breakup_solutions     : drivers to factor witness sets
 mainfac                          : routine called by main dispatcher
 black_box_factorization          : routine called by black-box solver (phc -b)
