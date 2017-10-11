@@ -1,5 +1,6 @@
 Tue 10 Oct 2017 : fixed the range of the arrays of duration for the filtering
   in drivers_to_cascade_filtering.adb for double double and quad doubles.
+  New procedure Witness_Factor in cascade_homotopy_filters.
 
 Mon 9 Oct 2017 : updated path_counts_table.adb so no constraint_error 
   happens at empty levels.  Applied remove_imaginary_target to the solutions

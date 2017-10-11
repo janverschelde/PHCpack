@@ -26,7 +26,7 @@ package Cascade_Homotopy_Filters is
 --   1) the output is written to one single file, or
 --   2) each superwitness set is written to a separate file.
 --   The junk points are removed from the superwitness sets
---   by the application of homotopy membershiop filters
+--   by the application of homotopy membership filters
 
   procedure Witness_Filter
                ( outfile,resfile : in file_type; nt : in natural32;
@@ -244,6 +244,54 @@ package Cascade_Homotopy_Filters is
   --   filtms    CPU time at each stage of the homotopy membership filters;
   --   totcas    total CPU time for running the cascade homotopies;
   --   totfil    total CPU time for the homotopy memberhip filters;
+  --   alltime   the total elapsed CPU time.
+
+  procedure Witness_Factor
+              ( nt : in natural32;
+                ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                topdim,nitfix : in natural32; zerotol : in double_float;
+                restol,homtol : in double_float;
+                embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                factors : out Standard_Natural_VecVecs.Array_of_VecVecs;
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms,factms : out Array_of_Duration;
+                totcas,totfil,totfac,alltime : out duration );
+
+  -- DESCRIPTION :
+  --   Silent version of the witness generate to compute witness supersets,
+  --   of the witness filter to remove the junk points from the supersets,
+  --   and of the factorization into irreducible components,
+  --   in double, double double, and quad double precision.
+
+  -- ON ENTRY :
+  --   nt        number of tasks for multitasking, set to zero for no tasking;
+  --   ep        an embedded polynomial system for the top dimension,
+  --             with as many slack variables and random hyperplanes added
+  --             as the top dimension topdim;
+  --   sols      solutions to the system ep with all values for the slack
+  --             variables, the zero and the nonzero values;
+  --   topdim    number of slack variables and random hyperplanes,
+  --             equals the top dimension of the solution sets;
+  --   nitfix    maximum number of monodromy loops which leave the
+  --             decomposition invariant;
+  --   zerotol   tolerance to decide whether a number is zero or not;
+  --   restol    tolerance on the residual;
+  --   homtol    tolerance for the homotopy membership test.
+
+  -- ON RETURN :
+  --   embsys    sequence of embedded polynomial systems;
+  --   esols0    witness points at each dimension;
+  --   factors   partitions witness points along irreducible factors;
+  --   pathcnts  table with path counts during the cascade homotopies;
+  --   filtcnts  counts of the witness points after each junk removal;
+  --   castms    CPU time at each stage in the cascade homotopy;
+  --   filtms    CPU time at each stage of the homotopy membership filters;
+  --   factms    CPU time at each level of the monodromy homotopies;
+  --   totcas    total CPU time for running the cascade homotopies;
+  --   totfil    total CPU time for the homotopy memberhip filters;
+  --   totfac    total CPU time for the monodromy homotopies;
   --   alltime   the total elapsed CPU time.
 
 end Cascade_Homotopy_Filters;
