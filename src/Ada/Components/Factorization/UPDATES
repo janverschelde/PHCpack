@@ -1,3 +1,5 @@
+Wed 11 Oct 2017 : provide code for a Factor in monodromy_homotopies.adb.
+
 Tue 10 Oct 2017 : new package monodromy_homotopies to encapsulate the
   classification of the witness sets for an irreducible decomposition.
 
