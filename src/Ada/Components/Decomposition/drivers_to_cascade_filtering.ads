@@ -76,27 +76,27 @@ package Drivers_to_Cascade_Filtering is
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                filter : in boolean );
+                filter,factor : in boolean );
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                filter : in boolean );
+                filter,factor : in boolean );
   procedure DoblDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                filter : in boolean );
+                filter,factor : in boolean );
   procedure DoblDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                filter : in boolean );
+                filter,factor : in boolean );
   procedure QuadDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                filter : in boolean );
+                filter,factor : in boolean );
   procedure QuadDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                filter : in boolean );
+                filter,factor : in boolean );
 
   -- DESCRIPTION :
   --   Prompts the user to enter the top dimension, embeds the system,
@@ -110,6 +110,9 @@ package Drivers_to_Cascade_Filtering is
   --   p        an ordinary or a Laurent polynomial system;
   --   filter   if true, then junk points will be removed,
   --            otherwise, the output will be superwitness sets.
+  --   factor   if true and filter, then the filtered witness sets will be
+  --            factored into irreducible components,
+  --            otherwise, the output sets may still be reducible.
 
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32; inpname,outname : in string );

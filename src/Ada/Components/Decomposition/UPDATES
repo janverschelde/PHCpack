@@ -1,3 +1,6 @@
+Sun 15 Oct 2017 : in drivers_to_cascade_filtering, added the factor option
+  and calls to the witness_factor in the monodromy_homotopies.
+
 Tue 10 Oct 2017 : fixed the range of the arrays of duration for the filtering
   in drivers_to_cascade_filtering.adb for double double and quad doubles.
   New procedure Witness_Factor in cascade_homotopy_filters.

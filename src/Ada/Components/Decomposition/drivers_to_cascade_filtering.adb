@@ -37,9 +37,7 @@ with Write_Seed_Number;
 with Path_Counts_Table;
 with Cascade_Homotopies;                 use Cascade_Homotopies;
 with Cascade_Homotopy_Filters;           use Cascade_Homotopy_Filters;
-
-with Standard_Natural_Vectors_io;
- use Standard_Natural_Vectors_io;
+with Monodromy_Homotopies;
 
 package body Drivers_to_Cascade_Filtering is
 
@@ -420,7 +418,7 @@ package body Drivers_to_Cascade_Filtering is
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                filter : in boolean ) is
+                filter,factor : in boolean ) is
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
@@ -468,14 +466,21 @@ package body Drivers_to_Cascade_Filtering is
         ep : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
         gpts : Array_of_Solution_Lists(0..ns);
         pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+        nbl : constant natural32 := 20;
+        deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
         castm : Array_of_Duration(0..integer(ns));
         filtm : Array_of_Duration(0..integer(ns));
-        totcas,totfil,alltime : duration;
+        factm : Array_of_Duration(0..integer(ns));
+        totcas,totfil,totfac,alltime : duration;
       begin
         if filter then
           Witness_Filter
             (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
              castm,filtm,totcas,totfil,alltime);
+          if factor then
+            Monodromy_Homotopies.Witness_Factor
+              (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+          end if;
         else
           Witness_Generate
             (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
@@ -498,7 +503,7 @@ package body Drivers_to_Cascade_Filtering is
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                filter : in boolean ) is
+                filter,factor : in boolean ) is
 
     use Standard_Complex_Laurentials;
     use Standard_Complex_Solutions;
@@ -546,14 +551,21 @@ package body Drivers_to_Cascade_Filtering is
         ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
         gpts : Array_of_Solution_Lists(0..ns);
         pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+       -- nbl : constant natural32 := 20;
+       -- deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
         castm : Array_of_Duration(0..integer(ns));
         filtm : Array_of_Duration(0..integer(ns));
-        totcas,totfil,alltime : duration;
+       -- factm : Array_of_Duration(0..integer(ns));
+        totcas,totfil,alltime : duration; -- totfac,alltime : duration;
       begin
         if filter then
           Witness_Filter
             (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
              castm,filtm,totcas,totfil,alltime);
+         -- if factor then
+         --   Monodromy_Homotopies.Witness_Factor
+         --     (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+         -- end if;
         else
           Witness_Generate
             (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
@@ -576,7 +588,7 @@ package body Drivers_to_Cascade_Filtering is
   procedure DoblDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                filter : in boolean ) is
+                filter,factor : in boolean ) is
 
     use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Solutions;
@@ -654,7 +666,7 @@ package body Drivers_to_Cascade_Filtering is
   procedure DoblDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                filter : in boolean ) is
+                filter,factor : in boolean ) is
 
     use DoblDobl_Complex_Laurentials;
     use DoblDobl_Complex_Solutions;
@@ -732,7 +744,7 @@ package body Drivers_to_Cascade_Filtering is
   procedure QuadDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                filter : in boolean ) is
+                filter,factor : in boolean ) is
 
     use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Solutions;
@@ -810,7 +822,7 @@ package body Drivers_to_Cascade_Filtering is
   procedure QuadDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                filter : in boolean ) is
+                filter,factor : in boolean ) is
 
     use QuadDobl_Complex_Laurentials;
     use QuadDobl_Complex_Solutions;
@@ -858,14 +870,20 @@ package body Drivers_to_Cascade_Filtering is
         ep : QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
         gpts : Array_of_Solution_Lists(0..ns);
         pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+       -- nbl : constant natural32 := 20;
+       -- deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
         castm : Array_of_Duration(0..integer(ns));
         filtm : Array_of_Duration(0..integer(ns));
-        totcas,totfil,alltime : duration;
+       -- factm : Array_of_Duration(0..integer(ns));
+        totcas,totfil,alltime : duration; -- totfac,alltime : duration;
       begin
         if filter then
           Witness_Filter
             (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
              castm,filtm,totcas,totfil,alltime);
+         -- if factor then
+         --   Witness_Factor(false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+         -- end if;
         else
           Witness_Generate
             (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
