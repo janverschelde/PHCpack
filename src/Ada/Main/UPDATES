@@ -1,3 +1,6 @@
+Sun 15 Oct 2017 : adjusted calls in compsolve.adb, compsolve2.adb, and
+  compsolve4.adb for the factor option.
+
 Sun 8 Oct 2017 : fixed messages in compsolve.adb, compsolve2.adb, and
   compsolve4.adb regarding the precision.
 

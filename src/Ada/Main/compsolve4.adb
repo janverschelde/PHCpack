@@ -71,7 +71,7 @@ procedure compsolve4
     if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(q.all) then
       if tofile = 'y'
        then QuadDobl_Embed_and_Cascade(outfile,outname.all,nt,q.all);
-       else QuadDobl_Embed_and_Cascade(nt,q.all,true);
+       else QuadDobl_Embed_and_Cascade(nt,q.all,true,true);
       end if;
     else
       declare
@@ -82,7 +82,7 @@ procedure compsolve4
         p := new Poly_Sys'(t);
         if tofile = 'y'
          then QuadDobl_Embed_and_Cascade(outfile,outname.all,nt,p.all);
-         else QuadDobl_Embed_and_Cascade(nt,p.all,true);
+         else QuadDobl_Embed_and_Cascade(nt,p.all,true,true);
         end if;
       end;
     end if;
