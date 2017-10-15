@@ -1,3 +1,6 @@
+Sun 15 Oct 2017 : extended monodromy homotopies with versions for Laurent
+  systems and for double double precision.
+
 Wed 11 Oct 2017 : provide code for a Factor in monodromy_homotopies.adb.
 
 Tue 10 Oct 2017 : new package monodromy_homotopies to encapsulate the

@@ -1,9 +1,13 @@
-with Timing_Package;                     use Timing_Package;
+with Timing_Package;                    use Timing_Package;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
 
 package Monodromy_Homotopies is
 
@@ -17,6 +21,24 @@ package Monodromy_Homotopies is
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Poly_Systems.Poly_Sys;
                 pts : in Standard_Complex_Solutions.Solution_List;
+                dim,nbl : in natural32; tol : in double_float;
+                f : out Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Witness_Factor
+              ( verbose : in boolean;
+                eqs : in Standard_Complex_Laur_Systems.Laur_Sys;
+                pts : in Standard_Complex_Solutions.Solution_List;
+                dim,nbl : in natural32; tol : in double_float;
+                f : out Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Witness_Factor
+              ( verbose : in boolean;
+                eqs : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                pts : in DoblDobl_Complex_Solutions.Solution_List;
+                dim,nbl : in natural32; tol : in double_float;
+                f : out Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Witness_Factor
+              ( verbose : in boolean;
+                eqs : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                pts : in DoblDobl_Complex_Solutions.Solution_List;
                 dim,nbl : in natural32; tol : in double_float;
                 f : out Standard_Natural_VecVecs.Link_to_VecVec );
 
@@ -39,6 +61,13 @@ package Monodromy_Homotopies is
   procedure Witness_Factor
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
+                pts : in Standard_Complex_Solutions.Array_of_Solution_Lists;
+                topdim,nbl : in natural32; tol : in double_float;
+                f : out Standard_Natural_VecVecs.Array_of_VecVecs;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Factor
+              ( verbose : in boolean;
+                eqs : in Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in Standard_Complex_Solutions.Array_of_Solution_Lists;
                 topdim,nbl : in natural32; tol : in double_float;
                 f : out Standard_Natural_VecVecs.Array_of_VecVecs;
