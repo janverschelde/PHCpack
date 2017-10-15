@@ -6,8 +6,11 @@ with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Monodromy_Homotopies is
 
@@ -41,9 +44,23 @@ package Monodromy_Homotopies is
                 pts : in DoblDobl_Complex_Solutions.Solution_List;
                 dim,nbl : in natural32; tol : in double_float;
                 f : out Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Witness_Factor
+              ( verbose : in boolean;
+                eqs : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                pts : in QuadDobl_Complex_Solutions.Solution_List;
+                dim,nbl : in natural32; tol : in double_float;
+                f : out Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Witness_Factor
+              ( verbose : in boolean;
+                eqs : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                pts : in QuadDobl_Complex_Solutions.Solution_List;
+                dim,nbl : in natural32; tol : in double_float;
+                f : out Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
-  --   Partitions the witness points according to the irreducible factors.
+  --   Partitions the witness points according to the irreducible factors,
+  --   for ordinary polynomial systems and for Laurent systems,
+  --   in double, double double, and quad double precision.
 
   -- ON ENTRY :
   --   verbose  if true then output is written to screen,
@@ -72,9 +89,39 @@ package Monodromy_Homotopies is
                 topdim,nbl : in natural32; tol : in double_float;
                 f : out Standard_Natural_VecVecs.Array_of_VecVecs;
                 times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Factor
+              ( verbose : in boolean;
+                eqs : in DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                pts : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim,nbl : in natural32; tol : in double_float;
+                f : out Standard_Natural_VecVecs.Array_of_VecVecs;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Factor
+              ( verbose : in boolean;
+                eqs : in DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                pts : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim,nbl : in natural32; tol : in double_float;
+                f : out Standard_Natural_VecVecs.Array_of_VecVecs;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Factor
+              ( verbose : in boolean;
+                eqs : in QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                pts : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim,nbl : in natural32; tol : in double_float;
+                f : out Standard_Natural_VecVecs.Array_of_VecVecs;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Factor
+              ( verbose : in boolean;
+                eqs : in QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                pts : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                topdim,nbl : in natural32; tol : in double_float;
+                f : out Standard_Natural_VecVecs.Array_of_VecVecs;
+                times : out Array_of_Duration; alltime : out duration );
 
   -- DESCRIPTION :
-  --   Partitions the witness points according to the irreducible factors.
+  --   Partitions the witness points according to the irreducible factors,
+  --   for ordinary polynomial systems and for Laurent systems,
+  --   in double, double double, and quad double precision.
 
   -- ON ENTRY :
   --   verbose  if true then output is written to screen,
