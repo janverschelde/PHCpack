@@ -4,6 +4,7 @@ with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
@@ -489,6 +490,10 @@ package body Drivers_to_Cascade_Filtering is
         if filter then
           Path_Counts_Table.Write_Filter_Counts
             (standard_output,fc,filtm,totfil);
+          if factor then
+            Path_Counts_Table.Write_Factor_Counts
+              (standard_output,deco,factm,totfac);
+          end if;     
         end if;
         new_line;
         put("The CPU time for the cascade filters : ");
@@ -551,21 +556,21 @@ package body Drivers_to_Cascade_Filtering is
         ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
         gpts : Array_of_Solution_Lists(0..ns);
         pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
-       -- nbl : constant natural32 := 20;
-       -- deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+        nbl : constant natural32 := 20;
+        deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
         castm : Array_of_Duration(0..integer(ns));
         filtm : Array_of_Duration(0..integer(ns));
-       -- factm : Array_of_Duration(0..integer(ns));
-        totcas,totfil,alltime : duration; -- totfac,alltime : duration;
+        factm : Array_of_Duration(0..integer(ns));
+        totcas,totfil,totfac,alltime : duration;
       begin
         if filter then
           Witness_Filter
             (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
              castm,filtm,totcas,totfil,alltime);
-         -- if factor then
-         --   Monodromy_Homotopies.Witness_Factor
-         --     (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
-         -- end if;
+          if factor then
+            Monodromy_Homotopies.Witness_Factor
+              (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+          end if;
         else
           Witness_Generate
             (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
@@ -574,6 +579,10 @@ package body Drivers_to_Cascade_Filtering is
         if filter then
           Path_Counts_Table.Write_Filter_Counts
             (standard_output,fc,filtm,totfil);
+          if factor then
+            Path_Counts_Table.Write_Factor_Counts
+              (standard_output,deco,factm,totfac);
+          end if;
         end if;
         new_line;
         put("The CPU time for the cascade filters : ");

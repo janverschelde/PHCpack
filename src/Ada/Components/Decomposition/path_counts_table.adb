@@ -2,6 +2,7 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Natural_Vectors;
+with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 
 package body Path_Counts_Table is
 
@@ -101,9 +102,10 @@ package body Path_Counts_Table is
     new_line(file);
     new_line(file);
     put(file,"dim | ");
-    put(file," CPU user time");
+    put(file," CPU user time |");
+    put(file," counts after filter");
     new_line(file);
-    put_line(file,"----+----------------+");
+    put_line(file,"----+----------------+---------------------");
     for i in reverse cnts'range loop
       put(file,i,3);
       put(file," | "); print_hms(file,times(integer(i)));
@@ -120,5 +122,41 @@ package body Path_Counts_Table is
     print_hms(file,totaltime);
     new_line(file);
   end Write_Filter_Counts;
+
+  procedure Write_Factor_Counts
+              ( file : in file_type;
+                deco : in Standard_Natural_VecVecs.Array_of_VecVecs;
+                times : in Array_of_Duration; totaltime : in duration ) is
+
+    use Standard_Natural_VecVecs;
+    use Standard_Natural_Vectors;
+
+  begin
+    new_line(file);
+    new_line(file);
+    put(file,"dim | ");
+    put(file," CPU user time |");
+    put(file," decomposition");
+    new_line(file);
+    put_line(file,"----+----------------+---------------");
+    for i in reverse 1..deco'last loop
+      put(file,i,3);
+      put(file," | "); print_hms(file,times(integer(i)));
+      put(file," | ");
+      if deco(i) /= null then
+        put(file,deco(i)(deco(i)'first));
+        for j in deco(i)'first+1..deco(i)'last loop
+          exit when (deco(i)(j) = null);
+          put(file,",");
+          put(file,deco(i)(j));
+        end loop;
+      end if;
+      new_line(file);
+    end loop;
+    put_line(file,"----+----------------+");
+    put(file,"sum | "); 
+    print_hms(file,totaltime);
+    new_line(file);
+  end Write_Factor_Counts;
 
 end Path_Counts_Table;

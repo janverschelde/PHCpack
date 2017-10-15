@@ -63,4 +63,15 @@ package Path_Counts_Table is
   --   as there is no filtering needed at the top dimension, and at
   --   dimension 0, there are as many stages as the top dimension minus one.
 
+  procedure Write_Factor_Counts
+              ( file : in file_type;
+                deco : in Standard_Natural_VecVecs.Array_of_VecVecs;
+                times : in Array_of_Duration; totaltime : in duration );
+
+  -- DESCRIPTION :
+  --   Writes the classification of the witness points along the factors
+  --   in the irreducible decomposition, for all dimensions.
+  --   The range of deco is 1..topdim.
+  --   There is no factorization at dimension 0.
+
 end Path_Counts_Table;
