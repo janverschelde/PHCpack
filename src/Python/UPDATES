@@ -4,6 +4,8 @@ Tue 17 Oct 2017 : fixed verbose option in appolonius.py files.
   and did the same for the __init__.py in the PHCpy2/phcpy folder.
   Fixed the example touchcircle.py for the updated options and the
   module diagonal, extracted out of the old sets.
+  Fixed the tangents4spheres.sage and tangents4spheres.sws for the
+  deprecated option silent of the blackbox solver.
 
 Mon 16 Oct 2017 : fixed bug in random_coefficient_system() by clearing the
   systems container for a subsequent mixed volume computation.

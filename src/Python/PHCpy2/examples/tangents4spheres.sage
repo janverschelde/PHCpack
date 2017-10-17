@@ -327,7 +327,7 @@ def main():
             print pol
         print 'calling the solver of phcpy :'
     from phcpy.solver import solve
-    sols = solve(pols, silent=True)
+    sols = solve(pols, verbose=False)
     if verbose:
         print 'the solutions :'
         for sol in sols:
