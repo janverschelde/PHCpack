@@ -104,7 +104,7 @@ Calling the blackbox solver then happens as
 ::
 
     from phcpy.solver import solve
-    sols = solve(pols, silent=True)
+    sols = solve(pols, verbose=False)
     for sol in sols:
         print sol
 

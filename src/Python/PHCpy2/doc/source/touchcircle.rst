@@ -275,7 +275,7 @@ is shown below.
 
 ::
 
-    from phcpy.sets import diagonal_solver as diagsolve
+    from phcpy.diagonal import diagonal_solver as diagsolve
     result = diagsolve(dim, w1d, w1eqs, w1sols, w2d, w2eqs, w2sols)
     (eqs, sols) = result
 

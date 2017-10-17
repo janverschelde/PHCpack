@@ -6,6 +6,9 @@ Tue 17 Oct 2017 : fixed verbose option in appolonius.py files.
   module diagonal, extracted out of the old sets.
   Fixed the tangents4spheres.sage and tangents4spheres.sws for the
   deprecated option silent of the blackbox solver.
+  Fixed the documentation apollonius.rst, touchcircle.rst, and
+  tangents4spheres.rst for the deprecated silent option and the
+  diagonal module.
 
 Mon 16 Oct 2017 : fixed bug in random_coefficient_system() by clearing the
   systems container for a subsequent mixed volume computation.

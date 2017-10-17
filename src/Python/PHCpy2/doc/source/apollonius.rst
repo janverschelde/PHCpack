@@ -113,7 +113,7 @@ and solves the systems.  The valid solutions are extracted and returned.
                print('solving system', eqscnt, ':')
                for pol in eqs:
                    print(pol)
-           sols = solve(eqs, silent=True)
+           sols = solve(eqs, verbose=False)
            if verbose:
                print('system', eqscnt, 'has', len(sols), 'solutions')
            for sol in sols:
@@ -132,7 +132,7 @@ and solves the systems.  The valid solutions are extracted and returned.
 
 The code for the function ``solve4circles`` has two important statements:
 
-1. ``sols = solve(eqs, silent=True)`` calls the blackbox solver; and
+1. ``sols = solve(eqs, verbose=False)`` calls the blackbox solver; and
 
 2. ``soldic = strsol2dict(sol)`` converts a solution string ``sol``
    into the dictionary ``soldic``.
@@ -185,7 +185,7 @@ session in an interactive Python shell:
    from math import sqrt
    h = sqrt(3)
    p = polynomials(2, 1, 1, h, 1)
-   sols = solve(p[3], silent=True)
+   sols = solve(p[3], verbose=False)
    print(sols[0])
 
 In what is printed, we recognize the first input circle:
@@ -228,7 +228,7 @@ as follows:
    from math import sqrt
    h = sqrt(3)
    p = polynomials(2.05, 1, 1.025, h+0.025, 1)
-   sols = solve(p[3], silent=True)
+   sols = solve(p[3], verbose=False)
    print(sols[0])
 
 What is printed defines the large perturbation of the unit circle:
