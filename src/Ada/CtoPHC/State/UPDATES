@@ -1,3 +1,6 @@
+Mon 16 Oct 2017 : fixed miscount in job number in use_c2phc.adb, in calling
+  use_celcon for the double double and quad double polyhedral homotopy.
+
 Sat 23 Sep 2017 : added job for nonlinear reduction to use_reduction and to
   use_c2phc.  Fixed error message in exception handler in use_reduction.adb.
 
