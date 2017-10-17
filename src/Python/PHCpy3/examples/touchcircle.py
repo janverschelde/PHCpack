@@ -28,7 +28,7 @@ def special_solutions(pols, slope):
     for pol in pols:
         rpl = pol.replace('s', '(' + str(slope) + ')')
         special.append(rpl)
-    sols = solve(special, silent=True)
+    sols = solve(special, verbose=False)
     result = []
     for sol in sols:
         (vars, vals) = coordinates(sol)
@@ -50,7 +50,7 @@ def make_witness_set(pols, verbose=True):
         print('the embedded system :')
         for pol in embpols:
             print(pol)
-    embsols = solve(embpols, silent=not verbose)
+    embsols = solve(embpols, verbose=verbose)
     if verbose:
         print('the witness points :')
         for sol in embsols:
@@ -188,7 +188,7 @@ def witset(pols, verbose=True):
         print('the embedded system :')
         for pol in embpols:
             print(pol)
-    embsols = solve(embpols, silent=not verbose)
+    embsols = solve(embpols, verbose=verbose)
     if verbose:
         print('the witness points :')
         for sol in embsols:
@@ -211,7 +211,7 @@ def intersect(dim, w1d, w2d, ws1, ws2):
     Applies the diagonal homotopy to intersect two witness sets
     w1 and w2 of dimensions w1d and w2d in a space of dimension dim.
     """
-    from phcpy.sets import diagonal_solver as diagsolve
+    from phcpy.diagonal import diagonal_solver as diagsolve
     w1eqs, w1sols = ws1
     w2eqs, w2sols = ws2
     nw1eq0 = insert_symbols(w1eqs[0])
