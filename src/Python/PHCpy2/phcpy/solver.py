@@ -239,6 +239,9 @@ def solve(pols, verbose=True, tasks=0, precision='d', checkin=True):
         errmsg = 'The blackbox solver accepts only square systems,'
         if not solve_checkin(pols, errmsg):
             return None
+        if tasks < 0:
+            print 'The number of tasks must be a nonnegative integer.'
+            return None
     if(precision == 'd'):
         return standard_solve(pols, verbose, tasks)
     elif(precision == 'dd'):

@@ -8,7 +8,8 @@ Tue 17 Oct 2017 : fixed verbose option in appolonius.py files.
   deprecated option silent of the blackbox solver.
   Fixed the documentation apollonius.rst, touchcircle.rst, and
   tangents4spheres.rst for the deprecated silent option and the
-  diagonal module.
+  diagonal module.  With the checkin option of the blackbox solver,
+  the number of tasks is checked for being nonnegative.
 
 Mon 16 Oct 2017 : fixed bug in random_coefficient_system() by clearing the
   systems container for a subsequent mixed volume computation.
