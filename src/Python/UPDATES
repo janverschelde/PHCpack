@@ -1,5 +1,6 @@
 Mon 16 Oct 2017 : fixed bug in random_coefficient_system() by clearing the
   systems container for a subsequent mixed volume computation.
+  Applied the same changes also to the python3 version.
 
 Thu 28 Sep 2017 : prepared version 0.7.5 of phcpy.
 
