@@ -1,4 +1,6 @@
 Tue 17 Oct 2017 : fixed verbose option in appolonius.py files.
+  In the __init__.py, added the import of the modules, so dir(phcpy)
+  shows the modules and phcpy.solver.solve can be used directly.
 
 Mon 16 Oct 2017 : fixed bug in random_coefficient_system() by clearing the
   systems container for a subsequent mixed volume computation.
