@@ -1,3 +1,6 @@
+Mon 16 Oct 2017 : fixed bug in random_coefficient_system() by clearing the
+  systems container for a subsequent mixed volume computation.
+
 Thu 28 Sep 2017 : prepared version 0.7.5 of phcpy.
 
 Sun 24 Sep 2017 : added a short paragraph about nonlinear reduction in the

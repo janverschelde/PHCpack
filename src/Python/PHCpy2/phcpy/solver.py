@@ -670,9 +670,10 @@ def standard_random_coefficient_system(verbose=True):
     from phcpy.phcpy2c2 import py2c_celcon_track_standard_solution_path
     from phcpy.phcpy2c2 \
         import py2c_celcon_copy_target_standard_solution_to_container
+    from phcpy.phcpy2c2 import py2c_syscon_clear_standard_system
+    from phcpy.interface import load_standard_system, load_standard_solutions
     py2c_celcon_standard_random_coefficient_system()
     py2c_celcon_copy_into_standard_systems_container()
-    from phcpy.interface import load_standard_system, load_standard_solutions
     # py2c_syscon_write_system()
     result = load_standard_system()
     # print result
@@ -691,6 +692,7 @@ def standard_random_coefficient_system(verbose=True):
     sols = load_standard_solutions()
     # print sols
     # newton_step(result, sols)
+    py2c_syscon_clear_standard_system()
     return (result, sols)
 
 def dobldobl_random_coefficient_system(verbose=True):
@@ -709,6 +711,7 @@ def dobldobl_random_coefficient_system(verbose=True):
     from phcpy.phcpy2c2 import py2c_celcon_track_dobldobl_solution_path
     from phcpy.phcpy2c2 \
         import py2c_celcon_copy_target_dobldobl_solution_to_container
+    from phcpy.phcpy2c2 import py2c_syscon_clear_dobldobl_system
     from phcpy.interface import load_dobldobl_system, load_dobldobl_solutions
     py2c_celcon_dobldobl_random_coefficient_system()
     py2c_celcon_copy_into_dobldobl_systems_container()
@@ -730,6 +733,7 @@ def dobldobl_random_coefficient_system(verbose=True):
     sols = load_dobldobl_solutions()
     # print sols
     # newton_step(result, sols)
+    py2c_syscon_clear_dobldobl_system()
     return (result, sols)
 
 def quaddobl_random_coefficient_system(verbose=True):
@@ -748,6 +752,7 @@ def quaddobl_random_coefficient_system(verbose=True):
     from phcpy.phcpy2c2 import py2c_celcon_track_quaddobl_solution_path
     from phcpy.phcpy2c2 \
         import py2c_celcon_copy_target_quaddobl_solution_to_container
+    from phcpy.phcpy2c2 import py2c_syscon_clear_quaddobl_system
     from phcpy.interface import load_quaddobl_system, load_quaddobl_solutions
     py2c_celcon_quaddobl_random_coefficient_system()
     py2c_celcon_copy_into_quaddobl_systems_container()
@@ -769,6 +774,7 @@ def quaddobl_random_coefficient_system(verbose=True):
     sols = load_quaddobl_solutions()
     # print sols
     # newton_step(result, sols)
+    py2c_syscon_clear_quaddobl_system()
     return (result, sols)
 
 def random_coefficient_system(verbose=True, precision='d'):
