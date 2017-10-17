@@ -1,5 +1,5 @@
 """
-The circle problem of Appolonius has the following input/output specification:
+The circle problem of Apollonius has the following input/output specification:
 Given three circles, find all circles that are tangent to the given circles.
 Without loss of generality, we take the first circle to be the unit circle,
 centered at (0, 0) and with radius 1.  The origin of the second circle lies
@@ -18,7 +18,7 @@ With matplotlib, the given circles and the solutions are plotted.
 """
 def polynomials(c2x, r2, c3x, c3y, r3):
     """
-    On input are the five parameters of the circle problem of Appolonius:
+    On input are the five parameters of the circle problem of Apollonius:
     c2x : the x-coordinate of the center of the second circle,
     r2 : the radius of the second circle,
     c3x : the x-coordinate of the center of the third circle,
@@ -61,7 +61,7 @@ def solve4circles(syst, verbose=True):
             print 'solving system', eqscnt, ':'
             for pol in eqs:
                 print pol
-        sols = solve(eqs, silent=True)
+        sols = solve(eqs, verbose=False)
         if verbose:
             print 'system', eqscnt, 'has', len(sols), 'solutions'
         for sol in sols:
@@ -183,13 +183,13 @@ def solve_perturbed_problem():
 def main():
     """
     Solves a general and a special instance of the circle problem
-    of Appolonius.
+    of Apollonius.
     """
-    print 'solving a general instance of the Appolonius circle problem'
+    print 'solving a general instance of the Apollonius circle problem'
     solve_general_problem()
-    print 'solving a special instance of the Appolonius circle problem'
+    print 'solving a special instance of the Apollonius circle problem'
     solve_special_problem()
-    print 'solving a perturbed instance of the Appolonius circle problem'
+    print 'solving a perturbed instance of the Apollonius circle problem'
     solve_perturbed_problem()
 
 if __name__=="__main__":
