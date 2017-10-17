@@ -121,6 +121,9 @@ def cite():
 try:
     from phcpy2c2 import py2c_PHCpack_version_string
     print py2c_PHCpack_version_string() + ' works!'
+    from phcpy import solver, solutions, interface, trackers, sweepers, tuning
+    from phcpy import sets, cascades, factor, diagonal, schubert
+    from phcpy import polytopes, tropisms, maps, series, examples, families
 except:
     print 'Is the phcpy2c2.so not suited for this platform?'
 
