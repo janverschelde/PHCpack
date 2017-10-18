@@ -10,6 +10,7 @@ Tue 17 Oct 2017 : fixed verbose option in appolonius.py files.
   tangents4spheres.rst for the deprecated silent option and the
   diagonal module.  With the checkin option of the blackbox solver,
   the number of tasks is checked for being nonnegative.
+  Prepared the __init__.py, conf.py, and setup.py for phcpy 0.7.6.
 
 Mon 16 Oct 2017 : fixed bug in random_coefficient_system() by clearing the
   systems container for a subsequent mixed volume computation.

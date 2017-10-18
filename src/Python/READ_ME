@@ -1,4 +1,4 @@
-phcpy 0.7.5 offers a simple Python interface to PHCv2.4.46
+phcpy 0.7.6 offers a simple Python interface to PHCv2.4.47
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -64,6 +64,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.7.6 : 2017-10-17 : bug fixes and other improvements
 0.7.5 : 2017-09-28 : reduction of systems added to the solver module
 0.7.4 : 2017-09-12 : phcpy prints the root counters output string
 0.7.3 : 2017-09-05 : code snippets in Jupyter notebook for SageMath kernel
