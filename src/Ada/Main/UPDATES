@@ -1,3 +1,5 @@
+Tue 17 Oct 2017 : adjusted greeting_banners for version 2.4.47.
+
 Sun 15 Oct 2017 : adjusted calls in compsolve.adb, compsolve2.adb, and
   compsolve4.adb for the factor option.
 
