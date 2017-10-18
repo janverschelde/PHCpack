@@ -39,6 +39,7 @@ with Path_Counts_Table;
 with Cascade_Homotopies;                 use Cascade_Homotopies;
 with Cascade_Homotopy_Filters;           use Cascade_Homotopy_Filters;
 with Monodromy_Homotopies;
+with Monodromy_Homotopies_io;
 
 package body Drivers_to_Cascade_Filtering is
 
@@ -481,10 +482,17 @@ package body Drivers_to_Cascade_Filtering is
           if factor then
             Monodromy_Homotopies.Witness_Factor
               (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+           -- Monodromy_Homotopies_io.Write_Decomposition
+           --   (standard_output,ep,gpts,deco);
+         -- else
+         --   Monodromy_Homotopies_io.Write_Components
+         --     (standard_output,ep,gpts,fc);
           end if;
         else
           Witness_Generate
             (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+         -- Monodromy_Homotopies_io.Write_Components
+         --   (standard_output,ep,gpts,pc);
         end if;
         Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
         if filter then

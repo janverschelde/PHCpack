@@ -1,3 +1,6 @@
+Tue 17 Oct 2017 : new package monodromy_homotopies_io to write the output
+  of phc -B.
+
 Sun 15 Oct 2017 : extended monodromy homotopies with versions for Laurent
   systems and for double double precision.  First complete versions for
   the procedures in monodromy_homotopies which do not write to file.
