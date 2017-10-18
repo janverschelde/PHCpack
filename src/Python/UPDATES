@@ -1,3 +1,6 @@
+Wed 18 Oct 2017 : in solutions.py, converted the value for t from a string
+  to a complex number.
+
 Tue 17 Oct 2017 : fixed verbose option in appolonius.py files.
   In the __init__.py, added the import of the modules, so dir(phcpy)
   shows the modules and phcpy.solver.solve can be used directly

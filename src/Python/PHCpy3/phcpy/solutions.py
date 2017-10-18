@@ -70,7 +70,7 @@ def endmultiplicity(sol):
     tstr = data[0]
     line = tstr.split('\n')
     tstr = line[0].split(':')
-    tval = tstr[1]
+    tval = str2complex(tstr[1])
     mstr = line[1].split(':')
     mval = literal_eval(mstr[1].lstrip())
     return (tval, mval)
