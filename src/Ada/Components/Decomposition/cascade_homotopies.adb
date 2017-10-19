@@ -15,9 +15,6 @@ with Write_Seed_Number;
 with Cascade_Homotopy_Steps;             use Cascade_Homotopy_Steps;
 with Cascade_Homotopies_io;              use Cascade_Homotopies_io;
 
-with Standard_Complex_Solutions_io;
- use Standard_Complex_Solutions_io;
-
 package body Cascade_Homotopies is
 
   procedure Witness_Generate
@@ -31,13 +28,18 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -50,7 +52,7 @@ package body Cascade_Homotopies is
     Write_Super_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -101,13 +103,18 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -120,7 +127,7 @@ package body Cascade_Homotopies is
     Write_Super_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -171,13 +178,18 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -190,7 +202,7 @@ package body Cascade_Homotopies is
     Write_Super_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -241,13 +253,18 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -260,7 +277,7 @@ package body Cascade_Homotopies is
     Write_Super_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -311,13 +328,18 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -330,7 +352,7 @@ package body Cascade_Homotopies is
     Write_Super_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -381,13 +403,18 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -400,7 +427,7 @@ package body Cascade_Homotopies is
     Write_Super_Witness_Points(resfile,sols0);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -456,11 +483,16 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -474,7 +506,7 @@ package body Cascade_Homotopies is
     Write_Witness_Superset(name,ep,esols0(integer32(topdim)),topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -525,15 +557,20 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the number of variables
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
     pocotime,alltime : duration;
 
   begin
-    times := (times'range => 0.0);
     tstart(timer);
+    times := (times'range => 0.0);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -545,7 +582,7 @@ package body Cascade_Homotopies is
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(topdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -597,15 +634,20 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
     pocotime,alltime : duration;
 
   begin
-    times := (times'range => 0.0);
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
+    times := (times'range => 0.0);
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -617,7 +659,7 @@ package body Cascade_Homotopies is
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -669,15 +711,20 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
     pocotime,alltime : duration;
 
   begin
-    times := (times'range => 0.0);
     tstart(timer);
+    times := (times'range => 0.0);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -689,7 +736,7 @@ package body Cascade_Homotopies is
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -741,15 +788,20 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
     pocotime,alltime : duration;
 
   begin
-    times := (times'range => 0.0);
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
+    times := (times'range => 0.0);
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -761,7 +813,7 @@ package body Cascade_Homotopies is
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -813,15 +865,20 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
     pocotime,alltime : duration;
 
   begin
-    times := (times'range => 0.0);
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
+    times := (times'range => 0.0);
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -833,7 +890,7 @@ package body Cascade_Homotopies is
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -885,7 +942,8 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
@@ -893,6 +951,10 @@ package body Cascade_Homotopies is
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -904,7 +966,7 @@ package body Cascade_Homotopies is
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,
@@ -959,11 +1021,16 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -976,7 +1043,7 @@ package body Cascade_Homotopies is
        Length_Of(sols1));
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
           (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
@@ -1009,11 +1076,16 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1026,7 +1098,7 @@ package body Cascade_Homotopies is
        Length_Of(sols1));
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
           (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
@@ -1059,11 +1131,16 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1076,7 +1153,7 @@ package body Cascade_Homotopies is
        Length_Of(sols1));
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
           (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
@@ -1109,11 +1186,16 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1126,7 +1208,7 @@ package body Cascade_Homotopies is
        Length_Of(sols1));
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
           (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
@@ -1159,11 +1241,16 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1176,7 +1263,7 @@ package body Cascade_Homotopies is
        Length_Of(sols1));
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
           (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
@@ -1209,11 +1296,16 @@ package body Cascade_Homotopies is
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
-    n : constant natural32 := natural32(ep'last)-topdim;
+    n : constant natural32 := natural32(ep'last)-topdim; -- #variables
+    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
+    if n <= topdim
+     then lowdim := 0;
+     else lowdim := n - topdim;
+    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1226,7 +1318,7 @@ package body Cascade_Homotopies is
        Length_Of(sols1));
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse 1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
           (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
