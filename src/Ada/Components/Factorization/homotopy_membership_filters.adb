@@ -603,7 +603,10 @@ package body Homotopy_Membership_Filters is
         cnt := (cnt'range => 0);
         cnt(0) := Standard_Complex_Solutions.Length_Of(pts(dim));
         for witdim in reverse dim+1..topdim loop
-          if not Standard_Complex_Solutions.Is_Null(pts(witdim)) then
+          idx := idx + 1;
+          if Standard_Complex_Solutions.Is_Null(pts(witdim)) then
+            cnt(idx) := cnt(idx-1); -- no witness set at witdim, no junk
+          else
             if not Standard_Complex_Solutions.Is_Null(pts(dim)) then
               if verbose then
                 put("Filtering junk at dimension "); put(dim,1);
@@ -618,7 +621,6 @@ package body Homotopy_Membership_Filters is
                 Standard_Complex_Solutions.Clear(mempts); -- members are junk
                 Standard_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
-                idx := idx + 1;
                 cnt(idx) := Standard_Complex_Solutions.Length_Of(pts(dim));
                 if verbose then
                   put("Junk removal : "); put(cnt(idx-1),1);
@@ -661,7 +663,10 @@ package body Homotopy_Membership_Filters is
         cnt := (cnt'range => 0);
         cnt(0) := Standard_Complex_Solutions.Length_Of(pts(dim));
         for witdim in reverse dim+1..topdim loop
-          if not Standard_Complex_Solutions.Is_Null(pts(witdim)) then
+          idx := idx + 1;
+          if Standard_Complex_Solutions.Is_Null(pts(witdim)) then
+            cnt(idx) := cnt(idx-1); -- no witness set at witdim, no junk
+          else
             if not Standard_Complex_Solutions.Is_Null(pts(dim)) then
               if verbose then
                 put("Filtering junk at dimension "); put(dim,1);
@@ -676,7 +681,6 @@ package body Homotopy_Membership_Filters is
                 Standard_Complex_Solutions.Clear(mempts); -- members are junk
                 Standard_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
-                idx := idx + 1;
                 cnt(idx) := Standard_Complex_Solutions.Length_Of(pts(dim));
                 if verbose then
                   put("Junk removal : "); put(cnt(idx-1),1);
@@ -719,7 +723,10 @@ package body Homotopy_Membership_Filters is
         cnt := (cnt'range => 0);
         cnt(0) := DoblDobl_Complex_Solutions.Length_Of(pts(dim));
         for witdim in reverse dim+1..topdim loop
-          if not DoblDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+          idx := idx + 1;
+          if DoblDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+            cnt(idx) := cnt(idx-1); -- no witness set at witdim, no junk
+          else
             if not DoblDobl_Complex_Solutions.Is_Null(pts(dim)) then
               if verbose then
                 put("Filtering junk at dimension "); put(dim,1);
@@ -734,7 +741,6 @@ package body Homotopy_Membership_Filters is
                 DoblDobl_Complex_Solutions.Clear(mempts); -- members are junk
                 DoblDobl_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
-                idx := idx + 1;
                 cnt(idx) := DoblDobl_Complex_Solutions.Length_Of(pts(dim));
                 if verbose then
                   put("Junk removal : "); put(cnt(idx-1),1);
@@ -777,7 +783,10 @@ package body Homotopy_Membership_Filters is
         cnt := (cnt'range => 0);
         cnt(0) := DoblDobl_Complex_Solutions.Length_Of(pts(dim));
         for witdim in reverse dim+1..topdim loop
-          if not DoblDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+          idx := idx + 1;
+          if DoblDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+            cnt(idx) := cnt(idx-1); -- no witness set at witdim, no junk
+          else
             if not DoblDobl_Complex_Solutions.Is_Null(pts(dim)) then
               if verbose then
                 put("Filtering junk at dimension "); put(dim,1);
@@ -792,7 +801,6 @@ package body Homotopy_Membership_Filters is
                 DoblDobl_Complex_Solutions.Clear(mempts); -- members are junk
                 DoblDobl_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
-                idx := idx + 1;
                 cnt(idx) := DoblDobl_Complex_Solutions.Length_Of(pts(dim));
                 if verbose then
                   put("Junk removal : "); put(cnt(idx-1),1);
@@ -835,7 +843,10 @@ package body Homotopy_Membership_Filters is
         cnt := (cnt'range => 0);
         cnt(0) := QuadDobl_Complex_Solutions.Length_Of(pts(dim));
         for witdim in reverse dim+1..topdim loop
-          if not QuadDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+          idx := idx + 1;
+          if QuadDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+            cnt(idx) := cnt(idx-1); -- no witness set at witdim, no junk
+          else
             if not QuadDobl_Complex_Solutions.Is_Null(pts(dim)) then
               if verbose then
                 put("Filtering junk at dimension "); put(dim,1);
@@ -850,7 +861,6 @@ package body Homotopy_Membership_Filters is
                 QuadDobl_Complex_Solutions.Clear(mempts); -- members are junk
                 QuadDobl_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
-                idx := idx + 1;
                 cnt(idx) := QuadDobl_Complex_Solutions.Length_Of(pts(dim));
                 if verbose then
                   put("Junk removal : "); put(cnt(idx-1),1);
@@ -893,7 +903,10 @@ package body Homotopy_Membership_Filters is
         cnt := (cnt'range => 0);
         cnt(0) := QuadDobl_Complex_Solutions.Length_Of(pts(dim));
         for witdim in reverse dim+1..topdim loop
-          if not QuadDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+          idx := idx + 1;
+          if QuadDobl_Complex_Solutions.Is_Null(pts(witdim)) then
+            cnt(idx) := cnt(idx-1); -- no witness set at witdim, no junk
+          else
             if not QuadDobl_Complex_Solutions.Is_Null(pts(dim)) then
               if verbose then
                 put("Filtering junk at dimension "); put(dim,1);
@@ -908,7 +921,6 @@ package body Homotopy_Membership_Filters is
                 QuadDobl_Complex_Solutions.Clear(mempts); -- members are junk
                 QuadDobl_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
-                idx := idx + 1;
                 cnt(idx) := QuadDobl_Complex_Solutions.Length_Of(pts(dim));
                 if verbose then
                   put("Junk removal : "); put(cnt(idx-1),1);
