@@ -436,8 +436,14 @@ package body Drivers_to_Cascade_Filtering is
       put("Give the expected top dimension : ");
       Numbers_io.Read_Natural(topdim);
       exit when (topdim < nv) and (topdim >= lowdim); -- check bounds
-      put_line
-        ("The top dimension cannot be larger than the number of variables.");
+      if topdim >= nv then
+        put("Error: The top dimension cannot be larger than ");
+        put(nv-1,1); put_line(".");
+      end if;
+      if topdim < lowdim then
+        put("Error: The top dimension should be at least "); 
+        put(lowdim,1); put_line(".");
+      end if;
       put("Please enter a number between "); put(lowdim,1);
       put(" and "); put(nv-1,1); put_line(".");
       put("The suggested default top dimension is ");
