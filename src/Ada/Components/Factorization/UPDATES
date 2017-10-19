@@ -1,6 +1,7 @@
 Thu 19 Oct 2017 : added the parameter on the maximum number of loops to
   monodromy_component_breakup, which changed drivers_to_factor_components.adb,
-  monodromy_homotopies.adb, and ts_newfac.adb.
+  monodromy_homotopies.adb, and ts_newfac.adb.  No generic points at a level
+  implies no witness_factor at that level, fixed monodromy_homotopies.adb.
 
 Tue 17 Oct 2017 : new package monodromy_homotopies_io to write the output
   of phc -B.

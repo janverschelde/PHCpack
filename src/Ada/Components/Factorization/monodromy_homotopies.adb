@@ -160,9 +160,11 @@ package body Monodromy_Homotopies is
     tstart(total_timer);
     for k in reverse 1..topdim loop
       tstart(level_timer);
-      Witness_Factor
-        (verbose,eqs(integer32(k)).all,pts(integer32(k)),
-         k,nbl,tol,f(integer32(k)));
+      if not Standard_Complex_Solutions.Is_Null(pts(integer32(k))) then
+        Witness_Factor
+          (verbose,eqs(integer32(k)).all,pts(integer32(k)),
+           k,nbl,tol,f(integer32(k)));
+      end if;
       tstop(level_timer);
       times(integer(k)) := Elapsed_User_Time(level_timer);
     end loop;
@@ -184,9 +186,11 @@ package body Monodromy_Homotopies is
     tstart(total_timer);
     for k in reverse 1..topdim loop
       tstart(level_timer);
-      Witness_Factor
-        (verbose,eqs(integer32(k)).all,pts(integer32(k)),
-         k,nbl,tol,f(integer32(k)));
+      if not Standard_Complex_Solutions.Is_Null(pts(integer32(k))) then
+        Witness_Factor
+          (verbose,eqs(integer32(k)).all,pts(integer32(k)),
+           k,nbl,tol,f(integer32(k)));
+      end if;
       tstop(level_timer);
       times(integer(k)) := Elapsed_User_Time(level_timer);
     end loop;
@@ -208,9 +212,11 @@ package body Monodromy_Homotopies is
     tstart(total_timer);
     for k in reverse 1..topdim loop
       tstart(level_timer);
-      Witness_Factor
-        (verbose,eqs(integer32(k)).all,pts(integer32(k)),
-         k,nbl,tol,f(integer32(k)));
+      if not DoblDobl_Complex_Solutions.Is_Null(pts(integer32(k))) then
+        Witness_Factor
+          (verbose,eqs(integer32(k)).all,pts(integer32(k)),
+           k,nbl,tol,f(integer32(k)));
+      end if;
       tstop(level_timer);
       times(integer(k)) := Elapsed_User_Time(level_timer);
     end loop;
@@ -232,9 +238,11 @@ package body Monodromy_Homotopies is
     tstart(total_timer);
     for k in reverse 1..topdim loop
       tstart(level_timer);
-      Witness_Factor
-        (verbose,eqs(integer32(k)).all,pts(integer32(k)),
-         k,nbl,tol,f(integer32(k)));
+      if not DoblDobl_Complex_Solutions.Is_Null(pts(integer32(k))) then
+        Witness_Factor
+          (verbose,eqs(integer32(k)).all,pts(integer32(k)),
+           k,nbl,tol,f(integer32(k)));
+      end if;
       tstop(level_timer);
       times(integer(k)) := Elapsed_User_Time(level_timer);
     end loop;
@@ -256,9 +264,11 @@ package body Monodromy_Homotopies is
     tstart(total_timer);
     for k in reverse 1..topdim loop
       tstart(level_timer);
-      Witness_Factor
-        (verbose,eqs(integer32(k)).all,pts(integer32(k)),
-         k,nbl,tol,f(integer32(k)));
+      if not QuadDobl_Complex_Solutions.Is_Null(pts(integer32(k))) then
+        Witness_Factor
+          (verbose,eqs(integer32(k)).all,pts(integer32(k)),
+           k,nbl,tol,f(integer32(k)));
+      end if;
       tstop(level_timer);
       times(integer(k)) := Elapsed_User_Time(level_timer);
     end loop;
@@ -280,9 +290,11 @@ package body Monodromy_Homotopies is
     tstart(total_timer);
     for k in reverse 1..topdim loop
       tstart(level_timer);
-      Witness_Factor
-        (verbose,eqs(integer32(k)).all,pts(integer32(k)),
-         k,nbl,tol,f(integer32(k)));
+      if not QuadDobl_Complex_Solutions.Is_Null(pts(integer32(k))) then
+        Witness_Factor
+          (verbose,eqs(integer32(k)).all,pts(integer32(k)),
+           k,nbl,tol,f(integer32(k)));
+      end if;
       tstop(level_timer);
       times(integer(k)) := Elapsed_User_Time(level_timer);
     end loop;
