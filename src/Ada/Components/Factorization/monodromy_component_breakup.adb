@@ -1279,29 +1279,27 @@ package body Monodromy_Component_Breakup is
 -- DRIVER ROUTINES :
 
   procedure Factor ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
     use_laurent := false;
-    f := Init_Factors(d);
-    Monodromy_Breakup(grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(grid,dim,nbl,tol,fac);
   end Factor;
 
   procedure Factor ( file : in file_type;
                      p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     timer : Timing_Widget;
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
@@ -1310,8 +1308,8 @@ package body Monodromy_Component_Breakup is
     put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
     new_line(file);
     tstart(timer);
-    f := Init_Factors(d);
-    Monodromy_Breakup(file,grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(file,grid,dim,nbl,tol,fac);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Monodromy Factorization");
@@ -1319,29 +1317,27 @@ package body Monodromy_Component_Breakup is
   end Factor;
 
   procedure Factor ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_DoblDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
     use_laurent := false;
-    f := Init_Factors(d);
-    Monodromy_Breakup(grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(grid,dim,nbl,tol,fac);
   end Factor;
 
   procedure Factor ( file : in file_type;
                      p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_DoblDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     timer : Timing_Widget;
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
@@ -1350,8 +1346,8 @@ package body Monodromy_Component_Breakup is
     put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
     new_line(file);
     tstart(timer);
-    f := Init_Factors(d);
-    Monodromy_Breakup(file,grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(file,grid,dim,nbl,tol,fac);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Monodromy Factorization");
@@ -1359,29 +1355,27 @@ package body Monodromy_Component_Breakup is
   end Factor;
 
   procedure Factor ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_QuadDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
     use_laurent := false;
-    f := Init_Factors(d);
-    Monodromy_Breakup(grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(grid,dim,nbl,tol,fac);
   end Factor;
 
   procedure Factor ( file : in file_type;
                      p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_QuadDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     timer : Timing_Widget;
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
@@ -1390,8 +1384,8 @@ package body Monodromy_Component_Breakup is
     put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
     new_line(file);
     tstart(timer);
-    f := Init_Factors(d);
-    Monodromy_Breakup(file,grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(file,grid,dim,nbl,tol,fac);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Monodromy Factorization");
@@ -1399,29 +1393,27 @@ package body Monodromy_Component_Breakup is
   end Factor;
 
   procedure Factor ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
     use_laurent := true;
-    f := Init_Factors(d);
-    Monodromy_Breakup(grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(grid,dim,nbl,tol,fac);
   end Factor;
 
   procedure Factor ( file : in file_type;
                      p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     timer : Timing_Widget;
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
@@ -1430,8 +1422,8 @@ package body Monodromy_Component_Breakup is
     put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
     new_line(file);
     tstart(timer);
-    f := Init_Factors(d);
-    Monodromy_Breakup(file,grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(file,grid,dim,nbl,tol,fac);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Monodromy Factorization");
@@ -1439,29 +1431,27 @@ package body Monodromy_Component_Breakup is
   end Factor;
 
   procedure Factor ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_DoblDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
     use_laurent := true;
-    f := Init_Factors(d);
-    Monodromy_Breakup(grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(grid,dim,nbl,tol,fac);
   end Factor;
 
   procedure Factor ( file : in file_type;
                      p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_DoblDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     timer : Timing_Widget;
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
@@ -1470,8 +1460,8 @@ package body Monodromy_Component_Breakup is
     put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
     new_line(file);
     tstart(timer);
-    f := Init_Factors(d);
-    Monodromy_Breakup(file,grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(file,grid,dim,nbl,tol,fac);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Monodromy Factorization");
@@ -1479,29 +1469,27 @@ package body Monodromy_Component_Breakup is
   end Factor;
 
   procedure Factor ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_QuadDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
     use_laurent := true;
-    f := Init_Factors(d);
-    Monodromy_Breakup(grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(grid,dim,nbl,tol,fac);
   end Factor;
 
   procedure Factor ( file : in file_type;
                      p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_QuadDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     timer : Timing_Widget;
-    d : constant natural32 := Length_Of(grid(grid'first));
-    t : constant natural32 := 10;
+    deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
 
   begin
@@ -1510,8 +1498,8 @@ package body Monodromy_Component_Breakup is
     put_line(file,"MONODROMY GROUP BREAKS UP INTO IRREDUCIBLE COMPONENTS");
     new_line(file);
     tstart(timer);
-    f := Init_Factors(d);
-    Monodromy_Breakup(file,grid,dim,t,tol,f);
+    fac := Init_Factors(deg);
+    Monodromy_Breakup(file,grid,dim,nbl,tol,fac);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Monodromy Factorization");

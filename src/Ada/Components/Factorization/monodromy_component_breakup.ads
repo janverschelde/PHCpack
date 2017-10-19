@@ -276,34 +276,34 @@ package Monodromy_Component_Breakup is
 -- DRIVER ROUTINES :
 
   procedure Factor ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
   procedure Factor ( file : in file_type;
                      p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
 
   procedure Factor ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_DoblDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
   procedure Factor ( file : in file_type;
                      p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_DoblDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
 
   procedure Factor ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_QuadDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
   procedure Factor ( file : in file_type;
                      p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_QuadDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
   --   Applies monodromy loops to factor a pure dimensional solution set
@@ -316,40 +316,41 @@ package Monodromy_Component_Breakup is
   --   file          for intermediate output and diagnostics;
   --   p             embedded polynomial system;
   --   dim           dimension of the solution set;
+  --   nbl           threshold on the maximum number of loops;
   --   grid          grid for the linear traces.
 
   -- ON RETURN :
-  --   f             irreducible decomposition of witness point set.
+  --   fac           irreducible decomposition of witness point set.
 
   procedure Factor ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
   procedure Factor ( file : in file_type;
                      p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
 
   procedure Factor ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_DoblDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
   procedure Factor ( file : in file_type;
                      p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_DoblDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
 
   procedure Factor ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_QuadDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
   procedure Factor ( file : in file_type;
                      p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim : in natural32;
+                     dim,nbl : in natural32;
                      grid : in Array_of_QuadDobl_Sample_Lists;
-                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+                     fac : out Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
   --   Applies monodromy loops to factor a pure dimensional solution set
@@ -363,9 +364,10 @@ package Monodromy_Component_Breakup is
   --   file          for intermediate output and diagnostics;
   --   p             embedded polynomial system;
   --   dim           dimension of the solution set;
+  --   nbl           threshold on the maximum number of loops;
   --   grid          grid for the linear traces.
 
   -- ON RETURN :
-  --   f             irreducible decomposition of witness point set.
+  --   fac           irreducible decomposition of witness point set.
 
 end Monodromy_Component_Breakup;

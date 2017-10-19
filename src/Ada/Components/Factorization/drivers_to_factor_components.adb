@@ -210,6 +210,7 @@ package body Drivers_to_Factor_Components is
                 dim : in natural32;
                 f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
+    nbl : constant natural32 := 20;
     grid : Array_of_Standard_Sample_Lists(0..2);
 
   begin
@@ -222,7 +223,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,grid,f);
+    Factor(file,p,dim,nbl,grid,f);
     Sampling_Machine.Clear;
   end Call_Monodromy_Breakup;
 
@@ -233,6 +234,7 @@ package body Drivers_to_Factor_Components is
                 dim : in natural32;
                 f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
+    nbl : constant natural32 := 20;
     grid : Array_of_DoblDobl_Sample_Lists(0..2);
 
   begin
@@ -245,7 +247,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,grid,f);
+    Factor(file,p,dim,nbl,grid,f);
     DoblDobl_Sampling_Machine.Clear;
   end Call_Monodromy_Breakup;
 
@@ -256,6 +258,7 @@ package body Drivers_to_Factor_Components is
                 dim : in natural32;
                 f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
+    nbl : constant natural32 := 20;
     grid : Array_of_QuadDobl_Sample_Lists(0..2);
 
   begin
@@ -268,7 +271,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,grid,f);
+    Factor(file,p,dim,nbl,grid,f);
     QuadDobl_Sampling_Machine.Clear;
   end Call_Monodromy_Breakup;
 
@@ -279,6 +282,7 @@ package body Drivers_to_Factor_Components is
                 dim : in natural32;
                 f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
+    nbl : constant natural32 := 20;
     grid : Array_of_Standard_Sample_Lists(0..2);
 
   begin
@@ -291,7 +295,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,grid,f);
+    Factor(file,p,dim,nbl,grid,f);
     Sampling_Laurent_Machine.Clear;
   end Call_Monodromy_Breakup;
 
@@ -302,6 +306,7 @@ package body Drivers_to_Factor_Components is
                 dim : in natural32;
                 f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
+    nbl : constant natural32 := 20;
     grid : Array_of_DoblDobl_Sample_Lists(0..2);
 
   begin
@@ -314,7 +319,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,grid,f);
+    Factor(file,p,dim,nbl,grid,f);
     DoblDobl_Sampling_Laurent_Machine.Clear;
   end Call_Monodromy_Breakup;
 
@@ -326,6 +331,7 @@ package body Drivers_to_Factor_Components is
                 f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     grid : Array_of_QuadDobl_Sample_Lists(0..2);
+    nbl : constant natural32 := 20;
 
   begin
     QuadDobl_Sampling_Laurent_Machine.Initialize(p);
@@ -337,7 +343,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,grid,f);
+    Factor(file,p,dim,nbl,grid,f);
     QuadDobl_Sampling_Laurent_Machine.Clear;
   end Call_Monodromy_Breakup;
 

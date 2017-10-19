@@ -43,6 +43,7 @@ procedure ts_newfac is
     lp : Link_to_Poly_Sys;
     sols : Solution_List;
     dim : natural32;
+    nbl : constant natural32 := 20;
     ans : character;
     grid : Array_of_Standard_Sample_Lists(0..2);
     f : Standard_Natural_VecVecs.Link_to_VecVec;
@@ -63,7 +64,7 @@ procedure ts_newfac is
       Sampling_Machine.Default_Tune_Sampler(0);
       Sampling_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,grid,f);
+      Factor(file,lp.all,dim,nbl,grid,f);
       Sampling_Machine.Clear;
     else
       new_line;
@@ -71,7 +72,7 @@ procedure ts_newfac is
       Sampling_Machine.Default_Tune_Sampler(0);
       Sampling_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,grid,f);
+      Factor(lp.all,dim,nbl,grid,f);
       Sampling_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
@@ -91,6 +92,7 @@ procedure ts_newfac is
     lp : Link_to_Laur_Sys;
     sols : Solution_List;
     dim : natural32;
+    nbl : constant natural32 := 20;
     ans : character;
     grid : Array_of_Standard_Sample_Lists(0..2);
     f : Standard_Natural_VecVecs.Link_to_VecVec;
@@ -111,7 +113,7 @@ procedure ts_newfac is
       Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,grid,f);
+      Factor(file,lp.all,dim,nbl,grid,f);
       Sampling_Laurent_Machine.Clear;
     else
       new_line;
@@ -119,7 +121,7 @@ procedure ts_newfac is
       Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,grid,f);
+      Factor(lp.all,dim,nbl,grid,f);
       Sampling_Laurent_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
@@ -139,6 +141,7 @@ procedure ts_newfac is
     lp : Link_to_Poly_Sys;
     sols : Solution_List;
     dim : natural32;
+    nbl : constant natural32 := 20;
     ans : character;
     grid : Array_of_DoblDobl_Sample_Lists(0..2);
     f : Standard_Natural_VecVecs.Link_to_VecVec;
@@ -159,7 +162,7 @@ procedure ts_newfac is
       DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
       DoblDobl_Sampling_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,grid,f);
+      Factor(file,lp.all,dim,nbl,grid,f);
       DoblDobl_Sampling_Machine.Clear;
     else
       new_line;
@@ -167,7 +170,7 @@ procedure ts_newfac is
       DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
       DoblDobl_Sampling_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,grid,f);
+      Factor(lp.all,dim,nbl,grid,f);
       DoblDobl_Sampling_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
@@ -187,6 +190,7 @@ procedure ts_newfac is
     lp : Link_to_Laur_Sys;
     sols : Solution_List;
     dim : natural32;
+    nbl : constant natural32 := 20;
     ans : character;
     grid : Array_of_DoblDobl_Sample_Lists(0..2);
     f : Standard_Natural_VecVecs.Link_to_VecVec;
@@ -207,7 +211,7 @@ procedure ts_newfac is
       DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,grid,f);
+      Factor(file,lp.all,dim,nbl,grid,f);
       DoblDobl_Sampling_Laurent_Machine.Clear;
     else
       new_line;
@@ -215,7 +219,7 @@ procedure ts_newfac is
       DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,grid,f);
+      Factor(lp.all,dim,nbl,grid,f);
       DoblDobl_Sampling_Laurent_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
@@ -235,6 +239,7 @@ procedure ts_newfac is
     lp : Link_to_Poly_Sys;
     sols : Solution_List;
     dim : natural32;
+    nbl : constant natural32 := 20;
     ans : character;
     grid : Array_of_QuadDobl_Sample_Lists(0..2);
     f : Standard_Natural_VecVecs.Link_to_VecVec;
@@ -255,7 +260,7 @@ procedure ts_newfac is
       QuadDobl_Sampling_Machine.Default_Tune_Sampler(0);
       QuadDobl_Sampling_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,grid,f);
+      Factor(file,lp.all,dim,nbl,grid,f);
       QuadDobl_Sampling_Machine.Clear;
     else
       new_line;
@@ -263,7 +268,7 @@ procedure ts_newfac is
       QuadDobl_Sampling_Machine.Default_Tune_Sampler(0);
       QuadDobl_Sampling_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,grid,f);
+      Factor(lp.all,dim,nbl,grid,f);
       QuadDobl_Sampling_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
@@ -283,6 +288,7 @@ procedure ts_newfac is
     lp : Link_to_Laur_Sys;
     sols : Solution_List;
     dim : natural32;
+    nbl : constant natural32 := 20;
     ans : character;
     grid : Array_of_QuadDobl_Sample_Lists(0..2);
     f : Standard_Natural_VecVecs.Link_to_VecVec;
@@ -303,7 +309,7 @@ procedure ts_newfac is
       QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,grid,f);
+      Factor(file,lp.all,dim,nbl,grid,f);
       QuadDobl_Sampling_Laurent_Machine.Clear;
     else
       new_line;
@@ -311,7 +317,7 @@ procedure ts_newfac is
       QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,grid,f);
+      Factor(lp.all,dim,nbl,grid,f);
       QuadDobl_Sampling_Laurent_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
