@@ -472,7 +472,6 @@ package body Drivers_to_Cascade_Filtering is
   begin
     Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
-    new_line;
     if nt = 0 then
       tstart(timer);
       Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
@@ -483,8 +482,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    put_line("THE ROOT COUNTS :");
-    new_line; put_line(rocos.all);
+    if rocos /= null then -- the system could be linear ...
+      new_line;
+      put_line("THE ROOT COUNTS :");
+      new_line; put_line(rocos.all);
+    end if;
     topsoltime := Elapsed_User_Time(timer);
     new_line;
     put("The CPU time for the solver : ");
@@ -566,7 +568,6 @@ package body Drivers_to_Cascade_Filtering is
   begin
     Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
-    new_line;
     if nt = 0 then
       tstart(timer);
       Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
@@ -577,8 +578,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    put_line("THE ROOT COUNTS :");
-    new_line; put_line(rocos.all);
+    if rocos /= null then -- the system could be linear ...
+      new_line;
+      put_line("THE ROOT COUNTS :");
+      new_line; put_line(rocos.all);
+    end if;
     topsoltime := Elapsed_User_Time(timer);
     new_line;
     put("The CPU time for the solver : ");
@@ -653,7 +657,6 @@ package body Drivers_to_Cascade_Filtering is
   begin
     Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
-    new_line;
     if nt = 0 then
       tstart(timer);
       Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
@@ -664,8 +667,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    put_line("THE ROOT COUNTS :");
-    new_line; put_line(rocos.all);
+    if rocos /= null then -- the system could be linear
+      new_line;
+      put_line("THE ROOT COUNTS :");
+      new_line; put_line(rocos.all);
+    end if;
     topsoltime := Elapsed_User_Time(timer);
     new_line;
     put("The CPU time for the solver : ");
@@ -740,7 +746,6 @@ package body Drivers_to_Cascade_Filtering is
   begin
     Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
-    new_line;
     if nt = 0 then
       tstart(timer);
       Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
@@ -751,8 +756,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    put_line("THE ROOT COUNTS :");
-    new_line; put_line(rocos.all);
+    if rocos /= null then -- the system could be linear ...
+      new_line;
+      put_line("THE ROOT COUNTS :");
+      new_line; put_line(rocos.all);
+    end if;
     topsoltime := Elapsed_User_Time(timer);
     new_line;
     put("The CPU time for the solver : ");
@@ -827,7 +835,6 @@ package body Drivers_to_Cascade_Filtering is
   begin
     Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
-    new_line;
     if nt = 0 then
       tstart(timer);
       Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
@@ -838,8 +845,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    put_line("THE ROOT COUNTS :");
-    new_line; put_line(rocos.all);
+    if rocos /= null then -- the system could be linear ...
+      new_line;
+      put_line("THE ROOT COUNTS :");
+      new_line; put_line(rocos.all);
+    end if;
     topsoltime := Elapsed_User_Time(timer);
     new_line;
     put("The CPU time for the solver : ");
@@ -914,7 +924,6 @@ package body Drivers_to_Cascade_Filtering is
   begin
     Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
-    new_line;
     if nt = 0 then
       tstart(timer);
       Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
@@ -925,8 +934,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    put_line("THE ROOT COUNTS :");
-    new_line; put_line(rocos.all);
+    if rocos /= null then
+      new_line;
+      put_line("THE ROOT COUNTS :");
+      new_line; put_line(rocos.all);
+    end if;
     topsoltime := Elapsed_User_Time(timer);
     new_line;
     put("The CPU time for the solver : ");
