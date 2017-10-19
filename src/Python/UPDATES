@@ -1,5 +1,5 @@
 Wed 18 Oct 2017 : in solutions.py, converted the value for t from a string
-  to a complex number.
+  to a complex number.  In solver.py, provided a checkin for mixed_volume.
 
 Tue 17 Oct 2017 : fixed verbose option in appolonius.py files.
   In the __init__.py, added the import of the modules, so dir(phcpy)

@@ -215,7 +215,7 @@ def solve_checkin(pols, msg):
         dim = number_of_symbols(pols)
         neq = len(pols)
         print 'got %d polynomials in %d variables.' % (neq, dim)
-        print 'Either correct the input, or use the module sets'
+        print 'Either correct the input, or use phcpy.factor.solve'
         print 'to solve polynomial systems that are not square.'
 
 def solve(pols, verbose=True, tasks=0, precision='d', checkin=True):
@@ -629,7 +629,7 @@ def random_linear_product_system(pols, tosolve=True, checkin=True):
     sols = load_standard_solutions()
     return (result, sols)
 
-def mixed_volume(pols, stable=False):
+def mixed_volume(pols, stable=False, checkin=True):
     r"""
     Given in *pols* a list of string representations of polynomials,
     this function returns the mixed volume of the system.
@@ -642,7 +642,12 @@ def mixed_volume(pols, stable=False):
     Note that the stable mixed volume does not apply to systems
     with negative exponents.
     Incorrectly parsed strings will result in a negative value on return.
+    If checkin, then the system will be checked for being square.
     """
+    if checkin:
+        errmsg = 'Mixed volumes are defined only for square systems,'
+        if not solve_checkin(pols, errmsg):
+            return None
     from phcpy.phcpy2c2 import py2c_celcon_clear_container
     from phcpy.phcpy2c2 import py2c_mixed_volume
     from phcpy.interface import store_standard_system
