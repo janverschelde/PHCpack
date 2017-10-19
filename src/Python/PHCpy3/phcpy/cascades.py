@@ -444,6 +444,7 @@ def run_cascade(nvr, dim, pols, islaurent=False, \
     from phcpy.sets import ismember_filter, laurent_ismember_filter
     from phcpy.cascades import top_cascade, laurent_top_cascade
     from phcpy.cascades import cascade_filter, laurent_cascade_filter
+    lowdim = max(0, nvr-len(pols)) # lower bound on the dimension
     result = {}
     if islaurent:
         (topemb, topsols, nonsols) \
@@ -452,7 +453,7 @@ def run_cascade(nvr, dim, pols, islaurent=False, \
         (topemb, topsols, nonsols) \
             = top_cascade(nvr, dim, pols, tol, tasks, prc, verbose)
     result[dim] = (topemb, topsols)
-    for idx in range(dim, 0, -1):
+    for idx in range(dim, lowdim, -1):
         emb = result[idx][0]
         if(idx == 1):
             if islaurent:

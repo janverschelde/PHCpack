@@ -1,3 +1,5 @@
+Thu 19 Oct 2017 : added lower dimension to run_cascade of cascades.py.
+
 Wed 18 Oct 2017 : in solutions.py, converted the value for t from a string
   to a complex number.  In solver.py, provided a checkin for mixed_volume.
   Also fixed the python3 version and returned -1 for nonsquare input.
