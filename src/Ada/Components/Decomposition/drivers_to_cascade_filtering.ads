@@ -42,6 +42,20 @@ package Drivers_to_Cascade_Filtering is
   --   inpname  name of the input file;
   --   outname  name of the output file.
 
+  procedure Prompt_for_Top_Dimension
+              ( nq,nv : in natural32; topdim : out natural32 );
+
+  -- DESCRIPTION :
+  --   Prompts the user for the value of the top dimension
+  --   and checks whether what gets entered is not larger than nv-1.
+
+  -- ON ENTRY :
+  --   nq       number of equations in the system;
+  --   nv       number of variables in the system.
+
+  -- ON RETURN :
+  --   topdim   the requested top dimension.
+
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
                 p : in Standard_Complex_Poly_Systems.Poly_Sys );

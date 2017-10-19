@@ -1,6 +1,7 @@
 with String_Splitters;                   use String_Splitters;
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
+with Numbers_io;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -417,6 +418,33 @@ package body Drivers_to_Cascade_Filtering is
     end if;
   end QuadDobl_Embed_and_Cascade;
 
+  procedure Prompt_for_Top_Dimension
+              ( nq,nv : in natural32; topdim : out natural32 ) is
+
+    lowdim : natural32; -- lower bound on the dimension
+
+  begin
+    if nq >= nv
+     then lowdim := 0;  -- allow no negative values for lower bound
+     else lowdim := nv-nq;
+    end if;
+    loop
+      put("The number of equations : "); put(nq,1); new_line;
+      put("The number of variables : "); put(nv,1); new_line;
+      put("-> the default, suggested top dimension is "); put(nv-1,1);
+      put_line(" ...");
+      put("Give the expected top dimension : ");
+      Numbers_io.Read_Natural(topdim);
+      exit when (topdim < nv) and (topdim >= lowdim); -- check bounds
+      put_line
+        ("The top dimension cannot be larger than the number of variables.");
+      put("Please enter a number between "); put(lowdim,1);
+      put(" and "); put(nv-1,1); put_line(".");
+      put("The suggested default top dimension is ");
+      put(nv-1,1); put_line(".");
+    end loop;
+  end Prompt_for_Top_Dimension;
+
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -436,9 +464,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    put("The number of equations : "); put(nq,1); new_line;
-    put("The number of variables : "); put(nv,1); new_line;
-    put("Give the expected top dimension : "); get(topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
     new_line;
     if nt = 0 then
@@ -532,9 +558,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    put("The number of equations : "); put(nq,1); new_line;
-    put("The number of variables : "); put(nv,1); new_line;
-    put("Give the expected top dimension : "); get(topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
     new_line;
     if nt = 0 then
@@ -621,9 +645,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    put("The number of equations : "); put(nq,1); new_line;
-    put("The number of variables : "); put(nv,1); new_line;
-    put("Give the expected top dimension : "); get(topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
     new_line;
     if nt = 0 then
@@ -710,9 +732,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    put("The number of equations : "); put(nq,1); new_line;
-    put("The number of variables : "); put(nv,1); new_line;
-    put("Give the expected top dimension : "); get(topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
     new_line;
     if nt = 0 then
@@ -799,9 +819,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    put("The number of equations : "); put(nq,1); new_line;
-    put("The number of variables : "); put(nv,1); new_line;
-    put("Give the expected top dimension : "); get(topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
     new_line;
     if nt = 0 then
@@ -888,9 +906,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    put("The number of equations : "); put(nq,1); new_line;
-    put("The number of variables : "); put(nv,1); new_line;
-    put("Give the expected top dimension : "); get(topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim);
     Square_and_Embed(p,topdim,embsys);
     new_line;
     if nt = 0 then
