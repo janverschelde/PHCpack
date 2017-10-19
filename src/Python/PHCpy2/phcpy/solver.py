@@ -642,12 +642,14 @@ def mixed_volume(pols, stable=False, checkin=True):
     Note that the stable mixed volume does not apply to systems
     with negative exponents.
     Incorrectly parsed strings will result in a negative value on return.
-    If checkin, then the system will be checked for being square.
+    If checkin, then the system will be checked for being square
+    and if then the system is not square, an error message is printed
+    and -1 is returned.
     """
     if checkin:
         errmsg = 'Mixed volumes are defined only for square systems,'
         if not solve_checkin(pols, errmsg):
-            return None
+            return -1
     from phcpy.phcpy2c2 import py2c_celcon_clear_container
     from phcpy.phcpy2c2 import py2c_mixed_volume
     from phcpy.interface import store_standard_system
