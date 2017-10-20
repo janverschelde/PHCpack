@@ -6,6 +6,9 @@ with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Laur_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Drivers_to_Cascade_Filtering is
 
@@ -43,11 +46,13 @@ package Drivers_to_Cascade_Filtering is
   --   outname  name of the output file.
 
   procedure Prompt_for_Top_Dimension
-              ( nq,nv : in natural32; topdim : out natural32 );
+              ( nq,nv : in natural32; topdim,lowdim : out natural32 );
 
   -- DESCRIPTION :
   --   Prompts the user for the value of the top dimension
-  --   and checks whether what gets entered is not larger than nv-1.
+  --   and checks whether what gets entered is not larger than nv-1
+  --   and that it is at least larger than the lowest dimension
+  --   for underdetermined inputs.
 
   -- ON ENTRY :
   --   nq       number of equations in the system;
@@ -55,6 +60,7 @@ package Drivers_to_Cascade_Filtering is
 
   -- ON RETURN :
   --   topdim   the requested top dimension.
+  --   lowdim   the computed lower bound on the dimension.
 
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
@@ -86,6 +92,54 @@ package Drivers_to_Cascade_Filtering is
   --   nt       number of tasks for multitasking,
   --            if zero, then no multitasking will be used;
   --   p        an ordinary or a Laurent polynomial system.
+
+  procedure Standard_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                filter,factor : in boolean );
+  procedure Standard_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                filter,factor : in boolean );
+  procedure DoblDobl_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean );
+  procedure DoblDobl_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean );
+  procedure QuadDobl_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean );
+  procedure QuadDobl_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean );
+
+  -- DESCRIPTION :
+  --   Given an embedding of the top dimensional solution set,
+  --   runs a cascade of homotopies,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   nt       number of tasks for multitasking,
+  --            if zero, then no multitasking will be used;
+  --   topdim   the top dimension of the solution set;
+  --   embsys   an embedded system for the top dimension;
+  --   sols     solutions of the system embsys;
+  --   filter   if true, then junk points will be removed,
+  --            otherwise, the output will be superwitness sets.
+  --   factor   if true and filter, then the filtered witness sets will be
+  --            factored into irreducible components,
+  --            otherwise, the output sets may still be reducible.
 
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;

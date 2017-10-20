@@ -22,11 +22,8 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with QuadDobl_Laur_Poly_Convertors;
-with Standard_Complex_Solutions;
 with Standard_Solution_Manipulators;
-with DoblDobl_Complex_Solutions;
 with DoblDobl_Solution_Manipulators;
-with QuadDobl_Complex_Solutions;
 with QuadDobl_Solution_Manipulators;
 with Prompt_for_Systems;
 with Black_Box_Solvers;
@@ -419,10 +416,7 @@ package body Drivers_to_Cascade_Filtering is
   end QuadDobl_Embed_and_Cascade;
 
   procedure Prompt_for_Top_Dimension
-              ( nq,nv : in natural32; topdim : out natural32 ) is
-
-    lowdim : natural32; -- lower bound on the dimension
-
+              ( nq,nv : in natural32; topdim,lowdim : out natural32 ) is
   begin
     if nq >= nv
      then lowdim := 0;  -- allow no negative values for lower bound
@@ -451,6 +445,325 @@ package body Drivers_to_Cascade_Filtering is
     end loop;
   end Prompt_for_Top_Dimension;
 
+  procedure Standard_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                filter,factor : in boolean ) is
+
+    use Standard_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := 1.0E-8;
+    restol : constant double_float := 1.0E-6;
+    homtol : constant double_float := 1.0E-8;
+    ep : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    nbl : constant natural32 := 20;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
+  begin
+    if filter then
+      Witness_Filter
+        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+         castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        -- Monodromy_Homotopies_io.Write_Decomposition
+        --   (standard_output,ep,gpts,deco);
+      -- else
+      --   Monodromy_Homotopies_io.Write_Components
+      --     (standard_output,ep,gpts,fc);
+      end if;
+    else
+      Witness_Generate
+        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+      -- Monodromy_Homotopies_io.Write_Components
+      --   (standard_output,ep,gpts,pc);
+    end if;
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+    if filter then
+      Path_Counts_Table.Write_Filter_Counts
+        (standard_output,fc,filtm,totfil);
+      if factor then
+        Path_Counts_Table.Write_Factor_Counts
+          (standard_output,deco,factm,totfac);
+      end if;     
+    end if;
+    new_line;
+    put("The CPU time for the cascade filters : ");
+    if filter 
+     then print_hms(standard_output,alltime);
+     else print_hms(standard_output,totcas);
+    end if;
+  end Standard_Run_Cascade;
+
+  procedure Standard_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                filter,factor : in boolean ) is
+
+    use Standard_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := 1.0E-8;
+    restol : constant double_float := 1.0E-6;
+    homtol : constant double_float := 1.0E-8;
+    ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    nbl : constant natural32 := 20;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
+  begin
+    if filter then
+      Witness_Filter
+        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+         castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Witness_Generate
+        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+    end if;
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+    if filter then
+      Path_Counts_Table.Write_Filter_Counts
+        (standard_output,fc,filtm,totfil);
+      if factor then
+        Path_Counts_Table.Write_Factor_Counts
+          (standard_output,deco,factm,totfac);
+      end if;
+    end if;
+    new_line;
+    put("The CPU time for the cascade filters : ");
+    if filter 
+     then print_hms(standard_output,alltime);
+     else print_hms(standard_output,totcas);
+    end if;
+  end Standard_Run_Cascade;
+
+  procedure DoblDobl_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := 1.0E-8;
+    restol : constant double_float := 1.0E-6;
+    homtol : constant double_float := 1.0E-8;
+    ep : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    nbl : constant natural32 := 20;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
+  begin
+    if filter then
+      Witness_Filter
+        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+         castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Witness_Generate
+        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+    end if;
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+    if filter then
+      Path_Counts_Table.Write_Filter_Counts
+        (standard_output,fc,filtm,totfil);
+      if factor then
+        Path_Counts_Table.Write_Factor_Counts
+          (standard_output,deco,factm,totfac);
+      end if;
+    end if;
+    new_line;
+    put("The CPU time for the cascade filters : ");
+    if filter 
+     then print_hms(standard_output,alltime);
+     else print_hms(standard_output,totcas);
+    end if;
+  end DoblDobl_Run_Cascade;
+
+  procedure DoblDobl_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := 1.0E-8;
+    restol : constant double_float := 1.0E-6;
+    homtol : constant double_float := 1.0E-8;
+    ep : DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    nbl : constant natural32 := 20;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
+  begin
+    if filter then
+      Witness_Filter
+        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+         castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Witness_Generate
+        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+    end if;
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+    if filter then
+      Path_Counts_Table.Write_Filter_Counts
+        (standard_output,fc,filtm,totfil);
+      if factor then
+        Path_Counts_Table.Write_Factor_Counts
+          (standard_output,deco,factm,totfac);
+      end if;
+    end if;
+    new_line;
+    put("The CPU time for the cascade filters : ");
+    if filter 
+     then print_hms(standard_output,alltime);
+     else print_hms(standard_output,totcas);
+    end if;
+  end DoblDobl_Run_Cascade;
+
+  procedure QuadDobl_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := 1.0E-8;
+    restol : constant double_float := 1.0E-6;
+    homtol : constant double_float := 1.0E-8;
+    ep : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
+    nbl : constant natural32 := 20;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
+  begin
+    if filter then
+      Witness_Filter
+        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+         castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Witness_Generate
+        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+    end if;
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+    if filter then
+      Path_Counts_Table.Write_Filter_Counts
+        (standard_output,fc,filtm,totfil);
+      if factor then
+        Path_Counts_Table.Write_Factor_Counts
+          (standard_output,deco,factm,totfac);
+      end if;
+    end if;
+    new_line;
+    put("The CPU time for the cascade filters : ");
+    if filter 
+     then print_hms(standard_output,alltime);
+     else print_hms(standard_output,totcas);
+    end if;
+  end QuadDobl_Run_Cascade;
+
+  procedure QuadDobl_Run_Cascade
+              ( nt,topdim : in natural32;
+                embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := 1.0E-8;
+    restol : constant double_float := 1.0E-6;
+    homtol : constant double_float := 1.0E-8;
+    ep : QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    nbl : constant natural32 := 20;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
+  begin
+    if filter then
+      Witness_Filter
+        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+         castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Witness_Generate
+        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+    end if;
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
+    if filter then
+      Path_Counts_Table.Write_Filter_Counts
+        (standard_output,fc,filtm,totfil);
+      if factor then
+        Path_Counts_Table.Write_Factor_Counts
+          (standard_output,deco,factm,totfac);
+      end if;
+    end if;
+    new_line;
+    put("The CPU time for the cascade filters : ");
+    if filter 
+     then print_hms(standard_output,alltime);
+     else print_hms(standard_output,totcas);
+    end if;
+  end QuadDobl_Run_Cascade;
+
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -461,7 +774,7 @@ package body Drivers_to_Cascade_Filtering is
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
-    topdim : natural32 := 0;
+    topdim,lowdim : natural32 := 0;
     embsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     timer : Timing_Widget;
     rc : natural32;
@@ -470,7 +783,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    Prompt_for_Top_Dimension(nq,nv,topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
@@ -494,56 +807,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      declare
-        ns : constant integer32 := integer32(topdim);
-        tol : constant double_float := 1.0E-8;
-        restol : constant double_float := 1.0E-6;
-        homtol : constant double_float := 1.0E-8;
-        ep : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
-        gpts : Array_of_Solution_Lists(0..ns);
-        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
-        nbl : constant natural32 := 20;
-        deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
-        castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns));
-        factm : Array_of_Duration(0..integer(ns));
-        totcas,totfil,totfac,alltime : duration;
-      begin
-        if filter then
-          Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
-             castm,filtm,totcas,totfil,alltime);
-          if factor then
-            Monodromy_Homotopies.Witness_Factor
-              (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
-           -- Monodromy_Homotopies_io.Write_Decomposition
-           --   (standard_output,ep,gpts,deco);
-         -- else
-         --   Monodromy_Homotopies_io.Write_Components
-         --     (standard_output,ep,gpts,fc);
-          end if;
-        else
-          Witness_Generate
-            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
-         -- Monodromy_Homotopies_io.Write_Components
-         --   (standard_output,ep,gpts,pc);
-        end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
-        if filter then
-          Path_Counts_Table.Write_Filter_Counts
-            (standard_output,fc,filtm,totfil);
-          if factor then
-            Path_Counts_Table.Write_Factor_Counts
-              (standard_output,deco,factm,totfac);
-          end if;     
-        end if;
-        new_line;
-        put("The CPU time for the cascade filters : ");
-        if filter 
-         then print_hms(standard_output,alltime);
-         else print_hms(standard_output,totcas);
-        end if;
-      end;
+      Standard_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -557,7 +821,7 @@ package body Drivers_to_Cascade_Filtering is
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
-    topdim : natural32 := 0;
+    topdim,lowdim : natural32 := 0;
     embsys : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
     timer : Timing_Widget;
     rc : natural32;
@@ -566,7 +830,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    Prompt_for_Top_Dimension(nq,nv,topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
@@ -590,49 +854,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      declare
-        ns : constant integer32 := integer32(topdim);
-        tol : constant double_float := 1.0E-8;
-        restol : constant double_float := 1.0E-6;
-        homtol : constant double_float := 1.0E-8;
-        ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
-        gpts : Array_of_Solution_Lists(0..ns);
-        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
-        nbl : constant natural32 := 20;
-        deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
-        castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns));
-        factm : Array_of_Duration(0..integer(ns));
-        totcas,totfil,totfac,alltime : duration;
-      begin
-        if filter then
-          Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
-             castm,filtm,totcas,totfil,alltime);
-          if factor then
-            Monodromy_Homotopies.Witness_Factor
-              (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
-          end if;
-        else
-          Witness_Generate
-            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
-        end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
-        if filter then
-          Path_Counts_Table.Write_Filter_Counts
-            (standard_output,fc,filtm,totfil);
-          if factor then
-            Path_Counts_Table.Write_Factor_Counts
-              (standard_output,deco,factm,totfac);
-          end if;
-        end if;
-        new_line;
-        put("The CPU time for the cascade filters : ");
-        if filter 
-         then print_hms(standard_output,alltime);
-         else print_hms(standard_output,totcas);
-        end if;
-      end;
+      Standard_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -646,7 +868,7 @@ package body Drivers_to_Cascade_Filtering is
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
-    topdim : natural32 := 0;
+    topdim,lowdim : natural32 := 0;
     embsys : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     timer : Timing_Widget;
     rc : natural32;
@@ -655,7 +877,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    Prompt_for_Top_Dimension(nq,nv,topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
@@ -679,49 +901,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      declare
-        ns : constant integer32 := integer32(topdim);
-        tol : constant double_float := 1.0E-8;
-        restol : constant double_float := 1.0E-6;
-        homtol : constant double_float := 1.0E-8;
-        ep : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
-        gpts : Array_of_Solution_Lists(0..ns);
-        nbl : constant natural32 := 20;
-        deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
-        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
-        castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns));
-        factm : Array_of_Duration(0..integer(ns));
-        totcas,totfil,totfac,alltime : duration;
-      begin
-        if filter then
-          Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
-             castm,filtm,totcas,totfil,alltime);
-          if factor then
-            Monodromy_Homotopies.Witness_Factor
-              (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
-          end if;
-        else
-          Witness_Generate
-            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
-        end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
-        if filter then
-          Path_Counts_Table.Write_Filter_Counts
-            (standard_output,fc,filtm,totfil);
-          if factor then
-            Path_Counts_Table.Write_Factor_Counts
-              (standard_output,deco,factm,totfac);
-          end if;
-        end if;
-        new_line;
-        put("The CPU time for the cascade filters : ");
-        if filter 
-         then print_hms(standard_output,alltime);
-         else print_hms(standard_output,totcas);
-        end if;
-      end;
+      DoblDobl_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -735,7 +915,7 @@ package body Drivers_to_Cascade_Filtering is
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
-    topdim : natural32 := 0;
+    topdim,lowdim : natural32 := 0;
     embsys : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
     timer : Timing_Widget;
     rc : natural32;
@@ -744,7 +924,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    Prompt_for_Top_Dimension(nq,nv,topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
@@ -768,49 +948,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      declare
-        ns : constant integer32 := integer32(topdim);
-        tol : constant double_float := 1.0E-8;
-        restol : constant double_float := 1.0E-6;
-        homtol : constant double_float := 1.0E-8;
-        ep : DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
-        gpts : Array_of_Solution_Lists(0..ns);
-        nbl : constant natural32 := 20;
-        deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
-        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
-        castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns));
-        factm : Array_of_Duration(0..integer(ns));
-        totcas,totfil,totfac,alltime : duration;
-      begin
-        if filter then
-          Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
-             castm,filtm,totcas,totfil,alltime);
-          if factor then
-            Monodromy_Homotopies.Witness_Factor
-              (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
-          end if;
-        else
-          Witness_Generate
-            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
-        end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
-        if filter then
-          Path_Counts_Table.Write_Filter_Counts
-            (standard_output,fc,filtm,totfil);
-          if factor then
-            Path_Counts_Table.Write_Factor_Counts
-              (standard_output,deco,factm,totfac);
-          end if;
-        end if;
-        new_line;
-        put("The CPU time for the cascade filters : ");
-        if filter 
-         then print_hms(standard_output,alltime);
-         else print_hms(standard_output,totcas);
-        end if;
-      end;
+      DoblDobl_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -824,7 +962,7 @@ package body Drivers_to_Cascade_Filtering is
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
-    topdim : natural32 := 0;
+    topdim,lowdim : natural32 := 0;
     embsys : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     timer : Timing_Widget;
     rc : natural32;
@@ -833,7 +971,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    Prompt_for_Top_Dimension(nq,nv,topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
@@ -857,49 +995,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      declare
-        ns : constant integer32 := integer32(topdim);
-        tol : constant double_float := 1.0E-8;
-        restol : constant double_float := 1.0E-6;
-        homtol : constant double_float := 1.0E-8;
-        ep : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
-        nbl : constant natural32 := 20;
-        deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
-        gpts : Array_of_Solution_Lists(0..ns);
-        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
-        castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns));
-        factm : Array_of_Duration(0..integer(ns));
-        totcas,totfil,totfac,alltime : duration;
-      begin
-        if filter then
-          Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
-             castm,filtm,totcas,totfil,alltime);
-          if factor then
-            Monodromy_Homotopies.Witness_Factor
-              (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
-          end if;
-        else
-          Witness_Generate
-            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
-        end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
-        if filter then
-          Path_Counts_Table.Write_Filter_Counts
-            (standard_output,fc,filtm,totfil);
-          if factor then
-            Path_Counts_Table.Write_Factor_Counts
-              (standard_output,deco,factm,totfac);
-          end if;
-        end if;
-        new_line;
-        put("The CPU time for the cascade filters : ");
-        if filter 
-         then print_hms(standard_output,alltime);
-         else print_hms(standard_output,totcas);
-        end if;
-      end;
+      QuadDobl_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
     end if;
   end QuadDobl_Embed_and_Cascade;
 
@@ -913,7 +1009,7 @@ package body Drivers_to_Cascade_Filtering is
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
-    topdim : natural32 := 0;
+    topdim,lowdim : natural32 := 0;
     embsys : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
     timer : Timing_Widget;
     rc : natural32;
@@ -922,7 +1018,7 @@ package body Drivers_to_Cascade_Filtering is
     topsoltime : duration;
 
   begin
-    Prompt_for_Top_Dimension(nq,nv,topdim);
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
@@ -946,49 +1042,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      declare
-        ns : constant integer32 := integer32(topdim);
-        tol : constant double_float := 1.0E-8;
-        restol : constant double_float := 1.0E-6;
-        homtol : constant double_float := 1.0E-8;
-        ep : QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
-        gpts : Array_of_Solution_Lists(0..ns);
-        pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
-        nbl : constant natural32 := 20;
-        deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
-        castm : Array_of_Duration(0..integer(ns));
-        filtm : Array_of_Duration(0..integer(ns));
-        factm : Array_of_Duration(0..integer(ns));
-        totcas,totfil,totfac,alltime : duration;
-      begin
-        if filter then
-          Witness_Filter
-            (nt,embsys.all,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
-             castm,filtm,totcas,totfil,alltime);
-          if factor then
-            Monodromy_Homotopies.Witness_Factor
-              (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
-          end if;
-        else
-          Witness_Generate
-            (nt,embsys.all,sols,topdim,tol,ep,gpts,pc,castm,totcas);
-        end if;
-        Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
-        if filter then
-          Path_Counts_Table.Write_Filter_Counts
-            (standard_output,fc,filtm,totfil);
-          if factor then
-            Path_Counts_Table.Write_Factor_Counts
-              (standard_output,deco,factm,totfac);
-          end if;
-        end if;
-        new_line;
-        put("The CPU time for the cascade filters : ");
-        if filter 
-         then print_hms(standard_output,alltime);
-         else print_hms(standard_output,totcas);
-        end if;
-      end;
+      QuadDobl_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
     end if;
   end QuadDobl_Embed_and_Cascade;
 
