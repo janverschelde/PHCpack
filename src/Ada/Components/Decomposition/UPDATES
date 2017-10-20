@@ -4,6 +4,9 @@ Thu 19 Oct 2017 : added a prompting for the top dimension to check whether
   In cascade_homotopies.adb, halted the cascade early for underdertermined
   inputs. Fixed crash in drivers_to_cascade_filtering.adb for linear systems.
   Refactored procedures in drivers_to_cascade_filtering.
+  Added lower bound on the dimension as parameter in the procedures of the
+  cascade_homotopies and cascade_homotopy_filters, which changed the calls
+  in drivers_to_cascade_filtering.
 
 Tue 17 Oct 2017 : added monodromy_homotopies_io to the with list in
   drivers_to_cascade_filtering.adb.

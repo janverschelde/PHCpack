@@ -81,11 +81,11 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     close(infile);
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      Witness_Generate(filename.all,outfile,nt,lq.all,sols,dim,1.0E-8);
+      Witness_Generate(filename.all,outfile,nt,lq.all,sols,dim,0,1.0E-8);
     else
       lp := new Standard_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      Witness_Generate(filename.all,outfile,nt,lp.all,sols,dim,1.0E-8);
+      Witness_Generate(filename.all,outfile,nt,lp.all,sols,dim,0,1.0E-8);
     end if;
   end Standard_Witness_Generate;
 
@@ -129,11 +129,11 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     close(infile);
     if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      Witness_Generate(filename.all,outfile,nt,lq.all,sols,dim,1.0E-8);
+      Witness_Generate(filename.all,outfile,nt,lq.all,sols,dim,0,1.0E-8);
     else
       lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      Witness_Generate(filename.all,outfile,nt,lp.all,sols,dim,1.0E-8);
+      Witness_Generate(filename.all,outfile,nt,lp.all,sols,dim,0,1.0E-8);
     end if;
   end DoblDobl_Witness_Generate;
 
@@ -177,11 +177,11 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     close(infile);
     if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      Witness_Generate(filename.all,outfile,nt,lq.all,sols,dim,1.0E-8);
+      Witness_Generate(filename.all,outfile,nt,lq.all,sols,dim,0,1.0E-8);
     else
       lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      Witness_Generate(filename.all,outfile,nt,lp.all,sols,dim,1.0E-8);
+      Witness_Generate(filename.all,outfile,nt,lp.all,sols,dim,0,1.0E-8);
     end if;
   end QuadDobl_Witness_Generate;
 
@@ -210,11 +210,11 @@ package body Drivers_to_Cascade_Filtering is
     timer : timing_widget;
     sols : Solution_List;
     tol : constant double_float := 1.0E-8;
-    k,rc : natural32;
+    topdim,rc : natural32;
                 
   begin
     new_line;
-    Interactive_Square_and_Embed(file,p,ep,k);
+    Interactive_Square_and_Embed(file,p,ep,topdim);
     new_line;
     put_line("See the output file for results ...");
     new_line;
@@ -231,7 +231,7 @@ package body Drivers_to_Cascade_Filtering is
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
     if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -246,11 +246,11 @@ package body Drivers_to_Cascade_Filtering is
     timer : timing_widget;
     sols : Solution_List;
     tol : constant double_float := 1.0E-8;
-    k,rc : natural32;
+    topdim,rc : natural32;
                 
   begin
     new_line;
-    Interactive_Square_and_Embed(file,p,ep,k);
+    Interactive_Square_and_Embed(file,p,ep,topdim);
     new_line;
     put_line("See the output file for results ...");
     new_line;
@@ -267,7 +267,7 @@ package body Drivers_to_Cascade_Filtering is
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
     if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -282,11 +282,11 @@ package body Drivers_to_Cascade_Filtering is
     timer : timing_widget;
     sols : Solution_List;
     tol : constant double_float := 1.0E-8;
-    k,rc : natural32;
+    topdim,rc : natural32;
                 
   begin
     new_line;
-    Interactive_Square_and_Embed(file,p,ep,k);
+    Interactive_Square_and_Embed(file,p,ep,topdim);
     new_line;
     put_line("See the output file for results ...");
     new_line;
@@ -303,7 +303,7 @@ package body Drivers_to_Cascade_Filtering is
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
     if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
     end if;
   end QuadDobl_Embed_and_Cascade;
 
@@ -318,11 +318,11 @@ package body Drivers_to_Cascade_Filtering is
     timer : timing_widget;
     sols : Solution_List;
     tol : constant double_float := 1.0E-8;
-    k,rc : natural32;
+    topdim,rc : natural32;
                 
   begin
     new_line;
-    Interactive_Square_and_Embed(file,p,ep,k);
+    Interactive_Square_and_Embed(file,p,ep,topdim);
     new_line;
     put_line("See the output file for results ...");
     new_line;
@@ -339,7 +339,7 @@ package body Drivers_to_Cascade_Filtering is
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
     if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -354,11 +354,11 @@ package body Drivers_to_Cascade_Filtering is
     timer : timing_widget;
     sols : Solution_List;
     tol : constant double_float := 1.0E-8;
-    k,rc : natural32;
+    topdim,rc : natural32;
                 
   begin
     new_line;
-    Interactive_Square_and_Embed(file,p,ep,k);
+    Interactive_Square_and_Embed(file,p,ep,topdim);
     new_line;
     put_line("See the output file for results ...");
     new_line;
@@ -375,7 +375,7 @@ package body Drivers_to_Cascade_Filtering is
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
     if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -390,11 +390,11 @@ package body Drivers_to_Cascade_Filtering is
     timer : timing_widget;
     sols : Solution_List;
     tol : constant double_float := 1.0E-8;
-    k,rc : natural32;
+    topdim,rc : natural32;
                 
   begin
     new_line;
-    Interactive_Square_and_Embed(file,p,ep,k);
+    Interactive_Square_and_Embed(file,p,ep,topdim);
     new_line;
     put_line("See the output file for results ...");
     new_line;
@@ -411,7 +411,7 @@ package body Drivers_to_Cascade_Filtering is
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
     if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,k,tol);
+      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
     end if;
   end QuadDobl_Embed_and_Cascade;
 
@@ -446,7 +446,7 @@ package body Drivers_to_Cascade_Filtering is
   end Prompt_for_Top_Dimension;
 
   procedure Standard_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -470,7 +470,7 @@ package body Drivers_to_Cascade_Filtering is
   begin
     if filter then
       Witness_Filter
-        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -483,7 +483,7 @@ package body Drivers_to_Cascade_Filtering is
       end if;
     else
       Witness_Generate
-        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
       -- Monodromy_Homotopies_io.Write_Components
       --   (standard_output,ep,gpts,pc);
     end if;
@@ -505,7 +505,7 @@ package body Drivers_to_Cascade_Filtering is
   end Standard_Run_Cascade;
 
   procedure Standard_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -529,7 +529,7 @@ package body Drivers_to_Cascade_Filtering is
   begin
     if filter then
       Witness_Filter
-        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -537,7 +537,7 @@ package body Drivers_to_Cascade_Filtering is
       end if;
     else
       Witness_Generate
-        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
     if filter then
@@ -557,7 +557,7 @@ package body Drivers_to_Cascade_Filtering is
   end Standard_Run_Cascade;
 
   procedure DoblDobl_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -581,7 +581,7 @@ package body Drivers_to_Cascade_Filtering is
   begin
     if filter then
       Witness_Filter
-        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -589,7 +589,7 @@ package body Drivers_to_Cascade_Filtering is
       end if;
     else
       Witness_Generate
-        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
     if filter then
@@ -609,7 +609,7 @@ package body Drivers_to_Cascade_Filtering is
   end DoblDobl_Run_Cascade;
 
   procedure DoblDobl_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -633,7 +633,7 @@ package body Drivers_to_Cascade_Filtering is
   begin
     if filter then
       Witness_Filter
-        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -641,7 +641,7 @@ package body Drivers_to_Cascade_Filtering is
       end if;
     else
       Witness_Generate
-        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
     if filter then
@@ -661,7 +661,7 @@ package body Drivers_to_Cascade_Filtering is
   end DoblDobl_Run_Cascade;
 
   procedure QuadDobl_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -685,7 +685,7 @@ package body Drivers_to_Cascade_Filtering is
   begin
     if filter then
       Witness_Filter
-        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -693,7 +693,7 @@ package body Drivers_to_Cascade_Filtering is
       end if;
     else
       Witness_Generate
-        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
     if filter then
@@ -713,7 +713,7 @@ package body Drivers_to_Cascade_Filtering is
   end QuadDobl_Run_Cascade;
 
   procedure QuadDobl_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -737,7 +737,7 @@ package body Drivers_to_Cascade_Filtering is
   begin
     if filter then
       Witness_Filter
-        (nt,embsys,sols,topdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -745,7 +745,7 @@ package body Drivers_to_Cascade_Filtering is
       end if;
     else
       Witness_Generate
-        (nt,embsys,sols,topdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
     if filter then
@@ -807,7 +807,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      Standard_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
+      Standard_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -854,7 +854,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      Standard_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
+      Standard_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -901,7 +901,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      DoblDobl_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
+      DoblDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -948,7 +948,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      DoblDobl_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
+      DoblDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -995,7 +995,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      QuadDobl_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
+      QuadDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
     end if;
   end QuadDobl_Embed_and_Cascade;
 
@@ -1042,7 +1042,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      QuadDobl_Run_Cascade(nt,topdim,embsys.all,sols,filter,factor);
+      QuadDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
     end if;
   end QuadDobl_Embed_and_Cascade;
 

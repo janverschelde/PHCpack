@@ -32,37 +32,37 @@ package Cascade_Homotopy_Filters is
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
   procedure Witness_Filter
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
   procedure Witness_Filter
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
   procedure Witness_Filter
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
   procedure Witness_Filter
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
   procedure Witness_Filter
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
 
   -- DESCRIPTION :
@@ -84,6 +84,7 @@ package Cascade_Homotopy_Filters is
   --             with zero an nonzero values;
   --   topdim    number of slack variables and random hyperplanes,
   --             equals the top dimension of the solution sets;
+  --   lowdim    lower bound on the dimension to stop the cascade;
   --   zerotol   tolerance to decide whether a number is zero or not;
   --   restol    tolerance on the residual;
   --   homtol    tolerance for the homotopy membership test.
@@ -93,42 +94,42 @@ package Cascade_Homotopy_Filters is
                  nt : in natural32;
                  ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
   procedure Witness_Filter
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
                  ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
   procedure Witness_Filter
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
                  ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
   procedure Witness_Filter
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
                  ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
   procedure Witness_Filter
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
                  ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
   procedure Witness_Filter
                ( name : in string; outfile : in file_type;
                  nt : in natural32;
                  ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
-                 topdim : in natural32; zerotol : in double_float;
+                 topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float );
 
   -- DESCRIPTION :
@@ -146,6 +147,7 @@ package Cascade_Homotopy_Filters is
   --             with all zero and nonzero values for the slack variables;
   --   topdim    number of slack variables and random hyperplanes,
   --             equals the top dimension of the solution sets;
+  --   lowdim    lower bound on the dimension to stop the cascade;
   --   zerotol   tolerance to decide whether a number is zero or not;
   --   restol    tolerance on the residual;
   --   homtol    tolerance for the homotopy membership test.
@@ -154,7 +156,7 @@ package Cascade_Homotopy_Filters is
               ( nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 restol,homtol : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
@@ -165,7 +167,7 @@ package Cascade_Homotopy_Filters is
               ( nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 restol,homtol : in double_float;
                 embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
@@ -176,7 +178,7 @@ package Cascade_Homotopy_Filters is
               ( nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 restol,homtol : in double_float;
                 embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
@@ -187,7 +189,7 @@ package Cascade_Homotopy_Filters is
               ( nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 restol,homtol : in double_float;
                 embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
@@ -198,7 +200,7 @@ package Cascade_Homotopy_Filters is
               ( nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 restol,homtol : in double_float;
                 embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
@@ -209,7 +211,7 @@ package Cascade_Homotopy_Filters is
               ( nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 restol,homtol : in double_float;
                 embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
@@ -231,6 +233,7 @@ package Cascade_Homotopy_Filters is
   --             variables, the zero and the nonzero values;
   --   topdim    number of slack variables and random hyperplanes,
   --             equals the top dimension of the solution sets;
+  --   lowdim    lower bound on the dimension to stop the cascade;
   --   zerotol   tolerance to decide whether a number is zero or not;
   --   restol    tolerance on the residual;
   --   homtol    tolerance for the homotopy membership test.
@@ -250,7 +253,7 @@ package Cascade_Homotopy_Filters is
               ( nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,nitfix : in natural32; zerotol : in double_float;
+                topdim,lowdim,nitfix : in natural32; zerotol : in double_float;
                 restol,homtol : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
@@ -274,6 +277,7 @@ package Cascade_Homotopy_Filters is
   --             variables, the zero and the nonzero values;
   --   topdim    number of slack variables and random hyperplanes,
   --             equals the top dimension of the solution sets;
+  --   lowdim    lower bound on the dimension to stop the cascade;
   --   nitfix    maximum number of monodromy loops which leave the
   --             decomposition invariant;
   --   zerotol   tolerance to decide whether a number is zero or not;

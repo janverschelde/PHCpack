@@ -94,32 +94,32 @@ package Drivers_to_Cascade_Filtering is
   --   p        an ordinary or a Laurent polynomial system.
 
   procedure Standard_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
   procedure Standard_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
   procedure DoblDobl_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
   procedure DoblDobl_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
   procedure QuadDobl_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
   procedure QuadDobl_Run_Cascade
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
@@ -133,6 +133,7 @@ package Drivers_to_Cascade_Filtering is
   --   nt       number of tasks for multitasking,
   --            if zero, then no multitasking will be used;
   --   topdim   the top dimension of the solution set;
+  --   lowdim   lower bound on the dimension to stop the cascade;
   --   embsys   an embedded system for the top dimension;
   --   sols     solutions of the system embsys;
   --   filter   if true, then junk points will be removed,

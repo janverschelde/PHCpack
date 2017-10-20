@@ -21,7 +21,7 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -29,17 +29,13 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
+    nbq : constant natural32 := natural32(ep'last); -- #equations
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -96,7 +92,7 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
@@ -104,17 +100,12 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -171,7 +162,7 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -179,17 +170,12 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -246,7 +232,7 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use DoblDobl_Complex_Laur_Systems;
     use DoblDobl_Complex_Solutions;
@@ -254,17 +240,12 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -321,7 +302,7 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -329,17 +310,12 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -396,7 +372,7 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use QuadDobl_Complex_Laur_Systems;
     use QuadDobl_Complex_Solutions;
@@ -404,17 +380,12 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -472,7 +443,7 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -484,15 +455,10 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -550,7 +516,7 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -558,7 +524,6 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the number of variables
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
@@ -567,10 +532,6 @@ package body Cascade_Homotopies is
   begin
     tstart(timer);
     times := (times'range => 0.0);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -627,7 +588,7 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
@@ -635,7 +596,6 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
@@ -643,10 +603,6 @@ package body Cascade_Homotopies is
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     times := (times'range => 0.0);
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
@@ -704,7 +660,7 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -712,7 +668,6 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
@@ -721,10 +676,6 @@ package body Cascade_Homotopies is
   begin
     tstart(timer);
     times := (times'range => 0.0);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -781,7 +732,7 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use DoblDobl_Complex_Laur_Systems;
     use DoblDobl_Complex_Solutions;
@@ -789,7 +740,6 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
@@ -797,10 +747,6 @@ package body Cascade_Homotopies is
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     times := (times'range => 0.0);
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
@@ -858,7 +804,7 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -866,7 +812,6 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
@@ -874,10 +819,6 @@ package body Cascade_Homotopies is
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     times := (times'range => 0.0);
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
@@ -935,7 +876,7 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32; zerotol : in double_float ) is
 
     use QuadDobl_Complex_Laur_Systems;
     use QuadDobl_Complex_Solutions;
@@ -943,7 +884,6 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     embsys : Array_of_Laur_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
     times : Array_of_Duration(0..integer(topdim));
@@ -951,10 +891,6 @@ package body Cascade_Homotopies is
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1010,7 +946,7 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1022,15 +958,10 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1065,7 +996,7 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1077,15 +1008,10 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1120,7 +1046,7 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1132,15 +1058,10 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1175,7 +1096,7 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1187,15 +1108,10 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1230,7 +1146,7 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1242,15 +1158,10 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Poly_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
@@ -1285,7 +1196,7 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32; zerotol : in double_float;
                 embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1297,15 +1208,10 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    lowdim : natural32; -- lower bound on the dimension
     pocotime : duration;
 
   begin
     tstart(timer);
-    if n <= topdim
-     then lowdim := 0;
-     else lowdim := n - topdim;
-    end if;
     embsys(integer32(topdim)) := new Laur_Sys'(ep);
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
