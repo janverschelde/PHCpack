@@ -7,8 +7,11 @@ with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with Standard_System_and_Solutions_io;   use Standard_System_and_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with DoblDobl_System_and_Solutions_io;   use DoblDobl_System_and_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
+with QuadDobl_System_and_Solutions_io;   use QuadDobl_System_and_Solutions_io;
 
 package body Monodromy_Homotopies_io is
 
@@ -338,15 +341,11 @@ package body Monodromy_Homotopies_io is
   procedure Write_Components
               ( file : in file_type;
                 eqs : in Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
-                pts : in Standard_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec ) is
-
-    use Standard_Natural_Vectors;
-
+                pts : in Standard_Complex_Solutions.Array_of_Solution_Lists ) is
   begin
-    for k in comp'range loop
-      if comp(k) /= null then
-        Write_Factor(file,eqs(k).all,pts(k),comp(k));
+    for k in reverse eqs'range loop
+      if not Standard_Complex_Solutions.Is_Null(pts(k)) then
+        put_line(standard_output,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -354,15 +353,11 @@ package body Monodromy_Homotopies_io is
   procedure Write_Components
               ( file : in file_type;
                 eqs : in Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
-                pts : in Standard_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec ) is
-
-    use Standard_Natural_Vectors;
-
+                pts : in Standard_Complex_Solutions.Array_of_Solution_Lists ) is
   begin
-    for k in comp'range loop
-      if comp(k) /= null then
-        Write_Factor(file,eqs(k).all,pts(k),comp(k));
+    for k in reverse eqs'range loop
+      if not Standard_Complex_Solutions.Is_Null(pts(k)) then
+        put_line(standard_output,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -370,15 +365,11 @@ package body Monodromy_Homotopies_io is
   procedure Write_Components
               ( file : in file_type;
                 eqs : in DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
-                pts : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec ) is
-
-    use Standard_Natural_Vectors;
-
+                pts : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists ) is
   begin
-    for k in comp'range loop
-      if comp(k) /= null then
-        Write_Factor(file,eqs(k).all,pts(k),comp(k));
+    for k in reverse eqs'range loop
+      if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
+        put_line(standard_output,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -386,15 +377,11 @@ package body Monodromy_Homotopies_io is
   procedure Write_Components
               ( file : in file_type;
                 eqs : in DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
-                pts : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec ) is
-
-    use Standard_Natural_Vectors;
-
+                pts : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists ) is
   begin
-    for k in comp'range loop
-      if comp(k) /= null then
-        Write_Factor(file,eqs(k).all,pts(k),comp(k));
+    for k in reverse eqs'range loop
+      if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
+        put_line(standard_output,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -402,15 +389,11 @@ package body Monodromy_Homotopies_io is
   procedure Write_Components
               ( file : in file_type;
                 eqs : in QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
-                pts : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec ) is
-
-    use Standard_Natural_Vectors;
-
+                pts : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists ) is
   begin
-    for k in comp'range loop
-      if comp(k) /= null then
-        Write_Factor(file,eqs(k).all,pts(k),comp(k));
+    for k in reverse eqs'range loop
+      if not QuadDobl_Complex_Solutions.Is_Null(pts(k)) then
+        put_line(standard_output,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -418,15 +401,11 @@ package body Monodromy_Homotopies_io is
   procedure Write_Components
               ( file : in file_type;
                 eqs : in QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
-                pts : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec ) is
-
-    use Standard_Natural_Vectors;
-
+                pts : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists ) is
   begin
-    for k in comp'range loop
-      if comp(k) /= null then
-        Write_Factor(file,eqs(k).all,pts(k),comp(k));
+    for k in reverse eqs'range loop
+      if not QuadDobl_Complex_Solutions.Is_Null(pts(k)) then
+        put_line(standard_output,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;

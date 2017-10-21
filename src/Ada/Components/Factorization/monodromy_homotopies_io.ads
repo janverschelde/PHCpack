@@ -103,33 +103,27 @@ package Monodromy_Homotopies_io is
   procedure Write_Components
               ( file : in file_type;
                 eqs : in Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
-                pts : in Standard_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec );
+                pts : in Standard_Complex_Solutions.Array_of_Solution_Lists );
   procedure Write_Components
               ( file : in file_type;
                 eqs : in Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
-                pts : in Standard_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec );
+                pts : in Standard_Complex_Solutions.Array_of_Solution_Lists );
   procedure Write_Components
               ( file : in file_type;
                 eqs : in DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
-                pts : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec );
+                pts : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists );
   procedure Write_Components
               ( file : in file_type;
                 eqs : in DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
-                pts : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec );
+                pts : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists );
   procedure Write_Components
               ( file : in file_type;
                 eqs : in QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
-                pts : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec );
+                pts : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists );
   procedure Write_Components
               ( file : in file_type;
                 eqs : in QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
-                pts : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                comp : in Standard_Natural_VecVecs.VecVec );
+                pts : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists );
 
   -- DESCRIPTION :
   --   Writes the pure dimensional components to file,
@@ -138,8 +132,7 @@ package Monodromy_Homotopies_io is
   -- ON ENTRY :
   --   file     must be either standard_output or a file opened for output;
   --   eqs      the equations of the witness sets;
-  --   pts      generic points in the witness sets;
-  --   comp     pure dimensional components.
+  --   pts      generic points in the witness sets.
 
   procedure Write_Decomposition
               ( file : in file_type;
