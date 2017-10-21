@@ -1,3 +1,5 @@
+Fri 20 Oct 2017 : started filling the stubs in cascade_homotopy_filters.adb.
+
 Thu 19 Oct 2017 : added a prompting for the top dimension to check whether
   the entered top dimension is within bounds in drivers_to_cascade_filtering.
   Added better error messages to drivers_to_cascade_filtering.adb.

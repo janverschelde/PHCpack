@@ -10,8 +10,13 @@ package body Cascade_Homotopy_Filters is
                  sols : in Standard_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float ) is
+
+    timer : Timing_Widget;
+
   begin
-    null;
+    tstart(timer);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    tstop(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -20,8 +25,13 @@ package body Cascade_Homotopy_Filters is
                  sols : in Standard_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float ) is
+ 
+    timer : Timing_Widget;
+
   begin
-    null;
+    tstart(timer);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    tstop(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -30,8 +40,13 @@ package body Cascade_Homotopy_Filters is
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float ) is
+
+    timer : Timing_Widget;
+
   begin
-    null;
+    tstart(timer);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    tstop(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -40,8 +55,13 @@ package body Cascade_Homotopy_Filters is
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float ) is
+
+    timer : Timing_Widget;
+
   begin
-    null;
+    tstart(timer);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    tstop(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -50,8 +70,13 @@ package body Cascade_Homotopy_Filters is
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float ) is
+
+    timer : Timing_Widget;
+
   begin
-    null;
+    tstart(timer);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    tstop(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
@@ -60,8 +85,13 @@ package body Cascade_Homotopy_Filters is
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
                  restol,homtol : in double_float ) is
+
+    timer : Timing_Widget;
+
   begin
-    null;
+    tstart(timer);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    tstop(timer);
   end Witness_Filter;
 
   procedure Witness_Filter
