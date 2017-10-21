@@ -1,5 +1,6 @@
 Sat 21 Oct 2017 : new package running_cascades with code refactored from
-  drivers_to_cascade_filtering.
+  drivers_to_cascade_filtering.  Added procedures which write to file in
+  the package running_cascades.
 
 Fri 20 Oct 2017 : started filling the stubs in cascade_homotopy_filters.adb.
 
