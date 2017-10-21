@@ -419,9 +419,11 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
 
   begin
-    for k in fac'range loop
-      if fac(k) /= null then
-        Write_Factors(file,eqs(k).all,pts(k),fac(k));
+    for k in reverse fac'range loop
+      if not Standard_Complex_Solutions.Is_Null(pts(k)) then
+        if fac(k) /= null then
+          Write_Factors(file,eqs(k).all,pts(k),fac(k));
+        end if;
       end if;
     end loop;
   end Write_Decomposition;
@@ -435,9 +437,11 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
 
   begin
-    for k in fac'range loop
-      if fac(k) /= null then
-        Write_Factors(file,eqs(k).all,pts(k),fac(k));
+    for k in reverse fac'range loop
+      if not Standard_Complex_Solutions.Is_Null(pts(k)) then
+        if fac(k) /= null then
+          Write_Factors(file,eqs(k).all,pts(k),fac(k));
+        end if;
       end if;
     end loop;
   end Write_Decomposition;
@@ -451,9 +455,11 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
 
   begin
-    for k in fac'range loop
-      if fac(k) /= null then
-        Write_Factors(file,eqs(k).all,pts(k),fac(k));
+    for k in reverse fac'range loop
+      if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
+        if fac(k) /= null then
+          Write_Factors(file,eqs(k).all,pts(k),fac(k));
+        end if;
       end if;
     end loop;
   end Write_Decomposition;
@@ -467,9 +473,11 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
 
   begin
-    for k in fac'range loop
-      if fac(k) /= null then
-        Write_Factors(file,eqs(k).all,pts(k),fac(k));
+    for k in reverse fac'range loop
+      if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
+        if fac(k) /= null then
+          Write_Factors(file,eqs(k).all,pts(k),fac(k));
+        end if;
       end if;
     end loop;
   end Write_Decomposition;
@@ -483,9 +491,11 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
 
   begin
-    for k in fac'range loop
-      if fac(k) /= null then
-        Write_Factors(file,eqs(k).all,pts(k),fac(k));
+    for k in reverse fac'range loop
+      if not Quaddobl_Complex_Solutions.Is_Null(pts(k)) then
+        if fac(k) /= null then
+          Write_Factors(file,eqs(k).all,pts(k),fac(k));
+        end if;
       end if;
     end loop;
   end Write_Decomposition;
@@ -499,9 +509,11 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
 
   begin
-    for k in fac'range loop
-      if fac(k) /= null then
-        Write_Factors(file,eqs(k).all,pts(k),fac(k));
+    for k in reverse fac'range loop
+      if not QuadDobl_Complex_Solutions.Is_Null(pts(k)) then
+        if fac(k) /= null then
+          Write_Factors(file,eqs(k).all,pts(k),fac(k));
+        end if;
       end if;
     end loop;
   end Write_Decomposition;

@@ -1,4 +1,6 @@
 Sat 21 Oct 2017 : fixed write_components in monodromy_homotopies_io.
+  Reversed the order of writing a decomposition in monodromy_homotopies_io.adb
+  starting at the top dimension.
 
 Thu 19 Oct 2017 : added the parameter on the maximum number of loops to
   monodromy_component_breakup, which changed drivers_to_factor_components.adb,
