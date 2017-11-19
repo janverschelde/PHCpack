@@ -31,14 +31,17 @@ package body Monodromy_Homotopies is
         := Witness_Sets.Slices(eqs,dim);
     sps : constant Standard_Sample_List := Create(pts,hyp);
     grid : Array_of_Standard_Sample_Lists(0..2);
+    copiedeqs : Standard_Complex_Poly_Systems.Poly_Sys(eqs'range);
 
   begin
-    Sampling_Machine.Initialize(eqs);
+    Standard_Complex_Poly_Systems.Copy(eqs,copiedeqs);
+    Sampling_Machine.Initialize(copiedeqs);
     Sampling_Machine.Default_Tune_Sampler(0);
     Sampling_Machine.Default_Tune_Refiner;
     grid := Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(eqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
     Sampling_Machine.Clear;
+    Standard_Complex_Poly_Systems.Clear(copiedeqs);
   end Witness_Factor;
 
   procedure Witness_Factor
@@ -52,14 +55,17 @@ package body Monodromy_Homotopies is
         := Witness_Sets.Slices(eqs,dim);
     sps : constant Standard_Sample_List := Create(pts,hyp);
     grid : Array_of_Standard_Sample_Lists(0..2);
+    copiedeqs : Standard_Complex_Laur_Systems.Laur_Sys(eqs'range);
 
   begin
-    Sampling_Laurent_Machine.Initialize(eqs);
+    Standard_Complex_Laur_Systems.Copy(eqs,copiedeqs);
+    Sampling_Laurent_Machine.Initialize(copiedeqs);
     Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     Sampling_Laurent_Machine.Default_Tune_Refiner;
     grid := Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(eqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
     Sampling_Laurent_Machine.Clear;
+    Standard_Complex_Laur_Systems.Clear(copiedeqs);
   end Witness_Factor;
 
   procedure Witness_Factor
@@ -73,14 +79,17 @@ package body Monodromy_Homotopies is
         := Witness_Sets.Slices(eqs,dim);
     sps : constant DoblDobl_Sample_List := Create(pts,hyp);
     grid : Array_of_DoblDobl_Sample_Lists(0..2);
+    copiedeqs : DoblDobl_Complex_Poly_Systems.Poly_Sys(eqs'range);
 
   begin
-    DoblDobl_Sampling_Machine.Initialize(eqs);
+    DoblDobl_Complex_Poly_Systems.Copy(eqs,copiedeqs);
+    DoblDobl_Sampling_Machine.Initialize(copiedeqs);
     DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
     DoblDobl_Sampling_Machine.Default_Tune_Refiner;
     grid := DoblDobl_Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(eqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
     DoblDobl_Sampling_Machine.Clear;
+    DoblDobl_Complex_Poly_Systems.Clear(copiedeqs);
   end Witness_Factor;
 
   procedure Witness_Factor
@@ -94,14 +103,17 @@ package body Monodromy_Homotopies is
         := Witness_Sets.Slices(eqs,dim);
     sps : constant DoblDobl_Sample_List := Create(pts,hyp);
     grid : Array_of_DoblDobl_Sample_Lists(0..2);
+    copiedeqs : DoblDobl_Complex_Laur_Systems.Laur_Sys(eqs'range);
 
   begin
-    DoblDobl_Sampling_Laurent_Machine.Initialize(eqs);
+    DoblDobl_Complex_Laur_Systems.Copy(eqs,copiedeqs);
+    DoblDobl_Sampling_Laurent_Machine.Initialize(copiedeqs);
     DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
     grid := DoblDobl_Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(eqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
     DoblDobl_Sampling_Laurent_Machine.Clear;
+    DoblDobl_Complex_Laur_Systems.Clear(copiedeqs);
   end Witness_Factor;
 
   procedure Witness_Factor
@@ -115,14 +127,17 @@ package body Monodromy_Homotopies is
         := Witness_Sets.Slices(eqs,dim);
     sps : constant QuadDobl_Sample_List := Create(pts,hyp);
     grid : Array_of_QuadDobl_Sample_Lists(0..2);
+    copiedeqs : QuadDobl_Complex_Poly_Systems.Poly_Sys(eqs'range);
 
   begin
-    QuadDobl_Sampling_Machine.Initialize(eqs);
+    QuadDobl_Complex_Poly_Systems.Copy(eqs,copiedeqs);
+    QuadDobl_Sampling_Machine.Initialize(copiedeqs);
     QuadDobl_Sampling_Machine.Default_Tune_Sampler(0);
     QuadDobl_Sampling_Machine.Default_Tune_Refiner;
     grid := QuadDobl_Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(eqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
     QuadDobl_Sampling_Machine.Clear;
+    QuadDobl_Complex_Poly_Systems.Clear(copiedeqs);
   end Witness_Factor;
 
   procedure Witness_Factor
@@ -136,14 +151,17 @@ package body Monodromy_Homotopies is
         := Witness_Sets.Slices(eqs,dim);
     sps : constant QuadDobl_Sample_List := Create(pts,hyp);
     grid : Array_of_QuadDobl_Sample_Lists(0..2);
+    copiedeqs : QuadDobl_Complex_Laur_Systems.Laur_Sys(eqs'range);
 
   begin
-    QuadDobl_Sampling_Laurent_Machine.Initialize(eqs);
+    QuadDobl_Complex_Laur_Systems.Copy(eqs,copiedeqs);
+    QuadDobl_Sampling_Laurent_Machine.Initialize(copiedeqs);
     QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
     grid := QuadDobl_Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(eqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
     QuadDobl_Sampling_Laurent_Machine.Clear;
+    QuadDobl_Complex_Laur_Systems.Clear(copiedeqs);
   end Witness_Factor;
 
   procedure Witness_Factor
