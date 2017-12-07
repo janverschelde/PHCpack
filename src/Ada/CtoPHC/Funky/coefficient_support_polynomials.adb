@@ -1,5 +1,7 @@
 with text_io,integer_io;                use text_io,integer_io;
 with Interfaces.C;                      use Interfaces.C;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
@@ -8,8 +10,8 @@ package body Coefficient_Support_Polynomials is
 
   function Support ( p : Poly ) return C_Integer_Array is
 
-    m : constant natural := Number_of_Terms(p);
-    n : constant natural := Number_of_Unknowns(p);
+    m : constant natural := natural(Number_of_Terms(p));
+    n : constant natural := natural(Number_of_Unknowns(p));
     numexp : constant size_T := size_T(n*m-1);
     res : C_Integer_Array(0..numexp);
     ind : Size_T := 0;
@@ -31,7 +33,7 @@ package body Coefficient_Support_Polynomials is
 
   function Coefficients ( p : Poly ) return C_Double_Array is
 
-    m : constant natural := Number_of_Terms(p);
+    m : constant natural := natural(Number_of_Terms(p));
     numcff : constant size_T := size_T(2*m-1);
     res : C_Double_Array(0..numcff);
     ind : Size_T := 0;
@@ -64,12 +66,12 @@ package body Coefficient_Support_Polynomials is
    -- put("c'last : "); put(integer(c'last),1); new_line;
    -- put("s'first : "); put(integer(s'first),1); new_line;
    -- put("s'last : "); put(integer(s'last),1); new_line;
-    t.dg := new Standard_Natural_Vectors.Vector(1..n);
+    t.dg := new Standard_Natural_Vectors.Vector(1..integer32(n));
     while (indcff < c'last) and (indsup <= s'last) loop
       t.cf := Create(double_float(c(indcff)),double_float(c(indcff+1)));
       indcff := indcff + 2;
-      for i in 1..n loop
-        t.dg(i) := natural(s(indsup));
+      for i in 1..integer32(n) loop
+        t.dg(i) := natural32(s(indsup));
         indsup := indsup + 1;
         exit when (indsup > s'last);
       end loop;

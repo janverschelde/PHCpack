@@ -1,3 +1,8 @@
+Wed 6 Dec 2017 : updated coefficient_support_polynomials.adb,
+  coefficient_support_poly_systems.adb, getsys1.adb, and getsys3.adb, 
+  for conversion problems with explicitly declared 32-bit numbers,
+  so make ts_getsys finishes without compilation errors.
+
 Fri 22 Jul 2016 : fixed bug in phc -k by patching pieri_solver.adb,
   the conversion of a negative C int to a 32-bit Ada integer number nb.
 

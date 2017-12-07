@@ -21,7 +21,7 @@ procedure getsys1 is
   procedure Export_to_C ( p : in Poly_Sys ) is
 
     n : constant natural := p'length;
-    m : constant natural := Number_of_Unknowns(p(p'first));
+    m : constant natural := natural(Number_of_Unknowns(p(p'first)));
     moncnt : constant C_Integer_Array := Monomial_Count(p);
     monsum : constant natural := Sum(moncnt);
     sup : constant C_Integer_Array := Support(n,monsum,moncnt,p);

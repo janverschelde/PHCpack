@@ -1,5 +1,6 @@
 with text_io,integer_io;                use text_io,integer_io;
 with Interfaces.C;                      use Interfaces.C;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Coefficient_Support_Polynomials;   use Coefficient_Support_Polynomials;
 
@@ -8,7 +9,7 @@ package body Coefficient_Support_Poly_Systems is
   function Monomial_Count ( p : Poly_Sys ) return C_Integer_Array is
 
     res : C_Integer_Array(0..Interfaces.C.size_T(p'length-1));
-    ind : natural := p'first;
+    ind : integer32 := p'first;
 
   begin
     for i in res'range loop

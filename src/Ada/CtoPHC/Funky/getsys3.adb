@@ -3,6 +3,7 @@ with Interfaces.C;
 with C_Integer_io,C_Double_io;          use C_Integer_io,C_Double_io;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
 with C_Double_Arrays;                   use C_Double_Arrays;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Coefficient_Support_Poly_Systems;  use Coefficient_Support_Poly_Systems;
@@ -32,7 +33,7 @@ procedure getsys3 ( n,m : in integer; mc : in C_intarrs.Pointer;
       := C_intarrs.Value(s,Interfaces.C.ptrdiff_T(ns));
   cva : C_Double_Array(0..Interfaces.C.size_T(nc-1)) 
       := C_dblarrs.Value(c,Interfaces.C.ptrdiff_T(nc));
-  p : Poly_Sys(1..m);
+  p : Poly_Sys(1..integer32(m));
 
 begin
   put("Number of variables : "); put(n,1); new_line;
