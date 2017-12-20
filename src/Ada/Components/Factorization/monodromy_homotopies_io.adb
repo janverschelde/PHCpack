@@ -1,5 +1,6 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
@@ -253,6 +254,7 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
+        put(file,"Factor "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -269,6 +271,7 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
+        put(file,"Factor "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -285,6 +288,7 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
+        put(file,"Factor "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -301,6 +305,7 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
+        put(file,"Factor "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -317,6 +322,7 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
+        put(file,"Factor "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -333,6 +339,7 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
+        put(file,"Factor "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -420,6 +427,7 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
+      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
       if not Standard_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
@@ -438,6 +446,7 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
+      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
       if not Standard_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
@@ -456,6 +465,7 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
+      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
       if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
@@ -474,6 +484,7 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
+      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
       if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
@@ -492,6 +503,7 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
+      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
       if not Quaddobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
@@ -510,6 +522,7 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
+      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
       if not QuadDobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));

@@ -1,5 +1,5 @@
-Sat 18 Nov 2017 : fixed memory problem in monodromy_homotopies.adb with
-  a deep copy before initializations of the sampling machines.
+Wed 20 Dec 2017 : added more information to the writing of the factors and
+  decomposition in monodromy_homotopies_io.adb.
 
 Sat 21 Oct 2017 : fixed write_components in monodromy_homotopies_io.
   Reversed the order of writing a decomposition in monodromy_homotopies_io.adb
