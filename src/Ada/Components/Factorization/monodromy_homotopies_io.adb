@@ -57,7 +57,7 @@ package body Monodromy_Homotopies_io is
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
         cnt := 0;
         tmp := pts;
-        for k in 1..deg loop
+        for k in 1..Length_Of(pts) loop
           ls := Head_Of(tmp);
           if Is_In(fac,k) then
             Write_Next(file,cnt,ls.all);
@@ -92,7 +92,7 @@ package body Monodromy_Homotopies_io is
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
         cnt := 0;
         tmp := pts;
-        for k in 1..deg loop
+        for k in 1..Length_Of(pts) loop
           ls := Head_Of(tmp);
           if Is_In(fac,k) then
             Write_Next(file,cnt,ls.all);
@@ -127,7 +127,7 @@ package body Monodromy_Homotopies_io is
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
         cnt := 0;
         tmp := pts;
-        for k in 1..deg loop
+        for k in 1..Length_Of(pts) loop
           ls := Head_Of(tmp);
           if Is_In(fac,k) then
             Write_Next(file,cnt,ls.all);
@@ -162,7 +162,7 @@ package body Monodromy_Homotopies_io is
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
         cnt := 0;
         tmp := pts;
-        for k in 1..deg loop
+        for k in 1..Length_Of(pts) loop
           ls := Head_Of(tmp);
           if Is_In(fac,k) then
             Write_Next(file,cnt,ls.all);
@@ -197,7 +197,7 @@ package body Monodromy_Homotopies_io is
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
         cnt := 0;
         tmp := pts;
-        for k in 1..deg loop
+        for k in 1..Length_Of(pts) loop
           ls := Head_Of(tmp);
           if Is_In(fac,k) then
             Write_Next(file,cnt,ls.all);
@@ -232,7 +232,7 @@ package body Monodromy_Homotopies_io is
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
         cnt := 0;
         tmp := pts;
-        for k in 1..deg loop
+        for k in 1..Length_Of(pts) loop
           ls := Head_Of(tmp);
           if Is_In(fac,k) then
             Write_Next(file,cnt,ls.all);
