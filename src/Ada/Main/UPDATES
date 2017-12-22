@@ -1,3 +1,6 @@
+Fri 22 Dec 2017 : with an unhandled exception, the seed is printed,
+  at the end of dispatch.adb.
+
 Tue 17 Oct 2017 : adjusted greeting_banners for version 2.4.47.
 
 Sun 15 Oct 2017 : adjusted calls in compsolve.adb, compsolve2.adb, and

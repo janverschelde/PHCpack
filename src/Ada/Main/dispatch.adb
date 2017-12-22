@@ -1,6 +1,3 @@
-with Standard_Natural_Numbers_io;
- use Standard_Natural_Numbers_io;
-
 with text_io;                            use text_io;
 with Unix_Command_Line;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
@@ -41,6 +38,7 @@ with Complex_Polynomial_Matrices;        use Complex_Polynomial_Matrices;
 with Complex_Polynomial_Matrices_io;     use Complex_Polynomial_Matrices_io;
 with Verify_Solution_Maps;
 with C_to_Ada_Arrays;                    use C_to_Ada_Arrays;
+with Write_Seed_Number;
 
 procedure Dispatch is
 
@@ -332,7 +330,6 @@ procedure Dispatch is
     redprc : constant natural32 := Scan_Precision('d');
 
   begin
-   -- put("The blackbox precision : "); put(bbprc,1); new_line;
     case option2 is
       when 'h' | '-' => Greeting_Banners.help4blackbox;
       when 's'    => mainscal(file1,file2);
@@ -523,7 +520,6 @@ procedure Dispatch is
     case o2 is
       when 'h' | '-' => Greeting_Banners.help4continuation;
       when 'b' =>
-        put("The value of contprc : "); put(contprc,1); new_line;
         if contprc = 2 or bbprc = 2 then
           bablpoco2(file1,file2,file3);
         elsif contprc = 4 or bbprc = 4 then
@@ -1003,5 +999,9 @@ procedure Dispatch is
 begin
   Main;
 exception
-  when others => raise; -- put_line("remain silent ..."); return;
+  when others =>
+    put_line("Oops, an unhandled exception occurred.");
+    Write_Seed_Number(standard_output);
+    put_line("Use the seed number to reproduce the error.");
+    raise; -- put_line("remain silent ..."); return;
 end Dispatch;
