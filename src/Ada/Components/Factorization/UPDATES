@@ -1,5 +1,6 @@
 Fri 22 Dec 2017 : fixed a bug in writing the generic points on the factors
-  in monodromy_homotopies_io.adb.
+  in monodromy_homotopies_io.adb.  Added the writing of the isolated points
+  in the writing of the decomposition in monodromy_homotopies_io.adb.
 
 Wed 20 Dec 2017 : added more information to the writing of the factors and
   decomposition in monodromy_homotopies_io.adb.

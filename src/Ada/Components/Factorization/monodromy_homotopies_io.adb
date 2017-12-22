@@ -254,7 +254,8 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
-        put(file,"Factor "); put(file,k,1); put_line(file," :");
+        new_line(file);
+        put(file,"FACTOR "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -271,7 +272,8 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
-        put(file,"Factor "); put(file,k,1); put_line(file," :");
+        new_line(file);
+        put(file,"FACTOR "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -288,7 +290,8 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
-        put(file,"Factor "); put(file,k,1); put_line(file," :");
+        new_line(file);
+        put(file,"FACTOR "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -305,7 +308,8 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
-        put(file,"Factor "); put(file,k,1); put_line(file," :");
+        new_line(file);
+        put(file,"FACTOR "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -322,7 +326,8 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
-        put(file,"Factor "); put(file,k,1); put_line(file," :");
+        new_line(file);
+        put(file,"FACTOR "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -339,7 +344,8 @@ package body Monodromy_Homotopies_io is
   begin
     if fac /= null then
       for k in fac'range loop
-        put(file,"Factor "); put(file,k,1); put_line(file," :");
+        new_line(file);
+        put(file,"FACTOR "); put(file,k,1); put_line(file," :");
         Write_Factor(file,eqs,pts,fac(k));
       end loop;
     end if;
@@ -427,13 +433,21 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
-      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
+      new_line(file);
+      put(file,"Writing the factors of dimension ");
+      put(file,k,1); put_line(file," ...");
       if not Standard_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
     end loop;
+    if not Standard_Complex_Solutions.Is_Null(pts(0)) then
+      new_line(file);
+      put_line(file,"THE ISOLATED SOLUTIONS :");
+      put(file,Standard_Complex_Solutions.Length_Of(pts(0)),
+          natural32(Standard_Complex_Solutions.Head_Of(pts(0)).n),pts(0));
+    end if;
   end Write_Decomposition;
 
   procedure Write_Decomposition
@@ -446,13 +460,21 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
-      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
+      new_line(file);
+      put(file,"Writing the factors of dimension ");
+      put(file,k,1); put_line(file," ...");
       if not Standard_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
     end loop;
+    if not Standard_Complex_Solutions.Is_Null(pts(0)) then
+      new_line(file);
+      put_line(file,"THE ISOLATED SOLUTIONS :");
+      put(file,Standard_Complex_Solutions.Length_Of(pts(0)),
+          natural32(Standard_Complex_Solutions.Head_Of(pts(0)).n),pts(0));
+    end if;
   end Write_Decomposition;
 
   procedure Write_Decomposition
@@ -465,13 +487,21 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
-      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
+      new_line(file);
+      put(file,"Writing the factors of dimension ");
+      put(file,k,1); put_line(file," ...");
       if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
     end loop;
+    if not DoblDobl_Complex_Solutions.Is_Null(pts(0)) then
+      new_line(file);
+      put_line(file,"THE ISOLATED SOLUTIONS :");
+      put(file,DoblDobl_Complex_Solutions.Length_Of(pts(0)),
+          natural32(DoblDobl_Complex_Solutions.Head_Of(pts(0)).n),pts(0));
+    end if;
   end Write_Decomposition;
 
   procedure Write_Decomposition
@@ -484,13 +514,21 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
-      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
+      new_line(file);
+      put(file,"Writing the factors of dimension ");
+      put(file,k,1); put_line(file," ...");
       if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
     end loop;
+    if not DoblDobl_Complex_Solutions.Is_Null(pts(0)) then
+      new_line(file);
+      put_line(file,"THE ISOLATED SOLUTIONS :");
+      put(file,DoblDobl_Complex_Solutions.Length_Of(pts(0)),
+          natural32(DoblDobl_Complex_Solutions.Head_Of(pts(0)).n),pts(0));
+    end if;
   end Write_Decomposition;
 
   procedure Write_Decomposition
@@ -503,13 +541,21 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
-      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
+      new_line(file);
+      put(file,"Writing the factors of dimension ");
+      put(file,k,1); put_line(file," ...");
       if not Quaddobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
     end loop;
+    if not QuadDobl_Complex_Solutions.Is_Null(pts(0)) then
+      new_line(file);
+      put_line(file,"THE ISOLATED SOLUTIONS :");
+      put(file,QuadDobl_Complex_Solutions.Length_Of(pts(0)),
+          natural32(QuadDobl_Complex_Solutions.Head_Of(pts(0)).n),pts(0));
+    end if;
   end Write_Decomposition;
 
   procedure Write_Decomposition
@@ -522,13 +568,21 @@ package body Monodromy_Homotopies_io is
 
   begin
     for k in reverse fac'range loop
-      put(file,"Factors of dimension "); put(file,k,1); put_line(file," ...");
+      new_line(file);
+      put(file,"Writing the factors of dimension ");
+      put(file,k,1); put_line(file," ...");
       if not QuadDobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
     end loop;
+    if not QuadDobl_Complex_Solutions.Is_Null(pts(0)) then
+      new_line(file);
+      put_line(file,"THE ISOLATED SOLUTIONS :");
+      put(file,QuadDobl_Complex_Solutions.Length_Of(pts(0)),
+          natural32(QuadDobl_Complex_Solutions.Head_Of(pts(0)).n),pts(0));
+    end if;
   end Write_Decomposition;
 
 end Monodromy_Homotopies_io;
