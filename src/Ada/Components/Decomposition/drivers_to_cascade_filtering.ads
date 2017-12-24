@@ -64,22 +64,28 @@ package Drivers_to_Cascade_Filtering is
 
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in Standard_Complex_Poly_Systems.Poly_Sys );
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean );
   procedure DoblDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean );
   procedure QuadDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys );
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean );
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in Standard_Complex_Laur_Systems.Laur_Sys );
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean );
   procedure DoblDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys );
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean );
   procedure QuadDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys );
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean );
 
   -- DESCRIPTION :
   --   Prompts the user to enter the top dimension, embeds the system,
@@ -91,7 +97,12 @@ package Drivers_to_Cascade_Filtering is
   --   name     name of the output file;
   --   nt       number of tasks for multitasking,
   --            if zero, then no multitasking will be used;
-  --   p        an ordinary or a Laurent polynomial system.
+  --   p        an ordinary or a Laurent polynomial system;
+  --   filter   if true, then junk points will be removed,
+  --            otherwise, the output will be superwitness sets.
+  --   factor   if true and filter, then the filtered witness sets will be
+  --            factored into irreducible components,
+  --            otherwise, the output sets may still be reducible.
 
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;

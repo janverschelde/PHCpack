@@ -70,7 +70,7 @@ procedure compsolve
     end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(q.all) then
       if tofile = 'y'
-       then Standard_Embed_and_Cascade(outfile,outname.all,nt,q.all);
+       then Standard_Embed_and_Cascade(outfile,outname.all,nt,q.all,true,true);
        else Standard_Embed_and_Cascade(nt,q.all,true,true);
       end if;
     else
@@ -80,9 +80,10 @@ procedure compsolve
           := Positive_Laurent_Polynomial_System(q.all);
       begin
         p := new Poly_Sys'(t);
-        if tofile = 'y'
-         then Standard_Embed_and_Cascade(outfile,outname.all,nt,p.all);
-         else Standard_Embed_and_Cascade(nt,p.all,true,true);
+        if tofile = 'y' then
+          Standard_Embed_and_Cascade(outfile,outname.all,nt,p.all,true,true);
+        else
+          Standard_Embed_and_Cascade(nt,p.all,true,true);
         end if;
       end;
     end if;

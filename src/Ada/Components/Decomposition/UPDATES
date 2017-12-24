@@ -1,3 +1,6 @@
+Sat 23 Dec 2017 : added filter and factor flags to the embed and cascade
+  procedure in drivers_to_cascade_filtering.
+
 Sat 21 Oct 2017 : new package running_cascades with code refactored from
   drivers_to_cascade_filtering.  Added procedures which write to file in
   the package running_cascades.

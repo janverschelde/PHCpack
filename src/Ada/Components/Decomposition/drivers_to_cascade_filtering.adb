@@ -200,7 +200,8 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -236,7 +237,8 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure DoblDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -272,7 +274,8 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure QuadDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -308,7 +311,8 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean ) is
 
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
@@ -344,7 +348,8 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure DoblDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean ) is
 
     use DoblDobl_Complex_Laur_Systems;
     use DoblDobl_Complex_Solutions;
@@ -380,7 +385,8 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure QuadDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32; 
-                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean ) is
 
     use QuadDobl_Complex_Laur_Systems;
     use QuadDobl_Complex_Solutions;
@@ -741,11 +747,11 @@ package body Drivers_to_Cascade_Filtering is
     Prompt_for_Systems.Read_System(infile,inpname,lq,sysonfile);
     Create_Output_File(outfile,outname,outfilename);
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      Standard_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all);
+      Standard_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all,true,true);
     else
       lp := new Standard_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      Standard_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all);
+      Standard_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all,true,true);
     end if;
     new_line(outfile);
     Write_Seed_Number(outfile);
@@ -767,11 +773,11 @@ package body Drivers_to_Cascade_Filtering is
     Prompt_for_Systems.Read_System(infile,inpname,lq,sysonfile);
     Create_Output_File(outfile,outname,outfilename);
     if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      DoblDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all);
+      DoblDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all,true,true);
     else
       lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      DoblDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all);
+      DoblDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all,true,true);
     end if;
     new_line(outfile);
     Write_Seed_Number(outfile);
@@ -793,11 +799,11 @@ package body Drivers_to_Cascade_Filtering is
     Prompt_for_Systems.Read_System(infile,inpname,lq,sysonfile);
     Create_Output_File(outfile,outname,outfilename);
     if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      QuadDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all);
+      QuadDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all,true,true);
     else
       lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      QuadDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all);
+      QuadDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all,true,true);
     end if;
     new_line(outfile);
     Write_Seed_Number(outfile);

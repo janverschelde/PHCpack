@@ -1,3 +1,6 @@
+Sat 23 Dec 2017 : added true values for the filter and factor flags in
+  the embed and cascade calls in the compsolve?.adb files.
+
 Fri 22 Dec 2017 : with an unhandled exception, the seed is printed,
   at the end of dispatch.adb.
 
