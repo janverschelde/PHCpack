@@ -154,15 +154,17 @@ package body Generic_Polynomial_Systems is
 
   procedure Clear ( p : in out Link_to_Poly_Sys ) is
   begin
-    if p /= null
-     then Clear(p.all);
-          free(p);
+    if p /= null then
+      Clear(p.all);
+      free(p);
     end if;
   end Clear;
 
   procedure Shallow_Clear ( p : in out Link_to_Poly_Sys ) is
   begin
-    free(p);
+    if p /= null
+     then free(p);
+    end if;
   end Shallow_Clear;
 
 end Generic_Polynomial_Systems;

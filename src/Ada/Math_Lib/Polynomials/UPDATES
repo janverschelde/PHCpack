@@ -1,3 +1,6 @@
+Mon 25 Dec 2017 : before free(p) in generic_polynomial_systems.adb,
+  must test whether the pointer is null or not.
+
 Sun 30 Jul 2017 : defined the get in quaddobl_complex_laurentials_io.adb.
 
 Tue 25 Jul 2017 : provided basic input procedures for Laurent polynomials,
