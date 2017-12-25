@@ -1,3 +1,5 @@
+Mon 25 Dec 2017 : more fixes in monodromy_homotopies_io.adb.
+
 Sun 24 Dec 2017 : if there are no factors, then nothing should be written,
   fixed this in monodromy_homotopies_io.adb.
 
