@@ -358,7 +358,7 @@ package body Monodromy_Homotopies_io is
   begin
     for k in reverse eqs'range loop
       if not Standard_Complex_Solutions.Is_Null(pts(k)) then
-        put_line(standard_output,eqs(k).all,pts(k));
+        put_line(file,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -370,7 +370,7 @@ package body Monodromy_Homotopies_io is
   begin
     for k in reverse eqs'range loop
       if not Standard_Complex_Solutions.Is_Null(pts(k)) then
-        put_line(standard_output,eqs(k).all,pts(k));
+        put_line(file,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -382,7 +382,7 @@ package body Monodromy_Homotopies_io is
   begin
     for k in reverse eqs'range loop
       if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
-        put_line(standard_output,eqs(k).all,pts(k));
+        put_line(file,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -394,7 +394,7 @@ package body Monodromy_Homotopies_io is
   begin
     for k in reverse eqs'range loop
       if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
-        put_line(standard_output,eqs(k).all,pts(k));
+        put_line(file,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -406,7 +406,7 @@ package body Monodromy_Homotopies_io is
   begin
     for k in reverse eqs'range loop
       if not QuadDobl_Complex_Solutions.Is_Null(pts(k)) then
-        put_line(standard_output,eqs(k).all,pts(k));
+        put_line(file,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -418,7 +418,7 @@ package body Monodromy_Homotopies_io is
   begin
     for k in reverse eqs'range loop
       if not QuadDobl_Complex_Solutions.Is_Null(pts(k)) then
-        put_line(standard_output,eqs(k).all,pts(k));
+        put_line(file,eqs(k).all,pts(k));
       end if;
     end loop;
   end Write_Components;
@@ -430,14 +430,18 @@ package body Monodromy_Homotopies_io is
                 fac : in Standard_Natural_VecVecs.Array_of_VecVecs ) is
 
     use Standard_Natural_VecVecs;
+    first : boolean := true;
 
   begin
     for k in reverse fac'range loop
-      new_line(file);
-      put(file,"Writing the factors of dimension ");
-      put(file,k,1); put_line(file," ...");
       if not Standard_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
+          if first then
+            new_line(file);
+            put(file,"Writing the factors of dimension ");
+            put(file,k,1); put_line(file," ...");
+            first := false;
+          end if;
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
@@ -457,14 +461,18 @@ package body Monodromy_Homotopies_io is
                 fac : in Standard_Natural_VecVecs.Array_of_VecVecs ) is
 
     use Standard_Natural_VecVecs;
+    first : boolean := true;
 
   begin
     for k in reverse fac'range loop
-      new_line(file);
-      put(file,"Writing the factors of dimension ");
-      put(file,k,1); put_line(file," ...");
       if not Standard_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
+          if first then
+            new_line(file);
+            put(file,"Writing the factors of dimension ");
+            put(file,k,1); put_line(file," ...");
+            first := false;
+          end if;
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
@@ -484,14 +492,18 @@ package body Monodromy_Homotopies_io is
                 fac : in Standard_Natural_VecVecs.Array_of_VecVecs ) is
 
     use Standard_Natural_VecVecs;
+    first : boolean := true;
 
   begin
     for k in reverse fac'range loop
-      new_line(file);
-      put(file,"Writing the factors of dimension ");
-      put(file,k,1); put_line(file," ...");
       if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
+          if first then
+            new_line(file);
+            put(file,"Writing the factors of dimension ");
+            put(file,k,1); put_line(file," ...");
+            first := false;
+          end if;
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
@@ -511,14 +523,18 @@ package body Monodromy_Homotopies_io is
                 fac : in Standard_Natural_VecVecs.Array_of_VecVecs ) is
 
     use Standard_Natural_VecVecs;
+    first : boolean := true;
 
   begin
     for k in reverse fac'range loop
-      new_line(file);
-      put(file,"Writing the factors of dimension ");
-      put(file,k,1); put_line(file," ...");
       if not DoblDobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
+          if first then
+            new_line(file);
+            put(file,"Writing the factors of dimension ");
+            put(file,k,1); put_line(file," ...");
+            first := false;
+          end if;
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
@@ -538,14 +554,18 @@ package body Monodromy_Homotopies_io is
                 fac : in Standard_Natural_VecVecs.Array_of_VecVecs ) is
 
     use Standard_Natural_VecVecs;
+    first : boolean := true;
 
   begin
     for k in reverse fac'range loop
-      new_line(file);
-      put(file,"Writing the factors of dimension ");
-      put(file,k,1); put_line(file," ...");
       if not Quaddobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
+          if first then
+            new_line(file);
+            put(file,"Writing the factors of dimension ");
+            put(file,k,1); put_line(file," ...");
+            first := false;
+          end if;
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
@@ -565,14 +585,18 @@ package body Monodromy_Homotopies_io is
                 fac : in Standard_Natural_VecVecs.Array_of_VecVecs ) is
 
     use Standard_Natural_VecVecs;
+    first : boolean := true;
 
   begin
     for k in reverse fac'range loop
-      new_line(file);
-      put(file,"Writing the factors of dimension ");
-      put(file,k,1); put_line(file," ...");
       if not QuadDobl_Complex_Solutions.Is_Null(pts(k)) then
         if fac(k) /= null then
+          if first then
+            new_line(file);
+            put(file,"Writing the factors of dimension ");
+            put(file,k,1); put_line(file," ...");
+            first := false;
+          end if;
           Write_Factors(file,eqs(k).all,pts(k),fac(k));
         end if;
       end if;
