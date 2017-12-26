@@ -198,228 +198,6 @@ package body Drivers_to_Cascade_Filtering is
     end case;
   end Driver_to_Witness_Generate;
 
-  procedure Standard_Embed_and_Cascade
-              ( file : in file_type; name : in string; nt : in natural32; 
-                p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean ) is
-
-    use Standard_Complex_Poly_Systems;
-    use Standard_Complex_Solutions;
-
-    ep : Link_to_Poly_Sys;
-    timer : timing_widget;
-    sols : Solution_List;
-    tol : constant double_float := 1.0E-8;
-    topdim,rc : natural32;
-                
-  begin
-    new_line;
-    Interactive_Square_and_Embed(file,p,ep,topdim);
-    new_line;
-    put_line("See the output file for results ...");
-    new_line;
-    if nt = 0 then
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
-      tstop(timer);
-    else
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
-      tstop(timer);
-      Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
-    end if;
-    new_line(file);
-    print_times(file,timer,"calling the blackbox solver for the top");
-    if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
-    end if;
-  end Standard_Embed_and_Cascade;
-
-  procedure DoblDobl_Embed_and_Cascade
-              ( file : in file_type; name : in string; nt : in natural32; 
-                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean ) is
-
-    use DoblDobl_Complex_Poly_Systems;
-    use DoblDobl_Complex_Solutions;
-
-    ep : Link_to_Poly_Sys;
-    timer : timing_widget;
-    sols : Solution_List;
-    tol : constant double_float := 1.0E-8;
-    topdim,rc : natural32;
-                
-  begin
-    new_line;
-    Interactive_Square_and_Embed(file,p,ep,topdim);
-    new_line;
-    put_line("See the output file for results ...");
-    new_line;
-    if nt = 0 then
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
-      tstop(timer);
-    else
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
-      tstop(timer);
-      DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
-    end if;
-    new_line(file);
-    print_times(file,timer,"calling the blackbox solver for the top");
-    if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
-    end if;
-  end DoblDobl_Embed_and_Cascade;
-
-  procedure QuadDobl_Embed_and_Cascade
-              ( file : in file_type; name : in string; nt : in natural32; 
-                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean ) is
-
-    use QuadDobl_Complex_Poly_Systems;
-    use QuadDobl_Complex_Solutions;
-
-    ep : Link_to_Poly_Sys;
-    timer : timing_widget;
-    sols : Solution_List;
-    tol : constant double_float := 1.0E-8;
-    topdim,rc : natural32;
-                
-  begin
-    new_line;
-    Interactive_Square_and_Embed(file,p,ep,topdim);
-    new_line;
-    put_line("See the output file for results ...");
-    new_line;
-    if nt = 0 then
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
-      tstop(timer);
-    else
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
-      tstop(timer);
-      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
-    end if;
-    new_line(file);
-    print_times(file,timer,"calling the blackbox solver for the top");
-    if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
-    end if;
-  end QuadDobl_Embed_and_Cascade;
-
-  procedure Standard_Embed_and_Cascade
-              ( file : in file_type; name : in string; nt : in natural32; 
-                p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean ) is
-
-    use Standard_Complex_Laur_Systems;
-    use Standard_Complex_Solutions;
-
-    ep : Link_to_Laur_Sys;
-    timer : timing_widget;
-    sols : Solution_List;
-    tol : constant double_float := 1.0E-8;
-    topdim,rc : natural32;
-                
-  begin
-    new_line;
-    Interactive_Square_and_Embed(file,p,ep,topdim);
-    new_line;
-    put_line("See the output file for results ...");
-    new_line;
-    if nt = 0 then
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
-      tstop(timer);
-    else
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
-      tstop(timer);
-      Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
-    end if;
-    new_line(file);
-    print_times(file,timer,"calling the blackbox solver for the top");
-    if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
-    end if;
-  end Standard_Embed_and_Cascade;
-
-  procedure DoblDobl_Embed_and_Cascade
-              ( file : in file_type; name : in string; nt : in natural32; 
-                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean ) is
-
-    use DoblDobl_Complex_Laur_Systems;
-    use DoblDobl_Complex_Solutions;
-
-    ep : Link_to_Laur_Sys;
-    timer : timing_widget;
-    sols : Solution_List;
-    tol : constant double_float := 1.0E-8;
-    topdim,rc : natural32;
-                
-  begin
-    new_line;
-    Interactive_Square_and_Embed(file,p,ep,topdim);
-    new_line;
-    put_line("See the output file for results ...");
-    new_line;
-    if nt = 0 then
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
-      tstop(timer);
-    else
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
-      tstop(timer);
-      DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
-    end if;
-    new_line(file);
-    print_times(file,timer,"calling the blackbox solver for the top");
-    if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
-    end if;
-  end DoblDobl_Embed_and_Cascade;
-
-  procedure QuadDobl_Embed_and_Cascade
-              ( file : in file_type; name : in string; nt : in natural32; 
-                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean ) is
-
-    use QuadDobl_Complex_Laur_Systems;
-    use QuadDobl_Complex_Solutions;
-
-    ep : Link_to_Laur_Sys;
-    timer : timing_widget;
-    sols : Solution_List;
-    tol : constant double_float := 1.0E-8;
-    topdim,rc : natural32;
-                
-  begin
-    new_line;
-    Interactive_Square_and_Embed(file,p,ep,topdim);
-    new_line;
-    put_line("See the output file for results ...");
-    new_line;
-    if nt = 0 then
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
-      tstop(timer);
-    else
-      tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
-      tstop(timer);
-      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
-    end if;
-    new_line(file);
-    print_times(file,timer,"calling the blackbox solver for the top");
-    if not Is_Null(sols) then
-      Witness_Generate(name,file,nt,ep.all,sols,topdim,0,tol);
-    end if;
-  end QuadDobl_Embed_and_Cascade;
-
   procedure Prompt_for_Top_Dimension
               ( nq,nv : in natural32; topdim,lowdim : out natural32 ) is
   begin
@@ -498,6 +276,46 @@ package body Drivers_to_Cascade_Filtering is
   end Standard_Embed_and_Cascade;
 
   procedure Standard_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean ) is
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Solutions;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+    topdim,lowdim : natural32 := 0;
+    embsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    timer : Timing_Widget;
+    rc : natural32;
+    sols : Solution_List;
+
+  begin
+    new_line;
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
+    Square_and_Embed(p,topdim,embsys);
+    put_line(file,embsys.all);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      tstop(timer);
+      Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if not Is_Null(sols) then
+      Standard_Run_Cascade
+        (file,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+    end if;
+  end Standard_Embed_and_Cascade;
+
+  procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean ) is
@@ -541,6 +359,43 @@ package body Drivers_to_Cascade_Filtering is
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
       Standard_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+    end if;
+  end Standard_Embed_and_Cascade;
+
+  procedure Standard_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean ) is
+
+    use Standard_Complex_Laurentials;
+    use Standard_Complex_Solutions;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+    topdim,lowdim : natural32 := 0;
+    embsys : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    timer : Timing_Widget;
+    rc : natural32;
+    sols : Solution_List;
+
+  begin
+    new_line;
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
+    Square_and_Embed(p,topdim,embsys);
+    put_line(file,embsys.all);
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      tstop(timer);
+      Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if not Is_Null(sols) then
+      Standard_Run_Cascade
+        (file,nt,topdim,lowdim,embsys.all,sols,filter,factor);
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -592,6 +447,43 @@ package body Drivers_to_Cascade_Filtering is
   end DoblDobl_Embed_and_Cascade;
 
   procedure DoblDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean ) is
+
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Solutions;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+    topdim,lowdim : natural32 := 0;
+    embsys : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    timer : Timing_Widget;
+    rc : natural32;
+    sols : Solution_List;
+
+  begin
+    new_line;
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
+    Square_and_Embed(p,topdim,embsys);
+    put_line(file,embsys.all);
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      tstop(timer);
+      DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if not Is_Null(sols) then
+      DoblDobl_Run_Cascade
+        (file,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+    end if;
+  end DoblDobl_Embed_and_Cascade;
+
+  procedure DoblDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean ) is
@@ -635,6 +527,43 @@ package body Drivers_to_Cascade_Filtering is
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
       DoblDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+    end if;
+  end DoblDobl_Embed_and_Cascade;
+
+  procedure DoblDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean ) is
+
+    use DoblDobl_Complex_Laurentials;
+    use DoblDobl_Complex_Solutions;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+    topdim,lowdim : natural32 := 0;
+    embsys : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    timer : Timing_Widget;
+    rc : natural32;
+    sols : Solution_List;
+
+  begin
+    new_line;
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
+    Square_and_Embed(p,topdim,embsys);
+    put_line(file,embsys.all);
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      tstop(timer);
+      DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if not Is_Null(sols) then
+      DoblDobl_Run_Cascade
+        (file,nt,topdim,lowdim,embsys.all,sols,filter,factor);
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -686,6 +615,43 @@ package body Drivers_to_Cascade_Filtering is
   end QuadDobl_Embed_and_Cascade;
 
   procedure QuadDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean ) is
+
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Solutions;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+    topdim,lowdim : natural32 := 0;
+    embsys : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    timer : Timing_Widget;
+    rc : natural32;
+    sols : Solution_List;
+
+  begin
+    new_line;
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
+    Square_and_Embed(p,topdim,embsys);
+    put_line(file,embsys.all);
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      tstop(timer);
+      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if not Is_Null(sols) then
+      QuadDobl_Run_Cascade
+        (file,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+    end if;
+  end QuadDobl_Embed_and_Cascade;
+
+  procedure QuadDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean ) is
@@ -729,6 +695,43 @@ package body Drivers_to_Cascade_Filtering is
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
       QuadDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+    end if;
+  end QuadDobl_Embed_and_Cascade;
+
+  procedure QuadDobl_Embed_and_Cascade
+              ( file : in file_type; name : in string; nt : in natural32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean ) is
+
+    use QuadDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Solutions;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+    topdim,lowdim : natural32 := 0;
+    embsys : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    timer : Timing_Widget;
+    rc : natural32;
+    sols : Solution_List;
+
+  begin
+    new_line;
+    Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
+    Square_and_Embed(p,topdim,embsys);
+    put_line(file,embsys.all);
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      tstop(timer);
+      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if not Is_Null(sols) then
+      QuadDobl_Run_Cascade
+        (file,nt,topdim,lowdim,embsys.all,sols,filter,factor);
     end if;
   end QuadDobl_Embed_and_Cascade;
 

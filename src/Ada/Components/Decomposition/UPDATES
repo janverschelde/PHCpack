@@ -1,3 +1,6 @@
+Tue 26 Dec 2017 : in drivers_to_cascade_filtering.adb, updated the
+  embed and cascade procedures that write to file to call running_cascades.
+
 Sat 23 Dec 2017 : added filter and factor flags to the embed and cascade
   procedure in drivers_to_cascade_filtering.
 
