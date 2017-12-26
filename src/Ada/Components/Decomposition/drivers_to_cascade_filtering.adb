@@ -208,7 +208,7 @@ package body Drivers_to_Cascade_Filtering is
     loop
       put("The number of equations : "); put(nq,1); new_line;
       put("The number of variables : "); put(nv,1); new_line;
-      put("-> the default, suggested top dimension is "); put(nv-1,1);
+      put("-> the default, largest top dimension is "); put(nv-1,1);
       put_line(" ...");
       put("Give the expected top dimension : ");
       Numbers_io.Read_Natural(topdim);
@@ -223,7 +223,7 @@ package body Drivers_to_Cascade_Filtering is
       end if;
       put("Please enter a number between "); put(lowdim,1);
       put(" and "); put(nv-1,1); put_line(".");
-      put("The suggested default top dimension is ");
+      put("The default, largest top dimension is ");
       put(nv-1,1); put_line(".");
     end loop;
   end Prompt_for_Top_Dimension;
