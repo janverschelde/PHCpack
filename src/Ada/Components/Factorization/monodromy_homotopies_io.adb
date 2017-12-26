@@ -252,12 +252,15 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
     use Standard_Natural_Vectors;
 
+    cnt : natural32 := 0;
+
   begin
     if fac /= null then
       for k in fac'range loop
         if fac(k) /= null then
+          cnt := cnt + 1;
           new_line(file);
-          put(file,"FACTOR "); put(file,k,1); put_line(file," :");
+          put(file,"FACTOR "); put(file,cnt,1); put_line(file," :");
           Write_Factor(file,eqs,pts,fac(k));
         end if;
       end loop;
@@ -273,12 +276,15 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
     use Standard_Natural_Vectors;  
 
+    cnt : natural32 := 0;
+
   begin
     if fac /= null then
       for k in fac'range loop
         if fac(k) /= null then
+          cnt := cnt + 1;
           new_line(file);
-          put(file,"FACTOR "); put(file,k,1); put_line(file," :");
+          put(file,"FACTOR "); put(file,cnt,1); put_line(file," :");
           Write_Factor(file,eqs,pts,fac(k));
         end if;
       end loop;
@@ -294,12 +300,15 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
     use Standard_Natural_Vectors;
 
+    cnt : natural32 := 0;
+
   begin
     if fac /= null then
       for k in fac'range loop
         if fac(k) /= null then
+          cnt := cnt + 1;
           new_line(file);
-          put(file,"FACTOR "); put(file,k,1); put_line(file," :");
+          put(file,"FACTOR "); put(file,cnt,1); put_line(file," :");
           Write_Factor(file,eqs,pts,fac(k));
         end if;
       end loop;
@@ -315,12 +324,15 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
     use Standard_Natural_Vectors;
 
+    cnt : natural32 := 0;
+
   begin
     if fac /= null then
       for k in fac'range loop
         if fac(k) /= null then
+          cnt := cnt + 1;
           new_line(file);
-          put(file,"FACTOR "); put(file,k,1); put_line(file," :");
+          put(file,"FACTOR "); put(file,cnt,1); put_line(file," :");
           Write_Factor(file,eqs,pts,fac(k));
         end if;
       end loop;
@@ -336,12 +348,15 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
     use Standard_Natural_Vectors;
 
+    cnt : natural32 := 0;
+
   begin
     if fac /= null then
       for k in fac'range loop
         if fac(k) /= null then
+          cnt := cnt + 1;
           new_line(file);
-          put(file,"FACTOR "); put(file,k,1); put_line(file," :");
+          put(file,"FACTOR "); put(file,cnt,1); put_line(file," :");
           Write_Factor(file,eqs,pts,fac(k));
         end if;
       end loop;
@@ -357,12 +372,15 @@ package body Monodromy_Homotopies_io is
     use Standard_Natural_VecVecs;
     use Standard_Natural_Vectors;
 
+    cnt : natural32 := 0;
+
   begin
     if fac /= null then
       for k in fac'range loop
         if fac(k) /= null then
+          cnt := cnt + 1;
           new_line(file);
-          put(file,"FACTOR "); put(file,k,1); put_line(file," :");
+          put(file,"FACTOR "); put(file,cnt,1); put_line(file," :");
           Write_Factor(file,eqs,pts,fac(k));
         end if;
       end loop;
