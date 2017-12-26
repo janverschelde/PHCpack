@@ -223,7 +223,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,nbl,grid,f);
+    Factor(file,dim,nbl,grid,f);
     Sampling_Machine.Clear;
   end Call_Monodromy_Breakup;
 
@@ -247,7 +247,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,nbl,grid,f);
+    Factor(file,dim,nbl,grid,f);
     DoblDobl_Sampling_Machine.Clear;
   end Call_Monodromy_Breakup;
 
@@ -271,7 +271,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,nbl,grid,f);
+    Factor(file,dim,nbl,grid,f);
     QuadDobl_Sampling_Machine.Clear;
   end Call_Monodromy_Breakup;
 
@@ -295,7 +295,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,nbl,grid,f);
+    Laurent_Factor(file,dim,nbl,grid,f);
     Sampling_Laurent_Machine.Clear;
   end Call_Monodromy_Breakup;
 
@@ -319,7 +319,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,nbl,grid,f);
+    Laurent_Factor(file,dim,nbl,grid,f);
     DoblDobl_Sampling_Laurent_Machine.Clear;
   end Call_Monodromy_Breakup;
 
@@ -343,7 +343,7 @@ package body Drivers_to_Factor_Components is
     put_line("See the output file for results...");
     new_line;
     grid := Create(file,p,sols,dim);
-    Factor(file,p,dim,nbl,grid,f);
+    Laurent_Factor(file,dim,nbl,grid,f);
     QuadDobl_Sampling_Laurent_Machine.Clear;
   end Call_Monodromy_Breakup;
 

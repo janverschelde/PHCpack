@@ -1278,8 +1278,7 @@ package body Monodromy_Component_Breakup is
 
 -- DRIVER ROUTINES :
 
-  procedure Factor ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                     dim,nbl : in natural32;
+  procedure Factor ( dim,nbl : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
                      fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
@@ -1293,7 +1292,6 @@ package body Monodromy_Component_Breakup is
   end Factor;
 
   procedure Factor ( file : in file_type;
-                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                      dim,nbl : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
                      fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
@@ -1316,8 +1314,7 @@ package body Monodromy_Component_Breakup is
     new_line(file);
   end Factor;
 
-  procedure Factor ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                     dim,nbl : in natural32;
+  procedure Factor ( dim,nbl : in natural32;
                      grid : in Array_of_DoblDobl_Sample_Lists;
                      fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
@@ -1331,7 +1328,6 @@ package body Monodromy_Component_Breakup is
   end Factor;
 
   procedure Factor ( file : in file_type;
-                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                      dim,nbl : in natural32;
                      grid : in Array_of_DoblDobl_Sample_Lists;
                      fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
@@ -1354,8 +1350,7 @@ package body Monodromy_Component_Breakup is
     new_line(file);
   end Factor;
 
-  procedure Factor ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                     dim,nbl : in natural32;
+  procedure Factor ( dim,nbl : in natural32;
                      grid : in Array_of_QuadDobl_Sample_Lists;
                      fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
@@ -1369,7 +1364,6 @@ package body Monodromy_Component_Breakup is
   end Factor;
 
   procedure Factor ( file : in file_type;
-                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                      dim,nbl : in natural32;
                      grid : in Array_of_QuadDobl_Sample_Lists;
                      fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
@@ -1392,10 +1386,10 @@ package body Monodromy_Component_Breakup is
     new_line(file);
   end Factor;
 
-  procedure Factor ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                     dim,nbl : in natural32;
-                     grid : in Array_of_Standard_Sample_Lists;
-                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+  procedure Laurent_Factor
+              ( dim,nbl : in natural32;
+                grid : in Array_of_Standard_Sample_Lists;
+                fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
@@ -1404,13 +1398,13 @@ package body Monodromy_Component_Breakup is
     use_laurent := true;
     fac := Init_Factors(deg);
     Monodromy_Breakup(grid,dim,nbl,tol,fac);
-  end Factor;
+  end Laurent_Factor;
 
-  procedure Factor ( file : in file_type;
-                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                     dim,nbl : in natural32;
-                     grid : in Array_of_Standard_Sample_Lists;
-                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+  procedure Laurent_Factor
+              ( file : in file_type;
+                dim,nbl : in natural32;
+                grid : in Array_of_Standard_Sample_Lists;
+                fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     timer : Timing_Widget;
     deg : constant natural32 := Length_Of(grid(grid'first));
@@ -1428,12 +1422,12 @@ package body Monodromy_Component_Breakup is
     new_line(file);
     print_times(file,timer,"Monodromy Factorization");
     new_line(file);
-  end Factor;
+  end Laurent_Factor;
 
-  procedure Factor ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim,nbl : in natural32;
-                     grid : in Array_of_DoblDobl_Sample_Lists;
-                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+  procedure Laurent_Factor
+              ( dim,nbl : in natural32;
+                grid : in Array_of_DoblDobl_Sample_Lists;
+                fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
@@ -1442,13 +1436,13 @@ package body Monodromy_Component_Breakup is
     use_laurent := true;
     fac := Init_Factors(deg);
     Monodromy_Breakup(grid,dim,nbl,tol,fac);
-  end Factor;
+  end Laurent_Factor;
 
-  procedure Factor ( file : in file_type;
-                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim,nbl : in natural32;
-                     grid : in Array_of_DoblDobl_Sample_Lists;
-                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+  procedure Laurent_Factor
+              ( file : in file_type;
+                dim,nbl : in natural32;
+                grid : in Array_of_DoblDobl_Sample_Lists;
+                fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     timer : Timing_Widget;
     deg : constant natural32 := Length_Of(grid(grid'first));
@@ -1466,12 +1460,12 @@ package body Monodromy_Component_Breakup is
     new_line(file);
     print_times(file,timer,"Monodromy Factorization");
     new_line(file);
-  end Factor;
+  end Laurent_Factor;
 
-  procedure Factor ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim,nbl : in natural32;
-                     grid : in Array_of_QuadDobl_Sample_Lists;
-                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+  procedure Laurent_Factor
+              ( dim,nbl : in natural32;
+                grid : in Array_of_QuadDobl_Sample_Lists;
+                fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     deg : constant natural32 := Length_Of(grid(grid'first));
     tol : constant double_float := 1.0E-8;
@@ -1480,13 +1474,13 @@ package body Monodromy_Component_Breakup is
     use_laurent := true;
     fac := Init_Factors(deg);
     Monodromy_Breakup(grid,dim,nbl,tol,fac);
-  end Factor;
+  end Laurent_Factor;
 
-  procedure Factor ( file : in file_type;
-                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                     dim,nbl : in natural32;
-                     grid : in Array_of_QuadDobl_Sample_Lists;
-                     fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+  procedure Laurent_Factor
+              ( file : in file_type;
+                dim,nbl : in natural32;
+                grid : in Array_of_QuadDobl_Sample_Lists;
+                fac : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     timer : Timing_Widget;
     deg : constant natural32 := Length_Of(grid(grid'first));
@@ -1504,7 +1498,7 @@ package body Monodromy_Component_Breakup is
     new_line(file);
     print_times(file,timer,"Monodromy Factorization");
     new_line(file);
-  end Factor;
+  end Laurent_Factor;
 
 begin
   use_laurent := false;

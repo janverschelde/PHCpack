@@ -64,7 +64,7 @@ procedure ts_newfac is
       Sampling_Machine.Default_Tune_Sampler(0);
       Sampling_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,nbl,grid,f);
+      Factor(file,dim,nbl,grid,f);
       Sampling_Machine.Clear;
     else
       new_line;
@@ -72,7 +72,8 @@ procedure ts_newfac is
       Sampling_Machine.Default_Tune_Sampler(0);
       Sampling_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,nbl,grid,f);
+     -- Factor(lp.all,dim,nbl,grid,f);
+      Factor(dim,nbl,grid,f);
       Sampling_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
@@ -113,7 +114,7 @@ procedure ts_newfac is
       Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,nbl,grid,f);
+      Laurent_Factor(file,dim,nbl,grid,f);
       Sampling_Laurent_Machine.Clear;
     else
       new_line;
@@ -121,7 +122,7 @@ procedure ts_newfac is
       Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,nbl,grid,f);
+      Laurent_Factor(dim,nbl,grid,f);
       Sampling_Laurent_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
@@ -162,7 +163,7 @@ procedure ts_newfac is
       DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
       DoblDobl_Sampling_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,nbl,grid,f);
+      Factor(file,dim,nbl,grid,f);
       DoblDobl_Sampling_Machine.Clear;
     else
       new_line;
@@ -170,7 +171,7 @@ procedure ts_newfac is
       DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
       DoblDobl_Sampling_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,nbl,grid,f);
+      Factor(dim,nbl,grid,f);
       DoblDobl_Sampling_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
@@ -211,7 +212,7 @@ procedure ts_newfac is
       DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,nbl,grid,f);
+      Laurent_Factor(file,dim,nbl,grid,f);
       DoblDobl_Sampling_Laurent_Machine.Clear;
     else
       new_line;
@@ -219,7 +220,7 @@ procedure ts_newfac is
       DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,nbl,grid,f);
+      Laurent_Factor(dim,nbl,grid,f);
       DoblDobl_Sampling_Laurent_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
@@ -260,7 +261,7 @@ procedure ts_newfac is
       QuadDobl_Sampling_Machine.Default_Tune_Sampler(0);
       QuadDobl_Sampling_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,nbl,grid,f);
+      Factor(file,dim,nbl,grid,f);
       QuadDobl_Sampling_Machine.Clear;
     else
       new_line;
@@ -268,7 +269,7 @@ procedure ts_newfac is
       QuadDobl_Sampling_Machine.Default_Tune_Sampler(0);
       QuadDobl_Sampling_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,nbl,grid,f);
+      Factor(dim,nbl,grid,f);
       QuadDobl_Sampling_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);
@@ -309,7 +310,7 @@ procedure ts_newfac is
       QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(file,lp.all,sols,dim);
-      Factor(file,lp.all,dim,nbl,grid,f);
+      Laurent_Factor(file,dim,nbl,grid,f);
       QuadDobl_Sampling_Laurent_Machine.Clear;
     else
       new_line;
@@ -317,7 +318,7 @@ procedure ts_newfac is
       QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
       QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
       grid := Create(lp.all,sols,dim);
-      Factor(lp.all,dim,nbl,grid,f);
+      Laurent_Factor(dim,nbl,grid,f);
       QuadDobl_Sampling_Laurent_Machine.Clear;
       put_line("The factorization : ");
       Write_Factors(Standard_Output,f.all);

@@ -27,7 +27,7 @@ package body Monodromy_Homotopies is
                 dim,nbl : in natural32; tol : in double_float;
                 f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
 
-    hyp : constant Standard_Complex_VecVecs.VecVec
+    hyp : Standard_Complex_VecVecs.VecVec(1..integer32(dim))
         := Witness_Sets.Slices(eqs,dim);
     sps : constant Standard_Sample_List := Create(pts,hyp);
     grid : Array_of_Standard_Sample_Lists(0..2);
@@ -39,9 +39,13 @@ package body Monodromy_Homotopies is
     Sampling_Machine.Default_Tune_Sampler(0);
     Sampling_Machine.Default_Tune_Refiner;
     grid := Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Factor(dim,nbl,grid,f);
+    Standard_Complex_VecVecs.Clear(hyp);
     Sampling_Machine.Clear;
-    Standard_Complex_Poly_Systems.Clear(copiedeqs);
+   -- Standard_Complex_Poly_Systems.Clear(copiedeqs);
+  exception
+    when others =>
+      put_line("An exception happened in Witness_Factor."); raise;
   end Witness_Factor;
 
   procedure Witness_Factor
@@ -63,7 +67,7 @@ package body Monodromy_Homotopies is
     Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     Sampling_Laurent_Machine.Default_Tune_Refiner;
     grid := Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Laurent_Factor(dim,nbl,grid,f);
     Sampling_Laurent_Machine.Clear;
     Standard_Complex_Laur_Systems.Clear(copiedeqs);
   end Witness_Factor;
@@ -87,7 +91,7 @@ package body Monodromy_Homotopies is
     DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
     DoblDobl_Sampling_Machine.Default_Tune_Refiner;
     grid := DoblDobl_Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Factor(dim,nbl,grid,f);
     DoblDobl_Sampling_Machine.Clear;
     DoblDobl_Complex_Poly_Systems.Clear(copiedeqs);
   end Witness_Factor;
@@ -111,7 +115,7 @@ package body Monodromy_Homotopies is
     DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
     grid := DoblDobl_Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Laurent_Factor(dim,nbl,grid,f);
     DoblDobl_Sampling_Laurent_Machine.Clear;
     DoblDobl_Complex_Laur_Systems.Clear(copiedeqs);
   end Witness_Factor;
@@ -135,7 +139,7 @@ package body Monodromy_Homotopies is
     QuadDobl_Sampling_Machine.Default_Tune_Sampler(0);
     QuadDobl_Sampling_Machine.Default_Tune_Refiner;
     grid := QuadDobl_Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Factor(dim,nbl,grid,f);
     QuadDobl_Sampling_Machine.Clear;
     QuadDobl_Complex_Poly_Systems.Clear(copiedeqs);
   end Witness_Factor;
@@ -159,7 +163,7 @@ package body Monodromy_Homotopies is
     QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
     grid := QuadDobl_Rectangular_Sample_Grids.Create1(sps,2);
-    Monodromy_Component_Breakup.Factor(copiedeqs,dim,nbl,grid,f);
+    Monodromy_Component_Breakup.Laurent_Factor(dim,nbl,grid,f);
     QuadDobl_Sampling_Laurent_Machine.Clear;
     QuadDobl_Complex_Laur_Systems.Clear(copiedeqs);
   end Witness_Factor;
