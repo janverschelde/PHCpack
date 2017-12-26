@@ -1,3 +1,6 @@
+Tue 26 Dec 2017 : in compsolve.adb, compsolve2.adb, and compsolve4.adb,
+  fixed the greetings when phc -B writes to file.
+
 Sat 23 Dec 2017 : added true values for the filter and factor flags in
   the embed and cascade calls in the compsolve?.adb files.
 

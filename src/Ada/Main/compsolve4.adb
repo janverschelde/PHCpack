@@ -55,13 +55,14 @@ procedure compsolve4
       append_sols := not append_sols;
       close(infile);
     end if;
+    if not greeted then
+      Write_Greeting(nt);
+      greeted := true;
+    end if;
     if outfilename /= "" then
       tofile := 'y';
     else
-      if not greeted then
-        Write_Greeting(nt); new_line;
-        greeted := true;
-      end if;
+      new_line;
       put("Do you want the output to file ? (y/n) ");
       Ask_Yes_or_No(tofile); -- will be 'y' if yes
     end if;
