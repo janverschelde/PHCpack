@@ -3,6 +3,7 @@ Mon 25 Dec 2017 : more fixes in monodromy_homotopies_io.adb,
   the top drivers do not depend on the polynomial system.  The removal
   of a superfluous input parameter changed drivers_to_factor_components.adb,
   ts_newfac.adb, and monodromy_homotopies.adb.
+  Removed the patch with copiedeqs from monodromy_homotopies.adb.
 
 Sun 24 Dec 2017 : if there are no factors, then nothing should be written,
   fixed this in monodromy_homotopies_io.adb.
