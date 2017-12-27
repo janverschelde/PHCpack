@@ -967,13 +967,17 @@ package body Sampling_Laurent_Machine is
     use Standard_Complex_Laur_SysFun;
     use Standard_Complex_Laur_JacoMats;
 
-    jac : Jaco_Mat(ep'range,ep'range) := Create(ep);
-    jac_eval : constant Eval_Jaco_Mat(ep'range,ep'range) := Create(jac);
+    epcopy : Standard_Complex_Laur_Systems.Laur_Sys(ep'range);
+    jac : Jaco_Mat(ep'range,ep'range);
+    jac_eval : Eval_Jaco_Mat(ep'range,ep'range);
 
   begin
     restricted := false;
-    stansys := new Standard_Complex_Laur_Systems.Laur_Sys'(ep);
-    stansys_eval := new Eval_Laur_Sys'(Create(ep));
+    Standard_Complex_Laur_Systems.Copy(ep,epcopy);
+    jac := Create(epcopy);
+    jac_eval := Create(jac);
+    stansys := new Standard_Complex_Laur_Systems.Laur_Sys'(epcopy);
+    stansys_eval := new Eval_Laur_Sys'(Create(epcopy));
     stanjac_eval := new Eval_Jaco_Mat'(jac_eval);
     Clear(jac);
   end Initialize;
@@ -994,13 +998,17 @@ package body Sampling_Laurent_Machine is
     use Standard_Complex_Laur_SysFun;
     use Standard_Complex_Laur_JacoMats;
 
-    jac : Jaco_Mat(ep'range,ep'range) := Create(ep);
-    jac_eval : constant Eval_Jaco_Mat(ep'range,ep'range) := Create(jac);
+    epcopy : Standard_Complex_Laur_Systems.Laur_Sys(ep'range);
+    jac : Jaco_Mat(ep'range,ep'range);
+    jac_eval : Eval_Jaco_Mat(ep'range,ep'range);
 
   begin
     restricted := true;
-    rststansys := new Standard_Complex_Laur_Systems.Laur_Sys'(ep);
-    rststansys_eval := new Eval_Laur_Sys'(Create(ep));
+    Standard_Complex_Laur_Systems.Copy(ep,epcopy);
+    jac := Create(epcopy);
+    jac_eval := Create(jac);
+    rststansys := new Standard_Complex_Laur_Systems.Laur_Sys'(epcopy);
+    rststansys_eval := new Eval_Laur_Sys'(Create(epcopy));
     rststanjac_eval := new Eval_Jaco_Mat'(jac_eval);
     Clear(jac);
   end Initialize_Restricted;
@@ -1014,22 +1022,24 @@ package body Sampling_Laurent_Machine is
     use Multprec_Complex_Laur_SysFun;
     use Multprec_Complex_Laur_JacoMats;
 
+    epcopy : Standard_Complex_Laur_Systems.Laur_Sys(ep'range);
     mps : Multprec_Complex_Laur_Systems.Laur_Sys(ep'range);
     mpjac : Jaco_Mat(ep'range,ep'range);
-    stjac : Standard_Complex_Laur_JacoMats.Jaco_Mat(ep'range,ep'range)
-          := Standard_Complex_Laur_JacoMats.Create(ep);
-    stjac_eval : constant Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat
-                   (ep'range,ep'range)
-               := Standard_Complex_Laur_JacoMats.Create(stjac);
+    stjac : Standard_Complex_Laur_JacoMats.Jaco_Mat(ep'range,ep'range);
+    stjac_eval
+      : Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat(ep'range,ep'range);
 
   begin
     restricted := false;
-    stansys := new Standard_Complex_Laur_Systems.Laur_Sys'(ep);
+    Standard_Complex_Laur_Systems.Copy(ep,epcopy);
+    stjac := Standard_Complex_Laur_JacoMats.Create(epcopy);
+    stjac_eval := Standard_Complex_Laur_JacoMats.Create(stjac);
+    stansys := new Standard_Complex_Laur_Systems.Laur_Sys'(epcopy);
     stansys_eval
       := new Standard_Complex_Laur_SysFun.Eval_Laur_Sys'
-               (Standard_Complex_Laur_SysFun.Create(ep));
-    stanjac_eval := new Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat'
-                          (stjac_eval);
+               (Standard_Complex_Laur_SysFun.Create(epcopy));
+    stanjac_eval
+      := new Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat'(stjac_eval);
     Standard_Complex_Laur_JacoMats.Clear(stjac);
     orgsys := new Multprec_Complex_Laur_Systems.Laur_Sys'(mp);
     for i in ep'first..ep'last-k loop
@@ -1057,22 +1067,24 @@ package body Sampling_Laurent_Machine is
     use Multprec_Complex_Laur_SysFun;
     use Multprec_Complex_Laur_JacoMats;
 
+    epcopy : Standard_Complex_Laur_Systems.Laur_Sys(ep'range);
     mps : Multprec_Complex_Laur_Systems.Laur_Sys(ep'range);
     mpjac : Jaco_Mat(ep'range,ep'range);
-    stjac : Standard_Complex_Laur_JacoMats.Jaco_Mat(ep'range,ep'range)
-          := Standard_Complex_Laur_JacoMats.Create(ep);
-    stjac_eval : constant Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat
-                   (ep'range,ep'range)
-               := Standard_Complex_Laur_JacoMats.Create(stjac);
+    stjac : Standard_Complex_Laur_JacoMats.Jaco_Mat(ep'range,ep'range);
+    stjac_eval
+      : Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat(ep'range,ep'range);
 
   begin
     restricted := true;
-    rststansys := new Standard_Complex_Laur_Systems.Laur_Sys'(ep);
+    Standard_Complex_Laur_Systems.Copy(ep,epcopy);
+    stjac := Standard_Complex_Laur_JacoMats.Create(ep);
+    stjac_eval := Standard_Complex_Laur_JacoMats.Create(stjac);
+    rststansys := new Standard_Complex_Laur_Systems.Laur_Sys'(epcopy);
     rststansys_eval
       := new Standard_Complex_Laur_SysFun.Eval_Laur_Sys'
-               (Standard_Complex_Laur_SysFun.Create(ep));
-    rststanjac_eval := new Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat'
-                             (stjac_eval);
+               (Standard_Complex_Laur_SysFun.Create(epcopy));
+    rststanjac_eval
+      := new Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat'(stjac_eval);
     Standard_Complex_Laur_JacoMats.Clear(stjac);
     for i in ep'first..ep'last-k loop
       mps(i) := Embed(mp(i),ep(i),mp'last,k,size);
@@ -1695,7 +1707,8 @@ package body Sampling_Laurent_Machine is
 
   procedure Clear is
   begin
-    Standard_Complex_Laur_Systems.Shallow_Clear(stansys); --  data sharing
+   -- Standard_Complex_Laur_Systems.Shallow_Clear(stansys); -- data sharing
+    Standard_Complex_Laur_Systems.Clear(stansys); -- no sharing!
     Multprec_Complex_Laur_Systems.Shallow_Clear(multsys);
     Multprec_Complex_Laur_Systems.Shallow_Clear(orgsys);
     Standard_Complex_Laur_SysFun.Clear(stansys_eval);
@@ -1707,7 +1720,8 @@ package body Sampling_Laurent_Machine is
   procedure Clear_Restricted is
   begin
     restricted := false;
-    Standard_Complex_Laur_Systems.Shallow_Clear(rststansys); --  data sharing
+   -- Standard_Complex_Laur_Systems.Shallow_Clear(rststansys); -- data sharing
+    Standard_Complex_Laur_Systems.Clear(rststansys); -- no sharing!
     Multprec_Complex_Laur_Systems.Shallow_Clear(rstmultsys);
     Standard_Complex_Laur_SysFun.Clear(rststansys_eval);
     Standard_Complex_Laur_JacoMats.Clear(rststanjac_eval);

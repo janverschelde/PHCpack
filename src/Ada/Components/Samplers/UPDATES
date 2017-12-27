@@ -1,5 +1,5 @@
 Tue 26 Dec 2017 : changed initialize and clear in sampling_machine.adb
-  to avoid a crash in phc -B.
+  to avoid a crash in phc -B.  Also fixed sampling_laurent_machine.adb.
 
 Wed 26 Jul 2017 : extended intrinsic_witness_sets_io with procedures to
   write a witness set for a Laurent system with the solutions represented
