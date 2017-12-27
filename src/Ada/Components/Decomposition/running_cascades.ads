@@ -71,32 +71,38 @@ package Running_Cascades is
   --            otherwise, the output sets may still be reducible.
 
   procedure Standard_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
   procedure Standard_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
   procedure DoblDobl_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
   procedure DoblDobl_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
   procedure QuadDobl_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
   procedure QuadDobl_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean );
@@ -108,6 +114,7 @@ package Running_Cascades is
 
   -- ON ENTRY :
   --   file     file opened for output;
+  --   name     file name for the top embedded system;
   --   nt       number of tasks for multitasking,
   --            if zero, then no multitasking will be used;
   --   topdim   the top dimension of the solution set;

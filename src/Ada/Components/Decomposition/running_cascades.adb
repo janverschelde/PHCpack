@@ -352,7 +352,8 @@ package body Running_Cascades is
   end QuadDobl_Run_Cascade;
 
   procedure Standard_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -407,7 +408,8 @@ package body Running_Cascades is
   end Standard_Run_Cascade;
 
   procedure Standard_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -461,7 +463,8 @@ package body Running_Cascades is
   end Standard_Run_Cascade;
 
   procedure DoblDobl_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -515,7 +518,8 @@ package body Running_Cascades is
   end DoblDobl_Run_Cascade;
 
   procedure DoblDobl_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -569,7 +573,8 @@ package body Running_Cascades is
   end DoblDobl_Run_Cascade;
 
   procedure QuadDobl_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
@@ -623,7 +628,8 @@ package body Running_Cascades is
   end QuadDobl_Run_Cascade;
 
   procedure QuadDobl_Run_Cascade
-              ( file : in file_type; nt,topdim,lowdim : in natural32;
+              ( file : in file_type; name : in string;
+                nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean ) is
