@@ -1,3 +1,6 @@
+Tue 26 Dec 2017 : in monodromy_homotopies.adb, the polynomial_type must be
+  set properly to laurent before making the grids for monodromy stop test.
+
 Mon 25 Dec 2017 : more fixes in monodromy_homotopies_io.adb,
   fixed the counting of the factors.  In monodromy_component_breakup,
   the top drivers do not depend on the polynomial system.  The removal

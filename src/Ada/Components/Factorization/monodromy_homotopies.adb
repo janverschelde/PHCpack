@@ -36,6 +36,7 @@ package body Monodromy_Homotopies is
     Sampling_Machine.Initialize(eqs);
     Sampling_Machine.Default_Tune_Sampler(0);
     Sampling_Machine.Default_Tune_Refiner;
+    Rectangular_Sample_Grids.Set_Polynomial_Type(laurent=>false);
     grid := Rectangular_Sample_Grids.Create1(sps,2);
     Monodromy_Component_Breakup.Factor(dim,nbl,grid,f);
     Standard_Complex_VecVecs.Clear(hyp);
@@ -61,6 +62,7 @@ package body Monodromy_Homotopies is
     Sampling_Laurent_Machine.Initialize(eqs);
     Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     Sampling_Laurent_Machine.Default_Tune_Refiner;
+    Rectangular_Sample_Grids.Set_Polynomial_Type(laurent=>true);
     grid := Rectangular_Sample_Grids.Create1(sps,2);
     Monodromy_Component_Breakup.Laurent_Factor(dim,nbl,grid,f);
     Standard_Complex_VecVecs.Clear(hyp);
@@ -83,6 +85,7 @@ package body Monodromy_Homotopies is
     DoblDobl_Sampling_Machine.Initialize(eqs);
     DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
     DoblDobl_Sampling_Machine.Default_Tune_Refiner;
+    DoblDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(laurent=>false);
     grid := DoblDobl_Rectangular_Sample_Grids.Create1(sps,2);
     Monodromy_Component_Breakup.Factor(dim,nbl,grid,f);
     DoblDobl_Complex_VecVecs.Clear(hyp);
@@ -105,6 +108,7 @@ package body Monodromy_Homotopies is
     DoblDobl_Sampling_Laurent_Machine.Initialize(eqs);
     DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
+    DoblDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(laurent=>true);
     grid := DoblDobl_Rectangular_Sample_Grids.Create1(sps,2);
     Monodromy_Component_Breakup.Laurent_Factor(dim,nbl,grid,f);
     DoblDobl_Complex_VecVecs.Clear(hyp);
@@ -128,6 +132,7 @@ package body Monodromy_Homotopies is
     QuadDobl_Sampling_Machine.Initialize(eqs);
     QuadDobl_Sampling_Machine.Default_Tune_Sampler(0);
     QuadDobl_Sampling_Machine.Default_Tune_Refiner;
+    QuadDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(laurent=>false);
     grid := QuadDobl_Rectangular_Sample_Grids.Create1(sps,2);
     Monodromy_Component_Breakup.Factor(dim,nbl,grid,f);
     QuadDobl_Complex_VecVecs.Clear(hyp);
@@ -150,6 +155,7 @@ package body Monodromy_Homotopies is
     QuadDobl_Sampling_Laurent_Machine.Initialize(eqs);
     QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
+    QuadDobl_Rectangular_Sample_Grids.Set_Polynomial_Type(laurent=>true);
     grid := QuadDobl_Rectangular_Sample_Grids.Create1(sps,2);
     Monodromy_Component_Breakup.Laurent_Factor(dim,nbl,grid,f);
     QuadDobl_Complex_VecVecs.Clear(hyp);
