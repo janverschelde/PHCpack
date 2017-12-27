@@ -21,7 +21,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
     gpts : Array_of_Solution_Lists(0..ns);
     pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
@@ -77,7 +77,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
     gpts : Array_of_Solution_Lists(0..ns);
     pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
@@ -134,7 +134,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
     gpts : Array_of_Solution_Lists(0..ns);
     nbl : constant natural32 := 20;
@@ -191,7 +191,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
     gpts : Array_of_Solution_Lists(0..ns);
     nbl : constant natural32 := 20;
@@ -248,7 +248,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
     nbl : constant natural32 := 20;
     deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
@@ -305,7 +305,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
     gpts : Array_of_Solution_Lists(0..ns);
     pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
@@ -363,7 +363,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
     gpts : Array_of_Solution_Lists(0..ns);
     pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
@@ -419,7 +419,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
     gpts : Array_of_Solution_Lists(0..ns);
     pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
@@ -474,7 +474,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
     gpts : Array_of_Solution_Lists(0..ns);
     nbl : constant natural32 := 20;
@@ -529,7 +529,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
     gpts : Array_of_Solution_Lists(0..ns);
     nbl : constant natural32 := 20;
@@ -584,7 +584,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
     nbl : constant natural32 := 20;
     deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
@@ -639,7 +639,7 @@ package body Running_Cascades is
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     restol : constant double_float := 1.0E-6;
-    homtol : constant double_float := 1.0E-8;
+    homtol : constant double_float := 1.0E-6;
     ep : QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
     gpts : Array_of_Solution_Lists(0..ns);
     pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
