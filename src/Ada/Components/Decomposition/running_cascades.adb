@@ -8,9 +8,6 @@ with Monodromy_Homotopies;
 with Monodromy_Homotopies_io;
 with Path_Counts_Table;
 
---with Standard_Complex_Poly_Systems_io;
--- use Standard_Complex_Poly_Systems_io;
-
 package body Running_Cascades is
 
   procedure Standard_Run_Cascade
@@ -41,12 +38,8 @@ package body Running_Cascades is
         (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
-       -- put_line("The top dimension system before the factor : ");
-       -- put(ep(integer32(topdim)).all);
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
-       -- put_line("The top dimension system after the factor : ");
-       -- put(ep(integer32(topdim)).all);
         Monodromy_Homotopies_io.Write_Decomposition
           (standard_output,ep,gpts,deco);
       else
@@ -103,6 +96,8 @@ package body Running_Cascades is
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition
+          (standard_output,ep,gpts,deco);
       else
         Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
       end if;
@@ -158,6 +153,8 @@ package body Running_Cascades is
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition
+          (standard_output,ep,gpts,deco);
       else
         Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
       end if;
@@ -213,6 +210,8 @@ package body Running_Cascades is
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition
+          (standard_output,ep,gpts,deco);
       else
         Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
       end if;
@@ -268,6 +267,8 @@ package body Running_Cascades is
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition
+          (standard_output,ep,gpts,deco);
       else
         Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
       end if;
@@ -323,6 +324,8 @@ package body Running_Cascades is
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition
+          (standard_output,ep,gpts,deco);
       else
         Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
       end if;
@@ -375,14 +378,14 @@ package body Running_Cascades is
       Cascade_Homotopy_Filters.Witness_Filter
         (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
-   --   if factor then
-   --     Monodromy_Homotopies.Witness_Factor
-   --       (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
-   --     Monodromy_Homotopies_io.Write_Decomposition
-   --       (file,ep,gpts,deco);
-   --   else
-      Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
-   --   end if;
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition
+          (file,ep,gpts,deco);
+      else
+        Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
+      end if;
     else
       Cascade_Homotopies.Witness_Generate
         (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
@@ -391,9 +394,9 @@ package body Running_Cascades is
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);
     if filter then
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
-   --   if factor then
-   --     Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
-   --   end if;     
+      if factor then
+        Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
+      end if;     
     end if;
     new_line(file);
     put(file,"The CPU time for the cascade filters : ");
@@ -433,6 +436,7 @@ package body Running_Cascades is
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition(file,ep,gpts,deco);
       else
         Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
       end if;
@@ -486,6 +490,7 @@ package body Running_Cascades is
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition(file,ep,gpts,deco);
       else
         Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
       end if;
@@ -539,6 +544,7 @@ package body Running_Cascades is
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition(file,ep,gpts,deco);
       else
         Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
       end if;
@@ -592,6 +598,7 @@ package body Running_Cascades is
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition(file,ep,gpts,deco);
       else
         Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
       end if;
@@ -645,6 +652,7 @@ package body Running_Cascades is
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+        Monodromy_Homotopies_io.Write_Decomposition(file,ep,gpts,deco);
       else
         Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
       end if;

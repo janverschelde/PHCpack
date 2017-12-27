@@ -2,6 +2,8 @@ Tue 26 Dec 2017 : in drivers_to_cascade_filtering.adb, updated the
   embed and cascade procedures that write to file to call running_cascades.
   In drivers_to_cascade_filtering.adb, in the Prompt_for_Top_Dimension,
   replaced the "suggested top dimension" by "largest top dimension".
+  In running_cascades.adb, added the write_decomposition() in all procedures
+  for every precision and also for Laurent systems.
 
 Sat 23 Dec 2017 : added filter and factor flags to the embed and cascade
   procedure in drivers_to_cascade_filtering.
