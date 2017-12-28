@@ -1,6 +1,7 @@
 Wed 27 Dec 2017 : added the file name to procedures in running_cascades,
   which changed drivers_to_cascade_filtering.adb.  Set the default value
   for homtol to 1.0e-6 (instead of 1.0e-8) in running_cascades.adb.
+  Changed header in one of the tables defined in path_counts_table.adb.
 
 Tue 26 Dec 2017 : in drivers_to_cascade_filtering.adb, updated the
   embed and cascade procedures that write to file to call running_cascades.

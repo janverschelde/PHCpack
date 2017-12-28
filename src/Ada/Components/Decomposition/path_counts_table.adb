@@ -103,9 +103,9 @@ package body Path_Counts_Table is
     new_line(file);
     put(file,"dim | ");
     put(file," CPU user time |");
-    put(file," counts after filter");
+    put(file," solutions after filter");
     new_line(file);
-    put_line(file,"----+----------------+---------------------");
+    put_line(file,"----+----------------+-----------------------");
     for i in reverse cnts'range loop
       put(file,i,3);
       put(file," | "); print_hms(file,times(integer(i)));
