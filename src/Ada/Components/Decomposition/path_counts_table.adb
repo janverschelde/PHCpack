@@ -136,19 +136,18 @@ package body Path_Counts_Table is
     new_line(file);
     put(file,"dim | ");
     put(file," CPU user time |");
-    put(file," decomposition");
+    put(file," degrees of factors");
     new_line(file);
-    put_line(file,"----+----------------+---------------");
+    put_line(file,"----+----------------+-------------------");
     for i in reverse 1..deco'last loop
       put(file,i,3);
       put(file," | "); print_hms(file,times(integer(i)));
-      put(file," | ");
+      put(file," |");
       if deco(i) /= null then
-        put(file,deco(i)(deco(i)'first));
-        for j in deco(i)'first+1..deco(i)'last loop
-          exit when (deco(i)(j) = null);
-          put(file,",");
-          put(file,deco(i)(j));
+        for j in deco(i)'range loop
+          if(deco(i)(j) /= null)
+           then put(file," "); put(file,deco(i)(j)'last,1);
+          end if;
         end loop;
       end if;
       new_line(file);
