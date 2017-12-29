@@ -1,3 +1,6 @@
+Fri 29 Dec 2017 : fixed the formatting in the output of the solution lists 
+  in monodromy_homotopies_io.adb.
+
 Tue 26 Dec 2017 : in monodromy_homotopies.adb, the polynomial_type must be
   set properly to laurent before making the grids for monodromy stop test.
 

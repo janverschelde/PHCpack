@@ -55,6 +55,7 @@ package body Monodromy_Homotopies_io is
         new_line(file);
         put_line(file,"THE SOLUTIONS :");
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
+        Standard_Complex_Solutions_io.put_bar(file);
         cnt := 0;
         tmp := pts;
         for k in 1..Length_Of(pts) loop
@@ -90,6 +91,7 @@ package body Monodromy_Homotopies_io is
         new_line(file);
         put_line(file,"THE SOLUTIONS :");
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
+        Standard_Complex_Solutions_io.put_bar(file);
         cnt := 0;
         tmp := pts;
         for k in 1..Length_Of(pts) loop
@@ -125,6 +127,7 @@ package body Monodromy_Homotopies_io is
         new_line(file);
         put_line(file,"THE SOLUTIONS :");
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
+        Standard_Complex_Solutions_io.put_bar(file);
         cnt := 0;
         tmp := pts;
         for k in 1..Length_Of(pts) loop
@@ -160,6 +163,7 @@ package body Monodromy_Homotopies_io is
         new_line(file);
         put_line(file,"THE SOLUTIONS :");
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
+        Standard_Complex_Solutions_io.put_bar(file);
         cnt := 0;
         tmp := pts;
         for k in 1..Length_Of(pts) loop
@@ -195,6 +199,7 @@ package body Monodromy_Homotopies_io is
         new_line(file);
         put_line(file,"THE SOLUTIONS :");
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
+        Standard_Complex_Solutions_io.put_bar(file);
         cnt := 0;
         tmp := pts;
         for k in 1..Length_Of(pts) loop
@@ -230,6 +235,7 @@ package body Monodromy_Homotopies_io is
         new_line(file);
         put_line(file,"THE SOLUTIONS :");
         put(file,deg,1); put(file," "); put(file,nvr,1); new_line(file);
+        Standard_Complex_Solutions_io.put_bar(file);
         cnt := 0;
         tmp := pts;
         for k in 1..Length_Of(pts) loop
