@@ -69,9 +69,17 @@ package Path_Counts_Table is
                 times : in Array_of_Duration; totaltime : in duration );
 
   -- DESCRIPTION :
-  --   Writes the classification of the witness points along the factors
-  --   in the irreducible decomposition, for all dimensions.
+  --   Writes the degrees of the factors in the irreducible decomposition,
+  --   represented by deco, for all dimensions.
   --   The range of deco is 1..topdim.
   --   There is no factorization at dimension 0.
+
+  procedure Write_Decomposition
+              ( file : in file_type;
+                deco : in Standard_Natural_VecVecs.Array_of_VecVecs );
+
+  -- DESCRIPTION :
+  --   Writes the factors in the irreducible decomposition,
+  --   represented by deco, of range 1..topdim.
 
 end Path_Counts_Table;

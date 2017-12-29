@@ -158,4 +158,30 @@ package body Path_Counts_Table is
     new_line(file);
   end Write_Factor_Counts;
 
+  procedure Write_Decomposition
+              ( file : in file_type;
+                deco : in Standard_Natural_VecVecs.Array_of_VecVecs ) is
+
+    use Standard_Natural_VecVecs;
+    use Standard_Natural_Vectors;
+
+    cnt : natural32;
+
+  begin
+    new_line(file);
+    for i in reverse 1..deco'last loop
+      if deco(i) /= null then
+        put(file,"factors of dimension "); put(file,i,1); put_line(file," :");
+        cnt := 0;
+        for j in deco(i)'range loop
+          if(deco(i)(j) /= null) then
+            cnt := cnt + 1;
+            put(file,"  points in factor "); put(file,cnt,1); put(file," :");
+            put(file,deco(i)(j).all); new_line(file);
+          end if;
+        end loop;
+      end if;
+    end loop;
+  end Write_Decomposition;
+
 end Path_Counts_Table;

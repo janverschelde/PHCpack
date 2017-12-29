@@ -56,13 +56,18 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(standard_output,deco);
       end if;     
     end if;
     new_line;
     put("The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(standard_output,alltime);
-     else print_hms(standard_output,totcas);
+    if filter then
+      if factor 
+       then print_hms(standard_output,alltime+totfac);
+       else print_hms(standard_output,alltime);
+      end if;
+    else
+      print_hms(standard_output,totcas);
     end if;
   end Standard_Run_Cascade;
 
@@ -113,13 +118,18 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(standard_output,deco);
       end if;
     end if;
     new_line;
     put("The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(standard_output,alltime);
-     else print_hms(standard_output,totcas);
+    if filter then
+      if factor
+       then print_hms(standard_output,alltime+totfac);
+       else print_hms(standard_output,alltime);
+      end if;
+    else
+      print_hms(standard_output,totcas);
     end if;
   end Standard_Run_Cascade;
 
@@ -170,13 +180,18 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(standard_output,deco);
       end if;
     end if;
     new_line;
     put("The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(standard_output,alltime);
-     else print_hms(standard_output,totcas);
+    if filter then
+      if factor
+       then print_hms(standard_output,alltime+totfac);
+       else print_hms(standard_output,alltime);
+      end if;
+    else
+      print_hms(standard_output,totcas);
     end if;
   end DoblDobl_Run_Cascade;
 
@@ -227,13 +242,18 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(standard_output,deco);
       end if;
     end if;
     new_line;
     put("The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(standard_output,alltime);
-     else print_hms(standard_output,totcas);
+    if filter then
+      if factor
+       then print_hms(standard_output,alltime+totfac);
+       else print_hms(standard_output,alltime);
+      end if;
+    else
+      print_hms(standard_output,totcas);
     end if;
   end DoblDobl_Run_Cascade;
 
@@ -284,13 +304,18 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(standard_output,deco);
       end if;
     end if;
     new_line;
     put("The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(standard_output,alltime);
-     else print_hms(standard_output,totcas);
+    if filter then
+      if factor 
+       then print_hms(standard_output,alltime+totfac);
+       else print_hms(standard_output,alltime);
+      end if;
+    else
+      print_hms(standard_output,totcas);
     end if;
   end QuadDobl_Run_Cascade;
 
@@ -341,13 +366,18 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(standard_output,deco);
       end if;
     end if;
     new_line;
     put("The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(standard_output,alltime);
-     else print_hms(standard_output,totcas);
+    if filter then
+      if factor
+       then print_hms(standard_output,alltime+totfac);
+       else print_hms(standard_output,alltime);
+      end if;
+    else
+      print_hms(standard_output,totcas);
     end if;
   end QuadDobl_Run_Cascade;
 
@@ -397,13 +427,18 @@ package body Running_Cascades is
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(file,deco);
       end if;     
     end if;
     new_line(file);
     put(file,"The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(file,alltime);
-     else print_hms(file,totcas);
+    if filter then
+      if factor
+       then print_hms(file,alltime+totfac);
+       else print_hms(file,alltime);
+      end if;
+    else
+      print_hms(file,totcas);
     end if;
   end Standard_Run_Cascade;
 
@@ -452,13 +487,18 @@ package body Running_Cascades is
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(file,deco);
       end if;
     end if;
     new_line(file);
     put(file,"The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(file,alltime);
-     else print_hms(file,totcas);
+    if filter then
+      if factor
+       then print_hms(file,alltime+totfac);
+       else print_hms(file,alltime);
+      end if;
+    else
+      print_hms(file,totcas);
     end if;
   end Standard_Run_Cascade;
 
@@ -507,13 +547,18 @@ package body Running_Cascades is
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(file,deco);
       end if;
     end if;
     new_line(file);
     put(file,"The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(file,alltime);
-     else print_hms(file,totcas);
+    if filter then
+      if factor
+       then print_hms(file,alltime+totfac);
+       else print_hms(file,alltime);
+      end if;
+    else
+      print_hms(file,totcas);
     end if;
   end DoblDobl_Run_Cascade;
 
@@ -562,13 +607,18 @@ package body Running_Cascades is
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(file,deco);
       end if;
     end if;
     new_line(file);
     put(file,"The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(file,alltime);
-     else print_hms(file,totcas);
+    if filter then
+      if factor
+       then print_hms(file,alltime+totfac);
+       else print_hms(file,alltime);
+      end if;
+    else
+      print_hms(file,totcas);
     end if;
   end DoblDobl_Run_Cascade;
 
@@ -617,13 +667,18 @@ package body Running_Cascades is
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(file,deco);
       end if;
     end if;
     new_line(file);
     put(file,"The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(file,alltime);
-     else print_hms(file,totcas);
+    if filter then
+      if factor
+       then print_hms(file,alltime+totfac);
+       else print_hms(file,alltime);
+      end if;
+    else
+      print_hms(file,totcas);
     end if;
   end QuadDobl_Run_Cascade;
 
@@ -672,13 +727,18 @@ package body Running_Cascades is
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
+        Path_Counts_Table.Write_Decomposition(file,deco);
       end if;
     end if;
     new_line(file);
     put(file,"The CPU time for the cascade filters : ");
-    if filter 
-     then print_hms(file,alltime);
-     else print_hms(file,totcas);
+    if filter then
+      if factor
+       then print_hms(file,alltime+totfac);
+       else print_hms(file,alltime);
+      end if;
+    else
+      print_hms(file,totcas);
     end if;
   end QuadDobl_Run_Cascade;
 
