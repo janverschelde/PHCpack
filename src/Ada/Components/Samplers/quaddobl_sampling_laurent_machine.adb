@@ -632,12 +632,16 @@ package body QuadDobl_Sampling_Laurent_Machine is
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
 
-    jac : Jaco_Mat(ep'range,ep'range) := Create(ep);
-    jac_eval : constant Eval_Jaco_Mat(ep'range,ep'range) := Create(jac);
+    jac : Jaco_Mat(ep'range,ep'range);
+    jac_eval : Eval_Jaco_Mat(ep'range,ep'range);
+    epcopy : QuadDobl_Complex_Laur_Systems.Laur_Sys(ep'range);
 
   begin
-    qdsys := new QuadDobl_Complex_Laur_Systems.Laur_Sys'(ep);
-    qdsys_eval := new Eval_Laur_Sys'(Create(ep));
+    QuadDobl_Complex_Laur_Systems.Copy(ep,epcopy);
+    jac := Create(epcopy);
+    jac_eval := Create(jac);
+    qdsys := new QuadDobl_Complex_Laur_Systems.Laur_Sys'(epcopy);
+    qdsys_eval := new Eval_Laur_Sys'(Create(epcopy));
     qdjac_eval := new Eval_Jaco_Mat'(jac_eval);
     Clear(jac);
   end Initialize;
@@ -1037,7 +1041,8 @@ package body QuadDobl_Sampling_Laurent_Machine is
 
   procedure Clear is
   begin
-    QuadDobl_Complex_Laur_Systems.Shallow_Clear(qdsys); --  data sharing
+   -- QuadDobl_Complex_Laur_Systems.Shallow_Clear(qdsys); --  data sharing
+    QuadDobl_Complex_Laur_Systems.Clear(qdsys); -- no data sharing!
     QuadDobl_Complex_Laur_SysFun.Clear(qdsys_eval);
     QuadDobl_Complex_Laur_JacoMats.Clear(qdjac_eval);
   end Clear;

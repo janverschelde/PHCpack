@@ -632,12 +632,16 @@ package body DoblDobl_Sampling_Machine is
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Jaco_Matrices;
 
-    jac : Jaco_Mat(ep'range,ep'range) := Create(ep);
-    jac_eval : constant Eval_Jaco_Mat(ep'range,ep'range) := Create(jac);
+    jac : Jaco_Mat(ep'range,ep'range);
+    jac_eval : Eval_Jaco_Mat(ep'range,ep'range);
+    epcopy : DoblDobl_Complex_Poly_Systems.Poly_Sys(ep'range);
 
   begin
-    ddsys := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(ep);
-    ddsys_eval := new Eval_Poly_Sys'(Create(ep));
+    DoblDobl_Complex_Poly_Systems.Copy(ep,epcopy);
+    jac := Create(epcopy);
+    jac_eval := Create(jac);
+    ddsys := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(epcopy);
+    ddsys_eval := new Eval_Poly_Sys'(Create(epcopy));
     ddjac_eval := new Eval_Jaco_Mat'(jac_eval);
     Clear(jac);
   end Initialize;
@@ -1037,7 +1041,8 @@ package body DoblDobl_Sampling_Machine is
 
   procedure Clear is
   begin
-    DoblDobl_Complex_Poly_Systems.Shallow_Clear(ddsys); --  data sharing
+   -- DoblDobl_Complex_Poly_Systems.Shallow_Clear(ddsys); -- data sharing
+    DoblDobl_Complex_Poly_Systems.Clear(ddsys); -- no data sharing!
     DoblDobl_Complex_Poly_SysFun.Clear(ddsys_eval);
     DoblDobl_Complex_Jaco_Matrices.Clear(ddjac_eval);
   end Clear;

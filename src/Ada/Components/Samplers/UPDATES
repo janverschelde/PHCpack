@@ -1,3 +1,6 @@
+Fri 29 Dec 2017 : updated *dobl*sampling*machine.adb to avoid sharing
+  in the initialization and the clearing.
+
 Tue 26 Dec 2017 : changed initialize and clear in sampling_machine.adb
   to avoid a crash in phc -B.  Also fixed sampling_laurent_machine.adb.
 
