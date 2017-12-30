@@ -197,6 +197,23 @@ in the directory where ``setup.py`` exists and for ``python``
 using the absolute file name of the executable, e.g., type
 ``/Users/jan/Downloads/sage-7.2/local/bin/python setup.py install``.
 
+Importing phcpy apparently changes the configuration of the signal 
+handlers which may lead Sage to crash when exceptions occur.
+Thanks to Marc Culler for reporting this problem
+and for suggesting a work around:
+
+::
+
+   sage: import phcpy
+   sage: from cysignals import init_cysignals
+   sage: init_cysignals()
+   sage: pari(1)/pari(0)
+
+Without the ``init_cysignals()``,
+the statement ``pari(1)/pari(0)`` crashes Sage.
+With the ``init_cysignals()``, the ``PariError`` exception is handled
+and the user can continue the Sage session.
+
 project history
 ===============
 
