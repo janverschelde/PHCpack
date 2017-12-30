@@ -1,3 +1,6 @@
+Fri 30 Dec 2017 : removed the redundant with Write_Seed_Number; from the
+  black_box_solvers.adb.
+
 Tue 26 Dec 2017 : in compsolve.adb, compsolve2.adb, and compsolve4.adb,
   fixed the greetings when phc -B writes to file.
 
