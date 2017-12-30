@@ -1,5 +1,6 @@
 Sat 30 Dec 2017 : added the work around of Marc Culler for the signals
   when importing phcpy in Sage session to the welcome.rst files.
+  Updated setup.py, conf.py, and __init__.py for version 0.7.7 of phcpy.
 
 Thu 19 Oct 2017 : added lower dimension to run_cascade of cascades.py.
 
