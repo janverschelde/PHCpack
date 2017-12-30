@@ -1,4 +1,6 @@
-Fri 30 Dec 2017 : removed the redundant with Write_Seed_Number; from the
+Sat 30 Dec 2017 : updated greeting_banners for version 2.4.48.
+
+Fri 29 Dec 2017 : removed the redundant with Write_Seed_Number; from the
   black_box_solvers.adb.  New package greetings_and_conclusions to define
   the writing of greetings and conclusions in compsolve.adb, compsolve2.adb,
   and compsolve4.adb.
