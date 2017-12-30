@@ -22,6 +22,9 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with QuadDobl_Laur_Poly_Convertors;
+with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Solution_Manipulators;
 with DoblDobl_Solution_Manipulators;
 with QuadDobl_Solution_Manipulators;
@@ -271,7 +274,13 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      Standard_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        Standard_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -310,8 +319,14 @@ package body Drivers_to_Cascade_Filtering is
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     if not Is_Null(sols) then
-      Standard_Run_Cascade
-        (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        Standard_Run_Cascade
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -358,7 +373,13 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      Standard_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        Standard_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -394,8 +415,14 @@ package body Drivers_to_Cascade_Filtering is
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     if not Is_Null(sols) then
-      Standard_Run_Cascade
-        (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        Standard_Run_Cascade
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end Standard_Embed_and_Cascade;
 
@@ -442,7 +469,13 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      DoblDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        DoblDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -478,8 +511,14 @@ package body Drivers_to_Cascade_Filtering is
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     if not Is_Null(sols) then
-      DoblDobl_Run_Cascade
-        (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        DoblDobl_Run_Cascade
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -526,7 +565,13 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      DoblDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        DoblDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -562,8 +607,14 @@ package body Drivers_to_Cascade_Filtering is
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     if not Is_Null(sols) then
-      DoblDobl_Run_Cascade
-        (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        DoblDobl_Run_Cascade
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end DoblDobl_Embed_and_Cascade;
 
@@ -610,7 +661,13 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      QuadDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        QuadDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end QuadDobl_Embed_and_Cascade;
 
@@ -646,8 +703,14 @@ package body Drivers_to_Cascade_Filtering is
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     if not Is_Null(sols) then
-      QuadDobl_Run_Cascade
-        (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        QuadDobl_Run_Cascade
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end QuadDobl_Embed_and_Cascade;
 
@@ -694,7 +757,13 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
-      QuadDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        QuadDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end QuadDobl_Embed_and_Cascade;
 
@@ -730,8 +799,14 @@ package body Drivers_to_Cascade_Filtering is
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
     if not Is_Null(sols) then
-      QuadDobl_Run_Cascade
-        (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      if topdim > 0 then
+        QuadDobl_Run_Cascade
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+      else
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      end if;
     end if;
   end QuadDobl_Embed_and_Cascade;
 
