@@ -1,3 +1,7 @@
+Fri 29 Dec 2017 : if there are any isolated solutions, then the writing of
+  the decomposition in running_cascades.adb is followed by the writing of
+  the number of isolated solutions.
+
 Thu 28 Dec 2017 : added a write_decomposition procedure to path_counts_table,
   called in running_cascades.adb.
 

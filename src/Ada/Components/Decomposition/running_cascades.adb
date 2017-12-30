@@ -1,4 +1,5 @@
 with Timing_Package;                     use Timing_Package;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Natural_VecVecs;
@@ -57,6 +58,11 @@ package body Running_Cascades is
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(standard_output,deco);
+        if Standard_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put("number of isolated solutions : ");
+          put(Standard_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line;
+        end if;
       end if;     
     end if;
     new_line;
@@ -119,6 +125,11 @@ package body Running_Cascades is
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(standard_output,deco);
+        if Standard_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put("number of isolated solutions : ");
+          put(Standard_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line;
+        end if;
       end if;
     end if;
     new_line;
@@ -181,6 +192,11 @@ package body Running_Cascades is
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(standard_output,deco);
+        if DoblDobl_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put("number of isolated solutions : ");
+          put(DoblDobl_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line;
+        end if;
       end if;
     end if;
     new_line;
@@ -243,6 +259,11 @@ package body Running_Cascades is
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(standard_output,deco);
+        if DoblDobl_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put("number of isolated solutions : ");
+          put(DoblDobl_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line;
+        end if;
       end if;
     end if;
     new_line;
@@ -305,6 +326,11 @@ package body Running_Cascades is
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(standard_output,deco);
+        if QuadDobl_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put("number of isolated solutions : ");
+          put(QuadDobl_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line;
+        end if;
       end if;
     end if;
     new_line;
@@ -367,6 +393,11 @@ package body Running_Cascades is
         Path_Counts_Table.Write_Factor_Counts
           (standard_output,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(standard_output,deco);
+        if QuadDobl_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put("number of isolated solutions : ");
+          put(QuadDobl_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line;
+        end if;
       end if;
     end if;
     new_line;
@@ -428,6 +459,11 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(file,deco);
+        if Standard_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put(file,"number of isolated solutions : ");
+          put(file,Standard_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line(file);
+        end if;
       end if;     
     end if;
     new_line(file);
@@ -488,6 +524,11 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(file,deco);
+        if Standard_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put(file,"number of isolated solutions : ");
+          put(file,Standard_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line(file);
+        end if;
       end if;
     end if;
     new_line(file);
@@ -548,6 +589,11 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(file,deco);
+        if DoblDobl_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put(file,"number of isolated solutions : ");
+          put(file,DoblDobl_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line(file);
+        end if;
       end if;
     end if;
     new_line(file);
@@ -608,6 +654,11 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(file,deco);
+        if DoblDobl_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put(file,"number of isolated solutions : ");
+          put(file,DoblDobl_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line(file);
+        end if;
       end if;
     end if;
     new_line(file);
@@ -668,6 +719,11 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(file,deco);
+        if QuadDobl_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put(file,"number of isolated solutions : ");
+          put(file,QuadDobl_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line(file);
+        end if;
       end if;
     end if;
     new_line(file);
@@ -728,6 +784,11 @@ package body Running_Cascades is
       if factor then
         Path_Counts_Table.Write_Factor_Counts(file,deco,factm,totfac);
         Path_Counts_Table.Write_Decomposition(file,deco);
+        if QuadDobl_Complex_Solutions.Length_Of(gpts(0)) > 0 then
+          put(file,"number of isolated solutions : ");
+          put(file,QuadDobl_Complex_Solutions.Length_Of(gpts(0)),1);
+          new_line(file);
+        end if;
       end if;
     end if;
     new_line(file);
