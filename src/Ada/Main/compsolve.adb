@@ -36,7 +36,6 @@ procedure compsolve
       greeted := true;
       Greetings_and_Conclusions.Write_Greeting(nt,0);
       new_line; get(q);
-      new_line;
     else
       Scan_and_Skip(infile,"SOLUTIONS",append_sols);
       append_sols := not append_sols;
