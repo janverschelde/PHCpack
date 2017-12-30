@@ -47,7 +47,10 @@ black_box_solvers            : to be called by bablphc
 bablphc                      : black-box version of the program
 bablphc2                     : black-box solving in double double precision
 bablphc4                     : black-box solving in quad double precision
-compsolve                    : numerical irreducible decomposition as blackbox
+greetings_and_conclusions    : defines greetings and conclusions in phc -B
+compsolve                    : numerical irreducible decomposition in phc -B
+compsolve2                   : defines phc -B2, in double double precision
+compsolve4                   : defines phc -B4, in quad double precision
 -------------------------------------------------------------------------------
 phcpack                      : PHC with main drivers according to 4 stages
 use_phc                      : an example of how to use phcpack

@@ -1,34 +1,21 @@
+with Ada.Calendar;
 with text_io;                           use text_io;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with String_Splitters;                  use String_Splitters;
 with Communications_with_User;          use Communications_with_User;
 with File_Scanning;                     use File_Scanning;
-with Greeting_Banners;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
 with Standard_System_Readers;
 with Drivers_to_Cascade_Filtering;      use Drivers_to_Cascade_Filtering;
+with Greetings_and_Conclusions;
 
 procedure compsolve
             ( nt : in natural32; infilename,outfilename : in string ) is
 
-  procedure Write_Greeting ( nbtasks : in natural32 ) is
-
-  -- DESCRIPTION :
-  --   Writes the greeting and the number of tasks in nbtasks,
-  --   or writes no tasking, followed by the precision.
-
-  begin
-    put_line(Greeting_Banners.welcome & ".");
-    put("Numerical irreducible decomposition");
-    if nbtasks = 0
-     then put(", no tasking");
-     else put(", with "); put(nbtasks,1); put(" tasks");
-    end if;
-    put_line(", in double precision.");
-  end Write_Greeting;
+  start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
   procedure Main is
 
@@ -47,7 +34,7 @@ procedure compsolve
     Standard_System_Readers.Read_System(infile,infilename,q);
     if q = null then
       greeted := true;
-      Write_Greeting(nt);
+      Greetings_and_Conclusions.Write_Greeting(nt,0);
       new_line; get(q);
       new_line;
     else
@@ -56,7 +43,7 @@ procedure compsolve
       close(infile);
     end if;
     if not greeted then
-      Write_Greeting(nt);
+      Greetings_and_Conclusions.Write_Greeting(nt,0);
       greeted := true;
     end if;
     if outfilename /= "" then
@@ -87,6 +74,10 @@ procedure compsolve
           Standard_Embed_and_Cascade(nt,p.all,true,true);
         end if;
       end;
+    end if;
+    if tofile = 'y'
+     then Greetings_and_Conclusions.Write_Conclusion(outfile,start_moment);
+     else Greetings_and_Conclusions.Write_Conclusion(start_moment);
     end if;
   end Main;
 
