@@ -535,7 +535,7 @@ def viviani(prc='d'):
             'x^2 + y^2 + z^2 - 4;' , \
             '(x-1)^2 + y^2 - 1;', \
             's;']
-    sols = solve(pols, silent=True, precision=prc)
+    sols = solve(pols, verbose=False, precision=prc)
     print "The solutions on the Viviani curve :"
     for sol in sols:
         print sol
@@ -596,7 +596,7 @@ def example4pade(prc='d'):
     """
     pols = ['(x^2 - 1)*(1-s) + (3*x^2 - 3/2)*s;', 's;']
     from phcpy.solver import solve
-    sols = solve(pols, silent=True, precision=prc)
+    sols = solve(pols, verbose=False, precision=prc)
     for sol in sols:
         print sol
     if prc == 'd':
@@ -639,4 +639,4 @@ if __name__ == "__main__":
     #test('qd')
     #viviani2('qd')
     #apollonius()
-    example4pade('qd')
+    example4pade('dd')

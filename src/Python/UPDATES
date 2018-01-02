@@ -1,3 +1,6 @@
+Tue 2 Jan 2018 : replaced the silent=True option in the test() of series.py
+  by verbose=False, when calling the blackbox solver solve().
+
 Sat 30 Dec 2017 : added the work around of Marc Culler for the signals
   when importing phcpy in Sage session to the welcome.rst files.
   Updated setup.py, conf.py, and __init__.py for version 0.7.7 of phcpy.
