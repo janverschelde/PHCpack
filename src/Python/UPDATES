@@ -1,3 +1,6 @@
+Thu 4 Jan 2018 : added comment lines to the __init__.py of phcpy to 
+  suggest the init_cysignals() when using phcpy in SageMath.
+
 Tue 2 Jan 2018 : replaced the silent=True option in the test() of series.py
   by verbose=False, when calling the blackbox solver solve().
 
