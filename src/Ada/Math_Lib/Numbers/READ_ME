@@ -1,4 +1,4 @@
-Basic number definitions, coefficient rings and fields for PHCv2.4.39
+Basic number definitions, coefficient rings and fields for PHCv2.4.49
 
 This directory was established in release 2 of PHCpack and was upgraded
 for efficiency in later versions.  In v2.3, only the i/o of multiprecision
@@ -65,6 +65,10 @@ abstract_ring                    : a ring has the operations +,- and *
 abstract_ring_io                 : definition of input/output for a ring
 abstract_ring-domain             : extension with order and division/remainder
 abstract_ring-field              : extension with order and division
+boolean_numbers                  : definitions to instantiate a Boolean ring
+boolean_numbers_io               : defines i/o of Boolean numbers
+boolean_ring                     : definition of a Boolean ring
+boolean_ring_io                  : a Boolean ring with input and output
 standard_natural_ring            : ring of standard natural numbers
 standard_natural_ring_io         : abstract_ring_io(standard natural)
 standard_natural64_ring          : ring of standard long long natural numbers
