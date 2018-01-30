@@ -1,4 +1,4 @@
-Vectors and vectors of vectors in PHCv2.4.39
+Vectors and vectors of vectors in PHCv2.4.49
 
 Because the directory Matrices became too big, 
 this directory was created new for PHCv2.3.33.
@@ -24,6 +24,8 @@ generic_vectors_io                 : input/output for generic vectors
 generic_vecvecs                    : vectors of vectors over any ring
 generic_vecvecs_io                 : input/output for vectors of vectors
 -----------------------------------------------------------------------------
+boolean_vectors                    : vectors of Boolean numbers
+boolean_vectors_io                 : input/output for Boolean vectors
 standard_natural_vectors           : vectors of standard natural numbers
 standard_natural_vectors_io        : generic_vectors_io(standard natural)
 standard_natural_vecvecs           : generic_vecvecs(standard natural)

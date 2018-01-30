@@ -1,3 +1,6 @@
+Tue 30 Jan 2018 : new package boolean_vectors and boolean_vectors_io
+  to represent vectors of Boolean numbers.
+
 Wed 28 Jun 2017 : new package valid_vector_checks to test if all components
   of a vector are valid numbers.
 
