@@ -1,4 +1,4 @@
-Generalized Bezout numbers and linear-product start systems in PHCv2.4.46
+Generalized Bezout numbers and linear-product start systems in PHCv2.4.49
 
 Four types of start systems are implemented, based on total degree,
 m-homogeneous, multi-homegenous, and generalized Bezout number.

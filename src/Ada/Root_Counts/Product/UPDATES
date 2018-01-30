@@ -1,3 +1,6 @@
+Tue 30 Jan 2018 : minor fix in documentation of the permanent procedure
+  of m_homogeneous_permanent_factors.ads
+
 Thu 21 Sep 2017 : added total_degree() functions to the package
   total_degree_start_systems.
 

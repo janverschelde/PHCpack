@@ -25,7 +25,7 @@ package m_homogeneous_permanent_factors is
   --   Row expansion for the permanent of an integer matrix.
 
   -- ON ENTRY :
-  --   row      current row index, initialize with a'first(1);
+  --   row      current row index, initialize with deg'first(1);
   --   deg      degree matrix, with as many columns as crd'length;
   --   cols     selected column indices of the degree matrix,
   --            the range of cols must be deg'range(1);
