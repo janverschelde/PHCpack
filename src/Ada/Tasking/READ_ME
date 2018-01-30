@@ -1,4 +1,4 @@
-Multitasking linear algebra, evaluation and path tracking in PHCv2.4.15
+Multitasking linear algebra, evaluation and path tracking in PHCv2.4.49
 
 This directory is entirely new in release 2.3.45 of PHCpack.
 Tasks in Ada are mapped to kernel threads.
@@ -69,4 +69,7 @@ pipelined_polyhedral_trackers     : pipelining polyhedral continuation
 ts_mtmva                          : interlace cell production with processing
 multitasking_root_refiners        : root refinement by multiple tasks
 ts_mtverify                       : test on multitasked root refinement
+-------------------------------------------------------------------------------
+integer_permanents                : reference code for multitasking
+ts_mtperm                         : test on multitasked permanent computation
 -------------------------------------------------------------------------------
