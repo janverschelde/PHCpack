@@ -28,13 +28,14 @@ package m_homogeneous_permanent_factors is
   --   row      current row index, initialize with deg'first(1);
   --   deg      degree matrix, with as many columns as crd'length;
   --   cols     selected column indices of the degree matrix,
-  --            the range of cols must be deg'range(1);
+  --            the range of cols must be deg'range(2);
   --   crd      cardinalities of the sets in the partition,
   --            crd(k) equals the number of elements to be taken
-  --            of the k-th column of deg.
+  --            of the k-th column of deg;
+  --   per      initialize with zero.
 
   -- ON RETURN :
-  --   per      the permanent of the matrix d, initialize with 0;
+  --   per      the permanent of the matrix deg;
   --   ind      list of all column indices used in the permanent;
   --   ind_last is the pointer the to last element in the list ind.
 
