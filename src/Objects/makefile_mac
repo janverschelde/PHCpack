@@ -24,6 +24,7 @@ gpp=/usr/bin/g++
 # of the Sage distribution, which is defined here:
 
 SAGEPYTHONLIB=/Users/jan/Downloads/sage-8.0/local/lib
+# SAGEPYTHONLIB=/Users/jan/SageMath/Sage/local/lib
 
 # The location of the QD library
 
@@ -2075,6 +2076,10 @@ ts_mtverify:
 
 ts_mtmva:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmva.adb -o $(BIN)/ts_mtmva
+
+ts_mtperm:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtperm.adb \
+              -o $(BIN)/ts_mtperm
 
 # Test programs for the Main interactive drivers :
 
