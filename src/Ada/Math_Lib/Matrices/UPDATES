@@ -1,3 +1,6 @@
+Tue 30 Jan 2018 : to work with Boolean matrices, defined the packages
+  boolean_matrices and boolean_matrices_io.
+
 Fri 2 Dec 2016 : to generic_matrices, added multiplication of matrix 
   by a scalar.
 
