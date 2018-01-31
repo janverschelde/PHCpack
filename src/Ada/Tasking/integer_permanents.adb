@@ -153,4 +153,164 @@ package body Integer_Permanents is
     return res;
   end Permanent;
 
+  function Number_of_Start_Columns
+             ( dim,nbrows : integer32 ) return integer32 is
+
+    res : integer32 := dim;
+ 
+  begin
+    for k in 1..nbrows-1 loop
+      res := res*(dim-k);
+    end loop;
+    return res;
+  end Number_of_Start_Columns;
+
+  procedure Start_Columns
+              ( row,nbrows : in integer32;
+                mat : in Standard_Integer_Matrices.Matrix;
+                cols,cnts : in out Standard_Integer_Vectors.Vector;
+                idx : in out integer32;
+                stc : in out Standard_Integer_VecVecs.VecVec ) is
+  begin
+    if row > nbrows then
+      idx := idx + 1;
+      stc(idx) := new Standard_Integer_Vectors.Vector'(cols);
+    else
+      for col in mat'range(2) loop
+        if cnts(col) > 0 and mat(row,col) /= 0 then
+          cnts(col) := 0;
+          cols(row) := col;
+          Start_Columns(row+1,nbrows,mat,cols,cnts,idx,stc);
+          cnts(col) := 1;
+        end if;
+      end loop;
+    end if;
+  end Start_Columns;
+
+  procedure Start_Columns
+              ( row,nbrows : in integer32;
+                mat : in Boolean_Matrices.Matrix;
+                cols,cnts : in out Standard_Integer_Vectors.Vector;
+                idx : in out integer32;
+                stc : in out Standard_Integer_VecVecs.VecVec ) is
+  begin
+    if row > nbrows then
+      idx := idx + 1;
+      stc(idx) := new Standard_Integer_Vectors.Vector'(cols);
+    else
+      for col in mat'range(2) loop
+        if cnts(col) > 0 and mat(row,col) then
+          cnts(col) := 0;
+          cols(row) := col;
+          Start_Columns(row+1,nbrows,mat,cols,cnts,idx,stc);
+          cnts(col) := 1;
+        end if;
+      end loop;
+    end if;
+  end Start_Columns;
+
+  function Start_Permanent
+             ( row : integer32;
+               stc : Standard_Integer_VecVecs.VecVec;
+               mat : Standard_Integer_Matrices.Matrix )
+             return integer64 is
+
+    res,acc : integer64 := 0;
+    cnts : Standard_Integer_Vectors.Vector(mat'range(2));
+    cols : Standard_Integer_Vectors.Vector(mat'range(2));
+
+  begin
+    for k in stc'range loop
+      for i in cols'range loop
+        cols(i) := stc(k)(i);
+      end loop;
+      cnts := (mat'range(2) => 1);
+      for col in 1..(row-1) loop
+        cnts(cols(col)) := 0;
+      end loop;
+      acc := 0;
+      Permanent(row,mat,cols,cnts,acc);
+      res := res + acc;
+    end loop;
+    return res;
+  end Start_Permanent;
+
+  function Start_Permanent
+             ( file : file_type; row : integer32;
+               stc : Standard_Integer_VecVecs.VecVec;
+               mat : Standard_Integer_Matrices.Matrix )
+             return integer64 is
+
+    res,acc : integer64 := 0;
+    cnts : Standard_Integer_Vectors.Vector(mat'range(2));
+    cols : Standard_Integer_Vectors.Vector(mat'range(2));
+
+  begin
+    for k in stc'range loop
+      for i in cols'range loop
+        cols(i) := stc(k)(i);
+      end loop;
+      cnts := (mat'range(2) => 1);
+      for col in 1..(row-1) loop
+        cnts(cols(col)) := 0;
+      end loop;
+      acc := 0;
+      Permanent(file,row,mat,cols,cnts,acc);
+      res := res + acc;
+    end loop;
+    return res;
+  end Start_Permanent;
+
+  function Start_Permanent
+             ( row : integer32;
+               stc : Standard_Integer_VecVecs.VecVec;
+               mat : Boolean_Matrices.Matrix )
+             return integer64 is
+
+    res,acc : integer64 := 0;
+    cnts : Standard_Integer_Vectors.Vector(mat'range(2));
+    cols : Standard_Integer_Vectors.Vector(mat'range(2));
+
+  begin
+    for k in stc'range loop
+      for i in cols'range loop
+        cols(i) := stc(k)(i);
+      end loop;
+      cnts := (mat'range(2) => 1);
+      for col in 1..(row-1) loop
+        cnts(cols(col)) := 0;
+      end loop;
+      acc := 0;
+      Permanent(row,mat,cols,cnts,acc);
+      res := res + acc;
+    end loop;
+    return res;
+  end Start_Permanent;
+
+  function Start_Permanent
+             ( file : file_type; row : integer32;
+               stc : Standard_Integer_VecVecs.VecVec;
+               mat : Boolean_Matrices.Matrix )
+             return integer64 is
+
+    res,acc : integer64 := 0;
+    cnts : Standard_Integer_Vectors.Vector(mat'range(2));
+    cols : Standard_Integer_Vectors.Vector(mat'range(2));
+
+  begin
+    for k in stc'range loop
+      for i in cols'range loop
+        cols(i) := stc(k)(i);
+      end loop;
+      cnts := (mat'range(2) => 1);
+      for col in 1..(row-1) loop
+        cnts(cols(col)) := 0;
+      end loop;
+      acc := 0;
+      Permanent(file,row,mat,cols,cnts,acc);
+      res := res + acc;
+    end loop;
+    return res;
+  end Start_Permanent;
+
 end Integer_Permanents;

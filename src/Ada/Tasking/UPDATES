@@ -1,5 +1,6 @@
 Tue 30 Jan 2018 : new package integer_permanents, tested by ts_mtperm,
   with reference code for multitasked permanent computation.
+  Updated integer_permanents and ts_mtperm with start columns.
 
 Fri 1 Apr 2016 : fixed ts_mtsols.adb and ts_mtsharps for compilation.
 
