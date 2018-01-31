@@ -19,6 +19,7 @@ package Static_Columns_Queue is
 
   -- DESCRIPTION :
   --   Returns the next vector of column indices for the first rows.
+  --   If all columns have been processed, then null is returned.
 
   function Next_Counter return integer32;
 

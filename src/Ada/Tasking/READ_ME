@@ -72,5 +72,6 @@ ts_mtverify                       : test on multitasked root refinement
 -------------------------------------------------------------------------------
 integer_permanents                : reference code for multitasking
 static_columns_queue              : thread safe queue of column indices
+multitasking_integer_permanents   : multitasked permanent computation
 ts_mtperm                         : test on multitasked permanent computation
 -------------------------------------------------------------------------------
