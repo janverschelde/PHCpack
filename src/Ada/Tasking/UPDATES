@@ -1,3 +1,5 @@
+Fri 2 Feb 2018 : added another test procedure to ts_mtperm.adb.
+
 Wed 31 Jan 2018 : defined the package static_columns_queue for a thread
   safe data structure to manage the queue of column indices.
   New package multitasking_integer_permanents, tested by ts_mtperm,

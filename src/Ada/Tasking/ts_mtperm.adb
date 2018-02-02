@@ -329,6 +329,109 @@ procedure ts_mtperm is
     end if;
   end Multitasked_Test;
 
+  procedure Doubling_Multitasked_Boolean_Test ( dim : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random integer matrix of the given dimension dim
+  --   and computes its permanent.
+  --   Elapsed wall clock times in seconds are written.
+
+    idm : constant integer32 := integer32(dim);
+    mat : constant Boolean_Matrices.Matrix(1..idm,1..idm)
+        := Random_Boolean_Matrix(dim);
+    per : integer64;
+    nbrows,ntasks,maxnbtasks : integer32 := 0;
+    ans : character;
+    verb : boolean;
+    timestart,timestop : Ada.Calendar.Time;
+
+  begin
+    put("A random "); put(dim,1); put("-by-"); put(dim,1);
+    put_line(" matrix : "); put(mat);
+    put("Give the number of first rows : "); get(nbrows);
+    put("Give the largest number of tasks : "); get(maxnbtasks);
+    put("Output during computations ? "); Ask_Yes_or_No(ans);
+    verb := (ans = 'y');
+    timestart := Ada.Calendar.Clock;
+    per := Permanent(mat);
+    timestop := Ada.Calendar.Clock;
+    put("The permanent : "); put(per,1); new_line;
+    put_line("Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,timestart,timestop);
+    ntasks := 2;
+    while ntasks <= maxnbtasks loop
+      timestart := Ada.Calendar.Clock;
+      per := Multitasking_Integer_Permanents.Permanent(mat,nbrows,ntasks,verb);
+      timestop := Ada.Calendar.Clock;
+      put("The permanent : "); put(per,1); new_line;
+      put("With "); put(ntasks,1); put(" tasks.  ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,timestart,timestop);
+      ntasks := 2*ntasks;
+    end loop;
+  end Doubling_Multitasked_Boolean_Test;
+
+  procedure Doubling_Multitasked_Integer_Test ( dim : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random integer matrix of the given dimension dim
+  --   and computes its permanent.
+
+    idm : constant integer32 := integer32(dim);
+    mat : constant Standard_Integer_Matrices.Matrix(1..idm,1..idm)
+        := Standard_Random_Matrices.Random_Matrix(dim,dim,0,9);
+    per : integer64;
+    nbrows,ntasks,maxnbtasks : integer32 := 0;
+    ans : character;
+    verb : boolean;
+    timestart,timestop : Ada.Calendar.Time;
+
+  begin
+    put("A random "); put(dim,1); put("-by-"); put(dim,1);
+    put_line(" matrix : "); put(mat);
+    put("Give the number of first rows : "); get(nbrows);
+    put("Give the maximum number of tasks : "); get(maxnbtasks);
+    put("Output during computations ? "); Ask_Yes_or_No(ans);
+    verb := (ans = 'y');
+    timestart := Ada.Calendar.Clock;
+    per := Permanent(mat);
+    timestop := Ada.Calendar.Clock;
+    put("The permanent : "); put(per,1); new_line;
+    put_line("Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,timestart,timestop);
+    ntasks := 2;
+    while ntasks <= maxnbtasks loop
+      timestart := Ada.Calendar.Clock;
+      per := Multitasking_Integer_Permanents.Permanent(mat,nbrows,ntasks,verb);
+      timestop := Ada.Calendar.Clock;
+      put("The permanent : "); put(per,1); new_line;
+      put("With "); put(ntasks,1); put(" tasks.  ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,timestart,timestop);
+      ntasks := 2*ntasks;
+    end loop;
+  end Doubling_Multitasked_Integer_Test;
+
+  procedure Doubling_Multitasked_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the dimension
+  --   and asks whether the matrix is Boolean or not.
+  --   Starting with the serial run,
+  --   the number of tasks doubles in each stage.
+
+    dim : natural32 := 0;
+    ans : character;
+
+  begin
+    new_line;
+    put("Give the dimension : "); get(dim);
+    put("Generate a Boolean matrix ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Doubling_Multitasked_Boolean_Test(dim);
+     else Doubling_Multitasked_Integer_Test(dim);
+    end if;
+  end Doubling_Multitasked_Test;
+
   procedure Main is
 
     ans : character;
@@ -338,13 +441,15 @@ procedure ts_mtperm is
     put_line("MENU to test a permament computation : ");
     put_line("  1. test on a randomly generated matrix;");
     put_line("  2. compute start columns for the first rows;");
-    put_line("  3. test multitasked permanent computation.");
-    put("Type 1, 2, or 3 to choose a test : ");
-    Ask_Alternative(ans,"123");
+    put_line("  3. test multitasked permanent computation;");
+    put_line("  4. double the number of tasks in each stage.");
+    put("Type 1, 2, 3, or 4 to choose a test : ");
+    Ask_Alternative(ans,"1234");
     case ans is
       when '1' => Random_Test;
       when '2' => Start_Random_Test;
       when '3' => Multitasked_Test;
+      when '4' => Doubling_Multitasked_Test;
       when others => null;
     end case;
   end Main;
