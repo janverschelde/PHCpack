@@ -1,3 +1,6 @@
+Mon 12 Feb 2018 : moved the random_Boolean_matrix function from ts_mtperm
+  to the package standard_random_matrices.
+
 Fri 2 Feb 2018 : added another test procedure to ts_mtperm.adb.
 
 Wed 31 Jan 2018 : defined the package static_columns_queue for a thread

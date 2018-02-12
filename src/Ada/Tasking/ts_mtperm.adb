@@ -24,26 +24,6 @@ procedure ts_mtperm is
 -- DESCRIPTION :
 --   Interactive test on the permanent computation of an integer matrix.
 
-  function Random_Boolean_Matrix
-             ( dim : natural32 ) return Boolean_Matrices.Matrix is
-
-  -- DESCRIPTION :
-  --   Returns a random Boolean matrix of the given dimension.
-
-    idm : constant integer32 := integer32(dim);
-    res : Boolean_Matrices.Matrix(1..idm,1..idm);
-    rnd : integer32;
-
-  begin
-    for i in 1..idm loop
-      for j in 1..idm loop
-        rnd := Standard_Random_Numbers.Random(0,1);
-        res(i,j) := (rnd = 1);
-      end loop;
-    end loop;
-    return res;
-  end Random_Boolean_Matrix;
-
   procedure Integer_Random_Test ( dim : in natural32 ) is
 
   -- DESCRIPTION :
@@ -81,7 +61,7 @@ procedure ts_mtperm is
 
     idm : constant integer32 := integer32(dim);
     mat : Boolean_Matrices.Matrix(1..idm,1..idm)
-        := Random_Boolean_Matrix(dim);
+        := Standard_Random_Matrices.Random_Matrix(dim);
     per : integer64;
     ans : character;
     timer : Timing_Widget;
@@ -176,7 +156,7 @@ procedure ts_mtperm is
 
     idm : constant integer32 := integer32(dim);
     mat : Boolean_Matrices.Matrix(1..idm,1..idm)
-        := Random_Boolean_Matrix(dim);
+        := Standard_Random_Matrices.Random_Matrix(dim);
     nbr : integer32 := 0;
 
   begin
@@ -241,7 +221,7 @@ procedure ts_mtperm is
 
     idm : constant integer32 := integer32(dim);
     mat : constant Boolean_Matrices.Matrix(1..idm,1..idm)
-        := Random_Boolean_Matrix(dim);
+        := Standard_Random_Matrices.Random_Matrix(dim);
     per : integer64;
     nbrows,ntasks : integer32 := 0;
     ans : character;
@@ -338,7 +318,7 @@ procedure ts_mtperm is
 
     idm : constant integer32 := integer32(dim);
     mat : constant Boolean_Matrices.Matrix(1..idm,1..idm)
-        := Random_Boolean_Matrix(dim);
+        := Standard_Random_Matrices.Random_Matrix(dim);
     per : integer64;
     nbrows,ntasks,maxnbtasks : integer32 := 0;
     ans : character;
