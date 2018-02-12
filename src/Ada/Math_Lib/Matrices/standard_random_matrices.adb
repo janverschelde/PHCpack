@@ -8,6 +8,22 @@ with Standard_Complex_QR_Least_Squares;  use Standard_Complex_QR_Least_Squares;
 
 package body Standard_Random_Matrices is
 
+  function Random_Matrix ( dim : natural32 ) return Boolean_Matrices.Matrix is
+
+    idm : constant integer32 := integer32(dim);
+    res : Boolean_Matrices.Matrix(1..idm,1..idm);
+    rnd : integer32;
+
+  begin
+    for i in 1..idm loop
+      for j in 1..idm loop
+        rnd := Standard_Random_Numbers.Random(0,1);
+        res(i,j) := (rnd = 1);
+      end loop;
+    end loop;
+    return res;
+  end Random_Matrix;
+
   function Random_Matrix ( n,m : natural32; low,upp : integer32 )
                          return Standard_Integer_Matrices.Matrix is
 

@@ -1,5 +1,6 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Boolean_Matrices;
 with Standard_Integer_Matrices;
 with Standard_Integer64_Matrices;
 with Standard_Floating_Matrices;
@@ -8,8 +9,15 @@ with Standard_Complex_Matrices;
 package Standard_Random_Matrices is
 
 -- DESCRIPTION :
---   Offers routines to generate random standard integer, floating and
---   complex matrices.
+--   Offers routines to generate random Boolean, standard integer,
+--   floating and complex matrices.
+
+  function Random_Matrix ( dim : natural32 ) return Boolean_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a square Boolean matrix with random distribution of
+  --   zeros and ones, occurring with uniform probability,
+  --   as the result of dim*dim coin flips.
 
   function Random_Matrix ( n,m : natural32; low,upp : integer32 )
                          return Standard_Integer_Matrices.Matrix;

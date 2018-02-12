@@ -1,3 +1,6 @@
+Mon 12 Feb 2018 : added a random_matrix function for Boolean matrices
+  to the package standard_random_matrices.
+
 Tue 30 Jan 2018 : to work with Boolean matrices, defined the packages
   boolean_matrices and boolean_matrices_io.
 
