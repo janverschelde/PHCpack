@@ -1,3 +1,6 @@
+Mon 12 Feb 2018 : new test procedure ts_pivsel.adb to develop the
+  pivot selection problem via maximal matching in a bipartite graph.
+
 Tue 30 Jan 2018 : minor fix in documentation of the permanent procedure
   of m_homogeneous_permanent_factors.ads
 
