@@ -742,7 +742,7 @@ test_root_counts: test_product test_binomials test_implift test_mixedvol \
 # Test programs for the Root_Counts/Product homotopies library :
 
 test_product: ts_startsys ts_permanent ts_prodsys ts_drivmhom ts_drivmuho \
-              ts_drivss ts_strset ts_strpart ts_permstar
+              ts_drivss ts_strset ts_strpart ts_permstar ts_pivsel
 
 ts_startsys:
 	make -f $(MAKEFILE) ts_startsys
@@ -770,6 +770,9 @@ ts_strset:
 
 ts_permstar:
 	make -f $(MAKEFILE) ts_permstar
+
+ts_pivsel:
+	make -f $(MAKEFILE) ts_pivsel
 
 # Test programs in the Root_Counts/Binomials library :
 
@@ -1526,7 +1529,7 @@ ts_pathpars:
 # Test programs for the Tasking:
 
 test_tasking: ts_mutex ts_jobs ts_mtvol ts_mtvolcon ts_mtverify ts_mtcont \
-              ts_mtmva ts_mtddref ts_mtqdref ts_mtsols ts_mtsharp
+              ts_mtmva ts_mtddref ts_mtqdref ts_mtsols ts_mtsharp ts_mtperm
 #             ts_mtmatvec ts_mtpolval ts_mtlinsol
 
 ts_mtmatvec:
@@ -1588,6 +1591,9 @@ ts_mtverify:
 
 ts_mtmva:
 	make -f $(MAKEFILE) ts_mtmva
+
+ts_mtperm:
+	make -f $(MAKEFILE) ts_mtperm
 
 # Test programs for the Main interactive drivers :
 

@@ -847,6 +847,10 @@ ts_permstar:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_permstar.adb \
               -o $(BIN)/ts_permstar
 
+ts_pivsel:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pivsel.adb \
+              -o $(BIN)/ts_pivsel
+
 # Test programs in the Root_Counts/Binomials library :
 
 ts_binsys:
