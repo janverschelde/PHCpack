@@ -4,6 +4,7 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
+with Standard_Natural_VecVecs;
 with Standard_Natural_Matrices;
 with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
 with Boolean_Matrices;
@@ -98,6 +99,34 @@ procedure ts_pivsel is
     end loop;
     return res;
   end Apply_Permutation;
+
+  procedure Initialize_Pred
+              ( pred : in out Standard_Natural_VecVecs.VecVec;
+                unmatched : in Standard_Natural_Vectors.Link_to_Vector;
+                prm : in Standard_Natural_Vectors.Vector;
+                prm_size : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Initializes the pred data structure, which gives for every vertex
+  --   the neighbor in the previous layer for each vertex not in the
+  --   matching permutation prm, in the left vertex set of the graph.
+
+  -- ON ENTRY :
+  --   unmatched  collects vertices that are not matched;
+  --   prm        permutation represents the column selection;
+  --   prm_size   size of the permutation.
+
+  -- ON RETURN :
+  --   pred       initialized pred data structure.
+
+  begin
+    for i in pred'range loop
+      pred(i) := unmatched;
+    end loop;
+    for i in prm'first..prm_size loop
+      pred(i) := null;
+    end loop;
+  end Initialize_Pred;
 
   procedure Random_Test ( dim : in integer32 ) is
 
