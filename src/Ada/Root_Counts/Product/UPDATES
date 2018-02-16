@@ -1,3 +1,5 @@
+Thu 15 Feb 2018 : made a first attempt at a recurse procedure in ts_pivsel.
+
 Tue 13 Feb 2018 : added initialization of pred data structure to ts_pivsel.
 
 Mon 12 Feb 2018 : new test procedure ts_pivsel.adb to develop the

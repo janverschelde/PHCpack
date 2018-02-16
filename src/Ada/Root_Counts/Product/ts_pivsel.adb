@@ -128,6 +128,62 @@ procedure ts_pivsel is
     end loop;
   end Initialize_Pred;
 
+  procedure recurse ( vtx : in integer32;
+                      preds : in out Standard_Natural_VecVecs.VecVec;
+                      pred : in out Standard_Natural_VecVecs.VecVec;
+                      unmatched : in Standard_Natural_Vectors.Link_to_Vector;
+                      prm : in out Standard_Natural_Vectors.Vector;
+                      found : out boolean ) is
+ 
+  -- DESCRIPTION :
+  --   Recursively search backward through layers to find alternating paths.
+  --   The recursion returns true if found path, returns false otherwise.
+  --   The preds gives for preds[v] the neighbors in the previous layer 
+  --   for v in the right vertex set of the bipartite graph.
+  --   The pred gives for pred[u] the neighbor in the previous 
+  --   layer for u in the left vertex set of the bipartite graph.
+  --   The unmatched stores the unmatched vertices in final layer
+  --   of the right vertex set, and is also used as a flag value for pred[u]
+  --   when u is in the first layer.
+
+    use Standard_Natural_Vectors;
+    u : integer32;
+
+  begin
+    if preds(vtx) /= null then
+      declare
+        lst : constant Standard_Natural_Vectors.Link_to_Vector
+            := preds(vtx);
+      begin
+        preds(vtx) := null;
+        for k in lst'range loop
+          u := integer32(lst(k));
+          if u > 0 then
+            if pred(u) /= null then
+              declare
+                pu : constant Standard_Natural_Vectors.Link_to_Vector
+                   := pred(u);
+              begin
+                pred(u) := null;
+                if pu = unmatched then
+                  prm(vtx) := natural32(u);
+                  found := true; return;
+                else
+                  recurse(integer32(pu(pu'first)),
+                          preds,pred,unmatched,prm,found);
+                  if found then
+                    prm(vtx) := natural32(u); return;
+                  end if;
+                end if;
+              end;
+            end if;
+          end if;
+        end loop;
+      end;
+    end if;
+    found := false;
+  end recurse;
+
   procedure Random_Test ( dim : in integer32 ) is
 
   -- DESCRIPTION :
