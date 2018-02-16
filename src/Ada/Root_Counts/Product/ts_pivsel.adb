@@ -7,6 +7,7 @@ with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
 with Standard_Natural_Matrices;
 with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
+with Boolean_Vectors;
 with Boolean_Matrices;
 with Boolean_Matrices_io;                use Boolean_Matrices_io;
 with Standard_Random_Matrices;
@@ -100,51 +101,61 @@ procedure ts_pivsel is
     return res;
   end Apply_Permutation;
 
-  procedure Initialize_Pred
-              ( pred : in out Standard_Natural_VecVecs.VecVec;
-                unmatched : in Standard_Natural_Vectors.Link_to_Vector;
+  procedure Initialize_PredFlag
+              ( flag : in out Boolean_Vectors.Vector;
                 prm : in Standard_Natural_Vectors.Vector;
                 prm_size : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Initializes the pred data structure, which gives for every vertex
-  --   the neighbor in the previous layer for each vertex not in the
-  --   matching permutation prm, in the left vertex set of the graph.
+  --   The pred-flag data structure signals when for a vertex u,
+  --   pred(u) is in the first layer.
+  --   The pred data structure gives for every vertex the neighbor 
+  --   in the previous layer for each vertex not in the matching
+  --   permutation prm, in the left vertex set of the graph.
 
   -- ON ENTRY :
-  --   unmatched  collects vertices that are not matched;
   --   prm        permutation represents the column selection;
   --   prm_size   size of the permutation.
 
   -- ON RETURN :
-  --   pred       initialized pred data structure.
+  --   flag       initialized pred-flag data structure,
+  --              for matched vertices vtx, flag(vtx) is false,
+  --              otherwise flag(vtx) is true.
 
   begin
-    for i in pred'range loop
-      pred(i) := unmatched;
+    for i in flag'range loop
+      flag(i) := true;
     end loop;
     for i in prm'first..prm_size loop
-      pred(i) := null;
+      flag(integer32(prm(i))) := false;
     end loop;
-  end Initialize_Pred;
+  end Initialize_PredFlag;
 
-  procedure recurse ( vtx : in integer32;
-                      preds : in out Standard_Natural_VecVecs.VecVec;
-                      pred : in out Standard_Natural_VecVecs.VecVec;
-                      unmatched : in Standard_Natural_Vectors.Link_to_Vector;
-                      prm : in out Standard_Natural_Vectors.Vector;
-                      found : out boolean ) is
+  procedure Recurse
+                ( vtx : in integer32;
+                  preds : in out Standard_Natural_VecVecs.VecVec;
+                  pred : in out Standard_Natural_Vectors.Vector;
+                  flag : in out Boolean_Vectors.Vector;
+                  prm : in out Standard_Natural_Vectors.Vector;
+                  found : out boolean ) is
  
   -- DESCRIPTION :
   --   Recursively search backward through layers to find alternating paths.
   --   The recursion returns true if found path, returns false otherwise.
-  --   The preds gives for preds[v] the neighbors in the previous layer 
-  --   for v in the right vertex set of the bipartite graph.
-  --   The pred gives for pred[u] the neighbor in the previous 
-  --   layer for u in the left vertex set of the bipartite graph.
-  --   The unmatched stores the unmatched vertices in final layer
-  --   of the right vertex set, and is also used as a flag value for pred[u]
-  --   when u is in the first layer.
+
+  -- ON ENTRY :
+  --   vtx        a vertex;
+  --   preds      gives for preds[v] the neighbors in the previous layer 
+  --              for v in the right vertex set of the bipartite graph;
+  --   pred       gives for pred[u] the neighbor in the previous 
+  --              layer for u in the left vertex set of the graph;
+  --   prm        permutation to represent the matching.
+
+  -- ON RETURN :
+  --   preds      updated preds data structure;
+  --   pred       updated pred data structure;
+  --   prm        updated permuation of the matched vertices;
+  --   found      true if a path was found, false otherwise.
 
     use Standard_Natural_Vectors;
     u : integer32;
@@ -152,27 +163,24 @@ procedure ts_pivsel is
   begin
     if preds(vtx) /= null then
       declare
-        lst : constant Standard_Natural_Vectors.Link_to_Vector
-            := preds(vtx);
+        lst : constant Standard_Natural_Vectors.Link_to_Vector := preds(vtx);
       begin
         preds(vtx) := null;
         for k in lst'range loop
           u := integer32(lst(k));
           if u > 0 then
-            if pred(u) /= null then
+            if flag(u) then
               declare
-                pu : constant Standard_Natural_Vectors.Link_to_Vector
-                   := pred(u);
+                pu : constant integer32 := integer32(pred(u));
               begin
-                pred(u) := null;
-                if pu = unmatched then
+                flag(u) := false;
+                if flag(pu) then
                   prm(vtx) := natural32(u);
                   found := true; return;
                 else
-                  recurse(integer32(pu(pu'first)),
-                          preds,pred,unmatched,prm,found);
-                  if found then
-                    prm(vtx) := natural32(u); return;
+                  Recurse(pu,preds,pred,flag,prm,found);
+                  if found
+                   then prm(vtx) := natural32(u); return;
                   end if;
                 end if;
               end;
@@ -182,7 +190,30 @@ procedure ts_pivsel is
       end;
     end if;
     found := false;
-  end recurse;
+  end Recurse;
+
+  procedure Bipartite_Match
+              ( graph : in Boolean_Matrices.Matrix;
+                prm : in out Standard_Natural_Vectors.Vector;
+                prm_size : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Computes the maximum cardinality matching of a bipartite graph.
+
+  -- ON ENTRY :
+  --   graph    the rows of the matrix are adjacency lists to columns,
+  --            in a bipartite graph between rows and columns;
+  --   prm      permutation initialized by a greedy search;
+  --   prm_size is the size of the permutation obtained greedily
+  --            and this size is expected to be smaller than graph'last(1).
+
+    dim : constant integer32 := graph'last(1);
+    flag : Boolean_Vectors.Vector(1..dim);
+    pred : Standard_Natural_Vectors.Vector(1..dim) := (1..dim => 0);
+
+  begin
+    Initialize_PredFlag(flag,prm,prm_size);
+  end Bipartite_Match;
 
   procedure Random_Test ( dim : in integer32 ) is
 
@@ -203,6 +234,9 @@ procedure ts_pivsel is
     if prm_size = mat'last(1) then
       put_line("The greedy search solved the pivot selection problem :");
       put(Apply_Permutation(mat,prm));
+    else
+      put_line("Running the Hopcroft-Karp algorithm ...");
+      Bipartite_Match(mat,prm,prm_size);
     end if;
   end Random_Test;
 

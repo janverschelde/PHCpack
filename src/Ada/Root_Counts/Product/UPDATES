@@ -1,3 +1,6 @@
+Fri 16 Feb 2018 : decoupled the flag use of the pred data structure into
+  a separate Boolean vector in ts_pivsel.
+
 Thu 15 Feb 2018 : made a first attempt at a recurse procedure in ts_pivsel.
 
 Tue 13 Feb 2018 : added initialization of pred data structure to ts_pivsel.
