@@ -192,10 +192,25 @@ procedure ts_pivsel is
     found := false;
   end Recurse;
 
+  function Empty ( b : Boolean_Vectors.Vector ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if b is empty, that is if all elements in b
+  --   are false.  Returns false otherwise.
+
+  begin
+    for k in b'range loop
+      if b(k)
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Empty;
+
   procedure Bipartite_Match
               ( graph : in Boolean_Matrices.Matrix;
                 prm : in out Standard_Natural_Vectors.Vector;
-                prm_size : in integer32 ) is
+                prm_size : in out integer32 ) is
 
   -- DESCRIPTION :
   --   Computes the maximum cardinality matching of a bipartite graph.
@@ -210,9 +225,19 @@ procedure ts_pivsel is
     dim : constant integer32 := graph'last(1);
     flag : Boolean_Vectors.Vector(1..dim);
     pred : Standard_Natural_Vectors.Vector(1..dim) := (1..dim => 0);
+    preds : Standard_Natural_VecVecs.VecVec(1..dim);
+    unmatched : boolean_Vectors.Vector(1..dim) := (1..dim => false);
+    found : boolean;
 
   begin
     Initialize_PredFlag(flag,prm,prm_size);
+    while true loop
+      for k in unmatched'range loop
+        if unmatched(k)
+         then recurse(k,preds,pred,flag,prm,found);
+        end if;
+      end loop;
+    end loop;
   end Bipartite_Match;
 
   procedure Random_Test ( dim : in integer32 ) is
