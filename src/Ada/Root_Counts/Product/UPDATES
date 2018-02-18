@@ -1,3 +1,6 @@
+Sat 17 Feb 2018 : initialized pred data structure, now as a vector,
+  in ts_pivsel.
+
 Fri 16 Feb 2018 : decoupled the flag use of the pred data structure into a
   separate Boolean vector in ts_pivsel.  More initializations in ts_pivsel.
 

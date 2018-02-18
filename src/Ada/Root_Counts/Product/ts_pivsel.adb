@@ -224,7 +224,7 @@ procedure ts_pivsel is
 
     dim : constant integer32 := graph'last(1);
     flag : Boolean_Vectors.Vector(1..dim);
-    pred : Standard_Natural_Vectors.Vector(1..dim) := (1..dim => 0);
+    pred : Standard_Natural_Vectors.Vector(1..dim);
     preds : Standard_Natural_VecVecs.VecVec(1..dim);
     unmatched : boolean_Vectors.Vector(1..dim) := (1..dim => false);
     found : boolean;
@@ -232,6 +232,12 @@ procedure ts_pivsel is
   begin
     Initialize_PredFlag(flag,prm,prm_size);
     while true loop
+      for k in 1..dim loop
+        pred(k) := natural32(k);
+      end loop;
+      for k in 1..prm_size loop
+        pred(integer32(prm(k))) := 0;
+      end loop;
       for k in unmatched'range loop
         if unmatched(k)
          then recurse(k,preds,pred,flag,prm,found);
