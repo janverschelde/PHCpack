@@ -68,7 +68,7 @@ procedure ts_pivsel is
         if mat(row,col) then
           if not Is_In(prm,size,natural32(col)) then
             size := size + 1;
-            prm(size) := natural32(col);
+            prm(row) := natural32(col); exit;
           end if;
         end if;
       end loop;
@@ -207,10 +207,26 @@ procedure ts_pivsel is
     return true;
   end Empty;
 
+  function Empty ( v : Standard_Natural_Vectors.Vector ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if v is empty, that is if all elements in v
+  --   are zero.  Returns false otherwise.
+
+  begin
+    for k in v'range loop
+      if v(k) > 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Empty;
+
   procedure Bipartite_Match
               ( graph : in Boolean_Matrices.Matrix;
                 prm : in out Standard_Natural_Vectors.Vector;
-                prm_size : in out integer32 ) is
+                prm_size : in out integer32;
+                verbose : in boolean := true ) is
 
   -- DESCRIPTION :
   --   Computes the maximum cardinality matching of a bipartite graph.
@@ -220,7 +236,12 @@ procedure ts_pivsel is
   --            in a bipartite graph between rows and columns;
   --   prm      permutation initialized by a greedy search;
   --   prm_size is the size of the permutation obtained greedily
-  --            and this size is expected to be smaller than graph'last(1).
+  --            and this size is expected to be smaller than graph'last(1);
+  --   verbose  flag for extra output during the computation.
+
+  -- ON RETURN :
+  --   prm      updated permutation;
+  --   prm_size is the updated size of the permutation.
 
     dim : constant integer32 := graph'last(1);
     flag : Boolean_Vectors.Vector(1..dim);
@@ -238,6 +259,18 @@ procedure ts_pivsel is
       for k in 1..prm_size loop
         pred(integer32(prm(k))) := 0;
       end loop;
+      if verbose then
+        put("The data pred initialized in while :");
+        put(pred); new_line;
+      end if;
+      -- repeatedly extend layering structure by another pair of layers
+      while Empty(unmatched) loop
+        null;
+      end loop;
+      -- did we finish layering without finding any alternating paths?
+      if Empty(unmatched) then
+        null;
+      end if;
       for k in unmatched'range loop
         if unmatched(k)
          then recurse(k,preds,pred,flag,prm,found);
@@ -260,8 +293,8 @@ procedure ts_pivsel is
   begin
     put_line("A random Boolean matrix :"); put(mat);
     Greedy_Search(mat,prm,prm_size);
-    put("The permutation : ");
-    put(prm(prm'first..prm_size)); new_line;
+    put("The permutation : "); put(prm);
+    put(" with size : "); put(prm_size,1); new_line;
     if prm_size = mat'last(1) then
       put_line("The greedy search solved the pivot selection problem :");
       put(Apply_Permutation(mat,prm));
