@@ -1,5 +1,6 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Boolean_Matrices;
 with Standard_Integer_Matrices;
 with Standard_Integer64_Matrices;
@@ -12,12 +13,17 @@ package Standard_Random_Matrices is
 --   Offers routines to generate random Boolean, standard integer,
 --   floating and complex matrices.
 
-  function Random_Matrix ( dim : natural32 ) return Boolean_Matrices.Matrix;
+  function Random_Matrix
+             ( dim : natural32; prb : double_float := 0.5 )
+             return Boolean_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns a square Boolean matrix with random distribution of
-  --   zeros and ones, occurring with uniform probability,
-  --   as the result of dim*dim coin flips.
+  --   zeros and ones, occurring with probability prb,
+  --   as the result of dim*dim flips with a loaded coin.
+  --   The value of prb is the probability of getting true.
+  --   Setting prb to 1.0 will result in a matrix of true values,
+  --   setting prb to 0.0 will result in a matrix of false values.
 
   function Random_Matrix ( n,m : natural32; low,upp : integer32 )
                          return Standard_Integer_Matrices.Matrix;
