@@ -4,6 +4,8 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Integer_Vectors;
@@ -296,10 +298,13 @@ procedure ts_pivsel is
   --   Generates a random Boolean matrix and runs the algorithms to
   --   solve the pivot selection problem.
 
-    mat : Boolean_Matrices.Matrix(1..dim,1..dim)
-        := Standard_Random_Matrices.Random_Matrix(natural32(dim));
+    mat : Boolean_Matrices.Matrix(1..dim,1..dim);
+    prb : double_float := 0.0;
 
   begin
+    put("Give the probability for true (1) : ");
+    get(prb);
+    mat := Standard_Random_Matrices.Random_Matrix(natural32(dim),prb);
     Test(mat);
   end Random_Test;
 
