@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
@@ -32,47 +33,6 @@ procedure ts_pivsel is
 --   efficiently by the Hopcroft-Karp algorithm.
 --   Code for the Ford-Fulkerson algorithm is in the package
 --   Pivot_Selection.
-
-  function Apply_Permutation
-             ( mat : Boolean_Matrices.Matrix;
-               prm : Standard_Natural_Vectors.Vector;
-               check : boolean := true )
-             return Standard_Natural_Matrices.Matrix is
-
-  -- DESCRIPTION :
-  --   The selected columns are marked in the matrix on return by 2,
-  --   the rest of the 0 and 1 entries are copied from mat.
-  --   If check is on, then an error will be raised if a 2 will
-  --   be placed at a spot where there is no one.
-
-    res : Standard_Natural_Matrices.Matrix(mat'range(1),mat'range(2));
-    idx : integer32;
-
-  begin
-    for i in mat'range(1) loop
-      for j in mat'range(2) loop
-        if mat(i,j)
-         then res(i,j) := 1;
-         else res(i,j) := 0;
-        end if;
-      end loop;
-    end loop;
-    for i in prm'range loop
-      if not check then
-        res(i,integer32(prm(i))) := 2;
-      else
-        idx := integer32(prm(i));
-        if res(i,idx) = 1 then
-          res(i,idx) := 2;
-        else
-          put("Problem at row "); put(i,1);
-          put(" and column "); put(idx,1);
-          put_line(" : no edge!");
-        end if;
-      end if;
-    end loop;
-    return res;
-  end Apply_Permutation;
 
   procedure Initialize_PredFlag
               ( flag : in out Boolean_Vectors.Vector;
@@ -252,21 +212,61 @@ procedure ts_pivsel is
     end loop;
   end Bipartite_Match;
 
-  procedure Random_Test ( dim : in integer32 ) is
+  function Apply_Permutation
+             ( mat : Boolean_Matrices.Matrix;
+               prm : Standard_Natural_Vectors.Vector;
+               check : boolean := true )
+             return Standard_Natural_Matrices.Matrix is
 
   -- DESCRIPTION :
-  --   Generates a random Boolean matrix and runs the algorithms to
-  --   solve the pivot selection problem.
+  --   The selected columns are marked in the matrix on return by 2,
+  --   the rest of the 0 and 1 entries are copied from mat.
+  --   If check is on, then an error will be raised if a 2 will
+  --   be placed at a spot where there is no one.
 
-    mat : Boolean_Matrices.Matrix(1..dim,1..dim)
-        := Standard_Random_Matrices.Random_Matrix(natural32(dim));
+    res : Standard_Natural_Matrices.Matrix(mat'range(1),mat'range(2));
+    idx : integer32;
+
+  begin
+    for i in mat'range(1) loop
+      for j in mat'range(2) loop
+        if mat(i,j)
+         then res(i,j) := 1;
+         else res(i,j) := 0;
+        end if;
+      end loop;
+    end loop;
+    for i in prm'range loop
+      if not check then
+        res(i,integer32(prm(i))) := 2;
+      else
+        idx := integer32(prm(i));
+        if res(i,idx) = 1 then
+          res(i,idx) := 2;
+        else
+          put("Problem at row "); put(i,1);
+          put(" and column "); put(idx,1);
+          put_line(" : no edge!");
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Apply_Permutation;
+
+  procedure Test ( mat : in Boolean_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Tests the algorithms for the pivot selection
+  --   on the matrix mat.
+
+    dim : constant integer32 := mat'last(1);
     prm : Standard_Natural_Vectors.Vector(1..dim);
     prm_size : integer32;
     selected : Standard_Integer_Vectors.Vector(1..dim);
     selected_size : natural32;
 
   begin
-    put_line("A random Boolean matrix :"); put(mat);
+    put_line("An adjacency matrix :"); put(mat);
     Pivot_Selection.Greedy_Search(mat,prm,prm_size);
     put("The permutation : "); put(prm);
     put(" with size : "); put(prm_size,1); new_line;
@@ -288,19 +288,58 @@ procedure ts_pivsel is
      -- put_line("Running the Hopcroft-Karp algorithm ...");
      -- Bipartite_Match(mat,prm,prm_size);
     end if;
+  end Test;
+
+  procedure Random_Test ( dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random Boolean matrix and runs the algorithms to
+  --   solve the pivot selection problem.
+
+    mat : Boolean_Matrices.Matrix(1..dim,1..dim)
+        := Standard_Random_Matrices.Random_Matrix(natural32(dim));
+
+  begin
+    Test(mat);
   end Random_Test;
+
+  procedure Test_Input ( dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a 0/1 matrix of dimension dim and runs 
+  --   the algorithms to solve the pivot selection problem.
+
+    mat : Boolean_Matrices.Matrix(1..dim,1..dim);
+    bit : natural32 := 0;
+
+  begin
+    for i in 1..dim loop
+      put("Give "); put(dim,1);
+      put(" bits for row "); put(i,1); put(" : ");
+      for j in 1..dim loop
+        get(bit);
+        mat(i,j) := (bit = 1);
+      end loop;
+    end loop;
+    Test(mat);
+  end Test_Input;
 
   procedure Main is
 
   -- DESCRIPTION :
   --   Prompts the user for a dimension
-  --   and then generates a random Boolean matrix.
+  --   and for the type of matrix, random or user given.
 
     dim : integer32 := 0;
+    ans : character;
 
   begin
     put("Give the dimension of the problem : "); get(dim);
-    Random_Test(dim);
+    put("Random matrix ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Random_Test(dim);
+     else Test_Input(dim);
+    end if;
   end Main;
 
 begin
