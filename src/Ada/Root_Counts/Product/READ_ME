@@ -47,6 +47,7 @@ multi_homogeneous_start_systems    : construct multi-homogeneous start systems
 drivers_for_multi_homogenization   : menu-driver for multi-homogenization
 ts_drivmuho                        : calls the driver for multi-homogenization
 ------------------------------------------------------------------------------
+pivot_selection                    : algorithms for pivot selection
 ts_pivsel                          : test pivot selection problem
 ------------------------------------------------------------------------------
 set_structure                      : model of general degree structure

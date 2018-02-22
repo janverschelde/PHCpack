@@ -1,5 +1,6 @@
 Wed 21 Feb 2018 : fixed another bug in greedy search in ts_pivsel.adb
-  and added code for the Ford-Fulkerson algorithm.
+  and added code for the Ford-Fulkerson algorithm.  Removed code for
+  the greedy search and Ford-Fulkerson to the new package pivot_selection.
 
 Mon 19 Feb 2018 : bug fixed in greedy search in ts_pivsel.adb.
 

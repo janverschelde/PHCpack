@@ -14,6 +14,7 @@ with Boolean_Vectors;
 with Boolean_Matrices;
 with Boolean_Matrices_io;                use Boolean_Matrices_io;
 with Standard_Random_Matrices;
+with Pivot_Selection;
 
 procedure ts_pivsel is
 
@@ -29,135 +30,8 @@ procedure ts_pivsel is
 --   This pivot selection problem corresponds to the maximum
 --   matching problem in a bipartite graph, which can be solved
 --   efficiently by the Hopcroft-Karp algorithm.
-
--- CODE for the Ford-Fulkerson algorithm :
-
-  procedure dfs4bpm
-              ( graph : in Boolean_Matrices.Matrix;
-                vtx : in integer32;
-                seen : in out Boolean_Vectors.Vector;
-                match : in out Standard_Integer_Vectors.Vector;
-                found : out boolean ) is
-
-  -- DESCRIPTION :
-  --   A depth first search based recursive procedure that returns
-  --   found as true if a matching for vertex vtx is possible.
-
-  -- ON INPUT :
-  --   graph    adjacency matrix of a bipartite graph;
-  --   vtx      a vertex in the graph;
-  --   seen     marks the visited vertices;
-  --   match    current matching in the graph.
-
-  -- ON RETURN :
-  --   seen     updated list of visited vertices;
-  --   match    updated matching;
-  --   found    true if a matching for vertex vtx is possible,
-  --            false otherwise.
-
-  begin
-    for col in graph'range(2) loop -- try every column one by one
-      -- if there is an edge from col to vtx and col is not visited
-      if(graph(col,vtx) and not seen(col)) then
-        seen(col) := true; -- mark col as visited
-        -- If col is not assigned to a row or previously assigned row
-        -- for col (which is match(col)) has an alternate col available.
-        -- Since col is marked as visited in the above line, match(col)
-        -- in the following recursive call will not get col again.
-        if(match(col) < 0) then
-          match(col) := vtx;
-          found := true; return;
-        else
-          dfs4bpm(graph,match(col),seen,match,found);
-          if found
-           then match(col) := vtx; return;
-          end if;
-        end if;
-      end if;
-    end loop;
-    found := false; 
-  end dfs4bpm;
-
-  procedure maxBPM
-              ( bpGraph : in Boolean_Matrices.Matrix;
-                match : out Standard_Integer_Vectors.Vector;
-                size : out natural32 ) is
-
-  -- DESCRIPTION :
-  --   Computes the maximum matching in a bipartite graph.
-
-  -- ON ENTRY :
-  --   bpGraph  the adjacency matrix of a bipartite graph.
-
-  -- ON RETURN :
-  --   match    match(i) is the row assigned to column i,
-  --            if -1 then the column is unassigned;
-  --   size     number of assigned columns.
-
-    seen : Boolean_Vectors.Vector(bpGraph'range(1));
-    found : boolean;
-
-  begin
-    match := (match'range => -1); -- all columns are unassigned
-    size := 0;
-    for col in bpGraph'range(2) loop
-      seen := (seen'range => false);
-      dfs4bpm(bpGraph,col,seen,match,found); -- can col be assigned?
-      if found
-       then size := size + 1;
-      end if;
-    end loop;
-  end maxBPM;
-
--- CODE for the Hopcroft-Karp algorithm :
-
-  function Is_In ( vec : Standard_Natural_Vectors.Vector;
-                   vec_end : integer32; nbr : in natural32 )
-                 return boolean is
-
-  -- DESCRIPTION :
-  --   Returns true if nbr equals vec(k) for k in range vec'first..vec_end,
-  --   returns false otherwise.
-
-  begin
-    for k in vec'first..vec_end loop
-      if vec(k) = nbr
-       then return true;
-      end if;
-    end loop;
-    return false;
-  end Is_In;
-
-  procedure Greedy_Search
-              ( mat : in Boolean_Matrices.Matrix;
-                prm : out Standard_Natural_Vectors.Vector;
-                size : out integer32 ) is
-
-  -- DESCRIPTION :
-  --   Applies a greedy search to find an initial matching
-  --   of the graph defined by the matrix mat.
-
-  -- ON ENTRY :
-  --   mat      matrix of a bipartite graph of rows and columns.
-
-  -- ON RETURN :
-  --   prm      permutation with the selection of the column;
-  --   size     size of the permutation.
-
-  begin
-    prm := (prm'range => 0);
-    size := 0;
-    for row in mat'range(1) loop
-      for col in mat'range(2) loop
-        if mat(row,col) then
-          if not Is_In(prm,prm'last,natural32(col)) then
-            size := size + 1;
-            prm(row) := natural32(col); exit;
-          end if;
-        end if;
-      end loop;
-    end loop;
-  end Greedy_Search;
+--   Code for the Ford-Fulkerson algorithm is in the package
+--   Pivot_Selection.
 
   function Apply_Permutation
              ( mat : Boolean_Matrices.Matrix;
@@ -393,7 +267,7 @@ procedure ts_pivsel is
 
   begin
     put_line("A random Boolean matrix :"); put(mat);
-    Greedy_Search(mat,prm,prm_size);
+    Pivot_Selection.Greedy_Search(mat,prm,prm_size);
     put("The permutation : "); put(prm);
     put(" with size : "); put(prm_size,1); new_line;
     if prm_size = mat'last(1) then
@@ -401,7 +275,7 @@ procedure ts_pivsel is
       put(Apply_Permutation(mat,prm));
     else
       put_line("Running the Ford-Fulkerson algorithm ...");
-      maxBPM(mat,selected,selected_size);
+      Pivot_Selection.maxBPM(mat,selected,selected_size);
       put("The size of the selection : "); put(selected_size,1); new_line;
       put("The selected columns :"); put(selected); new_line;
       if selected_size = natural32(mat'last(1)) then
