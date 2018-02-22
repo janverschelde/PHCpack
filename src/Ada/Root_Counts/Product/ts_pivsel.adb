@@ -1,9 +1,12 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
+with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Natural_VecVecs;
 with Standard_Natural_Matrices;
 with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
@@ -26,6 +29,87 @@ procedure ts_pivsel is
 --   This pivot selection problem corresponds to the maximum
 --   matching problem in a bipartite graph, which can be solved
 --   efficiently by the Hopcroft-Karp algorithm.
+
+-- CODE for the Ford-Fulkerson algorithm :
+
+  procedure dfs4bpm
+              ( graph : in Boolean_Matrices.Matrix;
+                vtx : in integer32;
+                seen : in out Boolean_Vectors.Vector;
+                match : in out Standard_Integer_Vectors.Vector;
+                found : out boolean ) is
+
+  -- DESCRIPTION :
+  --   A depth first search based recursive procedure that returns
+  --   found as true if a matching for vertex vtx is possible.
+
+  -- ON INPUT :
+  --   graph    adjacency matrix of a bipartite graph;
+  --   vtx      a vertex in the graph;
+  --   seen     marks the visited vertices;
+  --   match    current matching in the graph.
+
+  -- ON RETURN :
+  --   seen     updated list of visited vertices;
+  --   match    updated matching;
+  --   found    true if a matching for vertex vtx is possible,
+  --            false otherwise.
+
+  begin
+    for col in graph'range(2) loop -- try every column one by one
+      -- if there is an edge from col to vtx and col is not visited
+      if(graph(col,vtx) and not seen(col)) then
+        seen(col) := true; -- mark col as visited
+        -- If col is not assigned to a row or previously assigned row
+        -- for col (which is match(col)) has an alternate col available.
+        -- Since col is marked as visited in the above line, match(col)
+        -- in the following recursive call will not get col again.
+        if(match(col) < 0) then
+          match(col) := vtx;
+          found := true; return;
+        else
+          dfs4bpm(graph,match(col),seen,match,found);
+          if found
+           then match(col) := vtx; return;
+          end if;
+        end if;
+      end if;
+    end loop;
+    found := false; 
+  end dfs4bpm;
+
+  procedure maxBPM
+              ( bpGraph : in Boolean_Matrices.Matrix;
+                match : out Standard_Integer_Vectors.Vector;
+                size : out natural32 ) is
+
+  -- DESCRIPTION :
+  --   Computes the maximum matching in a bipartite graph.
+
+  -- ON ENTRY :
+  --   bpGraph  the adjacency matrix of a bipartite graph.
+
+  -- ON RETURN :
+  --   match    match(i) is the row assigned to column i,
+  --            if -1 then the column is unassigned;
+  --   size     number of assigned columns.
+
+    seen : Boolean_Vectors.Vector(bpGraph'range(1));
+    found : boolean;
+
+  begin
+    match := (match'range => -1); -- all columns are unassigned
+    size := 0;
+    for col in bpGraph'range(2) loop
+      seen := (seen'range => false);
+      dfs4bpm(bpGraph,col,seen,match,found); -- can col be assigned?
+      if found
+       then size := size + 1;
+      end if;
+    end loop;
+  end maxBPM;
+
+-- CODE for the Hopcroft-Karp algorithm :
 
   function Is_In ( vec : Standard_Natural_Vectors.Vector;
                    vec_end : integer32; nbr : in natural32 )
@@ -66,7 +150,7 @@ procedure ts_pivsel is
     for row in mat'range(1) loop
       for col in mat'range(2) loop
         if mat(row,col) then
-          if not Is_In(prm,size,natural32(col)) then
+          if not Is_In(prm,prm'last,natural32(col)) then
             size := size + 1;
             prm(row) := natural32(col); exit;
           end if;
@@ -77,14 +161,18 @@ procedure ts_pivsel is
 
   function Apply_Permutation
              ( mat : Boolean_Matrices.Matrix;
-               prm : Standard_Natural_Vectors.Vector )
+               prm : Standard_Natural_Vectors.Vector;
+               check : boolean := true )
              return Standard_Natural_Matrices.Matrix is
 
   -- DESCRIPTION :
   --   The selected columns are marked in the matrix on return by 2,
   --   the rest of the 0 and 1 entries are copied from mat.
+  --   If check is on, then an error will be raised if a 2 will
+  --   be placed at a spot where there is no one.
 
     res : Standard_Natural_Matrices.Matrix(mat'range(1),mat'range(2));
+    idx : integer32;
 
   begin
     for i in mat'range(1) loop
@@ -96,7 +184,18 @@ procedure ts_pivsel is
       end loop;
     end loop;
     for i in prm'range loop
-      res(i,integer32(prm(i))) := 2;
+      if not check then
+        res(i,integer32(prm(i))) := 2;
+      else
+        idx := integer32(prm(i));
+        if res(i,idx) = 1 then
+          res(i,idx) := 2;
+        else
+          put("Problem at row "); put(i,1);
+          put(" and column "); put(idx,1);
+          put_line(" : no edge!");
+        end if;
+      end if;
     end loop;
     return res;
   end Apply_Permutation;
@@ -264,9 +363,9 @@ procedure ts_pivsel is
         put(pred); new_line;
       end if;
       -- repeatedly extend layering structure by another pair of layers
-      while Empty(unmatched) loop
-        null;
-      end loop;
+     -- while Empty(unmatched) loop
+     --   null;
+     -- end loop;
       -- did we finish layering without finding any alternating paths?
       if Empty(unmatched) then
         null;
@@ -289,6 +388,8 @@ procedure ts_pivsel is
         := Standard_Random_Matrices.Random_Matrix(natural32(dim));
     prm : Standard_Natural_Vectors.Vector(1..dim);
     prm_size : integer32;
+    selected : Standard_Integer_Vectors.Vector(1..dim);
+    selected_size : natural32;
 
   begin
     put_line("A random Boolean matrix :"); put(mat);
@@ -299,8 +400,19 @@ procedure ts_pivsel is
       put_line("The greedy search solved the pivot selection problem :");
       put(Apply_Permutation(mat,prm));
     else
-      put_line("Running the Hopcroft-Karp algorithm ...");
-      Bipartite_Match(mat,prm,prm_size);
+      put_line("Running the Ford-Fulkerson algorithm ...");
+      maxBPM(mat,selected,selected_size);
+      put("The size of the selection : "); put(selected_size,1); new_line;
+      put("The selected columns :"); put(selected); new_line;
+      if selected_size = natural32(mat'last(1)) then
+        for i in prm'range loop
+          prm(i) := natural32(selected(i));
+        end loop;
+        put_line("The solution applied to the matrix :");
+        put(Apply_Permutation(mat,prm));
+      end if;
+     -- put_line("Running the Hopcroft-Karp algorithm ...");
+     -- Bipartite_Match(mat,prm,prm_size);
     end if;
   end Random_Test;
 
