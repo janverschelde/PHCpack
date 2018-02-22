@@ -21,6 +21,14 @@ package body Standard_Random_Numbers is
     return initial_seed;
   end Get_Seed;
 
+  function Random ( probability : double_float := 0.5 ) return boolean is
+
+    f : constant double_float := (Random + 1.0)/2.0;
+
+  begin
+    return (f <= probability);
+  end Random;
+
   function Random ( lower,upper : integer32 ) return integer32 is
 
     f : double_float;

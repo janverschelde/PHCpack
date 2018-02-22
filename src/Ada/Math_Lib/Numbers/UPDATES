@@ -1,3 +1,6 @@
+Thu 22 Feb 2018 : to standard_random_numbers, added a random() function
+  which takes on input the probability for true.
+
 Tue 30 Jan 2018 : to work with Boolean matrices, defined boolean_numbers,
   boolean_ring, and boolean_ring_io.
 

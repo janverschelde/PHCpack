@@ -20,6 +20,14 @@ package Standard_Random_Numbers is
   -- DESCRIPTION :
   --   Returns the seed used to generate random numbers.
 
+  function Random ( probability : double_float := 0.5 ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true with given probability.
+  --   By default, the likelihood of true is equal to that of false. 
+  --   With higher probability, true is more likely,
+  --   with lower probability, false is more likely.
+
   function Random ( lower,upper : integer32 ) return integer32;
   function Random ( lower,upper : integer64 ) return integer64;
 
