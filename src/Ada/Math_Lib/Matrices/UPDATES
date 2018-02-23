@@ -1,5 +1,8 @@
+Fri 23 Feb 2018 : to standard_random_matrices, added a function to generate
+  random Boolean matrices with a different number of rows than columns.
+
 Thu 22 Feb 2018 : extended the random_matrix function for Boolean matrices
-  with a probability argument.
+  with a probability argument, in standard_random_matrices.
 
 Mon 12 Feb 2018 : added a random_matrix function for Boolean matrices
   to the package standard_random_matrices.

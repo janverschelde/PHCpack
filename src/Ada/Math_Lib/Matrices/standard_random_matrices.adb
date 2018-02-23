@@ -24,6 +24,23 @@ package body Standard_Random_Matrices is
     return res;
   end Random_Matrix;
 
+  function Random_Matrix
+             ( rows,cols : natural32; prb : double_float := 0.5 )
+             return Boolean_Matrices.Matrix is
+
+    nbrows : constant integer32 := integer32(rows);
+    nbcols : constant integer32 := integer32(cols);
+    res : Boolean_Matrices.Matrix(1..nbrows,1..nbcols);
+
+  begin
+    for i in 1..nbrows loop
+      for j in 1..nbcols loop
+        res(i,j) := Standard_Random_Numbers.Random(prb);
+      end loop;
+    end loop;
+    return res;
+  end Random_Matrix;
+
   function Random_Matrix ( n,m : natural32; low,upp : integer32 )
                          return Standard_Integer_Matrices.Matrix is
 
