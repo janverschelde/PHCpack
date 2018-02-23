@@ -40,19 +40,21 @@ package body Pivot_Selection is
   begin
     for col in graph'range(2) loop -- try every column one by one
       -- if there is an edge from col to vtx and col is not visited
-      if(graph(col,vtx) and not seen(col)) then
-        seen(col) := true; -- mark col as visited
-        -- If col is not assigned to a row or previously assigned row
-        -- for col (which is match(col)) has an alternate col available.
-        -- Since col is marked as visited in the above line, match(col)
-        -- in the following recursive call will not get col again.
-        if(match(col) < 0) then
-          match(col) := vtx;
-          found := true; return;
-        else
-          dfs4bpm(graph,match(col),seen,match,found);
-          if found
-           then match(col) := vtx; return;
+      if col <= graph'last(1) then -- may have more columns than rows
+        if(graph(col,vtx) and not seen(col)) then
+          seen(col) := true; -- mark col as visited
+          -- If col is not assigned to a row or previously assigned row
+          -- for col (which is match(col)) has an alternate col available.
+          -- Since col is marked as visited in the above line, match(col)
+          -- in the following recursive call will not get col again.
+          if(match(col) < 0) then
+            match(col) := vtx;
+            found := true; return;
+          else
+            dfs4bpm(graph,match(col),seen,match,found);
+            if found
+             then match(col) := vtx; return;
+            end if;
           end if;
         end if;
       end if;

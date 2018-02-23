@@ -214,6 +214,8 @@ procedure ts_pivsel is
     end loop;
   end Bipartite_Match;
 
+-- CODE for testing :
+
   function Apply_Permutation
              ( mat : Boolean_Matrices.Matrix;
                prm : Standard_Natural_Vectors.Vector;
@@ -270,7 +272,7 @@ procedure ts_pivsel is
   begin
     put_line("An adjacency matrix :"); put(mat);
     Pivot_Selection.Greedy_Search(mat,prm,prm_size);
-    put("The permutation : "); put(prm);
+    put("The permutation :"); put(prm);
     put(" with size : "); put(prm_size,1); new_line;
     if prm_size = mat'last(1) then
       put_line("The greedy search solved the pivot selection problem :");
@@ -292,36 +294,39 @@ procedure ts_pivsel is
     end if;
   end Test;
 
-  procedure Random_Test ( dim : in integer32 ) is
+  procedure Random_Test ( nbrows,nbcols : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random Boolean matrix and runs the algorithms to
   --   solve the pivot selection problem.
 
-    mat : Boolean_Matrices.Matrix(1..dim,1..dim);
+    use Standard_Random_Matrices;
+
+    mat : Boolean_Matrices.Matrix(1..nbrows,1..nbcols);
     prb : double_float := 0.0;
 
   begin
-    put("Give the probability for true (1) : ");
+    put("Give the probability for true : ");
     get(prb);
-    mat := Standard_Random_Matrices.Random_Matrix(natural32(dim),prb);
+    mat := Random_Matrix(natural32(nbrows),natural32(nbcols),prb);
     Test(mat);
   end Random_Test;
 
-  procedure Test_Input ( dim : in integer32 ) is
+  procedure Test_Input ( nbrows,nbcols : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Prompts the user for a 0/1 matrix of dimension dim and runs 
-  --   the algorithms to solve the pivot selection problem.
+  --   Given in nbrows the number of rows and in nbcols the number of
+  --   columns, prompts the user for a 0/1 matrix of the given dimensions
+  --   and runs the algorithms for the pivot selection problem.
 
-    mat : Boolean_Matrices.Matrix(1..dim,1..dim);
+    mat : Boolean_Matrices.Matrix(1..nbrows,1..nbcols);
     bit : natural32 := 0;
 
   begin
-    for i in 1..dim loop
-      put("Give "); put(dim,1);
+    for i in 1..nbrows loop
+      put("Give "); put(nbcols,1);
       put(" bits for row "); put(i,1); put(" : ");
-      for j in 1..dim loop
+      for j in 1..nbcols loop
         get(bit);
         mat(i,j) := (bit = 1);
       end loop;
@@ -335,15 +340,16 @@ procedure ts_pivsel is
   --   Prompts the user for a dimension
   --   and for the type of matrix, random or user given.
 
-    dim : integer32 := 0;
+    nbrows,nbcols : integer32 := 0;
     ans : character;
 
   begin
-    put("Give the dimension of the problem : "); get(dim);
-    put("Random matrix ? (y/n) "); Ask_Yes_or_No(ans);
+    put("Give the number of rows : "); get(nbrows);
+    put("Give the number of columns : "); get(nbcols);
+    put("Generate a random matrix ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then Random_Test(dim);
-     else Test_Input(dim);
+     then Random_Test(nbrows,nbcols);
+     else Test_Input(nbrows,nbcols);
     end if;
   end Main;
 
