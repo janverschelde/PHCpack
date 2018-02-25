@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -9,6 +10,7 @@ with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Lists_of_Integer_Vectors;           use Lists_of_Integer_Vectors;
 with Drivers_for_Set_Structures;         use Drivers_for_Set_Structures;
 with Random_Product_Start_Systems;
+with Standard_Linear_Product_System;
 with Set_Structure;
 with Set_Structure_io;
 with Degree_Sets_Tables;
@@ -42,6 +44,48 @@ procedure ts_drivss is
     end;
   end Test_Driver;
 
+  procedure Test_Permanent_Computation ( dim : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Given a set structure stored internally,
+  --   for a square polynomial system of the given dimension dim,
+  --   this procedure tests the computation of the permanent in three ways:
+  --   1) based on taking unions of the sets;
+  --   2) running the maximum bipartite matching algorithms;
+  --   3) solving a random linear product start system.
+
+    dst : constant Degree_Sets_Tables.Degree_Sets_Table
+        := Degree_Sets_Tables.Create;
+    cnt : integer32;
+    ans : character;
+    nbsols : natural64;
+
+  begin
+    put_line("The degree sets table :");
+    Degree_Sets_Tables_io.put(dst);
+    new_line;
+    put("Compute the permanent with sets ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      cnt := Degree_Sets_Tables.Permanent(dst);
+      put("The formal root count : "); put(cnt,1); new_line;
+    end if;
+    put("Compute the permanent with maximum bipartite matching ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      cnt := Degree_Sets_Tables.Matching_Permanent(dst);
+      put("The formal root count : "); put(cnt,1); new_line;
+    end if;
+    put("Compute the permanent solving a linear-product system ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Standard_Linear_Product_System.Init(dim);
+      Random_Product_Start_Systems.Build_Random_Product_System(dim);
+      nbsols := Standard_Linear_Product_System.Count_All_Solutions(1.0E-8);
+      put("The number of solutions : "); put(nbsols,1); new_line;
+    end if;
+  end Test_Permanent_Computation;
+
   procedure Test_Root_Count is
 
   -- DESCRIPTION :
@@ -55,18 +99,7 @@ procedure ts_drivss is
     Random_Product_Start_Systems.Build_Set_Structure(lp.all);
     put_line("A supporting set structure :");
     Set_Structure_io.put;
-    declare
-      dst : constant Degree_Sets_Tables.Degree_Sets_Table
-          := Degree_Sets_Tables.Create;
-      cnt : integer32;
-    begin
-      put_line("The degree sets table :");
-      Degree_Sets_Tables_io.put(dst);
-      cnt := Degree_Sets_Tables.Permanent(dst);
-      put("The formal root count : "); put(cnt,1); new_line;
-      cnt := Degree_Sets_Tables.Matching_Permanent(dst);
-      put("The formal root count : "); put(cnt,1); new_line;
-    end;
+    Test_Permanent_Computation(natural32(lp'last));
   end Test_Root_Count;
 
   procedure Main is

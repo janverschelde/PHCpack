@@ -1,3 +1,5 @@
+Sun 25 Feb 2018 : improved the test in ts_drivss.adb.
+
 Sat 24 Feb 2018 : new package degree_sets_tables_io to test formal root
   count based on a set structure, tested in ts_drivss.adb.
   Extended degree_sets_tables to compute the permanent with algorithms
