@@ -1,3 +1,6 @@
+Sat 24 Feb 2018 : new package degree_sets_tables_io to test formal root
+  count based on a set structure, tested in ts_drivss.adb.
+
 Fri 23 Feb 2018 : adjusted pivot_selection.adb to run for matrices which
   have more columns than rows, updated tests in ts_pivsel.adb to test
   matrices that have a different number of columns than rows.

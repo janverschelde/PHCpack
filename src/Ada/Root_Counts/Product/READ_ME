@@ -55,6 +55,7 @@ set_structure_io                   : input/output of set structures
 set_structure_strings              : string representations of set structures
 supporting_set_structure           : does set structure support polynomials?
 degree_sets_tables                 : generalized permanents
+degree_sets_tables_io              : output of degree sets tables
 random_product_start_systems       : construct random linear-product systems
 drivers_for_set_structures         : menu-driver for set structures
 ts_strset                          : test on set structures as strings
