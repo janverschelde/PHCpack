@@ -8,6 +8,9 @@ start systems to allow the jumpstarting of homotopies.  This was made
 available in phc -r in release v2.3.16.  New in v2.3.50 is the use of 64-bit
 arithmetic in the computation of m-homogeneous Bezout numbers.
 
+In release 2.4.49, code was added to compute the generalized permanent
+for a supporting set structure, with maximum bipartite matching.
+
 ------------------------------------------------------------------------------
 file name                          : short description
 ------------------------------------------------------------------------------

@@ -32,6 +32,12 @@ package Degree_Sets_Tables is
   -- DESCRIPTION :
   --   Returns the generalized permanent, based on the set structure.
 
+  function Matching_Permanent ( dst : Degree_Sets_Table ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the generalized permanent, based on the set structure,
+  --   applying the connection with maximum bipartite matching problem.
+
 -- DESTRUCTOR :
 
   procedure Clear ( ase : in out Array_of_Sets );

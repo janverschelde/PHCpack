@@ -1,6 +1,9 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
+with Standard_Integer_Vectors;
+with Boolean_Matrices;
 with Set_Structure;
+with Pivot_Selection;
 
 package body Degree_Sets_Tables is
 
@@ -291,6 +294,88 @@ package body Degree_Sets_Tables is
   begin
     return Permanent(dst.a,dst.s,v,1,dst.n);
   end Permanent;
+
+  function Adjacency_Matrix
+             ( s : Array_of_Sets; v : Vector; i,n : integer32 )
+             return Boolean_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the adjacency matrix for the selection of sets
+  --   defined by s and the vector v, with i rows and n columns.
+
+    res : Boolean_Matrices.Matrix(1..i,1..n);
+    vrs : Set;
+
+  begin
+    for k in 1..i loop
+      vrs := s(integer32(v(k)));
+      for j in 1..n loop
+        res(i,j) := Is_In(vrs,natural32(j));
+      end loop;
+    end loop;
+    return res;
+  end Adjacency_Matrix;
+ 
+  function Consistent
+             ( s : Array_of_Sets; v : Vector; i,n : integer32 )
+             return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if the selection of the sets will lead to a linear
+  --   system that is consistent, i.e.: that has a solution.
+
+    mat : constant Boolean_Matrices.Matrix(1..i,1..n)
+        := Adjacency_Matrix(s,v,i,n);
+    prm : Standard_Natural_Vectors.Vector(1..i);
+    prm_size : integer32;
+    match : Standard_Integer_Vectors.Vector(1..i);
+    match_size : natural32;
+
+  begin
+    Pivot_Selection.Greedy_Search(mat,prm,prm_size);
+    if prm_size = i then
+      return true;
+    else
+      Pivot_Selection.maxBPM(mat,match,match_size);
+      return (integer32(match_size) = i);
+    end if;
+  end Consistent;
+
+  function Matching_Permanent
+             ( a : matrix; s : Array_of_Sets; v : Vector;
+               i,n : integer32 ) return integer32 is
+
+  -- ALGORITHM : Row expansion without memory.
+
+  begin
+    if i = n+1 then
+      return 1;
+    else
+      declare
+        res : integer32 := 0;
+        vv : Vector(v'range) := v;
+      begin
+        for j in a'range(2) loop
+          if a(i,j) /= 0 then
+            vv(i) := natural32(j);
+            if Consistent(s,vv,i,n)
+             then res := res + a(i,j)*Permanent(a,s,vv,i+1,n);
+            end if;
+          end if;
+        end loop;
+        return res;
+      end;
+    end if;
+  end Matching_Permanent;
+
+  function Matching_Permanent
+             ( dst : Degree_Sets_Table ) return integer32 is
+
+    v : constant Vector(1..dst.n) := (1..dst.n => 0);
+
+  begin
+    return Matching_Permanent(dst.a,dst.s,v,1,dst.n);
+  end Matching_Permanent;
 
 -- DESTRUCTOR :
 

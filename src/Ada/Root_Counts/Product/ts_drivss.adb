@@ -1,6 +1,8 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
@@ -56,9 +58,14 @@ procedure ts_drivss is
     declare
       dst : constant Degree_Sets_Tables.Degree_Sets_Table
           := Degree_Sets_Tables.Create;
+      cnt : integer32;
     begin
       put_line("The degree sets table :");
       Degree_Sets_Tables_io.put(dst);
+      cnt := Degree_Sets_Tables.Permanent(dst);
+      put("The formal root count : "); put(cnt,1); new_line;
+      cnt := Degree_Sets_Tables.Matching_Permanent(dst);
+      put("The formal root count : "); put(cnt,1); new_line;
     end;
   end Test_Root_Count;
 

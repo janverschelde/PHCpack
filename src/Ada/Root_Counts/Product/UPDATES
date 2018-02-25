@@ -1,5 +1,7 @@
 Sat 24 Feb 2018 : new package degree_sets_tables_io to test formal root
   count based on a set structure, tested in ts_drivss.adb.
+  Extended degree_sets_tables to compute the permanent with algorithms
+  for maximum bipartite matching, defined in the pivot_selection package.
 
 Fri 23 Feb 2018 : adjusted pivot_selection.adb to run for matrices which
   have more columns than rows, updated tests in ts_pivsel.adb to test
