@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
@@ -59,6 +60,7 @@ procedure ts_drivss is
     cnt : integer32;
     ans : character;
     nbsols : natural64;
+    timer : Timing_Widget;
 
   begin
     put_line("The degree sets table :");
@@ -67,22 +69,36 @@ procedure ts_drivss is
     put("Compute the permanent with sets ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      tstart(timer);
       cnt := Degree_Sets_Tables.Permanent(dst);
+      tstop(timer);
       put("The formal root count : "); put(cnt,1); new_line;
+      new_line;
+      print_times(standard_output,timer,"permanent with set unions");
     end if;
+    new_line;
     put("Compute the permanent with maximum bipartite matching ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      tstart(timer);
       cnt := Degree_Sets_Tables.Matching_Permanent(dst);
+      tstop(timer);
       put("The formal root count : "); put(cnt,1); new_line;
+      new_line;
+      print_times(standard_output,timer,"permanent with matching");
     end if;
+    new_line;
     put("Compute the permanent solving a linear-product system ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      tstart(timer);
       Standard_Linear_Product_System.Init(dim);
       Random_Product_Start_Systems.Build_Random_Product_System(dim);
       nbsols := Standard_Linear_Product_System.Count_All_Solutions(1.0E-8);
+      tstop(timer);
       put("The number of solutions : "); put(nbsols,1); new_line;
+      new_line;
+      print_times(standard_output,timer,"solving linear-product system");
     end if;
   end Test_Permanent_Computation;
 
