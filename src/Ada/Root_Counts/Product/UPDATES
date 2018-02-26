@@ -1,6 +1,7 @@
 Mon 26 Feb 2018 : added timers to ts_drivss.adb.
 
-Sun 25 Feb 2018 : improved the test in ts_drivss.adb.
+Sun 25 Feb 2018 : improved the test in ts_drivss.adb.  Fixed bug in 
+  degree_sets_tables.adb for recursive call in the maching_permanent.
 
 Sat 24 Feb 2018 : new package degree_sets_tables_io to test formal root
   count based on a set structure, tested in ts_drivss.adb.

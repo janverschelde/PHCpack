@@ -359,7 +359,7 @@ package body Degree_Sets_Tables is
           if a(i,j) /= 0 then
             vv(i) := natural32(j);
             if Consistent(s,vv,i,n)
-             then res := res + a(i,j)*Permanent(a,s,vv,i+1,n);
+             then res := res + a(i,j)*Matching_Permanent(a,s,vv,i+1,n);
             end if;
           end if;
         end loop;
