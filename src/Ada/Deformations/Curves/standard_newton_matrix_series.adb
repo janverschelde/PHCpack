@@ -567,10 +567,14 @@ package body Standard_Newton_Matrix_Series is
     end loop;
     Standard_Dense_Series_Vectors.Min(px);
     Series_and_Polynomials.Set_degree(px,degree);
+    put_line(file,"Evaluating the Jacobian matrix ...");
     jm := Standard_Series_Jaco_Matrices.Eval(jp,x);
+    put_line(file,"Done evaluating the Jacobian matrix.");
     Series_and_Polynomials.Set_degree(jm,degree);
+    put_line(file,"Creating matrices and vectors ...");
     mj := Standard_Dense_Matrix_Series.Create(jm);
     xp := Standard_Dense_Vector_Series.Create(px);
+    put_line(file,"Calling Echelon_Solve ...");
     Echelon_Solve(mj,xp,det,xd,xdn);
     put(file,"n.deg : "); put(file,xdn.deg,1); 
     put(file,"  det : "); put(file,det); new_line(file);
@@ -583,6 +587,11 @@ package body Standard_Newton_Matrix_Series is
     Standard_Dense_Matrix_Series.Clear(mj);
     Standard_Dense_Vector_Series.Clear(xp);
     Standard_Dense_Vector_Series.Clear(xd);
+  exception
+    when others =>
+      put("exception in ");
+      put_line("Standard_Newton_Matrix_Series.Echelon_Newton_Step");
+      raise;
   end Echelon_Newton_Step;
 
   procedure Echelon_Newton_Step
@@ -927,6 +936,11 @@ package body Standard_Newton_Matrix_Series is
        then degree := Standard_Dense_Series.max_deg;
       end if;
     end loop;
+  exception
+    when others =>
+      put("exception ");
+      put_line("in Standard_Newton_Matrix_Series.Echelon_Newton_Steps");
+      raise;
   end Echelon_Newton_Steps;
 
   procedure Echelon_Newton_Steps

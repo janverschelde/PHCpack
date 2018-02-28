@@ -544,6 +544,10 @@ package body Power_Series_Methods is
       put_line(file,"The evaluated solution :");
       Series_and_Polynomials_io.put(file,eva);
     end if;
+  exception
+    when others =>
+      put_line("exception in Power_Series_Methods.Run_Echelon_Newton");
+      raise;
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
