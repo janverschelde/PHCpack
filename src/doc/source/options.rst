@@ -229,10 +229,15 @@ including the positive dimensional ones, consider the options
 phc -B : numerical irreducible decomposition in blackbox mode
 =============================================================
 
-The ``-B`` option does currently the same as option ``0``
-of ``phc -c``, that is: track all path defined by a cascade homotopy
-to compute candidate generic points on all components of the
-solution set.  In the near future, new releases will compute
+The ``-B`` option bundles the functionality of 
+
+1. ``phc -c`` to run a cascade homotopy to compute candidate generic
+   points on all components of the solution set; and
+
+2. ``phc -f`` to filter the junk points (which are not generic points)
+   and to factor pure dimensional solution sets into irreducible factors.
+
+Since version 2.4.48, running ``phc -B`` provides
 a complete numerical irreducible decomposition.
 
 phc -c : irreducible decomposition for solution components     
@@ -938,6 +943,8 @@ Three different generalizations of the total degree are available:
 3. A general linear-product Bezout number groups the variables
    in a collection of sets where each variable occurs at most once
    in each set.  Every set then corresponds to one linear equation.
+   The formal root count is a generalized :index:`permanent`, computed
+   formally via algorithms for the bipartite matching problem.
 
 Each of these three generalizations leads to 
 a :index:`linear-product start system`.
