@@ -294,6 +294,10 @@ global optimization, and computational physics:
    **Solution of polynomial system using PHCpack**.
    *Journal of Physical Sciences and Innovation*, 4:44-53, 2012.
 
+#. Michael F. Adamer and Martin Helmer:
+   **Euclidean Distance Degree for Chemical Reaction Networks**.
+   arXiv:1707.07650v1 [q-bio.QM] 24 Jul 2017.
+
 #. Min-Ho Ahn, Dong-Oh Nam and Chung-Nim Lee:
    **Self-Calibration with Varying Focal Lengths Using 
    the Infinity Homography**. In *Proceedings of the 
@@ -507,7 +511,7 @@ global optimization, and computational physics:
    *Signal Processing* 82(4): 625-641, 2002.
 
 #. A. Jensen, A. Leykin, and J. Yu:
-   **Computing tropical curves via homotopy continuation.**
+   **Computing tropical curves via homotopy continuation**.
    *Experimental Mathematics* 25(1): 83--93, 2016.
 
 #. Bjorn Johansson, Magnus Oskarsson, and Kalle Astrom:
@@ -521,6 +525,10 @@ global optimization, and computational physics:
    rendezvous problem**.
    *American Institute of Aeronautics and Astronautics Guidance, Navigation,
    and Control Conference*, Toronto, Canada, 02-05 August 2010.
+
+#. Dimitra Kosta and Kaie Kubjas:
+   **Geometry of symmetry group-based models**.
+   arXiv:1705.09228v2 [q-bio.PE] 17 Aug 2017
 
 #. P.U. Lamalle, A. Messiaen, P. Dumortier, F. Durodie, M. Evrard, F. Louche:
    **Study of mutual coupling effects in the antenna array of the ICRH
@@ -608,6 +616,13 @@ global optimization, and computational physics:
 #. Andrew J. Newell:
    **Transition to supermagnetism in chains of magnetosome crystals**.
    *Geochemistry Geophysics Geosystems* 10(11):1-19, 2009.
+
+#. Girijanandan Nucha, Georges-Pierre Bonneau, Stefanie Hahmann,
+   and Vijay Natarajan.
+   **Computing Contour Trees for 2D piecewise Polynomial Functions**.
+   In Eurographics Conference on Visualization (EuroVis) 2017,
+   edited by J. Heer, T. Ropinski, and J. van Wijk, pages 24-33,
+   Computer Graphics Forum, Wiley & Sons Ltd., 2017.
 
 #. M. Oskarsson, A. Zisserman and K. Astrom:
    **Minimal Projective Reconstruction for combinations of Points
@@ -790,10 +805,10 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-98. Ali Baharev, Ferenc Domes, Arnold Neumaier:
-    **A robust approach for finding all well-separated solutions of
-    sparse systems of nonlinear equations**.
-    *Numerical Algorithms*, pages 1-27, 2016 (online first).
+101. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+     **A robust approach for finding all well-separated solutions of
+     sparse systems of nonlinear equations**.
+     *Numerical Algorithms* 76:163-189, 2017.
 
 #. Ada Boralevi, Jasper van Doornmalen, Jan Draisma, Michiel E. Hochstenbach,
    and Bor Plestenjak: **Uniform Determinantal Representations**.
@@ -861,7 +876,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-114. Bo Dong, Bo Yu, and Yan Yu:
+117. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -880,7 +895,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-117. B. Sturmfels:
+120. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
@@ -929,6 +944,12 @@ Their names, titles of PhD dissertation, and year of PhD are listed below:
 #. Xiangcheng Yu:
    *Accelerating Polynomial Homotopy Continuation
    on Graphics Processing Units*, 2015.
+
+#. Jeff Sommars:
+   *Algorithms and Implementations in Computational Algebraic Geometry*, 2018.
+
+#. Nathan Bliss:
+   *Computing Series Expansions of Algebraic Space Curves*, 2018.
 
 Anton Leykin contributed to the application of message passing 
 in a parallel implementation of monodromy to decompose an equidimensional
