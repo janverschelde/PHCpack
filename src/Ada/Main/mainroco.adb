@@ -82,6 +82,8 @@ procedure mainroco ( infilename,outfilename : in string ) is
     end if;
     if Is_Square(lp.all) then
       Create_Output_File(outft,outfilename);
+      put(outft,lp'last,1);
+      new_line(outft);
       put(outft,lp.all);
       declare
         q : Poly_Sys(lp'range);

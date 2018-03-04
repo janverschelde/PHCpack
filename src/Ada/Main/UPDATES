@@ -1,3 +1,6 @@
+Sun 4 Mar 2018 : changed mainroco.adb so that phc -r also writes the
+  dimension of the system to the output file.
+
 Sat 30 Dec 2017 : updated greeting_banners for version 2.4.48.
   Removed superfluous new_line; after prompting for system in
   compsolve.adb, compsolve2.adb, and compsolve4.adb.
