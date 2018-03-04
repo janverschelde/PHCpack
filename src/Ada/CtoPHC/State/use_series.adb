@@ -8,6 +8,8 @@ with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;  -- for debugging
+ use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
@@ -31,6 +33,7 @@ with Standard_Series_Poly_Systems;
 with DoblDobl_Series_Poly_Systems;
 with QuadDobl_Series_Poly_Systems;
 with Series_and_Polynomials;
+with Series_and_Polynomials_io; -- for debugging
 with Series_and_Solutions;
 with Power_Series_Methods;                 use Power_Series_Methods;
 with Standard_Pade_Approximants;
@@ -545,6 +548,10 @@ function use_series ( job : integer32;
     if verbose then
       put("Number of equations in the system : "); put(nq,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
+      put("The index of the parameter : "); put(idx,1); new_line;
+      put_line("The polynomials in the system :"); put(lp.all);
+      put_line("The system converted to series :");
+      Series_and_Polynomials_io.put(srp);
     end if;
     Run_Newton(nq,idx,dim,nbr,true,verbose,srp,srv.all);
     Store_Series_Solutions(srv.all);
