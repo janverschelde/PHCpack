@@ -119,15 +119,17 @@ package body Drivers_for_Set_Structures is
   --   Depending on whether the user wants the computer to generate
   --   a set structure or whether a set structure needs to be read,
   --   a generalized Bezout number is computed and returned in bb.
+  --   The permanent computation based on the bipartite matching problem
+  --   is more efficient than the one based on set unions.
 
   begin
     case choice is
       when '1' =>  
         Random_Product_Start_Systems.Build_Set_Structure(p);
-        bb := natural32(Permanent(Degree_Sets_Tables.Create));
+        bb := natural32(Matching_Permanent(Degree_Sets_Tables.Create));
       when '2' => 
         Read_Set_Structure(natural32(p'last));
-        bb := natural32(Permanent(Degree_Sets_Tables.Create));
+        bb := natural32(Matching_Permanent(Degree_Sets_Tables.Create));
       when others => null;
     end case;
     Write_Results(Standard_Output,bb); Write_Results(file,bb);

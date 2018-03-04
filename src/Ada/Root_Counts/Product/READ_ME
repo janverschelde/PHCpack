@@ -10,6 +10,8 @@ arithmetic in the computation of m-homogeneous Bezout numbers.
 
 In release 2.4.49, code was added to compute the generalized permanent
 for a supporting set structure, with maximum bipartite matching.
+The formal root count based on a set structure in phc -r is then
+computed much faster than with the previous permanent computation.
 
 ------------------------------------------------------------------------------
 file name                          : short description

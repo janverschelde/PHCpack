@@ -1,3 +1,6 @@
+Sun 4 Mar 2018 : in drivers_for_set_structures.adb, called the function
+  Matching_Permanent() so the formal root count in phc -r goes faster.
+
 Mon 26 Feb 2018 : added timers to ts_drivss.adb.
 
 Sun 25 Feb 2018 : improved the test in ts_drivss.adb.  Fixed bug in 
