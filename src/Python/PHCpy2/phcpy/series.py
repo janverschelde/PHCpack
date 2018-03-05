@@ -174,7 +174,32 @@ def quaddobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     py2c_syspool_quaddobl_clear()
     return result
 
-def standard_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
+def checkin_newton_power_series(nbsym, lser, idx):
+    """
+    Given in nbsym the number of symbols in the polynomial system,
+    in lser the list of leading terms in the series and 
+    in idx the index of the parameter, returns True
+    if nbsym = len(lser) if idx == 0, or otherwise
+    if nbsym = len(lser) + 1 if idx != 0.
+    An error message is written and False is returned
+    if the above conditions are not satisfied.
+    """
+    if idx == 0:
+        okay = (nbsym == len(lser))
+    else:
+        okay = (nbsym == len(lser) + 1)
+    if not okay:
+        if idx == 0:
+            dim = nbsym
+        else:
+            dim = nbsym - 1
+        print 'Wrong length of list of leading terms, should be', \
+            str(dim) + '.'
+       
+    return okay   
+
+def standard_newton_power_series(pols, lser, idx=1, nbr=4, \
+    checkin=True, verbose=True):
     r"""
     Computes series in standard double precision for the polynomials
     in *pols*, where the leading terms are given in the list *lser*.
@@ -188,6 +213,11 @@ def standard_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
     *idx*: index of the series parameter, by default equals 1,
 
     *nbr*: number of steps with Newton's method,
+
+    *checkin*: checks whether the number of symbols in pols matches
+    the length of the list lser if idx == 0, or is one less than 
+    the length of the list lser if idx != 0.  If the conditions are
+    not satisfied, then an error message is printed and lser is returned.
 
     *verbose*: whether to write intermediate output to screen or not.
 
@@ -208,6 +238,9 @@ def standard_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
         for pol in pols:
             print pol
         print "Number of variables :", nbsym
+    if checkin:
+        if not checkin_newton_power_series(nbsym, lser, idx):
+            return lser
     store_standard_system(lser, nbvar=1)
     py2c_syspool_standard_init(1);
     py2c_syspool_standard_create(1);
@@ -225,7 +258,8 @@ def standard_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
     py2c_syspool_standard_clear()
     return result
 
-def dobldobl_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
+def dobldobl_newton_power_series(pols, lser, idx=1, nbr=4, \
+    checkin=True, verbose=True):
     r"""
     Computes series in double double precision for the polynomials
     in *pols*, where the leading terms are given in the list *lser*.
@@ -239,6 +273,11 @@ def dobldobl_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
     *idx*: index of the series parameter, by default equals 1,
 
     *nbr*: number of steps with Newton's method,
+
+    *checkin*: checks whether the number of symbols in pols matches
+    the length of the list lser if idx == 0, or is one less than 
+    the length of the list lser if idx != 0.  If the conditions are
+    not satisfied, then an error message is printed and lser is returned.
 
     *verbose*: whether to write intermediate output to screen or not.
 
@@ -259,6 +298,9 @@ def dobldobl_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
         for pol in pols:
             print pol
         print "Number of variables :", nbsym
+    if checkin:
+        if not checkin_newton_power_series(nbsym, lser, idx):
+            return lser
     store_dobldobl_system(lser, nbvar=1)
     py2c_syspool_dobldobl_init(1);
     py2c_syspool_dobldobl_create(1);
@@ -276,7 +318,8 @@ def dobldobl_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
     py2c_syspool_dobldobl_clear()
     return result
 
-def quaddobl_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
+def quaddobl_newton_power_series(pols, lser, idx=1, nbr=4, \
+    checkin=True, verbose=True):
     r"""
     Computes series in quad double precision for the polynomials
     in *pols*, where the leading terms are given in the list *lser*.
@@ -290,6 +333,11 @@ def quaddobl_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
     *idx*: index of the series parameter, by default equals 1,
 
     *nbr*: number of steps with Newton's method,
+
+    *checkin*: checks whether the number of symbols in pols matches
+    the length of the list lser if idx == 0, or is one less than 
+    the length of the list lser if idx != 0.  If the conditions are
+    not satisfied, then an error message is printed and lser is returned.
 
     *verbose*: whether to write intermediate output to screen or not.
 
@@ -310,6 +358,9 @@ def quaddobl_newton_power_series(pols, lser, idx=1, nbr=4, verbose=True):
         for pol in pols:
             print pol
         print "Number of variables :", nbsym
+    if checkin:
+        if not checkin_newton_power_series(nbsym, lser, idx):
+            return lser
     store_quaddobl_system(lser, nbvar=1)
     py2c_syspool_quaddobl_init(1);
     py2c_syspool_quaddobl_create(1);
