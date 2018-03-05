@@ -40,6 +40,10 @@ The nineth and last section of this chapter sketches
 the design of the C interface, the Python interface module,
 and the wrappers to the C interface to PHCpack.
 
+The last section collects the code snippets,
+defined for the notebook extension of Jupyter,
+as they pop up in the menus of the notebook.
+
 .. toctree::
    :maxdepth: 2
 
@@ -52,3 +56,4 @@ and the wrappers to the C interface to PHCpack.
    dashboard
    phcbwulf
    modphcpy2c2
+   snippets

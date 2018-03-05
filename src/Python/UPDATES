@@ -1,3 +1,6 @@
+Sun 4 Mar 2018 : added snippets.rst to the user manual, listing all code
+  snippets for the Jupyter notebook extension in the documentation.
+
 Thu 4 Jan 2018 : added comment lines to the __init__.py of phcpy to 
   suggest the init_cysignals() when using phcpy in SageMath.
 
