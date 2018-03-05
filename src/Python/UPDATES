@@ -1,5 +1,7 @@
 Mon 5 Mar 2018 : added a checkin_newton_power_series_function() to check
   the input of the newton_power_series functions in the series.py module.
+  Updated files setup.py, __init__.py, conf.py in the PHCpy2/PHCpy3,
+  in the phcpy and doc/source directories for version 0.7.8.
 
 Sun 4 Mar 2018 : added snippets.rst to the user manual, listing all code
   snippets for the Jupyter notebook extension in the documentation.
