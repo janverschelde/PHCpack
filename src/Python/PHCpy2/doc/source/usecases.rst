@@ -23,7 +23,7 @@ In all cases, there are three stages:
 
 The use cases illustrate how phcpy fits with Python's computational
 ecosystem, in particular with sympy, numpy, and matplotlib.
-In all use cases, plots of the solutions are made with matplotlib.
+In the first use cases, plots of the solutions are made with matplotlib.
 To formulate the polynomial equations we may use sympy,
 as illustrated in the design of 4-bar mechanisms.
 In the problem of the four lines, the intersection conditions
