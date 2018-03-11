@@ -1,5 +1,10 @@
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs;
@@ -19,7 +24,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Poly_Systems.Poly_Sys;
                 pts : in Standard_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in Standard_Complex_Solutions.Solution_List;
                 mempts : out Standard_Complex_Solutions.Solution_List;
                 outpts : out Standard_Complex_Solutions.Solution_List ) is
@@ -42,8 +47,17 @@ package body Homotopy_Membership_Filters is
       if verbose then
         put("Testing point "); put(i,1); put_line(" : ");
       end if;
-      Homotopy_Membership_Test
-        (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      if ls.rco < rcotol then
+        Homotopy_Membership_Test
+          (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        if verbose then
+          put("The point is considered regular for its tolerance ");
+          put(ls.rco,3); put(" < "); put(rcotol,3); put_line(".");
+        end if;
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -68,7 +82,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Laur_Systems.Laur_Sys;
                 pts : in Standard_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in Standard_Complex_Solutions.Solution_List;
                 mempts : out Standard_Complex_Solutions.Solution_List;
                 outpts : out Standard_Complex_Solutions.Solution_List ) is
@@ -91,8 +105,17 @@ package body Homotopy_Membership_Filters is
       if verbose
        then put("Testing point "); put(i,1); put_line(" : ");
       end if;
-      Homotopy_Membership_Test
-        (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      if ls.rco < rcotol then
+        Homotopy_Membership_Test
+          (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      else
+        success := true; -- assume solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        if verbose then
+          put("The point is considered regular for its tolerance ");
+          put(ls.rco,3); put(" < "); put(rcotol,3); put_line(".");
+        end if;
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -117,7 +140,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 pts : in DoblDobl_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in DoblDobl_Complex_Solutions.Solution_List;
                 mempts : out DoblDobl_Complex_Solutions.Solution_List;
                 outpts : out DoblDobl_Complex_Solutions.Solution_List ) is
@@ -140,8 +163,17 @@ package body Homotopy_Membership_Filters is
       if verbose
        then put("Testing point "); put(i,1); put_line(" : ");
       end if;
-      Homotopy_Membership_Test
-        (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      if Double_Double_Numbers.hi_part(ls.rco) < rcotol then
+        Homotopy_Membership_Test
+          (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        if verbose then
+          put("The point is considered regular for its tolerance ");
+          put(ls.rco,3); put(" < "); put(rcotol,3); put_line(".");
+        end if;
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -166,7 +198,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 pts : in DoblDobl_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in DoblDobl_Complex_Solutions.Solution_List;
                 mempts : out DoblDobl_Complex_Solutions.Solution_List;
                 outpts : out DoblDobl_Complex_Solutions.Solution_List ) is
@@ -189,8 +221,17 @@ package body Homotopy_Membership_Filters is
       if verbose
        then put("Testing point "); put(i,1); put_line(" : ");
       end if;
-      Homotopy_Membership_Test
-        (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      if Double_Double_Numbers.hi_part(ls.rco) < rcotol then
+        Homotopy_Membership_Test
+          (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        if verbose then
+          put("The point is considered regular for its tolerance ");
+          put(ls.rco,3); put(" < "); put(rcotol,3); put_line(".");
+        end if;
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -215,7 +256,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 pts : in QuadDobl_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in QuadDobl_Complex_Solutions.Solution_List;
                 mempts : out QuadDobl_Complex_Solutions.Solution_List;
                 outpts : out QuadDobl_Complex_Solutions.Solution_List ) is
@@ -238,8 +279,17 @@ package body Homotopy_Membership_Filters is
       if verbose
        then put("Testing point "); put(i,1); put_line(" : ");
       end if;
-      Homotopy_Membership_Test
-        (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      if Quad_Double_Numbers.hihi_part(ls.rco) < rcotol then
+        Homotopy_Membership_Test
+          (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        if verbose then
+          put("The point is considered regular for its tolerance ");
+          put(ls.rco,3); put(" < "); put(rcotol,3); put_line(".");
+        end if;
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -264,7 +314,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 pts : in QuadDobl_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in QuadDobl_Complex_Solutions.Solution_List;
                 mempts : out QuadDobl_Complex_Solutions.Solution_List;
                 outpts : out QuadDobl_Complex_Solutions.Solution_List ) is
@@ -287,8 +337,17 @@ package body Homotopy_Membership_Filters is
       if verbose
        then put("Testing point "); put(i,1); put_line(" : ");
       end if;
-      Homotopy_Membership_Test
-        (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      if Quad_Double_Numbers.hihi_part(ls.rco) < rcotol then
+        Homotopy_Membership_Test
+          (verbose,eqs,dim,sli,pts,ls.v,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        if verbose then
+          put("The point is considered regular for its tolerance ");
+          put(ls.rco,3); put(" < "); put(rcotol,3); put_line(".");
+        end if;
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -313,7 +372,7 @@ package body Homotopy_Membership_Filters is
               ( file : in file_type;
                 eqs : in Standard_Complex_Poly_Systems.Poly_Sys;
                 pts : in Standard_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in Standard_Complex_Solutions.Solution_List;
                 mempts : out Standard_Complex_Solutions.Solution_List;
                 outpts : out Standard_Complex_Solutions.Solution_List ) is
@@ -334,8 +393,16 @@ package body Homotopy_Membership_Filters is
     for i in 1..Standard_Complex_Solutions.Length_Of(totest) loop
       ls := Standard_Complex_Solutions.Head_Of(tmp);
       put(file,"Testing point "); put(file,i,1); put(file," : ");
-      Homotopy_Membership_Test
-        (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      if ls.rco < rcotol then
+        Homotopy_Membership_Test
+          (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        put(file,"The point is considered regular for its tolerance ");
+        put(file,ls.rco,3); put(file," < ");
+        put(file,rcotol,3); put_line(file,".");
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -358,7 +425,7 @@ package body Homotopy_Membership_Filters is
               ( file : in file_type;
                 eqs : in Standard_Complex_Laur_Systems.Laur_Sys;
                 pts : in Standard_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in Standard_Complex_Solutions.Solution_List;
                 mempts : out Standard_Complex_Solutions.Solution_List;
                 outpts : out Standard_Complex_Solutions.Solution_List ) is
@@ -379,8 +446,16 @@ package body Homotopy_Membership_Filters is
     for i in 1..Standard_Complex_Solutions.Length_Of(totest) loop
       ls := Standard_Complex_Solutions.Head_Of(tmp);
       put(file,"Testing point "); put(file,i,1); put(file," : ");
-      Homotopy_Membership_Test
-        (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      if ls.rco < rcotol then
+        Homotopy_Membership_Test
+          (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        put(file,"The point is considered regular for its tolerance ");
+        put(file,ls.rco,3); put(file," < ");
+        put(file,rcotol,3); put_line(file,".");
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -403,7 +478,7 @@ package body Homotopy_Membership_Filters is
               ( file : in file_type;
                 eqs : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 pts : in DoblDobl_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in DoblDobl_Complex_Solutions.Solution_List;
                 mempts : out DoblDobl_Complex_Solutions.Solution_List;
                 outpts : out DoblDobl_Complex_Solutions.Solution_List ) is
@@ -424,8 +499,16 @@ package body Homotopy_Membership_Filters is
     for i in 1..DoblDobl_Complex_Solutions.Length_Of(totest) loop
       ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
       put(file,"Testing point "); put(file,i,1); put(file," : ");
-      Homotopy_Membership_Test
-        (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      if Double_Double_Numbers.hi_part(ls.rco) < rcotol then
+        Homotopy_Membership_Test
+          (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        put(file,"The point is considered regular for its tolerance ");
+        put(file,ls.rco,3); put(file," < ");
+        put(file,rcotol,3); put_line(file,".");
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -448,7 +531,7 @@ package body Homotopy_Membership_Filters is
               ( file : in file_type;
                 eqs : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 pts : in DoblDobl_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in DoblDobl_Complex_Solutions.Solution_List;
                 mempts : out DoblDobl_Complex_Solutions.Solution_List;
                 outpts : out DoblDobl_Complex_Solutions.Solution_List ) is
@@ -469,8 +552,16 @@ package body Homotopy_Membership_Filters is
     for i in 1..DoblDobl_Complex_Solutions.Length_Of(totest) loop
       ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
       put(file,"Testing point "); put(file,i,1); put(file," : ");
-      Homotopy_Membership_Test
-        (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      if Double_Double_Numbers.hi_part(ls.rco) < rcotol then
+        Homotopy_Membership_Test
+          (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        put(file,"The point is considered regular for its tolerance ");
+        put(file,ls.rco,3); put(file," < ");
+        put(file,rcotol,3); put_line(file,".");
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -493,7 +584,7 @@ package body Homotopy_Membership_Filters is
               ( file : in file_type;
                 eqs : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 pts : in QuadDobl_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in QuadDobl_Complex_Solutions.Solution_List;
                 mempts : out QuadDobl_Complex_Solutions.Solution_List;
                 outpts : out QuadDobl_Complex_Solutions.Solution_List ) is
@@ -514,8 +605,16 @@ package body Homotopy_Membership_Filters is
     for i in 1..QuadDobl_Complex_Solutions.Length_Of(totest) loop
       ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
       put(file,"Testing point "); put(file,i,1); put(file," : ");
-      Homotopy_Membership_Test
-        (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      if Quad_Double_Numbers.hihi_part(ls.rco) < rcotol then
+        Homotopy_Membership_Test
+          (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        put(file,"The point is considered regular for its tolerance ");
+        put(file,ls.rco,3); put(file," < ");
+        put(file,rcotol,3); put_line(file,".");
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -538,7 +637,7 @@ package body Homotopy_Membership_Filters is
               ( file : in file_type;
                 eqs : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 pts : in QuadDobl_Complex_Solutions.Solution_List;
-                dim : in natural32; restol,homtol : in double_float;
+                dim : in natural32; rcotol,restol,homtol : in double_float;
                 totest : in QuadDobl_Complex_Solutions.Solution_List;
                 mempts : out QuadDobl_Complex_Solutions.Solution_List;
                 outpts : out QuadDobl_Complex_Solutions.Solution_List ) is
@@ -559,8 +658,16 @@ package body Homotopy_Membership_Filters is
     for i in 1..QuadDobl_Complex_Solutions.Length_Of(totest) loop
       ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
       put(file,"Testing point "); put(file,i,1); put(file," : ");
-      Homotopy_Membership_Test
-        (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      if Quad_Double_Numbers.hihi_part(ls.rco) < rcotol then
+        Homotopy_Membership_Test
+          (file,eqs,dim,sli,pts,ls.all,restol,homtol,success,found);
+      else
+        success := true; -- assume the solution is valid for now ...
+        found := false;  -- the point does not lie on the solution set
+        put(file,"The point is considered regular for its tolerance ");
+        put(file,ls.rco,3); put(file," < ");
+        put(file,rcotol,3); put_line(file,".");
+      end if;
       if success then
         if found then
           cnt := cnt + 1;
@@ -583,7 +690,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float;
+                topdim : in integer32; rcotol,restol,homtol : in double_float;
                 filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration ) is
 
@@ -617,7 +724,7 @@ package body Homotopy_Membership_Filters is
                 mempts,outpts : Standard_Complex_Solutions.Solution_List;
               begin
                 Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
-                       restol,homtol,pts(dim),mempts,outpts);
+                       rcotol,restol,homtol,pts(dim),mempts,outpts);
                 Standard_Complex_Solutions.Clear(mempts); -- members are junk
                 Standard_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
@@ -643,7 +750,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out Standard_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float;
+                topdim : in integer32; rcotol,restol,homtol : in double_float;
                 filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration ) is
 
@@ -677,7 +784,7 @@ package body Homotopy_Membership_Filters is
                 mempts,outpts : Standard_Complex_Solutions.Solution_List;
               begin
                 Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
-                       restol,homtol,pts(dim),mempts,outpts);
+                       rcotol,restol,homtol,pts(dim),mempts,outpts);
                 Standard_Complex_Solutions.Clear(mempts); -- members are junk
                 Standard_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
@@ -703,7 +810,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float;
+                topdim : in integer32; rcotol,restol,homtol : in double_float;
                 filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration ) is
 
@@ -737,7 +844,7 @@ package body Homotopy_Membership_Filters is
                 mempts,outpts : DoblDobl_Complex_Solutions.Solution_List;
               begin
                 Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
-                       restol,homtol,pts(dim),mempts,outpts);
+                       rcotol,restol,homtol,pts(dim),mempts,outpts);
                 DoblDobl_Complex_Solutions.Clear(mempts); -- members are junk
                 DoblDobl_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
@@ -763,7 +870,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float;
+                topdim : in integer32; rcotol,restol,homtol : in double_float;
                 filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration ) is
 
@@ -797,7 +904,7 @@ package body Homotopy_Membership_Filters is
                 mempts,outpts : DoblDobl_Complex_Solutions.Solution_List;
               begin
                 Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
-                       restol,homtol,pts(dim),mempts,outpts);
+                       rcotol,restol,homtol,pts(dim),mempts,outpts);
                 DoblDobl_Complex_Solutions.Clear(mempts); -- members are junk
                 DoblDobl_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
@@ -823,7 +930,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float;
+                topdim : in integer32; rcotol,restol,homtol : in double_float;
                 filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration ) is
 
@@ -857,7 +964,7 @@ package body Homotopy_Membership_Filters is
                 mempts,outpts : QuadDobl_Complex_Solutions.Solution_List;
               begin
                 Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
-                       restol,homtol,pts(dim),mempts,outpts);
+                       rcotol,restol,homtol,pts(dim),mempts,outpts);
                 QuadDobl_Complex_Solutions.Clear(mempts); -- members are junk
                 QuadDobl_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets
@@ -883,7 +990,7 @@ package body Homotopy_Membership_Filters is
               ( verbose : in boolean;
                 eqs : in QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 pts : in out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
-                topdim : in integer32; restol,homtol : in double_float;
+                topdim : in integer32; rcotol,restol,homtol : in double_float;
                 filcnt : out Standard_Natural_VecVecs.VecVec;
                 times : out Array_of_Duration; alltime : out duration ) is
 
@@ -917,7 +1024,7 @@ package body Homotopy_Membership_Filters is
                 mempts,outpts : QuadDobl_Complex_Solutions.Solution_List;
               begin
                 Filter(verbose,eqs(witdim).all,pts(witdim),natural32(witdim),
-                       restol,homtol,pts(dim),mempts,outpts);
+                       rcotol,restol,homtol,pts(dim),mempts,outpts);
                 QuadDobl_Complex_Solutions.Clear(mempts); -- members are junk
                 QuadDobl_Complex_Solutions.Clear(pts(dim));
                 pts(dim) := outpts; -- points not on higher dimensional sets

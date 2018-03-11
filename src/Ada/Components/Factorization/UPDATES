@@ -1,3 +1,7 @@
+Sun 11 Mar 2018 : added tolerance on the inverse of the estimated condition
+  number to the tests in homotopy_membership_filters, to bypass the more
+  expensive homotopy membership test for obvious regular isolated solutions.
+
 Fri 29 Dec 2017 : fixed the formatting in the output of the solution lists 
   in monodromy_homotopies_io.adb.
 
