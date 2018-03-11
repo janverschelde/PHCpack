@@ -318,6 +318,7 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
         Standard_Run_Cascade
@@ -414,6 +415,7 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
         Standard_Run_Cascade
@@ -510,6 +512,7 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
         DoblDobl_Run_Cascade
@@ -606,6 +609,7 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
         DoblDobl_Run_Cascade
@@ -702,6 +706,7 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
         QuadDobl_Run_Cascade
@@ -798,6 +803,7 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
         QuadDobl_Run_Cascade

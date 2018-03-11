@@ -1,3 +1,6 @@
+Sat 10 Mar 2018 : added flush(file) to drivers_to_cascade_filtering.adb,
+  to flush the buffers after calling the blackbox solver on the top system.
+
 Sat 30 Dec 2017 : in drivers_to_cascade_filtering.adb, run the cascades
   only when the top dimension is strictly positive.
 
