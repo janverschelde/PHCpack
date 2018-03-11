@@ -1,3 +1,7 @@
+Sun 11 Mar 2018 : added extra tolerance parameter on the inverse of the
+  estimated condition number in cascade_homotopy_filters, which also
+  modified the calls in running_cascades.adb.
+
 Sat 10 Mar 2018 : added flush(file) to drivers_to_cascade_filtering.adb,
   to flush the buffers after calling the blackbox solver on the top system.
 

@@ -9,7 +9,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
 
     timer : Timing_Widget;
 
@@ -24,7 +24,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
  
     timer : Timing_Widget;
 
@@ -39,7 +39,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
 
     timer : Timing_Widget;
 
@@ -54,7 +54,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
 
     timer : Timing_Widget;
 
@@ -69,7 +69,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
 
     timer : Timing_Widget;
 
@@ -84,7 +84,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
 
     timer : Timing_Widget;
 
@@ -100,7 +100,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
   begin
     null;
   end Witness_Filter;
@@ -111,7 +111,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
   begin
     null;
   end Witness_Filter;
@@ -122,7 +122,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
   begin
     null;
   end Witness_Filter;
@@ -133,7 +133,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
   begin
     null;
   end Witness_Filter;
@@ -144,7 +144,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
   begin
     null;
   end Witness_Filter;
@@ -155,7 +155,7 @@ package body Cascade_Homotopy_Filters is
                  ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  sols : in QuadDobl_Complex_Solutions.Solution_List;
                  topdim,lowdim : in natural32; zerotol : in double_float;
-                 restol,homtol : in double_float ) is
+                 rcotol,restol,homtol : in double_float ) is
   begin
     null;
   end Witness_Filter;
@@ -165,7 +165,7 @@ package body Cascade_Homotopy_Filters is
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 topdim,lowdim : in natural32; zerotol : in double_float;
-                restol,homtol : in double_float;
+                rcotol,restol,homtol : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
@@ -180,7 +180,7 @@ package body Cascade_Homotopy_Filters is
     tstart(timer);
     Witness_Generate
       (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+    Filter(false,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
     alltime := Elapsed_User_Time(timer);
@@ -191,7 +191,7 @@ package body Cascade_Homotopy_Filters is
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 topdim,lowdim : in natural32; zerotol : in double_float;
-                restol,homtol : in double_float;
+                rcotol,restol,homtol : in double_float;
                 embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
@@ -206,7 +206,7 @@ package body Cascade_Homotopy_Filters is
     tstart(timer);
     Witness_Generate
       (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+    Filter(false,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
     alltime := Elapsed_User_Time(timer);
@@ -217,7 +217,7 @@ package body Cascade_Homotopy_Filters is
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 topdim,lowdim : in natural32; zerotol : in double_float;
-                restol,homtol : in double_float;
+                rcotol,restol,homtol : in double_float;
                 embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
@@ -232,7 +232,7 @@ package body Cascade_Homotopy_Filters is
     tstart(timer);
     Witness_Generate
       (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+    Filter(false,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
     alltime := Elapsed_User_Time(timer);
@@ -243,7 +243,7 @@ package body Cascade_Homotopy_Filters is
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 topdim,lowdim : in natural32; zerotol : in double_float;
-                restol,homtol : in double_float;
+                rcotol,restol,homtol : in double_float;
                 embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
@@ -258,7 +258,7 @@ package body Cascade_Homotopy_Filters is
     tstart(timer);
     Witness_Generate
       (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+    Filter(false,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
     alltime := Elapsed_User_Time(timer);
@@ -269,7 +269,7 @@ package body Cascade_Homotopy_Filters is
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 topdim,lowdim : in natural32; zerotol : in double_float;
-                restol,homtol : in double_float;
+                rcotol,restol,homtol : in double_float;
                 embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
@@ -284,7 +284,7 @@ package body Cascade_Homotopy_Filters is
     tstart(timer);
     Witness_Generate
       (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+    Filter(false,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
     alltime := Elapsed_User_Time(timer);
@@ -295,7 +295,7 @@ package body Cascade_Homotopy_Filters is
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 topdim,lowdim : in natural32; zerotol : in double_float;
-                restol,homtol : in double_float;
+                rcotol,restol,homtol : in double_float;
                 embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
@@ -310,7 +310,7 @@ package body Cascade_Homotopy_Filters is
     tstart(timer);
     Witness_Generate
       (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+    Filter(false,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
     alltime := Elapsed_User_Time(timer);
@@ -321,7 +321,7 @@ package body Cascade_Homotopy_Filters is
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 topdim,lowdim,nitfix : in natural32; zerotol : in double_float;
-                restol,homtol : in double_float;
+                rcotol,restol,homtol : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 factors : out Standard_Natural_VecVecs.Array_of_VecVecs;
@@ -338,7 +338,7 @@ package body Cascade_Homotopy_Filters is
     tstart(timer);
     Witness_Generate
       (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
-    Filter(false,embsys,esols0,integer32(topdim),restol,homtol,
+    Filter(false,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     Witness_Factor
       (false,embsys,esols0,topdim,nitfix,zerotol,factors,factms,totfac);

@@ -21,6 +21,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
@@ -36,7 +37,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -87,6 +88,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
@@ -102,7 +104,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -154,6 +156,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
@@ -169,7 +172,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -221,6 +224,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
@@ -236,7 +240,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -288,6 +292,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
@@ -303,7 +308,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -355,6 +360,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
@@ -370,7 +376,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -423,6 +429,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
@@ -438,7 +445,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -489,6 +496,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
@@ -504,7 +512,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -554,6 +562,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
@@ -569,7 +578,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -619,6 +628,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
@@ -634,7 +644,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -684,6 +694,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
@@ -699,7 +710,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
@@ -749,6 +760,7 @@ package body Running_Cascades is
 
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
+    rcotol : constant double_float := 1.0E-6;
     restol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     ep : QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
@@ -764,7 +776,7 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,restol,homtol,ep,gpts,pc,fc,
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
          castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
