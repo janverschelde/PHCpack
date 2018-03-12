@@ -525,7 +525,7 @@ def test_decompose():
             '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
             '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
             '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
-    deco = run_cascade(4, 3, pols, 1.0e-8)
+    deco = run_cascade(4, 3, pols)
     fadc = decompose(deco)
     write_decomposition(fadc)
 
