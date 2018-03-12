@@ -748,7 +748,7 @@ def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
     return (onpolsys, inwitset)
 
 def standard_ismember_filter(wsys, gpts, dim, points, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded polynomial system,
@@ -758,18 +758,26 @@ def standard_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in standard double precision.
+    The parameter *rcotol* is used to bypass the homotopy membership test,
+    for points with their estimated inverse condition number larger than
+    *rcotol* will be considered isolated and not in the witness set.
     """
+    from phcpy.solutions import diagnostics
     result = []
     for point in points:
-        tst = standard_ismember(wsys, gpts, dim, point, \
-                                evatol, memtol, verbose)
-        (isgood, ismember) = tst
+        rco = diagnostics(point)[1]
+        if rco > rcotol:
+            (isgood, ismember) = (True, False)
+        else:
+            tst = standard_ismember(wsys, gpts, dim, point, \
+                                    evatol, memtol, verbose)
+            (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def dobldobl_ismember_filter(wsys, gpts, dim, points, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded polynomial system,
@@ -779,18 +787,26 @@ def dobldobl_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in double double precision.
+    The parameter *rcotol* is used to bypass the homotopy membership test,
+    for points with their estimated inverse condition number larger than
+    *rcotol* will be considered isolated and not in the witness set.
     """
+    from phcpy.solutions import diagnostics
     result = []
     for point in points:
-        tst = dobldobl_ismember(wsys, gpts, dim, point, \
-                                evatol, memtol, verbose)
-        (isgood, ismember) = tst
+        rco = diagnostics(point)[1]
+        if rco > rcotol:
+            (isgood, ismember) = (True, False)
+        else:
+            tst = dobldobl_ismember(wsys, gpts, dim, point, \
+                                    evatol, memtol, verbose)
+            (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def quaddobl_ismember_filter(wsys, gpts, dim, points, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded polynomial system,
@@ -800,18 +816,26 @@ def quaddobl_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in quad double precision.
+    The parameter *rcotol* is used to bypass the homotopy membership test,
+    for points with their estimated inverse condition number larger than
+    *rcotol* will be considered isolated and not in the witness set.
     """
+    from phcpy.solutions import diagnostics
     result = []
     for point in points:
-        tst = quaddobl_ismember(wsys, gpts, dim, point, \
-                                evatol, memtol, verbose)
-        (isgood, ismember) = tst
+        rco = diagnostics(point)[1]
+        if rco > rcotol:
+            (isgood, ismember) = (True, False)
+        else:
+            tst = quaddobl_ismember(wsys, gpts, dim, point, \
+                                    evatol, memtol, verbose)
+            (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def standard_laurent_ismember_filter(wsys, gpts, dim, points, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded Laurent polynomial system,
@@ -821,18 +845,26 @@ def standard_laurent_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in standard double precision.
+    The parameter *rcotol* is used to bypass the homotopy membership test,
+    for points with their estimated inverse condition number larger than
+    *rcotol* will be considered isolated and not in the witness set.
     """
+    from phcpy.solutions import diagnostics
     result = []
     for point in points:
-        tst = standard_laurent_ismember(wsys, gpts, dim, point, \
-                                        evatol, memtol, verbose)
-        (isgood, ismember) = tst
+        rco = diagnostics(point)[1]
+        if rco > rcotol:
+            (isgood, ismember) = (True, False)
+        else:
+            tst = standard_laurent_ismember(wsys, gpts, dim, point, \
+                                            evatol, memtol, verbose)
+            (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def dobldobl_laurent_ismember_filter(wsys, gpts, dim, points, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded Laurent polynomial system,
@@ -842,18 +874,26 @@ def dobldobl_laurent_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in double double precision.
+    The parameter *rcotol* is used to bypass the homotopy membership test,
+    for points with their estimated inverse condition number larger than
+    *rcotol* will be considered isolated and not in the witness set.
     """
+    from phcpy.solutions import diagnostics
     result = []
     for point in points:
-        tst = dobldobl_laurent_ismember(wsys, gpts, dim, point, \
-                                        evatol, memtol, verbose)
-        (isgood, ismember) = tst
+        rco = diagnostics(points)[1]
+        if rco > rcotol:
+            (isgood, ismember) = (True, False)
+        else:
+            tst = dobldobl_laurent_ismember(wsys, gpts, dim, point, \
+                                            evatol, memtol, verbose)
+            (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def quaddobl_laurent_ismember_filter(wsys, gpts, dim, points, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded Laurent polynomial system,
@@ -863,18 +903,26 @@ def quaddobl_laurent_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in quad double precision.
+    The parameter *rcotol* is used to bypass the homotopy membership test,
+    for points with their estimated inverse condition number larger than
+    *rcotol* will be considered isolated and not in the witness set.
     """
+    from phcpy.solutions import diagnostics
     result = []
     for point in points:
-        tst = quaddobl_laurent_ismember(wsys, gpts, dim, point, \
-                                        evatol, memtol, verbose)
-        (isgood, ismember) = tst
+        rco = diagnostics(point)[1]
+        if rco > rcotol:
+            (isgood, ismember) = (True, False)
+        else:
+            tst = quaddobl_laurent_ismember(wsys, gpts, dim, point, \
+                                            evatol, memtol, verbose)
+            (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def ismember_filter(wsys, gpts, dim, points, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
     r"""
     Filters *points* so the list on return contains only those points
     which do not belong to the witness set of dimension *dim*,
@@ -885,7 +933,11 @@ def ismember_filter(wsys, gpts, dim, points, \
     By default, *verbose* is True, and the precision is double 'd'.
     Other levels of precision are double double precision 'dd' 
     and quad double precision 'qd'.
-    There are two tolerances: *evatol* is the tolerance on the residual
+    The parameter *rcotol* is used to bypass the homotopy membership test,
+    for points with their estimated inverse condition number larger than
+    *rcotol* will be considered isolated and not in the witness set.
+    The homotopy membership test has two tolerances: *evatol* and *memtol*.
+    The *evatol* is the tolerance on the residual
     of the evaluation of the polynomial equations at the test point.
     If the residual of the evaluation is not less than *evatol*,
     then the point is not a member.  Otherwise, the homotopy
@@ -895,20 +947,20 @@ def ismember_filter(wsys, gpts, dim, points, \
     tolerance *memtol*, then the points is a member and filtered out.
     """
     if(precision == 'd'):
-        return standard_ismember_filter(wsys, gpts, dim, points, \
-                                        evatol, memtol, verbose)
+        return standard_ismember_filter\
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
     elif(precision == 'dd'):
-        return dobldobl_ismember_filter(wsys, gpts, dim, points, \
-                                        evatol, memtol, verbose)
+        return dobldobl_ismember_filter\
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
     elif(precision == 'qd'):
-        return quaddobl_ismember_filter(wsys, gpts, dim, points, \
-                                        evatol, memtol, verbose)
+        return quaddobl_ismember_filter\
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
     else:
         print('wrong argument for precision')
         return points
 
 def laurent_ismember_filter(wsys, gpts, dim, points, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
     r"""
     Filters *points* so the list on return contains only those points
     which do not belong to the witness set of dimension *dim*,
@@ -919,7 +971,11 @@ def laurent_ismember_filter(wsys, gpts, dim, points, \
     By default, *verbose* is True, and the precision is double 'd'.
     Other levels of precision are double double precision 'dd' 
     and quad double precision 'qd'.
-    There are two tolerances: *evatol* is the tolerance on the residual
+    The parameter *rcotol* is used to bypass the homotopy membership test,
+    for points with their estimated inverse condition number larger than
+    *rcotol* will be considered isolated and not in the witness set.
+    The homotopy membership test has two tolerances: *evatol* and *memtol*.
+    The *evatol* is the tolerance on the residual
     of the evaluation of the polynomial equations at the test point.
     If the residual of the evaluation is not less than *evatol*,
     then the point is not a member.  Otherwise, the homotopy
@@ -930,13 +986,13 @@ def laurent_ismember_filter(wsys, gpts, dim, points, \
     """
     if(precision == 'd'):
         return standard_laurent_ismember_filter\
-                   (wsys, gpts, dim, points, evatol, memtol, verbose)
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
     elif(precision == 'dd'):
         return dobldobl_laurent_ismember_filter\
-                   (wsys, gpts, dim, points, evatol, memtol, verbose)
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
     elif(precision == 'qd'):
         return quaddobl_laurent_ismember_filter\
-                   (wsys, gpts, dim, points, evatol, memtol, verbose)
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
     else:
         print('wrong argument for precision')
         return points

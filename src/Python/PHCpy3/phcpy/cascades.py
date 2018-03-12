@@ -422,7 +422,7 @@ def laurent_cascade_filter(dim, embpols, nonsols, tol, \
         return (embdown[:-1], sols0, sols1) 
 
 def run_cascade(nvr, dim, pols, islaurent=False, \
-    tol=1.0e-8, evatol=1.0e-6, memtol=1.0e-6, \
+    tol=1.0e-8, rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, \
     tasks=0, prc='d', verbose=True):
     r"""
     Runs a cascade on the polynomials *pols*,
@@ -432,8 +432,9 @@ def run_cascade(nvr, dim, pols, islaurent=False, \
     Returns a dictionary with as keys the dimensions
     and as values the tuples with the embedded systems
     and the corresponding generic points.
-    Three tolerance parameters have default values on input:
+    Four tolerance parameters have default values on input:
     *tol* is used to decide which slack variables are zero,
+    *rcotol* is the tolerance on the estimated inverse condition number,
     *evatol* is the tolerance on the residual to filter junk points,
     *memtol* is the tolerance for the homotopy membership test.
     The number of tasks is given by *tasks* (0 for no multitasking)
@@ -474,11 +475,12 @@ def run_cascade(nvr, dim, pols, islaurent=False, \
         for dim in dims:
             (epols, esols) = result[dim]
             if islaurent:
-                sols = laurent_ismember_filter(epols, esols, dim, sols, \
-                                               evatol, memtol, False, prc)
+                sols = laurent_ismember_filter\
+                          (epols, esols, dim, sols, \
+                           rcotol, evatol, memtol, False, prc)
             else:
                 sols = ismember_filter(epols, esols, dim, sols, \
-                                       evatol, memtol, False, prc)
+                                       rcotol, evatol, memtol, False, prc)
             if verbose:
                 print('number of generic points after filtering :', len(sols))
         result[idx-1] = (embp, sols)

@@ -461,7 +461,7 @@ def write_decomposition(deco):
 
 def solve(nvr, dim, pols, islaurent=False, \
     precision='d', tasks=0, nbloops=20, \
-    tol=1.0e-8, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    tol=1.0e-8, rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     r"""
     Computes a numerical irreducible decomposition for the polynomials
     in the list *pols*, where *nvr* is the number of variables in *pols*.
@@ -480,7 +480,7 @@ def solve(nvr, dim, pols, islaurent=False, \
     """
     from phcpy.cascades import run_cascade
     deco = run_cascade(nvr, dim, pols, islaurent, \
-               tol=1.0e-8, evatol=evatol, memtol=memtol, \
+               tol=1.0e-8, rcotol=rcotol, evatol=evatol, memtol=memtol, \
                tasks=tasks, prc=precision, verbose=verbose)
     fadc = decompose(deco, islaurent=int(islaurent), verbose=verbose, \
                nbloops=nbloops, precision=precision)

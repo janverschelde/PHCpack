@@ -1,6 +1,7 @@
 Mon 12 Mar 2018 : added a tolerance to the membership filters in sets.py
   to bypass the homotopy membership tests for regular solutions,
   modified cascades.py and factor.py in the Python2 version of phcpy.
+  Made the similar updates to the Python3 version of phcpy.
 
 Mon 5 Mar 2018 : added a checkin_newton_power_series_function() to check
   the input of the newton_power_series functions in the series.py module.
