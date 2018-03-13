@@ -1,4 +1,5 @@
 Mon 12 Mar 2018 : for version 2.4.50, updated greeting_banners.
+  Added a line in mainphc.adb about phc -B.
 
 Mon 5 Mar 2018 : adjusted greeting_banners for version 2.4.49.
 

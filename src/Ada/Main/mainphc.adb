@@ -43,7 +43,7 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
   -- DESCRIPTION :
   --   Displays an overview of all options on screen.
 
-    o : array(0..24) of string(1..65);
+    o : array(0..25) of string(1..65);
 
   begin
     put("Running full mode,");
@@ -55,28 +55,29 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
     o(0) := "  phc -0 : random numbers with fixed seed for repeatable runs    ";
     o(1) := "  phc -a : solving polynomial systems equation-by-equation       ";
     o(2) := "  phc -b : batch or black-box processing, the blackbox solver    ";
-    o(3) := "  phc -c : irreducible decomposition for solution components     ";
-    o(4) := "  phc -d : linear and nonlinear reduction w.r.t. the total degree";
-    o(5) := "  phc -e : SAGBI/Pieri/Littlewood-Richardson homotopies          ";
-    o(6) := "  phc -f : factor pure dimensional solution set into irreducibles";
-    o(7) := "  phc -g : checking whether an input system has the right syntax ";
-    o(8) := "  phc -h : displays help, e.g.: phc -h -b or phc -b -h, or --help";
-    o(9) := "  phc -j : path tracking with algorithmic differentiation        ";
-    o(10):= "  phc -k : realization of dynamic output feedback placing poles  ";
-    o(11):= "  phc -l : witness set for hypersurface cutting with random line ";
-    o(12):= "  phc -m : mixed volume computation via lift+prune and MixedVol  ";
-    o(13):= "  phc -o : write order of symbols after parsing polynomial system";
-    o(14):= "  phc -p : polynomial continuation by a homotopy in one parameter";
-    o(15):= "  phc -q : tracking solution paths with incremental read/write   ";
-    o(16):= "  phc -r : root counting and construction of start systems       ";
-    o(17):= "  phc -s : equation and variable scaling on system and solutions ";
-    o(18):= "  phc -t : tasking for tracking paths using multiple threads     ";
-    o(19):= "  phc -u : Newton's method to compute power series solutions     ";
-    o(20):= "  phc -v : verification, refinement and purification of solutions";
-    o(21):= "  phc -w : witness set intersection using diagonal homotopies    ";
-    o(22):= "  phc -x : convert solutions from PHCpack into Python dictionary ";
-    o(23):= "  phc -y : sample points from an algebraic set, given witness set";
-    o(24):= "  phc -z : strip phc output solution lists into Maple format     ";
+    o(3) := "  phc -B : blackbox numerical irreducible decomposition solver   ";
+    o(4) := "  phc -c : irreducible decomposition for solution components     ";
+    o(5) := "  phc -d : linear and nonlinear reduction w.r.t. the total degree";
+    o(6) := "  phc -e : SAGBI/Pieri/Littlewood-Richardson homotopies          ";
+    o(7) := "  phc -f : factor pure dimensional solution set into irreducibles";
+    o(8) := "  phc -g : checking whether an input system has the right syntax ";
+    o(9) := "  phc -h : displays help, e.g.: phc -h -b or phc -b -h, or --help";
+    o(10):= "  phc -j : path tracking with algorithmic differentiation        ";
+    o(11):= "  phc -k : realization of dynamic output feedback placing poles  ";
+    o(12):= "  phc -l : witness set for hypersurface cutting with random line ";
+    o(13):= "  phc -m : mixed volume computation via lift+prune and MixedVol  ";
+    o(14):= "  phc -o : write order of symbols after parsing polynomial system";
+    o(15):= "  phc -p : polynomial continuation by a homotopy in one parameter";
+    o(16):= "  phc -q : tracking solution paths with incremental read/write   ";
+    o(17):= "  phc -r : root counting and construction of start systems       ";
+    o(18):= "  phc -s : equation and variable scaling on system and solutions ";
+    o(19):= "  phc -t : tasking for tracking paths using multiple threads     ";
+    o(20):= "  phc -u : Newton's method to compute power series solutions     ";
+    o(21):= "  phc -v : verification, refinement and purification of solutions";
+    o(22):= "  phc -w : witness set intersection using diagonal homotopies    ";
+    o(23):= "  phc -x : convert solutions from PHCpack into Python dictionary ";
+    o(24):= "  phc -y : sample points from an algebraic set, given witness set";
+    o(25):= "  phc -z : strip phc output solution lists into Maple format     ";
     for i in o'range loop
       put_line(o(i));
     end loop;
