@@ -105,7 +105,8 @@ def is_square(pols):
 
 def standard_solve(pols, verbose=True, tasks=0):
     r"""
-    Calls the blackbox solver.  On input in *pols* is a list of strings.
+    Calls the blackbox solver to compute all isolated solutions in
+    standard double precision.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
     To make the solver silent, set the flag *verbose* to False.
     The number of tasks for multithreading is given by *tasks*.
@@ -138,7 +139,8 @@ def standard_solve(pols, verbose=True, tasks=0):
 
 def dobldobl_solve(pols, verbose=True, tasks=0):
     r"""
-    Calls the blackbox solver.  On input in *pols* is a list of strings.
+    Calls the blackbox solver to compute all isolated solutions in
+    double double precision.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
     To make the solver silent, set the flag *verbose* to False.
     The number of tasks for multithreading is given by *tasks*.
@@ -171,7 +173,8 @@ def dobldobl_solve(pols, verbose=True, tasks=0):
 
 def quaddobl_solve(pols, verbose=True, tasks=0):
     r"""
-    Calls the blackbox solver.  On input in *pols* is a list of strings.
+    Calls the blackbox solver to compute all isolated solutions in
+    quad double precision.  On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
     To make the solver silent, set the flag *verbose* to False.
     The number of tasks for multithreading is given by *tasks*.
@@ -220,7 +223,10 @@ def solve_checkin(pols, msg):
 
 def solve(pols, verbose=True, tasks=0, precision='d', checkin=True):
     r"""
-    Calls the blackbox solver.  On input in *pols* is a list of strings.
+    Calls the blackbox solver to compute all isolated solutions.
+    To compute all solutions, also all positive dimensional solution sets,
+    with a numerical irreducible decomposition, use solve in phcpy.factor.
+    On input in *pols* is a list of strings.
     By default, the solver will print to screen the computed root counts.
     To make the solver silent, set the flag *verbose* to False.
     The number of tasks for multithreading is given by *tasks*.

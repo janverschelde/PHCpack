@@ -1,4 +1,6 @@
 Tue 13 Mar 2018 : updated setup.py, __init__.py, and conf.py for 0.7.9.
+  In the documentation string of solve() in solver.py, referred explicitly to
+  the solve in the factor module for a numerical irreducible decomposition.
 
 Mon 12 Mar 2018 : added a tolerance to the membership filters in sets.py
   to bypass the homotopy membership tests for regular solutions,
