@@ -1,3 +1,5 @@
+Tue 13 Mar 2018 : updated setup.py, __init__.py, and conf.py for 0.7.9.
+
 Mon 12 Mar 2018 : added a tolerance to the membership filters in sets.py
   to bypass the homotopy membership tests for regular solutions,
   modified cascades.py and factor.py in the Python2 version of phcpy.
