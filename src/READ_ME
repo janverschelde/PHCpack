@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.49 contains
+The public distribution for PHCpack version 2.4.50 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -29,6 +29,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.50 on 2018-03-13 : faster phc -B by faster membership test
 release 2.4.49 on 2018-03-05 : phc -r computes set structures bound faster
 release 2.4.48 on 2017-12-30 : improved phc -B as another blackbox solver
 release 2.4.47 on 2017-10-17 : phc -B factors, bug fixed in phcpy

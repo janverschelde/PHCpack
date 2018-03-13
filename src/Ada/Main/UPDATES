@@ -1,3 +1,5 @@
+Mon 12 Mar 2018 : for version 2.4.50, updated greeting_banners.
+
 Mon 5 Mar 2018 : adjusted greeting_banners for version 2.4.49.
 
 Sun 4 Mar 2018 : changed mainroco.adb so that phc -r also writes the
