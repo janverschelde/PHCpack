@@ -1,3 +1,5 @@
+Wed 14 Mar 2018 : added silent versions to pipelined_polyhedral_drivers.
+
 Mon 12 Feb 2018 : moved the random_Boolean_matrix function from ts_mtperm
   to the package standard_random_matrices.
 

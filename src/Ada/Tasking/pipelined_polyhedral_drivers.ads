@@ -19,6 +19,53 @@ package Pipelined_Polyhedral_Drivers is
 --   in standard double, double double, and quad double precision.
 --   The drivers are to be called in Drivers_for_MixedVol_Algorithm.
 
+-- SILENT VERSIONS, ON ORDINARY POLYNOMIAL SYSTEMS :
+
+  procedure Pipelined_Polyhedral_Homotopies
+              ( nt : in integer32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                mv : out natural32;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List );
+  procedure Pipelined_Polyhedral_Homotopies
+              ( nt : in integer32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                mv : out natural32;
+                q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Pipelined_Polyhedral_Homotopies
+              ( nt : in integer32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                mv : out natural32;
+                q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Driver to the polyhedral homotopies to create
+  --   a random coefficient start system to solve the system p,
+  --   in standard double, double double, or quad double precision,
+  --   with pipelined production of mixed cells, interleaved with
+  --   the tracking of the paths defined by a polyhedral homotopy.
+  --   These procedures are wrappers to the driver procedures on
+  --   Laurent polynomial systems below.
+
+  -- REQUIRED : nt >= 2.
+
+  -- ON ENTRY :
+  --   nt       number of tasks, which includes one task to produce
+  --            the mixed cells, and the others to track the paths;
+  --   p        a polynomial system.
+
+  -- ON RETURN :
+  --   mv       mixed volume of the tuple of Newton polytopes
+  --            spanned by the supports of p;
+  --   q        if ranstart, then q is a random coefficient system,
+  --            with as many solutions as the mixed volume;
+  --   qsols    solution to a random coefficient system,
+  --            if all went well, then Length_Of(qsols) = mv.
+
+-- WITH OUTPUT TO FILES, ON ORDINARY POLYNOMIAL SYSTEMS :
+
   procedure Pipelined_Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
                 misufile,contrep : in boolean;
@@ -42,7 +89,7 @@ package Pipelined_Polyhedral_Drivers is
                 qsols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
-  --   Interactive driver to the polyhedral homotopies to create
+  --   Driver to the polyhedral homotopies to create
   --   a random coefficient start system to solve the system p,
   --   in standard double, double double, or quad double precision,
   --   with pipelined production of mixed cells, interleaved with
@@ -72,6 +119,51 @@ package Pipelined_Polyhedral_Drivers is
   --   qsols    solution to a random coefficient system,
   --            if all went well, then Length_Of(qsols) = mv.
 
+-- WITHOUT OUTPUT, ON LAURENT POLYNOMIAL SYSTEMS :
+
+  procedure Pipelined_Polyhedral_Homotopies
+              ( nt : in integer32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mv : out natural32;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List );
+  procedure Pipelined_Polyhedral_Homotopies
+              ( nt : in integer32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mv : out natural32;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                qsols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Pipelined_Polyhedral_Homotopies
+              ( nt : in integer32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mv : out natural32;
+                q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                qsols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Driver to the polyhedral homotopies to create
+  --   a random coefficient start system to solve the system p,
+  --   in standard double, double double, or quad double precision,
+  --   with pipelined production of mixed cells, interleaved with
+  --   the tracking of the paths defined by a polyhedral homotopy.
+
+  -- REQUIRED : nt >= 2.
+
+  -- ON ENTRY :
+  --   nt       number of tasks, which includes one task to produce
+  --            the mixed cells, and the others to track the paths;
+  --   p        a polynomial system.
+
+  -- ON RETURN :
+  --   mv       mixed volume of the tuple of Newton polytopes
+  --            spanned by the supports of p;
+  --   q        if ranstart, then q is a random coefficient system,
+  --            with as many solutions as the mixed volume;
+  --   qsols    solution to a random coefficient system,
+  --            if all went well, then Length_Of(qsols) = mv.
+
+-- WITH OUTPUT TO FILES, ON LAURENT POLYNOMIAL SYSTEMS :
+
   procedure Pipelined_Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
                 misufile,contrep : in boolean;
@@ -95,7 +187,7 @@ package Pipelined_Polyhedral_Drivers is
                 qsols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
-  --   Interactive driver to the polyhedral homotopies to create
+  --   Driver to the polyhedral homotopies to create
   --   a random coefficient start system to solve the system p,
   --   in standard double, double double, or quad double precision,
   --   with pipelined production of mixed cells, interleaved with
