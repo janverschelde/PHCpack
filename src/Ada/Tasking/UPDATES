@@ -1,3 +1,7 @@
+Thu 15 Mar 2018 : removed stlb from the parameters in the procedures for
+  Laurent systems in pipelined_polyhedral_trakers, which then also changed
+  pipelined_polyhedral_drivers.adb.
+
 Wed 14 Mar 2018 : added silent versions to pipelined_polyhedral_drivers.
 
 Mon 12 Feb 2018 : moved the random_Boolean_matrix function from ts_mtperm

@@ -171,7 +171,6 @@ package body Pipelined_Polyhedral_Drivers is
     nbpts : integer32 := 0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup : Standard_Integer_Vectors.Link_to_Vector;
-    stlb : double_float := 0.0;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -179,7 +178,7 @@ package body Pipelined_Polyhedral_Drivers is
   begin
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
     Silent_Multitasking_Tracker
-      (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,qsols);
+      (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     Standard_Integer_Vectors.Clear(sup);
     Clear(mcc);
   end Pipelined_Polyhedral_Homotopies;
@@ -201,7 +200,6 @@ package body Pipelined_Polyhedral_Drivers is
     nbpts : integer32 := 0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup : Standard_Integer_Vectors.Link_to_Vector;
-    stlb : double_float := 0.0;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -209,7 +207,7 @@ package body Pipelined_Polyhedral_Drivers is
   begin
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     Silent_Multitasking_Tracker
-      (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,qsols);
+      (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     Standard_Integer_Vectors.Clear(sup);
     Clear(mcc);
   end Pipelined_Polyhedral_Homotopies;
@@ -231,7 +229,6 @@ package body Pipelined_Polyhedral_Drivers is
     nbpts : integer32 := 0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup : Standard_Integer_Vectors.Link_to_Vector;
-    stlb : double_float := 0.0;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -239,7 +236,7 @@ package body Pipelined_Polyhedral_Drivers is
   begin
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     Silent_Multitasking_Tracker
-      (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,qsols);
+      (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     Standard_Integer_Vectors.Clear(sup);
     Clear(mcc);
   end Pipelined_Polyhedral_Homotopies;
@@ -262,7 +259,6 @@ package body Pipelined_Polyhedral_Drivers is
     nbpts : integer32 := 0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup : Standard_Integer_Vectors.Link_to_Vector;
-    stlb : double_float := 0.0;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -272,10 +268,10 @@ package body Pipelined_Polyhedral_Drivers is
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
     if contrep then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,qsols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,qsols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     end if;
     tstop(timer);
     put(file,q'last,1); new_line(file);
@@ -322,7 +318,6 @@ package body Pipelined_Polyhedral_Drivers is
     nbpts : integer32 := 0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup : Standard_Integer_Vectors.Link_to_Vector;
-    stlb : double_float := 0.0;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -332,10 +327,10 @@ package body Pipelined_Polyhedral_Drivers is
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     if contrep then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,qsols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,qsols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     end if;
     tstop(timer);
     put(file,q'last,1); new_line(file);
@@ -382,7 +377,6 @@ package body Pipelined_Polyhedral_Drivers is
     nbpts : integer32 := 0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup : Standard_Integer_Vectors.Link_to_Vector;
-    stlb : double_float := 0.0;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -392,10 +386,10 @@ package body Pipelined_Polyhedral_Drivers is
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     if contrep then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,qsols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,qsols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     end if;
     tstop(timer);
     put(file,q'last,1); new_line(file);
