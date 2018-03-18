@@ -1,11 +1,24 @@
 # this is a makefile suitable for Windows platforms,
 # it uses a more basic timing facility
 
+#gpp=g++
+gpp=c:/GNAT/2015/bin/g++
+gcc=c:/GNAT/2015/bin/gcc
+
+# The QD library is compiled in the folder where QD_ROOT refers to.
+# Configure the compilation of the QD library so that the g++ of
+# the gnu-ada compiler distribution is used.  Therefore do
+# ./configure CXX=c:/GNAT/2015/bin/g++
+# for the correct 'make' in the compilation of the QD library.
+
+QD_ROOT=../qd-2.3.14
+QD_LIB=../qd-2.3.14/src/.libs
 PHCAda=../Ada
 PHCLib=../LIB
+MPILib=../MPI
+PHCgpu=../GPU
 PYTHON = c:/Python25
 MINGCC = c:/mingw/bin/gcc
-#BIN=/tmp
 BIN=../bin
 INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Basic_Timer \
  -I$(PHCAda)/Math_Lib/Numbers -I$(PHCAda)/Math_Lib/QD \
@@ -27,18 +40,33 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Basic_Timer \
  -I$(PHCAda)/Components/Samplers -I$(PHCAda)/Components/Interpolators \
  -I$(PHCAda)/Components/Factorization -I$(PHCAda)/Components/Decomposition \
  -I$(PHCAda)/Components/Solver -I$(PHCAda)/Components/Tropical \
- -I$(PHCAda)/Differentials -I$(PHCAda)/Tasking -I$(PHCAda)/Main \
- -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State
+ -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
+ -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization :
 GNATFLAGS=-gnatv -O3 -gnatp
 # flag with gnat95 restriction for CtoPHC
 GNAT95FLAGS=-gnat95 -gnatv -O3 -gnatp
 
+# the main executable is phc :
+
+phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o parameter.o lib2path.o
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_solver.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) dispatch.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind dispatch use_c2phc
+	gnatlink dispatch syscon.o solcon.o phcpack.o feedback.o \
+                 pieri_solver.o parameter.o lib2path.o \
+                 lib.a $(QD_LIB)/libqd.a \
+                 get_clock.o get_clocks_per_sec.o \
+              -o $(BIN)/phc -lm --LINK=$(gpp)
+
 # Test program to see if compiler works, "hello world" :
 
 hello:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) hello.adb
-	gnatbl -o $(BIN)/hello hello.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) hello.adb -o $(BIN)/hello
 
 ada_hello:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ada_hello.adb
@@ -1126,7 +1154,7 @@ ts_use_c2pieri:
 # files in feedback :
 
 lib.a:$(PHCAda)/../Feedback/*.c $(PHCAda)/../Feedback/*.h
-	gcc -c $(PHCAda)/../Feedback/*.c
+	$(gcc) -c $(PHCAda)/../Feedback/*.c
 	ar ruv lib.a    dc_interpolation.o  dcmplx.o       poly_matrix.o\
        append_dcmatrix.o    dc_inverse.o        pieri_sols.o   poly_smith.o\
        c2ada_dc_matrix.o    dc_matrix.o         poly_dcmplx.o  realization.o\
@@ -1142,7 +1170,20 @@ ts_feedback: lib.a get_clock.o get_clocks_per_sec.o
                  get_clock.o get_clocks_per_sec.o
 
 feedback.o:
-	gcc -c $(PHCAda)/../Feedback/feedback.c
+	$(gcc) -c $(PHCAda)/../Feedback/feedback.c
+
+
+# Test program to test the C interface to GPU acceleration :
+
+parameter.o:
+	$(gpp) -O3 -I$(PHCgpu)/Path/Host \
+               -c $(PHCgpu)/Path/Host/parameter.cpp -o parameter.o
+
+lib2path.o:
+	$(gpp) -O3 -I$(PHCLib) -I$(QD_ROOT)/include \
+                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly2 \
+                   -I$(PHCgpu)/Path/Host \
+               -c $(PHCgpu)/Path/Host/lib2path.cpp -o lib2path.o
 
 # Test programs for the Tasking :
 
@@ -1177,13 +1218,6 @@ use_phc:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_phc.adb
 	gnatbl -o $(BIN)/use_phc use_phc.ali
 
-phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_solver.adb
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) dispatch.adb
-	gnatmake -o $(BIN)/phc $(INCLULIBS) $(GNATFLAGS) dispatch.adb \
-                 -largs lib.a pieri_solver.o feedback.o \
-                        get_clock.o get_clocks_per_sec.o -lm
-
 # Test programs for the Library Lib :
 
 phcpack.o:
@@ -1192,44 +1226,58 @@ phcpack.o:
 use_c2phc.o:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 
-lib_read:
+lib_read: get_clock.o get_clocks_per_sec.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_read.c
-	gnatbind -n -C use_c2phc
-	gnatlink -C use_c2phc phcpack.o lib_read.o -o ../bin/lib_read
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o \
+                    get_clock.o get_clocks_per_sec.o \
+                 -o ../bin/lib_read -lm
 
-lib_syscon:
+lib_syscon: get_clock.o get_clocks_per_sec.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/lib_syscon.c
-	gnatbind -n -C use_c2phc
-	gnatlink -C use_c2phc syscon.o lib_syscon.o -o ../bin/lib_syscon
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc syscon.o lib_syscon.o \
+                    get_clock.o get_clocks_per_sec.o \
+                 -o ../bin/lib_syscon -lm
 
-lib_newton:
+lib_newton: get_clock.o get_clocks_per_sec.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_newton.c
-	gnatbind -n -C use_c2phc
-	gnatlink -C use_c2phc phcpack.o lib_newton.o \
-                 -o ../bin/lib_newton
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o lib_newton.o \
+                    get_clock.o get_clocks_per_sec.o \
+                 -o ../bin/lib_newton -lm
 
-lib_solcon:
+lib_solcon: get_clock.o get_clocks_per_sec.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_solcon.c
-	gnatbind -n -C use_c2phc
-	gnatlink -C use_c2phc solcon.o lib_solcon.o -o ../bin/lib_solcon
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc solcon.o lib_solcon.o \
+                    get_clock.o get_clocks_per_sec.o \
+                 -o ../bin/lib_solcon -lm
 
-lib_celcon:
+lib_celcon: get_clock.o get_clocks_per_sec.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gcc -c $(PHCLib)/phcpack.c
-	gcc -c $(PHCLib)/solcon.c
-	gcc -c $(PHCLib)/celcon.c
-	gcc -c $(PHCLib)/lib_celcon.c
-	gnatbind -n -C use_c2phc
-	gnatlink -C use_c2phc phcpack.o solcon.o celcon.o lib_celcon.o \
-                 -o ../bin/lib_celcon
+	$(gcc) -c $(PHCLib)/phcpack.c
+	$(gcc) -c $(PHCLib)/syscon.c
+	$(gcc) -c $(PHCLib)/solcon.c
+	$(gcc) -c $(PHCLib)/celcon.c
+	$(gcc) -c $(PHCLib)/intcelcon.c
+	$(gcc) -c $(PHCLib)/lib_celcon.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o celcon.o \
+                    intcelcon.o lib_celcon.o \
+                    get_clock.o get_clocks_per_sec.o \
+                 -o ../bin/lib_celcon -lm
 
 lib_poco:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
