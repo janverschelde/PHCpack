@@ -11,6 +11,8 @@ package Timing_Package is
 --   Originally developed by Dave Emery (emery@aries.mitre.org),
 --   but modified by me.
 
+  type Array_of_Duration is array ( integer range <> ) of duration;
+
   type Timing_Widget is private;
 
 -- OPERATIONS :
