@@ -325,6 +325,7 @@ procedure ts_mbthom is
     genpts,sols,mempts,outpts : Standard_Complex_Solutions.Solution_List;
     dim : natural32;
     restol : constant double_float := 1.0E-10;
+    rcotol : constant double_float := 1.0E-6;
     homtol : constant double_float := 1.0E-6;
     out2file : boolean;
     ans : character;
@@ -362,7 +363,7 @@ procedure ts_mbthom is
       put_line("See the output file for results ...");
       new_line;
       Homotopy_Membership_Filters.Filter
-        (file,lp.all,genpts,dim,restol,homtol,sols,mempts,outpts);
+        (file,lp.all,genpts,dim,rcotol,restol,homtol,sols,mempts,outpts);
       put(file,"Number of points that are member : ");
       put(file,Standard_Complex_Solutions.Length_Of(mempts),1);
       new_line(file);
@@ -374,7 +375,7 @@ procedure ts_mbthom is
       put("Verbose ? (y/n) ");
       Ask_Yes_or_No(ans);
       Homotopy_Membership_Filters.Filter
-        (ans = 'y',lp.all,genpts,dim,restol,homtol,sols,mempts,outpts);
+        (ans = 'y',lp.all,genpts,dim,rcotol,restol,homtol,sols,mempts,outpts);
       put("Number of points that are member : ");
       put(Standard_Complex_Solutions.Length_Of(mempts),1); new_line;
       put("Number of points that are outside : ");

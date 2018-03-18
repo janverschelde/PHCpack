@@ -1,4 +1,4 @@
-Sat 18 Mar 2018 : fixed ts_poco.adb for changed driver procedure in
+Sun 18 Mar 2018 : fixed ts_poco.adb for changed driver procedure in
   drivers_for_poly_continuation.
 
 Sat 19 Aug 2017 : added parameters to drivers_for_poly_continuation and
