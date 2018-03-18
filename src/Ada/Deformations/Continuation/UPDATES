@@ -1,3 +1,6 @@
+Sat 18 Mar 2018 : fixed ts_poco.adb for changed driver procedure in
+  drivers_for_poly_continuation.
+
 Sat 19 Aug 2017 : added parameters to drivers_for_poly_continuation and
   updated mainpoco.adb so the end solutions are written to separate file
   in case the precision is higher than double.  Added the root refiners

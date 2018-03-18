@@ -37,6 +37,8 @@ procedure ts_poco is
     lp : Link_to_Poly_Sys;
     ls : constant Link_to_Array_of_Strings := null;
     sols : Standard_Complex_Solutions.Solution_List;
+    ddsols : DoblDobl_Complex_Solutions.Solution_List;
+    qdsols : QuadDobl_Complex_Solutions.Solution_List;
     mpsols : Multprec_Complex_Solutions.Solution_List;
     target : Complex_Number;
 
@@ -46,7 +48,8 @@ procedure ts_poco is
     new_line;
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
-    Driver_for_Polynomial_Continuation(file,lp.all,0,ls,sols,mpsols,target);
+    Driver_for_Polynomial_Continuation
+      (file,lp.all,1,ls,sols,ddsols,qdsols,mpsols,target);
   end Standard_Continuation;
 
   procedure DoblDobl_Continuation is
