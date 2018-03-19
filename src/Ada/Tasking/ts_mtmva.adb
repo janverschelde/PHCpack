@@ -595,10 +595,10 @@ procedure ts_mtmva is
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
     if ans = 'y' then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
       put(file,q'last,1); new_line(file);
       put(file,q);
     end if;
@@ -653,10 +653,10 @@ procedure ts_mtmva is
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     if ans = 'y' then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
       put(file,q'last,1); new_line(file);
       put(file,q);
     end if;
@@ -711,10 +711,10 @@ procedure ts_mtmva is
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     if ans = 'y' then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
       put(file,q'last,1); new_line(file);
       put(file,q);
     end if;
