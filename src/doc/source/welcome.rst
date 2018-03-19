@@ -98,15 +98,29 @@ at <https://github.com/janverschelde/PHCpack>.
 To compile the source code, the gnu-ada compiler is needed.
 Free binary versions of the :index:`gnu-ada compiler`
 are available at <http://libre.adacore.com>.
+One does not need to be superuser to install the gnu-ada compiler.
 The directory ``Objects`` in the
 source code provides makefiles for Linux, Mac OS X, and Windows
 operating systems.
 
 When compiling from source, note that since version 2.4.35,
 the quad double library QDlib must be installed.
+Alternatively, one can also compile the QD library in a user
+account and then adjust the makefiles for the location of the
+header files and the archive qdlib.a.  
+The makefile for Windows provides an example
+of a compilation of the QD library under a user account.
 On Linux systems, the qdlib.a must have been compiled with
 the -fPIC option for the shared object file for the C extension
 module of phcpy.
+
+The software has been compiled with many versions of gcc 
+on Linux, Mac OS X, and Windows computers.
+While the software does not require any particular version of gcc,
+the C, C++, and Ada code must be compiled with the *same* version of gcc.
+One cannot link object code produced by, for example g++ 4.9.3,
+with other object code compiled by another version of gcc,
+for example gcc 4.9.2.
 
 Project History
 ===============
