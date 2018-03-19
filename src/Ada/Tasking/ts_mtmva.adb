@@ -14,8 +14,11 @@ with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Integer_VecVecs;
 with Standard_Integer64_Matrices;
 with Standard_Integer64_Linear_Solvers; use Standard_Integer64_Linear_Solvers;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
+with Standard_Poly_Laur_Convertors;
 with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems_io;  use DoblDobl_Complex_Laur_Systems_io;
 with DoblDobl_Polynomial_Convertors;
@@ -332,11 +335,12 @@ procedure ts_mtmva is
     stlb : double_float := 0.0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    sub,mcc,stbmcc : Mixed_Subdivision;
+    sub,mcc,orgmcc,stbmcc : Mixed_Subdivision;
     mv : natural32;
     ans : character;
     otp : boolean;
     sem : Semaphore.Lock;
+    orgcnt,stbcnt : natural32;
     celcnt : natural32 := 0;
     sumvol : natural64 := 0;
     stabmv : natural64 := 0;
@@ -414,7 +418,7 @@ procedure ts_mtmva is
       Ask_Yes_or_No(ans);
       otp := (ans = 'y');
       if otp then
-        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,stlb,
+        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,
           r,mtype,perm,mcc,mv,Write_Mixed_Volume'access);
         if stable
          then put("The sum of the volumes of original cells : ");
@@ -422,12 +426,17 @@ procedure ts_mtmva is
         end if;
         put(sumvol,1); new_line;
       else
-        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,stlb,
+        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,
           r,mtype,perm,mcc,mv);
       end if;
       if stable then
         put("The total mixed volume : "); put(mv,1); new_line;
         put("The stable mixed volume : "); put(stabmv,1); new_line;
+        Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
+        put("Number of cells without artificial origin : ");
+        put(Length_Of(orgmcc),1); new_line;
+        put("Number of stable mixed cells : ");
+        put(Length_Of(stbmcc),1); new_line;
       else
         put("The mixed volume : "); put(stabmv,1); new_line;
       end if;
@@ -473,6 +482,59 @@ procedure ts_mtmva is
     Ask_Yes_or_No(ans);
     rep := (ans = 'y');
     Pipelined_Polyhedral_Homotopies(file,cfile,qfile,nt,mfi,rep,p,mv,q,sols);
+  end Pipelined_Polyhedral_Driver;
+
+  procedure Pipelined_Polyhedral_Driver
+              ( file : in file_type; nt : in integer32;
+                stable : in boolean; stlb : in double_float;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Extracts the supports of the polynomial system p and computes
+  --   its mixed volume and solves a random coefficient system,
+  --   in standard double precision. The number of tasks equals nt.
+  --   Calls the driver in Pipelined_Polyhedral_Drivers.
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    cfile,qfile : file_type;
+    q : Laur_Sys(p'range);
+    sub,orgmcc,stbmcc : Mixed_Subdivision;
+    mv,orgcnt,stbcnt : natural32;
+    sols : Solution_List;
+    ans : character;
+    mfi,rep : boolean;
+
+  begin
+    new_line;
+    put_line("Reading the file name to write the start system ...");
+    Read_Name_and_Create_File(qfile);
+    new_line;
+    put("Do you want the mixed cell configuration on file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    mfi := (ans = 'y');
+    if mfi then
+      put_line("Reading the file name to write the cell configuration ...");
+      Read_Name_and_Create_File(cfile);
+    end if;
+    new_line;
+    put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    rep := (ans = 'y');
+    if stable then
+      Pipelined_Polyhedral_Homotopies
+        (file,cfile,qfile,nt,mfi,rep,stable,stlb,p,sub,mv,q,sols);
+      Split_Original_Cells(sub,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
+      put("Number of cells without artificial origin : ");
+      put(Length_Of(orgmcc),1); new_line;
+      put("Number of stable mixed cells : ");
+      put(Length_Of(stbmcc),1); new_line;
+    else
+      Pipelined_Polyhedral_Homotopies
+        (file,cfile,qfile,nt,mfi,rep,p,mv,q,sols);
+    end if;
   end Pipelined_Polyhedral_Driver;
 
   procedure Pipelined_Polyhedral_Driver
@@ -579,15 +641,17 @@ procedure ts_mtmva is
     ans : character;
 
   begin
-    if stable then
-      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
-    else
-      put("Test the pipelined driver ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      if ans = 'y' then
-        Pipelined_Polyhedral_Driver(file,nt,p);
-        return;
+    if stable
+     then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
+    end if;
+    put("Test the pipelined driver ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      if stable
+       then Pipelined_Polyhedral_Driver(file,nt,stable,stlb,p);
+       else Pipelined_Polyhedral_Driver(file,nt,p);
       end if;
+      return;
     end if;
     new_line;
     put("Do you want intermediate output ? (y/n) ");
@@ -755,7 +819,7 @@ procedure ts_mtmva is
     new_line;
     put("Do you want a random coefficient system ? (y/n) ");
     Ask_Yes_or_No(ans);
-    if ans = 'y'
+    if ans = 'y' 
      then Random_Coefficient_System(file,nt,stable,lp.all);
      else Mixed_Volume_Calculation(file,nt,stable,lp.all);
     end if;

@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -10,6 +11,7 @@ with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 
 package Pipelined_Polyhedral_Drivers is
 
@@ -208,6 +210,50 @@ package Pipelined_Polyhedral_Drivers is
   --   p        a polynomial system.
 
   -- ON RETURN :
+  --   mv       mixed volume of the tuple of Newton polytopes
+  --            spanned by the supports of p;
+  --   q        if ranstart, then q is a random coefficient system,
+  --            with as many solutions as the mixed volume;
+  --   qsols    solution to a random coefficient system,
+  --            if all went well, then Length_Of(qsols) = mv.
+
+-- WITH STABLE MIXED VOLUMES :
+
+  procedure Pipelined_Polyhedral_Homotopies
+              ( file,cfile,qfile : in file_type; nt : in integer32;
+                misufile,contrep,stable : in boolean;
+                stlb : in double_float;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Driver to the polyhedral homotopies to create
+  --   a random coefficient start system to solve the system p,
+  --   in standard double, double double, or quad double precision,
+  --   with pipelined production of mixed cells, interleaved with
+  --   the tracking of the paths defined by a polyhedral homotopy.
+
+  -- REQUIRED : nt >= 2.
+
+  -- ON ENTRY :
+  --   file     to write timings and other results;
+  --   cfile    the file to write a regular mixed-cell configuration on,
+  --            will be used only if misufile equals true;
+  --   qfile    the file to write a random coefficient start system on;
+  --   nt       number of tasks, which includes one task to produce
+  --            the mixed cells, and the others to track the paths;
+  --   misufile indicates whether to write the mixed-cell configuration
+  --            to a separate file;
+  --   contrep  indicates whether output is wanted during continuation;
+  --   stable   indicates whether the stable mixed volume is wanted;
+  --   stlb     stable lifting bound if stable, otherwise 0.0;
+  --   p        a polynomial system.
+
+  -- ON RETURN :
+  --   mcc      mixed cell configuration, which contains all mixed cells,
+  --            those with and without artificial origin, if stable;
   --   mv       mixed volume of the tuple of Newton polytopes
   --            spanned by the supports of p;
   --   q        if ranstart, then q is a random coefficient system,

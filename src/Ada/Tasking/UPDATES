@@ -1,4 +1,7 @@
 Mon 19 Mar 2018 : fixed ts_mtmva.adb for the removed stlb parameter.
+  Updated pipelined_polyhedral_{trackers, drivers}, tested by ts_mtmva.adb
+  for working with stable mixed volumes.  Removed the stlb parameter
+  from pipelined_labeled_cells.
 
 Thu 15 Mar 2018 : removed stlb from the parameters in the procedures for
   Laurent systems in pipelined_polyhedral_trakers, which then also changed

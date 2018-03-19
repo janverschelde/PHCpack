@@ -426,8 +426,10 @@ package body Pipelined_Polyhedral_Trackers is
     tmv := tmv + natural32(pdetU);
   end QuadDobl_Track_Cell;
 
+-- AFTER PREPROCESSING AND LIFTING, ON LAURENT SYSTEMS, SILENT :
+
   procedure Silent_Multitasking_Tracker
-              ( nt,nbequ,r : in integer32;
+              ( nt,nbequ,r : in integer32; stlb : in double_float;
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
@@ -439,7 +441,6 @@ package body Pipelined_Polyhedral_Trackers is
     use Standard_Complex_Laur_JacoMats;
     use Standard_Complex_Solutions;
 
-    stlb : constant double_float := 0.0;
     sem : Semaphore.Lock;
     mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
     permlif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
@@ -493,7 +494,7 @@ package body Pipelined_Polyhedral_Trackers is
   end Silent_Multitasking_Tracker;
 
   procedure Silent_Multitasking_Tracker
-              ( nt,nbequ,r : in integer32;
+              ( nt,nbequ,r : in integer32; stlb : in double_float;
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
@@ -505,7 +506,6 @@ package body Pipelined_Polyhedral_Trackers is
     use DoblDobl_Complex_Laur_JacoMats;
     use DoblDobl_Complex_Solutions;
 
-    stlb : constant double_float := 0.0;
     sem : Semaphore.Lock;
     mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
     permlif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
@@ -559,7 +559,7 @@ package body Pipelined_Polyhedral_Trackers is
   end Silent_Multitasking_Tracker;
 
   procedure Silent_Multitasking_Tracker
-              ( nt,nbequ,r : in integer32;
+              ( nt,nbequ,r : in integer32; stlb : in double_float;
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
@@ -571,7 +571,6 @@ package body Pipelined_Polyhedral_Trackers is
     use QuadDobl_Complex_Laur_JacoMats;
     use QuadDobl_Complex_Solutions;
 
-    stlb : constant double_float := 0.0;
     sem : Semaphore.Lock;
     mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
     permlif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
@@ -624,9 +623,11 @@ package body Pipelined_Polyhedral_Trackers is
     end loop;
   end Silent_Multitasking_Tracker;
 
+-- AFTER PREPROCESSING AND LIFTING, ON LAURENT SYSTEMS, REPORTING :
+
   procedure Reporting_Multitasking_Tracker
               ( file : in file_type;
-                nt,nbequ,r : in integer32;
+                nt,nbequ,r : in integer32; stlb : in double_float;
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
@@ -638,7 +639,6 @@ package body Pipelined_Polyhedral_Trackers is
     use Standard_Complex_Laur_JacoMats;
     use Standard_Complex_Solutions;
 
-    stlb : constant double_float := 0.0;
     sem : Semaphore.Lock;
     mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
     permlif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
@@ -659,9 +659,12 @@ package body Pipelined_Polyhedral_Trackers is
                       mtype : in Standard_Integer_Vectors.Link_to_Vector;
                       mic : in out Mixed_Cell ) is
     begin
-      Standard_Track_Cell(sem,idtask,nbequ,r,mix,mic,lif,cff,
-        dpw(idtask),cft(idtask),epv,hom,ejf,jmf,q,tmv(idtask),
-        tasksols(idtask),lastsols(idtask));
+      if( (stlb = 0.0) or else
+         ((stlb > 0.0) and then Is_Original(mic,stlb)) ) then
+        Standard_Track_Cell(sem,idtask,nbequ,r,mix,mic,lif,cff,
+          dpw(idtask),cft(idtask),epv,hom,ejf,jmf,q,tmv(idtask),
+          tasksols(idtask),lastsols(idtask));
+      end if;
     end Track;
 
   begin
@@ -696,7 +699,7 @@ package body Pipelined_Polyhedral_Trackers is
 
   procedure Reporting_Multitasking_Tracker
               ( file : in file_type;
-                nt,nbequ,r : in integer32;
+                nt,nbequ,r : in integer32; stlb : in double_float;
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
@@ -708,7 +711,6 @@ package body Pipelined_Polyhedral_Trackers is
     use DoblDobl_Complex_Laur_JacoMats;
     use DoblDobl_Complex_Solutions;
 
-    stlb : constant double_float := 0.0;
     sem : Semaphore.Lock;
     mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
     permlif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
@@ -729,9 +731,12 @@ package body Pipelined_Polyhedral_Trackers is
                       mtype : in Standard_Integer_Vectors.Link_to_Vector;
                       mic : in out Mixed_Cell ) is
     begin
-      DoblDobl_Track_Cell(sem,idtask,nbequ,r,mix,mic,lif,cff,
-        dpw(idtask),cft(idtask),epv,hom,ejf,jmf,q,tmv(idtask),
-        tasksols(idtask),lastsols(idtask));
+      if( (stlb = 0.0) or else
+         ((stlb > 0.0) and then Is_Original(mic,stlb)) ) then
+        DoblDobl_Track_Cell(sem,idtask,nbequ,r,mix,mic,lif,cff,
+          dpw(idtask),cft(idtask),epv,hom,ejf,jmf,q,tmv(idtask),
+          tasksols(idtask),lastsols(idtask));
+      end if;
     end Track;
 
   begin
@@ -766,7 +771,7 @@ package body Pipelined_Polyhedral_Trackers is
 
   procedure Reporting_Multitasking_Tracker
               ( file : in file_type;
-                nt,nbequ,r : in integer32;
+                nt,nbequ,r : in integer32; stlb : in double_float;
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
@@ -778,7 +783,6 @@ package body Pipelined_Polyhedral_Trackers is
     use QuadDobl_Complex_Laur_JacoMats;
     use QuadDobl_Complex_Solutions;
 
-    stlb : constant double_float := 0.0;
     sem : Semaphore.Lock;
     mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
     permlif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
@@ -799,9 +803,12 @@ package body Pipelined_Polyhedral_Trackers is
                       mtype : in Standard_Integer_Vectors.Link_to_Vector;
                       mic : in out Mixed_Cell ) is
     begin
-      QuadDobl_Track_Cell(sem,idtask,nbequ,r,mix,mic,lif,cff,
-        dpw(idtask),cft(idtask),epv,hom,ejf,jmf,q,tmv(idtask),
-        tasksols(idtask),lastsols(idtask));
+      if( (stlb = 0.0) or else
+         ((stlb > 0.0) and then Is_Original(mic,stlb)) ) then
+        QuadDobl_Track_Cell(sem,idtask,nbequ,r,mix,mic,lif,cff,
+          dpw(idtask),cft(idtask),epv,hom,ejf,jmf,q,tmv(idtask),
+          tasksols(idtask),lastsols(idtask));
+      end if;
     end Track;
 
   begin
@@ -834,6 +841,8 @@ package body Pipelined_Polyhedral_Trackers is
     end loop;
   end Reporting_Multitasking_Tracker;
 
+-- DOES PREPROCESSING AND LIFTING, ON LAURENT SYSTEMS, SILENT :
+
   procedure Silent_Multitasking_Tracker
               ( nt,nbequ,nbpts : in integer32;
                 ind,cnt : in Standard_Integer_Vectors.Vector;
@@ -854,7 +863,7 @@ package body Pipelined_Polyhedral_Trackers is
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Silent_Multitasking_Tracker
-      (nt,nbequ,r,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
+      (nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
     Standard_Integer_Vectors.Clear(idx);
     Standard_Integer_Vectors.Clear(sdx);
     Standard_Integer_Vectors.Clear(ndx);
@@ -882,7 +891,7 @@ package body Pipelined_Polyhedral_Trackers is
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Silent_Multitasking_Tracker
-      (nt,nbequ,r,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
+      (nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
     Standard_Integer_Vectors.Clear(idx);
     Standard_Integer_Vectors.Clear(sdx);
     Standard_Integer_Vectors.Clear(ndx);
@@ -910,13 +919,15 @@ package body Pipelined_Polyhedral_Trackers is
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Silent_Multitasking_Tracker
-      (nt,nbequ,r,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
+      (nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
     Standard_Integer_Vectors.Clear(idx);
     Standard_Integer_Vectors.Clear(sdx);
     Standard_Integer_Vectors.Clear(ndx);
     Standard_Floating_Vectors.Clear(lft);
     Standard_Integer_VecVecs.Deep_Clear(vtx);
   end Silent_Multitasking_Tracker;
+
+-- DOES PREPROCESSING AND LIFTING, ON LAURENT SYSTEMS, REPORTING :
 
   procedure Reporting_Multitasking_Tracker
               ( file : in file_type; nt,nbequ,nbpts : in integer32;
@@ -938,7 +949,7 @@ package body Pipelined_Polyhedral_Trackers is
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Reporting_Multitasking_Tracker
-      (file,nt,nbequ,r,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
+      (file,nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
     Standard_Integer_Vectors.Clear(idx);
     Standard_Integer_Vectors.Clear(sdx);
     Standard_Integer_Vectors.Clear(ndx);
@@ -966,7 +977,7 @@ package body Pipelined_Polyhedral_Trackers is
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Reporting_Multitasking_Tracker
-      (file,nt,nbequ,r,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
+      (file,nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
     Standard_Integer_Vectors.Clear(idx);
     Standard_Integer_Vectors.Clear(sdx);
     Standard_Integer_Vectors.Clear(ndx);
@@ -994,7 +1005,73 @@ package body Pipelined_Polyhedral_Trackers is
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Reporting_Multitasking_Tracker
-      (file,nt,nbequ,r,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
+      (file,nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
+    Standard_Integer_Vectors.Clear(idx);
+    Standard_Integer_Vectors.Clear(sdx);
+    Standard_Integer_Vectors.Clear(ndx);
+    Standard_Floating_Vectors.Clear(lft);
+    Standard_Integer_VecVecs.Deep_Clear(vtx);
+  end Reporting_Multitasking_Tracker;
+
+-- DOES PREPROCESSING AND LIFTING, ON STABLE MIXED VOLUMES, SILENT :
+
+  procedure Silent_Multitasking_Tracker
+              ( nt,nbequ,nbpts : in integer32;
+                ind,cnt : in Standard_Integer_Vectors.Vector;
+                support : in Standard_Integer_Vectors.Link_to_Vector;
+                stable : in boolean; stlb : in double_float;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    idx,sdx,ndx : Standard_Integer_Vectors.Link_to_Vector;
+    vtx,spt : Standard_Integer_VecVecs.Link_to_VecVec;
+    lft : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    mv_upto_pre4mv
+      (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
+    if stable
+     then mv_lift(nbequ,stlb,r,idx,vtx,lft);
+     else mv_lift(nbequ,0.0,r,idx,vtx,lft);
+    end if;
+    Silent_Multitasking_Tracker
+      (nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
+    Standard_Integer_Vectors.Clear(idx);
+    Standard_Integer_Vectors.Clear(sdx);
+    Standard_Integer_Vectors.Clear(ndx);
+    Standard_Floating_Vectors.Clear(lft);
+    Standard_Integer_VecVecs.Deep_Clear(vtx);
+  end Silent_Multitasking_Tracker;
+
+-- DOES PREPROCESSING AND LIFTING, STABLE MIXED VOLUMES, REPORTING :
+
+  procedure Reporting_Multitasking_Tracker
+              ( file : in file_type; nt,nbequ,nbpts : in integer32;
+                ind,cnt : in Standard_Integer_Vectors.Vector;
+                support : in Standard_Integer_Vectors.Link_to_Vector;
+                stable : in boolean; stlb : in double_float;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    idx,sdx,ndx : Standard_Integer_Vectors.Link_to_Vector;
+    vtx,spt : Standard_Integer_VecVecs.Link_to_VecVec;
+    lft : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    mv_upto_pre4mv
+      (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
+    if stable
+     then mv_lift(nbequ,stlb,r,idx,vtx,lft);
+     else mv_lift(nbequ,0.0,r,idx,vtx,lft);
+    end if;
+    Reporting_Multitasking_Tracker
+      (file,nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
     Standard_Integer_Vectors.Clear(idx);
     Standard_Integer_Vectors.Clear(sdx);
     Standard_Integer_Vectors.Clear(ndx);

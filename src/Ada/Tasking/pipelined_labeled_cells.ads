@@ -121,7 +121,7 @@ package Pipelined_Labeled_Cells is
               ( ntasks,nbequ,nbpts : in integer32; otp : in boolean;
                 ind,cnt : in Standard_Integer_Vectors.Vector;
                 support : in Standard_Integer_Vectors.Link_to_Vector;
-                stlb : in double_float; r : out integer32;
+                r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 sub : out Mixed_Subdivision; mv : out natural32;
                 process : access procedure
@@ -145,8 +145,6 @@ package Pipelined_Labeled_Cells is
   --   cnt      cnt(k) counts the number of points in the k-th support;
   --   support  vector range 1..nbequ*nbpts with the coordinates of
   --            all points in the supports;
-  --   stlb     lifting bound to use for stable mixed volumes,
-  --            equals 0.0 if no stable mixed volumes are requested.
   --   process  optional callback procedure to process each mixed
   --            cell as soon as it is computed.
 
@@ -156,8 +154,6 @@ package Pipelined_Labeled_Cells is
   --   perm     permutation of the supports;
   --   sub      a mixed cell configuration for a random lifting;
   --   mv       the mixed volume computed via sub, which equals
-  --            the total mixed volume for a nonzero value of stlb.
-  --            This total mixed volume may include the volumes of
-  --            the cells in sub that are not stable.
+  --            the total mixed volume for all mixed cells.
 
 end Pipelined_Labeled_Cells;

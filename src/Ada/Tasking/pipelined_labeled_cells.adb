@@ -175,7 +175,7 @@ package body Pipelined_Labeled_Cells is
               ( ntasks,nbequ,nbpts : in integer32; otp : in boolean;
                 ind,cnt : in Standard_Integer_Vectors.Vector;
                 support : in Standard_Integer_Vectors.Link_to_Vector;
-                stlb : in double_float; r : out integer32;
+                r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 sub : out Mixed_Subdivision; mv : out natural32;
                 process : access procedure
@@ -190,7 +190,7 @@ package body Pipelined_Labeled_Cells is
   begin
     mv_upto_pre4mv
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
-    mv_lift(nbequ,stlb,r,idx,vtx,lft);
+    mv_lift(nbequ,0.0,r,idx,vtx,lft);
     Pipelined_Mixed_Cells
       (ntasks,nbequ,otp,r,mtype,perm,idx,vtx,lft,sub,mv,process);
     Standard_Integer_Vectors.Clear(idx);
