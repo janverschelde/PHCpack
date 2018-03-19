@@ -1,3 +1,6 @@
+Mon 19 Mar 2018 : updated time_stamps so the elapsed time also writes the
+  milliseconds and properly truncates.  Changed ts_stamps.adb, ts_clock.adb.
+
 Tue 17 Nov 2015 : moved the prompt_for_precision function from the
   extrinsic_diagonal_solvers.adb into communications_with_user.
 

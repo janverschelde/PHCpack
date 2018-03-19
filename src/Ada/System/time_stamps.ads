@@ -7,6 +7,20 @@ package Time_Stamps is
 --   This package uses the clock time to deliver time stamps and
 --   to measure the elapsed time.
 
+  procedure Seconds_into_HMS
+              ( seconds : in Duration; hour,min,sec : out integer );
+
+  -- DESCRIPTION :
+  --   Splits the seconds into hours, minutes, and seconds.
+
+  procedure Seconds_into_HMSMS
+              ( seconds : in Duration;
+                hour,min,sec,millisec : out integer );
+
+  -- DESCRIPTION :
+  --   Splits the seconds into hours, minutes, seconds,
+  --   and milliseconds.
+
   function Elapsed_Time ( before,after : Time ) return integer;
 
   -- DESCRIPTION :

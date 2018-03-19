@@ -2,7 +2,7 @@ with integer_io;                      use integer_io;
 
 package body Time_Stamps is
 
--- AUXILIARY FUNCTIONS :
+-- AUXILIARY FUNCTION :
 
   function Month_Name ( m : integer ) return string is
 
@@ -27,11 +27,10 @@ package body Time_Stamps is
     end case;
   end Month_Name;
 
+-- TARGET ROUTINES :
+
   procedure Seconds_into_HMS ( seconds : in Duration;
                                hour,min,sec : out integer ) is
-
-  -- DESCRIPTION :
-  --   Splits the seconds into hours, minutes and seconds.
 
     remainder : integer;
 
@@ -43,7 +42,22 @@ package body Time_Stamps is
     sec := remainder;
   end Seconds_into_HMS;
 
--- TARGET ROUTINES :
+  procedure Seconds_into_HMSMS
+              ( seconds : in Duration;
+                hour,min,sec,millisec : out integer ) is
+
+    remainder : integer;
+    wholeseconds : constant Duration := duration(integer(seconds));
+    milliseconds : constant Duration := seconds - wholeseconds;
+
+  begin
+    hour := integer(seconds)/3600;
+    remainder := integer(seconds)-hour*3600;
+    min := remainder/60;
+    remainder := remainder-min*60;
+    sec := integer(remainder);
+    millisec := integer(milliseconds*1000.0);
+  end Seconds_into_HMSMS;
 
   function Elapsed_Time ( before,after : Time ) return integer is
 
@@ -87,29 +101,51 @@ package body Time_Stamps is
 
   procedure Write_Elapsed_Time
                ( file : in file_type; before,after : in Time ) is
-
-    difsec : constant integer := Elapsed_Time(before,after);
+  
+    the_seconds : constant duration := after - before;
+   -- difsec : constant integer := Elapsed_Time(before,after);
     hours,minutes,remainder : integer;
+    float_seconds : constant float := float(the_seconds);
+    wholeseconds : constant duration
+                 := duration(float'truncation(float_seconds));
+    milliseconds : constant integer
+                 := integer((the_seconds - wholeseconds)*1000.0);
+    difsec : constant integer := integer(wholeseconds);
+
+    package duration_io is new text_io.fixed_io(duration);
 
   begin
     put(file,"The total elapsed time is ");
-    put(file,difsec,1); put(file," seconds");
+    duration_io.put(file,the_seconds,1,3);
+    put(file," seconds");
     if difsec < 60 then
-      put_line(file,".");
+      if milliseconds > 0 then
+        put(file," = ");
+        if difsec > 0
+         then put(file,difsec,1); put(file," seconds ");
+        end if;
+        put(file,milliseconds,1); put_line(file," milliseconds.");
+      else
+        put_line(file,".");
+      end if;
     else
-      put(file," = ");
+      put(file," =");
       hours := difsec/3600;
       if hours > 0
-       then put(file,hours,1); put(file," hours ");
+       then put(file," "); put(file,hours,1); put(file," hours");
       end if;
       remainder := difsec-hours*3600;
       minutes := remainder/60;
       if minutes > 0
-       then put(file,minutes,1); put(file," minutes ");
+       then put(file," "); put(file,minutes,1); put(file," minutes");
       end if;
       remainder := remainder-minutes*60;
       if remainder > 0
-       then put(file,remainder,1); put_line(file," seconds.");
+       then put(file," "); put(file,remainder,1); put(file," seconds");
+      end if;
+      if milliseconds > 0
+       then put(file,milliseconds,1); put_line(file," milliseconds.");
+       else put_line(file,".");
       end if;
     end if;
   end Write_Elapsed_Time;
