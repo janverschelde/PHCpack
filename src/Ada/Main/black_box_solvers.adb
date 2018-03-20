@@ -892,7 +892,11 @@ package body Black_Box_Solvers is
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
-      Black_Box_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco,hoco);
+      if nt >= 2 then
+        Pipelined_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco);
+      else
+        Black_Box_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco,hoco);
+      end if;
       if rc /= 0 then
         Black_Box_Polynomial_Continuation(integer32(nt),pp,q,sols,poco);
       end if;
@@ -916,7 +920,11 @@ package body Black_Box_Solvers is
     rc := DoblDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       DoblDobl_Complex_Laur_Systems.Copy(p,pp);
-      Black_Box_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco,hoco);
+      if nt >= 2 then
+        Pipelined_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco);
+      else
+        Black_Box_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco,hoco);
+      end if;
       if rc /= 0 then
         Black_Box_Polynomial_Continuation(integer32(nt),pp,q,sols,poco);
       end if;
@@ -940,7 +948,11 @@ package body Black_Box_Solvers is
     rc := QuadDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       QuadDobl_Complex_Laur_Systems.Copy(p,pp);
-      Black_Box_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco,hoco);
+      if nt >= 2 then
+        Pipelined_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco);
+      else
+        Black_Box_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco,hoco);
+      end if;
       if rc /= 0 then
         Black_Box_Polynomial_Continuation(integer32(nt),pp,q,sols,poco);
       end if;
@@ -963,7 +975,11 @@ package body Black_Box_Solvers is
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
-      Black_Box_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco,hoco);
+      if nt >= 2 then
+        Pipelined_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco);
+      else
+        Black_Box_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco,hoco);
+      end if;
       if rc /= 0 then
         Black_Box_Polynomial_Continuation(integer32(nt),pp,q,sols,poco);
       end if;
@@ -986,7 +1002,11 @@ package body Black_Box_Solvers is
     rc := DoblDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       DoblDobl_Complex_Laur_Systems.Copy(p,pp);
-      Black_Box_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco,hoco);
+      if nt >= 0 then
+        Pipelined_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco);
+      else
+        Black_Box_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco,hoco);
+      end if;
       if rc /= 0 then
         Black_Box_Polynomial_Continuation(integer32(nt),pp,q,sols,poco);
       end if;
@@ -1009,7 +1029,11 @@ package body Black_Box_Solvers is
     rc := QuadDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       QuadDobl_Complex_Laur_Systems.Copy(p,pp);
-      Black_Box_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco,hoco);
+      if nt >= 2 then
+        Pipelined_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco);
+      else
+        Black_Box_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco,hoco);
+      end if;
       if rc /= 0 then
         Black_Box_Polynomial_Continuation(integer32(nt),pp,q,sols,poco);
       end if;
@@ -1032,7 +1056,11 @@ package body Black_Box_Solvers is
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
-      Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);
+      if nt >= 2 then
+        Pipelined_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco);
+      else
+        Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);
+      end if;
       if rc /= 0 then
         Black_Box_Polynomial_Continuation(file,integer32(nt),pp,q,sols,poco);
       end if;
@@ -1055,7 +1083,11 @@ package body Black_Box_Solvers is
     rc := DoblDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       DoblDobl_Complex_Laur_Systems.Copy(p,pp);
-      Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);
+      if nt >= 2 then
+        Pipelined_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco);
+      else
+        Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);
+      end if;
       if rc /= 0 then
         Black_Box_Polynomial_Continuation(file,integer32(nt),pp,q,sols,poco);
       end if;
@@ -1078,7 +1110,11 @@ package body Black_Box_Solvers is
     rc := QuadDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       QuadDobl_Complex_Laur_Systems.Copy(p,pp);
-      Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);
+      if nt >= 2 then
+        Pipelined_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco);
+      else
+        Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);
+      end if;
       if rc /= 0 then
         Black_Box_Polynomial_Continuation(file,integer32(nt),pp,q,sols,poco);
       end if;

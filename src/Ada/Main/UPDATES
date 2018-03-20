@@ -1,3 +1,7 @@
+Tue 20 Mar 2018 : added another set of pipelined wrappers to
+  black_box_root_counters for Laurent systems and applied them
+  in black_box_solvers.adb.
+
 Mon 19 Mar 2018 : wrapped pipelined polyhedral homotopies for Laurent systems
   in black_box_root_counters.
 

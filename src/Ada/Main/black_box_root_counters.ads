@@ -564,6 +564,49 @@ package Black_Box_Root_Counters is
 -- PIPELINING FOR LAURENT SYSTEMS :
 
   procedure Pipelined_Root_Counting 
+               ( nt : in integer32; silent : in boolean;
+                 p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out Standard_Complex_Solutions.Solution_List;
+                 elaptime : out duration );
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32; silent : in boolean;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration );
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32; silent : in boolean;
+                 p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration );
+
+  -- DESCRIPTION :
+  --   Wrapper to the pipelined polyhedral homotopies to solve
+  --   a random coefficient system for a given Laurent polynomial system,
+  --   in double, double double, or quad double precision.
+  --   No output is written to screen.
+
+  -- ON ENTRY :
+  --   nt        number of tasks for polyhedral homotopy continuation,
+  --             nt must be at least 2;
+  --   silent    if silent, then the mixed volume will not be written
+  --             to screen, otherwise, if silent, then the user will
+  --             be shown the mixed volume on screen;
+  --   p         a Laurent polynomial system.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   rc        the root count is the mixed volume, equals Length_Of(qsols);
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   elaptime  is elapsed user cpu time for the computation.
+
+  procedure Pipelined_Root_Counting 
                ( nt : in integer32;
                  p : in out Standard_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32; rocos : out Link_to_String;

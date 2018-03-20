@@ -1474,6 +1474,75 @@ package body Black_Box_Root_Counters is
 -- PIPELINING FOR LAURENT SYSTEMS :
 
   procedure Pipelined_Root_Counting 
+               ( nt : in integer32; silent : in boolean;
+                 p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out Standard_Complex_Solutions.Solution_List;
+                 elaptime : out duration ) is
+
+    use Standard_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
+    tstop(timer);
+    if not silent
+     then put("mixed volume : "); put(rc,1); new_line;
+    end if;
+    elaptime := Elapsed_User_Time(timer);
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32; silent : in boolean;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration ) is
+
+    use DoblDobl_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
+    tstop(timer);
+    if not silent
+     then put("mixed volume : "); put(rc,1); new_line;
+    end if;
+    elaptime := Elapsed_User_Time(timer);
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32; silent : in boolean;
+                 p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration ) is
+
+    use QuadDobl_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
+    tstop(timer);
+    if not silent
+     then put("mixed volume : "); put(rc,1); new_line;
+    end if;
+    elaptime := Elapsed_User_Time(timer);
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting 
                ( nt : in integer32;
                  p : in out Standard_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32; rocos : out Link_to_String;
