@@ -1,3 +1,6 @@
+Mon 19 Mar 2018 : wrapped pipelined polyhedral homotopies for Laurent systems
+  in black_box_root_counters.
+
 Mon 12 Mar 2018 : for version 2.4.50, updated greeting_banners.
   Added a line in mainphc.adb about phc -B.
 

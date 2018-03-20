@@ -438,6 +438,8 @@ package Black_Box_Root_Counters is
   --   rocotime  is elapsed user cpu time for computation of the root counts;
   --   hocotime  is elapsed user cpu time for construction of start system.
 
+-- FOR LAURENT SYSTEMS :
+
   procedure Black_Box_Root_Counting 
                ( nt : in integer32; silent : in boolean;
                  p : in out Standard_Complex_Laur_Systems.Laur_Sys;
@@ -542,7 +544,8 @@ package Black_Box_Root_Counters is
                  rocotime,hocotime : out duration );
 
   -- DESCRIPTION :
-  --   Wrapper to a mixed-volume computation for a Laurent polynomial system.
+  --   Wrapper to a mixed-volume computation for a Laurent polynomial system,
+  --   in double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file      must be opened for output;
@@ -557,5 +560,90 @@ package Black_Box_Root_Counters is
   --   qsols     solutions of q, without zero components;
   --   rocotime  is elapsed user cpu time for computation of the root counts;
   --   hocotime  is elapsed user cpu time for construction of start system.
+
+-- PIPELINING FOR LAURENT SYSTEMS :
+
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32;
+                 p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out Standard_Complex_Solutions.Solution_List;
+                 elaptime : out duration );
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration );
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32;
+                 p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration );
+
+  -- DESCRIPTION :
+  --   Wrapper to the pipelined polyhedral homotopies to solve
+  --   a random coefficient system for a given Laurent polynomial system,
+  --   in double, double double, or quad double precision.
+  --   No output is written to screen.
+
+  -- ON ENTRY :
+  --   nt        number of tasks for polyhedral homotopy continuation,
+  --             nt must be at least 2;
+  --   p         a Laurent polynomial system.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   rc        the root count is the mixed volume, equals Length_Of(qsols);
+  --   rocos     information about the root count, identical what the
+  --             above procedures write when silent is false;
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   elaptime  is elapsed user cpu time for the computation.
+
+  procedure Pipelined_Root_Counting 
+               ( file : in file_type; nt : in integer32;
+                 p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out Standard_Complex_Solutions.Solution_List;
+                 elaptime : out duration );
+  procedure Pipelined_Root_Counting 
+               ( file : in file_type; nt : in integer32;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration );
+  procedure Pipelined_Root_Counting 
+               ( file : in file_type; nt : in integer32;
+                 p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration );
+
+  -- DESCRIPTION :
+  --   Wrapper to the pipelined polyhedral homotopies to solve
+  --   a random coefficient system for a given Laurent polynomial system,
+  --   in double, double double, or quad double precision.
+  --   Output is written to file.
+
+  -- ON ENTRY :
+  --   file      must be opened for output;
+  --   nt        number of tasks for polyhedral homotopy continuation,
+  --             nt must be at least 2;
+  --   p         a Laurent polynomial system.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   rc        the root count is the mixed volume, equals Lenght_Of(qsols);
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   elaptime  is elapsed user cpu time for the computation.
 
 end Black_Box_Root_Counters;

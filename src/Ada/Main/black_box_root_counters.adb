@@ -28,6 +28,7 @@ with Induced_Permutations;
 with Black_Mixed_Volume_Computations;    use Black_Mixed_Volume_Computations;
 with Black_Polyhedral_Continuations;     use Black_Polyhedral_Continuations;
 with Root_Counters_Output;
+with Pipelined_Polyhedral_Drivers;
 
 --with Standard_Integer_Vectors_io;
 -- use Standard_Integer_Vectors_io;
@@ -1469,5 +1470,178 @@ package body Black_Box_Root_Counters is
     flush(file);
     Standard_Complex_Laur_Systems.Clear(sp);
   end Black_Box_Root_Counting;
+
+-- PIPELINING FOR LAURENT SYSTEMS :
+
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32;
+                 p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out Standard_Complex_Solutions.Solution_List;
+                 elaptime : out duration ) is
+
+    use Standard_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
+    tstop(timer);
+    Append(rocos,"mixed volume : ");
+    Append(rocos,Characters_and_Numbers.nConvert(rc));
+    elaptime := Elapsed_User_Time(timer);
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration ) is
+
+    use DoblDobl_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
+    tstop(timer);
+    Append(rocos,"mixed volume : ");
+    Append(rocos,Characters_and_Numbers.nConvert(rc));
+    elaptime := Elapsed_User_Time(timer);
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32;
+                 p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration ) is
+
+    use QuadDobl_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
+    tstop(timer);
+    Append(rocos,"mixed volume : ");
+    Append(rocos,Characters_and_Numbers.nConvert(rc));
+    elaptime := Elapsed_User_Time(timer);
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting 
+               ( file : in file_type; nt : in integer32;
+                 p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out Standard_Complex_Solutions.Solution_List;
+                 elaptime : out duration ) is
+
+    use Standard_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
+    tstop(timer);
+    new_line(file);
+    put(file,"mixed volume : "); put(file,rc,1); new_line(file);
+    new_line(file);
+    put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
+    new_line(file);
+    put_line(file,q);
+    new_line(file);
+    put_line(file,"START SOLUTIONS : ");
+    new_line(file);
+    if not Is_Null(qsols)
+     then put(file,Length_Of(qsols),natural32(q'last),qsols);
+    end if;
+    new_line(file);
+    print_times(file,timer,"pipelined polyhedral homotopy continuation");
+    elaptime := Elapsed_User_Time(timer);
+    flush(file);
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting 
+               ( file : in file_type; nt : in integer32;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration ) is
+
+    use DoblDobl_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
+    tstop(timer);
+    new_line(file);
+    put(file,"mixed volume : "); put(file,rc,1); new_line(file);
+    new_line(file);
+    put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
+    new_line(file);
+    put_line(file,q);
+    new_line(file);
+    put_line(file,"START SOLUTIONS : ");
+    new_line(file);
+    if not Is_Null(qsols)
+     then put(file,Length_Of(qsols),natural32(q'last),qsols);
+    end if;
+    new_line(file);
+    print_times(file,timer,"pipelined polyhedral homotopy continuation");
+    elaptime := Elapsed_User_Time(timer);
+    flush(file);
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting 
+               ( file : in file_type; nt : in integer32;
+                 p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 elaptime : out duration ) is
+
+    use QuadDobl_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
+    tstop(timer);
+    new_line(file);
+    put(file,"mixed volume : "); put(file,rc,1); new_line(file);
+    new_line(file);
+    put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
+    new_line(file);
+    put_line(file,q);
+    new_line(file);
+    put_line(file,"START SOLUTIONS : ");
+    new_line(file);
+    if not Is_Null(qsols)
+     then put(file,Length_Of(qsols),natural32(q'last),qsols);
+    end if;
+    new_line(file);
+    print_times(file,timer,"pipelined polyhedral homotopy continuation");
+    elaptime := Elapsed_User_Time(timer);
+    flush(file);
+  end Pipelined_Root_Counting;
 
 end Black_Box_Root_Counters;
