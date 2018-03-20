@@ -115,12 +115,12 @@ package body Time_Stamps is
     package duration_io is new text_io.fixed_io(duration);
 
   begin
-    put(file,"The total elapsed time is ");
+    put(file,"The total elapsed wall clock time is ");
     duration_io.put(file,the_seconds,1,3);
     put(file," seconds");
     if difsec < 60 then
       if milliseconds > 0 then
-        put(file," = ");
+        new_line(file); put(file," = ");
         if difsec > 0 then
           put(file,difsec,1);
           if difsec = 1
@@ -137,7 +137,7 @@ package body Time_Stamps is
         put_line(file,".");
       end if;
     else
-      put(file," =");
+      new_line(file); put(file," =");
       hours := difsec/3600;
       if hours > 0 then
         put(file," "); put(file,hours,1);

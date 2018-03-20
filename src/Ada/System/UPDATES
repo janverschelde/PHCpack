@@ -1,5 +1,6 @@
 Tue 20 Mar 2018 : fixed formatting error in time_stamps.adb and fixed the
-  grammatical singular before the time units.
+  grammatical singular before the time units.  In time_stamps.adb,
+  inserted "wall clock" between the "elapsed" and "time" for clarity.
 
 Mon 19 Mar 2018 : updated time_stamps so the elapsed time also writes the
   milliseconds and properly truncates.  Changed ts_stamps.adb, ts_clock.adb.
