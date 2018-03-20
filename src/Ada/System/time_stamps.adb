@@ -121,31 +121,56 @@ package body Time_Stamps is
     if difsec < 60 then
       if milliseconds > 0 then
         put(file," = ");
-        if difsec > 0
-         then put(file,difsec,1); put(file," seconds ");
+        if difsec > 0 then
+          put(file,difsec,1);
+          if difsec = 1
+           then put(file," second ");
+           else put(file," seconds ");
+          end if;
         end if;
-        put(file,milliseconds,1); put_line(file," milliseconds.");
+        put(file,milliseconds,1);
+        if milliseconds = 1
+         then put_line(file," millisecond.");
+         else put_line(file," milliseconds.");
+        end if;
       else
         put_line(file,".");
       end if;
     else
       put(file," =");
       hours := difsec/3600;
-      if hours > 0
-       then put(file," "); put(file,hours,1); put(file," hours");
+      if hours > 0 then
+        put(file," "); put(file,hours,1);
+        if hours = 1 
+         then put(file," hour");
+         else put(file," hours");
+        end if;
       end if;
       remainder := difsec-hours*3600;
       minutes := remainder/60;
-      if minutes > 0
-       then put(file," "); put(file,minutes,1); put(file," minutes");
+      if minutes > 0 then
+        put(file," "); put(file,minutes,1);
+        if minutes = 1 
+         then put(file," minute");
+         else put(file," minutes");
+        end if;
       end if;
       remainder := remainder-minutes*60;
-      if remainder > 0
-       then put(file," "); put(file,remainder,1); put(file," seconds");
+      if remainder > 0 then
+        put(file," "); put(file,remainder,1);
+        if remainder = 1
+         then put(file," second");
+         else put(file," seconds");
+        end if;
       end if;
-      if milliseconds > 0
-       then put(file,milliseconds,1); put_line(file," milliseconds.");
-       else put_line(file,".");
+      if milliseconds > 0 then
+        put(file," "); put(file,milliseconds,1);
+        if milliseconds = 1
+         then put_line(file," millisecond.");
+         else put_line(file," milliseconds.");
+        end if;
+      else
+        put_line(file,".");
       end if;
     end if;
   end Write_Elapsed_Time;
