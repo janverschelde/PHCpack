@@ -23,6 +23,7 @@ with Standard_Complex_Prod_Systems;      use Standard_Complex_Prod_Systems;
 with Standard_Complex_Prod_Systems_io;   use Standard_Complex_Prod_Systems_io;
 with Standard_Complex_Prod_Planes;
 with Random_Product_Start_Systems;       use Random_Product_Start_Systems;
+with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
 with Induced_Permutations;
 with Black_Mixed_Volume_Computations;    use Black_Mixed_Volume_Computations;
@@ -1196,6 +1197,7 @@ package body Black_Box_Root_Counters is
     else
       Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
                   stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       if not silent then
         Write_Root_Counts(standard_output,true,d,mptdeg,nz,bz,bs,mv,smv,z);
       end if;
@@ -1236,6 +1238,7 @@ package body Black_Box_Root_Counters is
     else
       Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
                   stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       if not silent then
         Write_Root_Counts(standard_output,true,d,mptdeg,nz,bz,bs,mv,smv,z);
       end if;
@@ -1276,6 +1279,7 @@ package body Black_Box_Root_Counters is
     else
       Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
                   stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       if not silent then
         Write_Root_Counts(standard_output,true,d,mptdeg,nz,bz,bs,mv,smv,z);
       end if;
@@ -1299,8 +1303,10 @@ package body Black_Box_Root_Counters is
     mv,smv : natural32;
     z : partition(1..natural32(p'last));
     nz : natural32;
+    r : integer32;
     mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
-    orgmcc,stbmcc : Mixed_Subdivision;
+    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    orgcnt,stbcnt : natural32;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1317,10 +1323,13 @@ package body Black_Box_Root_Counters is
     else
       Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
                   stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
-      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      Pipelined_Polyhedral_Homotopies
+        (nt,true,stlb,p,r,mix,perm,mcc,mv,q,qsols);
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
+      Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
       declare
         rcs : constant string
             := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
@@ -1362,6 +1371,7 @@ package body Black_Box_Root_Counters is
     else
       Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
                   stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
       tstop(timer);
@@ -1407,6 +1417,7 @@ package body Black_Box_Root_Counters is
     else
       Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
                   stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
       tstop(timer);
@@ -1449,6 +1460,7 @@ package body Black_Box_Root_Counters is
     else
       Count_Roots(file,p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
                   stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
       tstop(timer);
@@ -1484,6 +1496,7 @@ package body Black_Box_Root_Counters is
     else
       Count_Roots(file,p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
                   stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
       tstop(timer);
@@ -1519,6 +1532,7 @@ package body Black_Box_Root_Counters is
     else
       Count_Roots(file,p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
                   stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
       tstop(timer);

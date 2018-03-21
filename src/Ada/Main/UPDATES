@@ -1,3 +1,6 @@
+Wed 21 Mar 2018 : modified black_box_root_counters.adb for the improved
+  pipelined_polyhedral_drivers.
+
 Tue 20 Mar 2018 : added another set of pipelined wrappers to
   black_box_root_counters for Laurent systems and applied them
   in black_box_solvers.adb.  In black_box_root_counters, made a start to
