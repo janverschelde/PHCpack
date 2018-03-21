@@ -1286,6 +1286,246 @@ package body Black_Box_Root_Counters is
     end if;
   end Pipelined_Root_Counting;
 
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 rocos : out Link_to_String;
+                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    d,bz,bs : natural64;
+    mv,smv : natural32;
+    z : partition(1..natural32(p'last));
+    nz : natural32;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    stlb : double_float;
+    lifsup : Link_to_Array_of_Lists;
+    no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
+    mptdeg : Natural_Number;
+    timer : Timing_Widget;
+
+    use Root_Counters_Output;
+    use Pipelined_Polyhedral_Drivers;
+
+  begin
+    if nt < 2 or no_mv then
+      Black_Box_Root_Counting
+        (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
+    else
+      Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
+                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      tstart(timer);
+      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      tstop(timer);
+      hocotime := Elapsed_User_Time(timer);
+      declare
+        rcs : constant string
+            := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
+      begin
+        rocos := new string'(rcs);
+      end;
+      rc := mv;
+    end if;
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32;
+                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 rocos : out Link_to_String;
+                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    d,bz,bs : natural64;
+    mv,smv : natural32;
+    z : partition(1..natural32(p'last));
+    nz : natural32;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    stlb : double_float;
+    lifsup : Link_to_Array_of_Lists;
+    no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
+    mptdeg : Natural_Number;
+    timer : Timing_Widget;
+
+    use Root_Counters_Output;
+    use Pipelined_Polyhedral_Drivers;
+
+  begin
+    if nt < 2 or no_mv then
+      Black_Box_Root_Counting
+        (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
+    else
+      Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
+                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      tstart(timer);
+      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      tstop(timer);
+      hocotime := Elapsed_User_Time(timer);
+      declare
+        rcs : constant string
+            := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
+      begin
+        rocos := new string'(rcs);
+      end;
+      rc := mv;
+    end if;
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting 
+               ( nt : in integer32;
+                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 rocos : out Link_to_String;
+                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    d,bz,bs : natural64;
+    mv,smv : natural32;
+    z : partition(1..natural32(p'last));
+    nz : natural32;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    stlb : double_float;
+    lifsup : Link_to_Array_of_Lists;
+    no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
+    mptdeg : Natural_Number;
+    timer : Timing_Widget;
+
+    use Root_Counters_Output;
+    use Pipelined_Polyhedral_Drivers;
+
+  begin
+    if nt < 2 or no_mv then
+      Black_Box_Root_Counting
+        (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
+    else
+      Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
+                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      tstart(timer);
+      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      tstop(timer);
+      hocotime := Elapsed_User_Time(timer);
+      declare
+        rcs : constant string
+            := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
+      begin
+        rocos := new string'(rcs);
+      end;
+      rc := mv;
+    end if;
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting
+               ( file : in file_type; nt : in integer32;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    d,bz,bs : natural64;
+    mv,smv : natural32;
+    z : partition(1..natural32(p'last));
+    nz : natural32;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    stlb : double_float;
+    lifsup : Link_to_Array_of_Lists;
+    mptdeg : Natural_Number;
+    timer : Timing_Widget;
+
+    use Pipelined_Polyhedral_Drivers;
+
+  begin
+    if nt < 2 or deg then
+      Black_Box_Root_Counting
+        (file,nt,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
+    else
+      Count_Roots(file,p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
+                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      tstart(timer);
+      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      tstop(timer);
+      hocotime := Elapsed_User_Time(timer);
+    end if;
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting
+               ( file : in file_type; nt : in integer32;
+                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    d,bz,bs : natural64;
+    mv,smv : natural32;
+    z : partition(1..natural32(p'last));
+    nz : natural32;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    stlb : double_float;
+    lifsup : Link_to_Array_of_Lists;
+    mptdeg : Natural_Number;
+    timer : Timing_Widget;
+
+    use Pipelined_Polyhedral_Drivers;
+
+  begin
+    if nt < 2 or deg then
+      Black_Box_Root_Counting
+        (file,nt,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
+    else
+      Count_Roots(file,p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
+                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      tstart(timer);
+      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      tstop(timer);
+      hocotime := Elapsed_User_Time(timer);
+    end if;
+  end Pipelined_Root_Counting;
+
+  procedure Pipelined_Root_Counting
+               ( file : in file_type; nt : in integer32;
+                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean; rc : out natural32;
+                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    d,bz,bs : natural64;
+    mv,smv : natural32;
+    z : partition(1..natural32(p'last));
+    nz : natural32;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    stlb : double_float;
+    lifsup : Link_to_Array_of_Lists;
+    mptdeg : Natural_Number;
+    timer : Timing_Widget;
+
+    use Pipelined_Polyhedral_Drivers;
+
+  begin
+    if nt < 2 or deg then
+      Black_Box_Root_Counting
+        (file,nt,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
+    else
+      Count_Roots(file,p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
+                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      tstart(timer);
+      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      tstop(timer);
+      hocotime := Elapsed_User_Time(timer);
+    end if;
+  end Pipelined_Root_Counting;
+
 -- FOR LAURENT SYSTEMS :
 
   procedure Black_Box_Root_Counting 
