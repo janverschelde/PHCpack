@@ -1,7 +1,6 @@
 with Timing_Package;                     use Timing_Package;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Integer_Vectors;           use Standard_Integer_Vectors;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
@@ -423,64 +422,38 @@ package body Pipelined_Polyhedral_Drivers is
     Clear(mcc);
   end Pipelined_Polyhedral_Homotopies;
 
--- WITH STABLE MIXED VOLUMES :
+-- WITH LIFTING BOUND FOR THE ARTIFICIAL ORIGIN :
 
   procedure Pipelined_Polyhedral_Homotopies
-              ( file,cfile,qfile : in file_type; nt : in integer32;
-                misufile,contrep,stable : in boolean;
-                stlb : in double_float;
-                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+              ( nt : in integer32;
+                stable : in boolean; stlb : in double_float;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 mcc : out Mixed_Subdivision; mv : out natural32;
-                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List ) is
 
     use Standard_Complex_Solutions;
     use Drivers_for_Static_Lifting;
+    use Standard_Poly_Laur_Convertors;
+    use Standard_Laur_Poly_Convertors;
 
-    timer : Timing_Widget;
+    lp,lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     nbequ : constant integer32 := p'last;
     nbpts : integer32 := 0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup : Standard_Integer_Vectors.Link_to_Vector;
-    r : integer32;
-    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
-    tstart(timer);
-    Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
-    if contrep then
-      Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,stable,stlb,
-         r,mtype,perm,mcc,mv,q,qsols);
-    else
-      Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,stable,stlb,
-         r,mtype,perm,mcc,mv,q,qsols);
-    end if;
-    tstop(timer);
-    put(file,q'last,1); new_line(file);
-    put(file,q);
-    new_line(file);
-    print_times(file,timer,"pipelined polyhedral path trackers");
-    declare
-      mix : constant Standard_Integer_Vectors.Vector
-          := Pipelined_Labeled_Cells.Mixture(r,mtype);
-    begin
-      Floating_Volume_Computation(file,nbequ,mix,mcc,mv);
-      if misufile
-       then put(cfile,natural32(nbequ),mix,mcc);
-      end if;
-    end;
-    put(qfile,q'last,1); new_line(qfile);
-    put(qfile,q);
-    if Length_Of(qsols) > 0 then
-      new_line(qfile);
-      put_line(qfile,"THE SOLUTIONS :");
-      put(qfile,Length_Of(qsols),natural32(Head_Of(qsols).n),qsols);
-      new_line(file);
-      put_line(file,"THE SOLUTIONS :");
-      put(file,Length_Of(qsols),natural32(Head_Of(qsols).n),qsols);
-    end if;
+    lp := Polynomial_to_Laurent_System(p);
+    Extract_Supports(nbequ,lp,nbpts,ind,cnt,sup);
+    Silent_Multitasking_Tracker
+      (nt,nbequ,nbpts,ind,cnt,sup,stable,stlb,
+       r,mtype,perm,mcc,mv,lq,qsols);
+    q := Laurent_to_Polynomial_System(lq);
+    Standard_Complex_Laur_Systems.Clear(lp);
+    Standard_Complex_Laur_Systems.Clear(lq);
   end Pipelined_Polyhedral_Homotopies;
 
 end Pipelined_Polyhedral_Drivers;

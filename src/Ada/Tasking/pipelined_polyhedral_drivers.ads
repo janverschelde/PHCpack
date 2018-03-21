@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Integer_Vectors;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -61,7 +62,7 @@ package Pipelined_Polyhedral_Drivers is
   -- ON RETURN :
   --   mv       mixed volume of the tuple of Newton polytopes
   --            spanned by the supports of p;
-  --   q        if ranstart, then q is a random coefficient system,
+  --   q        a random coefficient system,
   --            with as many solutions as the mixed volume;
   --   qsols    solution to a random coefficient system,
   --            if all went well, then Length_Of(qsols) = mv.
@@ -116,7 +117,7 @@ package Pipelined_Polyhedral_Drivers is
   -- ON RETURN :
   --   mv       mixed volume of the tuple of Newton polytopes
   --            spanned by the supports of p;
-  --   q        if ranstart, then q is a random coefficient system,
+  --   q        a random coefficient system,
   --            with as many solutions as the mixed volume;
   --   qsols    solution to a random coefficient system,
   --            if all went well, then Length_Of(qsols) = mv.
@@ -159,7 +160,7 @@ package Pipelined_Polyhedral_Drivers is
   -- ON RETURN :
   --   mv       mixed volume of the tuple of Newton polytopes
   --            spanned by the supports of p;
-  --   q        if ranstart, then q is a random coefficient system,
+  --   q        a random coefficient system,
   --            with as many solutions as the mixed volume;
   --   qsols    solution to a random coefficient system,
   --            if all went well, then Length_Of(qsols) = mv.
@@ -212,20 +213,21 @@ package Pipelined_Polyhedral_Drivers is
   -- ON RETURN :
   --   mv       mixed volume of the tuple of Newton polytopes
   --            spanned by the supports of p;
-  --   q        if ranstart, then q is a random coefficient system,
+  --   q        a random coefficient system,
   --            with as many solutions as the mixed volume;
   --   qsols    solution to a random coefficient system,
   --            if all went well, then Length_Of(qsols) = mv.
 
--- WITH STABLE MIXED VOLUMES :
+-- WITH LIFTING BOUND FOR THE ARTIFICIAL ORIGIN :
 
   procedure Pipelined_Polyhedral_Homotopies
-              ( file,cfile,qfile : in file_type; nt : in integer32;
-                misufile,contrep,stable : in boolean;
-                stlb : in double_float;
-                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+              ( nt : in integer32;
+                stable : in boolean; stlb : in double_float;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 mcc : out Mixed_Subdivision; mv : out natural32;
-                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -234,29 +236,27 @@ package Pipelined_Polyhedral_Drivers is
   --   in standard double, double double, or quad double precision,
   --   with pipelined production of mixed cells, interleaved with
   --   the tracking of the paths defined by a polyhedral homotopy.
+  --   This version allows to provide a lifting bound for the
+  --   artificial origin in case the stable mixed volume is requested.
 
   -- REQUIRED : nt >= 2.
 
   -- ON ENTRY :
-  --   file     to write timings and other results;
-  --   cfile    the file to write a regular mixed-cell configuration on,
-  --            will be used only if misufile equals true;
-  --   qfile    the file to write a random coefficient start system on;
   --   nt       number of tasks, which includes one task to produce
   --            the mixed cells, and the others to track the paths;
-  --   misufile indicates whether to write the mixed-cell configuration
-  --            to a separate file;
-  --   contrep  indicates whether output is wanted during continuation;
   --   stable   indicates whether the stable mixed volume is wanted;
   --   stlb     stable lifting bound if stable, otherwise 0.0;
   --   p        a polynomial system.
 
   -- ON RETURN :
+  --   r        number of distinct supports;
+  --   mtype    type of mixture stores frequency of each support;
+  --   perm     permutation of the supports when computing mixture type;
   --   mcc      mixed cell configuration, which contains all mixed cells,
   --            those with and without artificial origin, if stable;
   --   mv       mixed volume of the tuple of Newton polytopes
   --            spanned by the supports of p;
-  --   q        if ranstart, then q is a random coefficient system,
+  --   q        a random coefficient system,
   --            with as many solutions as the mixed volume;
   --   qsols    solution to a random coefficient system,
   --            if all went well, then Length_Of(qsols) = mv.
