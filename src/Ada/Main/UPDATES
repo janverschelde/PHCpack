@@ -1,3 +1,7 @@
+Thu 22 Mar 2018 : for stable mixed volumes and pipelining, updated
+  black_box_root_counters.adb, black_box_solver_cases.adb, and
+  black_box_solver.adb.
+
 Wed 21 Mar 2018 : modified black_box_root_counters.adb for the improved
   pipelined_polyhedral_drivers.
 

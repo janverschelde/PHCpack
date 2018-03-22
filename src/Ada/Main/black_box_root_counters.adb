@@ -2,6 +2,7 @@ with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Characters_and_Numbers;
+with Standard_Complex_Numbers;
 with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
 with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
@@ -26,13 +27,18 @@ with Random_Product_Start_Systems;       use Random_Product_Start_Systems;
 with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
 with Induced_Permutations;
+with Mixed_Volume_Computation;
 with Black_Mixed_Volume_Computations;    use Black_Mixed_Volume_Computations;
+with Stable_Polyhedral_Continuation;     use Stable_Polyhedral_Continuation;
 with Black_Polyhedral_Continuations;     use Black_Polyhedral_Continuations;
 with Root_Counters_Output;
+with Pipelined_Labeled_Cells;
 with Pipelined_Polyhedral_Drivers;
 
---with Standard_Integer_Vectors_io;
--- use Standard_Integer_Vectors_io;
+with Standard_Integer_Numbers_io;
+ use Standard_Integer_Numbers_io;
+with Standard_Integer_Vectors_io;
+ use Standard_Integer_Vectors_io;
 
 package body Black_Box_Root_Counters is
 
@@ -247,8 +253,6 @@ package body Black_Box_Root_Counters is
         Black_Box_Mixed_Volume_Computation
           (p,mix,perm,iprm,stlb,lifsup,mixsub,orgmcc,stbmcc,
            mv,smv,tmv,orgcnt,stbcnt);
-       -- put("the mixed volume : "); put(mv,1); new_line;
-       -- put("the stable mixed volume : "); put(smv,1); new_line;
       exception
         when others => mv := 0; smv := 0; tmv := 0;
       end;
@@ -1175,18 +1179,24 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
+    dim : constant integer32 := p'last;
     d,bz,bs : natural64;
-    mv,smv : natural32;
+    mv,smv,tmv : natural32;
     z : partition(1..natural32(p'last));
     nz : natural32;
-    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
-    orgmcc,stbmcc : Mixed_Subdivision;
+    r : integer32;
+    mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    orgcnt,stbcnt : natural32;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
     mptdeg : Natural_Number;
     timer : Timing_Widget;
+    lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
 
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
     use Root_Counters_Output;
     use Pipelined_Polyhedral_Drivers;
 
@@ -1196,13 +1206,43 @@ package body Black_Box_Root_Counters is
         (nt,silent,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
     else
       Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                  stlb,lifsup,mtype,perm,iprm,orgmcc,stbmcc,rocotime);
       stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       if not silent then
         Write_Root_Counts(standard_output,true,d,mptdeg,nz,bz,bs,mv,smv,z);
       end if;
       tstart(timer);
-      Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
+      Pipelined_Polyhedral_Homotopies
+        (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
+      if stbcnt = 0 then
+        rc := tmv;
+      else
+        declare
+          mix : constant Standard_Integer_Vectors.Vector
+              := Pipelined_Labeled_Cells.Mixture(r,mtype);
+          mtp : Standard_Integer_Vectors.Link_to_Vector;
+        begin
+          Mixed_Volume_Computation.Mixed_Volume(dim,mix,orgmcc,mv);
+          if not silent then
+            put("mixed volume : "); put(mv,1); new_line;
+          end if;
+          Mixed_Volume_Computation.Mixed_Volume(dim,mix,stbmcc,smv);
+          smv := smv + mv;
+          if not silent then
+            put("stable mixed volume : "); put(smv,1); new_line;
+          end if;
+          if not Is_Null(stbmcc) then
+            mtp := new Standard_Integer_Vectors.Vector'(mix);
+            put_line("Calling stable continuation ...");
+            Reporting_Polyhedral_Continuation
+              (standard_output,lq,stlb,mtp,lifsup.all,stbmcc,qsols0);
+            Set_Continuation_Parameter(qsols0,Create(0.0));
+            put("Length_Of(qsols0) : ");
+            put(Length_Of(qsols0),1); new_line;
+          end if;
+        end;
+      end if;
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
     end if;
@@ -1312,6 +1352,7 @@ package body Black_Box_Root_Counters is
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
     mptdeg : Natural_Number;
     timer : Timing_Widget;
+    lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
 
     use Root_Counters_Output;
     use Pipelined_Polyhedral_Drivers;
@@ -1326,7 +1367,7 @@ package body Black_Box_Root_Counters is
       stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
-        (nt,true,stlb,p,r,mix,perm,mcc,mv,q,qsols);
+        (nt,true,stlb,p,r,mix,perm,lifsup,mcc,mv,lq,q,qsols);
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
       Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);

@@ -812,13 +812,18 @@ package body Black_Box_Solver_Cases is
           Black_Box_Root_Counting
             (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
         else 
-          Black_Box_Root_Counting
-            (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco);
+          if nt >= 2 then
+            Pipelined_Root_Counting
+              (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco);
+          else
+            Black_Box_Root_Counting
+              (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco);
+          end if;
         end if;
        -- put_line("The system after root counting : "); put(pp);
-       -- put("rc = "); put(rc,1); new_line;
-       -- put("Length_Of(sols) = "); put(Length_Of(sols),1); new_line;
-       -- put("Length_Of(sols0) = "); put(Length_Of(sols0),1); new_line;
+        put("rc = "); put(rc,1); new_line;
+        put("Length_Of(sols) = "); put(Length_Of(sols),1); new_line;
+        put("Length_Of(sols0) = "); put(Length_Of(sols0),1); new_line;
         if rc /= 0 then
           Standard_Scaling.Scale(pp);
           if output_to_file then
