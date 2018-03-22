@@ -1,3 +1,6 @@
+Thu 22 Mar 2018 : added extra parameters to pipelined_polyhedral_trackers
+  and pipelined_polyhedral_drivers for stable polyhedral continuation.
+
 Wed 21 Mar 2018 : improved the pipelined_polyhedral_drivers to handle
   the lifting bound of the artificial origin.
 

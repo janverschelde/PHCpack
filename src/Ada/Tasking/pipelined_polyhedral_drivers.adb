@@ -172,12 +172,13 @@ package body Pipelined_Polyhedral_Drivers is
     sup : Standard_Integer_Vectors.Link_to_Vector;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lif : Link_to_Array_of_Lists;
     mcc : Mixed_Subdivision;
 
   begin
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
     Silent_Multitasking_Tracker
-      (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
+      (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
     Standard_Integer_Vectors.Clear(sup);
     Clear(mcc);
   end Pipelined_Polyhedral_Homotopies;
@@ -260,6 +261,7 @@ package body Pipelined_Polyhedral_Drivers is
     sup : Standard_Integer_Vectors.Link_to_Vector;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lif : Link_to_Array_of_Lists;
     mcc : Mixed_Subdivision;
 
   begin
@@ -267,10 +269,10 @@ package body Pipelined_Polyhedral_Drivers is
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
     if contrep then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
     end if;
     tstop(timer);
     put(file,q'last,1); new_line(file);
@@ -430,7 +432,9 @@ package body Pipelined_Polyhedral_Drivers is
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
+                lq : out Standard_Complex_Laur_Systems.Laur_Sys;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List ) is
 
@@ -439,7 +443,7 @@ package body Pipelined_Polyhedral_Drivers is
     use Standard_Poly_Laur_Convertors;
     use Standard_Laur_Poly_Convertors;
 
-    lp,lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+    lp : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     nbequ : constant integer32 := p'last;
     nbpts : integer32 := 0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
@@ -450,10 +454,9 @@ package body Pipelined_Polyhedral_Drivers is
     Extract_Supports(nbequ,lp,nbpts,ind,cnt,sup);
     Silent_Multitasking_Tracker
       (nt,nbequ,nbpts,ind,cnt,sup,stable,stlb,
-       r,mtype,perm,mcc,mv,lq,qsols);
+       r,mtype,perm,lif,mcc,mv,lq,qsols);
     q := Laurent_to_Polynomial_System(lq);
     Standard_Complex_Laur_Systems.Clear(lp);
-    Standard_Complex_Laur_Systems.Clear(lq);
   end Pipelined_Polyhedral_Homotopies;
 
 end Pipelined_Polyhedral_Drivers;

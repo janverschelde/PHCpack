@@ -5,6 +5,7 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
+with Arrays_of_Floating_Vector_Lists;   use Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Laur_Systems;
@@ -28,6 +29,7 @@ package Pipelined_Polyhedral_Trackers is
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List );
@@ -67,6 +69,7 @@ package Pipelined_Polyhedral_Trackers is
   --   lft      lifting values for the vertex points.
  
   -- ON RETURN :
+  --   lif      configuration of lifted supports;
   --   mcc      a regular mixed-cell configuration;
   --   mv       the mixed volume of the polytopes spanned by the supports;
   --   q        a random coefficient system;
@@ -80,6 +83,7 @@ package Pipelined_Polyhedral_Trackers is
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List );
@@ -122,6 +126,7 @@ package Pipelined_Polyhedral_Trackers is
   --   lft      lifting values for the vertex points.
  
   -- ON RETURN :
+  --   lif      configuration of lifted supports;
   --   mcc      a regular mixed-cell configuration;
   --   mv       the mixed volume of the polytopes spanned by the supports;
   --   q        a random coefficient system;
@@ -135,6 +140,7 @@ package Pipelined_Polyhedral_Trackers is
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List );
@@ -178,6 +184,7 @@ package Pipelined_Polyhedral_Trackers is
   --   r        number of distinct supports;
   --   mtype    the type of mixture of the supports;
   --   perm     permutation of the supports;
+  --   lif      configuration of lifted supports;
   --   mcc      a regular mixed-cell configuration;
   --   mv       the mixed volume of the polytopes spanned by the supports;
   --   q        a random coefficient system;
@@ -191,6 +198,7 @@ package Pipelined_Polyhedral_Trackers is
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List );
@@ -235,6 +243,7 @@ package Pipelined_Polyhedral_Trackers is
   --   r        number of distinct supports;
   --   mtype    the type of mixture of the supports;
   --   perm     permutation of the supports;
+  --   lif      configuration of lifted supports;
   --   mcc      a regular mixed-cell configuration;
   --   mv       the mixed volume of the polytopes spanned by the supports;
   --   q        a random coefficient system;
@@ -249,6 +258,7 @@ package Pipelined_Polyhedral_Trackers is
                 stable : in boolean; stlb : in double_float;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List );
@@ -277,6 +287,7 @@ package Pipelined_Polyhedral_Trackers is
   --   r        number of distinct supports;
   --   mtype    the type of mixture of the supports;
   --   perm     permutation of the supports;
+  --   lif      configuration of lifted supports;
   --   mcc      a regular mixed-cell configuration;
   --   mv       the mixed volume of the polytopes spanned by the supports;
   --   q        a random coefficient system;
@@ -291,6 +302,7 @@ package Pipelined_Polyhedral_Trackers is
                 stable : in boolean; stlb : in double_float;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List );
@@ -320,6 +332,7 @@ package Pipelined_Polyhedral_Trackers is
   --   r        number of distinct supports;
   --   mtype    the type of mixture of the supports;
   --   perm     permutation of the supports;
+  --   lif      configuration of lifted supports;
   --   mcc      a regular mixed-cell configuration;
   --   mv       the mixed volume of the polytopes spanned by the supports;
   --   q        a random coefficient system;

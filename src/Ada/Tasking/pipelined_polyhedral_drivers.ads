@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
+with Arrays_of_Floating_Vector_Lists;    use Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -226,7 +227,9 @@ package Pipelined_Polyhedral_Drivers is
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
+                lq : out Standard_Complex_Laur_Systems.Laur_Sys;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List );
 
@@ -252,10 +255,12 @@ package Pipelined_Polyhedral_Drivers is
   --   r        number of distinct supports;
   --   mtype    type of mixture stores frequency of each support;
   --   perm     permutation of the supports when computing mixture type;
+  --   lif      configuration of lifted supports;
   --   mcc      mixed cell configuration, which contains all mixed cells,
   --            those with and without artificial origin, if stable;
   --   mv       mixed volume of the tuple of Newton polytopes
   --            spanned by the supports of p;
+  --   lq       the random coefficient system q as Laurent system;
   --   q        a random coefficient system,
   --            with as many solutions as the mixed volume;
   --   qsols    solution to a random coefficient system,
