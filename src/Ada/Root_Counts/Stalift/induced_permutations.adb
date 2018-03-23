@@ -4,9 +4,10 @@ with Standard_Floating_Vectors;
 
 package body Induced_Permutations is
 
-  procedure Remove_Artificial_Origin
-              ( L : in out Lists_of_Floating_Vectors.List;
-                b : in double_float ) is
+  function Remove_Artificial_Origin
+             ( L : Lists_of_Floating_Vectors.List;
+               b : double_float )
+             return Lists_of_Floating_Vectors.List is
 
     use Lists_of_Floating_Vectors;
     res,res_last : List;
@@ -21,8 +22,33 @@ package body Induced_Permutations is
       end if;
       tmp := Tail_Of(tmp);
     end loop;
+    return res;
+  end Remove_Artificial_Origin;
+
+  procedure Remove_Artificial_Origin
+              ( L : in out Lists_of_Floating_Vectors.List;
+                b : in double_float ) is
+
+    use Lists_of_Floating_Vectors;
+    res : List := Remove_Artificial_Origin(L,b);
+
+  begin
     Deep_Clear(L);
     L := res;
+  end Remove_Artificial_Origin;
+
+  function Remove_Artificial_Origin
+              ( L : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                b : double_float )
+              return Arrays_of_Floating_Vector_Lists.Array_of_Lists is
+
+    res : Arrays_of_Floating_Vector_Lists.Array_of_Lists(L'range);
+
+  begin
+    for i in L'range loop
+      res(i) := Remove_Artificial_Origin(L(i),b);
+    end loop;
+    return res;
   end Remove_Artificial_Origin;
 
   procedure Remove_Artificial_Origin

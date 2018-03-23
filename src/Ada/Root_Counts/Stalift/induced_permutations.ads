@@ -16,6 +16,20 @@ package Induced_Permutations is
 --   permuted by MixedVol and needed for processing with
 --   the black box polyhedral homotopies and solver.
 
+  function Remove_Artificial_Origin
+             ( L : Lists_of_Floating_Vectors.List;
+               b : double_float );
+             return Lists_of_Floating_Vectors.List;
+  function Remove_Artificial_Origin
+             ( L : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+               b : double_float );
+             return Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+
+  -- DESCRIPTION :
+  --   Returns copies of the same points in the lists L,
+  --   with the exception of those points which have
+  --   the artificial origin with lifting value equal to b.
+
   procedure Remove_Artificial_Origin
               ( L : in out Lists_of_Floating_Vectors.List;
                 b : in double_float );
