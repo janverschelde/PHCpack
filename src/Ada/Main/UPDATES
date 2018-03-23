@@ -1,3 +1,7 @@
+Fri 23 Mar 2018 : updated black_box_root_counters.adb and
+  black_box_solver_cases.adb for the stable polyhedral continuation
+  in the pipelined polyhedral homotopies.
+
 Thu 22 Mar 2018 : for stable mixed volumes and pipelining, updated
   black_box_root_counters.adb, black_box_solver_cases.adb, and
   black_box_solver.adb.

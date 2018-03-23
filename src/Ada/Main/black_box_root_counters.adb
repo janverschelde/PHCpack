@@ -1214,6 +1214,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Set_Continuation_Parameter(qsols,Create(0.0));
       Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
       if stbcnt = 0 then
         rc := tmv;
@@ -1234,14 +1235,14 @@ package body Black_Box_Root_Counters is
           end if;
           if not Is_Null(stbmcc) then
             mtp := new Standard_Integer_Vectors.Vector'(mix);
-            put_line("Calling stable continuation ...");
-            Reporting_Polyhedral_Continuation
-              (standard_output,lq,stlb,mtp,lifsup.all,stbmcc,qsols0);
+            Induced_Permutations.Remove_Artificial_Origin(lifsup.all,stlb);
+            Silent_Polyhedral_Continuation
+              (lq,stlb,mtp,lifsup.all,stbmcc,qsols0);
             Set_Continuation_Parameter(qsols0,Create(0.0));
-            put("Length_Of(qsols0) : ");
-            put(Length_Of(qsols0),1); new_line;
+            Push(qsols0,qsols);
           end if;
         end;
+        rc := smv;
       end if;
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);

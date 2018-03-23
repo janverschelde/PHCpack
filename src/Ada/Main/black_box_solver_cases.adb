@@ -821,9 +821,9 @@ package body Black_Box_Solver_Cases is
           end if;
         end if;
        -- put_line("The system after root counting : "); put(pp);
-        put("rc = "); put(rc,1); new_line;
-        put("Length_Of(sols) = "); put(Length_Of(sols),1); new_line;
-        put("Length_Of(sols0) = "); put(Length_Of(sols0),1); new_line;
+       -- put("rc = "); put(rc,1); new_line;
+       -- put("Length_Of(sols) = "); put(Length_Of(sols),1); new_line;
+       -- put("Length_Of(sols0) = "); put(Length_Of(sols0),1); new_line;
         if rc /= 0 then
           Standard_Scaling.Scale(pp);
           if output_to_file then
