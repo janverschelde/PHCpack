@@ -18,11 +18,11 @@ package Induced_Permutations is
 
   function Remove_Artificial_Origin
              ( L : Lists_of_Floating_Vectors.List;
-               b : double_float );
+               b : double_float )
              return Lists_of_Floating_Vectors.List;
   function Remove_Artificial_Origin
              ( L : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-               b : double_float );
+               b : double_float )
              return Arrays_of_Floating_Vector_Lists.Array_of_Lists;
 
   -- DESCRIPTION :

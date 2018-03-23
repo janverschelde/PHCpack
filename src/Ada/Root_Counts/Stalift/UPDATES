@@ -1,5 +1,6 @@
 Fri 23 Mar 2018 : to induced_permutations, added functions to remove the
   artificial origins from a lists of lifted supports.
+  Fixed error in induced_permutations.ads.
 
 Mon 10 Oct 2016 : new test function ts_userlift.adb to isolate to application
   of user defined integer lifting for a regular mixed-cell configuration.
