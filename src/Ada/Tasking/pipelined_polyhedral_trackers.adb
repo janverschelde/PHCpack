@@ -53,6 +53,7 @@ with QuadDobl_Radial_Solvers;
 with QuadDobl_Binomial_Systems;
 with QuadDobl_Binomial_Solvers;
 with Floating_Mixed_Subdivisions_io;
+with Induced_Permutations;
 with Random_Coefficient_Systems;
 with MixedVol_Algorithm;                use MixedVol_Algorithm;
 with Semaphore;
@@ -424,6 +425,78 @@ package body Pipelined_Polyhedral_Trackers is
     tmv := tmv + natural32(pdetU);
   end QuadDobl_Track_Cell;
 
+  function Stable_Start_System
+             ( nbequ : integer32; stlb : double_float;
+               mix : Standard_Integer_Vectors.Vector;
+               lifsup : Array_of_Lists )
+             return Standard_Complex_Laur_Systems.Laur_Sys is
+
+  -- DESCRIPTION :
+  --   For stable polyhedral continuation, artificial origins were
+  --   added to the lifted supports.
+  --   The artificial origins with lifting bound equal to stlb
+  --   are removed in the random coefficient start system on return.
+
+    sup : Array_of_Lists(lifsup'range)
+        := Induced_Permutations.Remove_Artificial_Origin(lifsup,stlb);
+    res : Standard_Complex_Laur_Systems.Laur_Sys(1..nbequ)
+        := Random_Coefficient_Systems.Create(natural32(nbequ),mix,sup);
+
+  begin
+    for i in sup'range loop
+      Lists_of_Floating_Vectors.Clear(sup(i));
+    end loop;
+    return res;
+  end Stable_Start_System;
+
+  function Stable_Start_System
+             ( nbequ : integer32; stlb : double_float;
+               mix : Standard_Integer_Vectors.Vector;
+               lifsup : Array_of_Lists )
+             return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+  -- DESCRIPTION :
+  --   For stable polyhedral continuation, artificial origins were
+  --   added to the lifted supports.
+  --   The artificial origins with lifting bound equal to stlb
+  --   are removed in the random coefficient start system on return.
+
+    sup : Array_of_Lists(lifsup'range)
+        := Induced_Permutations.Remove_Artificial_Origin(lifsup,stlb);
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys(1..nbequ)
+        := Random_Coefficient_Systems.Create(natural32(nbequ),mix,sup);
+
+  begin
+    for i in sup'range loop
+      Lists_of_Floating_Vectors.Clear(sup(i));
+    end loop;
+    return res;
+  end Stable_Start_System;
+
+  function Stable_Start_System
+             ( nbequ : integer32; stlb : double_float;
+               mix : Standard_Integer_Vectors.Vector;
+               lifsup : Array_of_Lists )
+             return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+  -- DESCRIPTION :
+  --   For stable polyhedral continuation, artificial origins were
+  --   added to the lifted supports.
+  --   The artificial origins with lifting bound equal to stlb
+  --   are removed in the random coefficient start system on return.
+
+    sup : Array_of_Lists(lifsup'range)
+        := Induced_Permutations.Remove_Artificial_Origin(lifsup,stlb);
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys(1..nbequ)
+        := Random_Coefficient_Systems.Create(natural32(nbequ),mix,sup);
+
+  begin
+    for i in sup'range loop
+      Lists_of_Floating_Vectors.Clear(sup(i));
+    end loop;
+    return res;
+  end Stable_Start_System;
+
 -- AFTER PREPROCESSING AND LIFTING, ON LAURENT SYSTEMS, SILENT :
 
   procedure Silent_Multitasking_Tracker
@@ -470,10 +543,19 @@ package body Pipelined_Polyhedral_Trackers is
 
   begin
     if r < nbequ then
-      q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        q := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       lifsup := permlif;
     else
-      permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        permq
+          := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        permq := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       for i in perm'range loop
         q(perm(i)+1) := permq(i+1);
         lifsup(perm(i)+1) := permlif(i+1);
@@ -536,10 +618,19 @@ package body Pipelined_Polyhedral_Trackers is
 
   begin
     if r < nbequ then
-      q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        q := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       lif := permlif;
     else
-      permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        permq
+          := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        permq := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       for i in perm'range loop
         q(perm(i)+1) := permq(i+1);
         lif(perm(i)+1) := permlif(i+1);
@@ -601,10 +692,19 @@ package body Pipelined_Polyhedral_Trackers is
 
   begin
     if r < nbequ then
-      q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        q := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       lif := permlif;
     else
-      permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        permq
+          := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        permq := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       for i in perm'range loop
         q(perm(i)+1) := permq(i+1);
         lif(perm(i)+1) := permlif(i+1);
@@ -670,10 +770,19 @@ package body Pipelined_Polyhedral_Trackers is
 
   begin
     if r < nbequ then
-      q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        q := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       lifsup := permlif;
     else
-      permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        permq
+          := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        permq := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       for i in perm'range loop
         q(perm(i)+1) := permq(i+1);
         lifsup(perm(i)+1) := permlif(i+1);
@@ -743,10 +852,19 @@ package body Pipelined_Polyhedral_Trackers is
 
   begin
     if r < nbequ then
-      q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        q := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       lif := permlif;
     else
-      permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        permq
+          := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        permq := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       for i in perm'range loop
         q(perm(i)+1) := permq(i+1);
         lif(perm(i)+1) := permlif(i+1);
@@ -815,10 +933,19 @@ package body Pipelined_Polyhedral_Trackers is
 
   begin
     if r < nbequ then
-      q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        q := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       lif := permlif;
     else
-      permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      if stlb = 0.0 then
+        permq
+          := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      else
+        q := Stable_Start_System(nbequ,stlb,mix,permlif);
+      end if;
       for i in perm'range loop
         q(perm(i)+1) := permq(i+1);
         lif(perm(i)+1) := permlif(i+1);

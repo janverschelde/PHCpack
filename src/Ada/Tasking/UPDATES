@@ -1,3 +1,6 @@
+Fri 23 Mar 2018 : added construction of a start system for stable polyhedral
+  continuation in pipelined_polyhedral_trackers.adb.
+
 Thu 22 Mar 2018 : added extra parameters to pipelined_polyhedral_trackers
   and pipelined_polyhedral_drivers for stable polyhedral continuation.
 
