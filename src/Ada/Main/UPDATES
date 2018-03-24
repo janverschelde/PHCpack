@@ -1,3 +1,6 @@
+Sat 24 Mar 2018 : for double double and quad double precision extended
+  black_box_solver_cases.adb and black_box_root_counters.adb.
+
 Fri 23 Mar 2018 : updated black_box_root_counters.adb and
   black_box_solver_cases.adb for the stable polyhedral continuation
   in the pipelined polyhedral homotopies.
