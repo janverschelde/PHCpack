@@ -232,6 +232,28 @@ package Pipelined_Polyhedral_Drivers is
                 lq : out Standard_Complex_Laur_Systems.Laur_Sys;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List );
+  procedure Pipelined_Polyhedral_Homotopies
+              ( nt : in integer32;
+                stable : in boolean; stlb : in double_float;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                lq : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Pipelined_Polyhedral_Homotopies
+              ( nt : in integer32;
+                stable : in boolean; stlb : in double_float;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                lq : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Driver to the polyhedral homotopies to create

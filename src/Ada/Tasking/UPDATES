@@ -1,3 +1,7 @@
+Sat 24 Mar 2018 : extended pipelined_polyhedral_trackers and the
+  pipelined_polyhedral_drivers for stable polyhedral continuation
+  in double double and quad double precision.
+
 Fri 23 Mar 2018 : added construction of a start system for stable polyhedral
   continuation in pipelined_polyhedral_trackers.adb.
 

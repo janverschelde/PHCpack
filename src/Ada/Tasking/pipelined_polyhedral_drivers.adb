@@ -202,12 +202,13 @@ package body Pipelined_Polyhedral_Drivers is
     sup : Standard_Integer_Vectors.Link_to_Vector;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lif : Link_to_Array_of_Lists;
     mcc : Mixed_Subdivision;
 
   begin
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     Silent_Multitasking_Tracker
-      (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
+      (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
     Standard_Integer_Vectors.Clear(sup);
     Clear(mcc);
   end Pipelined_Polyhedral_Homotopies;
@@ -231,12 +232,13 @@ package body Pipelined_Polyhedral_Drivers is
     sup : Standard_Integer_Vectors.Link_to_Vector;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lif : Link_to_Array_of_Lists;
     mcc : Mixed_Subdivision;
 
   begin
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     Silent_Multitasking_Tracker
-      (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
+      (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
     Standard_Integer_Vectors.Clear(sup);
     Clear(mcc);
   end Pipelined_Polyhedral_Homotopies;
@@ -323,6 +325,7 @@ package body Pipelined_Polyhedral_Drivers is
     sup : Standard_Integer_Vectors.Link_to_Vector;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lif : Link_to_Array_of_Lists;
     mcc : Mixed_Subdivision;
 
   begin
@@ -333,7 +336,7 @@ package body Pipelined_Polyhedral_Drivers is
         (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
     end if;
     tstop(timer);
     put(file,q'last,1); new_line(file);
@@ -384,6 +387,7 @@ package body Pipelined_Polyhedral_Drivers is
     sup : Standard_Integer_Vectors.Link_to_Vector;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lif : Link_to_Array_of_Lists;
     mcc : Mixed_Subdivision;
 
   begin
@@ -394,7 +398,7 @@ package body Pipelined_Polyhedral_Drivers is
         (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
     end if;
     tstop(timer);
     put(file,q'last,1); new_line(file);
@@ -438,8 +442,6 @@ package body Pipelined_Polyhedral_Drivers is
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List ) is
 
-    use Standard_Complex_Solutions;
-    use Drivers_for_Static_Lifting;
     use Standard_Poly_Laur_Convertors;
     use Standard_Laur_Poly_Convertors;
 
@@ -457,6 +459,76 @@ package body Pipelined_Polyhedral_Drivers is
        r,mtype,perm,lif,mcc,mv,lq,qsols);
     q := Laurent_to_Polynomial_System(lq);
     Standard_Complex_Laur_Systems.Clear(lp);
+  end Pipelined_Polyhedral_Homotopies;
+
+  procedure Pipelined_Polyhedral_Homotopies
+              ( nt : in integer32;
+                stable : in boolean; stlb : in double_float;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                lq : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Poly_Laur_Convertors;
+    use DoblDobl_Laur_Poly_Convertors;
+    use DoblDobl_Polynomial_Convertors;
+
+    lp : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+       := Polynomial_to_Laurent_System(p);
+    stp : Standard_Complex_Laur_Systems.Laur_Sys(lp'range)
+        := DoblDobl_Complex_to_Standard_Laur_Sys(lp);
+    nbequ : constant integer32 := p'last;
+    nbpts : integer32 := 0;
+    cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
+    sup : Standard_Integer_Vectors.Link_to_Vector;
+
+  begin
+    Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
+    Silent_Multitasking_Tracker
+      (nt,nbequ,nbpts,ind,cnt,sup,stable,stlb,
+       r,mtype,perm,lif,mcc,mv,lq,qsols);
+    q := Laurent_to_Polynomial_System(lq);
+    DoblDobl_Complex_Laur_Systems.Clear(lp);
+    Standard_Complex_Laur_Systems.Clear(stp);
+  end Pipelined_Polyhedral_Homotopies;
+
+  procedure Pipelined_Polyhedral_Homotopies
+              ( nt : in integer32;
+                stable : in boolean; stlb : in double_float;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                lq : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Poly_Laur_Convertors;
+    use QuadDobl_Laur_Poly_Convertors;
+    use QuadDobl_Polynomial_Convertors;
+
+    lp : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+       := Polynomial_to_Laurent_System(p);
+    stp : Standard_Complex_Laur_Systems.Laur_Sys(lp'range)
+        := QuadDobl_Complex_to_Standard_Laur_Sys(lp);
+    nbequ : constant integer32 := p'last;
+    nbpts : integer32 := 0;
+    cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
+    sup : Standard_Integer_Vectors.Link_to_Vector;
+
+  begin
+    Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
+    Silent_Multitasking_Tracker
+      (nt,nbequ,nbpts,ind,cnt,sup,stable,stlb,
+       r,mtype,perm,lif,mcc,mv,lq,qsols);
+    q := Laurent_to_Polynomial_System(lq);
+    QuadDobl_Complex_Laur_Systems.Clear(lp);
+    Standard_Complex_Laur_Systems.Clear(stp);
   end Pipelined_Polyhedral_Homotopies;
 
 end Pipelined_Polyhedral_Drivers;

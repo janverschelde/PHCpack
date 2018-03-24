@@ -38,6 +38,7 @@ package Pipelined_Polyhedral_Trackers is
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
@@ -46,6 +47,7 @@ package Pipelined_Polyhedral_Trackers is
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
@@ -150,6 +152,7 @@ package Pipelined_Polyhedral_Trackers is
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
@@ -159,6 +162,7 @@ package Pipelined_Polyhedral_Trackers is
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
@@ -262,6 +266,28 @@ package Pipelined_Polyhedral_Trackers is
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Silent_Multitasking_Tracker
+              ( nt,nbequ,nbpts : in integer32;
+                ind,cnt : in Standard_Integer_Vectors.Vector;
+                support : in Standard_Integer_Vectors.Link_to_Vector;
+                stable : in boolean; stlb : in double_float;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Silent_Multitasking_Tracker
+              ( nt,nbequ,nbpts : in integer32;
+                ind,cnt : in Standard_Integer_Vectors.Vector;
+                support : in Standard_Integer_Vectors.Link_to_Vector;
+                stable : in boolean; stlb : in double_float;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Uses nt tasks to solve a random coefficient system q,

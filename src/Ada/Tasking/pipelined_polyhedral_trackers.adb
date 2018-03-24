@@ -580,6 +580,7 @@ package body Pipelined_Polyhedral_Trackers is
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out DoblDobl_Complex_Solutions.Solution_List ) is
@@ -592,7 +593,7 @@ package body Pipelined_Polyhedral_Trackers is
     mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
     permlif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
             := Lifted_Supports(nbequ,r,mix,idx,vtx,lft);
-    lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     hom : Eval_Coeff_Laur_Sys(1..nbequ);
     cff : DoblDobl_Complex_VecVecs.VecVec(hom'range);
     epv : Exponent_Vectors.Exponent_Vectors_Array(hom'range);
@@ -610,7 +611,7 @@ package body Pipelined_Polyhedral_Trackers is
     begin
       if( (stlb = 0.0) or else
          ((stlb > 0.0) and then Is_Original(mic,stlb)) ) then
-        DoblDobl_Track_Cell(sem,idtask,nbequ,r,mix,mic,lif,cff,
+        DoblDobl_Track_Cell(sem,idtask,nbequ,r,mix,mic,lifsup,cff,
           dpw(idtask),cft(idtask),epv,hom,ejf,jmf,q,tmv(idtask),
           tasksols(idtask),lastsols(idtask));
       end if;
@@ -623,7 +624,7 @@ package body Pipelined_Polyhedral_Trackers is
       else
         q := Stable_Start_System(nbequ,stlb,mix,permlif);
       end if;
-      lif := permlif;
+      lifsup := permlif;
     else
       if stlb = 0.0 then
         permq
@@ -633,9 +634,10 @@ package body Pipelined_Polyhedral_Trackers is
       end if;
       for i in perm'range loop
         q(perm(i)+1) := permq(i+1);
-        lif(perm(i)+1) := permlif(i+1);
+        lifsup(perm(i)+1) := permlif(i+1);
       end loop;
     end if;
+    lif := new Array_of_Lists'(lifsup);
     cff := Coeff(q);
     epv := Exponent_Vectors.Create(q);
     hom := Create(q);
@@ -654,6 +656,7 @@ package body Pipelined_Polyhedral_Trackers is
                 mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out QuadDobl_Complex_Solutions.Solution_List ) is
@@ -666,7 +669,7 @@ package body Pipelined_Polyhedral_Trackers is
     mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
     permlif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
             := Lifted_Supports(nbequ,r,mix,idx,vtx,lft);
-    lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     hom : Eval_Coeff_Laur_Sys(1..nbequ);
     cff : QuadDobl_Complex_VecVecs.VecVec(hom'range);
     epv : Exponent_Vectors.Exponent_Vectors_Array(hom'range);
@@ -684,7 +687,7 @@ package body Pipelined_Polyhedral_Trackers is
     begin
       if( (stlb = 0.0) or else
          ((stlb > 0.0) and then Is_Original(mic,stlb)) ) then
-        QuadDobl_Track_Cell(sem,idtask,nbequ,r,mix,mic,lif,cff,
+        QuadDobl_Track_Cell(sem,idtask,nbequ,r,mix,mic,lifsup,cff,
           dpw(idtask),cft(idtask),epv,hom,ejf,jmf,q,tmv(idtask),
           tasksols(idtask),lastsols(idtask));
       end if;
@@ -697,7 +700,7 @@ package body Pipelined_Polyhedral_Trackers is
       else
         q := Stable_Start_System(nbequ,stlb,mix,permlif);
       end if;
-      lif := permlif;
+      lifsup := permlif;
     else
       if stlb = 0.0 then
         permq
@@ -707,9 +710,10 @@ package body Pipelined_Polyhedral_Trackers is
       end if;
       for i in perm'range loop
         q(perm(i)+1) := permq(i+1);
-        lif(perm(i)+1) := permlif(i+1);
+        lifsup(perm(i)+1) := permlif(i+1);
       end loop;
     end if;
+    lif := new Array_of_Lists'(lifsup);
     cff := Coeff(q);
     epv := Exponent_Vectors.Create(q);
     hom := Create(q);
@@ -1007,6 +1011,7 @@ package body Pipelined_Polyhedral_Trackers is
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out DoblDobl_Complex_Solutions.Solution_List ) is
@@ -1021,7 +1026,7 @@ package body Pipelined_Polyhedral_Trackers is
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Silent_Multitasking_Tracker
-      (nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
+      (nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,lif,mcc,mv,q,sols);
     Standard_Integer_Vectors.Clear(idx);
     Standard_Integer_Vectors.Clear(sdx);
     Standard_Integer_Vectors.Clear(ndx);
@@ -1035,6 +1040,7 @@ package body Pipelined_Polyhedral_Trackers is
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out QuadDobl_Complex_Solutions.Solution_List ) is
@@ -1049,7 +1055,7 @@ package body Pipelined_Polyhedral_Trackers is
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Silent_Multitasking_Tracker
-      (nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
+      (nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,lif,mcc,mv,q,sols);
     Standard_Integer_Vectors.Clear(idx);
     Standard_Integer_Vectors.Clear(sdx);
     Standard_Integer_Vectors.Clear(ndx);
@@ -1157,6 +1163,70 @@ package body Pipelined_Polyhedral_Trackers is
                 mcc : out Mixed_Subdivision; mv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    idx,sdx,ndx : Standard_Integer_Vectors.Link_to_Vector;
+    vtx,spt : Standard_Integer_VecVecs.Link_to_VecVec;
+    lft : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    mv_upto_pre4mv
+      (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
+    if stable
+     then mv_lift(nbequ,stlb,r,idx,vtx,lft);
+     else mv_lift(nbequ,0.0,r,idx,vtx,lft);
+    end if;
+    Silent_Multitasking_Tracker
+      (nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,lif,mcc,mv,q,sols);
+    Standard_Integer_Vectors.Clear(idx);
+    Standard_Integer_Vectors.Clear(sdx);
+    Standard_Integer_Vectors.Clear(ndx);
+    Standard_Floating_Vectors.Clear(lft);
+    Standard_Integer_VecVecs.Deep_Clear(vtx);
+  end Silent_Multitasking_Tracker;
+
+  procedure Silent_Multitasking_Tracker
+              ( nt,nbequ,nbpts : in integer32;
+                ind,cnt : in Standard_Integer_Vectors.Vector;
+                support : in Standard_Integer_Vectors.Link_to_Vector;
+                stable : in boolean; stlb : in double_float;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    idx,sdx,ndx : Standard_Integer_Vectors.Link_to_Vector;
+    vtx,spt : Standard_Integer_VecVecs.Link_to_VecVec;
+    lft : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    mv_upto_pre4mv
+      (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
+    if stable
+     then mv_lift(nbequ,stlb,r,idx,vtx,lft);
+     else mv_lift(nbequ,0.0,r,idx,vtx,lft);
+    end if;
+    Silent_Multitasking_Tracker
+      (nt,nbequ,r,stlb,mtype,perm,idx,vtx,lft,lif,mcc,mv,q,sols);
+    Standard_Integer_Vectors.Clear(idx);
+    Standard_Integer_Vectors.Clear(sdx);
+    Standard_Integer_Vectors.Clear(ndx);
+    Standard_Floating_Vectors.Clear(lft);
+    Standard_Integer_VecVecs.Deep_Clear(vtx);
+  end Silent_Multitasking_Tracker;
+
+  procedure Silent_Multitasking_Tracker
+              ( nt,nbequ,nbpts : in integer32;
+                ind,cnt : in Standard_Integer_Vectors.Vector;
+                support : in Standard_Integer_Vectors.Link_to_Vector;
+                stable : in boolean; stlb : in double_float;
+                r : out integer32;
+                mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                lif : out Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
 
     idx,sdx,ndx : Standard_Integer_Vectors.Link_to_Vector;
     vtx,spt : Standard_Integer_VecVecs.Link_to_VecVec;
