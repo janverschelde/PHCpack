@@ -333,7 +333,7 @@ package body Pipelined_Polyhedral_Drivers is
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     if contrep then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
     else
       Silent_Multitasking_Tracker
         (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
@@ -395,7 +395,7 @@ package body Pipelined_Polyhedral_Drivers is
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     if contrep then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,qsols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
     else
       Silent_Multitasking_Tracker
         (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,qsols);
