@@ -26,6 +26,22 @@ package Black_Box_Root_Counters is
 --   Three different levels of precision are supported:
 --   standard double, double double, and quad double precision.
 
+  procedure Compute_Total_Degree
+               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 tdeg : out natural64; mptdeg : out Natural_Number );
+  procedure Compute_Total_Degree
+               ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 tdeg : out natural64; mptdeg : out Natural_Number );
+  procedure Compute_Total_Degree
+               ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 tdeg : out natural64; mptdeg : out Natural_Number );
+
+  -- DESCRIPTION :
+  --   Computes the total degree of the system p.
+  --   The output is in tdeg, except when the total degree is huge,
+  --   larger than a 64-bit natural number.
+  --   In that case, tdeg equals zero and mptdeg equals the total degree.
+
   function Set_Structure_Bound
                ( p : Standard_Complex_Poly_Systems.Poly_Sys ) return natural64;
   function Set_Structure_Bound

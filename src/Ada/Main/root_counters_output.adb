@@ -9,11 +9,9 @@ with Set_Structure_Strings;
 
 package body Root_Counters_Output is
 
-  procedure Write_Root_Counts
-               ( file : in file_type; no_mv : in boolean;
-                 d : in natural64; mp_d : in Natural_Number;
-                 m : in natural32; bz,bs : in natural64;
-                 mv,smv : in natural32; z : in Partition ) is
+  procedure Write_Total_Degree
+               ( file : in file_type;
+                 d : in natural64; mp_d : in Natural_Number ) is
   begin
     new_line(file);
     put_line(file,"ROOT COUNTS :");
@@ -23,6 +21,15 @@ package body Root_Counters_Output is
      then put(file,mp_d,1); new_line(file);
      else put(file,d,1); new_line(file);
     end if;
+  end Write_Total_Degree;
+
+  procedure Write_Root_Counts
+               ( file : in file_type; no_mv : in boolean;
+                 d : in natural64; mp_d : in Natural_Number;
+                 m : in natural32; bz,bs : in natural64;
+                 mv,smv : in natural32; z : in Partition ) is
+  begin
+    Write_Total_Degree(file,d,mp_d);
     if m >= 1 then
       put(file,m,1); put(file,"-homogeneous Bezout number : ");
       put(file,bz,1); new_line(file);
@@ -84,5 +91,26 @@ package body Root_Counters_Output is
     Append(res,Characters_and_Numbers.nConvert(smv));
     return res.all;
   end Root_Counts_to_String;
+
+  function Mixed_Volumes_to_String
+             ( d : in natural64; mv,smv : in natural32 ) return string is
+
+    use String_Splitters;
+
+    res : Link_to_String;
+    nlc : character := ASCII.LF;
+    snl : constant string(1..1) := (1..1 => nlc);
+
+  begin
+    Append(res,"total degree : ");
+    Append(res,Characters_and_Numbers.nConvert(d));
+    Append(res,snl);
+    Append(res,"mixed volume : ");
+    Append(res,Characters_and_Numbers.nConvert(mv));
+    Append(res,snl);
+    Append(res,"stable mixed volume : ");
+    Append(res,Characters_and_Numbers.nConvert(smv));
+    return res.all;
+  end Mixed_Volumes_to_String;
 
 end Root_Counters_Output;

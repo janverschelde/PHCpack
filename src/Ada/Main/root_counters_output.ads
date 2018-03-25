@@ -9,6 +9,18 @@ package Root_Counters_Output is
 --   The procedures in the package define the output of the various
 --   root counts computed by the black box root counters.
 
+  procedure Write_Total_Degree
+               ( file : in file_type;
+                 d : in natural64; mp_d : in Natural_Number );
+ 
+  -- DESCRIPTION :
+  --   Writes the total degree to file.
+
+  -- ON ENTRY :
+  --   file      to write root counts on (could be standard_output);
+  --   d         total degree;
+  --   mp_d      multiprecision version of total degree (if overflow).
+
   procedure Write_Root_Counts
                ( file : in file_type; no_mv : in boolean;
                  d : in natural64; mp_d : in Natural_Number;
@@ -49,5 +61,12 @@ package Root_Counters_Output is
   --   mv        mixed volume;
   --   smv       stable mixed volume;
   --   z         partition of variables for m-homogeneous Bezout number.
+
+  function Mixed_Volumes_to_String
+             ( d : in natural64; mv,smv : in natural32 ) return string;
+
+  -- DESCRIPTION :
+  --   Write total degree d, mixed volume mv, and stable mixed volume smv
+  --   to a string, which is returned.
 
 end Root_Counters_Output;

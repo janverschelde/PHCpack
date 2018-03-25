@@ -48,6 +48,40 @@ package body Black_Box_Root_Counters is
 
   chicken_mv : constant natural32 := 40;  -- arbitrary bound ...
 
+  procedure Compute_Total_Degree
+               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 tdeg : out natural64; mptdeg : out Natural_Number ) is
+
+  begin
+    tdeg := Total_Degree(p);
+  exception
+    when others =>
+      mptdeg := Total_Degree(p); tdeg := 0;
+      put("Huge total degree : "); put(mptdeg); new_line;
+  end Compute_Total_Degree;
+
+  procedure Compute_Total_Degree
+               ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 tdeg : out natural64; mptdeg : out Natural_Number ) is
+
+    q : Standard_Complex_Poly_Systems.Poly_Sys(p'range)
+      := QuadDobl_Complex_to_Standard_Poly_Sys(p);
+
+  begin
+    Compute_Total_Degree(q,tdeg,mptdeg);
+  end Compute_Total_Degree;
+
+  procedure Compute_Total_Degree
+               ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 tdeg : out natural64; mptdeg : out Natural_Number ) is
+
+    q : Standard_Complex_Poly_Systems.Poly_Sys(p'range)
+      := DoblDobl_Complex_to_Standard_Poly_Sys(p);
+
+  begin
+    Compute_Total_Degree(q,tdeg,mptdeg);
+  end Compute_Total_Degree;
+
   function Set_Structure_Bound
              ( p : Standard_Complex_Poly_Systems.Poly_Sys ) return natural64 is
   begin
@@ -107,14 +141,7 @@ package body Black_Box_Root_Counters is
 
   begin
     tstart(timer);
-    declare
-    begin
-      d := Total_Degree(p);
-    exception
-      when others =>
-        mptode := Total_Degree(p); d := 0;
-        put("Huge total degree : "); put(mptode); new_line;
-    end;
+    Compute_Total_Degree(p,d,mptode);
     if d = 0 and Equal(mptode,0)       -- patch for GNAT optimizers ...
      then mptode := Total_Degree(p);
     end if;
@@ -238,7 +265,7 @@ package body Black_Box_Root_Counters is
     if d = 0 and Equal(mptode,0)      -- patch for GNAT optimizers ...
      then mptode := Total_Degree(p);
     end if;
-   -- put("total degree : "); put(d,1); new_line;
+    put("total degree : "); put(d,1); new_line;
     declare
     begin
       PB(p,bz,m,z); 
@@ -251,7 +278,7 @@ package body Black_Box_Root_Counters is
     if m = 1
      then bz := d;
     end if;
-    if not no_mv then
+    if deg or not no_mv then
       declare -- problems with systems with one monomial equation
       begin
         Black_Box_Mixed_Volume_Computation
@@ -1401,17 +1428,15 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    d,bz,bs : natural64;
+    d : natural64;
+    mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
-    z : partition(1..natural32(p'last));
-    nz : natural32;
     r : integer32;
-    mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
-    mptdeg : Natural_Number;
     timer : Timing_Widget;
     lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
 
@@ -1425,12 +1450,11 @@ package body Black_Box_Root_Counters is
       Black_Box_Root_Counting
         (nt,silent,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
     else
-      Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mtype,perm,iprm,orgmcc,stbmcc,rocotime);
-      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
-      if not silent then
-        Write_Root_Counts(standard_output,true,d,mptdeg,nz,bz,bs,mv,smv,z);
+      Compute_Total_Degree(p,d,mptdeg);
+      if not silent
+       then Write_Total_Degree(standard_output,d,mptdeg);
       end if;
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
@@ -1451,17 +1475,15 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    d,bz,bs : natural64;
+    d : natural64;
+    mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
-    z : partition(1..natural32(p'last));
-    nz : natural32;
     r : integer32;
-    mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
-    mptdeg : Natural_Number;
     timer : Timing_Widget;
     lq : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     zero : constant double_double := create(0.0);
@@ -1476,12 +1498,11 @@ package body Black_Box_Root_Counters is
       Black_Box_Root_Counting
         (nt,silent,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
     else
-      Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mtype,perm,iprm,orgmcc,stbmcc,rocotime);
-      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
-      if not silent then
-        Write_Root_Counts(standard_output,true,d,mptdeg,nz,bz,bs,mv,smv,z);
+      Compute_Total_Degree(p,d,mptdeg);
+      if not silent
+       then Write_Total_Degree(standard_output,d,mptdeg);
       end if;
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
@@ -1502,17 +1523,15 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    d,bz,bs : natural64;
+    d : natural64;
+    mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
-    z : partition(1..natural32(p'last));
-    nz : natural32;
     r : integer32;
-    mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
-    mptdeg : Natural_Number;
     timer : Timing_Widget;
     lq : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     zero : constant quad_double := create(0.0);
@@ -1527,12 +1546,11 @@ package body Black_Box_Root_Counters is
       Black_Box_Root_Counting
         (nt,silent,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
     else
-      Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mtype,perm,iprm,orgmcc,stbmcc,rocotime);
-      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
-      if not silent then
-        Write_Root_Counts(standard_output,true,d,mptdeg,nz,bz,bs,mv,smv,z);
+      Compute_Total_Degree(p,d,mptdeg);
+      if not silent
+       then Write_Total_Degree(standard_output,d,mptdeg);
       end if;
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
@@ -1554,17 +1572,15 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    d,bz,bs : natural64;
+    d : natural64;
+    mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
-    z : partition(1..natural32(p'last));
-    nz : natural32;
     r : integer32;
-    mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
-    mptdeg : Natural_Number;
     timer : Timing_Widget;
     lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
 
@@ -1578,8 +1594,7 @@ package body Black_Box_Root_Counters is
       Black_Box_Root_Counting
         (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
     else
-      Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mtype,perm,iprm,orgmcc,stbmcc,rocotime);
+      Compute_Total_Degree(p,d,mptdeg);
       stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
@@ -1591,12 +1606,10 @@ package body Black_Box_Root_Counters is
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
       declare
-        rcs : constant string
-            := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
+        rcs : constant string := Mixed_Volumes_to_String(d,mv,smv);
       begin
         rocos := new string'(rcs);
       end;
-      rc := mv;
     end if;
   end Pipelined_Root_Counting;
 
@@ -1609,17 +1622,15 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    d,bz,bs : natural64;
+    d : natural64;
+    mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
-    z : partition(1..natural32(p'last));
-    nz : natural32;
     r : integer32;
-    mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
-    mptdeg : Natural_Number;
     timer : Timing_Widget;
     zero : constant double_double := create(0.0);
     lq : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
@@ -1634,8 +1645,7 @@ package body Black_Box_Root_Counters is
       Black_Box_Root_Counting
         (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
     else
-      Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mtype,perm,iprm,orgmcc,stbmcc,rocotime);
+      Compute_Total_Degree(p,d,mptdeg);
       stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
@@ -1647,12 +1657,10 @@ package body Black_Box_Root_Counters is
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
       declare
-        rcs : constant string
-            := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
+        rcs : constant string := Mixed_Volumes_to_String(d,mv,smv);
       begin
         rocos := new string'(rcs);
       end;
-      rc := mv;
     end if;
   end Pipelined_Root_Counting;
 
@@ -1665,18 +1673,21 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    d,bz,bs : natural64;
-    mv,smv : natural32;
-    z : partition(1..natural32(p'last));
-    nz : natural32;
-    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
-    orgmcc,stbmcc : Mixed_Subdivision;
+    d : natural64;
+    mptdeg : Natural_Number;
+    mv,smv,tmv : natural32;
+    r : integer32;
+    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mcc,orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
-    mptdeg : Natural_Number;
     timer : Timing_Widget;
+    lq : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    zero : constant quad_double := create(0.0);
 
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
     use Root_Counters_Output;
     use Pipelined_Polyhedral_Drivers;
 
@@ -1685,16 +1696,19 @@ package body Black_Box_Root_Counters is
       Black_Box_Root_Counting
         (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
     else
-      Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      Compute_Total_Degree(p,d,mptdeg);
       stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
-      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      Pipelined_Polyhedral_Homotopies
+        (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Set_Continuation_Parameter(qsols,Create(zero));
+      Pipelined_Stable_Continuation
+        (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
+      rc := smv;
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
       declare
-        rcs : constant string
-            := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
+        rcs : constant string := Mixed_Volumes_to_String(d,mv,smv);
       begin
         rocos := new string'(rcs);
       end;
@@ -1710,17 +1724,20 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    d,bz,bs : natural64;
-    mv,smv : natural32;
-    z : partition(1..natural32(p'last));
-    nz : natural32;
-    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
-    orgmcc,stbmcc : Mixed_Subdivision;
+    d : natural64;
+    mptdeg : Natural_Number;
+    mv,smv,tmv : natural32;
+    r : integer32;
+    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mcc,orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
-    mptdeg : Natural_Number;
     timer : Timing_Widget;
+    lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
 
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
+    use Root_Counters_Output;
     use Pipelined_Polyhedral_Drivers;
 
   begin
@@ -1728,12 +1745,30 @@ package body Black_Box_Root_Counters is
       Black_Box_Root_Counting
         (file,nt,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
     else
-      Count_Roots(file,p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      Compute_Total_Degree(p,d,mptdeg);
+      Write_Total_Degree(file,d,mptdeg);
+      flush(file);
       stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
-      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      Pipelined_Polyhedral_Homotopies
+        (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Set_Continuation_Parameter(qsols,create(0.0));
+      Pipelined_Stable_Continuation
+        (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
+      Set_Continuation_Parameter(qsols0,create(0.0));
+      put(file,"mixed volume : "); put(file,mv,1); new_line(file);
+      put(file,"stable mixed volume : "); put(file,smv,1); new_line(file);
+      new_line(file);
+      put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
+      put(file,q);
+      new_line(file);
+      put_line(file,"START SOLUTIONS :");
+      put(file,Length_Of(qsols),natural32(q'last),qsols);
+      new_line(file);
+      put_line(file,"START SOLUTIONS with zero coordinates :");
+      put(file,Length_Of(qsols0),natural32(q'last),qsols0);
       tstop(timer);
+      rc := smv;
       hocotime := Elapsed_User_Time(timer);
     end if;
   end Pipelined_Root_Counting;
@@ -1746,17 +1781,21 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    d,bz,bs : natural64;
-    mv,smv : natural32;
-    z : partition(1..natural32(p'last));
-    nz : natural32;
-    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
-    orgmcc,stbmcc : Mixed_Subdivision;
+    d : natural64;
+    mptdeg : Natural_Number;
+    mv,smv,tmv : natural32;
+    r : integer32;
+    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mcc,orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
-    mptdeg : Natural_Number;
     timer : Timing_Widget;
+    lq : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    zero : constant double_double := create(0.0);
 
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+    use Root_Counters_Output;
     use Pipelined_Polyhedral_Drivers;
 
   begin
@@ -1764,12 +1803,30 @@ package body Black_Box_Root_Counters is
       Black_Box_Root_Counting
         (file,nt,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
     else
-      Count_Roots(file,p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      Compute_Total_Degree(p,d,mptdeg);
+      Write_Total_Degree(file,d,mptdeg);
+      flush(file);
       stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
-      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      Pipelined_Polyhedral_Homotopies
+        (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Set_Continuation_Parameter(qsols,create(zero));
+      Pipelined_Stable_Continuation
+        (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
+      Set_Continuation_Parameter(qsols0,create(zero));
+      put(file,"mixed volume : "); put(file,mv,1); new_line(file);
+      put(file,"stable mixed volume : "); put(file,smv,1); new_line(file);
+      new_line(file);
+      put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
+      put(file,q);
+      new_line(file);
+      put_line(file,"START SOLUTIONS :");
+      put(file,Length_Of(qsols),natural32(q'last),qsols);
+      new_line(file);
+      put_line(file,"START SOLUTIONS with zero coordinates :");
+      put(file,Length_Of(qsols0),natural32(q'last),qsols0);
       tstop(timer);
+      rc := smv;
       hocotime := Elapsed_User_Time(timer);
     end if;
   end Pipelined_Root_Counting;
@@ -1782,17 +1839,21 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    d,bz,bs : natural64;
-    mv,smv : natural32;
-    z : partition(1..natural32(p'last));
-    nz : natural32;
-    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
-    orgmcc,stbmcc : Mixed_Subdivision;
+    d : natural64;
+    mptdeg : Natural_Number;
+    mv,smv,tmv : natural32;
+    r : integer32;
+    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mcc,orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
-    mptdeg : Natural_Number;
     timer : Timing_Widget;
+    lq : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    zero : constant quad_double := create(0.0);
 
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+    use Root_Counters_Output;
     use Pipelined_Polyhedral_Drivers;
 
   begin
@@ -1800,12 +1861,30 @@ package body Black_Box_Root_Counters is
       Black_Box_Root_Counting
         (file,nt,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
     else
-      Count_Roots(file,p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+      Compute_Total_Degree(p,d,mptdeg);
+      Write_Total_Degree(file,d,mptdeg);
+      flush(file);
       stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
-      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      Pipelined_Polyhedral_Homotopies
+        (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Set_Continuation_Parameter(qsols,create(zero));
+      Pipelined_Stable_Continuation
+        (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
+      Set_Continuation_Parameter(qsols0,create(zero));
+      put(file,"mixed volume : "); put(file,mv,1); new_line(file);
+      put(file,"stable mixed volume : "); put(file,smv,1); new_line(file);
+      new_line(file);
+      put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
+      put(file,q);
+      new_line(file);
+      put_line(file,"START SOLUTIONS :");
+      put(file,Length_Of(qsols),natural32(q'last),qsols);
+      new_line(file);
+      put_line(file,"START SOLUTIONS with zero coordinates :");
+      put(file,Length_Of(qsols0),natural32(q'last),qsols0);
       tstop(timer);
+      rc := smv;
       hocotime := Elapsed_User_Time(timer);
     end if;
   end Pipelined_Root_Counting;

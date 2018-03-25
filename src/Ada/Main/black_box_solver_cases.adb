@@ -809,8 +809,13 @@ package body Black_Box_Solver_Cases is
         Standard_Complex_Poly_Systems.Copy(p.all,pp);
        -- put_line("The system before root counting : "); put(pp);
         if output_to_file then
-          Black_Box_Root_Counting
-            (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+          if nt >= 2 then
+            Pipelined_Root_Counting
+              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+          else
+            Black_Box_Root_Counting
+              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+          end if;
         else 
           if nt >= 2 then
             Pipelined_Root_Counting
@@ -933,8 +938,13 @@ package body Black_Box_Solver_Cases is
         DoblDobl_Complex_Poly_Systems.Copy(p.all,pp);
        -- put_line("The system before root counting : "); put(pp);
         if output_to_file then
-          Black_Box_Root_Counting
-            (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+          if nt >= 2 then
+            Black_Box_Root_Counting
+              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+          else
+            Black_Box_Root_Counting
+              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+          end if;
         else 
           if nt >= 2 then
             Pipelined_Root_Counting
@@ -1057,8 +1067,13 @@ package body Black_Box_Solver_Cases is
         QuadDobl_Complex_Poly_Systems.Copy(p.all,pp);
        -- put_line("The system before root counting : "); put(pp);
         if output_to_file then
-          Black_Box_Root_Counting
-            (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+          if nt >= 2 then
+            Pipelined_Root_Counting
+              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+          else
+            Black_Box_Root_Counting
+              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+          end if;
         else 
           if nt >= 2 then
             Pipelined_Root_Counting
