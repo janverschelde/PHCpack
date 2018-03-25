@@ -1175,6 +1175,224 @@ package body Black_Box_Root_Counters is
 
 -- PIPELINED BLACK BOX ROOT COUNTING :
 
+  procedure Pipelined_Stable_Continuation
+              ( silent : in boolean; r : in integer32;
+                mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                stlb : in double_float;
+                lifsup: in Link_to_Array_of_Lists;
+                mcc : in Mixed_Subdivision; tmv : in natural32;
+                lq : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mv,smv : out natural32;
+                qsols0 : out Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Extracts the stable mixed cells and applies polyhedral
+  --   continuation to compute the solutions with zero coordinates,
+  --   in standard double precision.
+
+  -- ON ENTRY :
+  --   silent   if not silent, then the mixed volume and the stable
+  --            mixed volume are written to screen;
+  --   r        number of distinct supports;
+  --   mtype    type of mixture of the supports;
+  --   stlb     bound on the artificial origin;
+  --   lifsup   the lifted supports;
+  --   mcc      regular mixed cell configuration for the supports;
+  --   tmv      the total volume of cells without artificial origin in mcc;
+  --   lq       a random coefficient system.
+
+  -- ON RETURN :
+  --   mv       the mixed volume of the supports;
+  --   smv      the stable mixed volume;
+  --   qsols0   solutions of lq with zero coordinates.
+
+    dim : constant integer32 := lq'last;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    orgcnt,stbcnt : natural32;
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
+
+  begin
+    Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
+    if stbcnt = 0 then
+      if not silent then
+        put("mixed volume : "); put(tmv,1); new_line;
+        put("stable mixed volume : "); put(tmv,1); new_line;
+      end if;
+      mv := tmv; smv := tmv;
+    else
+      declare
+        mix : constant Standard_Integer_Vectors.Vector
+            := Pipelined_Labeled_Cells.Mixture(r,mtype);
+        mtp : Standard_Integer_Vectors.Link_to_Vector;
+      begin
+        Mixed_Volume_Computation.Mixed_Volume(dim,mix,orgmcc,mv);
+        if not silent then
+          put("mixed volume : "); put(mv,1); new_line;
+        end if;
+        Mixed_Volume_Computation.Mixed_Volume(dim,mix,stbmcc,smv);
+        smv := smv + mv;
+        if not silent then
+          put("stable mixed volume : "); put(smv,1); new_line;
+        end if;
+        if not Is_Null(stbmcc) then
+          mtp := new Standard_Integer_Vectors.Vector'(mix);
+          Induced_Permutations.Remove_Artificial_Origin(lifsup.all,stlb);
+          Silent_Polyhedral_Continuation
+            (lq,stlb,mtp,lifsup.all,stbmcc,qsols0);
+          Set_Continuation_Parameter(qsols0,Create(0.0));
+        end if;
+      end;
+    end if;
+  end Pipelined_Stable_Continuation;
+
+  procedure Pipelined_Stable_Continuation
+              ( silent : in boolean; r : in integer32;
+                mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                stlb : in double_float;
+                lifsup: in Link_to_Array_of_Lists;
+                mcc : in Mixed_Subdivision; tmv : in natural32;
+                lq : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mv,smv : out natural32;
+                qsols0 : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Extracts the stable mixed cells and applies polyhedral
+  --   continuation to compute the solutions with zero coordinates,
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   silent   if not silent, then the mixed volume and the stable
+  --            mixed volume are written to screen;
+  --   r        number of distinct supports;
+  --   mtype    type of mixture of the supports;
+  --   stlb     bound on the artificial origin;
+  --   lifsup   the lifted supports;
+  --   mcc      regular mixed cell configuration for the supports;
+  --   tmv      the total volume of cells without artificial origin in mcc;
+  --   lq       a random coefficient system.
+
+  -- ON RETURN :
+  --   mv       the mixed volume of the supports;
+  --   smv      the stable mixed volume;
+  --   qsols0   solutions of lq with zero coordinates.
+
+    dim : constant integer32 := lq'last;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    orgcnt,stbcnt : natural32;
+    zero : constant double_double := create(0.0);
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+
+  begin
+    Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
+    if stbcnt = 0 then
+      if not silent then
+        put("mixed volume : "); put(tmv,1); new_line;
+        put("stable mixed volume : "); put(tmv,1); new_line;
+      end if;
+      mv := tmv; smv := tmv;
+    else
+      declare
+        mix : constant Standard_Integer_Vectors.Vector
+            := Pipelined_Labeled_Cells.Mixture(r,mtype);
+        mtp : Standard_Integer_Vectors.Link_to_Vector;
+      begin
+        Mixed_Volume_Computation.Mixed_Volume(dim,mix,orgmcc,mv);
+        if not silent then
+          put("mixed volume : "); put(mv,1); new_line;
+        end if;
+        Mixed_Volume_Computation.Mixed_Volume(dim,mix,stbmcc,smv);
+        smv := smv + mv;
+        if not silent then
+          put("stable mixed volume : "); put(smv,1); new_line;
+        end if;
+        if not Is_Null(stbmcc) then
+          mtp := new Standard_Integer_Vectors.Vector'(mix);
+          Induced_Permutations.Remove_Artificial_Origin(lifsup.all,stlb);
+          Silent_Polyhedral_Continuation
+            (lq,stlb,mtp,lifsup.all,stbmcc,qsols0);
+          Set_Continuation_Parameter(qsols0,Create(zero));
+        end if;
+      end;
+    end if;
+  end Pipelined_Stable_Continuation;
+
+  procedure Pipelined_Stable_Continuation
+              ( silent : in boolean; r : in integer32;
+                mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                stlb : in double_float;
+                lifsup: in Link_to_Array_of_Lists;
+                mcc : in Mixed_Subdivision; tmv : in natural32;
+                lq : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mv,smv : out natural32;
+                qsols0 : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Extracts the stable mixed cells and applies polyhedral
+  --   continuation to compute the solutions with zero coordinates,
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   silent   if not silent, then the mixed volume and the stable
+  --            mixed volume are written to screen;
+  --   r        number of distinct supports;
+  --   mtype    type of mixture of the supports;
+  --   stlb     bound on the artificial origin;
+  --   lifsup   the lifted supports;
+  --   mcc      regular mixed cell configuration for the supports;
+  --   tmv      the total volume of cells without artificial origin in mcc;
+  --   lq       a random coefficient system.
+
+  -- ON RETURN :
+  --   mv       the mixed volume of the supports;
+  --   smv      the stable mixed volume;
+  --   qsols0   solutions of lq with zero coordinates.
+
+    dim : constant integer32 := lq'last;
+    orgmcc,stbmcc : Mixed_Subdivision;
+    orgcnt,stbcnt : natural32;
+    zero : constant quad_double := create(0.0);
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+
+  begin
+    Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
+    if stbcnt = 0 then
+      if not silent then
+        put("mixed volume : "); put(tmv,1); new_line;
+        put("stable mixed volume : "); put(tmv,1); new_line;
+      end if;
+      mv := tmv; smv := tmv;
+    else
+      declare
+        mix : constant Standard_Integer_Vectors.Vector
+            := Pipelined_Labeled_Cells.Mixture(r,mtype);
+        mtp : Standard_Integer_Vectors.Link_to_Vector;
+      begin
+        Mixed_Volume_Computation.Mixed_Volume(dim,mix,orgmcc,mv);
+        if not silent then
+          put("mixed volume : "); put(mv,1); new_line;
+        end if;
+        Mixed_Volume_Computation.Mixed_Volume(dim,mix,stbmcc,smv);
+        smv := smv + mv;
+        if not silent then
+          put("stable mixed volume : "); put(smv,1); new_line;
+        end if;
+        if not Is_Null(stbmcc) then
+          mtp := new Standard_Integer_Vectors.Vector'(mix);
+          Induced_Permutations.Remove_Artificial_Origin(lifsup.all,stlb);
+          Silent_Polyhedral_Continuation
+            (lq,stlb,mtp,lifsup.all,stbmcc,qsols0);
+          Set_Continuation_Parameter(qsols0,Create(zero));
+        end if;
+      end;
+    end if;
+  end Pipelined_Stable_Continuation;
+
   procedure Pipelined_Root_Counting
                ( nt : in integer32; silent : in boolean;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
@@ -1183,7 +1401,6 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    dim : constant integer32 := p'last;
     d,bz,bs : natural64;
     mv,smv,tmv : natural32;
     z : partition(1..natural32(p'last));
@@ -1191,7 +1408,6 @@ package body Black_Box_Root_Counters is
     r : integer32;
     mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
-    orgcnt,stbcnt : natural32;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1219,34 +1435,9 @@ package body Black_Box_Root_Counters is
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
       Set_Continuation_Parameter(qsols,Create(0.0));
-      Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
-      if stbcnt = 0 then
-        rc := tmv;
-      else
-        declare
-          mix : constant Standard_Integer_Vectors.Vector
-              := Pipelined_Labeled_Cells.Mixture(r,mtype);
-          mtp : Standard_Integer_Vectors.Link_to_Vector;
-        begin
-          Mixed_Volume_Computation.Mixed_Volume(dim,mix,orgmcc,mv);
-          if not silent then
-            put("mixed volume : "); put(mv,1); new_line;
-          end if;
-          Mixed_Volume_Computation.Mixed_Volume(dim,mix,stbmcc,smv);
-          smv := smv + mv;
-          if not silent then
-            put("stable mixed volume : "); put(smv,1); new_line;
-          end if;
-          if not Is_Null(stbmcc) then
-            mtp := new Standard_Integer_Vectors.Vector'(mix);
-            Induced_Permutations.Remove_Artificial_Origin(lifsup.all,stlb);
-            Silent_Polyhedral_Continuation
-              (lq,stlb,mtp,lifsup.all,stbmcc,qsols0);
-            Set_Continuation_Parameter(qsols0,Create(0.0));
-          end if;
-        end;
-        rc := smv;
-      end if;
+      Pipelined_Stable_Continuation
+        (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
+      rc := smv;
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
     end if;
@@ -1260,7 +1451,6 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    dim : constant integer32 := p'last;
     d,bz,bs : natural64;
     mv,smv,tmv : natural32;
     z : partition(1..natural32(p'last));
@@ -1268,7 +1458,6 @@ package body Black_Box_Root_Counters is
     r : integer32;
     mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
-    orgcnt,stbcnt : natural32;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1297,34 +1486,9 @@ package body Black_Box_Root_Counters is
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
       Set_Continuation_Parameter(qsols,Create(zero));
-      Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
-      if stbcnt = 0 then
-        rc := tmv;
-      else
-        declare
-          mix : constant Standard_Integer_Vectors.Vector
-              := Pipelined_Labeled_Cells.Mixture(r,mtype);
-          mtp : Standard_Integer_Vectors.Link_to_Vector;
-        begin
-          Mixed_Volume_Computation.Mixed_Volume(dim,mix,orgmcc,mv);
-          if not silent then
-            put("mixed volume : "); put(mv,1); new_line;
-          end if;
-          Mixed_Volume_Computation.Mixed_Volume(dim,mix,stbmcc,smv);
-          smv := smv + mv;
-          if not silent then
-            put("stable mixed volume : "); put(smv,1); new_line;
-          end if;
-          if not Is_Null(stbmcc) then
-            mtp := new Standard_Integer_Vectors.Vector'(mix);
-            Induced_Permutations.Remove_Artificial_Origin(lifsup.all,stlb);
-            Silent_Polyhedral_Continuation
-              (lq,stlb,mtp,lifsup.all,stbmcc,qsols0);
-            Set_Continuation_Parameter(qsols0,Create(zero));
-          end if;
-        end;
-        rc := smv;
-      end if;
+      Pipelined_Stable_Continuation
+        (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
+      rc := smv;
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
     end if;
@@ -1338,7 +1502,6 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
-    dim : constant integer32 := p'last;
     d,bz,bs : natural64;
     mv,smv,tmv : natural32;
     z : partition(1..natural32(p'last));
@@ -1346,7 +1509,6 @@ package body Black_Box_Root_Counters is
     r : integer32;
     mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
-    orgcnt,stbcnt : natural32;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1375,34 +1537,9 @@ package body Black_Box_Root_Counters is
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
       Set_Continuation_Parameter(qsols,Create(zero));
-      Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
-      if stbcnt = 0 then
-        rc := tmv;
-      else
-        declare
-          mix : constant Standard_Integer_Vectors.Vector
-              := Pipelined_Labeled_Cells.Mixture(r,mtype);
-          mtp : Standard_Integer_Vectors.Link_to_Vector;
-        begin
-          Mixed_Volume_Computation.Mixed_Volume(dim,mix,orgmcc,mv);
-          if not silent then
-            put("mixed volume : "); put(mv,1); new_line;
-          end if;
-          Mixed_Volume_Computation.Mixed_Volume(dim,mix,stbmcc,smv);
-          smv := smv + mv;
-          if not silent then
-            put("stable mixed volume : "); put(smv,1); new_line;
-          end if;
-          if not Is_Null(stbmcc) then
-            mtp := new Standard_Integer_Vectors.Vector'(mix);
-            Induced_Permutations.Remove_Artificial_Origin(lifsup.all,stlb);
-            Silent_Polyhedral_Continuation
-              (lq,stlb,mtp,lifsup.all,stbmcc,qsols0);
-            Set_Continuation_Parameter(qsols0,Create(zero));
-          end if;
-        end;
-        rc := smv;
-      end if;
+      Pipelined_Stable_Continuation
+        (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
+      rc := smv;
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
     end if;
@@ -1418,13 +1555,12 @@ package body Black_Box_Root_Counters is
                  rocotime,hocotime : out duration ) is
 
     d,bz,bs : natural64;
-    mv,smv : natural32;
+    mv,smv,tmv : natural32;
     z : partition(1..natural32(p'last));
     nz : natural32;
     r : integer32;
-    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
-    orgcnt,stbcnt : natural32;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1432,6 +1568,8 @@ package body Black_Box_Root_Counters is
     timer : Timing_Widget;
     lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
 
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
     use Root_Counters_Output;
     use Pipelined_Polyhedral_Drivers;
 
@@ -1441,14 +1579,17 @@ package body Black_Box_Root_Counters is
         (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
     else
       Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                  stlb,lifsup,mtype,perm,iprm,orgmcc,stbmcc,rocotime);
       stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
-        (nt,true,stlb,p,r,mix,perm,lifsup,mcc,mv,lq,q,qsols);
+        (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Set_Continuation_Parameter(qsols0,Create(0.0));
+      Pipelined_Stable_Continuation
+        (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
+      rc := smv;
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
-      Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
       declare
         rcs : constant string
             := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
@@ -1469,17 +1610,22 @@ package body Black_Box_Root_Counters is
                  rocotime,hocotime : out duration ) is
 
     d,bz,bs : natural64;
-    mv,smv : natural32;
+    mv,smv,tmv : natural32;
     z : partition(1..natural32(p'last));
     nz : natural32;
-    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
-    orgmcc,stbmcc : Mixed_Subdivision;
+    r : integer32;
+    mtype,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    mcc,orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
     mptdeg : Natural_Number;
     timer : Timing_Widget;
+    zero : constant double_double := create(0.0);
+    lq : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
 
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
     use Root_Counters_Output;
     use Pipelined_Polyhedral_Drivers;
 
@@ -1489,10 +1635,15 @@ package body Black_Box_Root_Counters is
         (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
     else
       Count_Roots(p,true,d,mptdeg,bz,bs,mv,smv,z,nz, -- rest not used ...
-                  stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                  stlb,lifsup,mtype,perm,iprm,orgmcc,stbmcc,rocotime);
       stlb := Floating_Lifting_Functions.Lifting_Bound(p);
       tstart(timer);
-      Pipelined_Polyhedral_Homotopies(nt,p,mv,q,qsols);
+      Pipelined_Polyhedral_Homotopies
+        (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Set_Continuation_Parameter(qsols,Create(zero));
+      Pipelined_Stable_Continuation
+        (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
+      rc := smv;
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
       declare

@@ -1,5 +1,7 @@
 Sat 24 Mar 2018 : for double double and quad double precision extended
   black_box_solver_cases.adb and black_box_root_counters.adb.
+  More updates in black_box_root_counters.adb and black_box_solvers.adb
+  for pipelined root counting methods.
 
 Fri 23 Mar 2018 : updated black_box_root_counters.adb and
   black_box_solver_cases.adb for the stable polyhedral continuation

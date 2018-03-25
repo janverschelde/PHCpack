@@ -687,8 +687,13 @@ package body Black_Box_Solvers is
     Solve_for_Special_Cases(p,rc,sols,fail);
     if fail then
       DoblDobl_Complex_Poly_Systems.Copy(p,pp);
-      Black_Box_Root_Counting
-        (integer32(nt),pp,false,rc,rocos,q,sols,sols0,roco,hoco);
+      if nt >= 2 then
+        Pipelined_Root_Counting
+          (integer32(nt),pp,false,rc,rocos,q,sols,sols0,roco,hoco);
+      else
+        Black_Box_Root_Counting
+          (integer32(nt),pp,false,rc,rocos,q,sols,sols0,roco,hoco);
+      end if;
       if rc /= 0 then
         DoblDobl_Scaling.Scale(pp);
         Black_Box_Polynomial_Continuation
@@ -714,8 +719,13 @@ package body Black_Box_Solvers is
     Solve_for_Special_Cases(p,rc,sols,fail);
     if fail then
       QuadDobl_Complex_Poly_Systems.Copy(p,pp);
-      Black_Box_Root_Counting
-        (integer32(nt),pp,false,rc,rocos,q,sols,sols0,roco,hoco);
+      if nt >= 2 then
+        Pipelined_Root_Counting
+          (integer32(nt),pp,false,rc,rocos,q,sols,sols0,roco,hoco);
+      else
+        Black_Box_Root_Counting
+          (integer32(nt),pp,false,rc,rocos,q,sols,sols0,roco,hoco);
+      end if;
       if rc /= 0 then
         QuadDobl_Scaling.Scale(pp);
         Black_Box_Polynomial_Continuation
