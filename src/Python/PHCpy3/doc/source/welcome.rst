@@ -313,6 +313,18 @@ references
 acknowledgments
 ===============
 
+The PhD thesis of Kathy Piret (cited above) described the
+development of a first Python interface to PHCpack.
+The 2008 ``phcpy.py`` provided access to the blackbox solver,
+the path trackers, and the mixed volume computation.
+
+In the summer of 2017, Jasmine Otto helped with the setup of
+jupyterhub and the definition of a SageMath kernel.
+Code snippets with example uses of ``phcpy`` in a Jupyter notebook
+were introduced during that summer.  The code snippets,
+listed in a chapter of this document, provide another good way
+to explore the capabilities of the software.
+
 This material is based upon work supported by the 
 National Science Foundation under Grants 1115777 and 1440534.
 Any opinions, findings, and conclusions or recommendations expressed 
@@ -323,7 +335,7 @@ about this document
 ===================
 
 This document arose as an exercise in exploring restructured text and Sphinx.
-All good software documents contain the following four items: 
+All good software documents contain the following four items:
 an installation guide, a getting started, a tutorial, and a reference manual.
 This document combines all four.
 In its current state, phcpy is a collection of modules, with a focus
