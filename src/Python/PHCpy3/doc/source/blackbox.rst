@@ -141,6 +141,16 @@ What is printed to screen by ``s = solve(p)`` is an example of
 the four different types of root counts.
 The structure of the output in ``s`` is described in the next section.
 
+If multitasking is applied in the solver,
+providing a larger than one value for the option ``tasks``,
+then the multi-homogeneous and the general linear-product Bezout numbers
+are not computed, because of the pipelined polyhedral homotopies.
+In pipelined polyhedral homotopies, the computation of the mixed volume
+is then done by one task, while the other tasks take the mixed cells and
+run the polyhedral homotopies to solve a random coefficient start system.
+This random coefficient start system will then be used to solve the given
+system, so there is no need for a start system based on a Bezout number.
+
 representations of solutions of polynomial systems 
 --------------------------------------------------
 
