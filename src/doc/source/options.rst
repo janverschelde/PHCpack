@@ -221,6 +221,13 @@ a random coefficient system and for the
 artificial-parameter homotopy towards the target system.
 See the documentation for the option ``phc -t`` below.
 
+When combining ``-b`` with ``-t`` (for example as ``phc -b -t4``
+to use 4 threads in the blackbox solver),
+the m-homogeneous and linear-product degree bounds are not computed,
+because the polyhedral homotopies are applied with pipelining,
+interlacing the production of the mixed cells on one thread
+with the solving of a random coefficient system with the other threads.
+
 The focus on ``-b`` is on isolated solutions.
 For a numerical irreducible decomposition of all solutions,
 including the positive dimensional ones, consider the options
