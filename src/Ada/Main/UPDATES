@@ -1,3 +1,5 @@
+Mon 26 Mar 2018 : updated greeting_banners for version 2.4.51.
+
 Sun 25 Mar 2018 : extended root_counters_output for writing only the total
   degree and the mixed volumes.  Updated black_box_root_counters,
   black_box_solver_cases.adb, and black_box_solvers.adb, removing the
