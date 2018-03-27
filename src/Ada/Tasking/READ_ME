@@ -1,4 +1,4 @@
-Multitasking linear algebra, evaluation and path tracking in PHCv2.4.51
+Multitasking linear algebra, evaluation and path tracking in PHCv2.4.52
 
 This directory is entirely new in release 2.3.45 of PHCpack.
 Tasks in Ada are mapped to kernel threads.
@@ -74,4 +74,6 @@ integer_permanents                : reference code for multitasking
 static_columns_queue              : thread safe queue of column indices
 multitasking_integer_permanents   : multitasked permanent computation
 ts_mtperm                         : test on multitasked permanent computation
+-------------------------------------------------------------------------------
+write_number_of_tasks             : write #tasks the end of a run
 -------------------------------------------------------------------------------
