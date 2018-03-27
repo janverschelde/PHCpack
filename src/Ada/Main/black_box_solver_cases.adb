@@ -11,6 +11,7 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
 with Write_Seed_Number;
+with Write_Number_of_Tasks;
 with Standard_Natural_Vectors;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
@@ -543,6 +544,7 @@ package body Black_Box_Solver_Cases is
       put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
       put_line(outfile,".");
       Write_Elapsed_Time(outfile,start_moment,ended_moment);
+      Write_Number_of_Tasks(outfile,nt);
       Write_Seed_Number(outfile);
       put_line(outfile,Greeting_Banners.Version);
       Close(outfile);
@@ -562,6 +564,7 @@ package body Black_Box_Solver_Cases is
       put(" till "); Write_Time_Stamp(standard_output,ended_moment);
       put_line(".");
       Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+      Write_Number_of_Tasks(standard_output,nt);
       Write_Seed_Number(standard_output);
       put_line(Greeting_Banners.Version);
     end if;
@@ -641,6 +644,7 @@ package body Black_Box_Solver_Cases is
       put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
       put_line(outfile,".");
       Write_Elapsed_Time(outfile,start_moment,ended_moment);
+      Write_Number_of_Tasks(outfile,nt);
       Write_Seed_Number(outfile);
       put_line(outfile,Greeting_Banners.Version);
       Close(outfile);
@@ -663,6 +667,7 @@ package body Black_Box_Solver_Cases is
       put(" till "); Write_Time_Stamp(standard_output,ended_moment);
       put_line(".");
       Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+      Write_Number_of_Tasks(standard_output,nt);
       Write_Seed_Number(standard_output);
       put_line(Greeting_Banners.Version);
     end if;
@@ -742,6 +747,7 @@ package body Black_Box_Solver_Cases is
       put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
       put_line(outfile,".");
       Write_Elapsed_Time(outfile,start_moment,ended_moment);
+      Write_Number_of_Tasks(outfile,nt);
       Write_Seed_Number(outfile);
       put_line(outfile,Greeting_Banners.Version);
       Close(outfile);
@@ -764,6 +770,7 @@ package body Black_Box_Solver_Cases is
       put(" till "); Write_Time_Stamp(standard_output,ended_moment);
       put_line(".");
       Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+      Write_Number_of_Tasks(standard_output,nt);
       Write_Seed_Number(standard_output);
       put_line(Greeting_Banners.Version);
     end if;
@@ -870,6 +877,7 @@ package body Black_Box_Solver_Cases is
         put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
         put_line(outfile,".");
         Write_Elapsed_Time(outfile,start_moment,ended_moment);
+        Write_Number_of_Tasks(outfile,nt);
         Write_Seed_Number(outfile);
         put_line(outfile,Greeting_Banners.Version);
         Close(outfile);
@@ -887,6 +895,7 @@ package body Black_Box_Solver_Cases is
       put(" till "); Write_Time_Stamp(standard_output,ended_moment);
       put_line(".");
       Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+      Write_Number_of_Tasks(standard_output,nt);
       Write_Seed_Number(standard_output);
       put_line(Greeting_Banners.Version);
     end if;
@@ -999,6 +1008,7 @@ package body Black_Box_Solver_Cases is
         put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
         put_line(outfile,".");
         Write_Elapsed_Time(outfile,start_moment,ended_moment);
+        Write_Number_of_Tasks(outfile,nt);
         Write_Seed_Number(outfile);
         put_line(outfile,Greeting_Banners.Version);
         Close(outfile);
@@ -1016,6 +1026,7 @@ package body Black_Box_Solver_Cases is
       put(" till "); Write_Time_Stamp(standard_output,ended_moment);
       put_line(".");
       Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+      Write_Number_of_Tasks(standard_output,nt);
       Write_Seed_Number(standard_output);
       put_line(Greeting_Banners.Version);
     end if;
@@ -1128,6 +1139,7 @@ package body Black_Box_Solver_Cases is
         put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
         put_line(outfile,".");
         Write_Elapsed_Time(outfile,start_moment,ended_moment);
+        Write_Number_of_Tasks(outfile,nt);
         Write_Seed_Number(outfile);
         put_line(outfile,Greeting_Banners.Version);
         Close(outfile);
@@ -1145,6 +1157,7 @@ package body Black_Box_Solver_Cases is
       put(" till "); Write_Time_Stamp(standard_output,ended_moment);
       put_line(".");
       Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+      Write_Number_of_Tasks(standard_output,nt);
       Write_Seed_Number(standard_output);
       put_line(Greeting_Banners.Version);
     end if;

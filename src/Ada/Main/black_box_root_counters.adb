@@ -265,7 +265,7 @@ package body Black_Box_Root_Counters is
     if d = 0 and Equal(mptode,0)      -- patch for GNAT optimizers ...
      then mptode := Total_Degree(p);
     end if;
-    put("total degree : "); put(d,1); new_line;
+   -- put("total degree : "); put(d,1); new_line;
     declare
     begin
       PB(p,bz,m,z); 

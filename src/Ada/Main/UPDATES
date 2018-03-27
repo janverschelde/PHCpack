@@ -1,6 +1,8 @@
 Tue 27 Mar 2018 : only write start solutions with zero coordinates if list
   is not empty, write timer info for pipelined polyhedral continuation in
-  black_box_root_counters.adb.
+  black_box_root_counters.adb.  Updates in bablphc.adb, bablphc2.adb,
+  bablphc4.adb, black_box_solver_cases.adb, and black_box_root_counters.adb,
+  to write number of tasks at the end of a run.
 
 Mon 26 Mar 2018 : updated greeting_banners for version 2.4.51.
 

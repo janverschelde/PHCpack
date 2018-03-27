@@ -7,6 +7,7 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Write_Seed_Number;
+with Write_Number_of_Tasks;
 with Standard_Integer_Matrices;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -126,6 +127,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
         put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
         put_line(outfile,".");
         Write_Elapsed_Time(outfile,start_moment,ended_moment);
+        Write_Number_of_Tasks(outfile,nt);
         Write_Seed_Number(outfile);
         put_line(outfile,Greeting_Banners.Version);
         close(outfile);
@@ -141,6 +143,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
         put(" till "); Write_Time_Stamp(standard_output,ended_moment);
         put_line(".");
         Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+        Write_Number_of_Tasks(standard_output,nt);
         Write_Seed_Number(standard_output);
         put_line(Greeting_Banners.Version);
       end if;
@@ -189,6 +192,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
         put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
         put_line(outfile,".");
         Write_Elapsed_Time(outfile,start_moment,ended_moment);
+        Write_Number_of_Tasks(outfile,nt);
         Write_Seed_Number(outfile);
         close(outfile);
       else
@@ -205,7 +209,8 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
         put(" till "); Write_Time_Stamp(standard_output,ended_moment);
         put_line(".");
         Write_Elapsed_Time(standard_output,start_moment,ended_moment);
-        Write_Seed_Number(outfile);
+        Write_Number_of_Tasks(standard_output,nt);
+        Write_Seed_Number(standard_output);
       end if;
     end if;
   end Affine_Binomial_Solver;

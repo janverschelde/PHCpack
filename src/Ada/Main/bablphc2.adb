@@ -6,7 +6,6 @@ with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Write_Seed_Number;
 with Standard_Integer_Matrices;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
