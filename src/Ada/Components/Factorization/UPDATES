@@ -1,3 +1,6 @@
+Tue 27 Mar 2018 : new package random_test_points with code factored out
+  of ts_mbthom.adb.
+
 Sun 18 Mar 2018 : fixed ts_mbthom.adb for added parameter rcotol in the
   homotopy membership tests filter.
 
