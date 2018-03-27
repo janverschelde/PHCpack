@@ -1529,7 +1529,8 @@ ts_pathpars:
 # Test programs for the Tasking:
 
 test_tasking: ts_mutex ts_jobs ts_mtvol ts_mtvolcon ts_mtverify ts_mtcont \
-              ts_mtmva ts_mtddref ts_mtqdref ts_mtsols ts_mtsharp ts_mtperm
+              ts_mtmva ts_mtddref ts_mtqdref ts_mtsols ts_mtsharp ts_mtperm \
+              ts_mtmbthom
 #             ts_mtmatvec ts_mtpolval ts_mtlinsol
 
 ts_mtmatvec:
@@ -1594,6 +1595,9 @@ ts_mtmva:
 
 ts_mtperm:
 	make -f $(MAKEFILE) ts_mtperm
+
+ts_mtmbthom:
+	make -f $(MAKEFILE) ts_mtmbthom
 
 # Test programs for the Main interactive drivers :
 

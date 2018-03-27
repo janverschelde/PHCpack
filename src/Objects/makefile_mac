@@ -2083,7 +2083,10 @@ ts_mtmva:
 
 ts_mtperm:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtperm.adb \
-              -o $(BIN)/ts_mtperm
+
+ts_mtmbthom:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmbthom.adb \
+              -o $(BIN)/ts_mtmbthom
 
 # Test programs for the Main interactive drivers :
 

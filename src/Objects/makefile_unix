@@ -940,6 +940,10 @@ ts_balance:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_balance.adb \
               -o $(BIN)/ts_balance
 
+ts_userlift:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_userlift.adb \
+              -o $(BIN)/ts_userlift
+
 # Test programs for the Root_Counts/Dynlift library :
 
 ts_dyntri:
@@ -1605,7 +1609,7 @@ ts_gpu2norm_d_in_c:
 	nvcc --define-macro precision=d -I$(PHCgpu)/DefineTypesD \
              -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
              -I/usr/local/cuda/include \
-             -c $(PHCgpu)/MGS2/norm_kernels.cu -arch=sm_13 --ptxas-options=-v \
+             -c $(PHCgpu)/MGS2/norm_kernels.cu --ptxas-options=-v \
              -o norm_kernels.o
 	@-echo ">>> compiling code for execution on the host ..."
 	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesD \
@@ -1630,7 +1634,7 @@ ts_gpu2norm_d:
 	nvcc --define-macro precision=d -I$(PHCgpu)/DefineTypesD \
              -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
              -I/usr/local/cuda/include \
-             -c $(PHCgpu)/MGS2/norm_kernels.cu -arch=sm_13 --ptxas-options=-v \
+             -c $(PHCgpu)/MGS2/norm_kernels.cu --ptxas-options=-v \
              -o norm_kernels.o
 	@-echo ">>> compiling code for execution on the host ..."
 	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesD \
@@ -1658,7 +1662,7 @@ ts_gpu2norm_dd:
 	nvcc --define-macro precision=dd -I$(PHCgpu)/DefineTypesDD \
              -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
              -I/usr/local/cuda/include \
-             -c $(PHCgpu)/MGS2/norm_kernels.cu -arch=sm_13 --ptxas-options=-v \
+             -c $(PHCgpu)/MGS2/norm_kernels.cu --ptxas-options=-v \
              -o norm_kernels.o
 	@-echo ">>> compiling code for execution on the host ..."
 	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesDD \
@@ -1687,7 +1691,7 @@ ts_gpu2norm_qd:
 	nvcc --define-macro precision=qd -I$(PHCgpu)/DefineTypesQD \
              -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
              -I/usr/local/cuda/include \
-             -c $(PHCgpu)/MGS2/norm_kernels.cu -arch=sm_13 --ptxas-options=-v \
+             -c $(PHCgpu)/MGS2/norm_kernels.cu --ptxas-options=-v \
              -o norm_kernels.o
 	@-echo ">>> compiling code for execution on the host ..."
 	$(gpp) -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesQD \
@@ -2567,6 +2571,10 @@ ts_mtmva:
 
 ts_mtperm:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtperm.adb -o $(BIN)/ts_mtperm
+
+ts_mtmbthom:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtmbthom.adb \
+              -o $(BIN)/ts_mtmbthom
 
 # Test programs for the Main interactive drivers :
 
