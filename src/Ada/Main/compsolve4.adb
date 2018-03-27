@@ -75,8 +75,8 @@ procedure compsolve4
       end;
     end if;
     if tofile = 'y'
-     then Greetings_and_Conclusions.Write_Conclusion(outfile,start_moment);
-     else Greetings_and_Conclusions.Write_Conclusion(start_moment);
+     then Greetings_and_Conclusions.Write_Conclusion(outfile,start_moment,nt);
+     else Greetings_and_Conclusions.Write_Conclusion(start_moment,nt);
     end if;
   end Main;
 

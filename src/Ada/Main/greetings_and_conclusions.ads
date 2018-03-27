@@ -17,17 +17,19 @@ package Greetings_and_Conclusions is
   --   The values for precision are 0 for standard double,
   --   1 for double double, and 2 for quad double.
 
-  procedure Write_Conclusion ( start_moment : in Ada.Calendar.Time );
+  procedure Write_Conclusion
+              ( start_moment : in Ada.Calendar.Time; nbtasks : in natural32 );
 
   -- DESCRIPTION :
-  --   Writes the time stamp, seed, and version number to screen.
-  --   The start_moment is the start time of the computations.
+  --   Writes the time stamp, number of tasks, seed, and version number
+  --   to screen.  The start_moment is the start time of the computations.
 
   procedure Write_Conclusion
-              ( file : in file_type; start_moment : in Ada.Calendar.Time );
+              ( file : in file_type;
+                start_moment : in Ada.Calendar.Time; nbtasks : in natural32 );
 
   -- DESCRIPTION :
-  --   Writes the time stamp, seed, and version number to file.
-  --   The start_moment is the start time of the computations.
+  --   Writes the time stamp, number of tasks, seed, and version number
+  --   to file.  The start_moment is the start time of the computations.
 
 end Greetings_and_Conclusions;
