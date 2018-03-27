@@ -1764,12 +1764,17 @@ package body Black_Box_Root_Counters is
       new_line(file);
       put_line(file,"START SOLUTIONS :");
       put(file,Length_Of(qsols),natural32(q'last),qsols);
-      new_line(file);
-      put_line(file,"START SOLUTIONS with zero coordinates :");
-      put(file,Length_Of(qsols0),natural32(q'last),qsols0);
+      if not Is_Null(qsols0) then
+        new_line(file);
+        put_line(file,"START SOLUTIONS with zero coordinates :");
+        put(file,Length_Of(qsols0),natural32(q'last),qsols0);
+      end if;
       tstop(timer);
       rc := smv;
       hocotime := Elapsed_User_Time(timer);
+      new_line(file);
+      print_times(file,timer,"pipelined polyhedral continuation");
+      flush(file);
     end if;
   end Pipelined_Root_Counting;
 
@@ -1822,12 +1827,17 @@ package body Black_Box_Root_Counters is
       new_line(file);
       put_line(file,"START SOLUTIONS :");
       put(file,Length_Of(qsols),natural32(q'last),qsols);
-      new_line(file);
-      put_line(file,"START SOLUTIONS with zero coordinates :");
-      put(file,Length_Of(qsols0),natural32(q'last),qsols0);
+      if not Is_Null(qsols0) then
+        new_line(file);
+        put_line(file,"START SOLUTIONS with zero coordinates :");
+        put(file,Length_Of(qsols0),natural32(q'last),qsols0);
+      end if;
       tstop(timer);
       rc := smv;
       hocotime := Elapsed_User_Time(timer);
+      new_line(file);
+      print_times(file,timer,"pipelined polyhedral continuation");
+      flush(file);
     end if;
   end Pipelined_Root_Counting;
 
@@ -1880,12 +1890,17 @@ package body Black_Box_Root_Counters is
       new_line(file);
       put_line(file,"START SOLUTIONS :");
       put(file,Length_Of(qsols),natural32(q'last),qsols);
-      new_line(file);
-      put_line(file,"START SOLUTIONS with zero coordinates :");
-      put(file,Length_Of(qsols0),natural32(q'last),qsols0);
+      if not Is_Null(qsols0) then
+        new_line(file);
+        put_line(file,"START SOLUTIONS with zero coordinates :");
+        put(file,Length_Of(qsols0),natural32(q'last),qsols0);
+      end if;
       tstop(timer);
       rc := smv;
       hocotime := Elapsed_User_Time(timer);
+      new_line(file);
+      print_times(file,timer,"pipelined polyhedral continuation");
+      flush(file);
     end if;
   end Pipelined_Root_Counting;
 
@@ -1976,6 +1991,7 @@ package body Black_Box_Root_Counters is
     tstop(timer);
     Standard_Complex_Laur_Systems.Clear(sp);
     hocotime := Elapsed_User_Time(timer);
+
   end Black_Box_Root_Counting;
 
   procedure Black_Box_Root_Counting 
