@@ -1,3 +1,6 @@
+Wed 28 Mar 2018 : new package multitasking_membership_tests, 
+  tested by ts_mtmbthom.adb.
+
 Tue 27 Mar 2018 : the new write_number_of_tasks procedure defines the
   writing of the number of tasks in a run.  New procedure in ts_mtmbthom.adb
   to develop a multitasked homotopy membership test.
