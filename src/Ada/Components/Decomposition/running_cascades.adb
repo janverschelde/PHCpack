@@ -1,4 +1,5 @@
-with Timing_Package;                     use Timing_Package;
+with Ada.Calendar;
+with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -19,6 +20,8 @@ package body Running_Cascades is
 
     use Standard_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -76,6 +79,9 @@ package body Running_Cascades is
     else
       print_hms(standard_output,totcas);
     end if;
+    new_line;
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
   end Standard_Run_Cascade;
 
   procedure Standard_Run_Cascade
@@ -86,6 +92,8 @@ package body Running_Cascades is
 
     use Standard_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -144,6 +152,9 @@ package body Running_Cascades is
     else
       print_hms(standard_output,totcas);
     end if;
+    new_line;
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
   end Standard_Run_Cascade;
 
   procedure DoblDobl_Run_Cascade
@@ -154,6 +165,8 @@ package body Running_Cascades is
 
     use DoblDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -212,6 +225,9 @@ package body Running_Cascades is
     else
       print_hms(standard_output,totcas);
     end if;
+    new_line;
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
   end DoblDobl_Run_Cascade;
 
   procedure DoblDobl_Run_Cascade
@@ -222,6 +238,8 @@ package body Running_Cascades is
 
     use DoblDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -280,6 +298,9 @@ package body Running_Cascades is
     else
       print_hms(standard_output,totcas);
     end if;
+    new_line;
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
   end DoblDobl_Run_Cascade;
 
   procedure QuadDobl_Run_Cascade
@@ -290,6 +311,8 @@ package body Running_Cascades is
 
     use QuadDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -348,6 +371,9 @@ package body Running_Cascades is
     else
       print_hms(standard_output,totcas);
     end if;
+    new_line;
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
   end QuadDobl_Run_Cascade;
 
   procedure QuadDobl_Run_Cascade
@@ -358,6 +384,8 @@ package body Running_Cascades is
 
     use QuadDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -416,6 +444,9 @@ package body Running_Cascades is
     else
       print_hms(standard_output,totcas);
     end if;
+    new_line;
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
   end QuadDobl_Run_Cascade;
 
   procedure Standard_Run_Cascade
@@ -427,6 +458,8 @@ package body Running_Cascades is
 
     use Standard_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -445,8 +478,8 @@ package body Running_Cascades is
   begin
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
-        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
-         castm,filtm,totcas,totfil,alltime);
+        (file,nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -483,6 +516,9 @@ package body Running_Cascades is
     else
       print_hms(file,totcas);
     end if;
+    new_line(file);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(file,start_moment,ended_moment);
   end Standard_Run_Cascade;
 
   procedure Standard_Run_Cascade
@@ -494,6 +530,8 @@ package body Running_Cascades is
 
     use Standard_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -549,6 +587,9 @@ package body Running_Cascades is
     else
       print_hms(file,totcas);
     end if;
+    new_line(file);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(file,start_moment,ended_moment);
   end Standard_Run_Cascade;
 
   procedure DoblDobl_Run_Cascade
@@ -560,6 +601,8 @@ package body Running_Cascades is
 
     use DoblDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -615,6 +658,9 @@ package body Running_Cascades is
     else
       print_hms(file,totcas);
     end if;
+    new_line(file);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(file,start_moment,ended_moment);
   end DoblDobl_Run_Cascade;
 
   procedure DoblDobl_Run_Cascade
@@ -626,6 +672,8 @@ package body Running_Cascades is
 
     use DoblDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -681,6 +729,9 @@ package body Running_Cascades is
     else
       print_hms(file,totcas);
     end if;
+    new_line(file);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(file,start_moment,ended_moment);
   end DoblDobl_Run_Cascade;
 
   procedure QuadDobl_Run_Cascade
@@ -692,6 +743,8 @@ package body Running_Cascades is
 
     use QuadDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -747,6 +800,9 @@ package body Running_Cascades is
     else
       print_hms(file,totcas);
     end if;
+    new_line(file);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(file,start_moment,ended_moment);
   end QuadDobl_Run_Cascade;
 
   procedure QuadDobl_Run_Cascade
@@ -758,6 +814,8 @@ package body Running_Cascades is
 
     use QuadDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     ns : constant integer32 := integer32(topdim);
     tol : constant double_float := 1.0E-8;
     rcotol : constant double_float := 1.0E-6;
@@ -813,6 +871,9 @@ package body Running_Cascades is
     else
       print_hms(file,totcas);
     end if;
+    new_line(file);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Elapsed_Time(file,start_moment,ended_moment);
   end QuadDobl_Run_Cascade;
 
 end Running_Cascades;

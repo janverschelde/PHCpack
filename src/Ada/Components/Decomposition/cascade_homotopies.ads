@@ -27,6 +27,53 @@ package Cascade_Homotopies is
 --   2) each superwitness set is written to a separate file.
 
   procedure Witness_Generate
+               ( outfile : in file_type; nt : in natural32;
+                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                 sols : in Standard_Complex_Solutions.Solution_List;
+                 topdim,lowdim : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( outfile : in file_type; nt : in natural32;
+                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                 sols : in Standard_Complex_Solutions.Solution_List;
+                 topdim,lowdim : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( outfile : in file_type; nt : in natural32;
+                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in DoblDobl_Complex_Solutions.Solution_List;
+                 topdim,lowdim : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( outfile : in file_type; nt : in natural32;
+                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 sols : in DoblDobl_Complex_Solutions.Solution_List;
+                 topdim,lowdim : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( outfile : in file_type; nt : in natural32;
+                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in QuadDobl_Complex_Solutions.Solution_List;
+                 topdim,lowdim : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( outfile : in file_type; nt : in natural32;
+                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 sols : in QuadDobl_Complex_Solutions.Solution_List;
+                 topdim,lowdim : in natural32; zerotol : in double_float );
+
+  -- DESCRIPTION :
+  --   Calculates candidate witness points on every component,
+  --   starting at the component of dimension k,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   outfile   file for intermediate results and diagnostics;
+  --   nt        number of tasks, set to zero for no tasking;
+  --   ep        embedded polynomial system;
+  --   sols      solutions to the system ep (unfiltered);
+  --   topdim    number of slack variables and random hyperplanes,
+  --             equals the top dimension of the solution sets;
+  --   lowdim    lower bound on the dimension to stop the cascade;
+  --   zerotol   tolerance to decide whether a number is zero or not.
+
+
+  procedure Witness_Generate
                ( outfile,resfile : in file_type; nt : in natural32;
                  ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
@@ -221,6 +268,82 @@ package Cascade_Homotopies is
   --   in double, double double, and quad double precision.
 
   -- ON ENTRY :
+  --   nt        number of tasks for multitasking, set to zero for no tasking;
+  --   ep        embedded polynomial system;
+  --   sols      solutions to the system ep (unfiltered);
+  --   topdim    number of slack variables and random hyperplanes,
+  --             equals the top dimension of the solution sets;
+  --   lowdim    lower bound on the dimension to stop the cascade;
+  --   zerotol   tolerance to decide whether a number is zero or not.
+
+  -- ON RETURN :
+  --   embsys    sequence of embedded polynomial systems;
+  --   esols0    candidate witness points at each dimension;
+  --   pathcnts  table with path counts during the cascade homotopies;
+  --   times     CPU time at each stage in the cascade homotopy;
+  --   alltime   the total elapsed CPU time.
+
+  procedure Witness_Generate
+              ( file : in file_type; nt : in natural32;
+                ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Generate
+              ( file : in file_type; nt : in natural32;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Generate
+              ( file : in file_type; nt : in natural32;
+                ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Generate
+              ( file : in file_type; nt : in natural32;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Generate
+              ( file : in file_type; nt : in natural32;
+                ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+  procedure Witness_Generate
+              ( file : in file_type; nt : in natural32;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts : out Standard_Natural_VecVecs.VecVec;
+                times : out Array_of_Duration; alltime : out duration );
+
+  -- DESCRIPTION :
+  --   Reporting version of the witness generate to compute witness supersets,
+  --   in double, double double, and quad double precision.
+
+  -- ON ENTRY :
+  --   file      must be opened for output;
   --   nt        number of tasks for multitasking, set to zero for no tasking;
   --   ep        embedded polynomial system;
   --   sols      solutions to the system ep (unfiltered);
