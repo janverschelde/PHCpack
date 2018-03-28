@@ -1,3 +1,6 @@
+Wed 28 Mar 2018 : added writing of elapsed wall clock time of the solving
+  of the top dimensional system in drivers_to_cascade_filtering.adb.
+
 Sun 11 Mar 2018 : added extra tolerance parameter on the inverse of the
   estimated condition number in cascade_homotopy_filters, which also
   modified the calls in running_cascades.adb.

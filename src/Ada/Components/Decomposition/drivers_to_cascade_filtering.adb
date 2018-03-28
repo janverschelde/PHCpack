@@ -1,6 +1,7 @@
+with Ada.Calendar;
 with String_Splitters;                   use String_Splitters;
 with Communications_with_User;           use Communications_with_User;
-with Timing_Package;                     use Timing_Package;
+with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
 with Numbers_io;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
@@ -239,6 +240,8 @@ package body Drivers_to_Cascade_Filtering is
     use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -271,6 +274,9 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     put("The CPU time for the solver : ");
     print_hms(standard_output,topsoltime); new_line;
+    ended_moment := Ada.Calendar.Clock;
+    new_line;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
@@ -292,6 +298,8 @@ package body Drivers_to_Cascade_Filtering is
     use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -318,6 +326,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    new_line(file);
+    print_times(file,timer,"solving the top dimensional system");
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
@@ -339,6 +352,8 @@ package body Drivers_to_Cascade_Filtering is
     use Standard_Complex_Laurentials;
     use Standard_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -371,6 +386,9 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     put("The CPU time for the solver : ");
     print_hms(standard_output,topsoltime); new_line;
+    ended_moment := Ada.Calendar.Clock;
+    new_line;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
@@ -392,6 +410,8 @@ package body Drivers_to_Cascade_Filtering is
     use Standard_Complex_Laurentials;
     use Standard_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -415,6 +435,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    new_line(file);
+    print_times(file,timer,"solving the top dimensional system");
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
@@ -436,6 +461,8 @@ package body Drivers_to_Cascade_Filtering is
     use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -468,6 +495,9 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     put("The CPU time for the solver : ");
     print_hms(standard_output,topsoltime); new_line;
+    ended_moment := Ada.Calendar.Clock;
+    new_line;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
@@ -489,6 +519,8 @@ package body Drivers_to_Cascade_Filtering is
     use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -512,6 +544,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    new_line(file);
+    print_times(file,timer,"solving the top dimensional system");
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
@@ -533,6 +570,8 @@ package body Drivers_to_Cascade_Filtering is
     use DoblDobl_Complex_Laurentials;
     use DoblDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -565,6 +604,9 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     put("The CPU time for the solver : ");
     print_hms(standard_output,topsoltime); new_line;
+    ended_moment := Ada.Calendar.Clock;
+    new_line;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
@@ -586,6 +628,8 @@ package body Drivers_to_Cascade_Filtering is
     use DoblDobl_Complex_Laurentials;
     use DoblDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -609,6 +653,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    new_line(file);
+    print_times(file,timer,"solving the top dimensional system");
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
@@ -630,6 +679,8 @@ package body Drivers_to_Cascade_Filtering is
     use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -662,6 +713,9 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     put("The CPU time for the solver : ");
     print_hms(standard_output,topsoltime); new_line;
+    ended_moment := Ada.Calendar.Clock;
+    new_line;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
@@ -683,6 +737,8 @@ package body Drivers_to_Cascade_Filtering is
     use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -706,6 +762,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    new_line(file);
+    print_times(file,timer,"solving the top dimensional system");
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
@@ -727,6 +788,8 @@ package body Drivers_to_Cascade_Filtering is
     use QuadDobl_Complex_Laurentials;
     use QuadDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -759,6 +822,9 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     put("The CPU time for the solver : ");
     print_hms(standard_output,topsoltime); new_line;
+    ended_moment := Ada.Calendar.Clock;
+    new_line;
+    Write_Elapsed_Time(standard_output,start_moment,ended_moment);
     if not Is_Null(sols) then
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
@@ -780,6 +846,8 @@ package body Drivers_to_Cascade_Filtering is
     use QuadDobl_Complex_Laurentials;
     use QuadDobl_Complex_Solutions;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
     topdim,lowdim : natural32 := 0;
@@ -803,6 +871,11 @@ package body Drivers_to_Cascade_Filtering is
       tstop(timer);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
+    new_line(file);
+    print_times(file,timer,"solving the top dimensional system");
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
     if not Is_Null(sols) then
       if topdim > 0 then
