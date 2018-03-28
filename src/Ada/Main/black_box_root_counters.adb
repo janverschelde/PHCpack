@@ -1,4 +1,5 @@
-with Timing_Package;                     use Timing_Package;
+with Ada.Calendar;
+with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Characters_and_Numbers;
@@ -1233,6 +1234,8 @@ package body Black_Box_Root_Counters is
   --   smv      the stable mixed volume;
   --   qsols0   solutions of lq with zero coordinates.
 
+   -- start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+   -- ended_moment : Ada.Calendar.Time;
     dim : constant integer32 := lq'last;
     orgmcc,stbmcc : Mixed_Subdivision;
     orgcnt,stbcnt : natural32;
@@ -1272,6 +1275,10 @@ package body Black_Box_Root_Counters is
         end if;
       end;
     end if;
+   -- ended_moment := Ada.Calendar.Clock;
+   -- if not silent
+   --  then Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+   -- end if;
   end Pipelined_Stable_Continuation;
 
   procedure Pipelined_Stable_Continuation
@@ -1305,6 +1312,8 @@ package body Black_Box_Root_Counters is
   --   smv      the stable mixed volume;
   --   qsols0   solutions of lq with zero coordinates.
 
+   -- start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+   -- ended_moment : Ada.Calendar.Time;
     dim : constant integer32 := lq'last;
     orgmcc,stbmcc : Mixed_Subdivision;
     orgcnt,stbcnt : natural32;
@@ -1345,6 +1354,10 @@ package body Black_Box_Root_Counters is
         end if;
       end;
     end if;
+   -- ended_moment := Ada.Calendar.Clock;
+   -- if not silent
+   --  then Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+   -- end if;
   end Pipelined_Stable_Continuation;
 
   procedure Pipelined_Stable_Continuation
@@ -1378,6 +1391,8 @@ package body Black_Box_Root_Counters is
   --   smv      the stable mixed volume;
   --   qsols0   solutions of lq with zero coordinates.
 
+   -- start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+   -- ended_moment : Ada.Calendar.Time;
     dim : constant integer32 := lq'last;
     orgmcc,stbmcc : Mixed_Subdivision;
     orgcnt,stbcnt : natural32;
@@ -1418,6 +1433,10 @@ package body Black_Box_Root_Counters is
         end if;
       end;
     end if;
+   -- ended_moment := Ada.Calendar.Clock;
+   -- if not silent
+   --  then Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+   -- end if;
   end Pipelined_Stable_Continuation;
 
   procedure Pipelined_Root_Counting
@@ -1428,6 +1447,8 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     d : natural64;
     mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
@@ -1465,6 +1486,13 @@ package body Black_Box_Root_Counters is
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
     end if;
+    ended_moment := Ada.Calendar.Clock;
+    if not silent then
+      new_line;
+      print_times(standard_output,timer,"pipelined polyhedral homotopies");
+      new_line;
+      Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+    end if;
   end Pipelined_Root_Counting;
 
   procedure Pipelined_Root_Counting
@@ -1475,6 +1503,8 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     d : natural64;
     mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
@@ -1513,6 +1543,13 @@ package body Black_Box_Root_Counters is
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
     end if;
+    ended_moment := Ada.Calendar.Clock;
+    if not silent then
+      new_line;
+      print_times(standard_output,timer,"pipelined polyhedral homotopies");
+      new_line;
+      Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+    end if;
   end Pipelined_Root_Counting;
 
   procedure Pipelined_Root_Counting
@@ -1523,6 +1560,8 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     d : natural64;
     mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
@@ -1560,6 +1599,13 @@ package body Black_Box_Root_Counters is
       rc := smv;
       tstop(timer);
       hocotime := Elapsed_User_Time(timer);
+    end if;
+    ended_moment := Ada.Calendar.Clock;
+    if not silent then
+      new_line;
+      print_times(standard_output,timer,"pipelined polyhedral homotopies");
+      new_line;
+      Write_Elapsed_Time(standard_output,start_moment,ended_moment);
     end if;
   end Pipelined_Root_Counting;
 
@@ -1724,6 +1770,8 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     d : natural64;
     mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
@@ -1774,8 +1822,11 @@ package body Black_Box_Root_Counters is
       hocotime := Elapsed_User_Time(timer);
       new_line(file);
       print_times(file,timer,"pipelined polyhedral continuation");
-      flush(file);
     end if;
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
+    flush(file);
   end Pipelined_Root_Counting;
 
   procedure Pipelined_Root_Counting
@@ -1786,6 +1837,8 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     d : natural64;
     mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
@@ -1837,8 +1890,11 @@ package body Black_Box_Root_Counters is
       hocotime := Elapsed_User_Time(timer);
       new_line(file);
       print_times(file,timer,"pipelined polyhedral continuation");
-      flush(file);
     end if;
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
+    flush(file);
   end Pipelined_Root_Counting;
 
   procedure Pipelined_Root_Counting
@@ -1849,6 +1905,8 @@ package body Black_Box_Root_Counters is
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     d : natural64;
     mptdeg : Natural_Number;
     mv,smv,tmv : natural32;
@@ -1900,8 +1958,11 @@ package body Black_Box_Root_Counters is
       hocotime := Elapsed_User_Time(timer);
       new_line(file);
       print_times(file,timer,"pipelined polyhedral continuation");
-      flush(file);
     end if;
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
+    flush(file);
   end Pipelined_Root_Counting;
 
 -- FOR LAURENT SYSTEMS :
@@ -2227,6 +2288,8 @@ package body Black_Box_Root_Counters is
     use Standard_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     timer : Timing_Widget;
 
   begin
@@ -2237,6 +2300,13 @@ package body Black_Box_Root_Counters is
      then put("mixed volume : "); put(rc,1); new_line;
     end if;
     elaptime := Elapsed_User_Time(timer);
+    ended_moment := Ada.Calendar.Clock;
+    if not silent then
+      new_line;
+      print_times(standard_output,timer,"pipelined polyhedral homotopies");
+      new_line;
+      Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+    end if;
   end Pipelined_Root_Counting;
 
   procedure Pipelined_Root_Counting 
@@ -2250,6 +2320,8 @@ package body Black_Box_Root_Counters is
     use DoblDobl_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     timer : Timing_Widget;
 
   begin
@@ -2260,6 +2332,13 @@ package body Black_Box_Root_Counters is
      then put("mixed volume : "); put(rc,1); new_line;
     end if;
     elaptime := Elapsed_User_Time(timer);
+    ended_moment := Ada.Calendar.Clock;
+    if not silent then
+      new_line;
+      print_times(standard_output,timer,"pipelined polyhedral homotopies");
+      new_line;
+      Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+    end if;
   end Pipelined_Root_Counting;
 
   procedure Pipelined_Root_Counting 
@@ -2273,6 +2352,8 @@ package body Black_Box_Root_Counters is
     use QuadDobl_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     timer : Timing_Widget;
 
   begin
@@ -2283,6 +2364,13 @@ package body Black_Box_Root_Counters is
      then put("mixed volume : "); put(rc,1); new_line;
     end if;
     elaptime := Elapsed_User_Time(timer);
+    ended_moment := Ada.Calendar.Clock;
+    if not silent then
+      new_line;
+      print_times(standard_output,timer,"pipelined polyhedral homotopies");
+      new_line;
+      Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+    end if;
   end Pipelined_Root_Counting;
 
   procedure Pipelined_Root_Counting 
@@ -2362,6 +2450,8 @@ package body Black_Box_Root_Counters is
     use Standard_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     timer : Timing_Widget;
 
   begin
@@ -2383,6 +2473,9 @@ package body Black_Box_Root_Counters is
     new_line(file);
     print_times(file,timer,"pipelined polyhedral homotopy continuation");
     elaptime := Elapsed_User_Time(timer);
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
   end Pipelined_Root_Counting;
 
@@ -2397,6 +2490,8 @@ package body Black_Box_Root_Counters is
     use DoblDobl_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     timer : Timing_Widget;
 
   begin
@@ -2418,6 +2513,9 @@ package body Black_Box_Root_Counters is
     new_line(file);
     print_times(file,timer,"pipelined polyhedral homotopy continuation");
     elaptime := Elapsed_User_Time(timer);
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
   end Pipelined_Root_Counting;
 
@@ -2432,6 +2530,8 @@ package body Black_Box_Root_Counters is
     use QuadDobl_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     timer : Timing_Widget;
 
   begin
@@ -2453,6 +2553,9 @@ package body Black_Box_Root_Counters is
     new_line(file);
     print_times(file,timer,"pipelined polyhedral homotopy continuation");
     elaptime := Elapsed_User_Time(timer);
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
   end Pipelined_Root_Counting;
 

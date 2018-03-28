@@ -1,3 +1,6 @@
+Wed 28 Mar 2018 : added the writing of the elapsed wall clock time to
+  the pipelined polyhedral homotopies in black_box_root_counters.adb.
+
 Tue 27 Mar 2018 : only write start solutions with zero coordinates if list
   is not empty, write timer info for pipelined polyhedral continuation in
   black_box_root_counters.adb.  Updates in bablphc.adb, bablphc2.adb,
