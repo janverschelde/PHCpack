@@ -36,6 +36,7 @@ ts_rwpoly                        : test on rewriting
 combinatorial_factorization      : factorization with linear traces only
 ts_combfac                       : test on combinatorial factorization
 ------------------------------------------------------------------------------
+homotopy_membership_target       : make target in homotopy membership test
 homotopy_membership_tests        : test to decide membership to witness set
 homotopy_membership_filters      : splitting solutions with membership test
 random_test_points               : compute a random point for testing

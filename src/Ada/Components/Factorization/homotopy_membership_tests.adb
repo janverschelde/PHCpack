@@ -27,6 +27,7 @@ with DoblDobl_Sampling_Machine;
 with DoblDobl_Sampling_Laurent_Machine;
 with QuadDobl_Sampling_Machine;
 with QuadDobl_Sampling_Laurent_Machine;
+with Homotopy_Membership_Target;         use Homotopy_Membership_Target;
 
 package body Homotopy_Membership_Tests is
 
@@ -79,72 +80,6 @@ package body Homotopy_Membership_Tests is
      else return Add_Embedding(s,natural32(n-s.n));
     end if;
   end Embed_Solution;
-
-  function Adjusted_Slices 
-             ( sli : Standard_Complex_VecVecs.VecVec;
-               sol : Standard_Complex_Vectors.Vector )
-             return Standard_Complex_VecVecs.VecVec is
-
-  -- DESCRIPTION :
-  --   Adjusts the constant coefficient of each slice such that
-  --   the solution vector satisfies the equations.
-
-    res : Standard_Complex_VecVecs.VecVec(sli'range);
-
-  begin
-    for i in res'range loop
-      res(i) := new Standard_Complex_Vectors.Vector'(sli(i).all);
-      res(i)(0) := -res(i)(1)*sol(1);
-      for j in 2..sol'last loop
-        res(i)(0) := res(i)(0) - res(i)(j)*sol(j);
-      end loop;
-    end loop;
-    return res;
-  end Adjusted_Slices;
-
-  function Adjusted_Slices 
-             ( sli : DoblDobl_Complex_VecVecs.VecVec;
-               sol : DoblDobl_Complex_Vectors.Vector )
-             return DoblDobl_Complex_VecVecs.VecVec is
-
-  -- DESCRIPTION :
-  --   Adjusts the constant coefficient of each slice such that
-  --   the solution vector satisfies the equations.
-
-    res : DoblDobl_Complex_VecVecs.VecVec(sli'range);
-
-  begin
-    for i in res'range loop
-      res(i) := new DoblDobl_Complex_Vectors.Vector'(sli(i).all);
-      res(i)(0) := -res(i)(1)*sol(1);
-      for j in 2..sol'last loop
-        res(i)(0) := res(i)(0) - res(i)(j)*sol(j);
-      end loop;
-    end loop;
-    return res;
-  end Adjusted_Slices;
-
-  function Adjusted_Slices 
-             ( sli : QuadDobl_Complex_VecVecs.VecVec;
-               sol : QuadDobl_Complex_Vectors.Vector )
-             return QuadDobl_Complex_VecVecs.VecVec is
-
-  -- DESCRIPTION :
-  --   Adjusts the constant coefficient of each slice such that
-  --   the solution vector satisfies the equations.
-
-    res : QuadDobl_Complex_VecVecs.VecVec(sli'range);
-
-  begin
-    for i in res'range loop
-      res(i) := new QuadDobl_Complex_Vectors.Vector'(sli(i).all);
-      res(i)(0) := -res(i)(1)*sol(1);
-      for j in 2..sol'last loop
-        res(i)(0) := res(i)(0) - res(i)(j)*sol(j);
-      end loop;
-    end loop;
-    return res;
-  end Adjusted_Slices;
 
   function Is_Member
               ( verbose : boolean; idx : natural32;

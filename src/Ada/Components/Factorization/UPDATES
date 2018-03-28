@@ -1,3 +1,6 @@
+Wed 28 Mar 2018 : new package homotopy_membership_factor with code factored
+  out of homotopy_membership_tests, added make of target system in the test.
+
 Tue 27 Mar 2018 : new package random_test_points with code factored out
   of ts_mbthom.adb.
 
