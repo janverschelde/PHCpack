@@ -85,13 +85,14 @@ package body Homotopy_Membership_Target is
         := Witness_Sets.Slices(ep,dim);
     adj : Standard_Complex_VecVecs.VecVec(1..idm)
         := Adjusted_Slices(sli,pnt);
+    offset : constant integer32 := ep'last-idm;
 
   begin
-    for i in ep'first..ep'last-idm loop
+    for i in ep'first..offset loop
       Standard_Complex_Polynomials.Copy(ep(i),res(i));
     end loop;
     for i in 1..idm loop
-      res(i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
+      res(offset+i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
     end loop;
     Standard_Complex_VecVecs.Clear(sli);
     Standard_Complex_VecVecs.Clear(adj);
@@ -110,13 +111,14 @@ package body Homotopy_Membership_Target is
         := Witness_Sets.Slices(ep,dim);
     adj : DoblDobl_Complex_VecVecs.VecVec(1..idm)
         := Adjusted_Slices(sli,pnt);
+    offset : constant integer32 := ep'last-idm;
 
   begin
-    for i in ep'first..ep'last-idm loop
+    for i in ep'first..offset loop
       DoblDobl_Complex_Polynomials.Copy(ep(i),res(i));
     end loop;
     for i in 1..idm loop
-      res(i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
+      res(offset+i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
     end loop;
     DoblDobl_Complex_VecVecs.Clear(sli);
     DoblDobl_Complex_VecVecs.Clear(adj);
@@ -135,13 +137,14 @@ package body Homotopy_Membership_Target is
         := Witness_Sets.Slices(ep,dim);
     adj : QuadDobl_Complex_VecVecs.VecVec(1..idm)
         := Adjusted_Slices(sli,pnt);
+    offset : constant integer32 := ep'last-idm;
 
   begin
-    for i in ep'first..ep'last-idm loop
+    for i in ep'first..offset loop
       QuadDobl_Complex_Polynomials.Copy(ep(i),res(i));
     end loop;
     for i in 1..idm loop
-      res(i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
+      res(offset+i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
     end loop;
     QuadDobl_Complex_VecVecs.Clear(sli);
     QuadDobl_Complex_VecVecs.Clear(adj);
@@ -160,13 +163,14 @@ package body Homotopy_Membership_Target is
         := Witness_Sets.Slices(ep,dim);
     adj : Standard_Complex_VecVecs.VecVec(1..idm)
         := Adjusted_Slices(sli,pnt);
+    offset : constant integer32 := ep'last-idm;
 
   begin
-    for i in ep'first..ep'last-idm loop
+    for i in ep'first..offset loop
       Standard_Complex_Laurentials.Copy(ep(i),res(i));
     end loop;
     for i in 1..idm loop
-      res(i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
+      res(offset+i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
     end loop;
     Standard_Complex_VecVecs.Clear(sli);
     Standard_Complex_VecVecs.Clear(adj);
@@ -185,13 +189,14 @@ package body Homotopy_Membership_Target is
         := Witness_Sets.Slices(ep,dim);
     adj : DoblDobl_Complex_VecVecs.VecVec(1..idm)
         := Adjusted_Slices(sli,pnt);
+    offset : constant integer32 := ep'last-idm;
 
   begin
-    for i in ep'first..ep'last-idm loop
+    for i in ep'first..offset loop
       DoblDobl_Complex_Laurentials.Copy(ep(i),res(i));
     end loop;
     for i in 1..idm loop
-      res(i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
+      res(offset+i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
     end loop;
     DoblDobl_Complex_VecVecs.Clear(sli);
     DoblDobl_Complex_VecVecs.Clear(adj);
@@ -210,13 +215,14 @@ package body Homotopy_Membership_Target is
         := Witness_Sets.Slices(ep,dim);
     adj : QuadDobl_Complex_VecVecs.VecVec(1..idm)
         := Adjusted_Slices(sli,pnt);
+    offset : constant integer32 := ep'last-idm;
 
   begin
-    for i in ep'first..ep'last-idm loop
+    for i in ep'first..offset loop
       QuadDobl_Complex_Laurentials.Copy(ep(i),res(i));
     end loop;
     for i in 1..idm loop
-      res(i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
+      res(offset+i) := Planes_and_Polynomials.Hyperplane(adj(i).all);
     end loop;
     QuadDobl_Complex_VecVecs.Clear(sli);
     QuadDobl_Complex_VecVecs.Clear(adj);
