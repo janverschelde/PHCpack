@@ -1,5 +1,6 @@
+with Ada.Calendar;
 with Timing_Package;                     use Timing_Package;
-with File_Scanning;                      use File_Scanning;
+with File_Scanning,Time_Stamps;          use File_Scanning,Time_Stamps;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -696,6 +697,8 @@ package body Standard_BlackBox_Continuations is
                  sols : in out Solution_List;
                  pocotime : out duration ) is
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     timer : timing_widget;
     k : constant natural32 := 2;
     target : constant Complex_Number := Create(1.0);
@@ -717,6 +720,9 @@ package body Standard_BlackBox_Continuations is
     new_line(file);
     print_times(file,timer,"continuation");
     pocotime := Elapsed_User_Time(timer);
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
     Reporting_Black_Box_Refine(file,nt,p,sols);
     Standard_Homotopy.Clear;
@@ -951,6 +957,8 @@ package body Standard_BlackBox_Continuations is
                  p,q : in Laur_Sys; sols : in out Solution_List;
                  pocotime : out duration ) is
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
     k : constant natural32 := 2;
     gamma : constant Complex_Number := Random1;
     timer : Timing_Widget;
@@ -962,6 +970,10 @@ package body Standard_BlackBox_Continuations is
     Silent_Multitasking_Laurent_Path_Tracker(sols,nt);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
+    flush(file);
     Reporting_Black_Box_Refine(file,nt,p,sols);
     Standard_Laurent_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;

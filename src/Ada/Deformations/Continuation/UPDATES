@@ -1,4 +1,7 @@
-Sun 18 Mar 2018 : fixed ts_poco.adb for changed driver procedure in
+Wed 28 Mar 2018 : to {standard,dobldobl,quaddobl}_blackbox_continuations.adb,
+  added the writing of elapsed wall clock times for multitasked continuation.
+
+Sat 18 Mar 2018 : fixed ts_poco.adb for changed driver procedure in
   drivers_for_poly_continuation.
 
 Sat 19 Aug 2017 : added parameters to drivers_for_poly_continuation and
