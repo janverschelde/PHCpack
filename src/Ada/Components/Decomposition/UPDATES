@@ -2,6 +2,7 @@ Wed 28 Mar 2018 : added writing of elapsed wall clock time of the solving
   of the top dimensional system in drivers_to_cascade_filtering.adb.
   Updated running_cascades.adb, cascade_homotopy_filters, and
   cascade_homotopies for better output to file.
+  Added multitasked membership filters to cascade_homotopy_filters.adb.
 
 Sun 11 Mar 2018 : added extra tolerance parameter on the inverse of the
   estimated condition number in cascade_homotopy_filters, which also
