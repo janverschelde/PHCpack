@@ -1808,7 +1808,7 @@ package body Black_Box_Root_Counters is
       put(file,"stable mixed volume : "); put(file,smv,1); new_line(file);
       new_line(file);
       put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
-      put(file,q);
+      put_line(file,q);
       new_line(file);
       put_line(file,"START SOLUTIONS :");
       put(file,Length_Of(qsols),natural32(q'last),qsols);
@@ -1876,7 +1876,7 @@ package body Black_Box_Root_Counters is
       put(file,"stable mixed volume : "); put(file,smv,1); new_line(file);
       new_line(file);
       put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
-      put(file,q);
+      put_line(file,q);
       new_line(file);
       put_line(file,"START SOLUTIONS :");
       put(file,Length_Of(qsols),natural32(q'last),qsols);
@@ -1944,7 +1944,7 @@ package body Black_Box_Root_Counters is
       put(file,"stable mixed volume : "); put(file,smv,1); new_line(file);
       new_line(file);
       put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
-      put(file,q);
+      put_line(file,q);
       new_line(file);
       put_line(file,"START SOLUTIONS :");
       put(file,Length_Of(qsols),natural32(q'last),qsols);
@@ -2462,7 +2462,6 @@ package body Black_Box_Root_Counters is
     put(file,"mixed volume : "); put(file,rc,1); new_line(file);
     new_line(file);
     put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
-    new_line(file);
     put_line(file,q);
     new_line(file);
     put_line(file,"START SOLUTIONS : ");
@@ -2502,7 +2501,6 @@ package body Black_Box_Root_Counters is
     put(file,"mixed volume : "); put(file,rc,1); new_line(file);
     new_line(file);
     put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
-    new_line(file);
     put_line(file,q);
     new_line(file);
     put_line(file,"START SOLUTIONS : ");
@@ -2542,7 +2540,6 @@ package body Black_Box_Root_Counters is
     put(file,"mixed volume : "); put(file,rc,1); new_line(file);
     new_line(file);
     put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
-    new_line(file);
     put_line(file,q);
     new_line(file);
     put_line(file,"START SOLUTIONS : ");
