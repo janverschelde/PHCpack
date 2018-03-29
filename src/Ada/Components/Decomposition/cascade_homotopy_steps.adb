@@ -74,6 +74,7 @@ package body Cascade_Homotopy_Steps is
     n : constant natural32 := natural32(embsys'last)-level;
 
   begin
+    new_line(file);
     put(file,"START SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,embsys);
     new_line(file);
@@ -144,6 +145,7 @@ package body Cascade_Homotopy_Steps is
     n : constant natural32 := natural32(embsys'last)-level;
 
   begin
+    new_line(file);
     put(file,"START SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,embsys);
     new_line(file);
@@ -214,6 +216,7 @@ package body Cascade_Homotopy_Steps is
     n : constant natural32 := natural32(embsys'last)-level;
 
   begin
+    new_line(file);
     put(file,"START SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,embsys);
     new_line(file);
@@ -284,6 +287,7 @@ package body Cascade_Homotopy_Steps is
     n : constant natural32 := natural32(embsys'last)-level;
 
   begin
+    new_line(file);
     put(file,"START SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,embsys);
     new_line(file);
@@ -354,6 +358,7 @@ package body Cascade_Homotopy_Steps is
     n : constant natural32 := natural32(embsys'last)-level;
 
   begin
+    new_line(file);
     put(file,"START SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,embsys);
     new_line(file);
@@ -424,6 +429,7 @@ package body Cascade_Homotopy_Steps is
     n : constant natural32 := natural32(embsys'last)-level;
 
   begin
+    new_line(file);
     put(file,"START SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,embsys);
     new_line(file);
