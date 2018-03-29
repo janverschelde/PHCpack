@@ -1,3 +1,6 @@
+Thu 29 Mar 2019 : new packages {standard,double,quaddobl}_blackbox_refiners,
+  with code from {standard,dobldobl,quaddobl}_blackbox_continuations.adb.
+
 Wed 28 Mar 2018 : to {standard,dobldobl,quaddobl}_blackbox_continuations.adb,
   added the writing of elapsed wall clock times for multitasked continuation.
 
