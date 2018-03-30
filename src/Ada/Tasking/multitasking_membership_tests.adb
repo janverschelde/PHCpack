@@ -570,7 +570,7 @@ package body Multitasking_Membership_Tests is
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       idx := Standard_Membership_Test(nt,dim,tol,start,gpts,ls.v);
-      if idx /= 0
+      if idx = 0
        then Append(res,res_last,ls.all);
       end if;
       tmp := Tail_Of(tmp);
@@ -594,7 +594,7 @@ package body Multitasking_Membership_Tests is
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       idx := Standard_Membership_Test(nt,dim,tol,start,gpts,ls.v);
-      if idx /= 0
+      if idx = 0
        then Append(res,res_last,ls.all);
       end if;
       tmp := Tail_Of(tmp);
@@ -618,7 +618,7 @@ package body Multitasking_Membership_Tests is
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       idx := DoblDobl_Membership_Test(nt,dim,tol,start,gpts,ls.v);
-      if idx /= 0
+      if idx = 0
        then Append(res,res_last,ls.all);
       end if;
       tmp := Tail_Of(tmp);
@@ -642,7 +642,7 @@ package body Multitasking_Membership_Tests is
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       idx := DoblDobl_Membership_Test(nt,dim,tol,start,gpts,ls.v);
-      if idx /= 0
+      if idx = 0
        then Append(res,res_last,ls.all);
       end if;
       tmp := Tail_Of(tmp);
@@ -666,7 +666,7 @@ package body Multitasking_Membership_Tests is
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       idx := QuadDobl_Membership_Test(nt,dim,tol,start,gpts,ls.v);
-      if idx /= 0
+      if idx = 0
        then Append(res,res_last,ls.all);
       end if;
       tmp := Tail_Of(tmp);
@@ -690,7 +690,7 @@ package body Multitasking_Membership_Tests is
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       idx := QuadDobl_Membership_Test(nt,dim,tol,start,gpts,ls.v);
-      if idx /= 0
+      if idx = 0
        then Append(res,res_last,ls.all);
       end if;
       tmp := Tail_Of(tmp);

@@ -1,3 +1,5 @@
+Fri 30 Mar 2018 : fixed filter in multitasking_membership_tests.adb.
+
 Thu 29 Mar 2018 : added mute procedures to multitasking_root_refiners.
 
 Wed 28 Mar 2018 : new package multitasking_membership_tests, 
