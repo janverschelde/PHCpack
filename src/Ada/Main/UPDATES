@@ -1,3 +1,6 @@
+Fri 30 Mar 2018 : updated the factorization banner in greeting_banners.ads
+  and passed the number of tasks to mainfac in dispatch.adb.
+
 Thu 29 Mar 2018 : improved output in black_box_root_counters.adb.
 
 Wed 28 Mar 2018 : added the writing of the elapsed wall clock time to

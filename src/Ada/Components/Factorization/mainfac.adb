@@ -1,8 +1,9 @@
+with Ada.Calendar;
 with text_io;                            use text_io;
 with String_Splitters;                   use String_Splitters;
+with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
 with Characters_and_Numbers;             use Characters_and_Numbers;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -47,6 +48,7 @@ with Drivers_to_Grid_Creators;           use Drivers_to_Grid_Creators;
 with Standard_Trace_Interpolators;
 with Multprec_Trace_Interpolators;
 with Homotopy_Membership_Tests;          use Homotopy_Membership_Tests;
+with Multitasking_Membership_Tests;      use Multitasking_Membership_Tests;
 with Witness_Sets,Witness_Sets_io;       use Witness_Sets,Witness_Sets_io;
 with Combinatorial_Factorization;        use Combinatorial_Factorization;
 with Drivers_to_Factor_Components;       use Drivers_to_Factor_Components;
@@ -57,7 +59,7 @@ with mainfilt;
 with Greeting_Banners;
 with Write_Seed_Number;
 
-procedure mainfac ( infilename,outfilename : in string ) is
+procedure mainfac ( nt : in natural32; infilename,outfilename : in string ) is
 
   procedure Tune_Member_Tolerances ( restol,homtol : in out double_float ) is
 
@@ -86,6 +88,117 @@ procedure mainfac ( infilename,outfilename : in string ) is
     end loop;
   end Tune_Member_Tolerances;
 
+  procedure Standard_Multitasked_Membership_Test
+              ( file : in file_type;
+                nbtasks,dim : in natural32; homtol : in double_float;
+                ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                gpts,sols : in Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   When nt > 0, then the multitasking membership test is called.
+  --   This procedure wraps the call and writes results to file.
+
+    use Standard_Complex_Solutions;
+
+    start_moment,ended_moment : Ada.Calendar.Time;
+    isols : Solution_List;
+    timer : Timing_Widget;
+
+  begin
+    start_moment := Ada.Calendar.Clock;
+    tstart(timer);
+    isols := Standard_Membership_Filter(nt,dim,homtol,ep,gpts,sols);
+    tstop(timer);
+    ended_moment := Ada.Calendar.Clock;
+    put(file,"Tested ");
+    put(file,Length_Of(sols),1);
+    put(file," points, with ");
+    put(file,nbtasks,1); put_line(file," tasks.");
+    put(file,"Number of points not on component : ");
+    put(file,Length_Of(isols),1); put_line(file,".");
+    new_line(file);
+    print_times(file,timer,"multitasked membership test");
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
+    new_line(file);
+    put_line(file,"SOLUTIONS THAT FAILED MEMBERSHIP TEST :");
+    put(file,Length_Of(isols),natural32(Head_Of(isols).n),isols);
+  end Standard_Multitasked_Membership_Test;
+
+  procedure DoblDobl_Multitasked_Membership_Test
+              ( file : in file_type;
+                nbtasks,dim : in natural32; homtol : in double_float;
+                ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                gpts,sols : in DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   When nt > 0, then the multitasking membership test is called.
+  --   This procedure wraps the call and writes results to file.
+
+    use DoblDobl_Complex_Solutions;
+
+    start_moment,ended_moment : Ada.Calendar.Time;
+    isols : Solution_List;
+    timer : Timing_Widget;
+
+  begin
+    start_moment := Ada.Calendar.Clock;
+    tstart(timer);
+    isols := DoblDobl_Membership_Filter(nt,dim,homtol,ep,gpts,sols);
+    tstop(timer);
+    ended_moment := Ada.Calendar.Clock;
+    put(file,"Tested ");
+    put(file,Length_Of(sols),1);
+    put(file," points, with ");
+    put(file,nbtasks,1); put_line(file," tasks.");
+    put(file,"Number of points not on component : ");
+    put(file,Length_Of(isols),1); put_line(file,".");
+    new_line(file);
+    print_times(file,timer,"multitasked membership test");
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
+    new_line(file);
+    put_line(file,"SOLUTIONS THAT FAILED MEMBERSHIP TEST :");
+    put(file,Length_Of(isols),natural32(Head_Of(isols).n),isols);
+  end DoblDobl_Multitasked_Membership_Test;
+
+  procedure QuadDobl_Multitasked_Membership_Test
+              ( file : in file_type;
+                nbtasks,dim : in natural32; homtol : in double_float;
+                ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                gpts,sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   When nt > 0, then the multitasking membership test is called.
+  --   This procedure wraps the call and writes results to file.
+
+    use QuadDobl_Complex_Solutions;
+
+    start_moment,ended_moment : Ada.Calendar.Time;
+    isols : Solution_List;
+    timer : Timing_Widget;
+
+  begin
+    start_moment := Ada.Calendar.Clock;
+    tstart(timer);
+    isols := QuadDobl_Membership_Filter(nt,dim,homtol,ep,gpts,sols);
+    tstop(timer);
+    ended_moment := Ada.Calendar.Clock;
+    put(file,"Tested ");
+    put(file,Length_Of(sols),1);
+    put(file," points, with ");
+    put(file,nbtasks,1); put_line(file," tasks.");
+    put(file,"Number of points not on component : ");
+    put(file,Length_Of(isols),1); put_line(file,".");
+    new_line(file);
+    print_times(file,timer,"multitasked membership test");
+    new_line(file);
+    Write_Elapsed_Time(file,start_moment,ended_moment);
+    new_line(file);
+    put_line(file,"SOLUTIONS THAT FAILED MEMBERSHIP TEST :");
+    put(file,Length_Of(isols),natural32(Head_Of(isols).n),isols);
+  end QuadDobl_Multitasked_Membership_Test;
+
   procedure Standard_Homotopy_Membership_Test is
 
   -- DESCRIPTION :
@@ -99,6 +212,7 @@ procedure mainfac ( infilename,outfilename : in string ) is
     dim : natural32;
     restol : double_float := 1.0E-10;
     homtol : double_float := 1.0E-6;
+    timer : Timing_Widget;
 
   begin
     Standard_Read_Embedding(lp,genpts,dim);
@@ -112,7 +226,16 @@ procedure mainfac ( infilename,outfilename : in string ) is
     new_line;
     put_line("See the output file for results ...");
     new_line;
-    Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+    if nt = 0 then
+      tstart(timer);
+      Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+      tstop(timer);
+      new_line(file);
+      print_times(file,timer,"homotopy membership test");
+    else
+      Standard_Multitasked_Membership_Test
+        (file,nt,dim,homtol,lp.all,genpts,sols);
+    end if;
     new_line(file);
     Write_Seed_Number(file);
     put_line(file,Greeting_Banners.Version);
@@ -131,6 +254,7 @@ procedure mainfac ( infilename,outfilename : in string ) is
     dim : natural32;
     restol : double_float := 1.0E-10;
     homtol : double_float := 1.0E-6;
+    timer : Timing_Widget;
 
   begin
     DoblDobl_Read_Embedding(lp,genpts,dim);
@@ -144,7 +268,16 @@ procedure mainfac ( infilename,outfilename : in string ) is
     new_line;
     put_line("See the output file for results ...");
     new_line;
-    Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+    if nt = 0 then
+      tstart(timer);
+      Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+      tstop(timer);
+      new_line(file);
+      print_times(file,timer,"homotopy membership test");
+    else
+      DoblDobl_Multitasked_Membership_Test
+        (file,nt,dim,homtol,lp.all,genpts,sols);
+    end if;
     new_line(file);
     Write_Seed_Number(file);
     put_line(file,Greeting_Banners.Version);
@@ -163,6 +296,7 @@ procedure mainfac ( infilename,outfilename : in string ) is
     dim : natural32;
     restol : double_float := 1.0E-10;
     homtol : double_float := 1.0E-6;
+    timer : Timing_Widget;
 
   begin
     QuadDobl_Read_Embedding(lp,genpts,dim);
@@ -176,7 +310,16 @@ procedure mainfac ( infilename,outfilename : in string ) is
     new_line;
     put_line("See the output file for results ...");
     new_line;
-    Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+    if nt = 0 then
+      tstart(timer);
+      Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+      tstop(timer);
+      new_line(file);
+      print_times(file,timer,"homotopy membership test");
+    else
+      QuadDobl_Multitasked_Membership_Test
+        (file,nt,dim,homtol,lp.all,genpts,sols);
+    end if;
     new_line(file);
     Write_Seed_Number(file);
     put_line(file,Greeting_Banners.Version);

@@ -40,6 +40,9 @@ with Verify_Solution_Maps;
 with C_to_Ada_Arrays;                    use C_to_Ada_Arrays;
 with Write_Seed_Number;
 
+with Standard_Natural_Numbers_io;
+ use Standard_Natural_Numbers_io;
+
 procedure Dispatch is
 
 -- BANNERS WITH INFORMATION TO START DIALOGUE WITH USER :
@@ -308,6 +311,7 @@ procedure Dispatch is
     seed_found : constant natural32 := Find_Seed;
 
   begin
+    put("The seed found : "); put(seed_found,1); new_line;
     if seed_found = 0
      then Standard_Random_Numbers.Set_Seed(fixed_seed);
      else Standard_Random_Numbers.Set_Seed(seed_found);
@@ -497,12 +501,12 @@ procedure Dispatch is
           if o3 = 'b' then
             babldmvc(nt,infile,outfile);
           else
-            put_line(welcome); put_line(mvcban & ", with " & ns & " tasks");
+            put_line(welcome); put_line(mvcban & ", with " & ns & " tasks.");
             mainsmvc(nt,infile,outfile);
           end if;
         end;
       when others =>
-       put_line(welcome); put_line(mvcban & ", no multitasking");
+       put_line(welcome); put_line(mvcban & ", no multitasking.");
        mainsmvc(0,infile,outfile);
     end case;
   end Mixed_Volume_Dispatcher;
@@ -533,11 +537,12 @@ procedure Dispatch is
              nt : constant natural32 := Number_of_Tasks;
              ns : constant string := Convert(integer32(nt));
            begin
-             put_line(welcome); put_line(pocoban & ", with " & ns & " tasks");
+             put_line(welcome);
+             put_line(pocoban & ", with " & ns & " tasks.");
              mainpoco(nt,file1,file2,contprc);
            end;
       when others
-        => put_line(welcome); put_line(pocoban & ", no multitasking");
+        => put_line(welcome); put_line(pocoban & ", no multitasking.");
            mainpoco(0,file1,file2,contprc);
     end case;
   end Continuation_Dispatcher;
@@ -627,14 +632,29 @@ procedure Dispatch is
     end case;
   end Decomposition_Dispatcher;
 
-  procedure Factorization_Dispatcher ( infile,outfile : in string ) is
+  procedure Factorization_Dispatcher
+              ( o2 : in character; infile,outfile : in string ) is
 
   -- DESCRIPTION :
-  --   Filtering and factorization capabilities.
+  --   Filtering and factorization capabilities, when o1 = 'f'.
+
+    nt : natural32;
 
   begin
-    put_line(welcome); put_line(facban);
-    mainfac(infile,outfile);
+    put_line(welcome);
+    case o2 is
+      when 't' =>
+        nt := Number_of_Tasks;
+        declare
+          ns : constant string := Convert(integer32(nt));
+        begin
+          put_line(facban & ", with " & ns & " tasks.");
+        end;
+      when others =>
+        nt := 0;
+        put_line(facban & ", no multitasking.");
+    end case;
+    mainfac(nt,infile,outfile);
   end Factorization_Dispatcher;
 
   procedure Tasking_Dispatcher
@@ -676,7 +696,11 @@ procedure Dispatch is
         put_line(welcome);
         put_line(compban & " with " & ns & " tasks");
         maindeco(nt,infile,outfile);
-      when others => mainphc(nt,infile,outfile);
+      when 'f' => 
+        put_line(welcome); put_line(facban & ", with " & ns & " tasks.");
+        mainfac(nt,infile,outfile);
+      when others =>
+        mainphc(nt,infile,outfile);
     end case;
   end Tasking_Dispatcher;
 
@@ -790,7 +814,7 @@ procedure Dispatch is
       when 'e'    => Enumeration_Dispatcher(o2,f1,f2);
       when 'f'    => if o2 = 'h' or o2 = '-'
                       then Greeting_Banners.help4factor;
-                      else Factorization_Dispatcher(f1,f2);
+                      else Factorization_Dispatcher(o2,f1,f2);
                      end if;
       when 'g'    => if o2 = 'h' or o2 = '-'
                       then Greeting_Banners.help4goodformat;

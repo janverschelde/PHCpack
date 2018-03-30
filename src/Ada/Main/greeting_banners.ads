@@ -14,7 +14,7 @@ package Greeting_Banners is
     "SAGBI/Pieri homotopies to solve a problem in enumerative geometry.";
 
   facban : constant string :=
-    "Factor a pure dimensional solution set into irreducible components.";
+    "Factor a pure dimensional solution set into irreducibles";
 
   goodban : constant string :=
     "Checking whether a given input system has the right syntax.";

@@ -1,3 +1,5 @@
+Fri 30 Mar 2018 : updated mainfac for multitasking homotopy membership tests.
+
 Wed 28 Mar 2018 : new package homotopy_membership_target with code factored
   out of homotopy_membership_tests, added make of target system in the test.
   Bug fix in homotopy_membership_target.adb, forgotten offset.
