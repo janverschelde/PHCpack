@@ -237,8 +237,8 @@ package body Equation_by_Equation_Solvers is
     sing,regu : Solution_List;
 
   begin
-    R_Singular_Filter(file,sols,tol,sing,regu);
-   -- S_Singular_Filter(sols,tol,sing,regu);
+    Reporting_Singular_Filter(file,sols,tol,sing,regu);
+   -- Silent_Singular_Filter(sols,tol,sing,regu);
     put(file,"Tested "); put(file,len,1); put(file," solutions, found ");
     put(file,Length_Of(regu),1); put(file," regular and ");
     put(file,Length_Of(sing),1); put_line(file," singular.");

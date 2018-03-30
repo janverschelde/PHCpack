@@ -1,3 +1,6 @@
+Fri 30 Mar 2018 : in {standard,dobldobl,quaddobl}_solution_splitters,
+  improved the interface to the singular filters.
+
 Mon 9 Oct 2017 : new package standard_solution_manipulators to remove the
   imaginary part of the target.  Made dobldobl and quaddobl versions of
   this new package.

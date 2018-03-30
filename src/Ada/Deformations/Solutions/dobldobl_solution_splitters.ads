@@ -37,17 +37,32 @@ package DoblDobl_Solution_Splitters is
   --   sols0      solutions with n-th component less than tol;
   --   sols1      solutions with n-th component larger than tol.
 
-  procedure S_Singular_Filter
+  procedure Silent_Singular_Filter
               ( sols : in Solution_List; tol : in double_float;
                 sinsols,regsols : out Solution_List );
 
-  procedure R_Singular_Filter
+  -- DESCRIPTION :
+  --   Splits the solution list sols in two list, based on
+  --   the tolerance on the estimate for the inverse condition number.
+  --   Solutions are copied.  This version is silent.
+
+  -- ON ENTRY :
+  --   sols     list of solutions;
+  --   tol      tolerance on inverse condition number rco.
+
+  -- ON RETURN :
+  --   sinsols  solutions with rco <= tol.
+  --   regsols  solutions with rco > tol.
+
+  procedure Reporting_Singular_Filter
               ( file : in file_type;
                 sols : in Solution_List; tol : in double_float;
                 sinsols,regsols : out Solution_List );
 
   -- DESCRIPTION :
-  --   Removes those solutions whose conditions number is too large.
+  --   Splits the solution list sols in two list, based on
+  --   the tolerance on the estimate for the inverse condition number.
+  --   Solutions are copied.  Output is written to file.
 
   -- ON ENTRY :
   --   file     for intermediate output;

@@ -1,3 +1,6 @@
+Fri 30 Mar 2018 : changed intrinsic_diagonal_continuation.adb for the
+  improved interface in standard_solution_filters.
+
 Thu 29 Mar 2018 : improved output in cascade_homotopy_steps.adb.
 
 Wed 28 Mar 2018 : added writing of elapsed wall clock time of the solving

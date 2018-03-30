@@ -71,7 +71,7 @@ package body QuadDobl_Solution_Splitters is
     end if;
   end Filter_and_Split_Solutions;
 
-  procedure S_Singular_Filter
+  procedure Silent_Singular_Filter
               ( sols : in Solution_List; tol : in double_float;
                 sinsols,regsols : out Solution_List ) is
 
@@ -90,9 +90,9 @@ package body QuadDobl_Solution_Splitters is
       end if;
       tmp := Tail_Of(tmp);
     end loop;
-  end S_Singular_Filter;
+  end Silent_Singular_Filter;
 
-  procedure R_Singular_Filter
+  procedure Reporting_Singular_Filter
               ( file : in file_type;
                 sols : in Solution_List; tol : in double_float;
                 sinsols,regsols : out Solution_List ) is
@@ -124,6 +124,6 @@ package body QuadDobl_Solution_Splitters is
       tmp := Tail_Of(tmp);
     end loop;
     Write_Condition_Table(file,table);
-  end R_Singular_Filter;
+  end Reporting_Singular_Filter;
 
 end QuadDobl_Solution_Splitters;

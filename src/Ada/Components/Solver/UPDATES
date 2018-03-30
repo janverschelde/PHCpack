@@ -1,3 +1,6 @@
+Fri 30 Mar 2018 : equation_by_equation_solvers.adb changed because of
+  improved interface in standard_solution_filters.
+
 Mon 31 Jul 2017 : added the type conversions to the Silent_Root_Finder
   procedures in the *hypersurface_witdrivers.adb packages.
   Bug fix in *hypersurface_witdrivers.adb, swapped cases in conversions.
