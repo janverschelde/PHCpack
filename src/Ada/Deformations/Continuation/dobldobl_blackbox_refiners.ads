@@ -18,48 +18,51 @@ package DoblDobl_BlackBox_Refiners is
               ( p : in Poly_Sys; sols : in out Solution_List );
 
   -- DESCRIPTION :
-  --   Refines the roots in sols w.r.t. the system p,
+  --   Refines the solution given in sols of the polynomial system p,
   --   without output written to file.
-  --   By default, deflation is applied.
+
+  procedure Silent_Black_Box_Refine
+              ( nt : in integer32;
+                p : in Poly_Sys; sols : in out Solution_List );
+
+  -- DESCRIPTION :
+  --   Refines the solution given in sols of the polynomial system p,
+  --   without output written to file, with nt tasks.
 
   procedure Silent_Black_Box_Refine
               ( p : in Laur_Sys; sols : in out Solution_List );
 
   -- DESCRIPTION :
-  --   Refines the roots in sols w.r.t. the system p,
+  --   Refines the solution given in sols of the Laurent system p,
   --   without output written to file.
-  --   For Laurent systems, deflation is not yet available.
 
   procedure Reporting_Black_Box_Refine
-              ( file : in file_type; p : in Poly_Sys;
-                sols : in out Solution_List );
+              ( file : in file_type;
+                p : in Poly_Sys; sols : in out Solution_List );
 
   -- DESCRIPTION :
-  --   Refines the roots in sols w.r.t. the system p.
-  --   By default, deflation is applied.
+  --   Refines the solutions in sols of the system polynomial p.
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type; nt : in integer32;
                 p : in Poly_Sys; sols : in out Solution_List );
 
   -- DESCRIPTION :
-  --   Refines the roots in sols w.r.t. the system p, with nt tasks.
-  --   With multitasking, deflation is not yet available...
+  --   Refines the solutions in sols of the polynomial system p
+  --   with nt tasks.
 
   procedure Reporting_Black_Box_Refine
-              ( file : in file_type; p : in Laur_Sys;
-                sols : in out Solution_List );
+              ( file : in file_type;
+                p : in Laur_Sys; sols : in out Solution_List );
 
   -- DESCRIPTION :
-  --   Refines the roots in sols w.r.t. the system p.
-  --   Deflation is not yet available for Laurent systems.
+  --   Refines the solutions in sols of the Laurent system p.
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type; nt : in integer32;
                 p : in Laur_Sys; sols : in out Solution_List );
 
   -- DESCRIPTION :
-  --   Refines the roots in sols w.r.t. the system p with nt tasks.
-  --   Deflation is not yet available for Laurent systems.
+  --   Refines the solutions in sols of the Laurent system p with nt tasks.
 
 end DoblDobl_BlackBox_Refiners;
