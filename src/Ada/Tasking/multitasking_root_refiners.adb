@@ -84,7 +84,287 @@ package body Multitasking_Root_Refiners is
     return res;
   end Create;
 
--- ROOT REFINING PROCEDURES :
+-- MUTE ROOT REFINING PROCEDURES ON POLYNOMIAL SYSTEMS :
+
+  procedure Mute_Multitasking_Root_Refiner
+              ( nt : in integer32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean ) is
+
+    use Standard_Complex_Poly_SysFun;
+    use Standard_Complex_Jaco_Matrices;
+    use Standard_Complex_Solutions;
+    use Standard_Solution_Diagnostics;
+    use Standard_Root_Refiners;
+
+    n : constant integer32 := p'length;
+    f : Eval_Poly_Sys(1..n) := Create(p);
+    jm : Jaco_Mat(1..n,1..n) := Create(p);
+    jf : Eval_Jaco_Mat(1..n,1..n) := Create(jm);
+    len : constant natural32 := Length_Of(sols);
+    slm : constant Solution_Metric_List := Create(integer32(len));
+
+    procedure Job ( task_id,nb_tasks : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   Defines the job for the task with identification task_id,
+    --   out of a total of tasks equal to the number nb_tasks.
+    --   Every task does one Newton step on a solution,
+    --   depending whether the index of the solution matches
+    --   the job identification number, modulo the number of tasks.
+
+      y : Standard_Complex_Vectors.Vector(p'range);
+      A : Standard_Complex_Matrices.Matrix(p'range,p'range);
+      ipvt : Standard_Integer_Vectors.Vector(1..n);
+      index : integer32;
+      ptr_sols : Solution_List := sols;
+      ptr_slms : Solution_Metric_List := slm;
+      ls : Link_to_Solution;
+      lsm : Link_to_Solution_Metric;
+
+    begin
+      for i in 1..integer32(len) loop
+        index := 1 + i mod nb_tasks;
+        if index = task_id then
+          ls := Head_Of(ptr_sols);
+          lsm := Head_Of(ptr_slms);
+          y := Eval(f,ls.v);
+          lsm.initres := Sum_Norm(y);
+          lsm.infty := At_Infinity(ls.all,false,1.0E+8);
+          if not lsm.infty and ls.err < 0.1 and lsm.initres < 0.1 then
+            for k in 1..max loop
+              Standard_Complex_Vectors.Min(y);
+              A := Eval(jf,ls.v);
+              lufco(A,n,ipvt,ls.rco);
+              if ls.rco + 1.0 = 1.0 then
+                ls.res := Sum_Norm(y);
+                lsm.fail := (ls.res > epsfa); exit;
+              end if;
+              lusolve(A,n,ipvt,y);
+              Standard_Complex_Vectors.Add(ls.v,y);
+              ls.err := Sum_Norm(y);
+              y := Eval(f,ls.v);           
+              ls.res := Sum_Norm(y);
+              lsm.numbits := lsm.numbits + 1;
+              if ls.err < epsxa then
+                lsm.fail := false; exit;
+              elsif ls.res < epsfa then
+                lsm.fail := false; exit;
+              end if;
+            end loop;
+           -- Multiplicity(ls,i,sols,lsm.fail,lsm.infty,deflate,tolsing,epsxa);
+          end if;
+        end if;
+        ptr_sols := Tail_Of(ptr_sols);
+        ptr_slms := Tail_Of(ptr_slms);
+      end loop;
+    end Job;
+    procedure do_jobs is new Multitasking.Silent_Workers(Job);
+
+    procedure Main is
+
+    -- DESCRIPTION :
+    --   Launches a number of tasks to do one Newton step on each solution.
+
+    begin
+      do_jobs(nt);
+      Clear(f); Clear(jm); Clear(jf);
+    end Main;
+
+  begin
+    Main;
+  end Mute_Multitasking_Root_Refiner;
+
+  procedure Mute_Multitasking_Root_Refiner
+              ( nt : in integer32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Solution_Diagnostics;
+    use DoblDobl_Root_Refiners;
+
+    n : constant integer32 := p'length;
+    f : Eval_Poly_Sys(1..n) := Create(p);
+    jm : Jaco_Mat(1..n,1..n) := Create(p);
+    jf : Eval_Jaco_Mat(1..n,1..n) := Create(jm);
+    len : constant natural32 := Length_Of(sols);
+    slm : constant Solution_Metric_List := Create(integer32(len));
+    one : constant double_double := create(1.0);
+
+    procedure Job ( task_id,nb_tasks : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   Defines the job for the task with identification task_id,
+    --   out of a total of tasks equal to the number nb_tasks.
+    --   Every task does one Newton step on a solution,
+    --   depending whether the index of the solution matches
+    --   the job identification number, modulo the number of tasks.
+
+      y : DoblDobl_Complex_Vectors.Vector(p'range);
+      A : DoblDobl_Complex_Matrices.Matrix(p'range,p'range);
+      ipvt : Standard_Integer_Vectors.Vector(1..n);
+      index : integer32;
+      ptr_sols : Solution_List := sols;
+      ptr_slms : Solution_Metric_List := slm;
+      ls : Link_to_Solution;
+      lsm : Link_to_Solution_Metric;
+
+    begin
+      for i in 1..integer32(len) loop
+        index := 1 + i mod nb_tasks;
+        if index = task_id then
+          ls := Head_Of(ptr_sols);
+          lsm := Head_Of(ptr_slms);
+          y := Eval(f,ls.v);
+          lsm.initres := hi_part(Sum_Norm(y));
+          lsm.infty := At_Infinity(ls.all,false,1.0E+8);
+          if not lsm.infty and ls.err < 0.1 and lsm.initres < 0.1 then
+            for k in 1..max loop
+              DoblDobl_Complex_Vectors.Min(y);
+              A := Eval(jf,ls.v);
+              lufco(A,n,ipvt,ls.rco);
+              if ls.rco + one = one then
+                ls.res := Sum_Norm(y);
+                lsm.fail := (ls.res > epsfa); exit;
+              end if;
+              lusolve(A,n,ipvt,y);
+              DoblDobl_Complex_Vectors.Add(ls.v,y);
+              ls.err := Sum_Norm(y);
+              y := Eval(f,ls.v);           
+              ls.res := Sum_Norm(y);
+              lsm.numbits := lsm.numbits + 1;
+              if ls.err < epsxa then
+                lsm.fail := false; exit;
+              elsif ls.res < epsfa then
+                lsm.fail := false; exit;
+              end if;
+            end loop;
+           -- Multiplicity(ls,i,sols,lsm.fail,lsm.infty,deflate,tolsing,epsxa);
+          end if;
+        end if;
+        ptr_sols := Tail_Of(ptr_sols);
+        ptr_slms := Tail_Of(ptr_slms);
+      end loop;
+    end Job;
+    procedure do_jobs is new Multitasking.Silent_Workers(Job);
+
+    procedure Main is
+
+    -- DESCRIPTION :
+    --   Launches a number of tasks to do one Newton step on each solution.
+
+    begin
+      do_jobs(nt);
+      Clear(f); Clear(jm); Clear(jf);
+    end Main;
+
+  begin
+    Main;
+  end Mute_Multitasking_Root_Refiner;
+
+  procedure Mute_Multitasking_Root_Refiner
+              ( nt : in integer32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean ) is
+
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Jaco_Matrices;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Solution_Diagnostics;
+    use QuadDobl_Root_Refiners;
+
+    n : constant integer32 := p'length;
+    f : Eval_Poly_Sys(1..n) := Create(p);
+    jm : Jaco_Mat(1..n,1..n) := Create(p);
+    jf : Eval_Jaco_Mat(1..n,1..n) := Create(jm);
+    len : constant natural32 := Length_Of(sols);
+    slm : constant Solution_Metric_List := Create(integer32(len));
+    one : constant quad_double := create(1.0);
+
+    procedure Job ( task_id,nb_tasks : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   Defines the job for the task with identification task_id,
+    --   out of a total of tasks equal to the number nb_tasks.
+    --   Every task does one Newton step on a solution,
+    --   depending whether the index of the solution matches
+    --   the job identification number, modulo the number of tasks.
+
+      y : QuadDobl_Complex_Vectors.Vector(p'range);
+      A : QuadDobl_Complex_Matrices.Matrix(p'range,p'range);
+      ipvt : Standard_Integer_Vectors.Vector(1..n);
+      index : integer32;
+      ptr_sols : Solution_List := sols;
+      ptr_slms : Solution_Metric_List := slm;
+      ls : Link_to_Solution;
+      lsm : Link_to_Solution_Metric;
+
+    begin
+      for i in 1..integer32(len) loop
+        index := 1 + i mod nb_tasks;
+        if index = task_id then
+          ls := Head_Of(ptr_sols);
+          lsm := Head_Of(ptr_slms);
+          y := Eval(f,ls.v);
+          lsm.initres := hihi_part(Sum_Norm(y));
+          lsm.infty := At_Infinity(ls.all,false,1.0E+8);
+          if not lsm.infty and ls.err < 0.1 and lsm.initres < 0.1 then
+            for k in 1..max loop
+              QuadDobl_Complex_Vectors.Min(y);
+              A := Eval(jf,ls.v);
+              lufco(A,n,ipvt,ls.rco);
+              if ls.rco + one = one then
+                ls.res := Sum_Norm(y);
+                lsm.fail := (ls.res > epsfa); exit;
+              end if;
+              lusolve(A,n,ipvt,y);
+              QuadDobl_Complex_Vectors.Add(ls.v,y);
+              ls.err := Sum_Norm(y);
+              y := Eval(f,ls.v);           
+              ls.res := Sum_Norm(y);
+              lsm.numbits := lsm.numbits + 1;
+              if ls.err < epsxa then
+                lsm.fail := false; exit;
+              elsif ls.res < epsfa then
+                lsm.fail := false; exit;
+              end if;
+            end loop;
+           -- Multiplicity(ls,i,sols,lsm.fail,lsm.infty,deflate,tolsing,epsxa);
+          end if;
+        end if;
+        ptr_sols := Tail_Of(ptr_sols);
+        ptr_slms := Tail_Of(ptr_slms);
+      end loop;
+    end Job;
+    procedure do_jobs is new Multitasking.Silent_Workers(Job);
+
+    procedure Main is
+
+    -- DESCRIPTION :
+    --   Launches a number of tasks to do one Newton step on each solution.
+
+    begin
+      do_jobs(nt);
+      Clear(f); Clear(jm); Clear(jf);
+    end Main;
+
+  begin
+    Main;
+  end Mute_Multitasking_Root_Refiner;
+
+-- SILENT ROOT REFINING PROCEDURES ON POLYNOMIAL SYSTEMS :
 
   procedure Silent_Multitasking_Root_Refiner
               ( file : in file_type; nt : in integer32;
@@ -877,6 +1157,288 @@ package body Multitasking_Root_Refiners is
   begin
     Main;
   end Reporting_Multitasking_Root_Refiner;
+
+-- MUTE ROOT REFINERS ON LAURENT SYSTEMS :
+
+  procedure Mute_Multitasking_Root_Refiner
+              ( nt : in integer32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean ) is
+
+    use Standard_Complex_Laur_SysFun;
+    use Standard_Complex_Laur_JacoMats;
+    use Standard_Complex_Solutions;
+    use Standard_Solution_Diagnostics;
+    use Standard_Root_Refiners;
+
+    n : constant integer32 := p'length;
+    f : Eval_Laur_Sys(1..n) := Create(p);
+    jm : Jaco_Mat(1..n,1..n) := Create(p);
+    jf : Eval_Jaco_Mat(1..n,1..n) := Create(jm);
+    len : constant natural32 := Length_Of(sols);
+    slm : constant Solution_Metric_List := Create(integer32(len));
+
+    procedure Job ( task_id,nb_tasks : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   Defines the job for the task with identification task_id,
+    --   out of a total of tasks equal to the number nb_tasks.
+    --   Every task does one Newton step on a solution,
+    --   depending whether the index of the solution matches
+    --   the job identification number, modulo the number of tasks.
+
+      y : Standard_Complex_Vectors.Vector(p'range);
+      A : Standard_Complex_Matrices.Matrix(p'range,p'range);
+      ipvt : Standard_Integer_Vectors.Vector(1..n);
+      index : integer32;
+      ptr_sols : Solution_List := sols;
+      ptr_slms : Solution_Metric_List := slm;
+      ls : Link_to_Solution;
+      lsm : Link_to_Solution_Metric;
+
+    begin
+      for i in 1..integer32(len) loop
+        index := 1 + i mod nb_tasks;
+        if index = task_id then
+          ls := Head_Of(ptr_sols);
+          lsm := Head_Of(ptr_slms);
+          y := Eval(f,ls.v);
+          lsm.initres := Sum_Norm(y);
+          lsm.infty := At_Infinity(ls.all,false,1.0E+8);
+          if not lsm.infty and ls.err < 0.1 and lsm.initres < 0.1 then
+            for k in 1..max loop
+              Standard_Complex_Vectors.Min(y);
+              A := Eval(jf,ls.v);
+              lufco(A,n,ipvt,ls.rco);
+              if ls.rco + 1.0 = 1.0 then
+                ls.res := Sum_Norm(y);
+                lsm.fail := (ls.res > epsfa); exit;
+              end if;
+              lusolve(A,n,ipvt,y);
+              Standard_Complex_Vectors.Add(ls.v,y);
+              ls.err := Sum_Norm(y);
+              y := Eval(f,ls.v);           
+              ls.res := Sum_Norm(y);
+              lsm.numbits := lsm.numbits + 1;
+              if ls.err < epsxa then
+                lsm.fail := false; exit;
+              elsif ls.res < epsfa then
+                lsm.fail := false; exit;
+              end if;
+            end loop;
+           -- Multiplicity(ls,i,sols,lsm.fail,lsm.infty,deflate,tolsing,epsxa);
+          end if;
+        end if;
+        ptr_sols := Tail_Of(ptr_sols);
+        ptr_slms := Tail_Of(ptr_slms);
+      end loop;
+    end Job;
+    procedure do_jobs is new Multitasking.Silent_Workers(Job);
+
+    procedure Main is
+
+    -- DESCRIPTION :
+    --   Launches a number of tasks to do one Newton step on each solution.
+
+    begin
+      do_jobs(nt);
+      Clear(f); Clear(jm); Clear(jf);
+    end Main;
+
+  begin
+    Main;
+  end Mute_Multitasking_Root_Refiner;
+
+  procedure Mute_Multitasking_Root_Refiner
+              ( nt : in integer32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean ) is
+
+    use DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_JacoMats;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Solution_Diagnostics;
+    use DoblDobl_Root_Refiners;
+
+    n : constant integer32 := p'length;
+    f : Eval_Laur_Sys(1..n) := Create(p);
+    jm : Jaco_Mat(1..n,1..n) := Create(p);
+    jf : Eval_Jaco_Mat(1..n,1..n) := Create(jm);
+    len : constant natural32 := Length_Of(sols);
+    slm : constant Solution_Metric_List := Create(integer32(len));
+    one : constant double_double := create(1.0);
+
+    procedure Job ( task_id,nb_tasks : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   Defines the job for the task with identification task_id,
+    --   out of a total of tasks equal to the number nb_tasks.
+    --   Every task does one Newton step on a solution,
+    --   depending whether the index of the solution matches
+    --   the job identification number, modulo the number of tasks.
+
+      y : DoblDobl_Complex_Vectors.Vector(p'range);
+      A : DoblDobl_Complex_Matrices.Matrix(p'range,p'range);
+      ipvt : Standard_Integer_Vectors.Vector(1..n);
+      index : integer32;
+      ptr_sols : Solution_List := sols;
+      ptr_slms : Solution_Metric_List := slm;
+      ls : Link_to_Solution;
+      lsm : Link_to_Solution_Metric;
+
+    begin
+      for i in 1..integer32(len) loop
+        index := 1 + i mod nb_tasks;
+        if index = task_id then
+          ls := Head_Of(ptr_sols);
+          lsm := Head_Of(ptr_slms);
+          y := Eval(f,ls.v);
+          lsm.initres := hi_part(Sum_Norm(y));
+          lsm.infty := At_Infinity(ls.all,false,1.0E+8);
+          if not lsm.infty and ls.err < 0.1 and lsm.initres < 0.1 then
+            for k in 1..max loop
+              DoblDobl_Complex_Vectors.Min(y);
+              A := Eval(jf,ls.v);
+              lufco(A,n,ipvt,ls.rco);
+              if ls.rco + one = one then
+                ls.res := Sum_Norm(y);
+                lsm.fail := (ls.res > epsfa); exit;
+              end if;
+              lusolve(A,n,ipvt,y);
+              DoblDobl_Complex_Vectors.Add(ls.v,y);
+              ls.err := Sum_Norm(y);
+              y := Eval(f,ls.v);           
+              ls.res := Sum_Norm(y);
+              lsm.numbits := lsm.numbits + 1;
+              if ls.err < epsxa then
+                lsm.fail := false; exit;
+              elsif ls.res < epsfa then
+                lsm.fail := false; exit;
+              end if;
+            end loop;
+           -- Multiplicity(ls,i,sols,lsm.fail,lsm.infty,deflate,tolsing,epsxa);
+          end if;
+        end if;
+        ptr_sols := Tail_Of(ptr_sols);
+        ptr_slms := Tail_Of(ptr_slms);
+      end loop;
+    end Job;
+    procedure do_jobs is new Multitasking.Silent_Workers(Job);
+
+    procedure Main is
+
+    -- DESCRIPTION :
+    --   Launches a number of tasks to do one Newton step on each solution.
+
+    begin
+      do_jobs(nt);
+      Clear(f); Clear(jm); Clear(jf);
+    end Main;
+
+  begin
+    Main;
+  end Mute_Multitasking_Root_Refiner;
+
+  procedure Mute_Multitasking_Root_Refiner
+              ( nt : in integer32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean ) is
+
+    use QuadDobl_Complex_Laur_SysFun;
+    use QuadDobl_Complex_Laur_JacoMats;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Solution_Diagnostics;
+    use QuadDobl_Root_Refiners;
+
+    n : constant integer32 := p'length;
+    f : Eval_Laur_Sys(1..n) := Create(p);
+    jm : Jaco_Mat(1..n,1..n) := Create(p);
+    jf : Eval_Jaco_Mat(1..n,1..n) := Create(jm);
+    len : constant natural32 := Length_Of(sols);
+    slm : constant Solution_Metric_List := Create(integer32(len));
+    one : constant quad_double := create(1.0);
+
+    procedure Job ( task_id,nb_tasks : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   Defines the job for the task with identification task_id,
+    --   out of a total of tasks equal to the number nb_tasks.
+    --   Every task does one Newton step on a solution,
+    --   depending whether the index of the solution matches
+    --   the job identification number, modulo the number of tasks.
+
+      y : QuadDobl_Complex_Vectors.Vector(p'range);
+      A : QuadDobl_Complex_Matrices.Matrix(p'range,p'range);
+      ipvt : Standard_Integer_Vectors.Vector(1..n);
+      index : integer32;
+      ptr_sols : Solution_List := sols;
+      ptr_slms : Solution_Metric_List := slm;
+      ls : Link_to_Solution;
+      lsm : Link_to_Solution_Metric;
+
+    begin
+      for i in 1..integer32(len) loop
+        index := 1 + i mod nb_tasks;
+        if index = task_id then
+          ls := Head_Of(ptr_sols);
+          lsm := Head_Of(ptr_slms);
+          y := Eval(f,ls.v);
+          lsm.initres := hihi_part(Sum_Norm(y));
+          lsm.infty := At_Infinity(ls.all,false,1.0E+8);
+          if not lsm.infty and ls.err < 0.1 and lsm.initres < 0.1 then
+            for k in 1..max loop
+              QuadDobl_Complex_Vectors.Min(y);
+              A := Eval(jf,ls.v);
+              lufco(A,n,ipvt,ls.rco);
+              if ls.rco + one = one then
+                ls.res := Sum_Norm(y);
+                lsm.fail := (ls.res > epsfa); exit;
+              end if;
+              lusolve(A,n,ipvt,y);
+              QuadDobl_Complex_Vectors.Add(ls.v,y);
+              ls.err := Sum_Norm(y);
+              y := Eval(f,ls.v);           
+              ls.res := Sum_Norm(y);
+              lsm.numbits := lsm.numbits + 1;
+              if ls.err < epsxa then
+                lsm.fail := false; exit;
+              elsif ls.res < epsfa then
+                lsm.fail := false; exit;
+              end if;
+            end loop;
+           -- Multiplicity(ls,i,sols,lsm.fail,lsm.infty,deflate,tolsing,epsxa);
+          end if;
+        end if;
+        ptr_sols := Tail_Of(ptr_sols);
+        ptr_slms := Tail_Of(ptr_slms);
+      end loop;
+    end Job;
+    procedure do_jobs is new Multitasking.Silent_Workers(Job);
+
+    procedure Main is
+
+    -- DESCRIPTION :
+    --   Launches a number of tasks to do one Newton step on each solution.
+
+    begin
+      do_jobs(nt);
+      Clear(f); Clear(jm); Clear(jf);
+    end Main;
+
+  begin
+    Main;
+  end Mute_Multitasking_Root_Refiner;
+
+-- SILENT ROOT REFINERS ON LAURENT SYSTEMS :
 
   procedure Silent_Multitasking_Root_Refiner
               ( file : in file_type; nt : in integer32;
