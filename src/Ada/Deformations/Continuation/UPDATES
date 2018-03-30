@@ -1,3 +1,7 @@
+Fri 30 Mar 2019 : in {standard,dobldobl,quaddobl}_blackbox_refiners.adb,
+  replace singular filter by a splitter.
+  Adjusted standard_blackbox_continuations.adb.
+
 Thu 29 Mar 2019 : new packages {standard,dobldobl,quaddobl}_blackbox_refiners,
   with code from {standard,dobldobl,quaddobl}_blackbox_continuations.adb.
   Added more to {standard,dobldobl,quaddobl}_blackbox_refiners.

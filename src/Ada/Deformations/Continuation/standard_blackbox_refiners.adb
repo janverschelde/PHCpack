@@ -1,9 +1,13 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Solution_Filters;
+with Standard_Solution_Splitters;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Root_Refining_Parameters;           use Root_Refining_Parameters;
 with Multitasking_Root_Refiners;         use Multitasking_Root_Refiners;
+
+with Standard_Complex_Solutions_io;
+ use Standard_Complex_Solutions_io;
 
 package body Standard_BlackBox_Refiners is
 
@@ -139,7 +143,7 @@ package body Standard_BlackBox_Refiners is
     epsxa,epsfa,tolsing : double_float;
     maxit,nb : natural32 := 0;
     deflate,wout : boolean;
-    ref_sols : Solution_List;
+    vansols,regsols,sinsols,ref_sinsols : Solution_List;
 
   begin
     if Length_Of(sols) > 0 then
@@ -147,9 +151,15 @@ package body Standard_BlackBox_Refiners is
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
       Mute_Multitasking_Root_Refiner
         (nt,p,sols,epsxa,epsfa,tolsing,nb,maxit,deflate);
-      ref_sols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
-      Clear(sols);
-      sols := ref_sols;
+      vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
+      Standard_Solution_Splitters.Silent_Singular_Filter
+        (vansols,tolsing,sinsols,regsols);
+      nb := 0;
+      Silent_Root_Refiner
+        (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+      Push(ref_sinsols,regsols);
+      Clear(sols); Clear(vansols); Clear(sinsols);
+      sols := regsols;
     end if;
   end Silent_Black_Box_Refine;
 
@@ -160,7 +170,7 @@ package body Standard_BlackBox_Refiners is
     epsxa,epsfa,tolsing : double_float;
     maxit,nb : natural32 := 0;
     deflate,wout : boolean;
-    ref_sols : Solution_List;
+    vansols,regsols,sinsols,ref_sinsols : Solution_List;
 
   begin
     if Length_Of(sols) > 0 then
@@ -168,9 +178,20 @@ package body Standard_BlackBox_Refiners is
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
       Silent_Multitasking_Root_Refiner -- tasks remain silent
         (file,nt,p,sols,epsxa,epsfa,tolsing,nb,maxit,deflate);
-      ref_sols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
-      Clear(sols);
-      sols := ref_sols;
+      vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
+      Standard_Solution_Splitters.Silent_Singular_Filter
+        (vansols,tolsing,sinsols,regsols);
+      nb := 0;
+      Reporting_Root_Refiner
+        (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,
+         nb,maxit,deflate,wout);
+     -- new_line(file);
+     -- put_line(file,"THE REFINED SINGULAR SOLUTIONS :");
+     -- put(file,Length_Of(ref_sinsols),natural32(Head_Of(ref_sinsols).n),
+     --     ref_sinsols);
+      Push(ref_sinsols,regsols);
+      Clear(sols); Clear(vansols); Clear(sinsols);
+      sols := regsols;
     end if;
   end Reporting_Black_Box_Refine;
 
