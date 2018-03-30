@@ -1,5 +1,6 @@
 Fri 30 Mar 2018 : changed intrinsic_diagonal_continuation.adb for the
   improved interface in standard_solution_filters.
+  Set default values for tolerances in running_cascades.adb.
 
 Thu 29 Mar 2018 : improved output in cascade_homotopy_steps.adb.
 
