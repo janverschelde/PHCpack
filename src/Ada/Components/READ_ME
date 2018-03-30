@@ -1,4 +1,4 @@
-Treatment and representation of solution components with PHCv2.4.13
+Treatment and representation of solution components with PHCv2.4.52
 
 This directory was new in release 2.1 and under continueing development.
 Release 2.2 offered a blackbox factorization for multivariate polynomials,
@@ -10,6 +10,8 @@ a preliminary version of a new equation-by-equation solver.
 Release 2.3.48 contained the new directory Tropical.
 Release 2.3.70 offered a first version of an irreducible decomposition
 of the solution set of a binomial system.
+A blackbox version (phc -B) for a numerical irreducible decomposition
+was introduced in 2.4.46 and improved with multitasking in 2.4.52.
 
 The organization of the library is organized as follows:
 
