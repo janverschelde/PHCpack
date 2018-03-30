@@ -1,4 +1,6 @@
 Fri 30 Mar 2018 : updated mainfac for multitasking homotopy membership tests.
+  In homotopy_membership_filters, the multitasked versions must use
+  homtol instead of restol for their tolerance.
 
 Wed 28 Mar 2018 : new package homotopy_membership_target with code factored
   out of homotopy_membership_tests, added make of target system in the test.

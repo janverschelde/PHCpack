@@ -419,7 +419,7 @@ package body Homotopy_Membership_Filters is
       end if;
       if ls.rco < rcotol then   -- do not test regular points
         if ls.res < restol then -- do not test diverged paths
-          idx := Standard_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := Standard_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -478,7 +478,7 @@ package body Homotopy_Membership_Filters is
       end if;
       if ls.rco < rcotol then   -- do not test regular points
         if ls.res < restol then -- do not test diverged paths
-          idx := Standard_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := Standard_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -537,7 +537,7 @@ package body Homotopy_Membership_Filters is
       end if;
       if Double_Double_Numbers.hi_part(ls.rco) < rcotol then
         if Double_Double_Numbers.hi_part(ls.res) < restol then
-          idx := DoblDobl_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := DoblDobl_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -596,7 +596,7 @@ package body Homotopy_Membership_Filters is
       end if;
       if Double_Double_Numbers.hi_part(ls.rco) < rcotol then
         if Double_Double_Numbers.hi_part(ls.res) < restol then
-          idx := DoblDobl_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := DoblDobl_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -655,7 +655,7 @@ package body Homotopy_Membership_Filters is
       end if;
       if Quad_Double_Numbers.hihi_part(ls.rco) < rcotol then
         if Quad_Double_Numbers.hihi_part(ls.res) < restol then
-          idx := QuadDobl_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := QuadDobl_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -714,7 +714,7 @@ package body Homotopy_Membership_Filters is
       end if;
       if Quad_Double_Numbers.hihi_part(ls.rco) < rcotol then
         if Quad_Double_Numbers.hihi_part(ls.res) < restol then
-          idx := QuadDobl_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := QuadDobl_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -1113,7 +1113,7 @@ package body Homotopy_Membership_Filters is
       put(file,"Testing point "); put(file,i,1); put(file," : ");
       if ls.rco < rcotol then   -- do not test regular points
         if ls.res < restol then -- do not test diverged paths
-          idx := Standard_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := Standard_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -1167,7 +1167,7 @@ package body Homotopy_Membership_Filters is
       put(file,"Testing point "); put(file,i,1); put(file," : ");
       if ls.rco < rcotol then   -- do not test regular points
         if ls.res < restol then -- do not test diverged paths
-          idx := Standard_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := Standard_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -1221,7 +1221,7 @@ package body Homotopy_Membership_Filters is
       put(file,"Testing point "); put(file,i,1); put(file," : ");
       if Double_Double_Numbers.hi_part(ls.rco) < rcotol then
         if Double_Double_Numbers.hi_part(ls.res) < restol then
-          idx := DoblDobl_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := DoblDobl_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -1275,7 +1275,7 @@ package body Homotopy_Membership_Filters is
       put(file,"Testing point "); put(file,i,1); put(file," : ");
       if Double_Double_Numbers.hi_part(ls.rco) < rcotol then
         if Double_Double_Numbers.hi_part(ls.res) < restol then
-          idx := DoblDobl_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := DoblDobl_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -1329,7 +1329,7 @@ package body Homotopy_Membership_Filters is
       put(file,"Testing point "); put(file,i,1); put(file," : ");
       if Quad_Double_Numbers.hihi_part(ls.rco) < rcotol then
         if Quad_Double_Numbers.hihi_part(ls.res) < restol then
-          idx := QuadDobl_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := QuadDobl_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
@@ -1383,7 +1383,7 @@ package body Homotopy_Membership_Filters is
       put(file,"Testing point "); put(file,i,1); put(file," : ");
       if Quad_Double_Numbers.hihi_part(ls.rco) < rcotol then
         if Quad_Double_Numbers.hihi_part(ls.res) < restol then
-          idx := QuadDobl_Membership_Test(nt,dim,restol,eqs,pts,ls.v);
+          idx := QuadDobl_Membership_Test(nt,dim,homtol,eqs,pts,ls.v);
           success := true;
           found := (idx /= 0);
         else
