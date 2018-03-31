@@ -6,8 +6,8 @@ with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Root_Refining_Parameters;           use Root_Refining_Parameters;
 with Multitasking_Root_Refiners;         use Multitasking_Root_Refiners;
 
-with Standard_Complex_Solutions_io;
- use Standard_Complex_Solutions_io;
+--with Standard_Complex_Solutions_io;
+-- use Standard_Complex_Solutions_io;
 
 package body Standard_BlackBox_Refiners is
 
@@ -149,11 +149,15 @@ package body Standard_BlackBox_Refiners is
     if Length_Of(sols) > 0 then
       Standard_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
-      Mute_Multitasking_Root_Refiner
-        (nt,p,sols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+     -- refine only the vanishing solutions
       vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
+     -- apply deflation to singular solutions, split the list first
       Standard_Solution_Splitters.Silent_Singular_Filter
         (vansols,tolsing,sinsols,regsols);
+     -- run Newton's method only on the regular solutions
+      Mute_Multitasking_Root_Refiner
+        (nt,p,regsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+     -- apply deflation on the singular solutions
       nb := 0;
       Silent_Root_Refiner
         (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
@@ -176,11 +180,15 @@ package body Standard_BlackBox_Refiners is
     if Length_Of(sols) > 0 then
       Standard_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
-      Silent_Multitasking_Root_Refiner -- tasks remain silent
-        (file,nt,p,sols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+     -- refine only the vanishing solutions
       vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
+     -- apply deflation to singular solutions, split the list first
       Standard_Solution_Splitters.Silent_Singular_Filter
         (vansols,tolsing,sinsols,regsols);
+     -- refine the regular solutions just with Newton's method
+      Silent_Multitasking_Root_Refiner -- tasks remain silent
+        (file,nt,p,regsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+     -- running Newton's method prior to deflation may not be good
       nb := 0;
       Reporting_Root_Refiner
         (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,

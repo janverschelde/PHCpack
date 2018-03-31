@@ -1,8 +1,11 @@
-Fri 30 Mar 2019 : in {standard,dobldobl,quaddobl}_blackbox_refiners.adb,
+Sat 31 Mar 2018 : in standard_blackbox_refiners, applied multitasking
+  root refinement only to the regular solutions.
+
+Fri 30 Mar 2018 : in {standard,dobldobl,quaddobl}_blackbox_refiners.adb,
   replace singular filter by a splitter.
   Adjusted standard_blackbox_continuations.adb.
 
-Thu 29 Mar 2019 : new packages {standard,dobldobl,quaddobl}_blackbox_refiners,
+Thu 29 Mar 2018 : new packages {standard,dobldobl,quaddobl}_blackbox_refiners,
   with code from {standard,dobldobl,quaddobl}_blackbox_continuations.adb.
   Added more to {standard,dobldobl,quaddobl}_blackbox_refiners.
 
