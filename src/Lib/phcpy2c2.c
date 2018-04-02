@@ -6649,7 +6649,7 @@ static PyObject *py2c_factor_quaddobl_trace_sum_difference
 static PyObject *py2c_witset_standard_membertest
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
@@ -6660,7 +6660,7 @@ static PyObject *py2c_witset_standard_membertest
       double tpt[dim];
 
       str2dbllist(dim,p,tpt);
-      fail = standard_homotopy_membership_test(v,n,d,r,h,tpt,&onp,&ins);
+      fail = standard_homotopy_membership_test(v,n,d,r,h,tpt,&onp,&ins,nbtasks);
    }
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6668,7 +6668,7 @@ static PyObject *py2c_witset_standard_membertest
 static PyObject *py2c_witset_dobldobl_membertest
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
@@ -6679,7 +6679,7 @@ static PyObject *py2c_witset_dobldobl_membertest
       double tpt[dim];
 
       str2dbllist(dim,p,tpt);
-      fail = dobldobl_homotopy_membership_test(v,n,d,r,h,tpt,&onp,&ins);
+      fail = dobldobl_homotopy_membership_test(v,n,d,r,h,tpt,&onp,&ins,nbtasks);
    }
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6687,7 +6687,7 @@ static PyObject *py2c_witset_dobldobl_membertest
 static PyObject *py2c_witset_quaddobl_membertest
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
@@ -6698,7 +6698,7 @@ static PyObject *py2c_witset_quaddobl_membertest
       double tpt[dim];
 
       str2dbllist(dim,p,tpt);
-      fail = quaddobl_homotopy_membership_test(v,n,d,r,h,tpt,&onp,&ins);
+      fail = quaddobl_homotopy_membership_test(v,n,d,r,h,tpt,&onp,&ins,nbtasks);
    }
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6707,7 +6707,7 @@ static PyObject *py2c_witset_quaddobl_membertest
 static PyObject *py2c_witset_standard_Laurent_membertest
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
@@ -6719,7 +6719,7 @@ static PyObject *py2c_witset_standard_Laurent_membertest
 
       str2dbllist(dim,p,tpt);
       fail = standard_Laurent_homotopy_membership_test
-                (v,n,d,r,h,tpt,&onp,&ins);
+                (v,n,d,r,h,tpt,&onp,&ins,nbtasks);
    }
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6727,7 +6727,7 @@ static PyObject *py2c_witset_standard_Laurent_membertest
 static PyObject *py2c_witset_dobldobl_Laurent_membertest
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
@@ -6739,7 +6739,7 @@ static PyObject *py2c_witset_dobldobl_Laurent_membertest
 
       str2dbllist(dim,p,tpt);
       fail = dobldobl_Laurent_homotopy_membership_test
-                (v,n,d,r,h,tpt,&onp,&ins);
+                (v,n,d,r,h,tpt,&onp,&ins,nbtasks);
    }
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6747,7 +6747,7 @@ static PyObject *py2c_witset_dobldobl_Laurent_membertest
 static PyObject *py2c_witset_quaddobl_Laurent_membertest
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
@@ -6759,7 +6759,7 @@ static PyObject *py2c_witset_quaddobl_Laurent_membertest
 
       str2dbllist(dim,p,tpt);
       fail = quaddobl_Laurent_homotopy_membership_test
-                (v,n,d,r,h,tpt,&onp,&ins);
+                (v,n,d,r,h,tpt,&onp,&ins,nbtasks);
    }
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6767,13 +6767,13 @@ static PyObject *py2c_witset_quaddobl_Laurent_membertest
 static PyObject *py2c_witset_standard_ismember
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
    initialize();
    if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
-   fail = standard_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+   fail = standard_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6781,13 +6781,13 @@ static PyObject *py2c_witset_standard_ismember
 static PyObject *py2c_witset_dobldobl_ismember
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
    initialize();
    if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
-   fail = dobldobl_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+   fail = dobldobl_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6795,13 +6795,13 @@ static PyObject *py2c_witset_dobldobl_ismember
 static PyObject *py2c_witset_quaddobl_ismember
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
    initialize();
    if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
-   fail = quaddobl_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+   fail = quaddobl_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6809,13 +6809,13 @@ static PyObject *py2c_witset_quaddobl_ismember
 static PyObject *py2c_witset_standard_Laurent_ismember
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
    initialize();
    if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
-   fail = standard_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+   fail = standard_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6823,13 +6823,13 @@ static PyObject *py2c_witset_standard_Laurent_ismember
 static PyObject *py2c_witset_dobldobl_Laurent_ismember
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
    initialize();
    if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
-   fail = dobldobl_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+   fail = dobldobl_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }
@@ -6837,13 +6837,13 @@ static PyObject *py2c_witset_dobldobl_Laurent_ismember
 static PyObject *py2c_witset_quaddobl_Laurent_ismember
  ( PyObject *self, PyObject *args )
 {
-   int v,n,d,m,fail,onp,ins;
+   int v,n,d,m,fail,onp,ins,nbtasks=0;
    double r,h;
    char *p;
 
    initialize();
    if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
-   fail = quaddobl_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins);
+   fail = quaddobl_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
 }

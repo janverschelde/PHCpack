@@ -1335,7 +1335,7 @@ int quaddobl_monodromy_permutation ( int d, int *done );
 
 int standard_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset );
+   double *tpt, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1354,7 +1354,8 @@ int standard_homotopy_membership_test
  *   restol   tolerance on the residual for evaluating the test point;
  *   homtol   tolerance to compare points in the membership test;
  *   tpt      coordinates of the test point, the 2*nvr doubles store
- *            the real and imaginary parts of every coordinate.
+ *            the real and imaginary parts of every coordinate;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1364,7 +1365,7 @@ int standard_homotopy_membership_test
 
 int dobldobl_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset );
+   double *tpt, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1383,7 +1384,8 @@ int dobldobl_homotopy_membership_test
  *   restol   tolerance on the residual for evaluating the test point;
  *   homtol   tolerance to compare points in the membership test;
  *   tpt      coordinates of the test point, the 4*nvr doubles store
- *            the real and imaginary parts of every coordinate.
+ *            the real and imaginary parts of every coordinate;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1393,7 +1395,7 @@ int dobldobl_homotopy_membership_test
 
 int quaddobl_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset );
+   double *tpt, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1412,7 +1414,8 @@ int quaddobl_homotopy_membership_test
  *   restol   tolerance on the residual for evaluating the test point;
  *   homtol   tolerance to compare points in the membership test;
  *   tpt      coordinates of the test point, the 8*nvr doubles store
- *            the real and imaginary parts of every coordinate.
+ *            the real and imaginary parts of every coordinate;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1422,7 +1425,7 @@ int quaddobl_homotopy_membership_test
 
 int standard_Laurent_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset );
+   double *tpt, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1441,7 +1444,8 @@ int standard_Laurent_homotopy_membership_test
  *   restol   tolerance on the residual for evaluating the test point;
  *   homtol   tolerance to compare points in the membership test;
  *   tpt      coordinates of the test point, the 2*nvr doubles store
- *            the real and imaginary parts of every coordinate.
+ *            the real and imaginary parts of every coordinate;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1451,7 +1455,7 @@ int standard_Laurent_homotopy_membership_test
 
 int dobldobl_Laurent_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset );
+   double *tpt, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1470,7 +1474,8 @@ int dobldobl_Laurent_homotopy_membership_test
  *   restol   tolerance on the residual for evaluating the test point;
  *   homtol   tolerance to compare points in the membership test;
  *   tpt      coordinates of the test point, the 4*nvr doubles store
- *            the real and imaginary parts of every coordinate.
+ *            the real and imaginary parts of every coordinate;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1480,7 +1485,7 @@ int dobldobl_Laurent_homotopy_membership_test
 
 int quaddobl_Laurent_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset );
+   double *tpt, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1499,7 +1504,8 @@ int quaddobl_Laurent_homotopy_membership_test
  *   restol   tolerance on the residual for evaluating the test point;
  *   homtol   tolerance to compare points in the membership test;
  *   tpt      coordinates of the test point, the 8*nvr doubles store
- *            the real and imaginary parts of every coordinate.
+ *            the real and imaginary parts of every coordinate;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1509,7 +1515,7 @@ int quaddobl_Laurent_homotopy_membership_test
 
 int standard_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset );
+   double restol, double homtol, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1528,7 +1534,8 @@ int standard_homotopy_ismember
  *   tpt      characters in the string representation for the test point
  *            as a solution in symbolic format with variable names;
  *   restol   tolerance on the residual for evaluating the test point;
- *   homtol   tolerance to compare points in the membership test.
+ *   homtol   tolerance to compare points in the membership test;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1538,7 +1545,7 @@ int standard_homotopy_ismember
 
 int dobldobl_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset );
+   double restol, double homtol, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1557,7 +1564,8 @@ int dobldobl_homotopy_ismember
  *   tpt      characters in the string representation for the test point
  *            as a solution in symbolic format with variable names;
  *   restol   tolerance on the residual for evaluating the test point;
- *   homtol   tolerance to compare points in the membership test.
+ *   homtol   tolerance to compare points in the membership test;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1567,7 +1575,7 @@ int dobldobl_homotopy_ismember
 
 int quaddobl_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset );
+   double restol, double homtol, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1586,7 +1594,8 @@ int quaddobl_homotopy_ismember
  *   tpt      characters in the string representation for the test point
  *            as a solution in symbolic format with variable names;
  *   restol   tolerance on the residual for evaluating the test point;
- *   homtol   tolerance to compare points in the membership test.
+ *   homtol   tolerance to compare points in the membership test;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1596,7 +1605,7 @@ int quaddobl_homotopy_ismember
 
 int standard_Laurent_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset );
+   double restol, double homtol, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1615,7 +1624,8 @@ int standard_Laurent_homotopy_ismember
  *   tpt      characters in the string representation for the test point
  *            as a solution in symbolic format with variable names;
  *   restol   tolerance on the residual for evaluating the test point;
- *   homtol   tolerance to compare points in the membership test.
+ *   homtol   tolerance to compare points in the membership test;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1625,7 +1635,7 @@ int standard_Laurent_homotopy_ismember
 
 int dobldobl_Laurent_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset );
+   double restol, double homtol, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1644,7 +1654,8 @@ int dobldobl_Laurent_homotopy_ismember
  *   tpt      characters in the string representation for the test point
  *            as a solution in symbolic format with variable names;
  *   restol   tolerance on the residual for evaluating the test point;
- *   homtol   tolerance to compare points in the membership test.
+ *   homtol   tolerance to compare points in the membership test;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,
@@ -1654,7 +1665,7 @@ int dobldobl_Laurent_homotopy_ismember
 
 int quaddobl_Laurent_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset );
+   double restol, double homtol, int *onsys, int *onset, int nbtasks );
 /*
  * DESCRIPTION :
  *   Runs the homotopy membership test for a point to belong to a witness set
@@ -1673,7 +1684,8 @@ int quaddobl_Laurent_homotopy_ismember
  *   tpt      characters in the string representation for the test point
  *            as a solution in symbolic format with variable names;
  *   restol   tolerance on the residual for evaluating the test point;
- *   homtol   tolerance to compare points in the membership test.
+ *   homtol   tolerance to compare points in the membership test;
+ *   nbtasks  is the number of tasks, if zero, then no multitasking.
  *
  * ON RETURN :
  *   onsys    1 if the test point satisfies the equation within restol,

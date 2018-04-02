@@ -1730,7 +1730,7 @@ int quaddobl_monodromy_permutation ( int d, int *done )
 
 int standard_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset )
+   double *tpt, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[2];
@@ -1753,7 +1753,7 @@ int standard_homotopy_membership_test
 
 int dobldobl_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset )
+   double *tpt, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[2];
@@ -1776,7 +1776,7 @@ int dobldobl_homotopy_membership_test
 
 int quaddobl_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset )
+   double *tpt, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[2];
@@ -1799,7 +1799,7 @@ int quaddobl_homotopy_membership_test
 
 int standard_Laurent_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset )
+   double *tpt, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[2];
@@ -1822,7 +1822,7 @@ int standard_Laurent_homotopy_membership_test
 
 int dobldobl_Laurent_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset )
+   double *tpt, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[2];
@@ -1845,7 +1845,7 @@ int dobldobl_Laurent_homotopy_membership_test
 
 int quaddobl_Laurent_homotopy_membership_test
  ( int vrb, int nvr, int dim, double restol, double homtol,
-   double *tpt, int *onsys, int *onset )
+   double *tpt, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[2];
@@ -1868,7 +1868,7 @@ int quaddobl_Laurent_homotopy_membership_test
 
 int standard_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset )
+   double restol, double homtol, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[4];
@@ -1894,7 +1894,7 @@ int standard_homotopy_ismember
 
 int dobldobl_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset )
+   double restol, double homtol, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[4];
@@ -1920,7 +1920,7 @@ int dobldobl_homotopy_ismember
 
 int quaddobl_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset )
+   double restol, double homtol, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[4];
@@ -1946,7 +1946,7 @@ int quaddobl_homotopy_ismember
 
 int standard_Laurent_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset )
+   double restol, double homtol, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[4];
@@ -1972,7 +1972,7 @@ int standard_Laurent_homotopy_ismember
 
 int dobldobl_Laurent_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset )
+   double restol, double homtol, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[4];
@@ -1998,7 +1998,7 @@ int dobldobl_Laurent_homotopy_ismember
 
 int quaddobl_Laurent_homotopy_ismember
  ( int vrb, int nvr, int dim, int nbc, char *tpt,
-   double restol, double homtol, int *onsys, int *onset )
+   double restol, double homtol, int *onsys, int *onset, int nbtasks )
 {
    int fail,k,idx;
    int dims[4];
