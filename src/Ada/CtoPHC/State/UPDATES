@@ -1,3 +1,6 @@
+Tue 3 Apr 2018 : extended use_c2mbt.adb to extract the number of tasks
+  from the input parameters.
+
 Sat 3 Mar 2018 : added some extra verbose information to use_series.adb.
 
 Mon 16 Oct 2017 : fixed miscount in job number in use_c2phc.adb, in calling

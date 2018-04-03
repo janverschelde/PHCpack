@@ -58,7 +58,7 @@ function use_c2mbt ( job : integer32;
                      c : C_dblarrs.Pointer ) return integer32 is
 
   procedure Get_Input_Parameters
-              ( verbose : out boolean; nbr,dim : out integer32 ) is
+              ( verbose : out boolean; nbr,dim,nbt : out integer32 ) is
 
   -- DESCRIPTION :
   --   Extracts the input parameters from the a and b input.
@@ -66,12 +66,13 @@ function use_c2mbt ( job : integer32;
   -- ON RETURN :
   --   verbose  flag to determine the verbosity of the test;
   --   nbr      number of coordinates in the test point;
-  --   dim      dimension of the witness set.
+  --   dim      dimension of the witness set;
+  --   nbt      number of tasks for the homotopy membership test.
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     vrb : constant integer32 := integer32(va(va'first));
     vb : constant C_Integer_Array
-       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(3));
 
   begin
     verbose := (vrb = 1);
@@ -79,24 +80,27 @@ function use_c2mbt ( job : integer32;
    -- put("nbr = "); put(nbr,1); new_line;
     dim := integer32(vb(vb'first+1));
    -- put("dim = "); put(dim,1); new_line;
+    nbt := integer32(vb(vb'first+2));
+   -- put("nbt = "); put(nbt,1); new_line;
   end Get_Input_Parameters;
 
   procedure Get_Input_Integers
               ( verbose : out boolean;
-                nbr,dim,nbc : out integer32 ) is
+                nbr,dim,nbc,nbt : out integer32 ) is
 
   -- DESCRIPTION :
   --   Extracts the input parameters from the a input,
-  --   expecting four integers on input.
+  --   expecting five integers on input.
 
   -- ON RETURN :
   --   verbose  flag to determine the verbosity of the test;
   --   nbr      number of coordinates in the test point;
   --   dim      dimension of the witness set.
-  --   nbc      number of characters in the input string.
+  --   nbc      number of characters in the input string;
+  --   nbt      number of tasks for the homotopy membership test.
 
     va : constant C_Integer_Array
-       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(5));
     vrb : constant integer32 := integer32(va(va'first));
 
   begin
@@ -112,6 +116,10 @@ function use_c2mbt ( job : integer32;
     nbc := integer32(va(va'first+3));
     if verbose
      then put("in use_c2mbt, nbc = "); put(nbc,1); new_line;
+    end if;
+    nbt := integer32(va(va'first+4));
+    if verbose
+     then put("in use_c2mbt, nbt = "); put(nbt,1); new_line;
     end if;
   end Get_Input_Integers;
 
@@ -425,7 +433,7 @@ function use_c2mbt ( job : integer32;
     use Standard_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim : integer32;
+    nbr,dim,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
@@ -434,15 +442,17 @@ function use_c2mbt ( job : integer32;
     Sampling_Machine.Initialize(lp.all);
     Sampling_Machine.Default_Tune_Sampler(2);
     Sampling_Machine.Default_Tune_Refiner;
-    Get_Input_Parameters(verbose,nbr,dim);
+    Get_Input_Parameters(verbose,nbr,dim,nbtasks);
     declare
       tpt : Standard_Complex_Vectors.Vector(1..nbr);
       sli : Standard_Complex_VecVecs.VecVec(1..dim)
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       Get_Standard_Input_Values(nbr,restol,homtol,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       Standard_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -456,7 +466,7 @@ function use_c2mbt ( job : integer32;
     use DoblDobl_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim : integer32;
+    nbr,dim,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
     sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
@@ -465,15 +475,17 @@ function use_c2mbt ( job : integer32;
     DoblDobl_Sampling_Machine.Initialize(lp.all);
     DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
     DoblDobl_Sampling_Machine.Default_Tune_Refiner;
-    Get_Input_Parameters(verbose,nbr,dim);
+    Get_Input_Parameters(verbose,nbr,dim,nbtasks);
     declare
       tpt : DoblDobl_Complex_Vectors.Vector(1..nbr);
       sli : DoblDobl_Complex_VecVecs.VecVec(1..dim)
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       Get_DoblDobl_Input_Values(nbr,restol,homtol,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       DoblDobl_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -487,7 +499,7 @@ function use_c2mbt ( job : integer32;
     use QuadDobl_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim : integer32;
+    nbr,dim,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
     sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
@@ -496,15 +508,17 @@ function use_c2mbt ( job : integer32;
     QuadDobl_Sampling_Machine.Initialize(lp.all);
     QuadDobl_Sampling_Machine.Default_Tune_Sampler(0);
     QuadDobl_Sampling_Machine.Default_Tune_Refiner;
-    Get_Input_Parameters(verbose,nbr,dim);
+    Get_Input_Parameters(verbose,nbr,dim,nbtasks);
     declare
       tpt : QuadDobl_Complex_Vectors.Vector(1..nbr);
       sli : QuadDobl_Complex_VecVecs.VecVec(1..dim)
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       Get_QuadDobl_Input_Values(nbr,restol,homtol,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       QuadDobl_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -518,7 +532,7 @@ function use_c2mbt ( job : integer32;
     use Standard_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim : integer32;
+    nbr,dim,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
@@ -527,15 +541,17 @@ function use_c2mbt ( job : integer32;
     Sampling_Laurent_Machine.Initialize(lp.all);
     Sampling_Laurent_Machine.Default_Tune_Sampler(2);
     Sampling_Laurent_Machine.Default_Tune_Refiner;
-    Get_Input_Parameters(verbose,nbr,dim);
+    Get_Input_Parameters(verbose,nbr,dim,nbtasks);
     declare
       tpt : Standard_Complex_Vectors.Vector(1..nbr);
       sli : Standard_Complex_VecVecs.VecVec(1..dim)
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       Get_Standard_Input_Values(nbr,restol,homtol,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       Standard_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -549,7 +565,7 @@ function use_c2mbt ( job : integer32;
     use DoblDobl_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim : integer32;
+    nbr,dim,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
     sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
@@ -558,15 +574,17 @@ function use_c2mbt ( job : integer32;
     DoblDobl_Sampling_Laurent_Machine.Initialize(lp.all);
     DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
-    Get_Input_Parameters(verbose,nbr,dim);
+    Get_Input_Parameters(verbose,nbr,dim,nbtasks);
     declare
       tpt : DoblDobl_Complex_Vectors.Vector(1..nbr);
       sli : DoblDobl_Complex_VecVecs.VecVec(1..dim)
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       Get_DoblDobl_Input_Values(nbr,restol,homtol,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       DoblDobl_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -580,7 +598,7 @@ function use_c2mbt ( job : integer32;
     use QuadDobl_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim : integer32;
+    nbr,dim,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
     sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
@@ -589,15 +607,17 @@ function use_c2mbt ( job : integer32;
     QuadDobl_Sampling_Laurent_Machine.Initialize(lp.all);
     QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(0);
     QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
-    Get_Input_Parameters(verbose,nbr,dim);
+    Get_Input_Parameters(verbose,nbr,dim,nbtasks);
     declare
       tpt : QuadDobl_Complex_Vectors.Vector(1..nbr);
       sli : QuadDobl_Complex_VecVecs.VecVec(1..dim)
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       Get_QuadDobl_Input_Values(nbr,restol,homtol,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       QuadDobl_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -611,7 +631,7 @@ function use_c2mbt ( job : integer32;
     use Standard_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim,nbc : integer32;
+    nbr,dim,nbc,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
@@ -620,7 +640,7 @@ function use_c2mbt ( job : integer32;
     Sampling_Machine.Initialize(lp.all);
     Sampling_Machine.Default_Tune_Sampler(2);
     Sampling_Machine.Default_Tune_Refiner;
-    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Integers(verbose,nbr,dim,nbc,nbtasks);
     Get_Input_Tolerances(verbose,restol,homtol);
     declare
       tpt : Standard_Complex_Vectors.Vector(1..nbr);
@@ -628,8 +648,10 @@ function use_c2mbt ( job : integer32;
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       Standard_Parse_Test_Point(verbose,nbr,nbc,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       Standard_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -643,7 +665,7 @@ function use_c2mbt ( job : integer32;
     use DoblDobl_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim,nbc : integer32;
+    nbr,dim,nbc,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
     sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
@@ -652,7 +674,7 @@ function use_c2mbt ( job : integer32;
     DoblDobl_Sampling_Machine.Initialize(lp.all);
     DoblDobl_Sampling_Machine.Default_Tune_Sampler(2);
     DoblDobl_Sampling_Machine.Default_Tune_Refiner;
-    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Integers(verbose,nbr,dim,nbc,nbtasks);
     Get_Input_Tolerances(verbose,restol,homtol);
     declare
       tpt : DoblDobl_Complex_Vectors.Vector(1..nbr);
@@ -660,8 +682,10 @@ function use_c2mbt ( job : integer32;
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       DoblDobl_Parse_Test_Point(verbose,nbr,nbc,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       DoblDobl_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -675,7 +699,7 @@ function use_c2mbt ( job : integer32;
     use QuadDobl_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim,nbc : integer32;
+    nbr,dim,nbc,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
     sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
@@ -684,7 +708,7 @@ function use_c2mbt ( job : integer32;
     QuadDobl_Sampling_Machine.Initialize(lp.all);
     QuadDobl_Sampling_Machine.Default_Tune_Sampler(2);
     QuadDobl_Sampling_Machine.Default_Tune_Refiner;
-    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Integers(verbose,nbr,dim,nbc,nbtasks);
     Get_Input_Tolerances(verbose,restol,homtol);
     declare
       tpt : QuadDobl_Complex_Vectors.Vector(1..nbr);
@@ -692,8 +716,10 @@ function use_c2mbt ( job : integer32;
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       QuadDobl_Parse_Test_Point(verbose,nbr,nbc,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       QuadDobl_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -707,7 +733,7 @@ function use_c2mbt ( job : integer32;
     use Standard_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim,nbc : integer32;
+    nbr,dim,nbc,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
@@ -716,7 +742,7 @@ function use_c2mbt ( job : integer32;
     Sampling_Laurent_Machine.Initialize(lp.all);
     Sampling_Laurent_Machine.Default_Tune_Sampler(2);
     Sampling_Laurent_Machine.Default_Tune_Refiner;
-    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Integers(verbose,nbr,dim,nbc,nbtasks);
     Get_Input_Tolerances(verbose,restol,homtol);
     declare
       tpt : Standard_Complex_Vectors.Vector(1..nbr);
@@ -724,8 +750,10 @@ function use_c2mbt ( job : integer32;
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       Standard_Parse_Test_Point(verbose,nbr,nbc,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       Standard_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -739,7 +767,7 @@ function use_c2mbt ( job : integer32;
     use DoblDobl_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim,nbc : integer32;
+    nbr,dim,nbc,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
     sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
@@ -748,7 +776,7 @@ function use_c2mbt ( job : integer32;
     DoblDobl_Sampling_Laurent_Machine.Initialize(lp.all);
     DoblDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(2);
     DoblDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
-    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Integers(verbose,nbr,dim,nbc,nbtasks);
     Get_Input_Tolerances(verbose,restol,homtol);
     declare
       tpt : DoblDobl_Complex_Vectors.Vector(1..nbr);
@@ -756,8 +784,10 @@ function use_c2mbt ( job : integer32;
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       DoblDobl_Parse_Test_Point(verbose,nbr,nbc,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       DoblDobl_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
@@ -771,7 +801,7 @@ function use_c2mbt ( job : integer32;
     use QuadDobl_Complex_Solutions;
 
     verbose,onp,inw : boolean;
-    nbr,dim,nbc : integer32;
+    nbr,dim,nbc,nbtasks : integer32;
     restol,homtol : double_float;
     lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
     sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
@@ -780,7 +810,7 @@ function use_c2mbt ( job : integer32;
     QuadDobl_Sampling_Laurent_Machine.Initialize(lp.all);
     QuadDobl_Sampling_Laurent_Machine.Default_Tune_Sampler(2);
     QuadDobl_Sampling_Laurent_Machine.Default_Tune_Refiner;
-    Get_Input_Integers(verbose,nbr,dim,nbc);
+    Get_Input_Integers(verbose,nbr,dim,nbc,nbtasks);
     Get_Input_Tolerances(verbose,restol,homtol);
     declare
       tpt : QuadDobl_Complex_Vectors.Vector(1..nbr);
@@ -788,8 +818,10 @@ function use_c2mbt ( job : integer32;
           := Witness_Sets.Slices(lp.all,natural32(dim));
     begin
       QuadDobl_Parse_Test_Point(verbose,nbr,nbc,tpt);
-      Homotopy_Membership_Test
-        (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      if nbtasks = 0 then
+        Homotopy_Membership_Test
+          (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      end if;
       QuadDobl_Complex_VecVecs.Clear(sli);
     end;
     Assign_Results(onp,inw);
