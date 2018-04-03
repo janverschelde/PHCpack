@@ -1,3 +1,6 @@
+Tue 3 Apr 2018 : in standard_root_refiners.adb, avoided the application of
+  Newton's method after deflation, re-initialized nit in each run.
+
 Sat 8 Jul 2017 : extended multprec_root_refiners with procedures for
   Laurent systems.
 

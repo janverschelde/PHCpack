@@ -624,10 +624,10 @@ package body Standard_Root_Refiners is
       jacobian := Eval(j_eval,zero.v);     -- solve jacobian*deltax = -f(zero)
       lufco(jacobian,n,ipvt,zero.rco);
       put(file,"zero.rco : "); put(file,zero.rco,3); new_line(file);
-      if zero.rco < 1.0E-14                -- singular jacobian matrix
-       then zero.res := Sum_Norm(y); 
-            fail := (zero.res > epsfa);    -- accuracy not reached yet
-            return;
+      if zero.rco < 1.0E-14 then           -- singular jacobian matrix
+        zero.res := Sum_Norm(y); 
+        fail := (zero.res > epsfa);        -- accuracy not reached yet
+        return;
       end if;
       deltax := -y;
       lusolve(jacobian,n,ipvt,deltax);  
@@ -680,10 +680,10 @@ package body Standard_Root_Refiners is
       jacobian := Eval(j_eval,zero.v);     -- solve jacobian*deltax = -f(zero)
       lufco(jacobian,n,ipvt,zero.rco);
       put(file,"zero.rco : "); put(file,zero.rco,3); new_line(file);
-      if zero.rco < 1.0E-14                -- singular jacobian matrix
-       then zero.res := Sum_Norm(y); 
-            fail := (zero.res > epsfa);    -- accuracy not reached yet
-            return;
+      if zero.rco < 1.0E-14 then             -- singular jacobian matrix
+        zero.res := Sum_Norm(y); 
+        fail := (zero.res > epsfa);          -- accuracy not reached yet
+        return;
       end if;
       deltax := -y;
       lusolve(jacobian,n,ipvt,deltax);  
@@ -734,10 +734,10 @@ package body Standard_Root_Refiners is
     for i in 1..max loop
       jacobian := j_eval(zero.v);          -- solve jacobian*deltax = -f(zero)
       lufco(jacobian,n,ipvt,zero.rco);
-      if zero.rco < 1.0E-14                -- singular jacobian matrix
-       then zero.res := Sum_Norm(y); 
-            fail := (zero.res > epsfa); -- accuracy not reached yet
-            return;
+      if zero.rco < 1.0E-14 then           -- singular jacobian matrix
+        zero.res := Sum_Norm(y); 
+        fail := (zero.res > epsfa);        -- accuracy not reached yet
+        return;
       end if;
       deltax := -y;
       lusolve(jacobian,n,ipvt,deltax);
@@ -946,7 +946,7 @@ package body Standard_Root_Refiners is
       end;
     end if;
     for i in sa'range loop
-      numb := 0; nbdef := 0;
+      numb := 0; nbdef := 0; nit := 0;
       sa(i).res := Sum_Norm(Eval(p_eval,sa(i).v));
       infty := At_Infinity(sa(i).all,false,1.0E+8);
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
@@ -955,7 +955,7 @@ package body Standard_Root_Refiners is
           Silent_Deflate
             (max,p_eval,jac_eval,sa(i),order,tolrnk,nd,monkeys,nv,nq,R1,
              numb,nbdef,fail);
-          Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
+         -- Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
@@ -1069,7 +1069,7 @@ package body Standard_Root_Refiners is
       end;
     end if;
     for i in sa'range loop
-      numb := 0; nbdef := 0;
+      numb := 0; nbdef := 0; nit := 0;
       sa(i).res := Sum_Norm(Eval(p_eval,sa(i).v));
       infty := At_Infinity(sa(i).all,false,1.0E+8);
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
@@ -1078,7 +1078,7 @@ package body Standard_Root_Refiners is
           Silent_Deflate
             (max,p_eval,jac_eval,sa(i),order,tolrnk,nd,monkeys,nv,nq,R1,
              numb,nbdef,fail);
-          Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
+         -- Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
@@ -1254,7 +1254,7 @@ package body Standard_Root_Refiners is
     put(file,nbtot,1); put(file," "); put(file,n,1); new_line(file);
     put_bar(file);
     for i in sa'range loop 
-      numb := 0; nbdef := 0;
+      numb := 0; nbdef := 0; nit := 0;
       sa(i).res := Sum_Norm(Eval(p_eval,sa(i).v));
       initres(i) := sa(i).res;
       infty := At_Infinity(sa(i).all,false,1.0E+8);
@@ -1265,13 +1265,13 @@ package body Standard_Root_Refiners is
             backup := sa(i).all;
             Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
                               tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-            if wout then
-              Reporting_Newton(file,p_eval,jac_eval,sa(i).all,epsxa,epsfa,
-                               nit,max,fail);
-            else
-              Silent_Newton
-                (p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
-            end if;
+           -- if wout then
+           --   Reporting_Newton(file,p_eval,jac_eval,sa(i).all,epsxa,epsfa,
+           --                    nit,max,fail);
+           -- else
+           --   Silent_Newton
+           --     (p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
+           -- end if;
             if fail and backup.res < sa(i).res then
               sa(i).all := backup;
               Silent_Newton
@@ -1438,7 +1438,7 @@ package body Standard_Root_Refiners is
     put(file,nbtot,1); put(file," "); put(file,n,1); new_line(file);
     put_bar(file);
     for i in sa'range loop 
-      numb := 0; nbdef := 0;
+      numb := 0; nbdef := 0; nit := 0;
       declare
       begin
         eyp := Eval(p_eval,sa(i).v);
@@ -1453,12 +1453,12 @@ package body Standard_Root_Refiners is
           backup := sa(i).all;
           Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
                             tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-          if wout then
-            Reporting_Newton(file,p_eval,jac_eval,sa(i).all,epsxa,epsfa,
-                             nit,max,fail);
-          else 
-            Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
-          end if;
+         -- if wout then
+         --   Reporting_Newton(file,p_eval,jac_eval,sa(i).all,epsxa,epsfa,
+         --                    nit,max,fail);
+         -- else 
+         --   Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
+         -- end if;
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
@@ -1897,7 +1897,7 @@ package body Standard_Root_Refiners is
       end;
     end if;
     for i in sa'range loop
-      numb := 0;
+      numb := 0; nit := 0;
       sa(i).res := Sum_Norm(Eval(p_eval,sa(i).v));
       infty := At_Infinity(sa(i).all,false,1.0E+8);
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
@@ -1906,8 +1906,8 @@ package body Standard_Root_Refiners is
           Silent_Deflate
             (max,p_eval,jac_eval,sa(i),order,tol_rnk,nd,monkeys,nv,nq,R1,
              numb,nbdef,fail);
-          Silent_Gauss_Newton
-            (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+         -- Silent_Gauss_Newton
+         --   (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Gauss_Newton
@@ -1989,7 +1989,7 @@ package body Standard_Root_Refiners is
       end;
     end if;
     for i in sa'range loop
-      numb := 0;
+      numb := 0; nit := 0;
       sa(i).res := Sum_Norm(Eval(p_eval,sa(i).v));
       infty := At_Infinity(sa(i).all,false,1.0E+8);
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
@@ -1998,8 +1998,8 @@ package body Standard_Root_Refiners is
           Silent_Deflate
             (max,p_eval,jac_eval,sa(i),order,tol_rnk,nd,monkeys,nv,nq,R1,
              numb,nbdef,fail);
-          Silent_Gauss_Newton
-            (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+         -- Silent_Gauss_Newton
+         --   (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Gauss_Newton
@@ -2142,7 +2142,7 @@ package body Standard_Root_Refiners is
     put(file,nbvar,1); new_line(file);
     put_bar(file);
     for i in sa'range loop 
-      numb := 0; nbdef := 0;
+      numb := 0; nbdef := 0; nit := 0;
       eyp := Eval(p_eval,sa(i).v);
       sa(i).res := Sum_Norm(eyp);
       initres(i) := sa(i).res;
@@ -2152,14 +2152,14 @@ package body Standard_Root_Refiners is
           backup := sa(i).all;
           Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
                             tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-          if wout then
-            Reporting_Gauss_Newton
-              (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
-               nit,max,fail);
-          else 
-            Silent_Gauss_Newton
-              (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
-          end if;
+         -- if wout then
+         --   Reporting_Gauss_Newton
+         --     (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
+         --      nit,max,fail);
+         -- else 
+         --   Silent_Gauss_Newton
+         --     (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+         -- end if;
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Gauss_Newton
@@ -2265,7 +2265,7 @@ package body Standard_Root_Refiners is
     put(file,nbtot,1); put(file," "); put(file,nbvar,1); new_line(file);
     put_bar(file);
     for i in sa'range loop 
-      numb := 0; nbdef := 0;
+      numb := 0; nbdef := 0; nit := 0;
       eyp := Eval(p_eval,sa(i).v);
       sa(i).res := Sum_Norm(eyp);
       initres(i) := sa(i).res;
@@ -2275,14 +2275,14 @@ package body Standard_Root_Refiners is
           backup := sa(i).all;
           Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
                             tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-          if wout then
-            Reporting_Gauss_Newton
-              (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
-               nit,max,fail);
-          else 
-            Silent_Gauss_Newton
-              (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
-          end if;
+         -- if wout then
+         --   Reporting_Gauss_Newton
+         --     (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
+         --      nit,max,fail);
+         -- else 
+         --   Silent_Gauss_Newton
+         --     (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+         -- end if;
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Gauss_Newton
