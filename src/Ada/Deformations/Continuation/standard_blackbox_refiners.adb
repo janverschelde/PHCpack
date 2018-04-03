@@ -150,15 +150,15 @@ package body Standard_BlackBox_Refiners is
       Standard_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
      -- refine only the vanishing solutions
-     -- vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
-      Copy(sols,vansols);
+      vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
+     -- Copy(sols,vansols);
      -- apply deflation to singular solutions, split the list first
       Standard_Solution_Splitters.Silent_Singular_Filter
         (vansols,tolsing,sinsols,regsols);
      -- run Newton's method only on the regular solutions
       Mute_Multitasking_Root_Refiner
         (nt,p,regsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
-     -- apply deflation on the singular solutions
+     -- apply deflation only on the singular solutions
       nb := 0;
       Silent_Root_Refiner
         (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
@@ -182,8 +182,8 @@ package body Standard_BlackBox_Refiners is
       Standard_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
      -- refine only the vanishing solutions
-     -- vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
-      Copy(sols,vansols);
+      vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
+     -- Copy(sols,vansols);
      -- apply deflation to singular solutions, split the list first
       Standard_Solution_Splitters.Silent_Singular_Filter
         (vansols,tolsing,sinsols,regsols);
@@ -192,11 +192,11 @@ package body Standard_BlackBox_Refiners is
         (file,nt,p,regsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
      -- running Newton's method prior to deflation may not be good
       nb := 0;
-     -- Reporting_Root_Refiner
-     --   (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,
-     --    nb,maxit,deflate,wout);
-      Silent_Root_Refiner
-        (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+      Reporting_Root_Refiner
+        (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,
+         nb,maxit,deflate,wout);
+     -- Silent_Root_Refiner
+     --   (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
       new_line(file);
       put_line(file,"THE REFINED SINGULAR SOLUTIONS :");
       put(file,Length_Of(ref_sinsols),natural32(Head_Of(ref_sinsols).n),

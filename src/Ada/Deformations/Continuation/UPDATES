@@ -1,4 +1,5 @@
-Mon 2 Apr 2018 : adjusted standard_blackbox_refiners.adb to experiment.
+Tue 3 Apr 2018 : reverted changes back in standard_blackbox_refiners,
+  applying reporting_refiner in the reporting blackbox multitasked refiner.
 
 Sat 31 Mar 2018 : in standard_blackbox_refiners, applied multitasking
   root refinement only to the regular solutions.
