@@ -1,3 +1,5 @@
+Wed 4 Apr 2018 : added multitasked homotopy membership tests to use_c2mbt.adb.
+
 Tue 3 Apr 2018 : extended use_c2mbt.adb to extract the number of tasks
   from the input parameters.
 

@@ -41,6 +41,7 @@ with QuadDobl_Sampling_Machine;
 with QuadDobl_Sampling_Laurent_Machine;
 with Witness_Sets;
 with Homotopy_Membership_Tests;         use Homotopy_Membership_Tests;
+with Multitasking_Membership_Tests;     use Multitasking_Membership_Tests;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
 with Standard_LaurSys_Container;
@@ -452,6 +453,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       Standard_Complex_VecVecs.Clear(sli);
     end;
@@ -485,6 +490,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       DoblDobl_Complex_VecVecs.Clear(sli);
     end;
@@ -518,6 +527,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       QuadDobl_Complex_VecVecs.Clear(sli);
     end;
@@ -551,6 +564,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       Standard_Complex_VecVecs.Clear(sli);
     end;
@@ -584,6 +601,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       DoblDobl_Complex_VecVecs.Clear(sli);
     end;
@@ -617,6 +638,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       QuadDobl_Complex_VecVecs.Clear(sli);
     end;
@@ -651,6 +676,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       Standard_Complex_VecVecs.Clear(sli);
     end;
@@ -685,6 +714,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       DoblDobl_Complex_VecVecs.Clear(sli);
     end;
@@ -719,6 +752,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       QuadDobl_Complex_VecVecs.Clear(sli);
     end;
@@ -753,6 +790,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       Standard_Complex_VecVecs.Clear(sli);
     end;
@@ -787,6 +828,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       DoblDobl_Complex_VecVecs.Clear(sli);
     end;
@@ -821,6 +866,10 @@ function use_c2mbt ( job : integer32;
       if nbtasks = 0 then
         Homotopy_Membership_Test
           (verbose,lp.all,natural32(dim),sli,sols,tpt,restol,homtol,onp,inw);
+      else
+        Homotopy_Membership_Test
+          (verbose,natural32(nbtasks),lp.all,natural32(dim),sols,tpt,
+           restol,homtol,onp,inw);
       end if;
       QuadDobl_Complex_VecVecs.Clear(sli);
     end;
