@@ -25,7 +25,8 @@ function use_c2mbt ( job : integer32;
 --                 0 for no output, or 1 for diagnostic intermediate output,
 --                 on input in b[0] is the dimension n of the test point,
 --                 which equals the number of complex coordinates,
---                 and in b[1] is the dimension of the witness set,
+--                 in b[1] is the dimension of the witness set, and
+--                 in b[2] is the number of tasks (0 for no multitasking);
 --                 on input in c are first the two tolerances:
 --                 first on the residual for the evaluation,
 --                 second on the tolerance on the membership,
@@ -42,8 +43,9 @@ function use_c2mbt ( job : integer32;
 --                 on input in a is the verbose flag:
 --                 0 for no output, or 1 for diagnostic intermediate output,
 --                 on input in b is the dimension n of the test point,
---                 and in b[1] is the dimension of the witness set,
 --                 which equals the number of complex coordinates,
+--                 in b[1] is the dimension of the witness set, and
+--                 in b[2] is the number of tasks (0 for no multitasking);
 --                 on input in c are first the two tolerances:
 --                 first on the residual for the evaluation,
 --                 second on the tolerance on the membership,
@@ -60,8 +62,9 @@ function use_c2mbt ( job : integer32;
 --                 on input in a is the verbose flag:
 --                 0 for no output, or 1 for diagnostic intermediate output,
 --                 on input in b is the dimension n of the test point,
---                 and in b[1] is the dimension of the witness set,
 --                 which equals the number of complex coordinates,
+--                 in b[1] is the dimension of the witness set, and
+--                 in b[2] is the number of tasks (0 for no multitasking);
 --                 on input in c are first the two tolerances:
 --                 first on the residual for the evaluation,
 --                 second on the tolerance on the membership,
@@ -79,7 +82,8 @@ function use_c2mbt ( job : integer32;
 --                 0 for no output, or 1 for diagnostic intermediate output,
 --                 on input in b[0] is the dimension n of the test point,
 --                 which equals the number of complex coordinates,
---                 and in b[1] is the dimension of the witness set,
+--                 in b[1] is the dimension of the witness set, and
+--                 in b[2] is the number of tasks (0 for no multitasking);
 --                 on input in c are first the two tolerances:
 --                 first on the residual for the evaluation,
 --                 second on the tolerance on the membership,
@@ -95,9 +99,10 @@ function use_c2mbt ( job : integer32;
 --                 defined by a Laurent polynomial systems,
 --                 on input in a is the verbose flag:
 --                 0 for no output, or 1 for diagnostic intermediate output,
---                 on input in b is the dimension n of the test point,
---                 and in b[1] is the dimension of the witness set,
+--                 on input in b[0] is the dimension n of the test point,
 --                 which equals the number of complex coordinates,
+--                 in b[1] is the dimension of the witness set, and
+--                 in b[2] is the number of tasks (0 for no multitasking);
 --                 on input in c are first the two tolerances:
 --                 first on the residual for the evaluation,
 --                 second on the tolerance on the membership,
@@ -113,9 +118,10 @@ function use_c2mbt ( job : integer32;
 --                 defined by a Laurent polynomial systems,
 --                 on input in a is the verbose flag:
 --                 0 for no output, or 1 for diagnostic intermediate output,
---                 on input in b is the dimension n of the test point,
---                 and in b[1] is the dimension of the witness set,
+--                 on input in b[0] is the dimension n of the test point,
 --                 which equals the number of complex coordinates,
+--                 in b[1] is the dimension of the witness set, and
+--                 in b[2] is the number of tasks (0 for no multitasking);
 --                 on input in c are first the two tolerances:
 --                 first on the residual for the evaluation,
 --                 second on the tolerance on the membership,
@@ -134,8 +140,9 @@ function use_c2mbt ( job : integer32;
 --                 on input in a[1] is the dimension n of the test point,
 --                 which equals the number of complex coordinates,
 --                 in a[2] is the dimension of the witness set,
---                 and in a[3] is the number of characters in the string
---                 representation of the test point, as a solution;
+--                 in a[3] is the number of characters in the string
+--                 representation of the test point, as a solution, and
+--                 in a[4] is the number of tasks (0 for no multitasking);
 --                 on input in b are the a[3] integers which encode the
 --                 characters of the string representation of the solution,
 --                 which stores the coordinates of the test point,
@@ -155,8 +162,9 @@ function use_c2mbt ( job : integer32;
 --                 on input in a[1] is the dimension n of the test point,
 --                 which equals the number of complex coordinates,
 --                 in a[2] is the dimension of the witness set,
---                 and in a[3] is the number of characters in the string
---                 representation of the test point, as a solution;
+--                 in a[3] is the number of characters in the string
+--                 representation of the test point, as a solution, and
+--                 in a[4] is the number of tasks (0 for no multitasking);
 --                 on input in b are the a[3] integers which encode the
 --                 characters of the string representation of the solution,
 --                 which stores the coordinates of the test point,
@@ -176,8 +184,9 @@ function use_c2mbt ( job : integer32;
 --                 on input in a[1] is the dimension n of the test point,
 --                 which equals the number of complex coordinates,
 --                 in a[2] is the dimension of the witness set,
---                 and in a[3] is the number of characters in the string
---                 representation of the test point, as a solution;
+--                 in a[3] is the number of characters in the string
+--                 representation of the test point, as a solution, and
+--                 in a[4] is the number of tasks (0 for no multitasking);
 --                 on input in b are the a[3] integers which encode the
 --                 characters of the string representation of the solution,
 --                 which stores the coordinates of the test point,
@@ -197,8 +206,9 @@ function use_c2mbt ( job : integer32;
 --                 on input in a[1] is the dimension n of the test point,
 --                 which equals the number of complex coordinates,
 --                 in a[2] is the dimension of the witness set,
---                 and in a[3] is the number of characters in the string
---                 representation of the test point, as a solution;
+--                 in a[3] is the number of characters in the string
+--                 representation of the test point, as a solution, and
+--                 in a[4] is the number of tasks (0 for no multitasking);
 --                 on input in b are the a[3] integers which encode the
 --                 characters of the string representation of the solution,
 --                 which stores the coordinates of the test point,
@@ -218,8 +228,9 @@ function use_c2mbt ( job : integer32;
 --                 on input in a[1] is the dimension n of the test point,
 --                 which equals the number of complex coordinates,
 --                 in a[2] is the dimension of the witness set,
---                 and in a[3] is the number of characters in the string
---                 representation of the test point, as a solution;
+--                 in a[3] is the number of characters in the string
+--                 representation of the test point, as a solution, and
+--                 in a[4] is the number of tasks (0 for no multitasking);
 --                 on input in b are the a[3] integers which encode the
 --                 characters of the string representation of the solution,
 --                 which stores the coordinates of the test point,
@@ -239,8 +250,9 @@ function use_c2mbt ( job : integer32;
 --                 on input in a[1] is the dimension n of the test point,
 --                 which equals the number of complex coordinates,
 --                 in a[2] is the dimension of the witness set,
---                 and in a[3] is the number of characters in the string
---                 representation of the test point, as a solution;
+--                 in a[3] is the number of characters in the string
+--                 representation of the test point, as a solution, and
+--                 in a[4] is the number of tasks (0 for no multitasking);
 --                 on input in b are the a[3] integers which encode the
 --                 characters of the string representation of the solution,
 --                 which stores the coordinates of the test point,
