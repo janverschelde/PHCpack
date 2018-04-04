@@ -197,10 +197,10 @@ package body Standard_BlackBox_Refiners is
          nb,maxit,deflate,wout);
      -- Silent_Root_Refiner
      --   (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
-      new_line(file);
-      put_line(file,"THE REFINED SINGULAR SOLUTIONS :");
-      put(file,Length_Of(ref_sinsols),natural32(Head_Of(ref_sinsols).n),
-          ref_sinsols);
+     -- new_line(file);
+     -- put_line(file,"THE REFINED SINGULAR SOLUTIONS :");
+     -- put(file,Length_Of(ref_sinsols),natural32(Head_Of(ref_sinsols).n),
+     --     ref_sinsols);
       Push(ref_sinsols,regsols);
       Clear(sols); Clear(vansols); Clear(sinsols);
       sols := regsols;

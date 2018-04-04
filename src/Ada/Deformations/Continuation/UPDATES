@@ -1,3 +1,6 @@
+Wed 4 Apr 2018 : updated standard_blackbox_refiners.adb, removing the writing
+  of the refined singular solutions, as it is no longer needed.
+
 Tue 3 Apr 2018 : reverted changes back in standard_blackbox_refiners,
   applying reporting_refiner in the reporting blackbox multitasked refiner.
 
