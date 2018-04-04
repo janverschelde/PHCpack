@@ -152,6 +152,8 @@ package Multitasking_Membership_Tests is
   --            of generic points;
   --   match    coordinates of the matching point if idx /= 0.
 
+-- FILTERS :
+
   function Standard_Membership_Filter
              ( nt,dim : natural32; tol : double_float;
                start : Standard_Complex_Poly_Systems.Poly_Sys;
@@ -193,5 +195,79 @@ package Multitasking_Membership_Tests is
   --   start    embedded system as start system for the test;
   --   gpts     generic points as start solutions;
   --   sols     points to test.
+
+-- WITH PREPROCESSING EVALUATION TEST :
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                dim : in natural32;
+                genpts : in Standard_Complex_Solutions.Solution_List;
+                x : in Standard_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                dim : in natural32;
+                genpts : in DoblDobl_Complex_Solutions.Solution_List;
+                x : in DoblDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                dim : in natural32;
+                genpts : in QuadDobl_Complex_Solutions.Solution_List;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts : in Standard_Complex_Solutions.Solution_List;
+                x : in Standard_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts : in DoblDobl_Complex_Solutions.Solution_List;
+                x : in DoblDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts : in QuadDobl_Complex_Solutions.Solution_List;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean );
+
+  -- DESCRIPTION :
+  --   The test point is first evaluated in the system before
+  --   running the membership test, as a preprocessing stage.
+  --   This preprocessing saves time if the test point is not
+  --   a junk point in a cascade and is user given.
+
+  -- ON ENTRY :
+  --   verbose  if true, the diagnostic output is written to screen,
+  --            if false, then the procedure remain silent;
+  --   nt       number of tasks;
+  --   ep       embedded polynomial system;
+  --   dim      dimension of solution components;
+  --   genpts   generic points on the components;
+  --   x        coordinates of the point for testing;
+  --   restol   tolerance for residual;
+  --   homtol   tolerance for homotopy test.
+
+  -- ON RETURN :
+  --   success  true when test point satisfies the equations,
+  --            false otherwise;
+  --   found    true when homotopy test succeeds in finding a matching
+  --            generic point, found is false when not success.
 
 end Multitasking_Membership_Tests;

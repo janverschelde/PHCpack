@@ -1,4 +1,7 @@
+with text_io;                            use text_io;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
@@ -7,6 +10,18 @@ with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
+with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
+with Standard_Complex_Poly_SysFun;
+with Standard_Complex_Laur_SysFun;
+with DoblDobl_Complex_Poly_SysFun;
+with DoblDobl_Complex_Laur_SysFun;
+with QuadDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Laur_SysFun;
 with Standard_Homotopy;
 with Standard_Laurent_Homotopy;
 with DoblDobl_Homotopy;
@@ -697,5 +712,329 @@ package body Multitasking_Membership_Tests is
     end loop;
     return res;
   end QuadDobl_Membership_Filter;
+
+-- WITH PREPROCESSING EVALUATION TEST :
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                dim : in natural32;
+                genpts : in Standard_Complex_Solutions.Solution_List;
+                x : in Standard_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+    ex,match : Standard_Complex_Vectors.Vector(ep'range);
+    y : Standard_Complex_Vectors.Vector(ep'range);
+    res : double_float;
+    idx : natural32;
+
+  begin
+    ex(x'range) := x;
+    for k in x'last+1..ex'last loop
+      ex(k) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
+    y := Standard_Complex_Poly_SysFun.Eval(ep,ex);
+    res := Max_Norm(y(y'first..y'last-integer32(dim)));
+    if verbose
+     then put("residual is "); put(res); new_line;
+    end if;
+    if res <= restol then
+      success := true;
+      if verbose then
+        put("  point satisfies the equations, as residual <=");
+        put(restol,3); new_line;
+      end if;
+      if not verbose then
+        idx := Standard_Membership_Test(nt,dim,homtol,ep,genpts,ex);
+      else
+        Standard_Membership_Test(nt,dim,homtol,ep,genpts,ex,idx,match);
+        if idx = 0 then
+          put_line("The test point does not belong to the set.");
+        else
+          put("The test point found at "); put(idx,1); put_line(".");
+          put_line("The test point :"); put_line(ex);
+          put_line("The matching coordinates :"); put_line(match);
+        end if;
+      end if;
+      found := (idx /= 0);
+    else
+      success := false;
+      if verbose then
+        put("  point does not lie on the component, as residual >");
+        put(restol,3); new_line;
+      end if;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                dim : in natural32;
+                genpts : in DoblDobl_Complex_Solutions.Solution_List;
+                x : in DoblDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+    ex,match : DoblDobl_Complex_Vectors.Vector(ep'range);
+    y : DoblDobl_Complex_Vectors.Vector(ep'range);
+    zero : constant double_double := create(0.0);
+    res : double_float;
+    idx : natural32;
+
+  begin
+    ex(x'range) := x;
+    for k in x'last+1..ex'last loop
+      ex(k) := DoblDobl_Complex_Numbers.Create(zero);
+    end loop;
+    y := DoblDobl_Complex_Poly_SysFun.Eval(ep,ex);
+    res := hi_part(Max_Norm(y(y'first..y'last-integer32(dim))));
+    if verbose
+     then put("residual is "); put(res); new_line;
+    end if;
+    if res <= restol then
+      success := true;
+      if verbose then
+        put("  point satisfies the equations, as residual <=");
+        put(restol,3); new_line;
+      end if;
+      if not verbose then
+        idx := DoblDobl_Membership_Test(nt,dim,homtol,ep,genpts,ex);
+      else
+        DoblDobl_Membership_Test(nt,dim,homtol,ep,genpts,ex,idx,match);
+        if idx = 0 then
+          put_line("The test point does not belong to the set.");
+        else
+          put("The test point found at "); put(idx,1); put_line(".");
+          put_line("The test point :"); put_line(ex);
+          put_line("The matching coordinates :"); put_line(match);
+        end if;
+      end if;
+      found := (idx /= 0);
+    else
+      success := false;
+      if verbose then
+        put("  point does not lie on the component, as residual >");
+        put(restol,3); new_line;
+      end if;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                dim : in natural32;
+                genpts : in QuadDobl_Complex_Solutions.Solution_List;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+    ex,match : QuadDobl_Complex_Vectors.Vector(ep'range);
+    y : QuadDobl_Complex_Vectors.Vector(ep'range);
+    zero : constant quad_double := create(0.0);
+    res : double_float;
+    idx : natural32;
+
+  begin
+    ex(x'range) := x;
+    for k in x'last+1..ex'last loop
+      ex(k) := QuadDobl_Complex_Numbers.Create(zero);
+    end loop;
+    y := QuadDobl_Complex_Poly_SysFun.Eval(ep,ex);
+    res := hihi_part(Max_Norm(y(y'first..y'last-integer32(dim))));
+    if verbose
+     then put("residual is "); put(res); new_line;
+    end if;
+    if res <= restol then
+      success := true;
+      if verbose then
+        put("  point satisfies the equations, as residual <=");
+        put(restol,3); new_line;
+      end if;
+      if not verbose then
+        idx := QuadDobl_Membership_Test(nt,dim,homtol,ep,genpts,ex);
+      else
+        QuadDobl_Membership_Test(nt,dim,homtol,ep,genpts,ex,idx,match);
+        if idx = 0 then
+          put_line("The test point does not belong to the set.");
+        else
+          put("The test point found at "); put(idx,1); put_line(".");
+          put_line("The test point :"); put_line(ex);
+          put_line("The matching coordinates :"); put_line(match);
+        end if;
+      end if;
+      found := (idx /= 0);
+    else
+      success := false;
+      if verbose then
+        put("  point does not lie on the component, as residual >");
+        put(restol,3); new_line;
+      end if;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts : in Standard_Complex_Solutions.Solution_List;
+                x : in Standard_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+    ex,match : Standard_Complex_Vectors.Vector(ep'range);
+    y : Standard_Complex_Vectors.Vector(ep'range);
+    res : double_float;
+    idx : natural32;
+
+  begin
+    ex(x'range) := x;
+    for k in x'last+1..ex'last loop
+      ex(k) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
+    y := Standard_Complex_Laur_SysFun.Eval(ep,ex);
+    res := Max_Norm(y(y'first..y'last-integer32(dim)));
+    if verbose
+     then put("residual is "); put(res); new_line;
+    end if;
+    if res <= restol then
+      success := true;
+      if verbose then
+        put("  point satisfies the equations, as residual <=");
+        put(restol,3); new_line;
+      end if;
+      if not verbose then
+        idx := Standard_Membership_Test(nt,dim,homtol,ep,genpts,ex);
+      else
+        Standard_Membership_Test(nt,dim,homtol,ep,genpts,ex,idx,match);
+        if idx = 0 then
+          put_line("The test point does not belong to the set.");
+        else
+          put("The test point found at "); put(idx,1); put_line(".");
+          put_line("The test point :"); put_line(ex);
+          put_line("The matching coordinates :"); put_line(match);
+        end if;
+      end if;
+      found := (idx /= 0);
+    else
+      success := false;
+      if verbose then
+        put("  point does not lie on the component, as residual >");
+        put(restol,3); new_line;
+      end if;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts : in DoblDobl_Complex_Solutions.Solution_List;
+                x : in DoblDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+    ex,match : DoblDobl_Complex_Vectors.Vector(ep'range);
+    y : DoblDobl_Complex_Vectors.Vector(ep'range);
+    zero : constant double_double := create(0.0);
+    res : double_float;
+    idx : natural32;
+
+  begin
+    ex(x'range) := x;
+    for k in x'last+1..ex'last loop
+      ex(k) := DoblDobl_Complex_Numbers.Create(zero);
+    end loop;
+    y := DoblDobl_Complex_Laur_SysFun.Eval(ep,ex);
+    res := hi_part(Max_Norm(y(y'first..y'last-integer32(dim))));
+    if verbose
+     then put("residual is "); put(res); new_line;
+    end if;
+    if res <= restol then
+      success := true;
+      if verbose then
+        put("  point satisfies the equations, as residual <=");
+        put(restol,3); new_line;
+      end if;
+      if not verbose then
+        idx := DoblDobl_Membership_Test(nt,dim,homtol,ep,genpts,ex);
+      else
+        DoblDobl_Membership_Test(nt,dim,homtol,ep,genpts,ex,idx,match);
+        if idx = 0 then
+          put_line("The test point does not belong to the set.");
+        else
+          put("The test point found at "); put(idx,1); put_line(".");
+          put_line("The test point :"); put_line(ex);
+          put_line("The matching coordinates :"); put_line(match);
+        end if;
+      end if;
+      found := (idx /= 0);
+    else
+      success := false;
+      if verbose then
+        put("  point does not lie on the component, as residual >");
+        put(restol,3); new_line;
+      end if;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test 
+              ( verbose : in boolean; nt : in natural32;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                dim : in natural32;
+                genpts : in QuadDobl_Complex_Solutions.Solution_List;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                restol,homtol : in double_float;
+                success,found : out boolean ) is
+
+    ex,match : QuadDobl_Complex_Vectors.Vector(ep'range);
+    y : QuadDobl_Complex_Vectors.Vector(ep'range);
+    zero : constant quad_double := create(0.0);
+    res : double_float;
+    idx : natural32;
+
+  begin
+    ex(x'range) := x;
+    for k in x'last+1..ex'last loop
+      ex(k) := QuadDobl_Complex_Numbers.Create(zero);
+    end loop;
+    y := QuadDobl_Complex_Laur_SysFun.Eval(ep,ex);
+    res := hihi_part(Max_Norm(y(y'first..y'last-integer32(dim))));
+    if verbose
+     then put("residual is "); put(res); new_line;
+    end if;
+    if res <= restol then
+      success := true;
+      if verbose then
+        put("  point satisfies the equations, as residual <=");
+        put(restol,3); new_line;
+      end if;
+      if not verbose then
+        idx := QuadDobl_Membership_Test(nt,dim,homtol,ep,genpts,ex);
+      else
+        QuadDobl_Membership_Test(nt,dim,homtol,ep,genpts,ex,idx,match);
+        if idx = 0 then
+          put_line("The test point does not belong to the set.");
+        else
+          put("The test point found at "); put(idx,1); put_line(".");
+          put_line("The test point :"); put_line(ex);
+          put_line("The matching coordinates :"); put_line(match);
+        end if;
+      end if;
+      found := (idx /= 0);
+    else
+      success := false;
+      if verbose then
+        put("  point does not lie on the component, as residual >");
+        put(restol,3); new_line;
+      end if;
+      found := false;
+    end if;
+  end Homotopy_Membership_Test;
 
 end Multitasking_Membership_Tests;
