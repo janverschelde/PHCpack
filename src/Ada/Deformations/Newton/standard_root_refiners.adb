@@ -1263,8 +1263,10 @@ package body Standard_Root_Refiners is
         begin
           if deflate then
             backup := sa(i).all;
-            Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
-                              tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+            Silent_Deflate(max,p_eval,jac_eval,sa(i),order,
+                           tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+           -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
+           --                   tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
            -- if wout then
            --   Reporting_Newton(file,p_eval,jac_eval,sa(i).all,epsxa,epsfa,
            --                    nit,max,fail);
@@ -1451,8 +1453,10 @@ package body Standard_Root_Refiners is
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
         if deflate then
           backup := sa(i).all;
-          Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
-                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Silent_Deflate(max,p_eval,jac_eval,sa(i),order,
+                         tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+         -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
+         --                   tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- if wout then
          --   Reporting_Newton(file,p_eval,jac_eval,sa(i).all,epsxa,epsfa,
          --                    nit,max,fail);
@@ -2150,8 +2154,10 @@ package body Standard_Root_Refiners is
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
         if deflate then
           backup := sa(i).all;
-          Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
-                            tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Silent_Deflate(max,p_eval,jac_eval,sa(i),order,
+                         tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+         -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
+         --                   tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- if wout then
          --   Reporting_Gauss_Newton
          --     (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
@@ -2273,8 +2279,10 @@ package body Standard_Root_Refiners is
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
         if deflate then
           backup := sa(i).all;
-          Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
-                            tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Silent_Deflate(max,p_eval,jac_eval,sa(i),order,
+                         tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+         -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
+         --                   tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- if wout then
          --   Reporting_Gauss_Newton
          --     (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
