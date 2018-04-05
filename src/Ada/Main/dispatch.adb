@@ -311,7 +311,6 @@ procedure Dispatch is
     seed_found : constant natural32 := Find_Seed;
 
   begin
-    put("The seed found : "); put(seed_found,1); new_line;
     if seed_found = 0
      then Standard_Random_Numbers.Set_Seed(fixed_seed);
      else Standard_Random_Numbers.Set_Seed(seed_found);

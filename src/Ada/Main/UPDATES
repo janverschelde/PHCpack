@@ -1,3 +1,5 @@
+Thu 5 Apr 2018 : removed the "seed found" message from dispatch.adb.
+
 Fri 30 Mar 2018 : updated the factorization banner in greeting_banners.ads
   and passed the number of tasks to mainfac in dispatch.adb.
 
