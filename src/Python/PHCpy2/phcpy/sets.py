@@ -353,7 +353,7 @@ def drop_coordinate_from_quaddobl_solutions(sols, nbvar, svar):
     return load_quaddobl_solutions()
 
 def standard_membertest(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded polynomial
@@ -361,6 +361,8 @@ def standard_membertest(wsys, gpts, dim, point, \
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
     coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in standard double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -376,7 +378,7 @@ def standard_membertest(wsys, gpts, dim, point, \
     return (result[2] == 1)
 
 def dobldobl_membertest(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded polynomial
@@ -384,6 +386,8 @@ def dobldobl_membertest(wsys, gpts, dim, point, \
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
     coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in double double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -399,7 +403,7 @@ def dobldobl_membertest(wsys, gpts, dim, point, \
     return (result[2] == 1)
 
 def quaddobl_membertest(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded polynomial
@@ -407,6 +411,8 @@ def quaddobl_membertest(wsys, gpts, dim, point, \
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
     coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in quad double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -422,7 +428,7 @@ def quaddobl_membertest(wsys, gpts, dim, point, \
     return (result[2] == 1)
 
 def standard_laurent_membertest(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded Laurent
@@ -430,6 +436,8 @@ def standard_laurent_membertest(wsys, gpts, dim, point, \
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
     coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in standard double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -446,7 +454,7 @@ def standard_laurent_membertest(wsys, gpts, dim, point, \
     return (result[2] == 1)
 
 def dobldobl_laurent_membertest(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded Laurent
@@ -454,6 +462,8 @@ def dobldobl_laurent_membertest(wsys, gpts, dim, point, \
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
     coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in double double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -470,7 +480,7 @@ def dobldobl_laurent_membertest(wsys, gpts, dim, point, \
     return (result[2] == 1)
 
 def quaddobl_laurent_membertest(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded Laurent
@@ -478,6 +488,8 @@ def quaddobl_laurent_membertest(wsys, gpts, dim, point, \
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
     coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in quad double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -494,16 +506,18 @@ def quaddobl_laurent_membertest(wsys, gpts, dim, point, \
     return (result[2] == 1)
 
 def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
-    verbose=True, precision='d'):
+    verbose=True, precision='d', tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded polynomial
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
-    coordinate of the point.  By default, *verbose* is True, and the
-    working precision is double 'd'.  Other levels of precision are
-    double double precision 'dd' and quad double precision 'qd'.
+    coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
+    The default working precision is double 'd'.  Other levels of precision
+    are double double precision 'dd' and quad double precision 'qd'.
     There are two tolerances: *evatol* is the tolerance on the residual
     of the evaluation of the polynomial equations at the test point.
     If the residual of the evaluation is not less than *evatol*,
@@ -515,27 +529,29 @@ def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
     """
     if(precision == 'd'):
         return standard_membertest(wsys, gpts, dim, point, \
-                                   evatol, memtol, verbose)
+                                   evatol, memtol, verbose, tasks)
     elif(precision == 'dd'):
         return dobldobl_membertest(wsys, gpts, dim, point, \
-                                   evatol, memtol, verbose)
+                                   evatol, memtol, verbose, tasks)
     elif(precision == 'qd'):
         return quaddobl_membertest(wsys, gpts, dim, point, \
-                                   evatol, memtol, verbose)
+                                   evatol, memtol, verbose, tasks)
     else:
         print 'wrong argument for precision'
         return None
 
 def laurent_membertest(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d', tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded Laurent
     system in *wsys*, with corresponding generic points in *gpts*.
     The coordinates of the test point are given in the list *point*,
     as a list of doubles, with the real and imaginary part of each
-    coordinate of the point.  By default, *verbose* is True, and the
-    working precision is double 'd'.  Other levels of precision are
+    coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
+    The working precision is double 'd'.  Other levels of precision are
     double double precision 'dd' and quad double precision 'qd'.
     There are two tolerances: *evatol* is the tolerance on the residual
     of the evaluation of the Laurent system at the test point.
@@ -548,19 +564,19 @@ def laurent_membertest(wsys, gpts, dim, point, \
     """
     if(precision == 'd'):
         return standard_laurent_membertest\
-                   (wsys, gpts, dim, point, evatol, memtol, verbose)
+                   (wsys, gpts, dim, point, evatol, memtol, verbose, tasks)
     elif(precision == 'dd'):
         return dobldobl_laurent_membertest\
-                   (wsys, gpts, dim, point, evatol, memtol, verbose)
+                   (wsys, gpts, dim, point, evatol, memtol, verbose, tasks)
     elif(precision == 'qd'):
         return quaddobl_laurent_membertest\
-                   (wsys, gpts, dim, point, evatol, memtol, verbose)
+                   (wsys, gpts, dim, point, evatol, memtol, verbose, tasks)
     else:
         print 'wrong argument for precision'
         return None
 
 def standard_ismember(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded polynomial
@@ -569,6 +585,8 @@ def standard_ismember(wsys, gpts, dim, point, \
     which is the string representation of a solution in PHCpack format,
     with symbols of the variables before the values of the coordinates.
     By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in standard double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -591,7 +609,7 @@ def standard_ismember(wsys, gpts, dim, point, \
     return (onpolsys, inwitset)
 
 def dobldobl_ismember(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded polynomial
@@ -600,6 +618,8 @@ def dobldobl_ismember(wsys, gpts, dim, point, \
     which is the string representation of a solution in PHCpack format,
     with symbols of the variables before the values of the coordinates.
     By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in double double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -622,7 +642,7 @@ def dobldobl_ismember(wsys, gpts, dim, point, \
     return (onpolsys, inwitset)
 
 def quaddobl_ismember(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded polynomial
@@ -631,6 +651,8 @@ def quaddobl_ismember(wsys, gpts, dim, point, \
     which is the string representation of a solution in PHCpack format,
     with symbols of the variables before the values of the coordinates.
     By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in quad double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -653,7 +675,7 @@ def quaddobl_ismember(wsys, gpts, dim, point, \
     return (onpolsys, inwitset)
 
 def standard_laurent_ismember(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded polynomial
@@ -662,6 +684,8 @@ def standard_laurent_ismember(wsys, gpts, dim, point, \
     which is the string representation of a solution in PHCpack format,
     with symbols of the variables before the values of the coordinates.
     By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in standard double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -685,7 +709,7 @@ def standard_laurent_ismember(wsys, gpts, dim, point, \
     return (onpolsys, inwitset)
 
 def dobldobl_laurent_ismember(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded polynomial
@@ -694,6 +718,8 @@ def dobldobl_laurent_ismember(wsys, gpts, dim, point, \
     which is the string representation of a solution in PHCpack format,
     with symbols of the variables before the values of the coordinates.
     By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in double double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -717,7 +743,7 @@ def dobldobl_laurent_ismember(wsys, gpts, dim, point, \
     return (onpolsys, inwitset)
 
 def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Applies the homotopy membership test for a *point* to belong to
     a witness set of dimension *dim*, given by an embedded polynomial
@@ -726,6 +752,8 @@ def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
     which is the string representation of a solution in PHCpack format,
     with symbols of the variables before the values of the coordinates.
     By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in quad double precision.
     The default values for the evaluation (*evatol*) and the membership
     (*memtol*) allow for singular values at the end points of the paths
@@ -749,7 +777,7 @@ def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
     return (onpolsys, inwitset)
 
 def standard_ismember_filter(wsys, gpts, dim, points, \
-    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded polynomial system,
@@ -758,6 +786,9 @@ def standard_ismember_filter(wsys, gpts, dim, points, \
     applied to each point in the list *points*.  The list on return
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
+    By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     Calculations happen in standard double precision.
     The parameter *rcotol* is used to bypass the homotopy membership test,
     for points with their estimated inverse condition number larger than
@@ -771,14 +802,14 @@ def standard_ismember_filter(wsys, gpts, dim, points, \
             (isgood, ismember) = (True, False)
         else:
             tst = standard_ismember(wsys, gpts, dim, point, \
-                                    evatol, memtol, verbose)
+                                    evatol, memtol, verbose, tasks)
             (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def dobldobl_ismember_filter(wsys, gpts, dim, points, \
-    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded polynomial system,
@@ -788,6 +819,9 @@ def dobldobl_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in double double precision.
+    By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     The parameter *rcotol* is used to bypass the homotopy membership test,
     for points with their estimated inverse condition number larger than
     *rcotol* will be considered isolated and not in the witness set.
@@ -800,14 +834,14 @@ def dobldobl_ismember_filter(wsys, gpts, dim, points, \
             (isgood, ismember) = (True, False)
         else:
             tst = dobldobl_ismember(wsys, gpts, dim, point, \
-                                    evatol, memtol, verbose)
+                                    evatol, memtol, verbose, tasks)
             (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def quaddobl_ismember_filter(wsys, gpts, dim, points, \
-    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded polynomial system,
@@ -817,6 +851,9 @@ def quaddobl_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in quad double precision.
+    By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     The parameter *rcotol* is used to bypass the homotopy membership test,
     for points with their estimated inverse condition number larger than
     *rcotol* will be considered isolated and not in the witness set.
@@ -829,14 +866,14 @@ def quaddobl_ismember_filter(wsys, gpts, dim, points, \
             (isgood, ismember) = (True, False)
         else:
             tst = quaddobl_ismember(wsys, gpts, dim, point, \
-                                    evatol, memtol, verbose)
+                                    evatol, memtol, verbose, tasks)
             (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def standard_laurent_ismember_filter(wsys, gpts, dim, points, \
-    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded Laurent polynomial system,
@@ -846,6 +883,9 @@ def standard_laurent_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in standard double precision.
+    By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     The parameter *rcotol* is used to bypass the homotopy membership test,
     for points with their estimated inverse condition number larger than
     *rcotol* will be considered isolated and not in the witness set.
@@ -858,14 +898,14 @@ def standard_laurent_ismember_filter(wsys, gpts, dim, points, \
             (isgood, ismember) = (True, False)
         else:
             tst = standard_laurent_ismember(wsys, gpts, dim, point, \
-                                            evatol, memtol, verbose)
+                                            evatol, memtol, verbose, tasks)
             (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def dobldobl_laurent_ismember_filter(wsys, gpts, dim, points, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded Laurent polynomial system,
@@ -875,6 +915,9 @@ def dobldobl_laurent_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in double double precision.
+    By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     The parameter *rcotol* is used to bypass the homotopy membership test,
     for points with their estimated inverse condition number larger than
     *rcotol* will be considered isolated and not in the witness set.
@@ -887,14 +930,14 @@ def dobldobl_laurent_ismember_filter(wsys, gpts, dim, points, \
             (isgood, ismember) = (True, False)
         else:
             tst = dobldobl_laurent_ismember(wsys, gpts, dim, point, \
-                                            evatol, memtol, verbose)
+                                            evatol, memtol, verbose, tasks)
             (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def quaddobl_laurent_ismember_filter(wsys, gpts, dim, points, \
-    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True, tasks=0):
     r"""
     Given in *wsys* and *gpts* is a witness set of dimension *dim*,
     where *wsys* is an embedded Laurent polynomial system,
@@ -904,6 +947,9 @@ def quaddobl_laurent_ismember_filter(wsys, gpts, dim, points, \
     contains the points that do NOT belong to the witness set.
     Points that belong to the witness set are considered junk.
     Calculations happen in quad double precision.
+    By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     The parameter *rcotol* is used to bypass the homotopy membership test,
     for points with their estimated inverse condition number larger than
     *rcotol* will be considered isolated and not in the witness set.
@@ -915,14 +961,15 @@ def quaddobl_laurent_ismember_filter(wsys, gpts, dim, points, \
             (isgood, ismember) = (True, False)
         else:
             tst = quaddobl_laurent_ismember(wsys, gpts, dim, point, \
-                                            evatol, memtol, verbose)
+                                            evatol, memtol, verbose, tasks)
             (isgood, ismember) = tst
         if isgood and not ismember:
             result.append(point)
     return result
 
 def ismember_filter(wsys, gpts, dim, points, \
-    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, \
+    verbose=True, precision='d', tasks=0):
     r"""
     Filters *points* so the list on return contains only those points
     which do not belong to the witness set of dimension *dim*,
@@ -933,6 +980,8 @@ def ismember_filter(wsys, gpts, dim, points, \
     By default, *verbose* is True, and the precision is double 'd'.
     Other levels of precision are double double precision 'dd' 
     and quad double precision 'qd'.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     The parameter *rcotol* is used to bypass the homotopy membership test,
     for points with their estimated inverse condition number larger than
     *rcotol* will be considered isolated and not in the witness set.
@@ -948,19 +997,23 @@ def ismember_filter(wsys, gpts, dim, points, \
     """
     if(precision == 'd'):
         return standard_ismember_filter\
-                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, \
+                    verbose, tasks)
     elif(precision == 'dd'):
         return dobldobl_ismember_filter\
-                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, \
+                    verbose, tasks)
     elif(precision == 'qd'):
         return quaddobl_ismember_filter\
-                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, \
+                    verbose, tasks)
     else:
         print 'wrong argument for precision'
         return points
 
 def laurent_ismember_filter(wsys, gpts, dim, points, \
-    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, verbose=True, precision='d'):
+    rcotol=1.0e-6, evatol=1.0e-6, memtol=1.0e-6, \
+    verbose=True, precision='d', tasks=0):
     r"""
     Filters *points* so the list on return contains only those points
     which do not belong to the witness set of dimension *dim*,
@@ -971,6 +1024,8 @@ def laurent_ismember_filter(wsys, gpts, dim, points, \
     By default, *verbose* is True, and the precision is double 'd'.
     Other levels of precision are double double precision 'dd' 
     and quad double precision 'qd'.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
     The parameter *rcotol* is used to bypass the homotopy membership test,
     for points with their estimated inverse condition number larger than
     *rcotol* will be considered isolated and not in the witness set.
@@ -986,13 +1041,16 @@ def laurent_ismember_filter(wsys, gpts, dim, points, \
     """
     if(precision == 'd'):
         return standard_laurent_ismember_filter\
-                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, \
+                    verbose, tasks)
     elif(precision == 'dd'):
         return dobldobl_laurent_ismember_filter\
-                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, \
+                    verbose, tasks)
     elif(precision == 'qd'):
         return quaddobl_laurent_ismember_filter\
-                   (wsys, gpts, dim, points, rcotol, evatol, memtol, verbose)
+                   (wsys, gpts, dim, points, rcotol, evatol, memtol, \
+                    verbose, tasks)
     else:
         print 'wrong argument for precision'
         return points
@@ -1024,7 +1082,7 @@ def is_signed(pol):
         return (wrk[0] == '+' or wrk[0] == '-')
 
 def is_member(wsys, gpts, dim, solpt, evatol=1.0e-6, memtol=1.0e-6, \
-    verbose=True, precision='d'):
+    verbose=True, precision='d', tasks=0):
     r"""
     This function wraps the membertest where the point is a solution,
     given in *solpt*.  All other parameters have the same meaning as
@@ -1069,7 +1127,7 @@ def is_member(wsys, gpts, dim, solpt, evatol=1.0e-6, memtol=1.0e-6, \
         newpol0 = ordvar + '+' + wpol0
     newsys = [newpol0] + wsys[1:]
     return membertest(newsys, gpts, dim, solval, evatol, memtol, \
-                      verbose, precision)
+                      verbose, precision, tasks)
 
 def test_member(prc='d'):
     """
