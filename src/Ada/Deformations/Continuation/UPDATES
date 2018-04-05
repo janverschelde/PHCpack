@@ -1,3 +1,6 @@
+Thu 5 Apr 2018 : added Is_Null() tests in standard_blackbox_refiners.adb,
+  in particular for the reporting case when there are no singular solutions.
+
 Wed 4 Apr 2018 : updated standard_blackbox_refiners.adb, removing the writing
   of the refined singular solutions, as it is no longer needed.
 
