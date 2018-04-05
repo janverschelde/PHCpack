@@ -213,8 +213,9 @@ int standard_membership_test ( void )
    {
       int fail,onsys,onset,nbtasks=0;
       double tpt[2*nv];
-      const double restol = 1.0e-6;
-      const double homtol = 1.0e-10;
+      const double restol = 1.0e-8;
+      const double homtol = 1.0e-6;
+      printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       printf("\nReading the coordinates of the test point x ...\n");
       standard_read_point(nv,tpt);
       fail = standard_homotopy_membership_test
@@ -257,8 +258,9 @@ int dobldobl_membership_test ( void )
    {
       int fail,onsys,onset,nbtasks=0;
       double tpt[4*nv];
-      const double restol = 1.0e-6;
-      const double homtol = 1.0e-10;
+      const double restol = 1.0e-8;
+      const double homtol = 1.0e-6;
+      printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       printf("\nReading the coordinates of the test point x ...\n");
       dobldobl_read_point(nv,tpt);
       fail = dobldobl_homotopy_membership_test
@@ -301,8 +303,9 @@ int quaddobl_membership_test ( void )
    {
       int fail,onsys,onset,nbtasks=0;
       double tpt[8*nv];
-      const double restol = 1.0e-6;
-      const double homtol = 1.0e-10;
+      const double restol = 1.0e-8;
+      const double homtol = 1.0e-6;
+      printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       printf("\nReading the coordinates of the test point x ...\n");
       quaddobl_read_point(nv,tpt);
       fail = quaddobl_homotopy_membership_test
@@ -345,8 +348,9 @@ int standard_Laurent_membership_test ( void )
    {
       int fail,onsys,onset,nbtasks;
       double tpt[2*nv];
-      const double restol = 1.0e-6;
-      const double homtol = 1.0e-10;
+      const double restol = 1.0e-8;
+      const double homtol = 1.0e-6;
+      printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       printf("\nReading the coordinates of the test point x ...\n");
       standard_read_point(nv,tpt);
       fail = standard_Laurent_homotopy_membership_test
@@ -389,8 +393,9 @@ int dobldobl_Laurent_membership_test ( void )
    {
       int fail,onsys,onset,nbtasks=0;
       double tpt[4*nv];
-      const double restol = 1.0e-6;
-      const double homtol = 1.0e-10;
+      const double restol = 1.0e-8;
+      const double homtol = 1.0e-6;
+      printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       printf("\nReading the coordinates of the test point x ...\n");
       dobldobl_read_point(nv,tpt);
       fail = dobldobl_Laurent_homotopy_membership_test
@@ -433,8 +438,9 @@ int quaddobl_Laurent_membership_test ( void )
    {
       int fail,onsys,onset,nbtasks=0;
       double tpt[8*nv];
-      const double restol = 1.0e-6;
-      const double homtol = 1.0e-10;
+      const double restol = 1.0e-8;
+      const double homtol = 1.0e-6;
+      printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
       printf("\nReading the coordinates of the test point x ...\n");
       quaddobl_read_point(nv,tpt);
       fail = quaddobl_Laurent_homotopy_membership_test

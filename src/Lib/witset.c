@@ -1738,6 +1738,7 @@ int standard_homotopy_membership_test
 
    dims[0] = nvr;
    dims[1] = dim;
+   dims[2] = nbtasks;
    cffs[0] = restol;
    cffs[1] = homtol;
    idx = 2;
@@ -1761,6 +1762,7 @@ int dobldobl_homotopy_membership_test
 
    dims[0] = nvr;
    dims[1] = dim;
+   dims[2] = nbtasks;
    cffs[0] = restol;
    cffs[1] = homtol;
    idx = 2;
@@ -1784,6 +1786,7 @@ int quaddobl_homotopy_membership_test
 
    dims[0] = nvr;
    dims[1] = dim;
+   dims[2] = nbtasks;
    cffs[0] = restol;
    cffs[1] = homtol;
    idx = 2;
@@ -1807,6 +1810,7 @@ int standard_Laurent_homotopy_membership_test
 
    dims[0] = nvr;
    dims[1] = dim;
+   dims[2] = nbtasks;
    cffs[0] = restol;
    cffs[1] = homtol;
    idx = 2;
@@ -1830,6 +1834,7 @@ int dobldobl_Laurent_homotopy_membership_test
 
    dims[0] = nvr;
    dims[1] = dim;
+   dims[2] = nbtasks;
    cffs[0] = restol;
    cffs[1] = homtol;
    idx = 2;
@@ -1853,6 +1858,7 @@ int quaddobl_Laurent_homotopy_membership_test
 
    dims[0] = nvr;
    dims[1] = dim;
+   dims[2] = nbtasks;
    cffs[0] = restol;
    cffs[1] = homtol;
    idx = 2;
@@ -1879,6 +1885,7 @@ int standard_homotopy_ismember
    dims[1] = nvr;
    dims[2] = dim;
    dims[3] = nbc;
+   dims[4] = nbtasks;
    tols[0] = restol;
    tols[1] = homtol;
 
@@ -1905,6 +1912,7 @@ int dobldobl_homotopy_ismember
    dims[1] = nvr;
    dims[2] = dim;
    dims[3] = nbc;
+   dims[4] = nbtasks;
    tols[0] = restol;
    tols[1] = homtol;
 
@@ -1931,6 +1939,7 @@ int quaddobl_homotopy_ismember
    dims[1] = nvr;
    dims[2] = dim;
    dims[3] = nbc;
+   dims[4] = nbtasks;
    tols[0] = restol;
    tols[1] = homtol;
 
@@ -1957,6 +1966,7 @@ int standard_Laurent_homotopy_ismember
    dims[1] = nvr;
    dims[2] = dim;
    dims[3] = nbc;
+   dims[4] = nbtasks;
    tols[0] = restol;
    tols[1] = homtol;
 
@@ -1983,6 +1993,7 @@ int dobldobl_Laurent_homotopy_ismember
    dims[1] = nvr;
    dims[2] = dim;
    dims[3] = nbc;
+   dims[4] = nbtasks;
    tols[0] = restol;
    tols[1] = homtol;
 
@@ -2009,6 +2020,7 @@ int quaddobl_Laurent_homotopy_ismember
    dims[1] = nvr;
    dims[2] = dim;
    dims[3] = nbc;
+   dims[4] = nbtasks;
    tols[0] = restol;
    tols[1] = homtol;
 
