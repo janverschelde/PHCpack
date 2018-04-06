@@ -6654,7 +6654,8 @@ static PyObject *py2c_witset_standard_membertest
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    {
       const int dim = 2*n;
       double tpt[dim];
@@ -6673,7 +6674,8 @@ static PyObject *py2c_witset_dobldobl_membertest
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    {
       const int dim = 4*n;
       double tpt[dim];
@@ -6692,7 +6694,8 @@ static PyObject *py2c_witset_quaddobl_membertest
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    {
       const int dim = 8*n;
       double tpt[dim];
@@ -6712,7 +6715,8 @@ static PyObject *py2c_witset_standard_Laurent_membertest
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    {
       const int dim = 2*n;
       double tpt[dim];
@@ -6732,7 +6736,8 @@ static PyObject *py2c_witset_dobldobl_Laurent_membertest
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    {
       const int dim = 4*n;
       double tpt[dim];
@@ -6752,7 +6757,8 @@ static PyObject *py2c_witset_quaddobl_Laurent_membertest
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    {
       const int dim = 8*n;
       double tpt[dim];
@@ -6772,7 +6778,8 @@ static PyObject *py2c_witset_standard_ismember
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    fail = standard_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
@@ -6786,7 +6793,8 @@ static PyObject *py2c_witset_dobldobl_ismember
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    fail = dobldobl_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
@@ -6800,7 +6808,8 @@ static PyObject *py2c_witset_quaddobl_ismember
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    fail = quaddobl_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
@@ -6814,7 +6823,8 @@ static PyObject *py2c_witset_standard_Laurent_ismember
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    fail = standard_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
@@ -6828,7 +6838,8 @@ static PyObject *py2c_witset_dobldobl_Laurent_ismember
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    fail = dobldobl_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);
@@ -6842,7 +6853,8 @@ static PyObject *py2c_witset_quaddobl_Laurent_ismember
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+      return NULL;
    fail = quaddobl_Laurent_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
    return Py_BuildValue("(i,i,i)",fail,onp,ins);

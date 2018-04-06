@@ -372,9 +372,9 @@ def standard_membertest(wsys, gpts, dim, point, \
     from phcpy.phcpy2c2 import py2c_witset_standard_membertest as membtest
     store_standard_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/2
-    strpt = str(point)
-    nbc = len(strpt)
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
+    spt = str(point)
+    nbc = len(spt)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, spt)
     return (result[2] == 1)
 
 def dobldobl_membertest(wsys, gpts, dim, point, \
@@ -397,9 +397,9 @@ def dobldobl_membertest(wsys, gpts, dim, point, \
     from phcpy.phcpy2c2 import py2c_witset_dobldobl_membertest as membtest
     store_dobldobl_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/4
-    strpt = str(point)
-    nbc = len(strpt)
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
+    spt = str(point)
+    nbc = len(spt)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, spt)
     return (result[2] == 1)
 
 def quaddobl_membertest(wsys, gpts, dim, point, \
@@ -422,9 +422,9 @@ def quaddobl_membertest(wsys, gpts, dim, point, \
     from phcpy.phcpy2c2 import py2c_witset_quaddobl_membertest as membtest
     store_quaddobl_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/8
-    strpt = str(point)
-    nbc = len(strpt)
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
+    spt = str(point)
+    nbc = len(spt)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, spt)
     return (result[2] == 1)
 
 def standard_laurent_membertest(wsys, gpts, dim, point, \
@@ -448,9 +448,9 @@ def standard_laurent_membertest(wsys, gpts, dim, point, \
     import py2c_witset_standard_Laurent_membertest as membtest
     store_standard_laurent_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/2
-    strpt = str(point)
-    nbc = len(strpt)
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
+    spt = str(point)
+    nbc = len(spt)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, spt)
     return (result[2] == 1)
 
 def dobldobl_laurent_membertest(wsys, gpts, dim, point, \
@@ -474,9 +474,9 @@ def dobldobl_laurent_membertest(wsys, gpts, dim, point, \
     import py2c_witset_dobldobl_Laurent_membertest as membtest
     store_dobldobl_laurent_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/4
-    strpt = str(point)
-    nbc = len(strpt)
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
+    spt = str(point)
+    nbc = len(spt)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, spt)
     return (result[2] == 1)
 
 def quaddobl_laurent_membertest(wsys, gpts, dim, point, \
@@ -500,9 +500,9 @@ def quaddobl_laurent_membertest(wsys, gpts, dim, point, \
     import py2c_witset_quaddobl_Laurent_membertest as membtest
     store_laurent_witness_set(len(wsys), dim, wsys, gpts)
     nvr = len(point)/8
-    strpt = str(point)
-    nbc = len(strpt)
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
+    spt = str(point)
+    nbc = len(spt)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, spt)
     return (result[2] == 1)
 
 def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
@@ -604,7 +604,7 @@ def standard_ismember(wsys, gpts, dim, point, \
     if verbose:
         print 'calling standard_ismember with test point :'
         print point
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, point)
     (fail, onpolsys, inwitset) = result
     return (onpolsys, inwitset)
 
@@ -637,7 +637,7 @@ def dobldobl_ismember(wsys, gpts, dim, point, \
     if verbose:
         print 'calling dobldobl_ismember with test point :'
         print point
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, point)
     (fail, onpolsys, inwitset) = result
     return (onpolsys, inwitset)
 
@@ -670,7 +670,7 @@ def quaddobl_ismember(wsys, gpts, dim, point, \
     if verbose:
         print 'calling quaddobl_ismember with test point :'
         print point
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, point)
     (fail, onpolsys, inwitset) = result
     return (onpolsys, inwitset)
 
@@ -704,7 +704,7 @@ def standard_laurent_ismember(wsys, gpts, dim, point, \
     if verbose:
         print 'calling standard_ismember with test point :'
         print point
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, point)
     (fail, onpolsys, inwitset) = result
     return (onpolsys, inwitset)
 
@@ -738,7 +738,7 @@ def dobldobl_laurent_ismember(wsys, gpts, dim, point, \
     if verbose:
         print 'calling dobldobl_ismember with test point :'
         print point
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, point)
     (fail, onpolsys, inwitset) = result
     return (onpolsys, inwitset)
 
@@ -772,7 +772,7 @@ def quaddobl_laurent_ismember(wsys, gpts, dim, point, \
     if verbose:
         print 'calling quaddobl_ismember with test point :'
         print point
-    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, point)
+    result = membtest(int(verbose), tasks, nvr, dim, nbc, evatol, memtol, point)
     (fail, onpolsys, inwitset) = result
     return (onpolsys, inwitset)
 

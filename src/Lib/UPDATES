@@ -1,5 +1,7 @@
 Thu 5 Apr 2018 : updated witset.c and lib_member.c to give access to the
-  multitasked homotopy membership tests.
+  multitasked homotopy membership tests.  Modified phcpy2c2.c and phcpy2c3.c
+  to parse the number of tasks from the input arguments in the functions
+  that run the homotopy membership tests.
 
 Mon 2 Apr 2018 : added the number of tasks to the membership tests in
   witset.h, witset.c, with default zero value in lib_member.c,
