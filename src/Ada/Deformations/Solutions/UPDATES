@@ -1,3 +1,7 @@
+Fri 6 Apr 2018 : added a zero_singular_split_filter to the
+  {standard,dobldobl,quaddobl}_solution_splitters, to remove the singular
+  solutions from the solutions with nonzero slack variables.
+
 Fri 30 Mar 2018 : in {standard,dobldobl,quaddobl}_solution_splitters,
   improved the interface to the singular filters.
 
