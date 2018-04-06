@@ -58,6 +58,8 @@ package body Drivers_to_Cascade_Filtering is
     sols : Solution_List;
     dim : natural32;
     filename : Link_to_String;
+    tolzero : constant double_float := 1.0E-12;
+    tolsing : constant double_float := 1.0E-8;
 
   begin
     if inpname /= "" then
@@ -84,11 +86,13 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     close(infile);
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      Witness_Generate(filename.all,outfile,nt,lq.all,sols,dim,0,1.0E-8);
+      Witness_Generate
+        (filename.all,outfile,nt,lq.all,sols,dim,0,tolzero,tolsing);
     else
       lp := new Standard_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      Witness_Generate(filename.all,outfile,nt,lp.all,sols,dim,0,1.0E-8);
+      Witness_Generate
+        (filename.all,outfile,nt,lp.all,sols,dim,0,tolzero,tolsing);
     end if;
   end Standard_Witness_Generate;
 
@@ -106,6 +110,8 @@ package body Drivers_to_Cascade_Filtering is
     sols : Solution_List;
     dim : natural32;
     filename : Link_to_String;
+    tolzero : constant double_float := 1.0E-12;
+    tolsing : constant double_float := 1.0E-8;
 
   begin
     if inpname /= "" then
@@ -132,11 +138,13 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     close(infile);
     if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      Witness_Generate(filename.all,outfile,nt,lq.all,sols,dim,0,1.0E-8);
+      Witness_Generate
+        (filename.all,outfile,nt,lq.all,sols,dim,0,tolzero,tolsing);
     else
       lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      Witness_Generate(filename.all,outfile,nt,lp.all,sols,dim,0,1.0E-8);
+      Witness_Generate
+        (filename.all,outfile,nt,lp.all,sols,dim,0,tolzero,tolsing);
     end if;
   end DoblDobl_Witness_Generate;
 
@@ -154,6 +162,8 @@ package body Drivers_to_Cascade_Filtering is
     sols : Solution_List;
     dim : natural32;
     filename : Link_to_String;
+    tolzero : constant double_float := 1.0E-12;
+    tolsing : constant double_float := 1.0E-8;
 
   begin
     if inpname /= "" then
@@ -180,11 +190,13 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     close(infile);
     if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      Witness_Generate(filename.all,outfile,nt,lq.all,sols,dim,0,1.0E-8);
+      Witness_Generate
+        (filename.all,outfile,nt,lq.all,sols,dim,0,tolzero,tolsing);
     else
       lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      Witness_Generate(filename.all,outfile,nt,lp.all,sols,dim,0,1.0E-8);
+      Witness_Generate
+        (filename.all,outfile,nt,lp.all,sols,dim,0,tolzero,tolsing);
     end if;
   end QuadDobl_Witness_Generate;
 

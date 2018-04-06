@@ -29,7 +29,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -51,8 +51,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then
-      Filter_and_Split_Solutions
-        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -61,7 +63,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -95,8 +97,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (file,sols,integer32(n),integer32(level)-1,
+         zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -105,7 +110,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -127,8 +132,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -137,7 +144,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -171,8 +178,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (file,sols,integer32(n),integer32(level)-1,
+         zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -181,7 +191,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -203,8 +213,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -213,7 +225,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -247,8 +259,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (file,sols,integer32(n),integer32(level)-1,
+         zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -257,7 +272,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -279,8 +294,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -289,7 +306,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -323,8 +340,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (file,sols,integer32(n),integer32(level)-1,
+         zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -333,7 +353,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -355,8 +375,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -365,7 +387,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -399,8 +421,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (file,sols,integer32(n),integer32(level)-1,
+         zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -409,7 +434,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -431,8 +456,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -441,7 +468,7 @@ package body Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration ) is
@@ -475,8 +502,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-      Filter_and_Split_Solutions
-        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Filter_and_Split_Solutions
+     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+      Zero_Singular_Split_Filter
+        (file,sols,integer32(n),integer32(level)-1,
+         zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;

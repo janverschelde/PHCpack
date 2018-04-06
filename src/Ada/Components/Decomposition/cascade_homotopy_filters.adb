@@ -15,7 +15,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -30,7 +30,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -45,7 +45,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -60,7 +60,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -75,7 +75,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -90,7 +90,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -105,7 +105,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -120,7 +120,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -135,7 +135,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -150,7 +150,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -165,7 +165,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -180,7 +180,7 @@ package body Cascade_Homotopy_Filters is
 
   begin
     tstart(timer);
-    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol);
+    Witness_Generate(outfile,resfile,nt,ep,sols,topdim,lowdim,zerotol,rcotol);
     tstop(timer);
   end Witness_Filter;
 
@@ -269,7 +269,8 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+      (nt,ep,sols,topdim,lowdim,zerotol,rcotol,
+       embsys,esols0,pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
@@ -295,7 +296,8 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+      (nt,ep,sols,topdim,lowdim,zerotol,rcotol,
+       embsys,esols0,pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
@@ -321,7 +323,8 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+      (nt,ep,sols,topdim,lowdim,zerotol,rcotol,
+       embsys,esols0,pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
@@ -347,7 +350,8 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+      (nt,ep,sols,topdim,lowdim,zerotol,rcotol,
+       embsys,esols0,pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
@@ -373,7 +377,8 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+      (nt,ep,sols,topdim,lowdim,zerotol,rcotol,
+       embsys,esols0,pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
@@ -399,7 +404,8 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,pathcnts,castms,totcas);
+      (nt,ep,sols,topdim,lowdim,zerotol,rcotol,
+       embsys,esols0,pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
     tstop(timer);
@@ -425,7 +431,7 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (file,nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,
+      (file,nt,ep,sols,topdim,lowdim,zerotol,rcotol,embsys,esols0,
        pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
@@ -452,7 +458,7 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (file,nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,
+      (file,nt,ep,sols,topdim,lowdim,zerotol,rcotol,embsys,esols0,
        pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
@@ -479,7 +485,7 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (file,nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,
+      (file,nt,ep,sols,topdim,lowdim,zerotol,rcotol,embsys,esols0,
        pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
@@ -506,7 +512,7 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (file,nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,
+      (file,nt,ep,sols,topdim,lowdim,zerotol,rcotol,embsys,esols0,
        pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
@@ -533,7 +539,7 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (file,nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,
+      (file,nt,ep,sols,topdim,lowdim,zerotol,rcotol,embsys,esols0,
        pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);
@@ -560,7 +566,7 @@ package body Cascade_Homotopy_Filters is
     filtms := (filtms'range => 0.0);
     tstart(timer);
     Witness_Generate
-      (file,nt,ep,sols,topdim,lowdim,zerotol,embsys,esols0,
+      (file,nt,ep,sols,topdim,lowdim,zerotol,rcotol,embsys,esols0,
        pathcnts,castms,totcas);
     Filter(false,nt,embsys,esols0,integer32(topdim),rcotol,restol,homtol,
            filtcnts,filtms,totfil);

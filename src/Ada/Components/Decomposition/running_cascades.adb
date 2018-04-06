@@ -14,7 +14,7 @@ package body Running_Cascades is
 
   deftol : constant double_float := 1.0E-8;     -- tolerance for zero
   defrcotol : constant double_float := 1.0E-6;  -- tolerance for regular
-  defrestol : constant double_float := 1.0E-10; -- tolerance on residual
+  defrestol : constant double_float := 1.0E-12; -- tolerance on residual
   defhomtol : constant double_float := 1.0E-6;  -- htpy membership test
   defmaxloops : constant natural32 := 20;       -- max #monodromy loops
 
@@ -58,7 +58,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
@@ -130,7 +130,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
@@ -203,7 +203,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
@@ -276,7 +276,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
@@ -349,7 +349,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
@@ -422,7 +422,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(standard_output,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(standard_output,pc,castm,totcas);
@@ -496,7 +496,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);
@@ -567,7 +567,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);
@@ -638,7 +638,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);
@@ -709,7 +709,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);
@@ -780,7 +780,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);
@@ -851,7 +851,7 @@ package body Running_Cascades is
       end if;
     else
       Cascade_Homotopies.Witness_Generate
-        (nt,embsys,sols,topdim,lowdim,tol,ep,gpts,pc,castm,totcas);
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
     end if;
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);

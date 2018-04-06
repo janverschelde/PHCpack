@@ -21,7 +21,8 @@ package body Cascade_Homotopies is
               ( outfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -40,8 +41,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(outfile,ep);
@@ -51,7 +55,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -92,7 +96,8 @@ package body Cascade_Homotopies is
               ( outfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
@@ -110,8 +115,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(outfile,ep);
@@ -121,7 +129,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -162,7 +170,8 @@ package body Cascade_Homotopies is
               ( outfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -180,8 +189,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(outfile,ep);
@@ -191,7 +203,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -232,7 +244,8 @@ package body Cascade_Homotopies is
               ( outfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use DoblDobl_Complex_Laur_Systems;
     use DoblDobl_Complex_Solutions;
@@ -250,8 +263,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(outfile,ep);
@@ -261,7 +277,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -302,7 +318,8 @@ package body Cascade_Homotopies is
               ( outfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -320,8 +337,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(outfile,ep);
@@ -331,7 +351,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -372,7 +392,8 @@ package body Cascade_Homotopies is
               ( outfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use QuadDobl_Complex_Laur_Systems;
     use QuadDobl_Complex_Solutions;
@@ -390,8 +411,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(outfile,ep);
@@ -401,7 +425,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -442,7 +466,8 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -461,8 +486,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
@@ -472,7 +500,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -513,7 +541,8 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
@@ -531,8 +560,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
@@ -542,7 +574,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -583,7 +615,8 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -601,8 +634,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
@@ -612,7 +648,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -653,7 +689,8 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use DoblDobl_Complex_Laur_Systems;
     use DoblDobl_Complex_Solutions;
@@ -671,8 +708,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
@@ -682,7 +722,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -723,7 +763,8 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -741,8 +782,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
@@ -752,7 +796,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -793,7 +837,8 @@ package body Cascade_Homotopies is
               ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use QuadDobl_Complex_Laur_Systems;
     use QuadDobl_Complex_Solutions;
@@ -811,8 +856,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     put_line(resfile,ep);
@@ -822,7 +870,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         Update_Path_Counts
           (pathcnts,natural32(i-1),
@@ -864,7 +912,8 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -884,8 +933,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -896,7 +948,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,esols0(i-1),sols1,pocotime);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -937,7 +989,8 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -957,8 +1010,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
@@ -967,7 +1023,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(topdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1009,7 +1065,8 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
@@ -1029,8 +1086,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
@@ -1039,7 +1099,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1081,7 +1141,8 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -1101,8 +1162,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
@@ -1111,7 +1175,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1153,7 +1217,8 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use DoblDobl_Complex_Laur_Systems;
     use DoblDobl_Complex_Solutions;
@@ -1173,8 +1238,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
@@ -1183,7 +1251,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1225,7 +1293,8 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -1245,8 +1314,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
@@ -1255,7 +1327,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1297,7 +1369,8 @@ package body Cascade_Homotopies is
                 nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float ) is
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float ) is
 
     use QuadDobl_Complex_Laur_Systems;
     use QuadDobl_Complex_Solutions;
@@ -1316,8 +1389,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+   -- Filter_and_Split_Solutions
+   --   (outfile,sols,integer32(n),integer32(topdim),zerotol,sols0,sols1);
+    Zero_Singular_Split_Filter
+      (outfile,sols,integer32(n),integer32(topdim),
+       zerotol,tolsing,sols0,sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(sols0),Length_Of(sols1));
     Write_Witness_Superset(name,ep,sols0,topdim);
@@ -1326,7 +1402,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
-          (outfile,nt,embsys(i).all,natural32(i),zerotol,
+          (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1367,7 +1443,8 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1387,8 +1464,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1398,7 +1478,8 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,tolsing,
+           wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1417,7 +1498,8 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1437,8 +1519,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1448,7 +1533,8 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,tolsing,
+           wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1467,7 +1553,8 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1487,8 +1574,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1498,7 +1588,8 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,tolsing,
+           wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1517,7 +1608,8 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1537,8 +1629,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1548,7 +1643,8 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,tolsing,
+           wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1567,7 +1663,8 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1587,8 +1684,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1598,7 +1698,8 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,tolsing,
+           wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1617,7 +1718,8 @@ package body Cascade_Homotopies is
               ( nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1637,8 +1739,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1648,7 +1753,8 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (nt,embsys(i).all,natural32(i),zerotol,wsols,sols0,sols1,pocotime);
+          (nt,embsys(i).all,natural32(i),zerotol,tolsing,
+           wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
         Update_Path_Counts
@@ -1667,7 +1773,8 @@ package body Cascade_Homotopies is
               ( file : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1687,9 +1794,12 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+    Zero_Singular_Split_Filter
+      (file,sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
        Length_Of(sols1));
@@ -1698,7 +1808,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (file,nt,embsys(i).all,natural32(i),zerotol,
+          (file,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
@@ -1718,7 +1828,8 @@ package body Cascade_Homotopies is
               ( file : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1738,8 +1849,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1749,7 +1863,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (file,nt,embsys(i).all,natural32(i),zerotol,
+          (file,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
@@ -1769,7 +1883,8 @@ package body Cascade_Homotopies is
               ( file : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1789,8 +1904,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1800,7 +1918,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (file,nt,embsys(i).all,natural32(i),zerotol,
+          (file,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
@@ -1820,7 +1938,8 @@ package body Cascade_Homotopies is
               ( file : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1840,8 +1959,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1851,7 +1973,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (file,nt,embsys(i).all,natural32(i),zerotol,
+          (file,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
@@ -1871,7 +1993,8 @@ package body Cascade_Homotopies is
               ( file : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1891,8 +2014,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1902,7 +2028,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (file,nt,embsys(i).all,natural32(i),zerotol,
+          (file,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;
@@ -1922,7 +2048,8 @@ package body Cascade_Homotopies is
               ( file : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                topdim,lowdim : in natural32; zerotol : in double_float;
+                topdim,lowdim : in natural32;
+                zerotol,tolsing : in double_float;
                 embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
                 esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
                 pathcnts : out Standard_Natural_VecVecs.VecVec;
@@ -1942,8 +2069,11 @@ package body Cascade_Homotopies is
     for i in 0..topdim-1 loop
       embsys(integer32(i)) := new Laur_Sys'(Remove_Embedding1(ep,topdim-i));
     end loop;
-    Filter_and_Split_Solutions
-      (sols,integer32(n),integer32(topdim),zerotol,
+   -- Filter_and_Split_Solutions
+   --   (sols,integer32(n),integer32(topdim),zerotol,
+   --    esols0(integer32(topdim)),sols1);
+    Zero_Singular_Split_Filter
+      (sols,integer32(n),integer32(topdim),zerotol,tolsing,
        esols0(integer32(topdim)),sols1);
     Update_Path_Counts
       (pathcnts,topdim,Length_Of(sols),Length_Of(esols0(integer32(topdim))),
@@ -1953,7 +2083,7 @@ package body Cascade_Homotopies is
       for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols1);
         Down_Continuation
-          (file,nt,embsys(i).all,natural32(i),zerotol,
+          (file,nt,embsys(i).all,natural32(i),zerotol,tolsing,
            wsols,sols0,sols1,pocotime);
         esols0(i-1) := Remove_Component(sols0); Clear(sols0);
         times(integer(i)) := pocotime;

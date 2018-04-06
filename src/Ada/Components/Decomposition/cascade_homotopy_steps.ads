@@ -26,20 +26,58 @@ package Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( nt : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
+                time : out duration );
+  procedure Down_Continuation
+              ( nt : in natural32;
+                embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
+                level : in natural32; zerotol,tolsing : in double_float;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
+                time : out duration );
+  procedure Down_Continuation
+              ( nt : in natural32;
+                embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                level : in natural32; zerotol,tolsing : in double_float;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
+                time : out duration );
+  procedure Down_Continuation
+              ( nt : in natural32;
+                embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                level : in natural32; zerotol,tolsing : in double_float;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
+                time : out duration );
+  procedure Down_Continuation
+              ( nt : in natural32;
+                embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                level : in natural32; zerotol,tolsing : in double_float;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
+                time : out duration );
+  procedure Down_Continuation
+              ( nt : in natural32;
+                embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                level : in natural32; zerotol,tolsing : in double_float;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
   --   Runs a continuation to remove the slice from the embedded
-  --   polynomial system in double double precision, without output.
+  --   (Laurent) polynomial system without output,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded polynomial system;
+  --   embsys   the embedded (Laurent) polynomial system;
   --   level    equals the current dimension in the cascade;
   --   zerotol  is the tolerance whether the slack variable is zero or not;
+  --   tolsing  tolerance on rco to remove singular solutions with
+  --            nonzero slack variable value;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
@@ -51,269 +89,50 @@ package Cascade_Homotopy_Steps is
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
                 time : out duration );
-
-  -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded
-  --   polynomial system in double double precision, with output to file.
-
-  -- ON ENTRY :
-  --   file     must be opened for output;
-  --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded polynomial system;
-  --   level    equals the current dimension in the cascade;
-  --   zerotol  is the tolerance whether the slack variable is zero or not;
-  --   sols     solutions with nonzero slack variables of embsys.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the homotopy;
-  --   sols0    solutions with zero slack variable;
-  --   sols1    solutions with nonzero slack variable;
-  --   time     the elapsed CPU time.
-
-  procedure Down_Continuation
-              ( nt : in natural32;
-                embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
-                sols : in out Standard_Complex_Solutions.Solution_List;
-                sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
-                time : out duration );
-
-  -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded Laurent
-  --   polynomial system in double double precision, without output.
-
-  -- ON ENTRY :
-  --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded Laurent polynomial system;
-  --   level    equals the current dimension in the cascade;
-  --   zerotol  is the tolerance whether the slack variable is zero or not;
-  --   sols     solutions with nonzero slack variables of embsys.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the homotopy;
-  --   sols0    solutions with zero slack variable;
-  --   sols1    solutions with nonzero slack variable;
-  --   time     the elapsed CPU time.
-
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 sols0,sols1 : out Standard_Complex_Solutions.Solution_List;
                 time : out duration );
-
-  -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded Laurent
-  --   polynomial system in double double precision, with output to file.
-
-  -- ON ENTRY :
-  --   file     must be opened for output;
-  --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded Laurent polynomial system;
-  --   level    equals the current dimension in the cascade;
-  --   zerotol  is the tolerance whether the slack variable is zero or not;
-  --   sols     solutions with nonzero slack variables of embsys.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the homotopy;
-  --   sols0    solutions with zero slack variable;
-  --   sols1    solutions with nonzero slack variable;
-  --   time     the elapsed CPU time.
-
-  procedure Down_Continuation
-              ( nt : in natural32;
-                embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
-                time : out duration );
-
-  -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded
-  --   polynomial system in double double precision, without output.
-
-  -- ON ENTRY :
-  --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded polynomial system;
-  --   level    equals the current dimension in the cascade;
-  --   zerotol  is the tolerance whether the slack variable is zero or not;
-  --   sols     solutions with nonzero slack variables of embsys.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the homotopy;
-  --   sols0    solutions with zero slack variable;
-  --   sols1    solutions with nonzero slack variable;
-  --   time     the elapsed CPU time.
-
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
                 time : out duration );
-
-  -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded
-  --   polynomial system in double double precision, with output to file.
-
-  -- ON ENTRY :
-  --   file     must be opened for output;
-  --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded polynomial system;
-  --   level    equals the current dimension in the cascade;
-  --   zerotol  is the tolerance whether the slack variable is zero or not;
-  --   sols     solutions with nonzero slack variables of embsys.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the homotopy;
-  --   sols0    solutions with zero slack variable;
-  --   sols1    solutions with nonzero slack variable;
-  --   time     the elapsed CPU time.
-
-  procedure Down_Continuation
-              ( nt : in natural32;
-                embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
-                time : out duration );
-
-  -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded Laurent
-  --   polynomial system in double double precision, without output.
-
-  -- ON ENTRY :
-  --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded Laurent polynomial system;
-  --   level    equals the current dimension in the cascade;
-  --   zerotol  is the tolerance whether the slack variable is zero or not;
-  --   sols     solutions with nonzero slack variables of embsys.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the homotopy;
-  --   sols0    solutions with zero slack variable;
-  --   sols1    solutions with nonzero slack variable;
-  --   time     the elapsed CPU time.
-
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out DoblDobl_Complex_Solutions.Solution_List;
                 time : out duration );
-
-  -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded Laurent
-  --   polynomial system in double double precision, with output to file.
-
-  -- ON ENTRY :
-  --   file     must be opened for output;
-  --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded Laurent polynomial system;
-  --   level    equals the current dimension in the cascade;
-  --   zerotol  is the tolerance whether the slack variable is zero or not;
-  --   sols     solutions with nonzero slack variables of embsys.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the homotopy;
-  --   sols0    solutions with zero slack variable;
-  --   sols1    solutions with nonzero slack variable;
-  --   time     the elapsed CPU time.
-
-  procedure Down_Continuation
-              ( nt : in natural32;
-                embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
-                time : out duration );
-
-  -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded
-  --   polynomial system in quad double precision, without output.
-
-  -- ON ENTRY :
-  --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded polynomial system;
-  --   level    equals the current dimension in the cascade;
-  --   zerotol  is the tolerance whether the slack variable is zero or not;
-  --   sols     solutions with nonzero slack variables of embsys.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the homotopy;
-  --   sols0    solutions with zero slack variable;
-  --   sols1    solutions with nonzero slack variable;
-  --   time     the elapsed CPU time.
-
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration );
-
-  -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded
-  --   polynomial system in quad double precision, with output to file.
-
-  -- ON ENTRY :
-  --   file     must be opened for output;
-  --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded polynomial system;
-  --   level    equals the current dimension in the cascade;
-  --   zerotol  is the tolerance whether the slack variable is zero or not;
-  --   sols     solutions with nonzero slack variables of embsys.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the homotopy;
-  --   sols0    solutions with zero slack variable;
-  --   sols1    solutions with nonzero slack variable;
-  --   time     the elapsed CPU time.
-
-  procedure Down_Continuation
-              ( nt : in natural32;
-                embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
-                time : out duration );
-
-  -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded Laurent
-  --   polynomial system in quad double precision, without output.
-
-  -- ON ENTRY :
-  --   nt       the number of tasks, for no tasking set nt = 0;
-  --   embsys   the embedded Laurent polynomial system;
-  --   level    equals the current dimension in the cascade;
-  --   zerotol  is the tolerance whether the slack variable is zero or not;
-  --   sols     solutions with nonzero slack variables of embsys.
-
-  -- ON RETURN :
-  --   sols     solutions at the end of the homotopy;
-  --   sols0    solutions with zero slack variable;
-  --   sols1    solutions with nonzero slack variable;
-  --   time     the elapsed CPU time.
-
   procedure Down_Continuation
               ( file : in file_type; nt : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                level : in natural32; zerotol : in double_float;
+                level : in natural32; zerotol,tolsing : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 sols0,sols1 : out QuadDobl_Complex_Solutions.Solution_List;
                 time : out duration );
 
   -- DESCRIPTION :
-  --   Runs a continuation to remove the slice from the embedded Laurent
-  --   polynomial system in quad double precision, with output to file.
+  --   Runs a continuation to remove the slice from the embedded (Laurent)
+  --   polynomial system with output to file,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file     must be opened for output;
@@ -321,6 +140,8 @@ package Cascade_Homotopy_Steps is
   --   embsys   the embedded Laurent polynomial system;
   --   level    equals the current dimension in the cascade;
   --   zerotol  is the tolerance whether the slack variable is zero or not;
+  --   tolsing  tolerance on rco to remove singular solutions with
+  --            nonzero slack variable value;
   --   sols     solutions with nonzero slack variables of embsys.
 
   -- ON RETURN :
