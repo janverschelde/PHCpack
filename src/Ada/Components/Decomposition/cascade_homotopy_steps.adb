@@ -80,6 +80,11 @@ package body Cascade_Homotopy_Steps is
     new_line(file);
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
+    new_line(file);
+    put(file,"Tracking "); put(file,Length_Of(sols),1);
+    put(file," paths at level "); put(file,level,1);
+    put_line(file," in the cascade ...");
+    flush(file);
     Set_Continuation_Parameter(sols,Create(0.0));
     if nt = 0 then
       Black_Box_Polynomial_Continuation
@@ -151,6 +156,11 @@ package body Cascade_Homotopy_Steps is
     new_line(file);
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
+    new_line(file);
+    put(file,"Tracking "); put(file,Length_Of(sols),1);
+    put(file," paths at level "); put(file,level,1);
+    put_line(file," in the cascade ...");
+    flush(file);
     Set_Continuation_Parameter(sols,Create(0.0));
     if nt = 0 then
       Black_Box_Polynomial_Continuation
@@ -222,6 +232,11 @@ package body Cascade_Homotopy_Steps is
     new_line(file);
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
+    new_line(file);
+    put(file,"Tracking "); put(file,Length_Of(sols),1);
+    put(file," paths at level "); put(file,level,1);
+    put_line(file," in the cascade ...");
+    flush(file);
     Set_Continuation_Parameter(sols,Create(integer(0)));
     if nt = 0 then
       Black_Box_Polynomial_Continuation
@@ -293,6 +308,11 @@ package body Cascade_Homotopy_Steps is
     new_line(file);
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
+    new_line(file);
+    put(file,"Tracking "); put(file,Length_Of(sols),1);
+    put(file," paths at level "); put(file,level,1);
+    put_line(file," in the cascade ...");
+    flush(file);
     Set_Continuation_Parameter(sols,Create(integer(0)));
     if nt = 0 then
       Black_Box_Polynomial_Continuation
@@ -364,6 +384,11 @@ package body Cascade_Homotopy_Steps is
     new_line(file);
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
+    new_line(file);
+    put(file,"Tracking "); put(file,Length_Of(sols),1);
+    put(file," paths at level "); put(file,level,1);
+    put_line(file," in the cascade ...");
+    flush(file);
     Set_Continuation_Parameter(sols,Create(integer(0)));
     if nt = 0 then
       Black_Box_Polynomial_Continuation
@@ -373,7 +398,7 @@ package body Cascade_Homotopy_Steps is
         (file,integer32(nt),target,embsys,sols,time);
       Remove_Imaginary_Target(sols);
     end if;
-    if level > 1 then -- ast least one slack variable left
+    if level > 1 then -- at least one slack variable left
       Filter_and_Split_Solutions
         (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
     else
@@ -435,6 +460,11 @@ package body Cascade_Homotopy_Steps is
     new_line(file);
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
+    new_line(file);
+    put(file,"Tracking "); put(file,Length_Of(sols),1);
+    put(file," paths at level "); put(file,level,1);
+    put_line(file," in the cascade ...");
+    flush(file);
     Set_Continuation_Parameter(sols,Create(integer(0)));
     if nt = 0 then
       Black_Box_Polynomial_Continuation
