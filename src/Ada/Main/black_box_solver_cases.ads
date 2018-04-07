@@ -124,7 +124,7 @@ package Black_Box_Solver_Cases is
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                append_sols : in boolean );
+                deflate,append_sols : in boolean );
   procedure Square_Main
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
@@ -152,6 +152,7 @@ package Black_Box_Solver_Cases is
   --   outfilename    the name of the output file;
   --   start_moment   clock time when phc was started;
   --   p              polynomial system to be solved.
+  --   deflate        if not deflate, then not deflation will be applied;
   --   append_sols    true if solutions need to be appended to input file.
 
   -- ON RETURN :

@@ -1,6 +1,8 @@
 Fri 6 Apr 2018 : black_box_solver_cases.adb and black_box_solvers.adb
   changed because of extra deflate parameter in the blackbox continuation
-  and refiner procedures.
+  and refiner procedures.  Moved the extra deflate parameter to the
+  black_box_solver_cases and black_box_solver specifications as well,
+  which change bablphc.adb.
 
 Thu 5 Apr 2018 : removed the "seed found" message from dispatch.adb.
 

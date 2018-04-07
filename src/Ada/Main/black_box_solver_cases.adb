@@ -780,7 +780,7 @@ package body Black_Box_Solver_Cases is
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                append_sols : in boolean ) is
+                deflate,append_sols : in boolean ) is
 
     use Standard_Complex_Solutions;
 
@@ -792,7 +792,6 @@ package body Black_Box_Solver_Cases is
     fail : boolean;
     ended_moment : Ada.Calendar.Time;
     output_to_file : boolean;
-    deflate : constant boolean := true;
 
   begin
    -- put_line("in Black_Box_Solvers.Square_Main for regular poly system");

@@ -263,17 +263,19 @@ package body Drivers_to_Cascade_Filtering is
     rocos : Link_to_String;
     sols : Solution_List;
     topsoltime : duration;
+    deflate : boolean;
 
   begin
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
+    deflate := (topdim = 0);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(embsys.all,deflate,rc,rocos,sols);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(nt,embsys.all,deflate,rc,rocos,sols);
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -319,22 +321,24 @@ package body Drivers_to_Cascade_Filtering is
     timer : Timing_Widget;
     rc : natural32;
     sols : Solution_List;
+    deflate : boolean;
 
   begin
     new_line;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
+    deflate := (topdim = 0);
     put_line(file,embsys.all);
     new_line;
     put_line("See the output file for results ...");
     new_line;
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,embsys.all,deflate,rc,sols);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,deflate,rc,sols);
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;

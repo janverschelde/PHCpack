@@ -1,3 +1,6 @@
+Fri 6 Apr 2018 : use_c2phc.adb changed because of extra deflate parameter
+  in the blackbox solver.
+
 Wed 4 Apr 2018 : added multitasked homotopy membership tests to use_c2mbt.adb
   and updated the documentation in use_c2mbt.ads.
 

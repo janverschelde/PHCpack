@@ -247,8 +247,9 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
       Single_Main(infilename,outfilename,p(p'first),append_sols);
     elsif p'last = integer32(n) then
       Linear_Main(infilename,outfilename,p,n,append_sols,fail);
-      if fail
-       then Square_Main(nt,infilename,outfilename,start_moment,p,append_sols);
+      if fail then
+        Square_Main
+          (nt,infilename,outfilename,start_moment,p,true,append_sols);
       end if;
     else
       Toric_Binomial_Solver(p.all,append_sols,fail);

@@ -1876,9 +1876,9 @@ function use_c2phc ( job : integer32;
       begin
        -- Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
         if silent then
-          Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+          Black_Box_Solvers.Solve(ntasks,p,silent,true,rc,sols);
         else
-          Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
+          Black_Box_Solvers.Solve(ntasks,p,true,rc,lsroco,sols);
           if lsroco = null then
             nr := 0;
           else
@@ -1933,9 +1933,9 @@ function use_c2phc ( job : integer32;
     end if;
    -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
     if silent then
-      Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      Black_Box_Solvers.Solve(ntasks,lp.all,silent,true,rc,sols);
     else
-      Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+      Black_Box_Solvers.Solve(ntasks,lp.all,true,rc,lsroco,sols);
       if lsroco = null then
         nr := 0;
       else

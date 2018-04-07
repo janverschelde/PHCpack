@@ -44,7 +44,7 @@ with Black_Box_Solver_Cases;             use Black_Box_Solver_Cases;
 package body Black_Box_Solvers is
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    silent : in boolean;
+                    silent,deflate : in boolean;
                     rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List ) is
 
@@ -54,7 +54,6 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
-    deflate : boolean := true;
 
   begin
     Solve_for_Special_Cases(p,rc,sols,fail);
@@ -120,6 +119,7 @@ package body Black_Box_Solvers is
   end Solve;
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
                     sols : out Standard_Complex_Solutions.Solution_List ) is
 
@@ -129,7 +129,6 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
-    deflate : boolean := true;
 
   begin
     Solve_for_Special_Cases(p,rc,sols,fail);
@@ -194,7 +193,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    rc : out natural32;
+                    deflate : in boolean; rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List ) is
 
     use Standard_Complex_Solutions;
@@ -206,7 +205,6 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
-    deflate : boolean := true;
 
   begin
     if p'first = p'last then
@@ -556,8 +554,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent,deflate : in boolean; rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List ) is
 
     use Standard_Complex_Solutions;
@@ -566,7 +563,6 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
-    deflate : boolean := true;
 
   begin
     Solve_for_Special_Cases(p,rc,sols,fail);
@@ -590,8 +586,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent : in boolean; rc : out natural32;
                     sols : out DoblDobl_Complex_Solutions.Solution_List ) is
 
     use DoblDobl_Complex_Solutions;
@@ -618,8 +613,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent : in boolean; rc : out natural32;
                     sols : out QuadDobl_Complex_Solutions.Solution_List ) is
 
     use QuadDobl_Complex_Solutions;
@@ -646,6 +640,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
                     sols : out Standard_Complex_Solutions.Solution_List ) is
 
@@ -655,7 +650,6 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
-    deflate : boolean := true;
 
   begin
     Solve_for_Special_Cases(p,rc,sols,fail);
@@ -743,7 +737,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    rc : out natural32;
+                    deflate : in boolean; rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List ) is
  
     use Standard_Complex_Solutions;
@@ -755,7 +749,6 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
-    deflate : boolean := true;
 
   begin
     if p'first = p'last then
@@ -921,8 +914,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent : in boolean; rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List ) is
  
     fail : boolean;
@@ -949,8 +941,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent : in boolean; rc : out natural32;
                     sols : out DoblDobl_Complex_Solutions.Solution_List ) is
  
     fail : boolean;
@@ -977,8 +968,7 @@ package body Black_Box_Solvers is
 
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent : in boolean; rc : out natural32;
                     sols : out QuadDobl_Complex_Solutions.Solution_List ) is
  
     fail : boolean;

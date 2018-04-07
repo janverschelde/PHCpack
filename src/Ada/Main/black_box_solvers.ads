@@ -30,7 +30,7 @@ package Black_Box_Solvers is
 --   procedures return also the root counter string.
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    silent : in boolean;
+                    silent,deflate : in boolean;
                     rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -51,13 +51,15 @@ package Black_Box_Solvers is
   --   p            a polynomial system;
   --   silent       if true, then the computed root counts will not be shown,
   --                if false, then the user will see the computed root counts
-  --                displayed on screen.
+  --                displayed on screen;
+  --   deflate      if not deflate, then no deflation will be applied.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
   --   sols         solutions found at the end of the paths.
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
                     sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -73,7 +75,8 @@ package Black_Box_Solvers is
   --   standard double, double double, and quad double.
 
   -- ON INPUT :
-  --   p            a polynomial system.
+  --   p            a polynomial system;
+  --   deflate      if false, then no deflation will be applied;
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -85,7 +88,7 @@ package Black_Box_Solvers is
 
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    rc : out natural32;
+                    deflate : in boolean; rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( file : in file_type;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -102,9 +105,7 @@ package Black_Box_Solvers is
   -- ON INPUT :
   --   file         must be opened for output;
   --   p            a polynomial system;
-  --   silent       if true, then the computed root counts will not be shown,
-  --                if false, then the user will see the computed root counts
-  --                displayed on screen.
+  --   deflate      if false, then no deflation will be applied.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -191,18 +192,15 @@ package Black_Box_Solvers is
 
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent,deflate : in boolean; rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent : in boolean; rc : out natural32;
                     sols : out DoblDobl_Complex_Solutions.Solution_List );
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent : in boolean; rc : out natural32;
                     sols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -212,9 +210,10 @@ package Black_Box_Solvers is
 
   -- ON INPUT :
   --    nt          number of tasks for multithreading, 0 if no multitasking;
+  --    p           a polynomial system.
   --    silent      if not silent, then root counting information will be
   --                written the standard output;
-  --    p           a polynomial system.
+  --    deflate     if false, then no deflation will be applied.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -222,6 +221,7 @@ package Black_Box_Solvers is
 
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
                     sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( nt : in natural32;
@@ -240,7 +240,8 @@ package Black_Box_Solvers is
 
   -- ON INPUT :
   --    nt          number of tasks for multithreading, 0 if no multitasking;
-  --    p           a polynomial system.
+  --    p           a polynomial system;
+  --    deflate     if false, then no deflation will be applied.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -252,7 +253,7 @@ package Black_Box_Solvers is
 
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    rc : out natural32;
+                    deflate : in boolean; rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -271,7 +272,8 @@ package Black_Box_Solvers is
   -- ON INPUT :
   --   file         must be opened for output;
   --   nt           number of tasks for multithreading, 0 if no multitasking;
-  --   p            a polynomial system.
+  --   p            a polynomial system;
+  --   deflate      if false, then no deflation will be applied.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -279,18 +281,15 @@ package Black_Box_Solvers is
 
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent : in boolean; rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent : in boolean; rc : out natural32;
                     sols : out DoblDobl_Complex_Solutions.Solution_List );
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                    silent : in boolean;
-                    rc : out natural32;
+                    silent : in boolean; rc : out natural32;
                     sols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
