@@ -1,3 +1,7 @@
+Fri 6 Apr 2018 : black_box_solver_cases.adb and black_box_solvers.adb
+  changed because of extra deflate parameter in the blackbox continuation
+  and refiner procedures.
+
 Thu 5 Apr 2018 : removed the "seed found" message from dispatch.adb.
 
 Fri 30 Mar 2018 : updated the factorization banner in greeting_banners.ads

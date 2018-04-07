@@ -792,6 +792,7 @@ package body Black_Box_Solver_Cases is
     fail : boolean;
     ended_moment : Ada.Calendar.Time;
     output_to_file : boolean;
+    deflate : constant boolean := true;
 
   begin
    -- put_line("in Black_Box_Solvers.Square_Main for regular poly system");
@@ -841,20 +842,22 @@ package body Black_Box_Solver_Cases is
           if output_to_file then
             if nt = 0 then
               Black_Box_Polynomial_Continuation
-                (outfile,pp,q,sols,sols0,poco);
+                (outfile,deflate,pp,q,sols,sols0,poco);
             else
               Black_Box_Polynomial_Continuation
-                (outfile,integer32(nt),pp,q,sols,sols0,poco);
+                (outfile,deflate,integer32(nt),pp,q,sols,sols0,poco);
             end if;
           else
            -- put_line("in Black_Box_Solvers.Square_Main ...");
            -- put_line("Calling Black_Box_Polynomial_Continuation ...");
            -- put_line("the start system : "); put(q);
            -- put_line("the target system : "); put(pp);
-            if nt = 0
-             then Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco);
-             else Black_Box_Polynomial_Continuation
-                    (integer32(nt),pp,q,sols,sols0,poco);
+            if nt = 0 then
+              Black_Box_Polynomial_Continuation
+                (deflate,pp,q,sols,sols0,poco);
+            else
+              Black_Box_Polynomial_Continuation
+                (deflate,integer32(nt),pp,q,sols,sols0,poco);
             end if;
           end if;
          -- put("Length_Of(sols) = "); put(Length_Of(sols),1); new_line;

@@ -16,24 +16,27 @@ package Standard_BlackBox_Continuations is
 -- ALL INPUT IS SCANNED FROM FILES :
 
   procedure Black_Box_Polynomial_Continuation
-                  ( infile,outfile : in file_type; pocotime : out duration );
+                  ( infile,outfile : in file_type; 
+                    deflate : in boolean; pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
                   ( targetfile,startfile,outfile : in file_type;
-                    pocotime : out duration );
+                    deflate : in boolean; pocotime : out duration );
 
   -- DESCRIPTION :
   --   Scans the targetfile for the target system,
   --   scans the startfile for start system and start solutions,
   --   and then does the path tracking, writing results to outfile.
+  --   If deflate is false, then deflation will not be applied.
 
 -- STABLE POLYOMIAL CONTINUATION :
 
   procedure Black_Box_Stable_Poly_Continuation
-               ( p,q : in Poly_Sys; gamma : in Complex_Number;
+               ( deflate : in boolean;
+                 p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Stable_Poly_Continuation
-               ( file : file_type;
+               ( file : file_type; deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
                  pocotime : out duration );
@@ -45,6 +48,7 @@ package Standard_BlackBox_Continuations is
 
   -- ON ENTRY :
   --   file      to write intermediate output and diagnostics;
+  --   deflate   if not deflate, then no deflation will be applied;
   --   p         target system;
   --   q         start system;
   --   gamma     a random constant;
@@ -58,36 +62,40 @@ package Standard_BlackBox_Continuations is
 -- GENERAL POLYNOMIAL CONTINUATION :
 
   procedure Black_Box_Polynomial_Continuation
-               ( p,q : in Poly_Sys; sols : in out Solution_List;
-                 pocotime : out duration );
-  procedure Black_Box_Polynomial_Continuation
-               ( nt : in integer32;
+               ( deflate : in boolean;
                  p,q : in Poly_Sys; sols : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; 
+               ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; sols : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type; deflate : in boolean;
                  p,q : in Poly_Sys; sols : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( p,q : in Poly_Sys; gamma : in Complex_Number;
-                 sols : in out Solution_List;
+               ( file : in file_type; deflate : in boolean;
+                 nt : in integer32;
+                 p,q : in Poly_Sys; sols : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( nt : in integer32;
+               ( deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type;
+               ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type; deflate : in boolean;
+                 p,q : in Poly_Sys; gamma : in Complex_Number;
+                 sols : in out Solution_List;
+                 pocotime : out duration );
+  procedure Black_Box_Polynomial_Continuation
+               ( file : in file_type; deflate : in boolean;
+                 nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
                  pocotime : out duration );
@@ -101,6 +109,7 @@ package Standard_BlackBox_Continuations is
 
   -- ON ENTRY :
   --   file      file to write the results on;
+  --   deflate   if not deflate, then no deflation will be applied;
   --   nt        number of tasks, must be larger than zero to have effect;
   --   p         target polynomial system;
   --   q         a start system for solving p;
@@ -115,36 +124,40 @@ package Standard_BlackBox_Continuations is
 -- GENERAL AND STABLE CONTINUATION :
 
   procedure Black_Box_Polynomial_Continuation
-               ( p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
-                 pocotime : out duration );
-  procedure Black_Box_Polynomial_Continuation
-               ( nt : in integer32;
+               ( deflate : in boolean;
                  p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; 
+               ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type; deflate : in boolean;
                  p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( p,q : in Poly_Sys; gamma : in Complex_Number;
-                 sols,sols0 : in out Solution_List;
+               ( file : in file_type; deflate : in boolean;
+                 nt : in integer32;
+                 p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( nt : in integer32;
+               ( deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; 
+               ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
                  pocotime : out duration );
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type; deflate : in boolean;
+                 p,q : in Poly_Sys; gamma : in Complex_Number;
+                 sols,sols0 : in out Solution_List;
+                 pocotime : out duration );
+  procedure Black_Box_Polynomial_Continuation
+               ( file : in file_type; deflate : in boolean;
+                 nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
                  pocotime : out duration );
@@ -157,6 +170,7 @@ package Standard_BlackBox_Continuations is
 
   -- ON ENTRY :
   --   file      file to write the results on;
+  --   deflate   if not deflate, then deflation will not be applied;
   --   nt        number of tasks, must be larger than zero to have effect;
   --   p         target polynomial system;
   --   q         a start system for solving p;

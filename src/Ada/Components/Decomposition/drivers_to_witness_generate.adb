@@ -74,7 +74,7 @@ package body Drivers_to_Witness_Generate is
       Black_Box_Root_Counting(file,0,pp,deg,rc,q,sols,sols0,roco,hoco);
       if rc /= 0 then
         Scale(pp);
-        Black_Box_Polynomial_Continuation(file,pp,q,sols,poco);
+        Black_Box_Polynomial_Continuation(file,true,pp,q,sols,poco);
       end if;
       Clear(pp);
     end;

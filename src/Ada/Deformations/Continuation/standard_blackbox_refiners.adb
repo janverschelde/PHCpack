@@ -6,27 +6,29 @@ with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Root_Refining_Parameters;           use Root_Refining_Parameters;
 with Multitasking_Root_Refiners;         use Multitasking_Root_Refiners;
 
-with Standard_Complex_Solutions_io;
- use Standard_Complex_Solutions_io;
+--with Standard_Complex_Solutions_io;
+-- use Standard_Complex_Solutions_io;
 
 package body Standard_BlackBox_Refiners is
 
 -- WITHOUT MULTITASKING :
 
   procedure Silent_Black_Box_Refine
-              ( p : in Poly_Sys; sols : in out Solution_List ) is
+              ( p : in Poly_Sys; sols : in out Solution_List;
+                deflate : in boolean ) is
 
     epsxa,epsfa,tolsing : double_float;
     ref_sols : Solution_List;
     maxit,nb : natural32 := 0;
-    deflate,wout : boolean;
+    default_deflate,wout : boolean;
+    vardeflate : boolean := deflate;
 
   begin
     if not Is_Null(sols) then
       Standard_Default_Root_Refining_Parameters
-        (epsxa,epsfa,tolsing,maxit,deflate,wout);
+        (epsxa,epsfa,tolsing,maxit,default_deflate,wout);
       Silent_Root_Refiner
-        (p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+        (p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,vardeflate);
       Clear(sols);
       sols := ref_sols;
     end if;
@@ -52,19 +54,21 @@ package body Standard_BlackBox_Refiners is
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type;
-                p : in Poly_Sys; sols : in out Solution_List ) is
+                p : in Poly_Sys; sols : in out Solution_List;
+                deflate : in boolean ) is
 
     epsxa,epsfa,tolsing : double_float;
     ref_sols : Solution_List;
     maxit,nb : natural32 := 0;
-    deflate,wout : boolean;
+    default_deflate,wout : boolean;
+    vardeflate : boolean := deflate;
 
   begin
     if not Is_Null(sols) then
       Standard_Default_Root_Refining_Parameters
-        (epsxa,epsfa,tolsing,maxit,deflate,wout);
+        (epsxa,epsfa,tolsing,maxit,default_deflate,wout);
       Reporting_Root_Refiner
-        (file,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,deflate,wout);
+        (file,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,vardeflate,wout);
     end if;
     Clear(sols);
     sols := ref_sols;
@@ -138,74 +142,92 @@ package body Standard_BlackBox_Refiners is
 
   procedure Silent_Black_Box_Refine
               ( nt : in integer32;
-                p : in Poly_Sys; sols : in out Solution_List ) is
+                p : in Poly_Sys; sols : in out Solution_List;
+                deflate : in boolean ) is
 
     epsxa,epsfa,tolsing : double_float;
     maxit,nb : natural32 := 0;
-    deflate,wout : boolean;
+    default_deflate,wout : boolean;
+    vardeflate : boolean := deflate;
     vansols,regsols,sinsols,ref_sinsols : Solution_List;
 
   begin
     if not Is_Null(sols) then
       Standard_Default_Root_Refining_Parameters
-        (epsxa,epsfa,tolsing,maxit,deflate,wout);
+        (epsxa,epsfa,tolsing,maxit,default_deflate,wout);
      -- refine only the vanishing solutions
       vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
-     -- Copy(sols,vansols);
-     -- apply deflation to singular solutions, split the list first
-      Standard_Solution_Splitters.Silent_Singular_Filter
-        (vansols,tolsing,sinsols,regsols);
-     -- run Newton's method only on the regular solutions
-      if not Is_Null(regsols) then
-        Mute_Multitasking_Root_Refiner
-          (nt,p,regsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+      if not Is_Null(vansols) then
+        if not deflate then
+          Mute_Multitasking_Root_Refiner
+            (nt,p,vansols,epsxa,epsfa,tolsing,nb,maxit,vardeflate);
+          Clear(sols); sols := vansols;
+        else
+         -- apply deflation to singular solutions, split the list first
+          Standard_Solution_Splitters.Silent_Singular_Filter
+            (vansols,tolsing,sinsols,regsols);
+         -- run Newton's method only on the regular solutions
+          if not Is_Null(regsols) then
+            Mute_Multitasking_Root_Refiner
+              (nt,p,regsols,epsxa,epsfa,tolsing,nb,maxit,vardeflate);
+          end if;
+         -- apply deflation only on the singular solutions
+          if not Is_Null(sinsols) then
+            nb := 0;
+            Silent_Root_Refiner
+              (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,vardeflate);
+            Push(ref_sinsols,regsols);
+          end if;
+          Clear(sols); Clear(vansols); Clear(sinsols);
+          sols := regsols;
+        end if;
       end if;
-     -- apply deflation only on the singular solutions
-      if not Is_Null(sinsols) then
-        nb := 0;
-        Silent_Root_Refiner
-          (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
-        Push(ref_sinsols,regsols);
-      end if;
-      Clear(sols); Clear(vansols); Clear(sinsols);
-      sols := regsols;
     end if;
   end Silent_Black_Box_Refine;
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type; nt : in integer32;
-                p : in Poly_Sys; sols : in out Solution_List ) is
+                p : in Poly_Sys; sols : in out Solution_List;
+                deflate : in boolean ) is
 
     epsxa,epsfa,tolsing : double_float;
     maxit,nb : natural32 := 0;
-    deflate,wout : boolean;
+    default_deflate,wout : boolean;
+    vardeflate : boolean := deflate;
     vansols,regsols,sinsols,ref_sinsols : Solution_List;
 
   begin
     if not Is_Null(sols) then
       Standard_Default_Root_Refining_Parameters
-        (epsxa,epsfa,tolsing,maxit,deflate,wout);
+        (epsxa,epsfa,tolsing,maxit,default_deflate,wout);
      -- refine only the vanishing solutions
       vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
-     -- Copy(sols,vansols);
-     -- apply deflation to singular solutions, split the list first
-      Standard_Solution_Splitters.Silent_Singular_Filter
-        (vansols,tolsing,sinsols,regsols);
-     -- refine the regular solutions just with Newton's method
-      if not Is_Null(regsols) then
-        Silent_Multitasking_Root_Refiner -- tasks remain silent
-          (file,nt,p,regsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+      if not Is_Null(vansols) then
+        if not deflate then
+          Silent_Multitasking_Root_Refiner -- tasks remain silent
+            (file,nt,p,vansols,epsxa,epsfa,tolsing,nb,maxit,vardeflate);
+          Clear(sols); sols := vansols;
+        else
+         -- apply deflation to singular solutions, split the list first
+          Standard_Solution_Splitters.Silent_Singular_Filter
+            (vansols,tolsing,sinsols,regsols);
+         -- refine the regular solutions just with Newton's method
+          if not Is_Null(regsols) then
+            Silent_Multitasking_Root_Refiner -- tasks remain silent
+              (file,nt,p,regsols,epsxa,epsfa,tolsing,nb,maxit,vardeflate);
+          end if;
+         -- running Newton's method prior to deflation may not be good
+          if not Is_Null(sinsols) then
+            nb := 0;
+            Reporting_Root_Refiner
+              (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,
+               nb,maxit,vardeflate,wout);
+            Push(ref_sinsols,regsols);
+          end if;
+          Clear(sols); Clear(vansols); Clear(sinsols);
+          sols := regsols;
+        end if;
       end if;
-     -- running Newton's method prior to deflation may not be good
-      if not Is_Null(sinsols) then
-        nb := 0;
-        Reporting_Root_Refiner
-          (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,
-           nb,maxit,deflate,wout);
-        Push(ref_sinsols,regsols);
-      end if;
-      Clear(sols); Clear(vansols); Clear(sinsols);
-      sols := regsols;
     end if;
   end Reporting_Black_Box_Refine;
 

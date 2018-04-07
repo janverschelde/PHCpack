@@ -1,3 +1,6 @@
+Fri 6 Apr 2018 : added deflate options to standard_blackbox_refiners
+   and standard_blackbox_continuations, which changed bablpoco.adb.
+
 Thu 5 Apr 2018 : added Is_Null() tests in standard_blackbox_refiners.adb,
   in particular for the reporting case when there are no singular solutions.
 

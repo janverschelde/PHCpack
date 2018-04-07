@@ -54,6 +54,7 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
+    deflate : boolean := true;
 
   begin
     Solve_for_Special_Cases(p,rc,sols,fail);
@@ -62,7 +63,7 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(0,silent,pp,false,rc,q,sols,sols0,roco,hoco);
       if rc /= 0 then
         Standard_Scaling.Scale(pp);
-        Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco);
+        Black_Box_Polynomial_Continuation(deflate,pp,q,sols,sols0,poco);
         Push(sols0,sols);
       end if;
     end if;
@@ -128,6 +129,7 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
+    deflate : boolean := true;
 
   begin
     Solve_for_Special_Cases(p,rc,sols,fail);
@@ -136,7 +138,7 @@ package body Black_Box_Solvers is
       Black_Box_Root_Counting(0,pp,false,rc,rocos,q,sols,sols0,roco,hoco);
       if rc /= 0 then
         Standard_Scaling.Scale(pp);
-        Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco);
+        Black_Box_Polynomial_Continuation(deflate,pp,q,sols,sols0,poco);
         Push(sols0,sols);
       end if;
     end if;
@@ -204,6 +206,7 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
+    deflate : boolean := true;
 
   begin
     if p'first = p'last then
@@ -234,7 +237,8 @@ package body Black_Box_Solvers is
           Black_Box_Root_Counting(file,0,pp,false,rc,q,sols,sols0,roco,hoco);
           if rc /= 0 then
             Standard_Scaling.Scale(pp);
-            Black_Box_Polynomial_Continuation(file,pp,q,sols,sols0,poco);
+            Black_Box_Polynomial_Continuation
+              (file,deflate,pp,q,sols,sols0,poco);
             Push(sols0,sols);
           end if;
         end if;
@@ -562,6 +566,7 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
+    deflate : boolean := true;
 
   begin
     Solve_for_Special_Cases(p,rc,sols,fail);
@@ -577,7 +582,7 @@ package body Black_Box_Solvers is
       if rc /= 0 then
         Standard_Scaling.Scale(pp);
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,sols0,poco);
+          (deflate,integer32(nt),pp,q,sols,sols0,poco);
         Push(sols0,sols);
       end if;
     end if;
@@ -650,6 +655,7 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
+    deflate : boolean := true;
 
   begin
     Solve_for_Special_Cases(p,rc,sols,fail);
@@ -665,7 +671,7 @@ package body Black_Box_Solvers is
       if rc /= 0 then
         Standard_Scaling.Scale(pp);
         Black_Box_Polynomial_Continuation
-          (integer32(nt),pp,q,sols,sols0,poco);
+          (deflate,integer32(nt),pp,q,sols,sols0,poco);
         Push(sols0,sols);
       end if;
     end if;
@@ -749,6 +755,7 @@ package body Black_Box_Solvers is
     pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     roco,hoco,poco : duration;
     sols0 : Solution_List;
+    deflate : boolean := true;
 
   begin
     if p'first = p'last then
@@ -786,7 +793,7 @@ package body Black_Box_Solvers is
           if rc /= 0 then
             Standard_Scaling.Scale(pp);
             Black_Box_Polynomial_Continuation
-              (file,integer32(nt),pp,q,sols,sols0,poco);
+              (file,deflate,integer32(nt),pp,q,sols,sols0,poco);
             Push(sols0,sols);
           end if;
         end if;

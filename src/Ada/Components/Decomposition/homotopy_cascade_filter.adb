@@ -36,7 +36,7 @@ package body Homotopy_Cascade_Filter is
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
     Set_Continuation_Parameter(sols,Create(0.0));
-    Black_Box_Polynomial_Continuation(file,target,embsys,sols,pocotime);
+    Black_Box_Polynomial_Continuation(file,true,target,embsys,sols,pocotime);
   end Down_Continuation;
 
 -- TARGET ROUTINES :

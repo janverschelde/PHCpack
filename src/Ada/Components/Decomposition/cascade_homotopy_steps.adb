@@ -40,14 +40,16 @@ package body Cascade_Homotopy_Steps is
     target : constant Standard_Complex_Poly_Systems.Poly_Sys(embsys'range)
            := Witness_Sets.Remove_Slice(embsys);
     n : constant natural32 := natural32(embsys'last)-level;
+    deflate : constant boolean := (level = 1);
+    -- deflate only at the last stage, when removing the last slack variable
 
   begin
     Set_Continuation_Parameter(sols,Create(0.0));
     if nt = 0 then
-      Black_Box_Polynomial_Continuation(target,embsys,sols,time);
+      Black_Box_Polynomial_Continuation(deflate,target,embsys,sols,time);
     else
       Black_Box_Polynomial_Continuation
-        (integer32(nt),target,embsys,sols,time);
+        (deflate,integer32(nt),target,embsys,sols,time);
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then
@@ -74,6 +76,8 @@ package body Cascade_Homotopy_Steps is
     target : constant Standard_Complex_Poly_Systems.Poly_Sys(embsys'range)
            := Witness_Sets.Remove_Slice(embsys);
     n : constant natural32 := natural32(embsys'last)-level;
+    deflate : constant boolean := (level = 1);
+    -- deflate only at the last stage, when removing the last slack variable
 
   begin
     new_line(file);
@@ -90,10 +94,10 @@ package body Cascade_Homotopy_Steps is
     Set_Continuation_Parameter(sols,Create(0.0));
     if nt = 0 then
       Black_Box_Polynomial_Continuation
-        (file,target,embsys,sols,time);
+        (file,deflate,target,embsys,sols,time);
     else
       Black_Box_Polynomial_Continuation
-        (file,integer32(nt),target,embsys,sols,time);
+        (file,deflate,integer32(nt),target,embsys,sols,time);
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left

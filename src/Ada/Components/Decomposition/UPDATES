@@ -5,6 +5,9 @@ Fri 6 Apr 2018 : added number of paths tracked before starting the cascade
   Did the same in cascade_homotopies.  Adjusted tolerances and added
   tolsing argument in running_cascades.adb, cascade_homotopy_filters.adb,
   and drivers_to_cascade_filtering.adb.
+  Because of the extra deflate parameter in the blackbox refiners,
+  updated cascade_homotopy_steps.adb, homotopy_cascade_filter.adb,
+  and drivers_to_witness_generate.adb.
 
 Fri 30 Mar 2018 : changed intrinsic_diagonal_continuation.adb for the
   improved interface in standard_solution_filters.

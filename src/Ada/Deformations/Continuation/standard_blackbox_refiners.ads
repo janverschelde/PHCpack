@@ -14,20 +14,45 @@ package Standard_BlackBox_Refiners is
 --   2) single or multitasked;
 --   3) on polynomial or Laurent systems.
 
+-- ON POLYNOMIAL SYSTEMS :
+
   procedure Silent_Black_Box_Refine
-              ( p : in Poly_Sys; sols : in out Solution_List );
+              ( p : in Poly_Sys; sols : in out Solution_List;
+                deflate : in boolean );
 
   -- DESCRIPTION :
   --   Refines the solutions given in sols of the polynomial system p,
   --   without output written to file.
+  --   If deflate is false, then no deflation is applied.
 
   procedure Silent_Black_Box_Refine
               ( nt : in integer32;
-                p : in Poly_Sys; sols : in out Solution_List );
+                p : in Poly_Sys; sols : in out Solution_List;
+                deflate : in boolean );
 
   -- DESCRIPTION :
   --   Refines the solutions given in sols of the polynomial system p,
   --   without output written to file, with nt tasks.
+
+  procedure Reporting_Black_Box_Refine
+              ( file : in file_type;
+                p : in Poly_Sys; sols : in out Solution_List;
+                deflate : in boolean );
+
+  -- DESCRIPTION :
+  --   Refines the solutions given in sols of the polynomial system p.
+
+  procedure Reporting_Black_Box_Refine
+              ( file : in file_type; nt : in integer32;
+                p : in Poly_Sys; sols : in out Solution_List;
+                deflate : in boolean );
+
+  -- DESCRIPTION :
+  --   Refines the solutions in sols of the polynomial system p
+  --   with nt tasks.
+  --   If deflate is false, then no deflation will be applied.
+
+-- ON LAURENT SYSTEMS :
 
   procedure Silent_Black_Box_Refine
               ( p : in Laur_Sys; sols : in out Solution_List );
@@ -43,21 +68,6 @@ package Standard_BlackBox_Refiners is
   -- DESCRIPTION :
   --   Refines the solutions given in sols of the Laurent system p,
   --   without output written to file, with nt tasks.
-
-  procedure Reporting_Black_Box_Refine
-              ( file : in file_type;
-                p : in Poly_Sys; sols : in out Solution_List );
-
-  -- DESCRIPTION :
-  --   Refines the solutions given in sols of the polynomial system p.
-
-  procedure Reporting_Black_Box_Refine
-              ( file : in file_type; nt : in integer32;
-                p : in Poly_Sys; sols : in out Solution_List );
-
-  -- DESCRIPTION :
-  --   Refines the solutions in sols of the polynomial system p
-  --   with nt tasks.
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type;

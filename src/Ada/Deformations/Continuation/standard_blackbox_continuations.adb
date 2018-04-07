@@ -155,7 +155,7 @@ package body Standard_BlackBox_Continuations is
 
   procedure Black_Box_Polynomial_Continuation
                 ( targetfile,startfile,outfile : in file_type;
-                  pocotime : out duration ) is
+                  deflate : in boolean; pocotime : out duration ) is
 
     p,q : Link_to_Poly_Sys;
     sols : Solution_List;
@@ -183,11 +183,12 @@ package body Standard_BlackBox_Continuations is
     print_times(outfile,timer,"continuation");
     pocotime := Elapsed_User_Time(timer);
     flush(outfile);
-    Reporting_Black_Box_Refine(outfile,p.all,sols);
+    Reporting_Black_Box_Refine(outfile,p.all,sols,deflate);
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-                 ( infile,outfile : in file_type; pocotime : out duration ) is
+                 ( infile,outfile : in file_type;
+                   deflate : in boolean; pocotime : out duration ) is
 
     p,q,sp : Link_to_Poly_Sys;
     sols : Solution_List;
@@ -231,7 +232,7 @@ package body Standard_BlackBox_Continuations is
     Scale(2,scalecoeff.all,sols);
     Clear(sp);
     flush(outfile);
-    Reporting_Black_Box_Refine(outfile,p.all,sols);
+    Reporting_Black_Box_Refine(outfile,p.all,sols,deflate);
   end Black_Box_Polynomial_Continuation;
 
 -- STABLE POLYNOMIAL CONTINUATION :
@@ -344,7 +345,8 @@ package body Standard_BlackBox_Continuations is
   end Black_Box_Stable_Poly_Continuation;
 
   procedure Black_Box_Stable_Poly_Continuation
-                  ( p,q : in Poly_Sys; gamma : in Complex_Number;
+                  ( deflate : in boolean;
+                    p,q : in Poly_Sys; gamma : in Complex_Number;
                     sols : in out Solution_List;
                     pocotime : out duration ) is
 
@@ -361,13 +363,13 @@ package body Standard_BlackBox_Continuations is
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
     end loop;
-    Silent_Black_Box_Refine(p,sols);
+    Silent_Black_Box_Refine(p,sols,deflate);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
   end Black_Box_Stable_Poly_Continuation;
 
   procedure Black_Box_Stable_Poly_Continuation
-               ( file : in file_type;
+               ( file : in file_type; deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
                  pocotime : out duration ) is
@@ -391,7 +393,7 @@ package body Standard_BlackBox_Continuations is
       tmp := Tail_Of(tmp);
     end loop;
     flush(file);
-    Reporting_Black_Box_Refine(file,p,sols);
+    Reporting_Black_Box_Refine(file,p,sols,deflate);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"stable continuation");
@@ -401,50 +403,54 @@ package body Standard_BlackBox_Continuations is
 -- GENERAL POLYNOMIAL CONTINUATION :
 
   procedure Black_Box_Polynomial_Continuation
-               ( p,q : in Poly_Sys; sols : in out Solution_List;
-                 pocotime : out duration ) is
-
-    gamma : constant Complex_Number := Random1;
-
-  begin
-    Black_Box_Polynomial_Continuation(p,q,gamma,sols,pocotime);
-  end Black_Box_Polynomial_Continuation;
-
-  procedure Black_Box_Polynomial_Continuation
-               ( nt : in integer32;
+               ( deflate : in boolean;
                  p,q : in Poly_Sys; sols : in out Solution_List;
                  pocotime : out duration ) is
 
     gamma : constant Complex_Number := Random1;
 
   begin
-    Black_Box_Polynomial_Continuation(nt,p,q,gamma,sols,pocotime);
+    Black_Box_Polynomial_Continuation(deflate,p,q,gamma,sols,pocotime);
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; 
+               ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; sols : in out Solution_List;
                  pocotime : out duration ) is
 
     gamma : constant Complex_Number := Random1;
 
   begin
-    Black_Box_Polynomial_Continuation(file,p,q,gamma,sols,pocotime);
+    Black_Box_Polynomial_Continuation(deflate,nt,p,q,gamma,sols,pocotime);
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type; deflate : in boolean;  
                  p,q : in Poly_Sys; sols : in out Solution_List;
                  pocotime : out duration ) is
 
     gamma : constant Complex_Number := Random1;
 
   begin
-    Black_Box_Polynomial_Continuation(file,nt,p,q,gamma,sols,pocotime);
+    Black_Box_Polynomial_Continuation(file,deflate,p,q,gamma,sols,pocotime);
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( p,q : in Poly_Sys; gamma : in Complex_Number;
+               ( file : in file_type; deflate : in boolean;
+                 nt : in integer32;
+                 p,q : in Poly_Sys; sols : in out Solution_List;
+                 pocotime : out duration ) is
+
+    gamma : constant Complex_Number := Random1;
+
+  begin
+    Black_Box_Polynomial_Continuation
+     (file,deflate,nt,p,q,gamma,sols,pocotime);
+  end Black_Box_Polynomial_Continuation;
+
+  procedure Black_Box_Polynomial_Continuation
+               ( deflate : in boolean;
+                 p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
                  pocotime : out duration ) is
 
@@ -464,7 +470,7 @@ package body Standard_BlackBox_Continuations is
     Continuation_Parameters.Tune(0);
     tstart(timer);
     Cont(sols,proj,target=>target);
-    Silent_Black_Box_Refine(p,sols);
+    Silent_Black_Box_Refine(p,sols,deflate);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Standard_Homotopy.Clear;
@@ -476,7 +482,7 @@ package body Standard_BlackBox_Continuations is
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( nt : in integer32;
+               ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
                  pocotime : out duration ) is
@@ -490,7 +496,7 @@ package body Standard_BlackBox_Continuations is
     Continuation_Parameters.Tune(0);
     tstart(timer);
     Silent_Multitasking_Path_Tracker(sols,nt);
-    Silent_Black_Box_Refine(nt,p,sols);
+    Silent_Black_Box_Refine(nt,p,sols,deflate);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Standard_Homotopy.Clear;
@@ -498,7 +504,7 @@ package body Standard_BlackBox_Continuations is
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type;
+               ( file : in file_type; deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
                  pocotime : out duration ) is
@@ -532,7 +538,7 @@ package body Standard_BlackBox_Continuations is
     flush(file);
     declare
     begin
-      Reporting_Black_Box_Refine(file,p,sols);
+      Reporting_Black_Box_Refine(file,p,sols,deflate);
    -- exception
    --   when others => 
    --     put_line("exception when calling Reporting_Black_Box_Refine...");
@@ -545,7 +551,8 @@ package body Standard_BlackBox_Continuations is
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type;
+                 deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
                  pocotime : out duration ) is
@@ -574,7 +581,7 @@ package body Standard_BlackBox_Continuations is
     flush(file);
     start_moment := Ada.Calendar.Clock;
     tstart(timer);
-    Reporting_Black_Box_Refine(file,nt,p,sols);
+    Reporting_Black_Box_Refine(file,nt,p,sols,deflate);
     tstop(timer);
     ended_moment := Ada.Calendar.Clock;
     new_line(file);
@@ -589,50 +596,56 @@ package body Standard_BlackBox_Continuations is
 -- GENERAL AND STABLE CONTINUATION :
 
   procedure Black_Box_Polynomial_Continuation
-               ( p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
-                 pocotime : out duration ) is
-
-    gamma : constant Complex_Number := Random1;
-
-  begin
-    Black_Box_Polynomial_Continuation(p,q,gamma,sols,sols0,pocotime);
-  end Black_Box_Polynomial_Continuation;
-
-  procedure Black_Box_Polynomial_Continuation
-               ( nt : in integer32;
+               ( deflate : in boolean;
                  p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
                  pocotime : out duration ) is
 
     gamma : constant Complex_Number := Random1;
 
   begin
-    Black_Box_Polynomial_Continuation(nt,p,q,gamma,sols,sols0,pocotime);
+    Black_Box_Polynomial_Continuation(deflate,p,q,gamma,sols,sols0,pocotime);
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; 
+               ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
                  pocotime : out duration ) is
 
     gamma : constant Complex_Number := Random1;
 
   begin
-    Black_Box_Polynomial_Continuation(file,p,q,gamma,sols,sols0,pocotime);
+    Black_Box_Polynomial_Continuation
+      (deflate,nt,p,q,gamma,sols,sols0,pocotime);
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type; deflate : in boolean;
                  p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
                  pocotime : out duration ) is
 
     gamma : constant Complex_Number := Random1;
 
   begin
-    Black_Box_Polynomial_Continuation(file,nt,p,q,gamma,sols,sols0,pocotime);
+    Black_Box_Polynomial_Continuation
+      (file,deflate,p,q,gamma,sols,sols0,pocotime);
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( p,q : in Poly_Sys; gamma : in Complex_Number;
+               ( file : in file_type; deflate : in boolean;
+                 nt : in integer32;
+                 p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
+                 pocotime : out duration ) is
+
+    gamma : constant Complex_Number := Random1;
+
+  begin
+    Black_Box_Polynomial_Continuation
+      (file,deflate,nt,p,q,gamma,sols,sols0,pocotime);
+  end Black_Box_Polynomial_Continuation;
+
+  procedure Black_Box_Polynomial_Continuation
+               ( deflate : in boolean;
+                 p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
                  pocotime : out duration ) is
 
@@ -640,12 +653,12 @@ package body Standard_BlackBox_Continuations is
 
   begin
     if not Is_Null(sols0) then
-      Black_Box_Stable_Poly_Continuation(p,q,gamma,sols0,t1);
+      Black_Box_Stable_Poly_Continuation(deflate,p,q,gamma,sols0,t1);
     else
       t1 := 0.0;
     end if;
     if not Is_Null(sols) then
-      Black_Box_Polynomial_Continuation(p,q,gamma,sols,t2);
+      Black_Box_Polynomial_Continuation(deflate,p,q,gamma,sols,t2);
     else
       t2 := 0.0;
     end if;
@@ -657,7 +670,7 @@ package body Standard_BlackBox_Continuations is
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( nt : in integer32;
+               ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
                  pocotime : out duration ) is
@@ -666,12 +679,12 @@ package body Standard_BlackBox_Continuations is
 
   begin
     if not Is_Null(sols0) then
-      Black_Box_Stable_Poly_Continuation(p,q,gamma,sols0,t1);
+      Black_Box_Stable_Poly_Continuation(deflate,p,q,gamma,sols0,t1);
     else
       t1 := 0.0;
     end if;
     if not Is_Null(sols) then
-      Black_Box_Polynomial_Continuation(nt,p,q,gamma,sols,t2);
+      Black_Box_Polynomial_Continuation(deflate,nt,p,q,gamma,sols,t2);
     else
       t2 := 0.0;
     end if;
@@ -683,7 +696,7 @@ package body Standard_BlackBox_Continuations is
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; 
+               ( file : in file_type; deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
                  pocotime : out duration ) is
@@ -692,12 +705,12 @@ package body Standard_BlackBox_Continuations is
 
   begin
     if not Is_Null(sols0) then
-      Black_Box_Stable_Poly_Continuation(file,p,q,gamma,sols0,t1);
+      Black_Box_Stable_Poly_Continuation(file,deflate,p,q,gamma,sols0,t1);
     else
       t1 := 0.0;
     end if;
     if not Is_Null(sols) then
-      Black_Box_Polynomial_Continuation(file,p,q,gamma,sols,t2);
+      Black_Box_Polynomial_Continuation(file,deflate,p,q,gamma,sols,t2);
     else
       t2 := 0.0;
     end if;
@@ -709,7 +722,8 @@ package body Standard_BlackBox_Continuations is
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type; deflate : in boolean;
+                 nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
                  pocotime : out duration ) is
@@ -718,12 +732,12 @@ package body Standard_BlackBox_Continuations is
 
   begin
     if not Is_Null(sols0) then
-      Black_Box_Stable_Poly_Continuation(file,p,q,gamma,sols0,t1);
+      Black_Box_Stable_Poly_Continuation(file,deflate,p,q,gamma,sols0,t1);
     else
       t1 := 0.0;
     end if;
     if not Is_Null(sols) then
-      Black_Box_Polynomial_Continuation(file,nt,p,q,gamma,sols,t2);
+      Black_Box_Polynomial_Continuation(file,deflate,nt,p,q,gamma,sols,t2);
     else
       t2 := 0.0;
     end if;
