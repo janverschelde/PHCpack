@@ -54,10 +54,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then
-     -- Filter_and_Split_Solutions
-     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -103,11 +103,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (file,sols,integer32(n),integer32(level)-1,
-         zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (file,sols,integer32(n),integer32(level)-1,
+     --    zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -138,10 +138,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -184,11 +184,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (file,sols,integer32(n),integer32(level)-1,
-         zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (file,sols,integer32(n),integer32(level)-1,
+     --    zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -219,10 +219,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -265,11 +265,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (file,sols,integer32(n),integer32(level)-1,
-         zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (file,sols,integer32(n),integer32(level)-1,
+     --    zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -300,10 +300,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -346,11 +346,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (file,sols,integer32(n),integer32(level)-1,
-         zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (file,sols,integer32(n),integer32(level)-1,
+     --    zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -381,10 +381,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -427,11 +427,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (file,sols,integer32(n),integer32(level)-1,
-         zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (file,sols,integer32(n),integer32(level)-1,
+     --    zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -462,10 +462,10 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (sols,integer32(n),integer32(level)-1,zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
@@ -508,11 +508,11 @@ package body Cascade_Homotopy_Steps is
       Remove_Imaginary_Target(sols);
     end if;
     if level > 1 then -- at least one slack variable left
-     -- Filter_and_Split_Solutions
-     --   (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
-      Zero_Singular_Split_Filter
-        (file,sols,integer32(n),integer32(level)-1,
-         zerotol,tolsing,sols0,sols1);
+      Filter_and_Split_Solutions
+        (file,sols,integer32(n),integer32(level)-1,zerotol,sols0,sols1);
+     -- Zero_Singular_Split_Filter
+     --   (file,sols,integer32(n),integer32(level)-1,
+     --    zerotol,tolsing,sols0,sols1);
     else
       sols0 := Vanishing_Filter(sols,zerotol);
     end if;
