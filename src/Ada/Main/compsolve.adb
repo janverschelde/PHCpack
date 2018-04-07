@@ -9,7 +9,7 @@ with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
 with Standard_System_Readers;
-with Drivers_to_Cascade_Filtering;      use Drivers_to_Cascade_Filtering;
+with Embeddings_and_Cascades;           use Embeddings_and_Cascades;
 with Greetings_and_Conclusions;
 
 procedure compsolve

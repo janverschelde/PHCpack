@@ -1,3 +1,6 @@
+Sat 7 Apr 2018 : updated compsolve.adb, compsolve2.adb, and compsolve4.adb
+  for the new package embeddings_and_cascades.
+
 Fri 6 Apr 2018 : black_box_solver_cases.adb and black_box_solvers.adb
   changed because of extra deflate parameter in the blackbox continuation
   and refiner procedures.  Moved the extra deflate parameter to the

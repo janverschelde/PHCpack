@@ -66,6 +66,7 @@ cascade_homotopies_io            : defines the writing of witness super sets
 cascade_homotopies               : versions of cascade homotopies
 cascade_homotopy_filters         : run a cascade and filter junk
 running_cascades                 : given top solutions, run cascades
+embeddings_and_cascades          : embed system and launch cascade
 drivers_to_cascade_filtering     : drivers to cascade of homotopies 
 ts_cascade                       : calls the cascade routine
 ------------------------------------------------------------------------------
