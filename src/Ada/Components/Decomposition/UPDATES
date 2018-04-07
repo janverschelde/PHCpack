@@ -1,7 +1,8 @@
 Sat 7 Apr 2018 : in cascade_homotopy_steps.adb and cascade_homotopies.adb,
   reverted Zero_Singular_Split_Filter back to Filter_and_Split_Solutions.
   New package embeddings_and_cascades with code taken from the package
-  drivers_to_cascade_filtering.
+  drivers_to_cascade_filtering.  Added file as argument to several
+  procedures in running_cascades.adb which write to file.
 
 Fri 6 Apr 2018 : added number of paths tracked before starting the cascade
   with flush(file) in cascade_homotopy_steps.adb.
