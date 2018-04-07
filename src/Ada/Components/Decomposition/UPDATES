@@ -10,6 +10,8 @@ Fri 6 Apr 2018 : added number of paths tracked before starting the cascade
   and drivers_to_witness_generate.adb.
   As the deflate option was added to the blackbox solvers,
   drivers_to_cascade_filtering.adb was updated.
+  Set the deflate option to false in cascade_homotopy_steps.adb
+  because deflate only after homotopy membership test!
 
 Fri 30 Mar 2018 : changed intrinsic_diagonal_continuation.adb for the
   improved interface in standard_solution_filters.

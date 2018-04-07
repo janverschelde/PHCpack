@@ -40,8 +40,9 @@ package body Cascade_Homotopy_Steps is
     target : constant Standard_Complex_Poly_Systems.Poly_Sys(embsys'range)
            := Witness_Sets.Remove_Slice(embsys);
     n : constant natural32 := natural32(embsys'last)-level;
-    deflate : constant boolean := (level = 1);
+    deflate : constant boolean := false; -- := (level = 1);
     -- deflate only at the last stage, when removing the last slack variable
+    -- deflation must wait after the homotopy membership test!
 
   begin
     Set_Continuation_Parameter(sols,Create(0.0));
@@ -76,8 +77,9 @@ package body Cascade_Homotopy_Steps is
     target : constant Standard_Complex_Poly_Systems.Poly_Sys(embsys'range)
            := Witness_Sets.Remove_Slice(embsys);
     n : constant natural32 := natural32(embsys'last)-level;
-    deflate : constant boolean := (level = 1);
+    deflate : constant boolean := false; -- (level = 1);
     -- deflate only at the last stage, when removing the last slack variable
+    -- deflate must wait after the homotopy membership test
 
   begin
     new_line(file);
