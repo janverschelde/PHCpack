@@ -5,6 +5,8 @@ Sat 7 Apr 2018 : in cascade_homotopy_steps.adb and cascade_homotopies.adb,
   procedures in running_cascades.adb which write to file.
   New package cascade_membership_filters, with code from the package
   homotopy_membership_filters, called in cascade_homotopy_filters.
+  Added more filter procedures to cascade_membership_filters,
+  called in cascade_homotopy_filters.adb.
 
 Fri 6 Apr 2018 : added number of paths tracked before starting the cascade
   with flush(file) in cascade_homotopy_steps.adb.
