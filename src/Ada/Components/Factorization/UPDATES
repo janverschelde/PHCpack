@@ -1,3 +1,6 @@
+Sat 7 Apr 2018 : removed code from homotopy_membership_filters to a new
+  package cascade_membership_filters, for filtering superwitness sets.
+
 Fri 30 Mar 2018 : updated mainfac for multitasking homotopy membership tests.
   In homotopy_membership_filters, the multitasked versions must use
   homtol instead of restol for their tolerance.
