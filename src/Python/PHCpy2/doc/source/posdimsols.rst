@@ -255,6 +255,10 @@ inverse condition number drops to ``1.343E-14`` (see the ``rco`` field).
 To perform the membership test in quad double precision,
 invoke ``membertest`` with ``precision='qd'``.
 
+For solution sets of large degree, the homotopy membership test will
+run faster in its multitasked version.  To run the membership test
+with 8 tasks, add ``tasks=8`` as last argument of the call to the function. 
+
 cascade of homotopies
 ---------------------
 
