@@ -1,5 +1,6 @@
 Tue 10 Apr 2018 : improved test in sets.py in PHCpy2/phcpy and PHCpy3/phcpy,
-  adding the number of tasks.
+  adding the number of tasks.  Prepared files for version 0.8.1,
+  in PHCpy2 and PHCpy3: setup.py, conf.py (doc/source), __init__.py (phcpy).
 
 Thu 5 Apr 2018 : extended sets.py for python2 and python3 with the parameter
   tasks in the functions for the homotopy membership tests.
