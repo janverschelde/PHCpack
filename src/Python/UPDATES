@@ -1,3 +1,6 @@
+Tue 10 Apr 2018 : improved test in sets.py in PHCpy2/phcpy and PHCpy3/phcpy,
+  adding the number of tasks.
+
 Thu 5 Apr 2018 : extended sets.py for python2 and python3 with the parameter
   tasks in the functions for the homotopy membership tests.
   In sets.py, updated the calls to the C membership tests to take the

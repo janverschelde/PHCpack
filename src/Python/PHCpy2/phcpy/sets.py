@@ -1132,6 +1132,8 @@ def is_member(wsys, gpts, dim, solpt, evatol=1.0e-6, memtol=1.0e-6, \
 def test_member(prc='d'):
     """
     To test the membership, we take the twisted cubic.
+    The test point is given with its coordinates only,
+    as a list of doubles.
     """
     twisted = ['x^2 - y;', 'x^3 - z;']
     twiste1 = embed(3, 1, twisted)
@@ -1156,9 +1158,10 @@ def test_member(prc='d'):
     print membertest(twiste1, twtsols, 1, inpoint, precision=prc)
     print membertest(twiste1, twtsols, 1, outpoint, precision=prc)
 
-def test_ismember(prc='d', laurent=True):
+def test_twisted_ismember(prc='d', laurent=True):
     """
     To test the membertest wrapper, we take the twisted cubic again.
+    The test point is given as a solution in PHCpack format.
     """
     from phcpy.solver import solve
     from phcpy.solutions import make_solution, strsol2dict
@@ -1179,20 +1182,20 @@ def test_ismember(prc='d', laurent=True):
     tstpt = make_solution(['x', 'y', 'z'], coord)
     if laurent:
         if prc == 'd':
-            print standard_laurent_ismember(twiste1, twtsols, 1, tstpt)
+            print standard_laurent_ismember(twiste1, twtsols, 1, tstpt, tasks=3)
         elif prc == 'dd':
-            print dobldobl_laurent_ismember(twiste1, twtsols, 1, tstpt)
+            print dobldobl_laurent_ismember(twiste1, twtsols, 1, tstpt, tasks=3)
         elif prc == 'qd':
-            print quaddobl_laurent_ismember(twiste1, twtsols, 1, tstpt)
+            print quaddobl_laurent_ismember(twiste1, twtsols, 1, tstpt, tasks=3)
         else:
             print 'wrong level of precision'
     else:
         if prc == 'd':
-            print standard_ismember(twiste1, twtsols, 1, tstpt)
+            print standard_ismember(twiste1, twtsols, 1, tstpt, tasks=3)
         elif prc == 'dd':
-            print dobldobl_ismember(twiste1, twtsols, 1, tstpt)
+            print dobldobl_ismember(twiste1, twtsols, 1, tstpt, tasks=3)
         elif prc == 'qd':
-            print quaddobl_ismember(twiste1, twtsols, 1, tstpt)
+            print quaddobl_ismember(twiste1, twtsols, 1, tstpt, tasks=3)
         else:
             print 'wrong level of precision'
     raw_input('hit enter to continue')
@@ -1200,20 +1203,23 @@ def test_ismember(prc='d', laurent=True):
     # print is_member(twiste1, twtsols, 1, outsol, precision=prc)
     if laurent:
         if prc == 'd':
-            print standard_laurent_ismember(twiste1, twtsols, 1, outsol)
+            print standard_laurent_ismember\
+                      (twiste1, twtsols, 1, outsol, tasks=3)
         elif prc == 'dd':
-            print dobldobl_laurent_ismember(twiste1, twtsols, 1, outsol)
+            print dobldobl_laurent_ismember\
+                      (twiste1, twtsols, 1, outsol, tasks=3)
         elif prc == 'qd':
-            print quaddobl_laurent_ismember(twiste1, twtsols, 1, outsol)
+            print quaddobl_laurent_ismember\
+                      (twiste1, twtsols, 1, outsol, tasks=3)
         else:
             print 'wrong level of precision'
     else:
         if prc == 'd':
-            print standard_ismember(twiste1, twtsols, 1, outsol)
+            print standard_ismember(twiste1, twtsols, 1, outsol, tasks=3)
         elif prc == 'dd':
-            print dobldobl_ismember(twiste1, twtsols, 1, outsol)
+            print dobldobl_ismember(twiste1, twtsols, 1, outsol, tasks=3)
         elif prc == 'qd':
-            print quaddobl_ismember(twiste1, twtsols, 1, outsol)
+            print quaddobl_ismember(twiste1, twtsols, 1, outsol, tasks=3)
         else:
             print 'wrong level of precision'
 
@@ -1223,7 +1229,7 @@ def test():
     """
     from phcpy.phcpy2c2 import py2c_set_seed
     py2c_set_seed(234798272)
-    test_ismember('qd')
+    test_twisted_ismember(prc='qd', laurent=False)
 
 if __name__ == "__main__":
     test()
