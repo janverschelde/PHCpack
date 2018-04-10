@@ -65,10 +65,14 @@ function use_c2mbt ( job : integer32;
   --   Extracts the input parameters from the a and b input.
 
   -- ON RETURN :
-  --   verbose  flag to determine the verbosity of the test;
-  --   nbr      number of coordinates in the test point;
-  --   dim      dimension of the witness set;
-  --   nbt      number of tasks for the homotopy membership test.
+  --   verbose  flag to determine the verbosity of the test
+  --            the value for verbose is in the first a value;;
+  --   nbr      number of coordinates in the test point,
+  --            the value for nbr is in the first b value;;
+  --   dim      dimension of the witness set,
+  --            the value for dim is in the second b value;;
+  --   nbt      number of tasks for the homotopy membership test,
+  --            the value for nbt is in the third b value..
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     vrb : constant integer32 := integer32(va(va'first));
@@ -91,7 +95,8 @@ function use_c2mbt ( job : integer32;
 
   -- DESCRIPTION :
   --   Extracts the input parameters from the a input,
-  --   expecting five integers on input.
+  --   expecting five integers on input,
+  --   in the first values of a.
 
   -- ON RETURN :
   --   verbose  flag to determine the verbosity of the test;
