@@ -328,6 +328,11 @@ global optimization, and computational physics:
    Impulsive Rendezvous Problem.**
    *Journal of Optimization Theory and Applications*, 2013.
 
+#. E. Bartzos, I. Emiris, J. Legersky, and E. Tsigaridas:
+   **On the maximal number of real embeddings of spatial minimally
+   rigid graphs.**
+   arXiv: 1802.05860v1 [math.AG] 16 Feb 2018.
+
 #. Bassi, I.G., Abdullahi Mohammed, and Okechukwu C.E.:
    **Analysis Of Solving Polynomial Equations Using Homotopy Continuation
    Method**. *International Journal of Engineering Research &
@@ -515,11 +520,6 @@ global optimization, and computational physics:
    Mechatronics and Automation*, August 5-8, 2007, Harbin, China.
    Pages 2472-2477, 2007.
 
-#. Libin Jiao, Bo Dong, Jintao Zhang, and Bo Yu:
-   **Polynomial Homotopy Methods for the Sparse Interpolation Problem 
-   Part I: Equally Spaced Sampling**.
-   *SIAM J. Numer. Anal.* 54(1): 462-480, 2016.
-
 #. Hamadi Jamali, Tokunbo Ogunfunmi:
    **Stationary points of the finite length constant modulus optimization**.
    *Signal Processing* 82(4): 625-641, 2002.
@@ -527,6 +527,11 @@ global optimization, and computational physics:
 #. A. Jensen, A. Leykin, and J. Yu:
    **Computing tropical curves via homotopy continuation**.
    *Experimental Mathematics* 25(1): 83--93, 2016.
+
+#. Libin Jiao, Bo Dong, Jintao Zhang, and Bo Yu:
+   **Polynomial Homotopy Methods for the Sparse Interpolation Problem 
+   Part I: Equally Spaced Sampling**.
+   *SIAM J. Numer. Anal.* 54(1): 462-480, 2016.
 
 #. Bjorn Johansson, Magnus Oskarsson, and Kalle Astrom:
    **Structure and motion estimation from complex features
@@ -616,6 +621,11 @@ global optimization, and computational physics:
    model**.
    *Journal of High Energy Physics* 2015:58, February 2015.
 
+#. F. Meng, J. W. Banks, W. D. Henshaw, and D. W. Schwendeman:
+   **A stable and accurate partitioned algorithm 
+   for conjugate heat transfer.**
+   *Journal of Computational Physics* 344: 51-85, 2017.
+
 #. Hyosang Moon and Nina P. Robson:
    **Design of spatial non-anthropomorphic articulated systems based on
    arm joint constraint kinematic data for human interactive robotics
@@ -639,7 +649,7 @@ global optimization, and computational physics:
 #. Girijanandan Nucha, Georges-Pierre Bonneau, Stefanie Hahmann,
    and Vijay Natarajan.
    **Computing Contour Trees for 2D piecewise Polynomial Functions**.
-   In Eurographics Conference on Visualization (EuroVis) 2017,
+   In *Eurographics Conference on Visualization (EuroVis)* 2017,
    edited by J. Heer, T. Ropinski, and J. van Wijk, pages 24-33,
    Computer Graphics Forum, Wiley & Sons Ltd., 2017.
 
@@ -761,6 +771,13 @@ global optimization, and computational physics:
    In 16th IFAC Symposium on System Identification Brussels, 
    11-13 Jul 2012, pages 722-727.
 
+#. J. Vanderstukken, A. Stegeman, and L. De Lathauwer:
+   **Systems of polynomial equations, higher-order tensor decompositions
+   and multidimensional harmonic retrieval: A unifying framework.
+   Part I: The canonical polyadic decomposition.**
+   Available as
+   ftp://ftp.esat.kuleuven.be/pub/stadius/nvervliet/vanderstukken2017systems1.pdf
+
 #. C.W. Wampler:
    **Isotropic coordinates, circularity and Bezout numbers:
    planar kinematics from a new perspective**.
@@ -771,6 +788,10 @@ global optimization, and computational physics:
    **Symbolic-numeric computation of implicit Riquier bases for PDE**.
    In the *Proceedings of the 2007 International Symposium on Symbolic and
    Algebraic Computation*, edited by C.W. Brown, pages 377-385, ACM 2007.
+
+#. Wenyuan Wu and Zhonggang Zeng:
+   **The Numerical Factorization of Polynomials.**
+   *Foundations of Computational Mathematics* 17(1): 259-286, 2017.
 
 #. Jonathan Widger and Daniel Grosu:
    **Parallel Computation of Nash Equilibria in N-Player Games**.
@@ -811,6 +832,11 @@ global optimization, and computational physics:
    **Biorthogonal Wavelet Construction Using Homotopy Method**.
    *Chinese Journal of Electronics* 24(4), pages 772-775, 2015.
 
+#. X. Zhang, J. Zhang, and B. Yu:
+   **Symmetric Homotopy Method for Discretized Elliptic Equations with
+   Cubic and Quintic Nonlinearities.**
+   *Journal of Scientific Computing* 70(3): 1316-1335, 2017.
+
 #. Xun S. Zhou and Stergios I. Roumeliotis:
    **Determining 3-D Relative Transformations for Any Combination of
    Range and Bearing Measurements.**
@@ -819,12 +845,12 @@ global optimization, and computational physics:
 #. Lifeng Zhou, Hai-Jun Su, Alexander E. Marras, Chao-Min Huang,
    Carlos E. Castro: **Projection kinematic analysis of DNA origami
    mechanisms based on a two-dimensional TEM image.**
-   Mechanisms and Machine Theory 109:22-38, 2017.
+   *Mechanisms and Machine Theory* 109:22-38, 2017.
 
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-102. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+107. Ali Baharev, Ferenc Domes, Arnold Neumaier:
      **A robust approach for finding all well-separated solutions of
      sparse systems of nonlinear equations**.
      *Numerical Algorithms* 76:163-189, 2017.
@@ -893,9 +919,19 @@ benchmark to measure the progress of new algorithms in the following papers:
    **Incomplete Groebner basis as a preconditioner for polynomial systems**.
    *Journal of Computational and Applied Mathematics* 226(1):2-9, 2009.
 
+#. S. Telen, B. Mourrain, and M. Van Barel:
+   **Solving Polynomial Systems via a Stabilized Representation
+   of Quotient Algebras.**
+   arXiv:1711.04543v1 [math.AG] 13 Nov 2017
+
+#. A. Zachariah and Z. Charles:
+   **Efficiently Finding All Power Flow Solutions to Tree Networks.**
+   In *Fifty-Fifth Annual Allerton Conference.  Allerton House, UIUC,
+   Illinois, USA.  October 3-6, 2017*, pages 1107-1114, IEEE, 2017.
+
 PHCpack was used to develop new homotopy algorithms:
 
-118. Bo Dong, Bo Yu, and Yan Yu:
+125. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -914,7 +950,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-121. B. Sturmfels:
+128. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
