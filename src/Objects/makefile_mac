@@ -96,6 +96,7 @@ phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
                  get_clock.o get_clocks_per_sec.o \
+                 -Wl,-stack_size -Wl,0x10000000 \
               -o $(BIN)/phc -lm --LINK=g++
 
 # Test program to see if compiler works, "hello world" :
