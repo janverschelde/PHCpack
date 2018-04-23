@@ -1,2 +1,3 @@
 Mon 23 Apr 2018 : improved ts_calldemics, adding absolute path name as
   default argument to the caller procedure, started parsing lifting values.
+  Fixed parsing of lifting.

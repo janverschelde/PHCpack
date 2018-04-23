@@ -11,6 +11,8 @@ with Characters_and_Numbers;
 with Standard_Random_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
+with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecs_io;       use Standard_Floating_VecVecs_io;
 with Lists_of_Integer_Vectors;           use Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
@@ -117,29 +119,42 @@ procedure ts_calldemics is
              ( vals : string ) return Standard_Floating_Vectors.Vector is
 
   -- DESCRIPTION :
-  --   Given a string with floats, separated by one space each,
+  --   Given in vals a string with floats, separated by one space each,
   --   extracts the lifting values.
 
     dlm : constant character := ' ';
     cnt : constant natural := String_Splitters.Count_Delimiters(vals,dlm);
     nbr : Array_of_Strings(1..integer(cnt));
     res : Standard_Floating_Vectors.Vector(1..integer32(cnt));
+    pos : integer;
 
   begin
     nbr := String_Splitters.Split(cnt,vals,dlm);
     res := (res'range => 0.0);
     for i in nbr'range loop
-      res(integer32(i)) := Characters_and_Numbers.Convert(nbr(i).all);
+      pos := nbr(i)'first;
+      Standard_Parse_Numbers.Parse(nbr(i).all,pos,res(integer32(i)));
     end loop;
     return res;
   end Extract_Lifting_Values;
 
   procedure Parse_Lifting
               ( file : in file_type; dim : in integer32;
+                lifting : out Standard_Floating_VecVecs.VecVec;
                 verbose : in boolean := true ) is
 
   -- DESCRIPTION :
   --   Extracts the lifting values from file.
+
+  -- REQUIRED : lifting'range = 1..dim.
+
+  -- ON ENTRY :
+  --   file     output file of demics, opened for input;
+  --   dim      number of supports;
+  --   verbose  flag to indicate that more output is wanted.
+
+  -- ON RETURN :
+  --   lifting  lifting values for each support.
 
     found : boolean;
     lifting_banner : constant string := "Lifting values";
@@ -169,6 +184,8 @@ procedure ts_calldemics is
             put_line(" : " & strlifvals);
             put_line(lifvals);
           end if;
+          lifting(integer32(i))
+            := new Standard_Floating_Vectors.Vector'(lifvals);
         end;
       end loop;
       if verbose then
@@ -191,13 +208,15 @@ procedure ts_calldemics is
     ch,sign : character;
     nb : natural32;
     imv : integer32 := 0;
+    lif : Standard_Floating_VecVecs.VecVec(1..dim);
 
   begin
     if verbose
      then put_line("Opening " & filename & " ...");
     end if;
     Open_Input_File(file,filename);
-    Parse_Lifting(file,dim,verbose);
+    Parse_Lifting(file,dim,lif,verbose);
+    put_line("The lifting of the supports :"); put(lif);
     File_Scanning.Scan(file,banner,found);
     if not found then
       put_line("No mixed volume computed?");
