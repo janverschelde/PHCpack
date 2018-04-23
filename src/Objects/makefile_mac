@@ -52,7 +52,8 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/Root_Counts/Product -I$(PHCAda)/Root_Counts/Binomials \
  -I$(PHCAda)/Root_Counts/Implift -I$(PHCAda)/Root_Counts/Stalift \
  -I$(PHCAda)/Root_Counts/Dynlift -I$(PHCAda)/Root_Counts/Symmetry \
- -I$(PHCAda)/Root_Counts/MixedVol -I$(PHCAda)/Root_Counts/Puiseux \
+ -I$(PHCAda)/Root_Counts/MixedVol -I$(PHCAda)/Root_Counts/DEMiCs \
+ -I$(PHCAda)/Root_Counts/Puiseux \
  -I$(PHCAda)/Schubert/SAGBI -I$(PHCAda)/Schubert/Pieri \
  -I$(PHCAda)/Schubert/Induction \
  -I$(PHCAda)/Components/Samplers -I$(PHCAda)/Components/Interpolators \
@@ -1022,6 +1023,12 @@ ts_mv:
 
 ts_mva:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mva.adb -o $(BIN)/ts_mva
+
+# Test programs for the Root_Counts/DEMiCs library :
+
+ts_calldemics:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_calldemics.adb \
+              -o $(BIN)/ts_calldemics
 
 # Test programs for the Root_Counts/Puiseux library :
 

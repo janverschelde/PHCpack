@@ -931,6 +931,13 @@ ts_mv:
 ts_mva:
 	make -f $(MAKEFILE) ts_mva
 
+# Test programs for the Root_Counts/DEMiCs library :
+
+test_demics: ts_calldemics
+
+ts_calldemics:
+	make -f $(MAKEFILE) ts_calldemics
+
 # Test programs for the Puiseux library :
 
 test_puiseux: ts_degcurve ts_puiseux
