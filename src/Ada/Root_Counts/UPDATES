@@ -1,0 +1,22 @@
+Sun 22 Apr 2018 : new directory DEMiCs to interface with demics.
+
+Thu 25 Apr 2013 : merged contents of Tasking to top Tasking directory.
+
+Sun 14 Apr 2013 : added Tasking directory.
+
+Fri 23 Nov 2012 : renamed the directory "Simpomials" into "Binomials"
+  because understanding of binomial systems is fundamental.
+  A simpomial solver just adds Gaussian elimination to the coefficient
+  matrix of the original system.
+
+Tue 12 Aug 2008 : renamed the directory "Fewnomials" into "Simpomials".
+  A simpomial solver solves simplex and binomials systems efficiently.
+
+Tue 29 Jul 2008 : created the directory "Puiseux" to test a conjecture
+  about the computation of the degree of curves ...
+
+Mon 24 Jul 2006 : renamed "ExtSoft" into "MixedVol", the translation of
+  Algorithm 846 into Ada has started...
+
+Thu 16 Mar 2006 : created "Fewnomials" for the new solvers of binomial
+  and fewnomial systems.

@@ -1,0 +1,31 @@
+Dynamic Enumeration of all Mixed Cells in PHCv2.4.53
+
+This directory was added in version 2.4.53 to prepare the interface
+to DEMiCs, software for the dynamic enumeration of all mixed cells.
+This software was developed by Tomohiko Mizutani, Akiko Takeda,
+and Masakazu Kojima and licensed under GNU GPL Version 2.
+
+T. Mizutani and A. Takeda.
+"DEMiCs: A software package for computing the mixed volume via
+ dynamic enumeration of all mixed cells".
+In "Software for Algebraic Geometry", edited by M. E. Stillman,
+N. Takayama, and J. Verschelde, volume 148 of The IMA Volumes in
+Mathematics and its Applications, pages 59-79. Springer-Verlag, 2008.
+
+T. Mizutani, A. Takeda, and M. Kojima.
+"Dynamic enumeration of all mixed cells".
+Discrete Comput. Geom. 37(3):351-367, 2007.
+
+T. Mizutani.
+"Finding all mixed cells for polyhedral homotopies".
+PhD Thesis.  Tokyo Institute of Technology, 2008.
+
+The current interface is a simple file based interface,
+which assumes the executable is available as /tmp/demics
+on UNIX like systems such as Mac OS X and Linux.
+
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+ts_calldemics                    : file based interface to DEMiCs
+------------------------------------------------------------------------------

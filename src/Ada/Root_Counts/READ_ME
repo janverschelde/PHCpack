@@ -1,4 +1,4 @@
-Root Counting and Start Systems Library in PHCpack version 2.4.06
+Root Counting and Start Systems Library in PHCpack version 2.4.53
 
 This library formed the main part of the first version of PHCpack.
 Modifications in version 2 were mainly due to the rewrite of the
@@ -29,7 +29,8 @@ The root-counting library is organized as follows :
      |-- Dynlift       : 5.5. dynamic lifting
      |-- Symmetry      : 5.6. exploitation of symmetry relations
      |-- MixedVol      : 5.7. translation of ACM TOMS Algorithm 846
-     |-- Puiseux       : 5.8. Puiseux series for curves
+     |-- DEMiCs        : 5.8. interface to the DEMiCs program
+     |-- Puiseux       : 5.9. Puiseux series for curves
 
 The root counts that are available in the directory Product are
 based on Bezout's theorem.  The corresponding start systems are
