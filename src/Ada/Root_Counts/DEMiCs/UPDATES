@@ -1,3 +1,4 @@
 Mon 23 Apr 2018 : improved ts_calldemics, adding absolute path name as
   default argument to the caller procedure, started parsing lifting values.
-  Fixed parsing of lifting.
+  Fixed parsing of lifting.  New package demics_command_line, 
+  with code taken out and tested by ts_calldemics.
