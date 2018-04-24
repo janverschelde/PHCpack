@@ -1,5 +1,6 @@
-Tue 24 Apr 2018 : new pacakge demics_output_convertors with code factored
-  out of ts_calldemics.
+Tue 24 Apr 2018 : new package demics_output_convertors with code factored
+  out of ts_calldemics.  Added computation of the normal to each cell in
+  demics_output_convertors.adb.
 
 Mon 23 Apr 2018 : improved ts_calldemics, adding absolute path name as
   default argument to the caller procedure, started parsing lifting values.

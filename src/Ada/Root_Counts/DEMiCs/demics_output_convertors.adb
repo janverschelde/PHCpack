@@ -1,4 +1,6 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Matrices;
+with Standard_Floating_Linear_Solvers;   use Standard_Floating_Linear_Solvers;
 
 package body DEMiCs_Output_Convertors is
 
@@ -55,33 +57,54 @@ package body DEMiCs_Output_Convertors is
     tmp,last : Lists_of_Floating_Vectors.List;
     idx,done : integer32;
     lpt : Standard_Floating_Vectors.Link_to_Vector;
+    first,second : Standard_Floating_Vectors.Vector(1..dim+1);
+    mat : Standard_Floating_Matrices.Matrix(1..dim,1..dim);
+    rhs : Standard_Floating_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
 
   begin
     res.nor := new Standard_Floating_Vectors.Vector'(1..dim+1 => 0.0);
     res.pts := new Arrays_of_Floating_Vector_Lists.Array_of_Lists(1..dim);
     res.sub := null;
-    for k in 1..dim loop
-      last := res.pts(k);
-      idxfirst := lbl(2*(k-1)+1);
-      idxsecond := lbl(2*(k-1)+2);
+    for row in 1..dim loop
+      last := res.pts(row);
+      idxfirst := lbl(2*(row-1)+1);
+      idxsecond := lbl(2*(row-1)+2);
       idx := 0;
       done := 2;
-      tmp := lifsup(k);
+      tmp := lifsup(row);
       while not Lists_of_Floating_Vectors.Is_Null(tmp) loop
         idx := idx + 1;
         if idx = idxfirst then
           lpt := Lists_of_Floating_Vectors.Head_Of(tmp);
-          Lists_of_Floating_Vectors.Append(res.pts(k),last,lpt.all);
+          Lists_of_Floating_Vectors.Append(res.pts(row),last,lpt.all);
+          for i in lpt'range loop
+            first(i) := lpt(i);
+          end loop;
           done := done - 1;
         elsif idx = idxsecond then
           lpt := Lists_of_Floating_Vectors.Head_Of(tmp);
-          Lists_of_Floating_Vectors.Append(res.pts(k),last,lpt.all);
+          Lists_of_Floating_Vectors.Append(res.pts(row),last,lpt.all);
+          for i in lpt'range loop
+            second(i) := lpt(i);
+          end loop;
           done := done - 1;
+        end if;
+        if done = 0 then
+          for j in 1..dim loop
+            mat(row,j) := first(j) - second(j);
+          end loop;
+          rhs(row) := second(dim+1) - first(dim+1);
         end if;
         exit when (done = 0);
         tmp := Lists_of_Floating_Vectors.Tail_Of(tmp);
       end loop;
     end loop;
+    lufac(mat,dim,ipvt,info);
+    lusolve(mat,dim,ipvt,rhs);
+    res.nor(1..dim) := rhs;
+    res.nor(dim+1) := 1.0;
     return res;
   end Make_Mixed_Cell;
 
