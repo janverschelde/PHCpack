@@ -28,5 +28,6 @@ on UNIX like systems such as Mac OS X and Linux.
 file name                        : short description
 ------------------------------------------------------------------------------
 demics_command_line              : defines the command line interface
+demics_output_convertors         : converts output of demics
 ts_calldemics                    : file based interface to DEMiCs
 ------------------------------------------------------------------------------
