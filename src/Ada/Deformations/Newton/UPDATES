@@ -3,6 +3,7 @@ Wed 25 Apr 2018 : added new packages dobldobl_query_matrices,
   and dobldobl_multiplicity_structure to compute the multiplicity structure
   in double double precision, tested by ts_multip.adb.
   Adjusted standard_query_matrices.adb for compiler warnings.
+  Added similar new quaddobl packages, tested by ts_multip.adb.
 
 Wed 4 Apr 2018 : something is not right with Reporting_Deflate(), replaced
   it in standard_root_refiners.adb by Silent_Deflate().

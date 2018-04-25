@@ -81,6 +81,7 @@ quaddobl_evaluate_deflation_io   : output quaddobl directed acyclic graphs
 multprec_evaluate_deflation_io   : output multprec directed acyclic graphs
 standard_query_matrices          : to look into big standard matrices
 dobldobl_query_matrices          : to examine large dobldobl matrices
+quaddobl_query_matrices          : to examine large quaddobl matrices
 multprec_query_matrices          : to look into big multprec matrices
 ts_defmat                        : working with deflation matrices
 ------------------------------------------------------------------------------
@@ -98,12 +99,15 @@ ts_stair                         : test examples from the staircase
 ------------------------------------------------------------------------------
 standard_nullity_polynomials     : operations to create nullity matrices
 dobldobl_nullity_polynomials     : double double operations for nullity
+quaddobl_nullity_polynomials     : quad double operations for nullity
 multprec_nullity_polynomials     : multiprecision operations for nullity
 standard_nullity_matrices        : creation and evaluation of nullity matrices
 dobldobl_nullity_matrices        : double double nullity matrices
+quaddobl_nullity_matrices        : quad double nullity matrices
 multprec_nullity_matrices        : multiprecision nullity matrices
 standard_multiplicity_structure  : determination of dual space at singularity
 dobldobl_multiplicity_structure  : multiplicity in double double precision
+quaddobl_multiplicity_structure  : multiplicity in quad double precision
 ts_multip                        : computation of multiplicity structure
 standard_multiple_deflation      : implementation of higher-order deflation
 multprec_multiple_deflation      : multiprecision higher-order deflation
