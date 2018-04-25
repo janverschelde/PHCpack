@@ -1,10 +1,12 @@
 with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
+with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
+with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 
-package body Standard_Query_Matrices is
+package body DoblDobl_Query_Matrices is
 
   procedure Show_Element ( A : in character; i,j : in integer32;
                            aij : in Complex_Number ) is
@@ -103,11 +105,11 @@ package body Standard_Query_Matrices is
     end loop;
   end Query_Matrices;
 
-  function Difference_of_Matrices ( a,b : Matrix ) return double_float is
+  function Difference_of_Matrices ( a,b : Matrix ) return double_double is
 
     dif : Complex_Number;
-    abs_dif : double_float;
-    sum : double_float := 0.0;
+    abs_dif : double_double;
+    sum : double_double := create(0.0);
 
   begin
     for i in a'range(1) loop
@@ -125,8 +127,8 @@ package body Standard_Query_Matrices is
     ans : character;
     cnt : integer32 := 0;
     dif : Complex_Number;
-    abs_dif : double_float;
-    sum : double_float := 0.0;
+    abs_dif : double_double;
+    sum : double_double := create(0.0);
     tol : constant double_float := 1.0E-8;
 
   begin
@@ -164,8 +166,8 @@ package body Standard_Query_Matrices is
     ans : character;
     cnt : integer32 := 1;
     dif : Complex_Number;
-    abs_dif : double_float;
-    sum : double_float := 0.0;
+    abs_dif : double_double;
+    sum : double_double := create(0.0);
     tol : constant double_float := 1.0E-8;
 
   begin
@@ -196,4 +198,4 @@ package body Standard_Query_Matrices is
     put("Sum of all differences : "); put(sum); new_line;
   end Show_Differences_in_Matrices;
 
-end Standard_Query_Matrices;
+end DoblDobl_Query_Matrices;
