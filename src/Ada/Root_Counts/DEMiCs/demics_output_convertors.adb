@@ -1,4 +1,5 @@
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with text_io;                            use text_io;
+with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_Matrices;
 with Standard_Floating_Linear_Solvers;   use Standard_Floating_Linear_Solvers;
 
@@ -46,11 +47,118 @@ package body DEMiCs_Output_Convertors is
     return res;
   end Apply_Lifting;
 
+  function Minimum ( lifpts : Lists_of_Floating_Vectors.List;
+                     normal : Standard_Floating_Vectors.Vector )
+                   return double_float is
+
+    use Standard_Floating_Vectors;
+
+    lpt : Standard_Floating_Vectors.Link_to_Vector
+        := Lists_of_Floating_Vectors.Head_Of(lifpts);
+    res : double_float := lpt.all*normal;
+    ipr : double_float;
+    tmp : Lists_of_Floating_Vectors.List
+        := Lists_of_Floating_Vectors.Tail_Of(lifpts);
+
+  begin
+    while not Lists_of_Floating_Vectors.Is_Null(tmp) loop
+      lpt := Lists_of_Floating_Vectors.Head_Of(tmp);
+      ipr := lpt.all*normal;
+      if ipr < res
+       then res := ipr;
+      end if;
+      tmp := Lists_of_Floating_Vectors.Tail_Of(tmp);
+    end loop;
+    return res;
+  end Minimum;
+
+  function Arguments_of_Minima
+             ( lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+               normal : Standard_Floating_Vectors.Vector )
+             return Standard_Integer_Vectors.Vector is
+
+    use Standard_Floating_Vectors;
+
+    dim : constant integer32 := lifsup'last;
+    res : Standard_Integer_Vectors.Vector(1..2*dim);
+    min,ipr : double_float;
+    tmp : Lists_of_Floating_Vectors.List;
+    lpt : Standard_Floating_Vectors.Link_to_Vector;
+    idxlpt,idxres : integer32;
+ 
+  begin
+    idxres := 0;
+    for k in lifsup'range loop
+      min := Minimum(lifsup(k),normal);
+      idxlpt := 0;
+      tmp := lifsup(k);
+      while not Lists_of_Floating_Vectors.Is_Null(tmp) loop
+        idxlpt := idxlpt + 1;
+        lpt := Lists_of_Floating_Vectors.Head_Of(tmp);
+        ipr := lpt.all*normal;
+        if abs(ipr - min) < 1.0E-8 then
+          idxres := idxres + 1;
+          res(idxres) := idxlpt;
+        end if;
+        tmp := Lists_of_Floating_Vectors.Tail_Of(tmp);
+      end loop;
+    end loop;
+    return res;
+  end Arguments_of_Minima;
+
+  function Sort_Labels
+              ( labels : Standard_Integer_Vectors.Vector )
+              return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(labels'range) := labels;
+    dim : constant integer32 := labels'last/2;
+    idx,tmp : integer32;
+
+  begin
+    for k in 1..dim loop
+      idx := 2*(k-1) + 1;
+      if res(idx) > res(idx+1) then
+        tmp := res(idx);
+        res(idx) := res(idx+1);
+        res(idx+1) := tmp;
+      end if;
+    end loop;
+    return res;
+  end Sort_Labels;
+
+  procedure Test_Inner_Normal
+              ( lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                normal : in Standard_Floating_Vectors.Vector;
+                labels : in Standard_Integer_Vectors.Vector;
+                fail : out boolean ) is
+
+    argmin : constant Standard_Integer_Vectors.Vector
+           := Arguments_of_Minima(lifsup,normal);
+    sorted : constant Standard_Integer_Vectors.Vector
+           := Sort_Labels(labels);
+
+  begin
+    put("The labels of demics : "); put(sorted); new_line;
+    put("The computed labels  : "); put(argmin);
+    fail := false;
+    for k in sorted'range loop
+      if sorted(k) /= argmin(k)
+       then fail := true;
+      end if;
+      exit when fail;
+    end loop;
+    if fail
+     then put_line("  wrong!?");
+     else put_line("  okay.");
+    end if;
+  end Test_Inner_Normal;
+
   function Make_Mixed_Cell
-             ( dim : integer32;
-               lbl : Standard_Integer_Vectors.Vector;
-               lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
-             return Mixed_Cell is
+              ( dim : integer32;
+                lbl : Standard_Integer_Vectors.Vector;
+                lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                verbose : boolean := true )
+              return Mixed_Cell is
 
     res : Mixed_Cell;
     idxfirst,idxsecond : integer32;
@@ -62,6 +170,7 @@ package body DEMiCs_Output_Convertors is
     rhs : Standard_Floating_Vectors.Vector(1..dim);
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     info : integer32;
+    fail : boolean;
 
   begin
     res.nor := new Standard_Floating_Vectors.Vector'(1..dim+1 => 0.0);
@@ -105,13 +214,17 @@ package body DEMiCs_Output_Convertors is
     lusolve(mat,dim,ipvt,rhs);
     res.nor(1..dim) := rhs;
     res.nor(dim+1) := 1.0;
+    if verbose
+     then Test_Inner_Normal(lifsup,res.nor.all,lbl,fail);
+    end if;
     return res;
   end Make_Mixed_Cell;
 
   function Make_Mixed_Cells
              ( dim : integer32;
                labels : Lists_of_Integer_Vectors.List;
-               lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+               lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+               verbose : boolean := true )
              return Mixed_Subdivision is
 
     res,res_last : Mixed_Subdivision;
@@ -122,7 +235,7 @@ package body DEMiCs_Output_Convertors is
   begin
     while not Lists_of_Integer_Vectors.Is_Null(tmp) loop
       lbl := Lists_of_Integer_Vectors.Head_Of(tmp);
-      mic := Make_Mixed_Cell(dim,lbl.all,lifsup);
+      mic := Make_Mixed_Cell(dim,lbl.all,lifsup,verbose);
       Append(res,res_last,mic);
       tmp := Lists_of_Integer_Vectors.Tail_Of(tmp);
     end loop;
