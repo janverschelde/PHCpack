@@ -47,7 +47,9 @@ with Drivers_for_Symmetry_Group_io;      use Drivers_for_Symmetry_Group_io;
 with Drivers_for_Orbits_of_Solutions;    use Drivers_for_Orbits_of_Solutions;
 with Driver_for_Winding_Numbers;
 with Drivers_to_Deflate_Singularities;   use Drivers_to_Deflate_Singularities;
-with Standard_Multiplicity_Structure;    use Standard_Multiplicity_Structure;
+with Standard_Multiplicity_Structure;
+with DoblDobl_Multiplicity_Structure;
+with QuadDobl_Multiplicity_Structure;
 with Drivers_to_DD_QD_Root_Refiners;     use Drivers_to_DD_QD_Root_Refiners;
 with Root_Refining_Parameters;           use Root_Refining_Parameters;
 with valipoco;
@@ -759,9 +761,14 @@ procedure mainvali ( infilename,outfilename : in string ) is
     end if;
   end QuadDobl_Newton_with_Deflation;
 
-  procedure Newton_with_Deflation is
+  function Prompt_for_Precision return character is
 
-    ans : character;
+  -- DESCRIPTION :
+  --   Prompts the user for '0', '1', or '2'
+  --   for double, double double or quad double.
+  --   The corresponding character is returned.
+
+    res : character;
 
   begin
     new_line;
@@ -770,8 +777,21 @@ procedure mainvali ( infilename,outfilename : in string ) is
     put_line("  1. double double precision;");
     put_line("  2. quad double precision.");
     put("Type 0, 1, or 2 to select the level of precision : ");
-    Ask_Alternative(ans,"012");
-    case ans is
+    Ask_Alternative(res,"012");
+    return res;
+  end Prompt_for_Precision;
+
+  procedure Newton_with_Deflation is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the precision
+  --   and then calls the corresponding driver
+  --   to apply Newton's method with deflation.
+
+    prc : character := Prompt_for_Precision;
+
+  begin
+    case prc is
       when '0' => Standard_Newton_with_Deflation;
       when '1' => DoblDobl_Newton_with_Deflation;
       when '2' => QuadDobl_Newton_with_Deflation;
@@ -779,9 +799,14 @@ procedure mainvali ( infilename,outfilename : in string ) is
     end case;
   end Newton_with_Deflation;
 
-  procedure Multiplicity_Structure is
+  procedure Standard_Compute_Multiplicity_Structure is
+
+  -- DESCRIPTION :
+  --   Computes the multiplicity structure in standard double precision,
+  --   after prompting for a polynomial system and solutions.
 
     use Standard_Complex_Solutions;
+    use Standard_Multiplicity_Structure;
 
     infile,outfile : file_type;
     sysonfile : boolean;
@@ -800,6 +825,80 @@ procedure mainvali ( infilename,outfilename : in string ) is
     put(outfile,natural32(lp'last),lp.all);
     Read_Solutions(infile,sysonfile,sols);
     Driver_to_Multiplicity_Structure(outfile,lp.all,sols);
+  end Standard_Compute_Multiplicity_Structure;
+
+  procedure DoblDobl_Compute_Multiplicity_Structure is
+
+  -- DESCRIPTION :
+  --   Computes the multiplicity structure in double double precision,
+  --   after prompting for a polynomial system and solutions.
+
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Multiplicity_Structure;
+
+    infile,outfile : file_type;
+    sysonfile : boolean;
+    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Read_System(infile,infilename,lp,sysonfile);
+    if outfilename = "" then
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(outfile);
+    else
+      Create_Output_File(outfile,outfilename);
+    end if;
+    put(outfile,natural32(lp'last),lp.all);
+    Read_Solutions(infile,sysonfile,sols);
+    Driver_to_Multiplicity_Structure(outfile,lp.all,sols);
+  end DoblDobl_Compute_Multiplicity_Structure;
+
+  procedure QuadDobl_Compute_Multiplicity_Structure is
+
+  -- DESCRIPTION :
+  --   Computes the multiplicity structure in quad double precision,
+  --   after prompting for a polynomial system and solutions.
+
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Multiplicity_Structure;
+
+    infile,outfile : file_type;
+    sysonfile : boolean;
+    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Read_System(infile,infilename,lp,sysonfile);
+    if outfilename = "" then
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(outfile);
+    else
+      Create_Output_File(outfile,outfilename);
+    end if;
+    put(outfile,natural32(lp'last),lp.all);
+    Read_Solutions(infile,sysonfile,sols);
+    Driver_to_Multiplicity_Structure(outfile,lp.all,sols);
+  end QuadDobl_Compute_Multiplicity_Structure;
+
+  procedure Multiplicity_Structure is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the precision
+  --   and then launches the corresponding driver
+  --   to compute the multiplicity structure.
+
+    prc : character := Prompt_for_Precision;
+
+  begin
+    case prc is
+      when '0' => Standard_Compute_Multiplicity_Structure;
+      when '1' => DoblDobl_Compute_Multiplicity_Structure;
+      when '2' => QuadDobl_Compute_Multiplicity_Structure;
+      when others => null;
+    end case;
   end Multiplicity_Structure;
 
   procedure Display_and_Dispatch_Menu is

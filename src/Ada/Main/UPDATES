@@ -1,3 +1,6 @@
+Wed 25 Apr 2018 : updated mainvali.adb to prompt for the precision
+  when computing the multiplicity structure.
+
 Tue 10 Apr 2018 : adjusted greeting_banners for version 2.4.52.
 
 Sat 7 Apr 2018 : updated compsolve.adb, compsolve2.adb, and compsolve4.adb
