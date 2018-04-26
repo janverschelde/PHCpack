@@ -1,4 +1,4 @@
-Calling PHCpack from C as a state machine in PHCv2.4.52
+Calling PHCpack from C as a state machine in PHCv2.4.53
 
 This directory was created in release 2.3 as subdirectory to CtoPHC.
 The idea for using PHCpack as a state machine originated from the need
@@ -99,6 +99,8 @@ crude_path_trackers              : path trackers without postprocessing
 ts_runtrack                      : calls the crude path trackers
 ------------------------------------------------------------------------------
 use_series                       : power series Newton method
+------------------------------------------------------------------------------
+use_multip                       : compute multiplicity structure
 ------------------------------------------------------------------------------
 ts_c2phc.c                       : C routine calls the Ada gateway to PHCpack
 use_c2phc                        : bundles containers and c_to_phcpack

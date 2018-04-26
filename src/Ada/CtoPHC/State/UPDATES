@@ -1,4 +1,7 @@
-Tue 10 Apr 2010 : improved the documentation in use_c2mbt.adb.
+Thu 26 Apr 2018 : new use_multip to export computation of the multiplicity
+  structure of an isolated solution of a polynomial system.
+
+Tue 10 Apr 2018 : improved the documentation in use_c2mbt.adb.
 
 Fri 6 Apr 2018 : use_c2phc.adb changed because of extra deflate parameter
   in the blackbox solver.
