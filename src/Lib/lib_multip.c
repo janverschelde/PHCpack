@@ -76,7 +76,8 @@ void test_standard_multiplicity_structure ( int order )
    fail = standard_multiplicity_structure(order,1,tol,&mult,hilb);
    printf("The multiplicity : %d.\n",mult);
    printf("Values of the Hilbert function :");
-   for(int k=0; k<order+1; k++)
+   int k;
+   for(k=0; k<order+1; k++)
       printf(" %d",hilb[k]);
    printf("\n");
 }
@@ -99,7 +100,8 @@ void test_dobldobl_multiplicity_structure ( int order )
    fail = dobldobl_multiplicity_structure(order,1,tol,&mult,hilb);
    printf("The multiplicity : %d.\n",mult);
    printf("Values of the Hilbert function :");
-   for(int k=0; k<order+1; k++)
+   int k;
+   for(k=0; k<order+1; k++)
       printf(" %d",hilb[k]);
    printf("\n");
 }
@@ -122,7 +124,8 @@ void test_quaddobl_multiplicity_structure ( int order )
    fail = quaddobl_multiplicity_structure(order,1,tol,&mult,hilb);
    printf("The multiplicity : %d.\n",mult);
    printf("Values of the Hilbert function :");
-   for(int k=0; k<order+1; k++)
+   int k;
+   for(k=0; k<order+1; k++)
       printf(" %d",hilb[k]);
    printf("\n");
 }

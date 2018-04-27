@@ -1,5 +1,6 @@
 Thu 26 Apr 2018 : new multiplicity.h, multiplicity.c, and lib_multip.c to 
   define and test the C interface to the computation of the multiplicity. 
+  Move the "int k" out of the "for(int k" in lib_multip.c for a purer C.
 
 Tue 10 Apr 2018 : in witset.c, adjusted number of entries in the dims
   arrays for the extra parameter, the number of tasks.
