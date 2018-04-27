@@ -2701,6 +2701,7 @@ phcpy2c2.so: lib2path.o parameter.o
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
@@ -2718,8 +2719,8 @@ phcpy2c2.so: lib2path.o parameter.o
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
             solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
             giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
-            scalers.o reducers.o numbtrop.o sweep.o schubert.o syspool.o \
-            series.o parameter.o lib2path.o $(QD_LIB)/libqd.a \
+            scalers.o reducers.o numbtrop.o sweep.o multiplicity.o schubert.o \
+            syspool.o series.o parameter.o lib2path.o $(QD_LIB)/libqd.a \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
                  -o ../Python/PHCpy2/phcpy/phcpy2c2.so \
@@ -2739,6 +2740,7 @@ sage_phcpy2c2.so: parameter.o lib2path.o
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
@@ -2756,8 +2758,8 @@ sage_phcpy2c2.so: parameter.o lib2path.o
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
             solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
             giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
-            scalers.o reducers.o numbtrop.o sweep.o schubert.o syspool.o \
-            series.o parameter.o lib2path.o $(QD_LIB)/libqd.a \
+            scalers.o reducers.o numbtrop.o sweep.o multiplicity.o schubert.o \
+            syspool.o series.o parameter.o lib2path.o $(QD_LIB)/libqd.a \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
             $(SAGEPYTHONLIB)/libpython2.7.dylib -o sage_phcpy2c2.so \
@@ -2781,6 +2783,7 @@ phcpy2c3.so: parameter.o lib2path.o
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/scalers.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
+	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
@@ -2799,8 +2802,8 @@ phcpy2c3.so: parameter.o lib2path.o
 	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
             solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
             giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
-            scalers.o reducers.o sweep.o numbtrop.o schubert.o syspool.o \
-            series.o parameter.o lib2path.o $(QD_LIB)/libqd.a \
+            scalers.o reducers.o sweep.o multiplicity.o numbtrop.o schubert.o \
+            syspool.o series.o parameter.o lib2path.o $(QD_LIB)/libqd.a \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
                -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
