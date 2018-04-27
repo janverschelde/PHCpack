@@ -1628,7 +1628,7 @@ test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_read lib_read_cpp lib_newton lib_newton_cpp \
           lib_roco lib_roco_cpp lib_celcon lib_celcon_cpp \
           lib_celphc lib_celphc_cpp lib_scale lib_scale_cpp \
-          lib_reduce \
+          lib_reduce lib_reduce_cpp lib_multip lib_multip_cpp \
           lib_conpar lib_conpar_cpp lib_poco lib_poco_cpp \
           lib_track lib_track_cpp lib_nxtsol lib_nxtsol_cpp \
           lib_sweep lib_sweep_cpp lib_nbrvar lib_nbrvar_cpp \
@@ -1666,6 +1666,12 @@ lib_newton:
 lib_newton_cpp:
 	make -f $(MAKEFILE) lib_newton_cpp
 
+lib_multip:
+	make -f $(MAKEFILE) lib_multip
+
+lib_multip_cpp:
+	make -f $(MAKEFILE) lib_multip_cpp
+
 lib_roco:
 	make -f $(MAKEFILE) lib_roco
 
@@ -1692,6 +1698,9 @@ lib_scale_cpp:
 
 lib_reduce:
 	make -f $(MAKEFILE) lib_reduce
+
+lib_reduce_cpp:
+	make -f $(MAKEFILE) lib_reduce_cpp
 
 lib_conpar:
 	make -f $(MAKEFILE) lib_conpar

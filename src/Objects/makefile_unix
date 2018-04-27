@@ -2682,6 +2682,28 @@ lib_newton_cpp:
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o lib_newton.o \
                  -o $(BIN)/lib_newton -lm --LINK=$(gpp)
 
+lib_multip:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/multiplicity.c
+	gcc -c $(PHCLib)/lib_multip.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o multiplicity.o \
+                    lib_multip.o -o $(BIN)/lib_multip -lm
+
+lib_multip_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/multiplicity.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/lib_multip.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o multiplicity.o \
+                    lib_multip.o -o $(BIN)/lib_multip -lm --LINK=$(gpp)
+
 lib_roco:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
@@ -2778,6 +2800,16 @@ lib_reduce:
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o reducers.o lib_reduce.o \
                  -o $(BIN)/lib_reduce -lm
+
+lib_reduce_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/reducers.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/lib_reduce.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o reducers.o lib_reduce.o \
+                 -o $(BIN)/lib_reduce -lm --LINK=$(gpp)
 
 lib_conpar:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
