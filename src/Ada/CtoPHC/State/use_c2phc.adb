@@ -94,6 +94,7 @@ with use_nxtsol;
 with unisolve,use_giftwrap;
 with use_numbtrop;
 with use_series;
+with use_multip; -- multiplicity structure
 
 function use_c2phc ( job : integer32;
                      a : C_intarrs.Pointer;
@@ -3090,6 +3091,10 @@ function use_c2phc ( job : integer32;
       when 710 => return use_reduction(4,a,b,c); -- standard nonlinear reduce
      -- container for numerically computed tropisms
       when 711..731 => return use_numbtrop(job-710,a,b,c);
+     -- computation of multiplicity structure
+      when 732 => return use_multip(0,a,b,c); -- standard double precision
+      when 733 => return use_multip(0,a,b,c); -- double double precision
+      when 734 => return use_multip(0,a,b,c); -- quad double precision
      -- integer mixed cell configurations
       when 741..758 => return use_celcon(job-690,a,b,c);
      -- reading, writing Laurent start and target systems

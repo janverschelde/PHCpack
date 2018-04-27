@@ -1721,6 +1721,33 @@ function use_c2phc ( job : integer32;
 --                 c[1] : the tolerance on the residual on the root,
 --                 c[2] : the tolerance for the numerical rank.
 --
+-- computation of multiplicity structure :
+--
+--   job   = 732 : computes in standard double precision,
+--                 on entry in a[0] is the maximum deflation order
+--                 in b[0] is 0 or 1, as a flag to indicate whether
+--                 to be silent or verbose (to screen) respectively,
+--                 in c[0] is the tolerance for the numerical rank,
+--                 on return in a is the computed multiplicity
+--                 and in b are order+1 integers with the values
+--                 of the Hilbert function;
+--   job   = 732 : computes in double double precision,
+--                 on entry in a[0] is the maximum deflation order
+--                 in b[0] is 0 or 1, as a flag to indicate whether
+--                 to be silent or verbose (to screen) respectively,
+--                 in c[0] is the tolerance for the numerical rank,
+--                 on return in a is the computed multiplicity
+--                 and in b are order+1 integers with the values
+--                 of the Hilbert function;
+--   job   = 733 : computes in quad double precision,
+--                 on entry in a[0] is the maximum deflation order
+--                 in b[0] is 0 or 1, as a flag to indicate whether
+--                 to be silent or verbose (to screen) respectively,
+--                 in c[0] is the tolerance for the numerical rank,
+--                 on return in a is the computed multiplicity
+--                 and in b are order+1 integers with the values
+--                 of the Hilbert function.
+--
 -- one Newton step on Laurent systems :
 --
 --   job   = 326 : does one Newton step with standard double arithmetic

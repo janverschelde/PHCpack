@@ -12,6 +12,7 @@ with QuadDobl_Complex_Solutions;
 with Standard_Multiplicity_Structure;
 with DoblDobl_Multiplicity_Structure;
 with QuadDobl_Multiplicity_Structure;
+with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_PolySys_Container;
@@ -68,9 +69,15 @@ function use_multip ( job : integer32;
     Extract_Parameters(order,verbose,tol);
     declare
       h : Standard_Natural_Vectors.Vector(0..integer32(order));
+      sh : Standard_Natural_Vectors.Vector(1..h'last+1);
       m : natural32;
     begin
       Multiplicity_Structure(ls.all,zero.v,tol,order,h,m);
+      Assign(integer32(m),a);
+      for k in h'range loop
+        sh(k+1) := h(k);
+      end loop;
+      Assign(sh,b);
     end;
     return 0;
   end Job0;
@@ -93,9 +100,15 @@ function use_multip ( job : integer32;
     Extract_Parameters(order,verbose,tol);
     declare
       h : Standard_Natural_Vectors.Vector(0..integer32(order));
+      sh : Standard_Natural_Vectors.Vector(1..h'last+1);
       m : natural32;
     begin
       Multiplicity_Structure(ls.all,zero.v,tol,order,h,m);
+      Assign(integer32(m),a);
+      for k in h'range loop
+        sh(k+1) := h(k);
+      end loop;
+      Assign(h,b);
     end;
     return 0;
   end Job1;
@@ -118,9 +131,15 @@ function use_multip ( job : integer32;
     Extract_Parameters(order,verbose,tol);
     declare
       h : Standard_Natural_Vectors.Vector(0..integer32(order));
+      sh : Standard_Natural_Vectors.Vector(1..h'last+1);
       m : natural32;
     begin
       Multiplicity_Structure(ls.all,zero.v,tol,order,h,m);
+      Assign(integer32(m),a);
+      for k in h'range loop
+        sh(k+1) := h(k);
+      end loop;
+      Assign(sh,b);
     end;
     return 0;
   end Job2;
