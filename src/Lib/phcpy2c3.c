@@ -19,6 +19,7 @@
 #include "scalers.h"
 #include "reducers.h"
 #include "sweep.h"
+#include "multiplicity.h"
 #include "numbtrop.h"
 #include "witset.h"
 #include "mapcon.h"
@@ -5098,6 +5099,54 @@ static PyObject *py2c_sweep_quaddobl_real_run
    return Py_BuildValue("i",fail);
 }
 
+/* The wrapping for the multiplicity structure starts here. */
+
+static PyObject *py2c_standard_multiplicity_structure
+ ( PyObject *self, PyObject *args )
+{
+   int fail,order,verbose,mult;
+   double tol;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iid",&order,&verbose,&tol)) return NULL;   
+   {
+      int hilb[order+1];
+      fail = standard_multiplicity_structure(order,verbose,tol,&mult,hilb);
+   }
+   return Py_BuildValue("i",mult);
+}
+
+static PyObject *py2c_dobldobl_multiplicity_structure
+ ( PyObject *self, PyObject *args )
+{
+   int fail,order,verbose,mult;
+   double tol;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iid",&order,&verbose,&tol)) return NULL;   
+   {
+      int hilb[order+1];
+      fail = dobldobl_multiplicity_structure(order,verbose,tol,&mult,hilb);
+   }
+   return Py_BuildValue("i",mult);
+}
+
+static PyObject *py2c_quaddobl_multiplicity_structure
+ ( PyObject *self, PyObject *args )
+{
+   int fail,order,verbose,mult;
+   double tol;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iid",&order,&verbose,&tol)) return NULL;   
+   {
+      int hilb[order+1];
+      fail = quaddobl_multiplicity_structure(order,verbose,tol,&mult,hilb);
+   }
+   return Py_BuildValue("i",mult);
+}
+
+
 /* The wrapping of the numerical tropisms container starts here. */
 
 static PyObject *py2c_numbtrop_standard_initialize
@@ -9362,6 +9411,15 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_sweep_quaddobl_real_run",
      py2c_sweep_quaddobl_real_run, METH_VARARGS, 
     "There are no input arguments to this routine.\n Starts a sweep with a natural parameter in a family of n equations\n in n+1 variables, where the last variable is the artificial parameter s\n that moves the one natural parameter from a start to target value.\n The last equation is of the form (1-s)*(A - v[0]) + s*(A - v[1]),\n where A is the natural parameter, going from the start value v[0]\n to the target value v[1].\n This family must be stored in the systems container in quad double\n precision and the corresponding start solutions in the quaddobl solutions\n container, where every solution has the value v[0] for the A variable.\n The sweep stops when s reaches the value v[1], or when a singularity\n is encountered on the path."},
+   {"py2c_standard_multiplicity_structure",
+     py2c_standard_multiplicity_structure, METH_VARARGS,
+    "Computes the multiplicity structure in standard double precision.\n Required is the presence of a polynomial system in the standard\n systems container and a solution in the standard solutions container.\n The input parameters are two integers and one double:\n order : the maximum differentiation order,\n verbose : 1 for verbose, 0 for silent, and\n tol : tolerance on the numerical rank.\n On return is a tuple: the multiplicity and the values\n of the Hilbert function."},
+   {"py2c_dobldobl_multiplicity_structure",
+     py2c_dobldobl_multiplicity_structure, METH_VARARGS,
+    "Computes the multiplicity structure in double double precision.\n Required is the presence of a polynomial system in the dobldobl\n systems container and a solution in the dobldobl solutions container.\n The input parameters are two integers and one double:\n order : the maximum differentiation order,\n verbose : 1 for verbose, 0 for silent, and\n tol : tolerance on the numerical rank.\n On return is a tuple: the multiplicity and the values\n of the Hilbert function."},
+   {"py2c_quaddobl_multiplicity_structure",
+     py2c_quaddobl_multiplicity_structure, METH_VARARGS,
+    "Computes the multiplicity structure in quad double precision.\n Required is the presence of a polynomial system in the quaddobl\n systems container and a solution in the quaddobl solutions container.\n The input parameters are two integers and one double:\n order : the maximum differentiation order,\n verbose : 1 for verbose, 0 for silent, and\n tol : tolerance on the numerical rank.\n On return is a tuple: the multiplicity and the values\n of the Hilbert function."},
    {"py2c_numbtrop_standard_initialize",
      py2c_numbtrop_standard_initialize, METH_VARARGS,
     "Initializes the numerical tropisms container,\n in standard double precision.  The input parameters are\n nbt : number of tropisms;\n dim : length_of_each tropism;\n wnd : winding numbers, as many as nbt;\n dir : nbt*dim doubles with the coordinates of the tropisms;\n err : errors on the tropisms, as many doubles as the value of nbt.\n The numbers in wnd, dir, and err must be given in one string,\n as the string representation of a list of doubles.\n On return is the failure code, which equals zero if all went well."},

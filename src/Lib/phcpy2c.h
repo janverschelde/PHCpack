@@ -3381,6 +3381,50 @@ static PyObject *py2c_sweep_quaddobl_real_run
  *   The sweep stops when s reaches the value v[1], or when a singularity
  *   is encountered on the path. */
 
+/* The wrapping for the multiplicity structure starts here. */
+
+static PyObject *py2c_standard_multiplicity_structure
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Computes the multiplicity structure in standard double precision.
+ *   Required is the presence of a polynomial system in the standard
+ *   systems container and a solution in the standard solutions container.
+ *   The input parameters are two integers and one double:
+ *   order : the maximum differentiation order,
+ *   verbose : 1 for verbose, 0 for silent, and
+ *   tol : tolerance on the numerical rank.
+ *   On return is a tuple: the multiplicity and the values
+ *   of the Hilbert function. */
+
+static PyObject *py2c_dobldobl_multiplicity_structure
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Computes the multiplicity structure in double double precision.
+ *   Required is the presence of a polynomial system in the dobldobl
+ *   systems container and a solution in the dobldobl solutions container.
+ *   The input parameters are two integers and one double:
+ *   order : the maximum differentiation order,
+ *   verbose : 1 for verbose, 0 for silent, and
+ *   tol : tolerance on the numerical rank.
+ *   On return is a tuple: the multiplicity and the values
+ *   of the Hilbert function. */
+
+static PyObject *py2c_quaddobl_multiplicity_structure
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Computes the multiplicity structure in quad double precision.
+ *   Required is the presence of a polynomial system in the quaddobl
+ *   systems container and a solution in the quaddobl solutions container.
+ *   The input parameters are two integers and one double:
+ *   order : the maximum differentiation order,
+ *   verbose : 1 for verbose, 0 for silent, and
+ *   tol : tolerance on the numerical rank.
+ *   On return is a tuple: the multiplicity and the values
+ *   of the Hilbert function. */
+
 /* The wrapping of the numerical tropisms container starts here. */
 
 static PyObject *py2c_numbtrop_standard_initialize

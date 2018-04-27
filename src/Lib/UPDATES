@@ -1,3 +1,6 @@
+Fri 27 Apr 2018 : added Python wrappers to the multiplicity structure
+  updating phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
+
 Thu 26 Apr 2018 : new multiplicity.h, multiplicity.c, and lib_multip.c to 
   define and test the C interface to the computation of the multiplicity. 
   Move the "int k" out of the "for(int k" in lib_multip.c for a purer C.
