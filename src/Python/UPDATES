@@ -1,3 +1,6 @@
+Sun 29 Apr 2018 : extended solver.py in PHCpy2/phcpy with wrappers to compute
+  the multiplicity structure and a test function.
+
 Tue 10 Apr 2018 : improved test in sets.py in PHCpy2/phcpy and PHCpy3/phcpy,
   adding the number of tasks.  Prepared files for version 0.8.1,
   in PHCpy2 and PHCpy3: setup.py, conf.py (doc/source), __init__.py (phcpy).

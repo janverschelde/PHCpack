@@ -487,6 +487,90 @@ def quaddobl_deflate(system, solutions, maxitr=3, maxdef=3, \
     result = load_quaddobl_solutions()
     return result
 
+def standard_multiplicity(system, solution, \
+    order=5, tol=1.0e-8, verbose=False):
+    r"""
+    Computes the multiplicity structure in standard double precision
+    of an isolated solution (in the string *solution*)
+    of a polynomial system (in the list *system*).
+    The other parameters are
+
+    *order*: the maximum order of differentiation,
+
+    *tol*: tolerance on the numerical rank,
+
+    *verbose*: if extra output is needed.
+
+    On return is the computed multiplicity.
+    """
+    from phcpy.phcpy2c2 import py2c_standard_multiplicity_structure
+    from phcpy.interface import store_standard_system
+    from phcpy.interface import store_standard_solutions
+    dim = number_of_symbols(system)
+    store_standard_system(system, nbvar=dim)
+    store_standard_solutions(dim, [solution])
+    (mlt, hlb) = py2c_standard_multiplicity_structure(order, int(verbose), tol)
+    if verbose:
+        print 'The values of the Hilbert function :', hlb
+        print 'The multiplicity :', mlt
+    return mlt
+
+def dobldobl_multiplicity(system, solution, \
+    order=5, tol=1.0e-8, verbose=False):
+    r"""
+    Computes the multiplicity structure in double double precision
+    of an isolated solution (in the string *solution*)
+    of a polynomial system (in the list *system*).
+    The other parameters are
+
+    *order*: the maximum order of differentiation,
+
+    *tol*: tolerance on the numerical rank,
+
+    *verbose*: if extra output is needed.
+
+    On return is the computed multiplicity.
+    """
+    from phcpy.phcpy2c2 import py2c_dobldobl_multiplicity_structure
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.interface import store_dobldobl_solutions
+    dim = number_of_symbols(system)
+    store_dobldobl_system(system, nbvar=dim)
+    store_dobldobl_solutions(dim, [solution])
+    (mlt, hlb) = py2c_dobldobl_multiplicity_structure(order, int(verbose), tol)
+    if verbose:
+        print 'The values of the Hilbert function :', hlb
+        print 'The multiplicity :', mlt
+    return mlt
+
+def quaddobl_multiplicity(system, solution, \
+    order=5, tol=1.0e-8, verbose=False):
+    r"""
+    Computes the multiplicity structure in quad double precision
+    of an isolated solution (in the string *solution*)
+    of a polynomial system (in the list *system*).
+    The other parameters are
+
+    *order*: the maximum order of differentiation,
+
+    *tol*: tolerance on the numerical rank,
+
+    *verbose*: if extra output is needed.
+
+    On return is the computed multiplicity.
+    """
+    from phcpy.phcpy2c2 import py2c_quaddobl_multiplicity_structure
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.interface import store_quaddobl_solutions
+    dim = number_of_symbols(system)
+    store_quaddobl_system(system, nbvar=dim)
+    store_quaddobl_solutions(dim, [solution])
+    (mlt, hlb) = py2c_quaddobl_multiplicity_structure(order, int(verbose), tol)
+    if verbose:
+        print 'The values of the Hilbert function :', hlb
+        print 'The multiplicity :', mlt
+    return mlt
+
 def total_degree(pols):
     r"""
     Given in *pols* a list of string representations of polynomials,
@@ -1396,6 +1480,28 @@ def test_deflate():
     print 'the solutions after deflation in quad double precision:'
     for sol in result:
         print sol
+
+def test_multiplicity(precision='d'):
+    """
+    Applies the deflation method to a system used as example in
+    the paper by T. Ojika on Modified deflation algorithm for
+    the solution of singular problems. I. A system of nonlinear
+    algebraic equations, which appeared in
+    J. Math. Anal. Appl. 123, 199-221, 1987.
+    The parameter precision is either 'd', 'dd', or 'qd',
+    respectively for double, double double, or quad double precision.
+    """
+    from phcpy.solutions import make_solution
+    pols = [ 'x**2+y-3;', 'x+0.125*y**2-1.5;']
+    sol = make_solution(['x', 'y'], [1, 2])
+    if precision == 'd':
+        mul = standard_multiplicity(pols, sol, verbose=True)
+    elif precision == 'dd':
+        mul = dobldobl_multiplicity(pols, sol, verbose=True)
+    elif precision == 'qd':
+        mul = quaddobl_multiplicity(pols, sol, verbose=True)
+    else:
+        print 'wrong level of precision'
 
 def test():
     """
