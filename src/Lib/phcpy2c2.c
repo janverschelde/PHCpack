@@ -5127,10 +5127,15 @@ static PyObject *py2c_dobldobl_multiplicity_structure
    initialize();
    if(!PyArg_ParseTuple(args,"iid",&order,&verbose,&tol)) return NULL;   
    {
+      int nbc,mult;
       int hilb[order+1];
+      char strhilb[4*(order+1)];
+     
       fail = dobldobl_multiplicity_structure(order,verbose,tol,&mult,hilb);
+      nbc = intlist2str(order+1,hilb,strhilb);
+
+      return Py_BuildValue("(i,s)",mult,strhilb);
    }
-   return Py_BuildValue("i",mult);
 }
 
 static PyObject *py2c_quaddobl_multiplicity_structure
@@ -5142,10 +5147,15 @@ static PyObject *py2c_quaddobl_multiplicity_structure
    initialize();
    if(!PyArg_ParseTuple(args,"iid",&order,&verbose,&tol)) return NULL;   
    {
+      int nbc,mult;
       int hilb[order+1];
+      char strhilb[4*(order+1)];
+
       fail = quaddobl_multiplicity_structure(order,verbose,tol,&mult,hilb);
+      nbc = intlist2str(order+1,hilb,strhilb);
+
+      return Py_BuildValue("(i,s)",mult,strhilb);
    }
-   return Py_BuildValue("i",mult);
 }
 
 /* The wrapping of the numerical tropisms container starts here. */

@@ -1,3 +1,6 @@
+Sun 29 Apr 2018 : completed phcpy2c2.c for the multiplicity structure
+  in double double and quad double precision.
+
 Fri 27 Apr 2018 : added Python wrappers to the multiplicity structure
   updating phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
 
