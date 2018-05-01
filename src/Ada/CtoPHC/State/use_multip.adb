@@ -1,7 +1,9 @@
 with Interfaces.C;
 with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Natural_Vectors;          use Standard_Natural_Vectors;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -49,6 +51,10 @@ function use_multip ( job : integer32;
     order := natural32(v_a(v_a'first));
     verbose := (integer32(v_b(v_b'first)) = 1);
     tol := double_float(v_c(v_c'first));
+    if verbose then
+      put("The maximum differentiation order : "); put(order,1); new_line;
+      put("Tolerance on the numerical rank : "); put(tol,3); new_line;
+    end if;
   end Extract_Parameters;
 
   function Job0 return integer32 is -- in standard double precision
@@ -72,7 +78,11 @@ function use_multip ( job : integer32;
       sh : Standard_Natural_Vectors.Vector(1..h'last+1);
       m : natural32;
     begin
-      Multiplicity_Structure(ls.all,zero.v,tol,order,h,m);
+      if verbose then
+        Multiplicity_Structure(standard_output,ls.all,zero.v,tol,order,h,m);
+      else
+        Multiplicity_Structure(ls.all,zero.v,tol,order,h,m);
+      end if;
       Assign(integer32(m),a);
       for k in h'range loop
         sh(k+1) := h(k);
@@ -103,7 +113,11 @@ function use_multip ( job : integer32;
       sh : Standard_Natural_Vectors.Vector(1..h'last+1);
       m : natural32;
     begin
-      Multiplicity_Structure(ls.all,zero.v,tol,order,h,m);
+      if verbose then
+        Multiplicity_Structure(standard_output,ls.all,zero.v,tol,order,h,m);
+      else
+        Multiplicity_Structure(ls.all,zero.v,tol,order,h,m);
+      end if;
       Assign(integer32(m),a);
       for k in h'range loop
         sh(k+1) := h(k);
@@ -134,7 +148,11 @@ function use_multip ( job : integer32;
       sh : Standard_Natural_Vectors.Vector(1..h'last+1);
       m : natural32;
     begin
-      Multiplicity_Structure(ls.all,zero.v,tol,order,h,m);
+      if verbose then
+        Multiplicity_Structure(standard_output,ls.all,zero.v,tol,order,h,m);
+      else
+        Multiplicity_Structure(ls.all,zero.v,tol,order,h,m);
+      end if;
       Assign(integer32(m),a);
       for k in h'range loop
         sh(k+1) := h(k);

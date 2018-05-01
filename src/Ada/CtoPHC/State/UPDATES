@@ -1,3 +1,5 @@
+Tue 1 May 2018 : in use_multip.adb, added printing to screen if verbose.
+
 Thu 26 Apr 2018 : new use_multip to export computation of the multiplicity
   structure of an isolated solution of a polynomial system.
   Added job codes in use_c2phc and added return values to use_multip.
