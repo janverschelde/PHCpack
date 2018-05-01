@@ -1,5 +1,6 @@
 Tue 1 May 2018 : updated blackbox.rst in the Python documentation with a
   small section on computing the multiplicity structure.
+  Updates files for version 0.8.2.
 
 Sun 29 Apr 2018 : extended solver.py in PHCpy2/phcpy with wrappers to compute
   the multiplicity structure and a test function.
