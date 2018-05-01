@@ -552,6 +552,37 @@ approximation is still as far as ``1.0e-6`` from the exact solution.
 Increasing the value for the tolerance to ``1.0e-4`` leads to the
 deflation at the approximation for the solution.
 
+the multiplicity of an isolated solution
+----------------------------------------
+
+The multiplicity of an isolated solution can be computed
+following the ISSAC 2005 paper by Barry Dayton and Zhonggang Zeng
+on *Computing the multiplicity structure in solving polynomial systems.*
+Consider again the example of the Griewank-Osborne paper of
+the previous section:
+
+::
+
+   p = ['(29/16)*x^3 - 2*x*y;', 'x^2 - y;']
+   from phcpy.solutions import make_solution
+   s = make_solution(['x', 'y'], [0.0, 0.0])
+   from phcpy.solver import standard_multiplicity as multip
+   print(multip(p,s))
+
+The outcome of the commands above is ``3``,
+which corresponds to the multiplicity of the isolated solution.
+
+The default value for ``order`` equals 5,
+where ``order`` is the maximal differentiation order.
+If ``order`` is too small, then the value on return may be strict
+lower bound on the multiplicity.
+Making ``order`` too large may exhaust the stack size.
+The default value for the tolerance on the numerical rank
+is ``1.0e-8`` and by default ``verbose`` is set to ``False``.
+
+With ``dobldobl_multiplicity`` and ``quaddobl_multiplicity``
+computations happen respectively in double double and quad double precision.
+
 equation and variable scaling
 -----------------------------
 
