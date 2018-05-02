@@ -11,8 +11,10 @@ with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs_io;        use Standard_Integer_VecVecs_io;
 with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
 with Standard_Floating_VecVecs_io;       use Standard_Floating_VecVecs_io;
+with Lists_of_Integer_Vectors_io;        use Lists_of_Integer_Vectors_io;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Supports_of_Polynomial_Systems;
+with Mixed_Volume_Computation;
 
 package body DEMiCs_Command_Line is
 
@@ -28,34 +30,46 @@ package body DEMiCs_Command_Line is
   procedure Prepare_Input
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 iptname : in string;
+                mix,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 verbose : in boolean := true ) is
 
     file : file_type;
-
+    idx : integer32;
+  
   begin
     supports := Supports_of_Polynomial_Systems.Create(p);
+    Mixed_Volume_Computation.Compute_Mixture(supports,mix,perm);
     if verbose then
       put_line("The supports : "); put(supports);
+      put("The mixture type : "); put(mix.all); new_line;
       put_line("Writing to file " & iptname & " ...");
     end if;
     Create_Output_File(file,iptname);
-    put(file,"Dim = "); put(file,supports'last,1); new_line(file);
-    put(file,"Support = "); put(file,supports'last,1); new_line(file);
+    put(file,"Dim = "); -- the ambient dimension
+    put(file,supports'last,1); new_line(file);
+    put(file,"Support = "); -- number of different supports
+    put(file,mix'last,1); new_line(file);
     new_line(file);
-    put(file,"Elem =");
-    for i in supports'range loop
+    put(file,"Elem ="); -- length of each support list
+    idx := supports'first;
+    for i in mix'range loop
       put(file," ");
-      put(file,Lists_of_Integer_Vectors.Length_Of(supports(i)),1);
+      put(file,Lists_of_Integer_Vectors.Length_Of(supports(idx)),1);
+      idx := idx + mix(i);
     end loop;
     new_line(file);
     put(file,"Type =");
-    for i in supports'range loop -- just assume fully mixed ...
-      put(file," 1");
+    for i in mix'range loop
+      put(file," "); put(file,mix(i),1);
     end loop;
     new_line(file);
     new_line(file);
-    put(file,supports);
+    idx := supports'first;
+    for i in mix'range loop
+      put(file,supports(idx));
+      idx := idx + mix(i);
+    end loop;
     close(file);
   end Prepare_Input;
 
@@ -98,7 +112,7 @@ package body DEMiCs_Command_Line is
   end Extract_Lifting_Values;
 
   procedure Parse_Lifting
-              ( file : in file_type; dim : in integer32;
+              ( file : in file_type;
                 lifting : out Standard_Floating_VecVecs.VecVec;
                 verbose : in boolean := true ) is
 
@@ -115,7 +129,7 @@ package body DEMiCs_Command_Line is
       if verbose then
         put_line("Found the lifting values banner.");
       end if;
-      for i in 1..dim loop
+      for i in lifting'range loop
         File_Scanning.Scan(file,support_banner,found);
         exit when not found;
         cnt := cnt + 1;
@@ -140,25 +154,44 @@ package body DEMiCs_Command_Line is
     end if;
   end Parse_Lifting;
 
-  function Extract_Cell_Indices
-              ( dim : integer32; vals : string;
-                verbose : boolean := true )
-              return Standard_Integer_Vectors.Vector is
+  function Offset_for_Index
+              ( mix : Standard_Integer_Vectors.Vector;
+                idx : integer32 ) return integer32 is
 
-    res : Standard_Integer_Vectors.Vector(1..2*dim); -- fully mixed
-    pos : integer := vals'first;
-    idx : integer32;
-    nbr : natural32;
-    sign : character;
-    idxfirst,idxsecond : integer32;
+  -- DESCRIPTION :
+  --   Returns the offset for the index of the component idx,
+  --   relative to the type of mixture in mix.
+
+    res : integer32 := 0;
 
   begin
-    for i in 1..dim loop
+    for i in mix'first..(idx-1) loop
+      res := res + mix(i)+1;
+    end loop;
+    return res;
+  end Offset_for_Index;
+
+  function Extract_Cell_Indices
+              ( nbrpts : integer32;
+                mix : Standard_Integer_Vectors.Vector;
+                vals : string; verbose : boolean := true )
+              return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(1..nbrpts);
+    residx : integer32;
+    pos : integer := vals'first;
+    idx,idx2pnt : integer32;
+    nbr : natural32;
+    sign : character;
+
+  begin
+    for i in mix'range loop
       while pos <= vals'last loop         -- skip spaces
         exit when (vals(pos) /= ' ');
         pos := pos + 1;
       end loop;
       Standard_Parse_Numbers.Parse(vals,pos,idx,nbr,sign);
+      residx := Offset_for_Index(mix,idx);
       if verbose then
         put("Indices for component "); put(idx,1);
         put(" : ");
@@ -168,34 +201,46 @@ package body DEMiCs_Command_Line is
         pos := pos + 1;
       end loop;
       pos := pos + 1; -- skip the (
-      while pos <= vals'last loop          -- skip spaces
-        exit when (vals(pos) /= ' ');
-        pos := pos + 1;
+      for k in 1..mix(i)+1 loop
+        while pos <= vals'last loop          -- skip spaces
+          exit when (vals(pos) /= ' ');
+          pos := pos + 1;
+        end loop;
+        Standard_Parse_Numbers.Parse(vals,pos,idx2pnt,nbr,sign);
+        if verbose then
+          put(" "); put(idx2pnt);
+        end if;
+        residx := residx + 1;
+        res(residx) := idx2pnt;
       end loop;
-      Standard_Parse_Numbers.Parse(vals,pos,idxfirst,nbr,sign);
-      while pos <= vals'last loop          -- skip spaces
-        exit when (vals(pos) /= ' ');
-        pos := pos + 1;
-      end loop;
-      Standard_Parse_Numbers.Parse(vals,pos,idxsecond,nbr,sign);
+      if verbose
+       then new_line;
+      end if;
       while pos <= vals'last loop          -- read till )
         exit when (vals(pos) = ')');
         pos := pos + 1;
       end loop;
       pos := pos + 1; -- skip the )
-      if verbose then
-        put(" "); put(idxfirst,1);
-        put(" "); put(idxsecond,1);
-        new_line;
-      end if;
-      res(2*(idx-1) + 1) := idxfirst;
-      res(2*(idx-1) + 2) := idxsecond;
     end loop;
     return res;
   end Extract_Cell_Indices;
 
+  function Number_of_Points_in_Cell
+              ( mix : Standard_Integer_Vectors.Vector ) 
+              return integer32 is
+
+    res : integer32 := 0;
+
+  begin
+    for i in mix'range loop
+      res := res + mix(i) + 1;
+    end loop;
+    return res;
+  end Number_of_Points_in_Cell;
+
   procedure Parse_Cells
               ( file : in file_type; dim : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
                 cells : out Lists_of_Integer_Vectors.List;
                 verbose : in boolean := true ) is
 
@@ -203,6 +248,7 @@ package body DEMiCs_Command_Line is
     ch : character;
     cnt : natural32 := 0;
     cells_last : Lists_of_Integer_Vectors.List := cells;
+    nbr : constant integer32 := Number_of_Points_in_Cell(mix);
 
   begin
     loop
@@ -214,13 +260,13 @@ package body DEMiCs_Command_Line is
       File_Scanning.Scan(file,":",found);
       declare
         strcell : constant string := text_io.get_line(file);
-        idxcell : Standard_Integer_Vectors.Vector(1..2*dim);
+        idxcell : Standard_Integer_Vectors.Vector(1..nbr);
       begin
         if verbose then
           put("Cell "); put(cnt,1);
           put_line(" :" & strcell);
         end if;
-        idxcell := Extract_Cell_Indices(dim,strcell,verbose);
+        idxcell := Extract_Cell_Indices(nbr,mix,strcell,verbose);
         if verbose then
           put("The indices of the mixed cell :");
           put(idxcell); new_line;
@@ -235,6 +281,7 @@ package body DEMiCs_Command_Line is
 
   procedure Process_Output
               ( dim : in integer32; filename : in string;
+                mix : in Standard_Integer_Vectors.Vector;
                 mv : out natural32;
                 lif : out Standard_Floating_VecVecs.VecVec;
                 cells : out Lists_of_Integer_Vectors.List;
@@ -252,8 +299,8 @@ package body DEMiCs_Command_Line is
       put_line("Opening " & filename & " ...");
     end if;
     Open_Input_File(file,filename);
-    Parse_Lifting(file,dim,lif,verbose);
-    Parse_Cells(file,dim,cells,verbose);
+    Parse_Lifting(file,lif,verbose);
+    Parse_Cells(file,dim,mix,cells,verbose);
     if verbose
      then put_line("The lifting of the supports :"); put(lif);
     end if;

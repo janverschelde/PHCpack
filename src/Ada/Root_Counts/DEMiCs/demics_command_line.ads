@@ -33,6 +33,7 @@ package DEMiCs_Command_Line is
   procedure Prepare_Input
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 iptname : in string;
+                mix,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 verbose : in boolean := true );
 
@@ -46,7 +47,10 @@ package DEMiCs_Command_Line is
   --   verbose  flag to indicate if extra output is wanted.
 
   -- ON RETURN :
-  --   supports are the supports of p, assuming fully mixed.
+  --   mix      type of mixture of the supports;
+  --   perm     permutation of the original position of supports;
+  --   supports are the supports of p, permuted so the same supports
+  --            appear jointly one after the other.
 
   procedure Call_DEMiCs
               ( infile,outfile : in string;
@@ -71,40 +75,58 @@ package DEMiCs_Command_Line is
   --   extracts the lifting values.
 
   procedure Parse_Lifting
-              ( file : in file_type; dim : in integer32;
+              ( file : in file_type;
                 lifting : out Standard_Floating_VecVecs.VecVec;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Extracts the lifting values from file.
 
-  -- NOTE : the precision of the printing of the lifting values
+  -- NOTE : the precision of the printing of the lifting values by demics
   --   is increased to 16, changed from the original version. 
 
-  -- REQUIRED : lifting'range = 1..dim.
+  -- REQUIRED : lifting'range corresponds to the type of mixture.
 
   -- ON ENTRY :
   --   file     output file of demics, opened for input;
-  --   dim      number of supports;
   --   verbose  flag to indicate that more output is wanted.
 
   -- ON RETURN :
   --   lifting  lifting values for each support.
 
+  function Offset_for_Index
+              ( mix : Standard_Integer_Vectors.Vector;
+                idx : integer32 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the offset for the index of the component idx,
+  --   relative to the type of mixture in mix.
+
   function Extract_Cell_Indices
-              ( dim : integer32; vals : string;
-                verbose : boolean := true )
+              ( nbrpts : integer32;
+                mix : Standard_Integer_Vectors.Vector;
+                vals : string; verbose : boolean := true )
               return Standard_Integer_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Given in vals are the indices to the points that span
-  --   the mixed cells, extracts those indices and returns
-  --   the vector of index vectors, for each component.
-  --   The vector on return has range 1..2*dim,
-  --   assuming the supports are fully mixed.
+  --   a fine mixed cell, extracts those indices and returns
+  --   the vector of indices, parsed as integer numbers.
+  --   The vector on return has range 1..nbrpts,
+  --   where nbrpts is the number of points in each fine mixed cell.
+  --   The type of mixture is given by mix.
+
+  function Number_of_Points_in_Cell
+              ( mix : Standard_Integer_Vectors.Vector ) 
+              return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the number of points in a fine mixed cell,
+  --   according to the type of mixture defined by mix.
 
   procedure Parse_Cells
               ( file : in file_type; dim : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
                 cells : out Lists_of_Integer_Vectors.List;
                 verbose : in boolean := true );
 
@@ -114,6 +136,7 @@ package DEMiCs_Command_Line is
   -- ON ENTRY :
   --   file     output file of demics, opened for output;
   --   dim      dimension of the problem;
+  --   mix      type of mixture;
   --   verbose  flag to indicate for extra diagnostic output.
 
   -- ON RETURN :
@@ -121,6 +144,7 @@ package DEMiCs_Command_Line is
 
   procedure Process_Output
               ( dim : in integer32; filename : in string;
+                mix : in Standard_Integer_Vectors.Vector;
                 mv : out natural32;
                 lif : out Standard_Floating_VecVecs.VecVec;
                 cells : out Lists_of_Integer_Vectors.List;
@@ -131,8 +155,9 @@ package DEMiCs_Command_Line is
   --   in the string filename.
 
   -- ON ENTRY :
-  --   dim      dimension of the problem;
+  --   dim      ambient dimension of the problem;
   --   filename is the name of the output file;
+  --   mix      type of mixture;
   --   verbose  flag to indicate is more output is wanted.
 
   -- ON RETURN :  

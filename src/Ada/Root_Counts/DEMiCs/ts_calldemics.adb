@@ -22,44 +22,34 @@ procedure ts_calldemics is
 -- DESCRIPTION :
 --   Tests the basic file based command line interface to DEMiCs.
 
-  procedure Main is
+  procedure Call_DEMiCs 
+              ( inpfile,outfile : in string; verbose : in boolean;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
-  --   Prompts the user for a polynomial system,
-  --   prepares the input for demics, calls demics,
-  --   and then parses the output file.
+  --   Given names of the input and output files, the verbose flag,
+  --   the mixed volume of the system p will be computed.
 
-    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-    randnbr : constant string := Random_Name("");
-    iptname : constant string := "/tmp/demics_input" & randnbr;
-    optname : constant string := "/tmp/demics_output" & randnbr;
-    ans : character;
-    verbose : boolean;
+  -- ON ENTRY :
+  --   inpfile  name of the input file;
+  --   outfile  name of the output file;
+  --   verbose  flag to indicate if extra output is wanted;
+  --   p        a polynomial system to compute the mixed volume for.
+
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    cells : Lists_of_Integer_Vectors.List;
+    mcc : Mixed_Subdivision;
     mv : natural32;
 
   begin
-    new_line;
-    put_line("Calling DEMiCs for mixed volume computation ...");
-    new_line;
-    get(lp);
-    new_line;
-    put_line("Writing input to " & iptname & ".");
-    put_line("Writing output to " & optname & ".");
-    new_line;
-    put("Do you want intermediate output ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    verbose := (ans = 'y');
+    Prepare_Input(p,inpfile,mix,perm,sup,verbose);
     declare
-      sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(lp'range);
-      lif : Standard_Floating_VecVecs.VecVec(lp'range);
-      cells : Lists_of_Integer_Vectors.List;
-      lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(sup'range);
-      mix : Standard_Integer_Vectors.Vector(sup'range) := (sup'range => 1);
-      mcc : Mixed_Subdivision;
+      lif : Standard_Floating_VecVecs.VecVec(mix'range);
+      lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     begin
-      Prepare_Input(lp.all,iptname,sup,verbose);
-      Call_DEMiCs(iptname,optname,verbose=>verbose);
-      Process_Output(lp'last,optname,mv,lif,cells,verbose);
+      Call_DEMiCs(inpfile,outfile,verbose=>verbose);
+      Process_Output(p'last,outfile,mix.all,mv,lif,cells,verbose);
       new_line;
       put_line("The lifting values for the supports : "); put(lif);
       new_line;
@@ -73,10 +63,38 @@ procedure ts_calldemics is
       mcc := Make_Mixed_Cells(sup'last,cells,lifsup);
       new_line;
       put_line("The mixed-cell configuration :");
-      Floating_Mixed_Subdivisions_io.put(natural32(sup'last),mix,mcc,mv);
+      Floating_Mixed_Subdivisions_io.put(natural32(sup'last),mix.all,mcc,mv);
       put("The mixed volume : "); put(mv,1); new_line;
-      
     end;
+  end Call_DEMiCs;
+
+  procedure Main is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system,
+  --   prepares the input for demics, calls demics,
+  --   and then parses the output file.
+
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    randnbr : constant string := Random_Name("");
+    iptname : constant string := "/tmp/demics_input" & randnbr;
+    optname : constant string := "/tmp/demics_output" & randnbr;
+    ans : character;
+    verbose : boolean;
+
+  begin
+    new_line;
+    put_line("Calling DEMiCs for mixed volume computation ...");
+    new_line;
+    get(lp);
+    new_line;
+    put_line("Writing input to " & iptname & ".");
+    put_line("Writing output to " & optname & ".");
+    new_line;
+    put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    Call_DEMiCs(iptname,optname,verbose,lp.all);
   end Main;
 
 begin
