@@ -80,6 +80,21 @@ package DEMiCs_Output_Convertors is
   --   Returns the indices in lifsup where the minimum inner product
   --   with the normal is attained.
 
+  -- REQUIRED : lifsup'last = normal'last-1, 
+  --   i.e.: the supports are fully mixed and the vector on return
+  --   has size 2*lifsup'last.
+
+  function Arguments_of_Minima
+              ( mix : Standard_Integer_Vectors.Vector;
+                lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                normal : Standard_Floating_Vectors.Vector )
+              return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the indices in lifsup where the minimum inner product
+  --   with the normal is attained.  The vector on return has as many
+  --   entries as sum(mix) + mix'last.
+
   function Sort_Labels
               ( labels : Standard_Integer_Vectors.Vector )
               return Standard_Integer_Vectors.Vector;
@@ -87,6 +102,22 @@ package DEMiCs_Output_Convertors is
   -- DESCRIPTION :
   --   Given a vector of labels, the vector on returns contains
   --   the labels where each pair of indices is sorted increasingly.
+  --   Assumed is that the labels are for fully mixed supports.
+
+  procedure Sort ( x : in out Standard_Integer_Vectors.Vector;
+                   xfirst,xlast : in integer32 );
+
+  -- DESCRIPTION :
+  --   Sorts the numbers in x, in the range xfirst..xlast.
+
+  function Sort_Labels
+              ( mix,labels : Standard_Integer_Vectors.Vector )
+              return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Given a vector of labels, the vector on returns contains
+  --   the labels where the indices is sorted increasingly,
+  --   according to the type of mixture, defined in mix.
 
   procedure Test_Inner_Normal
               ( lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
@@ -98,8 +129,33 @@ package DEMiCs_Output_Convertors is
   --   Tests whether the minimum of normal with the points in lifsup
   --   is attained at the indices in labels.
   --   Output is written to screen.
+
+  -- REQUIRED : lifsup'last = normal'last - 1,
+  --   i.e.: the supports are fully mixed.
   
   -- ON ENTRY :
+  --   lifsup   lifted supports;
+  --   normal   computed inner normal in Make_Cell;
+  --   labels   labels to the points that span the mixed cell.
+
+  -- ON RETURN :
+  --   fail     true if the labels disagree with where the minima are
+  --            attained, false otherwise.
+
+  procedure Test_Inner_Normal
+              ( mix : in Standard_Integer_Vectors.Vector;
+                lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                normal : in Standard_Floating_Vectors.Vector;
+                labels : in Standard_Integer_Vectors.Vector;
+                fail : out boolean );
+
+  -- DESCRIPTION :
+  --   Tests whether the minimum of normal with the points in lifsup
+  --   is attained at the indices in labels.
+  --   Output is written to screen.
+
+  -- ON ENTRY :
+  --   mix      type of mixture;
   --   lifsup   lifted supports;
   --   normal   computed inner normal in Make_Cell;
   --   labels   labels to the points that span the mixed cell.

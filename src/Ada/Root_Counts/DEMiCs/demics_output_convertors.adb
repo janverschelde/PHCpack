@@ -123,6 +123,42 @@ package body DEMiCs_Output_Convertors is
     return res;
   end Arguments_of_Minima;
 
+  function Arguments_of_Minima
+             ( mix : Standard_Integer_Vectors.Vector;
+               lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+               normal : Standard_Floating_Vectors.Vector )
+             return Standard_Integer_Vectors.Vector is
+
+    use Standard_Floating_Vectors;
+
+    dim : constant integer32
+        := Standard_Integer_Vectors.Sum(mix) + mix'last; 
+    res : Standard_Integer_Vectors.Vector(1..dim);
+    min,ipr : double_float;
+    tmp : Lists_of_Floating_Vectors.List;
+    lpt : Standard_Floating_Vectors.Link_to_Vector;
+    idxlpt,idxres : integer32;
+ 
+  begin
+    idxres := 0;
+    for k in lifsup'range loop
+      min := Minimum(lifsup(k),normal);
+      idxlpt := 0;
+      tmp := lifsup(k);
+      while not Lists_of_Floating_Vectors.Is_Null(tmp) loop
+        idxlpt := idxlpt + 1;
+        lpt := Lists_of_Floating_Vectors.Head_Of(tmp);
+        ipr := lpt.all*normal;
+        if abs(ipr - min) < 1.0E-8 then
+          idxres := idxres + 1;
+          res(idxres) := idxlpt;
+        end if;
+        tmp := Lists_of_Floating_Vectors.Tail_Of(tmp);
+      end loop;
+    end loop;
+    return res;
+  end Arguments_of_Minima;
+
   function Sort_Labels
               ( labels : Standard_Integer_Vectors.Vector )
               return Standard_Integer_Vectors.Vector is
@@ -143,6 +179,41 @@ package body DEMiCs_Output_Convertors is
     return res;
   end Sort_Labels;
 
+  procedure Sort ( x : in out Standard_Integer_Vectors.Vector;
+                   xfirst,xlast : in integer32 ) is
+
+    min,idx : integer32;
+
+  begin
+    for i in xfirst..xlast-1 loop 
+      idx := i; min := x(idx);
+      for j in i+1..xlast loop         -- invariant: min = x(idx)
+        if x(j) < min 
+         then idx := j; min := x(idx); -- new minimum found
+        end if;
+      end loop;
+      if idx /= i then  -- swap min = x(idx) to x(i)
+        x(idx) := x(i); -- overwrite x(idx) first, backup is min 
+        x(i) := min;    -- assign min to x(i)
+      end if;
+    end loop;
+  end Sort;
+
+  function Sort_Labels
+              ( mix,labels : Standard_Integer_Vectors.Vector )
+              return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(labels'range) := labels;
+    offset : integer32 := res'first;
+
+  begin
+    for k in mix'range loop
+      Sort(res,offset,offset+mix(k));
+      offset := offset + mix(k) + 1;
+    end loop;
+    return res;
+  end Sort_Labels;
+
   procedure Test_Inner_Normal
               ( lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 normal : in Standard_Floating_Vectors.Vector;
@@ -156,6 +227,35 @@ package body DEMiCs_Output_Convertors is
 
   begin
     put("The labels of demics : "); put(sorted); new_line;
+    put("The computed labels  : "); put(argmin);
+    fail := false;
+    for k in sorted'range loop
+      if sorted(k) /= argmin(k)
+       then fail := true;
+      end if;
+      exit when fail;
+    end loop;
+    if fail
+     then put_line("  wrong!?");
+     else put_line("  okay.");
+    end if;
+  end Test_Inner_Normal;
+
+  procedure Test_Inner_Normal
+              ( mix : in Standard_Integer_Vectors.Vector;
+                lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                normal : in Standard_Floating_Vectors.Vector;
+                labels : in Standard_Integer_Vectors.Vector;
+                fail : out boolean ) is
+
+    argmin : constant Standard_Integer_Vectors.Vector
+           := Arguments_of_Minima(mix,lifsup,normal);
+    sorted : constant Standard_Integer_Vectors.Vector
+           := Sort_Labels(mix,labels);
+
+  begin
+    put("The labels of demics : "); put(labels); new_line;
+    put("The sorted labels    : "); put(sorted); new_line;
     put("The computed labels  : "); put(argmin);
     fail := false;
     for k in sorted'range loop
@@ -302,7 +402,7 @@ package body DEMiCs_Output_Convertors is
     res.nor(1..dim) := rhs;
     res.nor(dim+1) := 1.0;
     if verbose
-     then Test_Inner_Normal(lifsup,res.nor.all,lbl,fail);
+     then Test_Inner_Normal(mix,lifsup,res.nor.all,lbl,fail);
     end if;
     return res;
   end Make_Mixed_Cell;
