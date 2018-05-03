@@ -128,6 +128,13 @@ package DEMiCs_Output_Convertors is
   --   verbose  flag to indicate whether the checks with the inner normal
   --            needs to happen.
 
+  function Is_In ( labels : Standard_Integer_Vectors.Vector;
+                   lbfirst,lblast,idx : integer32 ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if idx = labels(k) for k in lbfirst..lblast,
+  --   otherwise returns false.
+
   function Make_Mixed_Cell
               ( dim : integer32;
                 mix,lbl : Standard_Integer_Vectors.Vector;

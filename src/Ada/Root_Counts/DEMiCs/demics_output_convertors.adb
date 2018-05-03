@@ -237,6 +237,17 @@ package body DEMiCs_Output_Convertors is
     return res;
   end Make_Mixed_Cell;
 
+  function Is_In ( labels : Standard_Integer_Vectors.Vector;
+                   lbfirst,lblast,idx : integer32 ) return boolean is
+  begin
+    for k in lbfirst..lblast loop
+      if labels(k) = idx
+       then return true;
+      end if;
+    end loop;
+    return false;
+  end Is_In;
+
   function Make_Mixed_Cell
               ( dim : integer32;
                 mix,lbl : Standard_Integer_Vectors.Vector;
@@ -245,54 +256,46 @@ package body DEMiCs_Output_Convertors is
               return Mixed_Cell is
 
     res : Mixed_Cell;
-    idxfirst,idxsecond : integer32;
     tmp,last : Lists_of_Floating_Vectors.List;
-    idx,done : integer32;
     lpt : Standard_Floating_Vectors.Link_to_Vector;
-    first,second : Standard_Floating_Vectors.Vector(1..dim+1);
+    first : Standard_Floating_Vectors.Vector(1..dim+1);
     mat : Standard_Floating_Matrices.Matrix(1..dim,1..dim);
     rhs : Standard_Floating_Vectors.Vector(1..dim);
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
-    info : integer32;
-    fail : boolean;
+    info,pntidx,lblidx,rowidx : integer32;
+    fail,atfirstpt : boolean;
 
   begin
     res.nor := new Standard_Floating_Vectors.Vector'(1..dim+1 => 0.0);
     res.pts := new Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     res.sub := null;
-    for row in 1..dim loop
-      last := res.pts(row);
-      idxfirst := lbl(2*(row-1)+1);
-      idxsecond := lbl(2*(row-1)+2);
-      idx := 0;
-      done := 2;
-      tmp := lifsup(row);
+    lblidx := 1;
+    rowidx := 0;
+    for k in mix'range loop
+      tmp := lifsup(k);
+      atfirstpt := true;
+      pntidx := 0;
       while not Lists_of_Floating_Vectors.Is_Null(tmp) loop
-        idx := idx + 1;
-        if idx = idxfirst then
+        pntidx := pntidx + 1;
+        if Is_In(lbl,lblidx,lblidx+mix(k),pntidx) then
           lpt := Lists_of_Floating_Vectors.Head_Of(tmp);
-          Lists_of_Floating_Vectors.Append(res.pts(row),last,lpt.all);
-          for i in lpt'range loop
-            first(i) := lpt(i);
-          end loop;
-          done := done - 1;
-        elsif idx = idxsecond then
-          lpt := Lists_of_Floating_Vectors.Head_Of(tmp);
-          Lists_of_Floating_Vectors.Append(res.pts(row),last,lpt.all);
-          for i in lpt'range loop
-            second(i) := lpt(i);
-          end loop;
-          done := done - 1;
+          if atfirstpt then
+            for i in lpt'range loop
+              first(i) := lpt(i);
+            end loop;
+            atfirstpt := false;
+          else
+            rowidx := rowidx + 1;   
+            for j in 1..dim loop
+              mat(rowidx,j) := first(j) - lpt(j);
+            end loop;
+            rhs(rowidx) := lpt(dim+1) - first(dim+1);
+          end if;
+          Lists_of_Floating_Vectors.Append(res.pts(k),last,lpt.all);
         end if;
-        if done = 0 then
-          for j in 1..dim loop
-            mat(row,j) := first(j) - second(j);
-          end loop;
-          rhs(row) := second(dim+1) - first(dim+1);
-        end if;
-        exit when (done = 0);
         tmp := Lists_of_Floating_Vectors.Tail_Of(tmp);
       end loop;
+      lblidx := lblidx + mix(k) + 1;
     end loop;
     lufac(mat,dim,ipvt,info);
     lusolve(mat,dim,ipvt,rhs);
