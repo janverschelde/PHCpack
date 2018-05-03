@@ -37,9 +37,30 @@ package DEMiCs_Output_Convertors is
   --   and in lif are the corresponding lifting values.
   --   Returns the supports in sup, with the lifting applied
   --   as defined by the lifting values in lif.
+  --   Assumes the supports are fully mixed,
+  --   i.e.: every support is distinct from every other support.
 
   -- REQUIRED :
   --   for k in lif'range: length_of(sup(k)) = lif(k)'last.
+
+  function Apply_Lifting
+              ( mix : Standard_Integer_Vectors.Vector;
+                sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                lif : Standard_Floating_VecVecs.VecVec )
+              return Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+
+  -- DESCRIPTION :
+  --   Given in sup are the supports of a polynomial system,
+  --   sorted according to the type of mixture in mix,
+  --   and in lif are the corresponding lifting values.
+  --   Returns the supports in sup, with the lifting applied
+  --   as defined by the lifting values in lif.
+  --   Assumes the supports are fully mixed,
+  --   i.e.: every support is distinct from every other support.
+
+  -- REQUIRED :
+  --   for k in lif'range: length_of(sup(i)) = lif(k)'last,
+  --   where i is computed corresponding the type of mixture.
 
   function Minimum
               ( lifpts : Lists_of_Floating_Vectors.List;
@@ -97,8 +118,29 @@ package DEMiCs_Output_Convertors is
   -- DESCRIPTION :
   --   Returns the mixed cell corresponding to the labeled points.
 
+  -- REQUIRED : lifsup'last = dim,
+  --   i.e.: all supports are distinct from each other.
+
   -- ON ENTRY :
   --   dim      dimension before lifting;
+  --   lbl      labels to the points that span the mixed cell;
+  --   lifsup   lifted supports;
+  --   verbose  flag to indicate whether the checks with the inner normal
+  --            needs to happen.
+
+  function Make_Mixed_Cell
+              ( dim : integer32;
+                mix,lbl : Standard_Integer_Vectors.Vector;
+                lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                verbose : boolean := true )
+              return Mixed_Cell;
+
+  -- DESCRIPTION :
+  --   Returns the mixed cell corresponding to the labeled points.
+
+  -- ON ENTRY :
+  --   dim      dimension before lifting;
+  --   mix      type of mixture;
   --   lbl      labels to the points that span the mixed cell;
   --   lifsup   lifted supports;
   --   verbose  flag to indicate whether the checks with the inner normal
@@ -114,8 +156,30 @@ package DEMiCs_Output_Convertors is
   -- DESCRIPTION :
   --   Returns the mixed cells corresponding to the labeled points.
 
+  -- REQUIRED : lifsup'last = dim,
+  --   i.e.: all supports are distinct from each other.
+
   -- ON ENTRY :
   --   dim      dimension before lifting;
+  --   labels   labels to the points that span the mixed cell;
+  --   lifsup   lifted supports;
+  --   verbose  if verbose, then the inner normals are checked
+  --            and the outcome of each check is written to screen.
+
+  function Make_Mixed_Cells
+              ( dim : integer32;
+                mix : Standard_Integer_Vectors.Vector;
+                labels : Lists_of_Integer_Vectors.List;
+                lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                verbose : boolean := true )
+              return Mixed_Subdivision;
+
+  -- DESCRIPTION :
+  --   Returns the mixed cells corresponding to the labeled points.
+
+  -- ON ENTRY :
+  --   dim      dimension before lifting;
+  --   mix      type of mixture;
   --   labels   labels to the points that span the mixed cell;
   --   lifsup   lifted supports;
   --   verbose  if verbose, then the inner normals are checked

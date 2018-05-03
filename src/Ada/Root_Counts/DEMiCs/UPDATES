@@ -1,5 +1,6 @@
 Wed 2 May 2018 : updated demics_command_line and ts_calldemics.adb
-  to deal with semi-mixed and unmixed inputs.
+  to deal with semi-mixed and unmixed inputs.  Updated ts_calldemics.adb
+  and demics_output_convertors for semi- and un-mixed inputs.
 
 Tue 24 Apr 2018 : new package demics_output_convertors with code factored
   out of ts_calldemics.  Added computation of the normal to each cell in

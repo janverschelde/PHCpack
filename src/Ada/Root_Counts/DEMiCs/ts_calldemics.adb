@@ -56,11 +56,17 @@ procedure ts_calldemics is
       put_line("The indices to the mixed cells :"); put(cells);
       new_line;
       put("The mixed volume : "); put(mv,1); new_line;
-      lifsup := Apply_Lifting(sup,lif);
+      if mix'last = p'last
+       then lifsup := Apply_Lifting(sup,lif);         -- fully mixed
+       else lifsup := Apply_Lifting(mix.all,sup,lif); -- semi- or un-mixed
+      end if;
       new_line;
       put_line("The lifting applied to the supports :");
       Floating_Mixed_Subdivisions_io.put(lifsup);
-      mcc := Make_Mixed_Cells(sup'last,cells,lifsup);
+      if mix'last = p'last
+       then mcc := Make_Mixed_Cells(sup'last,cells,lifsup);
+       else mcc := Make_Mixed_Cells(sup'last,mix.all,cells,lifsup);
+      end if;
       new_line;
       put_line("The mixed-cell configuration :");
       Floating_Mixed_Subdivisions_io.put(natural32(sup'last),mix.all,mcc,mv);

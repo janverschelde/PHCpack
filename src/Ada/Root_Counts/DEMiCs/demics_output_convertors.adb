@@ -47,6 +47,23 @@ package body DEMiCs_Output_Convertors is
     return res;
   end Apply_Lifting;
 
+  function Apply_Lifting
+              ( mix : Standard_Integer_Vectors.Vector;
+                sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                lif : Standard_Floating_VecVecs.VecVec )
+              return Arrays_of_Floating_Vector_Lists.Array_of_Lists is
+
+    res : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    idx : integer32 := sup'first;
+
+  begin
+    for k in mix'range loop
+      res(k) := Apply_Lifting(sup(idx),lif(k).all);
+      idx := idx + mix(k);
+    end loop;
+    return res;
+  end Apply_Lifting;
+
   function Minimum ( lifpts : Lists_of_Floating_Vectors.List;
                      normal : Standard_Floating_Vectors.Vector )
                    return double_float is
@@ -220,6 +237,73 @@ package body DEMiCs_Output_Convertors is
     return res;
   end Make_Mixed_Cell;
 
+  function Make_Mixed_Cell
+              ( dim : integer32;
+                mix,lbl : Standard_Integer_Vectors.Vector;
+                lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                verbose : boolean := true )
+              return Mixed_Cell is
+
+    res : Mixed_Cell;
+    idxfirst,idxsecond : integer32;
+    tmp,last : Lists_of_Floating_Vectors.List;
+    idx,done : integer32;
+    lpt : Standard_Floating_Vectors.Link_to_Vector;
+    first,second : Standard_Floating_Vectors.Vector(1..dim+1);
+    mat : Standard_Floating_Matrices.Matrix(1..dim,1..dim);
+    rhs : Standard_Floating_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
+    fail : boolean;
+
+  begin
+    res.nor := new Standard_Floating_Vectors.Vector'(1..dim+1 => 0.0);
+    res.pts := new Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    res.sub := null;
+    for row in 1..dim loop
+      last := res.pts(row);
+      idxfirst := lbl(2*(row-1)+1);
+      idxsecond := lbl(2*(row-1)+2);
+      idx := 0;
+      done := 2;
+      tmp := lifsup(row);
+      while not Lists_of_Floating_Vectors.Is_Null(tmp) loop
+        idx := idx + 1;
+        if idx = idxfirst then
+          lpt := Lists_of_Floating_Vectors.Head_Of(tmp);
+          Lists_of_Floating_Vectors.Append(res.pts(row),last,lpt.all);
+          for i in lpt'range loop
+            first(i) := lpt(i);
+          end loop;
+          done := done - 1;
+        elsif idx = idxsecond then
+          lpt := Lists_of_Floating_Vectors.Head_Of(tmp);
+          Lists_of_Floating_Vectors.Append(res.pts(row),last,lpt.all);
+          for i in lpt'range loop
+            second(i) := lpt(i);
+          end loop;
+          done := done - 1;
+        end if;
+        if done = 0 then
+          for j in 1..dim loop
+            mat(row,j) := first(j) - second(j);
+          end loop;
+          rhs(row) := second(dim+1) - first(dim+1);
+        end if;
+        exit when (done = 0);
+        tmp := Lists_of_Floating_Vectors.Tail_Of(tmp);
+      end loop;
+    end loop;
+    lufac(mat,dim,ipvt,info);
+    lusolve(mat,dim,ipvt,rhs);
+    res.nor(1..dim) := rhs;
+    res.nor(dim+1) := 1.0;
+    if verbose
+     then Test_Inner_Normal(lifsup,res.nor.all,lbl,fail);
+    end if;
+    return res;
+  end Make_Mixed_Cell;
+
   function Make_Mixed_Cells
              ( dim : integer32;
                labels : Lists_of_Integer_Vectors.List;
@@ -236,6 +320,29 @@ package body DEMiCs_Output_Convertors is
     while not Lists_of_Integer_Vectors.Is_Null(tmp) loop
       lbl := Lists_of_Integer_Vectors.Head_Of(tmp);
       mic := Make_Mixed_Cell(dim,lbl.all,lifsup,verbose);
+      Append(res,res_last,mic);
+      tmp := Lists_of_Integer_Vectors.Tail_Of(tmp);
+    end loop;
+    return res;
+  end Make_Mixed_Cells;
+
+  function Make_Mixed_Cells
+             ( dim : integer32;
+               mix : Standard_Integer_Vectors.Vector;
+               labels : Lists_of_Integer_Vectors.List;
+               lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+               verbose : boolean := true )
+             return Mixed_Subdivision is
+
+    res,res_last : Mixed_Subdivision;
+    tmp : Lists_of_Integer_Vectors.List := labels;
+    lbl : Standard_Integer_Vectors.Link_to_Vector;
+    mic : Mixed_Cell;
+
+  begin
+    while not Lists_of_Integer_Vectors.Is_Null(tmp) loop
+      lbl := Lists_of_Integer_Vectors.Head_Of(tmp);
+      mic := Make_Mixed_Cell(dim,mix,lbl.all,lifsup,verbose);
       Append(res,res_last,mic);
       tmp := Lists_of_Integer_Vectors.Tail_Of(tmp);
     end loop;
