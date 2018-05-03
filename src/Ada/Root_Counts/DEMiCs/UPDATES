@@ -1,6 +1,8 @@
 Thu 3 May 2018 : fixed making of mixed cells in demics_output_convertors
   for semi- and un-mixed inputs.  Fixed testing of inner normal in
   demics_output_convertors for semi- and un-mixed inputs.
+  Fixed bug in parsing of labels computed by demics for semi-mixed inputs,
+  updated demics_command_line.adb.
 
 Wed 2 May 2018 : updated demics_command_line and ts_calldemics.adb
   to deal with semi-mixed and unmixed inputs.  Updated ts_calldemics.adb

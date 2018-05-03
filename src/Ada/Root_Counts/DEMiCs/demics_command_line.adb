@@ -201,8 +201,8 @@ package body DEMiCs_Command_Line is
         pos := pos + 1;
       end loop;
       pos := pos + 1; -- skip the (
-      for k in 1..mix(i)+1 loop
-        while pos <= vals'last loop          -- skip spaces
+      for k in 1..mix(idx)+1 loop          -- by greedy visit, idx /= i
+        while pos <= vals'last loop        -- skip spaces
           exit when (vals(pos) /= ' ');
           pos := pos + 1;
         end loop;
