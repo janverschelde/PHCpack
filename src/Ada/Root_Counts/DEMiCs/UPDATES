@@ -1,3 +1,5 @@
+Sun 6 May 2018 : added the reformatted source code of DEMiCs.
+
 Thu 3 May 2018 : fixed making of mixed cells in demics_output_convertors
   for semi- and un-mixed inputs.  Fixed testing of inner normal in
   demics_output_convertors for semi- and un-mixed inputs.

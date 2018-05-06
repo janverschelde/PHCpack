@@ -3,7 +3,7 @@ Dynamic Enumeration of all Mixed Cells in PHCv2.4.54
 This directory was added in version 2.4.53 to prepare the interface
 to DEMiCs, software for the dynamic enumeration of all mixed cells.
 This software was developed by Tomohiko Mizutani, Akiko Takeda,
-and Masakazu Kojima and licensed under GNU GPL Version 2.
+and Masakazu Kojima and licensed under GNU GPL Version 2 or higher.
 
 T. Mizutani and A. Takeda.
 "DEMiCs: A software package for computing the mixed volume via
@@ -24,10 +24,25 @@ The current interface is a simple file based interface,
 which assumes the executable is available as /tmp/demics
 on UNIX like systems such as Mac OS X and Linux.
 
+The original C++ code is included, after reformatting and removal of
+many superfluous blank lines.  The README.txt is copied from the SRC
+folder of the DEMiCs.0951 distribution archive.
+This README.txt describes the definition of the input files and the
+option to the executable demics.
+
 ------------------------------------------------------------------------------
-file name                        : short description
+file name                   : short description
 ------------------------------------------------------------------------------
-demics_command_line              : defines the command line interface
-demics_output_convertors         : converts output of demics
-ts_calldemics                    : file based interface to DEMiCs
+demics_command_line         : defines the command line interface
+demics_output_convertors    : converts output of demics
+ts_calldemics               : file based interface to DEMiCs
+------------------------------------------------------------------------------
+global.h                    : definition of global parameters
+inputData                   : processing of input data
+iTest                       : data storage for linear programs
+fTest                       : floating data for linear programs
+simplex                     : simplex algorithm
+reltab                      : relation table
+mvc                         : enumerates all mixed cells
+main                        : the main program
 ------------------------------------------------------------------------------
