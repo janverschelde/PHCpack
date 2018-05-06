@@ -1001,6 +1001,35 @@ ts_calldemics:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_calldemics.adb \
               -o $(BIN)/ts_calldemics
 
+DEMiCs_CFLAGS = -O3 -DNDEBUG
+
+inputData.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+
+iTest.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/iTest.cpp
+
+fTest.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/fTest.cpp
+
+simplex.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp
+
+reltab.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/reltab.cpp
+
+mvc.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp
+
+main.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/main.cpp
+
+demics_objects = inputData.o iTest.o fTest.o simplex.o reltab.o mvc.o main.o
+
+demics: $(demics_objects)
+	$(gpp) -o $(BIN)/demics $(DEMiCs_CFLAGS) $(demics_objects) -lm
+
+
 # Test programs for the Root_Counts/Puiseux library :
 
 ts_degcurve:

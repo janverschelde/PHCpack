@@ -938,6 +938,9 @@ test_demics: ts_calldemics
 ts_calldemics:
 	make -f $(MAKEFILE) ts_calldemics
 
+demics:
+	make -f $(MAKEFILE) demics
+
 # Test programs for the Puiseux library :
 
 test_puiseux: ts_degcurve ts_puiseux
