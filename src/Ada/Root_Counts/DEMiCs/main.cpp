@@ -29,6 +29,53 @@
 #include "mvc.h"
 
 void getInputPara
+ ( int argc, char** argv, int& seedNum, int& output, char** inputFileName );
+/*
+ * DESCRIPTION :
+ *   Reads the input parameters from the command line.
+ *
+ * ON ENTRY :
+ *   argc    the count of command line arguments;
+ *   argv    an array of strings holding the names of the arguments.
+ *
+ * ON RETURN :
+ *   seedNum is the seed for the random number generator,
+ *           if 1, then the default seed is used;;
+ *   output  is a flag to indicate if output is wanted or not,
+ *           if 0, then no extra output is written to screen;;
+ *   inputFileName is the name of the input file. */
+
+int main ( int argc, char* argv[] )
+{
+   int seedNum, output;
+   char* inputFileName;
+  
+   dataSet Data;
+   mvc MV_Comp;
+
+   double cpuTime_start, cpuTime_end;
+   struct tms cpuTime;
+
+   getInputPara(argc,argv,seedNum,output,&inputFileName);
+
+   times(&cpuTime);
+   cpuTime_start = (double) cpuTime.tms_utime;
+
+   Data.getInputFile(inputFileName);
+
+   MV_Comp.allocateAndIni(Data,seedNum,output);
+
+   MV_Comp.Enum();
+
+   times(&cpuTime);
+   cpuTime_end = (double) cpuTime.tms_utime;
+ 
+   MV_Comp.info_cpuTime(cpuTime_start,cpuTime_end);
+    
+   return (EXIT_SUCCESS);
+}
+
+void getInputPara
  ( int argc, char** argv, int& seedNum, int& output, char** inputFileName )
 {
    int length, flag = 0;
@@ -83,7 +130,6 @@ void getInputPara
       else
          flag = 1;
    }
-
    if(flag)
    {
       cerr <<"-----" << endl;
@@ -109,34 +155,4 @@ void getInputPara
 
       exit(EXIT_FAILURE);
    }
-}
-
-int main ( int argc, char* argv[] )
-{
-   int seedNum, output;
-   char* inputFileName;
-  
-   dataSet Data;
-   mvc MV_Comp;
-
-   double cpuTime_start, cpuTime_end;
-   struct tms cpuTime;
-
-   getInputPara(argc, argv, seedNum, output, &inputFileName);
-
-   times(&cpuTime);
-   cpuTime_start = (double) cpuTime.tms_utime;
-
-   Data.getInputFile(inputFileName);
-
-   MV_Comp.allocateAndIni(Data, seedNum, output);
-
-   MV_Comp.Enum();
-
-   times(&cpuTime);
-   cpuTime_end = (double) cpuTime.tms_utime;
- 
-   MV_Comp.info_cpuTime(cpuTime_start, cpuTime_end);
-    
-   return (EXIT_SUCCESS);
 }

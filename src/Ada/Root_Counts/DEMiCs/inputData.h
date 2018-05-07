@@ -26,8 +26,8 @@ class dataSet
 {
    public:
 
-      dataSet();
-      ~dataSet();
+      dataSet();  // constructor sets everythin to 0 or NULL
+      ~dataSet(); // destructor deallocates memory
 
       int Dim, supN, termSumNum;
       int termMax, typeMax;
@@ -39,12 +39,12 @@ class dataSet
 
       char* outFile;
 
-      void support_in(int rowIdx, int colIdx, double elem)
+      void support_in ( int rowIdx, int colIdx, double elem )
       {
          support[colIdx + Dim * rowIdx] = elem; 
       };
 
-      double support_out(int rowIdx, int colIdx)
+      double support_out ( int rowIdx, int colIdx )
       {
          return (support[colIdx + Dim * rowIdx]);
       };

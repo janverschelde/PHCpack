@@ -95,7 +95,7 @@ void dataSet::getInputFile ( char* inputFile )
       p = str;
       ch = in.peek();
 
-      if((ch == '#'))
+      if(ch == '#')
       {
          do
          {

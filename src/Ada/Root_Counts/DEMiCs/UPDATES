@@ -1,3 +1,7 @@
+Mon 7 May 2018 : documented the parameters of a function in main.cpp.
+  Did some reformatting in inputData.h and removed extraneous parentheses
+  in equality comparison on line 98 in inputData.cpp.
+
 Sun 6 May 2018 : added the reformatted source code of DEMiCs.
 
 Thu 3 May 2018 : fixed making of mixed cells in demics_output_convertors
