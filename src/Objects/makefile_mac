@@ -1066,6 +1066,18 @@ ts_inputData:
 	$(gpp) -o $(BIN)/ts_inputData $(DEMiCs_CFLAGS) ts_inputData.o \
                   inputData.o -lm
 
+ts_demicsrun:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_demicsrun.adb \
+                 -o ts_demicsrun.o
+	gnatbind ts_demicsrun
+	gnatlink ts_demicsrun inputData.o demicsrun.o \
+                 -o $(BIN)/ts_demicsrun \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=g++
+
 # Test programs for the Root_Counts/Puiseux library :
 
 ts_degcurve:
@@ -1892,7 +1904,6 @@ ademanypaths_qd.o:
             -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -o ademanypaths_qd.o
 
-
 ts_adepath_d: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
               eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
               predictor_host_d.o \
@@ -1914,7 +1925,6 @@ ts_adepath_d: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
                  predictor_host_d.o path_host_d.o \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
-                 -o $(BIN)/ts_adepath_dd -lm --LINK=g++
                  -o $(BIN)/ts_adepath_d -lm --LINK=g++
 
 ts_adepath_dd: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \

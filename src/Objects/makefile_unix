@@ -1030,12 +1030,20 @@ demics: $(demics_objects)
 	$(gpp) -o $(BIN)/demics $(DEMiCs_CFLAGS) $(demics_objects) -lm
 
 ts_inputData:
-	$(gpp) $(DEMiCs_CFLAGS) -c \
-               $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
 	$(gpp) $(DEMiCs_CFLAGS) -c \
                $(PHCAda)/Root_Counts/DEMiCs/ts_inputData.cpp
 	$(gpp) -o $(BIN)/ts_inputData $(DEMiCs_CFLAGS) ts_inputData.o \
                   inputData.o -lm
+
+ts_demicsrun:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_demicsrun.adb \
+                 -o ts_demicsrun.o
+	gnatbind ts_demicsrun
+	gnatlink ts_demicsrun inputData.o demicsrun.o \
+                 -o $(BIN)/ts_demicsrun --LINK=$(gpp) 
 
 # Test programs for the Root_Counts/Puiseux library :
 

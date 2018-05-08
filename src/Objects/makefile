@@ -944,6 +944,9 @@ demics:
 ts_inputData:
 	make -f $(MAKEFILE) ts_inputData
 
+ts_demicsrun:
+	make -f $(MAKEFILE) ts_demicsrun
+
 # Test programs for the Puiseux library :
 
 test_puiseux: ts_degcurve ts_puiseux
