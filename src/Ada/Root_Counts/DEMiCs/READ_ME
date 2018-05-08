@@ -47,3 +47,6 @@ reltab                      : relation table
 mvc                         : enumerates all mixed cells
 main                        : the main program
 ------------------------------------------------------------------------------
+demicsrun                   : basic C interface to run demics
+ts_demicsrun                : test on calling demicsrun
+------------------------------------------------------------------------------

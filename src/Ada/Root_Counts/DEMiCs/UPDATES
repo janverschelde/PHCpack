@@ -1,3 +1,6 @@
+Tue 8 May 2018 : new demicsrun.h, demicsrun.cpp, tested by ts_demicsrun.adb,
+  to call demics directly from an Ada procedure.
+
 Mon 7 May 2018 : documented the parameters of a function in main.cpp.
   Did some reformatting in inputData.h and removed extraneous parentheses
   in equality comparison on line 98 in inputData.cpp.
