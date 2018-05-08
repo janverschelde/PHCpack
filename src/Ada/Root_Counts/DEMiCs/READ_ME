@@ -39,6 +39,7 @@ ts_calldemics               : file based interface to DEMiCs
 ------------------------------------------------------------------------------
 global.h                    : definition of global parameters
 inputData                   : processing of input data
+ts_inputData                : unit test on reading the input data
 iTest                       : data storage for linear programs
 fTest                       : floating data for linear programs
 simplex                     : simplex algorithm

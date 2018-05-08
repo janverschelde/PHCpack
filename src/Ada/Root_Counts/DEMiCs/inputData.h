@@ -26,37 +26,62 @@ class dataSet
 {
    public:
 
-      dataSet();  // constructor sets everythin to 0 or NULL
-      ~dataSet(); // destructor deallocates memory
+      dataSet();       // constructor sets everythin to 0 or NULL
+      ~dataSet();      // destructor deallocates memory
 
-      int Dim, supN, termSumNum;
-      int termMax, typeMax;
+      int Dim;         // dimension of the points
+      int supN;        // number of distinct supports
+      int termSumNum;  // total number of points in all supports
+      int termMax;
+      int typeMax;
 
-      int* termSet, * termStart, * type;
+      int* termSet;    // array of supN integers with number of points
+                       // in each support set
+      int* termStart;
+      int* type;       // array of supN integers with the number
+                       // of occurrences of each distinct support
 
-      double* support;
+      double* support; // coordinates of the points in each support
       double* coef;
 
       char* outFile;
 
       void support_in ( int rowIdx, int colIdx, double elem )
+      /*
+       * DESCRIPTION :
+       *   Assigns the elem to the coordinate of position colIdx
+       *   of support with index rowIdx. */
       {
          support[colIdx + Dim * rowIdx] = elem; 
       };
 
       double support_out ( int rowIdx, int colIdx )
+      /*
+       * DESCRIPTION :
+       *   Returns the coordinate of index colIdx
+       *   of the point with index rowIdx. */
       {
          return (support[colIdx + Dim * rowIdx]);
       };
   
-  ///// functions  /////
-
       void getInputFile ( char* inputFile );
+      /*
+       * DESCRIPTION :
+       *   Opens the file with name defined by inputFile,
+       *   parses the information on the file into the data
+       *   on the support sets. */
 
-  ///// output infomation on display /////
-
-      void info_pre();
-      void info_support();
+      void info_preamble();
+      /*
+       * DESCRIPTION :
+       *   Writes the dimension, number of distinct supports,
+       *   the number of points in each support and
+       *   the number of occurrences of each support to screen. */
+  
+      void info_supports();
+      /*
+       * DESCRIPTION :
+       *    Writes each support set to screen. */
 };
 
 #endif

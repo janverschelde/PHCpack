@@ -78,8 +78,6 @@ void dataSet::getInputFile ( char* inputFile )
 
    delete [] tmpName;
 
-   ///// Get infomation in input file /////
-
    ifstream in(inputFile);
 
    if(!in)
@@ -277,38 +275,35 @@ void dataSet::getInputFile ( char* inputFile )
 
 #if DBG_INFO
 
-   info_pre();
-   info_support();
+   info_preamble();
+   info_supports();
 
 #endif
 
 }
 
-///// output information on display /////
-
-void dataSet::info_pre()
+void dataSet::info_preamble()
 {
    int i;
   
-   cout << "Dim: " << Dim << "\n";
-   cout << "Support " << supN << "\n\n";
+   cout << "Dim = " << Dim << "\n";
+   cout << "Support = " << supN << "\n\n";
   
-   cout << "Elem: ";
+   cout << "Elem = ";
    for(i = 0; i < supN; i++) cout << termSet[i] << " ";
    cout << "\n";
     
-   cout << "Type: ";
+   cout << "Type = ";
    for(i = 0; i < supN; i++) cout << type[i] << " ";
 
    cout << "\n\n";
 }
 
-void dataSet::info_support()
+void dataSet::info_supports()
 {
    int i, j, k, top, counter;
 
    counter = (top = 0);
-   cout << "support: \n";
 
    for(k = 0; k < supN; k++)
    {
