@@ -40,9 +40,9 @@ void getInputPara
  *
  * ON RETURN :
  *   seedNum is the seed for the random number generator,
- *           if 1, then the default seed is used;;
+ *           if 1, then the default seed is used;
  *   output  is a flag to indicate if output is wanted or not,
- *           if 0, then no extra output is written to screen;;
+ *           if 0, then no extra output is written to screen;
  *   inputFileName is the name of the input file. */
 
 int main ( int argc, char* argv[] )
