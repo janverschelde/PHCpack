@@ -1,5 +1,7 @@
 #include <iostream>
+#include "global.h"
 #include "inputData.h"
+#include "mvc.h"
 #include "demicsrun.h"
 
 using namespace std;
@@ -12,52 +14,16 @@ extern "C" int demicsrun
       write_data(dimension,nsupports,mixtype,cardsup,coordinates);
 
    dataSet Data;
-   Data.Dim = dimension;
-   Data.supN = nsupports;
-   Data.type = new int[nsupports];
-   for(int k=0; k<Data.supN; k++) Data.type[k] = mixtype[k];
-   Data.termSet = new int[nsupports];
-   for(int k=0; k<Data.supN; k++) Data.termSet[k] = cardsup[k];
 
-   if(verbose == 1)
-   {
-      cout << endl;
-      cout << "The dimension, the number of distinct support sets," << endl;
-      cout << "the number of points in each support set, and" << endl;
-      cout << "the number of occurrences of each support set :" << endl;
-      cout << endl;
+   fill_preamble(Data,verbose,dimension,nsupports,mixtype,cardsup);
+   fill_supports(Data,verbose,coordinates);
+   fill_complete(Data);
 
-      Data.info_preamble();
-   }
+   mvc MV_Comp;
 
-   Data.termSumNum = 0;
-   for(int k=0; k<Data.supN; k++)
-      Data.termSumNum = Data.termSumNum + Data.termSet[k];
+   MV_Comp.allocateAndIni(Data,1,1);
+   MV_Comp.Enum();
 
-   Data.support = new double[Data.termSumNum*Data.Dim];
-
-   int offset = 0;
-   int idxcoordinates = 0;
-   for(int i=0; i<Data.supN; i++)
-   {
-      for(int j=0; j<Data.termSet[i]; j++)
-      { 
-         for(int k=0; k<Data.Dim; k++)
-         {
-            double x = coordinates[idxcoordinates++];
-            Data.support_in(offset+j,k,x);
-         }
-      }
-      offset = offset + Data.termSet[i];
-   }
-
-   if(verbose == 1)
-   {
-      cout << endl;
-      cout << "The points in the support sets : " << endl << endl;
-
-      Data.info_supports();
-   }
    return 0;
 }
 
@@ -91,4 +57,78 @@ void write_data
          cout << endl;
       }
    }
+}
+
+void fill_preamble
+ ( dataSet& Data,
+   int verbose, int dimension, int nsupports, int* mixtype, int* cardsup )
+{
+   Data.Dim = dimension;
+   Data.supN = nsupports;
+   Data.type = new int[nsupports];
+   for(int k=0; k<Data.supN; k++) Data.type[k] = mixtype[k];
+   Data.termSet = new int[nsupports];
+   for(int k=0; k<Data.supN; k++) Data.termSet[k] = cardsup[k];
+
+   if(verbose == 1)
+   {
+      cout << endl;
+      cout << "The dimension, the number of distinct support sets," << endl;
+      cout << "the number of points in each support set, and" << endl;
+      cout << "the number of occurrences of each support set :" << endl;
+      cout << endl;
+
+      Data.info_preamble();
+   }
+}
+
+void fill_supports ( dataSet& Data, int verbose, int* coordinates )
+{
+   Data.termSumNum = 0;
+   for(int k=0; k<Data.supN; k++)
+      Data.termSumNum = Data.termSumNum + Data.termSet[k];
+
+   Data.support = new double[Data.termSumNum*Data.Dim];
+
+   int offset = 0;
+   int idxcoordinates = 0;
+   for(int i=0; i<Data.supN; i++)
+   {
+      for(int j=0; j<Data.termSet[i]; j++)
+      { 
+         for(int k=0; k<Data.Dim; k++)
+         {
+            double x = coordinates[idxcoordinates++];
+            Data.support_in(offset+j,k,x);
+         }
+      }
+      offset = offset + Data.termSet[i];
+   }
+   if(verbose == 1)
+   {
+      cout << endl;
+      cout << "The points in the support sets : " << endl << endl;
+
+      Data.info_supports();
+   }
+}
+
+void fill_complete ( dataSet& Data )
+{
+   Data.typeMax = Data.type[0];
+   for(int k=1; k<Data.supN; k++)
+      if(Data.type[k] > Data.typeMax) Data.typeMax = Data.type[k];
+   Data.termMax = Data.termSet[0];
+   for(int k=1; k<Data.supN; k++)
+      if(Data.termSet[k] > Data.termMax) Data.termMax = Data.termSet[k];
+
+   Data.termStart = new int[Data.supN+1];
+   Data.termStart[0] = 0;
+   int totalsum = 0;
+   for(int k=1; k<Data.supN+1; k++)
+   {
+      totalsum += Data.termSet[k-1];
+      Data.termStart[k] += totalsum;
+   }
+   Data.coef = new double[2*Data.termSumNum];
 }

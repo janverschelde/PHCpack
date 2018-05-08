@@ -32,12 +32,14 @@ class dataSet
       int Dim;         // dimension of the points
       int supN;        // number of distinct supports
       int termSumNum;  // total number of points in all supports
-      int termMax;
-      int typeMax;
+      int termMax;     // largest number in the array termSet
+      int typeMax;     // largest number in the array type
 
       int* termSet;    // array of supN integers with number of points
                        // in each support set
-      int* termStart;
+      int* termStart;  // array of supN+1 integers with the index to the 
+                       // first point in each support set, the last element 
+                       // in termStart is the total number of points
       int* type;       // array of supN integers with the number
                        // of occurrences of each distinct support
 
