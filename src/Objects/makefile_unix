@@ -1038,11 +1038,17 @@ ts_inputData:
 
 ts_demicsrun:
 	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/iTest.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/fTest.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/reltab.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp
 	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_demicsrun.adb \
                  -o ts_demicsrun.o
 	gnatbind ts_demicsrun
-	gnatlink ts_demicsrun inputData.o demicsrun.o \
+	gnatlink ts_demicsrun inputData.o iTest.o fTest.o simplex.o \
+                              reltab.o mvc.o demicsrun.o \
                  -o $(BIN)/ts_demicsrun --LINK=$(gpp) 
 
 # Test programs for the Root_Counts/Puiseux library :
