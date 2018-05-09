@@ -1051,6 +1051,10 @@ ts_demicsrun:
                               reltab.o mvc.o demicsrun.o \
                  -o $(BIN)/ts_demicsrun --LINK=$(gpp) 
 
+ts_outdata:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_outdata.adb \
+              -o $(BIN)/ts_outdata
+
 # Test programs for the Root_Counts/Puiseux library :
 
 ts_degcurve:

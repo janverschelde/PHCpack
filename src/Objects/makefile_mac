@@ -1084,6 +1084,10 @@ ts_demicsrun:
                  /usr/lib/libstdc++.dylib \
                  --LINK=g++
 
+ts_outdata:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_outdata.adb \
+                 -o $(BIN)/ts_outdata
+
 # Test programs for the Root_Counts/Puiseux library :
 
 ts_degcurve:
