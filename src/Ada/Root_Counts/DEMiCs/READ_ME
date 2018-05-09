@@ -49,4 +49,6 @@ main                        : the main program
 ------------------------------------------------------------------------------
 demicsrun                   : basic C interface to run demics
 ts_demicsrun                : test on calling demicsrun
+demics_output_data          : to store the output data of demics
+ts_outdata                  : test on demics_output_data
 ------------------------------------------------------------------------------

@@ -3,6 +3,8 @@ Tue 8 May 2018 : new demicsrun.h, demicsrun.cpp, tested by ts_demicsrun.adb,
   Removed superfluous semi-colons of the documentation of main.cpp.
   Added to the documentation of inputData.h and updated demicsrun.h
   and demicsrun.cpp so the mixed volume is computed.
+  New packages demics_output_data to store the results of DEMiCs,
+  tested by ts_outdata.adb.
 
 Mon 7 May 2018 : documented the parameters of a function in main.cpp.
   Did some reformatting in inputData.h and removed extraneous parentheses
