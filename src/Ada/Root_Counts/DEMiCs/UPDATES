@@ -1,3 +1,6 @@
+Wed 9 May 2018 : new use_outdata.ads and use_outdata.adb to export the
+  operations of demics_output_data to C and C++.
+
 Tue 8 May 2018 : new demicsrun.h, demicsrun.cpp, tested by ts_demicsrun.adb,
   to call demics directly from an Ada procedure.
   Removed superfluous semi-colons of the documentation of main.cpp.
