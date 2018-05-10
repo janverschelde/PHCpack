@@ -1,3 +1,7 @@
+Thu 10 May 2018 : new outputData.h and outputData.cpp,
+  tested by ts_outputData.cpp to store lifting values.
+  Updated use_outdata.adb.
+
 Wed 9 May 2018 : new use_outdata.ads and use_outdata.adb to export the
   operations of demics_output_data to C and C++.
 

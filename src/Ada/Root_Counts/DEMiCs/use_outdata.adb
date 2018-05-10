@@ -17,16 +17,21 @@ function use_outdata ( job : integer32;
   -- DESCRIPTION :
   --   Allocates memory for the lifting values of the supports.
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nbr : constant integer32 := integer32(v_a(v_a'first));
     n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nbr-1);
     v_b : constant C_Integer_Array(0..n1)
         := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nbr));
     crd : constant Standard_Integer_Vectors.Vector
         := C_to_Ada_Arrays.Convert(v_b);
+    shifted : Standard_Integer_Vectors.Vector(1..nbr);
 
   begin
-    DEMiCs_Output_Data.Initialize_Lifting(crd);
+    for i in shifted'range loop
+      shifted(i) := crd(i-1);
+    end loop;
+    DEMiCs_Output_Data.Initialize_Lifting(shifted);
     return 0;
   end Allocate;
 
@@ -36,9 +41,9 @@ function use_outdata ( job : integer32;
   --   Assigns a lifting value.
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    idxsup : constant integer32 := integer32(v_a(v_a'first));
+    idxsup : constant integer32 := integer32(v_a(v_a'first))+1;
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
-    idxpnt : constant integer32 := integer32(v_b(v_b'first));
+    idxpnt : constant integer32 := integer32(v_b(v_b'first))+1;
     v_c : constant C_Double_Array := C_dblarrs.Value(c);
     value : constant double_float := double_float(v_c(v_c'first));
 
@@ -53,9 +58,9 @@ function use_outdata ( job : integer32;
   --   Retrieves a lifting value.
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    idxsup : constant integer32 := integer32(v_a(v_a'first));
+    idxsup : constant integer32 := integer32(v_a(v_a'first))+1;
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
-    idxpnt : constant integer32 := integer32(v_b(v_b'first));
+    idxpnt : constant integer32 := integer32(v_b(v_b'first))+1;
     value : double_float;
 
   begin
