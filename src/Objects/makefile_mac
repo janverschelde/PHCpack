@@ -1088,6 +1088,20 @@ ts_outdata:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_outdata.adb \
                  -o $(BIN)/ts_outdata
 
+ts_outputData:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+
+	$(gpp) -O2 -Dcompilewgpp=1 \
+               -c $(PHCAda)/Root_Counts/DEMiCs/outputData.cpp
+	$(gpp) -O2 -Dcompilewgpp=1 \
+	       -c $(PHCAda)/Root_Counts/DEMiCs/ts_outputData.cpp
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc ts_outputData.o outputData.o \
+                 -o $(BIN)/ts_outputData \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 -lm --LINK=g++
+
 # Test programs for the Root_Counts/Puiseux library :
 
 ts_degcurve:

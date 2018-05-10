@@ -933,7 +933,7 @@ ts_mva:
 
 # Test programs for the Root_Counts/DEMiCs library :
 
-test_demics: ts_calldemics demics ts_inputData ts_demicsrun
+test_demics: ts_calldemics demics ts_inputData ts_demicsrun ts_outputData
 
 ts_calldemics:
 	make -f $(MAKEFILE) ts_calldemics
@@ -949,6 +949,9 @@ ts_demicsrun:
 
 ts_outdata:
 	make -f $(MAKEFILE) ts_outdata
+
+ts_outputData:
+	make -f $(MAKEFILE) ts_outputData
 
 # Test programs for the Puiseux library :
 
