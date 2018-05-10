@@ -2604,89 +2604,106 @@ function use_c2phc ( job : integer32;
 --                 in c are all the floating-point coefficients,
 --                 as many as a[0]*(a[1]+1), for the coordinates of the
 --                 tropisms and the errors on the numerical tropisms; 
---           712 : initialize the tropisms in double double precision,
+--        =  712 : initialize the tropisms in double double precision,
 --                 on input in a[0] are the number of tropisms, and
 --                 in a[1] the length of the tropisms, in b are then
 --                 the winding numbers, as many as the value of a[0],
 --                 in c are all the floating-point coefficients,
 --                 as many as 2*a[0]*(a[1]+1), for the coordinates of the
 --                 tropisms and the errors on the numerical tropisms; 
---           713 : initialize the tropisms in quad double precision,
+--        =  713 : initialize the tropisms in quad double precision,
 --                 on input in a[0] are the number of tropisms, and
 --                 in a[1] the length of the tropisms, in b are then
 --                 the winding numbers, as many as the value of a[0],
 --                 in c are all the floating-point coefficients,
 --                 as many as 4*a[0]*(a[1]+1), for the coordinates of the
 --                 tropisms and the errors on the numerical tropisms; 
---           714 : store a tropism in standard double precision,
+--        =  714 : store a tropism in standard double precision,
 --                 on input in a[0] is the length of the tropism, and
 --                 in a[1] the index of the tropism, 
 --                 in b is the winding number,
 --                 in c are all the floating-point coefficients,
 --                 as many as a[0] + 1, with the coordinates of the 
 --                 tropisms and the error;
---           715 : store a tropism in double double precision,
+--        =  715 : store a tropism in double double precision,
 --                 on input in a[0] is the length of the tropism, and
 --                 in a[1] the index of the tropism, 
 --                 in b is the winding number,
 --                 in c are all the floating-point coefficients,
 --                 as many as 2*a[0] + 2, with the coordinates of the 
 --                 tropisms and the error;
---           716 : store a tropism in quad double precision,
+--        =  716 : store a tropism in quad double precision,
 --                 on input in a[0] is the length of the tropism, and
 --                 in a[1] the index of the tropism, 
 --                 in b is the winding number,
 --                 in c are all the floating-point coefficients,
 --                 as many as 4*a[0] + 4, with the coordinates of the 
 --                 tropisms and the error;
---           717 : retrieve all tropisms in standard double precision,
+--        =  717 : retrieve all tropisms in standard double precision,
 --                 on return in a[0] are the number of tropisms, and
 --                 in a[1] the length of each tropism,
 --                 in b are the winding numbers for each tropism, and
 --                 in c are all coefficients, as many as a[0]*(a[1]+1);
---           718 : retrieve all tropisms in double double precision,
+--        =  718 : retrieve all tropisms in double double precision,
 --                 on return in a[0] are the number of tropisms, and
 --                 in a[1] the length of each tropism,
 --                 in b are the winding numbers for each tropism, and
 --                 in c are all coefficients, as many as 2*a[0]*(a[1]+1);
---           719 : retrieve all tropisms in quad double precision,
+--        =  719 : retrieve all tropisms in quad double precision,
 --                 on return in a[0] are the number of tropisms, and
 --                 in a[1] the length of each tropism,
 --                 in b are the winding numbers for each tropism, and
 --                 in c are all coefficients, as many as 4*a[0]*(a[1]+1);
---           720 : the number of tropisms in standard double precision
+--        =  720 : the number of tropisms in standard double precision
 --                 is returned in a;
---           721 : the number of tropisms in double double precision
+--        =  721 : the number of tropisms in double double precision
 --                 is returned in a;
---           722 : number of tropisms in quad double precision
+--        =  722 : number of tropisms in quad double precision
 --                 is returned in a;
---           723 : retrieve one tropism in standard double precision,
+--        =  723 : retrieve one tropism in standard double precision,
 --                 on input in a[0] is the length of the tropism, and
 --                 in a[1] is the index of the tropism,
 --                 on return in b is the winding number and in c are
 --                 the coefficiennts, as many as a[0] + 1, of the
 --                 coordinates of the tropism and the error,
---           724 : retrieve one tropism in double double precision,
+--        =  724 : retrieve one tropism in double double precision,
 --                 on input in a[0] is the length of the tropism, and
 --                 in a[1] is the index of the tropism,
 --                 on return in b is the winding number and in c are
 --                 the coefficiennts, as many as 2*a[0] + 2, of the
 --                 coordinates of the tropism and the error,
---           725 : retrieve one tropism in quad double precision,
+--        =  725 : retrieve one tropism in quad double precision,
 --                 on input in a[0] is the length of the tropism, and
 --                 in a[1] is the index of the tropism,
 --                 on return in b is the winding number and in c are
 --                 the coefficiennts, as many as 4*a[0] + 4, of the
 --                 coordinates of the tropism and the error,
---           726 : clear all tropisms in standard double precision;
---           727 : clear all tropisms in double double precision;
---           728 : clear all tropisms in quad double precision;
---           729 : the length of the tropisms in standard double precision
+--        =  726 : clear all tropisms in standard double precision;
+--        =  727 : clear all tropisms in double double precision;
+--        =  728 : clear all tropisms in quad double precision;
+--        =  729 : the length of the tropisms in standard double precision
 --                 is returned in a;
---           730 : the length of the tropisms in double double precision
+--        =  730 : the length of the tropisms in double double precision
 --                 is returned in a;
---           731 : the length of the tropisms in quad double precision
+--        =  731 : the length of the tropisms in quad double precision
 --                 is returned in a.
+--
+-- Processing the output data of DEMiCs :
+--
+--   job  =  834 : allocates memory for the lifting values,
+--                 in a[0] are the number of distinct supports,
+--                 and b is an array of a[0] integers,
+--                 where b[k] is the number of points in the support k,
+--                 starting the count k at zero.
+--        =  835 : assigns the lifting value of point in support
+--                 with index a[0] (starting to count at zero) 
+--                 at position with index b[0] (starting again at zero),
+--                 to the value given in c[0];
+--        =  836 : retrieves the lifting value of point in support
+--                 with index a[0] (starting to count at zero) 
+--                 at position with index b[0] (starting again at zero),
+--                 returns the lifting value in c[0];
+--        =  837 : deallocates the memory to store the lifting values.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

@@ -94,7 +94,8 @@ with use_nxtsol;
 with unisolve,use_giftwrap;
 with use_numbtrop;
 with use_series;
-with use_multip; -- multiplicity structure
+with use_multip;  -- multiplicity structure
+with use_outdata; -- output data for DEMiCs
 
 function use_c2phc ( job : integer32;
                      a : C_intarrs.Pointer;
@@ -3177,6 +3178,11 @@ function use_c2phc ( job : integer32;
       when 831 => return use_syscon(25,a,b,c); -- st Laurent drop var by name
       when 832 => return use_syscon(26,a,b,c); -- dd Laurent drop var by name
       when 833 => return use_syscon(27,a,b,c); -- qd Laurent drop var by name
+     -- extract DEMiCs output data
+      when 834 => return use_outdata(0,a,b,c); -- allocate memory for lifting
+      when 835 => return use_outdata(1,a,b,c); -- assign a lifting value
+      when 836 => return use_outdata(2,a,b,c); -- retrieve a lifting value
+      when 837 => return use_outdata(3,a,b,c); -- clear lifting values
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
