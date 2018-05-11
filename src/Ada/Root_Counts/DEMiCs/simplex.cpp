@@ -17,7 +17,19 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+/*
+    To compile for use with PHCpack, add
+    -Dcompile4phc=1
+    to the compiler statement.
+    By doing so, the code in the #ifdef compile4phc
+    statements is compiled.
+ */
+
 #include "simplex.h"
+
+#ifdef compile4phc
+#include "outputData.h"
+#endif
 
 // JV added 23 April 2018
 #include <iomanip>
@@ -377,6 +389,14 @@ void simplex::allocateAndIni
 
       cnt++;
    }
+
+#ifdef compile4phc
+   int fail = allocate_lifting(Data.supN,Data.termSet);
+   cnt = 0;
+   for(i=0; i<Data.supN; i++)
+      for(j=0; j<Data.termSet[i]; j++)
+         fail = assign_lifting(i,j,lifting[cnt++]);
+#else
    if(output)
    {
       cout << "----------------------------------\n";
@@ -408,6 +428,7 @@ void simplex::allocateAndIni
       cout << "----------------------------------\n";
       cout << endl << endl;
    }
+#endif
 }
 
 void simplex::reMakeNonBasisIdx ( int reTermS )

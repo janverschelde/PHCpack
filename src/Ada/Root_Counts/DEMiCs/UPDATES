@@ -1,6 +1,8 @@
 Thu 10 May 2018 : new outputData.h and outputData.cpp,
   tested by ts_outputData.cpp to store lifting values.
-  Updated use_outdata.adb.
+  Updated use_outdata.adb.  Added conditional compilation statements
+  to simplex.cpp, with updates in ts_demicsrun.adb to retrieve the
+  lifting from the computed output of DEMiCs.
 
 Wed 9 May 2018 : new use_outdata.ads and use_outdata.adb to export the
   operations of demics_output_data to C and C++.

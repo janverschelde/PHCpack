@@ -4,6 +4,8 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
+with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecs_io;      use Standard_Floating_VecVecs_io;
 with Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io; use Arrays_of_Integer_Vector_Lists_io;
@@ -12,6 +14,7 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Supports_of_Polynomial_Systems;
 with Mixed_Volume_Computation;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
+with DEMiCs_Output_Data;
 
 procedure ts_demicsrun is
 
@@ -110,6 +113,19 @@ procedure ts_demicsrun is
     return res;
   end Coordinates;
 
+  procedure Show_Output is
+
+  -- DESCRIPITON :
+  --   Shows the output stored in DEMiCs_Output_Data.
+
+    lifting : constant Standard_Floating_VecVecs.Link_to_VecVec
+            := DEMiCs_Output_Data.Lifting_Values;
+
+  begin
+    put_line("The lifting values :");
+    put(lifting.all);
+  end Show_Output;
+
   procedure Call_DEMiCs ( p : in Poly_Sys; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
@@ -173,6 +189,7 @@ procedure ts_demicsrun is
     put_line("Reading a polynomial system ...");
     get(lp);
     Call_DEMiCs(lp.all);
+    Show_Output;
   end Main;
 
 begin
