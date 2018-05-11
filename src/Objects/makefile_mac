@@ -1066,31 +1066,12 @@ ts_inputData:
 	$(gpp) -o $(BIN)/ts_inputData $(DEMiCs_CFLAGS) ts_inputData.o \
                   inputData.o -lm
 
-ts_demicsrun:
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/iTest.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/fTest.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/reltab.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_demicsrun.adb \
-                 -o ts_demicsrun.o
-	gnatbind ts_demicsrun
-	gnatlink ts_demicsrun inputData.o iTest.o fTest.o simplex.o \
-                              reltab.o mvc.o demicsrun.o \
-                 -o $(BIN)/ts_demicsrun \
-                 /usr/lib/libc++.dylib \
-                 /usr/lib/libstdc++.dylib \
-                 --LINK=g++
-
 ts_outdata:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_outdata.adb \
                  -o $(BIN)/ts_outdata
 
 ts_outputData:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-
 	$(gpp) -O2 -Dcompilewgpp=1 \
                -c $(PHCAda)/Root_Counts/DEMiCs/outputData.cpp
 	$(gpp) -O2 -Dcompilewgpp=1 \
@@ -1101,6 +1082,28 @@ ts_outputData:
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
                  -lm --LINK=g++
+
+ts_demicsrun:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+	$(gpp) -O2 -Dcompilewgpp=1 \
+               -c $(PHCAda)/Root_Counts/DEMiCs/outputData.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/iTest.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/fTest.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -Dcompile4phc=1 \
+            -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/reltab.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_demicsrun.adb \
+                 -o ts_demicsrun.o
+	gnatbind ts_demicsrun use_c2phc
+	gnatlink ts_demicsrun inputData.o outputData.o iTest.o fTest.o \
+                 simplex.o reltab.o mvc.o demicsrun.o \
+                 -o $(BIN)/ts_demicsrun \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=g++
 
 # Test programs for the Root_Counts/Puiseux library :
 
