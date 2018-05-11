@@ -1,8 +1,10 @@
+with String_Splitters;
 with Standard_Floating_Vectors;
 
 package body DEMiCs_Output_Data is
 
   lifting : Standard_Floating_VecVecs.Link_to_VecVec;
+  first,last : Lists_of_Strings.List;
 
   procedure Initialize_Lifting
               ( crdsup : in Standard_Integer_Vectors.Vector ) is
@@ -35,9 +37,38 @@ package body DEMiCs_Output_Data is
     return lifting;
   end Lifting_Values;
 
+  procedure Add_Cell_Indices ( strcell : in string ) is
+
+    link2strcell : constant String_Splitters.Link_to_String
+                 := new string'(strcell);
+
+  begin
+    Lists_of_Strings.Append(first,last,link2strcell);
+  end Add_Cell_Indices;
+
+  function Retrieve_Cell_Indices return Lists_of_Strings.List is
+  begin
+    return first;
+  end Retrieve_Cell_Indices;
+
   procedure Clear_Lifting is
   begin
     Standard_Floating_VecVecs.Deep_Clear(lifting);
   end Clear_Lifting;
+
+  procedure Clear_Cell_Indices is
+
+    tmp : Lists_of_Strings.List := first;
+    ls : String_Splitters.Link_to_String;
+
+  begin
+    while not Lists_of_Strings.Is_Null(tmp) loop
+      ls := Lists_of_Strings.Head_Of(tmp);
+      String_Splitters.Clear(ls);
+      tmp := Lists_of_Strings.Tail_Of(tmp);
+    end loop;
+    Lists_of_Strings.Clear(first);
+    last := first;
+  end Clear_Cell_Indices;
 
 end DEMiCs_Output_Data;

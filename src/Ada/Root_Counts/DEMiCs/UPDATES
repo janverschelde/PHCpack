@@ -1,3 +1,7 @@
+Fri 11 May 2018 : to simplex.cpp added writing of the cell indices to a
+  string.  Added operations to DEMiCs_Output_Data to store the cell indices,
+  after defining lists_of_strings.
+
 Thu 10 May 2018 : new outputData.h and outputData.cpp,
   tested by ts_outputData.cpp to store lifting values.
   Updated use_outdata.adb.  Added conditional compilation statements

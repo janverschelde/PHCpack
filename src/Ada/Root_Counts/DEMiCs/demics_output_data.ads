@@ -2,6 +2,7 @@ with Standard_Integer_Numbers;        use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;       use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_VecVecs;
+with Lists_of_Strings;
 
 package DEMiCs_Output_Data is
 
@@ -40,9 +41,26 @@ package DEMiCs_Output_Data is
   -- DESCRIPTION :
   --   Returns the stored lifting values.
 
+  procedure Add_Cell_Indices ( strcell : in string );
+
+  -- DESCRIPTION :
+  --   Adds the string representation of a cell,
+  --   as defined by its indices.
+
+  function Retrieve_Cell_Indices return Lists_of_Strings.List;
+
+  -- DESCRIPTION :
+  --   Returns list of the cell indices accumulated
+  --   by the application of the Add_Cell_Indices procedure.
+
   procedure Clear_Lifting;
 
   -- DESCRIPTION :
   --   Deallocates the memory for the lifting values.
+
+  procedure Clear_Cell_Indices;
+
+  -- DESCRIPTION :
+  --   Deallocates the memory occupied by the cell indices.
 
 end DEMiCs_Output_Data;

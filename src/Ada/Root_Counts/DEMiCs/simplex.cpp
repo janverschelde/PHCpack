@@ -33,6 +33,8 @@
 
 // JV added 23 April 2018
 #include <iomanip>
+// JV addeed 11 May 2018
+#include <sstream>
 
 supportSet::supportSet()
 {
@@ -3546,6 +3548,10 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
    int polyDim;
    int fIdx;
 
+#ifdef compile4phc
+   ostringstream strcell;
+#endif
+
    double det;
 
    // cout << "<< calMixedVol >>\n";
@@ -3555,6 +3561,10 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
    if(output)
    {
       cout << "# " << mixedCell << " : ";
+
+#ifdef compile4phc
+      strcell << "# " << mixedCell << " : ";
+#endif
    }
    cnt = 0;
    for(i = 0; i < supN; i++)
@@ -3567,6 +3577,10 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
       if(output)
       {
          cout << sp[i] + 1 << " : " << "( " << fIdx + 1 << " ";
+
+#ifdef compile4phc
+         strcell << sp[i] + 1 << " : " << "( " << fIdx + 1 << " ";
+#endif
       }
       for(j = 0; j < polyDim; j++)
       {
@@ -3576,6 +3590,10 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
          if(output)
          {
             cout << idx + 1 << " ";
+
+#ifdef compile4phc
+            strcell << idx + 1 << " ";
+#endif
          }
          // cout << "first " << cnt << " : ";
 
@@ -3584,11 +3602,14 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
             vol[Dim*cnt+k] = oriSupp[sp[i]][k + ii] - oriSupp[sp[i]][k + jj];
          }
          cnt++;
-         // cout << "\n";
       }
       if(output)
       {
          cout << ") ";
+
+#ifdef compile4phc
+         strcell << ") ";
+#endif
       }
    }
    det = fabs(lu(Dim, vol));
@@ -3596,6 +3617,10 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
    if(output)
    {
       cout << endl;
+
+#ifdef compile4phc
+      cout << "strcell: " << strcell.str() << endl;
+#endif
       cout << "Volume: " << det << endl << endl;
    }
    mixedVol += det;
