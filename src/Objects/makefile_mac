@@ -1090,7 +1090,7 @@ ts_demicsrun:
                -c $(PHCAda)/Root_Counts/DEMiCs/outputData.cpp
 	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/iTest.cpp
 	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/fTest.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -Dcompile4phc=1 \
+	$(gpp) $(DEMiCs_CFLAGS) -Dcompile4phc=1 -Dcompilewgpp=1 \
             -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp
 	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/reltab.cpp
 	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp
