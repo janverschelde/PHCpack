@@ -75,6 +75,17 @@ function use_outdata ( job : integer32;
     return 0;
   end Clear_Lifting;
 
+  function Append_Cell_Indices return integer32 is
+  begin
+    return 0;
+  end Append_Cell_Indices;
+
+  function Clear_Cell_Indices return integer32 is
+  begin
+    DEMiCs_Output_Data.Clear_Cell_Indices;
+    return 0;
+  end Clear_Cell_Indices;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -82,6 +93,8 @@ function use_outdata ( job : integer32;
       when 1 => return Assign_Lifting;
       when 2 => return Retrieve_Lifting;
       when 3 => return Clear_Lifting;
+      when 4 => return Append_Cell_Indices;
+      when 5 => return Clear_Cell_Indices;
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception

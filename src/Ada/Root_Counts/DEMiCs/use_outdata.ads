@@ -24,7 +24,11 @@ function use_outdata ( job : integer32;
 --                with index a[0] (starting to count at zero) 
 --                at position with index b[0] (starting again at zero),
 --                returns the lifting value in c[0].
---         =  3 : deallocates the memory to store the lifting values.
+--         =  3 : deallocates the memory to store the lifting values;
+--         =  4 : appends the string representation of cell indices,
+--                in a[0] are the number of characters and
+--                in b are the integers corresponding to the characters.
+--         =  5 : deallocates the memory occupied by the cell indices.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

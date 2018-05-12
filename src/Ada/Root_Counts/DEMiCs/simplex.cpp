@@ -3620,6 +3620,7 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
 
 #ifdef compile4phc
       cout << "strcell: " << strcell.str() << endl;
+      int fail = append_cell_indices(strcell.str());
 #endif
       cout << "Volume: " << det << endl << endl;
    }

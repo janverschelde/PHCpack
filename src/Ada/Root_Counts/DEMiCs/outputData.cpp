@@ -40,3 +40,30 @@ int clear_lifting ( void )
 
    return fail;
 }
+
+int append_cell_indices ( std::string strcell )
+{
+   int fail;
+   double *c;
+
+   int lenstrcell = strcell.length();
+
+   int cellchars[lenstrcell];
+
+   for(int k=0; k<lenstrcell; k++)
+      cellchars[k] = (int) strcell[k];
+
+   fail = _ada_use_c2phc(838,&lenstrcell,cellchars,c);
+
+   return 0;
+}
+
+int clear_cell_indices ( void )
+{
+   int *a,*b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(839,a,b,c);
+
+   return fail;
+}

@@ -17,6 +17,8 @@ extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
 extern void adafinal( void );
 #endif
 
+#include <string>
+
 int allocate_lifting ( int nbrsup, int* crdsup );
 /*
  * DESCRIPTION :
@@ -58,5 +60,15 @@ int clear_lifting ( void );
  * DESCRIPTION :
  *   Deallocates the memory used for the lifting of the supports.
  *   On return is the failure code, which equals 0 if all went well. */
+
+int append_cell_indices ( std::string strcell );
+/*
+ * DESCRIPTION :
+ *   Appends the string representation of the cell indices. */
+
+int clear_cell_indices ( void );
+/*
+ * DESCRIPTION :
+ *   Deallocates memory occupied by the cell indices. */
 
 #endif
