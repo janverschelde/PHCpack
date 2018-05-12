@@ -1,5 +1,6 @@
 Sat 12 May 2018 : in simplex.cpp, commented out the call to the append
-  of the cell indices, which caused a crash.
+  of the cell indices, which caused a crash.  Revised ts_outdata.adb
+  and added a test on storing strings in DEMiCs_Output_Data.
 
 Fri 11 May 2018 : to simplex.cpp added writing of the cell indices to a
   string.  Added operations to DEMiCs_Output_Data to store the cell indices,
