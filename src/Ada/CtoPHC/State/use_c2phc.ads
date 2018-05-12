@@ -2703,7 +2703,11 @@ function use_c2phc ( job : integer32;
 --                 with index a[0] (starting to count at zero) 
 --                 at position with index b[0] (starting again at zero),
 --                 returns the lifting value in c[0];
---        =  837 : deallocates the memory to store the lifting values.
+--        =  837 : deallocates the memory to store the lifting values;
+--        =  838 : appends the string representation of cell indices,
+--                 in a[0] are the number of characters and
+--                 in b are the integers corresponding to the characters.
+--        =  839 : deallocates the memory occupied by the cell indices.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
