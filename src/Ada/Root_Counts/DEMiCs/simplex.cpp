@@ -393,12 +393,12 @@ void simplex::allocateAndIni
    }
 
 #ifdef compile4phc
-   int fail = allocate_lifting(Data.supN,Data.termSet);
+   int fail = demics_allocate_lifting(Data.supN,Data.termSet);
    cnt = 0;
    for(i=0; i<Data.supN; i++)
       for(j=0; j<Data.termSet[i]; j++)
-         fail = assign_lifting(i,j,lifting[cnt++]);
-#else
+         fail = demics_assign_lifting(i,j,lifting[cnt++]);
+#endif
    if(output)
    {
       cout << "----------------------------------\n";
@@ -430,7 +430,6 @@ void simplex::allocateAndIni
       cout << "----------------------------------\n";
       cout << endl << endl;
    }
-#endif
 }
 
 void simplex::reMakeNonBasisIdx ( int reTermS )
@@ -3558,13 +3557,12 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
 
    mixedCell++;
 
+#ifdef compile4phc
+   strcell << "# " << mixedCell << " : ";
+#endif
    if(output)
    {
       cout << "# " << mixedCell << " : ";
-
-#ifdef compile4phc
-      strcell << "# " << mixedCell << " : ";
-#endif
    }
    cnt = 0;
    for(i = 0; i < supN; i++)
@@ -3574,26 +3572,24 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
       fIdx = lv[sp[i]].Node->parent->nodeLabel[0];
       jj = fIdx * Dim;
 
+#ifdef compile4phc
+      strcell << sp[i] + 1 << " : " << "( " << fIdx + 1 << " ";
+#endif
       if(output)
       {
          cout << sp[i] + 1 << " : " << "( " << fIdx + 1 << " ";
-
-#ifdef compile4phc
-         strcell << sp[i] + 1 << " : " << "( " << fIdx + 1 << " ";
-#endif
       }
       for(j = 0; j < polyDim; j++)
       {
          idx = lv[sp[i]].Node->parent->nodeLabel[j + 1];
          ii = idx * Dim;
 
+#ifdef compile4phc
+         strcell << idx + 1 << " ";
+#endif
          if(output)
          {
             cout << idx + 1 << " ";
-
-#ifdef compile4phc
-            strcell << idx + 1 << " ";
-#endif
          }
          // cout << "first " << cnt << " : ";
 
@@ -3603,25 +3599,23 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
          }
          cnt++;
       }
+#ifdef compile4phc
+      strcell << ") ";
+#endif
       if(output)
       {
          cout << ") ";
-
-#ifdef compile4phc
-         strcell << ") ";
-#endif
       }
    }
    det = fabs(lu(Dim, vol));
 
+#ifdef compile4phc
+   // cout << "strcell: " << strcell.str() << endl;
+   int fail = demics_append_cell_indices(strcell.str());
+#endif
    if(output)
    {
       cout << endl;
-
-#ifdef compile4phc
-      cout << "strcell: " << strcell.str() << endl;
-      int fail = append_cell_indices(strcell.str());
-#endif
       cout << "Volume: " << det << endl << endl;
    }
    mixedVol += det;
@@ -3869,9 +3863,13 @@ void simplex::dbg_dirRed ( data* parent, inifData* nextInif, int depth )
 
 void simplex::info_mv()
 {
+#ifdef compile4phc
+   int fail = demics_store_mixed_volume(mixedVol);
+#else
    cout.precision(15);
    cout << "# Mixed Cells: " << mixedCell << "\n";
    cout << "Mixed Volume: " << mixedVol << "\n\n";
+#endif
 }
 
 void simplex::info_allSup()

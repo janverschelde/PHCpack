@@ -3,7 +3,7 @@
 
 #include "outputData.h"
 
-int allocate_lifting ( int nbrsup, int* crdsup )
+int demics_allocate_lifting ( int nbrsup, int* crdsup )
 {
    int fail;
    double *c;
@@ -13,7 +13,7 @@ int allocate_lifting ( int nbrsup, int* crdsup )
    return fail;
 }
 
-int assign_lifting ( int idxsup, int idxpnt, double value )
+int demics_assign_lifting ( int idxsup, int idxpnt, double value )
 {
    int fail;
 
@@ -22,7 +22,7 @@ int assign_lifting ( int idxsup, int idxpnt, double value )
    return fail;
 }
 
-int retrieve_lifting ( int idxsup, int idxpnt, double* value )
+int demics_retrieve_lifting ( int idxsup, int idxpnt, double* value )
 {
    int fail;
 
@@ -31,7 +31,7 @@ int retrieve_lifting ( int idxsup, int idxpnt, double* value )
    return fail;
 }
 
-int clear_lifting ( void )
+int demics_clear_lifting ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -41,7 +41,7 @@ int clear_lifting ( void )
    return fail;
 }
 
-int append_cell_indices ( std::string strcell )
+int demics_append_cell_indices ( std::string strcell )
 {
    int fail;
    double *c;
@@ -58,7 +58,7 @@ int append_cell_indices ( std::string strcell )
    return fail;
 }
 
-int retrieve_cell_indices ( int idx, char* strcell )
+int demics_retrieve_cell_indices ( int idx, char* strcell )
 {
    int fail;
    int buf[256];
@@ -73,12 +73,32 @@ int retrieve_cell_indices ( int idx, char* strcell )
    return fail;
 }
 
-int clear_cell_indices ( void )
+int demics_clear_cell_indices ( void )
 {
    int *a,*b,fail;
    double *c;
 
    fail = _ada_use_c2phc(840,a,b,c);
+
+   return fail;
+}
+
+int demics_store_mixed_volume ( int mv )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(841,&mv,b,c);
+
+   return fail;
+}
+
+int demics_retrieve_mixed_volume ( int* mv )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(842,mv,b,c);
 
    return fail;
 }

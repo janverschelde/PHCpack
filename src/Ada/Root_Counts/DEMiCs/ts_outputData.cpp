@@ -23,10 +23,16 @@ void test_strings ( void );
  * DESCRIPTION :
  *   Test the storage and retrieval of strings. */
 
+void test_mixed_volume ( void );
+/*
+ * DESCRIPTION :
+ *   Tests storing and retrieving of mixed volume. */
+
 int main ( int argc, char* argv[] )
 {
    adainit();
 
+   test_mixed_volume();
    test_strings();
    test_lifting();
 
@@ -43,7 +49,7 @@ void print_lifting ( int nbrsup, int* crdsup )
       for(int j=0; j<crdsup[i]; j++)
       {
          double val;
-         int fail = retrieve_lifting(i,j,&val);
+         int fail = demics_retrieve_lifting(i,j,&val);
          cout << " " << val;
       }
       cout << endl;
@@ -62,7 +68,7 @@ void test_lifting ( void )
       cout << "Give the number of points in support " << k+1 << " : ";
       cin >> crdsup[k];
    }
-   int fail = allocate_lifting(nbrsup,crdsup);
+   int fail = demics_allocate_lifting(nbrsup,crdsup);
 
    do
    {
@@ -75,7 +81,7 @@ void test_lifting ( void )
       cout << "Give a lifting value : ";
       double val; cin >> val;
 
-      fail = assign_lifting(idxsup,idxpnt,val);
+      fail = demics_assign_lifting(idxsup,idxpnt,val);
 
       print_lifting(nbrsup,crdsup);
 
@@ -87,7 +93,7 @@ void test_lifting ( void )
    }
    while(true);
 
-   fail = clear_lifting();
+   fail = demics_clear_lifting();
 }
 
 void test_strings ( void )
@@ -99,7 +105,7 @@ void test_strings ( void )
       cout << "Give a string : ";
       string strcell; cin >> strcell;
 
-      fail = append_cell_indices(strcell);
+      fail = demics_append_cell_indices(strcell);
 
       do
       {
@@ -109,7 +115,7 @@ void test_strings ( void )
          if(idx <= 0) break;
 
          char cell[80];
-         fail = retrieve_cell_indices(idx,cell);
+         fail = demics_retrieve_cell_indices(idx,cell);
          cout << "The retrieved string : " << cell << endl;
       }
       while(true);
@@ -120,4 +126,19 @@ void test_strings ( void )
       if(ch != 'y') break;
    }
    while(true);
+}
+
+void test_mixed_volume ( void )
+{
+   int mv;
+
+   cout << "Give the mixed volume : "; cin >> mv;
+
+   int fail = demics_store_mixed_volume(mv);
+
+   int retmv;
+
+   fail = demics_retrieve_mixed_volume(&retmv);
+
+   cout << "The retrieved mixed volume : " << retmv << endl;
 }

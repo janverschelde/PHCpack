@@ -45,11 +45,12 @@ void fill_supports ( dataSet& Data, int verbose, int* coordinates );
  * ON RETURN :
  *   Data        dataSet object with working Data.info_supports(). */
 
-void fill_complete ( dataSet& Data );
+void fill_complete ( dataSet& Data, int verbose );
 /*
  * DESCRIPTION :
  *   Completes the filling of the dataSet object Data,
  *   needed for the mixed volume computation.
+ *   If verbose is 1, then extra data is printed.
  *
  * REQUIRED : fill_preamble() and fill_supports() ran on Data. */
 

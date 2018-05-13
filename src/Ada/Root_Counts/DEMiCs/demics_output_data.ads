@@ -10,6 +10,8 @@ package DEMiCs_Output_Data is
 -- DESCRIPTION :
 --   This package stores the output data computed by DEMiCs.
 
+  mixed_volume : integer32; -- use -1 to indicate an error occurred
+
   procedure Initialize_Lifting
               ( crdsup : in Standard_Integer_Vectors.Vector );
 

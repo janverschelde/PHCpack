@@ -17,11 +17,11 @@ extern "C" int demicsrun
 
    fill_preamble(Data,verbose,dimension,nsupports,mixtype,cardsup);
    fill_supports(Data,verbose,coordinates);
-   fill_complete(Data);
+   fill_complete(Data,verbose);
 
    mvc MV_Comp;
 
-   MV_Comp.allocateAndIni(Data,1,1);
+   MV_Comp.allocateAndIni(Data,1,verbose);
    MV_Comp.Enum();
 
    return 0;
@@ -113,14 +113,19 @@ void fill_supports ( dataSet& Data, int verbose, int* coordinates )
    }
 }
 
-void fill_complete ( dataSet& Data )
+void fill_complete ( dataSet& Data, int verbose )
 {
    Data.typeMax = Data.type[0];
    for(int k=1; k<Data.supN; k++)
       if(Data.type[k] > Data.typeMax) Data.typeMax = Data.type[k];
+
+   if(verbose == 1) cout << "typeMax : " << Data.typeMax << endl;
+
    Data.termMax = Data.termSet[0];
    for(int k=1; k<Data.supN; k++)
       if(Data.termSet[k] > Data.termMax) Data.termMax = Data.termSet[k];
+
+   if(verbose == 1) cout << "termMax : " << Data.termMax << endl;
 
    Data.termStart = new int[Data.supN+1];
    Data.termStart[0] = 0;
@@ -128,7 +133,15 @@ void fill_complete ( dataSet& Data )
    for(int k=1; k<Data.supN+1; k++)
    {
       totalsum += Data.termSet[k-1];
-      Data.termStart[k] += totalsum;
+      Data.termStart[k] = totalsum;
+   }
+
+   if(verbose == 1)
+   {
+      cout << "termStart =";
+      for(int k=0; k<Data.supN+1; k++) cout << " " << Data.termStart[k];
+      cout << endl;
+      cout << "termSumNum : " << Data.termSumNum << endl;
    }
    Data.coef = new double[2*Data.termSumNum];
 }

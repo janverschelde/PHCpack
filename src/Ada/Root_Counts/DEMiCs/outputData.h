@@ -19,7 +19,7 @@ extern void adafinal( void );
 
 #include <string>
 
-int allocate_lifting ( int nbrsup, int* crdsup );
+int demics_allocate_lifting ( int nbrsup, int* crdsup );
 /*
  * DESCRIPTION :
  *   Allocates memory for the lifting values.
@@ -29,7 +29,7 @@ int allocate_lifting ( int nbrsup, int* crdsup );
  *   nbrsup   the number of distinct supports;
  *   crdsup   cardinality of each support set. */
 
-int assign_lifting ( int idxsup, int idxpnt, double value );
+int demics_assign_lifting ( int idxsup, int idxpnt, double value );
 /*
  * DESCRIPTION :
  *   Assigns a lifting value for a point defined by two indices.
@@ -41,7 +41,7 @@ int assign_lifting ( int idxsup, int idxpnt, double value );
  *   value    lifting value for the point defined by the
  *            two indices idxsup and idxpnt. */
 
-int retrieve_lifting ( int idxsup, int idxpnt, double* value );
+int demics_retrieve_lifting ( int idxsup, int idxpnt, double* value );
 /*
  * DESCRIPTION :
  *   Retrieves the lifting value of a point defined by two indices.
@@ -55,26 +55,36 @@ int retrieve_lifting ( int idxsup, int idxpnt, double* value );
  *   value    lifting value for the point defined by the
  *            two indices idxsup and idxpnt. */
 
-int clear_lifting ( void );
+int demics_clear_lifting ( void );
 /*
  * DESCRIPTION :
  *   Deallocates the memory used for the lifting of the supports.
  *   On return is the failure code, which equals 0 if all went well. */
 
-int append_cell_indices ( std::string strcell );
+int demics_append_cell_indices ( std::string strcell );
 /*
  * DESCRIPTION :
  *   Appends the string representation of the cell indices. */
 
-int retrieve_cell_indices ( int idx, char* strcell );
+int demics_retrieve_cell_indices ( int idx, char* strcell );
 /*
  * DESCRIPTION :
  *   Returns the string at position idx.
  *   The strcell should have allocated sufficient space for the result. */
 
-int clear_cell_indices ( void );
+int demics_clear_cell_indices ( void );
 /*
  * DESCRIPTION :
  *   Deallocates memory occupied by the cell indices. */
+
+int demics_store_mixed_volume ( int mv );
+/*
+ * DESCRIPTION :
+ *   Stores the mixed volume mv. */
+
+int demics_retrieve_mixed_volume ( int* mv );
+/*
+ * DESCRIPTION :
+ *   Returns the stored mixed volume in mv. */
 
 #endif

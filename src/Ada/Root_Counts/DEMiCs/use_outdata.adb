@@ -139,6 +139,31 @@ function use_outdata ( job : integer32;
     return 0;
   end Clear_Cell_Indices;
 
+  function Store_Mixed_Volume return integer32 is
+
+  -- DESCRIPTION :
+  --   Stores the mixed volume that is given in a.
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+
+  begin
+    DEMiCs_Output_Data.mixed_volume := integer32(v_a(v_a'first));
+    return 0;
+  end Store_Mixed_Volume;
+
+  function Retrieve_Mixed_Volume return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves the mixed volume and assigns it to a.
+
+    mv : constant integer32 := DEMiCs_Output_Data.mixed_volume;
+
+  begin
+    Assignments_in_Ada_and_C.Assign(mv,a);
+    return 0;
+  end Retrieve_Mixed_Volume;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -149,6 +174,8 @@ function use_outdata ( job : integer32;
       when 4 => return Append_Cell_Indices;
       when 5 => return Retrieve_Cell_Indices;
       when 6 => return Clear_Cell_Indices;
+      when 7 => return Store_Mixed_Volume;
+      when 8 => return Retrieve_Mixed_Volume;
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception

@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with String_Splitters;
+with Communications_with_User;          use Communications_with_User;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
@@ -126,6 +127,7 @@ procedure ts_demicsrun is
           := DEMiCs_Output_Data.Retrieve_Cell_Indices;
     tmp : Lists_of_Strings.List := cells;
     ls : String_Splitters.Link_to_String;
+    mv : constant integer32 := DEMiCs_Output_Data.mixed_volume;
 
   begin
     put_line("The lifting values :");
@@ -136,6 +138,7 @@ procedure ts_demicsrun is
       put_line(ls.all);
       tmp := Lists_of_Strings.Tail_Of(tmp);
     end loop;
+    put("The mixed volume : "); put(mv,1); new_line;
   end Show_Output;
 
   procedure Call_DEMiCs ( p : in Poly_Sys; verbose : in boolean := true ) is
@@ -195,12 +198,19 @@ procedure ts_demicsrun is
   --   and then prepares the input for DEMiCs.
 
     lp : Link_to_Poly_Sys;
+    ans : character;
 
   begin
     new_line;
     put_line("Reading a polynomial system ...");
     get(lp);
-    Call_DEMiCs(lp.all);
+    new_line;
+    put("Verbose ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Call_DEMiCs(lp.all);
+     else Call_DEMiCs(lp.all,false);
+    end if;
     Show_Output;
   end Main;
 
