@@ -1,5 +1,7 @@
 with text_io;                           use text_io;
 with Interfaces.C;
+with String_Splitters;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
@@ -76,11 +78,62 @@ function use_outdata ( job : integer32;
   end Clear_Lifting;
 
   function Append_Cell_Indices return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves the string from b and adds it to DEMiCs_Output_Data.
+
+    use Assignments_in_Ada_and_C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nbr : constant integer32 := integer32(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nbr-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nbr));
+    strcell : constant string
+            := C_Integer_Array_to_String(natural32(nbr),v_b);
+
   begin
+    DEMiCs_Output_Data.Add_Cell_Indices(strcell);
     return 0;
   end Append_Cell_Indices;
 
+  function Retrieve_Cell_Indices return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves the string corresponding to the index in a.
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    idx : constant integer32 := integer32(v_a(v_a'first));
+    ls : constant String_Splitters.Link_to_String
+       := DEMiCs_Output_Data.Get_Cell_Indices(idx);
+    nbr : integer32;
+
+    use Assignments_in_Ada_and_C;
+    use String_Splitters;
+
+  begin
+    if ls = null then
+      nbr := 0;
+    else
+      nbr := integer32(ls'last);
+      declare
+        sv : constant Standard_Integer_Vectors.Vector
+           := String_to_Integer_Vector(ls.all);
+      begin
+        Assign(sv,b);
+      end;
+    end if;
+    Assign(nbr,a);
+    return 0;
+  end Retrieve_Cell_Indices;
+
   function Clear_Cell_Indices return integer32 is
+
+  -- DESCRIPTION :
+  --   Clears the list of strings that stores the indices to the cells.
+
   begin
     DEMiCs_Output_Data.Clear_Cell_Indices;
     return 0;
@@ -94,7 +147,8 @@ function use_outdata ( job : integer32;
       when 2 => return Retrieve_Lifting;
       when 3 => return Clear_Lifting;
       when 4 => return Append_Cell_Indices;
-      when 5 => return Clear_Cell_Indices;
+      when 5 => return Retrieve_Cell_Indices;
+      when 6 => return Clear_Cell_Indices;
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception

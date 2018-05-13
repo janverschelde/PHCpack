@@ -28,7 +28,11 @@ function use_outdata ( job : integer32;
 --         =  4 : appends the string representation of cell indices,
 --                in a[0] are the number of characters and
 --                in b are the integers corresponding to the characters.
---         =  5 : deallocates the memory occupied by the cell indices.
+--         =  5 : returns the string representation of cell indices,
+--                stored at position a[0], on return in a[0] are the
+--                number of characters in b, the integers representing
+--                the characters in the string;
+--         =  6 : deallocates the memory occupied by the cell indices.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

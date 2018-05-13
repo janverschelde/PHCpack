@@ -1,4 +1,3 @@
-with String_Splitters;
 with Standard_Floating_Vectors;
 
 package body DEMiCs_Output_Data is
@@ -45,6 +44,25 @@ package body DEMiCs_Output_Data is
   begin
     Lists_of_Strings.Append(first,last,link2strcell);
   end Add_Cell_Indices;
+
+  function Get_Cell_Indices
+             ( index : integer32 ) return String_Splitters.Link_to_String is
+
+    res : String_Splitters.Link_to_String := null;
+    tmp : Lists_of_Strings.List := first;
+    cnt : integer32 := 0;
+
+  begin
+    while not Lists_of_Strings.Is_Null(tmp) loop
+      cnt := cnt + 1;
+      if cnt = index then
+        res := Lists_of_Strings.Head_Of(tmp);
+        return res;
+      end if;
+      tmp := Lists_of_Strings.Tail_Of(tmp);
+    end loop;
+    return res;
+  end Get_Cell_Indices;
 
   function Retrieve_Cell_Indices return Lists_of_Strings.List is
   begin

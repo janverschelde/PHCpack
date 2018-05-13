@@ -12,10 +12,46 @@ void print_lifting ( int nbrsup, int* crdsup );
  *   and in crdsup the cardinality of each supports,
  *   prints the lifting value for all points. */
 
+void test_lifting ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for the number of supports,
+ *   cardinalities of the supports, and then lifting values. */
+
+void test_strings ( void );
+/*
+ * DESCRIPTION :
+ *   Test the storage and retrieval of strings. */
+
 int main ( int argc, char* argv[] )
 {
    adainit();
 
+   test_strings();
+   test_lifting();
+
+   adafinal();
+
+   return 0;
+}
+
+void print_lifting ( int nbrsup, int* crdsup )
+{
+   for(int i=0; i<nbrsup; i++)
+   {
+      cout << "lifting values for support " << i << " : " << endl;
+      for(int j=0; j<crdsup[i]; j++)
+      {
+         double val;
+         int fail = retrieve_lifting(i,j,&val);
+         cout << " " << val;
+      }
+      cout << endl;
+   }
+}
+
+void test_lifting ( void )
+{
    cout << "Give the number of distinct supports : ";
    int nbrsup; cin >> nbrsup;
 
@@ -52,23 +88,36 @@ int main ( int argc, char* argv[] )
    while(true);
 
    fail = clear_lifting();
-
-   adafinal();
-
-   return 0;
 }
 
-void print_lifting ( int nbrsup, int* crdsup )
+void test_strings ( void )
 {
-   for(int i=0; i<nbrsup; i++)
+   int fail;
+
+   do
    {
-      cout << "lifting values for support " << i << " : " << endl;
-      for(int j=0; j<crdsup[i]; j++)
+      cout << "Give a string : ";
+      string strcell; cin >> strcell;
+
+      fail = append_cell_indices(strcell);
+
+      do
       {
-         double val;
-         int fail = retrieve_lifting(i,j,&val);
-         cout << " " << val;
+         cout << "Give an index (0 to quit) : ";
+         int idx; cin >> idx;
+
+         if(idx <= 0) break;
+
+         char cell[80];
+         fail = retrieve_cell_indices(idx,cell);
+         cout << "The retrieved string : " << cell << endl;
       }
-      cout << endl;
+      while(true);
+
+      cout << "Continue ? (y/n) ";
+      char ch; cin >> ch;
+ 
+      if(ch != 'y') break;
    }
+   while(true);
 }

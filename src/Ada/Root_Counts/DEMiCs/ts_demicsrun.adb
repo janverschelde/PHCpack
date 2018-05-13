@@ -1,5 +1,6 @@
 with text_io;                           use text_io;
 with Interfaces.C;
+with String_Splitters;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
@@ -14,6 +15,7 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Supports_of_Polynomial_Systems;
 with Mixed_Volume_Computation;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
+with Lists_of_Strings;
 with DEMiCs_Output_Data;
 
 procedure ts_demicsrun is
@@ -120,10 +122,20 @@ procedure ts_demicsrun is
 
     lifting : constant Standard_Floating_VecVecs.Link_to_VecVec
             := DEMiCs_Output_Data.Lifting_Values;
+    cells : constant Lists_of_Strings.List
+          := DEMiCs_Output_Data.Retrieve_Cell_Indices;
+    tmp : Lists_of_Strings.List := cells;
+    ls : String_Splitters.Link_to_String;
 
   begin
     put_line("The lifting values :");
     put(lifting.all);
+    put_line("The mixed cells :");
+    while not Lists_of_Strings.Is_Null(tmp) loop
+      ls := Lists_of_Strings.Head_Of(tmp);
+      put_line(ls.all);
+      tmp := Lists_of_Strings.Tail_Of(tmp);
+    end loop;
   end Show_Output;
 
   procedure Call_DEMiCs ( p : in Poly_Sys; verbose : in boolean := true ) is

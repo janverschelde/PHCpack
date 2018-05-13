@@ -66,6 +66,12 @@ int append_cell_indices ( std::string strcell );
  * DESCRIPTION :
  *   Appends the string representation of the cell indices. */
 
+int retrieve_cell_indices ( int idx, char* strcell );
+/*
+ * DESCRIPTION :
+ *   Returns the string at position idx.
+ *   The strcell should have allocated sufficient space for the result. */
+
 int clear_cell_indices ( void );
 /*
  * DESCRIPTION :

@@ -84,6 +84,30 @@ procedure ts_outdata is
     end loop;
   end Write_Strings;
 
+  procedure Prompt_for_Index is
+
+  -- DESCRIPTION :
+  --   Prompts for an index and then shows the string
+  --   at the location defined by the index.
+
+    index : integer32 := 0;
+    ls : String_Splitters.Link_to_String;
+
+    use String_Splitters;
+
+  begin
+    loop
+      put("Give an index to a string (0 to exit) : ");
+      get(index);
+      exit when (index = 0);
+      ls := DEMiCs_Output_Data.Get_Cell_Indices(index);
+      if ls /= null then
+        put("The string at position "); put(index);
+        put_line(" :"); put_line(ls.all);
+      end if;
+    end loop;
+  end Prompt_for_Index;
+
   procedure Test_on_Strings is
 
   -- DESCRIPTION :
@@ -101,6 +125,7 @@ procedure ts_outdata is
         DEMiCs_Output_Data.Add_Cell_Indices(s);
       end;
       Write_Strings;
+      Prompt_for_Index;
       put("Continue ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');

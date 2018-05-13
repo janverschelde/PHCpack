@@ -55,7 +55,22 @@ int append_cell_indices ( std::string strcell )
 
    fail = _ada_use_c2phc(838,&lenstrcell,cellchars,c);
 
-   return 0;
+   return fail;
+}
+
+int retrieve_cell_indices ( int idx, char* strcell )
+{
+   int fail;
+   int buf[256];
+   int nbr = idx;
+   double *c;
+
+   fail = _ada_use_c2phc(839,&nbr,buf,c);
+
+   for(int k=0; k<nbr; k++) strcell[k] = (char) buf[k];
+   strcell[nbr] = '\0';
+
+   return fail;
 }
 
 int clear_cell_indices ( void )
@@ -63,7 +78,7 @@ int clear_cell_indices ( void )
    int *a,*b,fail;
    double *c;
 
-   fail = _ada_use_c2phc(839,a,b,c);
+   fail = _ada_use_c2phc(840,a,b,c);
 
    return fail;
 }
