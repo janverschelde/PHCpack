@@ -2711,7 +2711,9 @@ function use_c2phc ( job : integer32;
 --                 stored at position a[0], on return in a[0] are the
 --                 number of characters in b, the integers representing
 --                 the characters in the string;
---        =  840 : deallocates the memory occupied by the cell indices.
+--        =  840 : deallocates the memory occupied by the cell indices;
+--        =  841 : stores the mixed volume given in a;
+--        =  842 : returns the stored mixed volume with an assignment to a.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
