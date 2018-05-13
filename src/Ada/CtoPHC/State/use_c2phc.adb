@@ -3183,8 +3183,9 @@ function use_c2phc ( job : integer32;
       when 835 => return use_outdata(1,a,b,c); -- assign a lifting value
       when 836 => return use_outdata(2,a,b,c); -- retrieve a lifting value
       when 837 => return use_outdata(3,a,b,c); -- clear lifting values
-      when 838 => return use_outdata(3,a,b,c); -- append cell indices
-      when 839 => return use_outdata(3,a,b,c); -- clear cell indices
+      when 838 => return use_outdata(4,a,b,c); -- append cell indices
+      when 839 => return use_outdata(5,a,b,c); -- retrieve cell indices
+      when 840 => return use_outdata(6,a,b,c); -- clear cell indices
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

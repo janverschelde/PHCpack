@@ -2707,7 +2707,11 @@ function use_c2phc ( job : integer32;
 --        =  838 : appends the string representation of cell indices,
 --                 in a[0] are the number of characters and
 --                 in b are the integers corresponding to the characters.
---        =  839 : deallocates the memory occupied by the cell indices.
+--        =  839 : returns the string representation of cell indices,
+--                 stored at position a[0], on return in a[0] are the
+--                 number of characters in b, the integers representing
+--                 the characters in the string;
+--        =  840 : deallocates the memory occupied by the cell indices.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
