@@ -3,6 +3,7 @@ with Standard_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with C_Integer_Arrays;                   use C_Integer_Arrays;
 
@@ -68,9 +69,14 @@ package DEMiCs_Algorithm is
                  mix : out Standard_Integer_Vectors.Link_to_Vector;
                  supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                  verbose : in boolean := true );
+  procedure Extract_Supports 
+               ( p : in Laur_Sys;
+                 mix : out Standard_Integer_Vectors.Link_to_Vector;
+                 supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                 verbose : in boolean := true );
 
   -- DESCRIPTION :
-  --   Extracts the supports and computes the type of mixtures.
+  --   Extracts the supports and computes the type of mixture.
 
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;

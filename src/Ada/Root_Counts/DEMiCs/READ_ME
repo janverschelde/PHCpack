@@ -20,15 +20,23 @@ T. Mizutani.
 "Finding all mixed cells for polyhedral homotopies".
 PhD Thesis.  Tokyo Institute of Technology, 2008.
 
-The current interface is a simple file based interface,
+The first interface is a simple file based interface,
 which assumes the executable is available as /tmp/demics
 on UNIX like systems such as Mac OS X and Linux.
+This first interface is tested by ts_calldemics.
 
 The original C++ code is included, after reformatting and removal of
 many superfluous blank lines.  The README.txt is copied from the SRC
 folder of the DEMiCs.0951 distribution archive.
 This README.txt describes the definition of the input files and the
 option to the executable demics.
+
+The second interface links with the original C++ code directly.
+To integrate the original C++ code, it should be compiled with
+a particular flag to apply the modifications to run demics silently
+and write the output into the proper output data suitable for processing.
+This second interface is defined by the package DEMiCs_Algorithm
+and is tested by ts_demicsrun.
 
 ------------------------------------------------------------------------------
 file name                   : short description

@@ -1,5 +1,6 @@
 Mon 14 May 2018 : updated ts_demicsrun to prepare for driver package.
   New package DEMiCs_Algorithm with code taken from ts_demicsrun.adb.
+  To demics_algorithm, added extract of supports for Laurent systems.
 
 Sun 13 May 2018 : added mixed_volume variable to demics_output_data.ads,
   added functions to use_outdata, outputData, tested by ts_outputData.cpp,

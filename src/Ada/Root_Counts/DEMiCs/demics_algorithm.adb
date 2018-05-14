@@ -116,6 +116,23 @@ package body DEMiCs_Algorithm is
     end if;
   end Extract_Supports;
 
+  procedure Extract_Supports 
+               ( p : in Laur_Sys;
+                 mix : out Standard_Integer_Vectors.Link_to_Vector;
+                 supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                 verbose : in boolean := true ) is
+
+    perm : Standard_Integer_Vectors.Link_to_Vector;
+
+  begin
+    supports := Supports_of_Polynomial_Systems.Create(p);
+    Mixed_Volume_Computation.Compute_Mixture(supports,mix,perm);
+    if verbose then
+      put_line("The supports : "); put(supports);
+      put("The mixture type : "); put(mix.all); new_line;
+    end if;
+  end Extract_Supports;
+
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
                 supports : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
