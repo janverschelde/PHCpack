@@ -1,7 +1,8 @@
 Sun 13 May 2018 : added mixed_volume variable to demics_output_data.ads,
   added functions to use_outdata, outputData, tested by ts_outputData.cpp,
   updated demicsrun.h and demicsrun.cpp, tested by ts_demicsrun.adb.
-  Fixed a bug and upgraded simplex.cpp.
+  Fixed a bug and upgraded simplex.cpp.  To ts_demicsrun.adb, added the
+  application of the lifting and the making of the mixed-cell configuration.
 
 Sat 12 May 2018 : in simplex.cpp, commented out the call to the append
   of the cell indices, which caused a crash.  Revised ts_outdata.adb
