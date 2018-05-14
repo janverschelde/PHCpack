@@ -1,3 +1,5 @@
+Mon 14 May 2018 : added DEMiCs to the lifting menu in mainsmvc.adb.
+
 Sat 24 Jun 2017 : extended permute_operations with permutations applied
   to Laurent systems.
 

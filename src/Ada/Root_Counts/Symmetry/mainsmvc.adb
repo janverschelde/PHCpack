@@ -21,6 +21,7 @@ with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Drivers_for_Dynamic_Lifting;        use Drivers_for_Dynamic_Lifting;
 with Drivers_for_Symmetric_Lifting;      use Drivers_for_Symmetric_Lifting;
 with Drivers_for_MixedVol_Algorithm;     use Drivers_for_MixedVol_Algorithm;
+with Drivers_for_DEMiCs_Algorithm;       use Drivers_for_DEMiCs_Algorithm;
 with Write_Seed_Number;
 with Greeting_Banners;
 
@@ -62,16 +63,18 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
   begin
     loop
       new_line;
-      put_line("MENU with available Lifting Strategies :");
+      put_line("MENU with available Lifting Strategies (0 is default) :");
       put_line("  0. Static lifting     : lift points and prune lower hull.");
       put_line("  1. Implicit lifting   : based on recursive formula.");
       put_line("  2. Dynamic lifting    : incrementally add the points.");
       put_line
           ("  3. Symmetric lifting  : points in same orbit get same lifting.");
       put_line("  4. MixedVol Algorithm : a faster mixed volume computation.");
-      put("Type 0, 1, 2, 3, or 4 to select,"
+      put_line
+          ("  5. DEMiCs Algorithm   : dynamic enumeration for mixed cells.");
+      put("Type 0, 1, 2, 3, 4, or 5 to select,"
                 & " eventually preceded by i for info : ");
-      Ask_Alternative(choice,"01234",'i');
+      Ask_Alternative(choice,"012345",'i');
       exit when choice(1) /= 'i';
       new_line;
       case choice(2) is
@@ -110,7 +113,15 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
              if ans = 'y'
               then choice(1) := '4';
              end if;
-        when others => put_line("No information available.");
+        when '5'
+          => DEMiCs_Algorithm_Info; new_line;
+             put("Do you want to run the DEMiCs Algorithm ? (y/n) ");
+             Ask_Yes_or_No(ans);
+             if ans = 'y'
+              then choice(1) := '5';
+             end if;
+        when others
+          => put_line("No information available.");
       end case;
       exit when choice(1) /= 'i';
     end loop;
@@ -119,6 +130,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
       when '2'    => return 2;
       when '3'    => return 3;
       when '4'    => return 4;
+      when '5'    => return 5;
       when others => return 0;
     end case;
   end Lifting_Strategy;
@@ -203,6 +215,8 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
                   (outft,lq.all,true,qq,qsols,mv);
       when 4 => put_line(outft,"MixedVol Algorithm to compute mixed volume");
                 Call_MixedVol(outft,lq);
+      when 5 => put_line(outft,"DEMiCs Algorithm for all mixed cells");
+                Driver_for_DEMiCs_Algorithm(outft,lq.all);
       when others => null;
     end case;
     if Standard_Complex_Solutions.Length_Of(qsols) > 0 then
@@ -231,9 +245,8 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
   procedure Main is
 
   -- DESCRIPTION :
-  --   Reads a Laurent polynomial system with complex coefficients
-  --   in standard double precision and then calls the procedure to
-  --   proceed with the menu of different lifting strategies.
+  --   Reads the system as a Laurent polynomial system,
+  --   prompts the user with the menu for the lifting strategy.
 
     use Standard_Complex_Laur_Systems;
     lq : Link_to_Laur_Sys := null;
