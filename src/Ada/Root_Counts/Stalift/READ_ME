@@ -1,4 +1,4 @@
-Static lifting for mixed volumes and polyhedral continuation in PHCv2.4.51
+Static lifting for mixed volumes and polyhedral continuation in PHCv2.4.54
 
 In release 2.3, one file had to be changed for the optimizer in Mac OS X
 and default options were set to floating-point point-wise lifting.
@@ -68,8 +68,9 @@ driver_for_lifting_functions      : menu-driver for selecting lifting function
 pruning_statistics                : writes pruning statistics
 drivers_for_static_lifting        : menu-driver for static lifting
 ts_drivstal                       : calls the driver for static lifting
-drivers_for_mixedvol_algorithm    : drivers to MixedVol Algorithm
-ts_mvasta                         : calls MixedVol algorithm
+drivers_for_mixedvol_algorithm    : drivers to the MixedVol Algorithm
+ts_mvasta                         : calls the MixedVol algorithm
+drivers_for_demics_algorithm      : drivers to the DEMiCs Algorithm
 -------------------------------------------------------------------------------
 ts_mixlab                         : coordinate/labeled subdivision convertors
 ts_jpmix                          : template to prepare jumpstarting

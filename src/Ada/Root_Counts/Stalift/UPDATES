@@ -1,3 +1,5 @@
+Mon 14 May 2018 : new package drivers_for_demics_algorithm to call DEMiCs.
+
 Fri 23 Mar 2018 : to induced_permutations, added functions to remove the
   artificial origins from a lists of lifted supports.
   Fixed error in induced_permutations.ads.
