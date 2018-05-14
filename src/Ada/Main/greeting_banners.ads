@@ -26,7 +26,7 @@ package Greeting_Banners is
     "Witness Set for Hypersurface cutting with Random Line.";
 
   mvcban : constant string :=
-    "Mixed-Volume Computation, MixedVol, polyhedral homotopies";
+    "Mixed Volumes, MixedVol, DEMiCs, polyhedral homotopies";
 
   pocoban : constant string :=
     "Polynomial Continuation by a homotopy in 1 parameter";

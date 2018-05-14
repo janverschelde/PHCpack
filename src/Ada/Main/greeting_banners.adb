@@ -397,6 +397,8 @@ package body Greeting_Banners is
     put_line("    points in the same orbit receive the same lifting value;");
     put_line(" 4. MixedVol : a faster mixed volume calculator,");
     put_line("    which is applied in the blackbox solver.");
+    put_line(" 5. DEMiCs : dynamic enumeration produces the mixed cells at a");
+    put_line("    faster pace than MixedVol; is fastest for many polytopes.");
     put_line("For the Cayley trick to compute the Minkowski polynomial,");
     put_line("the dynamic lifting strategy should be selected.");
     new_line;
