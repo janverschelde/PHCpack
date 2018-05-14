@@ -83,7 +83,9 @@ CCLINKER    = $(CCC)
 
 # the main executable 
 
-phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o
+phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o \
+     inputData.o outputData.o iTest.o fTest.o simplex4phc.o reltab.o mvc.o \
+     demicsrun.o
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -93,6 +95,8 @@ phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o
 	gnatbind dispatch use_c2phc
 	gnatlink dispatch syscon.o solcon.o phcpack.o feedback.o \
                  pieri_solver.o parameter.o lib2path.o \
+                 inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                 reltab.o mvc.o demicsrun.o \
                  lib.a $(QD_LIB)/libqd.a \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
@@ -1083,23 +1087,25 @@ ts_outputData:
                  /usr/lib/libstdc++.dylib \
                  -lm --LINK=g++
 
-ts_demicsrun:
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+outputData.o:
 	$(gpp) -O2 -Dcompilewgpp=1 \
                -c $(PHCAda)/Root_Counts/DEMiCs/outputData.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/iTest.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/fTest.cpp
+
+simplex4phc.o:
 	$(gpp) $(DEMiCs_CFLAGS) -Dcompile4phc=1 -Dcompilewgpp=1 \
-            -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/reltab.cpp
-	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp
+            -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp -o simplex4phc.o
+
+demicsrun.o:
 	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp
+
+ts_demicsrun: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+              reltab.o mvc.o demicsrun.o
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_demicsrun.adb \
                  -o ts_demicsrun.o
 	gnatbind ts_demicsrun use_c2phc
 	gnatlink ts_demicsrun inputData.o outputData.o iTest.o fTest.o \
-                 simplex.o reltab.o mvc.o demicsrun.o \
+                 simplex4phc.o reltab.o mvc.o demicsrun.o \
                  -o $(BIN)/ts_demicsrun \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
