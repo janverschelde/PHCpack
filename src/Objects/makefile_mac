@@ -2951,7 +2951,8 @@ lib_adepath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                     $(QD_LIB)/libqd.a \
                  -o $(BIN)/lib_adepath_qd -lm --LINK=g++
 
-phc_solve:
+phc_solve: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
@@ -2959,9 +2960,13 @@ phc_solve:
 	gcc -c $(PHCLib)/phc_solve.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
-                 -o $(BIN)/phc_solve -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/phc_solve -lm --LINK=g++
 
-phc_solve_cpp:
+phc_solve_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+               reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
@@ -2969,9 +2974,13 @@ phc_solve_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phc_solve.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/phc_solve -lm --LINK=g++
 
-phcpy2c2.so: lib2path.o parameter.o
+phcpy2c2.so: lib2path.o parameter.o inputData.o outputData.o iTest.o fTest.o \
+             simplex4phc.o reltab.o mvc.o demicsrun.o
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
@@ -3001,9 +3010,11 @@ phcpy2c2.so: lib2path.o parameter.o
             solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
             giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
             scalers.o reducers.o numbtrop.o sweep.o multiplicity.o schubert.o \
-            syspool.o series.o parameter.o lib2path.o $(QD_LIB)/libqd.a \
-                 /usr/lib/libc++.dylib \
-                 /usr/lib/libstdc++.dylib \
+            syspool.o series.o \
+            inputData.o outputData.o iTest.o fTest.o \
+            simplex4phc.o reltab.o mvc.o demicsrun.o \
+            parameter.o lib2path.o $(QD_LIB)/libqd.a \
+                 /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o ../Python/PHCpy2/phcpy/phcpy2c2.so \
                  /usr/lib/libpython2.7.dylib \
                  -lm --LINK=gcc
@@ -3054,7 +3065,8 @@ sage_phcpy2c2.so: parameter.o lib2path.o
 # (3) With the sage python interpreter do 'python setup.py install'
 #     and then check if import phcpy works at the sage prompt.
 
-phcpy2c3.so: parameter.o lib2path.o
+phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
+             simplex4phc.o reltab.o mvc.o demicsrun.o
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
@@ -3084,9 +3096,11 @@ phcpy2c3.so: parameter.o lib2path.o
             solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
             giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
             scalers.o reducers.o sweep.o multiplicity.o numbtrop.o schubert.o \
-            syspool.o series.o parameter.o lib2path.o $(QD_LIB)/libqd.a \
-                 /usr/lib/libc++.dylib \
-                 /usr/lib/libstdc++.dylib \
+            syspool.o series.o \
+            inputData.o outputData.o iTest.o fTest.o \
+            simplex4phc.o reltab.o mvc.o demicsrun.o \
+            parameter.o lib2path.o $(QD_LIB)/libqd.a \
+                  /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
                $(PYTHON36lib)/libpython3.6m.dylib -lm --LINK=g++
 
