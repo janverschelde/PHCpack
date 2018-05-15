@@ -151,6 +151,20 @@ package Drivers_for_Static_Lifting is
   --   smv       stable mixed volume (only if stlb is nonzero);
   --   tmv       total mixed volume (only if stlb is nonzero).
 
+  procedure Prompt_for_File
+               ( misufile : out boolean;
+                 outsubft : in out file_type );
+
+  -- DESCRIPTION :
+  --   Prompts the user regarding the output file before the
+  --   computation of a regular mixed-cell configuration.
+
+  -- ON RETURN :
+  --   misufile  indicates whether the mixed-cell configuration has
+  --             to be written on a separate file or not;
+  --   outsubft  if misufile, then on return, this file pointer
+  --             has been assigned to some output file.
+
   procedure Integer_Polyhedral_Homotopy_Continuation
                ( file : in file_type; contrep : in boolean;
                  n : in integer32; mix : in Standard_Integer_Vectors.Vector;

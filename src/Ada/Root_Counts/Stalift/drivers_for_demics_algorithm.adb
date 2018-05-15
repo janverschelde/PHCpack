@@ -9,6 +9,7 @@ with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
+with Drivers_for_Static_Lifting;
 with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
 
 package body Drivers_for_DEMiCs_Algorithm is
@@ -43,8 +44,15 @@ package body Drivers_for_DEMiCs_Algorithm is
     mv : natural32;
     mcc : Mixed_Subdivision;
     timer : Timing_Widget;
+    mcc2file : boolean := false;
+    subfile : file_type;
 
   begin
+    new_line;
+    Drivers_for_Static_Lifting.Prompt_for_File(mcc2file,subfile);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
     Extract_Supports(p,mix,sup,false); -- verbose is false
     tstart(timer);
     Call_DEMiCs(mix,sup,false);
@@ -59,6 +67,10 @@ package body Drivers_for_DEMiCs_Algorithm is
     end;
     put_line(file,"The mixed-cell configuration :");
     Floating_Mixed_Subdivisions_io.put(file,natural32(dim),mix.all,mcc,mv);
+    if mcc2file then
+      Floating_Mixed_Subdivisions_io.put(subfile,natural32(dim),mix.all,mcc);
+      close(subfile);
+    end if;
     put(file,"The mixed volume : "); put(file,mv,1); new_line(file);
     new_line(file);
     print_times(file,timer,"DEMiCs Algorithm");

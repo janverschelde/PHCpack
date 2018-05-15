@@ -1,4 +1,6 @@
 Mon 14 May 2018 : new package drivers_for_demics_algorithm to call DEMiCs.
+  Exposed the prompting for file in drivers_for_static_lifting.ads,
+  applied in drivers_for_demics_algorithm.adb to write the cells to file.
 
 Fri 23 Mar 2018 : to induced_permutations, added functions to remove the
   artificial origins from a lists of lifted supports.
