@@ -213,6 +213,16 @@ int stable_mixed_volume ( int *mv, int *smv )
    return fail;
 }
 
+int mixed_volume_by_demics ( int *mv )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(843,mv,b,c);
+
+   return fail;
+}
+
 int standard_deflate
  ( int maxitr, int maxdef, double tolerr, double tolres, double tolrnk )
 {

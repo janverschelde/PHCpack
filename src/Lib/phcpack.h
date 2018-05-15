@@ -158,16 +158,30 @@ int solve_quaddobl_Laurent_system
 int mixed_volume ( int *mv );
 /*
  * DESCRIPTION :
- *   Computes the mixed volume for the system currently in the systems
- *   container.  The integer in mv on return equals the mixed volume.
+ *   Computes the mixed volume for the system currently in the standard
+ *   systems container, calling the Ada translation of MixedVol.
+ *   If the standard systems container is empty,
+ *   then the system of the standard Laurent systems container is taken.
+ *   The integer in mv on return equals the mixed volume.
  *   The regular mixed-cell configuration is in the cells container. */
 
 int stable_mixed_volume ( int *mv, int *smv );
 /*
  * DESCRIPTION :
  *   Computes the mixed volume mv and the stable mixed volume for the 
- *   system currently in the systems container.  The integer in mv on 
- *   return equals the mixed volume.
+ *   system currently in the standard systems container,
+ *   calling the Ada translation of MixedVol.
+ *   The integer in mv on  return equals the mixed volume.
+ *   The regular mixed-cell configuration is in the cells container. */
+
+int mixed_volume_by_demics ( int *mv );
+/*
+ * DESCRIPTION :
+ *   Calls DEMiCs to compute the mixed volume of the system in the
+ *   standard systems container.  If the standard systems container
+ *   is empty, then the system in the standard Laurent systems
+ *   container is taken as input.
+ *   The integer in mv on return equals the mixed volume.
  *   The regular mixed-cell configuration is in the cells container. */
 
 int standard_deflate

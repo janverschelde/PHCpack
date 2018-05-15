@@ -173,12 +173,21 @@ int main ( void )
 
 int compute_mixed_volume( void )
 {
-   int fail,mv,len,dim,r;
+   int fail,mv,len,dim,r,choice;
+
+   printf("\nMENU for mixed volume calculator :\n");
+   printf("  1. use MixedVol;\n");
+   printf("  2. use DEMiCs.\n");
+   printf("Type 1 or 2 to choose : ");
+   scanf("%d",&choice);
 
    fail = syscon_read_standard_system();
    printf("\nThe system in the container : \n");
    fail = syscon_write_standard_system();
-   fail = mixed_volume(&mv);
+   if(choice == 1)
+      fail = mixed_volume(&mv);
+   else
+      fail = mixed_volume_by_demics(&mv);
    printf("\nThe mixed volume : %d\n",mv);
    fail = celcon_number_of_cells(&len);
    printf("\nnumber of mixed cells : %d\n",len);

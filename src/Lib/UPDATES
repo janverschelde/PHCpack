@@ -1,3 +1,6 @@
+Tue 15 May 2018 : added function mixed_volume_by_demics to phcpack,
+  tested by lib_celcon.
+
 Sun 29 Apr 2018 : completed phcpy2c2.c for the multiplicity structure
   in double double and quad double precision.  Completed phcpy2c3.c too.
 
