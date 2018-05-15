@@ -4,12 +4,10 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
-with Arrays_of_Floating_Vector_Lists;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
-with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
 with Drivers_for_Static_Lifting;
+with DEMiCs_Output_Data;
 with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
 
 package body Drivers_for_DEMiCs_Algorithm is
@@ -33,6 +31,48 @@ package body Drivers_for_DEMiCs_Algorithm is
       put_line(i(k));
     end loop;
   end DEMiCs_Algorithm_Info;
+
+  procedure BlackBox_DEMiCs_Algorithm
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+              lif : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv : out natural32 ) is  
+
+    dim : constant integer32 := p'last;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+
+  begin
+    Extract_Supports(p,mix,sup,false); -- verbose is false
+    Call_DEMiCs(mix,sup,false);
+    declare
+      lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    begin
+      Process_Output(dim,mix,sup,lifsup,mcc,false);
+      lif := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(lifsup);
+    end;
+    mv := natural32(DEMiCs_Output_Data.mixed_volume);
+  end BlackBox_DEMiCs_Algorithm;
+
+  procedure BlackBox_DEMiCs_Algorithm
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+              lif : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv : out natural32 ) is  
+
+    dim : constant integer32 := p'last;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+
+  begin
+    Extract_Supports(p,mix,sup,false); -- verbose is false
+    Call_DEMiCs(mix,sup,false);
+    declare
+      lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    begin
+      Process_Output(dim,mix,sup,lifsup,mcc,false);
+      lif := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(lifsup);
+    end;
+    mv := natural32(DEMiCs_Output_Data.mixed_volume);
+  end BlackBox_DEMiCs_Algorithm;
 
   procedure Driver_for_DEMiCs_Algorithm
               ( file : in file_type;

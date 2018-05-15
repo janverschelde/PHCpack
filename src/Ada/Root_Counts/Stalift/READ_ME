@@ -71,6 +71,7 @@ ts_drivstal                       : calls the driver for static lifting
 drivers_for_mixedvol_algorithm    : drivers to the MixedVol Algorithm
 ts_mvasta                         : calls the MixedVol algorithm
 drivers_for_demics_algorithm      : drivers to the DEMiCs Algorithm
+ts_demics                         : calls the DEMiCs Algorithm
 -------------------------------------------------------------------------------
 ts_mixlab                         : coordinate/labeled subdivision convertors
 ts_jpmix                          : template to prepare jumpstarting
