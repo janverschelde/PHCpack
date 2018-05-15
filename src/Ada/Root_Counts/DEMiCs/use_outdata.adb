@@ -5,9 +5,17 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
+with Arrays_of_Floating_Vector_Lists;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
+with Floating_Mixed_Subdivisions;
+with Standard_PolySys_Container;
+with Standard_LaurSys_Container;
 with Assignments_in_Ada_and_C;
 with C_to_Ada_Arrays;
+with Cells_Container;
 with DEMiCs_Output_Data;
+with Drivers_for_DEMiCs_Algorithm;
 
 function use_outdata ( job : integer32;
                        a : C_intarrs.Pointer;
@@ -164,6 +172,37 @@ function use_outdata ( job : integer32;
     return 0;
   end Retrieve_Mixed_Volume;
 
+  function Mixed_Volume_by_DEMiCs return integer32 is 
+
+  -- DESCRIPTION :
+  --   Calls DEMiCs to ompute the mixed volume of the system in the
+  --   standard systems container, or if that container is empty,
+  --   of the system in the Laurent Systems container.
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Laur_Systems;
+
+    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    lq : Link_to_Laur_Sys;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+    mixsub : Floating_Mixed_Subdivisions.Mixed_Subdivision;
+    mv : natural32;
+
+    use Drivers_for_DEMiCs_Algorithm;
+
+  begin
+    if lp /= null then
+      BlackBox_DEMiCs_Algorithm(lp.all,mix,lifsup,mixsub,mv);
+    else
+      lq := Standard_LaurSys_Container.Retrieve;
+      BlackBox_DEMiCs_Algorithm(lq.all,mix,lifsup,mixsub,mv);
+    end if;
+    Assignments_in_Ada_and_C.Assign(integer32(mv),a);
+    Cells_Container.Initialize(mix,lifsup,mixsub);
+    return 0;
+  end Mixed_Volume_by_DEMiCs;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -176,6 +215,7 @@ function use_outdata ( job : integer32;
       when 6 => return Clear_Cell_Indices;
       when 7 => return Store_Mixed_Volume;
       when 8 => return Retrieve_Mixed_Volume;
+      when 9 => return Mixed_Volume_by_DEMiCs;
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception

@@ -34,7 +34,13 @@ function use_outdata ( job : integer32;
 --                the characters in the string;
 --         =  6 : deallocates the memory occupied by the cell indices;
 --         =  7 : stores the mixed volume given in a;
---         =  8 : returns the stored mixed volume with an assignment to a.
+--         =  8 : returns the stored mixed volume with an assignment to a;
+--         =  9 : computes the mixed volume for the system in the systems
+--                container and fills the cells container with the regular
+--                mixed-cell configuration constructed for the mixed volume,
+--                using dynamic enumeration for all mixed cells (demics),
+--                if the standard systems container is empty, then the
+--                system in the standard Laurent systems container is taken.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

@@ -1,3 +1,5 @@
+Tue 15 May 2018 : added job to use_outdata to compute mixed volume by DEMiCs.
+
 Mon 14 May 2018 : updated ts_demicsrun to prepare for driver package.
   New package DEMiCs_Algorithm with code taken from ts_demicsrun.adb.
   To demics_algorithm, added extract of supports for Laurent systems.
