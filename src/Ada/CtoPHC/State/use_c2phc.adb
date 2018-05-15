@@ -3188,6 +3188,7 @@ function use_c2phc ( job : integer32;
       when 840 => return use_outdata(6,a,b,c); -- clear cell indices
       when 841 => return use_outdata(7,a,b,c); -- store mixed volume
       when 842 => return use_outdata(8,a,b,c); -- retrieve mixed volume
+      when 843 => return use_outdata(9,a,b,c); -- call DEMiCs for mixed volume
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

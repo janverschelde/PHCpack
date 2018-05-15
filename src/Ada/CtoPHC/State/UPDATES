@@ -1,3 +1,5 @@
+Tue 15 May 2018 : added job 843 to call demics to compute the mixed volume.
+
 Sun 13 May 2018 : jobs added to use_c2phc to store the mixed volume.
 
 Sat 12 May 2018 : added job to use_c2phc.ads and use_c2phc.adb.
