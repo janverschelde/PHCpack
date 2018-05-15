@@ -977,6 +977,18 @@ ts_userlift:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_userlift.adb \
               -o $(BIN)/ts_userlift
 
+ts_demics: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc.o demicsrun.o
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_demics.adb
+	gnatbind ts_demics use_c2phc
+	gnatlink ts_demics inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc.o demicsrun.o \
+                 -o $(BIN)/ts_demics \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=g++
+
 # Test programs for the Root_Counts/Dynlift library :
 
 ts_dyntri:
@@ -2192,7 +2204,6 @@ ts_greet:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_greet.adb \
               -o $(BIN)/ts_greet
 
-
 # Test programs for the Library Lib :
 
 phcpack.o:
@@ -2206,55 +2217,82 @@ ts_list2str:
 	gcc -c $(PHCLib)/ts_list2str.c
 	gcc lists_and_strings.o ts_list2str.o -o $(BIN)/ts_list2str
 
-lib_syscon:
+lib_syscon: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/lib_syscon.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc syscon.o lib_syscon.o -o $(BIN)/lib_syscon
+	gnatlink -C use_c2phc syscon.o lib_syscon.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_syscon --LINK=g++
 
-lib_syscon_cpp:
+lib_syscon_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_syscon.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc syscon.o lib_syscon.o -o $(BIN)/lib_syscon \
-                 --LINK=g++
+	gnatlink -C use_c2phc syscon.o lib_syscon.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_syscon --LINK=g++
 
-lib_solcon:
+lib_solcon: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_solcon.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc solcon.o lib_solcon.o -o $(BIN)/lib_solcon
+	gnatlink -C use_c2phc solcon.o lib_solcon.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_solcon --LINK=g++
 
-lib_solcon_cpp:
+lib_solcon_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1  -c $(PHCLib)/solcon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_solcon.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc solcon.o lib_solcon.o -o $(BIN)/lib_solcon \
-                 --LINK=g++
+	gnatlink -C use_c2phc solcon.o lib_solcon.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_solcon --LINK=g++
 
-lib_read:
+lib_read: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+          reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_read.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o \
-                 -o $(BIN)/lib_read -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_read -lm --LINK=g++
 
-lib_read_cpp:
+lib_read_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+              reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_read.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_read -lm --LINK=g++
 
-lib_newton:
+lib_newton: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2262,9 +2300,13 @@ lib_newton:
 	gcc -c $(PHCLib)/lib_newton.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o lib_newton.o \
-                 -o $(BIN)/lib_newton -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_newton -lm --LINK=g++
 
-lib_newton_cpp:
+lib_newton_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2272,9 +2314,13 @@ lib_newton_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_newton.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o lib_newton.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_newton -lm --LINK=g++
 
-lib_multip:
+lib_multip: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2283,9 +2329,13 @@ lib_multip:
 	gcc -c $(PHCLib)/lib_multip.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o multiplicity.o \
-                    lib_multip.o -o $(BIN)/lib_multip -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                    lib_multip.o -o $(BIN)/lib_multip -lm --LINK=g++
 
-lib_multip_cpp:
+lib_multip_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2294,9 +2344,13 @@ lib_multip_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_multip.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o multiplicity.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                     lib_multip.o -o $(BIN)/lib_multip -lm --LINK=g++
 
-lib_roco:
+lib_roco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+          reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2305,9 +2359,13 @@ lib_roco:
 	gcc -c $(PHCLib)/lib_roco.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o product.o \
-                    lib_roco.o -o $(BIN)/lib_roco -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                    lib_roco.o -o $(BIN)/lib_roco -lm --LINK=g++
 
-lib_roco_cpp:
+lib_roco_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+              reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2316,9 +2374,13 @@ lib_roco_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_roco.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o product.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                     lib_roco.o -o $(BIN)/lib_roco -lm --LINK=g++
 
-lib_celcon:
+lib_celcon: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2328,9 +2390,13 @@ lib_celcon:
 	gcc -c $(PHCLib)/lib_celcon.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o celcon.o \
-                    intcelcon.o lib_celcon.o -o $(BIN)/lib_celcon -lm
+                    intcelcon.o inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o lib_celcon.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_celcon -lm --LINK=g++
 
-lib_celcon_cpp:
+lib_celcon_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2340,10 +2406,13 @@ lib_celcon_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_celcon.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o celcon.o \
-                    intcelcon.o lib_celcon.o -o $(BIN)/lib_celcon -lm \
-                 --LINK=g++
+                    intcelcon.o inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o lib_celcon.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_celcon -lm --LINK=g++
 
-lib_celphc:
+lib_celphc: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2351,9 +2420,13 @@ lib_celphc:
 	gcc -c $(PHCLib)/lib_celphc.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o celcon.o \
-                    lib_celphc.o -o $(BIN)/lib_celphc -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                    lib_celphc.o -o $(BIN)/lib_celphc -lm --LINK=g++
 
-lib_celphc_cpp:
+lib_celphc_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2361,9 +2434,13 @@ lib_celphc_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_celphc.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o celcon.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                     lib_celphc.o -o $(BIN)/lib_celphc -lm --LINK=g++
 
-lib_scale:
+lib_scale: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2371,9 +2448,13 @@ lib_scale:
 	gcc -c $(PHCLib)/lib_scale.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o scalers.o lib_scale.o \
-                 -o $(BIN)/lib_scale -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_scale -lm --LINK=g++
 
-lib_scale_cpp:
+lib_scale_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+               reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2381,9 +2462,13 @@ lib_scale_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_scale.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o scalers.o lib_scale.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_scale -lm --LINK=g++
 
-lib_reduce:
+lib_reduce: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2391,9 +2476,13 @@ lib_reduce:
 	gcc -c $(PHCLib)/lib_reduce.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o reducers.o lib_reduce.o \
-                 -o $(BIN)/lib_reduce -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_reduce -lm --LINK=g++
 
-lib_reduce_cpp:
+lib_reduce_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2401,39 +2490,61 @@ lib_reduce_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_reduce.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o reducers.o lib_reduce.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_reduce -lm --LINK=g++
 
-lib_conpar:
+lib_conpar: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/lib_conpar.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o lib_conpar.o -o $(BIN)/lib_conpar -lm
+	gnatlink -C use_c2phc phcpack.o lib_conpar.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_conpar -lm --LINK=g++
 
-lib_conpar_cpp:
+lib_conpar_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_conpar.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o lib_conpar.o -o $(BIN)/lib_conpar -lm \
-                 --LINK=g++
+	gnatlink -C use_c2phc phcpack.o lib_conpar.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_conpar -lm --LINK=g++
 
-lib_poco:
+lib_poco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+          reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/lib_poco.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o lib_poco.o -o $(BIN)/lib_poco -lm
+	gnatlink -C use_c2phc phcpack.o lib_poco.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_poco -lm --LINK=g++
 
-lib_poco_cpp:
+lib_poco_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+              reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_poco.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o lib_poco.o -o $(BIN)/lib_poco -lm \
-                 --LINK=g++
+	gnatlink -C use_c2phc phcpack.o lib_poco.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_poco -lm --LINK=g++
 
-lib_track:
+lib_track: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2443,9 +2554,14 @@ lib_track:
 	gcc -c $(PHCLib)/lib_track.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
-                 jump_track.o lib_track.o -o $(BIN)/lib_track -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                    jump_track.o lib_track.o \
+                 -o $(BIN)/lib_track -lm --LINK=g++
 
-lib_track_cpp:
+lib_track_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+               reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2455,10 +2571,14 @@ lib_track_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_track.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
-                 jump_track.o lib_track.o -o $(BIN)/lib_track -lm \
-                 --LINK=g++
+                    jump_track.o lib_track.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_track -lm --LINK=g++
 
-lib_nxtsol:
+lib_nxtsol: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2468,9 +2588,14 @@ lib_nxtsol:
 	gcc -c $(PHCLib)/lib_nxtsol.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o jump_track.o \
-                    next_track.o lib_nxtsol.o -o $(BIN)/lib_nxtsol
+                    next_track.o lib_nxtsol.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_nxtsol
 
-lib_nxtsol_cpp:
+lib_nxtsol_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2480,23 +2605,35 @@ lib_nxtsol_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_nxtsol.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o jump_track.o \
-                    next_track.o lib_nxtsol.o -o $(BIN)/lib_nxtsol \
-                 --LINK=g++
+                    next_track.o lib_nxtsol.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_nxtsol --LINK=g++
 
-lib_sweep:
+lib_sweep: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/sweep.c
 	gcc -c $(PHCLib)/lib_sweep.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc sweep.o lib_sweep.o -o $(BIN)/lib_sweep
+	gnatlink -C use_c2phc sweep.o lib_sweep.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_sweep --LINK=g++
 
-lib_sweep_cpp:
+lib_sweep_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+               reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/sweep.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_sweep.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc sweep.o lib_sweep.o -o $(BIN)/lib_sweep \
-                 --LINK=g++
+	gnatlink -C use_c2phc sweep.o lib_sweep.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_sweep --LINK=g++
 
 lib_pieri:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2pieri.adb
@@ -2511,7 +2648,8 @@ lib_pieri_cpp:
 	gnatlink -C use_c2pieri lib_pieri.o -o $(BIN)/lib_pieri \
                  --LINK=g++
 
-lib_lrhom:
+lib_lrhom: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c -O2 $(PHCLib)/syscon.c
 	gcc -c -O2 $(PHCLib)/solcon.c
@@ -2519,9 +2657,13 @@ lib_lrhom:
 	gcc -c -O2 $(PHCLib)/lib_lrhom.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc syscon.o solcon.o schubert.o lib_lrhom.o \
-                 -o $(BIN)/lib_lrhom -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_lrhom -lm --LINK=g++
 
-lib_lrhom_cpp:
+lib_lrhom_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+               reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/solcon.c
@@ -2529,9 +2671,13 @@ lib_lrhom_cpp:
 	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/lib_lrhom.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc syscon.o solcon.o schubert.o lib_lrhom.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_lrhom -lm --LINK=g++
 
-lib_factor:
+lib_factor: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2540,9 +2686,13 @@ lib_factor:
 	gcc -c $(PHCLib)/lib_factor.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
-                              lib_factor.o -o $(BIN)/lib_factor -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o lib_factor.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_factor -lm --LINK=g++
 
-lib_factor_cpp:
+lib_factor_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2552,9 +2702,13 @@ lib_factor_cpp:
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
                     lib_factor.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_factor -lm --LINK=g++
 
-lib_member:
+lib_member: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2563,9 +2717,14 @@ lib_member:
 	gcc -c $(PHCLib)/lib_member.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
-                    lib_member.o -o $(BIN)/lib_member -lm
+                    lib_member.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_member -lm --LINK=g++
 
-lib_member_cpp:
+lib_member_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2575,9 +2734,13 @@ lib_member_cpp:
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
                     lib_member.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_member -lm --LINK=g++
 
-lib_usolve:
+lib_usolve: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
@@ -2585,9 +2748,13 @@ lib_usolve:
 	gcc -c $(PHCLib)/lib_usolve.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc syscon.o solcon.o unisolvers.o lib_usolve.o \
-                 -o $(BIN)/lib_usolve -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_usolve -lm --LINK=g++
 
-lib_usolve_cpp:
+lib_usolve_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
@@ -2595,41 +2762,61 @@ lib_usolve_cpp:
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_usolve.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc syscon.o solcon.o unisolvers.o lib_usolve.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_usolve -lm --LINK=g++
 
-lib_giftwrap:
+lib_giftwrap: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+              reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/giftwrappers.c
 	gcc -c $(PHCLib)/lib_giftwrap.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc giftwrappers.o lib_giftwrap.o \
-                 -o $(BIN)/lib_giftwrap -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_giftwrap -lm --LINK=g++
 
-lib_giftwrap_cpp:
+lib_giftwrap_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                  reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/giftwrappers.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_giftwrap.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc giftwrappers.o lib_giftwrap.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_giftwrap -lm --LINK=g++
 
-lib_numbtrop:
+lib_numbtrop: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+              reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/numbtrop.c
 	gcc -c $(PHCLib)/lib_numbtrop.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc numbtrop.o lib_numbtrop.o \
-                 -o $(BIN)/lib_numbtrop -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_numbtrop -lm --LINK=g++
 
-lib_numbtrop_cpp:
+lib_numbtrop_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                  reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/numbtrop.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_numbtrop.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc numbtrop.o lib_numbtrop.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_numbtrop -lm --LINK=g++
 
-lib_series:
+lib_series: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -2639,9 +2826,13 @@ lib_series:
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc \
                     phcpack.o syscon.o syspool.o series.o lib_series.o \
-                 -o $(BIN)/lib_series -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_series -lm --LINK=g++
 
-lib_series_cpp:
+lib_series_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -2651,22 +2842,33 @@ lib_series_cpp:
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc \
                     phcpack.o syscon.o syspool.o series.o lib_series.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_series -lm --LINK=g++
 
-lib_nbrvar:
+lib_nbrvar: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/lib_nbrvar.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o lib_nbrvar.o \
-                 -o $(BIN)/lib_nbrvar -lm
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_nbrvar -lm --LINK=g++
 
-lib_nbrvar_cpp:
+lib_nbrvar_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                reltab.o mvc.o demicsrun.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_nbrvar.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o lib_nbrvar.o \
+                    inputData.o outputData.o iTest.o fTest.o \
+                    simplex4phc.o reltab.o mvc.o demicsrun.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_nbrvar -lm --LINK=g++
 
 adepath_d.o: adenewton_d.o adeonepath_d.o ademanypaths_d.o
