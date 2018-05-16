@@ -994,7 +994,22 @@ static PyObject *py2c_mixed_volume
  * DESCRIPTION :
  *   Computes the mixed volume, and the stable mixed volume as well if
  *   the input parameter equals 1.  On return is the mixed volume, or
- *   a tuple with the mixed volume and the stable mixed volume. */
+ *   a tuple with the mixed volume and the stable mixed volume.
+ *   The Ada translation of the MixedVol algorithm is applied.
+ *   The system in the standard systems container is considered first
+ *   and if that container is empty, then the system in the standard
+ *   Laurent systems container is taken as input.
+ *   A regular mixed-cell configuration is in the cells container. */
+
+static PyObject *py2c_mixed_volume_by_demics 
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Calls DEMiCs to compute the mixed volume of the system in the
+ *   standard systems container.  If the standard systems container
+ *   is empty, then the system in the standard Laurent systems
+ *   container is taken as input.  Returns the mixed volume.
+ *   A regular mixed-cell configuration is in the cells container. */
 
 static PyObject *py2c_standard_deflate
  ( PyObject *self, PyObject *args );

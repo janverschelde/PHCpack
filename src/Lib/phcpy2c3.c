@@ -1552,6 +1552,19 @@ static PyObject *py2c_mixed_volume
    }
 }
 
+static PyObject *py2c_mixed_volume_by_demics 
+ ( PyObject *self, PyObject *args )
+{
+   int fail,mv;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+
+   fail = mixed_volume_by_demics(&mv);
+
+   return Py_BuildValue("i",mv);
+}
+
 static PyObject *py2c_standard_deflate
  ( PyObject *self, PyObject *args )
 {
@@ -8693,6 +8706,8 @@ static PyMethodDef phcpy2c3_methods[] =
     "Calls the blackbox solver on the system stored in the container for\n Laurent systems with coefficients in quad double precision.\n Two integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose; and \n 2) the number of tasks: if 0, then no multitasking is applied,\n otherwise as many tasks as the number will run.\n On return, the container for solutions in quad double precision\n contains the solutions to the system in the quad double Laurent systems\n container."},
    {"py2c_mixed_volume", py2c_mixed_volume, METH_VARARGS,
     "Computes the mixed volume, and the stable mixed volume as well if\n the input parameter equals 1.  On return is the mixed volume, or\n a tuple with the mixed volume and the stable mixed volume."},
+   {"py2c_mixed_volume_by_demics", py2c_mixed_volume_by_demics, METH_VARARGS,
+    "Calls DEMiCs to compute the mixed volume of the system in the\n standard systems container.  If the standard systems container\n is empty, then the system in the standard Laurent systems\n container is taken as input.\n The integer in mv on return equals the mixed volume.\n The regular mixed-cell configuration is in the cells container."},
    {"py2c_standard_deflate", py2c_standard_deflate, METH_VARARGS,
     "Applies deflation in standard double precision to the system and\n the solutions stored in the containers.\n There are five input parameters, two integers and three doubles:\n (1) maxitr : the maximum number of iterations per root,\n (2) maxdef : the maximum number of deflations per root,\n (3) tolerr : tolerance on the forward error on each root,\n (4) tolres : tolerance on the backward error on each root,\n (5) tolres : tolerance on the numerical rank of the Jacobian matrices.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_dobldobl_deflate", py2c_dobldobl_deflate, METH_VARARGS,
