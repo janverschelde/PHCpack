@@ -467,6 +467,18 @@ with all coordinates different from zero,
 and, also considering solutions with zero coordinates, 
 at most 18 isolated solutions, counted with multiplicities.
 
+For larger polynomial systems with many different supports,
+DEMiCs is faster than MixedVol.
+The code snippet below illustrates 
+the computation of the mixed volume by calling DEMiCs.
+
+::
+
+   >>> f = ['x^3*y^2 + x*y^2 + x^2;', 'x^5 + x^2*y^3 + y^2;']
+   >>> from phcpy.solver import mixed_volume_by_demics as demics
+   >>> demics(f)
+   14
+
 For every root count, total degree, m-homogeneous Bezout number,
 linear-product root count, and mixed volume, there is a corresponding
 method to construct a polynomial system with exactly as many regular
