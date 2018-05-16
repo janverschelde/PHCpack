@@ -764,6 +764,31 @@ def mixed_volume(pols, stable=False, checkin=True):
     else:
         return py2c_mixed_volume(stable)
 
+def mixed_volume_by_demics(pols, checkin=True):
+    r"""
+    Given in *pols* a list of string representations of polynomials,
+    DEMiCs is called to compute the mixed volume of the Newton
+    polytopes spanned by the supports of the polynomials in the system.
+    DEMiCs applies dynamic enumeration to compute all mixed cells, was
+    developed by Tomohiko Mizutani, Akiko Takeda, and Masakazu Kojima.
+    If checkin, then the system will be checked for being square
+    and if then the system is not square, an error message is printed
+    and -1 is returned.
+    """
+    if checkin:
+        errmsg = 'Mixed volumes are defined only for square systems,'
+        if not solve_checkin(pols, errmsg):
+            return -1
+    from phcpy.phcpy2c3 import py2c_celcon_clear_container
+    from phcpy.phcpy2c3 import py2c_mixed_volume_by_demics
+    from phcpy.interface import store_standard_system
+    py2c_celcon_clear_container()
+    fail = store_standard_system(pols)
+    if(fail != 0):
+        return -fail  # a negative number is clearly wrong
+    else:
+        return py2c_mixed_volume_by_demics()
+
 def standard_random_coefficient_system(verbose=True):
     r"""
     Runs the polyhedral homotopies and returns a random coefficient
@@ -1514,6 +1539,19 @@ def test_multiplicity(precision='d'):
         mul = quaddobl_multiplicity(pols, sol, verbose=True)
     else:
         print('wrong level of precision')
+
+def test_mixed_volume():
+    """
+    Runs a test on the mixed volume calculators.
+    """
+    pols = ['x*y - x + 3*x^3;', 'x^2 + y^3 + x*y;']
+    for pol in pols:
+        print(pol)
+    mv = mixed_volume_by_demics(pols)
+    print('mixed volume by DEMiCs :', mv)
+    (mv2, smv) = mixed_volume(pols, stable=True)
+    print('mixed volume by MixedVol :', mv2)
+    print('stable mixed volume by MixedVol :', smv)
 
 def test():
     """
