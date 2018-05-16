@@ -3551,6 +3551,22 @@ phcpy2c2.so: parameter.o lib2path.o
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/syspool.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/jump_track.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/next_track.c
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/outputData.cpp
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/iTest.cpp
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/fTest.cpp
+	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 -static -fPIC $(DEMiCS_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp -o simplex4phc.o
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/reltab.cpp
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 -I$(PHCLib) \
                -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Host \
                -I$(PHCgpu)/Path/Poly2 -I$(PYTHON) \
@@ -3589,6 +3605,22 @@ phcpy2c3.so: parameter.o lib2path.o
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/syspool.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/jump_track.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/next_track.c
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/outputData.cpp
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/iTest.cpp
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/fTest.cpp
+	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 -static -fPIC $(DEMiCS_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp -o simplex4phc.o
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/reltab.cpp
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp
+	$(gpp) -Dcompilewgpp=1 -static -fPIC $(DEMiCs_CFLAGS) \
+               -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 -I$(PYTHON3) -I$(PHCLib) \
                -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Host \
                -I$(PHCgpu)/Path/Poly2 $(PHCLib)/phcpy2c3.c
