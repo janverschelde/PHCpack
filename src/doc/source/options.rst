@@ -592,18 +592,17 @@ and with the :index:`Cayley trick`
 we can compute all its coefficients.
 This is implemented with the dynamic lifting algorithm.
 
-The menu with 5 different lifting strategies is displayed as follows:
+The menu with 6 different lifting strategies is displayed as follows:
 
 ::
 
-   MENU with available Lifting Strategies :
+   MENU with available Lifting Strategies (0 is default) :
      0. Static lifting     : lift points and prune lower hull.
      1. Implicit lifting   : based on recursive formula.
      2. Dynamic lifting    : incrementally add the points.
      3. Symmetric lifting  : points in same orbit get same lifting.
      4. MixedVol Algorithm : a faster mixed volume computation.
-   Type 0, 1, 2, 3, or 4 to select, eventually preceded by i for info : 
-
+     5. DEMiCs Algorithm   : dynamic enumeration for mixed cells.
 
 The menu of ``phc -m`` offers 5 different algorithms:
 
@@ -641,6 +640,14 @@ The menu of ``phc -m`` offers 5 different algorithms:
    With the :index:`stable mixed volume` we count *all* affine 
    solutions (not only those with nonzero coordinates) and then
    and obtain polyhedral homotopies that compute all affine solutions.
+
+5. The :index:`DEMiCs` Algorithm is faster than MixedVol for larger
+   polynomial systems with many different supports.
+   The algorithm is described in the paper by
+   T. Mizutani, A. Takeda, and M. Kojima:
+   *Dynamic enumeration of all mixed cells*,
+   published in Discrete Comput. Geom. 37(3):351-367, 2007.
+   The software DEMiCs is distributed under the GNU GPL license as well.
 
 On :index:`multicore` computers, 
 the solution of a random coefficient system

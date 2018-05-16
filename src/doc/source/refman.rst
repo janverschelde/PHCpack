@@ -102,7 +102,8 @@ The Ada sources are organized in a tree of directories:
     |      |-- Dynlift       : 3.5. dynamic lifting
     |      |-- Symmetry      : 3.6. exploitation of symmetry relations
     |      |-- MixedVol      : 3.7. translation of ACM TOMS Algorithm 846
-    |      |-- Puiseux       : 3.8. Puiseux series for curves
+    |      |-- DEMiCs        : 3.8. interface to the DEMiCs program
+    |      |-- Puiseux       : 3.9. Puiseux series for curves
     |-- Schubert             : 4. numerical Schubert calculus
     |      |-- SAGBI         : 4.1. SAGBI homotopies
     |      |-- Pieri         : 4.2. deformations based on Pieri's rule

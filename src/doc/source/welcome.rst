@@ -43,7 +43,7 @@ practical applications have their own peculiar structure
 and so most homotopies will lead to diverging solution paths.
 In general, a polynomial system may have solution sets of many
 different dimensions, which renders the solving process challenging
-but a the same time still very interesting.
+but at the same time still very interesting.
 
 Version 1.0 of PHCpack was archived as Algorithm 795
 by ACM Transactions on Mathematical Software.  
@@ -194,8 +194,10 @@ objects and instead of selecting options from menus, the user runs scripts.
 References
 ==========
 
-PHCpack relies for its fast mixed volume computation on MixedVol
-and on QDlib for its double double and quad double arithmetic.
+PHCpack relies for its fast mixed volume computation
+on MixedVol and DEMiCs.
+For its double double and quad double arithmetic,
+there is QDlib which is integrated in PHCpack.
 Pointers to the literature are mentioned below.
 
 1. N. Bliss, J. Sommars, J. Verschelde and X. Yu:
@@ -241,6 +243,17 @@ Pointers to the literature are mentioned below.
    In *proceedings of ICMS 2006, LNCS 4151*,
    edited by A. Iglesias and N. Takayama,
    pages 354-360, Springer-Verlag, 2006. 
+
+#. T. Mizutani and A. Takeda.
+   **DEMiCs: A software package for computing the mixed volume via
+   dynamic enumeration of all mixed cells.**
+   In M. E. Stillman, N. Takayama, and J. Verschelde, editors,
+   *Software for Algebraic Geometry*, volume 148 of The IMA Volumes in
+   Mathematics and its Applications, pages 59-79. Springer-Verlag, 2008.
+
+#. T. Mizutani, A. Takeda, and M. Kojima.
+   **Dynamic enumeration of all mixed cells.**
+   *Discrete Comput. Geom.* 37(3):351-367, 2007.
 
 #. M. Lu. and B. He and Q. Luo
    **Supporting extended precision on graphics processors.**
