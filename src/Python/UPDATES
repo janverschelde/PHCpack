@@ -1,7 +1,8 @@
 Wed 16 May 2018 : added mixed_volume_by_demics() to the solver module of phcpy,
   with an added test_mixed_volume() to compare with MixedVol.
   Updated the files welcome.rst and blackbox.rst to document the new function
-  to compute mixed volumes by DEMiCs.
+  to compute mixed volumes by DEMiCs.  Updates files setup.py, __init__.py,
+  and conf.py in the documentation for version 0.8.3.
 
 Tue 1 May 2018 : updated blackbox.rst in the Python documentation with a
   small section on computing the multiplicity structure.
