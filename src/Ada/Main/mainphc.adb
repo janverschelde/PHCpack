@@ -65,7 +65,7 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
     o(10):= "  phc -j : path tracking with algorithmic differentiation        ";
     o(11):= "  phc -k : realization of dynamic output feedback placing poles  ";
     o(12):= "  phc -l : witness set for hypersurface cutting with random line ";
-    o(13):= "  phc -m : mixed volume computation via lift+prune and MixedVol  ";
+    o(13):= "  phc -m : mixed volumes via lift+prune, MixedVol, and DEMiCs    ";
     o(14):= "  phc -o : write order of symbols after parsing polynomial system";
     o(15):= "  phc -p : polynomial continuation by a homotopy in one parameter";
     o(16):= "  phc -q : tracking solution paths with incremental read/write   ";

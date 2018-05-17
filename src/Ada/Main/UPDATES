@@ -1,4 +1,5 @@
 Wed 16 May 2018 : adjusted greeting_banners for version 2.4.54.
+  Inserted DEMiCs in mainphc.adb to document the options.
 
 Mon 14 May 2018 : extended greeting_banners with information about DEMiCs.
 
