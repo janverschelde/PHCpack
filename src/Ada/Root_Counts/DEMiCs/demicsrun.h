@@ -14,6 +14,21 @@ void write_data
  *   mixtype    number of occurrences of each set;
  *   cardsup    cardinalities of the support sets. */
 
+void write_fly_data
+ ( int dimension, int nsupports,
+   int* mixtype, int* cardsup, int *coordinates, double* lifvals );
+/*
+ * DESCRIPTION :
+ *   Writes the input data to screen.
+ *
+ * ON ENTRY :
+ *   verbose    if 1, then data is printed, if 0, remains silent;
+ *   dimension  length of the points in each support set;
+ *   nsupports  number of distinct support sets;
+ *   mixtype    number of occurrences of each set;
+ *   cardsup    cardinalities of the support sets;
+ *   lifvals    lifting values for all points in the supports. */
+
 void fill_preamble
  ( dataSet& Data,
    int verbose, int dimension, int nsupports, int* mixtype, int* cardsup );
@@ -68,3 +83,22 @@ extern "C" int demicsrun
  *   mixtype     number of occurrences of each set;
  *   cardsup     cardinalities of the support sets;
  *   coordinates are the coordinates of the points in the supports. */
+
+extern "C" int demicsfly
+ ( int verbose, int dimension, int nsupports,
+   int* mixtype, int* cardsup, int *coordinates,
+   double* lifvals );
+/*
+ * DESCRIPTION :
+ *   Calls DEMiCs to enumerate all mixed cells,
+ *   using given lifting values.
+ *
+ * ON ENTRY :
+ *   verbose     if 1, then data is printed, if 0, remains silent;
+ *   dimension   length of the points in each support set;
+ *   nsupports   number of distinct support sets;
+ *   mixtype     number of occurrences of each set;
+ *   cardsup     cardinalities of the support sets;
+ *   coordinates are the coordinates of the points in the supports;
+ *   lifvals     random lifting values for the points in an array
+ *               of the same size as the total number of points. */

@@ -27,6 +27,27 @@ extern "C" int demicsrun
    return 0;
 }
 
+extern "C" int demicsfly
+ ( int verbose, int dimension, int nsupports,
+   int* mixtype, int* cardsup, int* coordinates, double* lifvals )
+{
+   if(verbose == 1)
+      write_fly_data(dimension,nsupports,mixtype,cardsup,coordinates,lifvals);
+
+   dataSet Data;
+
+   fill_preamble(Data,verbose,dimension,nsupports,mixtype,cardsup);
+   fill_supports(Data,verbose,coordinates);
+   fill_complete(Data,verbose);
+
+   mvc MV_Comp;
+
+   MV_Comp.allocateAndIni(Data,1,verbose);
+   MV_Comp.Enum();
+
+   return 0;
+}
+
 void write_data
  ( int dimension, int nsupports,
    int* mixtype, int* cardsup, int* coordinates )
@@ -52,6 +73,29 @@ void write_data
          for(int k=0; k<dimension; k++)
          {
             cout << " " << coordinates[idx];
+            idx = idx + 1;
+         }
+         cout << endl;
+      }
+   }
+}
+
+void write_fly_data
+ ( int dimension, int nsupports,
+   int* mixtype, int* cardsup, int* coordinates, double* lifvals )
+{
+   write_data(dimension,nsupports,mixtype,cardsup,coordinates);
+
+   cout << "The lifting values for the points in the support sets ";
+   int idx = 0;
+   for(int i=0; i<nsupports; i++)
+   {
+      cout << endl;
+      for(int j=0; j<cardsup[i]; j++) 
+      {
+         for(int k=0; k<dimension; k++)
+         {
+            cout << " " << lifvals[idx];
             idx = idx + 1;
          }
          cout << endl;

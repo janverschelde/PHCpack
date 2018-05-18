@@ -72,6 +72,25 @@ package DEMiCs_Algorithm is
   --   crd     cardinalities of each support set;
   --   pts     coordinates of the points in the each support.
 
+  function fly_demics
+             ( v,d,r : integer32; mtp,crd,pts : C_Integer_Array;
+               lif : C_Double_Array ) return integer32;
+  pragma import(C, fly_demics, "demicsfly");
+
+  -- DESCRIPTION :
+  --   Interface to the C++ function demicsrun,
+  --   with given lifting values.
+
+  -- ON ENTRY :
+  --   v       0 or 1 whether silent or verbose;
+  --   d       dimension;
+  --   r       number of distinct support sets;
+  --   mtp     mixture type;
+  --   crd     cardinalities of each support set;
+  --   pts     coordinates of the points in the each support;
+  --   lif     random lifting values for each point,
+  --           in an array of size equal to the total number of points. */
+
   procedure Extract_Supports 
                ( p : in Poly_Sys;
                  mix : out Standard_Integer_Vectors.Link_to_Vector;
