@@ -1356,6 +1356,101 @@ void mvc::info_final()
 
 /// for mixed volume computation ///////////////////// 
 
+#ifdef compile4phc
+void mvc::initialize_with_lifting
+ ( dataSet& Data, double* lifvals, int seedNum, int output )
+{
+   int i, j;
+   int length;
+
+   row = (Dim = Data.Dim);
+   supN = Data.supN;
+
+   termSumNum = Data.termSumNum;
+   termMax = Data.termMax;
+   maxLength = Data.typeMax + 1;
+
+   col = termSumNum - supN + Dim;
+
+   termSet = Data.termSet;
+   termStart = Data.termStart;
+
+   type = Data.type;
+
+   mfNum = new int [supN];
+   assert(mfNum);
+
+   lvl_1PT = new double [supN];
+   assert(lvl_1PT);
+   memset(lvl_1PT, 0, sizeof(double) * supN);
+
+   lvl_2PT = new double [supN];
+   assert(lvl_2PT);
+   memset(lvl_2PT, 0, sizeof(double) * supN);
+
+   actNode = new double [supN];
+   assert(actNode);
+   memset(actNode, 0, sizeof(double) * supN);
+
+   firIdx = new int [supN + 1];
+   assert(firIdx);
+   memset(firIdx, 0, sizeof(int) * (supN + 1));
+
+   re_termStart = new int [supN + 1];
+   assert(re_termStart);
+   re_termStart[0] = 0;
+
+   repN = new int [supN];
+   assert(repN);
+   memset(repN, 0, sizeof(int) * supN);
+
+   sp = new int [supN];
+   assert(sp);
+
+   candIdx = new int [termMax + 1];
+   assert(candIdx);
+
+   trMat = new double [Dim * Dim];
+   assert(trMat);
+
+   lv = new lvData [supN];
+   assert(lv);
+
+   iLv = new iLvData [supN];
+   assert(iLv);
+
+   for(i = 0; i < supN; i++)
+   {
+      re_termStart[i + 1] = termStart[i + 1] - i - 1;
+
+      sp[i] = i;
+
+      lv[i].create(i, supN, Dim, type[i] + 1, termMax);
+      iLv[i].create(i, supN, Dim, termMax);
+
+      length = type[i] + 1;
+ 
+      for(j = 0; j < length; j++)
+      {
+         getMemory(i, j, length);
+      }
+   }
+   Simplex.initialize_with_lifting(Data, lifvals, firIdx, seedNum, output);
+   Reltab.allocateAndIni(Simplex, &firIdx, Dim, supN, termSumNum,
+                         termSet, termStart, re_termStart);
+ 
+   iLv[0].getInit(Data, Simplex.lifting, termSet, termStart, Dim, supN);
+
+#if DBG_CHOOSESUP
+   iLv[0].info_all_dirRed();
+#endif
+
+   // Simplex.info_allCostVec();
+   // Simplex.info_lifting();
+   // Simplex.info_allSup();
+}
+#endif
+
 void mvc::allocateAndIni ( dataSet& Data, int seedNum, int output )
 {
    int i, j;

@@ -42,7 +42,7 @@ extern "C" int demicsfly
 
    mvc MV_Comp;
 
-   MV_Comp.allocateAndIni(Data,1,verbose);
+   MV_Comp.initialize_with_lifting(Data,lifvals,1,verbose);
    MV_Comp.Enum();
 
    return 0;

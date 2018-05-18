@@ -249,6 +249,191 @@ simplex::~simplex ( void )
    }
 }
 
+#ifdef compile4phc
+void simplex::initialize_with_lifting
+ ( dataSet& Data, double* lifvals,
+   int* ori_firIdx, int seedNum, int ori_output )
+{
+   int i, j, k, cnt;
+   int tmp_nDim, tmp_mDim;
+
+   double Rand_Max;
+  
+   Dim = (tmp_nDim = (tmp_mDim = Data.Dim));
+
+   supN = Data.supN;
+   termSumNum = Data.termSumNum;
+
+   tmp_nDim += termSumNum - supN;
+  
+   firIdx = ori_firIdx;
+   output = ori_output;
+
+   termSet = Data.termSet;    
+   termStart = Data.termStart;
+  
+   re_termStart = new int [supN + 1];
+   assert(re_termStart);
+   re_termStart[0] = 0;
+
+   p1_d_sol = new double [Dim];
+   assert(p1_d_sol);
+   memset(p1_d_sol, 0, sizeof(double) * Dim);
+
+   ip = new int [Dim];
+   assert(ip);
+   memset(ip, 0, sizeof(int) * Dim);
+
+   weight = new double [Dim];
+   assert(weight);
+  
+   vol = new double [Dim * Dim];
+   assert(vol);
+   memset(vol, 0, Dim * Dim * sizeof(double));
+
+   eye = new double [Dim * Dim];
+   assert(eye);
+   memset(eye, 0, Dim * Dim * sizeof(double));
+  
+   lifting = new double [termSumNum];
+   assert(lifting);
+  
+   oriSupp = new double* [supN];
+   assert(oriSupp);
+
+   for(i = 0; i < supN; i++)
+   {
+      oriSupp[i] = new double [Dim * termSet[i]];
+      assert(oriSupp[i]);
+      memset(oriSupp[i], 0, sizeof(double) * Dim * termSet[i]);
+
+      for(j = 0; j < Dim; j++)
+      {
+         for(k = termStart[i]; k < termStart[i] + termSet[i]; k++)
+         {
+            supp_in(i, j, k - termStart[i], Data.support_out(k, j));
+         }
+      }
+   }
+   fst_d_sol = new double [tmp_mDim];
+   assert(fst_d_sol);
+   memset(fst_d_sol, 0, tmp_mDim * sizeof(double));
+  
+   aux_cvec = new double [tmp_nDim];
+   assert(aux_cvec);
+   memset(aux_cvec, 0, tmp_nDim * sizeof(double));
+
+   dir = new double [tmp_mDim];
+   assert(dir);
+   memset(dir, 0, tmp_mDim * sizeof(double));
+  
+   fst_redVec = new double [Data.termMax];
+   assert(fst_redVec);
+   memset(fst_redVec, 0, Data.termMax * sizeof(double));
+
+   tmp_newInvB = new double [Dim];
+   assert(tmp_newInvB);
+
+   tmp_transMat = new double [Dim];
+   assert(tmp_transMat);
+  
+   nIdx = new int [2 * tmp_nDim];
+   assert(nIdx);
+  
+   srandom(seedNum);
+   Rand_Max = 2;  
+
+   for(i = 1; i < 30; i++) Rand_Max *= 2;
+   Rand_Max = (Rand_Max - 1) * 2 + 1;
+
+   for(i = 0; i < termSumNum; i++) // copy the lifting values
+   {
+      lifting[i] =  lifvals[i]; // (double) random() / Rand_Max*10;
+   }
+   Supp = new supportSet* [supN + 1];
+   assert(Supp);
+  
+   for(i = 0; i < supN; i++)
+   {
+      re_termStart[i + 1] = Data.termStart[i + 1] - i - 1;
+ 
+      Supp[i] = new supportSet [termSet[i]];
+      assert(Supp[i]);
+   }
+   for(i = 0; i < supN; i++)
+   {
+      for(j = 0; j < termSet[i]; j++)
+      {
+         Supp[i][j].allocSupp(Data, i, j, lifting);
+      }
+   }
+   Supp[supN] = new supportSet [1];
+   assert(Supp[supN]);
+
+   Supp[supN][0].allocAux(Data);
+
+   cnt = 0;
+   for(i = 0; i < supN; i++)
+   {
+      for(j = 0; j < termSet[i] - 1; j++)
+      {
+         nIdx[2 * cnt] = i;
+         nIdx[2 * cnt + 1] = j;
+         cnt++;
+      }
+   }
+   for(i = 0; i < Dim; i++)
+   {
+      aux_cvec[termSumNum - supN + i] = 1;
+
+      nIdx[2 * cnt] = supN;
+      nIdx[2 * cnt + 1] = 0;
+
+      eye[i * ( Dim + 1)] = 1;
+
+      cnt++;
+   }
+
+   int fail = demics_allocate_lifting(Data.supN,Data.termSet);
+   cnt = 0;
+   for(i=0; i<Data.supN; i++)
+      for(j=0; j<Data.termSet[i]; j++)
+         fail = demics_assign_lifting(i,j,lifting[cnt++]);
+
+   if(output)
+   {
+      cout << "----------------------------------\n";
+
+      cout << "* Seed number = "  << seedNum << endl;
+      cout << "* Lifting values for elements in each support set"
+           << endl << endl;
+
+      cout << fixed << setprecision(16); // JV Mon 23 Apr 2018
+
+      cnt = 0;
+      for(i = 0; i < supN; i++)
+      {
+         cout << "S";
+
+         cout.width(3);
+         cout.setf(ios::left);
+         cout <<  i + 1 << " : ";
+
+         for(j = termStart[i]; j < termStart[i] + termSet[i]; j++)
+         {
+            cout.width(10);
+            cout.setf(ios::left);
+            cout << lifting[cnt] << " ";
+            cnt++;
+         }
+         cout << endl;
+      }
+      cout << "----------------------------------\n";
+      cout << endl << endl;
+   }
+}
+#endif
+
 void simplex::allocateAndIni
  ( dataSet& Data, int* ori_firIdx, int seedNum, int ori_output )
 {

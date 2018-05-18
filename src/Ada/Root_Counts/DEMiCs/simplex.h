@@ -349,6 +349,14 @@ class simplex
          memcpy((*cur)->transMat, eye, sizeof(double) * Dim * Dim);
       };
 
+#ifdef compile4phc
+      void initialize_with_lifting
+             ( dataSet& Data, double* lifvals,
+               int* ori_firIdx, int seedNum, int ori_output );
+      /*
+       * Extends the definition of allocateAndIni with lifting values
+       * for each point in the supports. */
+#endif
       void allocateAndIni ( dataSet& Data, int* ori_firIdx,
                             int seedNum, int ori_output );
 

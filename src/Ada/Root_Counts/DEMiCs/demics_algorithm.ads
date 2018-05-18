@@ -63,6 +63,7 @@ package DEMiCs_Algorithm is
 
   -- DESCRIPTION :
   --   Interface to the C++ function demicsrun.
+  --   In this version, demics generates the random lifting values.
 
   -- ON ENTRY :
   --   v       0 or 1 whether silent or verbose;
@@ -79,7 +80,7 @@ package DEMiCs_Algorithm is
 
   -- DESCRIPTION :
   --   Interface to the C++ function demicsrun,
-  --   with given lifting values.
+  --   with given lifting values, which better be random numbers.
 
   -- ON ENTRY :
   --   v       0 or 1 whether silent or verbose;

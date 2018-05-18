@@ -6,6 +6,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_VecVecs;
@@ -162,12 +163,20 @@ package body DEMiCs_Algorithm is
     lenpts : constant integer32 := nbrpts*dim;
     ptstoc : constant C_Integer_Array
            := Coordinates(lenpts,mix.all,supports);
+    lif : constant C_Double_Array := Random_Lifting(nbrpts);
 
   begin
     if verbose then
-      return_of_call := run_demics(1,dim,mix'last,mixtoc,crdtoc,ptstoc);
+     -- return_of_call := run_demics(1,dim,mix'last,mixtoc,crdtoc,ptstoc);
+      put_line("The generated lifting values :");
+      for i in lif'range loop
+        put(" "); put(double_float(lif(i)));
+      end loop;
+      new_line;
+      return_of_call := fly_demics(1,dim,mix'last,mixtoc,crdtoc,ptstoc,lif);
     else
-      return_of_call := run_demics(0,dim,mix'last,mixtoc,crdtoc,ptstoc);
+     -- return_of_call := run_demics(0,dim,mix'last,mixtoc,crdtoc,ptstoc);
+      return_of_call := fly_demics(0,dim,mix'last,mixtoc,crdtoc,ptstoc,lif);
     end if;
   end Call_DEMiCs;
 

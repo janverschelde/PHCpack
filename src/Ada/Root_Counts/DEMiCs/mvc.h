@@ -189,8 +189,14 @@ class mvc
 
   //// for mixed volume computation /////////////////////
 
+#ifdef compile4phc
+      void initialize_with_lifting
+             ( dataSet& Data, double* lifvals, int seedNum, int output );
+      /*
+       * Extends the allocateAndIni with an array of lifting values
+       * for all points in the supports. */
+#endif
       void allocateAndIni ( dataSet& Data, int seedNum, int output );
-
       void initFeasTest ( int depth );
       void initCheck ( int depth, ftData& Data );
       void initLP ( ftData& Data, int** negIdx, int depth, 

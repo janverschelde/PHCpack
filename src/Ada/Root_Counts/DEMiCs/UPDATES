@@ -1,5 +1,7 @@
 Fri 18 May 2018 : to demicsrun, added a function demicsfly and to
   demics_algorithm, added fly_demics, to pass the lifting values to DEMiCs.
+  Added "initialize_with_lifting" methods to mvc.h, mvc.cpp, simplex.h,
+  and simplex.cpp with modifications to demicsrun.cpp and demics_algorithm.
 
 Thu 17 May 2018 : extended demics_algorithm with a function to generate
   random lifting values.
