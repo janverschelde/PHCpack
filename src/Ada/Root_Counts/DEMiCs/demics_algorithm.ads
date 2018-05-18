@@ -6,6 +6,7 @@ with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with C_Integer_Arrays;                   use C_Integer_Arrays;
+with C_Double_Arrays;                    use C_Double_Arrays;
 
 package DEMiCs_Algorithm is
 
@@ -47,7 +48,14 @@ package DEMiCs_Algorithm is
   -- DESCRIPTION :
   --   Returns the length of each support list in sup
   --   as an array suitable to pass to C.
-  --
+
+  function Random_Lifting ( nbr : integer32 ) return C_Double_Array;
+
+  -- DESCRIPTION :
+  --   Given in nbr is the total number of points in the supports.
+  --   On return is a vector of range 0..nbr-1 with random doubles.
+  --   The random doubles are in the interval [0, 1].
+
   function run_demics
              ( v,d,r : integer32; mtp,crd,pts : C_Integer_Array )
              return integer32;

@@ -5,6 +5,7 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_VecVecs;
@@ -12,6 +13,7 @@ with Standard_Floating_VecVecs_io;       use Standard_Floating_VecVecs_io;
 with Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Supports_of_Polynomial_Systems;
+with Floating_Lifting_Functions;
 with Mixed_Volume_Computation;
 with Floating_Mixed_Subdivisions_io;
 with Lists_of_Strings;
@@ -98,6 +100,20 @@ package body DEMiCs_Algorithm is
     end loop;
     return res;
   end Coordinates;
+
+  function Random_Lifting ( nbr : integer32 ) return C_Double_Array is
+
+    lst : constant Interfaces.C.size_T := Interfaces.C.size_T(nbr-1);
+    res : C_Double_Array(0..lst);
+    rnd : double_float;
+
+  begin
+    for i in res'range loop
+      rnd := Floating_Lifting_Functions.Random_Lift(0.0,1.0);
+      res(i) := Interfaces.C.double(rnd);
+    end loop;
+    return res;
+  end Random_Lifting;
 
   procedure Extract_Supports 
                ( p : in Poly_Sys;
