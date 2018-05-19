@@ -1,4 +1,5 @@
 with Timing_Package;                     use Timing_Package;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
@@ -86,10 +87,15 @@ package body Drivers_for_DEMiCs_Algorithm is
     timer : Timing_Widget;
     mcc2file : boolean := false;
     subfile : file_type;
+    ans : character;
 
   begin
     new_line;
     Drivers_for_Static_Lifting.Prompt_for_File(mcc2file,subfile);
+    new_line;
+    put("Monitor the progress of the computations on screen ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    DEMiCs_Output_Data.monitor := (ans = 'y');
     new_line;
     put_line("See the output file for results ...");
     new_line;
