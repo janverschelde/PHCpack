@@ -1,3 +1,7 @@
+Sat 19 May 2018 : updated use_outdata.adb for unused variables.
+  Extended demics_output_data with operations to retrieve the next cell
+  and the number of cell indices stored.
+
 Fri 18 May 2018 : to demicsrun, added a function demicsfly and to
   demics_algorithm, added fly_demics, to pass the lifting values to DEMiCs.
   Added "initialize_with_lifting" methods to mvc.h, mvc.cpp, simplex.h,

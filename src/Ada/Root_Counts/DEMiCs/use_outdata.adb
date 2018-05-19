@@ -184,7 +184,7 @@ function use_outdata ( job : integer32;
 
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     lq : Link_to_Laur_Sys;
-    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    mix : Standard_Integer_Vectors.Link_to_Vector;
     lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
     mixsub : Floating_Mixed_Subdivisions.Mixed_Subdivision;
     mv : natural32;

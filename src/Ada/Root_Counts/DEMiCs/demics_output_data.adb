@@ -2,8 +2,12 @@ with Standard_Floating_Vectors;
 
 package body DEMiCs_Output_Data is
 
+-- DATA STRUCTURES :
+
   lifting : Standard_Floating_VecVecs.Link_to_VecVec;
-  first,last : Lists_of_Strings.List;
+  first,last,cellptr : Lists_of_Strings.List;
+
+-- CONSTRUCTORS :
 
   procedure Initialize_Lifting
               ( crdsup : in Standard_Integer_Vectors.Vector ) is
@@ -25,6 +29,22 @@ package body DEMiCs_Output_Data is
     lifting(idxsup)(idxpnt) := val;
   end Assign_Lifting;
 
+  procedure Add_Cell_Indices ( strcell : in string ) is
+
+    link2strcell : constant String_Splitters.Link_to_String
+                 := new string'(strcell);
+
+  begin
+    Lists_of_Strings.Append(first,last,link2strcell);
+  end Add_Cell_Indices;
+
+  procedure Initialize_Cell_Pointer is
+  begin
+    cellptr := first;
+  end Initialize_Cell_Pointer;
+
+-- SELECTORS :
+
   function Retrieve_Lifting
              ( idxsup,idxpnt : integer32) return double_float is
   begin
@@ -36,14 +56,10 @@ package body DEMiCs_Output_Data is
     return lifting;
   end Lifting_Values;
 
-  procedure Add_Cell_Indices ( strcell : in string ) is
-
-    link2strcell : constant String_Splitters.Link_to_String
-                 := new string'(strcell);
-
+  function Number_of_Cell_Indices return natural32 is
   begin
-    Lists_of_Strings.Append(first,last,link2strcell);
-  end Add_Cell_Indices;
+    return Lists_of_Strings.Length_Of(first);
+  end Number_of_Cell_Indices;
 
   function Get_Cell_Indices
              ( index : integer32 ) return String_Splitters.Link_to_String is
@@ -68,6 +84,20 @@ package body DEMiCs_Output_Data is
   begin
     return first;
   end Retrieve_Cell_Indices;
+
+  function Get_Next_Cell return String_Splitters.Link_to_String is
+
+    res : String_Splitters.Link_to_String := null;
+
+  begin
+    if not Lists_of_Strings.Is_Null(cellptr) then
+      res := Lists_of_Strings.Head_Of(cellptr);
+      cellptr := Lists_of_Strings.Tail_Of(cellptr);
+    end if;
+    return res;
+  end Get_Next_Cell;
+
+-- DESTRUCTORS :
 
   procedure Clear_Lifting is
   begin
