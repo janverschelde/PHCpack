@@ -1,3 +1,4 @@
+with text_io;
 with Standard_Floating_Vectors;
 
 package body DEMiCs_Output_Data is
@@ -36,6 +37,9 @@ package body DEMiCs_Output_Data is
 
   begin
     Lists_of_Strings.Append(first,last,link2strcell);
+    if monitor
+     then text_io.put_line(strcell);
+    end if;
   end Add_Cell_Indices;
 
   procedure Initialize_Cell_Pointer is

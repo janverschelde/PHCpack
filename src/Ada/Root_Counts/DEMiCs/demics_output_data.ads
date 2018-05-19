@@ -11,7 +11,8 @@ package DEMiCs_Output_Data is
 -- DESCRIPTION :
 --   This package stores the output data computed by DEMiCs.
 
-  mixed_volume : integer32; -- use -1 to indicate an error occurred
+  mixed_volume : integer32;   -- use -1 to indicate an error occurred
+  monitor : boolean := false; -- write cell indices with every add
 
 -- CONSTRUCTORS :
 
@@ -36,7 +37,8 @@ package DEMiCs_Output_Data is
 
   -- DESCRIPTION :
   --   Adds the string representation of a cell,
-  --   as defined by its indices.
+  --   as defined by its indices.  If the flag monitor is true,
+  --   then the string strcell is written to screen.
 
   procedure Initialize_Cell_Pointer;
 

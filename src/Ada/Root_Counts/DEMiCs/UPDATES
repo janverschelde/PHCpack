@@ -1,6 +1,8 @@
 Sat 19 May 2018 : updated use_outdata.adb for unused variables.
   Extended demics_output_data with operations to retrieve the next cell
-  and the number of cell indices stored.
+  and the number of cell indices stored.  Added monitor option to
+  demics_output_data to see the cell indices as they are added, 
+  turned on in ts_demicsrun.adb.
 
 Fri 18 May 2018 : to demicsrun, added a function demicsfly and to
   demics_algorithm, added fly_demics, to pass the lifting values to DEMiCs.
