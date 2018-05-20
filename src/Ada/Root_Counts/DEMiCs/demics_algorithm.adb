@@ -164,8 +164,24 @@ package body DEMiCs_Algorithm is
     ptstoc : constant C_Integer_Array
            := Coordinates(lenpts,mix.all,supports);
     lif : constant C_Double_Array := Random_Lifting(nbrpts);
+    crdsup : Standard_Integer_Vectors.Vector(mix'range);
+    idx : Interfaces.C.size_T := lif'first;
+    use Interfaces.C; -- needed to increment idx
 
   begin
+    for i in crdtoc'range loop
+      crdsup(integer32(i)+1) := integer32(crdtoc(i));
+    end loop;
+    if verbose
+     then put("Cardinalities : "); put(crdsup); new_line;
+    end if;
+    DEMiCs_Output_Data.Initialize_Lifting(crdsup);
+    for i in crdsup'range loop
+      for j in 1..crdsup(i) loop
+        DEMiCs_Output_Data.Assign_Lifting(i,j,double_float(lif(idx)));
+        idx := idx + 1;
+      end loop;
+    end loop;
     if verbose then
      -- return_of_call := run_demics(1,dim,mix'last,mixtoc,crdtoc,ptstoc);
       put_line("The generated lifting values :");

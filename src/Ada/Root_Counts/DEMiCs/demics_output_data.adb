@@ -5,14 +5,20 @@ package body DEMiCs_Output_Data is
 
 -- DATA STRUCTURES :
 
-  lifting : Standard_Floating_VecVecs.Link_to_VecVec;
+  lifting : Standard_Floating_VecVecs.Link_to_VecVec := null;
   first,last,cellptr : Lists_of_Strings.List;
 
 -- CONSTRUCTORS :
 
   procedure Initialize_Lifting
               ( crdsup : in Standard_Integer_Vectors.Vector ) is
+
+    use Standard_Floating_VecVecs;
+
   begin
+    if lifting /= null
+     then Clear_Lifting;
+    end if;
     lifting := new Standard_Floating_VecVecs.VecVec(crdsup'range);
     for i in crdsup'range loop
       declare
