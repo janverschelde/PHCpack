@@ -1,4 +1,4 @@
-Multitasking linear algebra, evaluation and path tracking in PHCv2.4.52
+Multitasking linear algebra, evaluation and path tracking in PHCv2.4.55
 
 This directory is entirely new in release 2.3.45 of PHCpack.
 Tasks in Ada are mapped to kernel threads.
@@ -79,4 +79,6 @@ write_number_of_tasks             : write #tasks the end of a run
 -------------------------------------------------------------------------------
 multitasking_membership_tests     : multicore check if point on witness set
 ts_mtmbthom                       : develop multitasked homotopy membertest
+-------------------------------------------------------------------------------
+ts_mtcelidx                       : test on pipelining cell indices
 -------------------------------------------------------------------------------
