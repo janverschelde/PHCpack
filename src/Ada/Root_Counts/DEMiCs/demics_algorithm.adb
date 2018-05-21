@@ -39,17 +39,22 @@ package body DEMiCs_Algorithm is
   end Mixture_Type;
 
   function Cardinalities
-             ( sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             ( mix : Standard_Integer_Vectors.Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
              return C_Integer_Array is
 
-    lst : constant Interfaces.C.size_T := Interfaces.C.size_T(sup'last-1);
+    lst : constant Interfaces.C.size_T := Interfaces.C.size_T(mix'last-1);
     res : C_Integer_Array(0..lst);
+    supidx : integer32 := sup'first;
+    mixidx : integer32 := mix'first;
 
     use Lists_of_Integer_Vectors;
 
   begin
     for i in res'range loop
-      res(i) := Interfaces.C.int(Length_Of(sup(integer32(i)+1)));
+      res(i) := Interfaces.C.int(Length_Of(sup(supidx)));
+      mixidx := mixidx + 1;
+      supidx := supidx + mix(mixidx);
     end loop;
     return res;
   end Cardinalities;
@@ -158,7 +163,7 @@ package body DEMiCs_Algorithm is
     dim : constant integer32 := supports'last;
     return_of_call : integer32;
     mixtoc : constant C_Integer_Array := Mixture_Type(mix.all);
-    crdtoc : constant C_Integer_Array := Cardinalities(supports);
+    crdtoc : constant C_Integer_Array := Cardinalities(mix.all,supports);
     nbrpts : constant integer32 := Number_of_Points(mix.all,supports);
     lenpts : constant integer32 := nbrpts*dim;
     ptstoc : constant C_Integer_Array
@@ -172,8 +177,10 @@ package body DEMiCs_Algorithm is
     for i in crdtoc'range loop
       crdsup(integer32(i)+1) := integer32(crdtoc(i));
     end loop;
-    if verbose
-     then put("Cardinalities : "); put(crdsup); new_line;
+    if verbose then
+      put("The dimension : "); put(dim,1); new_line;
+      put("Cardinalities : "); put(crdsup); new_line;
+      put("The total number of points : "); put(nbrpts,1); new_line;
     end if;
     DEMiCs_Output_Data.Initialize_Lifting(crdsup);
     for i in crdsup'range loop

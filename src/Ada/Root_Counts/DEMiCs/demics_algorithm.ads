@@ -24,12 +24,14 @@ package DEMiCs_Algorithm is
   --   Returns the type of mixture as an array suitable to pass to C.
 
   function Cardinalities
-             ( sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             ( mix : Standard_Integer_Vectors.Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
              return C_Integer_Array;
 
   -- DESCRIPTION :
   --   Returns the length of each support list in sup
   --   as an array suitable to pass to C.
+  --   The type of mixture is given in mix.
 
   function Number_of_Points
              ( mix : Standard_Integer_Vectors.Vector;

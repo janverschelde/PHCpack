@@ -1,6 +1,9 @@
 Sun 20 May 2018 : added storing of lifting values in demics_algorithm.adb
   directly after generating the lifting values; in demics_output_data.adb,
   added a clear at the start of initialize_lifting procedure.
+  Fixed bug in demicsrun.cpp with the printing of the lifting values,
+  fixed bug in computing the total number of points for semi-mixed inputs,
+  updating demics_algorithm.
 
 Sat 19 May 2018 : updated use_outdata.adb for unused variables.
   Extended demics_output_data with operations to retrieve the next cell

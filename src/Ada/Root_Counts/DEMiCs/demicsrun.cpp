@@ -93,12 +93,8 @@ void write_fly_data
       cout << endl;
       for(int j=0; j<cardsup[i]; j++) 
       {
-         for(int k=0; k<dimension; k++)
-         {
-            cout << " " << lifvals[idx];
-            idx = idx + 1;
-         }
-         cout << endl;
+         cout << " " << lifvals[idx];
+         idx = idx + 1;
       }
    }
 }
