@@ -1,3 +1,6 @@
+Tue 22 May 2018 : added a new procedure to demics_command_line to compute
+  the indices for each cell in a multitasked procedure.
+
 Sun 20 May 2018 : added storing of lifting values in demics_algorithm.adb
   directly after generating the lifting values; in demics_output_data.adb,
   added a clear at the start of initialize_lifting procedure.

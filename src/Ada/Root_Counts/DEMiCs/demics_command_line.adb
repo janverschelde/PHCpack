@@ -171,6 +171,23 @@ package body DEMiCs_Command_Line is
     return res;
   end Offset_for_Index;
 
+  function Offset_for_Index
+              ( mix : Standard_Integer_Vectors.Link_to_Vector;
+                idx : integer32 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the offset for the index of the component idx,
+  --   relative to the type of mixture in mix.
+
+    res : integer32 := 0;
+
+  begin
+    for i in mix'first..(idx-1) loop
+      res := res + mix(i)+1;
+    end loop;
+    return res;
+  end Offset_for_Index;
+
   function Extract_Cell_Indices
               ( nbrpts : integer32;
                 mix : Standard_Integer_Vectors.Vector;
@@ -224,6 +241,61 @@ package body DEMiCs_Command_Line is
     end loop;
     return res;
   end Extract_Cell_Indices;
+
+  procedure Line2Cell_Indices
+              ( line : in string; nbrpts : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                indices : out Standard_Integer_Vectors.Vector;
+                verbose : boolean := true ) is
+
+    residx : integer32;
+    pos : integer := line'first;
+    idx,idx2pnt : integer32;
+    nbr : natural32;
+    sign : character;
+
+  begin
+    while line(pos) /= ':' loop -- skip the number of the cell
+      pos := pos + 1;
+    end loop;
+    for i in mix'range loop
+      while pos <= line'last loop         -- skip spaces
+        exit when (line(pos) /= ' ');
+        pos := pos + 1;
+      end loop;
+      Standard_Parse_Numbers.Parse(line,pos,idx,nbr,sign);
+      residx := Offset_for_Index(mix,idx);
+      if verbose then
+        put("Indices for component "); put(idx,1);
+        put(" : ");
+      end if;
+      while pos <= line'last loop          -- read till (
+        exit when (line(pos) = '(');
+        pos := pos + 1;
+      end loop;
+      pos := pos + 1; -- skip the (
+      for k in 1..mix(idx)+1 loop          -- by greedy visit, idx /= i
+        while pos <= line'last loop        -- skip spaces
+          exit when (line(pos) /= ' ');
+          pos := pos + 1;
+        end loop;
+        Standard_Parse_Numbers.Parse(line,pos,idx2pnt,nbr,sign);
+        if verbose then
+          put(" "); put(idx2pnt);
+        end if;
+        residx := residx + 1;
+        indices(residx) := idx2pnt;
+      end loop;
+      if verbose
+       then new_line;
+      end if;
+      while pos <= line'last loop          -- read till )
+        exit when (line(pos) = ')');
+        pos := pos + 1;
+      end loop;
+      pos := pos + 1; -- skip the )
+    end loop;
+  end Line2Cell_Indices;
 
   function Number_of_Points_in_Cell
               ( mix : Standard_Integer_Vectors.Vector ) 

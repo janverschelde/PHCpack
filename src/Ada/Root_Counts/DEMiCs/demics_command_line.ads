@@ -116,6 +116,26 @@ package DEMiCs_Command_Line is
   --   where nbrpts is the number of points in each fine mixed cell.
   --   The type of mixture is given by mix.
 
+  procedure Line2Cell_Indices
+              ( line : in string; nbrpts : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                indices : out Standard_Integer_Vectors.Vector;
+                verbose : boolean := true );
+
+  -- DESCRIPTION :
+  --   Given a line in the output of DEMiCs, converts the characters
+  --   into a vector with integer indices.
+
+  -- ON ENTRY :
+  --   line     the output line starts with the cell number;
+  --   nbrpts   the number of points in a fine mixed cell;
+  --   mix      type of mixture;
+  --   verbose  flag to indicate if extra output is wanted.
+
+  -- ON RETURN :
+  --   indices  indices to the points which span a fine mixed cell,
+  --            it range must be 1..nbrpts.
+
   function Number_of_Points_in_Cell
               ( mix : Standard_Integer_Vectors.Vector ) 
               return integer32;
