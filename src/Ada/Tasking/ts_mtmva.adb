@@ -9,6 +9,7 @@ with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Lists_of_Integer_Vectors;
 with Lists_of_Floating_Vectors;
+with Arrays_of_Floating_Vector_Lists;   use Arrays_of_Floating_Vector_Lists;
 with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Integer_VecVecs;
@@ -425,6 +426,7 @@ procedure ts_mtmva is
          else put("The sum of the volumes of all cells : ");
         end if;
         put(sumvol,1); new_line;
+        mv := natural32(sumvol);
       else
         Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,
           r,mtype,perm,mcc,mv);
@@ -438,7 +440,7 @@ procedure ts_mtmva is
         put("Number of stable mixed cells : ");
         put(Length_Of(stbmcc),1); new_line;
       else
-        put("The mixed volume : "); put(stabmv,1); new_line;
+        put("The mixed volume : "); put(mv,1); new_line;
       end if;
     end if;
     Write_Mixed_Cells(file,nbequ,r,mtype,mcc);
@@ -523,18 +525,18 @@ procedure ts_mtmva is
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
     rep := (ans = 'y');
-    if stable then
-      Pipelined_Polyhedral_Homotopies
-        (file,cfile,qfile,nt,mfi,rep,stable,stlb,p,sub,mv,q,sols);
-      Split_Original_Cells(sub,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
-      put("Number of cells without artificial origin : ");
-      put(Length_Of(orgmcc),1); new_line;
-      put("Number of stable mixed cells : ");
-      put(Length_Of(stbmcc),1); new_line;
-    else
+   -- if stable then
+   --   Pipelined_Polyhedral_Homotopies
+   --     (file,cfile,qfile,nt,mfi,rep,stable,stlb,p,sub,mv,q,sols);
+   --   Split_Original_Cells(sub,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
+   --   put("Number of cells without artificial origin : ");
+   --   put(Length_Of(orgmcc),1); new_line;
+   --   put("Number of stable mixed cells : ");
+   --   put(Length_Of(stbmcc),1); new_line;
+   -- else
       Pipelined_Polyhedral_Homotopies
         (file,cfile,qfile,nt,mfi,rep,p,mv,q,sols);
-    end if;
+   -- end if;
   end Pipelined_Polyhedral_Driver;
 
   procedure Pipelined_Polyhedral_Driver
@@ -635,6 +637,7 @@ procedure ts_mtmva is
     stlb : double_float := 0.0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lif : Link_to_Array_of_Lists;
     mcc : Mixed_Subdivision;
     mv : natural32;
     sols : Solution_List;
@@ -659,10 +662,10 @@ procedure ts_mtmva is
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
     if ans = 'y' then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,sols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,sols);
       put(file,q'last,1); new_line(file);
       put(file,q);
     end if;
@@ -695,6 +698,7 @@ procedure ts_mtmva is
     stlb : double_float := 0.0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lif : Link_to_Array_of_Lists;
     mcc : Mixed_Subdivision;
     mv : natural32;
     sols : Solution_List;
@@ -717,10 +721,10 @@ procedure ts_mtmva is
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     if ans = 'y' then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,sols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,sols);
       put(file,q'last,1); new_line(file);
       put(file,q);
     end if;
@@ -753,6 +757,7 @@ procedure ts_mtmva is
     stlb : double_float := 0.0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lif : Link_to_Array_of_Lists;
     mcc : Mixed_Subdivision;
     mv : natural32;
     sols : Solution_List;
@@ -775,10 +780,10 @@ procedure ts_mtmva is
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     if ans = 'y' then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,sols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,lif,mcc,mv,q,sols);
       put(file,q'last,1); new_line(file);
       put(file,q);
     end if;
