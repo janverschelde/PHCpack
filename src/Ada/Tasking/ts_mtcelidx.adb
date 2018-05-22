@@ -1,8 +1,10 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
@@ -12,6 +14,8 @@ with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
 with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
 with DEMiCs_Output_Data;
+with Semaphore;
+with Multitasking;
 
 procedure ts_mtcelidx is
 
@@ -36,6 +40,60 @@ procedure ts_mtcelidx is
     Call_DEMiCs(mix,sup,verbose);
     Show_Output;
   end Produce_Cells;
+
+  procedure Write_Cell_Indices is
+
+  -- DESCRIPTION :
+  --   Writes the cell indices stored in DEMiCs_Output_Data.
+
+    cell : String_Splitters.Link_to_String;
+
+    use String_Splitters;
+
+  begin
+    DEMiCs_Output_Data.Initialize_Cell_Pointer;
+    loop
+      cell := DEMiCs_Output_Data.Get_Next_Cell;
+      exit when (cell = null);
+      put_line(cell.all);
+    end loop;
+  end Write_Cell_Indices;
+
+  procedure Multitasked_Write_Cells ( nt : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Writes the cell indices stored in DEMiCs_Output_Data,
+  --   using nt tasks.
+
+    done : boolean := false;
+    sem : Semaphore.Lock;
+
+    procedure Write_Cell ( i,n : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   Gets the next cell indices and write the indices to screen.
+
+      cell : String_Splitters.Link_to_String;
+      use String_Splitters;
+
+    begin
+      loop
+        Semaphore.Request(sem);
+        put("Task "); put(i,1); put_line(" writes :");
+        cell := DEMiCs_Output_Data.Get_Next_Cell;
+        done := (cell = null);
+        Semaphore.Release(sem);
+        exit when done;
+        put_line(cell.all);
+      end loop;
+    end Write_Cell;
+
+    procedure Write_Cells is new Multitasking.Silent_Workers(Write_Cell);
+
+  begin
+    DEMiCs_Output_Data.Initialize_Cell_Pointer;
+    Write_Cells(nt);
+  end Multitasked_Write_Cells;
 
   procedure Process_Cells
               ( dim : in integer32;
@@ -76,6 +134,7 @@ procedure ts_mtcelidx is
     mix : Standard_Integer_Vectors.Link_to_Vector;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
     verbose : boolean;
+    nbtasks : integer32 := 0;
 
   begin
     new_line;
@@ -86,9 +145,17 @@ procedure ts_mtcelidx is
     put("Monitor the adding of cell indices ? (y/n) ");
     Ask_Yes_or_No(ans);
     DEMiCs_Output_Data.monitor := (ans = 'y');
+    new_line;
+    put("Give the number of tasks (0 for no tasks) : ");
+    get(nbtasks);
     Extract_Supports(p,mix,sup,verbose);
     Produce_Cells(mix,sup,verbose);
-    Process_Cells(dim,mix,sup,verbose);
+    put_line("The cell indices : ");
+    if nbtasks <= 0
+     then Write_Cell_Indices;
+     else Multitasked_Write_Cells(nbtasks);
+    end if;
+   -- Process_Cells(dim,mix,sup,verbose);
   end Compute_Mixed_Volume;
 
   procedure Main is

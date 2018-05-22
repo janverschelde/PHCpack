@@ -1,5 +1,6 @@
 Mon 21 May 2018 : new test procedure ts_mtcelidx.adb to start the development
   of pipelined processing of mixed cells computed by DEMiCs.
+  Added multitasked writing of the strings to ts_mtcelidx.adb.
 
 Wed 4 Apr 2018 : to multitasking_membership_tests, added procedures to
   add a preprocessing evaluation test on the residual.
