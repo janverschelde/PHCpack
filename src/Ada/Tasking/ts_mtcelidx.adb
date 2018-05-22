@@ -6,12 +6,14 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
+with DEMiCs_Command_Line;
 with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
 with DEMiCs_Output_Data;
 with Semaphore;
@@ -59,32 +61,43 @@ procedure ts_mtcelidx is
     end loop;
   end Write_Cell_Indices;
 
-  procedure Multitasked_Write_Cells ( nt : in integer32 ) is
+  procedure Multitasked_Write_Cells
+               ( nt : in integer32;
+                 mix : in Standard_Integer_Vectors.Link_to_Vector ) is
 
   -- DESCRIPTION :
   --   Writes the cell indices stored in DEMiCs_Output_Data,
-  --   using nt tasks.
+  --   using nt tasks.  In mix is the type of mixture,
+  --   needed to compute the cell indices.
 
+    nbr : constant integer32
+        := DEMiCs_Command_Line.Number_of_Points_in_Cell(mix.all);
     done : boolean := false;
-    sem : Semaphore.Lock;
+    sem_data : Semaphore.Lock;
+    sem_write : Semaphore.Lock;
 
     procedure Write_Cell ( i,n : in integer32 ) is
 
     -- DESCRIPTION :
     --   Gets the next cell indices and write the indices to screen.
 
+      inds : Standard_Integer_Vectors.Vector(1..nbr); 
       cell : String_Splitters.Link_to_String;
       use String_Splitters;
 
     begin
       loop
-        Semaphore.Request(sem);
-        put("Task "); put(i,1); put_line(" writes :");
+        Semaphore.Request(sem_data);
         cell := DEMiCs_Output_Data.Get_Next_Cell;
         done := (cell = null);
-        Semaphore.Release(sem);
+        Semaphore.Release(sem_data);
         exit when done;
+        DEMiCs_Command_Line.Line2Cell_Indices(cell.all,nbr,mix,inds,false);
+        Semaphore.Request(sem_write);
+        put("Task "); put(i,1); put_line(" writes :");
         put_line(cell.all);
+        put("Cell indices : "); put(inds); new_line;
+        Semaphore.Release(sem_write);
       end loop;
     end Write_Cell;
 
@@ -153,7 +166,7 @@ procedure ts_mtcelidx is
     put_line("The cell indices : ");
     if nbtasks <= 0
      then Write_Cell_Indices;
-     else Multitasked_Write_Cells(nbtasks);
+     else Multitasked_Write_Cells(nbtasks,mix);
     end if;
    -- Process_Cells(dim,mix,sup,verbose);
   end Compute_Mixed_Volume;

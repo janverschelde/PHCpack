@@ -1,3 +1,6 @@
+Tue 22 May 2018 : added extraction of cell indices to the multitasked
+  writing in ts_mtcelidx, with a new procedure in demics_command_line.
+
 Mon 21 May 2018 : new test procedure ts_mtcelidx.adb to start the development
   of pipelined processing of mixed cells computed by DEMiCs.
   Added multitasked writing of the strings to ts_mtcelidx.adb.
