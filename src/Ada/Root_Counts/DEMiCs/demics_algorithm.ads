@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -58,6 +59,14 @@ package DEMiCs_Algorithm is
   --   On return is a vector of range 0..nbr-1 with random doubles.
   --   The random doubles are in the interval [0, 1].
 
+  function Copy_Lifting
+             ( lif : Standard_Floating_Vectors.Vector )
+             return C_Double_Array;
+
+  -- DESCRIPTION :
+  --   Returns a C double array of range 0..lif'last-1
+  --   which contains the copied lifting values of lif.
+
   function run_demics
              ( v,d,r : integer32; mtp,crd,pts : C_Integer_Array )
              return integer32;
@@ -114,7 +123,24 @@ package DEMiCs_Algorithm is
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
-  --   Calls DEMiCs on the given supports.
+  --   Calls DEMiCs on the given supports, of type of mixture mix.
+
+  procedure Call_DEMiCs
+              ( mix : in Standard_Integer_Vectors.Link_to_Vector;
+                supports : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                lifting : in Standard_Floating_Vectors.Vector;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Calls DEMiCs on the given supports, of type of mixture mix,
+  --   with given random lifting values.
+
+  -- ON ENTRY :
+  --   mix      type of mixture of the supports.
+  --   supports supports of a polynomial system;
+  --   lifting  a vector of range 1..Number_of_Points(mix.all,supports)
+  --            with sufficiently random values for the lifting;
+  --   verbose  if additional output is desired.
 
   procedure Show_Output;
 

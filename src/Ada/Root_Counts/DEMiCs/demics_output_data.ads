@@ -13,6 +13,7 @@ package DEMiCs_Output_Data is
 
   mixed_volume : integer32;   -- use -1 to indicate an error occurred
   monitor : boolean := false; -- write cell indices with every add
+  done : boolean := false;    -- have all cell indices been computed?
 
 -- CONSTRUCTORS :
 

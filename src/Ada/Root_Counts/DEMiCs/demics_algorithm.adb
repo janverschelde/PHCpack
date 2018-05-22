@@ -121,6 +121,21 @@ package body DEMiCs_Algorithm is
     return res;
   end Random_Lifting;
 
+  function Copy_Lifting
+             ( lif : Standard_Floating_Vectors.Vector )
+             return C_Double_Array is
+
+    nbr : constant integer32 := lif'last;
+    lst : constant Interfaces.C.size_T := Interfaces.C.size_T(nbr-1);
+    res : C_Double_Array(0..lst);
+
+  begin
+    for i in res'range loop
+      res(i) := Interfaces.C.double(lif(integer32(i)+1));
+    end loop;
+    return res;
+  end Copy_Lifting;
+
   procedure Extract_Supports 
                ( p : in Poly_Sys;
                  mix : out Standard_Integer_Vectors.Link_to_Vector;
@@ -158,17 +173,16 @@ package body DEMiCs_Algorithm is
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
                 supports : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                nbrpts : in integer32; lif : in C_Double_Array;
                 verbose : in boolean := true ) is
 
     dim : constant integer32 := supports'last;
     return_of_call : integer32;
     mixtoc : constant C_Integer_Array := Mixture_Type(mix.all);
     crdtoc : constant C_Integer_Array := Cardinalities(mix.all,supports);
-    nbrpts : constant integer32 := Number_of_Points(mix.all,supports);
     lenpts : constant integer32 := nbrpts*dim;
     ptstoc : constant C_Integer_Array
            := Coordinates(lenpts,mix.all,supports);
-    lif : constant C_Double_Array := Random_Lifting(nbrpts);
     crdsup : Standard_Integer_Vectors.Vector(mix'range);
     idx : Interfaces.C.size_T := lif'first;
     use Interfaces.C; -- needed to increment idx
@@ -201,6 +215,39 @@ package body DEMiCs_Algorithm is
      -- return_of_call := run_demics(0,dim,mix'last,mixtoc,crdtoc,ptstoc);
       return_of_call := fly_demics(0,dim,mix'last,mixtoc,crdtoc,ptstoc,lif);
     end if;
+  end Call_DEMiCs;
+
+  procedure Call_DEMiCs
+              ( mix : in Standard_Integer_Vectors.Link_to_Vector;
+                supports : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true ) is
+
+    nbrpts : constant integer32 := Number_of_Points(mix.all,supports);
+    lif : constant C_Double_Array := Random_Lifting(nbrpts);
+
+  begin
+    Call_DEMiCs(mix,supports,nbrpts,lif,verbose);
+  end Call_DEMiCs;
+
+  procedure Call_DEMiCs
+              ( mix : in Standard_Integer_Vectors.Link_to_Vector;
+                supports : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                lifting : in Standard_Floating_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+    nbrpts : constant integer32 := Number_of_Points(mix.all,supports);
+    lif : constant C_Double_Array := Copy_Lifting(lifting);
+
+  begin
+    if verbose then
+      put("Total number of points : "); put(nbrpts,1); new_line;
+      put("Number of lifting values : "); put(lifting'last,1);
+      if nbrpts = lifting'last
+       then put_line("  okay.");
+       else put_line("  wrong!?");
+      end if;
+    end if;
+    Call_DEMiCs(mix,supports,nbrpts,lif,verbose);
   end Call_DEMiCs;
 
   procedure Show_Output is
