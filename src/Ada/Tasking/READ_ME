@@ -80,5 +80,6 @@ write_number_of_tasks             : write #tasks the end of a run
 multitasking_membership_tests     : multicore check if point on witness set
 ts_mtmbthom                       : develop multitasked homotopy membertest
 -------------------------------------------------------------------------------
+pipelined_cell_indices            : pipelined processing of cell indices
 ts_mtcelidx                       : test on pipelining cell indices
 -------------------------------------------------------------------------------
