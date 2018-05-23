@@ -22,13 +22,13 @@ package Pipelined_Cell_Indices is
   --   verbose  flag for more information.
 
   procedure Consume_Cells
-               ( nt : in integer32;
-                 mix : in Standard_Integer_Vectors.Link_to_Vector;
-                 process : access procedure
-                   ( idtask : in integer32;
-                     mix : in Standard_Integer_Vectors.Link_to_Vector;
-                     idx : in Standard_Integer_Vectors.Vector ) := null;
-                 verbose : in boolean := true );
+              ( nt : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                process : access procedure
+                  ( idtask : in integer32;
+                    mix : in Standard_Integer_Vectors.Link_to_Vector;
+                    idx : in Standard_Integer_Vectors.Vector ) := null;
+                verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   The cells in DEMiCs_Output_Data are consumed by nt tasks.
@@ -40,6 +40,29 @@ package Pipelined_Cell_Indices is
   -- ON ENTRY :
   --   nt       number of tasks;
   --   mix      type of mixture;
+  --   process  optional procedure which takes the task number, the type
+  --            of mixture, and the integer cell indices on input;
+  --   verbose  if true, then the integer cell indices are written.
+
+  procedure Pipelined_Mixed_Cells
+              ( nt : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                process : access procedure
+                  ( idtask : in integer32;
+                    mix : in Standard_Integer_Vectors.Link_to_Vector;
+                    idx : in Standard_Integer_Vectors.Vector ) := null;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Implements a 2-stage pipeline where the first task produces
+  --   the cells and the other tasks consume the cells.
+  --   For each cell the procedure process is called.
+
+  -- ON ENTRY :
+  --   nt       number of tasks, which must be at least 2;
+  --   mix      type of mixture;
+  --   sup      supports of a polynomial system;
   --   process  optional procedure which takes the task number, the type
   --            of mixture, and the integer cell indices on input;
   --   verbose  if true, then the integer cell indices are written.

@@ -85,6 +85,7 @@ procedure ts_mtcelidx is
     verbose : boolean;
     nbtasks : integer32 := 0;
     cellcnt : natural32 := 0;
+    sem_write : Semaphore.Lock;
 
     procedure Count_Cell
                 ( i : in integer32;
@@ -97,6 +98,39 @@ procedure ts_mtcelidx is
     begin
       cellcnt := cellcnt + 1;
     end Count_Cell;
+
+    procedure Write_Cell
+                ( i : in integer32;
+                  m : in Standard_Integer_Vectors.Link_to_Vector;
+                  indices : in Standard_Integer_Vectors.Vector ) is
+
+    -- DESCRIPTION :
+    --   Task i writes the cell indices to screen.
+
+    begin
+      Semaphore.Request(sem_write);
+      put("Task "); put(i,1);
+      put(" writes cell indices : "); put(indices); new_line;
+      Semaphore.Release(sem_write);
+    end Write_Cell;
+
+    procedure Two_Stage_Test is
+
+    -- DESCRIPTION :
+    --   Runs the production before the processing
+    --   as a 2-stage process without pipelining.
+
+    begin
+      put_line("The cell indices : ");
+      if nbtasks <= 0 then
+        Write_Cell_Indices;
+      else
+        Pipelined_Cell_Indices.Consume_Cells(nbtasks,mix);
+        Pipelined_Cell_Indices.Consume_Cells
+          (nbtasks,mix,Count_Cell'access,false);
+        put("The number of cells : "); put(cellcnt,1); new_line;
+      end if;
+    end Two_Stage_Test;
 
   begin
     new_line;
@@ -115,14 +149,9 @@ procedure ts_mtcelidx is
     if verbose
      then Write_DEMiCs_Output(dim,mix,sup);
     end if;
-    put_line("The cell indices : ");
-    if nbtasks <= 0 then
-      Write_Cell_Indices;
-    else
-      Pipelined_Cell_Indices.Consume_Cells(nbtasks,mix);
-      Pipelined_Cell_Indices.Consume_Cells(nbtasks,mix,Count_Cell'access,false);
-      put("The number of cells : "); put(cellcnt,1); new_line;
-    end if;
+   -- Two_Stage_Test;
+    Pipelined_Cell_Indices.Pipelined_Mixed_Cells
+      (nbtasks,mix,sup,Write_Cell'access,false);
   end Compute_Mixed_Volume;
 
   procedure Main is

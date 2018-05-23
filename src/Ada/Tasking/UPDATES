@@ -2,7 +2,8 @@ Tue 22 May 2018 : added extraction of cell indices to the multitasked
   writing in ts_mtcelidx, with a new procedure in demics_command_line.
   Fixed compilation errors in ts_mtmva.adb.
   New package pipelined_cell_indices with producer/consumer model,
-  tested by ts_mtcelidx.adb.
+  tested by ts_mtcelidx.adb.  Added pipelined_mixed_cells procedure
+  to pipelined_cell_indices, tested by ts_mtcelidx.
 
 Mon 21 May 2018 : new test procedure ts_mtcelidx.adb to start the development
   of pipelined processing of mixed cells computed by DEMiCs.

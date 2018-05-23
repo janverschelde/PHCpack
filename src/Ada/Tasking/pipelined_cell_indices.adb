@@ -27,13 +27,13 @@ package body Pipelined_Cell_Indices is
   end Produce_Cells;
 
   procedure Consume_Cells
-               ( nt : in integer32;
-                 mix : in Standard_Integer_Vectors.Link_to_Vector;
-                 process : access procedure
-                   ( idtask : in integer32;
-                     mix : in Standard_Integer_Vectors.Link_to_Vector;
-                     idx : in Standard_Integer_Vectors.Vector ) := null;
-                 verbose : in boolean := true ) is
+              ( nt : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                process : access procedure
+                  ( idtask : in integer32;
+                    mix : in Standard_Integer_Vectors.Link_to_Vector;
+                    idx : in Standard_Integer_Vectors.Vector ) := null;
+                verbose : in boolean := true ) is
 
     nbr : constant integer32
         := DEMiCs_Command_Line.Number_of_Points_in_Cell(mix.all);
@@ -77,5 +77,62 @@ package body Pipelined_Cell_Indices is
     DEMiCs_Output_Data.Initialize_Cell_Pointer;
     Run_Tasks(nt);
   end Consume_Cells;
+
+  procedure Pipelined_Mixed_Cells
+              ( nt : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                process : access procedure
+                  ( idtask : in integer32;
+                    mix : in Standard_Integer_Vectors.Link_to_Vector;
+                    idx : in Standard_Integer_Vectors.Vector ) := null;
+                verbose : in boolean := true ) is
+
+    nbr : constant integer32
+        := DEMiCs_Command_Line.Number_of_Points_in_Cell(mix.all);
+    sem_data,sem_write : Semaphore.Lock;
+
+    procedure do_job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   The first task is the producer, the others are consumers.
+
+      inds : Standard_Integer_Vectors.Vector(1..nbr); 
+      cell : String_Splitters.Link_to_String;
+      use String_Splitters;
+
+    begin
+      if i = 1 then
+        Produce_Cells(mix,sup,verbose);
+      else
+        loop
+          Semaphore.Request(sem_data);
+          cell := DEMiCs_Output_Data.Get_Next_Cell;
+          Semaphore.Release(sem_data);
+          exit when DEMiCs_Output_Data.done;
+          if cell /= null then
+            DEMiCs_Command_Line.Line2Cell_Indices
+              (cell.all,nbr,mix,inds,false);
+            if verbose or process = null then
+              Semaphore.Request(sem_write);
+              put("Task "); put(i,1); put_line(" writes :");
+              put_line(cell.all);
+              put("Cell indices : "); put(inds); new_line;
+              Semaphore.Release(sem_write);
+            end if;
+            if process /= null then
+              process(i,mix,inds);
+            end if;
+          end if;
+        end loop;
+      end if;
+    end do_job;
+
+    procedure Run_Tasks is new Multitasking.Silent_Workers(do_job);
+
+  begin
+    DEMiCs_Output_Data.Initialize_Cell_Pointer;
+    Run_Tasks(nt);
+  end Pipelined_Mixed_Cells;
 
 end Pipelined_Cell_Indices;
