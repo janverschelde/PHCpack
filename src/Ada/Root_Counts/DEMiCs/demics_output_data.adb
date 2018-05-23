@@ -1,5 +1,7 @@
 with text_io;
 with Standard_Floating_Vectors;
+with Lists_of_Floating_Vectors;
+with Arrays_of_Floating_Vector_Lists;   use Arrays_of_Floating_Vector_Lists;
 
 package body DEMiCs_Output_Data is
 
@@ -7,6 +9,9 @@ package body DEMiCs_Output_Data is
 
   lifting : Standard_Floating_VecVecs.Link_to_VecVec := null;
   first,last,cellptr : Lists_of_Strings.List;
+  cells,cells_last,allcellptr : Mixed_Subdivision;
+  dimension : integer32 := -1;
+  mixture : Standard_Integer_Vectors.Link_to_Vector;
 
 -- CONSTRUCTORS :
 
@@ -36,6 +41,34 @@ package body DEMiCs_Output_Data is
     lifting(idxsup)(idxpnt) := val;
   end Assign_Lifting;
 
+  procedure Store_Dimension_and_Mixture
+              ( dim : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector ) is
+  begin
+    dimension := dim;
+    mixture := mix;
+  end Store_Dimension_and_Mixture;
+
+  procedure Allocate_Mixed_Cell is
+
+    mic : Mixed_Cell;
+    zeros : constant Standard_Floating_Vectors.Vector(1..dimension+1)
+          := (1..dimension+1 => 0.0);
+    last : Lists_of_Floating_Vectors.List;
+
+  begin
+    mic.nor := new Standard_Floating_Vectors.Vector'(1..dimension+1 => 0.0);
+    mic.pts := new Array_of_Lists(mixture'range);
+    for i in mic.pts'range loop
+      last := mic.pts(i);
+      for j in 1..mixture(i)+1 loop
+        Lists_of_Floating_Vectors.Append(mic.pts(i),last,zeros);
+      end loop; 
+    end loop;
+    mic.sub := null;
+    Append(cells,cells_last,mic);
+  end Allocate_Mixed_Cell;
+
   procedure Add_Cell_Indices ( strcell : in string ) is
 
     link2strcell : constant String_Splitters.Link_to_String
@@ -46,12 +79,20 @@ package body DEMiCs_Output_Data is
     if monitor
      then text_io.put_line(strcell);
     end if;
+    if allocate 
+     then Allocate_Mixed_Cell;
+    end if;
   end Add_Cell_Indices;
 
-  procedure Initialize_Cell_Pointer is
+  procedure Initialize_Cell_Indices_Pointer is
   begin
     cellptr := first;
-  end Initialize_Cell_Pointer;
+  end Initialize_Cell_Indices_Pointer;
+
+  procedure Initialize_Allocated_Cell_Pointer is
+  begin
+    allcellptr := cells;
+  end Initialize_Allocated_Cell_Pointer;
 
 -- SELECTORS :
 
@@ -95,7 +136,7 @@ package body DEMiCs_Output_Data is
     return first;
   end Retrieve_Cell_Indices;
 
-  function Get_Next_Cell return String_Splitters.Link_to_String is
+  function Get_Next_Cell_Indices return String_Splitters.Link_to_String is
 
     res : String_Splitters.Link_to_String := null;
 
@@ -105,7 +146,23 @@ package body DEMiCs_Output_Data is
       cellptr := Lists_of_Strings.Tail_Of(cellptr);
     end if;
     return res;
-  end Get_Next_Cell;
+  end Get_Next_Cell_Indices;
+
+  function Get_Allocated_Cells return Mixed_Subdivision is
+  begin
+    return cells;
+  end Get_Allocated_Cells;
+  
+  function Get_Next_Allocated_Cell return Mixed_Subdivision is
+
+    res : Mixed_Subdivision := allcellptr;
+
+  begin
+    if not Is_Null(allcellptr)
+     then allcellptr := Tail_Of(allcellptr);
+    end if;
+    return res;
+  end Get_Next_Allocated_Cell;
 
 -- DESTRUCTORS :
 
@@ -128,5 +185,10 @@ package body DEMiCs_Output_Data is
     Lists_of_Strings.Clear(first);
     last := first;
   end Clear_Cell_Indices;
+
+  procedure Clear_Allocated_Cells is
+  begin
+    Clear(cells);
+  end Clear_Allocated_Cells;
 
 end DEMiCs_Output_Data;
