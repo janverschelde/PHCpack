@@ -159,8 +159,61 @@ procedure ts_mtcelidx is
   end Compute_Mixed_Volume;
 
   procedure Construct_Mixed_Cells ( p : in Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Constructs the mixed cells in a regular subdivision of 
+  --   the Newton polytopes spanned by the supports of p.
+
+    dim : constant integer32 := p'last;
+    ans : character;
+    mix : Standard_Integer_Vectors.Link_to_Vector;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+    verbose : boolean;
+    nbtasks : integer32 := 0;
+    cellcnt : natural32 := 0;
+    sem_write : Semaphore.Lock;
+
+    procedure Write_Cell
+                ( i : in integer32;
+                  m : in Standard_Integer_Vectors.Link_to_Vector;
+                  indices : in Standard_Integer_Vectors.Vector ) is
+
+    -- DESCRIPTION :
+    --   Task i writes the cell indices to screen.
+
+      sub : Mixed_Subdivision;
+
+    begin
+      Semaphore.Request(sem_write);
+      put("Task "); put(i,1);
+      put(" writes cell indices : "); put(indices); new_line;
+     -- sub := DEMiCs_Output_Data.Get_Next_Allocated_Cell;
+     -- Floating_Mixed_Subdivisions_io.put(natural32(dim),mix.all,Head_Of(sub));
+      Semaphore.Release(sem_write);
+    end Write_Cell;
+
   begin
-    null;
+    new_line;
+    put("Verbose ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put("Monitor the adding of cell indices ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    DEMiCs_Output_Data.monitor := (ans = 'y');
+    new_line;
+    put("Give the number of tasks (at least 2) : ");
+    get(nbtasks);
+    new_line;
+    Extract_Supports(p,mix,sup,verbose);
+   -- DEMiCs_Output_Data.done := false;
+   -- DEMiCs_Output_Data.allocate := false;
+   -- DEMiCs_Output_Data.Store_Dimension_and_Mixture(dim,mix);
+   -- DEMiCs_Output_Data.Initialize_Allocated_Cell_Pointer;
+    if nbtasks > 1 then
+      Pipelined_Cell_Indices.Pipelined_Mixed_Cells
+        (nbtasks,mix,sup,Write_Cell'access,verbose);
+    end if;
   end Construct_Mixed_Cells;
 
   procedure Main is
@@ -181,7 +234,7 @@ procedure ts_mtcelidx is
     put_line("  1. write cell indices with pipelining");
     put_line("  2. pipelined mixed cell construction");
     put("Type 1 or 2 to make a choice : ");
-    Ask_Yes_or_No(ans);
+    Ask_Alternative(ans,"12");
     case ans is
       when '1' => Compute_Mixed_Volume(lp.all);
       when '2' => Construct_Mixed_Cells(lp.all);
