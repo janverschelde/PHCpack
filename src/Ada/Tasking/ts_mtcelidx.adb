@@ -36,9 +36,9 @@ procedure ts_mtcelidx is
     use String_Splitters;
 
   begin
-    DEMiCs_Output_Data.Initialize_Cell_Pointer;
+    DEMiCs_Output_Data.Initialize_Cell_Indices_Pointer;
     loop
-      cell := DEMiCs_Output_Data.Get_Next_Cell;
+      cell := DEMiCs_Output_Data.Get_Next_Cell_Indices;
       exit when (cell = null);
       put_line(cell.all);
     end loop;
@@ -144,15 +144,24 @@ procedure ts_mtcelidx is
     new_line;
     put("Give the number of tasks (0 for no tasks) : ");
     get(nbtasks);
+    new_line;
     Extract_Supports(p,mix,sup,verbose);
-    Pipelined_Cell_Indices.Produce_Cells(mix,sup,verbose);
-    if verbose
-     then Write_DEMiCs_Output(dim,mix,sup);
+    if nbtasks < 2 then
+      Pipelined_Cell_Indices.Produce_Cells(mix,sup,verbose);
+      if verbose
+       then Write_DEMiCs_Output(dim,mix,sup);
+      end if;
+      Two_Stage_Test;
+    else
+      Pipelined_Cell_Indices.Pipelined_Mixed_Cells
+        (nbtasks,mix,sup,Write_Cell'access,false);
     end if;
-   -- Two_Stage_Test;
-    Pipelined_Cell_Indices.Pipelined_Mixed_Cells
-      (nbtasks,mix,sup,Write_Cell'access,false);
   end Compute_Mixed_Volume;
+
+  procedure Construct_Mixed_Cells ( p : in Poly_Sys ) is
+  begin
+    null;
+  end Construct_Mixed_Cells;
 
   procedure Main is
 
@@ -161,12 +170,23 @@ procedure ts_mtcelidx is
   --   and then prepares the input for DEMiCs.
 
     lp : Link_to_Poly_Sys;
+    ans : character;
 
   begin
     new_line;
     put_line("Reading a polynomial system ...");
     get(lp);
-    Compute_Mixed_Volume(lp.all);
+    new_line;
+    put_line("MENU to test pipelined computations :");
+    put_line("  1. write cell indices with pipelining");
+    put_line("  2. pipelined mixed cell construction");
+    put("Type 1 or 2 to make a choice : ");
+    Ask_Yes_or_No(ans);
+    case ans is
+      when '1' => Compute_Mixed_Volume(lp.all);
+      when '2' => Construct_Mixed_Cells(lp.all);
+      when others => null;
+    end case;
   end Main;
 
 begin

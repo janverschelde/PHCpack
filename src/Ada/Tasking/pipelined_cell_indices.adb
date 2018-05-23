@@ -53,7 +53,7 @@ package body Pipelined_Cell_Indices is
     begin
       loop
         Semaphore.Request(sem_data);
-        cell := DEMiCs_Output_Data.Get_Next_Cell;
+        cell := DEMiCs_Output_Data.Get_Next_Cell_Indices;
         done := (cell = null);
         Semaphore.Release(sem_data);
         exit when done;
@@ -74,7 +74,7 @@ package body Pipelined_Cell_Indices is
     procedure Run_Tasks is new Multitasking.Silent_Workers(Process_Cell);
 
   begin
-    DEMiCs_Output_Data.Initialize_Cell_Pointer;
+    DEMiCs_Output_Data.Initialize_Cell_Indices_Pointer;
     Run_Tasks(nt);
   end Consume_Cells;
 
@@ -107,7 +107,7 @@ package body Pipelined_Cell_Indices is
       else
         loop
           Semaphore.Request(sem_data);
-          cell := DEMiCs_Output_Data.Get_Next_Cell;
+          cell := DEMiCs_Output_Data.Get_Next_Cell_Indices;
           Semaphore.Release(sem_data);
           exit when DEMiCs_Output_Data.done;
           if cell /= null then
@@ -131,7 +131,7 @@ package body Pipelined_Cell_Indices is
     procedure Run_Tasks is new Multitasking.Silent_Workers(do_job);
 
   begin
-    DEMiCs_Output_Data.Initialize_Cell_Pointer;
+    DEMiCs_Output_Data.Initialize_Cell_Indices_Pointer;
     Run_Tasks(nt);
   end Pipelined_Mixed_Cells;
 
