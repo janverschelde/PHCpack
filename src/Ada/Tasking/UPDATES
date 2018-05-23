@@ -1,3 +1,6 @@
+Wed 23 May 2018 : new package pipelined_cell_trackers to track all paths
+  defined by one mixed cell, factored out of pipelined_polyhedral_trackers.
+
 Tue 22 May 2018 : added extraction of cell indices to the multitasked
   writing in ts_mtcelidx, with a new procedure in demics_command_line.
   Fixed compilation errors in ts_mtmva.adb.
