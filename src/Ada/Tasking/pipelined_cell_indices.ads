@@ -1,6 +1,9 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Floating_VecVecs;
 with Arrays_of_Integer_Vector_Lists;
+with Arrays_of_Floating_Vector_Lists;
+with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 
 package Pipelined_Cell_Indices is
 
@@ -19,6 +22,21 @@ package Pipelined_Cell_Indices is
   -- ON ENTRY :
   --   mix      type of mixture;
   --   sup      supports of a polynomial system;
+  --   verbose  flag for more information.
+
+  procedure Produce_Cells
+              ( mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                lif : in Standard_Floating_VecVecs.Link_to_VecVec;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Calls DEMiCs to produce the cells.
+
+  -- ON ENTRY :
+  --   mix      type of mixture;
+  --   sup      supports of a polynomial system;
+  --   lif      lifting values for the supports, of mix'range;
   --   verbose  flag for more information.
 
   procedure Consume_Cells
@@ -44,7 +62,7 @@ package Pipelined_Cell_Indices is
   --            of mixture, and the integer cell indices on input;
   --   verbose  if true, then the integer cell indices are written.
 
-  procedure Pipelined_Mixed_Cells
+  procedure Pipelined_Mixed_Indices
               ( nt : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
@@ -63,6 +81,34 @@ package Pipelined_Cell_Indices is
   --   nt       number of tasks, which must be at least 2;
   --   mix      type of mixture;
   --   sup      supports of a polynomial system;
+  --   process  optional procedure which takes the task number, the type
+  --            of mixture, and the integer cell indices on input;
+  --   verbose  if true, then the integer cell indices are written.
+
+  procedure Pipelined_Mixed_Cells
+              ( nt,dim : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                lif : in Standard_Floating_VecVecs.Link_to_VecVec;
+                lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                process : access procedure
+                  ( idtask : in integer32;
+                    mix : in Standard_Integer_Vectors.Link_to_Vector;
+                    mic : in Mixed_Cell ) := null;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Implements a 2-stage pipeline where the first task produces
+  --   the cells and the other tasks consume the cells.
+  --   For each cell the procedure process is called.
+
+  -- ON ENTRY :
+  --   nt       number of tasks, which must be at least 2;
+  --   dim      dimension of the points in sup, before the lifting;
+  --   mix      type of mixture;
+  --   sup      supports of a polynomial system;
+  --   lif      lifting values for each point in sup, of mix'range;
+  --   lifsup   lifted supports of mix'range;
   --   process  optional procedure which takes the task number, the type
   --            of mixture, and the integer cell indices on input;
   --   verbose  if true, then the integer cell indices are written.

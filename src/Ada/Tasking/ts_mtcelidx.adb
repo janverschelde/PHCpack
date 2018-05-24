@@ -5,8 +5,13 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
+with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecs_io;
+with Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -15,6 +20,7 @@ with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
 with Lists_of_Strings;
 with DEMiCs_Command_Line;
+with DEMiCs_Output_Convertors;
 with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
 with DEMiCs_Output_Data;
 with Pipelined_Cell_Indices;
@@ -72,6 +78,35 @@ procedure ts_mtcelidx is
     Floating_Mixed_Subdivisions_io.put(natural32(dim),mix.all,mcc,mv);
     put("The mixed volume : "); put(mv,1); new_line;
   end Write_DEMiCs_Output;
+
+  function Random_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             return Standard_Floating_VecVecs.Link_to_VecVec is
+
+    res : Standard_Floating_VecVecs.Link_to_VecVec;
+    resrep : Standard_Floating_VecVecs.VecVec(mix'range);
+    idx : integer32 := 1;
+    len : integer32;
+
+  begin
+    for i in resrep'range loop
+      len := integer32(Lists_of_Integer_Vectors.Length_Of(sup(idx)));
+      declare
+        vals : Standard_Floating_Vectors.Vector(1..len);
+      begin
+        for j in 1..len loop
+          vals(j) := Standard_Random_Numbers.Random;
+        end loop;
+        resrep(i) := new Standard_Floating_Vectors.Vector'(vals);
+      end;
+      idx := idx + mix(i);
+    end loop;
+    res := new Standard_Floating_VecVecs.VecVec'(resrep);
+    put_line("The random lifting : ");
+    Standard_Floating_VecVecs_io.put(res.all);
+    return res;
+  end Random_Lifting;
 
   procedure Compute_Mixed_Volume ( p : in Poly_Sys ) is
 
@@ -157,13 +192,65 @@ procedure ts_mtcelidx is
       end if;
       Two_Stage_Test;
     else
-      Pipelined_Cell_Indices.Pipelined_Mixed_Cells
+      Pipelined_Cell_Indices.Pipelined_Mixed_Indices
         (nbtasks,mix,sup,Write_Cell'access,false);
       put("Number of cells written : "); put(cellcnt,1); new_line;
       put("Number of cells : ");
       put(Length_Of(DEMiCs_Output_Data.Retrieve_Cell_Indices),1); new_line;
     end if;
   end Compute_Mixed_Volume;
+
+  procedure Run_Pipeline
+              ( dim,nbtasks : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Computes the lifted supports and runs the pipeline.
+
+    lif : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Random_Lifting(mix,sup);
+    lsp : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+        := DEMiCs_Output_Convertors.Apply_Lifting(mix.all,sup,lif.all);
+    cellcnt : natural32 := 0;
+    sem_write : Semaphore.Lock;
+
+    procedure Write_Cell
+                ( i : in integer32;
+                  m : in Standard_Integer_Vectors.Link_to_Vector;
+                  mic : in Mixed_Cell ) is
+
+    -- DESCRIPTION :
+    --   Task i writes the cell to screen.
+
+      sub : Mixed_Subdivision;
+
+      use Standard_Floating_VecVecs;
+
+    begin
+      Semaphore.Request(sem_write);
+      put("Task "); put(i,1); put_line(" writes cell : ");
+      Floating_Mixed_Subdivisions_io.put(natural32(dim),mix.all,mic);
+      cellcnt := cellcnt + 1;
+      Semaphore.Release(sem_write);
+    end Write_Cell;
+
+    use Lists_of_Strings;
+
+  begin
+    DEMiCs_Output_Data.allocate := true;
+    DEMiCs_Output_Data.Store_Dimension_and_Mixture(dim,mix);
+    DEMiCs_Output_Data.Initialize_Allocated_Cell_Pointer;
+    if nbtasks > 1 then
+      Pipelined_Cell_Indices.Pipelined_Mixed_Cells
+        (nbtasks,dim,mix,sup,lif,lsp,Write_Cell'access,verbose);
+      put("Number of cells processed : "); put(cellcnt,1); new_line;
+      put("Number of cells computed  : ");
+      put(Length_Of(DEMiCs_Output_Data.Retrieve_Cell_Indices),1);
+      new_line;
+    end if;
+  end Run_Pipeline;
 
   procedure Construct_Mixed_Cells ( p : in Poly_Sys ) is
 
@@ -177,30 +264,6 @@ procedure ts_mtcelidx is
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
     verbose : boolean;
     nbtasks : integer32 := 0;
-    cellcnt : natural32 := 0;
-    sem_write : Semaphore.Lock;
-
-    procedure Write_Cell
-                ( i : in integer32;
-                  m : in Standard_Integer_Vectors.Link_to_Vector;
-                  indices : in Standard_Integer_Vectors.Vector ) is
-
-    -- DESCRIPTION :
-    --   Task i writes the cell indices to screen.
-
-      sub : Mixed_Subdivision;
-
-    begin
-      Semaphore.Request(sem_write);
-      put("Task "); put(i,1);
-      put(" writes cell indices : "); put(indices); new_line;
-      sub := DEMiCs_Output_Data.Get_Next_Allocated_Cell;
-      Floating_Mixed_Subdivisions_io.put(natural32(dim),mix.all,Head_Of(sub));
-      cellcnt := cellcnt + 1;
-      Semaphore.Release(sem_write);
-    end Write_Cell;
-
-    use Lists_of_Strings;
 
   begin
     new_line;
@@ -216,16 +279,7 @@ procedure ts_mtcelidx is
     get(nbtasks);
     new_line;
     Extract_Supports(p,mix,sup,verbose);
-    DEMiCs_Output_Data.allocate := true;
-    DEMiCs_Output_Data.Store_Dimension_and_Mixture(dim,mix);
-    DEMiCs_Output_Data.Initialize_Allocated_Cell_Pointer;
-    if nbtasks > 1 then
-      Pipelined_Cell_Indices.Pipelined_Mixed_Cells
-        (nbtasks,mix,sup,Write_Cell'access,verbose);
-      put("Number of cells processed : "); put(cellcnt,1); new_line;
-      put("Number of cells computed  : ");
-      put(Length_Of(DEMiCs_Output_Data.Retrieve_Cell_Indices),1); new_line;
-    end if;
+    Run_Pipeline(dim,nbtasks,mix,sup,verbose);
   end Construct_Mixed_Cells;
 
   procedure Main is
