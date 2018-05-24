@@ -1,5 +1,10 @@
 Thu 24 May 2018 : in demics_output_data.adb, documented the getting of the
   next cell indices and fixed the getting of the next allocated mixed cell.
+  To demics_output_convertors, added a procedure to make a mixed cell
+  without memory allocation for multitasking.
+  In demics_output_data.adb, flipped the allocation with the adding of
+  the cell indices to ensure the allocation is done when a consumer task
+  gets the next cell indices.
 
 Wed 23 May 2018 : extended demics_output_data with memory allocation for
   the new mixed cells, allocated each time new cell indices are added.

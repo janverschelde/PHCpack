@@ -3,6 +3,7 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_Matrices;
 with Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Lists_of_Floating_Vectors;
@@ -208,6 +209,44 @@ package DEMiCs_Output_Convertors is
   --   lifsup   lifted supports;
   --   verbose  flag to indicate whether the checks with the inner normal
   --            needs to happen.
+
+  procedure Make_Mixed_Cell
+              ( mic : in out Mixed_Cell; dim : in integer32;
+                mix,lbl : in Standard_Integer_Vectors.Vector;
+                lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mat : in out Standard_Floating_Matrices.Matrix;
+                rhs : in out Standard_Floating_Vectors.Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                work : in out Standard_Floating_Vectors.Vector;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Fills allocated space for a mixed cell with the data
+  --   corresponding to the labeled points.
+ 
+  -- ON ENTRY :
+  --   mic      allocated space for a mixed cell;
+  --   dim      dimension before lifting;
+  --   mix      type of mixture;
+  --   lbl      labels to the points that span the mixed cell;
+  --   lifsup   lifted supports;
+  --   mat      matrix of ranges 1..dim by 1..dim, workspace to hold
+  --            the coefficient matrix to compute the inner normal;
+  --   rhs      vector of range 1..dim, workspace for the right hand
+  --            side vector to compute the inner normal;
+  --   ipvt     vector of range 1..dim for the pivoting information,
+  --            workspace to compute the inner normal;
+  --   work     vector of range 1..dim+1, as workspace to make the
+  --            linear system to compute the inner normal;
+  --   verbose  flag to indicate whether the checks with the inner normal
+  --            needs to happen.
+
+  -- ON RETURN :
+  --   mat      updated workspace;
+  --   rhs      updated workspace;
+  --   ipvt     updated workspace;
+  --   work     updated workspace;
+  --   mic      completed corresponding to the labeled points.
 
   function Make_Mixed_Cells
               ( dim : integer32;

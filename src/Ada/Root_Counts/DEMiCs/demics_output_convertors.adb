@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
-with Standard_Floating_Matrices;
 with Standard_Floating_Linear_Solvers;   use Standard_Floating_Linear_Solvers;
 
 package body DEMiCs_Output_Convertors is
@@ -405,6 +404,64 @@ package body DEMiCs_Output_Convertors is
      then Test_Inner_Normal(mix,lifsup,res.nor.all,lbl,fail);
     end if;
     return res;
+  end Make_Mixed_Cell;
+
+  procedure Make_Mixed_Cell
+              ( mic : in out Mixed_Cell; dim : in integer32;
+                mix,lbl : in Standard_Integer_Vectors.Vector;
+                lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mat : in out Standard_Floating_Matrices.Matrix;
+                rhs : in out Standard_Floating_Vectors.Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                work : in out Standard_Floating_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+    lifptr,micptr : Lists_of_Floating_Vectors.List;
+    liflpt,miclpt : Standard_Floating_Vectors.Link_to_Vector;
+    info,pntidx,lblidx,rowidx : integer32;
+    fail,atfirstpt : boolean;
+
+  begin
+    lblidx := 1;
+    rowidx := 0;
+    for k in mix'range loop
+      lifptr := lifsup(k);
+      micptr := mic.pts(k);
+      atfirstpt := true;
+      pntidx := 0;
+      while not Lists_of_Floating_Vectors.Is_Null(lifptr) loop
+        pntidx := pntidx + 1;
+        if Is_In(lbl,lblidx,lblidx+mix(k),pntidx) then
+          liflpt := Lists_of_Floating_Vectors.Head_Of(lifptr);
+          if atfirstpt then
+            for i in liflpt'range loop
+              work(i) := liflpt(i);
+            end loop;
+            atfirstpt := false;
+          else
+            rowidx := rowidx + 1;   
+            for j in 1..dim loop
+              mat(rowidx,j) := work(j) - liflpt(j);
+            end loop;
+            rhs(rowidx) := liflpt(dim+1) - work(dim+1);
+          end if;
+          miclpt := Lists_of_Floating_Vectors.Head_Of(micptr);
+          for i in liflpt'range loop
+            miclpt(i) := liflpt(i); -- copy coordinates of lifted point
+          end loop;
+          micptr := Lists_of_Floating_Vectors.Tail_Of(micptr);
+        end if;
+        lifptr := Lists_of_Floating_Vectors.Tail_Of(lifptr);
+      end loop;
+      lblidx := lblidx + mix(k) + 1;
+    end loop;
+    lufac(mat,dim,ipvt,info);
+    lusolve(mat,dim,ipvt,rhs);
+    mic.nor(1..dim) := rhs;
+    mic.nor(dim+1) := 1.0;
+    if verbose
+     then Test_Inner_Normal(mix,lifsup,mic.nor.all,lbl,fail);
+    end if;
   end Make_Mixed_Cell;
 
   function Make_Mixed_Cells

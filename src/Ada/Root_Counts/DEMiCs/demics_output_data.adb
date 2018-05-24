@@ -79,18 +79,14 @@ package body DEMiCs_Output_Data is
 
     link2strcell : constant String_Splitters.Link_to_String
                  := new string'(strcell);
-   -- start : constant boolean := Lists_of_Strings.Is_Null(first);
 
   begin
-    Lists_of_Strings.Append(first,last,link2strcell);
-   -- if start
-   --  then cellptr := first;
-   -- end if;
-    if monitor
-     then text_io.put_line(strcell);
-    end if;
     if allocate 
      then Allocate_Mixed_Cell;
+    end if;
+    Lists_of_Strings.Append(first,last,link2strcell);
+    if monitor
+     then text_io.put_line(strcell);
     end if;
   end Add_Cell_Indices;
 
