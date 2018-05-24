@@ -194,10 +194,13 @@ procedure ts_mtcelidx is
       Semaphore.Request(sem_write);
       put("Task "); put(i,1);
       put(" writes cell indices : "); put(indices); new_line;
-     -- sub := DEMiCs_Output_Data.Get_Next_Allocated_Cell;
-     -- Floating_Mixed_Subdivisions_io.put(natural32(dim),mix.all,Head_Of(sub));
+      sub := DEMiCs_Output_Data.Get_Next_Allocated_Cell;
+      Floating_Mixed_Subdivisions_io.put(natural32(dim),mix.all,Head_Of(sub));
+      cellcnt := cellcnt + 1;
       Semaphore.Release(sem_write);
     end Write_Cell;
+
+    use Lists_of_Strings;
 
   begin
     new_line;
@@ -219,6 +222,9 @@ procedure ts_mtcelidx is
     if nbtasks > 1 then
       Pipelined_Cell_Indices.Pipelined_Mixed_Cells
         (nbtasks,mix,sup,Write_Cell'access,verbose);
+      put("Number of cells processed : "); put(cellcnt,1); new_line;
+      put("Number of cells computed  : ");
+      put(Length_Of(DEMiCs_Output_Data.Retrieve_Cell_Indices),1); new_line;
     end if;
   end Construct_Mixed_Cells;
 

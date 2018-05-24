@@ -111,7 +111,8 @@ package body Pipelined_Cell_Indices is
          -- put_line("Task " & Multitasking.to_string(i) & " inside lock.");
           cell := DEMiCs_Output_Data.Get_Next_Cell_Indices;
           Semaphore.Release(sem_data);
-          exit when DEMiCs_Output_Data.done;
+         -- only done if empty cell and production stopped
+          exit when (cell = null) and DEMiCs_Output_Data.done;
           if cell /= null then
             DEMiCs_Command_Line.Line2Cell_Indices
               (cell.all,nbr,mix,inds,false);
