@@ -1,5 +1,6 @@
 Wed 23 May 2018 : extended demics_output_data with memory allocation for
   the new mixed cells, allocated each time new cell indices are added.
+  Fixed get of next cell indices in demics_output_data.adb.
 
 Tue 22 May 2018 : added a new procedure to demics_command_line to compute
   the indices for each cell in a multitasked procedure.

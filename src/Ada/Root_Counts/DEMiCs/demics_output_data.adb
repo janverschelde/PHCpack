@@ -12,6 +12,7 @@ package body DEMiCs_Output_Data is
   cells,cells_last,allcellptr : Mixed_Subdivision;
   dimension : integer32 := -1;
   mixture : Standard_Integer_Vectors.Link_to_Vector;
+  setcellptr : boolean;
 
 -- CONSTRUCTORS :
 
@@ -73,9 +74,13 @@ package body DEMiCs_Output_Data is
 
     link2strcell : constant String_Splitters.Link_to_String
                  := new string'(strcell);
+   -- start : constant boolean := Lists_of_Strings.Is_Null(first);
 
   begin
     Lists_of_Strings.Append(first,last,link2strcell);
+   -- if start
+   --  then cellptr := first;
+   -- end if;
     if monitor
      then text_io.put_line(strcell);
     end if;
@@ -139,11 +144,23 @@ package body DEMiCs_Output_Data is
   function Get_Next_Cell_Indices return String_Splitters.Link_to_String is
 
     res : String_Splitters.Link_to_String := null;
+    tailofcellptr : Lists_of_Strings.List;
 
   begin
-    if not Lists_of_Strings.Is_Null(cellptr) then
-      res := Lists_of_Strings.Head_Of(cellptr);
-      cellptr := Lists_of_Strings.Tail_Of(cellptr);
+    if Lists_of_Strings.Is_Null(cellptr) then
+      if not setcellptr then
+        if not Lists_of_Strings.Is_Null(first) then
+          res := Lists_of_Strings.Head_Of(first);
+          cellptr := first;
+          setcellptr := true;
+        end if;
+      end if;
+    else
+      tailofcellptr := Lists_of_Strings.Tail_Of(cellptr);
+      if not Lists_of_Strings.Is_Null(tailofcellptr) then
+        res := Lists_of_Strings.Head_Of(tailofcellptr);
+        cellptr := tailofcellptr;
+      end if;
     end if;
     return res;
   end Get_Next_Cell_Indices;
@@ -155,11 +172,15 @@ package body DEMiCs_Output_Data is
   
   function Get_Next_Allocated_Cell return Mixed_Subdivision is
 
-    res : Mixed_Subdivision := allcellptr;
+    res : Mixed_Subdivision;
 
   begin
-    if not Is_Null(allcellptr)
-     then allcellptr := Tail_Of(allcellptr);
+    if not Is_Null(allcellptr) then
+      res := allcellptr;
+      allcellptr := Tail_Of(allcellptr);
+    elsif not Is_Null(cells) then
+      res := cells;
+      allcellptr := Tail_Of(cells);
     end if;
     return res;
   end Get_Next_Allocated_Cell;
@@ -191,4 +212,6 @@ package body DEMiCs_Output_Data is
     Clear(cells);
   end Clear_Allocated_Cells;
 
+begin
+  setcellptr := false;
 end DEMiCs_Output_Data;
