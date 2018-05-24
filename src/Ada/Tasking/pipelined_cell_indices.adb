@@ -106,7 +106,9 @@ package body Pipelined_Cell_Indices is
         Produce_Cells(mix,sup,verbose);
       else
         loop
+         -- put_line("Task " & Multitasking.to_string(i) & " entered loop.");
           Semaphore.Request(sem_data);
+         -- put_line("Task " & Multitasking.to_string(i) & " inside lock.");
           cell := DEMiCs_Output_Data.Get_Next_Cell_Indices;
           Semaphore.Release(sem_data);
           exit when DEMiCs_Output_Data.done;
@@ -129,6 +131,7 @@ package body Pipelined_Cell_Indices is
     end do_job;
 
     procedure Run_Tasks is new Multitasking.Silent_Workers(do_job);
+   -- procedure Run_Tasks is new Multitasking.Reporting_Workers(do_job);
 
   begin
     DEMiCs_Output_Data.Initialize_Cell_Indices_Pointer;

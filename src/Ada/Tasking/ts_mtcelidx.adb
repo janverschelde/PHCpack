@@ -13,6 +13,7 @@ with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
+with Lists_of_Strings;
 with DEMiCs_Command_Line;
 with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
 with DEMiCs_Output_Data;
@@ -111,6 +112,7 @@ procedure ts_mtcelidx is
       Semaphore.Request(sem_write);
       put("Task "); put(i,1);
       put(" writes cell indices : "); put(indices); new_line;
+      cellcnt := cellcnt + 1;
       Semaphore.Release(sem_write);
     end Write_Cell;
 
@@ -131,6 +133,8 @@ procedure ts_mtcelidx is
         put("The number of cells : "); put(cellcnt,1); new_line;
       end if;
     end Two_Stage_Test;
+
+    use Lists_of_Strings;
 
   begin
     new_line;
@@ -155,6 +159,9 @@ procedure ts_mtcelidx is
     else
       Pipelined_Cell_Indices.Pipelined_Mixed_Cells
         (nbtasks,mix,sup,Write_Cell'access,false);
+      put("Number of cells written : "); put(cellcnt,1); new_line;
+      put("Number of cells : ");
+      put(Length_Of(DEMiCs_Output_Data.Retrieve_Cell_Indices),1); new_line;
     end if;
   end Compute_Mixed_Volume;
 
@@ -206,10 +213,9 @@ procedure ts_mtcelidx is
     get(nbtasks);
     new_line;
     Extract_Supports(p,mix,sup,verbose);
-   -- DEMiCs_Output_Data.done := false;
-   -- DEMiCs_Output_Data.allocate := false;
-   -- DEMiCs_Output_Data.Store_Dimension_and_Mixture(dim,mix);
-   -- DEMiCs_Output_Data.Initialize_Allocated_Cell_Pointer;
+    DEMiCs_Output_Data.allocate := true;
+    DEMiCs_Output_Data.Store_Dimension_and_Mixture(dim,mix);
+    DEMiCs_Output_Data.Initialize_Allocated_Cell_Pointer;
     if nbtasks > 1 then
       Pipelined_Cell_Indices.Pipelined_Mixed_Cells
         (nbtasks,mix,sup,Write_Cell'access,verbose);

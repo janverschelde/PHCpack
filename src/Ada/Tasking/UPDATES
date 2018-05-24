@@ -1,7 +1,8 @@
 Wed 23 May 2018 : new package pipelined_cell_trackers to track all paths
   defined by one mixed cell, factored out of pipelined_polyhedral_trackers.
   Updated pipelined_cell_indices.adb and ts_mtcelidx.adb for renaming
-  of operations in DEMiCs_Output_Data.
+  of operations in DEMiCs_Output_Data.  Changes in ts_mtcelidx.adb and
+  in pipelined_cell_indices.adb for debugging demics_output_data.adb.
 
 Tue 22 May 2018 : added extraction of cell indices to the multitasked
   writing in ts_mtcelidx, with a new procedure in demics_command_line.
