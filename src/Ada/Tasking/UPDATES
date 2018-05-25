@@ -1,3 +1,7 @@
+Fri 25 May 2018 : new package pipelined_polyhedral_homotopies to run the
+  pipeline to feed to the cells directly to the multitasked path trackers,
+  tested by ts_mtcelidx.
+
 Thu 24 May 2018 : bug fix in pipelined_cell_indices.adb involving "done"
   and added extra test in ts_mtcelidx.adb.  To pipelined_cell_indices, 
   added a new pipelined procedure to construct the mixed cell data 

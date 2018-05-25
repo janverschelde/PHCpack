@@ -82,5 +82,6 @@ multitasking_membership_tests     : multicore check if point on witness set
 ts_mtmbthom                       : develop multitasked homotopy membertest
 -------------------------------------------------------------------------------
 pipelined_cell_indices            : pipelined processing of cell indices
+pipelined_polyhedral_homotopies   : 2-stage pipeline for polyhedral homotopies
 ts_mtcelidx                       : test on pipelining cell indices
 -------------------------------------------------------------------------------
