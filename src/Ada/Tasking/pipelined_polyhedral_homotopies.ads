@@ -1,6 +1,8 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Floating_VecVecs;
 with Arrays_of_Integer_Vector_Lists;
+with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 
@@ -11,10 +13,20 @@ package Pipelined_Polyhedral_Homotopies is
 --   directly to the multitasked path trackers to solve a random
 --   coefficient start system.
 
+  function Random_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             return Standard_Floating_VecVecs.Link_to_VecVec;
+
+  -- DESCRIPTION :
+  --   Returns random lifting values for each of the support sets,
+  --   as arranged in the order of their mixture, defined by mix.
+
   procedure Pipeline_Cells_to_Paths
               ( dim,nt : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                lif : in Standard_Floating_VecVecs.Link_to_VecVec;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
                 verbose : in boolean := true );
@@ -27,6 +39,7 @@ package Pipelined_Polyhedral_Homotopies is
   --   nt       number of tasks, must be at least two;
   --   mix      type of mixture;
   --   sup      supports of the system, orded along occurrence;
+  --   lif      random lifting values for the points in the supports;
   --   verbose  if additional output is needed;
 
   -- ON RETURN :

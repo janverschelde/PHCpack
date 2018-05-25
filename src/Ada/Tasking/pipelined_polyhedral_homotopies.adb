@@ -4,11 +4,8 @@ with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Floating_Vectors;
-with Standard_Floating_VecVecs;
-with Standard_Floating_VecVecs_io;
 with Standard_Complex_VecVecs;
 with Lists_of_Integer_Vectors;
-with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Laur_SysFun;
 with Exponent_Vectors;
 with Standard_Complex_Laur_JacoMats;
@@ -51,8 +48,6 @@ package body Pipelined_Polyhedral_Homotopies is
       idx := idx + mix(i);
     end loop;
     res := new Standard_Floating_VecVecs.VecVec'(resrep);
-    put_line("The random lifting : ");
-    Standard_Floating_VecVecs_io.put(res.all);
     return res;
   end Random_Lifting;
 
@@ -60,6 +55,7 @@ package body Pipelined_Polyhedral_Homotopies is
               ( dim,nt : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                lif : in Standard_Floating_VecVecs.Link_to_VecVec;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
                 verbose : in boolean := true ) is
@@ -68,8 +64,6 @@ package body Pipelined_Polyhedral_Homotopies is
     use Standard_Complex_Laur_JacoMats;
     use Standard_Complex_Solutions;
 
-    lif : constant Standard_Floating_VecVecs.Link_to_VecVec
-        := Random_Lifting(mix,sup);
     lsp : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
         := DEMiCs_Output_Convertors.Apply_Lifting(mix.all,sup,lif.all);
     nbequ : constant integer32 := q'last;

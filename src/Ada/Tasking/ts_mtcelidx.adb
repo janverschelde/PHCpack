@@ -91,35 +91,6 @@ procedure ts_mtcelidx is
     put("The mixed volume : "); put(mv,1); new_line;
   end Write_DEMiCs_Output;
 
-  function Random_Lifting
-             ( mix : Standard_Integer_Vectors.Link_to_Vector;
-               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
-             return Standard_Floating_VecVecs.Link_to_VecVec is
-
-    res : Standard_Floating_VecVecs.Link_to_VecVec;
-    resrep : Standard_Floating_VecVecs.VecVec(mix'range);
-    idx : integer32 := 1;
-    len : integer32;
-
-  begin
-    for i in resrep'range loop
-      len := integer32(Lists_of_Integer_Vectors.Length_Of(sup(idx)));
-      declare
-        vals : Standard_Floating_Vectors.Vector(1..len);
-      begin
-        for j in 1..len loop
-          vals(j) := Standard_Random_Numbers.Random;
-        end loop;
-        resrep(i) := new Standard_Floating_Vectors.Vector'(vals);
-      end;
-      idx := idx + mix(i);
-    end loop;
-    res := new Standard_Floating_VecVecs.VecVec'(resrep);
-    put_line("The random lifting : ");
-    Standard_Floating_VecVecs_io.put(res.all);
-    return res;
-  end Random_Lifting;
-
   procedure Compute_Mixed_Volume ( p : in Laur_Sys ) is
 
   -- DESCRIPTION :
@@ -264,8 +235,38 @@ procedure ts_mtcelidx is
     end if;
   end Test_Pipeline;
 
+  procedure Random_Coefficient_System
+              ( dim,nbtasks : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Generates random lifting values, prompts the user for a file name,
+  --   and then runs a 2-stage pipeline with number of tasks nbtasks
+  --   to solve a random coefficient system with polyhedral homotopies.
+
+    lif : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Random_Lifting(mix,sup);
+    q : Standard_Complex_Laur_Systems.Laur_Sys(sup'range);
+    qsols : Standard_Complex_Solutions.Solution_List;
+    file : file_type;
+
+  begin
+    put("Reading a file name ");
+    put_line("to write the random coefficient system ...");
+    skip_line; -- capture new line symbol
+    Read_Name_and_Create_File(file);
+    new_line;
+    Pipeline_Cells_to_Paths(dim,nbtasks,mix,sup,lif,q,qsols,verbose);
+    put_line(file,q);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Standard_Complex_Solutions.Length_Of(qsols),
+        natural32(dim),qsols);
+  end Random_Coefficient_System;
+
   procedure Construct_Mixed_Cells
-               ( p : in Laur_Sys; randstart : in boolean ) is
+              ( p : in Laur_Sys; randstart : in boolean ) is
 
   -- DESCRIPTION :
   --   Constructs the mixed cells in a regular subdivision of 
@@ -294,25 +295,9 @@ procedure ts_mtcelidx is
     get(nbtasks);
     new_line;
     Extract_Supports(p,mix,sup,verbose);
-    if not randstart then
-      Test_Pipeline(dim,nbtasks,mix,sup,verbose);
-    else
-      declare
-        q : Standard_Complex_Laur_Systems.Laur_Sys(sup'range);
-        qsols : Standard_Complex_Solutions.Solution_List;
-        file : file_type;
-      begin
-        put("Reading a file name ");
-        put_line("to write the random coefficient system ...");
-        skip_line; -- capture new line symbol
-        Read_Name_and_Create_File(file);
-        new_line;
-        Pipeline_Cells_to_Paths(dim,nbtasks,mix,sup,q,qsols,verbose);
-        put_line(file,q);
-        put_line(file,"THE SOLUTIONS :");
-        put(file,Standard_Complex_Solutions.Length_Of(qsols),
-            natural32(dim),qsols);
-      end;
+    if not randstart
+     then Test_Pipeline(dim,nbtasks,mix,sup,verbose);
+     else Random_Coefficient_System(dim,nbtasks,mix,sup,verbose);
     end if;
   end Construct_Mixed_Cells;
 
