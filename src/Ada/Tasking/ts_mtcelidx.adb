@@ -6,18 +6,26 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Random_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Floating_VecVecs_io;
+with Standard_Complex_VecVecs;
 with Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
+with Standard_Complex_Laur_SysFun;
+with Exponent_Vectors;
+with Standard_Complex_Laur_JacoMats;
+with Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
+with Random_Coefficient_Systems;
 with Lists_of_Strings;
 with DEMiCs_Command_Line;
 with DEMiCs_Output_Convertors;
@@ -26,6 +34,8 @@ with DEMiCs_Output_Data;
 with Pipelined_Cell_Indices;
 with Semaphore;
 with Multitasking;
+with Polyhedral_Start_Systems;          use Polyhedral_Start_Systems;
+with Pipelined_Cell_Trackers;           use Pipelined_Cell_Trackers;
 
 procedure ts_mtcelidx is
 
@@ -108,7 +118,7 @@ procedure ts_mtcelidx is
     return res;
   end Random_Lifting;
 
-  procedure Compute_Mixed_Volume ( p : in Poly_Sys ) is
+  procedure Compute_Mixed_Volume ( p : in Laur_Sys ) is
 
   -- DESCRIPTION :
   --   Computes the mixed volume of the Newton polytopes
@@ -200,14 +210,14 @@ procedure ts_mtcelidx is
     end if;
   end Compute_Mixed_Volume;
 
-  procedure Run_Pipeline
+  procedure Test_Pipeline
               ( dim,nbtasks : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 verbose : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Computes the lifted supports and runs the pipeline.
+  --   Computes the lifted supports and runs the pipeline as a test.
 
     lif : constant Standard_Floating_VecVecs.Link_to_VecVec
         := Random_Lifting(mix,sup);
@@ -250,13 +260,81 @@ procedure ts_mtcelidx is
       put(Length_Of(DEMiCs_Output_Data.Retrieve_Cell_Indices),1);
       new_line;
     end if;
-  end Run_Pipeline;
+  end Test_Pipeline;
 
-  procedure Construct_Mixed_Cells ( p : in Poly_Sys ) is
+  procedure Pipelined_Polyhedral_Homotopies
+              ( dim,nt : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Computes the lifted supports and runs the pipeline with nt tasks.
+
+    use Standard_Complex_Laur_SysFun;
+    use Standard_Complex_Laur_JacoMats;
+    use Standard_Complex_Solutions;
+
+    lif : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Random_Lifting(mix,sup);
+    lsp : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+        := DEMiCs_Output_Convertors.Apply_Lifting(mix.all,sup,lif.all);
+    q : Standard_Complex_Laur_Systems.Laur_Sys(sup'range)
+      := Random_Coefficient_Systems.Create(natural32(dim),sup);
+    nbequ : constant integer32 := q'last;
+    r : constant integer32 := mix'last;
+    hom : Eval_Coeff_Laur_Sys(1..nbequ);
+    cff : Standard_Complex_VecVecs.VecVec(hom'range);
+    epv : Exponent_Vectors.Exponent_Vectors_Array(hom'range);
+    ejf : Eval_Coeff_Jaco_Mat(hom'range,hom'first..hom'last+1);
+    jmf : Mult_Factors(ejf'range(1),ejf'range(2));
+    tmv : Standard_Natural_Vectors.Vector(2..nt) := (2..nt => 0);
+    dpw : Standard_Floating_VecVecs.Array_of_VecVecs(2..nt);
+    cft : Standard_Complex_VecVecs.Array_of_VecVecs(2..nt);
+    tasksols,lastsols : Array_of_Solution_Lists(2..nt);
+    sols : Solution_List;
+    sem : Semaphore.Lock;
+    
+    procedure Track ( idtask : in integer32; 
+                      mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                      mic : in Mixed_Cell ) is
+    begin
+      Standard_Track_Cell(sem,idtask,nbequ,r,mix.all,mic,lsp,cff,
+        dpw(idtask),cft(idtask),epv,hom,ejf,jmf,q,tmv(idtask),
+        tasksols(idtask),lastsols(idtask));
+    end Track;
+
+  begin
+    DEMiCs_Output_Data.allocate := true;
+    DEMiCs_Output_Data.Store_Dimension_and_Mixture(dim,mix);
+    DEMiCs_Output_Data.Initialize_Allocated_Cell_Pointer;
+    cff := Coeff(q);
+    epv := Exponent_Vectors.Create(q);
+    hom := Create(q);
+    Create(q,ejf,jmf);
+    Allocate_Workspace_for_Exponents(epv,dpw);
+    Allocate_Workspace_for_Coefficients(cff,cft);
+    Pipelined_Cell_Indices.Pipelined_Mixed_Cells
+      (nt,dim,mix,sup,lif,lsp,Track'access,verbose);
+    for k in tasksols'range loop
+      Standard_Complex_Solutions.Push(tasksols(k),sols);
+    end loop;
+    new_line;
+    put_line("The start system : ");
+    put_line(q);
+    new_line;
+    put_line("The solutions :");
+    put(standard_output,Length_Of(sols),natural32(dim),sols);
+  end Pipelined_Polyhedral_Homotopies;
+
+  procedure Construct_Mixed_Cells
+               ( p : in Laur_Sys; randstart : in boolean ) is
 
   -- DESCRIPTION :
   --   Constructs the mixed cells in a regular subdivision of 
   --   the Newton polytopes spanned by the supports of p.
+  --   If randstart, then a random coefficient system will be
+  --   constructed and solved by pipelined polyhedral homotopies.
 
     dim : constant integer32 := p'last;
     ans : character;
@@ -279,7 +357,10 @@ procedure ts_mtcelidx is
     get(nbtasks);
     new_line;
     Extract_Supports(p,mix,sup,verbose);
-    Run_Pipeline(dim,nbtasks,mix,sup,verbose);
+    if randstart
+     then Pipelined_Polyhedral_Homotopies(dim,nbtasks,mix,sup,verbose);
+     else Test_Pipeline(dim,nbtasks,mix,sup,verbose);
+    end if;
   end Construct_Mixed_Cells;
 
   procedure Main is
@@ -288,7 +369,7 @@ procedure ts_mtcelidx is
   --   Prompts the user for a polynomial system
   --   and then prepares the input for DEMiCs.
 
-    lp : Link_to_Poly_Sys;
+    lp : Link_to_Laur_Sys;
     ans : character;
 
   begin
@@ -299,11 +380,13 @@ procedure ts_mtcelidx is
     put_line("MENU to test pipelined computations :");
     put_line("  1. write cell indices with pipelining");
     put_line("  2. pipelined mixed cell construction");
-    put("Type 1 or 2 to make a choice : ");
-    Ask_Alternative(ans,"12");
+    put_line("  3. apply pipelined polyhedral homotopies");
+    put("Type 1, 2, or 3 to make a choice : ");
+    Ask_Alternative(ans,"123");
     case ans is
       when '1' => Compute_Mixed_Volume(lp.all);
-      when '2' => Construct_Mixed_Cells(lp.all);
+      when '2' => Construct_Mixed_Cells(lp.all,false);
+      when '3' => Construct_Mixed_Cells(lp.all,true);
       when others => null;
     end case;
   end Main;
