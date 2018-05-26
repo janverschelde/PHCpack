@@ -1,3 +1,6 @@
+Sat 26 May 2018 : added type of mixture as argument when making a random
+  coefficient system in pipelined_polyhedral_homotopies.adb.
+
 Fri 25 May 2018 : new package pipelined_polyhedral_homotopies to run the
   pipeline to feed to the cells directly to the multitasked path trackers,
   tested by ts_mtcelidx.  In pipelined_polyhedral_homotopies, exported
