@@ -1,3 +1,7 @@
+Sat 26 May 2018 : fixed bug in demics_command_line.adb, adjusting the
+  position in the string to skip the ':' after the cell number in the
+  output line of DEMiCs.
+
 Thu 24 May 2018 : in demics_output_data.adb, documented the getting of the
   next cell indices and fixed the getting of the next allocated mixed cell.
   To demics_output_convertors, added a procedure to make a mixed cell

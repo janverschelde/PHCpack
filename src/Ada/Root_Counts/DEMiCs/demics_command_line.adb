@@ -255,9 +255,15 @@ package body DEMiCs_Command_Line is
     sign : character;
 
   begin
+    if verbose then
+      put("Inside Line2Cell_Indices, nbrpts = "); put(nbrpts,1); new_line;
+      put("mix = "); put(mix.all); new_line;
+      put("line = "); put_line(line);
+    end if;
     while line(pos) /= ':' loop -- skip the number of the cell
       pos := pos + 1;
     end loop;
+    pos := pos + 1; -- must skip the ':'
     for i in mix'range loop
       while pos <= line'last loop         -- skip spaces
         exit when (line(pos) /= ' ');
