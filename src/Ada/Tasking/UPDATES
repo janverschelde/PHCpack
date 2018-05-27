@@ -1,5 +1,6 @@
 Sat 26 May 2018 : added type of mixture as argument when making a random
   coefficient system in pipelined_polyhedral_homotopies.adb.
+  Fixed bug in Flatten function in pipelined_cell_indices.adb.
 
 Fri 25 May 2018 : new package pipelined_polyhedral_homotopies to run the
   pipeline to feed to the cells directly to the multitasked path trackers,

@@ -41,7 +41,7 @@ package body Pipelined_Cell_Indices is
 
   begin
     for i in v'range loop
-      res := res + v'last;
+      res := res + v(i)'last;
     end loop;
     return res;
   end Size;
@@ -116,7 +116,14 @@ package body Pipelined_Cell_Indices is
         done := (cell = null);
         Semaphore.Release(sem_data);
         exit when done;
-        DEMiCs_Command_Line.Line2Cell_Indices(cell.all,nbr,mix,inds,false);
+        if verbose then
+          Semaphore.Request(sem_write);
+          put("Task "); put(i,1); put_line(" extract cell indices :");
+          DEMiCs_Command_Line.Line2Cell_Indices(cell.all,nbr,mix,inds,true);
+          Semaphore.Release(sem_write);
+        else
+          DEMiCs_Command_Line.Line2Cell_Indices(cell.all,nbr,mix,inds,false);
+        end if;
         if verbose or process = null then
           Semaphore.Request(sem_write);
           put("Task "); put(i,1); put_line(" writes :");
@@ -247,8 +254,16 @@ package body Pipelined_Cell_Indices is
           Semaphore.Release(sem_data);
           if cell /= null then
             mic := Head_Of(sub);
-            DEMiCs_Command_Line.Line2Cell_Indices
-              (cell.all,nbr,mix,inds,false);
+            if verbose then
+              Semaphore.Request(sem_write);
+              put("Task "); put(i,1); put_line(" extract cell indices :");
+              DEMiCs_Command_Line.Line2Cell_Indices
+                (cell.all,nbr,mix,inds,true);
+              Semaphore.Release(sem_write);
+            else
+              DEMiCs_Command_Line.Line2Cell_Indices
+                (cell.all,nbr,mix,inds,false);
+            end if;
             DEMiCs_Output_Convertors.Make_Mixed_Cell
               (mic,dim,mix.all,inds,lifsup,mat,rhs,ipvt,wrk,verbose);
             if verbose or process = null then
