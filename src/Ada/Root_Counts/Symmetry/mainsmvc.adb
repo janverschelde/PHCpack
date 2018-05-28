@@ -216,7 +216,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
       when 4 => put_line(outft,"MixedVol Algorithm to compute mixed volume");
                 Call_MixedVol(outft,lq);
       when 5 => put_line(outft,"DEMiCs Algorithm for all mixed cells");
-                Driver_for_DEMiCs_Algorithm(outft,lq.all);
+                Driver_for_DEMiCs_Algorithm(outft,integer32(nt),lq.all);
       when others => null;
     end case;
     if Standard_Complex_Solutions.Length_Of(qsols) > 0 then

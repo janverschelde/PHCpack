@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;
@@ -42,7 +43,7 @@ package Drivers_for_DEMiCs_Algorithm is
   --   mv       the mixed volume.
 
   procedure Driver_for_DEMiCs_Algorithm
-              ( file : in file_type;
+              ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys );
 
   -- DESCRIPTION :
@@ -52,6 +53,7 @@ package Drivers_for_DEMiCs_Algorithm is
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
+  --   nt       number of tasks, 0 for no multitasking;
   --   p        a polynomial system.
 
 end Drivers_for_DEMiCs_Algorithm;

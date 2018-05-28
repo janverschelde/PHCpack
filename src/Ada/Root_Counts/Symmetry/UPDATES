@@ -1,3 +1,6 @@
+Mon 28 May 2018 : passed the number of tasks from the command line to the
+  driver procedure of DEMiCs.
+
 Mon 14 May 2018 : added DEMiCs to the lifting menu in mainsmvc.adb.
 
 Sat 24 Jun 2017 : extended permute_operations with permutations applied

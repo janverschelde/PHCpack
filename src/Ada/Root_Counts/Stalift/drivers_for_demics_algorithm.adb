@@ -2,7 +2,6 @@ with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
@@ -145,7 +144,7 @@ package body Drivers_for_DEMiCs_Algorithm is
   end Process_DEMiCs_Output;
 
   procedure Driver_for_DEMiCs_Algorithm
-              ( file : in file_type;
+              ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
 
     dim : constant integer32 := p'last;
