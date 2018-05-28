@@ -20,6 +20,48 @@ package DEMiCs_Algorithm is
 --   DEMiCs was developed by Tomohiko Mizutani, Akiko Takeda, and
 --   Masakazu Kojima and licensed under GNU GPL Version 2 or higher.
 
+  procedure Extract_Supports 
+              ( p : in Poly_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true );
+  procedure Extract_Supports 
+              ( p : in Laur_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Extracts the supports and computes the type of mixture.
+
+  procedure Add_Artificial_Origin
+              ( dim : in integer32;
+                sup : in out Lists_of_Integer_Vectors.List;
+                added : out boolean );
+
+  -- DESCRIPTION :
+  --   If the origin does not belong to the list of points sup,
+  --   then the origin is appended to sup and added is true on return.
+  --   The dimension dim on entry equals the dimension of the points.
+
+  procedure Add_Artificial_Origins
+              ( dim : in integer32;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                nbadd : out integer32;
+                added : out Standard_Integer_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Add artificial origins to the supports for the stable mixed volume.
+
+  -- ON ENTRY :
+  --   dim      dimension of the points in the supports;
+  --   sup      supports of a polynomial system.
+
+  -- ON RETURN :
+  --   nbadd    number of artificial origins added;
+  --   added    vector of sup'range to indicate where the artificial origins
+  --            are in sup: sup(k) = 1 then added to k-th support, 0 if not.
+
   function Mixture_Type
               ( mix : Standard_Integer_Vectors.Vector )
               return C_Integer_Array;
@@ -91,6 +133,18 @@ package DEMiCs_Algorithm is
   --   On return is a vector of range 0..nbr-1 with random doubles.
   --   The random doubles are in the interval [0, 1].
 
+  function Size ( v : Standard_Floating_VecVecs.Link_to_VecVec )
+                return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the total number of elements in v.
+ 
+  function Flatten ( v : Standard_Floating_VecVecs.Link_to_VecVec )
+                   return Standard_Floating_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns a vector with all values in v.
+
   function Copy_Lifting
               ( lif : Standard_Floating_Vectors.Vector )
               return C_Double_Array;
@@ -135,55 +189,34 @@ package DEMiCs_Algorithm is
   --   lif      random lifting values for each point,
   --            in an array of size equal to the total number of points.
 
-  procedure Extract_Supports 
-              ( p : in Poly_Sys;
-                mix : out Standard_Integer_Vectors.Link_to_Vector;
-                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                verbose : in boolean := true );
-  procedure Extract_Supports 
-              ( p : in Laur_Sys;
-                mix : out Standard_Integer_Vectors.Link_to_Vector;
-                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                verbose : in boolean := true );
-
-  -- DESCRIPTION :
-  --   Extracts the supports and computes the type of mixture.
-
-  procedure Add_Artificial_Origin
-              ( dim : in integer32;
-                sup : in out Lists_of_Integer_Vectors.List;
-                added : out boolean );
-
-  -- DESCRIPTION :
-  --   If the origin does not belong to the list of points sup,
-  --   then the origin is appended to sup and added is true on return.
-  --   The dimension dim on entry equals the dimension of the points.
-
-  procedure Add_Artificial_Origins
-              ( dim : in integer32;
-                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                nbadd : out integer32;
-                added : out Standard_Integer_Vectors.Vector );
-
-  -- DESCRIPTION :
-  --   Add artificial origins to the supports for the stable mixed volume.
-
-  -- ON ENTRY :
-  --   dim      dimension of the points in the supports;
-  --   sup      supports of a polynomial system.
-
-  -- ON RETURN :
-  --   nbadd    number of artificial origins added;
-  --   added    vector of sup'range to indicate where the artificial origins
-  --            are in sup: sup(k) = 1 then added to k-th support, 0 if not.
-
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
-                supports : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Calls DEMiCs on the given supports, of type of mixture mix.
+
+  procedure Call_DEMiCs
+              ( mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stable : in boolean; stlb : in double_float;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Calls DEMiCs on the given supports, of type of mixture mix.
+  --   If stable, then the stable mixed volume will be computed
+  --   and stlb is the stable lifting bound.
+
+  -- ON ENTRY :
+  --   mix      type of mixture;
+  --   sup      supports of a polynomial system;
+  --   stable   if the stable mixed volume is wanted;
+  --   stlb     stable lifting bound if stable, otherwise 0.0;
+  --   verbose  for extra output.
+
+  -- ON RETURN :
+  --   sup      supports with artificial origins added if stable.
 
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;

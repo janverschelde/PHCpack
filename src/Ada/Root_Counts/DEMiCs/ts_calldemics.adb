@@ -47,8 +47,8 @@ procedure ts_calldemics is
     declare
       lif : Standard_Floating_VecVecs.VecVec(mix'range);
       lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
-    begin
-      Call_DEMiCs(inpfile,outfile,verbose=>verbose);
+    begin -- assume demics is in the execution path
+      Call_DEMiCs(inpfile,outfile,execfile=>"demics",verbose=>verbose);
       Process_Output(p'last,outfile,mix.all,mv,lif,cells,verbose);
       new_line;
       put_line("The lifting values for the supports : "); put(lif);

@@ -3,11 +3,13 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
 with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
@@ -27,9 +29,10 @@ procedure ts_demicsrun is
     ans : character;
     mix : Standard_Integer_Vectors.Link_to_Vector;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
-    verbose : boolean;
+    verbose,stable : boolean;
     mv : natural32;
     mcc : Mixed_Subdivision;
+    stlb : double_float;
 
   begin
     new_line;
@@ -40,8 +43,17 @@ procedure ts_demicsrun is
     put("Monitor the adding of cell indices ? (y/n) ");
     Ask_Yes_or_No(ans);
     DEMiCs_Output_Data.monitor := (ans = 'y');
+    new_line;
+    put("Do you want the stable mixed volume ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    stable := (ans = 'y');
+    DEMiCs_Output_Data.stable := stable;
+    if ans = 'y'
+     then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
+     else stlb := 0.0;
+    end if;
     Extract_Supports(p,mix,sup,verbose);
-    Call_DEMiCs(mix,sup,verbose);
+    Call_DEMiCs(mix,sup,stable,stlb,verbose);
     Show_Output;
     declare
       lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
