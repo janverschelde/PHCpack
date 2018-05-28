@@ -1,5 +1,7 @@
 Mon 28 May 2018 : extended main driver in drivers_for_demics_algorithm with
   an extra parameter to pass the number of tasks.
+  Updated drivers_for_demics_algorithm so the pipelined polyhedral homotopies
+  are accessible from within phc -m.
 
 Sun 20 May 2018 : added application of polyhedral homotopies to the
   drivers_for_demics_algorithm.
