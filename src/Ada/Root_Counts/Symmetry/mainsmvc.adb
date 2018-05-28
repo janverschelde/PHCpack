@@ -202,21 +202,30 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
     strategy := Lifting_Strategy;
     new_line(outft);
     case strategy is
-      when 0 => put_line(outft,"STATIC LIFTING");
-                Driver_for_Mixed_Volume_Computation
-                  (outft,integer32(nt),lq.all,true,qq,qsols,qsols0,mv,smv,tmv);
-      when 1 => put_line(outft,"IMPLICIT LIFTING");
-                Driver_for_Mixture_Bezout_BKK(outft,lq.all,true,qq,qsols,mv);
-      when 2 => put_line(outft,"DYNAMIC LIFTING");
-                Driver_for_Dynamic_Mixed_Volume_Computation
-                  (outft,lq.all,true,qq,qsols,mv);
-      when 3 => put_line(outft,"SYMMETRIC LIFTING"); 
-                Driver_for_Symmetric_Mixed_Volume_Computation
-                  (outft,lq.all,true,qq,qsols,mv);
-      when 4 => put_line(outft,"MixedVol Algorithm to compute mixed volume");
-                Call_MixedVol(outft,lq);
-      when 5 => put_line(outft,"DEMiCs Algorithm for all mixed cells");
-                Driver_for_DEMiCs_Algorithm(outft,integer32(nt),lq.all);
+      when 0 =>
+        put_line(outft,"Static lifting applies lift-and-prune algorithms");
+        Driver_for_Mixed_Volume_Computation
+          (outft,integer32(nt),lq.all,true,qq,qsols,qsols0,mv,smv,tmv);
+      when 1 =>
+        put_line(outft,
+          "Implicit lifting applies a recursive formula for the mixed volume");
+        Driver_for_Mixture_Bezout_BKK(outft,lq.all,true,qq,qsols,mv);
+      when 2 =>
+        put_line
+          (outft,"Dynamic lifting to place points in a regular subdivsion");
+        Driver_for_Dynamic_Mixed_Volume_Computation
+          (outft,lq.all,true,qq,qsols,mv);
+      when 3 =>
+        put_line(outft,"Symmetric lifting to exploit permutation symmetry"); 
+        Driver_for_Symmetric_Mixed_Volume_Computation
+          (outft,lq.all,true,qq,qsols,mv);
+      when 4 =>
+        put_line(outft,"MixedVol Algorithm to compute the mixed volume");
+        Call_MixedVol(outft,lq);
+      when 5 =>
+        put_line(outft,
+          "DEMiCs Algorithm applies dynamic enumeration for all mixed cells");
+        Driver_for_DEMiCs_Algorithm(outft,integer32(nt),lq.all);
       when others => null;
     end case;
     if Standard_Complex_Solutions.Length_Of(qsols) > 0 then
