@@ -1,5 +1,6 @@
 Mon 28 May 2018 : moved random_lifting out of pipelined_polyhedral_homotopies
-  and into the package demics_algorithm.
+  and into the package demics_algorithm.  Moved the function Flatten from
+  pipelined_cell_indices.adb to demics_algorithm.
 
 Sun 27 May 2018 : making of the random coefficient system fixed in
   pipelined_polyhedral_homotopies to just take the ordered supports

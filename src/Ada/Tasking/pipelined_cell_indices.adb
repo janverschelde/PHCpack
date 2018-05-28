@@ -31,47 +31,14 @@ package body Pipelined_Cell_Indices is
     end if;
   end Produce_Cells;
 
-  function Size ( v : Standard_Floating_VecVecs.Link_to_VecVec )
-                return integer32 is
-
-  -- DESCRIPTION :
-  --   Returns the total number of elements in v.
- 
-    res : integer32 := 0;
-
-  begin
-    for i in v'range loop
-      res := res + v(i)'last;
-    end loop;
-    return res;
-  end Size;
-
-  function Flatten ( v : Standard_Floating_VecVecs.Link_to_VecVec )
-                   return Standard_Floating_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Returns a vector with all values in v.
-
-    res : Standard_Floating_Vectors.Vector(1..Size(v));
-    idx : integer32 := 0;
-
-  begin
-    for i in v'range loop
-      for j in v(i)'range loop
-        idx := idx + 1;
-        res(idx) := v(i)(j);
-      end loop;
-    end loop;
-    return res;
-  end Flatten;
-
   procedure Produce_Cells
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 lif : in Standard_Floating_VecVecs.Link_to_VecVec;
                 verbose : in boolean := true ) is
 
-    lifting : constant Standard_Floating_Vectors.Vector := Flatten(lif);
+    lifting : constant Standard_Floating_Vectors.Vector
+            := DEMiCs_Algorithm.Flatten(lif);
 
   begin
     DEMiCs_Output_Data.done := false;
