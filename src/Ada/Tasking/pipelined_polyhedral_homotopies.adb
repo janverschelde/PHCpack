@@ -1,9 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
-with Standard_Floating_Vectors;
 with Standard_Complex_VecVecs;
 with Lists_of_Integer_Vectors;
 with Standard_Complex_Laur_SysFun;
@@ -23,33 +21,6 @@ with Polyhedral_Start_Systems;          use Polyhedral_Start_Systems;
 with Pipelined_Cell_Trackers;           use Pipelined_Cell_Trackers;
 
 package body Pipelined_Polyhedral_Homotopies is
-
-  function Random_Lifting
-             ( mix : Standard_Integer_Vectors.Link_to_Vector;
-               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
-             return Standard_Floating_VecVecs.Link_to_VecVec is
-
-    res : Standard_Floating_VecVecs.Link_to_VecVec;
-    resrep : Standard_Floating_VecVecs.VecVec(mix'range);
-    idx : integer32 := 1;
-    len : integer32;
-
-  begin
-    for i in resrep'range loop
-      len := integer32(Lists_of_Integer_Vectors.Length_Of(sup(idx)));
-      declare
-        vals : Standard_Floating_Vectors.Vector(1..len);
-      begin
-        for j in 1..len loop
-          vals(j) := Standard_Random_Numbers.Random;
-        end loop;
-        resrep(i) := new Standard_Floating_Vectors.Vector'(vals);
-      end;
-      idx := idx + mix(i);
-    end loop;
-    res := new Standard_Floating_VecVecs.VecVec'(resrep);
-    return res;
-  end Random_Lifting;
 
   procedure Pipeline_Cells_to_Paths
               ( dim,nt : in integer32;

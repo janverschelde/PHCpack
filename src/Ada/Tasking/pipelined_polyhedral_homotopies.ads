@@ -13,15 +13,6 @@ package Pipelined_Polyhedral_Homotopies is
 --   directly to the multitasked path trackers to solve a random
 --   coefficient start system.
 
-  function Random_Lifting
-             ( mix : Standard_Integer_Vectors.Link_to_Vector;
-               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
-             return Standard_Floating_VecVecs.Link_to_VecVec;
-
-  -- DESCRIPTION :
-  --   Returns random lifting values for each of the support sets,
-  --   as arranged in the order of their mixture, defined by mix.
-
   procedure Pipeline_Cells_to_Paths
               ( dim,nt : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;

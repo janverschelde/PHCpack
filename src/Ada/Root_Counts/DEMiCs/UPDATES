@@ -1,3 +1,6 @@
+Mon 28 May 2018 : to demics_algorithm, added procedures to add an artificial
+  origin and to add the stable lifting bound to compute mixed volumes.
+
 Sat 26 May 2018 : fixed bug in demics_command_line.adb, adjusting the
   position in the string to skip the ':' after the cell number in the
   output line of DEMiCs.

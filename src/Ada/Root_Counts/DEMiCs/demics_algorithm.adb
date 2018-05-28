@@ -5,9 +5,8 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Integer_Vectors;
+with Standard_Random_Numbers;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_VecVecs;
 with Standard_Floating_VecVecs_io;       use Standard_Floating_VecVecs_io;
@@ -107,6 +106,65 @@ package body DEMiCs_Algorithm is
     return res;
   end Coordinates;
 
+  function Random_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             return Standard_Floating_VecVecs.Link_to_VecVec is
+
+    res : Standard_Floating_VecVecs.Link_to_VecVec;
+    resrep : Standard_Floating_VecVecs.VecVec(mix'range);
+    idx : integer32 := 1;
+    len : integer32;
+
+  begin
+    for i in resrep'range loop
+      len := integer32(Lists_of_Integer_Vectors.Length_Of(sup(idx)));
+      declare
+        vals : Standard_Floating_Vectors.Vector(1..len);
+      begin
+        for j in 1..len loop
+          vals(j) := Standard_Random_Numbers.Random;
+        end loop;
+        resrep(i) := new Standard_Floating_Vectors.Vector'(vals);
+      end;
+      idx := idx + mix(i);
+    end loop;
+    res := new Standard_Floating_VecVecs.VecVec'(resrep);
+    return res;
+  end Random_Lifting;
+
+  function Random_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+               stlb : double_float;
+               added : Standard_Integer_Vectors.Vector )
+             return Standard_Floating_VecVecs.Link_to_VecVec is
+
+    res : Standard_Floating_VecVecs.Link_to_VecVec;
+    resrep : Standard_Floating_VecVecs.VecVec(mix'range);
+    idx : integer32 := 1;
+    len : integer32;
+
+  begin
+    for i in resrep'range loop
+      len := integer32(Lists_of_Integer_Vectors.Length_Of(sup(idx)));
+      declare
+        vals : Standard_Floating_Vectors.Vector(1..len);
+      begin
+        for j in 1..len loop
+          vals(j) := Standard_Random_Numbers.Random;
+        end loop;
+        if added(idx) = 1          -- artificial origin is the last point
+         then vals(len) := stlb;   -- and receives the lifting stlb
+        end if;
+        resrep(i) := new Standard_Floating_Vectors.Vector'(vals);
+      end;
+      idx := idx + mix(i);
+    end loop;
+    res := new Standard_Floating_VecVecs.VecVec'(resrep);
+    return res;
+  end Random_Lifting;
+
   function Random_Lifting ( nbr : integer32 ) return C_Double_Array is
 
     lst : constant Interfaces.C.size_T := Interfaces.C.size_T(nbr-1);
@@ -154,10 +212,10 @@ package body DEMiCs_Algorithm is
   end Extract_Supports;
 
   procedure Extract_Supports 
-               ( p : in Laur_Sys;
-                 mix : out Standard_Integer_Vectors.Link_to_Vector;
-                 supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                 verbose : in boolean := true ) is
+              ( p : in Laur_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true ) is
 
     perm : Standard_Integer_Vectors.Link_to_Vector;
 
@@ -169,6 +227,60 @@ package body DEMiCs_Algorithm is
       put("The mixture type : "); put(mix.all); new_line;
     end if;
   end Extract_Supports;
+
+  procedure Add_Artificial_Origin
+              ( dim : in integer32;
+                sup : in out Lists_of_Integer_Vectors.List;
+                added : out boolean ) is
+
+    tmp : Lists_of_Integer_Vectors.List := sup;
+    last : Lists_of_Integer_Vectors.List;
+    lpt : Standard_Integer_Vectors.Link_to_Vector;
+    found : boolean := false;
+    origin : constant Standard_Integer_Vectors.Vector(1..dim)
+           := (1..dim => 0);
+
+  begin
+    while not Lists_of_Integer_Vectors.Is_Null(tmp) loop
+      lpt := Lists_of_Integer_Vectors.Head_Of(tmp);
+      found := false;
+      for k in lpt'range loop
+        if lpt(k) /= 0
+         then found := false; exit;
+        end if;
+      end loop;
+      exit when found;
+      last := tmp;
+      tmp := Lists_of_Integer_Vectors.Tail_Of(tmp);
+    end loop;
+    if found then
+      added := false;
+    else
+      Lists_of_Integer_Vectors.Append(sup,last,origin);
+      added := true;
+    end if;
+  end Add_Artificial_Origin;
+
+  procedure Add_Artificial_Origins
+              ( dim : in integer32;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                nbadd : out integer32;
+                added : out Standard_Integer_Vectors.Vector ) is
+
+    origin_added : boolean;
+
+  begin
+    nbadd := 0;
+    for k in sup'range loop
+      Add_Artificial_Origin(dim,sup(k),origin_added);
+      if origin_added then
+        nbadd := nbadd + 1;
+        added(k) := 1;
+      else
+        added(k) := 0;
+      end if;
+    end loop;
+  end Add_Artificial_Origins;
 
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
