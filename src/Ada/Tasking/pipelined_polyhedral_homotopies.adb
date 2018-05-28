@@ -89,8 +89,8 @@ package body Pipelined_Polyhedral_Homotopies is
     end Track;
 
   begin
-   -- q := Random_Coefficient_Systems.Create(natural32(dim),sup);
-    q := Random_Coefficient_Systems.Create(natural32(dim),mix.all,sup);
+    q := Random_Coefficient_Systems.Create(natural32(dim),sup);
+   -- q := Random_Coefficient_Systems.Create(natural32(dim),mix.all,sup);
     DEMiCs_Output_Data.allocate := true;
     DEMiCs_Output_Data.Store_Dimension_and_Mixture(dim,mix);
     DEMiCs_Output_Data.Initialize_Allocated_Cell_Pointer;

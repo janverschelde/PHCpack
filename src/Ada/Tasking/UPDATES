@@ -1,3 +1,7 @@
+Sun 27 May 2018 : making of the random coefficient system fixed in
+  pipelined_polyhedral_homotopies to just take the ordered supports
+  and not the type of mixture on input.
+
 Sat 26 May 2018 : added type of mixture as argument when making a random
   coefficient system in pipelined_polyhedral_homotopies.adb.
   Fixed bug in Flatten function in pipelined_cell_indices.adb.
