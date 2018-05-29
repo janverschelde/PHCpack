@@ -34,6 +34,22 @@ package DEMiCs_Algorithm is
   -- DESCRIPTION :
   --   Extracts the supports and computes the type of mixture.
 
+  procedure Extract_Supports 
+              ( p : in Poly_Sys;
+                mix,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true );
+  procedure Extract_Supports 
+              ( p : in Laur_Sys;
+                mix,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Extracts the supports and computes the type of mixture.
+  --   In addition, returns the permutation to put the same supports
+  --   in consecutive order.
+
   procedure Add_Artificial_Origin
               ( dim : in integer32;
                 sup : in out Lists_of_Integer_Vectors.List;

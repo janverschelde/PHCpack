@@ -1,3 +1,6 @@
+Tue 29 May 2018 : extended demics_algorithm with procedures which also return
+  the permutation when the supports are extracted from the system.
+
 Mon 28 May 2018 : to demics_algorithm, added procedures to add an artificial
   origin and to add the stable lifting bound to compute mixed volumes.
   Changed ts_calldemics.adb, assuming demics is in the execution path.
