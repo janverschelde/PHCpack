@@ -35,7 +35,7 @@ package Greeting_Banners is
     "Linear and nonlinear Reduction w.r.t the total degree of the system.";
 
   rocoban : constant string :=
-    "Root counting and Construction of product and polyhedral start systems.";
+    "Root counting and construction of start system";
 
   samban : constant string :=
     "Sample points of a pure dimensional solution set, given a witness set.";

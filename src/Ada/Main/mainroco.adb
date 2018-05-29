@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Polynomials;
@@ -12,7 +11,7 @@ with Write_Seed_Number;
 with Greeting_Banners;
 with Bye_Bye_Message;
 
-procedure mainroco ( infilename,outfilename : in string ) is
+procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
  
   procedure Read_System
               ( filename : in string;

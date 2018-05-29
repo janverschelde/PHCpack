@@ -459,11 +459,18 @@ procedure Dispatch is
   begin
     case o2 is
       when 'h' | '-' => Greeting_Banners.help4rootcounts;
-      when 'b'    => bablroco(0,infile,outfile);
-     -- when 't'    => bablroco(Number_of_Tasks(2),infile,outfile);
-      when 't'    => bablroco(Number_of_Tasks,infile,outfile);
-      when others => put_line(welcome); put_line(rocoban);
-                     mainroco(infile,outfile);
+      when 'b' => bablroco(0,infile,outfile);
+      when 't' =>
+        declare
+          nt : constant natural32 := Number_of_Tasks;
+          ns : constant string := Convert(integer32(nt));
+        begin
+          put_line(welcome); put_line(rocoban & ", with " & ns & " tasks.");
+          mainroco(nt,infile,outfile);
+        end;
+      when others =>
+        put_line(welcome); put_line(rocoban & ", no multitasking.");
+        mainroco(0,infile,outfile);
     end case;
   end Root_Count_Dispatcher;
 
@@ -698,6 +705,9 @@ procedure Dispatch is
       when 'f' => 
         put_line(welcome); put_line(facban & ", with " & ns & " tasks.");
         mainfac(nt,infile,outfile);
+      when 'r' =>
+        put_line(welcome); put_line(rocoban & ", with " & ns & " tasks.");
+        mainroco(nt,infile,outfile);
       when others =>
         mainphc(nt,infile,outfile);
     end case;

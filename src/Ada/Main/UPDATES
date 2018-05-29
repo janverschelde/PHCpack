@@ -1,3 +1,7 @@
+Mon 29 May 2018 : shorted root counting banner in greeting_banners.ads.
+  Inserted the number of tasks as first argument of mainroco,
+  updated dispatch.adb.
+
 Wed 16 May 2018 : adjusted greeting_banners for version 2.4.54.
   Inserted DEMiCs in mainphc.adb to document the options.
 
