@@ -14,11 +14,46 @@ with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
 with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
 with DEMiCs_Output_Data;
+with Drivers_for_Static_Lifting;
 
 procedure ts_demicsrun is
 
 -- DESCRIPTION :
 --   Development of a run with DEMiCs, invoked by an Ada main program.
+
+  procedure Process_Output 
+              ( dim : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stable : in boolean; stlb : in double_float;
+                verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Processes the output of DEMiCs.
+
+    lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    mv,smv,tmv,orgcnt,stbcnt : natural32;
+
+  begin
+    Process_Output(dim,mix,sup,lifsup,mcc,verbose);
+    put_line("The lifted supports :");
+    Floating_Mixed_Subdivisions_io.put(lifsup);
+    if not stable then
+      put_line("The mixed-cell configuration :");
+      Floating_Mixed_Subdivisions_io.put(natural32(dim),mix.all,mcc,mv);
+      put("The mixed volume : "); put(mv,1); new_line;
+    else
+      Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
+      new_line;
+      put("Number of cells without artificial origin : ");
+      put(orgcnt,1); new_line;
+      put("#extra stable cells with artificial origin : ");
+      put(stbcnt,1); new_line;
+      Drivers_for_Static_Lifting.Floating_Volume_Computation
+        (standard_output,dim,stlb,mix.all,mcc,mv,smv,tmv);
+    end if;
+  end Process_Output;
 
   procedure Compute_Mixed_Volume ( p : in Poly_Sys ) is
 
@@ -30,8 +65,6 @@ procedure ts_demicsrun is
     mix : Standard_Integer_Vectors.Link_to_Vector;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
     verbose,stable : boolean;
-    mv : natural32;
-    mcc : Mixed_Subdivision;
     stlb : double_float;
 
   begin
@@ -55,16 +88,7 @@ procedure ts_demicsrun is
     Extract_Supports(p,mix,sup,verbose);
     Call_DEMiCs(mix,sup,stable,stlb,verbose);
     Show_Output;
-    declare
-      lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
-    begin
-      Process_Output(dim,mix,sup,lifsup,mcc,verbose);
-      put_line("The lifted supports :");
-      Floating_Mixed_Subdivisions_io.put(lifsup);
-    end;
-    put_line("The mixed-cell configuration :");
-    Floating_Mixed_Subdivisions_io.put(natural32(dim),mix.all,mcc,mv);
-    put("The mixed volume : "); put(mv,1); new_line;
+    Process_Output(dim,mix,sup,stable,stlb,verbose);
   end Compute_Mixed_Volume;
 
   procedure Main is
