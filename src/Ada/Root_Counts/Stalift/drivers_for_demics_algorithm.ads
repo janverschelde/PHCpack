@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
@@ -51,6 +52,7 @@ package Drivers_for_DEMiCs_Algorithm is
                 dim : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stable : in boolean; stlb : in double_float;
                 timer : in Timing_Widget );
 
   -- DESCRIPTION :
@@ -65,6 +67,8 @@ package Drivers_for_DEMiCs_Algorithm is
   --   dim      dimension of the points;
   --   mix      type of mixture of the supports;
   --   sup      points in the supports;
+  --   stable   if the stable mixed volume is wanted;
+  --   stlb     value of the lifting bound if stable;
   --   timer    contains timings of the DEMiCs algorithm.
 
   procedure Run_DEMiCs_Algorithm
@@ -73,7 +77,8 @@ package Drivers_for_DEMiCs_Algorithm is
                 subfile,ranfile : in out file_type;
                 dim : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
-                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists );
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stable : in boolean; stlb : in double_float );
 
   -- DESCRIPTION :
   --   Runs the DEMiCs Algorithm, followed by the application of polyhedral
@@ -89,7 +94,12 @@ package Drivers_for_DEMiCs_Algorithm is
   --   ranfile  file to write the random coefficient system on;
   --   dim      dimension of the points;
   --   mix      type of mixture of the supports;
-  --   sup      points in the supports.
+  --   sup      points in the supports;
+  --   stable   if the stable mixed volume is wanted;
+  --   stlb     value of the lifting bound if stable.
+
+  -- ON RETURN :
+  --   sup      supports with artificial origins added if stable.
 
   procedure Driver_for_DEMiCs_Algorithm
               ( file : in file_type; nt : in integer32;

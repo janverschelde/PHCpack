@@ -4,8 +4,10 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
+with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
 with Drivers_for_Static_Lifting;
 with Drivers_for_MixedVol_Algorithm;
@@ -66,7 +68,7 @@ package body Drivers_for_DEMiCs_Algorithm is
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
 
   begin
-    Extract_Supports(p,mix,sup,false); -- verbose is false
+    Extract_Supports(p,mix,sup,false);  -- verbose is false
     Call_DEMiCs(mix,sup,false);
     declare
       lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
@@ -84,11 +86,12 @@ package body Drivers_for_DEMiCs_Algorithm is
                 dim : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stable : in boolean; stlb : in double_float;
                 timer : in Timing_Widget ) is
 
     lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     mcc : Mixed_Subdivision;
-    mv : natural32;
+    mv,smv,tmv : natural32;
     q : Standard_Complex_Laur_Systems.Laur_Sys(1..dim);
     qsols : Solution_List;
     qtimer : Timing_Widget;
@@ -100,13 +103,18 @@ package body Drivers_for_DEMiCs_Algorithm is
     new_line(file);
     put_line(file,"The lifted supports :");
     Floating_Mixed_Subdivisions_io.put(file,lifsup);
-    put_line(file,"A mixed-cell configuration :");
-    Floating_Mixed_Subdivisions_io.put(file,natural32(dim),mix.all,mcc,mv);
     if mcc2file then
       Floating_Mixed_Subdivisions_io.put(subfile,natural32(dim),mix.all,mcc);
       close(subfile);
     end if;
-    put(file,"The mixed volume : "); put(file,mv,1); new_line(file);
+    if not stable then
+      put_line(file,"A mixed-cell configuration :");
+      Floating_Mixed_Subdivisions_io.put(file,natural32(dim),mix.all,mcc,mv);
+      put(file,"The mixed volume : "); put(file,mv,1); new_line(file);
+    else
+      Drivers_for_Static_Lifting.Floating_Volume_Computation
+        (file,dim,stlb,mix.all,mcc,mv,smv,tmv);
+    end if;
     new_line(file);
     print_times(file,timer,"DEMiCs Algorithm");
     if ranstart then
@@ -135,7 +143,8 @@ package body Drivers_for_DEMiCs_Algorithm is
                 subfile,ranfile : in out file_type;
                 dim : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
-                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists ) is
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stable : in boolean; stlb : in double_float ) is
 
     timer : Timing_Widget;
     q : Standard_Complex_Laur_Systems.Laur_Sys(1..dim);
@@ -147,11 +156,17 @@ package body Drivers_for_DEMiCs_Algorithm is
 
   begin
     if nt < 2 or not ranstart then -- no multitasking, no path tracking
-      tstart(timer);
-      Call_DEMiCs(mix,sup,false);
-      tstop(timer);
+      if stable then
+        tstart(timer);
+        Call_DEMiCs(mix,sup,stable,stlb,false);
+        tstop(timer);
+      else
+        tstart(timer);
+        Call_DEMiCs(mix,sup,false);
+        tstop(timer);
+      end if;
       Process_DEMiCs_Output
-        (file,mcc2file,ranstart,subfile,ranfile,dim,mix,sup,timer);
+        (file,mcc2file,ranstart,subfile,ranfile,dim,mix,sup,stable,stlb,timer);
     else -- if random coefficient system is needed
       tstart(timer);
       lif := Random_Lifting(mix,sup);
@@ -191,10 +206,26 @@ package body Drivers_for_DEMiCs_Algorithm is
     ranstart : boolean := false;
     subfile,ranfile : file_type;
     ans : character;
+    genuine : constant boolean
+            := Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(p);
+    stable : boolean;
+    stlb : double_float;
 
   begin
     new_line;
     Drivers_for_Static_Lifting.Prompt_for_File(mcc2file,subfile);
+    if genuine then
+      stable := false; -- no stable mixed volume for genuine Laurent system
+    else
+      new_line;
+      put("Do you want to compute the stable mixed volume ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      stable := (ans = 'y');
+      if stable
+       then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
+       else stlb := 0.0;
+      end if;
+    end if;
     new_line;
     put("Monitor the progress of the computations on screen ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -214,7 +245,7 @@ package body Drivers_for_DEMiCs_Algorithm is
     new_line;
     Extract_Supports(p,mix,sup,false); -- verbose is false
     Run_DEMiCs_Algorithm
-      (file,nt,mcc2file,ranstart,subfile,ranfile,dim,mix,sup);
+      (file,nt,mcc2file,ranstart,subfile,ranfile,dim,mix,sup,stable,stlb);
   end Driver_for_DEMiCs_Algorithm;
 
 end Drivers_for_DEMiCs_Algorithm;
