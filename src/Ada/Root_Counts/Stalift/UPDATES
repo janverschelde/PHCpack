@@ -1,3 +1,6 @@
+Tue 29 May 2018 : changes in drivers_for_demics_algorithm for solving a
+  random coefficient system after stable mixed volume computation.
+
 Mon 28 May 2018 : extended main driver in drivers_for_demics_algorithm with
   an extra parameter to pass the number of tasks.
   Updated drivers_for_demics_algorithm so the pipelined polyhedral homotopies

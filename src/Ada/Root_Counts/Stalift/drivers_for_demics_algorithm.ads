@@ -8,6 +8,7 @@ with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
+with Standard_Complex_Solutions;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 
 package Drivers_for_DEMiCs_Algorithm is
@@ -45,12 +46,23 @@ package Drivers_for_DEMiCs_Algorithm is
   --   mcc      a regular mixed-cell configuration;
   --   mv       the mixed volume.
 
+  procedure Write_Random_Coefficient_System
+              ( file : in file_type; ranfile : in out file_type;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : in Standard_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Writes the random coefficient system q and its solutions qsols
+  --   to the output file and to the separate file ranfile.
+  --   On return, the file ranfile is closed for output.
+
   procedure Process_DEMiCs_Output
               ( file : in file_type;
                 mcc2file,ranstart : in boolean;
                 subfile,ranfile : in out file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 dim : in integer32;
-                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 stable : in boolean; stlb : in double_float;
                 timer : in Timing_Widget );
@@ -64,8 +76,10 @@ package Drivers_for_DEMiCs_Algorithm is
   --   ranstart if a random coefficient system is needed;
   --   subfile  file opened for output if mcc2file;
   --   ranfile  file to write the random coefficient system on;
+  --   p        the system given on input;
   --   dim      dimension of the points;
   --   mix      type of mixture of the supports;
+  --   perm     permutation used to put same supports consecutively;
   --   sup      points in the supports;
   --   stable   if the stable mixed volume is wanted;
   --   stlb     value of the lifting bound if stable;
@@ -75,8 +89,9 @@ package Drivers_for_DEMiCs_Algorithm is
               ( file : in file_type; nt : in integer32;
                 mcc2file,ranstart : in boolean;
                 subfile,ranfile : in out file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 dim : in integer32;
-                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 stable : in boolean; stlb : in double_float );
 
@@ -92,8 +107,10 @@ package Drivers_for_DEMiCs_Algorithm is
   --   ranstart if a random coefficient system is needed;
   --   subfile  file opened for output if mcc2file;
   --   ranfile  file to write the random coefficient system on;
+  --   p        the system given on input;
   --   dim      dimension of the points;
   --   mix      type of mixture of the supports;
+  --   perm     permutation used to put same supports consecutively;
   --   sup      points in the supports;
   --   stable   if the stable mixed volume is wanted;
   --   stlb     value of the lifting bound if stable.
