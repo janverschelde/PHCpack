@@ -109,7 +109,7 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
     Driver_for_Scaling(file,scalp,basis,scalvec);
     Driver_for_Reduction(file,scalp,roco,true);
     Copy(scalp,projp);
-    Driver_for_Root_Counts(file,projp,q,true,sols,roco);
+    Driver_for_Root_Counts(file,nt,projp,q,true,sols,roco);
     if Length_Of(sols) > 0 then
       Driver_for_Homotopy_Construction(file,ls,projp,q,sols,target,deci);
       proj := (Number_of_Unknowns(p(p'first)) > natural32(p'last));
@@ -148,7 +148,7 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
 
   begin
     Copy(p,cp);
-    Driver_for_Root_Counts(file,cp,q,sols,roco);
+    Driver_for_Root_Counts(file,nt,cp,q,sols,roco);
     if Length_Of(sols) > 0 then
       if Head_Of(sols).t /= Create(0.0)
        then Set_Continuation_Parameter(sols,Create(0.0));

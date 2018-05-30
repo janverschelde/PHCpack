@@ -12,11 +12,12 @@ package Drivers_for_Root_Counts is
 --   and for Laurent systems.
 
   procedure Driver_for_Root_Counts
-               ( file : in file_type; p,q : in out Poly_Sys;
-                 own : in boolean;
+               ( file : in file_type; nt : in natural32;
+                 p,q : in out Poly_Sys; own : in boolean;
                  qsols : in out Solution_List; roco : out natural32 );
   procedure Driver_for_Root_Counts
-               ( file : in file_type; p,q : in out Laur_Sys;
+               ( file : in file_type; nt : in natural32;
+                 p,q : in out Laur_Sys;
                  qsols : in out Solution_List; roco : out natural32 );
 
   -- DESCRIPTION :
@@ -26,6 +27,7 @@ package Drivers_for_Root_Counts is
 
   -- ON ENTRY :
   --   file      to write diagnostics on;
+  --   nt        number of tasks, 0 for no multitasking;
   --   p         a polynomial system;
   --   own       if true, then the user has the possibility to give
   --             an own start system.

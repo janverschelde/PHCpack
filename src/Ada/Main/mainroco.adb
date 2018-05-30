@@ -89,7 +89,7 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
         qsols : Solution_List;
         rc : natural32;
       begin
-        Driver_for_Root_Counts(outft,lp.all,q,false,qsols,rc);
+        Driver_for_Root_Counts(outft,nt,lp.all,q,false,qsols,rc);
       end; 
       new_line(outft);
       put_line(outft,Bye_Bye_Message);

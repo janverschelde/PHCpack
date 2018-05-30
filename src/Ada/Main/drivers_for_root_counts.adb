@@ -108,7 +108,7 @@ package body Drivers_for_Root_Counts is
   --   Shows the menu to count roots and construct start systems
   --   for Laurent polynomial systems.
 
-    m : array(0..4) of string(1..66);
+    m : array(0..5) of string(1..66);
 
   begin
     new_line;
@@ -120,6 +120,7 @@ package body Drivers_for_Root_Counts is
       when '3' => put("based on static mixed-volume computation : ");
       when '4' => put("based on dynamic mixed-volume computation : ");
       when '5' => put("based on symmetric mixed-volume computation : ");
+      when '6' => put("based on the MixedVol algorithm : ");
       when others =>  null;
     end case;
     put(rc,1); new_line;
@@ -128,6 +129,7 @@ package body Drivers_for_Root_Counts is
     m(2):="  3. mixed-volume computation                     (static lifting)";
     m(3):="  4. incremental mixed-volume computation        (dynamic lifting)";
     m(4):="  5. symmetric mixed-volume computation        (symmetric lifting)";
+    m(5):="  6. using MixedVol Algorithm to compute the mixed volume fast (!)";
     for i in m'range loop
       put_line(m(i));
     end loop;
@@ -229,7 +231,8 @@ package body Drivers_for_Root_Counts is
   end To32Bit;
 
   procedure Apply_General_Method
-              ( file : in file_type; p,q : in out Poly_Sys;
+              ( file : in file_type; nt : in integer32;
+                p,q : in out Poly_Sys;
                 qsols : in out Solution_List; method : in character;
                 irc : in out natural64; lpos : out List ) is
 
@@ -252,13 +255,13 @@ package body Drivers_for_Root_Counts is
                     (file,p,q,qsols,rc,lpos);
       when '5' => Driver_for_Mixture_Bezout_BKK(file,p,false,q,qsols,rc);
       when '6' => Driver_for_Mixed_Volume_Computation
-                    (file,0,p,false,q,qsols,qsols0,rc,smv,tmv);
+                    (file,nt,p,false,q,qsols,qsols0,rc,smv,tmv);
       when '7' => Driver_for_Dynamic_Mixed_Volume_Computation
                     (file,p,false,q,qsols,rc);
       when '8' => Driver_for_Symmetric_Mixed_Volume_Computation
                     (file,p,false,q,qsols,rc);
       when '9' => Driver_for_MixedVol_Algorithm
-                    (file,0,p,false,false,q,qsols,qsols0,rc,smv,tmv);
+                    (file,nt,p,false,false,q,qsols,qsols0,rc,smv,tmv);
       when 'A' => Driver_for_Own_Start_System(file,p,q,qsols);
                   rc := Length_of(qsols);
       when others => null;
@@ -266,7 +269,8 @@ package body Drivers_for_Root_Counts is
   end Apply_General_Method;
 
   procedure Apply_Laurent_Method
-              ( file : in file_type; p,q : in out Laur_Sys;
+              ( file : in file_type; nt : in integer32;
+                p,q : in out Laur_Sys;
                 qsols : in out Solution_List; method : in character;
                 rc : in out natural32 ) is
 
@@ -280,21 +284,23 @@ package body Drivers_for_Root_Counts is
   begin
     case method is
       when '1' => Driver_for_MixedVol_Algorithm
-                    (file,0,p,false,false,q,qsols,qsols0,rc,smv,tmv);
+                    (file,nt,p,false,false,q,qsols,qsols0,rc,smv,tmv);
       when '2' => Driver_for_Mixture_Bezout_BKK(file,p,false,q,qsols,rc);
       when '3' => Driver_for_Mixed_Volume_Computation
-                    (file,0,p,false,q,qsols,qsols0,rc,smv,tmv);
+                    (file,nt,p,false,q,qsols,qsols0,rc,smv,tmv);
       when '4' => Driver_for_Dynamic_Mixed_Volume_Computation
                     (file,p,false,q,qsols,rc);
       when '5' => Driver_for_Symmetric_Mixed_Volume_Computation
                     (file,p,false,q,qsols,rc);
+      when '6' => Driver_for_MixedVol_Algorithm
+                    (file,nt,p,false,false,q,qsols,qsols0,rc,smv,tmv);
       when others => null;
     end case;
   end Apply_Laurent_Method;
 
   procedure Driver_for_Root_Counts 
-               ( file : in file_type; p,q : in out Poly_Sys;
-                 own : in boolean;
+               ( file : in file_type; nt : in natural32;
+                 p,q : in out Poly_Sys; own : in boolean;
                  qsols : in out Solution_List; roco : out natural32 ) is
 
     rc : natural64;
@@ -338,7 +344,7 @@ package body Drivers_for_Root_Counts is
         method := choice(1);
       end if;
       if ans = 'y' then
-        Apply_General_Method(file,p,q,qsols,method,rc,lpos);
+        Apply_General_Method(file,integer32(nt),p,q,qsols,method,rc,lpos);
         noqsols := Length_Of(qsols);
         if method /= '0' then
           new_line;
@@ -362,8 +368,9 @@ package body Drivers_for_Root_Counts is
   end Driver_for_Root_Counts;
 
   procedure Driver_for_Root_Counts
-               ( file : in file_type; p,q : in out Laur_Sys;
-                 qsols : in out Solution_List; roco : out natural32 ) is
+               ( file : in file_type; nt : in natural32;
+                 p,q : in out Laur_Sys; qsols : in out Solution_List;
+                 roco : out natural32 ) is
 
     rc : natural32 := 0;
     choice : character := '0';
@@ -374,7 +381,7 @@ package body Drivers_for_Root_Counts is
       put("Type a number in the range from 0 to 5 : ");
       Ask_Alternative(choice,"012345");
       exit when (choice = '0');
-      Apply_Laurent_Method(file,p,q,qsols,choice,rc);
+      Apply_Laurent_Method(file,integer32(nt),p,q,qsols,choice,rc);
     end loop;
     roco := rc;
   end Driver_for_Root_Counts;

@@ -1,4 +1,7 @@
-Mon 29 May 2018 : shorted root counting banner in greeting_banners.ads.
+Wed 30 May 2018 : added number of tasks to driver_for_root_counts,
+  which changed mainroco.adb, ts_drivroco.adb, and mainphc.adb.
+
+Tue 29 May 2018 : shorted root counting banner in greeting_banners.ads.
   Inserted the number of tasks as first argument of mainroco,
   updated dispatch.adb.
 
