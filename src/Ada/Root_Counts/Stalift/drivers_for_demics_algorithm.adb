@@ -6,6 +6,7 @@ with Standard_Floating_VecVecs;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with Drivers_for_Poly_Continuation;
 with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
 with Drivers_for_Static_Lifting;
@@ -117,6 +118,8 @@ package body Drivers_for_DEMiCs_Algorithm is
     q : Standard_Complex_Laur_Systems.Laur_Sys(1..dim);
     qsols,qsols0 : Standard_Complex_Solutions.Solution_List;
     qtimer : Timing_Widget;
+    contrep : boolean;
+    oc : natural32;
 
    -- use Standard_Laur_Poly_Convertors;
     use Drivers_for_MixedVol_Algorithm;
@@ -141,6 +144,10 @@ package body Drivers_for_DEMiCs_Algorithm is
     new_line(file);
     print_times(file,timer,"DEMiCs Algorithm");
     if ranstart then
+      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file);
+      new_line;
+      Drivers_for_Poly_Continuation.Driver_for_Process_io(file,oc);
+      contrep := (oc /= 0);
       if not stable then
         tstart(qtimer);
         Random_Coefficient_System(0,dim,mix.all,lifsup,mcc,q,qsols);
@@ -150,7 +157,7 @@ package body Drivers_for_DEMiCs_Algorithm is
         Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
         tstart(qtimer);
         Polyhedral_Continuation
-          (file,0,stable,false,dim,mix'last,stlb,mix,perm,
+          (file,0,stable,contrep,dim,mix'last,stlb,mix,perm,
            p,sup,mcc,orgmcc,stbmcc,q,qsols,qsols0);
         tstop(qtimer);
       end if;
