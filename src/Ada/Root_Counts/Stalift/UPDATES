@@ -1,7 +1,8 @@
 Wed 30 May 2018 : for stable mixed volumes, the start system needs be based
   on the original supports, without artificial origins, fixed this in
   drivers_for_demics_algorithm which now computes the solutions which
-  zero coordinate values correctly.
+  zero coordinate values correctly.  Added versions for ordinary polynomial
+  systems to drivers_for_demics_algorithm.
 
 Tue 29 May 2018 : changes in drivers_for_demics_algorithm for solving a
   random coefficient system after stable mixed volume computation.

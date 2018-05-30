@@ -5,6 +5,7 @@ with Standard_Integer_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
+with Standard_Poly_Laur_Convertors;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_System_and_Solutions_io;
 with Drivers_for_Poly_Continuation;
@@ -250,6 +251,27 @@ package body Drivers_for_DEMiCs_Algorithm is
      then Arrays_of_Integer_Vector_Lists.Deep_Clear(orgsup);
     end if;
   end Run_DEMiCs_Algorithm;
+
+  procedure Driver_for_DEMiCs_Algorithm
+              ( file : in file_type; nt : in integer32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
+                qsols0 : out Standard_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32 ) is
+
+    lp,lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+
+    use Standard_Poly_Laur_Convertors;
+    use Standard_Laur_Poly_Convertors;
+
+  begin
+    lp := Polynomial_to_Laurent_System(p);
+    Driver_for_DEMiCs_Algorithm(file,nt,lp,lq,qsols,qsols0,mv,smv,tmv);
+    q := Positive_Laurent_Polynomial_System(lq);
+    Standard_Complex_Laur_Systems.Clear(lp);
+    Standard_Complex_Laur_Systems.Clear(lq);
+  end Driver_for_DEMiCs_Algorithm;
 
   procedure Driver_for_DEMiCs_Algorithm
               ( file : in file_type; nt : in integer32;

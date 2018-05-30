@@ -152,6 +152,13 @@ package Drivers_for_DEMiCs_Algorithm is
 
   procedure Driver_for_DEMiCs_Algorithm
               ( file : in file_type; nt : in integer32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
+                qsols0 : out Standard_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32 );
+  procedure Driver_for_DEMiCs_Algorithm
+              ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
@@ -164,7 +171,7 @@ package Drivers_for_DEMiCs_Algorithm is
   -- ON ENTRY :
   --   file     output file;
   --   nt       number of tasks;
-  --   p        a polynomial system.
+  --   p        a (Laurent) polynomial system.
   --
   -- ON RETURN :
   --   q        a random coefficient system, if asked for by user;
