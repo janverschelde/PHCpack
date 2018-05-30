@@ -23,6 +23,7 @@ with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Drivers_for_Dynamic_Lifting;        use Drivers_for_Dynamic_Lifting;
 with Drivers_for_Symmetric_Lifting;      use Drivers_for_Symmetric_Lifting;
 with Drivers_for_MixedVol_Algorithm;     use Drivers_for_MixedVol_Algorithm;
+with Drivers_for_DEMiCs_Algorithm;       use Drivers_for_DEMiCs_Algorithm;
 
 package body Drivers_for_Root_Counts is
 
@@ -57,7 +58,7 @@ package body Drivers_for_Root_Counts is
   --   Shows the menu to count roots and construct start systems
   --   for general polynomial systems.
 
-    m : array(0..10) of string(1..66);
+    m : array(0..11) of string(1..66);
 
   begin
     new_line;
@@ -74,6 +75,7 @@ package body Drivers_for_Root_Counts is
       when '7' => put("based on dynamic mixed-volume computation : ");
       when '8' => put("based on symmetric mixed-volume computation : ");
       when '9' => put("based on the mixed volume (via MixedVol) : ");
+      when 'A' => put("based on the mixed volume (via DEMiCs) : ");
       when others => put("based on your start system : ");
     end case;
     put(rc,1); new_line;
@@ -88,13 +90,14 @@ package body Drivers_for_Root_Counts is
     m(8):="  7. incremental mixed-volume computation        (dynamic lifting)";
     m(9):="  8. symmetric mixed-volume computation        (symmetric lifting)";
    m(10):="  9. using MixedVol Algorithm to compute the mixed volume fast (!)";
+   m(11):="  A. compute the mixed volume with DEMiCs to see the cells quickly";
     for i in m'range loop
       put_line(m(i));
     end loop;
     if own then
       put_line
         ("START SYSTEM DEFINED BY USER -------------------------------------");
-      put_line("  A. you can give your own start system");
+      put_line("  B. you can give your own start system");
     else
       put_line
         ("------------------------------------------------------------------");
@@ -114,22 +117,24 @@ package body Drivers_for_Root_Counts is
     new_line;
     put_line("MENU for MIXED VOLUMES and POLYHEDRAL HOMOTOPIES :");
     put("  0. exit - current root count is ");
+    put_line
+        ("------------------------------------------------------------------");
     case method is
-      when '1' => put("based on the mixed volume (via MixedVol) : ");
-      when '2' => put("based on Bezout and BKK Bound : ");
-      when '3' => put("based on static mixed-volume computation : ");
-      when '4' => put("based on dynamic mixed-volume computation : ");
-      when '5' => put("based on symmetric mixed-volume computation : ");
-      when '6' => put("based on the MixedVol algorithm : ");
+      when '1' => put("based on the mixed volume (via DEMiCs) : ");
+      when '2' => put("based on the mixed volume (via MixedVol) : ");
+      when '3' => put("based on Bezout and BKK Bound : ");
+      when '4' => put("based on static mixed-volume computation : ");
+      when '5' => put("based on dynamic mixed-volume computation : ");
+      when '6' => put("based on symmetric mixed-volume computation : ");
       when others =>  null;
     end case;
     put(rc,1); new_line;
-    m(0):="  1. using MixedVol Algorithm to compute the mixed volume fast (!)";
-    m(1):="  2. combination between Bezout and BKK Bound   (implicit lifting)";
-    m(2):="  3. mixed-volume computation                     (static lifting)";
-    m(3):="  4. incremental mixed-volume computation        (dynamic lifting)";
-    m(4):="  5. symmetric mixed-volume computation        (symmetric lifting)";
-    m(5):="  6. using MixedVol Algorithm to compute the mixed volume fast (!)";
+    m(0):="  1. compute the mixed volume with DEMiCs to see the cells quickly";
+    m(1):="  2. using MixedVol Algorithm to compute the mixed volume fast (!)";
+    m(2):="  3. combination between Bezout and BKK Bound   (implicit lifting)";
+    m(3):="  4. mixed-volume computation                     (static lifting)";
+    m(4):="  5. incremental mixed-volume computation        (dynamic lifting)";
+    m(5):="  6. symmetric mixed-volume computation        (symmetric lifting)";
     for i in m'range loop
       put_line(m(i));
     end loop;
@@ -155,6 +160,7 @@ package body Drivers_for_Root_Counts is
       when '7' => Dynamic_Lifting_Info;
       when '8' => Symmetric_Lifting_Info;
       when '9' => MixedVol_Algorithm_Info;
+      when 'A' => DEMiCs_Algorithm_Info;
       when others => put_line("No information available.");
     end case;
     new_line;
@@ -262,10 +268,13 @@ package body Drivers_for_Root_Counts is
                     (file,p,false,q,qsols,rc);
       when '9' => Driver_for_MixedVol_Algorithm
                     (file,nt,p,false,false,q,qsols,qsols0,rc,smv,tmv);
-      when 'A' => Driver_for_Own_Start_System(file,p,q,qsols);
+      when 'A' => Driver_for_DEMiCs_Algorithm
+                    (file,nt,p,q,qsols,qsols0,rc,smv,tmv);
+      when 'B' => Driver_for_Own_Start_System(file,p,q,qsols);
                   rc := Length_of(qsols);
       when others => null;
     end case;
+    irc := natural64(rc);
   end Apply_General_Method;
 
   procedure Apply_Laurent_Method
@@ -283,17 +292,17 @@ package body Drivers_for_Root_Counts is
 
   begin
     case method is
-      when '1' => Driver_for_MixedVol_Algorithm
+      when '1' => Driver_for_DEMiCs_Algorithm
+                    (file,nt,p,q,qsols,qsols0,rc,smv,tmv);
+      when '2' => Driver_for_MixedVol_Algorithm
                     (file,nt,p,false,false,q,qsols,qsols0,rc,smv,tmv);
-      when '2' => Driver_for_Mixture_Bezout_BKK(file,p,false,q,qsols,rc);
-      when '3' => Driver_for_Mixed_Volume_Computation
+      when '3' => Driver_for_Mixture_Bezout_BKK(file,p,false,q,qsols,rc);
+      when '4' => Driver_for_Mixed_Volume_Computation
                     (file,nt,p,false,q,qsols,qsols0,rc,smv,tmv);
-      when '4' => Driver_for_Dynamic_Mixed_Volume_Computation
+      when '5' => Driver_for_Dynamic_Mixed_Volume_Computation
                     (file,p,false,q,qsols,rc);
-      when '5' => Driver_for_Symmetric_Mixed_Volume_Computation
+      when '6' => Driver_for_Symmetric_Mixed_Volume_Computation
                     (file,p,false,q,qsols,rc);
-      when '6' => Driver_for_MixedVol_Algorithm
-                    (file,nt,p,false,false,q,qsols,qsols0,rc,smv,tmv);
       when others => null;
     end case;
   end Apply_Laurent_Method;
@@ -309,6 +318,7 @@ package body Drivers_for_Root_Counts is
     ans : character := 'y';
     method : character := '0';
     noqsols : natural32 := 0;
+    first : boolean := true; -- total degree only when first time
 
   begin
     declare
@@ -327,13 +337,13 @@ package body Drivers_for_Root_Counts is
     loop
       Display_General_Menu(rc,own,method);
       if own then
+        put("Type a number between 0 and 9, or A, B" 
+            & " preceded by i for info : ");
+        Ask_Alternative(choice,"0123456789AB",'i');
+      else
         put("Type a number between 0 and 9, or A" 
             & " preceded by i for info : ");
         Ask_Alternative(choice,"0123456789A",'i');
-      else
-        put("Type a number between 0 and 9," 
-            & " preceded by i for info : ");
-        Ask_Alternative(choice,"0123456789",'i');
       end if;
       if choice(1) = 'i' then
         method := choice(2);
@@ -343,6 +353,8 @@ package body Drivers_for_Root_Counts is
       else
         method := choice(1);
       end if;
+      exit when not first and (method = '0');
+      first := false;
       if ans = 'y' then
         Apply_General_Method(file,integer32(nt),p,q,qsols,method,rc,lpos);
         noqsols := Length_Of(qsols);
@@ -378,8 +390,8 @@ package body Drivers_for_Root_Counts is
   begin
     loop
       Display_Laurent_Menu(rc,choice);
-      put("Type a number in the range from 0 to 5 : ");
-      Ask_Alternative(choice,"012345");
+      put("Type a number in the range from 0 to 6 : ");
+      Ask_Alternative(choice,"0123456");
       exit when (choice = '0');
       Apply_Laurent_Method(file,integer32(nt),p,q,qsols,choice,rc);
     end loop;

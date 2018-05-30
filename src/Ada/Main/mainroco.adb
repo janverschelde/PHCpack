@@ -2,9 +2,12 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laurentials;
+with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
+with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Drivers_for_Root_Counts;            use Drivers_for_Root_Counts;
 with Write_Seed_Number;
@@ -15,7 +18,7 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
  
   procedure Read_System
               ( filename : in string;
-                lp : out Link_to_Poly_Sys ) is
+                lp : out Link_to_Laur_Sys ) is
 
   -- DESCRIPTION :
   --   If the string on input is not empty,
@@ -40,7 +43,7 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
       lp := null; return;
   end Read_System;
 
-  function Is_Square ( p : Poly_Sys ) return boolean is
+  function Is_Square ( p : Laur_Sys ) return boolean is
 
   -- DESRIPTOIN :
   --   Returns true if the system p has 
@@ -48,7 +51,7 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
   --   Writes an error message and returns false
   --   if the system is not square.
 
-    use Standard_Complex_Polynomials;
+    use Standard_Complex_Laurentials;
 
     nq : constant integer32 := p'last;
     nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
@@ -66,12 +69,58 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
     end if;
   end Is_Square;
 
+  procedure Count_Roots ( p : in out Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Applies the driver to count roots for a square Laurent system p.
+
+    outft : file_type;
+    q : Laur_Sys(p'range);
+    qsols : Solution_List;
+    rc : natural32;
+
+  begin
+    Create_Output_File(outft,outfilename);
+    put(outft,p'last,1);
+    new_line(outft);
+    put(outft,p);
+    Driver_for_Root_Counts(outft,nt,p,q,qsols,rc);
+    new_line(outft);
+    put_line(outft,Bye_Bye_Message);
+    Write_Seed_Number(outft);
+    put_line(outft,Greeting_Banners.Version);
+    Close(outft);
+  end Count_Roots;
+
+  procedure Count_Roots ( p : in out Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Applies the driver to count roots for a square polynomial system p.
+
+    outft : file_type;
+    q : Poly_Sys(p'range);
+    qsols : Solution_List;
+    rc : natural32;
+
+  begin
+    Create_Output_File(outft,outfilename);
+    put(outft,p'last,1);
+    new_line(outft);
+    put(outft,p);
+    Driver_for_Root_Counts(outft,nt,p,q,false,qsols,rc);
+    new_line(outft);
+    put_line(outft,Bye_Bye_Message);
+    Write_Seed_Number(outft);
+    put_line(outft,Greeting_Banners.Version);
+    Close(outft);
+  end Count_Roots;
+
   procedure Main is
 
   -- DESCRIPTION :
   --   Handles the input and output before calling the driver.
 
-    lp : Link_to_Poly_Sys := null;
+    lp : Link_to_Laur_Sys := null;
     outft : file_type;
 
   begin
@@ -80,22 +129,17 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
      then new_line; get(lp);
     end if;
     if Is_Square(lp.all) then
-      Create_Output_File(outft,outfilename);
-      put(outft,lp'last,1);
-      new_line(outft);
-      put(outft,lp.all);
-      declare
-        q : Poly_Sys(lp'range);
-        qsols : Solution_List;
-        rc : natural32;
-      begin
-        Driver_for_Root_Counts(outft,nt,lp.all,q,false,qsols,rc);
-      end; 
-      new_line(outft);
-      put_line(outft,Bye_Bye_Message);
-      Write_Seed_Number(outft);
-      put_line(outft,Greeting_Banners.Version);
-      Close(outft);
+      if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
+        Count_Roots(lp.all);
+      else
+        declare
+          use Standard_Laur_Poly_Convertors;
+          q : Poly_Sys(lp'range)
+            := Positive_Laurent_Polynomial_System(lp.all);
+        begin
+          Count_Roots(q);
+        end;
+      end if;
     end if;
   end Main;
 
