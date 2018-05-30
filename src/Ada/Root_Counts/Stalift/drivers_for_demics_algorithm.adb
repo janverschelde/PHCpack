@@ -6,6 +6,7 @@ with Standard_Floating_VecVecs;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with Standard_System_and_Solutions_io;
 with Drivers_for_Poly_Continuation;
 with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
@@ -83,45 +84,60 @@ package body Drivers_for_DEMiCs_Algorithm is
               ( file : in file_type; ranfile : in out file_type;
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : in Standard_Complex_Solutions.Solution_List ) is
-
-    use Standard_Complex_Solutions;
-
   begin
     new_line(file);
     put_line(file,"RANDOM COEFFICIENT SYSTEM :");
-    put_line(file,q);
-    put_line(ranfile,q);
-    new_line(file);
-    put_line(file,"THE SOLUTIONS ");
-    new_line(ranfile);
-    put_line(ranfile,"THE SOLUTIONS ");
-    put(file,Length_Of(qsols),natural32(Head_Of(qsols).n),qsols);
-    put(ranfile,Length_Of(qsols),natural32(Head_Of(qsols).n),qsols);
+    Standard_System_and_Solutions_io.put_line(file,q,qsols);
+    Standard_System_and_Solutions_io.put_line(ranfile,q,qsols);
     close(ranfile);
   end Write_Random_Coefficient_System;
 
-  procedure Process_DEMiCs_Output
+  procedure Write_Random_Coefficient_System
+              ( file : in file_type; ranfile : in out file_type;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : in Standard_Complex_Solutions.Solution_List ) is
+  begin
+    new_line(file);
+    put_line(file,"RANDOM COEFFICIENT SYSTEM :");
+    Standard_System_and_Solutions_io.put_line(file,q,qsols);
+    Standard_System_and_Solutions_io.put_line(ranfile,q,qsols);
+    if Standard_Complex_Solutions.Is_Null(qsols0) then
+      new_line(file);
+      put_line(file,"No solutions with zero coordinate values found.");
+    else
+      new_line(file);
+      put_line(file,"THE SOLUTIONS WITH ZERO COORDINATE VALUES : ");
+      put(file,Standard_Complex_Solutions.Length_Of(qsols0),
+          natural32(Standard_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+      new_line(ranfile);
+      put_line(ranfile,"THE SOLUTIONS WITH ZERO COORDINATE VALUES : ");
+      put(ranfile,Standard_Complex_Solutions.Length_Of(qsols0),
+          natural32(Standard_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+    end if;
+    close(ranfile);
+  end Write_Random_Coefficient_System;
+
+  procedure Run_Polyhedral_Homotopies
               ( file : in file_type;
-                mcc2file,ranstart : in boolean;
+                mcc2file,ranstart,contrep : in boolean;
                 subfile,ranfile : in out file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 dim : in integer32;
                 mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                orgsup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 stable : in boolean; stlb : in double_float;
-                timer : in Timing_Widget ) is
+                timer : in Timing_Widget;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
+                qsols0 : out Standard_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32 ) is
 
     lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
-    mv,smv,tmv,orgcnt,stbcnt : natural32;
-   -- pp : Standard_Complex_Poly_Systems.Poly_Sys(1..dim);
-    q : Standard_Complex_Laur_Systems.Laur_Sys(1..dim);
-    qsols,qsols0 : Standard_Complex_Solutions.Solution_List;
+    orgcnt,stbcnt : natural32;
     qtimer : Timing_Widget;
-    contrep : boolean;
-    oc : natural32;
 
-   -- use Standard_Laur_Poly_Convertors;
     use Drivers_for_MixedVol_Algorithm;
 
   begin
@@ -144,28 +160,24 @@ package body Drivers_for_DEMiCs_Algorithm is
     new_line(file);
     print_times(file,timer,"DEMiCs Algorithm");
     if ranstart then
-      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file);
-      new_line;
-      Drivers_for_Poly_Continuation.Driver_for_Process_io(file,oc);
-      contrep := (oc /= 0);
       if not stable then
         tstart(qtimer);
         Random_Coefficient_System(0,dim,mix.all,lifsup,mcc,q,qsols);
         tstop(qtimer);
+        Write_Random_Coefficient_System(file,ranfile,q,qsols);
       else
-       -- pp := Positive_Laurent_Polynomial_System(p);
         Split_Original_Cells(mcc,stlb,orgmcc,stbmcc,orgcnt,stbcnt);
         tstart(qtimer);
         Polyhedral_Continuation
           (file,0,stable,contrep,dim,mix'last,stlb,mix,perm,
-           p,sup,mcc,orgmcc,stbmcc,q,qsols,qsols0);
+           p,orgsup,mcc,orgmcc,stbmcc,q,qsols,qsols0);
         tstop(qtimer);
+        Write_Random_Coefficient_System(file,ranfile,q,qsols,qsols0);
       end if;
-      Write_Random_Coefficient_System(file,ranfile,q,qsols);
       new_line(file);
       print_times(file,qtimer,"polyhedral homotopies");
     end if;
-  end Process_DEMiCs_Output;
+  end Run_Polyhedral_Homotopies;
 
   procedure Run_DEMiCs_Algorithm
               ( file : in file_type; nt : in integer32;
@@ -175,17 +187,36 @@ package body Drivers_for_DEMiCs_Algorithm is
                 dim : in integer32;
                 mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                stable : in boolean; stlb : in double_float ) is
+                stable : in boolean; stlb : in double_float;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
+                qsols0 : out Standard_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32 ) is
 
     timer : Timing_Widget;
-    q : Standard_Complex_Laur_Systems.Laur_Sys(1..dim);
-    qsols : Standard_Complex_Solutions.Solution_List;
     lif : Standard_Floating_VecVecs.Link_to_VecVec;
     lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    orgsup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(sup'range);
     mcc : Mixed_Subdivision;
-    mv : natural32;
+    oc : natural32;
+    contrep : boolean;
 
   begin
+   -- start system based on supports without artificial origin: orgsup
+    if stable
+     then Arrays_of_Integer_Vector_Lists.Copy(sup,orgsup);
+     else orgsup := sup;
+    end if;
+    if ranstart then -- allow for tuning of continuation parameters
+      new_line;
+      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file);
+      new_line;
+      Drivers_for_Poly_Continuation.Driver_for_Process_io(file,oc);
+      contrep := (oc /= 0);
+    end if;
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
     if nt < 2 or not ranstart then -- no multitasking or no path tracking
       if stable then
         tstart(timer);
@@ -196,9 +227,9 @@ package body Drivers_for_DEMiCs_Algorithm is
         Call_DEMiCs(mix,sup,false);
         tstop(timer);
       end if;
-      Process_DEMiCs_Output
-        (file,mcc2file,ranstart,subfile,ranfile,
-         p,dim,mix,perm,sup,stable,stlb,timer);
+      Run_Polyhedral_Homotopies
+        (file,mcc2file,ranstart,contrep,subfile,ranfile,p,dim,mix,perm,
+         sup,orgsup,stable,stlb,timer,q,qsols,qsols0,mv,smv,tmv);
     else -- if random coefficient system is needed with pipelining
       tstart(timer);
       lif := Random_Lifting(mix,sup);
@@ -215,11 +246,18 @@ package body Drivers_for_DEMiCs_Algorithm is
       new_line(file);
       print_times(file,timer,"pipelined polyhedral homotopies");
     end if;
+    if stable
+     then Arrays_of_Integer_Vector_Lists.Deep_Clear(orgsup);
+    end if;
   end Run_DEMiCs_Algorithm;
 
   procedure Driver_for_DEMiCs_Algorithm
               ( file : in file_type; nt : in integer32;
-                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
+                qsols0 : out Standard_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32 ) is
 
     dim : constant integer32 := p'last;
     mix,perm : Standard_Integer_Vectors.Link_to_Vector;
@@ -263,13 +301,22 @@ package body Drivers_for_DEMiCs_Algorithm is
       put_line("for the random coefficient system ...");
       Read_Name_and_Create_File(ranfile);
     end if;
-    new_line;
-    put_line("See the output file for results ...");
-    new_line;
     Extract_Supports(p,mix,perm,sup,false); -- verbose is false
     Run_DEMiCs_Algorithm
       (file,nt,mcc2file,ranstart,subfile,ranfile,
-       p,dim,mix,perm,sup,stable,stlb);
+       p,dim,mix,perm,sup,stable,stlb,q,qsols,qsols0,mv,smv,tmv);
+  end Driver_for_DEMiCs_Algorithm;
+
+  procedure Driver_for_DEMiCs_Algorithm
+              ( file : in file_type; nt : in integer32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+    q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+    qsols,qsols0 : Standard_Complex_Solutions.Solution_List;
+    mv,smv,tmv : natural32;
+
+  begin
+    Driver_for_DEMiCs_Algorithm(file,nt,p,q,qsols,qsols0,mv,smv,tmv);
   end Driver_for_DEMiCs_Algorithm;
 
 end Drivers_for_DEMiCs_Algorithm;

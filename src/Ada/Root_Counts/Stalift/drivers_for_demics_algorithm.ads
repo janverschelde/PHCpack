@@ -50,40 +50,61 @@ package Drivers_for_DEMiCs_Algorithm is
               ( file : in file_type; ranfile : in out file_type;
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : in Standard_Complex_Solutions.Solution_List );
+  procedure Write_Random_Coefficient_System
+              ( file : in file_type; ranfile : in out file_type;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : in Standard_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
-  --   Writes the random coefficient system q and its solutions qsols
+  --   Writes the random coefficient system q and its solutions qsols,
+  --   with qsols0 the solutions with zero coordinates (may be null),
   --   to the output file and to the separate file ranfile.
   --   On return, the file ranfile is closed for output.
 
-  procedure Process_DEMiCs_Output
+  procedure Run_Polyhedral_Homotopies
               ( file : in file_type;
-                mcc2file,ranstart : in boolean;
+                mcc2file,ranstart,contrep : in boolean;
                 subfile,ranfile : in out file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 dim : in integer32;
                 mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                orgsup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 stable : in boolean; stlb : in double_float;
-                timer : in Timing_Widget );
+                timer : in Timing_Widget;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
+                qsols0 : out Standard_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32 );
 
   -- DESCRIPTION :
-  --   Processes the output of the DEMiCs algorithm.
+  --   Runs polyhedral homotopies on the output of the DEMiCs algorithm.
 
   -- ON ENTRY :
   --   file     for output;
   --   mcc2file if the mixed subdivision has to be written on file;
   --   ranstart if a random coefficient system is needed;
+  --   contrep  for a reporting polyhedral continuation, if ranstart;
   --   subfile  file opened for output if mcc2file;
   --   ranfile  file to write the random coefficient system on;
   --   p        the system given on input;
   --   dim      dimension of the points;
   --   mix      type of mixture of the supports;
   --   perm     permutation used to put same supports consecutively;
-  --   sup      points in the supports;
+  --   sup      points in the supports, eventually with artificial origin;
+  --   orgsup   original supports without artificial origin (in case stable);
   --   stable   if the stable mixed volume is wanted;
   --   stlb     value of the lifting bound if stable;
   --   timer    contains timings of the DEMiCs algorithm.
+
+  -- ON RETURN :
+  --   q        a random coefficient system, if ranstart;
+  --   qsols    solutions with nonzero coordinate values of q;
+  --   qsols0   solutions with zero coordinate values
+  --            if the stable mixed volume is computed;
+  --   mv       mixed volume;
+  --   smv      stable mixed volume;
+  --   tmv      total mixed volume.
 
   procedure Run_DEMiCs_Algorithm
               ( file : in file_type; nt : in integer32;
@@ -93,7 +114,11 @@ package Drivers_for_DEMiCs_Algorithm is
                 dim : in integer32;
                 mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                stable : in boolean; stlb : in double_float );
+                stable : in boolean; stlb : in double_float;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
+                qsols0 : out Standard_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32 );
 
   -- DESCRIPTION :
   --   Runs the DEMiCs Algorithm, followed by the application of polyhedral
@@ -117,6 +142,35 @@ package Drivers_for_DEMiCs_Algorithm is
 
   -- ON RETURN :
   --   sup      supports with artificial origins added if stable.
+  --   q        a random coefficient system, if ranstart;
+  --   qsols    solutions with nonzero coordinate values of q;
+  --   qsols0   solutions with zero coordinate values
+  --            if the stable mixed volume is computed;
+  --   mv       mixed volume;
+  --   smv      stable mixed volume;
+  --   tmv      total mixed volume.
+
+  procedure Driver_for_DEMiCs_Algorithm
+              ( file : in file_type; nt : in integer32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
+                qsols0 : out Standard_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32 );
+
+  -- DESCRIPTION :
+  --   Interactive driver to run the DEMiCs algorithm.
+  --
+  -- ON ENTRY :
+  --   file     output file;
+  --   nt       number of tasks;
+  --   p        a polynomial system.
+  --
+  -- ON RETURN :
+  --   q        a random coefficient system, if asked for by user;
+  --   qsols    solutions with nonzero coordinate values of q;
+  --   qsols0   solutions with zero coordinate values
+  --            if the stable mixed volume is computed;
 
   procedure Driver_for_DEMiCs_Algorithm
               ( file : in file_type; nt : in integer32;
