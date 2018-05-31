@@ -1,3 +1,6 @@
+Thu 31 May 2018 : added a stub job to outdata to make room for a procedure to
+  compute stable mixed volumes by demics.
+
 Tue 29 May 2018 : extended demics_algorithm with procedures which also return
   the permutation when the supports are extracted from the system.
 

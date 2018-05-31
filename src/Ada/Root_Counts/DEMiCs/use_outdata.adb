@@ -203,6 +203,23 @@ function use_outdata ( job : integer32;
     return 0;
   end Mixed_Volume_by_DEMiCs;
 
+  function Stable_Mixed_Volume_by_DEMiCs return integer32 is 
+
+  -- DESCRIPTION :
+  --   Calls DEMiCs to ompute the stable mixed volume of the system
+  --   in the standard systems container, or if that container is empty,
+  --   of the system in the Laurent Systems container.
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Laur_Systems;
+
+    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    lq : Link_to_Laur_Sys;
+
+  begin
+    return 0;
+  end Stable_Mixed_Volume_by_DEMiCs;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -216,6 +233,7 @@ function use_outdata ( job : integer32;
       when 7 => return Store_Mixed_Volume;
       when 8 => return Retrieve_Mixed_Volume;
       when 9 => return Mixed_Volume_by_DEMiCs;
+      when 10 => return Stable_Mixed_Volume_by_DEMiCs;
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception
