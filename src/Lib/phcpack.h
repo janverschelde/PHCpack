@@ -171,7 +171,7 @@ int stable_mixed_volume ( int *mv, int *smv );
  *   Computes the mixed volume mv and the stable mixed volume for the 
  *   system currently in the standard systems container,
  *   calling the Ada translation of MixedVol.
- *   The integer in mv on  return equals the mixed volume.
+ *   The integer in mv on return equals the mixed volume.
  *   The regular mixed-cell configuration is in the cells container. */
 
 int mixed_volume_by_demics ( int *mv );
@@ -181,6 +181,14 @@ int mixed_volume_by_demics ( int *mv );
  *   standard systems container.  If the standard systems container
  *   is empty, then the system in the standard Laurent systems
  *   container is taken as input.
+ *   The integer in mv on return equals the mixed volume.
+ *   The regular mixed-cell configuration is in the cells container. */
+
+int stable_mixed_volume_by_demics ( int *mv, int *smv );
+/*
+ * DESCRIPTION :
+ *   Calls DEMiCs to compute the mixed volume mv and the stable mixed volume
+ *   for the system currently in the standard systems container.
  *   The integer in mv on return equals the mixed volume.
  *   The regular mixed-cell configuration is in the cells container. */
 
