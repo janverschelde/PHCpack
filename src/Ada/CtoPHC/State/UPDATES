@@ -1,4 +1,8 @@
-Tue 15 May 2018 : added job 843 to call demics to compute the mixed volume.
+Thu 31 May 2018 : new job 844 in c2phc to compute the stable mixed volume
+  by demics.
+
+Tue 15 May 2018 : added job 843 to c2phc to call demics to compute 
+  the mixed volume.
 
 Sun 13 May 2018 : jobs added to use_c2phc to store the mixed volume.
 

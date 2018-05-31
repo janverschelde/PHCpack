@@ -2722,6 +2722,13 @@ function use_c2phc ( job : integer32;
 --                 mixed-cell configuration constructed for the mixed volume,
 --                 using dynamic enumeration for all mixed cells (demics),
 --                 if the standard systems container is empty, then the
+--                 system in the standard Laurent systems container is taken;
+--        =  844 : computes the mixed volume and the stable mixed volume
+--                 for the system in the systems container and fills the 
+--                 cells container with the regular mixed-cell configuration
+--                 constructed for the stable mixed volume,
+--                 using dynamic enumeration for all mixed cells (demics),
+--                 if the standard systems container is empty, then the
 --                 system in the standard Laurent systems container is taken.
 --
 -- ON RETURN :
