@@ -181,6 +181,7 @@ function use_outdata ( job : integer32;
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Laur_Systems;
+    use Drivers_for_DEMiCs_Algorithm;
 
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     lq : Link_to_Laur_Sys;
@@ -189,7 +190,6 @@ function use_outdata ( job : integer32;
     mixsub : Floating_Mixed_Subdivisions.Mixed_Subdivision;
     mv : natural32;
 
-    use Drivers_for_DEMiCs_Algorithm;
 
   begin
     if lp /= null then
@@ -211,12 +211,21 @@ function use_outdata ( job : integer32;
   --   of the system in the Laurent Systems container.
 
     use Standard_Complex_Poly_Systems;
-    use Standard_Complex_Laur_Systems;
+    use Drivers_for_DEMiCs_Algorithm;
 
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    lq : Link_to_Laur_Sys;
+    mix : Standard_Integer_Vectors.Link_to_Vector;
+    lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+    mixsub : Floating_Mixed_Subdivisions.Mixed_Subdivision;
+    mv,smv,tmv : natural32 := 0;
 
   begin
+    if lp /= null then
+      BlackBox_DEMiCs_Algorithm(lp.all,mix,lifsup,mixsub,mv,smv,tmv);
+      Cells_Container.Initialize(mix,lifsup,mixsub);
+    end if;
+    Assignments_in_Ada_and_C.Assign(integer32(mv),a);
+    Assignments_in_Ada_and_C.Assign(integer32(smv),b);
     return 0;
   end Stable_Mixed_Volume_by_DEMiCs;
 
