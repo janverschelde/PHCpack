@@ -46,6 +46,28 @@ package Drivers_for_DEMiCs_Algorithm is
   --   mcc      a regular mixed-cell configuration;
   --   mv       the mixed volume.
 
+  procedure BlackBox_DEMiCs_Algorithm
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+              lif : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv,smv,tmv : out natural32 );
+
+  -- DESCRIPTION :
+  --   Calls the DEMiCs algorithm to compute the stable mixed volume of
+  --   the Newton polytopes spanned by the supports of the system p.
+
+  -- ON ENTRY :
+  --   p        an ordinary polynomial system.
+
+  -- ON RETURN :
+  --   mix      type of mixture of the supports;
+  --   lif      the lifted supports;
+  --   mcc      a regular mixed-cell configuration;
+  --   mv       the mixed volume;
+  --   smv      the stable mixed volume;
+  --   tmv      total mixed volume includes also the volumes of the
+  --            cells with artificial origin that are not stable.
+
   procedure Write_Random_Coefficient_System
               ( file : in file_type; ranfile : in out file_type;
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;

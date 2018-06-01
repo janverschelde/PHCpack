@@ -1,3 +1,6 @@
+Thu 31 May 2018 : added new blackbox to drivers_for_demics_algorithm to
+  compute the stable mixed volume with DEMiCs.
+
 Wed 30 May 2018 : for stable mixed volumes, the start system needs be based
   on the original supports, without artificial origins, fixed this in
   drivers_for_demics_algorithm which now computes the solutions which

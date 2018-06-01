@@ -81,6 +81,30 @@ package body Drivers_for_DEMiCs_Algorithm is
     mv := natural32(DEMiCs_Output_Data.mixed_volume);
   end BlackBox_DEMiCs_Algorithm;
 
+  procedure BlackBox_DEMiCs_Algorithm
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+              lif : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+                mcc : out Mixed_Subdivision; mv,smv,tmv : out natural32 ) is  
+
+    dim : constant integer32 := p'last;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+    stlb : constant double_float
+         := Floating_Lifting_Functions.Lifting_Bound(p);
+
+  begin
+    Extract_Supports(p,mix,sup,false);    -- verbose is false
+    Call_DEMiCs(mix,sup,true,stlb,false); -- stable is true
+    declare
+      lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    begin
+      Process_Output(dim,mix,sup,lifsup,mcc,false);
+      lif := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(lifsup);
+    end;
+    Drivers_for_Static_Lifting.Floating_Volume_Computation
+      (dim,stlb,mix.all,mcc,mv,smv,tmv);
+  end BlackBox_DEMiCs_Algorithm;
+
   procedure Write_Random_Coefficient_System
               ( file : in file_type; ranfile : in out file_type;
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
