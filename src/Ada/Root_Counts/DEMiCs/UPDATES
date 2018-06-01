@@ -1,3 +1,6 @@
+Fri 1 Jun 2018 : mixed volume functions in use_outdata.adb must clear the
+  contents of DEMiCs_Output_Data at entry.
+
 Thu 31 May 2018 : added a stub job to outdata to make room for a procedure to
   compute stable mixed volumes by demics.  In use_outdata.adb, added the call
   to the blackbox procedure to compute the stable mixed volume by demics.

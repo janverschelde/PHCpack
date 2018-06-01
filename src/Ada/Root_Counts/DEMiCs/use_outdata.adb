@@ -192,6 +192,9 @@ function use_outdata ( job : integer32;
 
 
   begin
+    DEMiCs_Output_Data.Clear_Lifting;
+    DEMiCs_Output_Data.Clear_Cell_Indices;
+    DEMiCs_Output_Data.Clear_Allocated_Cells;
     if lp /= null then
       BlackBox_DEMiCs_Algorithm(lp.all,mix,lifsup,mixsub,mv);
     else
@@ -220,6 +223,9 @@ function use_outdata ( job : integer32;
     mv,smv,tmv : natural32 := 0;
 
   begin
+    DEMiCs_Output_Data.Clear_Lifting;
+    DEMiCs_Output_Data.Clear_Cell_Indices;
+    DEMiCs_Output_Data.Clear_Allocated_Cells;
     if lp /= null then
       BlackBox_DEMiCs_Algorithm(lp.all,mix,lifsup,mixsub,mv,smv,tmv);
       Cells_Container.Initialize(mix,lifsup,mixsub);
