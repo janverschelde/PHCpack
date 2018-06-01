@@ -1,4 +1,6 @@
 Thu 31 May 2018 : added the function stable_mixed_volume_by_demics to phcpack.
+  Extended a function in phcpy2c.h, phcpy2c2.c, and phcpy2c3.c to compute
+  the stable mixed volume with demics.
 
 Tue 15 May 2018 : added the function mixed_volume_by_demics to phcpack,
   tested by lib_celcon.  Updated phcpy2c.h, phcpy2c2.c, and phcpy2c3.c

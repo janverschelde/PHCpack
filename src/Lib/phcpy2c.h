@@ -1009,7 +1009,10 @@ static PyObject *py2c_mixed_volume_by_demics
  *   standard systems container.  If the standard systems container
  *   is empty, then the system in the standard Laurent systems
  *   container is taken as input.  Returns the mixed volume.
- *   A regular mixed-cell configuration is in the cells container. */
+ *   A regular mixed-cell configuration is in the cells container.
+ *   The above is for the case if the input parameter equals 0.
+ *   If the input parameter equals 1, then on return is a tuple,
+ *   which contains the mixed volume and the stable mixed volume. */
 
 static PyObject *py2c_standard_deflate
  ( PyObject *self, PyObject *args );
