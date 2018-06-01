@@ -3121,7 +3121,7 @@ phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
             scalers.o reducers.o sweep.o multiplicity.o numbtrop.o schubert.o \
             syspool.o series.o \
             inputData.o outputData.o iTest.o fTest.o \
-            simplex4phc.o reltab.o mvc.o demicsrun.o \
+            simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
             parameter.o lib2path.o $(QD_LIB)/libqd.a \
                   /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
