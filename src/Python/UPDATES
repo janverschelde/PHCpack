@@ -1,3 +1,6 @@
+Fri 1 Jun 2018 : extended mixed_volume_by_demics() with the stable option,
+  to compute the stable mixed volume.
+
 Wed 16 May 2018 : added mixed_volume_by_demics() to the solver module of phcpy,
   with an added test_mixed_volume() to compare with MixedVol.
   Updated the files welcome.rst and blackbox.rst to document the new function
