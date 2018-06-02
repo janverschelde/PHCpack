@@ -8,7 +8,11 @@ the homotopy, starting at the known solutions and leading to the solutions of th
 
 Version 1.0 of PHCpack has been archived by ACM Transactions of Mathematical Software (ACM TOMS) as Algorithm 795.
 PHCpack incorporates MixedVol (Algorithm 846 of ACM TOMS by T. Gao, T.Y. Li, and M. Wu) 
-to compute mixed volumes fast.  For its double double and quad double arithmetic, PHCpack contains QDlib
+to compute mixed volumes fast.
+DEMiCs (Dynamic Enumeration of all Mixed Cells, by T. Mizutani, A. Takeda, and M. Kojima),
+computes mixed volumes at a faster pace than MixedVol for larger systems with many different supports.
+DEMiCs is also integrated into PHCpack.
+For its double double and quad double arithmetic, PHCpack contains QDlib
 of Y. Hida, X.S. Li, and D.H. Bailey.
 
 This material is based upon work supported by the National Science Foundation
