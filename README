@@ -16,3 +16,25 @@ under Grants No. 9804846, 0105739, 0134611, 0410036, 0713018, 1115777,
 and 1440534.
 Any opinions, findings, and conclusions or recommendations expressed in this material
 are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
+
+Executable versions of the code for Linux, MacOS X, and Windows are
+available at http://www.math.uic.edu/~jan/download.html.
+Other links for the documentation:
+
+* The documentation of PHCpack in html format is
+  at http://www.math.uic.edu/~jan/phcpack_doc_html
+  and its pdf version is
+  at http://www.math.uic.edu/~jan/PHCpack.pdf.
+
+* The documentation of phcpy in html format is
+  at http://www.math.uic.edu/~jan/phcpy_doc_html
+  and its pdf version is
+  at http://www.math.uic.edu/~jan/phcpydoc.pdf.
+
+The restructured text source for the documentation for PHCpack starts at
+https://github.com/janverschelde/PHCpack/tree/master/src/doc/source
+and for phcpy at
+https://github.com/janverschelde/PHCpack/tree/master/src/Python/PHCpy3/doc/source.
+
+To try phcpy in a python or SageMath kernel of a jupyter notebook,
+visit http://www.phcpack.org.
