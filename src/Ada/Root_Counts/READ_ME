@@ -1,4 +1,4 @@
-Root Counting and Start Systems Library in PHCpack version 2.4.53
+Root Counting and Start Systems Library in PHCpack version 2.4.55
 
 This library formed the main part of the first version of PHCpack.
 Modifications in version 2 were mainly due to the rewrite of the
@@ -17,7 +17,8 @@ system solver, released in version 2.3.68, updated for affine solutions
 in release 2.3.70.  In release 2.3.71, this directory was renamed into 
 "Binomials" because the understanding of binomial systems is fundamental,
 whereas a simplicial solver is obtained by just running row reduction on
-the coefficient matrix.
+the coefficient matrix.  The folder "DEMiCs" provides the code for
+dynamic enumeration for all mixed cells, added in version 2.4.53.
 
 The root-counting library is organized as follows :
 
