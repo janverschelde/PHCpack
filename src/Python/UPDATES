@@ -1,3 +1,6 @@
+Sat 2 Jun 2018 : prepared files __init__.py, setup.py, conf.py for 0.8.4
+  of python2 and python3.
+
 Fri 1 Jun 2018 : extended mixed_volume_by_demics() with the stable option,
   to compute the stable mixed volume.
 
