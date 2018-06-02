@@ -175,6 +175,9 @@ version 2.4 provided path tracking methods on graphics processing units.
 A collection of Python scripts defines a simple web interface to the
 blackbox solver and the path trackers,
 enabling the solution of polynomial systems in the cloud.
+DEMiCs applies dynamic enumeration for all mixed cells and
+computes the mixed volume at a faster pace than MixedVol.
+Since version 2.4.53, DEMiCs is distributed with PHCpack.
 
 phcpy: An Application Programming Interface to PHCpack
 ======================================================
