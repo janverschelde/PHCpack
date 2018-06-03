@@ -38,6 +38,11 @@ and write the output into the proper output data suitable for processing.
 This second interface is defined by the package DEMiCs_Algorithm
 and is tested by ts_demicsrun.
 
+Modifications made to the code of DEMiCs (for callback operations and
+directly processing of the cells) is within #if blocks, compiled when
+the flag compile4phc is set.  See the makefiles in the Objects folder
+for the compilation instructions.
+
 ------------------------------------------------------------------------------
 file name                   : short description
 ------------------------------------------------------------------------------
