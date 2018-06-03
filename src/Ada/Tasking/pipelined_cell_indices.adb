@@ -33,6 +33,23 @@ package body Pipelined_Cell_Indices is
 
   procedure Produce_Cells
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stable : in boolean; stlb : in double_float;
+                verbose : in boolean := true ) is
+  begin
+    DEMiCs_Output_Data.done := false;
+    if verbose
+     then put_line("Calling DEMiCs ...");
+    end if;
+    DEMiCs_Algorithm.Call_DEMiCs(mix,sup,stable,stlb,verbose);
+    DEMiCs_Output_Data.done := true;
+    if verbose
+     then DEMiCs_Algorithm.Show_Output;
+    end if;
+  end Produce_Cells;
+
+  procedure Produce_Cells
+              ( mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 lif : in Standard_Floating_VecVecs.Link_to_VecVec;
                 verbose : in boolean := true ) is

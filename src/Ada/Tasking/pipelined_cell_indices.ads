@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_VecVecs;
 with Arrays_of_Integer_Vector_Lists;
@@ -26,12 +27,32 @@ package Pipelined_Cell_Indices is
 
   procedure Produce_Cells
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stable : in boolean; stlb : in double_float;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Calls DEMiCs to produce the cells, with the option
+  --   to compute the stable mixed volume.
+
+  -- ON ENTRY :
+  --   mix      type of mixture;
+  --   sup      supports of a polynomial system;
+  --   stable   flag to compute the stable mixed volume;
+  --   stlb     the lifting bound on the artificial origins;
+  --   verbose  flag for more information.
+
+  -- ON RETURN :
+  --   sup      supports with artificial origins added if stable.
+
+  procedure Produce_Cells
+              ( mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 lif : in Standard_Floating_VecVecs.Link_to_VecVec;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
-  --   Calls DEMiCs to produce the cells.
+  --   Calls DEMiCs to produce the cells, for given lifting values.
 
   -- ON ENTRY :
   --   mix      type of mixture;

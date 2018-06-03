@@ -1,3 +1,6 @@
+Sun 3 Jun 2018 : added another producer to pipelined_cell_indices for stable
+  mixed volumes, tested by ts_mtcelidx.adb.
+
 Mon 28 May 2018 : moved random_lifting out of pipelined_polyhedral_homotopies
   and into the package demics_algorithm.  Moved the function Flatten from
   pipelined_cell_indices.adb to demics_algorithm.

@@ -5,6 +5,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
@@ -21,10 +22,13 @@ with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Laur_SysFun;
 with Exponent_Vectors;
 with Standard_Complex_Laur_JacoMats;
+with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
+with Drivers_for_Static_Lifting;
 with Random_Coefficient_Systems;
 with Lists_of_Strings;
 with DEMiCs_Command_Line;
@@ -67,6 +71,7 @@ procedure ts_mtcelidx is
               ( dim : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stable : in boolean; stlb : in double_float;
                 verbose : in boolean := true ) is
 
   -- DESCRIPTIN :
@@ -80,15 +85,20 @@ procedure ts_mtcelidx is
 
     lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     mcc : Mixed_Subdivision;
-    mv : natural32;
+    mv,smv,tmv : natural32;
 
   begin
     Process_Output(dim,mix,sup,lifsup,mcc,verbose);
     put_line("The lifted supports :");
     Floating_Mixed_Subdivisions_io.put(lifsup);
-    put_line("The mixed-cell configuration :");
-    Floating_Mixed_Subdivisions_io.put(natural32(dim),mix.all,mcc,mv);
-    put("The mixed volume : "); put(mv,1); new_line;
+    if not stable then
+      put_line("The mixed-cell configuration :");
+      Floating_Mixed_Subdivisions_io.put(natural32(dim),mix.all,mcc,mv);
+      put("The mixed volume : "); put(mv,1); new_line;
+    else
+      Drivers_for_Static_Lifting.Floating_Volume_Computation
+        (standard_output,dim,stlb,mix.all,mcc,mv,smv,tmv);
+    end if;
   end Write_DEMiCs_Output;
 
   procedure Compute_Mixed_Volume ( p : in Laur_Sys ) is
@@ -101,7 +111,10 @@ procedure ts_mtcelidx is
     ans : character;
     mix : Standard_Integer_Vectors.Link_to_Vector;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
-    verbose : boolean;
+    verbose,stable : boolean;
+    genuine : constant boolean
+            := Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(p);
+    stlb : double_float;
     nbtasks : integer32 := 0;
     cellcnt : natural32 := 0;
     sem_write : Semaphore.Lock;
@@ -163,15 +176,31 @@ procedure ts_mtcelidx is
     put("Monitor the adding of cell indices ? (y/n) ");
     Ask_Yes_or_No(ans);
     DEMiCs_Output_Data.monitor := (ans = 'y');
+    if genuine then
+      stable := false;
+    else
+      new_line;
+      put("Compute the stable mixed volume ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      stable := (ans = 'y');
+    end if;
+    DEMiCs_Output_Data.stable := stable;
     new_line;
     put("Give the number of tasks (0 for no tasks) : ");
     get(nbtasks);
     new_line;
     Extract_Supports(p,mix,sup,verbose);
+    if stable
+     then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
+     else stlb := 0.0;
+    end if;
     if nbtasks < 2 then
-      Pipelined_Cell_Indices.Produce_Cells(mix,sup,verbose);
+      if stable
+       then Pipelined_Cell_Indices.Produce_Cells(mix,sup,stable,stlb,verbose);
+       else Pipelined_Cell_Indices.Produce_Cells(mix,sup,verbose);
+      end if;
       if verbose
-       then Write_DEMiCs_Output(dim,mix,sup);
+       then Write_DEMiCs_Output(dim,mix,sup,stable,stlb);
       end if;
       Two_Stage_Test;
     else
