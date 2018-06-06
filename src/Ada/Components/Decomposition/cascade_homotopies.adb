@@ -1020,7 +1020,7 @@ package body Cascade_Homotopies is
     Write_Witness_Superset(name,ep,sols0,topdim);
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
-      for i in reverse integer32(topdim)+1..integer32(topdim) loop
+      for i in reverse integer32(lowdim)+1..integer32(topdim) loop
         Clear(sols0); Clear(sols1);
         Down_Continuation
           (outfile,nt,embsys(i).all,natural32(i),zerotol,tolsing,
