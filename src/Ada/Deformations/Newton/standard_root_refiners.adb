@@ -1215,8 +1215,8 @@ package body Standard_Root_Refiners is
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
     nbtot : constant natural32 := Length_Of(sols);
     fail,infty : boolean;
-    sa : Solution_Array(1..integer32(nbtot)) := Create(sols);
-    initres : Standard_Floating_Vectors.Vector(sa'range);
+   -- sa : Solution_Array(1..integer32(nbtot)) := Create(sols);
+   -- initres : Standard_Floating_Vectors.Vector(sa'range);
    -- t_err,t_rco,t_dis,t_res : Standard_Natural_Vectors.Vector(0..15)
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
@@ -1232,11 +1232,14 @@ package body Standard_Root_Refiners is
     seed : integer32 := 1234567;
     h1,h2 : Standard_Complex_Vectors.Vector(1..n);
     pl : Point_List;
+    solsptr : Solution_List := sols;
+    ls : Link_to_Solution;
+    initres : double_float;
+    cnt : natural32;
 
   begin
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
-   -- put_line("in this reporting root refiner ...");
     if deflate then
       declare
       begin
@@ -1253,17 +1256,19 @@ package body Standard_Root_Refiners is
     put_line(file,"THE SOLUTIONS :"); new_line(file);
     put(file,nbtot,1); put(file," "); put(file,n,1); new_line(file);
     put_bar(file);
-    for i in sa'range loop 
+    cnt := 1;
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
       numb := 0; nbdef := 0; nit := 0;
-      sa(i).res := Sum_Norm(Eval(p_eval,sa(i).v));
-      initres(i) := sa(i).res;
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+      ls.res := Sum_Norm(Eval(p_eval,ls.v));
+      initres := ls.res;
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
         declare
         begin
           if deflate then
-            backup := sa(i).all;
-            Silent_Deflate(max,p_eval,jac_eval,sa(i),order,
+            backup := ls.all;
+            Silent_Deflate(max,p_eval,jac_eval,ls,order,
                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
            -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
            --                   tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
@@ -1274,43 +1279,48 @@ package body Standard_Root_Refiners is
            --   Silent_Newton
            --     (p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
            -- end if;
-            if fail and backup.res < sa(i).res then
-              sa(i).all := backup;
+            if fail and backup.res < ls.res then
+              ls.all := backup;
               Silent_Newton
-                (p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
+                (p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
             end if;
           elsif wout then
-            Reporting_Newton(file,p_eval,jac_eval,sa(i).all,epsxa,epsfa,
+            Reporting_Newton(file,p_eval,jac_eval,ls.all,epsxa,epsfa,
                              numb,max,fail);
           else
-            Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,numb,max,fail);
+            Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,numb,max,fail);
           end if;
-       -- exception
-       --   when others => fail := (sa(i).res > epsfa);
-       --      put("exception raised at solution "); put(i,1); new_line;
-       --      flush(file); put_line("flushed buffers..."); raise;
+         -- exception
+         --   when others => fail := (sa(i).res > epsfa);
+         --      put("exception raised at solution "); put(i,1); new_line;
+         --      flush(file); put_line("flushed buffers..."); raise;
         end;
       else
         fail := true;
       end if;
-      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,deflate,tolsing,epsxa);
-      Write_Info(file,sa(i).all,initres(i),natural32(i),numb,nbdef,fail,infty);
-      Write_Type
-        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,
-         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+     -- Multiplicity(h1,h2,pl,ls,natural32(i),sa(sa'first..i),fail,
+     --              infty,deflate,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,ls,cnt,sols,fail,infty,deflate,tolsing,epsxa);
+      Write_Info(file,ls.all,initres,cnt,numb,nbdef,fail,infty);
+     -- Write_Type
+     --   (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,
+     --    tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      Write_Type(file,ls,fail,infty,tolsing,nbfail,nbinfty,
+                 nbreal,nbcomp,nbreg,nbsing);
       if not fail and then deflate 
-       then merge := merge or (sa(i).m > 1);
+       then merge := merge or (ls.m > 1);
       end if;
-      Standard_Condition_Tables.Update_Corrector(t_err,sa(i).all);
-      Standard_Condition_Tables.Update_Condition(t_rco,sa(i).all);
-      Standard_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      Standard_Condition_Tables.Update_Corrector(t_err,ls.all);
+      Standard_Condition_Tables.Update_Condition(t_rco,ls.all);
+      Standard_Condition_Tables.Update_Residuals(t_res,ls.all);
       numit := numit + numb;
+      cnt := cnt + 1;
+      solsptr := Tail_Of(solsptr);
     end loop;
    -- put_line("done with the loop, writing global info ...");
     Write_Global_Info
       (file,nbtot,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
-    Deep_Clear(sols); sols := Create(sa); Clear(sa);
+   -- Deep_Clear(sols); sols := Create(sa); Clear(sa);
    -- put_line("cleaning up ...");
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
