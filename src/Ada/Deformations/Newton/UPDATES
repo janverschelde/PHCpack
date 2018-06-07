@@ -1,5 +1,6 @@
 Thu 7 Jun 2018 : in *dobl_root_refiners, removed all solution arrays and
   removed the application of Newton's method after deflation.
+  Bug fix in standard_root_refiners.adb, forgotten Tail_Of(solsptr).
 
 Wed 6 Jun 2018 : removed the solution array from a reporting version of
   the root refiner in standard_root_refiners.adb.  Also changed the other

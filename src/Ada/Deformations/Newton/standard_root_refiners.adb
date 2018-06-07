@@ -1111,6 +1111,8 @@ package body Standard_Root_Refiners is
         end if;
       end if;
       numit := numit + numb;
+      cnt := cnt + 1;
+      solsptr := Tail_Of(solsptr);
     end loop;
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
@@ -1172,6 +1174,8 @@ package body Standard_Root_Refiners is
        then Append(refsols,refsols_last,ls.all);
       end if;
       numit := numit + numb;
+      cnt := cnt + 1;
+      solsptr := Tail_Of(solsptr);
     end loop;
     Clear(jac); Clear(p_eval); Clear(jac_eval);
     Clear(pl);
