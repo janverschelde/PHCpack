@@ -49,134 +49,6 @@ package body DoblDobl_Root_Refiners is
     put(file,zero);
   end Write_Info;
 
-  procedure Root_Accounting
-              ( file : in file_type;
-                h1,h2 : in DoblDobl_Complex_Vectors.Vector;
-                pl : in out Point_List; ls : in Link_to_Solution;
-                nb : in natural32; sa : in out Solution_Array;
-                fail,infty,deflate : in boolean;
-                tolsing,tolclus : in double_float; nbfail,nbinfty,
-                nbreal,nbcomp,nbreg,nbsing,nbclus : in out natural32 ) is
-  begin
-    if infty then
-      put_line(file," at infinity ==");
-      nbinfty := nbinfty + 1;
-    elsif fail then
-      put_line(file," no solution ==");
-      nbfail := nbfail + 1;
-      ls.m := 0;
-    else
-      if Is_Real(ls.all,1.0E-13)
-       then put(file," real ");    nbreal := nbreal + 1;
-       else put(file," complex "); nbcomp := nbcomp + 1;
-      end if;
-      if deflate or sa(integer32(nb)).rco < tolsing then
-        if ls.m <= 1 then  -- do not change input multiplicity field
-          declare       -- to determine multiplicity, count clusters
-            m : natural32; -- := Multiplicity(ls.all,sa,tolclus);
-          begin
-            DoblDobl_Condition_Report.Multiplicity
-              (ls.all,nb,sa,tolclus,h1,h2,pl,m);
-            if ((m = 1) and (not deflate))
-             then m := 0;
-            end if;
-            ls.m := integer32(m);
-          end;
-        end if;
-        if deflate then
-          if ls.m = 1
-           then put_line(file,"single ==");
-           else put_line(file,"multiple ==");
-                nbsing := nbsing + 1;
-          end if;
-          nbreg := nbreg + 1;
-        else
-          put_line(file,"singular ==");
-          nbsing := nbsing + 1;
-        end if;
-      elsif sa(integer32(nb)).rco > tolsing then
-        declare
-         -- nb2 : constant natural32 := Is_Clustered(ls.all,nb,sa,tolclus);
-          nb2 : natural32;
-        begin
-          DoblDobl_Condition_Report.Is_Clustered
-            (ls.all,nb,sa,tolclus,h1,h2,pl,nb2);
-          if nb2 = nb then
-            put_line(file,"regular ==");
-            nbreg := nbreg + 1;
-            -- ls.m := 1;
-          else
-            put(file,"clustered : ");
-            put(file,nb2,1);
-            put_line(file," ==");
-            nbclus := nbclus + 1;
-            ls.m := -integer32(nb2);
-            sa(integer32(nb2)).m := -integer32(nb);
-          end if;
-        end;	   
-      end if;  
-    end if;
-  end Root_Accounting;
-
-  procedure Write_Type
-              ( file : in file_type; 
-                h1,h2 : in DoblDobl_Complex_Vectors.Vector;
-                pl : in out Point_List; ls : in Link_to_Solution;
-                nb : in natural32; sa : in out Solution_Array;
-                fail,infty,deflate : in boolean;
-                tolsing,tolclus : in double_float; nbfail,nbinfty,
-                nbreal,nbcomp,nbreg,nbsing,nbclus : in out natural32 ) is
-
-    nb2 : natural32;
-
-  begin
-    if infty then
-      put_line(file," at infinity ==");
-      nbinfty := nbinfty + 1;
-    elsif fail then
-      put_line(file," no solution ==");
-      nbfail := nbfail + 1;
-      ls.m := 0;
-    else
-      if Is_Real(ls.all,1.0E-13)
-       then put(file," real ");    nbreal := nbreal + 1;
-       else put(file," complex "); nbcomp := nbcomp + 1;
-      end if;
-      if deflate or sa(integer32(nb)).rco < tolsing then
-        if deflate then
-          if ls.m = 1 then
-            put_line(file,"single ==");
-          else
-            nb2 := Is_Clustered(ls.all,nb,sa,tolclus);
-           -- DoblDobl_Condition_Report.Is_Clustered
-           --   (ls.all,nb,sa,tolclus,h1,h2,pl,nb2);
-            if nb2 = nb then
-              put_line(file,"multiple ==");
-            else
-              put(file,"multiple: ");
-              put(file,nb2,1); put_line(file," ==");
-              nbsing := nbsing + 1;
-            end if;
-          end if;
-          nbreg := nbreg + 1;
-        else
-          put_line(file,"singular ==");
-          nbsing := nbsing + 1;
-        end if;
-      elsif sa(integer32(nb)).rco > tolsing then
-        if ls.m > 0 then
-          put_line(file,"regular ==");
-          nbreg := nbreg + 1;
-        else
-          put(file,"clustered : ");
-          put(file,ls.m,1);
-          put_line(file," ==");
-          nbclus := nbclus + 1;
-        end if;
-      end if;  
-    end if;
-  end Write_Type;
-
   procedure Write_Type
               ( file : in file_type; ls : in Link_to_Solution;
                 fail,infty : in boolean;
@@ -200,42 +72,6 @@ package body DoblDobl_Root_Refiners is
       end if;  
     end if;
   end Write_Type;
-
-  procedure Multiplicity
-              ( h1,h2 : in DoblDobl_Complex_Vectors.Vector;
-                pl : in out Point_List; ls : in Link_to_Solution;
-                nb : in natural32; sa : in out Solution_Array;
-                fail,infty,deflate : in boolean;
-                tolsing,tolclus : in double_float ) is
-  begin
-    if infty then
-      null;
-    elsif fail then
-      ls.m := 0;
-    elsif sa(integer32(nb)).rco < tolsing or deflate then
-      if ls.m <= 1 then -- do not change input multiplicity field
-        declare   -- to determine multiplicity count clustered solutions
-         -- m : constant natural32 := Multiplicity(ls.all,sa,tolclus);
-          m : natural32;
-        begin
-          DoblDobl_Condition_Report.Multiplicity
-            (ls.all,nb,sa,tolclus,h1,h2,pl,m);
-          if ((m = 1) and (not deflate))
-           then ls.m := 0;
-           else ls.m := integer32(m);
-          end if;
-        end;
-      end if;
-    else  -- sa(nb).rco > tolsing, check for clustering
-      declare
-        nb2 : constant natural32 := Is_Clustered(ls.all,nb,sa,tolclus);
-      begin
-        if nb2 /= nb
-         then ls.m := -integer32(nb2); sa(integer32(nb2)).m := -integer32(nb);
-        end if;
-      end;	   
-    end if;
-  end Multiplicity;
 
   procedure Multiplicity
               ( h1,h2 : in DoblDobl_Complex_Vectors.Vector;
@@ -744,30 +580,32 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     fail,infty : boolean;
     seed : integer32 := 1234567;
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..n);
     pl : Point_List;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
     DoblDobl_Random_Vectors.Random_Vector(seed,h2);
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
-        Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-        Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                     infty,false,tolsing,epsxa);
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
+        Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+        Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,false,tolsing,epsxa);
         numit := numit + nb;
       else
         fail := true;
       end if;
+      solsptr := Tail_Of(solsptr);
     end loop;
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     Clear(pl); Clear(f); Clear(jm); Clear(jf);
   end Silent_Root_Refiner;
 
@@ -786,34 +624,36 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
     fail,infty : boolean;
     seed : integer32 := 1234567;
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..n);
     pl : Point_List;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
     DoblDobl_Random_Vectors.Random_Vector(seed,h2);
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
-        Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-        Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                     infty,false,tolsing,epsxa);
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
+        Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+        Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,false,tolsing,epsxa);
         numit := numit + nb;
         if not fail
-         then Append(refs,refs_last,sa(i).all);
+         then Append(refs,refs_last,ls.all);
         end if;
       else
         fail := true;
       end if;
+      solsptr := Tail_Of(solsptr);
     end loop;
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     Clear(pl); Clear(f); Clear(jm); Clear(jf);
   end Silent_Root_Refiner;
 
@@ -832,30 +672,32 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     fail,infty : boolean;
     seed : integer32 := 1234567;
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
     DoblDobl_Random_Vectors.Random_Vector(seed,h2);
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
-        Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-        Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                     infty,false,tolsing,epsxa);
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
+        Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+        Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,false,tolsing,epsxa);
         numit := numit + nb;
       else
         fail := true;
       end if;
+      solsptr := Tail_Of(solsptr);
     end loop;
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     Clear(pl); Clear(f); Clear(jm); Clear(jf);
   end Silent_Root_Refiner;
 
@@ -874,34 +716,36 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
     fail,infty : boolean;
     seed : integer32 := 1234567;
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
     DoblDobl_Random_Vectors.Random_Vector(seed,h2);
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
-        Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-        Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                     infty,false,tolsing,epsxa);
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
+        Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+        Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,false,tolsing,epsxa);
         numit := numit + nb;
         if not fail
-         then Append(refs,refs_last,sa(i).all);
+         then Append(refs,refs_last,ls.all);
         end if;
       else
         fail := true;
       end if;
+      solsptr := Tail_Of(solsptr);
     end loop;
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     Clear(pl); Clear(f); Clear(jm); Clear(jf);
   end Silent_Root_Refiner;
 
@@ -922,7 +766,6 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
@@ -932,43 +775,45 @@ package body DoblDobl_Root_Refiners is
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
     initres : double_double;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
+    len : constant natural32 := Length_Of(s);
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
     DoblDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
+    put(file,len,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      initres := sa(i).res;
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      initres := ls.res;
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if wout
-         then Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-         else Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+         then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+         else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
         end if;
         numit := numit + nb;
       else
         fail := true;
       end if;
-      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,epsxa);
-      Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
-      Write_Type
-        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
-         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
-      DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,false,tolsing,epsxa);
+      Write_Info(file,ls.all,initres,cnt,nb,0,fail,infty);
+      Write_Type(file,ls,fail,infty,tolsing,nbfail,nbinfty,
+                 nbreal,nbcomp,nbreg,nbsing);
+      DoblDobl_Condition_Tables.Update_Corrector(t_err,ls.all);
+      DoblDobl_Condition_Tables.Update_Condition(t_rco,ls.all);
+      DoblDobl_Condition_Tables.Update_Residuals(t_res,ls.all);
+      solsptr := Tail_Of(solsptr);
     end loop;
     Write_Global_Info
-      (file,natural32(sa'last),
-       nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      (file,len,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     Clear(pl); Clear(f); Clear(jm); Clear(jf);
   end Reporting_Root_Refiner;
 
@@ -989,7 +834,6 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
@@ -1000,46 +844,48 @@ package body DoblDobl_Root_Refiners is
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
     initres : double_double;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
+    len : constant natural32 := Length_Of(s);
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
     DoblDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
+    put(file,len,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      initres := sa(i).res;
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      initres := ls.res;
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if wout
-         then Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-         else Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+         then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+         else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
         end if;
         numit := numit + nb;
       else
         fail := true;
       end if;
-      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,epsxa);
-      Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
-      Write_Type
-        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
-         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
-      DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,false,tolsing,epsxa);
+      Write_Info(file,ls.all,initres,cnt,nb,0,fail,infty);
+      Write_Type(file,ls,fail,infty,tolsing,nbfail,nbinfty,
+                 nbreal,nbcomp,nbreg,nbsing);
+      DoblDobl_Condition_Tables.Update_Corrector(t_err,ls.all);
+      DoblDobl_Condition_Tables.Update_Condition(t_rco,ls.all);
+      DoblDobl_Condition_Tables.Update_Residuals(t_res,ls.all);
       if not fail
-       then Append(refs,refs_last,sa(i).all);
+       then Append(refs,refs_last,ls.all);
       end if;
+      solsptr := Tail_Of(solsptr);
     end loop;
     Write_Global_Info
-      (file,natural32(sa'last),
-       nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      (file,len,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     Clear(pl); Clear(f); Clear(jm); Clear(jf);
   end Reporting_Root_Refiner;
 
@@ -1060,7 +906,6 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
@@ -1070,43 +915,45 @@ package body DoblDobl_Root_Refiners is
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
     initres : double_double;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
+    len : constant natural32 := Length_Of(s);
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
     DoblDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
+    put(file,len,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      initres := sa(i).res;
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      initres := ls.res;
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if wout
-         then Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-         else Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+         then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+         else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
         end if;
         numit := numit + nb;
       else
         fail := true;
       end if;
-      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,epsxa);
-      Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
-      Write_Type
-        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
-         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
-      DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,false,tolsing,epsxa);
+      Write_Info(file,ls.all,initres,cnt,nb,0,fail,infty);
+      Write_Type(file,ls,fail,infty,tolsing,nbfail,nbinfty,
+                 nbreal,nbcomp,nbreg,nbsing);
+      DoblDobl_Condition_Tables.Update_Corrector(t_err,ls.all);
+      DoblDobl_Condition_Tables.Update_Condition(t_rco,ls.all);
+      DoblDobl_Condition_Tables.Update_Residuals(t_res,ls.all);
+      solsptr := Tail_Of(solsptr);
     end loop;
     Write_Global_Info
-      (file,natural32(sa'last),
-       nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      (file,len,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     Clear(pl); Clear(f); Clear(jm); Clear(jf);
   end Reporting_Root_Refiner;
 
@@ -1127,7 +974,6 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
@@ -1138,46 +984,48 @@ package body DoblDobl_Root_Refiners is
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..nv);
     pl : Point_List;
     initres : double_double;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
+    len : constant natural32 := Length_Of(s);
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
     DoblDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
+    put(file,len,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      initres := sa(i).res;
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      initres := ls.res;
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if wout
-         then Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-         else Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+         then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+         else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
         end if;
         numit := numit + nb;
       else
         fail := true;
       end if;
-      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,epsxa);
-      Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
-      Write_Type
-        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
-         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
-      DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,false,tolsing,epsxa);
+      Write_Info(file,ls.all,initres,cnt,nb,0,fail,infty);
+      Write_Type(file,ls,fail,infty,tolsing,nbfail,nbinfty,
+                 nbreal,nbcomp,nbreg,nbsing);
+      DoblDobl_Condition_Tables.Update_Corrector(t_err,ls.all);
+      DoblDobl_Condition_Tables.Update_Condition(t_rco,ls.all);
+      DoblDobl_Condition_Tables.Update_Residuals(t_res,ls.all);
       if not fail
-       then Append(refs,refs_last,sa(i).all);
+       then Append(refs,refs_last,ls.all);
       end if;
+      solsptr := Tail_Of(solsptr);
     end loop;
     Write_Global_Info
-      (file,natural32(sa'last),
-       nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      (file,len,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     Clear(pl); Clear(f); Clear(jm); Clear(jf);
   end Reporting_Root_Refiner;
 
@@ -1338,7 +1186,6 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nbvar) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nbvar) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     tolrnk : constant double_float := 100.0*tolsing;
     order : constant integer32 := 3;
     nv : Standard_Natural_Vectors.Vector(0..order);
@@ -1354,6 +1201,9 @@ package body DoblDobl_Root_Refiners is
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
     initres : double_double;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
@@ -1370,35 +1220,35 @@ package body DoblDobl_Root_Refiners is
           deflate := false;
       end;
     end if;
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      initres := sa(i).res;
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      initres := ls.res;
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
-          backup := sa(i).all;
-          Silent_Deflate(max,f,jf,sa(i),order,
+          backup := ls.all;
+          Silent_Deflate(max,f,jf,ls,order,
                          tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-          if fail and backup.res < sa(i).res then
-            sa(i).all := backup;
-            Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+         -- Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+          if fail and backup.res < ls.res then
+            ls.all := backup;
+            Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
           end if;
         else
-          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
         end if;
         numit := numit + nb;
       else
         fail := true;
       end if;
-      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,deflate,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,deflate,tolsing,epsxa);
       if not fail and deflate
-       then merge := merge and (sa(i).m > 1);
+       then merge := merge and (ls.m > 1);
       end if;
+      solsptr := Tail_Of(solsptr);
     end loop;
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
       DoblDobl_Jacobian_Trees.Clear(nd);
@@ -1430,7 +1280,6 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nbvar) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nbvar) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     tolrnk : constant double_float := 100.0*tolsing;
     order : constant integer32 := 3;
     nv : Standard_Natural_Vectors.Vector(0..order);
@@ -1447,6 +1296,9 @@ package body DoblDobl_Root_Refiners is
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
     initres : double_double;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
@@ -1463,38 +1315,37 @@ package body DoblDobl_Root_Refiners is
           deflate := false;
       end;
     end if;
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      initres := sa(i).res;
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      initres := ls.res;
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
-          backup := sa(i).all;
-          Silent_Deflate(max,f,jf,sa(i),order,
+          backup := ls.all;
+          Silent_Deflate(max,f,jf,ls,order,
                          tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-          if fail and backup.res < sa(i).res then
-            sa(i).all := backup;
-            Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+         -- Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+          if fail and backup.res < ls.res then
+            ls.all := backup;
+            Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
           end if;
         else
-          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
         end if;
         numit := numit + nb;
       else
         fail := true;
       end if;
-      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,deflate,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,deflate,tolsing,epsxa);
       if not fail then
-        Append(refs,refs_last,sa(i).all);
+        Append(refs,refs_last,ls.all);
         if deflate
-         then merge := merge and (sa(i).m > 1);
+         then merge := merge and (ls.m > 1);
         end if;
       end if;
     end loop;
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
       DoblDobl_Jacobian_Trees.Clear(nd);
@@ -1528,7 +1379,6 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nbvar) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nbvar) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     tolrnk : constant double_float := 100.0*tolsing;
     order : constant integer32 := 3;
     nv : Standard_Natural_Vectors.Vector(0..order);
@@ -1547,6 +1397,10 @@ package body DoblDobl_Root_Refiners is
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
     initres : double_double;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
+    len : constant natural32 := Length_Of(s);
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
@@ -1565,53 +1419,50 @@ package body DoblDobl_Root_Refiners is
     end if;
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,nbvar,1); new_line(file);
+    put(file,len,1); put(file," "); put(file,nbvar,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      initres := sa(i).res;
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      initres := ls.res;
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
-          backup := sa(i).all;
-          Reporting_Deflate(file,wout,max,f,jf,sa(i),order,
+          backup := ls.all;
+          Reporting_Deflate(file,wout,max,f,jf,ls,order,
                             tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-          if wout
-           then Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-           else Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-          end if;
-          if fail and backup.res < sa(i).res then
-            sa(i).all := backup;
-            Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+         -- if wout
+         --  then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+         --  else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+         -- end if;
+          if fail and backup.res < ls.res then
+            ls.all := backup;
+            Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
           end if;
         elsif wout then
-          Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
         else
-          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
         end if;
         numit := numit + nb;
       else
         fail := true;
       end if;
-      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,deflate,tolsing,epsxa);
-      Write_Info(file,sa(i).all,initres,natural32(i),nb,nbdef,fail,infty);
-      Write_Type
-        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,
-         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
-      DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,deflate,tolsing,epsxa);
+      Write_Info(file,ls.all,initres,cnt,nb,nbdef,fail,infty);
+      Write_Type(file,ls,fail,infty,tolsing,nbfail,nbinfty,
+                 nbreal,nbcomp,nbreg,nbsing);
+      DoblDobl_Condition_Tables.Update_Corrector(t_err,ls.all);
+      DoblDobl_Condition_Tables.Update_Condition(t_rco,ls.all);
+      DoblDobl_Condition_Tables.Update_Residuals(t_res,ls.all);
       if not fail and deflate
-       then merge := merge and (sa(i).m > 1);
+       then merge := merge and (ls.m > 1);
       end if;
     end loop;
     Write_Global_Info
-      (file,natural32(sa'last),
-       nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      (file,len,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
       DoblDobl_Jacobian_Trees.Clear(nd);
@@ -1644,7 +1495,6 @@ package body DoblDobl_Root_Refiners is
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nbvar) := Create(p);
     jf : Eval_Jaco_Mat(p'range,1..nbvar) := Create(jm);
-    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     tolrnk : constant double_float := 100.0*tolsing;
     order : constant integer32 := 3;
     nv : Standard_Natural_Vectors.Vector(0..order);
@@ -1664,6 +1514,10 @@ package body DoblDobl_Root_Refiners is
     h1,h2 : DoblDobl_Complex_Vectors.Vector(1..nbvar);
     pl : Point_List;
     initres : double_double;
+    solsptr : Solution_List := s;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
+    len : constant natural32 := Length_Of(s);
 
   begin
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
@@ -1682,56 +1536,54 @@ package body DoblDobl_Root_Refiners is
     end if;
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,nbvar,1); new_line(file);
+    put(file,len,1); put(file," "); put(file,nbvar,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
-    for i in sa'range loop
-      nb := 0;
-      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
-      initres := sa(i).res;
-      infty := At_Infinity(sa(i).all,false,1.0E+8);
-      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      ls.res := Sum_Norm(Eval(f,ls.v));
+      initres := ls.res;
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
-          backup := sa(i).all;
-          Reporting_Deflate(file,wout,max,f,jf,sa(i),order,
+          backup := ls.all;
+          Reporting_Deflate(file,wout,max,f,jf,ls,order,
                             tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-          if wout
-           then Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-           else Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
-          end if;
-          if fail and backup.res < sa(i).res then
-            sa(i).all := backup;
-            Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+         -- if wout
+         --  then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+         --  else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+         -- end if;
+          if fail and backup.res < ls.res then
+            ls.all := backup;
+            Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
           end if;
         elsif wout then
-          Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
         else
-          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
         end if;
         numit := numit + nb;
       else
         fail := true;
       end if;
-      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,deflate,tolsing,epsxa);
-      Write_Info(file,sa(i).all,initres,natural32(i),nb,nbdef,fail,infty);
-      Write_Type
-        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,
-         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
-      DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
-      DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,deflate,tolsing,epsxa);
+      Write_Info(file,ls.all,initres,cnt,nb,nbdef,fail,infty);
+      Write_Type(file,ls,fail,infty,tolsing,nbfail,nbinfty,
+                 nbreal,nbcomp,nbreg,nbsing);
+      DoblDobl_Condition_Tables.Update_Corrector(t_err,ls.all);
+      DoblDobl_Condition_Tables.Update_Condition(t_rco,ls.all);
+      DoblDobl_Condition_Tables.Update_Residuals(t_res,ls.all);
       if not fail then
-        Append(refs,refs_last,sa(i).all);
+        Append(refs,refs_last,ls.all);
         if deflate
-         then merge := merge and (sa(i).m > 1);
+         then merge := merge and (ls.m > 1);
         end if;
       end if;
+      solsptr := Tail_Of(solsptr);
     end loop;
     Write_Global_Info
-      (file,natural32(sa'last),
-       nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      (file,len,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
-    Deep_Clear(s); s := Create(sa); Clear(sa);
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
       DoblDobl_Jacobian_Trees.Clear(nd);
