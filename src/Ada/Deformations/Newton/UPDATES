@@ -1,5 +1,6 @@
 Wed 6 Jun 2018 : removed the solution array from a reporting version of
-  the root refiner in standard_root_refiners.adb.
+  the root refiner in standard_root_refiners.adb.  Also changed the other
+  refiners in standard_root_refiners.adb.
 
 Wed 25 Apr 2018 : added new packages dobldobl_query_matrices,
   dobldobl_nullity_matrices, dobldobl_nullity_polynomials,
