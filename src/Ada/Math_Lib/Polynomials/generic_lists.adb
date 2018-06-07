@@ -51,6 +51,16 @@ package body Generic_Lists is
 
 -- CONSTRUCTORS :
 
+  function Create ( i : Item ) return List is
+
+    res : List;
+
+  begin
+    res := New_Item;
+    res.The_Item := i;
+    return res;
+  end Create;
+
   procedure Construct ( i : in Item; L : in out List ) is
 
     tmp : List;

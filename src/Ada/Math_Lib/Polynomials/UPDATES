@@ -1,3 +1,7 @@
+Thu 7 Jun 2018 : to generic_lists added a function to create a list with
+  one single item.  Fixed generic_polynomials and generic_laurent_polynomials
+  for a program error with the GNAT Community 2018 compiler.
+
 Mon 25 Dec 2017 : before free(p) in generic_polynomial_systems.adb,
   must test whether the pointer is null or not.
 

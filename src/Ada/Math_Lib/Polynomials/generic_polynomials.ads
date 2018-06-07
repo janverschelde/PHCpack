@@ -1,4 +1,5 @@
 with Abstract_Ring;
+with Generic_Lists;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
@@ -130,12 +131,15 @@ package Generic_Polynomials is
 
 private
 
-  type Poly_Rep;
+  package Term_List is new Generic_Lists(Term);
+  type Poly_Rep is new Term_List.List;
+
   type Poly is access Poly_Rep;
 
   Null_Poly : constant Poly := null;
 
   One_Term : constant Term := (one,null);
-  One_Poly : constant Poly := Create(One_Term);
+  One_Poly_Rep : constant Poly_Rep := Create(One_Term);
+  One_Poly : constant Poly := new Poly_Rep'(One_Poly_Rep);
 
 end Generic_Polynomials;

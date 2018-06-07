@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+
 generic
 
   type Item is private;
@@ -16,6 +17,11 @@ package Generic_Lists is
   List_Is_Null : exception;
 
 -- CONSTRUCTORS :
+
+  function Create ( i : Item ) return List;
+
+  -- DESCRIPTION :
+  --   Returns a list with i as its only item.
 
   procedure Construct ( i : in Item; L : in out List );
 

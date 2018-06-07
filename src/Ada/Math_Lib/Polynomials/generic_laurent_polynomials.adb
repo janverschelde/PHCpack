@@ -1,5 +1,4 @@
 with unchecked_deallocation;
-with Generic_Lists;
 with Graded_Lexicographic_Order;         use Graded_Lexicographic_Order;
 
 package body Generic_Laurent_Polynomials is
@@ -9,16 +8,17 @@ package body Generic_Laurent_Polynomials is
 --   2. The terms in any polynomial are ordered from high to low degree
 --      according to the graded lexicographic order.
 
-  MAX_INT : constant integer32 := 100000;
+  MAX_INT : constant integer32 := integer32'last;
 
--- DATA STRUCTURES : 
+-- NOTE : the representation of a polynomial as a list could no longer
+--   be defined in the body of the package because of the elaboration
+--   of the definition for One_Poly, which needed the Create() function
+--   to be executed in the private part of the package specification,
+--   since the GNAT Community 2018 compiler.
 
-  package Term_List is new Generic_Lists(Term);
-  type Poly_Rep is new Term_List.List;
+-- AUXILIARY OPERATIONS :
 
   procedure free is new unchecked_deallocation(Poly_Rep,Poly);
- 
--- AUXILIARY OPERATIONS :
 
   procedure Shuffle ( p : in out Poly ) is
 
