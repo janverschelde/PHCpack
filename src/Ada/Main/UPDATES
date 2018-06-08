@@ -1,3 +1,6 @@
+Thu 7 Jun 2018 : initialized rocotime to 0.0 in black_box_root_counts.adb
+  when pipelining is applied.
+
 Sat 2 Jun 2018 : updated greeting_banners for version 2.4.55.
 
 Wed 30 May 2018 : added number of tasks to driver_for_root_counts,

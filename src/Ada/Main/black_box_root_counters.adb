@@ -1484,6 +1484,7 @@ package body Black_Box_Root_Counters is
         (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
       rc := smv;
       tstop(timer);
+      rocotime := 0.0;
       hocotime := Elapsed_User_Time(timer);
     end if;
     ended_moment := Ada.Calendar.Clock;
@@ -1541,6 +1542,7 @@ package body Black_Box_Root_Counters is
         (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
       rc := smv;
       tstop(timer);
+      rocotime := 0.0;
       hocotime := Elapsed_User_Time(timer);
     end if;
     ended_moment := Ada.Calendar.Clock;
@@ -1598,6 +1600,7 @@ package body Black_Box_Root_Counters is
         (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
       rc := smv;
       tstop(timer);
+      rocotime := 0.0;
       hocotime := Elapsed_User_Time(timer);
     end if;
     ended_moment := Ada.Calendar.Clock;
@@ -1650,6 +1653,7 @@ package body Black_Box_Root_Counters is
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
       rc := smv;
       tstop(timer);
+      rocotime := 0.0;
       hocotime := Elapsed_User_Time(timer);
       declare
         rcs : constant string := Mixed_Volumes_to_String(d,mv,smv);
@@ -1701,6 +1705,7 @@ package body Black_Box_Root_Counters is
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
       rc := smv;
       tstop(timer);
+      rocotime := 0.0;
       hocotime := Elapsed_User_Time(timer);
       declare
         rcs : constant string := Mixed_Volumes_to_String(d,mv,smv);
@@ -1752,6 +1757,7 @@ package body Black_Box_Root_Counters is
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
       rc := smv;
       tstop(timer);
+      rocotime := 0.0;
       hocotime := Elapsed_User_Time(timer);
       declare
         rcs : constant string := Mixed_Volumes_to_String(d,mv,smv);
@@ -1819,6 +1825,7 @@ package body Black_Box_Root_Counters is
       end if;
       tstop(timer);
       rc := smv;
+      rocotime := 0.0;
       hocotime := Elapsed_User_Time(timer);
       new_line(file);
       print_times(file,timer,"pipelined polyhedral continuation");
@@ -1887,6 +1894,7 @@ package body Black_Box_Root_Counters is
       end if;
       tstop(timer);
       rc := smv;
+      rocotime := 0.0;
       hocotime := Elapsed_User_Time(timer);
       new_line(file);
       print_times(file,timer,"pipelined polyhedral continuation");
@@ -1955,6 +1963,7 @@ package body Black_Box_Root_Counters is
       end if;
       tstop(timer);
       rc := smv;
+      rocotime := 0.0;
       hocotime := Elapsed_User_Time(timer);
       new_line(file);
       print_times(file,timer,"pipelined polyhedral continuation");
