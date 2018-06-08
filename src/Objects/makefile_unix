@@ -20,14 +20,18 @@ SAGEPYTHONLIB=/home/microway/Downloads/sage-7.3/local/lib
 # The location of the adalib folder for the GNATGPL compiler:
 
 # for GNAT GPL 2016 :
-ADALIB=/usr/gnat-gpl-2016/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib
+# ADALIB=/usr/gnat-gpl-2016/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib
 # FOR GNAT GPL 2017 :
 # ADALIB=/usr/gnat/lib/gcc/x86_64-pc-linux-gnu/6.3.1/adalib
+# GNAT Community 2018 :
+ADALIB=/home/microway/opt/GNAT/2018/lib/gcc/x86_64-pc-linux-gnu/7.3.1/adalib
 
 # The location of the g++ compiler
 
+gpp=g++
+
 # before GNAT GPL 2017 :
-gpp=/usr/bin/g++
+# gpp=/usr/bin/g++
 # for GNAT GPL 2017 :
 # gpp=g++
 
