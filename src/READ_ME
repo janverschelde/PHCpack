@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.54 contains
+The public distribution for PHCpack version 2.4.56 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -29,6 +29,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.56 on 2018-08-14 : fixed error with GNAT Community 2018 compiler
 release 2.4.55 on 2018-06-02 : pipelined polyhedral homotopies with DEMiCs
 release 2.4.54 on 2018-05-18 : phc -m gives access to DEMiCs
 release 2.4.53 on 2018-05-01 : basic command line interface to DEMiCs
