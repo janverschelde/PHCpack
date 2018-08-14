@@ -83,7 +83,8 @@ Below is a step-by-step installation procedure.
    If you have multiple versions of gcc installed on your system,
    then the binaries of the gnu-ada compiler should appear first
    in your execution path.
-   Typing ``gcc -v`` should show ``for GNAT GPL`` in the reply.
+   Typing ``gcc -v`` should show ``for GNAT GPL`` in the reply,
+   or most recently (in 2018): ``GNAT Community 2018``.
 
    If both ``which gnatmake`` and ``gcc -v`` gave satisfactory replies,
    then you can proceed to step 2 and skip the installation of the
