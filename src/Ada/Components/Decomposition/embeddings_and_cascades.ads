@@ -6,6 +6,9 @@ with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Laur_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Embeddings_and_Cascades is
 
@@ -132,5 +135,76 @@ package Embeddings_and_Cascades is
   --   factor   if filter and factor, then numerical representations for
   --            the irreducible factors will be computed,
   --            otherwise, the output sets may still be reducible.
+
+  procedure Standard_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    ws : in Standard_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure Standard_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    ws : in Standard_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure DoblDobl_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    ws : in DoblDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure DoblDobl_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    ws : in DoblDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure QuadDobl_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    ws : in QuadDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure QuadDobl_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    ws : in QuadDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+
+  -- DESCRIPTION :
+  --   Given the top dimension of the solution set of the system p,
+  --   computes generic points on all solution components, 
+  --   in standard double, double double, or quad double precision.
+  --   If requested, homotopy membership tests are applied and
+  --   the filtered generic points are classified according to the
+  --   irreducible factors in a numerical irreducible decomposition.
+  --   No output is written to screen or file.
+
+  -- ON ENTRY :
+  --   nt       number of tasks, zero for no multitasking;
+  --   topdim   the top dimension of the solution set;
+  --   p        a (Laurent) polynomial system;
+  --   filter   flag to indicate that the homotopy membership tests
+  --            will remove the junk points from the output of cascades,
+  --            if false, the output will be superwitness sets;
+  --   factor   if filter and factor, then numerical representations for
+  --            the irreducible factors will be computed,
+  --            otherwise, the output sets may still be reducible;
+  --   Report_Witness_Set is a callback procedure, called each time
+  --            a new witness set is computed.
 
 end Embeddings_and_Cascades;

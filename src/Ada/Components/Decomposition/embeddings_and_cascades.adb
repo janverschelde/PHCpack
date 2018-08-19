@@ -17,11 +17,8 @@ with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
-with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
-with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
-with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Solution_Manipulators;
 with DoblDobl_Solution_Manipulators;
@@ -722,5 +719,77 @@ package body Embeddings_and_Cascades is
       end if;
     end if;
   end QuadDobl_Embed_and_Cascade;
+
+  procedure Standard_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    ws : in Standard_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end Standard_Solve_with_Callback;
+
+  procedure Standard_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    ws : in Standard_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end Standard_Solve_with_Callback;
+
+  procedure DoblDobl_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    ws : in DoblDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end DoblDobl_Solve_with_Callback;
+
+  procedure DoblDobl_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    ws : in DoblDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end DoblDobl_Solve_with_Callback;
+
+  procedure QuadDobl_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    ws : in QuadDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end QuadDobl_Solve_with_Callback;
+
+  procedure QuadDobl_Solve_with_Callback
+              ( nt,topdim : in natural32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    ws : in QuadDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end QuadDobl_Solve_with_Callback;
 
 end Embeddings_and_Cascades;
