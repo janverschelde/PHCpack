@@ -1,3 +1,6 @@
+Sat 18 Aug 2018 : removed declaration of pointer type to an array of
+  polynomial systems in the {standard,dobldobl,quaddobl}_systems_pool.adb.
+
 Thu 31 May 2018 : new job 844 in c2phc to compute the stable mixed volume
   by demics.
 

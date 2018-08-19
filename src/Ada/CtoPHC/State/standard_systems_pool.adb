@@ -5,7 +5,6 @@ package body Standard_Systems_Pool is
 
 -- DATA STRUCTURES :
 
-  type Link_to_Array_of_Poly_Sys is access Array_of_Poly_Sys;
   type Link_to_Array_of_Eval_Poly_Sys is access Array_of_Eval_Poly_Sys;
   type Link_to_Array_of_Jaco_Mat is access Array_of_Jaco_Mat;
   type Link_to_Array_of_Eval_Jaco_Mat is access Array_of_Eval_Jaco_Mat;
