@@ -22,6 +22,7 @@ package Generic_Polynomial_Systems is
   type Poly_Sys is array ( integer32 range <> ) of Poly;
   type Link_to_Poly_Sys is access Poly_Sys;
   type Array_of_Poly_Sys is array ( integer32 range <> ) of Link_to_Poly_Sys;
+  type Link_to_Array_of_Poly_Sys is access Array_of_Poly_Sys;
 
 -- COPYING :
 
@@ -59,6 +60,8 @@ package Generic_Polynomial_Systems is
   procedure Clear ( p : in out Poly_Sys );
   procedure Clear ( p : in out Link_to_Poly_Sys );
   procedure Shallow_Clear ( p : in out Link_to_Poly_Sys );
+  procedure Clear ( p : in out Array_of_Poly_Sys );
+  procedure Clear ( p : in out Link_to_Array_of_Poly_Sys );
 
   -- DESCRIPTION :
   --   Deallocation of memory, a shallow clear only releases the pointer

@@ -1,3 +1,6 @@
+Sat 18 Aug 2018 : added a pointer type to an array of polynomial systems
+  in generic_polynomial_systems and generic_laur_poly_systems.
+
 Thu 7 Jun 2018 : to generic_lists added a function to create a list with
   one single item.  Fixed generic_polynomials and generic_laurent_polynomials
   for a program error with the GNAT Community 2018 compiler.

@@ -167,4 +167,22 @@ package body Generic_Polynomial_Systems is
     end if;
   end Shallow_Clear;
 
+  procedure Clear ( p : in out Array_of_Poly_Sys ) is
+  begin
+    for i in p'range loop
+      Clear(p(i));
+    end loop;
+  end Clear;
+
+  procedure free is 
+    new unchecked_deallocation(Array_of_Poly_Sys,Link_to_Array_of_Poly_Sys);
+
+  procedure Clear ( p : in out Link_to_Array_of_Poly_Sys ) is
+  begin
+    if p /= null then
+      Clear(p.all);
+      free(p);
+    end if;
+  end Clear;
+
 end Generic_Polynomial_Systems;

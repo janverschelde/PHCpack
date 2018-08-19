@@ -22,6 +22,7 @@ package Generic_Laur_Poly_Systems is
   type Laur_Sys is array ( integer32 range <> ) of Poly;
   type Link_to_Laur_Sys is access Laur_Sys;
   type Array_of_Laur_Sys is array ( integer32 range <> ) of Link_to_Laur_Sys;
+  type Link_to_Array_of_Laur_Sys is access Array_of_Laur_Sys;
 
 -- COPYING :
 
@@ -59,6 +60,8 @@ package Generic_Laur_Poly_Systems is
   procedure Clear ( p : in out Laur_Sys );
   procedure Clear ( p : in out Link_to_Laur_Sys );
   procedure Shallow_Clear ( p : in out Link_to_Laur_Sys );
+  procedure Clear ( p : in out Array_of_Laur_Sys );
+  procedure Clear ( p : in out Link_to_Array_of_Laur_Sys );
 
   -- DESCRIPTION :
   --   Deallocation of memory, a shallow clear only releases the pointer
