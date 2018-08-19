@@ -62,6 +62,8 @@ homotopy_cascade_filter          : witness generate + classify
 square_and_embed_systems         : squaring and embedding systems
 path_counts_table                : counts the paths with zero & nonzero slacks
 standard_witness_solutions       : stores a numerical irreducible decomposition
+dobldobl_witness_solutions       : double double version of witness solutions
+quaddobl_witness_solutions       : quad double version of witness solutions
 ts_witsols                       : tests the witness solutions package
 cascade_homotopy_steps           : run one step in a cascade homotopy
 cascade_homotopies_io            : defines the writing of witness super sets

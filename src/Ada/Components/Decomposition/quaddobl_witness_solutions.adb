@@ -1,23 +1,23 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 
-package body Standard_Witness_Solutions is
+package body QuadDobl_Witness_Solutions is
 
 -- DATA :
 
   topdimension : integer32; -- top dimension of the start of the cascade
 
-  embpolysys : Standard_Complex_Poly_Systems.Link_to_Array_of_Poly_Sys;
-  emblaursys : Standard_Complex_Laur_Systems.Link_to_Array_of_Laur_Sys;
+  embpolysys : QuadDobl_Complex_Poly_Systems.Link_to_Array_of_Poly_Sys;
+  emblaursys : QuadDobl_Complex_Laur_Systems.Link_to_Array_of_Laur_Sys;
 
-  embsols : Standard_Complex_Solutions.Link_to_Array_of_Solution_Lists;
+  embsols : QuadDobl_Complex_Solutions.Link_to_Array_of_Solution_Lists;
 
 -- CONSTRUCTORS :
 
   procedure Initialize ( topdim : in natural32 ) is
 
-    use Standard_Complex_Poly_Systems;
-    use Standard_Complex_Laur_Systems;
-    use Standard_Complex_Solutions;
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
 
   begin
     topdimension := integer32(topdim);
@@ -27,10 +27,10 @@ package body Standard_Witness_Solutions is
   end Initialize;
 
   procedure Save_Embedded_System
-              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 k : in natural32 ) is
 
-    use Standard_Complex_Poly_Systems;
+    use QuadDobl_Complex_Poly_Systems;
 
     q : Poly_Sys(p'range);
 
@@ -40,10 +40,10 @@ package body Standard_Witness_Solutions is
   end Save_Embedded_System;
 
   procedure Save_Embedded_System
-              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+              ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 k : in natural32 ) is
 
-    use Standard_Complex_Laur_Systems;
+    use QuadDobl_Complex_Laur_Systems;
 
     q : Laur_Sys(p'range);
 
@@ -53,10 +53,10 @@ package body Standard_Witness_Solutions is
   end Save_Embedded_System;
 
   procedure Save_Witness_Points
-              ( s : in Standard_Complex_Solutions.Solution_List;
+              ( s : in QuadDobl_Complex_Solutions.Solution_List;
                 k : in natural32 ) is
 
-    use Standard_Complex_Solutions;
+    use QuadDobl_Complex_Solutions;
 
   begin
     Copy(s,embsols(integer32(k)));
@@ -66,9 +66,9 @@ package body Standard_Witness_Solutions is
 
   function Load_Embedded_System
               ( k : natural32 )
-              return Standard_Complex_Poly_Systems.Link_to_Poly_Sys is
+              return QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys is
 
-    res : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+    res : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
         := embpolysys(integer32(k));
 
   begin
@@ -77,9 +77,9 @@ package body Standard_Witness_Solutions is
 
   function Load_Embedded_System
               ( k : natural32 )
-              return Standard_Complex_Laur_Systems.Link_to_Laur_Sys is
+              return QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys is
 
-    res : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
+    res : constant QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys
         := emblaursys(integer32(k));
 
   begin
@@ -87,9 +87,9 @@ package body Standard_Witness_Solutions is
   end Load_Embedded_System;
 
   function Load_Witness_Points ( k : natural32 )
-              return Standard_Complex_Solutions.Solution_List is
+              return QuadDobl_Complex_Solutions.Solution_List is
 
-    res : constant Standard_Complex_Solutions.Solution_List
+    res : constant QuadDobl_Complex_Solutions.Solution_List
         := embsols(integer32(k));
 
   begin
@@ -100,9 +100,9 @@ package body Standard_Witness_Solutions is
 
   procedure Clear is
 
-    use Standard_Complex_Poly_Systems;
-    use Standard_Complex_Laur_Systems;
-    use Standard_Complex_Solutions;
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
 
   begin
     topdimension := -1;
@@ -117,4 +117,4 @@ package body Standard_Witness_Solutions is
     end if;
   end Clear;
 
-end Standard_Witness_Solutions;
+end QuadDobl_Witness_Solutions;

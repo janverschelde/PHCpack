@@ -1,9 +1,9 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;
-with Standard_Complex_Solutions;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Solutions;
 
-package Standard_Witness_Solutions is
+package DoblDobl_Witness_Solutions is
 
 -- DESCRIPTION :
 --   This package stores the witness set representation for the
@@ -12,7 +12,7 @@ package Standard_Witness_Solutions is
 --   The data stored by this package is computed by the procedures
 --   in the embeddings_and_cascades package, which defines the
 --   blackbox solver for polynomial systems, as called by phc -B,
---   computed in standard double precision.
+--   computed in double double precision.
 
 -- CONSTRUCTORS :
 
@@ -22,10 +22,10 @@ package Standard_Witness_Solutions is
   --   Initialized the package with the top dimension in topdim.
 
   procedure Save_Embedded_System
-              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 k : in natural32 );
   procedure Save_Embedded_System
-              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 k : in natural32 );
 
   -- DESCRIPTION :
@@ -38,7 +38,7 @@ package Standard_Witness_Solutions is
   --   and k is in the range 0..topdim.
 
   procedure Save_Witness_Points
-              ( s : in Standard_Complex_Solutions.Solution_List;
+              ( s : in DoblDobl_Complex_Solutions.Solution_List;
                 k : in natural32 );
 
   -- DESCRIPTION :
@@ -54,9 +54,9 @@ package Standard_Witness_Solutions is
 -- SELECTORS :
 
   function Load_Embedded_System ( k : natural32 )
-              return Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+              return DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
   function Load_Embedded_System ( k : natural32 )
-              return Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+              return DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
 
   -- DESCRIPTION :
   --   Returns the embedded system at position k in the sequence
@@ -69,7 +69,7 @@ package Standard_Witness_Solutions is
   --   If Save was not done at level k, then the null pointer is returned.
 
   function Load_Witness_Points ( k : natural32 )
-              return Standard_Complex_Solutions.Solution_List;
+              return DoblDobl_Complex_Solutions.Solution_List;
 
   -- DESCRIPTION :
   --   Returns the witness points saved at position k.
@@ -87,4 +87,4 @@ package Standard_Witness_Solutions is
   -- DESCRIPTION :
   --   Deallocates the data stored in the package.
 
-end Standard_Witness_Solutions;
+end DoblDobl_Witness_Solutions;
