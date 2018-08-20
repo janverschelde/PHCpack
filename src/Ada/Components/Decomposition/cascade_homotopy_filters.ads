@@ -216,6 +216,8 @@ package Cascade_Homotopy_Filters is
   --   restol    tolerance on the residual;
   --   homtol    tolerance for the homotopy membership test.
 
+-- SILENT VERSIONS OF FILTERS :
+
   procedure Witness_Filter
               ( nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -314,6 +316,133 @@ package Cascade_Homotopy_Filters is
   --   totcas    total CPU time for running the cascade homotopies;
   --   totfil    total CPU time for the homotopy memberhip filters;
   --   alltime   the total elapsed CPU time.
+
+-- FILTERS WITH OUTPUT TO CALLBACK PROCEDURES :
+
+  procedure Witness_Filter_Callback
+              ( nt : in natural32;
+                ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                rcotol,restol,homtol : in double_float;
+                embsys : out Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration;
+                Report_Witness_Set : access procedure
+                  ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    ws : in Standard_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure Witness_Filter_Callback
+              ( nt : in natural32;
+                ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                rcotol,restol,homtol : in double_float;
+                embsys : out Standard_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration;
+                Report_Witness_Set : access procedure
+                  ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    ws : in Standard_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure Witness_Filter_Callback
+              ( nt : in natural32;
+                ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                rcotol,restol,homtol : in double_float;
+                embsys : out DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration;
+                Report_Witness_Set : access procedure
+                  ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    ws : in DoblDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure Witness_Filter_Callback
+              ( nt : in natural32;
+                ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                rcotol,restol,homtol : in double_float;
+                embsys : out DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration;
+                Report_Witness_Set : access procedure
+                  ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    ws : in DoblDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure Witness_Filter_Callback
+              ( nt : in natural32;
+                ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                rcotol,restol,homtol : in double_float;
+                embsys : out QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+                esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration;
+                Report_Witness_Set : access procedure
+                  ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    ws : in QuadDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure Witness_Filter_Callback
+              ( nt : in natural32;
+                ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                topdim,lowdim : in natural32; zerotol : in double_float;
+                rcotol,restol,homtol : in double_float;
+                embsys : out QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys;
+                esols0 : out QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                pathcnts,filtcnts : out Standard_Natural_VecVecs.VecVec;
+                castms,filtms : out Array_of_Duration;
+                totcas,totfil,alltime : out duration;
+                Report_Witness_Set : access procedure
+                  ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    ws : in QuadDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+
+  -- DESCRIPTION :
+  --   Silent version of the witness generate to compute witness supersets,
+  --   and of the witness filter to remove the junk points from the supersets,
+  --   in double, double double, and quad double precision.
+
+  -- ON ENTRY :
+  --   nt        number of tasks for multitasking, set to zero for no tasking;
+  --   ep        an embedded polynomial system for the top dimension,
+  --             with as many slack variables and random hyperplanes added
+  --             as the top dimension topdim;
+  --   sols      solutions to the system ep with all values for the slack
+  --             variables, the zero and the nonzero values;
+  --   topdim    number of slack variables and random hyperplanes,
+  --             equals the top dimension of the solution sets;
+  --   lowdim    lower bound on the dimension to stop the cascade;
+  --   zerotol   tolerance to decide whether a number is zero or not;
+  --   rcotol    tolerance on inverse of the condition number estimate,
+  --             to bypass the homotopy membership test for regular solutions;
+  --   restol    tolerance on the residual;
+  --   homtol    tolerance for the homotopy membership test.
+
+  -- ON RETURN :
+  --   embsys    sequence of embedded polynomial systems;
+  --   esols0    witness points at each dimension;
+  --   pathcnts  table with path counts during the cascade homotopies;
+  --   filtcnts  counts of the witness points after each junk removal;
+  --   castms    CPU time at each stage in the cascade homotopy;
+  --   filtms    CPU time at each stage of the homotopy membership filters;
+  --   totcas    total CPU time for running the cascade homotopies;
+  --   totfil    total CPU time for the homotopy memberhip filters;
+  --   alltime   the total elapsed CPU time.
+
+-- FILTERS WITH OUTPUT TO FILE :
 
   procedure Witness_Filter
               ( file : in file_type; nt : in natural32;

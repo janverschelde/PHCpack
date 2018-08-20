@@ -911,9 +911,9 @@ package body Running_Cascades is
 
   begin
     if filter then
-      Cascade_Homotopy_Filters.Witness_Filter
+      Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
-         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -954,9 +954,9 @@ package body Running_Cascades is
 
   begin
     if filter then
-      Cascade_Homotopy_Filters.Witness_Filter
+      Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
-         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -997,9 +997,9 @@ package body Running_Cascades is
 
   begin
     if filter then
-      Cascade_Homotopy_Filters.Witness_Filter
+      Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
-         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -1040,9 +1040,9 @@ package body Running_Cascades is
 
   begin
     if filter then
-      Cascade_Homotopy_Filters.Witness_Filter
+      Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
-         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -1083,9 +1083,9 @@ package body Running_Cascades is
 
   begin
     if filter then
-      Cascade_Homotopy_Filters.Witness_Filter
+      Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
-         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -1126,9 +1126,9 @@ package body Running_Cascades is
 
   begin
     if filter then
-      Cascade_Homotopy_Filters.Witness_Filter
+      Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
-         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
