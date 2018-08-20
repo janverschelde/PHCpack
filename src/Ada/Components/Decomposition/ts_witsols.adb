@@ -144,6 +144,29 @@ procedure ts_witsols is
     end loop;
   end QuadDobl_Write;
 
+  procedure Prompt_for_Options ( filter,factor : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the settings of the options
+  --   filter and factor, returned on output.
+
+    ans : character;
+
+  begin
+    new_line;
+    put("Filter the witness supersets ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    filter := (ans = 'y');
+    if not filter then
+      factor := false;
+    else
+      new_line;
+      put("Factor the witness sets ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      factor := (ans = 'y');
+    end if;
+  end Prompt_for_Options;
+
   procedure Standard_Main is
 
   -- DESCRIPTION :
@@ -155,6 +178,7 @@ procedure ts_witsols is
 
     lp : Link_to_Poly_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
+    filter,factor : boolean;
 
   begin
     new_line;
@@ -164,9 +188,13 @@ procedure ts_witsols is
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     new_line;
     put("Give the number of tasks : "); get(nt);
+    Prompt_for_Options(filter,factor);
     Standard_Witness_Solutions.Initialize(topdim);
+    new_line;
+    put_line("Computing ...");
+    new_line;
     Standard_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
     Standard_Write(topdim,lowdim);
   end Standard_Main;
 
@@ -181,6 +209,7 @@ procedure ts_witsols is
 
     lp : Link_to_Laur_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
+    filter,factor : boolean;
 
   begin
     new_line;
@@ -190,9 +219,13 @@ procedure ts_witsols is
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     new_line;
     put("Give the number of tasks : "); get(nt);
+    Prompt_for_Options(filter,factor);
+    new_line;
+    put_line("Computing ...");
+    new_line;
     Standard_Witness_Solutions.Initialize(topdim);
     Standard_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
     Standard_Write(topdim,lowdim);
   end Standard_Laurent_Main;
 
@@ -207,6 +240,7 @@ procedure ts_witsols is
 
     lp : Link_to_Poly_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
+    filter,factor : boolean;
 
   begin
     new_line;
@@ -216,9 +250,13 @@ procedure ts_witsols is
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     new_line;
     put("Give the number of tasks : "); get(nt);
+    Prompt_for_Options(filter,factor);
+    new_line;
+    put_line("Computing ...");
+    new_line;
     DoblDobl_Witness_Solutions.Initialize(topdim);
     DoblDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
     DoblDobl_Write(topdim,lowdim);
   end DoblDobl_Main;
 
@@ -233,6 +271,7 @@ procedure ts_witsols is
 
     lp : Link_to_Laur_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
+    filter,factor : boolean;
 
   begin
     new_line;
@@ -242,9 +281,13 @@ procedure ts_witsols is
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     new_line;
     put("Give the number of tasks : "); get(nt);
+    Prompt_for_Options(filter,factor);
+    new_line;
+    put_line("Computing ...");
+    new_line;
     DoblDobl_Witness_Solutions.Initialize(topdim);
     DoblDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
     DoblDobl_Write(topdim,lowdim);
   end DoblDobl_Laurent_Main;
 
@@ -259,6 +302,7 @@ procedure ts_witsols is
 
     lp : Link_to_Poly_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
+    filter,factor : boolean;
 
   begin
     new_line;
@@ -268,9 +312,13 @@ procedure ts_witsols is
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     new_line;
     put("Give the number of tasks : "); get(nt);
+    Prompt_for_Options(filter,factor);
+    new_line;
+    put_line("Computing ...");
+    new_line;
     QuadDobl_Witness_Solutions.Initialize(topdim);
     QuadDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
     QuadDobl_Write(topdim,lowdim);
   end QuadDobl_Main;
 
@@ -285,6 +333,7 @@ procedure ts_witsols is
 
     lp : Link_to_Laur_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
+    filter,factor : boolean;
 
   begin
     new_line;
@@ -294,9 +343,13 @@ procedure ts_witsols is
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     new_line;
     put("Give the number of tasks : "); get(nt);
+    Prompt_for_Options(filter,factor);
+    new_line;
+    put_line("Computing ...");
+    new_line;
     QuadDobl_Witness_Solutions.Initialize(topdim);
     QuadDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
     QuadDobl_Write(topdim,lowdim);
   end QuadDobl_Laurent_Main;
 

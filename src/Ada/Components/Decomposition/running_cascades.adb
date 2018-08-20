@@ -891,8 +891,38 @@ package body Running_Cascades is
                   ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                     ws : in Standard_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    use Standard_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := deftol;
+    rcotol : constant double_float := defrcotol;
+    restol : constant double_float := defrestol;
+    homtol : constant double_float := defhomtol;
+    ep : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    nbl : constant natural32 := defmaxloops;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
   begin
-    null;
+    if filter then
+      Cascade_Homotopy_Filters.Witness_Filter
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Cascade_Homotopies.Witness_Generate_Callback
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
+         Report_Witness_Set);
+    end if;
   end Standard_Cascade_Callback;
 
   procedure Standard_Cascade_Callback
@@ -904,8 +934,38 @@ package body Running_Cascades is
                   ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                     ws : in Standard_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    use Standard_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := deftol;
+    rcotol : constant double_float := defrcotol;
+    restol : constant double_float := defrestol;
+    homtol : constant double_float := defhomtol;
+    ep : Standard_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    nbl : constant natural32 := defmaxloops;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
   begin
-    null;
+    if filter then
+      Cascade_Homotopy_Filters.Witness_Filter
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Cascade_Homotopies.Witness_Generate_Callback
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
+         Report_Witness_Set);
+    end if;
   end Standard_Cascade_Callback;
 
   procedure DoblDobl_Cascade_Callback
@@ -917,8 +977,38 @@ package body Running_Cascades is
                   ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     ws : in DoblDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := deftol;
+    rcotol : constant double_float := defrcotol;
+    restol : constant double_float := defrestol;
+    homtol : constant double_float := defhomtol;
+    ep : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    nbl : constant natural32 := defmaxloops;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
   begin
-    null;
+    if filter then
+      Cascade_Homotopy_Filters.Witness_Filter
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Cascade_Homotopies.Witness_Generate_Callback
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
+         Report_Witness_Set);
+    end if;
   end DoblDobl_Cascade_Callback;
 
   procedure DoblDobl_Cascade_Callback
@@ -930,8 +1020,38 @@ package body Running_Cascades is
                   ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     ws : in DoblDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := deftol;
+    rcotol : constant double_float := defrcotol;
+    restol : constant double_float := defrestol;
+    homtol : constant double_float := defhomtol;
+    ep : DoblDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    nbl : constant natural32 := defmaxloops;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
   begin
-    null;
+    if filter then
+      Cascade_Homotopy_Filters.Witness_Filter
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Cascade_Homotopies.Witness_Generate_Callback
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
+         Report_Witness_Set);
+    end if;
   end DoblDobl_Cascade_Callback;
 
   procedure QuadDobl_Cascade_Callback
@@ -943,8 +1063,38 @@ package body Running_Cascades is
                   ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     ws : in QuadDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := deftol;
+    rcotol : constant double_float := defrcotol;
+    restol : constant double_float := defrestol;
+    homtol : constant double_float := defhomtol;
+    ep : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    nbl : constant natural32 := defmaxloops;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
   begin
-    null;
+    if filter then
+      Cascade_Homotopy_Filters.Witness_Filter
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Cascade_Homotopies.Witness_Generate_Callback
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
+         Report_Witness_Set);
+    end if;
   end QuadDobl_Cascade_Callback;
 
   procedure QuadDobl_Cascade_Callback
@@ -956,8 +1106,38 @@ package body Running_Cascades is
                   ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     ws : in QuadDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    ns : constant integer32 := integer32(topdim);
+    tol : constant double_float := deftol;
+    rcotol : constant double_float := defrcotol;
+    restol : constant double_float := defrestol;
+    homtol : constant double_float := defhomtol;
+    ep : QuadDobl_Complex_Laur_Systems.Array_of_Laur_Sys(0..ns);
+    gpts : Array_of_Solution_Lists(0..ns);
+    pc,fc : Standard_Natural_VecVecs.VecVec(0..ns);
+    nbl : constant natural32 := defmaxloops;
+    deco : Standard_Natural_VecVecs.Array_of_VecVecs(1..ns);
+    castm : Array_of_Duration(0..integer(ns));
+    filtm : Array_of_Duration(0..integer(ns));
+    factm : Array_of_Duration(0..integer(ns));
+    totcas,totfil,totfac,alltime : duration;
+
   begin
-    null;
+    if filter then
+      Cascade_Homotopy_Filters.Witness_Filter
+        (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
+         ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime);
+      if factor then
+        Monodromy_Homotopies.Witness_Factor
+          (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
+      end if;
+    else
+      Cascade_Homotopies.Witness_Generate_Callback
+        (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
+         Report_Witness_Set);
+    end if;
   end QuadDobl_Cascade_Callback;
 
 end Running_Cascades;
