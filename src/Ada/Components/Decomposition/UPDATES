@@ -1,3 +1,7 @@
+Mon 20 Aug 2018 : added the running of cascades with a callback procedure
+  to running_cascades, called in embeddings_and_cascades, with a better
+  documentation, and with the main test procedures in ts_witsols.adb.
+
 Sun 19 Aug 2018 : added solution management to standard_witness_solutions,
   copied to {dobldobl,quaddobl}_witness_solutions, tested by ts_witsols.adb.
   Provided stubs for solvers with callback procedures in the package

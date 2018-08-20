@@ -721,7 +721,7 @@ package body Embeddings_and_Cascades is
   end QuadDobl_Embed_and_Cascade;
 
   procedure Standard_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -743,13 +743,18 @@ package body Embeddings_and_Cascades is
       Black_Box_Solvers.Solve(nt,embsys.all,true,deflate,rc,sols);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    if topdim = 0 then
-      Report_Witness_Set(embsys.all,sols,0);
+    if not Standard_Complex_Solutions.Is_Null(sols) then
+      if topdim = 0 then
+        Report_Witness_Set(embsys.all,sols,0);
+      else
+        Standard_Cascade_Callback
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,Report_Witness_Set);
+      end if;
     end if;
   end Standard_Solve_with_Callback;
 
   procedure Standard_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -769,13 +774,18 @@ package body Embeddings_and_Cascades is
       Black_Box_Solvers.Solve(nt,embsys.all,true,rc,sols);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    if topdim = 0 then
-      Report_Witness_Set(embsys.all,sols,0);
+    if not Standard_Complex_Solutions.Is_Null(sols) then
+      if topdim = 0 then
+        Report_Witness_Set(embsys.all,sols,0);
+      else
+        Standard_Cascade_Callback
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,Report_Witness_Set);
+      end if;
     end if;
   end Standard_Solve_with_Callback;
 
   procedure DoblDobl_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -795,13 +805,18 @@ package body Embeddings_and_Cascades is
       Black_Box_Solvers.Solve(nt,embsys.all,true,rc,sols);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    if topdim = 0 then
-      Report_Witness_Set(embsys.all,sols,0);
+    if not DoblDobl_Complex_Solutions.Is_Null(sols) then
+      if topdim = 0 then
+        Report_Witness_Set(embsys.all,sols,0);
+      else
+        DoblDobl_Cascade_Callback
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,Report_Witness_Set);
+      end if;
     end if;
   end DoblDobl_Solve_with_Callback;
 
   procedure DoblDobl_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -821,13 +836,18 @@ package body Embeddings_and_Cascades is
       Black_Box_Solvers.Solve(nt,embsys.all,true,rc,sols);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    if topdim = 0 then
-      Report_Witness_Set(embsys.all,sols,0);
+    if not DoblDobl_Complex_Solutions.Is_Null(sols) then
+      if topdim = 0 then
+        Report_Witness_Set(embsys.all,sols,0);
+      else
+        DoblDobl_Cascade_Callback
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,Report_Witness_Set);
+      end if;
     end if;
   end DoblDobl_Solve_with_Callback;
 
   procedure QuadDobl_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -847,13 +867,18 @@ package body Embeddings_and_Cascades is
       Black_Box_Solvers.Solve(nt,embsys.all,true,rc,sols);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    if topdim = 0 then
-      Report_Witness_Set(embsys.all,sols,0);
+    if not QuadDobl_Complex_Solutions.Is_Null(sols) then
+      if topdim = 0 then
+        Report_Witness_Set(embsys.all,sols,0);
+      else
+        QuadDobl_Cascade_Callback
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,Report_Witness_Set);
+      end if;
     end if;
   end QuadDobl_Solve_with_Callback;
 
   procedure QuadDobl_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -873,8 +898,13 @@ package body Embeddings_and_Cascades is
       Black_Box_Solvers.Solve(nt,embsys.all,true,rc,sols);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
-    if topdim = 0 then
-      Report_Witness_Set(embsys.all,sols,0);
+    if not QuadDobl_Complex_Solutions.Is_Null(sols) then
+      if topdim = 0 then
+        Report_Witness_Set(embsys.all,sols,0);
+      else
+        QuadDobl_Cascade_Callback
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,Report_Witness_Set);
+      end if;
     end if;
   end QuadDobl_Solve_with_Callback;
 

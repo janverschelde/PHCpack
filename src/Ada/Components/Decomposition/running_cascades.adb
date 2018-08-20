@@ -882,4 +882,82 @@ package body Running_Cascades is
     Write_Elapsed_Time(file,start_moment,ended_moment);
   end QuadDobl_Run_Cascade;
 
+  procedure Standard_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    ws : in Standard_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end Standard_Cascade_Callback;
+
+  procedure Standard_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    ws : in Standard_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end Standard_Cascade_Callback;
+
+  procedure DoblDobl_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    ws : in DoblDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end DoblDobl_Cascade_Callback;
+
+  procedure DoblDobl_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    ws : in DoblDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end DoblDobl_Cascade_Callback;
+
+  procedure QuadDobl_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    ws : in QuadDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end QuadDobl_Cascade_Callback;
+
+  procedure QuadDobl_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    ws : in QuadDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) ) is
+  begin
+    null;
+  end QuadDobl_Cascade_Callback;
+
 end Running_Cascades;

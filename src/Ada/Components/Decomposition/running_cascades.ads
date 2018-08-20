@@ -127,4 +127,78 @@ package Running_Cascades is
   --            factored into irreducible components,
   --            otherwise, the output sets may still be reducible.
 
+  procedure Standard_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    ws : in Standard_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure Standard_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    ws : in Standard_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure DoblDobl_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    ws : in DoblDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure DoblDobl_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    ws : in DoblDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure QuadDobl_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    ws : in QuadDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+  procedure QuadDobl_Cascade_Callback
+              ( nt,topdim,lowdim : in natural32;
+                embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                filter,factor : in boolean;
+                Report_Witness_Set : access procedure
+                  ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    ws : in QuadDobl_Complex_Solutions.Solution_List;
+                    dim : in natural32 ) );
+
+  -- DESCRIPTION :
+  --   Given an embedding of the top dimensional solution set,
+  --   runs a cascade of homotopies, in standard double, double double,
+  --   or quad double precision.  No output is written to screen or file,
+  --   the callback procedure is call for each new witness set.
+
+  -- ON ENTRY :
+  --   nt       number of tasks for multitasking,
+  --            if zero, then no multitasking will be used;
+  --   topdim   the top dimension of the solution set;
+  --   lowdim   lower bound on the dimension to stop the cascade;
+  --   embsys   an embedded system for the top dimension;
+  --   sols     solutions of the system embsys;
+  --   filter   if true, then junk points will be removed,
+  --            otherwise, the output will be superwitness sets.
+  --   factor   if true and filter, then the filtered witness sets will be
+  --            factored into irreducible components,
+  --            otherwise, the output sets may still be reducible.
+
 end Running_Cascades;

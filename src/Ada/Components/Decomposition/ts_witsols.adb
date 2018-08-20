@@ -81,7 +81,7 @@ procedure ts_witsols is
     QuadDobl_Witness_Solutions.Save_Witness_Points(ws,dim);
   end Store;
 
-  procedure Standard_Write ( topdim : in natural32 ) is
+  procedure Standard_Write ( topdim,lowdim : in natural32 ) is
 
   -- DESCRIPTION :
   --   Writes the number of solutions at each dimension,
@@ -94,7 +94,7 @@ procedure ts_witsols is
     len : natural32;
 
   begin
-    for k in 0..topdim loop
+    for k in lowdim..topdim loop
       sols := Standard_Witness_Solutions.Load_Witness_Points(k);
       len := Length_Of(sols);
       put("Number of solutions at dimension "); put(k,1);
@@ -102,7 +102,7 @@ procedure ts_witsols is
     end loop;
   end Standard_Write;
 
-  procedure DoblDobl_Write ( topdim : in natural32 ) is
+  procedure DoblDobl_Write ( topdim,lowdim : in natural32 ) is
 
   -- DESCRIPTION :
   --   Writes the number of solutions at each dimension,
@@ -115,7 +115,7 @@ procedure ts_witsols is
     len : natural32;
 
   begin
-    for k in 0..topdim loop
+    for k in lowdim..topdim loop
       sols := DoblDobl_Witness_Solutions.Load_Witness_Points(k);
       len := Length_Of(sols);
       put("Number of solutions at dimension "); put(k,1);
@@ -123,7 +123,7 @@ procedure ts_witsols is
     end loop;
   end DoblDobl_Write;
 
-  procedure QuadDobl_Write ( topdim : in natural32 ) is
+  procedure QuadDobl_Write ( topdim,lowdim : in natural32 ) is
 
   -- DESCRIPTION :
   --   Writes the number of solutions at each dimension,
@@ -136,7 +136,7 @@ procedure ts_witsols is
     len : natural32;
 
   begin
-    for k in 0..topdim loop
+    for k in lowdim..topdim loop
       sols := QuadDobl_Witness_Solutions.Load_Witness_Points(k);
       len := Length_Of(sols);
       put("Number of solutions at dimension "); put(k,1);
@@ -165,8 +165,9 @@ procedure ts_witsols is
     new_line;
     put("Give the number of tasks : "); get(nt);
     Standard_Witness_Solutions.Initialize(topdim);
-    Standard_Solve_with_Callback(nt,topdim,lp.all,true,true,Store'access);
-    Standard_Write(topdim);
+    Standard_Solve_with_Callback
+      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+    Standard_Write(topdim,lowdim);
   end Standard_Main;
 
   procedure Standard_Laurent_Main is
@@ -190,8 +191,9 @@ procedure ts_witsols is
     new_line;
     put("Give the number of tasks : "); get(nt);
     Standard_Witness_Solutions.Initialize(topdim);
-    Standard_Solve_with_Callback(nt,topdim,lp.all,true,true,Store'access);
-    Standard_Write(topdim);
+    Standard_Solve_with_Callback
+      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+    Standard_Write(topdim,lowdim);
   end Standard_Laurent_Main;
 
   procedure DoblDobl_Main is
@@ -215,8 +217,9 @@ procedure ts_witsols is
     new_line;
     put("Give the number of tasks : "); get(nt);
     DoblDobl_Witness_Solutions.Initialize(topdim);
-    DoblDobl_Solve_with_Callback(nt,topdim,lp.all,true,true,Store'access);
-    DoblDobl_Write(topdim);
+    DoblDobl_Solve_with_Callback
+      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+    DoblDobl_Write(topdim,lowdim);
   end DoblDobl_Main;
 
   procedure DoblDobl_Laurent_Main is
@@ -240,8 +243,9 @@ procedure ts_witsols is
     new_line;
     put("Give the number of tasks : "); get(nt);
     DoblDobl_Witness_Solutions.Initialize(topdim);
-    DoblDobl_Solve_with_Callback(nt,topdim,lp.all,true,true,Store'access);
-    DoblDobl_Write(topdim);
+    DoblDobl_Solve_with_Callback
+      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+    DoblDobl_Write(topdim,lowdim);
   end DoblDobl_Laurent_Main;
 
   procedure QuadDobl_Main is
@@ -265,8 +269,9 @@ procedure ts_witsols is
     new_line;
     put("Give the number of tasks : "); get(nt);
     QuadDobl_Witness_Solutions.Initialize(topdim);
-    QuadDobl_Solve_with_Callback(nt,topdim,lp.all,true,true,Store'access);
-    QuadDobl_Write(topdim);
+    QuadDobl_Solve_with_Callback
+      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+    QuadDobl_Write(topdim,lowdim);
   end QuadDobl_Main;
 
   procedure QuadDobl_Laurent_Main is
@@ -290,8 +295,9 @@ procedure ts_witsols is
     new_line;
     put("Give the number of tasks : "); get(nt);
     QuadDobl_Witness_Solutions.Initialize(topdim);
-    QuadDobl_Solve_with_Callback(nt,topdim,lp.all,true,true,Store'access);
-    QuadDobl_Write(topdim);
+    QuadDobl_Solve_with_Callback
+      (nt,topdim,lowdim,lp.all,true,true,Store'access);
+    QuadDobl_Write(topdim,lowdim);
   end QuadDobl_Laurent_Main;
 
   procedure Main is

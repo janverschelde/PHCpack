@@ -17,6 +17,22 @@ package Embeddings_and_Cascades is
 --   apply the blackbox solver to the top dimensional system
 --   and launch the cascades of homotopies to compute all
 --   lower dimensional solution sets.
+--   The are two types of polynomial systems accepted on input :
+--   (1) ordinary polynomial systems, with nonnegative exponents;
+--   (2) Laurent polynomial systems, with exponents which may be negative.
+--   Three different levels of precision are supported :
+--   (1) standard double precision, as provided by the hardware;
+--   (2) double double precision, the double of hardware precision;
+--   (3) quad double precision quadruples the hardware precision.
+--   Parallelism is indicated by the number of tasks :
+--   (1) if the number of tasks is zero, then no multitasking is applied;
+--   (2) a positive number of tasks defines the level of multitasking.
+--   The output comes in three different forms :
+--   (1) all output is written to screen;
+--   (2) all output is written to file;
+--   (3) all output is passed to a callback procedure.
+--   So in total, there are 2x3x2x3 = 36 procedures to run the
+--   homotopy cascades to compute a numerical irreducible decomposition.
 
   procedure Prompt_for_Top_Dimension
               ( nq,nv : in natural32; topdim,lowdim : out natural32 );
@@ -36,6 +52,8 @@ package Embeddings_and_Cascades is
   -- ON RETURN :
   --   topdim   top dimension of the solution set;
   --   lowdim   computed lowest dimension of the solution set.
+
+-- ALL OUTPUT WRITTEN TO SCREEN :
 
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
@@ -81,6 +99,8 @@ package Embeddings_and_Cascades is
   --   factor   if filter and factor, then numerical representations for
   --            the irreducible factors will be computed,
   --            otherwise, the output sets may still be reducible.
+
+-- ALL OUTPUT WRITTEN TO FILE :
 
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string;
@@ -136,8 +156,10 @@ package Embeddings_and_Cascades is
   --            the irreducible factors will be computed,
   --            otherwise, the output sets may still be reducible.
 
+-- ALL OUTPUT TO CALLBACK PROCEDURE :
+
   procedure Standard_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -145,7 +167,7 @@ package Embeddings_and_Cascades is
                     ws : in Standard_Complex_Solutions.Solution_List;
                     dim : in natural32 ) );
   procedure Standard_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -153,7 +175,7 @@ package Embeddings_and_Cascades is
                     ws : in Standard_Complex_Solutions.Solution_List;
                     dim : in natural32 ) );
   procedure DoblDobl_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -161,7 +183,7 @@ package Embeddings_and_Cascades is
                     ws : in DoblDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) );
   procedure DoblDobl_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -169,7 +191,7 @@ package Embeddings_and_Cascades is
                     ws : in DoblDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) );
   procedure QuadDobl_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -177,7 +199,7 @@ package Embeddings_and_Cascades is
                     ws : in QuadDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) );
   procedure QuadDobl_Solve_with_Callback
-              ( nt,topdim : in natural32;
+              ( nt,topdim,lowdim : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
                 Report_Witness_Set : access procedure
@@ -197,6 +219,7 @@ package Embeddings_and_Cascades is
   -- ON ENTRY :
   --   nt       number of tasks, zero for no multitasking;
   --   topdim   the top dimension of the solution set;
+  --   lowdim   lower bound on the dimension to stop the cascade;
   --   p        a (Laurent) polynomial system;
   --   filter   flag to indicate that the homotopy membership tests
   --            will remove the junk points from the output of cascades,
