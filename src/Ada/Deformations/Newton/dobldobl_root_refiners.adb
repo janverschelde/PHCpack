@@ -1345,6 +1345,7 @@ package body DoblDobl_Root_Refiners is
          then merge := merge and (ls.m > 1);
         end if;
       end if;
+      solsptr := Tail_Of(solsptr);
     end loop;
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
@@ -1459,6 +1460,7 @@ package body DoblDobl_Root_Refiners is
       if not fail and deflate
        then merge := merge and (ls.m > 1);
       end if;
+      solsptr := Tail_Of(solsptr);
     end loop;
     Write_Global_Info
       (file,len,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
