@@ -1402,6 +1402,9 @@ ts_fillit:
 ts_jmpdia:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_jmpdia.adb -o $(BIN)/ts_jmpdia
 
+ts_witsols:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_witsols.adb -o $(BIN)/ts_witsols
+
 # Test programs in the Components/Solver library :
 
 ts_hypwit:

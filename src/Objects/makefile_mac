@@ -98,8 +98,7 @@ phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  lib.a $(QD_LIB)/libqd.a \
-                 /usr/lib/libc++.dylib \
-                 /usr/lib/libstdc++.dylib \
+                 /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  get_clock.o get_clocks_per_sec.o \
                  -Wl,-stack_size -Wl,0x10000000 \
               -o $(BIN)/phc -lm --LINK=g++
@@ -1439,6 +1438,10 @@ ts_fillit:
 
 ts_jmpdia:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_jmpdia.adb -o $(BIN)/ts_jmpdia
+
+ts_witsols:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_witsols.adb \
+              -o $(BIN)/ts_witsols
 
 # Test programs in the Components/Solver library :
 

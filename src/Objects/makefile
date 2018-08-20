@@ -1239,7 +1239,7 @@ ts_monfac:
 # Test programs in the Components/Decomposition library :
 
 test_decomposition: ts_breakup ts_cascade ts_filfac ts_irdeco ts_mbthom \
-                    ts_jmpdia ts_intdia \
+                    ts_jmpdia ts_intdia ts_witsols \
                     # ts_intcas ts_diahom ts_reorder ts_squeeze ts_dimred
 
 ts_irdeco:
@@ -1280,6 +1280,9 @@ ts_fillit:
 
 ts_jmpdia:
 	make -f $(MAKEFILE) ts_jmpdia
+
+ts_witsols:
+	make -f $(MAKEFILE) ts_witsols
 
 # Test programs in the Components/Solver library :
 
