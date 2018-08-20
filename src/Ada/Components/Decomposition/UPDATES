@@ -2,6 +2,8 @@ Sun 19 Aug 2018 : added solution management to standard_witness_solutions,
   copied to {dobldobl,quaddobl}_witness_solutions, tested by ts_witsols.adb.
   Provided stubs for solvers with callback procedures in the package
   embeddings_and_cascades, tested by ts_witsols.adb.
+  Top dimension 0 works for the solve with callback procedures in
+  embeddings_and_cascades.adb, tested by ts_witsols.adb.
 
 Sat 18 Aug 2018 : new package standard_witness_solutions to store the output
   of running the cascades, tested by ts_witsols.adb.

@@ -728,8 +728,24 @@ package body Embeddings_and_Cascades is
                   ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                     ws : in Standard_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    embsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    rc : natural32;
+    sols : Standard_Complex_Solutions.Solution_List;
+    deflate : boolean;
+
   begin
-    null;
+    Square_and_Embed(p,topdim,embsys);
+    deflate := (topdim = 0);
+    if nt = 0 then
+      Black_Box_Solvers.Solve(embsys.all,true,deflate,rc,sols);
+    else
+      Black_Box_Solvers.Solve(nt,embsys.all,true,deflate,rc,sols);
+      Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if topdim = 0 then
+      Report_Witness_Set(embsys.all,sols,0);
+    end if;
   end Standard_Solve_with_Callback;
 
   procedure Standard_Solve_with_Callback
@@ -740,8 +756,22 @@ package body Embeddings_and_Cascades is
                   ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                     ws : in Standard_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    embsys : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    rc : natural32;
+    sols : Standard_Complex_Solutions.Solution_List;
+
   begin
-    null;
+    Square_and_Embed(p,topdim,embsys);
+    if nt = 0 then
+      Black_Box_Solvers.Solve(embsys.all,true,rc,sols);
+    else
+      Black_Box_Solvers.Solve(nt,embsys.all,true,rc,sols);
+      Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if topdim = 0 then
+      Report_Witness_Set(embsys.all,sols,0);
+    end if;
   end Standard_Solve_with_Callback;
 
   procedure DoblDobl_Solve_with_Callback
@@ -752,8 +782,22 @@ package body Embeddings_and_Cascades is
                   ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     ws : in DoblDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    embsys : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    rc : natural32;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+
   begin
-    null;
+    Square_and_Embed(p,topdim,embsys);
+    if nt = 0 then
+      Black_Box_Solvers.Solve(embsys.all,true,rc,sols);
+    else
+      Black_Box_Solvers.Solve(nt,embsys.all,true,rc,sols);
+      DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if topdim = 0 then
+      Report_Witness_Set(embsys.all,sols,0);
+    end if;
   end DoblDobl_Solve_with_Callback;
 
   procedure DoblDobl_Solve_with_Callback
@@ -764,8 +808,22 @@ package body Embeddings_and_Cascades is
                   ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     ws : in DoblDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    embsys : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    rc : natural32;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+
   begin
-    null;
+    Square_and_Embed(p,topdim,embsys);
+    if nt = 0 then
+      Black_Box_Solvers.Solve(embsys.all,true,rc,sols);
+    else
+      Black_Box_Solvers.Solve(nt,embsys.all,true,rc,sols);
+      DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if topdim = 0 then
+      Report_Witness_Set(embsys.all,sols,0);
+    end if;
   end DoblDobl_Solve_with_Callback;
 
   procedure QuadDobl_Solve_with_Callback
@@ -776,8 +834,22 @@ package body Embeddings_and_Cascades is
                   ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     ws : in QuadDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    embsys : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    rc : natural32;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+
   begin
-    null;
+    Square_and_Embed(p,topdim,embsys);
+    if nt = 0 then
+      Black_Box_Solvers.Solve(embsys.all,true,rc,sols);
+    else
+      Black_Box_Solvers.Solve(nt,embsys.all,true,rc,sols);
+      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if topdim = 0 then
+      Report_Witness_Set(embsys.all,sols,0);
+    end if;
   end QuadDobl_Solve_with_Callback;
 
   procedure QuadDobl_Solve_with_Callback
@@ -788,8 +860,22 @@ package body Embeddings_and_Cascades is
                   ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     ws : in QuadDobl_Complex_Solutions.Solution_List;
                     dim : in natural32 ) ) is
+
+    embsys : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    rc : natural32;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+
   begin
-    null;
+    Square_and_Embed(p,topdim,embsys);
+    if nt = 0 then
+      Black_Box_Solvers.Solve(embsys.all,true,rc,sols);
+    else
+      Black_Box_Solvers.Solve(nt,embsys.all,true,rc,sols);
+      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
+    end if;
+    if topdim = 0 then
+      Report_Witness_Set(embsys.all,sols,0);
+    end if;
   end QuadDobl_Solve_with_Callback;
 
 end Embeddings_and_Cascades;
