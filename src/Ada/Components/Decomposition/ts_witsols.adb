@@ -3,8 +3,6 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Natural_Vectors;
-with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
@@ -27,6 +25,7 @@ with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with Path_Counts_Table;
 with Embeddings_and_Cascades;            use Embeddings_and_Cascades;
 with Standard_Witness_Solutions;
 with DoblDobl_Witness_Solutions;
@@ -148,33 +147,6 @@ procedure ts_witsols is
     end loop;
   end QuadDobl_Write;
 
-  procedure Write_Irreducible_Factors
-              ( f : in Standard_Natural_VecVecs.Link_to_Array_of_VecVecs ) is
-
-  -- DESCRIPTION :
-  --   Writes the irreducible factors, as defined by f.
-
-    use Standard_Natural_VecVecs;
-    use Standard_Natural_Vectors;
-
-    vv : Link_to_VecVec;
-    lv : Link_to_Vector;
-
-  begin
-    for i in reverse f'range loop
-      put("Factors at dimension "); put(i,1); put_line(" :");
-      vv := f(i);
-      if vv /= null then
-        for j in vv'range loop
-          lv := vv(j);
-          if lv /= null then
-            put(lv.all); new_line;
-          end if;
-        end loop;
-      end if;
-    end loop;
-  end Write_Irreducible_Factors;
-
   procedure Prompt_for_Options ( filter,factor : out boolean ) is
 
   -- DESCRIPTION :
@@ -210,6 +182,7 @@ procedure ts_witsols is
     lp : Link_to_Poly_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
     idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
@@ -226,10 +199,14 @@ procedure ts_witsols is
     put_line("Computing ...");
     new_line;
     Standard_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     Standard_Write(topdim,lowdim);
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
+    if filter
+     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
+    end if;
     if factor
-     then Write_Irreducible_Factors(idxfac);
+     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
     end if;
   end Standard_Main;
 
@@ -245,6 +222,7 @@ procedure ts_witsols is
     lp : Link_to_Laur_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
     idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
@@ -261,10 +239,14 @@ procedure ts_witsols is
     new_line;
     Standard_Witness_Solutions.Initialize(topdim);
     Standard_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     Standard_Write(topdim,lowdim);
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
+    if filter
+     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
+    end if;
     if factor
-     then Write_Irreducible_Factors(idxfac);
+     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
     end if;
   end Standard_Laurent_Main;
 
@@ -280,6 +262,7 @@ procedure ts_witsols is
     lp : Link_to_Poly_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
     idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
@@ -296,10 +279,14 @@ procedure ts_witsols is
     new_line;
     DoblDobl_Witness_Solutions.Initialize(topdim);
     DoblDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     DoblDobl_Write(topdim,lowdim);
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
+    if filter
+     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
+    end if;
     if factor
-     then Write_Irreducible_Factors(idxfac);
+     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
     end if;
   end DoblDobl_Main;
 
@@ -315,6 +302,7 @@ procedure ts_witsols is
     lp : Link_to_Laur_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
     idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
@@ -331,10 +319,14 @@ procedure ts_witsols is
     new_line;
     DoblDobl_Witness_Solutions.Initialize(topdim);
     DoblDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     DoblDobl_Write(topdim,lowdim);
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
+    if filter
+     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
+    end if;
     if factor
-     then Write_Irreducible_Factors(idxfac);
+     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
     end if;
   end DoblDobl_Laurent_Main;
 
@@ -350,6 +342,7 @@ procedure ts_witsols is
     lp : Link_to_Poly_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
     idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
@@ -366,10 +359,14 @@ procedure ts_witsols is
     new_line;
     QuadDobl_Witness_Solutions.Initialize(topdim);
     QuadDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     QuadDobl_Write(topdim,lowdim);
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
+    if filter
+     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
+    end if;
     if factor
-     then Write_Irreducible_Factors(idxfac);
+     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
     end if;
   end QuadDobl_Main;
 
@@ -385,6 +382,7 @@ procedure ts_witsols is
     lp : Link_to_Laur_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
     idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
@@ -401,10 +399,14 @@ procedure ts_witsols is
     new_line;
     QuadDobl_Witness_Solutions.Initialize(topdim);
     QuadDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     QuadDobl_Write(topdim,lowdim);
+    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
+    if filter
+     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
+    end if;
     if factor
-     then Write_Irreducible_Factors(idxfac);
+     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
     end if;
   end QuadDobl_Laurent_Main;
 

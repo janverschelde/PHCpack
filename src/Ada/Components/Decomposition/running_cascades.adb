@@ -886,6 +886,7 @@ package body Running_Cascades is
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -914,6 +915,8 @@ package body Running_Cascades is
       Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
          ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
+      filtcnt := new Standard_Natural_VecVecs.VecVec'(fc);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -923,6 +926,7 @@ package body Running_Cascades is
       Cascade_Homotopies.Witness_Generate_Callback
         (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
          Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
     end if;
   end Standard_Cascade_Callback;
 
@@ -931,6 +935,7 @@ package body Running_Cascades is
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -959,6 +964,8 @@ package body Running_Cascades is
       Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
          ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
+      filtcnt := new Standard_Natural_VecVecs.VecVec'(fc);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -968,6 +975,7 @@ package body Running_Cascades is
       Cascade_Homotopies.Witness_Generate_Callback
         (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
          Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
     end if;
   end Standard_Cascade_Callback;
 
@@ -976,6 +984,7 @@ package body Running_Cascades is
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -1004,6 +1013,8 @@ package body Running_Cascades is
       Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
          ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
+      filtcnt := new Standard_Natural_VecVecs.VecVec'(fc);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -1013,6 +1024,7 @@ package body Running_Cascades is
       Cascade_Homotopies.Witness_Generate_Callback
         (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
          Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
     end if;
   end DoblDobl_Cascade_Callback;
 
@@ -1021,6 +1033,7 @@ package body Running_Cascades is
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -1049,6 +1062,8 @@ package body Running_Cascades is
       Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
          ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
+      filtcnt := new Standard_Natural_VecVecs.VecVec'(fc);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -1058,6 +1073,7 @@ package body Running_Cascades is
       Cascade_Homotopies.Witness_Generate_Callback
         (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
          Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
     end if;
   end DoblDobl_Cascade_Callback;
 
@@ -1066,6 +1082,7 @@ package body Running_Cascades is
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -1094,6 +1111,8 @@ package body Running_Cascades is
       Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
          ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
+      filtcnt := new Standard_Natural_VecVecs.VecVec'(fc);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -1103,6 +1122,7 @@ package body Running_Cascades is
       Cascade_Homotopies.Witness_Generate_Callback
         (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
          Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
     end if;
   end QuadDobl_Cascade_Callback;
 
@@ -1111,6 +1131,7 @@ package body Running_Cascades is
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
@@ -1139,6 +1160,8 @@ package body Running_Cascades is
       Cascade_Homotopy_Filters.Witness_Filter_Callback
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
          ep,gpts,pc,fc,castm,filtm,totcas,totfil,alltime,Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
+      filtcnt := new Standard_Natural_VecVecs.VecVec'(fc);
       if factor then
         Monodromy_Homotopies.Witness_Factor
           (false,ep,gpts,topdim,nbl,tol,deco,factm,totfac);
@@ -1148,6 +1171,7 @@ package body Running_Cascades is
       Cascade_Homotopies.Witness_Generate_Callback
         (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas,
          Report_Witness_Set);
+      pathcnt := new Standard_Natural_VecVecs.VecVec'(pc);
     end if;
   end QuadDobl_Cascade_Callback;
 

@@ -54,6 +54,9 @@ package Path_Counts_Table is
 
   procedure Write_Filter_Counts
               ( file : in file_type;
+                cnts : in Standard_Natural_VecVecs.VecVec );
+  procedure Write_Filter_Counts
+              ( file : in file_type;
                 cnts : in Standard_Natural_VecVecs.VecVec;
                 times : in Array_of_Duration; totaltime : in duration );
 

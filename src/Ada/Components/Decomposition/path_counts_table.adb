@@ -96,6 +96,28 @@ package body Path_Counts_Table is
 
   procedure Write_Filter_Counts
               ( file : in file_type;
+                cnts : in Standard_Natural_VecVecs.VecVec ) is
+  begin
+    new_line(file);
+    new_line(file);
+    put(file,"dim | ");
+    put(file," solutions after filter");
+    new_line(file);
+    put_line(file,"----+-----------------------");
+    for i in reverse cnts'range loop
+      put(file,i,3);
+      put(file," | ");
+      put(file,cnts(i)(0),1);
+      for j in 1..cnts(i)'last loop
+        put(file," -> ");
+        put(file,cnts(i)(j),1);
+      end loop;
+      new_line(file);
+    end loop;
+  end Write_Filter_Counts;
+
+  procedure Write_Filter_Counts
+              ( file : in file_type;
                 cnts : in Standard_Natural_VecVecs.VecVec;
                 times : in Array_of_Duration; totaltime : in duration ) is
   begin

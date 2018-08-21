@@ -133,6 +133,7 @@ package Running_Cascades is
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -143,6 +144,7 @@ package Running_Cascades is
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -153,6 +155,7 @@ package Running_Cascades is
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -163,6 +166,7 @@ package Running_Cascades is
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -173,6 +177,7 @@ package Running_Cascades is
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -183,6 +188,7 @@ package Running_Cascades is
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
@@ -209,6 +215,9 @@ package Running_Cascades is
   --            otherwise, the output sets may still be reducible.
 
   -- ON RETURN :
+  --   pathcnt  number of paths tracked at each level in the cascade;
+  --   filtcnt  if filter, then filtcnt contains the counts of each stage
+  --            of removing the junk points from the witness supersets;
   --   idxfac   indices to the irreducible factors in the decomposition,
   --            if filter and factor are both set to true on input.
 

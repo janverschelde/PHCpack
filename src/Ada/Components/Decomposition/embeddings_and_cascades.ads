@@ -163,6 +163,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -172,6 +173,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -181,6 +183,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -190,6 +193,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -199,6 +203,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -208,6 +213,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;

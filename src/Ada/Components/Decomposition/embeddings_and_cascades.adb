@@ -724,6 +724,7 @@ package body Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -749,8 +750,8 @@ package body Embeddings_and_Cascades is
         Report_Witness_Set(embsys.all,sols,0);
       else
         Standard_Cascade_Callback
-          (nt,topdim,lowdim,embsys.all,sols,filter,factor,idxfac,
-           Report_Witness_Set);
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,
+           pathcnt,filtcnt,idxfac,Report_Witness_Set);
       end if;
     end if;
   end Standard_Solve_with_Callback;
@@ -759,6 +760,7 @@ package body Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -782,8 +784,8 @@ package body Embeddings_and_Cascades is
         Report_Witness_Set(embsys.all,sols,0);
       else
         Standard_Cascade_Callback
-          (nt,topdim,lowdim,embsys.all,sols,filter,factor,idxfac,
-           Report_Witness_Set);
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,
+           pathcnt,filtcnt,idxfac,Report_Witness_Set);
       end if;
     end if;
   end Standard_Solve_with_Callback;
@@ -792,6 +794,7 @@ package body Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -815,8 +818,8 @@ package body Embeddings_and_Cascades is
         Report_Witness_Set(embsys.all,sols,0);
       else
         DoblDobl_Cascade_Callback
-          (nt,topdim,lowdim,embsys.all,sols,filter,factor,idxfac,
-           Report_Witness_Set);
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,
+           pathcnt,filtcnt,idxfac,Report_Witness_Set);
       end if;
     end if;
   end DoblDobl_Solve_with_Callback;
@@ -825,6 +828,7 @@ package body Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -848,8 +852,8 @@ package body Embeddings_and_Cascades is
         Report_Witness_Set(embsys.all,sols,0);
       else
         DoblDobl_Cascade_Callback
-          (nt,topdim,lowdim,embsys.all,sols,filter,factor,idxfac,
-           Report_Witness_Set);
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,
+           pathcnt,filtcnt,idxfac,Report_Witness_Set);
       end if;
     end if;
   end DoblDobl_Solve_with_Callback;
@@ -858,6 +862,7 @@ package body Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -881,8 +886,8 @@ package body Embeddings_and_Cascades is
         Report_Witness_Set(embsys.all,sols,0);
       else
         QuadDobl_Cascade_Callback
-          (nt,topdim,lowdim,embsys.all,sols,filter,factor,idxfac,
-           Report_Witness_Set);
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,
+           pathcnt,filtcnt,idxfac,Report_Witness_Set);
       end if;
     end if;
   end QuadDobl_Solve_with_Callback;
@@ -891,6 +896,7 @@ package body Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
+                pathcnt,filtcnt : out Standard_Natural_VecVecs.Link_to_VecVec;
                 idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
@@ -914,8 +920,8 @@ package body Embeddings_and_Cascades is
         Report_Witness_Set(embsys.all,sols,0);
       else
         QuadDobl_Cascade_Callback
-          (nt,topdim,lowdim,embsys.all,sols,filter,factor,idxfac,
-           Report_Witness_Set);
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,
+           pathcnt,filtcnt,idxfac,Report_Witness_Set);
       end if;
     end if;
   end QuadDobl_Solve_with_Callback;

@@ -1,6 +1,9 @@
 Tue 21 Aug 2018 : indices to the irreducible factors in the decomposition
   added as output parameter in the procedures with callback in
   running_cascades and embeddings_and_cascades, tested by ts_witsols.
+  In running_cascades and embeddings_and_cascades, the procedures with
+  callback return the path counts and filter counts.
+  Added a procedure to path_counts_table, and tests in ts_witsols.
 
 Mon 20 Aug 2018 : added the running of cascades with a callback procedure
   to running_cascades, called in embeddings_and_cascades, with a better
