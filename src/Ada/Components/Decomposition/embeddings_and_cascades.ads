@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -162,6 +163,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
+                idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                     ws : in Standard_Complex_Solutions.Solution_List;
@@ -170,6 +172,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
+                idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
                     ws : in Standard_Complex_Solutions.Solution_List;
@@ -178,6 +181,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
+                idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     ws : in DoblDobl_Complex_Solutions.Solution_List;
@@ -186,6 +190,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
+                idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     ws : in DoblDobl_Complex_Solutions.Solution_List;
@@ -194,6 +199,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 filter,factor : in boolean;
+                idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     ws : in QuadDobl_Complex_Solutions.Solution_List;
@@ -202,6 +208,7 @@ package Embeddings_and_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 filter,factor : in boolean;
+                idxfac : out Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
                 Report_Witness_Set : access procedure
                   ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     ws : in QuadDobl_Complex_Solutions.Solution_List;
@@ -229,5 +236,9 @@ package Embeddings_and_Cascades is
   --            otherwise, the output sets may still be reducible;
   --   Report_Witness_Set is a callback procedure, called each time
   --            a new witness set is computed.
+
+  -- ON RETURN :
+  --   idxfac   indices to the irreducible factors in the decomposition,
+  --            if filter and factor are both set to true on input.
 
 end Embeddings_and_Cascades;

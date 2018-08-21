@@ -2,6 +2,10 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Natural_Vectors;
+with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
+with Standard_Natural_VecVecs;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems;
@@ -144,6 +148,33 @@ procedure ts_witsols is
     end loop;
   end QuadDobl_Write;
 
+  procedure Write_Irreducible_Factors
+              ( f : in Standard_Natural_VecVecs.Link_to_Array_of_VecVecs ) is
+
+  -- DESCRIPTION :
+  --   Writes the irreducible factors, as defined by f.
+
+    use Standard_Natural_VecVecs;
+    use Standard_Natural_Vectors;
+
+    vv : Link_to_VecVec;
+    lv : Link_to_Vector;
+
+  begin
+    for i in reverse f'range loop
+      put("Factors at dimension "); put(i,1); put_line(" :");
+      vv := f(i);
+      if vv /= null then
+        for j in vv'range loop
+          lv := vv(j);
+          if lv /= null then
+            put(lv.all); new_line;
+          end if;
+        end loop;
+      end if;
+    end loop;
+  end Write_Irreducible_Factors;
+
   procedure Prompt_for_Options ( filter,factor : out boolean ) is
 
   -- DESCRIPTION :
@@ -179,6 +210,7 @@ procedure ts_witsols is
     lp : Link_to_Poly_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     new_line;
@@ -194,8 +226,11 @@ procedure ts_witsols is
     put_line("Computing ...");
     new_line;
     Standard_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
     Standard_Write(topdim,lowdim);
+    if factor
+     then Write_Irreducible_Factors(idxfac);
+    end if;
   end Standard_Main;
 
   procedure Standard_Laurent_Main is
@@ -210,6 +245,7 @@ procedure ts_witsols is
     lp : Link_to_Laur_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     new_line;
@@ -225,8 +261,11 @@ procedure ts_witsols is
     new_line;
     Standard_Witness_Solutions.Initialize(topdim);
     Standard_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
     Standard_Write(topdim,lowdim);
+    if factor
+     then Write_Irreducible_Factors(idxfac);
+    end if;
   end Standard_Laurent_Main;
 
   procedure DoblDobl_Main is
@@ -241,6 +280,7 @@ procedure ts_witsols is
     lp : Link_to_Poly_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     new_line;
@@ -256,8 +296,11 @@ procedure ts_witsols is
     new_line;
     DoblDobl_Witness_Solutions.Initialize(topdim);
     DoblDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
     DoblDobl_Write(topdim,lowdim);
+    if factor
+     then Write_Irreducible_Factors(idxfac);
+    end if;
   end DoblDobl_Main;
 
   procedure DoblDobl_Laurent_Main is
@@ -272,6 +315,7 @@ procedure ts_witsols is
     lp : Link_to_Laur_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     new_line;
@@ -287,8 +331,11 @@ procedure ts_witsols is
     new_line;
     DoblDobl_Witness_Solutions.Initialize(topdim);
     DoblDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
     DoblDobl_Write(topdim,lowdim);
+    if factor
+     then Write_Irreducible_Factors(idxfac);
+    end if;
   end DoblDobl_Laurent_Main;
 
   procedure QuadDobl_Main is
@@ -303,6 +350,7 @@ procedure ts_witsols is
     lp : Link_to_Poly_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     new_line;
@@ -318,8 +366,11 @@ procedure ts_witsols is
     new_line;
     QuadDobl_Witness_Solutions.Initialize(topdim);
     QuadDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
     QuadDobl_Write(topdim,lowdim);
+    if factor
+     then Write_Irreducible_Factors(idxfac);
+    end if;
   end QuadDobl_Main;
 
   procedure QuadDobl_Laurent_Main is
@@ -334,6 +385,7 @@ procedure ts_witsols is
     lp : Link_to_Laur_Sys;
     nt,nq,nv,topdim,lowdim : natural32 := 0;
     filter,factor : boolean;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     new_line;
@@ -349,8 +401,11 @@ procedure ts_witsols is
     new_line;
     QuadDobl_Witness_Solutions.Initialize(topdim);
     QuadDobl_Solve_with_Callback
-      (nt,topdim,lowdim,lp.all,filter,factor,Store'access);
+      (nt,topdim,lowdim,lp.all,filter,factor,idxfac,Store'access);
     QuadDobl_Write(topdim,lowdim);
+    if factor
+     then Write_Irreducible_Factors(idxfac);
+    end if;
   end QuadDobl_Laurent_Main;
 
   procedure Main is
