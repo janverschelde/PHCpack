@@ -101,7 +101,7 @@ package body Path_Counts_Table is
     new_line(file);
     new_line(file);
     put(file,"dim | ");
-    put(file," solutions after filter");
+    put(file,"solutions after filter");
     new_line(file);
     put_line(file,"----+-----------------------");
     for i in reverse cnts'range loop
