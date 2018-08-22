@@ -9,7 +9,7 @@ int initialize_standard_homotopy ( int fixed_gamma )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(500,&fixed_gamma,b,c);
+   fail = _ada_use_c2phc4c(500,&fixed_gamma,b,c);
 
    return fail;
 }
@@ -19,7 +19,7 @@ int initialize_dobldobl_homotopy ( int fixed_gamma )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(501,&fixed_gamma,b,c);
+   fail = _ada_use_c2phc4c(501,&fixed_gamma,b,c);
 
    return fail;
 }
@@ -29,7 +29,7 @@ int initialize_quaddobl_homotopy ( int fixed_gamma )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(502,&fixed_gamma,b,c);
+   fail = _ada_use_c2phc4c(502,&fixed_gamma,b,c);
 
    return fail;
 }
@@ -39,7 +39,7 @@ int initialize_multprec_homotopy ( int fixed_gamma, int decimals )
    int fail;
    double *c;
 
-   fail = _ada_use_c2phc(512,&fixed_gamma,&decimals,c);
+   fail = _ada_use_c2phc4c(512,&fixed_gamma,&decimals,c);
 
    return fail;
 }
@@ -60,7 +60,7 @@ int initialize_varbprec_homotopy
    for(i=0; i<nc_target; i++) b[i] = (int) target[i];
    for(i=0; i<nc_start; i++) b[nc_target+i] = (int) start[i];
  
-   fail = _ada_use_c2phc(516,a,b,c);
+   fail = _ada_use_c2phc4c(516,a,b,c);
 
    return fail;
 }
@@ -70,7 +70,7 @@ int initialize_standard_solution ( int k )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(503,&k,b,c);
+   fail = _ada_use_c2phc4c(503,&k,b,c);
 
    return fail;
 }
@@ -80,7 +80,7 @@ int initialize_dobldobl_solution ( int k )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(504,&k,b,c);
+   fail = _ada_use_c2phc4c(504,&k,b,c);
 
    return fail;
 }
@@ -90,7 +90,7 @@ int initialize_quaddobl_solution ( int k )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(505,&k,b,c);
+   fail = _ada_use_c2phc4c(505,&k,b,c);
 
    return fail;
 }
@@ -100,7 +100,7 @@ int initialize_multprec_solution ( int k )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(513,&k,b,c);
+   fail = _ada_use_c2phc4c(513,&k,b,c);
 
    return fail;
 }
@@ -116,7 +116,7 @@ int initialize_varbprec_solution ( int nv, int nc, char *sol )
    a[1] = nv;
    for(i=0; i<nc; i++) b[i] = (int) sol[i];
 
-   fail = _ada_use_c2phc(517,a,b,c);
+   fail = _ada_use_c2phc4c(517,a,b,c);
 
    return fail;
 }
@@ -126,7 +126,7 @@ int next_standard_solution ( int k )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(506,&k,b,c);
+   fail = _ada_use_c2phc4c(506,&k,b,c);
 
    return fail;
 }
@@ -136,7 +136,7 @@ int next_dobldobl_solution ( int k )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(507,&k,b,c);
+   fail = _ada_use_c2phc4c(507,&k,b,c);
 
    return fail;
 }
@@ -146,7 +146,7 @@ int next_quaddobl_solution ( int k )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(508,&k,b,c);
+   fail = _ada_use_c2phc4c(508,&k,b,c);
 
    return fail;
 }
@@ -156,7 +156,7 @@ int next_multprec_solution ( int k )
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(514,&k,b,c);
+   fail = _ada_use_c2phc4c(514,&k,b,c);
 
    return fail;
 }
@@ -173,10 +173,10 @@ char *next_varbprec_solution
    a[2] = maxitr;
    a[3] = verbose;
 
-   *fail = _ada_use_c2phc(518,a,&len,c);
+   *fail = _ada_use_c2phc4c(518,a,&len,c);
    {
       int i,b[len];
-      *fail = _ada_use_c2phc(520,a,b,c);
+      *fail = _ada_use_c2phc4c(520,a,b,c);
       if(len != a[0])
          *fail = 518;
       else
@@ -195,7 +195,7 @@ int clear_standard_tracker ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc(509,a,b,c);
+   fail = _ada_use_c2phc4c(509,a,b,c);
 
    return fail;
 }
@@ -205,7 +205,7 @@ int clear_dobldobl_tracker ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc(510,a,b,c);
+   fail = _ada_use_c2phc4c(510,a,b,c);
 
    return fail;
 }
@@ -215,7 +215,7 @@ int clear_quaddobl_tracker ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc(511,a,b,c);
+   fail = _ada_use_c2phc4c(511,a,b,c);
 
    return fail;
 }
@@ -225,7 +225,7 @@ int clear_multprec_tracker ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc(515,a,b,c);
+   fail = _ada_use_c2phc4c(515,a,b,c);
 
    return fail;
 }
@@ -235,7 +235,7 @@ int clear_varbprec_tracker ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc(519,a,b,c);
+   fail = _ada_use_c2phc4c(519,a,b,c);
 
    return fail;
 }

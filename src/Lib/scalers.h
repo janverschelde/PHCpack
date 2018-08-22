@@ -8,11 +8,11 @@
 
 #ifdef compilewgpp
 extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c );
 extern "C" void adafinal( void );
 #else
 extern void adainit( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c );
 extern void adafinal( void );
 #endif
 
@@ -90,7 +90,7 @@ int standard_scale_solutions ( int dim, int basis, double *cff );
  * DESCRIPTION :
  *   Replaces the solutions in the standard solutions container with
  *   the scaled solutions, scaled with standard double precision arithmetic,
- *   using the given scaling coefficients.
+ *   using the give scaling coefficients.
  *
  * ON ENTRY :
  *   dim     the number of doubles in the scaling coefficients cff,
@@ -104,7 +104,7 @@ int dobldobl_scale_solutions ( int dim, int basis, double *cff );
  * DESCRIPTION :
  *   Replaces the solutions in the dobldobl solutions container with
  *   the scaled solutions, scaled with double double precision arithmetic,
- *   using the given scaling coefficients.
+ *   using the give scaling coefficients.
  *
  * ON ENTRY :
  *   dim     the number of doubles in the scaling coefficients cff,
@@ -118,7 +118,7 @@ int quaddobl_scale_solutions ( int dim, int basis, double *cff );
  * DESCRIPTION :
  *   Replaces the solutions in the quaddobl solutions container with
  *   the scaled solutions, scaled with quad double precision arithmetic,
- *   using the given scaling coefficients.
+ *   using the give scaling coefficients.
  *
  * ON ENTRY :
  *   dim     the number of doubles in the scaling coefficients cff,

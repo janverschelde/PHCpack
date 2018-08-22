@@ -11,7 +11,7 @@ int Pieri_root_count ( int m, int p, int q, int *r )
 
    mpq[0] = m; mpq[1] = p; mpq[2] = q;
    
-   fail = _ada_use_c2phc(223,mpq,r,c);
+   fail = _ada_use_c2phc4c(223,mpq,r,c);
  
    return fail;
 }
@@ -28,7 +28,7 @@ int resolve_Schubert_conditions
    dim[2] = c;
    dim[3] = verbose;
 
-   fail = _ada_use_c2phc(228,dim,brackets,&rc);
+   fail = _ada_use_c2phc4c(228,dim,brackets,&rc);
 
    (*r) = (int) rc;
 
@@ -56,7 +56,7 @@ int standard_Littlewood_Richardson_homotopies
 
    for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
 
-   fail = _ada_use_c2phc(229,dim,brackets,rc);
+   fail = _ada_use_c2phc4c(229,dim,brackets,rc);
 
    (*r) = (int) rc[0];
 
@@ -86,7 +86,7 @@ int dobldobl_Littlewood_Richardson_homotopies
 
    for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
 
-   fail = _ada_use_c2phc(180,dim,brackets,rc);
+   fail = _ada_use_c2phc4c(180,dim,brackets,rc);
 
    (*r) = (int) rc[0];
 
@@ -116,7 +116,7 @@ int quaddobl_Littlewood_Richardson_homotopies
 
    for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
 
-   fail = _ada_use_c2phc(181,dim,brackets,rc);
+   fail = _ada_use_c2phc4c(181,dim,brackets,rc);
 
    (*r) = (int) rc[0];
 
@@ -135,7 +135,7 @@ int localization_poset ( int m, int p, int q, int *nc, char *ps )
 
    mpq[0] = m; mpq[1] = p; mpq[2] = q;
    
-   fail = _ada_use_c2phc(224,mpq,b,c);
+   fail = _ada_use_c2phc4c(224,mpq,b,c);
    *nc = mpq[0];
    for(i=0; i<*nc; i++) ps[i] = (char) b[i];
    ps[*nc] = '\0';
@@ -289,7 +289,7 @@ int Pieri_polynomial_system
    /* fail = show_input_planes(n,mdim,cff); */
 
    mpq[0] = m; mpq[1] = p; mpq[2] = q;
-   fail = _ada_use_c2phc(227,mpq,b,cff);
+   fail = _ada_use_c2phc4c(227,mpq,b,cff);
 
    return fail;
 }
@@ -317,7 +317,7 @@ int run_Pieri_homotopies
    }
    mpq[0] = m; mpq[1] = p; mpq[2] = q;
 
-   fail = _ada_use_c2phc(225,mpq,r,cff);
+   fail = _ada_use_c2phc4c(225,mpq,r,cff);
 
    return fail;
 }
@@ -372,7 +372,7 @@ int real_osculating_planes
    fail = scan_real_interpolation_points(n,s,cffpts);
 
    for(i=0; i<n; i++) coeffs[i] = cffpts[i];
-   fail = _ada_use_c2phc(226,mpq,b,coeffs);
+   fail = _ada_use_c2phc4c(226,mpq,b,coeffs);
 
    /* printf("the coefficients in schubert :\n"); 
    for(i=0; i<e; i++) printf("%.17lf\n",coeffs[i]); */
