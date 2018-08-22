@@ -1,3 +1,9 @@
+Wed 22 Aug 2018 : new use_witsols to interface to the witness solutions,
+  as output of a numerical irreducible decomposition.
+  Separated use_outdata (for DEMiCs) from use_c2phc4c.adb, so that
+  use_c2phc4c is for all C main programs and use_c2phc for everything,
+  including the C++ interface to DEMiCs.
+
 Sat 18 Aug 2018 : removed declaration of pointer type to an array of
   polynomial systems in the {standard,dobldobl,quaddobl}_systems_pool.adb.
 
