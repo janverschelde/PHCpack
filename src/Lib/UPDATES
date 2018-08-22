@@ -1,3 +1,6 @@
+Wed 22 Aug 2018 : new witsols.h, witsols.c, and lib_witsols.c to compute
+  a numerical irreducible decomposition.
+
 Thu 31 May 2018 : added the function stable_mixed_volume_by_demics to phcpack.
   Extended a function in phcpy2c.h, phcpy2c2.c, and phcpy2c3.c to compute
   the stable mixed volume with demics.

@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.54
+PHCpack as a library of C functions with a state machine in PHCv2.4.57
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -62,6 +62,9 @@ witset.h             : prototypes for witness sets
 witset.c             : definitions of functions of witset.h
 lib_witset.c         : tests functions of witset  
 lib_factor.c         : factorization using monodromy breakup
+witsols.h            : prototypes to call the witness solvers
+witsols.c            : definitions of the functions in witsols.h
+lib_witsols          : computes a numerical irreducible decomposition
 ------------------------------------------------------------------------------
 schubert.h           : numerical Schubert calculus prototypes
 schubert.c           : definitions of numerical Schubert calculus
