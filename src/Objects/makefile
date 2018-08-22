@@ -1661,7 +1661,8 @@ test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_numbtrop lib_numbtrop_cpp lib_series lib_series_cpp \
           lib_usolve lib_usolve_cpp phc_solve phc_solve_cpp \
           lib_giftwrap lib_giftwrap_cpp ts_list2str \
-          lib_adepath_d lib_adepath_dd lib_adepath_qd
+          lib_adepath_d lib_adepath_dd lib_adepath_qd \
+          lib_witsols lib_witsols_cpp
 
 ts_list2str:
 	make -f $(MAKEFILE) ts_list2str
@@ -1824,6 +1825,12 @@ phc_solve:
 
 phc_solve_cpp:
 	make -f $(MAKEFILE) phc_solve_cpp
+
+lib_witsols:
+	make -f $(MAKEFILE) lib_witsols
+
+lib_witsols_cpp:
+	make -f $(MAKEFILE) lib_witsols_cpp
 
 # Executables with MPI:
 

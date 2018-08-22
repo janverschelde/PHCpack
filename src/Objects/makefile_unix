@@ -3543,6 +3543,22 @@ phc_solve_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
                     reltab.o mvc4phc.o demicsrun4phc.o \
                  -o $(BIN)/phc_solve -lm --LINK=$(gpp)
 
+lib_witsols:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+	gcc -c $(PHCLib)/witsols.c
+	gcc -c $(PHCLib)/lib_witsols.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c witsols.o lib_witsols.o \
+                 -o $(BIN)/lib_witsols -lm --LINK=$(gpp)
+
+lib_witsols_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/witsols.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/lib_witsols.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c witsols.o lib_witsols.o \
+                 -o $(BIN)/phc_solve -lm --LINK=$(gpp)
+
 # Before typing make phcpy2c2.so, do make clean because everthing must
 # be compiled with the -fPIC option.
 # All statically compiled .o files are collected into one archive.
