@@ -2,16 +2,23 @@ with Interfaces.C;
 with text_io;                             use text_io;
 with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;         use Standard_Natural_Numbers_io;
+with Standard_Natural_VecVecs;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;    use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;    use Standard_Complex_Laur_Systems_io;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;    use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems_io;    use DoblDobl_Complex_Laur_Systems_io;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Laur_Systems_io;    use QuadDobl_Complex_Laur_Systems_io;
 with Standard_PolySys_Container;
@@ -20,6 +27,12 @@ with QuadDobl_PolySys_Container;
 with Standard_LaurSys_Container;
 with DoblDobl_LaurSys_Container;
 with QuadDobl_LaurSys_Container;
+with Embeddings_and_Cascades;             use Embeddings_and_Cascades;
+with Standard_Witness_Solutions;
+with DoblDobl_Witness_Solutions;
+with QuadDobl_Witness_Solutions;
+with Store_Witness_Solutions;             use Store_Witness_Solutions;
+with Write_Witness_Solutions;             use Write_Witness_Solutions;
 
 function use_witsols ( job : integer32;
                        a : C_intarrs.Pointer;
@@ -72,20 +85,37 @@ function use_witsols ( job : integer32;
   --   Runs the cascade homotopies on a polynomial system, in standard
   --   double precision, eventually followed by a filter and a factor.
 
-    nbtasks,topdim : natural32;
-    filter,factor,verbose : boolean;
-
+    use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
+
+    nbtasks,topdim,lowdim,nq,nv : natural32;
+    filter,factor,verbose : boolean;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     extract_solver_options(nbtasks,topdim,filter,factor,verbose);
+    if lp /= null then
+      nq := natural32(lp'last);
+      nv := Number_of_Unknowns(lp(lp'first));
+      lowdim := Lower_Dimension(nq,nv);
+    end if;
     if verbose then
       if lp = null then
         put_line("No polynomial system in the container!?");
       else
-        put_line("The polynomial system on input :");
-        put(lp.all);
+        put_line("The polynomial system on input :"); put(lp.all);
+        put("Lower bound on the dimension : "); put(lowdim,1); new_line;
+      end if;
+    end if;
+    if lp /= null then
+      Standard_Witness_Solutions.Initialize(topdim);
+      Standard_Solve_with_Callback
+        (nbtasks,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
+      if verbose then
+        Standard_Write(topdim,lowdim);
+        Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
     end if;
     return 0;
@@ -97,20 +127,37 @@ function use_witsols ( job : integer32;
   --   Runs the cascade homotopies on a Laurent system, in standard
   --   double precision, eventually followed by a filter and a factor.
 
-    nbtasks,topdim : natural32;
-    filter,factor,verbose : boolean;
-
+    use Standard_Complex_Laurentials;
     use Standard_Complex_Laur_Systems;
+
+    nbtasks,topdim,lowdim,nq,nv : natural32;
+    filter,factor,verbose : boolean;
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     extract_solver_options(nbtasks,topdim,filter,factor,verbose);
+    if lp /= null then
+      nq := natural32(lp'last);
+      nv := Number_of_Unknowns(lp(lp'first));
+      lowdim := Lower_Dimension(nq,nv);
+    end if;
     if verbose then
       if lp = null then
         put_line("No polynomial system in the container!?");
       else
-        put_line("The polynomial system on input :");
-        put(lp.all);
+        put_line("The polynomial system on input :"); put(lp.all);
+        put("Lower bound on the dimension : "); put(lowdim,1); new_line;
+      end if;
+    end if;
+    if lp /= null then
+      Standard_Witness_Solutions.Initialize(topdim);
+      Standard_Solve_with_Callback
+        (nbtasks,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
+      if verbose then
+        Standard_Write(topdim,lowdim);
+        Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
     end if;
     return 0;
@@ -122,20 +169,37 @@ function use_witsols ( job : integer32;
   --   Runs the cascade homotopies on a polynomial system, in double
   --   double precision, eventually followed by a filter and a factor.
 
-    nbtasks,topdim : natural32;
-    filter,factor,verbose : boolean;
-
+    use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Poly_Systems;
+
+    nbtasks,topdim,lowdim,nq,nv : natural32;
+    filter,factor,verbose : boolean;
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     extract_solver_options(nbtasks,topdim,filter,factor,verbose);
+    if lp /= null then
+      nq := natural32(lp'last);
+      nv := Number_of_Unknowns(lp(lp'first));
+      lowdim := Lower_Dimension(nq,nv);
+    end if;
     if verbose then
       if lp = null then
         put_line("No polynomial system in the container!?");
       else
-        put_line("The polynomial system on input :");
-        put(lp.all);
+        put_line("The polynomial system on input :"); put(lp.all);
+        put("Lower bound on the dimension : "); put(lowdim,1); new_line;
+      end if;
+    end if;
+    if lp /= null then
+      DoblDobl_Witness_Solutions.Initialize(topdim);
+      DoblDobl_Solve_with_Callback
+        (nbtasks,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
+      if verbose then
+        DoblDobl_Write(topdim,lowdim);
+        Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
     end if;
     return 0;
@@ -147,20 +211,37 @@ function use_witsols ( job : integer32;
   --   Runs the cascade homotopies on a Laurent system, in double
   --   double precision, eventually followed by a filter and a factor.
 
-    nbtasks,topdim : natural32;
-    filter,factor,verbose : boolean;
-
+    use DoblDobl_Complex_Laurentials;
     use DoblDobl_Complex_Laur_Systems;
+
+    nbtasks,topdim,lowdim,nq,nv : natural32;
+    filter,factor,verbose : boolean;
     lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     extract_solver_options(nbtasks,topdim,filter,factor,verbose);
+    if lp /= null then
+      nq := natural32(lp'last);
+      nv := Number_of_Unknowns(lp(lp'first));
+      lowdim := Lower_Dimension(nq,nv);
+    end if;
     if verbose then
       if lp = null then
         put_line("No polynomial system in the container!?");
       else
-        put_line("The polynomial system on input :");
-        put(lp.all);
+        put_line("The polynomial system on input :"); put(lp.all);
+        put("Lower bound on the dimension : "); put(lowdim,1); new_line;
+      end if;
+    end if;
+    if lp /= null then
+      DoblDobl_Witness_Solutions.Initialize(topdim);
+      DoblDobl_Solve_with_Callback
+        (nbtasks,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
+      if verbose then
+        DoblDobl_Write(topdim,lowdim);
+        Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
     end if;
     return 0;
@@ -172,20 +253,37 @@ function use_witsols ( job : integer32;
   --   Runs the cascade homotopies on a polynomial system, in quad
   --   double precision, eventually followed by a filter and a factor.
 
-    nbtasks,topdim : natural32;
-    filter,factor,verbose : boolean;
-
+    use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Poly_Systems;
+
+    nbtasks,topdim,lowdim,nq,nv : natural32;
+    filter,factor,verbose : boolean;
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     extract_solver_options(nbtasks,topdim,filter,factor,verbose);
+    if lp /= null then
+      nq := natural32(lp'last);
+      nv := Number_of_Unknowns(lp(lp'first));
+      lowdim := Lower_Dimension(nq,nv);
+    end if;
     if verbose then
       if lp = null then
         put_line("No polynomial system in the container!?");
       else
-        put_line("The polynomial system on input :");
-        put(lp.all);
+        put_line("The polynomial system on input :"); put(lp.all);
+        put("Lower bound on the dimension : "); put(lowdim,1); new_line;
+      end if;
+    end if;
+    if lp /= null then
+      QuadDobl_Witness_Solutions.Initialize(topdim);
+      QuadDobl_Solve_with_Callback
+        (nbtasks,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
+      if verbose then
+        QuadDobl_Write(topdim,lowdim);
+        Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
     end if;
     return 0;
@@ -197,20 +295,37 @@ function use_witsols ( job : integer32;
   --   Runs the cascade homotopies on a Laurent system, in quad
   --   double precision, eventually followed by a filter and a factor.
 
-    nbtasks,topdim : natural32;
-    filter,factor,verbose : boolean;
-
+    use QuadDobl_Complex_Laurentials;
     use QuadDobl_Complex_Laur_Systems;
+
+    nbtasks,topdim,lowdim,nq,nv : natural32;
+    filter,factor,verbose : boolean;
     lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+    pc,fc : Standard_Natural_VecVecs.Link_to_VecVec;
+    idxfac : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
 
   begin
     extract_solver_options(nbtasks,topdim,filter,factor,verbose);
+    if lp /= null then
+      nq := natural32(lp'last);
+      nv := Number_of_Unknowns(lp(lp'first));
+      lowdim := Lower_Dimension(nq,nv);
+    end if;
     if verbose then
       if lp = null then
         put_line("No polynomial system in the container!?");
       else
-        put_line("The polynomial system on input :");
-        put(lp.all);
+        put_line("The polynomial system on input :"); put(lp.all);
+        put("Lower bound on the dimension : "); put(lowdim,1); new_line;
+      end if;
+    end if;
+    if lp /= null then
+      QuadDobl_Witness_Solutions.Initialize(topdim);
+      QuadDobl_Solve_with_Callback
+        (nbtasks,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
+      if verbose then
+        QuadDobl_Write(topdim,lowdim);
+        Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
     end if;
     return 0;
