@@ -31,74 +31,12 @@ with Standard_Witness_Solutions;
 with DoblDobl_Witness_Solutions;
 with QuadDobl_Witness_Solutions;
 with Store_Witness_Solutions;            use Store_Witness_Solutions;
+with Write_Witness_Solutions;            use Write_Witness_Solutions;
 
 procedure ts_witsols is
 
 -- DESCRIPTION :
 --   Test on the package to store witness solutions.
-
-  procedure Standard_Write ( topdim,lowdim : in natural32 ) is
-
-  -- DESCRIPTION :
-  --   Writes the number of solutions at each dimension,
-  --   computed in standard double precision,
-  --   starting at the top dimension topdim.
-
-    use Standard_Complex_Solutions;
-
-    sols : Solution_List;
-    len : natural32;
-
-  begin
-    for k in lowdim..topdim loop
-      sols := Standard_Witness_Solutions.Load_Witness_Points(k);
-      len := Length_Of(sols);
-      put("Number of solutions at dimension "); put(k,1);
-      put(" : "); put(len,1); new_line;
-    end loop;
-  end Standard_Write;
-
-  procedure DoblDobl_Write ( topdim,lowdim : in natural32 ) is
-
-  -- DESCRIPTION :
-  --   Writes the number of solutions at each dimension,
-  --   computed in double double precision,
-  --   starting at the top dimension topdim.
-
-    use DoblDobl_Complex_Solutions;
-
-    sols : Solution_List;
-    len : natural32;
-
-  begin
-    for k in lowdim..topdim loop
-      sols := DoblDobl_Witness_Solutions.Load_Witness_Points(k);
-      len := Length_Of(sols);
-      put("Number of solutions at dimension "); put(k,1);
-      put(" : "); put(len,1); new_line;
-    end loop;
-  end DoblDobl_Write;
-
-  procedure QuadDobl_Write ( topdim,lowdim : in natural32 ) is
-
-  -- DESCRIPTION :
-  --   Writes the number of solutions at each dimension,
-  --   computed in quad double precision,
-  --   starting at the top dimension topdim.
-
-    use QuadDobl_Complex_Solutions;
-
-    sols : Solution_List;
-    len : natural32;
-
-  begin
-    for k in lowdim..topdim loop
-      sols := QuadDobl_Witness_Solutions.Load_Witness_Points(k);
-      len := Length_Of(sols);
-      put("Number of solutions at dimension "); put(k,1);
-      put(" : "); put(len,1); new_line;
-    end loop;
-  end QuadDobl_Write;
 
   procedure Prompt_for_Options ( filter,factor : out boolean ) is
 
@@ -116,7 +54,6 @@ procedure ts_witsols is
     if not filter then
       factor := false;
     else
-      new_line;
       put("Factor the witness sets ? (y/n) ");
       Ask_Yes_or_No(ans);
       factor := (ans = 'y');
@@ -154,13 +91,7 @@ procedure ts_witsols is
     Standard_Solve_with_Callback
       (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     Standard_Write(topdim,lowdim);
-    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
-    if filter
-     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
-    end if;
-    if factor
-     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
-    end if;
+    Write_Counts(filter,factor,pc,fc,idxfac);
   end Standard_Main;
 
   procedure Standard_Laurent_Main is
@@ -194,13 +125,7 @@ procedure ts_witsols is
     Standard_Solve_with_Callback
       (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     Standard_Write(topdim,lowdim);
-    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
-    if filter
-     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
-    end if;
-    if factor
-     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
-    end if;
+    Write_Counts(filter,factor,pc,fc,idxfac);
   end Standard_Laurent_Main;
 
   procedure DoblDobl_Main is
@@ -234,13 +159,7 @@ procedure ts_witsols is
     DoblDobl_Solve_with_Callback
       (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     DoblDobl_Write(topdim,lowdim);
-    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
-    if filter
-     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
-    end if;
-    if factor
-     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
-    end if;
+    Write_Counts(filter,factor,pc,fc,idxfac);
   end DoblDobl_Main;
 
   procedure DoblDobl_Laurent_Main is
@@ -274,13 +193,7 @@ procedure ts_witsols is
     DoblDobl_Solve_with_Callback
       (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     DoblDobl_Write(topdim,lowdim);
-    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
-    if filter
-     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
-    end if;
-    if factor
-     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
-    end if;
+    Write_Counts(filter,factor,pc,fc,idxfac);
   end DoblDobl_Laurent_Main;
 
   procedure QuadDobl_Main is
@@ -314,13 +227,7 @@ procedure ts_witsols is
     QuadDobl_Solve_with_Callback
       (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     QuadDobl_Write(topdim,lowdim);
-    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
-    if filter
-     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
-    end if;
-    if factor
-     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
-    end if;
+    Write_Counts(filter,factor,pc,fc,idxfac);
   end QuadDobl_Main;
 
   procedure QuadDobl_Laurent_Main is
@@ -354,13 +261,7 @@ procedure ts_witsols is
     QuadDobl_Solve_with_Callback
       (nt,topdim,lowdim,lp.all,filter,factor,pc,fc,idxfac,Store'access);
     QuadDobl_Write(topdim,lowdim);
-    Path_Counts_Table.Write_Path_Counts(standard_output,pc.all);
-    if filter
-     then Path_Counts_Table.Write_Filter_Counts(standard_output,fc.all);
-    end if;
-    if factor
-     then Path_Counts_Table.Write_Decomposition(standard_output,idxfac.all);
-    end if;
+    Write_Counts(filter,factor,pc,fc,idxfac);
   end QuadDobl_Laurent_Main;
 
   procedure Main is
