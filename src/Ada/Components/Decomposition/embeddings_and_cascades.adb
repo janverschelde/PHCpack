@@ -29,13 +29,22 @@ with Running_Cascades;                   use Running_Cascades;
 
 package body Embeddings_and_Cascades is
 
-  procedure Prompt_for_Top_Dimension
-              ( nq,nv : in natural32; topdim,lowdim : out natural32 ) is
+  function Lower_Dimension ( nq,nv : in natural32 ) return natural32 is
+
+    lowdim : natural32;
+
   begin
     if nq >= nv
      then lowdim := 0;  -- allow no negative values for lower bound
      else lowdim := nv-nq;
     end if;
+    return lowdim;
+  end Lower_Dimension;
+
+  procedure Prompt_for_Top_Dimension
+              ( nq,nv : in natural32; topdim,lowdim : out natural32 ) is
+  begin
+    lowdim := Lower_Dimension(nq,nv);
     loop
       put("The number of equations : "); put(nq,1); new_line;
       put("The number of variables : "); put(nv,1); new_line;

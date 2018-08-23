@@ -1,3 +1,8 @@
+Thu 23 Aug 2018 : new package store_witness_solutions contains the definitions
+  of the Store procedures, used in ts_witsols.adb.  Isolated the computation
+  of a lower bound on the dimension of a solution set into a separate function
+  in the package embeddings_and_cascades.
+
 Tue 21 Aug 2018 : indices to the irreducible factors in the decomposition
   added as output parameter in the procedures with callback in
   running_cascades and embeddings_and_cascades, tested by ts_witsols.

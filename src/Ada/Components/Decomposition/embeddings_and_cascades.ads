@@ -35,6 +35,14 @@ package Embeddings_and_Cascades is
 --   So in total, there are 2x3x2x3 = 36 procedures to run the
 --   homotopy cascades to compute a numerical irreducible decomposition.
 
+  function Lower_Dimension ( nq,nv : in natural32 ) return natural32;
+
+  -- DESCRIPTION :
+  --   Given in nq are the number of polynomials
+  --   and in nv are the number of variables of a polynomial system,
+  --   the lower bound on the dimension of the solution set
+  --   is nv - nq, if nq >= nv, otherwise, the lower bound is 0.
+
   procedure Prompt_for_Top_Dimension
               ( nq,nv : in natural32; topdim,lowdim : out natural32 );
 

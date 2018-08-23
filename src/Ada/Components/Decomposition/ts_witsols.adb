@@ -30,59 +30,12 @@ with Embeddings_and_Cascades;            use Embeddings_and_Cascades;
 with Standard_Witness_Solutions;
 with DoblDobl_Witness_Solutions;
 with QuadDobl_Witness_Solutions;
+with Store_Witness_Solutions;            use Store_Witness_Solutions;
 
 procedure ts_witsols is
 
 -- DESCRIPTION :
 --   Test on the package to store witness solutions.
-
-  procedure Store ( ep : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    ws : in Standard_Complex_Solutions.Solution_List;
-                    dim : in natural32 ) is
-  begin
-    Standard_Witness_Solutions.Save_Embedded_System(ep,dim);
-    Standard_Witness_Solutions.Save_Witness_Points(ws,dim);
-  end Store;
-
-  procedure Store ( ep : in Standard_Complex_Laur_Systems.Laur_Sys;
-                    ws : in Standard_Complex_Solutions.Solution_List;
-                    dim : in natural32 ) is
-  begin
-    Standard_Witness_Solutions.Save_Embedded_System(ep,dim);
-    Standard_Witness_Solutions.Save_Witness_Points(ws,dim);
-  end Store;
-
-  procedure Store ( ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                    ws : in DoblDobl_Complex_Solutions.Solution_List;
-                    dim : in natural32 ) is
-  begin
-    DoblDobl_Witness_Solutions.Save_Embedded_System(ep,dim);
-    DoblDobl_Witness_Solutions.Save_Witness_Points(ws,dim);
-  end Store;
-
-  procedure Store ( ep : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                    ws : in DoblDobl_Complex_Solutions.Solution_List;
-                    dim : in natural32 ) is
-  begin
-    DoblDobl_Witness_Solutions.Save_Embedded_System(ep,dim);
-    DoblDobl_Witness_Solutions.Save_Witness_Points(ws,dim);
-  end Store;
-
-  procedure Store ( ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                    ws : in QuadDobl_Complex_Solutions.Solution_List;
-                    dim : in natural32 ) is
-  begin
-    QuadDobl_Witness_Solutions.Save_Embedded_System(ep,dim);
-    QuadDobl_Witness_Solutions.Save_Witness_Points(ws,dim);
-  end Store;
-
-  procedure Store ( ep : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                    ws : in QuadDobl_Complex_Solutions.Solution_List;
-                    dim : in natural32 ) is
-  begin
-    QuadDobl_Witness_Solutions.Save_Embedded_System(ep,dim);
-    QuadDobl_Witness_Solutions.Save_Witness_Points(ws,dim);
-  end Store;
 
   procedure Standard_Write ( topdim,lowdim : in natural32 ) is
 
