@@ -3427,6 +3427,7 @@ phcpy2c2.so: parameter.o lib2path.o
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/multiplicity.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/numbtrop.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/witset.c
+	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/witsols.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/unisolvers.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/giftwrappers.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/phcpack.c
@@ -3481,6 +3482,7 @@ phcpy2c3.so: parameter.o lib2path.o
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/multiplicity.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/numbtrop.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/witset.c
+	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/witsols.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/unisolvers.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/giftwrappers.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/phcpack.c
