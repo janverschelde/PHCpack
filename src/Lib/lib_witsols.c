@@ -1,6 +1,7 @@
 /* reads a system and then computes a numerical irreducible decomposition */
 
 #include <stdio.h>
+#include "syscon.h"
 #include "witsols.h"
 
 void read_solver_options
@@ -18,15 +19,65 @@ void read_solver_options
  *   factor    0 or 1 flag to factor the witness sets,
  *   verbose   for intermediate output. */
 
+int standard_polysys_solver ( void );
+/*
+ * DESCRIPTION :
+ *   Calls the solver in standard double precision on a polynomial system. */
+
+int standard_laursys_solver ( void );
+/*
+ * DESCRIPTION :
+ *   Calls the solver in standard double precision on a Laurent system. */
+
+int dobldobl_polysys_solver ( void );
+/*
+ * DESCRIPTION :
+ *   Calls the solver in double double precision on a polynomial system. */
+
+int dobldobl_laursys_solver ( void );
+/*
+ * DESCRIPTION :
+ *   Calls the solver in double double precision on a Laurent system. */
+
+int quaddobl_polysys_solver ( void );
+/*
+ * DESCRIPTION :
+ *   Calls the solver in quad double precision on a polynomial system. */
+
+int quaddobl_laursys_solver ( void );
+/*
+ * DESCRIPTION :
+ *   Calls the solver in quad double precision on a Laurent system. */
+
 int main ( int argc, char *argv[] )
 {
-   int nbtasks,topdim,filter,factor,verbose,fail;
+   int fail,choice;
 
    adainit();
 
-   read_solver_options(&nbtasks,&topdim,&filter,&factor,&verbose);
+   printf("\nMENU for the precision and type of system :\n");
+   printf("  0. standard double precision on a polynomial system\n");
+   printf("  1. standard double precision on a Laurent polynomial system\n");
+   printf("  2. double double precision on a polynomial system\n");
+   printf("  3. double double precision on a Laurent polynomial system\n");
+   printf("  4. quad double precision on a polynomial system\n");
+   printf("  5. quad double precision on a Laurent polynomial system\n");
+   printf("Type 0, 1, 2, 3, 4, or 5 : "); scanf("%d", &choice);
 
-   fail = standard_polysys_solve(nbtasks,topdim,filter,factor,verbose);
+   if(choice == 0)
+      fail = standard_polysys_solver();
+   else if(choice == 1)
+      fail = standard_laursys_solver();
+   else if(choice == 2)
+      fail = dobldobl_polysys_solver();
+   else if(choice == 3)
+      fail = dobldobl_laursys_solver();
+   else if(choice == 4)
+      fail = quaddobl_polysys_solver();
+   else if(choice == 5)
+      fail = quaddobl_laursys_solver();
+   else
+      printf("invalid choice\n");
 
    adafinal();
 
@@ -54,4 +105,100 @@ void read_solver_options
 
    printf("Verbose mode ? (1 = yes, 0 = no) ");
    scanf("%d", verbose);
+}
+
+int standard_polysys_solver ( void )
+{
+   int fail,nbq,nbtasks,topdim,filter,factor,verbose;
+
+   fail = syscon_read_standard_system();
+   fail = syscon_number_of_standard_polynomials(&nbq);
+   printf("-> read %d polynomials\n", nbq);
+   printf("\n");
+   read_solver_options(&nbtasks,&topdim,&filter,&factor,&verbose);
+
+   printf("\nCalling the solver ...\n\n");
+   fail = standard_polysys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return fail;
+}
+
+int standard_laursys_solver ( void )
+{
+   int fail,nbq,nbtasks,topdim,filter,factor,verbose;
+
+   fail = syscon_read_standard_Laurent_system();
+   fail = syscon_number_of_standard_Laurentials(&nbq);
+   printf("-> read %d polynomials\n", nbq);
+   printf("\n");
+   read_solver_options(&nbtasks,&topdim,&filter,&factor,&verbose);
+
+   printf("\nCalling the solver ...\n\n");
+   fail = standard_laursys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return fail;
+}
+
+int dobldobl_polysys_solver ( void )
+{
+   int fail,nbq,nbtasks,topdim,filter,factor,verbose;
+
+   fail = syscon_read_dobldobl_system();
+   fail = syscon_number_of_dobldobl_polynomials(&nbq);
+   printf("-> read %d polynomials\n", nbq);
+   printf("\n");
+   read_solver_options(&nbtasks,&topdim,&filter,&factor,&verbose);
+
+   printf("\nCalling the solver ...\n\n");
+   fail = dobldobl_polysys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return fail;
+}
+
+int dobldobl_laursys_solver ( void )
+{
+   int fail,nbq,nbtasks,topdim,filter,factor,verbose;
+
+   fail = syscon_read_dobldobl_Laurent_system();
+   fail = syscon_number_of_dobldobl_Laurentials(&nbq);
+   printf("-> read %d polynomials\n", nbq);
+   printf("\n");
+   read_solver_options(&nbtasks,&topdim,&filter,&factor,&verbose);
+
+   printf("\nCalling the solver ...\n\n");
+   fail = dobldobl_laursys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return fail;
+}
+
+int quaddobl_polysys_solver ( void )
+{
+   int fail,nbq,nbtasks,topdim,filter,factor,verbose;
+
+   fail = syscon_read_quaddobl_system();
+   fail = syscon_number_of_quaddobl_polynomials(&nbq);
+   printf("-> read %d polynomials\n", nbq);
+   printf("\n");
+   read_solver_options(&nbtasks,&topdim,&filter,&factor,&verbose);
+
+   printf("\nCalling the solver ...\n\n");
+   fail = quaddobl_polysys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return fail;
+}
+
+int quaddobl_laursys_solver ( void )
+{
+   int fail,nbq,nbtasks,topdim,filter,factor,verbose;
+
+   fail = syscon_read_quaddobl_Laurent_system();
+   fail = syscon_number_of_quaddobl_Laurentials(&nbq);
+   printf("-> read %d polynomials\n", nbq);
+   printf("\n");
+   read_solver_options(&nbtasks,&topdim,&filter,&factor,&verbose);
+
+   printf("\nCalling the solver ...\n\n");
+   fail = quaddobl_laursys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return fail;
 }

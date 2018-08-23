@@ -3,6 +3,7 @@ Wed 22 Aug 2018 : new witsols.h, witsols.c, and lib_witsols.c to compute
   celcon, intcelcon, syscon, solcon, phcpack, product, scalers, reducers,
   multiplicity, jump_track, next_track, witset, sweep, series, unisolvers,
   syspool, numbtrop, giftwrappers, mapcon, schubert.
+  Extend lib_witsols.c with extra tests.
 
 Thu 31 May 2018 : added the function stable_mixed_volume_by_demics to phcpack.
   Extended a function in phcpy2c.h, phcpy2c2.c, and phcpy2c3.c to compute
