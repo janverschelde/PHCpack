@@ -1,3 +1,6 @@
+Thu 23 Aug 2018 : added wrappers to the solvers defined in witsols,
+  to phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
+
 Wed 22 Aug 2018 : new witsols.h, witsols.c, and lib_witsols.c to compute
   a numerical irreducible decomposition.  For use_c2phc4c, adjusted
   celcon, intcelcon, syscon, solcon, phcpack, product, scalers, reducers,

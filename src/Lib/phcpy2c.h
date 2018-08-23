@@ -4991,6 +4991,86 @@ static PyObject *py2c_quaddobl_collapse_diagonal
  *   to this system are in the solutions container.
  *   On return is the failure code, which equals zero if all went well. */
 
+/* The wrapping of functions with prototypes in witsols.h starts here. */
+
+static PyObject *py2c_standard_polysys_solve
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Runs the cascades of homotopies on the polynomial system in
+ *   the standard systems container.  Runs in standard double precision.
+ *   On input are five integers :
+ *   1) nbtasks equals the number of tasks for multitasking,
+ *   2) topdim is the top dimension to start the homotopy cascades,
+ *   3) filter is a 0 or 1 flag to filter the witness supersets, 
+ *   4) factor is a 0 or 1 flag to factor the witness sets,
+ *   5) verbose is a flag for intermediate output. */
+
+static PyObject *py2c_standard_laursys_solve
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Runs the cascades of homotopies on the Laurent polynomial system in
+ *   the standard systems container.  Runs in standard double precision.
+ *   On input are five integers :
+ *   1) nbtasks equals the number of tasks for multitasking,
+ *   2) topdim is the top dimension to start the homotopy cascades,
+ *   3) filter is a 0 or 1 flag to filter the witness supersets, 
+ *   4) factor is a 0 or 1 flag to factor the witness sets,
+ *   5) verbose is a flag for intermediate output. */
+
+static PyObject *py2c_dobldobl_polysys_solve
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Runs the cascades of homotopies on the polynomial system in
+ *   the dobldobl systems container.  Runs in double double precision.
+ *   On input are five integers :
+ *   1) nbtasks equals the number of tasks for multitasking,
+ *   2) topdim is the top dimension to start the homotopy cascades,
+ *   3) filter is a 0 or 1 flag to filter the witness supersets, 
+ *   4) factor is a 0 or 1 flag to factor the witness sets,
+ *   5) verbose is a flag for intermediate output. */
+
+static PyObject *py2c_dobldobl_laursys_solve
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Runs the cascades of homotopies on the Laurent polynomial system in
+ *   the dobldobl systems container.  Runs in double double precision.
+ *   On input are five integers :
+ *   1) nbtasks equals the number of tasks for multitasking,
+ *   2) topdim is the top dimension to start the homotopy cascades,
+ *   3) filter is a 0 or 1 flag to filter the witness supersets, 
+ *   4) factor is a 0 or 1 flag to factor the witness sets,
+ *   5) verbose is a flag for intermediate output. */
+
+static PyObject *py2c_quaddobl_polysys_solve
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Runs the cascades of homotopies on the polynomial system in
+ *   the quaddobl systems container.  Runs in quad double precision.
+ *   On input are five integers :
+ *   1) nbtasks equals the number of tasks for multitasking,
+ *   2) topdim is the top dimension to start the homotopy cascades,
+ *   3) filter is a 0 or 1 flag to filter the witness supersets, 
+ *   4) factor is a 0 or 1 flag to factor the witness sets,
+ *   5) verbose is a flag for intermediate output. */
+
+static PyObject *py2c_quaddobl_laursys_solve
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Runs the cascades of homotopies on the Laurent polynomial system in
+ *   the quaddobl systems container.  Runs in quad double precision.
+ *   On input are five integers :
+ *   1) nbtasks equals the number of tasks for multitasking,
+ *   2) topdim is the top dimension to start the homotopy cascades,
+ *   3) filter is a 0 or 1 flag to filter the witness supersets, 
+ *   4) factor is a 0 or 1 flag to factor the witness sets,
+ *   5) verbose is a flag for intermediate output. */
+
 /* The wrapping of functions with prototypes in schubert.h starts here. */
 
 static PyObject *py2c_schubert_pieri_count

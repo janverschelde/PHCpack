@@ -20,6 +20,7 @@
 #include "sweep.h"
 #include "multiplicity.h"
 #include "witset.h"
+#include "witsols.h"
 #include "mapcon.h"
 #include "series.h"
 #include "jump_track.h"
@@ -7156,6 +7157,86 @@ static PyObject *py2c_quaddobl_collapse_diagonal
    return Py_BuildValue("i",fail);
 }
 
+/* The wrapping of functions with prototypes in witsols.h starts here. */
+
+static PyObject *py2c_standard_polysys_solve
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbtasks,topdim,filter,factor,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiii",
+      &nbtasks,&topdim,&filter,&factor,&verbose)) return NULL;
+   fail = standard_polysys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_standard_laursys_solve
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbtasks,topdim,filter,factor,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiii",
+      &nbtasks,&topdim,&filter,&factor,&verbose)) return NULL;
+   fail = standard_laursys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_polysys_solve
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbtasks,topdim,filter,factor,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiii",
+      &nbtasks,&topdim,&filter,&factor,&verbose)) return NULL;
+   fail = dobldobl_polysys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_laursys_solve
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbtasks,topdim,filter,factor,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiii",
+      &nbtasks,&topdim,&filter,&factor,&verbose)) return NULL;
+   fail = dobldobl_laursys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_polysys_solve
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbtasks,topdim,filter,factor,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiii",
+      &nbtasks,&topdim,&filter,&factor,&verbose)) return NULL;
+   fail = quaddobl_polysys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_laursys_solve
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbtasks,topdim,filter,factor,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiii",
+      &nbtasks,&topdim,&filter,&factor,&verbose)) return NULL;
+   fail = quaddobl_laursys_solve(nbtasks,topdim,filter,factor,verbose);
+
+   return Py_BuildValue("i",fail);
+}
+
 /* The wrapping of functions with prototypes in schubert.h starts here. */
 
 static PyObject *py2c_schubert_pieri_count
@@ -9807,6 +9888,24 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_quaddobl_collapse_diagonal",
      py2c_quaddobl_collapse_diagonal, METH_VARARGS,
     "Eliminates the extrinsic diagonal for the system and solutions\n in the containers for quad doubles.  On input are two integers:\n 1) k, the current number of slack variables in the embedding;\n 2) d, the number of slack variables to add to the final embedding.\n The system in the container has its diagonal eliminated and is\n embedded with k+d slack variables.  The solutions corresponding\n to this system are in the solutions container.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_standard_polysys_solve",
+     py2c_standard_polysys_solve, METH_VARARGS,
+    "Runs the cascades of homotopies on the polynomial system in\n the standard systems container.  Runs in standard double precision.\n On input are five integers :\n 1) nbtasks equals the number of tasks for multitasking,\n 2) topdim is the top dimension to start the homotopy cascades,\n 3) filter is a 0 or 1 flag to filter the witness supersets,\n 4) factor is a 0 or 1 flag to factor the witness sets,\n 5) verbose is a flag for intermediate output."},
+   {"py2c_standard_laursys_solve",
+     py2c_standard_laursys_solve, METH_VARARGS,
+    "Runs the cascades of homotopies on the Laurent polynomial system in\n the standard systems container.  Runs in standard double precision.\n On input are five integers :\n 1) nbtasks equals the number of tasks for multitasking,\n 2) topdim is the top dimension to start the homotopy cascades,\n 3) filter is a 0 or 1 flag to filter the witness supersets,\n 4) factor is a 0 or 1 flag to factor the witness sets,\n 5) verbose is a flag for intermediate output."},
+   {"py2c_dobldobl_polysys_solve",
+     py2c_dobldobl_polysys_solve, METH_VARARGS,
+    "Runs the cascades of homotopies on the polynomial system in\n the dobldobl systems container.  Runs in double double precision.\n On input are five integers :\n 1) nbtasks equals the number of tasks for multitasking,\n 2) topdim is the top dimension to start the homotopy cascades,\n 3) filter is a 0 or 1 flag to filter the witness supersets,\n 4) factor is a 0 or 1 flag to factor the witness sets,\n 5) verbose is a flag for intermediate output."},
+   {"py2c_dobldobl_laursys_solve",
+     py2c_dobldobl_laursys_solve, METH_VARARGS,
+    "Runs the cascades of homotopies on the Laurent polynomial system in\n the dobldobl systems container.  Runs in double double precision.\n On input are five integers :\n 1) nbtasks equals the number of tasks for multitasking,\n 2) topdim is the top dimension to start the homotopy cascades,\n 3) filter is a 0 or 1 flag to filter the witness supersets,\n 4) factor is a 0 or 1 flag to factor the witness sets,\n 5) verbose is a flag for intermediate output."},
+   {"py2c_quaddobl_polysys_solve",
+     py2c_quaddobl_polysys_solve, METH_VARARGS,
+    "Runs the cascades of homotopies on the polynomial system in\n the quaddobl systems container.  Runs in quad double precision.\n On input are five integers :\n 1) nbtasks equals the number of tasks for multitasking,\n 2) topdim is the top dimension to start the homotopy cascades,\n 3) filter is a 0 or 1 flag to filter the witness supersets,\n 4) factor is a 0 or 1 flag to factor the witness sets,\n 5) verbose is a flag for intermediate output."},
+   {"py2c_quaddobl_laursys_solve",
+     py2c_quaddobl_laursys_solve, METH_VARARGS,
+    "Runs the cascades of homotopies on the Laurent polynomial system in\n the quaddobl systems container.  Runs in quad double precision.\n On input are five integers :\n 1) nbtasks equals the number of tasks for multitasking,\n 2) topdim is the top dimension to start the homotopy cascades,\n 3) filter is a 0 or 1 flag to filter the witness supersets,\n 4) factor is a 0 or 1 flag to factor the witness sets,\n 5) verbose is a flag for intermediate output."},
    {"py2c_schubert_pieri_count", py2c_schubert_pieri_count, METH_VARARGS,
     "Returns the number of p-plane producing curves of degree q\n that meet m*p + q*(m+p) given general m-planes.\n On input are three integer numbers:\n 1) m, the dimension of the input planes;\n 2) p, the dimension of the output planes; and\n 3) q, the degree of the curve that produces p-planes.\n The dimension of the ambient space of this Pieri problem is m+p."},
    {"py2c_schubert_resolve_conditions", py2c_schubert_resolve_conditions,
