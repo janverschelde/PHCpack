@@ -3387,18 +3387,20 @@ phc_solve_cpp:
 
 lib_witsols:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/witsols.c
 	gcc -c $(PHCLib)/lib_witsols.c
 	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c witsols.o lib_witsols.o \
+	gnatlink -C use_c2phc4c syscon.o witsols.o lib_witsols.o \
                  -o $(BIN)/lib_witsols -lm
 
 lib_witsols_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/witsols.c
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/lib_witsols.c
 	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c witsols.o lib_witsols.o \
+	gnatlink -C use_c2phc4c syscon.o witsols.o lib_witsols.o \
                  -o $(BIN)/phc_solve -lm --LINK=$(gpp)
 
 # Before typing make phcpy2c2.so, do make clean because everthing must
