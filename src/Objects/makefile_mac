@@ -2845,19 +2845,21 @@ phc_solve_cpp: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
 lib_witsols:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/witsols.c
 	gcc -c $(PHCLib)/lib_witsols.c
 	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c syscon.o witsols.o lib_witsols.o \
+	gnatlink -C use_c2phc4c syscon.o solcon.o witsols.o lib_witsols.o \
                  -o $(BIN)/lib_witsols -lm
 
 lib_witsols_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/witsols.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_witsols.c
 	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c syscon.o witsols.o lib_witsols.o \
+	gnatlink -C use_c2phc4c syscon.o solcon.o witsols.o lib_witsols.o \
                     /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_witsols -lm --LINK=g++
 
