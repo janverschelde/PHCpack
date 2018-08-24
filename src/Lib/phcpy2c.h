@@ -5071,6 +5071,108 @@ static PyObject *py2c_quaddobl_laursys_solve
  *   4) factor is a 0 or 1 flag to factor the witness sets,
  *   5) verbose is a flag for intermediate output. */
 
+static PyObject *py2c_copy_standard_polysys_witset
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   There is one integer parameter dim on input,
+ *   which represents the dimension of the witness set.
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the systems and solutions container,
+ *   in standard double precision.
+ *
+ * REQUIRED :
+ *   1) py2c_standard_polysys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+static PyObject *py2c_copy_standard_laursys_witset
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   There is one integer parameter dim on input,
+ *   which represents the dimension of the witness set.
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the Laurent systems and solutions container,
+ *   in standard double precision.
+ *
+ * REQUIRED :
+ *   1) py2c_standard_laursys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+static PyObject *py2c_copy_dobldobl_polysys_witset
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   There is one integer parameter dim on input,
+ *   which represents the dimension of the witness set.
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the systems and solutions container,
+ *   in double double precision.
+ *
+ * REQUIRED :
+ *   1) py2c_dobldobl_polysys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+static PyObject *py2c_copy_dobldobl_laursys_witset
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   There is one integer parameter dim on input,
+ *   which represents the dimension of the witness set.
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the Laurent systems and solutions container,
+ *   in double double precision.
+ *
+ * REQUIRED :
+ *   1) py2c_dobldobl_laursys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+static PyObject *py2c_copy_quaddobl_polysys_witset
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   There is one integer parameter dim on input,
+ *   which represents the dimension of the witness set.
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the systems and solutions container,
+ *   in quad double precision.
+ *
+ * REQUIRED :
+ *   1) py2c_quaddobl_polysys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+static PyObject *py2c_copy_quaddobl_laursys_witset
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   There is one integer parameter dim on input,
+ *   which represents the dimension of the witness set.
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the Laurent systems and solutions container,
+ *   in quad double precision.
+ *
+ * REQUIRED :
+ *   1) py2c_quaddobl_laursys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+static PyObject *py2c_clear_standard_witsols
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Clears the witness solutions in standard double precision. */
+
+static PyObject *py2c_clear_dobldobl_witsols
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Clears the witness solutions in double double precision. */
+
+static PyObject *py2c_clear_quaddobl_witsols
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Clears the witness solutions in quad double precision. */
+
 /* The wrapping of functions with prototypes in schubert.h starts here. */
 
 static PyObject *py2c_schubert_pieri_count
