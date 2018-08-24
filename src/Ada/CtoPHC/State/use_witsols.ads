@@ -66,6 +66,27 @@ function use_witsols ( job : integer32;
 --              a[3] : 0 or 1 if the witness sets need to be factored,
 --              b[0] : the verbose flag, 0 for false, 1 for true.
 --              If verbose, then intermediate results are written to screen.
+--   job =  6 : copies the witness set from the stored witness solutions
+--              into the standard polynomial system and solutions containers,
+--              on input in a[0] is the dimension of the witness set.
+--   job =  7 : copies the witness set from the stored witness solutions
+--              into the standard Laurent system and solutions containers,
+--              on input in a[0] is the dimension of the witness set.
+--   job =  8 : copies the witness set from the stored witness solutions
+--              into the dobldobl polynomial system and solutions containers,
+--              on input in a[0] is the dimension of the witness set.
+--   job =  9 : copies the witness set from the stored witness solutions
+--              into the dobldobl Laurent system and solutions containers,
+--              on input in a[0] is the dimension of the witness set.
+--   job = 10 : copies the witness set from the stored witness solutions
+--              into the quaddobl polynomial system and solutions containers,
+--              on input in a[0] is the dimension of the witness set.
+--   job = 11 : copies the witness set from the stored witness solutions
+--              into the quaddobl Laurent system and solutions containers,
+--              on input in a[0] is the dimension of the witness set.
+--   job = 12 : clears the witness solutions for standard double precision.
+--   job = 13 : clears the witness solutions for double double precision.
+--   job = 14 : clears the witness solutions for quad double precision.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

@@ -1,4 +1,6 @@
 Thu 23 Aug 2018 : the solver procedures in use_witsols.adb work.
+  Added operations in use_witsols to load the witness solutions into
+  the systems and solutions containers and to clear all witness solutions.
 
 Wed 22 Aug 2018 : new use_witsols to interface to the witness solutions,
   as output of a numerical irreducible decomposition.

@@ -21,12 +21,18 @@ with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Laur_Systems_io;    use QuadDobl_Complex_Laur_Systems_io;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
 with Standard_LaurSys_Container;
 with DoblDobl_LaurSys_Container;
 with QuadDobl_LaurSys_Container;
+with Standard_Solutions_Container;
+with DoblDobl_Solutions_Container;
+with QuadDobl_Solutions_Container;
 with Embeddings_and_Cascades;             use Embeddings_and_Cascades;
 with Standard_Witness_Solutions;
 with DoblDobl_Witness_Solutions;
@@ -331,15 +337,210 @@ function use_witsols ( job : integer32;
     return 0;
   end Job5;
 
+  function Job6 return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves a witness set stored for a polynomial system in
+  --   standard double precision and copies it into the containers.
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Poly_Sys
+       := Standard_Witness_Solutions.Load_Embedded_System(dim);
+    ws : constant Solution_List
+       := Standard_Witness_Solutions.Load_Witness_Points(dim);
+
+  begin
+    if lp /= null then
+      Standard_PolySys_Container.Clear;
+      Standard_PolySys_Container.Initialize(lp.all);
+    end if;
+    Standard_Solutions_Container.Clear;
+    Standard_Solutions_Container.Initialize(ws);
+    return 0;
+  end Job6;
+
+  function Job7 return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves a witness set stored for a Laurent polynomial system in
+  --   standard double precision and copies it into the containers.
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Laur_Sys
+       := Standard_Witness_Solutions.Load_Embedded_System(dim);
+    ws : constant Solution_List
+       := Standard_Witness_Solutions.Load_Witness_Points(dim);
+
+  begin
+    if lp /= null then
+      Standard_LaurSys_Container.Clear;
+      Standard_LaurSys_Container.Initialize(lp.all);
+    end if;
+    Standard_Solutions_Container.Clear;
+    Standard_Solutions_Container.Initialize(ws);
+    return 0;
+  end Job7;
+
+  function Job8 return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves a witness set stored for a polynomial system in
+  --   double double precision and copies it into the containers.
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Poly_Sys
+       := DoblDobl_Witness_Solutions.Load_Embedded_System(dim);
+    ws : constant Solution_List
+       := DoblDobl_Witness_Solutions.Load_Witness_Points(dim);
+
+  begin
+    if lp /= null then
+      DoblDobl_PolySys_Container.Clear;
+      DoblDobl_PolySys_Container.Initialize(lp.all);
+    end if;
+    DoblDobl_Solutions_Container.Clear;
+    DoblDobl_Solutions_Container.Initialize(ws);
+    return 0;
+  end Job8;
+
+  function Job9 return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves a witness set stored for a Laurent polynomial system in
+  --   double double precision and copies it into the containers.
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Laur_Sys
+       := DoblDobl_Witness_Solutions.Load_Embedded_System(dim);
+    ws : constant Solution_List
+       := DoblDobl_Witness_Solutions.Load_Witness_Points(dim);
+
+  begin
+    if lp /= null then
+      DoblDobl_LaurSys_Container.Clear;
+      DoblDobl_LaurSys_Container.Initialize(lp.all);
+    end if;
+    DoblDobl_Solutions_Container.Clear;
+    DoblDobl_Solutions_Container.Initialize(ws);
+    return 0;
+  end Job9;
+
+  function Job10 return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves a witness set stored for a polynomial system in
+  --   quad double precision and copies it into the containers.
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Poly_Sys
+       := QuadDobl_Witness_Solutions.Load_Embedded_System(dim);
+    ws : constant Solution_List
+       := QuadDobl_Witness_Solutions.Load_Witness_Points(dim);
+
+  begin
+    if lp /= null then
+      QuadDobl_PolySys_Container.Clear;
+      QuadDobl_PolySys_Container.Initialize(lp.all);
+    end if;
+    QuadDobl_Solutions_Container.Clear;
+    QuadDobl_Solutions_Container.Initialize(ws);
+    return 0;
+  end Job10;
+
+  function Job11 return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves a witness set stored for a Laurent polynomial system in
+  --   quad double precision and copies it into the containers.
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Laur_Sys
+       := QuadDobl_Witness_Solutions.Load_Embedded_System(dim);
+    ws : constant Solution_List
+       := QuadDobl_Witness_Solutions.Load_Witness_Points(dim);
+
+  begin
+    if lp /= null then
+      QuadDobl_LaurSys_Container.Clear;
+      QuadDobl_LaurSys_Container.Initialize(lp.all);
+    end if;
+    QuadDobl_Solutions_Container.Clear;
+    QuadDobl_Solutions_Container.Initialize(ws);
+    return 0;
+  end Job11;
+
+  function Job12 return integer32 is
+
+  -- DESCRIPTION :
+  --   Deallocates the witness solutions in standard double precision.
+
+  begin
+    Standard_Witness_Solutions.Clear;
+    return 0;
+  end Job12;
+
+  function Job13 return integer32 is
+
+  -- DESCRIPTION :
+  --   Deallocates the witness solutions in double double precision.
+
+  begin
+    DoblDobl_Witness_Solutions.Clear;
+    return 0;
+  end Job13;
+
+  function Job14 return integer32 is
+
+  -- DESCRIPTION :
+  --   Deallocates the witness solutions in quad double precision.
+
+  begin
+    QuadDobl_Witness_Solutions.Clear;
+    return 0;
+  end Job14;
+
   function do_jobs return integer32 is
   begin
     case job is
-      when 0 => return Job0; -- solve polynomial system with standard doubles
-      when 1 => return Job1; -- solve Laurent system with standard doubles
-      when 2 => return Job2; -- solve polynomial system with double doubles
-      when 3 => return Job3; -- solve Laurent system with double doubles
-      when 4 => return Job4; -- solve polynomial system with quad doubles
-      when 5 => return Job5; -- solve Laurent system with quad doubles
+      when  0 => return Job0; -- solve polynomial system with standard doubles
+      when  1 => return Job1; -- solve Laurent system with standard doubles
+      when  2 => return Job2; -- solve polynomial system with double doubles
+      when  3 => return Job3; -- solve Laurent system with double doubles
+      when  4 => return Job4; -- solve polynomial system with quad doubles
+      when  5 => return Job5; -- solve Laurent system with quad doubles
+      when  6 => return Job6; -- copy standard polysys witness set
+      when  7 => return Job7; -- copy standard laursys witness set
+      when  8 => return Job8; -- copy dobldobl polysys witness set
+      when  9 => return Job9; -- copy dobldobl laursys witness set
+      when 10 => return Job10; -- copy quaddobl polysys witness set
+      when 11 => return Job11; -- copy quaddobl laursys witness set
+      when 12 => return Job12; -- clear standard witness solutions
+      when 13 => return Job13; -- clear dobldobl witness solutions
+      when 14 => return Job14; -- clear quaddobl witness solutions
       when others => return -1;
     end case;
   end do_jobs;
