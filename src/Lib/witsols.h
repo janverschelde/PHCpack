@@ -103,4 +103,87 @@ int quaddobl_laursys_solve
  *   factor    0 or 1 flag to factor the witness sets,
  *   verbose   for intermediate output. */
 
+/* extracting solution data */
+
+int copy_standard_polysys_witset ( int dim );
+/*
+ * DESCRIPTION :
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the systems and solutions container,
+ *   in standard double precision.
+ *
+ * REQUIRED :
+ *   1) standard_polysys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+int copy_standard_laursys_witset ( int dim );
+/*
+ * DESCRIPTION :
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the Laurent systems and solutions container,
+ *   in standard double precision.
+ *
+ * REQUIRED :
+ *   1) standard_laursys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+int copy_dobldobl_polysys_witset ( int dim );
+/*
+ * DESCRIPTION :
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the systems and solutions container,
+ *   in double double precision.
+ *
+ * REQUIRED :
+ *   1) dobldobl_polysys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+int copy_dobldobl_laursys_witset ( int dim );
+/*
+ * DESCRIPTION :
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the Laurent systems and solutions container,
+ *   in double double precision.
+ *
+ * REQUIRED :
+ *   1) dobldobl_laursys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+int copy_quaddobl_polysys_witset ( int dim );
+/*
+ * DESCRIPTION :
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the systems and solutions container,
+ *   in quad double precision.
+ *
+ * REQUIRED :
+ *   1) quaddobl_polysys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+int copy_quaddobl_laursys_witset ( int dim );
+/*
+ * DESCRIPTION :
+ *   Copies the witness set representation for a solution set
+ *   of dimension dim into the Laurent systems and solutions container,
+ *   in quad double precision.
+ *
+ * REQUIRED :
+ *   1) quaddobl_laursys_solve was executed successfully, and
+ *   2) dim is in the range 0..topdim. */ 
+
+int clear_standard_witsols ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the witness solutions in standard double precision. */
+
+int clear_dobldobl_witsols ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the witness solutions in double double precision. */
+
+int clear_quaddobl_witsols ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the witness solutions in quad double precision. */
+
 #endif

@@ -107,3 +107,95 @@ int quaddobl_laursys_solve
 
    return fail;
 }
+
+/* extracting solution data */
+
+int copy_standard_polysys_witset ( int dim )
+{
+   int *b;
+   double *c;
+
+   int fail = _ada_use_c2phc4c(851,&dim,b,c);
+
+   return fail;
+}
+
+int copy_standard_laursys_witset ( int dim )
+{
+   int *b;
+   double *c;
+
+   int fail = _ada_use_c2phc4c(852,&dim,b,c);
+
+   return fail;
+}
+
+int copy_dobldobl_polysys_witset ( int dim )
+{
+   int *b;
+   double *c;
+
+   int fail = _ada_use_c2phc4c(853,&dim,b,c);
+
+   return fail;
+}
+
+int copy_dobldobl_laursys_witset ( int dim )
+{
+   int *b;
+   double *c;
+
+   int fail = _ada_use_c2phc4c(854,&dim,b,c);
+
+   return fail;
+}
+
+int copy_quaddobl_polysys_witset ( int dim )
+{
+   int *b;
+   double *c;
+
+   int fail = _ada_use_c2phc4c(855,&dim,b,c);
+
+   return fail;
+}
+
+int copy_quaddobl_laursys_witset ( int dim )
+{
+   int *b;
+   double *c;
+
+   int fail = _ada_use_c2phc4c(856,&dim,b,c);
+
+   return fail;
+}
+
+int clear_standard_witsols ( void )
+{
+   int *a,*b;
+   double *c;
+
+   int fail = _ada_use_c2phc4c(857,a,b,c);
+
+   return fail;
+}
+
+int clear_dobldobl_witsols ( void )
+{
+   int *a,*b;
+   double *c;
+
+   int fail = _ada_use_c2phc4c(858,a,b,c);
+
+   return fail;
+}
+
+int clear_quaddobl_witsols ( void )
+{
+   int *a,*b;
+   double *c;
+
+   int fail = _ada_use_c2phc4c(859,a,b,c);
+
+   return fail;
+}
