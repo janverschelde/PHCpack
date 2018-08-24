@@ -2691,6 +2691,84 @@ function use_c2phc4c ( job : integer32;
 --        =  731 : the length of the tropisms in quad double precision
 --                 is returned in a.
 --
+--   Jobs for the blackbox numerical irreducicble decomposition are below.
+--
+--   job  =  845 : numerical irreducible decomposition with standard doubles,
+--                 on the system in the standard polynomial systems container,
+--                 the input parameters are
+--                 a[0] : the top dimension of the solution set,
+--                 a[1] : the number of tasks, 0 for no multitasking,
+--                 a[2] : 0 or 1 if the witness supersets need to be filtered,
+--                 a[3] : 0 or 1 if the witness sets need to be factored,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, then intermediate results are written to screen.
+--        =  846 : numerical irreducible decomposition with standard doubles,
+--                 on the system in the standard Laurent systems container,
+--                 the input parameters are
+--                 a[0] : the top dimension of the solution set,
+--                 a[1] : the number of tasks, 0 for no multitasking,
+--                 a[2] : 0 or 1 if the witness supersets need to be filtered,
+--                 a[3] : 0 or 1 if the witness sets need to be factored,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, then intermediate results are written to screen.
+--        =  847 : numerical irreducible decomposition with double doubles,
+--                 on the system in the dobldobl polynomial systems container,
+--                 the input parameters are
+--                 a[0] : the top dimension of the solution set,
+--                 a[1] : the number of tasks, 0 for no multitasking,
+--                 a[2] : 0 or 1 if the witness supersets need to be filtered,
+--                 a[3] : 0 or 1 if the witness sets need to be factored,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, then intermediate results are written to screen.
+--         = 848 : numerical irreducible decomposition with double doubles,
+--                 on the system in the dobldobl Laurent systems container,
+--                 the input parameters are
+--                 a[0] : the top dimension of the solution set,
+--                 a[1] : the number of tasks, 0 for no multitasking,
+--                 a[2] : 0 or 1 if the witness supersets need to be filtered,
+--                 a[3] : 0 or 1 if the witness sets need to be factored,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, then intermediate results are written to screen.
+--        =  849 : numerical irreducible decomposition with quad doubles,
+--                 on the system in the quaddobl polynomial systems container,
+--                 the input parameters are
+--                 a[0] : the top dimension of the solution set,
+--                 a[1] : the number of tasks, 0 for no multitasking,
+--                 a[2] : 0 or 1 if the witness supersets need to be filtered,
+--                 a[3] : 0 or 1 if the witness sets need to be factored,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, then intermediate results are written to screen.
+--        =  850 : numerical irreducible decomposition with quad doubles,
+--                 on the system in the quaddobl Laurent systems container,
+--                 the input parameters are
+--                 a[0] : the top dimension of the solution set,
+--                 a[1] : the number of tasks, 0 for no multitasking,
+--                 a[2] : 0 or 1 if the witness supersets need to be filtered,
+--                 a[3] : 0 or 1 if the witness sets need to be factored,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, then intermediate results are written to screen.
+--        =  851 : copies the witness set from the stored witness solutions
+--                 into the standard polynomial system and solutions containers,
+--                 on input in a[0] is the dimension of the witness set.
+--        =  852 : copies the witness set from the stored witness solutions
+--                 into the standard Laurent system and solutions containers,
+--                 on input in a[0] is the dimension of the witness set.
+--        =  853 : copies the witness set from the stored witness solutions
+--                 into the dobldobl polynomial system and solutions containers,
+--                 on input in a[0] is the dimension of the witness set.
+--        =  854 : copies the witness set from the stored witness solutions
+--                 into the dobldobl Laurent system and solutions containers,
+--                 on input in a[0] is the dimension of the witness set.
+--        =  855 : copies the witness set from the stored witness solutions
+--                 into the quaddobl polynomial system and solutions containers,
+--                 on input in a[0] is the dimension of the witness set.
+--        =  856 : copies the witness set from the stored witness solutions
+--                 into the quaddobl Laurent system and solutions containers,
+--                 on input in a[0] is the dimension of the witness set.
+--        =  857 : clears the witness solutions for standard double precision.
+--        =  858 : clears the witness solutions for double double precision.
+--        =  859 : clears the witness solutions for quad double precision.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   or job not in the right range.

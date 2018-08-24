@@ -3191,7 +3191,7 @@ function use_c2phc4c ( job : integer32;
      -- when 843 => return use_outdata(9,a,b,c); -- call DEMiCs for mixed volume
      -- when 844 => return use_outdata(10,a,b,c); -- stable mv by DEMiCs
      -- numerical irreducible decomposition
-      when 845..850 => return use_witsols(job-845,a,b,c); -- solvers
+      when 845..859 => return use_witsols(job-845,a,b,c); -- solvers
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

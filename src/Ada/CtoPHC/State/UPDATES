@@ -1,3 +1,6 @@
+Fri 24 Aug 2018 : added 9 jobs to use_c2phc4c, for the witness solution data
+  computed by the blackbox numerical irreducible decomposition.
+
 Thu 23 Aug 2018 : the solver procedures in use_witsols.adb work.
   Added operations in use_witsols to load the witness solutions into
   the systems and solutions containers and to clear all witness solutions.
