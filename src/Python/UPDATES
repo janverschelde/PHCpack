@@ -1,5 +1,6 @@
 Sat 25 Aug 2018 : extended the factor module of PHCpy2 with the functions
-  standard_polysys_solve and test_polysys_solve.
+  standard_polysys_solve and test_polysys_solve.  Added the corresponding
+  function to the factor module of PHCpy3.
 
 Tue 14 Aug 2018 : adjustments for version 0.8.5 of phcpy.
 

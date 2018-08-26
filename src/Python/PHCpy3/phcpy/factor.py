@@ -491,6 +491,31 @@ def solve(nvr, dim, pols, islaurent=False, \
         write_decomposition(fadc)
     return fadc
 
+def standard_polysys_solve(pols, topdim=-1, \
+    filter=True, factor=True, tasks=0, verbose=True):
+    """
+    Runs the cascades of homotopies on the polynomial system in pols
+    in standard double precision.  The default top dimension topdim
+    is the number of variables in pols minus one.
+    """
+    from phcpy.phcpy2c3 import py2c_standard_polysys_solve
+    from phcpy.phcpy2c3 import py2c_copy_standard_polysys_witset
+    from phcpy.solver import number_of_symbols
+    from phcpy.interface import store_standard_system
+    from phcpy.interface import load_standard_system, load_standard_solutions
+    dim = number_of_symbols(pols)
+    if(topdim == -1):
+        topdim = dim
+    fail = store_standard_system(pols, nbvar=dim)
+    fail = py2c_standard_polysys_solve(tasks,topdim, \
+        int(filter),int(factor),int(verbose))
+    witsols = []
+    for soldim in range(0, topdim+1):
+        fail = py2c_copy_standard_polysys_witset(soldim)
+        witset = (load_standard_system(), load_standard_solutions())
+        witsols.append(witset)
+    return witsols
+
 def test_monodromy(prc='d'):
     """
     Runs a test on applying monodromy loops
@@ -540,6 +565,20 @@ def test_solve():
             '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
             '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
     deco = solve(4, 3, pols)
+
+def test_polysys_solve():
+    """
+    Runs a test on the standard_polysys_solve() function.
+    """
+    pols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
+            '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
+            '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
+            '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
+    sols = standard_polysys_solve(pols)
+    for dim in range(0, len(sols)):
+        witset = sols[dim]
+        deg = len(witset[1])
+        print('degree of solution set at dimension', dim, ':', deg)
 
 def test():
     """
