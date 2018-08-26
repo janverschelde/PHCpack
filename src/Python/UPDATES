@@ -1,3 +1,6 @@
+Sun 26 Aug 2018 : added function for double double and quad double precision
+  to the factor module of phcpy for python2.
+
 Sat 25 Aug 2018 : extended the factor module of PHCpy2 with the functions
   standard_polysys_solve and test_polysys_solve.  Added the corresponding
   function to the factor module of PHCpy3.
