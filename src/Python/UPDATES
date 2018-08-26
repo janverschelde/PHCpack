@@ -1,3 +1,6 @@
+Sat 25 Aug 2018 : extended the factor module of PHCpy2 with the functions
+  standard_polysys_solve and test_polysys_solve.
+
 Tue 14 Aug 2018 : adjustments for version 0.8.5 of phcpy.
 
 Sat 2 Jun 2018 : prepared files __init__.py, setup.py, conf.py for 0.8.4
