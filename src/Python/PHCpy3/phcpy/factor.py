@@ -505,7 +505,7 @@ def standard_polysys_solve(pols, topdim=-1, \
     from phcpy.interface import load_standard_system, load_standard_solutions
     dim = number_of_symbols(pols)
     if(topdim == -1):
-        topdim = dim
+        topdim = dim - 1
     fail = store_standard_system(pols, nbvar=dim)
     fail = py2c_standard_polysys_solve(tasks,topdim, \
         int(filter),int(factor),int(verbose))
@@ -513,6 +513,134 @@ def standard_polysys_solve(pols, topdim=-1, \
     for soldim in range(0, topdim+1):
         fail = py2c_copy_standard_polysys_witset(soldim)
         witset = (load_standard_system(), load_standard_solutions())
+        witsols.append(witset)
+    return witsols
+
+def standard_laursys_solve(pols, topdim=-1, \
+    filter=True, factor=True, tasks=0, verbose=True):
+    """
+    Runs the cascades of homotopies on the Laurent polynomial system in pols
+    in standard double precision.  The default top dimension topdim
+    is the number of variables in pols minus one.
+    """
+    from phcpy.phcpy2c3 import py2c_standard_laursys_solve
+    from phcpy.phcpy2c3 import py2c_copy_standard_laursys_witset
+    from phcpy.solver import number_of_symbols
+    from phcpy.interface import store_standard_laurent_system
+    from phcpy.interface import load_standard_laurent_system
+    from phcpy.interface import load_standard_solutions
+    dim = number_of_symbols(pols)
+    if(topdim == -1):
+        topdim = dim - 1
+    fail = store_standard_laurent_system(pols, nbvar=dim)
+    fail = py2c_standard_laursys_solve(tasks,topdim, \
+        int(filter),int(factor),int(verbose))
+    witsols = []
+    for soldim in range(0, topdim+1):
+        fail = py2c_copy_standard_laursys_witset(soldim)
+        witset = (load_standard_laurent_system(), load_standard_solutions())
+        witsols.append(witset)
+    return witsols
+
+def dobldobl_polysys_solve(pols, topdim=-1, \
+    filter=True, factor=True, tasks=0, verbose=True):
+    """
+    Runs the cascades of homotopies on the polynomial system in pols
+    in double double precision.  The default top dimension topdim
+    is the number of variables in pols minus one.
+    """
+    from phcpy.phcpy2c3 import py2c_dobldobl_polysys_solve
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_polysys_witset
+    from phcpy.solver import number_of_symbols
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.interface import load_dobldobl_system, load_dobldobl_solutions
+    dim = number_of_symbols(pols)
+    if(topdim == -1):
+        topdim = dim - 1
+    fail = store_dobldobl_system(pols, nbvar=dim)
+    fail = py2c_dobldobl_polysys_solve(tasks,topdim, \
+        int(filter),int(factor),int(verbose))
+    witsols = []
+    for soldim in range(0, topdim+1):
+        fail = py2c_copy_dobldobl_polysys_witset(soldim)
+        witset = (load_dobldobl_system(), load_dobldobl_solutions())
+        witsols.append(witset)
+    return witsols
+
+def dobldobl_laursys_solve(pols, topdim=-1, \
+    filter=True, factor=True, tasks=0, verbose=True):
+    """
+    Runs the cascades of homotopies on the Laurent polynomial system in pols
+    in double double precision.  The default top dimension topdim
+    is the number of variables in pols minus one.
+    """
+    from phcpy.phcpy2c3 import py2c_dobldobl_laursys_solve
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_laursys_witset
+    from phcpy.solver import number_of_symbols
+    from phcpy.interface import store_dobldobl_laurent_system
+    from phcpy.interface import load_dobldobl_laurent_system
+    from phcpy.interface import load_dobldobl_solutions
+    dim = number_of_symbols(pols)
+    if(topdim == -1):
+        topdim = dim - 1
+    fail = store_dobldobl_laurent_system(pols, nbvar=dim)
+    fail = py2c_dobldobl_laursys_solve(tasks,topdim, \
+        int(filter),int(factor),int(verbose))
+    witsols = []
+    for soldim in range(0, topdim+1):
+        fail = py2c_copy_dobldobl_laursys_witset(soldim)
+        witset = (load_dobldobl_laurent_system(), load_dobldobl_solutions())
+        witsols.append(witset)
+    return witsols
+
+def quaddobl_polysys_solve(pols, topdim=-1, \
+    filter=True, factor=True, tasks=0, verbose=True):
+    """
+    Runs the cascades of homotopies on the polynomial system in pols
+    in quad double precision.  The default top dimension topdim
+    is the number of variables in pols minus one.
+    """
+    from phcpy.phcpy2c3 import py2c_quaddobl_polysys_solve
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_polysys_witset
+    from phcpy.solver import number_of_symbols
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.interface import load_quaddobl_system, load_quaddobl_solutions
+    dim = number_of_symbols(pols)
+    if(topdim == -1):
+        topdim = dim - 1
+    fail = store_quaddobl_system(pols, nbvar=dim)
+    fail = py2c_quaddobl_polysys_solve(tasks,topdim, \
+        int(filter),int(factor),int(verbose))
+    witsols = []
+    for soldim in range(0, topdim+1):
+        fail = py2c_copy_quaddobl_polysys_witset(soldim)
+        witset = (load_quaddobl_system(), load_quaddobl_solutions())
+        witsols.append(witset)
+    return witsols
+
+def quaddobl_laursys_solve(pols, topdim=-1, \
+    filter=True, factor=True, tasks=0, verbose=True):
+    """
+    Runs the cascades of homotopies on the Laurent polynomial system in pols
+    in quad double precision.  The default top dimension topdim
+    is the number of variables in pols minus one.
+    """
+    from phcpy.phcpy2c3 import py2c_quaddobl_laursys_solve
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_laursys_witset
+    from phcpy.solver import number_of_symbols
+    from phcpy.interface import store_quaddobl_laurent_system
+    from phcpy.interface import load_quaddobl_laurent_system
+    from phcpy.interface import load_quaddobl_solutions
+    dim = number_of_symbols(pols)
+    if(topdim == -1):
+        topdim = dim - 1
+    fail = store_quaddobl_laurent_system(pols, nbvar=dim)
+    fail = py2c_quaddobl_laursys_solve(tasks,topdim, \
+        int(filter),int(factor),int(verbose))
+    witsols = []
+    for soldim in range(0, topdim+1):
+        fail = py2c_copy_quaddobl_laursys_witset(soldim)
+        witset = (load_quaddobl_laurent_system(), load_quaddobl_solutions())
         witsols.append(witset)
     return witsols
 
@@ -574,7 +702,8 @@ def test_polysys_solve():
             '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
             '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
             '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
-    sols = standard_polysys_solve(pols)
+    # sols = standard_polysys_solve(pols)
+    sols = dobldobl_polysys_solve(pols)
     for dim in range(0, len(sols)):
         witset = sols[dim]
         deg = len(witset[1])
