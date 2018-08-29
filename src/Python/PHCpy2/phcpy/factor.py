@@ -641,6 +641,46 @@ def quaddobl_laursys_solve(pols, topdim=-1, \
         witsols.append(witset)
     return witsols
 
+def polysys_solve(pols, topdim=-1, precision='d', \
+    filter=True, factor=True, tasks=0, verbose=True):
+    """
+    Runs the cascades of homotopies on the polynomial system in pols
+    in double, double double, or quad double precision.
+    The default top dimension topdim is the number of variables 
+    in pols minus one.
+    """
+    if(precision == 'd'):
+        return standard_polysys_solve(pols, topdim, \
+                                      filter, factor, tasks, verbose)
+    elif(precision == 'dd'):
+        return dobldobl_polysys_solve(pols, topdim, \
+                                      filter, factor, tasks, verbose)
+    elif(precision == 'qd'):
+        return quaddobl_polysys_solve(pols, topdim, \
+                                      filter, factor, tasks, verbose)
+    else:
+        print 'wrong level of precision, use d, dd, or qd'
+
+def laursys_solve(pols, topdim=-1, precision='d', \
+    filter=True, factor=True, tasks=0, verbose=True):
+    """
+    Runs the cascades of homotopies on the Laurent polynomial system in pols
+    in double, double double, or quad double precision.
+    The default top dimension topdim is the number of variables 
+    in pols minus one.
+    """
+    if(precision == 'd'):
+        return standard_laursys_solve(pols, topdim, \
+                                      filter, factor, tasks, verbose)
+    elif(precision == 'dd'):
+        return dobldobl_laursys_solve(pols, topdim, \
+                                      filter, factor, tasks, verbose)
+    elif(precision == 'qd'):
+        return quaddobl_laursys_solve(pols, topdim, \
+                                      filter, factor, tasks, verbose)
+    else:
+        print 'wrong level of precision, use d, dd, or qd'
+
 def test_monodromy(prc='d'):
     """
     Runs a test on applying monodromy loops
