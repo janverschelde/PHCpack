@@ -1,6 +1,9 @@
 a blackbox solver for isolated solutions
 ========================================
 
+.. |eacute| unicode:: U+00E9 .. eacute
+   :trim:
+
 The package phcpy depends on the shared object file phcpy2c.so.
 The module **solver**
 exports the blackbox solver of PHCpack, a fast mixed volume
@@ -79,10 +82,11 @@ prints the computed root counts.  The four computed root counts are
 1. The **total degree** is the product of the degrees of the polynomials
    in the system.
 
-2. The **multi-homogeneous Bezout number** is computed on a partition
-   of the set of unknowns.
+2. The **multi-homogeneous B** |eacute| **zout number** is computed
+   on a partition of the set of unknowns.
 
-3. A general **linear-product Bezout number** leads to a start system
+3. A general **linear-product B** |eacute| **zout number** leads 
+   to a start system
    which is a product of linear polynomials with random coefficients.
 
 4. The **mixed volume** is the mixed volume of the tuple of Newton
@@ -143,13 +147,15 @@ The structure of the output in ``s`` is described in the next section.
 
 If multitasking is applied in the solver,
 providing a larger than one value for the option ``tasks``,
-then the multi-homogeneous and the general linear-product Bezout numbers
+then the multi-homogeneous and the general linear-product
+B |eacute| zout numbers
 are not computed, because of the pipelined polyhedral homotopies.
 In pipelined polyhedral homotopies, the computation of the mixed volume
 is then done by one task, while the other tasks take the mixed cells and
 run the polyhedral homotopies to solve a random coefficient start system.
 This random coefficient start system will then be used to solve the given
-system, so there is no need for a start system based on a Bezout number.
+system, so there is no need for a start system based on 
+a B |eacute| zout number.
 
 representations of solutions of polynomial systems 
 --------------------------------------------------
@@ -478,7 +484,8 @@ the computation of the mixed volume by calling DEMiCs.
    >>> demics(f)
    14
 
-For every root count, total degree, m-homogeneous Bezout number,
+For every root count, total degree,
+m-homogeneous B |eacute| zout number,
 linear-product root count, and mixed volume, there is a corresponding
 method to construct a polynomial system with exactly as many regular
 solutions at the root count, which can then be used as a start system

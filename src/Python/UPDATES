@@ -1,3 +1,6 @@
+Tue 28 Aug 2018 : added the eacute definition to blackbox.rst to write
+  the e in Bezout properly.
+
 Sun 26 Aug 2018 : added function for double double and quad double precision
   to the factor module of phcpy for python2.  Did the same for python3.
 
