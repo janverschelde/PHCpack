@@ -1,3 +1,6 @@
+Thu 30 Aug 2018 : in black_box_root_counters.adb, added procedures to apply
+  the induced permutation for standard complex polynomial systems.
+
 Tue 14 Aug 2018 : adjusted greeting_banners for version 2.4.56.
 
 Thu 7 Jun 2018 : initialized rocotime to 0.0 in black_box_root_counts.adb
