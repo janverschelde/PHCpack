@@ -1,3 +1,6 @@
+Thu 30 Aug 2018 : exported the calculation of the induced permutation,
+  as needed for semi-mixed systems in the pipelined polyhedral homotopies.
+
 Wed 30 Sep 2015 : changed tuning in black_polyhedral_continuations.adb
   back to the original default values for double precision.
 

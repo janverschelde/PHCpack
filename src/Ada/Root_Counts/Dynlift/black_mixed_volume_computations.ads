@@ -37,6 +37,42 @@ package Black_Mixed_Volume_Computations is
   --   mixsub    a regular mixed-cell configuration;
   --   mv        mixed volume.
 
+  procedure Make_Induced_Permutation
+              ( sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                iprm : out Standard_Integer_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Auxiliary procedure to make the induced permutation
+  --   as needed for semi-mixed polynomial systems.
+
+  -- ON ENTRY :
+  --   sup      the supports of a polynomial system;
+  --   mix      type of mixture;
+  --   mcc      a regular mixed-cell configuration.
+
+  -- ON RETURN
+  --   iprm     the induced permutation from the mixed-cell configuration.
+
+  procedure Make_Induced_Permutation
+              ( p : in Poly_Sys;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                iprm : out Standard_Integer_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Auxiliary procedure to make the induced permutation
+  --   as needed for semi-mixed polynomial systems.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   mix      type of mixture;
+  --   mcc      a regular mixed-cell configuration.
+
+  -- ON RETURN
+  --   iprm     the induced permutation from the mixed-cell configuration.
+
   procedure Black_Box_Mixed_Volume_Computation
                ( p : in out Poly_Sys;
                  mix,perm,iprm : out Link_to_Vector;
