@@ -1231,7 +1231,8 @@ package body DoblDobl_Root_Refiners is
           backup := ls.all;
           Silent_Deflate(max,f,jf,ls,order,
                          tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-         -- Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+         -- reinstate Newton after deflation
+          Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
           if fail and backup.res < ls.res then
             ls.all := backup;
             Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
@@ -1326,7 +1327,8 @@ package body DoblDobl_Root_Refiners is
           backup := ls.all;
           Silent_Deflate(max,f,jf,ls,order,
                          tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-         -- Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+         -- reinstate Newton after deflation
+          Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
           if fail and backup.res < ls.res then
             ls.all := backup;
             Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
@@ -1433,10 +1435,11 @@ package body DoblDobl_Root_Refiners is
           backup := ls.all;
           Reporting_Deflate(file,wout,max,f,jf,ls,order,
                             tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-         -- if wout
-         --  then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
-         --  else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
-         -- end if;
+         -- reinstate Newton after deflation
+          if wout
+           then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+           else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+          end if;
           if fail and backup.res < ls.res then
             ls.all := backup;
             Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
@@ -1551,10 +1554,11 @@ package body DoblDobl_Root_Refiners is
           backup := ls.all;
           Reporting_Deflate(file,wout,max,f,jf,ls,order,
                             tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-         -- if wout
-         --  then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
-         --  else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
-         -- end if;
+         -- reinstate Newton after deflation
+          if wout
+           then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+           else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+          end if;
           if fail and backup.res < ls.res then
             ls.all := backup;
             Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);

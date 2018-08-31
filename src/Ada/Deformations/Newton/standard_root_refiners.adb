@@ -1976,8 +1976,9 @@ package body Standard_Root_Refiners is
           Silent_Deflate
             (max,p_eval,jac_eval,sa(i),order,tol_rnk,nd,monkeys,nv,nq,R1,
              numb,nbdef,fail);
-         -- Silent_Gauss_Newton
-         --   (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+         -- reinstate Gauss-Newton after deflation
+          Silent_Gauss_Newton
+            (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Gauss_Newton
@@ -2068,8 +2069,9 @@ package body Standard_Root_Refiners is
           Silent_Deflate
             (max,p_eval,jac_eval,sa(i),order,tol_rnk,nd,monkeys,nv,nq,R1,
              numb,nbdef,fail);
-         -- Silent_Gauss_Newton
-         --   (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+         -- reinstate Gauss-Newton after deflation
+          Silent_Gauss_Newton
+            (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Gauss_Newton
@@ -2224,14 +2226,15 @@ package body Standard_Root_Refiners is
                          tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
          --                   tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-         -- if wout then
-         --   Reporting_Gauss_Newton
-         --     (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
-         --      nit,max,fail);
-         -- else 
-         --   Silent_Gauss_Newton
-         --     (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
-         -- end if;
+         -- reinstate Gauss-Newton after deflation
+          if wout then
+            Reporting_Gauss_Newton
+              (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
+               nit,max,fail);
+          else 
+            Silent_Gauss_Newton
+              (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+          end if;
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Gauss_Newton
@@ -2349,14 +2352,15 @@ package body Standard_Root_Refiners is
                          tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
          --                   tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-         -- if wout then
-         --   Reporting_Gauss_Newton
-         --     (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
-         --      nit,max,fail);
-         -- else 
-         --   Silent_Gauss_Newton
-         --     (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
-         -- end if;
+         -- reinstate Gauss-Newton after deflation
+          if wout then
+            Reporting_Gauss_Newton
+              (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
+               nit,max,fail);
+          else 
+            Silent_Gauss_Newton
+              (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+          end if;
           if fail and backup.res < sa(i).res then
             sa(i).all := backup;
             Silent_Gauss_Newton
