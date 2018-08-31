@@ -1,3 +1,7 @@
+Fri 31 Aug 2018 : moved code for the apply induced permutations procedures
+  from black_box_root_counters to a new package Apply_Induced_Permutations
+  in the folder ../Root_Counts/Dynlift.
+
 Thu 30 Aug 2018 : in black_box_root_counters.adb, added procedures to
   apply the induced permutation for standard complex polynomial systems.
   Made similar updates for polynomial systems with coefficients in

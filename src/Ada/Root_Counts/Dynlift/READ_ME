@@ -52,6 +52,7 @@ dynamic_polyhedral_continuation  : incremental polyhedral continuation
 drivers_for_dynamic_lifting      : menu driver for dynamic lifting
 ts_drivdynl                      : calls the menu driver
 black_mixed_volume_computations  : blackbox mixed volume computation
+apply_induced_permutations       : applies induced permutations to systems
 black_polyhedral_continuations   : blackbox polyhedral continuation
 babldmvc                         : calls the blackbox mixed-volume computation
 -------------------------------------------------------------------------------
