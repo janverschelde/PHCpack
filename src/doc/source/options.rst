@@ -247,6 +247,24 @@ The ``-B`` option bundles the functionality of
 Since version 2.4.48, running ``phc -B`` provides
 a complete numerical irreducible decomposition.
 
+Consider for example the system
+
+::
+
+   4
+    (x1-1)*(x1-2)*(x1-3)*(x1-4);
+    (x1-1)*(x2-1)*(x2-2)*(x2-3);
+    (x1-1)*(x1-2)*(x3-1)*(x3-2);
+    (x1-1)*(x2-1)*(x3-1)*(x4-1);
+
+The system has 4 isolated solutions, 12 solution lines,
+one solution plane of dimension 2,
+and one solution plane of dimension 3.
+A numerical irreducible decomposition returns the 4 isolated solution points
+and one generic point on each of the 12 solution lines,
+one generic point on the 2-dimensional solution plane, and
+one generic point on the 3-dimensional solution plane.
+
 phc -c : irreducible decomposition for solution components     
 ==========================================================
 

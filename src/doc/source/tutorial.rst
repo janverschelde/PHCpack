@@ -126,6 +126,9 @@ The output of the solver will be sent to the file multilin.phc.
 In case the input file did not yet contain any solutions, 
 the solution list will be appended to the input file.
 
+The output can also appear directly on screen,
+if the name of the output file is omitted at the command line.
+
 We now explain the format of the solutions, for example, the last
 solution in the list occurs in the following format:
 
@@ -159,10 +162,49 @@ guaranteed to have all decimal places correct, except for the last three
 decimal places.  The last number represents the residual, the magnitude
 of the vector evaluated at the root.
 
+The blackbox solver has two other interesting options:
+
+1. To change the default working precision from hardware double precision
+   into double double or quad double precision, call ``phc`` respectively
+   with the options ``-b2`` or ``-b4``.
+
+2. To use multiple threads in the solver, call ``phc`` with the option 
+   ``-t`` immediately followed by the number of threads.
+   For example, to run the blackbox solver on 4 threads, type ``phc -b -t4``.
+
+Those two options may be combined.  For example ``phc -b2 -t8`` runs
+the blackbox solver on 8 threads in double double precision.
+If the computer has 8-core processors available, then ``phc -b2 -t8``
+may compensate for the overhead of double double arithmetic
+and be just as fast as the ``phc -b`` in double precision.
+
+For the system ``adjmin4`` above, representing
+the equations defining the adjacent 2-by-2 minors of
+a general 2-by-4 matrix, running ``phc -b`` does not make sense,
+as there are no isolated solutions.  
+Instead, we can compute a *numerical irreducible decompsition*
+with the option ``-B``, typing at the command prompt
+
+::
+
+    /tmp/phc -B adjmin4 adjmin4.phc
+
+The user is then prompted to enter the top dimension of the solution set,
+which by default equals the number of variables minus one.
+
+For this system, the output file will show that the solution set
+is a 5-dimensional solution set of degree 8, which factors into
+three irreducible components, of degrees 2, 2, and 4.
+
+Double double, quad double, and multithreading is also supported
+in the numerical irreducible decomposition.
+To run in quad double precision on 16 threads,
+type ``phc -B4 -t16`` at the command prompt.
+
 Running the program in full mode
 ================================
 
-If we just type in /tmp/phc without any option, we run the program
+If we just type in ``/tmp/phc`` without any option, we run the program
 in full mode and will pass through all the main menus.
 A nice application is the verification of the counterexample of Bertrand
 Haas.  We type in haas when the program asks us for the name of
