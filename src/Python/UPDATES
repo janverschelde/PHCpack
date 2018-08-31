@@ -1,3 +1,5 @@
+Fri 31 Aug 2018 : adjustment for version 0.8.6 of phcpy.
+
 Tue 28 Aug 2018 : added the eacute definition to blackbox.rst to write
   the e in Bezout properly.  Added a wrapper to the polysys and laursys
   solve functions in factor.py, to wrap the precision levels.

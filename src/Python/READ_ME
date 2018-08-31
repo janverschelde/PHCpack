@@ -1,4 +1,4 @@
-phcpy 0.8.5 offers a simple Python interface to PHCv2.4.56
+phcpy 0.8.6 offers a simple Python interface to PHCv2.4.57
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -64,6 +64,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.8.6 : 2018-08-31 : wrapped phc -B function in solvers of the factor module
 0.8.5 : 2018-08-14 : phcpy2c?.so is compiled with GNAT Community 2018
 0.8.4 : 2018-06-02 : option stable added to mixed_volume_by_demics()
 0.8.3 : 2018-05-18 : function mixed_volume_by_demics() in solver.py
