@@ -1,11 +1,15 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Solution_Manipulators;
 with Standard_Solution_Filters;
 with Standard_Solution_Splitters;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Root_Refining_Parameters;           use Root_Refining_Parameters;
 with Multitasking_Root_Refiners;         use Multitasking_Root_Refiners;
 
+--with standard_natural_numbers_io;
+-- use standard_natural_numbers_io;
 --with Standard_Complex_Solutions_io;
 -- use Standard_Complex_Solutions_io;
 
@@ -149,14 +153,22 @@ package body Standard_BlackBox_Refiners is
     maxit,nb : natural32 := 0;
     default_deflate,wout : boolean;
     vardeflate : boolean := deflate;
-    vansols,regsols,sinsols,ref_sinsols : Solution_List;
+    tarsols,vansols,regsols,sinsols,ref_sinsols : Solution_List;
+    target : constant Complex_Number := Create(1.0);
 
   begin
     if not Is_Null(sols) then
       Standard_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,default_deflate,wout);
-     -- refine only the vanishing solutions
-      vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
+     -- refine only the vanishing solutions that reached the target
+     -- put("The number of solutions : "); put(Length_Of(sols),1); new_line;
+      Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
+      tarsols := Standard_Solution_Filters.On_Target_Filter(sols,target,epsfa);
+     -- put("The number of solutions on target : ");
+     -- put(Length_Of(tarsols),1); new_line;
+      vansols := Standard_Solution_Filters.Vanishing_Filter(tarsols,epsfa);
+     -- put("The number of vanishing solutions on target : ");
+     -- put(Length_Of(vansols),1); new_line;
       if not Is_Null(vansols) then
         if not deflate then
           Mute_Multitasking_Root_Refiner
@@ -182,6 +194,7 @@ package body Standard_BlackBox_Refiners is
           sols := regsols;
         end if;
       end if;
+      Clear(tarsols);
     end if;
   end Silent_Black_Box_Refine;
 
@@ -194,14 +207,17 @@ package body Standard_BlackBox_Refiners is
     maxit,nb : natural32 := 0;
     default_deflate,wout : boolean;
     vardeflate : boolean := deflate;
-    vansols,regsols,sinsols,ref_sinsols : Solution_List;
+    tarsols,vansols,regsols,sinsols,ref_sinsols : Solution_List;
+    target : constant Complex_Number := Create(1.0);
 
   begin
     if not Is_Null(sols) then
       Standard_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,default_deflate,wout);
-     -- refine only the vanishing solutions
-      vansols := Standard_Solution_Filters.Vanishing_Filter(sols,epsfa);
+     -- refine only the vanishing solutions that reached the target
+      Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
+      tarsols := Standard_Solution_Filters.On_Target_Filter(sols,target,epsfa);
+      vansols := Standard_Solution_Filters.Vanishing_Filter(tarsols,epsfa);
       if not Is_Null(vansols) then
         if not deflate then
           Silent_Multitasking_Root_Refiner -- tasks remain silent
@@ -228,6 +244,7 @@ package body Standard_BlackBox_Refiners is
           sols := regsols;
         end if;
       end if;
+      Clear(tarsols);
     end if;
   end Reporting_Black_Box_Refine;
 

@@ -1,3 +1,6 @@
+Fri 31 Aug 2018 : filtered the solutions on reaching the target in
+  {standard,dobldobl,quaddobl}_blackbox_refiners.adb.
+
 Fri 6 Apr 2018 : added deflate options to standard_blackbox_refiners
    and standard_blackbox_continuations, which changed bablpoco.adb.
 

@@ -1,4 +1,4 @@
-Data management and drivers for polynomial continuation in PHCv2.4.52
+Data management and drivers for polynomial continuation in PHCv2.4.57
 
 In version 2.3.75, this directory was simplified with the moving of specific
 code for end games, sweeps, and path trackers to separate directories.

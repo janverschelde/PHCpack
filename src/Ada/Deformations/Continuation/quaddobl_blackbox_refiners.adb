@@ -1,5 +1,8 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
+with QuadDobl_Solution_Manipulators;
 with QuadDobl_Solution_Filters;
 with QuadDobl_Solution_Splitters;
 with QuadDobl_Root_Refiners;             use QuadDobl_Root_Refiners;
@@ -137,7 +140,9 @@ package body QuadDobl_BlackBox_Refiners is
     epsxa,epsfa,tolsing : double_float;
     deflate,wout : boolean := true;
     maxit,nb : natural32 := 0;
-    vansols,regsols,sinsols,ref_sinsols : Solution_List;
+    tarsols,vansols,regsols,sinsols,ref_sinsols : Solution_List;
+    qdtarget : constant quad_double := create(1.0);
+    target : constant Complex_Number := Create(qdtarget);
 
   begin
     if Length_Of(sols) > 0 then
@@ -145,14 +150,16 @@ package body QuadDobl_BlackBox_Refiners is
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
       Mute_Multitasking_Root_Refiner
         (nt,p,sols,epsxa,epsfa,tolsing,nb,maxit,deflate);
-      vansols := QuadDobl_Solution_Filters.Vanishing_Filter(sols,epsfa);
+      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
+      tarsols := QuadDobl_Solution_Filters.On_Target_Filter(sols,target,epsfa);
+      vansols := QuadDobl_Solution_Filters.Vanishing_Filter(tarsols,epsfa);
       QuadDobl_Solution_Splitters.Silent_Singular_Filter
         (vansols,tolsing,sinsols,regsols);
       nb := 0;
       Silent_Root_Refiner
         (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
       Push(ref_sinsols,regsols);
-      Clear(sols); Clear(vansols); Clear(sinsols);
+      Clear(sols); Clear(vansols); Clear(sinsols); Clear(tarsols);
       sols := regsols;
     end if;
   end Silent_Black_Box_Refine;
@@ -164,7 +171,9 @@ package body QuadDobl_BlackBox_Refiners is
     epsxa,epsfa,tolsing : double_float;
     maxit,nb : natural32 := 0;
     deflate,wout : boolean;
-    vansols,regsols,sinsols,ref_sinsols : Solution_List;
+    tarsols,vansols,regsols,sinsols,ref_sinsols : Solution_List;
+    qdtarget : constant quad_double := create(1.0);
+    target : constant Complex_Number := Create(qdtarget);
 
   begin
     if Length_Of(sols) > 0 then
@@ -172,13 +181,15 @@ package body QuadDobl_BlackBox_Refiners is
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
       Silent_Multitasking_Root_Refiner -- tasks remain silent
         (file,nt,p,sols,epsxa,epsfa,tolsing,nb,maxit,deflate);
-      vansols := QuadDobl_Solution_Filters.Vanishing_Filter(sols,epsfa);
+      QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
+      tarsols := QuadDobl_Solution_Filters.On_Target_Filter(sols,target,epsfa);
+      vansols := QuadDobl_Solution_Filters.Vanishing_Filter(tarsols,epsfa);
       QuadDobl_Solution_Splitters.Silent_Singular_Filter
         (vansols,tolsing,sinsols,regsols);
       Reporting_Root_Refiner
         (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
       Push(ref_sinsols,regsols);
-      Clear(sols); Clear(vansols); Clear(sinsols);
+      Clear(sols); Clear(vansols); Clear(sinsols); Clear(tarsols);
       sols := regsols;
     end if;
   end Reporting_Black_Box_Refine;
