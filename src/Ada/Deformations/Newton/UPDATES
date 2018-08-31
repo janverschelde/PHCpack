@@ -1,3 +1,6 @@
+Fri 31 Aug 2018 : reinstated the application of Newton's method after
+  deflation in standard_root_refiners.adb.
+
 Mon 20 Aug 2018 : bug fix in dobldobl_root_refiners.adb, forgotten
   Tail_Of(solsptr) caused phc -b2 to run forever.
 

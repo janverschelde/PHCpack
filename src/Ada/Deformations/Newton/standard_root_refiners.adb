@@ -960,7 +960,8 @@ package body Standard_Root_Refiners is
           Silent_Deflate
             (max,p_eval,jac_eval,ls,order,tolrnk,nd,monkeys,nv,nq,R1,
              numb,nbdef,fail);
-         -- Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
+         -- reinstate Newton after deflation
+          Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
           if fail and backup.res < ls.res then
             ls.all := backup;
             Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
@@ -1090,7 +1091,8 @@ package body Standard_Root_Refiners is
           Silent_Deflate
             (max,p_eval,jac_eval,ls,order,tolrnk,nd,monkeys,nv,nq,R1,
              numb,nbdef,fail);
-         -- Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
+         -- reinstate Newton after deflation
+          Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
           if fail and backup.res < ls.res then
             ls.all := backup;
             Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
@@ -1293,13 +1295,14 @@ package body Standard_Root_Refiners is
                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
            -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
            --                   tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-           -- if wout then
-           --   Reporting_Newton(file,p_eval,jac_eval,sa(i).all,epsxa,epsfa,
-           --                    nit,max,fail);
-           -- else
-           --   Silent_Newton
-           --     (p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
-           -- end if;
+           -- reinstate Newton after deflation
+            if wout then
+              Reporting_Newton(file,p_eval,jac_eval,ls.all,epsxa,epsfa,
+                               nit,max,fail);
+            else
+              Silent_Newton
+                (p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
+            end if;
             if fail and backup.res < ls.res then
               ls.all := backup;
               Silent_Newton
@@ -1494,12 +1497,13 @@ package body Standard_Root_Refiners is
                          tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
          --                   tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
-         -- if wout then
-         --   Reporting_Newton(file,p_eval,jac_eval,sa(i).all,epsxa,epsfa,
-         --                    nit,max,fail);
-         -- else 
-         --   Silent_Newton(p_eval,jac_eval,sa(i).all,epsxa,epsfa,nit,max,fail);
-         -- end if;
+         -- reinstate Newton after deflation
+          if wout then
+            Reporting_Newton(file,p_eval,jac_eval,ls.all,epsxa,epsfa,
+                             nit,max,fail);
+          else 
+            Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
+          end if;
           if fail and backup.res < ls.res then
             ls.all := backup;
             Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
