@@ -8,6 +8,7 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Arrays_of_Integer_Vector_Lists;
 with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
 with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
@@ -29,6 +30,7 @@ with Standard_Complex_Prod_Systems;      use Standard_Complex_Prod_Systems;
 with Standard_Complex_Prod_Systems_io;   use Standard_Complex_Prod_Systems_io;
 with Standard_Complex_Prod_Planes;
 with Random_Product_Start_Systems;       use Random_Product_Start_Systems;
+with Supports_of_Polynomial_Systems;
 with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
 with Induced_Permutations;
@@ -1440,7 +1442,7 @@ package body Black_Box_Root_Counters is
   end Pipelined_Stable_Continuation;
 
   procedure Compute_Permutation
-              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+              ( sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 r : in integer32;
                 perm,mtype : in Standard_Integer_Vectors.Link_to_Vector;
                 mcc : in Mixed_Subdivision;
@@ -1450,7 +1452,7 @@ package body Black_Box_Root_Counters is
   --   Computes the induced permutation for p.
 
   -- ON ENTRY :
-  --   p        a polynomial system;
+  --   sup      supports of a polynomial system;
   --   r        number of distinct supports;
   --   perm     permutation of the supports;
   --   mtype    type of mixture, computed by MixedVol;
@@ -1465,7 +1467,7 @@ package body Black_Box_Root_Counters is
     for i in 1..r loop
       mix(i) := mtype(i-1);
     end loop;
-    Make_Induced_Permutation(p,mix,mcc,iprm);
+    Make_Induced_Permutation(sup,mix,mcc,iprm);
   end Compute_Permutation;
 
   procedure Apply_Induced_Permutation
@@ -1488,12 +1490,175 @@ package body Black_Box_Root_Counters is
   --   p        permuted polynomials.
 
     iprm : Standard_Integer_Vectors.Link_to_Vector;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
 
   begin
     if perm /= null then
-      Compute_Permutation(p,r,perm,mtype,mcc,iprm);
+      sup := Supports_of_Polynomial_Systems.Create(p);
+      Compute_Permutation(sup,r,perm,mtype,mcc,iprm);
       Induced_Permutations.Permute(iprm.all,p);
       Standard_Integer_Vectors.Clear(iprm);
+      Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+    end if;
+  end Apply_Induced_Permutation;
+
+  procedure Apply_Induced_Permutation
+              ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                r : in integer32;
+                perm,mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                mcc : in Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Computes the induced permutation and applies it to p.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   r        number of distinct supports;
+  --   perm     permutation of the supports;
+  --   mtype    type of mixture, computed by MixedVol;
+  --   mcc      a regular mixed-cell configuration.
+ 
+  -- ON RETURN :
+  --   p        permuted polynomials.
+
+    iprm : Standard_Integer_Vectors.Link_to_Vector;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+
+  begin
+    if perm /= null then
+      sup := Supports_of_Polynomial_Systems.Create(p);
+      Compute_Permutation(sup,r,perm,mtype,mcc,iprm);
+      Induced_Permutations.Permute(iprm.all,p);
+      Standard_Integer_Vectors.Clear(iprm);
+      Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+    end if;
+  end Apply_Induced_Permutation;
+
+  procedure Apply_Induced_Permutation
+              ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                r : in integer32;
+                perm,mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                mcc : in Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Computes the induced permutation and applies it to p.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   r        number of distinct supports;
+  --   perm     permutation of the supports;
+  --   mtype    type of mixture, computed by MixedVol;
+  --   mcc      a regular mixed-cell configuration.
+ 
+  -- ON RETURN :
+  --   p        permuted polynomials.
+
+    iprm : Standard_Integer_Vectors.Link_to_Vector;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+
+  begin
+    if perm /= null then
+      sup := Supports_of_Polynomial_Systems.Create(p);
+      Compute_Permutation(sup,r,perm,mtype,mcc,iprm);
+      Induced_Permutations.Permute(iprm.all,p);
+      Standard_Integer_Vectors.Clear(iprm);
+      Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+    end if;
+  end Apply_Induced_Permutation;
+
+  procedure Apply_Induced_Permutation
+              ( p : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                r : in integer32;
+                perm,mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                mcc : in Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Computes the induced permutation and applies it to p.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   r        number of distinct supports;
+  --   perm     permutation of the supports;
+  --   mtype    type of mixture, computed by MixedVol;
+  --   mcc      a regular mixed-cell configuration.
+ 
+  -- ON RETURN :
+  --   p        permuted polynomials.
+
+    iprm : Standard_Integer_Vectors.Link_to_Vector;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+
+  begin
+    if perm /= null then
+      sup := Supports_of_Polynomial_Systems.Create(p);
+      Compute_Permutation(sup,r,perm,mtype,mcc,iprm);
+      Induced_Permutations.Permute(iprm.all,p);
+      Standard_Integer_Vectors.Clear(iprm);
+      Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+    end if;
+  end Apply_Induced_Permutation;
+
+  procedure Apply_Induced_Permutation
+              ( p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                r : in integer32;
+                perm,mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                mcc : in Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Computes the induced permutation and applies it to p.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   r        number of distinct supports;
+  --   perm     permutation of the supports;
+  --   mtype    type of mixture, computed by MixedVol;
+  --   mcc      a regular mixed-cell configuration.
+ 
+  -- ON RETURN :
+  --   p        permuted polynomials.
+
+    iprm : Standard_Integer_Vectors.Link_to_Vector;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+
+  begin
+    if perm /= null then
+      sup := Supports_of_Polynomial_Systems.Create(p);
+      Compute_Permutation(sup,r,perm,mtype,mcc,iprm);
+      Induced_Permutations.Permute(iprm.all,p);
+      Standard_Integer_Vectors.Clear(iprm);
+      Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+    end if;
+  end Apply_Induced_Permutation;
+
+  procedure Apply_Induced_Permutation
+              ( p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                r : in integer32;
+                perm,mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                mcc : in Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Computes the induced permutation and applies it to p.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   r        number of distinct supports;
+  --   perm     permutation of the supports;
+  --   mtype    type of mixture, computed by MixedVol;
+  --   mcc      a regular mixed-cell configuration.
+ 
+  -- ON RETURN :
+  --   p        permuted polynomials.
+
+    iprm : Standard_Integer_Vectors.Link_to_Vector;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+
+  begin
+    if perm /= null then
+      sup := Supports_of_Polynomial_Systems.Create(p);
+      Compute_Permutation(sup,r,perm,mtype,mcc,iprm);
+      Induced_Permutations.Permute(iprm.all,p);
+      Standard_Integer_Vectors.Clear(iprm);
+      Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
     end if;
   end Apply_Induced_Permutation;
 
@@ -1596,6 +1761,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,Create(zero));
       Pipelined_Stable_Continuation
         (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
@@ -1654,6 +1820,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,Create(zero));
       Pipelined_Stable_Continuation
         (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
@@ -1763,6 +1930,7 @@ package body Black_Box_Root_Counters is
       Set_Continuation_Parameter(qsols,Create(zero));
       Pipelined_Stable_Continuation
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
+      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
       rc := smv;
       tstop(timer);
       rocotime := 0.0;
@@ -1812,6 +1980,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,Create(zero));
       Pipelined_Stable_Continuation
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
@@ -1936,6 +2105,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,create(zero));
       Pipelined_Stable_Continuation
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
@@ -2005,6 +2175,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
+      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,create(zero));
       Pipelined_Stable_Continuation
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);

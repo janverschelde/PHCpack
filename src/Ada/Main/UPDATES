@@ -1,5 +1,7 @@
-Thu 30 Aug 2018 : in black_box_root_counters.adb, added procedures to apply
-  the induced permutation for standard complex polynomial systems.
+Thu 30 Aug 2018 : in black_box_root_counters.adb, added procedures to
+  apply the induced permutation for standard complex polynomial systems.
+  Made similar updates for polynomial systems with coefficients in
+  double double and quad double precision.
 
 Tue 14 Aug 2018 : adjusted greeting_banners for version 2.4.56.
 
