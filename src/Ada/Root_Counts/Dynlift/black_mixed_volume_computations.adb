@@ -123,6 +123,27 @@ package body Black_Mixed_Volume_Computations is
   end Make_Induced_Permutation;
 
   procedure Make_Induced_Permutation
+              ( sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stlb : in double_float;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                iprm : out Standard_Integer_Vectors.Link_to_Vector ) is
+
+    fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(sup'range)
+       := Floating_Integer_Convertors.Convert(sup);
+    ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+       := Floating_Lifting_Utilities.Lifted_Supports(mix'last,mcc);
+    ip : Standard_Integer_Vectors.Vector(fs'range);
+
+  begin
+    Induced_Permutations.Remove_Artificial_Origin(ls,stlb);
+    ip := Induced_Permutations.Permutation(fs,ls,mix);
+    iprm := new Standard_Integer_Vectors.Vector'(ip);
+    Arrays_of_Floating_Vector_Lists.Deep_Clear(fs);
+    Arrays_of_Floating_Vector_Lists.Deep_Clear(ls);
+  end Make_Induced_Permutation;
+
+  procedure Make_Induced_Permutation
               ( p : in Poly_Sys;
                 mix : in Standard_Integer_Vectors.Vector;
                 mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;

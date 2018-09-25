@@ -1,5 +1,7 @@
 Tue 25 Sep 2018 : the artificial origin must be removed in the computation
   of the induced permutation in black_mixed_volume_computations.adb.
+  Extended the package apply_induced_permutations and also exported more
+  in black_mixed_volume_computation for the stable lifting bound.
 
 Fri 31 Aug 2018 : new package apply_induced_permutations with code taken
   from black_box_root_counters.adb.

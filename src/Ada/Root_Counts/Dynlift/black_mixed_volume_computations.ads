@@ -56,6 +56,26 @@ package Black_Mixed_Volume_Computations is
   --   iprm     the induced permutation from the mixed-cell configuration.
 
   procedure Make_Induced_Permutation
+              ( sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stlb : in double_float;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                iprm : out Standard_Integer_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Auxiliary procedure to make the induced permutation
+  --   as needed for semi-mixed polynomial systems.
+
+  -- ON ENTRY :
+  --   sup      the supports of a polynomial system;
+  --   stlb     the stable lifting bound;
+  --   mix      type of mixture;
+  --   mcc      a regular mixed-cell configuration.
+
+  -- ON RETURN
+  --   iprm     the induced permutation from the mixed-cell configuration.
+
+  procedure Make_Induced_Permutation
               ( p : in Poly_Sys;
                 mix : in Standard_Integer_Vectors.Vector;
                 mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
