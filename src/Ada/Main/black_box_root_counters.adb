@@ -1482,7 +1482,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
-      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
+      Apply_Induced_Permutation(p,stlb,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,Create(0.0));
       Pipelined_Stable_Continuation
         (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
@@ -1541,7 +1541,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
-      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
+      Apply_Induced_Permutation(p,stlb,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,Create(zero));
       Pipelined_Stable_Continuation
         (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
@@ -1600,7 +1600,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
-      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
+      Apply_Induced_Permutation(p,stlb,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,Create(zero));
       Pipelined_Stable_Continuation
         (silent,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
@@ -1657,7 +1657,7 @@ package body Black_Box_Root_Counters is
       Set_Continuation_Parameter(qsols0,Create(0.0));
       Pipelined_Stable_Continuation
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
-      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
+      Apply_Induced_Permutation(p,stlb,r,perm,mtype,mcc);
       rc := smv;
       tstop(timer);
       rocotime := 0.0;
@@ -1710,7 +1710,7 @@ package body Black_Box_Root_Counters is
       Set_Continuation_Parameter(qsols,Create(zero));
       Pipelined_Stable_Continuation
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
-      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
+      Apply_Induced_Permutation(p,stlb,r,perm,mtype,mcc);
       rc := smv;
       tstop(timer);
       rocotime := 0.0;
@@ -1760,7 +1760,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
-      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
+      Apply_Induced_Permutation(p,stlb,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,Create(zero));
       Pipelined_Stable_Continuation
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
@@ -1815,7 +1815,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
-      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
+      Apply_Induced_Permutation(p,stlb,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,create(0.0));
       Pipelined_Stable_Continuation
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
@@ -1885,7 +1885,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
-      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
+      Apply_Induced_Permutation(p,stlb,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,create(zero));
       Pipelined_Stable_Continuation
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
@@ -1955,7 +1955,7 @@ package body Black_Box_Root_Counters is
       tstart(timer);
       Pipelined_Polyhedral_Homotopies
         (nt,true,stlb,p,r,mtype,perm,lifsup,mcc,tmv,lq,q,qsols);
-      Apply_Induced_Permutation(p,r,perm,mtype,mcc);
+      Apply_Induced_Permutation(p,stlb,r,perm,mtype,mcc);
       Set_Continuation_Parameter(qsols,create(zero));
       Pipelined_Stable_Continuation
         (true,r,mtype,stlb,lifsup,mcc,tmv,lq,mv,smv,qsols0);
