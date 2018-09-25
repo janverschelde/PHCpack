@@ -170,6 +170,43 @@ package body Black_Mixed_Volume_Computations is
     lifsup := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(ls);
   end Make_Induced_Permutation;
 
+  procedure Make_Induced_Permutation
+              ( sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stlb : in double_float;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                lifsup : out 
+                  Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+                iprm : out Standard_Integer_Vectors.Link_to_Vector ) is
+
+  -- DESCRIPTION :
+  --   Auxiliary procedure to make the induced permutation
+  --   as needed for semi-mixed polynomial systems.
+
+  -- ON ENTRY :
+  --   sup      the supports of the polynomials system;
+  --   stlb     stable lifting bound;
+  --   mix      type of mixture;
+  --   mcc      a regular mixed-cell configuration.
+
+  -- ON RETURN
+  --   lifsup   the lifted supports;
+  --   iprm     the induced permutation from the mixed-cell configuration.
+
+    fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(sup'range)
+       := Floating_Integer_Convertors.Convert(sup);
+    ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+       := Floating_Lifting_Utilities.Lifted_Supports(mix'last,mcc);
+    ip : Standard_Integer_Vectors.Vector(fs'range);
+
+  begin
+    Induced_Permutations.Remove_Artificial_Origin(ls,stlb);
+    ip := Induced_Permutations.Permutation(fs,ls,mix);
+    iprm := new Standard_Integer_Vectors.Vector'(ip);
+    Arrays_of_Floating_Vector_Lists.Deep_Clear(fs);
+    lifsup := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(ls);
+  end Make_Induced_Permutation;
+
   procedure Black_Box_Mixed_Volume_Computation
                ( p : in out Poly_Sys;
                  mix,perm,iprm : out Link_to_Vector;
@@ -274,7 +311,7 @@ package body Black_Mixed_Volume_Computations is
    --   Arrays_of_Floating_Vector_Lists.Deep_Clear(fs);
    --   lifsup := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(ls);
    -- end;
-    Make_Induced_Permutation(sup,mix(1..r),mixsub,lifsup,iprm);
+    Make_Induced_Permutation(sup,stlb,mix(1..r),mixsub,lifsup,iprm);
     Induced_Permutations.Permute(iprm.all,p);
     Drivers_for_Static_Lifting.Floating_Volume_Computation
       (n,stlb,mix(1..r),mixsub,mv,smv,tmv);

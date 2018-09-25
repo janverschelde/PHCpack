@@ -1,3 +1,6 @@
+Tue 25 Sep 2018 : the artificial origin must be removed in the computation
+  of the induced permutation in black_mixed_volume_computations.adb.
+
 Fri 31 Aug 2018 : new package apply_induced_permutations with code taken
   from black_box_root_counters.adb.
 
