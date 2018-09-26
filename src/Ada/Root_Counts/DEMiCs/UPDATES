@@ -1,5 +1,6 @@
 Wed 26 Sep 2018 : in simplex.cpp, added the volume and accumulated volume
   to the string strcell, which provides better info for progress monitoring.
+  Did an explicit type cast to int of the volumes to avoid default format.
 
 Fri 1 Jun 2018 : mixed volume functions in use_outdata.adb must clear the
   contents of DEMiCs_Output_Data at entry.
