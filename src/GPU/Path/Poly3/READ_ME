@@ -1,0 +1,33 @@
+Polynomials and solutions in the Path library, in PHCv2.4.58
+
+This directory contains the revised code of Poly2 of the Path library,
+revised to improve the integration into PHCpack.
+
+The templated Poly2 code has two main shortcomings:
+1) multiple class definitions in one file, and
+2) too few test programs.
+
+-------------------------------------------------------------------------------
+file name         : short description
+-------------------------------------------------------------------------------
+dict.h            : dictionary for the symbols of variabes
+linklist.h        : templated linked list
+linklist.tpp      : definitions of the templated code of linklist
+-------------------------------------------------------------------------------
+utilities.h       : templated prototypes of utility functions
+utilities.tpp     : definitions of the code prototyped in utilities.h
+polymon.h         : templated class for monomials
+polymon.tpp       : definitions of the templated code of polymon.h
+polyeq.h          : templated class for polynomial equations
+polyeq.tpp        : definitions of the templated code of polyeq.h
+int_idx.h         : defines a class to represent an index type
+polysys.h         : templated class for polynomial systems
+polysys.tpp       : definitions of the templated code of polysys.h
+polysyshom.h      : templated data structures for polynomial homotopies
+-------------------------------------------------------------------------------
+polysol.h         : templated classes for solutions of a polynomial system
+polysol.tpp       : definitions of the prototypes in polysol.h
+-------------------------------------------------------------------------------
+test_poly         : reads a system from file and prints it
+test_polysol      : reads solutions from file and prints them
+-------------------------------------------------------------------------------
