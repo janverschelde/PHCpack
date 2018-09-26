@@ -3793,8 +3793,11 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
       }
    }
    det = fabs(lu(Dim, vol));
+   mixedVol += det;
 
 #ifdef compile4phc
+   strcell << "volume : " << det;
+   strcell << " accumulated volume : " << mixedVol;
    // cout << "strcell: " << strcell.str() << endl;
    int fail = demics_append_cell_indices(strcell.str());
 #endif
@@ -3803,7 +3806,6 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
       cout << endl;
       cout << "Volume: " << det << endl << endl;
    }
-   mixedVol += det;
 }
 
 double simplex::lu ( int n, double* a )
