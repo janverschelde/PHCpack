@@ -3796,8 +3796,8 @@ void simplex::calMixedVol ( lvData* lv, int* sp, int supN )
    mixedVol += det;
 
 #ifdef compile4phc
-   strcell << "volume : " << ((int) det);
-   strcell << " accumulated volume : " << ((int) mixedVol);
+   strcell << "volume : " << lrint(det);
+   strcell << " accumulated volume : " << lrint(mixedVol);
    // cout << "strcell: " << strcell.str() << endl;
    int fail = demics_append_cell_indices(strcell.str());
 #endif

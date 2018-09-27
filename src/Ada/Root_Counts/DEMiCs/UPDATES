@@ -1,3 +1,6 @@
+Thu 27 Sep 2018 : used the function lrint() in simplex.cpp to round to
+  the nearest integer before converting to a long int.
+
 Wed 26 Sep 2018 : in simplex.cpp, added the volume and accumulated volume
   to the string strcell, which provides better info for progress monitoring.
   Did an explicit type cast to int of the volumes to avoid default format.
