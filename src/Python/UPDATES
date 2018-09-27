@@ -1,3 +1,6 @@
+Thu 27 Sep 2018 : in factor.py in the PHCpy2/phcpy folder, replaced the
+  import of phcpy2c3 by phcpy2c2.
+
 Fri 31 Aug 2018 : adjustment for version 0.8.6 of phcpy.
 
 Tue 28 Aug 2018 : added the eacute definition to blackbox.rst to write
