@@ -1,3 +1,5 @@
+Thu 27 Sep 2018 : adjusted greeting_banners for version 2.4.58.
+
 Tue 25 Sep 2018 : passed stable lifting bound to the make procedure of the
   induced permutations in black_box_root_counters.adb.
 
