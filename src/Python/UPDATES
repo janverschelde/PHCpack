@@ -1,5 +1,6 @@
 Thu 27 Sep 2018 : in factor.py in the PHCpy2/phcpy folder, replaced the
-  import of phcpy2c3 by phcpy2c2.
+  import of phcpy2c3 by phcpy2c2.  Updated __init__.py, conf.py and setup.py
+  in the PHCpy2 and PHCpy3 folders for version 0.8.7.
 
 Fri 31 Aug 2018 : adjustment for version 0.8.6 of phcpy.
 

@@ -1,4 +1,4 @@
-phcpy 0.8.6 offers a simple Python interface to PHCv2.4.57
+phcpy 0.8.7 offers a simple Python interface to PHCv2.4.58
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -11,10 +11,12 @@ volume 234, number 4, pages 1228-1237, 2010.
 
 The module phcpy needs the C extension module phcpy2c,
 which should be available as a shared object file.
-By default, the "make phcpy2c.so" command will place
-this shared object file in this directory.
-To compile phcpy2c.so on Unix, the fPIC option must be used for all files,
-so it is recommended to first execute "make clean" before "make phcpy2c.so".
+By default, the "make phcpy2c2.so" for python2 command will place
+this shared object file in the directory PHCpy2/phcpy.
+To compile phcpy2c2.so on Unix, the fPIC option must be used for all files,
+so it is recommended to first execute "make clean" before "make phcpy2c2.so".
+For python3, the shared object file is phcpy2c3.so and the code for phcpy
+is in the folder PHCpy3/phcpy.
 
 In version 2.3.71, documentation was generated with Sphinx,
 see the "doc" directory and the modules examples and phcsols were added.
@@ -64,6 +66,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.8.7 : 2018-09-27 : fixed regression tests in the examples module
 0.8.6 : 2018-08-31 : wrapped phc -B function in solvers of the factor module
 0.8.5 : 2018-08-14 : phcpy2c?.so is compiled with GNAT Community 2018
 0.8.4 : 2018-06-02 : option stable added to mixed_volume_by_demics()
