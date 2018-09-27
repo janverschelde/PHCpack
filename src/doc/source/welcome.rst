@@ -877,7 +877,9 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 #. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
    and Jeff Sommars: **Solving polynomial systems via homotopy continuation
-   and monodromy**. arXiv:1609.08722v2 [math.AG] 2 Nov 2016
+   and monodromy**. 
+   *IMA Journal of Numerical Analysis*. In Press, available online
+   13 April 2018.
 
 #. T. Gao and T.Y. Li:
    **Mixed volume computation via linear programming**.
