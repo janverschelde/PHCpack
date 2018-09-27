@@ -1,3 +1,7 @@
+Thu 27 Sep 2018 : in calling the blackbox solver in use_c2phc4c.adb,
+  treated the case for ntasks = 0 separately because deflation does not
+  work yet properly with multitasking.
+
 Fri 24 Aug 2018 : added 9 jobs to use_c2phc4c, for the witness solution data
   computed by the blackbox numerical irreducible decomposition.
 

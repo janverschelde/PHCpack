@@ -1855,9 +1855,15 @@ function use_c2phc4c ( job : integer32;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
      -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
       if silent then
-        Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+        if ntasks = 0 -- patch for multitasking and deflation
+         then Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
+         else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+        end if;
       else
-        Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+        if ntasks = 0 -- patch for multitasking and deflation
+         then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols);
+         else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+        end if;
         if lsroco = null then
           nr := 0;
         else
@@ -1878,9 +1884,15 @@ function use_c2phc4c ( job : integer32;
       begin
        -- Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
         if silent then
-          Black_Box_Solvers.Solve(ntasks,p,silent,true,rc,sols);
+          if ntasks = 0 -- patch for deflation with multitasking
+           then Black_Box_Solvers.Solve(p,silent,true,rc,sols);
+           else Black_Box_Solvers.Solve(ntasks,p,silent,true,rc,sols);
+          end if;
         else
-          Black_Box_Solvers.Solve(ntasks,p,true,rc,lsroco,sols);
+          if ntasks = 0 -- patch for deflation with multitasking
+           then Black_Box_Solvers.Solve(p,true,rc,lsroco,sols);
+           else Black_Box_Solvers.Solve(ntasks,p,true,rc,lsroco,sols);
+          end if;
           if lsroco = null then
             nr := 0;
           else
@@ -1935,9 +1947,15 @@ function use_c2phc4c ( job : integer32;
     end if;
    -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
     if silent then
-      Black_Box_Solvers.Solve(ntasks,lp.all,silent,true,rc,sols);
+      if ntasks = 0
+       then Black_Box_Solvers.Solve(lp.all,silent,true,rc,sols);
+       else Black_Box_Solvers.Solve(ntasks,lp.all,silent,true,rc,sols);
+      end if;
     else
-      Black_Box_Solvers.Solve(ntasks,lp.all,true,rc,lsroco,sols);
+      if ntasks = 0
+       then Black_Box_Solvers.Solve(lp.all,true,rc,lsroco,sols);
+       else Black_Box_Solvers.Solve(ntasks,lp.all,true,rc,lsroco,sols);
+      end if;
       if lsroco = null then
         nr := 0;
       else
@@ -1988,9 +2006,15 @@ function use_c2phc4c ( job : integer32;
       return 700;
     end if;
     if silent then
-      Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      if ntasks = 0 -- patch for multitasking and deflation
+       then Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
+       else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      end if;
     else
-      Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+      if ntasks = 0 -- patch for multitasking and deflation
+       then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols);
+       else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+      end if;
       if lsroco = null then
         nr := 0;
       else
@@ -2042,9 +2066,15 @@ function use_c2phc4c ( job : integer32;
     end if;
     if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
       if silent then
-        Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+        if ntasks = 0 -- patch for multitasking and deflation
+         then Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
+         else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+        end if;
       else
-        Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+        if ntasks = 0 -- patch for multitasking and deflation
+         then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols);
+         else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+        end if;
         if lsroco = null then
           nr := 0;
         else
@@ -2064,9 +2094,15 @@ function use_c2phc4c ( job : integer32;
         p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
       begin
         if silent then
-          Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+          if ntasks = 0 -- patch for multitasking and deflation
+           then Black_Box_Solvers.Solve(p,silent,rc,sols);
+           else Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+          end if;
         else
-          Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
+          if ntasks = 0 -- patch for multitasking and deflation
+           then Black_Box_Solvers.Solve(p,rc,lsroco,sols);
+           else Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
+          end if;
           if lsroco = null then
             nr := 0;
           else
@@ -2117,9 +2153,15 @@ function use_c2phc4c ( job : integer32;
       return 702;
     end if;
     if silent then
-      Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      if ntasks = 0 -- patch for multitasking and deflation
+       then Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
+       else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+      end if;
     else
-      Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+      if ntasks = 0 -- patch for multitasking and deflation
+       then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols);
+       else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+      end if;
       if lsroco = null then
         nr := 0;
       else
@@ -2171,9 +2213,15 @@ function use_c2phc4c ( job : integer32;
     end if;
     if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
       if silent then
-        Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+        if ntasks = 0 -- patch for multitasking and deflation
+         then Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
+         else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
+        end if;
       else
-        Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+        if ntasks = 0 -- patch for multitasking and deflation
+         then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols);
+         else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
+        end if;
         if lsroco = null then
           nr := 0;
         else
@@ -2193,9 +2241,15 @@ function use_c2phc4c ( job : integer32;
         p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
       begin
         if silent then
-          Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+          if ntasks = 0 -- patch for multitasking and deflation
+           then Black_Box_Solvers.Solve(p,silent,rc,sols);
+           else Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
+          end if;
         else
-          Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
+          if ntasks = 0 -- patch for multitasking and deflation
+           then Black_Box_Solvers.Solve(p,rc,lsroco,sols);
+           else Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
+          end if;
           if lsroco = null then
             nr := 0;
           else
