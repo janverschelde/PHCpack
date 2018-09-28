@@ -1,4 +1,4 @@
-Polynomials and solutions in the Path library, in PHCv2.4.58
+Polynomials and solutions in the Path library, in PHCv2.4.59
 
 This directory contains the revised code of Poly2 of the Path library,
 revised to improve the integration into PHCpack.
@@ -18,6 +18,7 @@ utilities.h       : templated prototypes of utility functions
 utilities.tpp     : definitions of the code prototyped in utilities.h
 polymon.h         : templated class for monomials
 polymon.tpp       : definitions of the templated code of polymon.h
+test_polymon      : test on the monomial data structure
 polyeq.h          : templated class for polynomial equations
 polyeq.tpp        : definitions of the templated code of polyeq.h
 int_idx.h         : defines a class to represent an index type

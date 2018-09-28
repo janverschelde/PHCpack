@@ -1,0 +1,2 @@
+Fri 28 Sep 2018 : new test program test_polymon.cpp, to test the data
+  structure to store a monomial, with added comments in polymon.h.

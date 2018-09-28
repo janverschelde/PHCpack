@@ -33,12 +33,12 @@ class PolyMon
    public:
 
       ComplexType coef; // coefficient of the monomial
-      int n_var; // derivative array of the monomial
-      int dim; // position array of variables in the monomial
-      int* pos;
-      int* exp; // exponent array of variables in the monomial
+      int n_var;        // number of variables with exponent > 0
+      int dim;          // ambient dimension, total number of variables
+      int* pos;         // position array of variables in the monomial
+      int* exp;         // exponent array of variables in the monomial
 
-      int n_base;
+      int n_base;       // number of variables with exponent > 1
       int* pos_base;
       int* exp_base;
       int* exp_tbl_base;
