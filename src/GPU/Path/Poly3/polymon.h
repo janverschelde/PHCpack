@@ -29,18 +29,18 @@ class PolyMon
 {
    public:
 
-      ComplexType coef; // coefficient of the monomial
-      int n_var;        // number of variables with exponent > 0
-      int dim;          // ambient dimension, total number of variables
-      int* pos;         // array of size n_var with positions of variables
-      int* exp;         // array of size n_var with exponents of variables
+      ComplexType coef;  // coefficient of the monomial
+      int n_var;         // number of variables with exponent > 0
+      int dim;           // ambient dimension, total number of variables
+      int* pos;          // array of size n_var with positions of variables
+      int* exp;          // array of size n_var with exponents of variables
 
-      int n_base;       // number of variables with exponent > 1
-      int* pos_base;    // array of size n_base with positions of variables
-      int* exp_base;    // array of size n_base with exponents of variables
-      int* exp_tbl_base;
+      int n_base;        // number of variables with exponent > 1
+      int* pos_base;     // array of size n_base with positions of variables
+      int* exp_base;     // array of size n_base with exponents of variables
+      int* exp_tbl_base; // stores values of exponents minus 2
 
-      PolyMon()
+      PolyMon() // makes the zero constant
       {
          coef = ComplexType(0.0,0.0);
          n_var = 0;
@@ -53,7 +53,7 @@ class PolyMon
          exp_tbl_base = NULL;
       }
 
-      PolyMon ( int dim )
+      PolyMon ( int dim ) // the zero constant in dimension dim
       {
          coef = ComplexType(0.0,0.0);
          n_var = 0;
@@ -67,6 +67,8 @@ class PolyMon
       }
 
       PolyMon ( int n, int* d, RealType* c )
+      // Makes a monomial for n variables, with exponents in d,
+      // and real and imaginary parts of the coefficient in c.
       {
          coef = ComplexType(c[0],c[1]);
          dim = n;
@@ -143,7 +145,8 @@ class PolyMon
        */
 
       ComplexType speel ( const ComplexType* x_val, ComplexType* deri );
-      // Use speel expanding to compute derivatives
+      // Uses Speelpennings algorithm to evaluate the monomial and all
+      // its derivatives.  The first n_var positions are deri are filled.
       /*
          First compute forward product, 
          then compute backward and cross product together.
@@ -163,7 +166,8 @@ class PolyMon
          @return value of base
        */
 
-      ComplexType eval ( const ComplexType* x_val ); // Evaluate monomial
+      ComplexType eval ( const ComplexType* x_val );
+      // The monomial is evaluated with the straightforward algorithm.
       /*
          @param x_val array of variables' values
          @return ComplexType monomial value
@@ -195,9 +199,10 @@ class PolyMon
 
       int job_number_block ( int start_level );
 
-      void update_max_deg(int* max_deg);
+      void update_max_deg ( int* max_deg );
 
       void update_base();
+      // Auxiliary operation for when reading a monomial.
 };
 
 #include "polymon.tpp"

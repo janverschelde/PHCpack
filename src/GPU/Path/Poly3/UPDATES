@@ -1,3 +1,6 @@
+Sun 30 Sep 2018 : improved documentation in polymon.h and better organization
+  of the tests in test_polymon.cpp.
+
 Sat 29 Sep 2018 : added better comments to polymon.h, tested the plain
   evaluation of monomials in test_polymon.cpp, fixed test_polysol.cpp.
 
