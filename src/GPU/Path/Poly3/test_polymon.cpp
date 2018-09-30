@@ -1,11 +1,28 @@
-// testing the operations on monomials
+// Tests the operations on monomials as defined by polymon.
 
 #include <iostream>
+#include <cstdlib>
 #include <string>
 #include "complexH.h"
 #include "polymon.h"
 
 using namespace std;
+
+template <class ComplexType, class RealType>
+ComplexType random_complex ();
+/*
+ * Returns a random complex number. */
+
+template <class ComplexType, class RealType>
+void random_point ( int dim, ComplexType* coordinates );
+/*
+ * Generates the coordinates of a random complex point.
+ * Space must be allocated for the coordinates. */
+
+template <class ComplexType, class RealType>
+ComplexType plain_eval ( PolyMon<ComplexType,RealType>& m, ComplexType *x );
+/*
+ * Applies the straightforward algorithm to evaluation m at x. */
 
 template <class ComplexType, class RealType>
 int test ( int dim );
@@ -42,6 +59,43 @@ int main ( void )
 }
 
 template <class ComplexType, class RealType>
+ComplexType random_complex ()
+{
+   double angle = 3.14*((double) rand())/RAND_MAX;
+   double re_part = cos(angle);
+   double im_part = sin(angle);
+
+   RealType real_part = RealType(re_part);
+   RealType imag_part = RealType(im_part);
+
+   ComplexType result = ComplexType(real_part, imag_part);
+
+   return result;
+}
+
+template <class ComplexType, class RealType>
+void random_point ( int dim, ComplexType* coordinates )
+{
+   for(int idx=0; idx<dim; idx++)
+      coordinates[idx] = random_complex<ComplexType,RealType>();
+}
+
+template <class ComplexType, class RealType>
+ComplexType plain_eval ( PolyMon<ComplexType,RealType>& m, ComplexType* x )
+{
+   ComplexType result = m.coef;
+
+   for(int varidx=0; varidx<m.n_var; varidx++)
+   {
+      int idx = m.pos[varidx];
+
+      for(int expidx=0; expidx<m.exp[varidx]; expidx++)
+         result = result*x[idx];
+   }
+   return result;
+}
+
+template <class ComplexType, class RealType>
 int test ( int dim )
 {
    RealType* coefficient = new RealType[2];
@@ -52,22 +106,27 @@ int test ( int dim )
       cout << "-> give the exponent for variable " << idx+1 << " : ";
       cin >> exponents[idx];
    }
-   coefficient[0] = 1.0;
-   coefficient[1] = 0.0;
+   srand(time(NULL));
+   ComplexType ran = random_complex<ComplexType,RealType>();
+
+   coefficient[0] = ran.real;
+   coefficient[1] = ran.imag;
 
    PolyMon<ComplexType,RealType> monomial
       = PolyMon<ComplexType,RealType>(dim, exponents, coefficient);
 
-   cout << endl << "dim : " << monomial.dim;
-   cout << endl << "n_var : " << monomial.n_var;
-   cout << endl << "n_base : " << monomial.n_base << endl;
+   cout << endl << "The coefficient : " << monomial.coef << endl;
+
+   cout << "dim : " << monomial.dim;
+   cout << "  n_var : " << monomial.n_var;
+   cout << "  n_base : " << monomial.n_base << endl;
 
    cout << endl << "The position array of the monomial :";
    for(int idx=0; idx<monomial.n_var; idx++)
       cout << " " << monomial.pos[idx];
    cout << endl;
 
-   cout << endl << "The exponent array of the monomial :";
+   cout << "The exponent array of the monomial :";
    for(int idx=0; idx<monomial.n_var; idx++)
       cout << " " << monomial.exp[idx];
    cout << endl;
@@ -77,10 +136,19 @@ int test ( int dim )
       cout << " " << monomial.pos_base[idx];
    cout << endl;
 
-   cout << endl << "The base exponent array of the monomial :";
+   cout << "The base exponent array of the monomial :";
    for(int idx=0; idx<monomial.n_base; idx++)
       cout << " " << monomial.exp_base[idx];
-   cout << endl;
+   cout << endl << endl;
+
+   ComplexType* point = new ComplexType[monomial.dim];
+   random_point<ComplexType,RealType>(monomial.dim, point);
+
+   ComplexType val1 = monomial.eval(point);
+   cout << "The value at a random point : " << val1;
+
+   ComplexType val2 = plain_eval<ComplexType,RealType>(monomial, point);
+   cout << "The value at a random point : " << val2 << endl;
 
    return 0;
 }

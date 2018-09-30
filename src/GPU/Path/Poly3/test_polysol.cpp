@@ -3,13 +3,13 @@
 #include <iostream>
 #include <string>
 #include "complexH.h"
-#include "poly.h"
+#include "polysys.h"
 #include "polysol.h"
 
 using namespace std;
 
 template <class ComplexType, class RealType>
-int test ( string filename);
+int test ( string filename );
 // reads a system from file and writes it to screen
 
 int main ( void )

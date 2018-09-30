@@ -1,5 +1,5 @@
-// polymon.h contains prototypes of templated data types for monomials
-// with complex coefficients of different precisions.
+// The file polymon.h contains prototypes of templated data types for
+// monomials with complex coefficients of different precisions.
 // The corresponding definitions of the functions are in polymon.tpp.
 
 #ifndef __POLYMON_H__
@@ -7,13 +7,10 @@
 
 #include <iostream>
 #include <fstream>
-#include "stdlib.h"
 #include <string>
 #include <cmath>
 #include <vector>
-#include <algorithm>
 
-#include "linklist.h"
 #include "dict.h"
 #include "utilities.h"
 
@@ -35,12 +32,12 @@ class PolyMon
       ComplexType coef; // coefficient of the monomial
       int n_var;        // number of variables with exponent > 0
       int dim;          // ambient dimension, total number of variables
-      int* pos;         // position array of variables in the monomial
-      int* exp;         // exponent array of variables in the monomial
+      int* pos;         // array of size n_var with positions of variables
+      int* exp;         // array of size n_var with exponents of variables
 
       int n_base;       // number of variables with exponent > 1
-      int* pos_base;
-      int* exp_base;
+      int* pos_base;    // array of size n_base with positions of variables
+      int* exp_base;    // array of size n_base with exponents of variables
       int* exp_tbl_base;
 
       PolyMon()
@@ -192,10 +189,9 @@ class PolyMon
          @param pos_dict the dictionary of variables and their positions
        */
 
-      int memory_size(int factor_size);
+      int memory_size ( int factor_size );
 
-      void print_level();
-      // print level structure
+      void print_level(); // prints the level structure
 
       int job_number_block ( int start_level );
 

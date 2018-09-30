@@ -1,2 +1,5 @@
+Sat 29 Sep 2018 : added better comments to polymon.h, tested the plain
+  evaluation of monomials in test_polymon.cpp, fixed test_polysol.cpp.
+
 Fri 28 Sep 2018 : new test program test_polymon.cpp, to test the data
   structure to store a monomial, with added comments in polymon.h.
