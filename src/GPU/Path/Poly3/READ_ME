@@ -20,6 +20,7 @@ polymon.h         : templated class for monomials
 polymon.tpp       : definitions of the templated code of polymon.h
 test_polymon      : test on the monomial data structure
 polyeq.h          : templated class for polynomial equations
+test_polyeq       : test on the polynomial equation data structure
 polyeq.tpp        : definitions of the templated code of polyeq.h
 int_idx.h         : defines a class to represent an index type
 polysys.h         : templated class for polynomial systems

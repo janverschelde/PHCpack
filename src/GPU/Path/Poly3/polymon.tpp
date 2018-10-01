@@ -275,3 +275,17 @@ ComplexType PolyMon<ComplexType,RealType>::eval
    return val;
 }
 
+template <class ComplexType, class RealType>
+void PolyMon<ComplexType,RealType>::print ( const string* pos_var )
+{
+   // print coef
+   print_coef_complex<ComplexType,RealType>(coef);
+   // cout << endl;
+   cout << pos_var[pos[0]];
+   if(exp[0]!= 1) cout << '^' << exp[0];
+   for(int i =1; i< n_var; i++)
+   {
+      cout << " * " << pos_var[pos[i]];
+      if(exp[i]!= 1) cout << '^' << exp[i];
+   }
+}
