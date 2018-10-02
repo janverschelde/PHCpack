@@ -16,13 +16,14 @@
 
 using namespace std;
 
-// Monomial class
 /*
-   Read the monomial from the string.
-   PolyMon is used to construct polynomial equation, PolyEq,
-   which is used to construct polynomial system, PolySys.
-   @sa PolyEq PolySys
-*/
+ * The class PolyMon defines the representation of a monomial,
+ * provides methods to read a monomial from string, and
+ * methods to efficiently evaluate and differentiate a monomial
+ * at a given point.
+ * The coefficient type is complex and the templated construction
+ * allows for different precisions.
+ */
 
 template <class ComplexType, class RealType>
 class PolyMon
@@ -67,8 +68,10 @@ class PolyMon
       }
 
       PolyMon ( int n, int* d, RealType* c )
-      // Makes a monomial for n variables, with exponents in d,
-      // and real and imaginary parts of the coefficient in c.
+      /*
+       * Makes a monomial for n variables, with exponents in d,
+       * and real and imaginary parts of the coefficient in c.
+       */
       {
          coef = ComplexType(c[0],c[1]);
          dim = n;
@@ -107,96 +110,97 @@ class PolyMon
          }
       }
 
-      ~PolyMon()
+      ~PolyMon() // The destructor frees the allocated space.
       {
          if(pos != NULL) delete[] pos;
          if(exp != NULL) delete[] exp;
+         if(pos_base != NULL) delete[] pos_base;
+         if(exp_base != NULL) delete[] exp_base;
+         if(exp_base != NULL) delete[] exp_tbl_base;
       }
 
       void read 
          ( const string& eq_string, VarDict& pos_dict,
            int start, int end, ComplexType coef );
-      // Reads a monomial from a certain part in the equation string.
       /*
-         Coefficient is given.
-         @param eq_string equation string
-         @param pos_dict the dictionary of variables and their positions
-         @param start start index of the monomial in equation string
-         @param end end index of the monomial in equation string
-         @param coef0 the coefficient of the monomail
-       */
+       * Reads the string from position start to end for the exponents
+       * of a monomial written in symbolic representation in the string.
+       * The dictionary pos_dict defines the positions of the variables.
+       * The coefficient of the monomial is given in coef.
+       */ 
 
       void read ( const string& mon_string, VarDict& pos_dict,
                   ComplexType coef );
-      // Reads a monomial from a monomial string.
       /*
-         Coefficient is given.
-         @param mon_string monomial string
-         @param pos_dict the dictionary of variables and their positions
-         @param coef0 the coefficient of the monomail
+       * Given the coefficient coef of a monomial, reads the string
+       * which contains the monomial in symbolic format for the exponents.
+       * The dictionary pos_dict define the position of the variables.
        */
 
       void read ( const string& mon_string, VarDict& pos_dict );
-      // Reads a monomial from a monomial string.
       /*
-         Read coefficient first and then variables.
-         @param mon_string monomial string
-         @param pos_dict the dictionary of variables and their positions
+       * Reads a monomial from a string which contains a monomial
+       * in symbolic representation.  The dictionary pos_dict defines
+       * the positions of the variables.
        */
 
       ComplexType speel ( const ComplexType* x_val, ComplexType* deri );
       /*
-         Applies algorithm of Speelpenning to evaluate the monomial and all
-         its derivatives.  The first n_var positions are deri are filled.
-         This function applies only when n_base == 0, that is:
-         when no variables appear with power 2 or higher.
-         The function assumes the monomial contains at least one variable
-         with an exponent equal to one.
-       */
-      /*
-         First compute forward product, 
-         then compute backward and cross product together.
-         @param[in] x_val values of variables
-         @param[out] deri array of derivatives
-         @return value of product of variables
+       * Applies algorithm of Speelpenning to evaluate the monomial and all
+       * its derivatives.  The first n_var positions are deri are filled.
+       * This function applies only when n_base == 0, that is:
+       * when no variables appear with power 2 or higher.
+       * The function assumes the monomial contains at least one variable
+       * with an exponent equal to one.
        */
 
       ComplexType speel_with_base
        ( const ComplexType* x_val, ComplexType* deri, ComplexType base );
+      /*
+       * Applies the Speelpenning algorithm to evaluate and differentiate
+       * the monomial at the point defined by x_val.
+       * The value of the monomial at x_val is returned.
+       * The derivatives are returned in deri.
+       * The value base is the common factor defined by all higher degree
+       * powers of the variables in the monomial.
+       */
 
       ComplexType eval_base
        ( const ComplexType* x_val, ComplexType** deg_table );
-      // Compute base of monomial
       /*
-         @param[in] x_val values of variables
-         @return value of base
+       * Multiplies the coefficient of the monomial with the powers
+       * of the variables in the double array deg_table.
+       * While the values in x_val are not used, the first entries
+       * in deg_table should equal to the coordinates in xval.
+       * Returns the value of the coefficient of the monomial
+       * times the value of the common factor of the monomial.
        */
 
       ComplexType eval ( const ComplexType* x_val );
-      // The monomial is evaluated with the straightforward algorithm.
       /*
-         @param x_val array of variables' values
-         @return ComplexType monomial value
+       * The monomial is evaluated with the straightforward algorithm
+       * at x_val, which must be an array of range 0..dim-1.
        */
 
       ComplexType eval ( const ComplexType* x_val, ComplexType* deri );
-      // Evaluate monomial and its derivatives
       /*
-         @param[in] x_val array of variables' values
-         @param[out] deri array of derivatives
-         @return monomial value
-         @sa eval_base() speel()
+       * Wraps the method speel() to evaluate and differentiate the
+       * monomial at the point x_val, with derivatives returned in deri.
        */
 
       ComplexType eval
        ( const ComplexType* x_val, ComplexType* deri,
          ComplexType** deg_table );
+      /*
+       * Wraps the method speel_with_base() to evaluate and differentiate
+       * the monomial at the point x_val, with powers of the variables
+       * given in deg_table.  The derivatives are returned in deri.
+       */
 
       void print ( const string* pos_var );
-      // prints a monomial
       /*
-         Variable symbols are read from pos_dict.
-         @param pos_dict the dictionary of variables and their positions
+       * Prints the monomial, given the positions of the variables
+       * defined in the string pos_var.
        */
 
       int memory_size ( int factor_size );

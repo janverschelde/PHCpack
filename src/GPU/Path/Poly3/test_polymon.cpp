@@ -43,6 +43,14 @@ ComplexType plain_eval ( PolyMon<ComplexType,RealType>& m, ComplexType *x );
  * Applies the straightforward algorithm to evaluate m at x. */
 
 template <class ComplexType, class RealType>
+void plain_diff
+ ( PolyMon<ComplexType,RealType>& m, ComplexType *x, ComplexType *deri );
+/*
+ * Applies the straightforward algorithm to differentiate m at x.
+ * The values of the derivatives are returned in deri in their order
+ * of appearance in the monomial, at positions 0 to m.n_var. */
+
+template <class ComplexType, class RealType>
 void test_evaluation ( PolyMon<ComplexType,RealType>& m );
 /*
  * Test the application of the straightforward and Speelpenning algorithm 
@@ -172,6 +180,32 @@ ComplexType plain_eval ( PolyMon<ComplexType,RealType>& m, ComplexType* x )
 }
 
 template <class ComplexType, class RealType>
+void plain_diff
+ ( PolyMon<ComplexType,RealType>& m, ComplexType *x, ComplexType *deri )
+{
+   for(int varidx=0; varidx<m.n_var; varidx++)
+   {
+      int idx = m.pos[varidx];
+
+      deri[varidx] = m.coef;
+      if(m.exp[varidx] > 1)
+      {
+         ComplexType factor = ComplexType(m.exp[varidx],0.0);
+         deri[varidx] = factor*deri[varidx];
+         for(int expidx=0; expidx<m.exp[varidx]-1; expidx++)
+            deri[varidx] = deri[varidx]*x[idx];
+      }
+      for(int otheridx=0; otheridx<m.n_var; otheridx++)
+         if(otheridx != varidx)
+         {
+            idx = m.pos[otheridx];
+            for(int expidx=0; expidx<m.exp[otheridx]; expidx++)
+               deri[varidx] = deri[varidx]*x[idx];
+         }
+   }
+}
+
+template <class ComplexType, class RealType>
 void print_data ( PolyMon<ComplexType,RealType>& monomial )
 {
    cout << endl << "The coefficient : " << monomial.coef << endl;
@@ -216,6 +250,10 @@ void test_evaluation ( PolyMon<ComplexType,RealType>& m )
    cout << "The value at a random point : " << val2;
 
    ComplexType* derivatives = new ComplexType[m.n_var];
+   ComplexType* plainderivs = new ComplexType[m.n_var];
+
+   plain_diff<ComplexType,RealType>(m, point, plainderivs);
+
    if(m.n_base == 0)
    {
       ComplexType val3 = m.speel(point, derivatives);
@@ -236,6 +274,12 @@ void test_evaluation ( PolyMon<ComplexType,RealType>& m )
       ComplexType valbase = m.eval_base(point, powers);
       ComplexType val4 = m.speel_with_base(point, derivatives, valbase);    
       cout << "The value at a random point : " << val4 << endl;
+   }
+   cout << "The derivatives computed plainly and with Speelpenning :" << endl;
+   for(int idx=0; idx<m.n_var; idx++)
+   {
+      cout << " at " << m.pos[idx] << " : " << plainderivs[idx];
+      cout << " at " << m.pos[idx] << " : " << derivatives[idx];
    }
 }
 
