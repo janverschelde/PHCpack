@@ -25,10 +25,10 @@ ComplexType plain_eval ( PolyMon<ComplexType,RealType>& m, ComplexType *x );
  * Applies the straightforward algorithm to evaluate m at x. */
 
 template <class ComplexType, class RealType>
-void test_plain_eval ( PolyMon<ComplexType,RealType>& m );
+void test_evaluation ( PolyMon<ComplexType,RealType>& m );
 /*
- * Test the application of the 
- * straightforward algorithm to evaluate m at x. */
+ * Test the application of the straightforward and Speelpenning algorithm 
+ * to evaluate m at x. */
 
 template <class ComplexType, class RealType>
 void print_data ( PolyMon<ComplexType,RealType>& monomial );
@@ -137,7 +137,7 @@ void print_data ( PolyMon<ComplexType,RealType>& monomial )
 }
 
 template <class ComplexType, class RealType>
-void test_plain_eval ( PolyMon<ComplexType,RealType>& m )
+void test_evaluation ( PolyMon<ComplexType,RealType>& m )
 {
    ComplexType* point = new ComplexType[m.dim];
    random_point<ComplexType,RealType>(m.dim, point);
@@ -146,7 +146,11 @@ void test_plain_eval ( PolyMon<ComplexType,RealType>& m )
    cout << "The value at a random point : " << val1;
 
    ComplexType val2 = plain_eval<ComplexType,RealType>(m, point);
-   cout << "The value at a random point : " << val2 << endl;
+   cout << "The value at a random point : " << val2;
+
+   ComplexType* derivatives = new ComplexType[m.n_var];
+   ComplexType val3 = m.speel(point, derivatives);
+   cout << "The value at a random point : " << val3 << endl;
 }
 
 template <class ComplexType, class RealType>
@@ -170,7 +174,7 @@ int test ( int dim )
       = PolyMon<ComplexType,RealType>(dim, exponents, coefficient);
 
    print_data<ComplexType,RealType>(monomial);
-   test_plain_eval<ComplexType,RealType>(monomial);
+   test_evaluation<ComplexType,RealType>(monomial);
 
    return 0;
 }

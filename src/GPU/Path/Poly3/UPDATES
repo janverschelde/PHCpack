@@ -1,5 +1,6 @@
 Mon 1 Oct 2018 : moved code from polysys.tpp into polymon.tpp and polyeq.tpp,
   new test program test_polyeq.cpp, with updated makefile.
+  Added calling of speel function to test_polymon.cpp.
 
 Sun 30 Sep 2018 : improved documentation in polymon.h and better organization
   of the tests in test_polymon.cpp.
