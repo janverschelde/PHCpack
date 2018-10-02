@@ -19,6 +19,24 @@ void random_point ( int dim, ComplexType* coordinates );
  * Generates the coordinates of a random complex point.
  * Space must be allocated for the dim many coordinates. */
 
+void random_exponents ( int dim, int expmax, int* exponents );
+/*
+ * Generates dim random positive integers as exponents in [0, expmax],
+ * uniformly distributed.
+ * Space must be allocated in exponents for dim integers. */
+
+template <class ComplexType, class RealType>
+PolyMon<ComplexType,RealType> random_monomial ( int dim, int expmax );
+/*
+ * Returns a random monomial, with a random complex coefficient,
+ * for dim variables, with exponents in [0, expmax]. */
+
+template <class ComplexType, class RealType>
+PolyMon<ComplexType,RealType> prompted_monomial ( int dim );
+/*
+ * Prompts the user for a coefficient and dim exponents
+ * to define a monomial which is returned. */
+
 template <class ComplexType, class RealType>
 ComplexType plain_eval ( PolyMon<ComplexType,RealType>& m, ComplexType *x );
 /*
@@ -91,6 +109,53 @@ void random_point ( int dim, ComplexType* coordinates )
       coordinates[idx] = random_complex<ComplexType,RealType>();
 }
 
+void random_exponents ( int dim, int expmax, int* exponents )
+{
+   for(int idx=0; idx<dim; idx++)
+      exponents[idx] = rand() % (expmax+1);
+}
+
+template <class ComplexType, class RealType>
+PolyMon<ComplexType,RealType> random_monomial ( int dim, int expmax )
+{
+   ComplexType ran = random_complex<ComplexType,RealType>();
+   RealType coefficient[2];
+   coefficient[0] = ran.real;
+   coefficient[1] = ran.imag;
+
+   int exponents[dim];
+   random_exponents(dim,expmax,exponents);
+
+   PolyMon<ComplexType,RealType> result
+      = PolyMon<ComplexType,RealType>(dim, exponents, coefficient);
+
+   return result;
+}
+
+template <class ComplexType, class RealType>
+PolyMon<ComplexType,RealType> prompted_monomial ( int dim )
+{
+   RealType coefficient[2];
+
+   cout << "-> give the real part of the coefficient : ";
+   cin >> coefficient[0];
+   cout << "-> give the imaginary part of the coefficient : ";
+   cin >> coefficient[1];
+
+   int exponents[dim];
+
+   for(int idx=0; idx<dim; idx++)
+   {
+      cout << "-> give the exponent for variable " << idx+1 << " : ";
+      cin >> exponents[idx];
+   }
+
+   PolyMon<ComplexType,RealType> result
+      = PolyMon<ComplexType,RealType>(dim, exponents, coefficient);
+
+   return result;
+}
+
 template <class ComplexType, class RealType>
 ComplexType plain_eval ( PolyMon<ComplexType,RealType>& m, ComplexType* x )
 {
@@ -139,6 +204,8 @@ void print_data ( PolyMon<ComplexType,RealType>& monomial )
 template <class ComplexType, class RealType>
 void test_evaluation ( PolyMon<ComplexType,RealType>& m )
 {
+   print_data<ComplexType,RealType>(m);
+
    ComplexType* point = new ComplexType[m.dim];
    random_point<ComplexType,RealType>(m.dim, point);
 
@@ -156,25 +223,24 @@ void test_evaluation ( PolyMon<ComplexType,RealType>& m )
 template <class ComplexType, class RealType>
 int test ( int dim )
 {
-   RealType* coefficient = new RealType[2];
-   int exponents[dim];
+   cout << "Test a random monomial ? (y/n) ";
+   char answer; cin >> answer;
 
-   for(int idx=0; idx<dim; idx++)
+   if(answer != 'y')
    {
-      cout << "-> give the exponent for variable " << idx+1 << " : ";
-      cin >> exponents[idx];
+      PolyMon<ComplexType,RealType> monomial
+         = prompted_monomial<ComplexType,RealType>(dim);
+
+      test_evaluation<ComplexType,RealType>(monomial);
    }
-   srand(time(NULL));
-   ComplexType ran = random_complex<ComplexType,RealType>();
+   else
+   {
+      srand(time(NULL));
 
-   coefficient[0] = ran.real;
-   coefficient[1] = ran.imag;
+      PolyMon<ComplexType,RealType> monomial
+         = random_monomial<ComplexType,RealType>(dim, 1);
 
-   PolyMon<ComplexType,RealType> monomial
-      = PolyMon<ComplexType,RealType>(dim, exponents, coefficient);
-
-   print_data<ComplexType,RealType>(monomial);
-   test_evaluation<ComplexType,RealType>(monomial);
-
+      test_evaluation<ComplexType,RealType>(monomial);
+   }
    return 0;
 }
