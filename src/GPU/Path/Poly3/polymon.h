@@ -145,8 +145,14 @@ class PolyMon
        */
 
       ComplexType speel ( const ComplexType* x_val, ComplexType* deri );
-      // Uses Speelpennings algorithm to evaluate the monomial and all
-      // its derivatives.  The first n_var positions are deri are filled.
+      /*
+         Applies algorithm of Speelpenning to evaluate the monomial and all
+         its derivatives.  The first n_var positions are deri are filled.
+         This function applies only when n_base == 0, that is:
+         when no variables appear with power 2 or higher.
+         The function assumes the monomial contains at least one variable
+         with an exponent equal to one.
+       */
       /*
          First compute forward product, 
          then compute backward and cross product together.

@@ -216,8 +216,27 @@ void test_evaluation ( PolyMon<ComplexType,RealType>& m )
    cout << "The value at a random point : " << val2;
 
    ComplexType* derivatives = new ComplexType[m.n_var];
-   ComplexType val3 = m.speel(point, derivatives);
-   cout << "The value at a random point : " << val3 << endl;
+   if(m.n_base == 0)
+   {
+      ComplexType val3 = m.speel(point, derivatives);
+      cout << "The value at a random point : " << val3 << endl;
+   }
+   else
+   {
+      ComplexType** powers = new ComplexType*[m.dim];
+      for(int idx=0; idx<m.n_var; idx++)
+      {
+         int varidx = m.pos[idx]; // index of the variable
+         int size = m.exp[idx]+1;
+         powers[varidx] = new ComplexType[size];
+         powers[varidx][0] = point[varidx];
+         for(int powidx=1; powidx<size; powidx++)
+            powers[varidx][powidx] = powers[varidx][powidx-1]*point[varidx];
+      }
+      ComplexType valbase = m.eval_base(point, powers);
+      ComplexType val4 = m.speel_with_base(point, derivatives, valbase);    
+      cout << "The value at a random point : " << val4 << endl;
+   }
 }
 
 template <class ComplexType, class RealType>
@@ -237,8 +256,11 @@ int test ( int dim )
    {
       srand(time(NULL));
 
+      cout << "Give the largest exponent in a monomial : ";
+      int expmax; cin >> expmax;
+
       PolyMon<ComplexType,RealType> monomial
-         = random_monomial<ComplexType,RealType>(dim, 1);
+         = random_monomial<ComplexType,RealType>(dim, expmax);
 
       test_evaluation<ComplexType,RealType>(monomial);
    }
