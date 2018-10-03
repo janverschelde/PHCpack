@@ -289,3 +289,13 @@ void PolyMon<ComplexType,RealType>::print ( const string* pos_var )
       if(exp[i]!= 1) cout << '^' << exp[i];
    }
 }
+
+template <class ComplexType, class RealType>
+void PolyMon<ComplexType,RealType>::update_max_deg ( int* max_deg )
+{
+   for(int i=0; i<n_var; i++)
+   {
+      // cout << "var " << i << endl;
+      if(exp[i]>max_deg[pos[i]]) max_deg[pos[i]] = exp[i];
+   }
+}

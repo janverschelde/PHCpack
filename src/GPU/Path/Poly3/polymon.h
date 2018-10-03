@@ -210,6 +210,10 @@ class PolyMon
       int job_number_block ( int start_level );
 
       void update_max_deg ( int* max_deg );
+      /*
+       * Updates the array of integers in max_deg with the value
+       * of the largest exponent, relative to its position.
+       */
 
       void update_base();
       // Auxiliary operation for when reading a monomial.

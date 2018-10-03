@@ -10,28 +10,32 @@ ComplexType PolyEq<ComplexType,RealType>::eval ( const ComplexType* x_val )
 
 template <class ComplexType, class RealType>
 ComplexType PolyEq<ComplexType,RealType>::eval
- ( const ComplexType* x_val, ComplexType* deri )
+ ( const ComplexType* x_val, ComplexType* deri, ComplexType *monderi )
 {
-   for(int i=0; i<dim; i++)
-   {
-      deri[i].init(0.0,0.0);
-   }
-   ComplexType val = constant;
-   // std::cout << constant << std::endl;
-    
-   ComplexType* mon_deri = new ComplexType[dim];
+   for(int i=0; i<dim; i++) deri[i].init(0.0,0.0);
 
+   ComplexType val = constant;
+    
    for(int i=0; i<n_mon; i++)
    {
       PolyMon<ComplexType,RealType>* m = mon[i];
-      val += m->eval(x_val, mon_deri);
+      val += m->eval(x_val, monderi);
 
-      for(int j=0; j<m->n_var; j++)
-      {
-         deri[m->pos[j]] += mon_deri[j];
-      }
+      for(int j=0; j<m->n_var; j++) deri[m->pos[j]] += monderi[j];
    }
-   delete [] mon_deri;
+
+   return val;
+}
+
+template <class ComplexType, class RealType>
+ComplexType PolyEq<ComplexType,RealType>::eval
+ ( const ComplexType* x_val, ComplexType* deri )
+{
+   ComplexType* mon_deri = new ComplexType[dim];
+
+   ComplexType val = eval(x_val, deri, mon_deri);
+
+   delete[] mon_deri;
 
    return val;
 }
@@ -40,10 +44,8 @@ template <class ComplexType, class RealType>
 ComplexType PolyEq<ComplexType,RealType>::eval
  ( const ComplexType* x_val, ComplexType* deri, ComplexType** deg_table )
 {
-   for(int i=0; i<dim; i++)
-   {
-      deri[i].init(0.0,0.0);
-   }
+   for(int i=0; i<dim; i++) deri[i].init(0.0,0.0);
+
    ComplexType val = constant;
    // std::cout << constant << std::endl;
 
@@ -53,10 +55,7 @@ ComplexType PolyEq<ComplexType,RealType>::eval
       // std::cout << "mon " << mon_idx << std::endl;
       PolyMon<ComplexType,RealType>* m = mon[mon_idx];
       val += m->eval(x_val, mon_deri, deg_table);
-      for(int j=0; j<m->n_var; j++)
-      {
-         deri[m->pos[j]] += mon_deri[j];
-      }
+      for(int j=0; j<m->n_var; j++) deri[m->pos[j]] += mon_deri[j];
    }
    delete [] mon_deri;
 
@@ -160,4 +159,14 @@ void PolyEq<ComplexType,RealType>::print(const string* pos_var)
 
    print_number_complex<ComplexType,RealType>(constant);
    cout << endl;
+}
+
+template <class ComplexType, class RealType>
+void PolyEq<ComplexType,RealType>::update_max_deg ( int* max_deg )
+{
+   for(int i=0; i<n_mon; i++)
+   {
+      // cout << "mon " << i << endl;
+      mon[i]->update_max_deg(max_deg);
+   }
 }

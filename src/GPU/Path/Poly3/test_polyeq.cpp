@@ -11,9 +11,23 @@
 using namespace std;
 
 template <class ComplexType, class RealType>
+PolyEq<ComplexType,RealType> random_polynomial
+ ( int dim, int nbterms, int expmax );
+/*
+ * Returns a random polynomial in a space with dim variables
+ * and with as many terms as the value of nbterms.
+ * The largest exponent is defined by the value of expmax.  */
+
+template <class ComplexType, class RealType>
 void write_polynomial ( PolyEq<ComplexType,RealType>& p );
 /*
  * Writes the terms in p in tableau style format. */
+
+template <class ComplexType, class RealType>
+ComplexType plain_eval
+ ( PolyEq<ComplexType,RealType>& p, ComplexType* x );
+/*
+ * Applies the straightforward algorithm to evaluate p at x. */
 
 template <class ComplexType, class RealType>
 int test ( int dim );
@@ -58,24 +72,69 @@ void write_polynomial ( PolyEq<ComplexType,RealType>& p )
 
    for(int idx=0; idx<p.n_mon; idx++)
    {
+      // print_data<ComplexType,RealType>(*p.mon[idx]);
+
       cout << p.mon[idx]->coef.real << "  "
-           << p.mon[idx]->coef.imag << endl;
+           << p.mon[idx]->coef.imag;
+
+      int varidx = 0;
+      for(int posidx=0; posidx<p.mon[idx]->n_var; posidx++)
+      {
+         while(varidx < p.mon[idx]->pos[posidx])
+         {
+            cout << " 0";
+            varidx = varidx+1;
+         }
+         cout << " " << p.mon[idx]->exp[posidx];
+         varidx = varidx+1;
+      }
+      while(varidx < p.mon[idx]->dim)
+      {
+         cout << " 0";
+         varidx = varidx + 1;
+      }
+      cout << endl;
    }
 }
 
 template <class ComplexType, class RealType>
 int test ( int dim )
 {
-   int nbterms;
-   RealType* coefficient = new RealType[2];
-   int exponents[dim];
-
-   for(int idx=0; idx<dim; idx++) exponents[idx] = 0;
+   int nbterms,expmax;
 
    cout << "Give the number of terms : "; cin >> nbterms;
+   cout << "Give the largest exponent : "; cin >> expmax;
 
    srand(time(NULL));
 
+   PolyEq<ComplexType,RealType> polynomial
+     = random_polynomial<ComplexType,RealType>(dim,nbterms,expmax);
+
+   cout << endl << "The terms in a random polynomial :" << endl;
+   write_polynomial<ComplexType,RealType>(polynomial);
+
+   cout << endl << "Testing the evaluation ..." << endl;
+   ComplexType* point = new ComplexType[dim];
+   random_point<ComplexType,RealType>(dim, point);
+
+   ComplexType* derivatives = new ComplexType[dim];
+
+   ComplexType val1 = polynomial.eval(point);
+   cout << "the value at a random point : " << val1;
+
+   ComplexType val2 = plain_eval<ComplexType,RealType>(polynomial,point);
+   cout << "the value at a random point : " << val2;
+
+   ComplexType val3 = polynomial.eval(point,derivatives);
+   cout << "the value at a random point : " << val3;
+
+   return 0;
+}
+
+template <class ComplexType, class RealType>
+PolyEq<ComplexType,RealType> random_polynomial
+ ( int dim, int nbterms, int expmax )
+{
    PolyEq<ComplexType,RealType> polynomial(dim);
    polynomial.constant = random_complex<ComplexType,RealType>();
 
@@ -83,20 +142,22 @@ int test ( int dim )
 
    for(int idx=0; idx<nbterms-1; idx++)
    {
-      ComplexType ran = random_complex<ComplexType,RealType>();
-      coefficient[0] = ran.real;
-      coefficient[1] = ran.imag;
-
-      PolyMon<ComplexType,RealType> *monomial;
-
-      monomial = new PolyMon<ComplexType,RealType>(dim,exponents,coefficient);
-   
-      polynomial.mon.push_back(monomial);
+      PolyMon<ComplexType,RealType>* term
+         = new PolyMon<ComplexType,RealType>
+                  (random_monomial<ComplexType,RealType>(dim,expmax));
+      polynomial.mon.push_back(term);
    }
+   return polynomial;
+}
 
-   cout << endl << "The terms in a random polynomial :" << endl;
+template <class ComplexType, class RealType>
+ComplexType plain_eval
+ ( PolyEq<ComplexType,RealType>& p, ComplexType* x )
+{
+   ComplexType result = p.constant;
 
-   write_polynomial(polynomial);
+   for(int idx=0; idx<p.n_mon; idx++)
+      result += plain_eval(*p.mon[idx],x);
 
-   return 0;
+   return result;
 }

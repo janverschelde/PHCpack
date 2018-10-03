@@ -1,5 +1,5 @@
-// polyeq.h contains prototypes of templated data types for polynomial
-// equations with complex coefficients of different precisions.
+// The file polyeq.h contains prototypes of templated data types for 
+// polynomials with complex coefficients of different precisions.
 // The corresponding definitions of the functions are in polyeq.tpp.
 
 #ifndef __POLYEQ_H__
@@ -22,29 +22,28 @@
 
 using namespace std;
 
-// Polynomial equation class
 /*
-   Read polynomial equation from string,
-   and build array of monomials, PolyMon.
-   PolyEq is used to construct polynomial system, PolySys.
-   @sa PolyMon PolySys
-*/
+ * The polynomial equation class defines the representation and
+ * the evaluation and differentiation methods for polynomials
+ * with complex coefficients (of various precisions) in several variables.
+ */
 
 template <class ComplexType, class RealType>
 class PolyEq
 {
    public:
 
-      ComplexType constant; // Constant of equation
-      int n_mon;   // Number of monomials
-      int dim;     // Number of monomials
+      ComplexType constant; // the constant of the polynomial
+      int n_mon;            // number of monomials in the vector mon
+      int dim;              // maximum number of variables in each monomial
       vector<PolyMon<ComplexType,RealType>*> mon;
-      // Monomial array of the equation
+      // monomial array of the equation of size n_mon
+      // with nonzero constant, the polynomial has thus n_mon+1 terms
 
       int level;
       int* job_number_level;
 
-      PolyEq() // Constructor 
+      PolyEq() // returns the zero polynomial
       {
          constant.init(0.0,0.0);
          n_mon = 0;
@@ -53,7 +52,7 @@ class PolyEq
          job_number_level = NULL;
       }
 
-      PolyEq(int dim) // Constructor 
+      PolyEq ( int dim ) // returns the zero polynomial and sets dim
       {
          constant.init(0.0, 0.0);
          n_mon = 0;
@@ -62,7 +61,7 @@ class PolyEq
          job_number_level = NULL;
       }
 
-      ~PolyEq() // Destructor
+      ~PolyEq() // destructor
       {
           for(typename vector< PolyMon<ComplexType,RealType>* >::iterator
               it=mon.begin(); it<mon.end(); it++)
@@ -72,51 +71,58 @@ class PolyEq
       }
 
       void read ( const string& eq_string, VarDict& pos_dict );
-      // Reads an equation from a string
       /*
-         First, indentify monomials position.
-         Then, construct an array of monomials, use PolyMon::read().
-         @param eq_string equation string
-         @param pos_dict the dictionary of variables and their positions
-         @sa PolyMon::read()
+       * Reads a polynomial from a string.
+       * The dictionary pos_dict defines the positions of the variables.
        */
 
       void read ( const string& eq_string, VarDict& pos_dict,
                   int start, int end );
-      // Reads an equation from certain part of a string
       /*
-         First, indentify monomials position.
-         Then, construct an array of monomials, use PolyMon::read().
-         @param eq_string equation string
-         @param pos_dict the dictionary of variables and their positions
-         @param start the start position of equation in the string 
-         @param end the end position of equation in the string
-         @sa PolyMon::read()
+       * Reads a polynomial from a string, starting at position start
+       * and ending at position end.
+       * The dictionary pos_dict defines the positions of the variables.
        */
 
       void print ( const string* pos_var );
-      // Print equation
       /*
-         Print monomial by monomial in the equation.
-         Constant comes the last.
-         @param pos_dict the dictionary of variables and their positions
+       * Writes the polynomial term by term, with the constant last.
+       * The string pos_var defines the dictionary of the variables
+       * and their positions.
        */
 
       ComplexType eval ( const ComplexType* x_val );
-      // Evaluate equation
       /*
-         @param x_val ComplexType array of variables' values
-         @return ComplexType equation value
+       * Evaluates the polynomial term by term,
+       * using the straighforward algorithm to evaluate a monomial.
+       * The input variable x_val must contain dim complex numbers.
+       */
+	
+      ComplexType eval
+       ( const ComplexType* x_val, ComplexType* deri, ComplexType *monderi );
+      /*
+       * Applies the algorithm of Speelpenning to evaluate and differentiate
+       * all monomials in the polynomial at the values in x_val.
+       * The function returns the function value and the values of the
+       * derivatives are returned in the argument deri.
+       * The dim values in monderi are auxiliary to store the intermediate
+       * values of the derivatives of the monomials.
+       * Results will be correct only if no variables appear with
+       * power 2 or higher.
        */
 	
       ComplexType eval ( const ComplexType* x_val, ComplexType* deri );
-      // Evaluate equation and its derivatives
       /*
-         Evaluate monomials and their derivative by PolyMon::eval(),
-         and add them up.
-         @param[in] x_val array of variables' values
-         @param[out] deri array of derivatives
-         @return equation value
+       * Applies the algorithm of Speelpenning to evaluate and differentiate
+       * all monomials in the polynomial at the values in x_val.
+       * The function returns the function value and the values of the
+       * derivatives are returned in the argument deri.
+       * Results will be correct only if no variables appear with
+       * power 2 or higher.
+       * This method allocates and deallocates the auxiliary data structure
+       * monderi and wraps the previous eval method.
+       * Because of this allocation and deallocation, this evaluation
+       * method should not be used in a multithreaded application.
        */
 
       ComplexType eval ( const ComplexType* x_val, ComplexType* deri,
@@ -131,6 +137,10 @@ class PolyEq
       int job_number_block ( int start_level );
 
       void update_max_deg ( int* max_deg );
+      /*
+       * Updates the array of integers in max_deg with the value
+       * of the largest exponent, relative to its position.
+       */
 };
 
 #include "polyeq.tpp"
