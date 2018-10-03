@@ -6,13 +6,9 @@
 #include "complexH.h"
 #include "polymon.h"
 #include "polyeq.h"
+#include "test_utils.h"
 
 using namespace std;
-
-template <class ComplexType, class RealType>
-ComplexType random_complex ();
-/*
- * Returns a random complex number. */
 
 template <class ComplexType, class RealType>
 void write_polynomial ( PolyEq<ComplexType,RealType>& p );
@@ -51,21 +47,6 @@ int main ( void )
       cout << "Invalid choice " << choice << " for the precision." << endl; 
 
    return 0;
-}
-
-template <class ComplexType, class RealType>
-ComplexType random_complex ()
-{
-   double angle = 3.14*((double) rand())/RAND_MAX;
-   double re_part = cos(angle);
-   double im_part = sin(angle);
-
-   RealType real_part = RealType(re_part);
-   RealType imag_part = RealType(im_part);
-
-   ComplexType result = ComplexType(real_part, imag_part);
-
-   return result;
 }
 
 template <class ComplexType, class RealType>

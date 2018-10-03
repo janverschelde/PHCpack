@@ -3,6 +3,8 @@ Tue 2 Oct 2018 : improved test_polymon.cpp with functions to generate a
   Improved the documentation in polymon.h and the evaluation of higher
   degree monomials is tested in test_polymon.cpp.  Differentiation tested 
   in test_polymon.cpp and improved documentation in polymon.h.
+  New files test_utils.h and test_utils.tpp with test utility functions
+  for use in test_polymon.cpp and in test_polyeq.cpp.
 
 Mon 1 Oct 2018 : moved code from polysys.tpp into polymon.tpp and polyeq.tpp,
   new test program test_polyeq.cpp, with updated makefile.

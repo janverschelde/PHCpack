@@ -5,7 +5,7 @@ gpp=/usr/bin/g++
 
 CFLAG   = ../Complex
 
-test_polymon:
+test_polymon: 
 	$(gpp) -c -I$(CFLAG) test_polymon.cpp -o test_polymon.o
 	$(gpp) test_polymon.o $(QD_LIB)/libqd.a -o /tmp/test_polymon
 

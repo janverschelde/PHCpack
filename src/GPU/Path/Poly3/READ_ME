@@ -18,6 +18,7 @@ utilities.h       : templated prototypes of utility functions
 utilities.tpp     : definitions of the code prototyped in utilities.h
 polymon.h         : templated class for monomials
 polymon.tpp       : definitions of the templated code of polymon.h
+test_utils        : test utility functions
 test_polymon      : test on the monomial data structure
 polyeq.h          : templated class for polynomial equations
 test_polyeq       : test on the polynomial equation data structure
