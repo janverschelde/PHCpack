@@ -140,3 +140,100 @@ void print_data ( PolyMon<ComplexType,RealType>& monomial )
       cout << " " << monomial.exp_base[idx];
    cout << endl << endl;
 }
+
+template <class ComplexType, class RealType>
+PolyEq<ComplexType,RealType> random_polynomial
+ ( int dim, int nbterms, int expmax )
+{
+   PolyEq<ComplexType,RealType> polynomial(dim);
+   polynomial.constant = random_complex<ComplexType,RealType>();
+
+   polynomial.n_mon = nbterms-1;
+
+   for(int idx=0; idx<nbterms-1; idx++)
+   {
+      PolyMon<ComplexType,RealType>* term
+         = new PolyMon<ComplexType,RealType>
+                  (random_monomial<ComplexType,RealType>(dim,expmax));
+      polynomial.mon.push_back(term);
+   }
+   return polynomial;
+}
+
+template <class ComplexType, class RealType>
+void write_polynomial ( PolyEq<ComplexType,RealType>& p )
+{
+   cout << p.constant.real << "  " << p.constant.imag << " ";
+   for(int idx=0; idx<p.dim; idx++) cout << " 0";
+   cout << endl;
+
+   for(int idx=0; idx<p.n_mon; idx++)
+   {
+      // print_data<ComplexType,RealType>(*p.mon[idx]);
+
+      cout << p.mon[idx]->coef.real << "  "
+           << p.mon[idx]->coef.imag;
+
+      int varidx = 0;
+      for(int posidx=0; posidx<p.mon[idx]->n_var; posidx++)
+      {
+         while(varidx < p.mon[idx]->pos[posidx])
+         {
+            cout << " 0";
+            varidx = varidx+1;
+         }
+         cout << " " << p.mon[idx]->exp[posidx];
+         varidx = varidx+1;
+      }
+      while(varidx < p.mon[idx]->dim)
+      {
+         cout << " 0";
+         varidx = varidx + 1;
+      }
+      cout << endl;
+   }
+}
+
+template <class ComplexType, class RealType>
+ComplexType plain_eval
+ ( PolyEq<ComplexType,RealType>& p, ComplexType* x )
+{
+   ComplexType result = p.constant;
+
+   for(int idx=0; idx<p.n_mon; idx++)
+      result += plain_eval(*p.mon[idx],x);
+
+   return result;
+}
+
+template <class ComplexType, class RealType>
+void plain_diff
+ ( PolyEq<ComplexType,RealType>& p, ComplexType* x, ComplexType *deri )
+{
+   ComplexType monderi[p.dim];
+
+   for(int idx=0; idx<p.dim; idx++) deri[idx].init(0.0,0.0);
+
+   for(int idx=0; idx<p.n_mon; idx++)
+   {
+      PolyMon<ComplexType,RealType> *m = p.mon[idx];
+
+      plain_diff<ComplexType,RealType>(*m, x, monderi);
+
+      for(int jdx=0; jdx<m->n_var; jdx++)
+         deri[m->pos[jdx]] += monderi[jdx];
+   }
+}
+
+template <class ComplexType, class RealType>
+void powertable
+ ( int dim, int* maxdeg, ComplexType* point, ComplexType** powers )
+{
+   for(int idx=0; idx<dim; idx++)
+   {
+      int size = maxdeg[idx]+1;
+      powers[idx][0] = point[idx];
+      for(int powidx=1; powidx<size; powidx++)
+         powers[idx][powidx] = powers[idx][powidx-1]*point[idx];
+   }
+}

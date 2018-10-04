@@ -1,5 +1,6 @@
 Thu 4 Oct 2018 : updated polyeq.h, polyeq.tpp, and test_polyeq.cpp to
   test the evaluation and differentiation of general polynomials.
+  Moved functions from test_polyeq.cpp to test_utils.h and test_utils.tpp.
 
 Wed 3 Oct 2018 : moved update_max_deg from polysys.tpp to polymon.tpp
   and documented this method.  Updated polyeq.h and polyeq.tpp, with

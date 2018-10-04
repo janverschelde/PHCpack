@@ -1,5 +1,7 @@
 // The file test_utils.h contains the prototypes of test utility functions
-// to test the operations on monomials as defined by polymon.
+// to test the operations on monomials as defined by polymon, and
+// to test the operations on polynomials as defined by polyeq.
+// The utility functions are applied in test_polymon and test_polyeq.
 
 #ifndef __TEST_UTILS_H__
 #define __TEST_UTILS_H__
@@ -9,6 +11,7 @@
 #include <cmath>
 #include "complexH.h"
 #include "polymon.h"
+#include "polyeq.h"
 
 template <class ComplexType, class RealType>
 ComplexType random_complex ();
@@ -56,6 +59,43 @@ template <class ComplexType, class RealType>
 void print_data ( PolyMon<ComplexType,RealType>& monomial );
 /*
  * Prints the content of the data stored in monomial. */
+
+template <class ComplexType, class RealType>
+PolyEq<ComplexType,RealType> random_polynomial
+ ( int dim, int nbterms, int expmax );
+/*
+ * Returns a random polynomial in a space with dim variables
+ * and with as many terms as the value of nbterms.
+ * The largest exponent is defined by the value of expmax. */
+
+template <class ComplexType, class RealType>
+void write_polynomial ( PolyEq<ComplexType,RealType>& p );
+/*
+ * Writes the terms in p in tableau style format. */
+
+template <class ComplexType, class RealType>
+ComplexType plain_eval
+ ( PolyEq<ComplexType,RealType>& p, ComplexType* x );
+/*
+ * Applies the straightforward algorithm to evaluate p at x. */
+
+template <class ComplexType, class RealType>
+void plain_diff
+ ( PolyEq<ComplexType,RealType>& p, ComplexType* x, ComplexType *deri );
+/*
+ * Applies the straightforward algorithm to differentiate p at x.
+ * The function returns in deri the values of all derivatives. */
+
+template <class ComplexType, class RealType>
+void powertable
+ ( int dim, int* maxdeg, ComplexType* point, ComplexType** powers );
+/*
+ * Computes the table with the powers of the variables,
+ * at the dim coordinates of the given point,
+ * given the maximal degrees for each variable from 0 to dim-1.
+ * The function assumes sufficient space for powers has been allocated.
+ * Row idx in powers[idx] contains the powers of the variable idx,
+ * starting at the value point[idx]. */
 
 #include "test_utils.tpp"
 
