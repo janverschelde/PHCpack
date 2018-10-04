@@ -37,6 +37,12 @@ void plain_diff
  * The function returns in deri the values of all derivatives. */
 
 template <class ComplexType, class RealType>
+void test_evaluation ( PolyEq<ComplexType,RealType> &polynomial );
+/*
+ * Tests the evaluation and differentation of the polynomial
+ * at a random point. */
+
+template <class ComplexType, class RealType>
 int test ( int dim );
 /*
  * Runs an interactive test on monomials with
@@ -104,6 +110,62 @@ void write_polynomial ( PolyEq<ComplexType,RealType>& p )
    }
 }
 
+int maximum ( int dim, int* values )
+{
+   int result = values[0];
+
+   for(int idx=0; idx<dim; idx++)
+      if(values[idx] > result) result = values[idx];
+
+   return result;
+}
+
+template <class ComplexType, class RealType>
+void test_evaluation ( PolyEq<ComplexType,RealType> &polynomial )
+{
+   const int dim = polynomial.dim;
+
+   cout << endl << "Testing the evaluation ..." << endl;
+   ComplexType* point = new ComplexType[dim];
+   random_point<ComplexType,RealType>(dim, point);
+
+   ComplexType* derivatives = new ComplexType[dim];
+   ComplexType* plainderivs = new ComplexType[dim];
+
+   ComplexType val1 = polynomial.eval(point);
+   cout << "the value at a random point : " << val1;
+
+   ComplexType val2 = plain_eval<ComplexType,RealType>(polynomial,point);
+   cout << "the value at a random point : " << val2;
+
+   int maxdegrees[dim];
+   for(int idx=0; idx<dim; idx++) maxdegrees[idx] = 0;
+
+   polynomial.update_max_deg(maxdegrees);
+   cout << "The maximum degrees :";
+   for(int idx=0; idx<dim; idx++) cout << " " << maxdegrees[idx];
+   int maxdeg = maximum(dim,maxdegrees);
+   cout << " max deg : " << maxdeg << endl;
+
+   plain_diff<ComplexType,RealType>(polynomial,point,plainderivs);
+
+   if(maxdeg == 1)
+   {
+      ComplexType val3 = polynomial.eval(point,derivatives);
+      cout << "the value at a random point : " << val3;
+
+      cout << "The derivatives computed plainly and with Speelpenning :"
+           << endl;
+      for(int idx=0; idx<polynomial.dim; idx++)
+      {
+         cout << " at " << idx << " : " << plainderivs[idx];
+         cout << " at " << idx << " : " << derivatives[idx];
+      }
+   }
+   else
+      cout << "not tested yet" << endl;
+}
+
 template <class ComplexType, class RealType>
 int test ( int dim )
 {
@@ -120,30 +182,7 @@ int test ( int dim )
    cout << endl << "The terms in a random polynomial :" << endl;
    write_polynomial<ComplexType,RealType>(polynomial);
 
-   cout << endl << "Testing the evaluation ..." << endl;
-   ComplexType* point = new ComplexType[dim];
-   random_point<ComplexType,RealType>(dim, point);
-
-   ComplexType* derivatives = new ComplexType[dim];
-   ComplexType* plainderivs = new ComplexType[dim];
-
-   ComplexType val1 = polynomial.eval(point);
-   cout << "the value at a random point : " << val1;
-
-   ComplexType val2 = plain_eval<ComplexType,RealType>(polynomial,point);
-   cout << "the value at a random point : " << val2;
-
-   ComplexType val3 = polynomial.eval(point,derivatives);
-   cout << "the value at a random point : " << val3;
-
-   plain_diff<ComplexType,RealType>(polynomial,point,plainderivs);
-
-   cout << "The derivatives computed plainly and with Speelpenning :" << endl;
-   for(int idx=0; idx<polynomial.dim; idx++)
-   {
-      cout << " at " << idx << " : " << plainderivs[idx];
-      cout << " at " << idx << " : " << derivatives[idx];
-   }
+   test_evaluation<ComplexType,RealType>(polynomial);
 
    return 0;
 }
