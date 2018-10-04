@@ -6,6 +6,8 @@ revised to improve the integration into PHCpack.
 The templated Poly2 code has two main shortcomings:
 1) multiple class definitions in one file, and
 2) too few test programs.
+The development of test programs pointed at the memory allocation and
+deallocation spots where the code would not be thread safe.
 
 -------------------------------------------------------------------------------
 file name         : short description

@@ -125,8 +125,33 @@ class PolyEq
        * method should not be used in a multithreaded application.
        */
 
+      ComplexType eval
+       ( const ComplexType* x_val, ComplexType* deri, ComplexType* monderi,
+         ComplexType** deg_table );
+      /*
+       * Evaluates and differentiations the polynomial at a point
+       * given by its coordinates in x_val and where all necessary 
+       * powers of the coordinates are given in the parameter deg_table.
+       * The value of the polynomial at the point is returned
+       * and the values of all its partial derivatives at the point
+       * are returned in the argument deri.
+       * The argument monderi is an auxiliary array of the same size 
+       * as x_val to hold all derivatives of the monomials.
+       */
+
       ComplexType eval ( const ComplexType* x_val, ComplexType* deri,
                          ComplexType** deg_table );
+      /*
+       * Evaluates and differentiations the polynomial at a point
+       * given by its coordinates in x_val and where all necessary 
+       * powers of the coordinates are given in the parameter deg_table.
+       * The value of the polynomial at the point is returned
+       * and the values of all its partial derivatives at the point
+       * are returned in the argument deri.
+       * This method allocates and deallocates an auxiliary array
+       * and should not be used in a multithreaded application.
+       * Instead, use the previous eval with the monderi argument.
+       */
 
       int memory_size ( int factor_size );
 

@@ -16,7 +16,7 @@ PolyEq<ComplexType,RealType> random_polynomial
 /*
  * Returns a random polynomial in a space with dim variables
  * and with as many terms as the value of nbterms.
- * The largest exponent is defined by the value of expmax.  */
+ * The largest exponent is defined by the value of expmax. */
 
 template <class ComplexType, class RealType>
 void write_polynomial ( PolyEq<ComplexType,RealType>& p );
@@ -35,6 +35,17 @@ void plain_diff
 /*
  * Applies the straightforward algorithm to differentiate p at x.
  * The function returns in deri the values of all derivatives. */
+
+template <class ComplexType, class RealType>
+void powertable
+ ( int dim, int* maxdeg, ComplexType* point, ComplexType** powers );
+/*
+ * Computes the table with the powers of the variables,
+ * at the dim coordinates of the given point,
+ * given the maximal degrees for each variable from 0 to dim-1.
+ * The function assumes sufficient space for powers has been allocated.
+ * Row idx in powers[idx] contains the powers of the variable idx,
+ * starting at the value point[idx]. */
 
 template <class ComplexType, class RealType>
 void test_evaluation ( PolyEq<ComplexType,RealType> &polynomial );
@@ -149,21 +160,27 @@ void test_evaluation ( PolyEq<ComplexType,RealType> &polynomial )
 
    plain_diff<ComplexType,RealType>(polynomial,point,plainderivs);
 
-   if(maxdeg == 1)
-   {
-      ComplexType val3 = polynomial.eval(point,derivatives);
-      cout << "the value at a random point : " << val3;
+   ComplexType val3;
 
-      cout << "The derivatives computed plainly and with Speelpenning :"
-           << endl;
-      for(int idx=0; idx<polynomial.dim; idx++)
-      {
-         cout << " at " << idx << " : " << plainderivs[idx];
-         cout << " at " << idx << " : " << derivatives[idx];
-      }
-   }
+   if(maxdeg == 1)
+      val3 = polynomial.eval(point,derivatives);
    else
-      cout << "not tested yet" << endl;
+   {
+      ComplexType** powers = new ComplexType*[dim];
+      for(int idx=0; idx<dim; idx++)
+         powers[idx] = new ComplexType[maxdegrees[idx]+1];
+      powertable<ComplexType, RealType>(dim,maxdegrees,point,powers);
+      val3 = polynomial.eval(point,derivatives,powers);
+   }
+   cout << "the value at a random point : " << val3;
+
+   cout << "The derivatives computed plainly and with Speelpenning :"
+        << endl;
+   for(int idx=0; idx<polynomial.dim; idx++)
+   {
+      cout << " at " << idx << " : " << plainderivs[idx];
+      cout << " at " << idx << " : " << derivatives[idx];
+   }
 }
 
 template <class ComplexType, class RealType>
@@ -234,5 +251,18 @@ void plain_diff
 
       for(int jdx=0; jdx<m->n_var; jdx++)
          deri[m->pos[jdx]] += monderi[jdx];
+   }
+}
+
+template <class ComplexType, class RealType>
+void powertable
+ ( int dim, int* maxdeg, ComplexType* point, ComplexType** powers )
+{
+   for(int idx=0; idx<dim; idx++)
+   {
+      int size = maxdeg[idx]+1;
+      powers[idx][0] = point[idx];
+      for(int powidx=1; powidx<size; powidx++)
+         powers[idx][powidx] = powers[idx][powidx-1]*point[idx];
    }
 }
