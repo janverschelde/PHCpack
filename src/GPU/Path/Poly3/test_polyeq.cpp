@@ -30,6 +30,13 @@ ComplexType plain_eval
  * Applies the straightforward algorithm to evaluate p at x. */
 
 template <class ComplexType, class RealType>
+void plain_diff
+ ( PolyEq<ComplexType,RealType>& p, ComplexType* x, ComplexType *deri );
+/*
+ * Applies the straightforward algorithm to differentiate p at x.
+ * The function returns in deri the values of all derivatives. */
+
+template <class ComplexType, class RealType>
 int test ( int dim );
 /*
  * Runs an interactive test on monomials with
@@ -118,6 +125,7 @@ int test ( int dim )
    random_point<ComplexType,RealType>(dim, point);
 
    ComplexType* derivatives = new ComplexType[dim];
+   ComplexType* plainderivs = new ComplexType[dim];
 
    ComplexType val1 = polynomial.eval(point);
    cout << "the value at a random point : " << val1;
@@ -127,6 +135,15 @@ int test ( int dim )
 
    ComplexType val3 = polynomial.eval(point,derivatives);
    cout << "the value at a random point : " << val3;
+
+   plain_diff<ComplexType,RealType>(polynomial,point,plainderivs);
+
+   cout << "The derivatives computed plainly and with Speelpenning :" << endl;
+   for(int idx=0; idx<polynomial.dim; idx++)
+   {
+      cout << " at " << idx << " : " << plainderivs[idx];
+      cout << " at " << idx << " : " << derivatives[idx];
+   }
 
    return 0;
 }
@@ -160,4 +177,23 @@ ComplexType plain_eval
       result += plain_eval(*p.mon[idx],x);
 
    return result;
+}
+
+template <class ComplexType, class RealType>
+void plain_diff
+ ( PolyEq<ComplexType,RealType>& p, ComplexType* x, ComplexType *deri )
+{
+   ComplexType monderi[p.dim];
+
+   for(int idx=0; idx<p.dim; idx++) deri[idx].init(0.0,0.0);
+
+   for(int idx=0; idx<p.n_mon; idx++)
+   {
+      PolyMon<ComplexType,RealType> *m = p.mon[idx];
+
+      plain_diff<ComplexType,RealType>(*m, x, monderi);
+
+      for(int jdx=0; jdx<m->n_var; jdx++)
+         deri[m->pos[jdx]] += monderi[jdx];
+   }
 }

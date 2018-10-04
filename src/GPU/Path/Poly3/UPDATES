@@ -1,6 +1,7 @@
 Wed 3 Oct 2018 : moved update_max_deg from polysys.tpp to polymon.tpp
   and documented this method.  Updated polyeq.h and polyeq.tpp, with
   a test on the evaluation in test_polyeq.cpp.
+  Added test on computing the derivatives in test_polyeq.cpp.
 
 Tue 2 Oct 2018 : improved test_polymon.cpp with functions to generate a
   random monomial and to prompt the user for a monomial.
