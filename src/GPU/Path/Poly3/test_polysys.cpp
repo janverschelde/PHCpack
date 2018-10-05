@@ -98,18 +98,26 @@ void write_polynomials ( PolySys<ComplexType,RealType>& p )
    for(int idx=0; idx<p.n_eq; idx++)
    {
       write_polynomial<ComplexType,RealType>(*(p.eq[idx]));
+      cout << endl;
    }
 }
 
 template <class ComplexType, class RealType>
 ComplexType* plain_eval
- ( PolySys<ComplexType,RealType> &polsys, ComplexType *x )
+ ( PolySys<ComplexType,RealType>& polsys, ComplexType *x )
 {
-   return x;
+   const int neq = polsys.n_eq;
+
+   ComplexType* result = new ComplexType[neq];
+
+   for(int idx=0; idx<neq; idx++)
+      result[idx] = plain_eval<ComplexType,RealType>(*polsys.eq[idx],x);
+
+   return result;
 }
 
 template <class ComplexType, class RealType>
-void test_evaluation ( PolySys<ComplexType,RealType> &polsys )
+void test_evaluation ( PolySys<ComplexType,RealType>& polsys )
 {
    const int neq = polsys.n_eq;
    const int dim = polsys.dim;
@@ -120,13 +128,15 @@ void test_evaluation ( PolySys<ComplexType,RealType> &polsys )
 
    ComplexType* derivatives = new ComplexType[dim];
    ComplexType* plainderivs = new ComplexType[dim];
-/*
-   ComplexType val1 = polsys.eval(point);
-   cout << "the value at a random point : " << val1;
 
-   ComplexType val2 = plain_eval<ComplexType,RealType>(polsys,point);
-   cout << "the value at a random point : " << val2;
- */
+   ComplexType* val1 = polsys.eval(point);
+   ComplexType* val2 = plain_eval<ComplexType,RealType>(polsys,point);
+
+   for(int idx=0; idx<neq; idx++)
+   {
+      cout << "at " << idx << " : " << val1[idx];
+      cout << "at " << idx << " : " << val2[idx];
+   }
 }
 
 template <class ComplexType, class RealType>

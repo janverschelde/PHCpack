@@ -1,5 +1,5 @@
-// polysys.h contains prototypes of templated data types for polynomial
-// systems with complex coefficients of different precisions.
+// The file polysys.h contains prototypes of templated data types for
+// polynomial systems with complex coefficients of different precisions.
 // The corresponding definitions of the functions are in polysys.tpp.
 
 #ifndef __POLYSYS_H__
@@ -23,33 +23,35 @@
 
 using namespace std;
 
-// Polynomial system class
 /*
-   Read polynomial system from string or string arrays,
-   and build array of polynomial equations, PolyEq.
-   @sa PolyMon, PolyEq.
-*/
+ * The class PolySys defines the representation of a polynomial system,
+ * provides methods to read a symbolic formulation of the polynomials,
+ * and methods to efficiently evaluate and differentiate the system
+ * at a given point.
+ * The coefficient type is complex and the templated construction
+ * allows for different precisions.
+ */
 
 template <class ComplexType, class RealType>
 class PolySys
 {
    public:
 
-      int n_eq; // Number of Equations
-      int dim;  // Dimension
+      int n_eq; // the number of equations in the system
+      int dim;  // the dimension equals the number of variables
       string* pos_var;
       vector<PolyEq<ComplexType,RealType>*> eq;
-      // Array of polynomial equations
-	
+      // an array with the polynomial equations in the system
+
       PolyEq<ComplexType, RealType>* eq_space;
 
-      int* max_deg_base;
-      bool eval_base;
+      int* max_deg_base; // computed by update_max_deg_base()
+      bool eval_base;    // flag if there is a common factor to evaluate
 
       int* job_number_level;
       int level;
 
-      PolySys() // Constructor
+      PolySys() // constructor initializes to zero and to NULL
       {
          n_eq = 0;
          dim = 0;
@@ -61,7 +63,7 @@ class PolySys
          level = 0;
       }
 
-      ~PolySys() // Destructor
+      ~PolySys() // the destructor deallocates occupied space
       {
          // delete eq_space;
          // delete pos_var;
@@ -70,85 +72,68 @@ class PolySys
       }
 
       void read ( const string* sys_string, int n_eq, VarDict& pos_dict );
-      // Reads a polynomial system from an array of strings.
       /*
-        Read equation from string array, sys_string, using PolyEq::read().
-        @param sys_string polynomial system string
-        @param n number of equations or number of strings
-        in string array sys_string
-        @param pos_dict the dictionary of variables and their positions
-        @sa PolyEq::read()
+       * Reads a polynomial systems from sys_string, an array of strings.
+       * The number of strings equals n_eq, which equals the number
+       * of polynomials in the system.
+       * The method read() defined in the class PolyEq is applied.
+       * The dictionary pos_dict defines the position of the variables.
        */
 
       void read ( const string& sys_string, VarDict& pos_dict );
-      // Reads a polynomial system from a string.
       /*
-         First split the string by ';',
-         then use PolyEq::read() to read each equation.
-         @param sys_string polynomial system string
-         @param pos_dict the dictionary of variables and their positions
-         @sa PolyEq::read()
+       * Reads a polynomial system from the string sys_string.
+       * Each polynomial in the string ends with a semicolon ';'.
+       * The method read() defined in the class PolyEq is applied.
+       * The dictionary pos_dict defines the positions of the variables.
        */
-
+ 
       void read_file ( const string& file_name );
-      // Reads a polynomial system from file.
       /*
-         Reads the dimension on the first line and then the system.
-         @param filename file name of polynomial system.
-         File requirement: first line is dimension
-         and the equations are separated by ';' symbols.
-         @param pos_dict position dictionary for variables.
-         If it is empty, the positions will be created by the order 
-         of variables appearance first time in the file.
-         @sa read_file(ifstream& myfile, Dict& pos_dict)
-         Note that there should not be any blank lines
-         between the lines that contain polynomials.
+       * Reads the dimension of the system on the first line on file
+       * and then reads the polynomial in the system.
+       * The polynomials must end with a semicolon ';'.
+       * There should not be any blank lines between the lines
+       * that contain the polynomials.
        */
 
       void read_file ( ifstream& myfile, VarDict& pos_dict );
-      // Reads a polynomial system from file.
       /*
-         Read dimension on the first line and then system.
-         @param myfile file stream of polynomial system.
-         File requirement: first line is dimension
-         and the equations are separated by ';' symbols.
-         @param pos_dict position dictionary for variables.
-         If it is empty, the positions will be created by the order 
-         of variables appearance first time in the file.
-         @sa read_file(string file_name, Dict& pos_dict)
+       * Reads the dimension of the system on the first line on file
+       * and then reads the polynomial in the system.
+       * The polynomials must end with a semicolon ';'.
+       * There should not be any blank lines between the lines
+       * that contain the polynomials.
+       * The dictionary pos_dict defines the position of the variables.
+       * If the dictionary is empty, then the positions of the
+       * variables are defined in the order of their appearance on file.
        */
 
       ComplexType* eval ( const ComplexType* x_val );
-      // Evaluates a polynomial system at the point x_val.
       /*
-         @param x_val ComplexType array of variables' values
-         @return ComplexType array of system value
-         On input, x_val points to as many complex numbers
-         as the dimension of the system.
-         On return is a pointer to a newly allocated array
-         of as many complex numbers as the number of equations.
-      */
+       * Applies the straightforward algorithm to evaluate
+       * the polynomial system at the values of the coordinates in x_val.
+       * On input, x_val points to as many complex numbers
+       * as the dimension of the system.
+       * On return is a pointer to a newly allocated array
+       * of as many complex numbers as the number of equations.
+       */
 
       ComplexType* eval ( const ComplexType* x_val, ComplexType** deri );
-      // Evaluates a polynomial system and its derivatives.
       /*
-         Evaluate monomials and their derivatives by PolyMon::eval(),
-         and add them up.
-         @param[in] x_val array of variables' values
-         @param[out] deri array of derivatives
-         @return equation value
+       * Evaluates and differentiates the polynomials in the system
+       * at the values in the array x_val.
+       * On return is the function value of the system at x_val
+       * and in deri is the Jacobian matrix evaluated at x_val.
        */
 
       void eval ( const ComplexType* x_val, ComplexType* f_val,
                   ComplexType** deri_val );
 
       void print();
-      // Prints the polynomial system.
       /*
-         Use PolyEq::print() to print each equation in the system.
-         @param pos_dict the dictionary of variables and their positions
-         @return void
-         @sa PolyEq::print() PolyMon::print()
+       * Prints the polynomials in the system, using the print()
+       * method defined in the class PolyEq.
        */
     
       void gpu_mon
@@ -169,8 +154,17 @@ class PolySys
       int job_number_block ( int start_level );
 
       void update_max_deg_base();
+      /*
+       * Allocates space for the data attribute max_deg_base
+       * and computes for each variable its highest power in
+       * the system, with the method update_max_deg() in PolyEq.
+       */
 
       ComplexType** eval_deg ( const ComplexType* x_val );
+      /*
+       * Computes the powers of the values for the coordinates in x_val,
+       * using the exponents in max_deg_base.
+       */
 
       void balance_eq ( const ComplexType* x_val );
 };
