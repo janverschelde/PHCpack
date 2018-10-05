@@ -23,11 +23,12 @@ polymon.tpp       : definitions of the templated code of polymon.h
 test_utils        : test utility functions
 test_polymon      : test on the monomial data structure
 polyeq.h          : templated class for polynomial equations
-test_polyeq       : test on the polynomial equation data structure
 polyeq.tpp        : definitions of the templated code of polyeq.h
+test_polyeq       : test on the polynomial equation data structure
 int_idx.h         : defines a class to represent an index type
 polysys.h         : templated class for polynomial systems
 polysys.tpp       : definitions of the templated code of polysys.h
+test_polysys      : test on the polynomial system data structure
 polysyshom.h      : templated data structures for polynomial homotopies
 -------------------------------------------------------------------------------
 polysol.h         : templated classes for solutions of a polynomial system
