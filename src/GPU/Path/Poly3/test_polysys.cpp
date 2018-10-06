@@ -31,6 +31,16 @@ ComplexType* plain_eval
  * Applies the straightforward algorithm to evaluate polsys at x. */
 
 template <class ComplexType, class RealType>
+void plain_diff
+ ( PolySys<ComplexType,RealType> &polsys, ComplexType *x,
+   ComplexType** derivatives );
+/*
+ * Applies the straightforward algorithm to differentiate polsys at x.
+ * All evaluated partial derivatives of the polynomial with index idx
+ * are returned in derivatives[idx].
+ */
+
+template <class ComplexType, class RealType>
 void test_evaluation ( PolySys<ComplexType,RealType> &polsys );
 /*
  * Tests the evaluation and differentation of the polynomial system
@@ -117,26 +127,52 @@ ComplexType* plain_eval
 }
 
 template <class ComplexType, class RealType>
+void plain_diff
+ ( PolySys<ComplexType,RealType> &polsys, ComplexType *x,
+   ComplexType** derivatives )
+{
+   for(int idx=0; idx<polsys.n_eq; idx++)
+      plain_diff<ComplexType, RealType>(*polsys.eq[idx],x,derivatives[idx]);
+}
+
+template <class ComplexType, class RealType>
 void test_evaluation ( PolySys<ComplexType,RealType>& polsys )
 {
    const int neq = polsys.n_eq;
    const int dim = polsys.dim;
 
-   cout << endl << "Testing the evaluation ..." << endl;
+   cout << "Testing the evaluation ..." << endl;
    ComplexType* point = new ComplexType[dim];
    random_point<ComplexType,RealType>(dim, point);
 
-   ComplexType* derivatives = new ComplexType[dim];
-   ComplexType* plainderivs = new ComplexType[dim];
-
+   ComplexType** derivatives = new ComplexType*[dim];
+   ComplexType** plainderivs = new ComplexType*[dim];
+   for(int idx=0; idx<neq; idx++)
+   {
+      derivatives[idx] = new ComplexType[dim];
+      plainderivs[idx] = new ComplexType[dim];
+   }
    ComplexType* val1 = polsys.eval(point);
    ComplexType* val2 = plain_eval<ComplexType,RealType>(polsys,point);
+   plain_diff<ComplexType,RealType>(polsys,point,plainderivs);
+   ComplexType* val3 = polsys.eval(point,derivatives);
 
    for(int idx=0; idx<neq; idx++)
    {
       cout << "at " << idx << " : " << val1[idx];
       cout << "at " << idx << " : " << val2[idx];
+      cout << "at " << idx << " : " << val3[idx];
    }
+
+   cout << "derivatives computed plainly and by Speelpenning :" << endl;
+   for(int polidx=0; polidx<neq; polidx++)
+      for(int varidx=0; varidx<dim; varidx++)
+      {
+         cout << "at " << polidx << "," << varidx << " : "
+              << plainderivs[polidx][varidx];
+         cout << "at " << polidx << "," << varidx << " : "
+              << derivatives[polidx][varidx];
+      }
 }
 
 template <class ComplexType, class RealType>

@@ -117,6 +117,7 @@ class PolySys
        * as the dimension of the system.
        * On return is a pointer to a newly allocated array
        * of as many complex numbers as the number of equations.
+       * This function should only be used for testing purposes.
        */
 
       ComplexType* eval ( const ComplexType* x_val, ComplexType** deri );
@@ -125,10 +126,27 @@ class PolySys
        * at the values in the array x_val.
        * On return is the function value of the system at x_val
        * and in deri is the Jacobian matrix evaluated at x_val.
+       * The function assumes sufficient space is allocated for deri,
+       * but allocates a new array of function values for the returned
+       * values of the polynomial system at x_val.
+       * The argument deri is the evaluated Jacobian matrix,
+       * deri[idx] contains all evaluated partial derivatives of
+       * the polynomial equation with index idx.
+       * This function should not be used with multithreading.
        */
 
       void eval ( const ComplexType* x_val, ComplexType* f_val,
                   ComplexType** deri_val );
+      /*
+       * Evaluates and differentiates the polynomial system at x_val.
+       * The function values are returned in f_val and all evaluated
+       * partial derivatives of the polynomial equation with index idx
+       * are returned in deri[idx].
+       * If eval_base, then the powers of the common factor for each
+       * equation are computed with memory allocation.
+       * For general polynomial equations, this function should not be
+       * applied in multithreaded runs.
+       */
 
       void print();
       /*
@@ -167,6 +185,12 @@ class PolySys
        */
 
       void balance_eq ( const ComplexType* x_val );
+      /*
+       * Evaluates the polynomial system at the point with values
+       * for its coordinates in x_val and then subtracts the result
+       * of the evaluation from the constant of each polynomial.
+       * After this operation, eval(x_val) should turn out zero.
+       */
 };
 
 #include "polysys.tpp"
