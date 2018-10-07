@@ -97,6 +97,9 @@ PolySys<ComplexType,RealType> random_polynomials
       result.eq.push_back(pol);
    }
 
+   if(expmax > 1)              // not all monomials are products of variables
+      result.eval_base = true; // there are factors common to all derivatives
+
    return result;
 }
 
@@ -147,6 +150,7 @@ void test_evaluation ( PolySys<ComplexType,RealType>& polsys )
 
    ComplexType** derivatives = new ComplexType*[dim];
    ComplexType** plainderivs = new ComplexType*[dim];
+
    for(int idx=0; idx<neq; idx++)
    {
       derivatives[idx] = new ComplexType[dim];
@@ -155,7 +159,16 @@ void test_evaluation ( PolySys<ComplexType,RealType>& polsys )
    ComplexType* val1 = polsys.eval(point);
    ComplexType* val2 = plain_eval<ComplexType,RealType>(polsys,point);
    plain_diff<ComplexType,RealType>(polsys,point,plainderivs);
-   ComplexType* val3 = polsys.eval(point,derivatives);
+
+   ComplexType* val3;
+   if(polsys.eval_base == false)
+      val3 = polsys.eval(point,derivatives);
+   else
+   {  
+      val3 = new ComplexType[dim];
+      polsys.update_max_deg_base();
+      polsys.eval(point,val3,derivatives);
+   }
 
    for(int idx=0; idx<neq; idx++)
    {

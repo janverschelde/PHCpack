@@ -1,5 +1,7 @@
 Sat 6 Oct 2018 : wrote more documentation in polysys.h and tested the
   evaluation of the Jacobian matrix in test_polysys.cpp.
+  Adjusted test_polysys.cpp so evaluation of Jacobian matrix works for
+  any general polynomial system.
 
 Fri 5 Oct 2018 : improved the documentation in polysys.h and added a test
   on the plain evaluation methods in test_polysys.cpp.
