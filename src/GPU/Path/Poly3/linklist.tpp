@@ -1,16 +1,4 @@
-template <class T>
-LinkNode<T>* LinkNode<T>::append(T data)
-{
-   LinkNode<T>* newnode = new LinkNode<T>(data);
-   next = newnode;
-   return newnode;
-}
-
-template <class T>
-void LinkNode<T>::print()
-{
-   cout << data << endl;
-}
+// The file linklist.tpp defines the methods with prototypes in linklist.h.
 
 template <class T>
 void LinkList<T>::append(T data)

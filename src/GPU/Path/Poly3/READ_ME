@@ -13,6 +13,8 @@ deallocation spots where the code would not be thread safe.
 file name         : short description
 -------------------------------------------------------------------------------
 dict.h            : dictionary for the symbols of variabes
+linknode.h        : defined classes for a node in a linked list
+linknode.tpp      : defines the methods with prototypes in linknode.h
 linklist.h        : templated linked list
 linklist.tpp      : definitions of the templated code of linklist
 -------------------------------------------------------------------------------

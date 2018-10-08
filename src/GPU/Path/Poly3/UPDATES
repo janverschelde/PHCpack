@@ -3,6 +3,8 @@ Sun 7 Oct 2018 : to make polysys thread safe, added extra functions to
   Updated polysys.h, polysys.tpp, and test_polysys.cpp.
   Splitted from polysol.h and polysol.tpp the class PolySolSet,
   now defined in polysolset.h and polysolset.tpp.
+  Splitted the classes for the node from the linklist, modifying linklist.h
+  and linklist.tpp, with new files linknode.h and linknode.tpp.
 
 Sat 6 Oct 2018 : wrote more documentation in polysys.h and tested the
   evaluation of the Jacobian matrix in test_polysys.cpp.
