@@ -1,0 +1,5 @@
+Mon 8 Oct 2018 : copied the mgs* files for the modified Gram-Schmidt method
+  from the Host folder.  Added a function to mgs_host.h and mgs_host.cpp
+  to work with an allocated right hand side vector rhs and deallocate this
+  vector also in the wrapper function.  Used templates in the test function
+  of test_mgs.cpp, so the test program turns out to be much shorter.
