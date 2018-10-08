@@ -5,15 +5,18 @@ The first revision in the folder Host was reworked to use templates properly.
 
 The main goal of this second revision is to obtain a thread safe version
 of the lib2path and to prepare a better integration into PHCpack, via
-1) better documentation and better separation of the classes,
+1) better documentation and better separation of the classes, and
 2) extra test functions.
 
 The makefile defines the compilation of the test programs.
 
--------------------------------------------------------------------------------
-file name          : short description
--------------------------------------------------------------------------------
-mgs_host.h         : templated prototypes for the modified Gram-Schmidt method
-mgs_host.tpp       : definition of the prototyped functions in mgs_host.h
-test_mgs.cpp       : test on solving a random linear system with mgs_host
--------------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+file name        : short description
+-----------------------------------------------------------------------------
+mgs_host.h       : templated prototypes for the modified Gram-Schmidt method
+mgs_host.tpp     : definition of the prototyped functions in mgs_host.h
+test_mgs.cpp     : test on solving a random linear system with mgs_host
+-----------------------------------------------------------------------------
+parameter.h      : settings for numerical constants
+test_parameter   : test on tuning the parameter settings
+-----------------------------------------------------------------------------
