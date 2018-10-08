@@ -4,7 +4,7 @@
 #include <string>
 #include "complexH.h"
 #include "polysys.h"
-#include "polysol.h"
+#include "polysolset.h"
 
 using namespace std;
 

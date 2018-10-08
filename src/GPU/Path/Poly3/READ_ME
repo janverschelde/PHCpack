@@ -31,8 +31,9 @@ polysys.tpp       : definitions of the templated code of polysys.h
 test_polysys      : test on the polynomial system data structure
 polysyshom.h      : templated data structures for polynomial homotopies
 -------------------------------------------------------------------------------
-polysol.h         : templated classes for solutions of a polynomial system
-polysol.tpp       : definitions of the prototypes in polysol.h
+polysol.h         : templated class for solutions of a polynomial system
+polysolset.h      : templated class for sets of solutions
+polysol.tpp       : definitions of the prototypes in polysol and polysolset
 -------------------------------------------------------------------------------
 test_poly         : reads a system from file and prints it
 test_polysol      : reads solutions from file and prints them
