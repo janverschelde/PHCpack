@@ -1,3 +1,7 @@
+Sun 7 Oct 2018 : to make polysys thread safe, added extra functions to
+  polysys to isolate the memory allocation to the main function.
+  Updated polysys.h, polysys.tpp, and test_polysys.cpp.
+
 Sat 6 Oct 2018 : wrote more documentation in polysys.h and tested the
   evaluation of the Jacobian matrix in test_polysys.cpp.
   Adjusted test_polysys.cpp so evaluation of Jacobian matrix works for

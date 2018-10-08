@@ -167,7 +167,10 @@ void test_evaluation ( PolySys<ComplexType,RealType>& polsys )
    {  
       val3 = new ComplexType[dim];
       polsys.update_max_deg_base();
-      polsys.eval(point,val3,derivatives);
+
+      ComplexType** deg_table = polsys.allocate_deg_table();
+      polsys.compute_deg_table(point,deg_table);
+      polsys.eval(point,val3,derivatives,deg_table);
    }
 
    for(int idx=0; idx<neq; idx++)

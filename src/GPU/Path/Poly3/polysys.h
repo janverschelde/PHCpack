@@ -109,6 +109,21 @@ class PolySys
        * variables are defined in the order of their appearance on file.
        */
 
+      ComplexType** allocate_deg_table ( void );
+      /*
+       * Allocates memory for the powers of the coordinates of the point
+       * for evaluation of polynomials with higher degrees.
+       * The allocated table is returned.
+       */
+
+      void compute_deg_table
+       ( const ComplexType* x_val, ComplexType** deg_table );
+      /*
+       * Given in x_val the coordinates of a point and
+       * an allocated memory space for the degree table in deg_table,
+       * computes the powers of the variables at the coordinates in x_val.
+       */
+
       ComplexType* eval ( const ComplexType* x_val );
       /*
        * Applies the straightforward algorithm to evaluate
@@ -146,6 +161,17 @@ class PolySys
        * equation are computed with memory allocation.
        * For general polynomial equations, this function should not be
        * applied in multithreaded runs.
+       */
+
+      void eval ( const ComplexType* x_val, ComplexType* f_val,
+                  ComplexType** deri_val, ComplexType** deg_table );
+      /*
+       * Evaluates and differentiates the polynomial system at x_val.
+       * The function values are returned in f_val and all evaluated
+       * partial derivatives of the polynomial equation with index idx
+       * are returned in deri[idx].
+       * If eval_base, the powers of the common factor for each
+       * equation are provided in deg_table.
        */
 
       void print();

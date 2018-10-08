@@ -29,22 +29,25 @@ void PolySys<ComplexType,RealType>::balance_eq ( const ComplexType* x_val )
 }
 
 template <class ComplexType, class RealType>
-ComplexType** PolySys<ComplexType,RealType>::eval_deg
- ( const ComplexType* x_val )
+ComplexType** PolySys<ComplexType,RealType>::allocate_deg_table ( void )
 {
-   // std::cout << "eval_deg" << std::endl;
-   // Allocate memory
    int n_total_deg = 0;
    for(int var_idx=0; var_idx<dim; var_idx++)
        n_total_deg += max_deg_base[var_idx];
 
    ComplexType** deg_table = new ComplexType*[dim];
-   // std::cout << "n_total_deg = " << n_total_deg << std::endl;
+
    deg_table[0] = new ComplexType[n_total_deg];
    for(int var_idx=1; var_idx<dim; var_idx++)
       deg_table[var_idx]=deg_table[var_idx-1]+max_deg_base[var_idx-1];
 
-   // Compute degree table
+   return deg_table;
+}
+
+template <class ComplexType, class RealType>
+void PolySys<ComplexType,RealType>::compute_deg_table
+ ( const ComplexType* x_val, ComplexType** deg_table )
+{
    for(int var_idx=0; var_idx<dim; var_idx++)
    {
       if(max_deg_base[var_idx]>0)
@@ -56,6 +59,16 @@ ComplexType** PolySys<ComplexType,RealType>::eval_deg
             tmp_deg_table[deg_idx] = tmp_deg_table[deg_idx-1]*tmp_var;
       }
    }
+}
+
+template <class ComplexType, class RealType>
+ComplexType** PolySys<ComplexType,RealType>::eval_deg
+ ( const ComplexType* x_val )
+{
+   ComplexType** deg_table = allocate_deg_table();
+
+   compute_deg_table(x_val,deg_table);
+
    // print degree table
    // for(int var_idx=0; var_idx<dim; var_idx++)
    // {
@@ -77,21 +90,27 @@ void PolySys<ComplexType,RealType>::eval
    {
       ComplexType** deg_table = eval_deg(x_val);
       for(int i=0; i<n_eq; i++)
-      {
-         // cout << "eq " << i << endl;
          f_val[i] = eq[i]->eval(x_val, deri_val[i], deg_table);
-      }
+
       delete[] deg_table[0];
       delete[] deg_table;
    }
    else
-   {
       for(int i=0; i<n_eq; i++)
-      {
-         // cout << "eq " << i << endl;
          f_val[i] = eq[i]->eval(x_val, deri_val[i]);
-      }
-   }
+}
+
+template <class ComplexType, class RealType>
+void PolySys<ComplexType,RealType>::eval
+ ( const ComplexType* x_val, ComplexType* f_val, ComplexType** deri_val,
+   ComplexType** deg_table )
+{
+   if(eval_base)
+      for(int i=0; i<n_eq; i++)
+         f_val[i] = eq[i]->eval(x_val, deri_val[i], deg_table);
+   else
+      for(int i=0; i<n_eq; i++)
+         f_val[i] = eq[i]->eval(x_val, deri_val[i]);
 }
 
 template <class ComplexType, class RealType>
