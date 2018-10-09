@@ -3,3 +3,8 @@ Mon 8 Oct 2018 : copied the mgs* files for the modified Gram-Schmidt method
   to work with an allocated right hand side vector rhs and deallocate this
   vector also in the wrapper function.  Used templates in the test function
   of test_mgs.cpp, so the test program turns out to be much shorter.
+  Copied parameter.h, parameter.cpp, and test_parameter.cpp from the Host
+  folder with some minor additions to the documentation.
+  The class PathStep is splitted off from the path_data files.
+  The code in path_step.h, path_step.tpp, path_data.h, path_data.tpp
+  is tested by test_pathdata.cpp.
