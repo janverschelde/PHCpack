@@ -11,30 +11,47 @@ of the lib2path and to prepare a better integration into PHCpack, via
 The makefile defines the compilation of the test programs.
 
 ------------------------------------------------------------------------------
-file name          : short description
+file name              : short description
 ------------------------------------------------------------------------------
-mgs_host.h         : templated prototypes for the modified Gram-Schmidt method
-mgs_host.tpp       : definition of the prototyped functions in mgs_host.h
-test_mgs.cpp       : test on solving a random linear system with mgs_host
+mgs_host.h             : prototypes for the modified Gram-Schmidt method
+mgs_host.tpp           : definition of the prototyped functions in mgs_host.h
+test_mgs.cpp           : test on solving a random linear system with mgs_host
 ------------------------------------------------------------------------------
-parameter.h        : settings for numerical constants
-parameter.cpp      : functions to write, set, get, and tune parameters
-test_parameter.cpp : test on tuning the parameter settings
+parameter.h            : settings for numerical constants
+parameter.cpp          : functions to write, set, get, and tune parameters
+test_parameter.cpp     : test on tuning the parameter settings
 ------------------------------------------------------------------------------
-path_step.h        : class definition to store one point on a path
-path_step.tpp      : definitions of the methods in path_step.h
-path_data.h        : class definition to store all points on a path
-path_data.tpp      : definitions of the methods in path_data.h
-test_pathdata.cpp  : tests on processing the output file of phc -p
+path_step.h            : class definition to store one point on a path
+path_step.tpp          : definitions of the methods in path_step.h
+path_data.h            : class definition to store all points on a path
+path_data.tpp          : definitions of the methods in path_data.h
+test_pathdata.cpp      : tests on processing the output file of phc -p
 ------------------------------------------------------------------------------
-workspace_host.h   : the class Worskspace stores data during path tracking
-workspace_host.tpp : definitions of the prototypes in workspace_host.h
-test_workspace.cpp : tests the initialization of the workspace
+workspace_host.h       : the class Workspace stores data for path tracking
+workspace_host.tpp     : definitions of the prototypes in workspace_host.h
+test_workspace.cpp     : tests the initialization of the workspace
 ------------------------------------------------------------------------------
-varset.h           : defines the class VarSet to store elements
-twoint.h           : defines the class TwoInt to store a pair of integers
-eqidxcoef.h        : the class EqIdxCoef for 2 complex numbers and an index
-generalset.h       : templated class GeneralSet for general elements
-monidxset.h        : defines the class MonIdxSet
-monset.h           : defines the class MonSet
+varset.h               : defines the class VarSet to store elements
+twoint.h               : defines the class TwoInt to store a pair of integers
+eqidxcoef.h            : class EqIdxCoef for 2 complex numbers and an index
+generalset.h           : templated class GeneralSet for general elements
+monidxset.h            : defines the class MonIdxSet
+monset.h               : defines the class MonSet
+------------------------------------------------------------------------------
+cpuinsthomcoef.h       : defines the class CPUInstHomCoef
+cpuinsthomcoef.tpp     : provides definitions of methods in CPUInstHomCoef
+cpuinsthommon.h        : defines the class CPUInstHomMon
+cpuinsthommon.tpp      : provides definitions of methods in CPUInstHomMon
+cpuinsthommonblock.h   : defines the class CPUInstHomMonBlock
+cpuinsthommonblock.tpp : provides definitions of methods in CPUInstHomMonBlock
+cpuinsthomsumblock.h   : defines the class CPUInstHomSumBlock
+cpuinsthomsumblock.tpp : provides definitions of methods in CPUInstHomSumBlock
+cpuinsthomsum.h        : defines the class CPUInstHomSum
+cpuinsthomsum.tpp      : provides definitions of methods in CPUInstHomSum
+cpuinsthomeq.h         : defines the class CPUInstHomEq
+cpuinsthomeq.tpp       : provides definitions of methods in CPUInstHomEq
+cpuinsthom.h           : defines the class CPUInstHom
+cpuinsthom.tpp         : provides definitions of methods in CPUInstHom
+eval_host.h            : #include statements for eval/diff of homotopies
+test_eval.cpp          : test on the evaluation of homotopies
 ------------------------------------------------------------------------------
