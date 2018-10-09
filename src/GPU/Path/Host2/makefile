@@ -30,5 +30,9 @@ test_eval:
 	$(gpp) -c -I$(CMPLX) -I$(POLYS) test_eval.cpp -o test_eval.o
 	$(gpp) test_eval.o $(QD_LIB)/libqd.a -o /tmp/test_eval
 
+test_newton: parameter.o
+	$(gpp) -c -I$(CMPLX) -I$(POLYS) test_newton.cpp -o test_newton.o
+	$(gpp) parameter.o test_newton.o $(QD_LIB)/libqd.a -o /tmp/test_newton
+
 clean:
 	/bin/rm -f -r *.o

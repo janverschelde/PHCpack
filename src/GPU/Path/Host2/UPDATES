@@ -7,6 +7,9 @@ Tue 9 Oct 2018 : updated workspace_host.h with the rhs for mgs, simplified
   into seven different cpuinsthom* header and tpp files.
   The file eval_host.tpp no longer exists and eval_host.h just holds the
   #include statements for evaluation and differentiation of homotopies.
+  The rhs in workspace_host.tpp must be allocated with one extra number.
+  Added verbose parameter to the functions in newton_host,
+  tested by test_newton.cpp.
 
 Mon 8 Oct 2018 : copied the mgs* files for the modified Gram-Schmidt method
   from the Host folder.  Added a function to mgs_host.h and mgs_host.cpp

@@ -55,3 +55,7 @@ cpuinsthom.tpp         : provides definitions of methods in CPUInstHom
 eval_host.h            : #include statements for eval/diff of homotopies
 test_eval.cpp          : test on the evaluation of homotopies
 ------------------------------------------------------------------------------
+newton_host.h          : prototypes for applying Newton's method
+newton_host.tpp        : definitions for the functions in newton_host.h
+test_newton.cpp        : test on Newton's method
+------------------------------------------------------------------------------

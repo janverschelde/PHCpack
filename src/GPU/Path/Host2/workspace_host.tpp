@@ -18,7 +18,7 @@ void Workspace<ComplexType>::init
    matrix = new ComplexType[n_eq*(dim + 1)];
 
    sol = new ComplexType[dim];
-   rhs = new ComplexType[n_eq];
+   rhs = new ComplexType[n_eq+1];
 
    R = new ComplexType*[dim+1];
    R[0] = new ComplexType[(dim+1)*(dim+1)];
