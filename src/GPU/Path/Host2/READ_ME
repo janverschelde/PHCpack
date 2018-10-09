@@ -31,3 +31,10 @@ workspace_host.h   : the class Worskspace stores data during path tracking
 workspace_host.tpp : definitions of the prototypes in workspace_host.h
 test_workspace.cpp : tests the initialization of the workspace
 ------------------------------------------------------------------------------
+varset.h           : defines the class VarSet to store elements
+twoint.h           : defines the class TwoInt to store a pair of integers
+eqidxcoef.h        : the class EqIdxCoef for 2 complex numbers and an index
+generalset.h       : templated class GeneralSet for general elements
+monidxset.h        : defines the class MonIdxSet
+monset.h           : defines the class MonSet
+------------------------------------------------------------------------------

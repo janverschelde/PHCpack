@@ -1,6 +1,8 @@
 Tue 9 Oct 2018 : updated workspace_host.h with the rhs for mgs, simplified
   single line body loops in workspace_host.tpp and wrote an elementary
-  test program in test_workspace.cpp.
+  test program in test_workspace.cpp.  Separated the classes in varset.h,
+  making the files twoint.h, eqidxcoef.h, generalset.h, monidxset.h,
+  monset.h and including monset.h in the header eval_host.h.
 
 Mon 8 Oct 2018 : copied the mgs* files for the modified Gram-Schmidt method
   from the Host folder.  Added a function to mgs_host.h and mgs_host.cpp
