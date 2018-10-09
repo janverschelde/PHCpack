@@ -27,3 +27,7 @@ path_data.h        : class definition to store all points on a path
 path_data.tpp      : definitions of the methods in path_data.h
 test_pathdata.cpp  : tests on processing the output file of phc -p
 ------------------------------------------------------------------------------
+workspace_host.h   : the class Worskspace stores data during path tracking
+workspace_host.tpp : definitions of the prototypes in workspace_host.h
+test_workspace.cpp : tests the initialization of the workspace
+------------------------------------------------------------------------------

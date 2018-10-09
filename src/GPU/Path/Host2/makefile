@@ -22,5 +22,9 @@ test_pathdata:
 	$(gpp) -c -I$(CMPLX) -I$(POLYS) test_pathdata.cpp -o test_pathdata.o
 	$(gpp) test_pathdata.o $(QD_LIB)/libqd.a -o /tmp/test_pathdata
 
+test_workspace:
+	$(gpp) -c -I$(CMPLX) test_workspace.cpp -o test_workspace.o
+	$(gpp) test_workspace.o $(QD_LIB)/libqd.a -o /tmp/test_workspace
+
 clean:
 	/bin/rm -f -r *.o

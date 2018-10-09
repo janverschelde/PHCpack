@@ -1,3 +1,7 @@
+Tue 9 Oct 2018 : updated workspace_host.h with the rhs for mgs, simplified
+  single line body loops in workspace_host.tpp and wrote an elementary
+  test program in test_workspace.cpp.
+
 Mon 8 Oct 2018 : copied the mgs* files for the modified Gram-Schmidt method
   from the Host folder.  Added a function to mgs_host.h and mgs_host.cpp
   to work with an allocated right hand side vector rhs and deallocate this
