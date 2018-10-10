@@ -1,3 +1,6 @@
+Tue 9 Oct 2018 : extended test_polysys.cpp to allow the user to enter
+  the file name for an input polynomial system.
+
 Sun 7 Oct 2018 : to make polysys thread safe, added extra functions to
   polysys to isolate the memory allocation to the main function.
   Updated polysys.h, polysys.tpp, and test_polysys.cpp.

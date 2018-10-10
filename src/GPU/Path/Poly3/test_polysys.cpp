@@ -47,14 +47,22 @@ void test_evaluation ( PolySys<ComplexType,RealType> &polsys );
  * at a random point. */
 
 template <class ComplexType, class RealType>
-int test ( int dim );
+int random_test ( int dim );
 /*
- * Runs an interactive test on monomials with
+ * Runs an interactive test on a randomly generated system with
  * as many variables as the value of the dimension dim. */
+
+template <class ComplexType, class RealType>
+int polsys_test ( void );
+/*
+ * Prompts the user for a file name for a system and then
+ * evaluates and differentiates the system at a random point. */
 
 int main ( void )
 {
-   cout << endl << "Testing the monomials ..." << endl;
+   srand(time(NULL));
+
+   cout << endl << "Testing the polynomial systems ..." << endl;
 
    char choice;
 
@@ -64,18 +72,35 @@ int main ( void )
    cout << "  2. quad double precision" << endl;
    cout << "Type 0, 1, or 2 : "; cin >> choice;
 
-   int dimension;
+   cout << endl << "Generate and test random system ? (y/n) ";
+   char rantest; cin >> rantest;
 
-   cout << endl << "Give the dimension : "; cin >> dimension;
+   if(rantest == 'y')
+   {
+      int dimension;
 
-   if(choice == '0')
-      test<complexH<double>,double>(dimension);
-   else if(choice == '1')
-      test<complexH<dd_real>,dd_real>(dimension);
-   else if(choice == '2')
-      test<complexH<qd_real>,qd_real>(dimension);
+      cout << endl << "Give the dimension : "; cin >> dimension;
+
+      if(choice == '0')
+         random_test<complexH<double>,double>(dimension);
+      else if(choice == '1')
+         random_test<complexH<dd_real>,dd_real>(dimension);
+      else if(choice == '2')
+         random_test<complexH<qd_real>,qd_real>(dimension);
+      else
+         cout << "Invalid choice " << choice << " for the precision." << endl; 
+   }
    else
-      cout << "Invalid choice " << choice << " for the precision." << endl; 
+   {
+      if(choice == '0')
+         polsys_test<complexH<double>,double>();
+      else if(choice == '1')
+         polsys_test<complexH<dd_real>,dd_real>();
+      else if(choice == '2')
+         polsys_test<complexH<qd_real>,qd_real>();
+      else
+         cout << "Invalid choice " << choice << " for the precision." << endl; 
+   }
 
    return 0;
 }
@@ -192,17 +217,39 @@ void test_evaluation ( PolySys<ComplexType,RealType>& polsys )
 }
 
 template <class ComplexType, class RealType>
-int test ( int dim )
+int random_test ( int dim )
 {
    int nbterms,expmax;
 
    cout << "Give the number of terms : "; cin >> nbterms;
    cout << "Give the largest exponent : "; cin >> expmax;
 
-   srand(time(NULL));
-
    PolySys<ComplexType,RealType> polynomials
      = random_polynomials<ComplexType,RealType>(dim,nbterms,expmax);
+
+   cout << endl << "The terms in a random polynomial system :" << endl;
+   write_polynomials<ComplexType,RealType>(polynomials);
+
+   test_evaluation<ComplexType,RealType>(polynomials);
+
+   return 0;
+}
+
+template <class ComplexType, class RealType>
+int polsys_test ( void )
+{
+   cout << "-> give a file name : ";
+   string name; cin >> name;
+
+   PolySys<ComplexType,RealType> polynomials;
+   polynomials.read_file(name);
+   cout << "The polynomials on the file " << name << " :" << endl;
+   polynomials.print();
+
+   if(polynomials.eval_base)
+      cout << "There is a common factor in the polynomials." << endl;
+   else
+      cout << "All monomials are products of variables." << endl;
 
    cout << endl << "The terms in a random polynomial system :" << endl;
    write_polynomials<ComplexType,RealType>(polynomials);
