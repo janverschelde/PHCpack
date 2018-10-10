@@ -1,3 +1,6 @@
+Wed 10 Oct 2018 : fixed bug in test_utils.tpp with the output of a
+  polynomial in the tableau format, added #include <iomanip> to test_utils.h.
+
 Tue 9 Oct 2018 : extended test_polysys.cpp to allow the user to enter
   the file name for an input polynomial system.
 

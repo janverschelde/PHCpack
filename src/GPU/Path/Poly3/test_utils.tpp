@@ -163,7 +163,9 @@ PolyEq<ComplexType,RealType> random_polynomial
 template <class ComplexType, class RealType>
 void write_polynomial ( PolyEq<ComplexType,RealType>& p )
 {
-   cout << p.constant.real << "  " << p.constant.imag << " ";
+   cout << scientific << setprecision(4);
+
+   cout << p.constant.real << "  " << p.constant.imag;
    for(int idx=0; idx<p.dim; idx++) cout << " 0";
    cout << endl;
 
@@ -185,7 +187,7 @@ void write_polynomial ( PolyEq<ComplexType,RealType>& p )
          cout << " " << p.mon[idx]->exp[posidx];
          varidx = varidx+1;
       }
-      while(varidx < p.mon[idx]->dim)
+      while(varidx < p.dim)
       {
          cout << " 0";
          varidx = varidx + 1;
