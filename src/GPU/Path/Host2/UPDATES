@@ -1,3 +1,6 @@
+Wed 10 Oct 2018 : extended the output at init when verbose in cpuinsthom.tpp,
+  set the verbose option in test_newton.cpp and fixed a bug in test_eval.cpp.
+
 Tue 9 Oct 2018 : updated workspace_host.h with the rhs for mgs, simplified
   single line body loops in workspace_host.tpp and wrote an elementary
   test program in test_workspace.cpp.  Separated the classes in varset.h,

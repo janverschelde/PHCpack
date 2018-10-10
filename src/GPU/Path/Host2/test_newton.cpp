@@ -89,7 +89,7 @@ int newton_test
    ComplexType alpha,t;
    alpha.init(0.0,0.0); // initialize the data for eval_host
    t.init(0.0,0.0);
-   ped.init(polynomials,polynomials.dim,polynomials.n_eq,0,alpha);
+   ped.init(polynomials,polynomials.dim,polynomials.n_eq,0,alpha,1);
 
    cout << "Number of equations n_eq in ped : " << ped.n_eq << endl;
 

@@ -5,6 +5,7 @@
 #include <string>
 #include "complexH.h"
 #include "eval_host.h"
+#include "test_utils.h"
 
 using namespace std;
 
@@ -74,14 +75,13 @@ int eval_test ( PolySys<ComplexType,RealType>& polynomials )
 {
    cout << "The dimension : " << polynomials.dim << endl;
 
-   ComplexType* arg = new ComplexType[polynomials.dim];
-   for(int i=0; i<polynomials.dim; i++) arg[i] = ComplexType(i,0.0);
-   // arg[i].init(i,0.0);
+   ComplexType* point = new ComplexType[polynomials.dim];
+   random_point<ComplexType,RealType>(polynomials.dim,point);
 
-   int fail = basic_eval<ComplexType,RealType>(polynomials,arg);
+   int fail = basic_eval<ComplexType,RealType>(polynomials,point);
 
-   if(fail != 0)
-      fail = ade_eval<ComplexType,RealType>(polynomials,arg);
+   if(fail == 0)
+      fail = ade_eval<ComplexType,RealType>(polynomials,point);
 
    return fail;
 }
@@ -96,9 +96,9 @@ int basic_eval ( PolySys<ComplexType,RealType>& polynomials, ComplexType* arg )
 
    polynomials.eval(arg,val,jac); // evaluate and differentiate
 
-   cout << "The value of the system at 0, 1, 2, ... :" << endl;
+   cout << "The value of the system at a random point :" << endl;
    for(int i=0; i<polynomials.dim; i++) cout << val[i];
-   cout << "The derivatives at 0, 1, 2, ... :" << endl;
+   cout << "The derivatives at a random point :" << endl;
    for(int i=0; i<polynomials.dim; i++)
    {
       cout << "All derivatives of polynomial " << i << " :" << endl;
@@ -120,12 +120,12 @@ int ade_eval ( PolySys<ComplexType,RealType>& polynomials, ComplexType* arg )
 
    alpha.init(0.0,0.0); // initialize the data for eval_host
    t.init(0.0,0.0);
-   ped.init(polynomials,polynomials.dim,polynomials.n_eq,0,alpha);
+   ped.init(polynomials,polynomials.dim,polynomials.n_eq,0,alpha,1);
    ped.init_workspace(wrk);
 
    ped.eval(wrk,arg,t); // evaluate and differentiate
 
-   cout << "The value of the system at 0, 1, 2, ... :" << endl;
+   cout << "The value of the system at a random point :" << endl;
    for(int j=0; j<polynomials.dim; j++)
       cout << wrk.matrix[polynomials.dim*polynomials.dim + j];
    for(int j=0; j<polynomials.dim; j++)

@@ -319,6 +319,14 @@ void CPUInstHom<ComplexType,RealType>::init
 
    if(verbose > 0)
    {
+      if(Target_Sys.eval_base)
+         std::cout << "eval_base is true" << std::endl;
+      else
+         std::cout << "eval_base is false" << std::endl;
+      std::cout << "max_deg_base :";
+      for(int idx=0; idx<Target_Sys.dim; idx++)
+         std::cout << " " << max_deg_base[idx];
+      std::cout << endl;
       std::cout << "n_constant  = " << n_constant << std::endl;
       std::cout << "total_n_mon = " << total_n_mon << std::endl;
       std::cout << "n_monset    = " << n_monset << std::endl;
