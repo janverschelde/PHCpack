@@ -34,5 +34,16 @@ test_newton: parameter.o
 	$(gpp) -c -I$(CMPLX) -I$(POLYS) test_newton.cpp -o test_newton.o
 	$(gpp) parameter.o test_newton.o $(QD_LIB)/libqd.a -o /tmp/test_newton
 
+test_jobs:
+	$(gpp) -pthread -o /tmp/test_jobs test_jobs.cpp -lpthread
+
+test_worker:
+	$(gpp) -pthread -o /tmp/test_worker test_worker.cpp -lpthread
+
+test_path: parameter.o
+	$(gpp) -pthread -c -I$(CMPLX) -I$(POLYS) test_path.cpp -o test_path.o
+	$(gpp) test_path.o parameter.o $(QD_LIB)/libqd.a -lpthread \
+               -o /tmp/test_path
+
 clean:
 	/bin/rm -f -r *.o

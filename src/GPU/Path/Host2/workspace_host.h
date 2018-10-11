@@ -67,11 +67,29 @@ class Workspace
       }
 
       void init ( int workspace_size, int n_coef, int n_constant,
-                  int n_eq, int dim, int n_predictor, int* max_deg_base=NULL );
+                  int n_eq, int dim, int n_predictor, int* max_deg_base=NULL,
+                  int verbose=0 );
+      /*
+       * Initializes the workspace.
+       *
+       * ON ENTRY :
+       *   workspace_size  is the size of the workspace;
+       *   n_coef          number of coefficients;
+       *   n_constant      number of constants;
+       *   n_eq            number of equations in the system;
+       *   dim             number of variables in the system;
+       *   n_predictor     number of predictor points;
+       *   max_deg_base    largest degrees of the common factor, equals
+       *                   NULL if all monomials are products of variables;
+       *   verbose         verbose flag, 0 for no output.
+       */
 
       Workspace ( int workspace_size, int coef_size,
                   int workspace_constant_size, int n_eq, int dim,
-                  int n_predictor, int* max_deg_base=NULL )
+                  int n_predictor, int* max_deg_base=NULL, int verbose=0 )
+      /*
+       * Wrapper to the initialization method of the workspace.
+       */
       {
          init(workspace_size, coef_size, workspace_constant_size, n_eq,
               dim, n_predictor, max_deg_base);

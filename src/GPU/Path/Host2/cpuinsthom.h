@@ -115,7 +115,8 @@ class CPUInstHom
 
       void print();
  
-      void init_workspace ( Workspace<ComplexType>& workspace_cpu );
+      void init_workspace
+       ( Workspace<ComplexType>& workspace_cpu, int verbose=0 );
       /*
          Initialization of the data structures to evaluate and
          differentiate the polynomial system.

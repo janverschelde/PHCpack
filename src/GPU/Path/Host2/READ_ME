@@ -59,3 +59,18 @@ newton_host.h          : prototypes for applying Newton's method
 newton_host.tpp        : definitions for the functions in newton_host.h
 test_newton.cpp        : test on Newton's method
 ------------------------------------------------------------------------------
+predictor_host.h       : prototype for the predictor on the host
+predictor_host.tpp     : templated code for the predictor
+path_host.h            : prototype for the path tracker on the host
+path_host.tpp          : templated code for the prototype in path_host.h
+path_track.h           : prototype to track many paths
+path_track.tpp         : templated code for the prototype in path_track.h
+-------------------------------------------------------------------------------
+jobqueue.h             : management of a job queue with mutex
+worker.h               : encapsulation of pthreads
+test_worker.cpp        : basic test on the methods in the Worker class
+test_jobs              : test on processing jobs
+test_path.cpp          : testing the path tracker
+-------------------------------------------------------------------------------
+lib2path               : connect Lib interface to the Path data structures
+-------------------------------------------------------------------------------

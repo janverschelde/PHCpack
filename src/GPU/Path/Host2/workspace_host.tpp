@@ -4,15 +4,20 @@
 template <class ComplexType>
 void Workspace<ComplexType>::init
  ( int workspace_size, int n_coef, int n_constant,
-   int n_eq, int dim, int n_predictor, int* max_deg_base )
+   int n_eq, int dim, int n_predictor, int* max_deg_base, int verbose )
 {
    this->dim = dim;
    this->n_eq = n_eq;
    all = new ComplexType[workspace_size];
    coef = all;
-   // std::cout << "n_constant = " << n_constant << std::endl;
-   // std::cout << "n_coef = " << n_coef << std::endl;
-   // std::cout << "workspace_size = " << workspace_size << std::endl;
+
+   if(verbose > 0)
+   {
+       std::cout << "inside Workspace.init ..." << std::endl;
+       std::cout << "n_constant = " << n_constant << std::endl;
+       std::cout << "n_coef = " << n_coef << std::endl;
+       std::cout << "workspace_size = " << workspace_size << std::endl;
+   }
    mon = coef + n_coef;
    sum = mon - n_constant;
    matrix = new ComplexType[n_eq*(dim + 1)];
@@ -29,7 +34,8 @@ void Workspace<ComplexType>::init
    }
    for(int j=0; j<dim+1; j++) R[dim][j].init(0.0,0.0);
 
-   // std::cout << "dim = " << dim << " n_eq = " << n_eq <<std::endl;
+   if(verbose > 0)
+      std::cout << "dim = " << dim << " n_eq = " << n_eq <<std::endl;
 
    V = new ComplexType*[dim+1];
    V[0] = matrix;
@@ -39,6 +45,8 @@ void Workspace<ComplexType>::init
 
    this->init_x_t(dim, n_predictor); // added this->
    if(max_deg_base != NULL) init_deg_table(max_deg_base);
+   if(verbose > 0)
+      std::cout << "... leaving Workspace.init" << std::endl;
 }
 
 template <class ComplexType>

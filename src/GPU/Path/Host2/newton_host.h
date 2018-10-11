@@ -33,7 +33,7 @@ bool CPU_Newton
  ( Workspace<ComplexType>& workspace_cpu,
    CPUInstHom<ComplexType,RealType>& cpu_inst_hom,
    Parameter path_parameter, double& timeSec_Eval, double& timeSec_MGS,
-   int reverse=0, bool verbose=true );
+   int reverse=0, bool verbose=false );
 /*
  * Runs Newton's method on the system defined by cpu_inst_hom,
  * and on the solutions stored in workspace_cpu,
@@ -45,7 +45,7 @@ bool CPU_Newton_Refine
  ( Workspace<ComplexType>& workspace_cpu,
    CPUInstHom<ComplexType,RealType>& cpu_inst_hom,
    Parameter path_parameter, double& timeSec_Eval, double& timeSec_MGS,
-   int reverse=0, bool verbose=true );
+   int reverse=0, bool verbose=false );
 /*
  * Runs Newton's method on the system defined by cpu_inst_hom,
  * and on the solutions stored in workspace_cpu,

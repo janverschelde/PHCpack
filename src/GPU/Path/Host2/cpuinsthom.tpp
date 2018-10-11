@@ -399,12 +399,12 @@ void CPUInstHom<ComplexType,RealType>::print()
 
 template <class ComplexType, class RealType>
 void CPUInstHom<ComplexType,RealType>::init_workspace
- ( Workspace<ComplexType>& workspace_cpu )
+ ( Workspace<ComplexType>& workspace_cpu, int verbose )
 {
    int coef_size = CPU_inst_hom_coef.n_coef;
    int workspace_size = coef_size + CPU_inst_hom_mon.mon_pos_size;
    workspace_cpu.init(workspace_size,coef_size,n_constant,n_eq,dim,
-       n_predictor, CPU_inst_hom_mon.max_deg_base);
+       n_predictor, CPU_inst_hom_mon.max_deg_base,verbose);
 }
 
 template <class ComplexType, class RealType>

@@ -121,7 +121,7 @@ int ade_eval ( PolySys<ComplexType,RealType>& polynomials, ComplexType* arg )
    alpha.init(0.0,0.0); // initialize the data for eval_host
    t.init(0.0,0.0);
    ped.init(polynomials,polynomials.dim,polynomials.n_eq,0,alpha,1);
-   ped.init_workspace(wrk);
+   ped.init_workspace(wrk,1);
    if(wrk.deg_table == NULL)
       cout << "deg_table in the workspace wrk is NULL" << endl;
    else

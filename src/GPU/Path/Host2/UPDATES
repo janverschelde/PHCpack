@@ -1,3 +1,9 @@
+Thu 11 Oct 2018 : added verbose parameter to the initialization methods
+  of workspace_host.h and workspace_host.tpp, called in cpuinsthom.
+  Added an extra function to predictor_host, to fix a memory leak.
+  Copied all remaining files, path_host, path_track, *job*, *worker*,
+  test_path.cpp and lib2path.cpp from ../Host, with updates to the makefile.
+
 Wed 10 Oct 2018 : extended the output at init when verbose in cpuinsthom.tpp,
   set the verbose option in test_newton.cpp and fixed a bug in test_eval.cpp.
   Must write max_deg_base only when eval_base in cpuinsthom.tpp,
