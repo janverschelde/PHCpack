@@ -2068,19 +2068,19 @@ ts_adepath: utilities_d.o utilities_dd.o poly_d.o poly_dd.o \
             -o $(BIN)/ts_adepath -lm --LINK=g++
 
 parameter.o:
-	$(gpp) -O3 -I$(PHCgpu)/Path/Host \
-               -c $(PHCgpu)/Path/Host/parameter.cpp -o parameter.o
+	$(gpp) -O3 -I$(PHCgpu)/Path/Host2 \
+               -c $(PHCgpu)/Path/Host2/parameter.cpp -o parameter.o
 
 lib2path.o:
 	$(gpp) -O3 -I$(PHCLib) -I$(QD_ROOT)/include \
-                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly2 \
-                   -I$(PHCgpu)/Path/Host \
-               -c $(PHCgpu)/Path/Host/lib2path.cpp -o lib2path.o
+                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly3 \
+                   -I$(PHCgpu)/Path/Host2 \
+               -c $(PHCgpu)/Path/Host2/lib2path.cpp -o lib2path.o
 
 ademanypaths.o:
 	$(gpp) -O2 -I$(PHCLib) -I$(QD_ROOT)/include \
-                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly2 \
-                   -I$(PHCgpu)/Path/Host \
+                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly3 \
+                   -I$(PHCgpu)/Path/Host2 \
                -c $(PHCAda)/PHCtoC/ademanypaths.cpp -o ademanypaths.o
 
 ts_ademanypaths: lib2path.o
