@@ -122,6 +122,10 @@ int ade_eval ( PolySys<ComplexType,RealType>& polynomials, ComplexType* arg )
    t.init(0.0,0.0);
    ped.init(polynomials,polynomials.dim,polynomials.n_eq,0,alpha,1);
    ped.init_workspace(wrk);
+   if(wrk.deg_table == NULL)
+      cout << "deg_table in the workspace wrk is NULL" << endl;
+   else
+      cout << "deg_table in the workspace wrk is not NULL" << endl;
 
    ped.eval(wrk,arg,t); // evaluate and differentiate
 
