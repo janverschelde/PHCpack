@@ -161,6 +161,12 @@ PolyEq<ComplexType,RealType> random_polynomial
 }
 
 template <class ComplexType, class RealType>
+void write_monomial ( int dim, PolyMon<ComplexType,RealType>& m )
+{
+   m.print_tableau(dim);
+}
+
+template <class ComplexType, class RealType>
 void write_polynomial ( PolyEq<ComplexType,RealType>& p )
 {
    cout << scientific << setprecision(4);
@@ -171,27 +177,8 @@ void write_polynomial ( PolyEq<ComplexType,RealType>& p )
 
    for(int idx=0; idx<p.n_mon; idx++)
    {
-      // print_data<ComplexType,RealType>(*p.mon[idx]);
+      write_monomial<ComplexType,RealType>(p.dim, *p.mon[idx]);
 
-      cout << p.mon[idx]->coef.real << "  "
-           << p.mon[idx]->coef.imag;
-
-      int varidx = 0;
-      for(int posidx=0; posidx<p.mon[idx]->n_var; posidx++)
-      {
-         while(varidx < p.mon[idx]->pos[posidx])
-         {
-            cout << " 0";
-            varidx = varidx+1;
-         }
-         cout << " " << p.mon[idx]->exp[posidx];
-         varidx = varidx+1;
-      }
-      while(varidx < p.dim)
-      {
-         cout << " 0";
-         varidx = varidx + 1;
-      }
       cout << endl;
    }
 }
@@ -203,7 +190,7 @@ ComplexType plain_eval
    ComplexType result = p.constant;
 
    for(int idx=0; idx<p.n_mon; idx++)
-      result += plain_eval(*p.mon[idx],x);
+      result += plain_eval<ComplexType,RealType>(*p.mon[idx],x);
 
    return result;
 }

@@ -205,6 +205,14 @@ class PolyMon
        * defined in the string pos_var.
        */
 
+      void print_tableau ( int dim );
+      /*
+       * Writes the information stored in the monomial m in tableau format, 
+       * first the real and imaginary part of the coefficient,
+       * followed by all dim exponents, where dim is the ambient dimension.
+       * There is no newline written at the end.
+       */
+
       int memory_size ( int factor_size );
 
       void print_level(); // prints the level structure

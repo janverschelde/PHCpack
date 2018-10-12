@@ -293,10 +293,33 @@ void PolyMon<ComplexType,RealType>::print ( const string* pos_var )
    // cout << endl;
    cout << pos_var[pos[0]];
    if(exp[0]!= 1) cout << '^' << exp[0];
-   for(int i =1; i< n_var; i++)
+   for(int i=1; i<n_var; i++)
    {
       cout << " * " << pos_var[pos[i]];
       if(exp[i]!= 1) cout << '^' << exp[i];
+   }
+}
+
+template <class ComplexType, class RealType>
+void PolyMon<ComplexType,RealType>::print_tableau ( int dim )
+{
+   cout << coef.real << "  " << coef.imag;
+
+   int varidx = 0;
+   for(int posidx=0; posidx<n_var; posidx++)
+   {
+      while(varidx < pos[posidx])
+      {
+         cout << " 0";
+         varidx = varidx+1;
+      }
+      cout << " " << exp[posidx];
+      varidx = varidx+1;
+   }
+   while(varidx < dim)
+   {
+      cout << " 0";
+      varidx = varidx + 1;
    }
 }
 

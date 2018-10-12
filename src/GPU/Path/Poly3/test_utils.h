@@ -70,6 +70,15 @@ PolyEq<ComplexType,RealType> random_polynomial
  * The largest exponent is defined by the value of expmax. */
 
 template <class ComplexType, class RealType>
+void write_monomial ( int dim, PolyMon<ComplexType,RealType>& m );
+/*
+ * Writes the information stored in the monomial m in tableau format, 
+ * first the real and imaginary part of the coefficient,
+ * followed by all dim exponents, where dim is the ambient dimension.
+ * There is no newline written at the end.
+ */
+
+template <class ComplexType, class RealType>
 void write_polynomial ( PolyEq<ComplexType,RealType>& p );
 /*
  * Writes the terms in p in tableau style format. */

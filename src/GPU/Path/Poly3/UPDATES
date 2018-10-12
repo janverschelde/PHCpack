@@ -1,3 +1,6 @@
+Fri 12 Oct 2018 : added a print_tableau method to the PolyMon class in
+  polymon.h and polymon.tpp, refactoring code in test_utils.h, test_utils.tpp.
+
 Thu 11 Oct 2018 : in polymon.h, polymon.tpp, polyeq.h, polyeq.tpp, polysys.h,
   polysys.tpp and test_polysys.cpp, added verbose options for debugging the
   read() methods.
