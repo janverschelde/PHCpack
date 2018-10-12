@@ -126,8 +126,10 @@ void PolySys<ComplexType,RealType>::print()
 
 template <class ComplexType, class RealType>
 void PolySys<ComplexType, RealType>::read
- ( const string& sys_string, VarDict& pos_dict )
+ ( const string& sys_string, VarDict& pos_dict, int verbose )
 {
+   if(verbose > 0) cout << "entering PolySys.read() ..." << endl;
+
    int l = sys_string.length();
    n_eq = 1;
 
@@ -168,10 +170,13 @@ void PolySys<ComplexType, RealType>::read
       PolyEq<ComplexType,RealType>* new_eq = new PolyEq<ComplexType,RealType>();
       tmp = tmp->next;
       int eq_end = tmp->data;
-      // cout << n_eq << " "<< eq_start <<" " << eq_end<< endl;
-      // string new_eq = sys_string.substr(eq_start, eq_end-eq_start);
-      // cout << new_eq << endl;
-      new_eq->read(sys_string, pos_dict, eq_start, eq_end);
+      if(verbose > 0)
+      {
+         cout << n_eq << " "<< eq_start <<" " << eq_end<< endl;
+         string new_eq = sys_string.substr(eq_start, eq_end-eq_start);
+         cout << new_eq << endl;
+      }
+      new_eq->read(sys_string, pos_dict, eq_start, eq_end, verbose);
       eq.push_back(new_eq);
       eq_start = eq_end;
    }
@@ -181,11 +186,13 @@ void PolySys<ComplexType, RealType>::read
    dim = pos_dict.n_job;
    pos_var = pos_dict.reverse();
    // dim = pos_dict.n_job;
+
+   if(verbose > 0) cout << "... leaving polysys.read()" << endl;
 }
 
 template <class ComplexType, class RealType>
 void PolySys<ComplexType,RealType>::read
- ( const string* sys_string, int n_eq, VarDict& pos_dict )
+ ( const string* sys_string, int n_eq, VarDict& pos_dict, int verbose )
 {
    eq.reserve(n_eq);
    this->n_eq = n_eq;
@@ -197,7 +204,7 @@ void PolySys<ComplexType,RealType>::read
    PolyEq<ComplexType,RealType>* tmp_eq_space = eq_space;
    for(int i=0; i< n_eq; i++)
    {
-      tmp_eq_space->read(sys_string[i], pos_dict);
+      tmp_eq_space->read(sys_string[i], pos_dict, verbose);
       tmp_eq_space->dim = dim;
       eq.push_back(tmp_eq_space);
       tmp_eq_space++;
@@ -207,13 +214,16 @@ void PolySys<ComplexType,RealType>::read
 }
 
 template <class ComplexType, class RealType>
-void PolySys<ComplexType,RealType>::read_file ( const string& file_name )
+void PolySys<ComplexType,RealType>::read_file
+ ( const string& file_name, int verbose )
 {
+   if(verbose > 0) cout << "entering PolySys.read_file() ..." << endl;
+
    VarDict pos_dict;
    ifstream myfile (file_name.c_str());
    if(myfile.is_open())
    {
-      read_file(myfile, pos_dict);
+      read_file(myfile, pos_dict, verbose);
       myfile.close();
    }
    else
@@ -228,12 +238,16 @@ void PolySys<ComplexType,RealType>::read_file ( const string& file_name )
    {
       std::cout << var_idx << " " << pos_var[var_idx] << std::endl;
    }*/
+
+   if(verbose > 0) cout << "... leaving PolySys.read_file()" << endl;
 }
 
 template <class ComplexType, class RealType>
 void PolySys<ComplexType,RealType>::read_file
- ( ifstream& myfile, VarDict& pos_dict )
+ ( ifstream& myfile, VarDict& pos_dict, int verbose )
 {
+   if(verbose > 0) cout << "entering the second read_file ..." << endl;
+
    string line;
    getline(myfile,line);
 
@@ -284,7 +298,7 @@ void PolySys<ComplexType,RealType>::read_file
          if(finish)
          {
             // std::cout << line << std::endl << std::endl;
-            tmp_eq_space->read(line, pos_dict);
+            tmp_eq_space->read(line, pos_dict, verbose);
             tmp_eq_space->dim = dim;
             eq.push_back(tmp_eq_space);
             tmp_eq_space++;
@@ -303,6 +317,8 @@ void PolySys<ComplexType,RealType>::read_file
    pos_var = pos_dict.reverse();
 
    update_max_deg_base();
+
+   if(verbose > 0) cout << "... leaving the second read_file" << endl;
 }
 
 template <class ComplexType, class RealType>

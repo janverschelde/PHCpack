@@ -71,33 +71,38 @@ class PolySys
          // cout << "sys destructed" << endl;
       }
 
-      void read ( const string* sys_string, int n_eq, VarDict& pos_dict );
+      void read ( const string* sys_string, int n_eq, VarDict& pos_dict,
+                  int verbose=0 );
       /*
        * Reads a polynomial systems from sys_string, an array of strings.
        * The number of strings equals n_eq, which equals the number
        * of polynomials in the system.
        * The method read() defined in the class PolyEq is applied.
        * The dictionary pos_dict defines the position of the variables.
+       * If verbose > 0, then extra output is written to screen.
        */
 
-      void read ( const string& sys_string, VarDict& pos_dict );
+      void read ( const string& sys_string, VarDict& pos_dict,
+                  int verbose=0 );
       /*
        * Reads a polynomial system from the string sys_string.
        * Each polynomial in the string ends with a semicolon ';'.
        * The method read() defined in the class PolyEq is applied.
        * The dictionary pos_dict defines the positions of the variables.
+       * If verbose > 0, then extra output is written to screen.
        */
  
-      void read_file ( const string& file_name );
+      void read_file ( const string& file_name, int verbose=0 );
       /*
        * Reads the dimension of the system on the first line on file
        * and then reads the polynomial in the system.
        * The polynomials must end with a semicolon ';'.
        * There should not be any blank lines between the lines
        * that contain the polynomials.
+       * If verbose > 0, then extra output is written to screen.
        */
 
-      void read_file ( ifstream& myfile, VarDict& pos_dict );
+      void read_file ( ifstream& myfile, VarDict& pos_dict, int verbose=0 );
       /*
        * Reads the dimension of the system on the first line on file
        * and then reads the polynomial in the system.
@@ -107,6 +112,7 @@ class PolySys
        * The dictionary pos_dict defines the position of the variables.
        * If the dictionary is empty, then the positions of the
        * variables are defined in the order of their appearance on file.
+       * If verbose > 0, then extra output is written to screen.
        */
 
       ComplexType** allocate_deg_table ( void );

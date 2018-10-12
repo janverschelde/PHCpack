@@ -70,18 +70,20 @@ class PolyEq
           }
       }
 
-      void read ( const string& eq_string, VarDict& pos_dict );
+      void read ( const string& eq_string, VarDict& pos_dict, int verbose=0 );
       /*
        * Reads a polynomial from a string.
        * The dictionary pos_dict defines the positions of the variables.
+       * If verbose, then extra output is written to screen.
        */
 
       void read ( const string& eq_string, VarDict& pos_dict,
-                  int start, int end );
+                  int start, int end, int verbose=0 );
       /*
        * Reads a polynomial from a string, starting at position start
        * and ending at position end.
        * The dictionary pos_dict defines the positions of the variables.
+       * If verbose, then extra output is written to screen.
        */
 
       void print ( const string* pos_var );

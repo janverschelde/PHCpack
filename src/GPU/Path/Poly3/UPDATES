@@ -1,3 +1,7 @@
+Thu 11 Oct 2018 : in polymon.h, polymon.tpp, polyeq.h, polyeq.tpp, polysys.h,
+  polysys.tpp and test_polysys.cpp, added verbose options for debugging the
+  read() methods.
+
 Wed 10 Oct 2018 : fixed bug in test_utils.tpp with the output of a
   polynomial in the tableau format, added #include <iomanip> to test_utils.h.
 

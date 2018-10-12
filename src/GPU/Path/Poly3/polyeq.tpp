@@ -74,16 +74,21 @@ ComplexType PolyEq<ComplexType,RealType>::eval
 
 template <class ComplexType, class RealType>
 void PolyEq<ComplexType,RealType>::read
- ( const string& eq_string, VarDict& pos_dict )
+ ( const string& eq_string, VarDict& pos_dict, int verbose )
 {
+   if(verbose > 0) cout << "entering the first PolyEq.read()" << endl;
    int l = eq_string.length();
-   read(eq_string, pos_dict, 0, l);
+   read(eq_string, pos_dict, 0, l, verbose);
+   if(verbose > 0) cout << "... leaving the first PolyEq.read()" << endl;
 }
 
 template <class ComplexType, class RealType>
 void PolyEq<ComplexType,RealType>::read
- ( const string& eq_string, VarDict& pos_dict, int start, int end )
+ ( const string& eq_string, VarDict& pos_dict, int start, int end,
+   int verbose )
 {
+   if(verbose > 0) cout << "entering the second PolyEq.read()" << endl;
+
    n_mon = 0;
 
    // Get the starting position of first monomial
@@ -130,7 +135,7 @@ void PolyEq<ComplexType,RealType>::read
             // std::cout << "n_mon = " << n_mon << std::endl;
             PolyMon<ComplexType,RealType>* mm
                = new PolyMon<ComplexType,RealType>;
-            mm->read(eq_string, pos_dict, mon_start, i, tmp_coef);
+            mm->read(eq_string, pos_dict, mon_start, i, tmp_coef, verbose);
             mon.push_back(mm);
             mon_start = i;
          }
@@ -150,7 +155,7 @@ void PolyEq<ComplexType,RealType>::read
       {
          n_mon++;
          PolyMon<ComplexType,RealType>* mm = new PolyMon<ComplexType,RealType>;
-         mm->read(eq_string, pos_dict, mon_start, end, tmp_coef);
+         mm->read(eq_string, pos_dict, mon_start, end, tmp_coef, verbose);
          mon.push_back(mm);
       }
       else
@@ -159,6 +164,8 @@ void PolyEq<ComplexType,RealType>::read
       }
    }
    dim = pos_dict.n_job;
+
+   if(verbose > 0) cout << "... leaving the second PolyEq.read()" << endl;
 }
 
 template <class ComplexType, class RealType>

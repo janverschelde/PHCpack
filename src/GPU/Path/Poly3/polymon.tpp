@@ -50,27 +50,35 @@ std::vector<std::string> split ( const std::string &s, char delim )
 
 template <class ComplexType, class RealType>
 void PolyMon<ComplexType,RealType>::read
- ( const string& mon_string, VarDict& pos_dict )
+ ( const string& mon_string, VarDict& pos_dict, int verbose )
 {
+   if(verbose > 0) cout << "entering the first PolyMon.read()" << endl;
+
    int end = mon_string.length();
    int loc = 0;
    ComplexType coef = get_coef_complex<ComplexType>(mon_string, loc);
-   read(mon_string, pos_dict, loc, end, coef);
+   read(mon_string, pos_dict, loc, end, coef, verbose);
+
+   if(verbose > 0) cout << "... leaving the first PolyMon.read()" << endl;
 }
 
 template <class ComplexType, class RealType>
 void PolyMon<ComplexType,RealType>::read
- ( const string& mon_string, VarDict& pos_dict, ComplexType coef )
+ ( const string& mon_string, VarDict& pos_dict, ComplexType coef, int verbose )
 {
+   if(verbose > 0) cout << "entering the second PolyMon.read()" << endl;
    int end = mon_string.length();
-   read(mon_string, pos_dict, 0, end, coef);
+   read(mon_string, pos_dict, 0, end, coef, verbose);
+   if(verbose > 0) cout << "... leaving the second PolyMon.read()" << endl;
 }
 
 template <class ComplexType, class RealType>
 void PolyMon<ComplexType,RealType>::read
  ( const string& eq_string, VarDict& pos_dict, int start, int end,
-   ComplexType coef )
+   ComplexType coef, int verbose )
 {
+   if(verbose > 0) cout << "entering the third PolyMon.read()" << endl;
+
    n_var = 1;
 
    this->coef = coef;
@@ -167,6 +175,8 @@ void PolyMon<ComplexType,RealType>::read
       exp[pos_ind-1] = atoi(var.c_str()); 
    }
    update_base();
+
+   if(verbose > 0) cout << "... leaving the third PolyMon.read()" << endl;
 }
 
 template <class ComplexType, class RealType>

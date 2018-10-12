@@ -242,7 +242,7 @@ int polsys_test ( void )
    string name; cin >> name;
 
    PolySys<ComplexType,RealType> polynomials;
-   polynomials.read_file(name);
+   polynomials.read_file(name,1);
    cout << "The polynomials on the file " << name << " :" << endl;
    polynomials.print();
 

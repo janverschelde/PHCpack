@@ -119,29 +119,31 @@ class PolyMon
          if(exp_base != NULL) delete[] exp_tbl_base;
       }
 
-      void read 
-         ( const string& eq_string, VarDict& pos_dict,
-           int start, int end, ComplexType coef );
+      void read ( const string& eq_string, VarDict& pos_dict,
+                  int start, int end, ComplexType coef, int verbose=0 );
       /*
        * Reads the string from position start to end for the exponents
        * of a monomial written in symbolic representation in the string.
        * The dictionary pos_dict defines the positions of the variables.
        * The coefficient of the monomial is given in coef.
+       * If verbose, then extra output is written to screen.
        */ 
 
       void read ( const string& mon_string, VarDict& pos_dict,
-                  ComplexType coef );
+                  ComplexType coef, int verbose=0 );
       /*
        * Given the coefficient coef of a monomial, reads the string
        * which contains the monomial in symbolic format for the exponents.
        * The dictionary pos_dict define the position of the variables.
+       * If verbose, then extra output is written to screen.
        */
 
-      void read ( const string& mon_string, VarDict& pos_dict );
+      void read ( const string& mon_string, VarDict& pos_dict, int verbose=0 );
       /*
        * Reads a monomial from a string which contains a monomial
        * in symbolic representation.  The dictionary pos_dict defines
        * the positions of the variables.
+       * If verbose, then extra output is written to screen.
        */
 
       ComplexType speel ( const ComplexType* x_val, ComplexType* deri );
