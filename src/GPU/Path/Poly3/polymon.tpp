@@ -92,6 +92,8 @@ void PolyMon<ComplexType,RealType>::read
              n_var++;
       }
 
+   if(verbose > 0) cout << "n_var : " << n_var << endl;
+
    pos = new int[n_var];
    exp = new int[n_var];
 
@@ -126,14 +128,25 @@ void PolyMon<ComplexType,RealType>::read
          new_var++;
       }
 
+      if(verbose > 0)
+         cout << "  new_var : " << new_var
+              << "  cur_type : " << cur_type
+              << "  next_type : " << next_type
+              << "  pos_ind : " << pos_ind << endl;
+
       // handle vars
       if(new_var == 1)
       {
          if(cur_type == 1)
          {
             // pos[pos_ind] = var_to_pos(var);
-            // string var1 = var.substr(1,var.length()-1);
-            // cout << var << " " << var1 << " " << atoi(var1.c_str()) << endl;
+            if(verbose > 0)
+            {
+               string var1 = var.substr(1,var.length()-1);
+               cout << var << " " << var1 << " " << atoi(var1.c_str()) << endl;
+               cout << "assiging to pos_ind : " << pos_ind << endl;
+               cout << "pos_dict.get(var) : " << pos_dict.get(var) << endl;
+            }
             // pos[pos_ind] = atoi(var1.c_str())-1;
             pos[pos_ind] = pos_dict.get(var);
             exp[pos_ind] = 1;
@@ -142,7 +155,7 @@ void PolyMon<ComplexType,RealType>::read
          }
          else if(cur_type == 2)
          {
-            int tmp_exp =  atoi(var.c_str());
+            int tmp_exp = atoi(var.c_str());
             exp[pos_ind-1] = tmp_exp;
             cur_type = 0;
          }
@@ -175,6 +188,20 @@ void PolyMon<ComplexType,RealType>::read
       exp[pos_ind-1] = atoi(var.c_str()); 
    }
    update_base();
+
+   if(verbose > 0) 
+   {
+      int dim = pos_dict.n_job;
+      cout << "the monomial read : ";
+      this->print_tableau(dim);
+      cout << endl;
+      cout << "pos :";
+      for(int idx=0; idx<n_var; idx++) cout << " " << pos[idx];
+      cout << endl;
+      cout << "exp :";
+      for(int idx=0; idx<n_var; idx++) cout << " " << exp[idx];
+      cout << endl;
+   }
 
    if(verbose > 0) cout << "... leaving the third PolyMon.read()" << endl;
 }
