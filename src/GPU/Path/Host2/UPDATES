@@ -1,3 +1,5 @@
+Sat 13 Oct 2018 : in workspace_host.tpp removed output written to screen.
+
 Thu 11 Oct 2018 : added verbose parameter to the initialization methods
   of workspace_host.h and workspace_host.tpp, called in cpuinsthom.
   Added an extra function to predictor_host, to fix a memory leak.

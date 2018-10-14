@@ -86,13 +86,13 @@ void Workspace<ComplexType>::init_x_t ( int dim, int n_predictor )
 template <class ComplexType>
 void Workspace<ComplexType>::init_x_t_idx()
 {
-   std::cout << "inside init_x_t_idx() ..." << std::endl;
+   // std::cout << "inside init_x_t_idx() ..." << std::endl;
    this->x_t_idx = 0; // added this->
-   std::cout << "assigning x_array[0] to x ..." << std::endl;
+   // std::cout << "assigning x_array[0] to x ..." << std::endl;
    this->x = this->x_array[0]; // added this->
-   std::cout << "after assignement" << std::endl;
+   // std::cout << "after assignement" << std::endl;
    this->t = this->t_array; // added this->
-   std::cout << "leaving init_x_t_idx()" << std::endl;
+   // std::cout << "leaving init_x_t_idx()" << std::endl;
 }
 
 template <class ComplexType>
