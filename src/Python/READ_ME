@@ -1,4 +1,4 @@
-phcpy 0.8.7 offers a simple Python interface to PHCv2.4.58
+phcpy 0.8.8 offers a simple Python interface to PHCv2.4.59
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -66,6 +66,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.8.8 : 2018-10-14 : fixed memory leak in algorithmic differentiation trackers
 0.8.7 : 2018-09-27 : fixed regression tests in the examples module
 0.8.6 : 2018-08-31 : wrapped phc -B function in solvers of the factor module
 0.8.5 : 2018-08-14 : phcpy2c?.so is compiled with GNAT Community 2018
