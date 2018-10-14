@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.58 contains
+The public distribution for PHCpack version 2.4.59 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -29,6 +29,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.59 on 2018-10-14 : fixed memory leak in phc -j
 release 2.4.58 on 2018-09-27 : bug fix for stable mixed volume in phc -b
 release 2.4.57 on 2018-08-31 : improved phc -B and many other bug fixes
 release 2.4.56 on 2018-08-14 : fixed error with GNAT Community 2018 compiler
