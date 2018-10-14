@@ -25,6 +25,7 @@ class Workspace
       int n_eq;          // number of equations
       int n_array;       // number of past solutions stored
       int n_predictor;   // number of points in predictor
+
       int x_t_idx_last;
       int x_t_idx;
 
@@ -37,6 +38,10 @@ class Workspace
       ComplexType* t_last;
 
       ComplexType** deg_table; // powers of coordinates
+
+      ComplexType* div_diff4pred; // divided differences, size n_predictor
+      ComplexType* t_array4pred;  // auxiliary array for predictor
+      ComplexType* t_diff4pred;   // auxiliary array for predictor
 
       int path_idx;
 
@@ -64,6 +69,9 @@ class Workspace
          x_t_idx_last = 0;
          path_idx = 0;
          deg_table = NULL;
+         div_diff4pred = NULL;
+         t_array4pred = NULL;
+         t_diff4pred = NULL;
       }
 
       void init ( int workspace_size, int n_coef, int n_constant,
@@ -108,6 +116,9 @@ class Workspace
             delete[] deg_table[0];
             delete[] deg_table;
          }
+         if(div_diff4pred != NULL) delete[] div_diff4pred;
+         if(t_array4pred != NULL) delete[] t_array4pred;
+         if(t_diff4pred != NULL) delete[] t_diff4pred;
          // more to add ... careful with memory leaks ...
          // delete[] tmp_x;
       }

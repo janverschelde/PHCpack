@@ -81,6 +81,10 @@ void Workspace<ComplexType>::init_x_t ( int dim, int n_predictor )
 
    this->x = this->x_array[0]; // added this->
    this->t = this->t_array;    // added this->
+
+   this->div_diff4pred = new ComplexType[n_predictor];
+   this->t_array4pred = new ComplexType[n_predictor];
+   this->t_diff4pred = new ComplexType[n_predictor];
 }
 
 template <class ComplexType>

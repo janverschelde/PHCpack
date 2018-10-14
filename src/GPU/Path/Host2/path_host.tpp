@@ -67,9 +67,16 @@ bool path_tracker
       // clock_t begin_Predict = clock();
       int n_predictor = min(workspace_cpu.n_predictor, n_point);
 
-      predictor_newton<ComplexType>
+      //predictor_newton<ComplexType>
+      //   (workspace_cpu.x_array,workspace_cpu.t_array,
+      //    workspace_cpu.x_t_idx,n_predictor,cpu_inst_hom.dim);
+
+      predictor_divdif<ComplexType>
          (workspace_cpu.x_array,workspace_cpu.t_array,
-          workspace_cpu.x_t_idx,n_predictor,cpu_inst_hom.dim);
+          workspace_cpu.x_t_idx,n_predictor,cpu_inst_hom.dim,
+          workspace_cpu.div_diff4pred, workspace_cpu.t_array4pred,
+          workspace_cpu.t_diff4pred);
+
       // clock_t end_Predict = clock();
       // timeSec_Predict
       //   += (end_Predict - begin_Predict)
