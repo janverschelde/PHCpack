@@ -1,3 +1,6 @@
+Sat 13 Oct 2018 : fixed the reading of a monomial in PolyMon in the cases
+  when the order of the variables differs from monomial to monomial.
+
 Fri 12 Oct 2018 : added a print_tableau method to the PolyMon class in
   polymon.h and polymon.tpp, refactoring code in test_utils.h, test_utils.tpp.
   Added more diagnostics prints to polymon.tpp.

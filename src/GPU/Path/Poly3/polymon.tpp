@@ -1,3 +1,6 @@
+// The file polymon.tpp provides the definitions of the methods of the
+// class PolyMon, with prototypes in the file polymon.h.
+
 inline int var_to_pos ( string var )
 {
    string var1 = var.substr(1,var.length()-1);
@@ -72,6 +75,70 @@ void PolyMon<ComplexType,RealType>::read
    if(verbose > 0) cout << "... leaving the second PolyMon.read()" << endl;
 }
 
+void bubblesortinfo ( int index, int* positions, int* exponents )
+/*
+ * Writes the information in positions and exponents,
+ * for when the verbose flag in bubblesort is raised.
+ */
+{
+   cout << "-> the positions :"; 
+   for(int posidx=0; posidx <= index; posidx++)
+      cout << " " << positions[posidx];
+   cout << endl;
+   cout << "-> the exponents :"; 
+   for(int posidx=0; posidx <= index; posidx++)
+      cout << " " << exponents[posidx];
+   cout << endl;
+}
+
+void bubblesort ( int index, int* positions, int* exponents, int verbose=0 )
+/*
+ * Applies bubble sort to insert the element at position index.
+ *
+ * ON ENTRY :
+ *   index     last index in positions and exponents, index >= 0;
+ *   positions is a sorted array, sorted up to position index-1;
+ *   exponents contains the exponents of the variables at positions;
+ *   verbose   if > 0, then extra output is written to screen.
+ *
+ * ON RETURN :
+ *   positions is a sorted array, sorted up to position index;
+ *   exponents contains the exponents of the variables at positions.
+ */
+{
+   if(verbose > 0)
+   {
+      cout << "Entering bubblesort with index = " << index << endl;
+      bubblesortinfo(index,positions,exponents);
+   }
+   if(index > 0)
+   {
+      int posidx = index;
+      bool unsorted = true;
+      do
+      {
+         if(positions[posidx] > positions[posidx-1])
+            unsorted = false;
+         else // if(positions[posidx] < positions[posidx-1])
+         {
+            int tmp = positions[posidx];
+            positions[posidx] = positions[posidx-1];
+            positions[posidx-1] = tmp;
+            tmp = exponents[posidx];
+            exponents[posidx] = exponents[posidx-1];
+            exponents[posidx-1] = tmp;
+            posidx--;
+         }
+      }
+      while(posidx > 0 and unsorted);
+   }
+   if(verbose > 0)
+   {
+      cout << "Leaving bubblesort with index = " << index << endl;
+      bubblesortinfo(index,positions,exponents);
+   }
+}
+
 template <class ComplexType, class RealType>
 void PolyMon<ComplexType,RealType>::read
  ( const string& eq_string, VarDict& pos_dict, int start, int end,
@@ -83,10 +150,10 @@ void PolyMon<ComplexType,RealType>::read
 
    this->coef = coef;
 
-   for(int i = start; i<end; ++i)
+   for(int i = start; i<end; ++i)   // counts the number of variables
       if(eq_string[i] == '*')
       {
-          if(eq_string[i+1] == '*')
+          if(eq_string[i+1] == '*') // ** is exponentiation
              i++;
           else
              n_var++;
@@ -109,7 +176,7 @@ void PolyMon<ComplexType,RealType>::read
       {
          if(eq_string[i+1] == '*')
          {
-            next_type = 2;
+            next_type = 2; // exponent of type **
             i++;
          }
          else
@@ -120,7 +187,7 @@ void PolyMon<ComplexType,RealType>::read
       }
       else if(c=='^')
       {
-         next_type = 2;
+         next_type = 2;   // exponent of type ^
          new_var++;
       }
       else if(c == ' ' || c ==';')
@@ -139,28 +206,39 @@ void PolyMon<ComplexType,RealType>::read
       {
          if(cur_type == 1)
          {
-            // pos[pos_ind] = var_to_pos(var);
             if(verbose > 0)
             {
                string var1 = var.substr(1,var.length()-1);
                cout << var << " " << var1 << " " << atoi(var1.c_str()) << endl;
                cout << "assiging to pos_ind : " << pos_ind << endl;
                cout << "pos_dict.get(var) : " << pos_dict.get(var) << endl;
+               cout << "next_type : " << next_type << endl;
             }
+            // pos[pos_ind] = var_to_pos(var);
             // pos[pos_ind] = atoi(var1.c_str())-1;
+            // In a sparse representation of the monomial, the position
+            // of the variable is not used in its position.
             pos[pos_ind] = pos_dict.get(var);
             exp[pos_ind] = 1;
+            if(next_type == 1) bubblesort(pos_ind,pos,exp,verbose);
             pos_ind++;
             cur_type = 0;
          }
          else if(cur_type == 2)
          {
             int tmp_exp = atoi(var.c_str());
+            if(verbose > 0)
+            {
+               cout << "assigning exponent " << tmp_exp
+                    << " at position " << pos_ind-1 << endl;
+               cout << "next_type : " << next_type << endl;
+            }
             exp[pos_ind-1] = tmp_exp;
+            bubblesort(pos_ind-1,pos,exp,verbose);
             cur_type = 0;
          }
       }
-      else
+      else // new_var == 0
       {
          if(cur_type == 0)
          {
@@ -172,20 +250,30 @@ void PolyMon<ComplexType,RealType>::read
             var += c;
          }
       }        
-   }
+   } // end for loop
 
    if(cur_type == 1)
    {
-      string var1 = var.substr(1,var.length()-1);
-      // cout << var << " " << var1 << " " << atoi(var1.c_str()) << endl;
-      // pos[pos_ind] = var_to_pos(var);
-      // pos[pos_ind] = atoi(var1.c_str())-1;
+      if(verbose > 0)
+      {
+         string var1 = var.substr(1,var.length()-1);
+         cout << var << " " << var1 << " " << atoi(var1.c_str()) << endl;
+         cout << "assiging to pos_ind : " << pos_ind << endl;
+         cout << "pos_dict.get(var) : " << pos_dict.get(var) << endl;
+      }
       pos[pos_ind] = pos_dict.get(var);
       exp[pos_ind] = 1;
+      bubblesort(pos_ind,pos,exp,verbose);
    }
    else if(cur_type == 2)
    {
       exp[pos_ind-1] = atoi(var.c_str()); 
+      if(verbose > 0)
+      {
+         cout << "assigning exponent " << atoi(var.c_str())
+              << " at position " << pos_ind-1 << endl;
+      }
+      bubblesort(pos_ind-1,pos,exp,verbose);
    }
    update_base();
 
