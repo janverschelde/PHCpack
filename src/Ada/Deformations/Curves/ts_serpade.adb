@@ -1261,6 +1261,126 @@ procedure ts_serpade is
     QuadDobl_Test_Start_Solutions(sols);
   end QuadDobl_Test_Case;
 
+  procedure Standard_Pade_Homotopy
+              ( numdeg,dendeg,nbeq,nbsteps : in integer32;
+                sols : in Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Computes Pade approximations for the solution paths
+  --   defined by an artificial parameter homotopy,
+  --   in standard double precision.
+
+  -- ON ENTRY :
+  --   numdeg   degree of the numerator;
+  --   dendeg   degree of the denominator;
+  --   nbeq     number of equations;
+  --   nbsteps  number of steps;
+  --   sols     start solutions for an artificial-parameter homotopy.
+
+    lnk : constant Standard_Complex_Solutions.Link_to_Solution
+        := Standard_Complex_Solutions.Head_Of(sols);
+    sol : Standard_Complex_Solutions.Solution := lnk.all;
+    nbt : constant natural32 := natural32(numdeg+dendeg+1);
+    nit : constant natural32 := 4*nbt;
+    srv : Standard_Dense_Series_Vectors.Vector(sol.v'range);
+    eva : Standard_Dense_Series_Vectors.Vector(1..nbeq);
+    pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
+
+  begin
+    Homotopy_Pade_Approximants.Standard_Pade_Approximant
+      (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
+    put_line("The solution series :");
+    Standard_Dense_Series_Vectors_io.put(srv);
+    put_line("The evaluated solution series :");
+    Standard_Dense_Series_Vectors_io.put(eva);
+    Standard_Pade_Approximation(nbeq,nbsteps,srv,pv);
+    put_line("The Pade approximant :");
+    for i in pv'range loop
+      put_line(Standard_Pade_Approximants_io.Write(pv(i)));
+    end loop;
+    Standard_Pade_Approximants.Clear(pv);
+  end Standard_Pade_Homotopy;
+
+  procedure DoblDobl_Pade_Homotopy
+              ( numdeg,dendeg,nbeq,nbsteps : in integer32;
+                sols : in DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Computes Pade approximations for the solution paths
+  --   defined by an artificial parameter homotopy,
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   numdeg   degree of the numerator;
+  --   dendeg   degree of the denominator;
+  --   nbeq     number of equations;
+  --   nbsteps  number of steps;
+  --   sols     start solutions for an artificial-parameter homotopy.
+
+    lnk : constant DoblDobl_Complex_Solutions.Link_to_Solution
+        := DoblDobl_Complex_Solutions.Head_Of(sols);
+    sol : DoblDobl_Complex_Solutions.Solution := lnk.all;
+    nbt : constant natural32 := natural32(numdeg+dendeg+1);
+    nit : constant natural32 := 4*nbt;
+    srv : DoblDobl_Dense_Series_Vectors.Vector(sol.v'range);
+    eva : DoblDobl_Dense_Series_Vectors.Vector(1..nbeq);
+    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
+
+  begin
+    Homotopy_Pade_Approximants.DoblDobl_Pade_Approximant
+      (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
+    put_line("The solution series :");
+    DoblDobl_Dense_Series_Vectors_io.put(srv);
+    put_line("The evaluated solution series :");
+    DoblDobl_Dense_Series_Vectors_io.put(eva);
+    DoblDobl_Pade_Approximation(nbeq,nbsteps,srv,pv);
+    put_line("The Pade approximant :");
+    for i in pv'range loop
+      put_line(DoblDobl_Pade_Approximants_io.Write(pv(i)));
+    end loop;
+    DoblDobl_Pade_Approximants.Clear(pv);
+  end DoblDobl_Pade_Homotopy;
+
+  procedure QuadDobl_Pade_Homotopy
+              ( numdeg,dendeg,nbeq,nbsteps : in integer32;
+                sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Computes Pade approximations for the solution paths
+  --   defined by an artificial parameter homotopy,
+  --   in quad double precision.
+
+  -- ON ENTRY :
+  --   numdeg   degree of the numerator;
+  --   dendeg   degree of the denominator;
+  --   nbeq     number of equations;
+  --   nbsteps  number of steps;
+  --   sols     start solutions for an artificial-parameter homotopy.
+
+    lnk : constant QuadDobl_Complex_Solutions.Link_to_Solution
+        := QuadDobl_Complex_Solutions.Head_Of(sols);
+    sol : QuadDobl_Complex_Solutions.Solution := lnk.all;
+    nbt : constant natural32 := natural32(numdeg+dendeg+1);
+    nit : constant natural32 := 4*nbt;
+    srv : QuadDobl_Dense_Series_Vectors.Vector(sol.v'range);
+    eva : QuadDobl_Dense_Series_Vectors.Vector(1..nbeq);
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
+
+  begin
+    Homotopy_Pade_Approximants.QuadDobl_Pade_Approximant
+      (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
+    put_line("The solution series :");
+    QuadDobl_Dense_Series_Vectors_io.put(srv);
+    put_line("The evaluated solution series :");
+    QuadDobl_Dense_Series_Vectors_io.put(eva);
+    QuadDobl_Pade_Approximation(nbeq,nbsteps,srv,pv);
+    put_line("The Pade approximant :");
+    for i in pv'range loop
+      put_line(QuadDobl_Pade_Approximants_io.Write(pv(i)));
+    end loop;
+    QuadDobl_Pade_Approximants.Clear(pv);
+  end QuadDobl_Pade_Homotopy;
+
   procedure Standard_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
@@ -1297,29 +1417,7 @@ procedure ts_serpade is
       put("Give the number of steps : "); get(nbsteps);
       new_line;
     end if;
-    declare
-      lnk : constant Standard_Complex_Solutions.Link_to_Solution
-          := Standard_Complex_Solutions.Head_Of(sols);
-      sol : Standard_Complex_Solutions.Solution := lnk.all;
-      nbt : constant natural32 := natural32(numdeg+dendeg+1);
-      nit : constant natural32 := 4*nbt;
-      srv : Standard_Dense_Series_Vectors.Vector(sol.v'range);
-      eva : Standard_Dense_Series_Vectors.Vector(1..nbeq);
-      pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
-    begin
-      Homotopy_Pade_Approximants.Standard_Pade_Approximant
-        (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
-      put_line("The solution series :");
-      Standard_Dense_Series_Vectors_io.put(srv);
-      put_line("The evaluated solution series :");
-      Standard_Dense_Series_Vectors_io.put(eva);
-      Standard_Pade_Approximation(nbeq,nbsteps,srv,pv);
-      put_line("The Pade approximant :");
-      for i in pv'range loop
-        put_line(Standard_Pade_Approximants_io.Write(pv(i)));
-      end loop;
-      Standard_Pade_Approximants.Clear(pv);
-    end;
+    Standard_Pade_Homotopy(numdeg,dendeg,nbeq,nbsteps,sols);
   end Standard_Homotopy_Test;
 
   procedure DoblDobl_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
@@ -1359,29 +1457,7 @@ procedure ts_serpade is
       put("Give the number of steps : "); get(nbsteps);
       new_line;
     end if;
-    declare
-      lnk : constant DoblDobl_Complex_Solutions.Link_to_Solution
-          := DoblDobl_Complex_Solutions.Head_Of(sols);
-      sol : DoblDobl_Complex_Solutions.Solution := lnk.all;
-      nbt : constant natural32 := natural32(numdeg+dendeg+1);
-      nit : constant natural32 := 4*nbt;
-      srv : DoblDobl_Dense_Series_Vectors.Vector(sol.v'range);
-      eva : DoblDobl_Dense_Series_Vectors.Vector(1..nbeq);
-      pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
-    begin
-      Homotopy_Pade_Approximants.DoblDobl_Pade_Approximant
-        (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
-      put_line("The solution series :");
-      DoblDobl_Dense_Series_Vectors_io.put(srv);
-      put_line("The evaluated solution series :");
-      DoblDobl_Dense_Series_Vectors_io.put(eva);
-      DoblDobl_Pade_Approximation(nbeq,nbsteps,srv,pv);
-      put_line("The Pade approximant :");
-      for i in pv'range loop
-        put_line(DoblDobl_Pade_Approximants_io.Write(pv(i)));
-      end loop;
-      DoblDobl_Pade_Approximants.Clear(pv);
-    end;
+    DoblDobl_Pade_Homotopy(numdeg,dendeg,nbeq,nbsteps,sols);
   end DoblDobl_Homotopy_Test;
 
   procedure QuadDobl_Homotopy_Test ( numdeg,dendeg : in integer32 ) is
@@ -1421,29 +1497,7 @@ procedure ts_serpade is
       put("Give the number of steps : "); get(nbsteps);
       new_line;
     end if;
-    declare
-      lnk : constant QuadDobl_Complex_Solutions.Link_to_Solution
-          := QuadDobl_Complex_Solutions.Head_Of(sols);
-      sol : QuadDobl_Complex_Solutions.Solution := lnk.all;
-      nbt : constant natural32 := natural32(numdeg+dendeg+1);
-      nit : constant natural32 := 4*nbt;
-      srv : QuadDobl_Dense_Series_Vectors.Vector(sol.v'range);
-      eva : QuadDobl_Dense_Series_Vectors.Vector(1..nbeq);
-      pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
-    begin
-      Homotopy_Pade_Approximants.QuadDobl_Pade_Approximant
-        (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
-      put_line("The solution series :");
-      QuadDobl_Dense_Series_Vectors_io.put(srv);
-      put_line("The evaluated solution series :");
-      QuadDobl_Dense_Series_Vectors_io.put(eva);
-      QuadDobl_Pade_Approximation(nbeq,nbsteps,srv,pv);
-      put_line("The Pade approximant :");
-      for i in pv'range loop
-        put_line(QuadDobl_Pade_Approximants_io.Write(pv(i)));
-      end loop;
-      QuadDobl_Pade_Approximants.Clear(pv);
-    end;
+    QuadDobl_Pade_Homotopy(numdeg,dendeg,nbeq,nbsteps,sols);
   end QuadDobl_Homotopy_Test;
 
   procedure Main is
