@@ -18,6 +18,8 @@ with QuadDobl_Random_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
+with Standard_Complex_VecVecs;
+with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
@@ -67,6 +69,13 @@ with Series_and_Solutions;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 with Homotopy_Series_Readers;
+with Standard_Pade_Approximants;
+with Standard_Pade_Approximants_io;
+with DoblDobl_Pade_Approximants;
+with DoblDobl_Pade_Approximants_io;
+with QuadDobl_Pade_Approximants;
+with QuadDobl_Pade_Approximants_io;
+with Homotopy_Pade_Approximants;
 
 procedure ts_serpred is
 
@@ -259,6 +268,115 @@ procedure ts_serpred is
     end loop;
   end QuadDobl_Step_Prediction;
 
+  procedure Standard_Test_Pade_Prediction
+              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                sol : in Standard_Complex_Solutions.Solution;
+                nit : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the Pade predictor on the solution in sol for the 
+  --   homotopy hom, in standard double precision.
+
+    degnum,degden : integer32 := 0;
+    nbt : natural32;
+    nbeq : constant integer32 := hom'last;
+    srv : Standard_Dense_Series_Vectors.Vector(sol.v'range);
+    eva : Standard_Dense_Series_Vectors.Vector(1..nbeq);
+    pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
+    poles : Standard_Complex_VecVecs.VecVec(pv'range);
+
+  begin
+    new_line;
+    put("Give the degree of the numerator : "); get(degnum);
+    put("Give the degree of the denominator : "); get(degden);
+    nbt := natural32(degnum+degden+1);
+    Homotopy_Pade_Approximants.Standard_Pade_Approximant
+      (sol.v,nbeq+1,nbeq,degnum,degden,natural32(nit),srv,eva,pv);
+    put_line("The solution series :");
+    Standard_Dense_Series_Vectors_io.put(srv);
+    put_line("The evaluated solution series :");
+    Standard_Dense_Series_Vectors_io.put(eva);
+    put_line("The Pade approximant :");
+    for i in pv'range loop
+      put("numerator for component "); put(i,1); put_line(" :");
+      put_line(Standard_Pade_Approximants.Numerator_Coefficients(pv(i)));
+      put("denominator for component "); put(i,1); put_line(" :");
+      put_line(Standard_Pade_Approximants.Denominator_Coefficients(pv(i)));
+      put_line(Standard_Pade_Approximants_io.Write(pv(i)));
+    end loop;
+    poles := Homotopy_Pade_Approximants.Standard_Poles(pv);
+    put_line("The poles : "); put(poles);
+    Standard_Pade_Approximants.Clear(pv);
+  end Standard_Test_Pade_Prediction;
+
+  procedure DoblDobl_Test_Pade_Prediction
+              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in DoblDobl_Complex_Solutions.Solution;
+                nit : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the Pade predictor on the solution in sol for the 
+  --   homotopy hom, in double double precision.
+
+    degnum,degden : integer32 := 0;
+    nbt : natural32;
+    nbeq : constant integer32 := hom'last;
+    srv : DoblDobl_Dense_Series_Vectors.Vector(sol.v'range);
+    eva : DoblDobl_Dense_Series_Vectors.Vector(1..nbeq);
+    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
+
+  begin
+    new_line;
+    put("Give the degree of the numerator : "); get(degnum);
+    put("Give the degree of the denominator : "); get(degden);
+    nbt := natural32(degnum+degden+1);
+    Homotopy_Pade_Approximants.DoblDobl_Pade_Approximant
+      (sol.v,nbeq+1,nbeq,degnum,degden,natural32(nit),srv,eva,pv);
+    put_line("The solution series :");
+    DoblDobl_Dense_Series_Vectors_io.put(srv);
+    put_line("The evaluated solution series :");
+    DoblDobl_Dense_Series_Vectors_io.put(eva);
+    put_line("The Pade approximant :");
+    for i in pv'range loop
+      put_line(DoblDobl_Pade_Approximants_io.Write(pv(i)));
+    end loop;
+    DoblDobl_Pade_Approximants.Clear(pv);
+  end DoblDobl_Test_Pade_Prediction;
+
+  procedure QuadDobl_Test_Pade_Prediction
+              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in QuadDobl_Complex_Solutions.Solution;
+                nit : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the Pade predictor on the solution in sol for the 
+  --   homotopy hom, in quad double precision.
+
+    degnum,degden : integer32 := 0;
+    nbt : natural32;
+    nbeq : constant integer32 := hom'last;
+    srv : QuadDobl_Dense_Series_Vectors.Vector(sol.v'range);
+    eva : QuadDobl_Dense_Series_Vectors.Vector(1..nbeq);
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
+
+  begin
+    new_line;
+    put("Give the degree of the numerator : "); get(degnum);
+    put("Give the degree of the denominator : "); get(degden);
+    nbt := natural32(degnum+degden+1);
+    Homotopy_Pade_Approximants.QuadDobl_Pade_Approximant
+      (sol.v,nbeq+1,nbeq,degnum,degden,natural32(nit),srv,eva,pv);
+    put_line("The solution series :");
+    QuadDobl_Dense_Series_Vectors_io.put(srv);
+    put_line("The evaluated solution series :");
+    QuadDobl_Dense_Series_Vectors_io.put(eva);
+    put_line("The Pade approximant :");
+    for i in pv'range loop
+      put_line(QuadDobl_Pade_Approximants_io.Write(pv(i)));
+    end loop;
+    QuadDobl_Pade_Approximants.Clear(pv);
+  end QuadDobl_Test_Pade_Prediction;
+
   procedure Standard_Test_Prediction
               ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
                 sol : in Standard_Complex_Solutions.Solution ) is
@@ -272,19 +390,26 @@ procedure ts_serpred is
     eva : Standard_Dense_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0e-12;
     tolres,step : double_float := 0.0;
+    ans : character;
 
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
-    Standard_Step_Prediction(hom,srv,eva);
     new_line;
-    put_line("Setting the step size based on the power series ...");
-    put("Give the tolerance on the residual : "); get(tolres);
-    step := Series_and_Predictors.Set_Step_Size
-              (standard_output,eva,tolcff,tolres,true);
-    put("The computed step size : "); put(step,3); new_line;
-    Standard_Check_Prediction(hom,srv,eva,step);
+    put("Compute a Pade approximation ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Standard_Test_Pade_Prediction(hom,sol,nit);
+    else
+      Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+      Standard_Step_Prediction(hom,srv,eva);
+      new_line;
+      put_line("Setting the step size based on the power series ...");
+      put("Give the tolerance on the residual : "); get(tolres);
+      step := Series_and_Predictors.Set_Step_Size
+                (standard_output,eva,tolcff,tolres,true);
+      put("The computed step size : "); put(step,3); new_line;
+      Standard_Check_Prediction(hom,srv,eva,step);
+    end if;
   end Standard_Test_Prediction;
 
   procedure DoblDobl_Test_Prediction
@@ -301,21 +426,28 @@ procedure ts_serpred is
     tolcff : constant double_float := 1.0e-12;
     tolres,step : double_float := 0.0;
     dd_step : double_double;
+    ans : character;
 
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
     skip_line; -- needed for prompting of double double ...
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
-    DoblDobl_Step_Prediction(hom,srv,eva);
     new_line;
-    put_line("Setting the step size based on the power series ...");
-    put("Give the tolerance on the residual : "); get(tolres);
-    step := Series_and_Predictors.Set_Step_Size
-              (standard_output,eva,tolcff,tolres,true);
-    put("The computed step size : "); put(step,3); new_line;
-    dd_step := create(step);
-    DoblDobl_Check_Prediction(hom,srv,eva,dd_step);
+    put("Compute a Pade approximation ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      DoblDobl_Test_Pade_Prediction(hom,sol,nit);
+    else
+      Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+      DoblDobl_Step_Prediction(hom,srv,eva);
+      new_line;
+      put_line("Setting the step size based on the power series ...");
+      put("Give the tolerance on the residual : "); get(tolres);
+      step := Series_and_Predictors.Set_Step_Size
+                (standard_output,eva,tolcff,tolres,true);
+      put("The computed step size : "); put(step,3); new_line;
+      dd_step := create(step);
+      DoblDobl_Check_Prediction(hom,srv,eva,dd_step);
+    end if;
   end DoblDobl_Test_Prediction;
 
   procedure QuadDobl_Test_Prediction
@@ -332,21 +464,28 @@ procedure ts_serpred is
     tolcff : constant double_float := 1.0e-12;
     tolres,step : double_float := 0.0;
     qd_step : quad_double;
+    ans : character;
 
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
     skip_line; -- needed for prompting of quad double ...
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
-    QuadDobl_Step_Prediction(hom,srv,eva);
     new_line;
-    put_line("Setting the step size based on the power series ...");
-    put("Give the tolerance on the residual : "); get(tolres);
-    step := Series_and_Predictors.Set_Step_Size
-              (standard_output,eva,tolcff,tolres,true);
-    put("The computed step size : "); put(step,3); new_line;
-    qd_step := create(step);
-    QuadDobl_Check_Prediction(hom,srv,eva,qd_step);
+    put("Compute a Pade approximation ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      QuadDobl_Test_Pade_Prediction(hom,sol,nit);
+    else
+      Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+      QuadDobl_Step_Prediction(hom,srv,eva);
+      new_line;
+      put_line("Setting the step size based on the power series ...");
+      put("Give the tolerance on the residual : "); get(tolres);
+      step := Series_and_Predictors.Set_Step_Size
+                (standard_output,eva,tolcff,tolres,true);
+      put("The computed step size : "); put(step,3); new_line;
+      qd_step := create(step);
+      QuadDobl_Check_Prediction(hom,srv,eva,qd_step);
+    end if;
   end QuadDobl_Test_Prediction;
 
   procedure Standard_Test_Prediction
@@ -370,6 +509,7 @@ procedure ts_serpred is
     put("Running the predictor on ");
     put(len,1); put_line(" solutions ...");
     for k in 1..len loop
+      put("At solution "); put(k,1); put_line("...");
       sol := Standard_Complex_Solutions.Head_Of(tmp);
       Standard_Test_Prediction(s,sol.all);
       tmp := Standard_Complex_Solutions.Tail_Of(tmp);
@@ -397,6 +537,7 @@ procedure ts_serpred is
     put("Running the predictor on ");
     put(len,1); put_line(" solutions ...");
     for k in 1..len loop
+      put("At solution "); put(k,1); put_line("...");
       sol := DoblDobl_Complex_Solutions.Head_Of(tmp);
       DoblDobl_Test_Prediction(s,sol.all);
       tmp := DoblDobl_Complex_Solutions.Tail_Of(tmp);
@@ -424,6 +565,7 @@ procedure ts_serpred is
     put("Running the predictor on ");
     put(len,1); put_line(" solutions ...");
     for k in 1..len loop
+      put("At solution "); put(k,1); put_line("...");
       sol := QuadDobl_Complex_Solutions.Head_Of(tmp);
       QuadDobl_Test_Prediction(s,sol.all);
       tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);

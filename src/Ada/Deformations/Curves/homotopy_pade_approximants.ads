@@ -1,12 +1,15 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with Standard_Dense_Series_Vectors;
 with Standard_Pade_Approximants;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
 with DoblDobl_Dense_Series_Vectors;
 with DoblDobl_Pade_Approximants;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with QuadDobl_Dense_Series_Vectors;
 with QuadDobl_Pade_Approximants;
 
@@ -60,5 +63,33 @@ package Homotopy_Pade_Approximants is
   --   srv      series solution, with initial coefficients in sol;
   --   eva      evaluated solution series;
   --   pv       vector of Pade approximants.
+
+  function Standard_Poles
+              ( p : Standard_Pade_Approximants.Pade )
+              return Standard_Complex_Vectors.Vector;
+  function DoblDobl_Poles
+              ( p : DoblDobl_Pade_Approximants.Pade )
+              return DoblDobl_Complex_Vectors.Vector;
+  function QuadDobl_Poles
+              ( p : QuadDobl_Pade_Approximants.Pade )
+              return QuadDobl_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the poles of the Pade approximant,
+  --   in standard double, double double, or quad double precision.
+
+  function Standard_Poles
+              ( pv : Standard_Pade_Approximants.Pade_Vector )
+              return Standard_Complex_VecVecs.VecVec;
+  function DoblDobl_Poles
+              ( pv : DoblDobl_Pade_Approximants.Pade_Vector )
+              return DoblDobl_Complex_VecVecs.VecVec;
+  function QuadDobl_Poles
+              ( pv : QuadDobl_Pade_Approximants.Pade_Vector )
+              return QuadDobl_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the poles of the vector of Pade approximants,
+  --   in standard double, double double, or quad double precision.
 
 end Homotopy_Pade_Approximants;

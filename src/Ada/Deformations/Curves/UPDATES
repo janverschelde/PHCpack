@@ -1,3 +1,6 @@
+Tue 16 Oct 2018 : added computation of poles to homotopy_pade_approximants,
+  tested by ts_serpred.adb.
+
 Mon 15 Oct 2018 : in ts_serpade.adb, wrapped test code into procedures.
 
 Tue 27 Feb 2018 : added exception handlers to some procedures in
