@@ -1,3 +1,6 @@
+Wed 17 Oct 2018 : the homotopy in ts_serpred.adb needs to be constructed
+  with tpow = 1.
+
 Tue 16 Oct 2018 : added computation of poles to homotopy_pade_approximants,
   tested by ts_serpred.adb.  Added verbose options to ts_serpred.adb,
   standard_rational_approximations, standard_pade_approximants, and

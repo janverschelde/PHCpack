@@ -580,9 +580,22 @@ procedure ts_serpred is
 
     nbeq : integer32;
     sols : Standard_Complex_Solutions.Solution_List;
+    ans : character;
 
   begin
-    Homotopy_Series_Readers.Standard_Reader(nbeq,sols);
+    new_line;
+    put("Random gamma ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Homotopy_Series_Readers.Standard_Reader(nbeq,sols,tpow=>1);
+    else
+      declare
+        gamma : constant Standard_Complex_Numbers.Complex_Number
+              := Standard_Complex_Numbers.Create(1.0);
+      begin
+        Homotopy_Series_Readers.Standard_Reader(nbeq,sols,1,gamma);
+      end;
+    end if;
     new_line;
     Standard_Test_Prediction(nbeq,sols);
   end Standard_Main;
@@ -595,9 +608,23 @@ procedure ts_serpred is
 
     nbeq : integer32;
     sols : DoblDobl_Complex_Solutions.Solution_List;
+    ans : character;
 
   begin
-    Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols);
+    new_line;
+    put("Random gamma ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,tpow=>1);
+    else
+      declare
+        one : constant double_double := create(1.0);
+        gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+              := DoblDobl_Complex_Numbers.Create(one);
+      begin
+        Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,1,gamma);
+      end;
+    end if;
     new_line;
     DoblDobl_Test_Prediction(nbeq,sols);
   end DoblDobl_Main;
@@ -610,9 +637,23 @@ procedure ts_serpred is
 
     nbeq : integer32;
     sols : QuadDobl_Complex_Solutions.Solution_List;
+    ans : character;
 
   begin
-    Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols);
+    new_line;
+    put("Random gamma ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,tpow=>1);
+    else
+      declare
+        one : constant quad_double := create(1.0);
+        gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+              := QuadDobl_Complex_Numbers.Create(one);
+      begin
+        Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,1,gamma);
+      end;
+    end if;
     new_line;
     QuadDobl_Test_Prediction(nbeq,sols);
   end QuadDobl_Main;
