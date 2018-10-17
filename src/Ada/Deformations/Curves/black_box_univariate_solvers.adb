@@ -317,25 +317,80 @@ package body Black_Box_Univariate_Solvers is
     "------------------------------------------------------------------------");
   end Write_Results;
 
+  procedure Standard_Compute_Roots
+              ( p : in Standard_Complex_Vectors.Vector;
+                z : out Standard_Complex_Vectors.Vector;
+                err,rco,res : out Standard_Floating_Vectors.Vector;
+                fail : out boolean ) is
+
+    use Standard_Durand_Kerner;
+
+    deg : constant integer32 := p'last;
+    max : constant natural32 := 10*natural32(deg);
+    eps : constant double_float := 1.0E-12;
+    r : Standard_Complex_Vectors.Vector(1..deg);
+    dp : constant Standard_Complex_Vectors.Vector(0..deg-1) := Derivative(p);
+    nb : natural32 := 0;
+
+  begin
+    z := Random_Vector(1,deg);
+    Silent_Durand_Kerner(p,z,r,max,eps,nb,fail);
+    Newton(p,dp,z,err,rco,res);
+  end Standard_Compute_Roots;
+
+  procedure DoblDobl_Compute_Roots
+              ( p : in DoblDobl_Complex_Vectors.Vector;
+                z : out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out Standard_Floating_Vectors.Vector;
+                fail : out boolean ) is
+
+    use DoblDobl_Durand_Kerner;
+  
+    deg : constant integer32 := p'last;
+    max : constant natural32 := 10*natural32(deg);
+    eps : constant double_float := 1.0E-24;
+    r : DoblDobl_Complex_Vectors.Vector(1..deg);
+    dp : constant DoblDobl_Complex_Vectors.Vector(0..deg-1) := Derivative(p);
+    nb : natural32 := 0;
+
+  begin
+    z := Random_Vector(1,deg);
+    Silent_Durand_Kerner(p,z,r,max,eps,nb,fail);
+    Newton(p,dp,z,err,rco,res);
+  end DoblDobl_Compute_Roots;
+
+  procedure QuadDobl_Compute_Roots
+              ( p : in QuadDobl_Complex_Vectors.Vector;
+                z : out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out Standard_Floating_Vectors.Vector;
+                fail : out boolean ) is
+
+    use QuadDobl_Durand_Kerner;
+  
+    deg : constant integer32 := p'last;
+    max : constant natural32 := 10*natural32(deg);
+    eps : constant double_float := 1.0E-48;
+    r : QuadDobl_Complex_Vectors.Vector(1..deg);
+    dp : constant QuadDobl_Complex_Vectors.Vector(0..deg-1) := Derivative(p);
+    nb : natural32 := 0;
+
+  begin
+    z := Random_Vector(1,deg);
+    Silent_Durand_Kerner(p,z,r,max,eps,nb,fail);
+    Newton(p,dp,z,err,rco,res);
+  end QuadDobl_Compute_Roots;
+
   procedure Standard_Find_Roots
               ( d : in integer32;
                 cp : in Standard_Complex_Vectors.Vector;
                 sols : out Standard_Complex_Solutions.Solution_List ) is
 
-    use Standard_Durand_Kerner;
-
-    max : constant natural32 := 10*natural32(d);
-    eps : constant double_float := 1.0E-13;
-    z,r : Standard_Complex_Vectors.Vector(1..d);
-    dcp : constant Standard_Complex_Vectors.Vector(0..d-1) := Derivative(cp);
+    z : Standard_Complex_Vectors.Vector(1..d);
     err,rco,res : Standard_Floating_Vectors.Vector(z'range);
-    nb : natural32;
     fail : boolean;
 
   begin
-    z := Random_Vector(1,d);
-    Silent_Durand_Kerner(cp,z,r,max,eps,nb,fail);
-    Newton(cp,dcp,z,err,rco,res);
+    Standard_Compute_Roots(cp,z,err,rco,res,fail);
     sols := Create_Solution_List(z,err,rco,res);
   end Standard_Find_Roots;
 
@@ -344,20 +399,12 @@ package body Black_Box_Univariate_Solvers is
                 cp : in DoblDobl_Complex_Vectors.Vector;
                 sols : out DoblDobl_Complex_Solutions.Solution_List ) is
 
-    use DoblDobl_Durand_Kerner;
-  
-    max : constant natural32 := 10*natural32(d);
-    eps : constant double_float := 1.0E-28;
-    z,r : DoblDobl_Complex_Vectors.Vector(1..d);
-    dcp : constant DoblDobl_Complex_Vectors.Vector(0..d-1) := Derivative(cp);
+    z : DoblDobl_Complex_Vectors.Vector(1..d);
     err,rco,res : Standard_Floating_Vectors.Vector(z'range);
-    nb : natural32;
     fail : boolean;
 
   begin
-    z := Random_Vector(1,d);
-    Silent_Durand_Kerner(cp,z,r,max,eps,nb,fail);
-    Newton(cp,dcp,z,err,rco,res);
+    DoblDobl_Compute_Roots(cp,z,err,rco,res,fail);
     sols := Create_Solution_List(z,err,rco,res);
   end DoblDobl_Find_Roots;
 
@@ -366,20 +413,12 @@ package body Black_Box_Univariate_Solvers is
                 cp : in QuadDobl_Complex_Vectors.Vector;
                 sols : out QuadDobl_Complex_Solutions.Solution_List ) is
 
-    use QuadDobl_Durand_Kerner;
-  
-    max : constant natural32 := 10*natural32(d);
-    eps : constant double_float := 1.0E-28;
-    z,r : QuadDobl_Complex_Vectors.Vector(1..d);
-    dcp : constant QuadDobl_Complex_Vectors.Vector(0..d-1) := Derivative(cp);
+    z : QuadDobl_Complex_Vectors.Vector(1..d);
     err,rco,res : Standard_Floating_Vectors.Vector(z'range);
-    nb : natural32 := 0;
     fail : boolean;
 
   begin
-    z := Random_Vector(1,d);
-    Silent_Durand_Kerner(cp,z,r,max,eps,nb,fail);
-    Newton(cp,dcp,z,err,rco,res);
+    QuadDobl_Compute_Roots(cp,z,err,rco,res,fail);
     sols := Create_Solution_List(z,err,rco,res);
   end QuadDobl_Find_Roots;
 

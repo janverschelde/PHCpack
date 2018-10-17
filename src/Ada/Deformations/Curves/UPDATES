@@ -1,5 +1,7 @@
 Wed 17 Oct 2018 : the homotopy in ts_serpred.adb needs to be constructed
-  with tpow = 1.
+  with tpow = 1.  To black_box_univariate_solvers, added procedures which
+  take coefficient vectors on input, extended homotopy_pade_approximants.adb
+  with procedures to copute all poles, tested by ts_serpred.adb.
 
 Tue 16 Oct 2018 : added computation of poles to homotopy_pade_approximants,
   tested by ts_serpred.adb.  Added verbose options to ts_serpred.adb,

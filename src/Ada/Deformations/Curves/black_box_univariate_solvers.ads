@@ -28,6 +28,42 @@ package Black_Box_Univariate_Solvers is
 --   Forms an interface to the black box univariate solver in PHCpack,
 --   to the Durand-Kerner method, also known as the method of Weierstrass.
 
+  procedure Standard_Compute_Roots
+              ( p : in Standard_Complex_Vectors.Vector;
+                z : out Standard_Complex_Vectors.Vector;
+                err,rco,res : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+  procedure DoblDobl_Compute_Roots
+              ( p : in DoblDobl_Complex_Vectors.Vector;
+                z : out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+  procedure QuadDobl_Compute_Roots
+              ( p : in QuadDobl_Complex_Vectors.Vector;
+                z : out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+
+  -- DESCRIPTION :
+  --   Runs the method of Weierstrass on the polynomial p,
+  --   with default settings of parameters and tolerances,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   p        coefficients of a polynomial p(0) is the constant term,
+  --            p(d) is the coefficients of x^d.
+
+  -- ON RETURN :
+  --   z        zeroes of p, in a vector of range 1..p'last;
+  --   err      forward errors on the roots as computed by Newton's method,
+  --            in a vector of range 1..p'last;
+  --   rco      estimates for the inverse condition numbers of the roots,
+  --            in a vector of range 1..p'last;
+  --   res      backward errors on the roots, the residuals,
+  --            in a vector range 1..p'last;
+  --   fail     the method of Weierstrass failed to reach the default
+  --            accuracy requirement.
+
   function Create_Solution_List
              ( z : Standard_Complex_Numbers.Complex_Number )
              return Standard_Complex_Solutions.Solution_List;

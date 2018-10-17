@@ -23,9 +23,13 @@ with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
+with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
@@ -305,7 +309,7 @@ procedure ts_serpred is
       put_line(Standard_Pade_Approximants_io.Write(pv(i)));
     end loop;
     poles := Homotopy_Pade_Approximants.Standard_Poles(pv);
-    put_line("The poles : "); put(poles);
+    put_line("The poles : "); put_line(poles);
     Standard_Pade_Approximants.Clear(pv);
   end Standard_Test_Pade_Prediction;
 
@@ -324,6 +328,7 @@ procedure ts_serpred is
     srv : DoblDobl_Dense_Series_Vectors.Vector(sol.v'range);
     eva : DoblDobl_Dense_Series_Vectors.Vector(1..nbeq);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
+    poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
 
   begin
     new_line;
@@ -340,6 +345,8 @@ procedure ts_serpred is
     for i in pv'range loop
       put_line(DoblDobl_Pade_Approximants_io.Write(pv(i)));
     end loop;
+    poles := Homotopy_Pade_Approximants.DoblDobl_Poles(pv);
+    put_line("The poles : "); put_line(poles);
     DoblDobl_Pade_Approximants.Clear(pv);
   end DoblDobl_Test_Pade_Prediction;
 
@@ -358,6 +365,7 @@ procedure ts_serpred is
     srv : QuadDobl_Dense_Series_Vectors.Vector(sol.v'range);
     eva : QuadDobl_Dense_Series_Vectors.Vector(1..nbeq);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
+    poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
 
   begin
     new_line;
@@ -374,6 +382,8 @@ procedure ts_serpred is
     for i in pv'range loop
       put_line(QuadDobl_Pade_Approximants_io.Write(pv(i)));
     end loop;
+    poles := Homotopy_Pade_Approximants.QuadDobl_Poles(pv);
+    put_line("The poles : "); put_line(poles);
     QuadDobl_Pade_Approximants.Clear(pv);
   end QuadDobl_Test_Pade_Prediction;
 
