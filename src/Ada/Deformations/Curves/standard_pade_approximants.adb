@@ -41,7 +41,8 @@ package body Standard_Pade_Approximants is
   end Coefficients;
 
   function Create ( numdeg,dendeg : integer32;
-                    srv : Standard_Dense_Series_Vectors.Vector )
+                    srv : Standard_Dense_Series_Vectors.Vector;
+                    verbose : boolean := false )
                   return Pade_Vector is
 
     res : Pade_Vector(srv'range);
@@ -55,7 +56,8 @@ package body Standard_Pade_Approximants is
         den : Standard_Complex_Vectors.Vector(0..dendeg);
         info : integer32;
       begin
-        Standard_Rational_Approximations.Pade(numdeg,dendeg,cff,num,den,info);
+        Standard_Rational_Approximations.Pade
+          (numdeg,dendeg,cff,num,den,info,verbose);
         res(i) := Create(num,den);
       end;
     end loop;

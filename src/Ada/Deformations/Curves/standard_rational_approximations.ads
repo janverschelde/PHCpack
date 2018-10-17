@@ -47,7 +47,7 @@ package Standard_Rational_Approximations is
               ( numdeg,dendeg : in integer32;
                 cff : in Standard_Complex_Vectors.Vector;
                 numcff,dencff : out Standard_Complex_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Tests the construction in standard floating point arithmetic

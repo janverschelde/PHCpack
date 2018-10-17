@@ -25,19 +25,22 @@ package Homotopy_Pade_Approximants is
                 idx,nbequ,numdeg,dendeg : in integer32;
                 nbiters : in natural32;
                 srv,eva : out Standard_Dense_Series_Vectors.Vector;
-                pv : out Standard_Pade_Approximants.Pade_Vector );
+                pv : out Standard_Pade_Approximants.Pade_Vector;
+                verbose : in boolean := false );
   procedure DoblDobl_Pade_Approximant
               ( sol : in DoblDobl_Complex_Vectors.Vector;
                 idx,nbequ,numdeg,dendeg : in integer32;
                 nbiters : in natural32;
                 srv,eva : out DoblDobl_Dense_Series_Vectors.Vector;
-                pv : out DoblDobl_Pade_Approximants.Pade_Vector );
+                pv : out DoblDobl_Pade_Approximants.Pade_Vector;
+                verbose : in boolean := false );
   procedure QuadDobl_Pade_Approximant
               ( sol : in QuadDobl_Complex_Vectors.Vector;
                 idx,nbequ,numdeg,dendeg : in integer32;
                 nbiters : in natural32;
                 srv,eva : out QuadDobl_Dense_Series_Vectors.Vector;
-                pv : out QuadDobl_Pade_Approximants.Pade_Vector );
+                pv : out QuadDobl_Pade_Approximants.Pade_Vector;
+                verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Given a start solution of a polynomial homotopy,

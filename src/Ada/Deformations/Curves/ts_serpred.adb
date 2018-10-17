@@ -291,7 +291,7 @@ procedure ts_serpred is
     put("Give the degree of the denominator : "); get(degden);
     nbt := natural32(degnum+degden+1);
     Homotopy_Pade_Approximants.Standard_Pade_Approximant
-      (sol.v,nbeq+1,nbeq,degnum,degden,natural32(nit),srv,eva,pv);
+      (sol.v,nbeq+1,nbeq,degnum,degden,natural32(nit),srv,eva,pv,true);
     put_line("The solution series :");
     Standard_Dense_Series_Vectors_io.put(srv);
     put_line("The evaluated solution series :");

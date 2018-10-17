@@ -1,5 +1,7 @@
+with text_io;                           use text_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with Standard_Complex_Linear_Solvers;   use Standard_Complex_Linear_Solvers;
 
 package body Standard_Rational_Approximations is
@@ -58,7 +60,7 @@ package body Standard_Rational_Approximations is
   procedure Pade ( numdeg,dendeg : in integer32;
                    cff : in Standard_Complex_Vectors.Vector;
                    numcff,dencff : out Standard_Complex_Vectors.Vector;
-                   info : out integer32 ) is
+                   info : out integer32; verbose : in boolean := false ) is
 
     dim : constant integer32 := numdeg + dendeg;
     mat : Standard_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
@@ -68,6 +70,10 @@ package body Standard_Rational_Approximations is
 
   begin
     Denominator_System(numdeg,dendeg,cff,mat,rhs);
+    if verbose then
+      put_line("The matrix of the denominator system :");
+      put(mat,3);
+    end if;
     lufac(mat,dendeg,ipvt,info);
     if info = 0 then
       lusolve(mat,dendeg,ipvt,rhs);

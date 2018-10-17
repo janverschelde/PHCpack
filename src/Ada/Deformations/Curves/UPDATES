@@ -1,5 +1,7 @@
 Tue 16 Oct 2018 : added computation of poles to homotopy_pade_approximants,
-  tested by ts_serpred.adb.
+  tested by ts_serpred.adb.  Added verbose options to ts_serpred.adb,
+  standard_rational_approximations, standard_pade_approximants, and
+  homotopy_pade_approximants.
 
 Mon 15 Oct 2018 : in ts_serpade.adb, wrapped test code into procedures.
 
