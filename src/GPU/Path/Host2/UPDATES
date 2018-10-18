@@ -1,4 +1,9 @@
+Wed 17 Oct 2018 : added test_start.cpp, to test solutions of a start system.
+
 Sat 13 Oct 2018 : in workspace_host.tpp removed output written to screen.
+  Added extra arrays for the predictor in workspace_host.h, with added
+  allocations in workspace_host.tpp.  Adjusted path_host.tpp to directly
+  use the predictor with the arrays stored in the workspace.
 
 Thu 11 Oct 2018 : added verbose parameter to the initialization methods
   of workspace_host.h and workspace_host.tpp, called in cpuinsthom.

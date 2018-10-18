@@ -40,6 +40,10 @@ test_jobs:
 test_worker:
 	$(gpp) -pthread -o /tmp/test_worker test_worker.cpp -lpthread
 
+test_start:
+	$(gpp) -c -I$(CMPLX) -I$(POLYS) test_start.cpp -o test_start.o
+	$(gpp) test_start.o $(QD_LIB)/libqd.a -o /tmp/test_start
+
 test_path: parameter.o
 	$(gpp) -pthread -c -I$(CMPLX) -I$(POLYS) test_path.cpp -o test_path.o
 	$(gpp) test_path.o parameter.o $(QD_LIB)/libqd.a -lpthread \
