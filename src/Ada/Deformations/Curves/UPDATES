@@ -1,3 +1,6 @@
+Thu 18 Oct 2018 : to *_pade_approximants, added Eval functions which take
+  double, double double, or quad double arguments.
+
 Wed 17 Oct 2018 : the homotopy in ts_serpred.adb needs to be constructed
   with tpow = 1.  To black_box_univariate_solvers, added procedures which
   take coefficient vectors on input, extended homotopy_pade_approximants.adb

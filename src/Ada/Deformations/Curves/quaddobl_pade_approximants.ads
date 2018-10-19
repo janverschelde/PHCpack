@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Dense_Series_Vectors;
@@ -88,6 +89,7 @@ package QuadDobl_Pade_Approximants is
 
 -- EVALUATORS :
 
+  function Eval ( p : Pade; x : quad_double ) return Complex_Number;
   function Eval ( p : Pade; x : Complex_Number ) return Complex_Number;
 
   -- DESCRIPTION :
@@ -95,6 +97,8 @@ package QuadDobl_Pade_Approximants is
 
   -- REQUIRED : p is well defined.
 
+  function Eval ( p : Pade_Vector; x : quad_double )
+                return QuadDobl_Complex_Vectors.Vector;
   function Eval ( p : Pade_Vector; x : Complex_Number )
                 return QuadDobl_Complex_Vectors.Vector;
 

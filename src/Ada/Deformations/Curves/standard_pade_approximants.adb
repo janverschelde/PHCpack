@@ -96,6 +96,23 @@ package body Standard_Pade_Approximants is
 
 -- EVALUATORS :
 
+  function Eval ( p : Pade; x : double_float ) return Complex_Number is
+
+    cx : constant Complex_Number := Create(x);
+
+  begin
+    return Eval(p,cx);
+  end Eval;
+
+  function Eval ( p : Pade_Vector; x : double_float )
+                return Standard_Complex_Vectors.Vector is
+
+    cx : constant Complex_Number := Create(x);
+
+  begin
+    return Eval(p,cx);
+  end Eval;
+
   function Eval ( p : Pade; x : Complex_Number ) return Complex_Number is
 
     num : constant Standard_Complex_Vectors.Vector

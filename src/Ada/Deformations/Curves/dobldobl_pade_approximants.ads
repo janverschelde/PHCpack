@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Dense_Series_Vectors;
@@ -88,6 +89,7 @@ package DoblDobl_Pade_Approximants is
 
 -- EVALUATORS :
 
+  function Eval ( p : Pade; x : double_double ) return Complex_Number;
   function Eval ( p : Pade; x : Complex_Number ) return Complex_Number;
 
   -- DESCRIPTION :
@@ -95,6 +97,8 @@ package DoblDobl_Pade_Approximants is
 
   -- REQUIRED : p is well defined.
 
+  function Eval ( p : Pade_Vector; x : double_double )
+                return DoblDobl_Complex_Vectors.Vector;
   function Eval ( p : Pade_Vector; x : Complex_Number )
                 return DoblDobl_Complex_Vectors.Vector;
 

@@ -94,6 +94,23 @@ package body QuadDobl_Pade_Approximants is
 
 -- EVALUATORS :
 
+  function Eval ( p : Pade; x : quad_double ) return Complex_Number is
+
+    cx : constant Complex_Number := Create(x);
+
+  begin
+    return Eval(p,cx);
+  end Eval;
+
+  function Eval ( p : Pade_Vector; x : quad_double )
+                return QuadDobl_Complex_Vectors.Vector is
+
+    cx : constant Complex_Number := Create(x);
+
+  begin
+    return Eval(p,cx);
+  end Eval;
+
   function Eval ( p : Pade; x : Complex_Number ) return Complex_Number is
 
     num : constant QuadDobl_Complex_Vectors.Vector

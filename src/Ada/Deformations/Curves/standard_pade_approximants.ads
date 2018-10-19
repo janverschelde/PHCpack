@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Dense_Series_Vectors;
@@ -89,6 +90,7 @@ package Standard_Pade_Approximants is
 
 -- EVALUATORS :
 
+  function Eval ( p : Pade; x : double_float ) return Complex_Number;
   function Eval ( p : Pade; x : Complex_Number ) return Complex_Number;
 
   -- DESCRIPTION :
@@ -96,6 +98,8 @@ package Standard_Pade_Approximants is
 
   -- REQUIRED : p is well defined.
 
+  function Eval ( p : Pade_Vector; x : double_float )
+                return Standard_Complex_Vectors.Vector;
   function Eval ( p : Pade_Vector; x : Complex_Number )
                 return Standard_Complex_Vectors.Vector;
 
