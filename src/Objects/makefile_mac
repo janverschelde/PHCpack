@@ -750,7 +750,10 @@ ts_serpath:
 
 ts_serpade:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpade.adb \
-                 -o $(BIN)/ts_serpade
+
+ts_padepred:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_padepred.adb \
+                 -o $(BIN)/ts_padepred
 
 # Test programs for the Deformations/End_Games library :
 

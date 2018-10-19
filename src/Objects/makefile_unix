@@ -726,6 +726,10 @@ ts_serpade:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_serpade.adb \
               -o $(BIN)/ts_serpade
 
+ts_padepred:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_padepred.adb \
+              -o $(BIN)/ts_padepred
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:
