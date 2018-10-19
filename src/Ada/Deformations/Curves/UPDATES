@@ -1,3 +1,7 @@
+Fri 19 Oct 2018 : test_series_predictors and test_pade_predictors are two
+  new packages with code taken from ts_serpred.adb, with new ts_padepred
+  to develop the Pade predictors.
+
 Thu 18 Oct 2018 : to *_pade_approximants, added Eval functions which take
   double, double double, or quad double arguments.  Extended the test
   procedures in ts_serpred.adb to evaluate the Pade approximant predictor.

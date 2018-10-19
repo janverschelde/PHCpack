@@ -48,6 +48,7 @@ series_and_homotopies            : homotopies as systems with series coeffs
 ts_serhom                        : test on series and homotopies
 series_and_predictors            : apply power series to predict solutions
 homotopy_series_readers          : reads a homotopy for power series
+test_series_predictors           : procedure to help in the testing
 ts_serpred                       : test on series predictor
 series_and_trackers              : power series predictor in path tracker
 ts_serpath                       : test on series path tracker
@@ -63,4 +64,7 @@ quaddobl_pade_approximants       : Pade approximants with quad doubles
 quaddobl_pade_approximants_io    : output of quad double Pade approximants
 homotopy_pade_approximants       : wraps series Newton and Pade creators
 ts_serpade                       : test rational approximations given series
+-------------------------------------------------------------------------------
+test_pade_predictors             : procedure to help testing Pade predictors
+ts_padepred                      : test the Pade predictors
 -------------------------------------------------------------------------------
