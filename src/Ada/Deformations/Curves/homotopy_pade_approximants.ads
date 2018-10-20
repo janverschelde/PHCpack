@@ -1,5 +1,8 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Dense_Series_Vectors;
@@ -94,5 +97,52 @@ package Homotopy_Pade_Approximants is
   -- DESCRIPTION :
   --   Returns the poles of the vector of Pade approximants,
   --   in standard double, double double, or quad double precision.
+
+  procedure Smallest_Forward_Pole
+              ( v : in Standard_Complex_Vectors.Vector;
+                idx : out integer32; minval : out double_float );
+  procedure Smallest_Forward_Pole
+              ( v : in DoblDobl_Complex_Vectors.Vector;
+                idx : out integer32; minval : out double_double );
+  procedure Smallest_Forward_Pole
+              ( v : in QuadDobl_Complex_Vectors.Vector;
+                idx : out integer32; minval : out quad_double );
+
+  -- DESCRIPTION :
+  --   Returns the smallest number in the vector v,
+  --   in double, double double, and quad double precision,
+  --   with a strictly positive real part.
+
+  -- ON ENTRY :
+  --   v        a vector of complex numbers.
+
+  -- ON RETURN :
+  --   idx      index in v'range to the smallest number in v;
+  --   minval   the smallest radius, equals radius(v(idx)),
+  --            which is negative if all poles have negative real part.
+
+  procedure Smallest_Forward_Pole
+              ( v : in Standard_Complex_VecVecs.VecVec;
+                leadidx,idx : out integer32; minval : out double_float );
+  procedure Smallest_Forward_Pole
+              ( v : in DoblDobl_Complex_VecVecs.VecVec;
+                leadidx,idx : out integer32; minval : out double_double );
+  procedure Smallest_Forward_Pole
+              ( v : in QuadDobl_Complex_VecVecs.VecVec;
+                leadidx,idx : out integer32; minval : out quad_double );
+
+  -- DESCRIPTION :
+  --   Returns the smallest number in the vector of vectors v,
+  --   in double, double double, and quad double precision,
+  --   with a strictly positive real part.
+
+  -- ON ENTRY :
+  --   v        a vector of vector of complex numbers.
+
+  -- ON RETURN :
+  --   leadidx  index in v'range to the smallest number in v;
+  --   idx      index in v(leadidx)'range to the smallest number in v;
+  --   minval   the smallest radius, equals radius(v(leadidx)(idx)),
+  --            which is negative if all poles have negative real part.
 
 end Homotopy_Pade_Approximants;

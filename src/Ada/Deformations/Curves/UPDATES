@@ -1,3 +1,6 @@
+Sat 20 Oct 2018 : added the computation to the smallest forward pole to
+  homotopy_pade_approximants, tested in ts_padepred.adb.
+
 Fri 19 Oct 2018 : test_series_predictors and test_pade_predictors are two
   new packages with code taken from ts_serpred.adb, with new ts_padepred
   to develop the Pade predictors.

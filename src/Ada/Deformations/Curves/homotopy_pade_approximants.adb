@@ -223,4 +223,175 @@ package body Homotopy_Pade_Approximants is
     return res;
   end QuadDobl_Poles;
 
+  procedure Smallest_Forward_Pole
+              ( v : in Standard_Complex_Vectors.Vector;
+                idx : out integer32; minval : out double_float ) is
+
+    radval : double_float;
+
+  begin
+    idx := v'first;
+    minval := Standard_Complex_Numbers_Polar.Radius(v(idx));
+    if Standard_Complex_Numbers.REAL_Part(v(idx)) <= 0.0
+     then minval := -minval;
+    end if;
+    for k in v'first+1..v'last loop
+      radval := Standard_Complex_Numbers_Polar.Radius(v(k));
+      if Standard_Complex_Numbers.REAL_PART(v(idx)) <= 0.0 then
+        if minval < 0.0 then
+          if radval < -minval
+           then minval := -radval; idx := k; -- smallest backward pole
+          end if;
+        end if;
+      elsif minval < 0.0 then
+        minval := radval; idx := k; -- first forward pole
+      elsif radval < minval then
+        minval := radval; idx := k; -- found smaller forward pole
+      end if;
+    end loop;
+  end Smallest_Forward_Pole;
+
+  procedure Smallest_Forward_Pole
+              ( v : in DoblDobl_Complex_Vectors.Vector;
+                idx : out integer32; minval : out double_double ) is
+
+    radval : double_double;
+
+  begin
+    idx := v'first;
+    minval := DoblDobl_Complex_Numbers_Polar.Radius(v(idx));
+    if DoblDobl_Complex_Numbers.REAL_Part(v(idx)) <= 0.0
+     then minval := -minval;
+    end if;
+    for k in v'first+1..v'last loop
+      radval := DoblDobl_Complex_Numbers_Polar.Radius(v(k));
+      if DoblDobl_Complex_Numbers.REAL_PART(v(idx)) <= 0.0 then
+        if minval < 0.0 then
+          if radval < -minval
+           then minval := -radval; idx := k; -- smallest backward pole
+          end if;
+        end if;
+      elsif minval < 0.0 then
+        minval := radval; idx := k; -- first forward pole
+      elsif radval < minval then
+        minval := radval; idx := k; -- found smaller forward pole
+      end if;
+    end loop;
+  end Smallest_Forward_Pole;
+
+  procedure Smallest_Forward_Pole
+              ( v : in QuadDobl_Complex_Vectors.Vector;
+                idx : out integer32; minval : out quad_double ) is
+
+    radval : quad_double;
+
+  begin
+    idx := v'first;
+    minval := QuadDobl_Complex_Numbers_Polar.Radius(v(idx));
+    if QuadDobl_Complex_Numbers.REAL_Part(v(idx)) <= 0.0
+     then minval := -minval;
+    end if;
+    for k in v'first+1..v'last loop
+      radval := QuadDobl_Complex_Numbers_Polar.Radius(v(k));
+      if QuadDobl_Complex_Numbers.REAL_PART(v(idx)) <= 0.0 then
+        if minval < 0.0 then
+          if radval < -minval
+           then minval := -radval; idx := k; -- smallest backward pole
+          end if;
+        end if;
+      elsif minval < 0.0 then
+        minval := radval; idx := k; -- first forward pole
+      elsif radval < minval then
+        minval := radval; idx := k; -- found smaller forward pole
+      end if;
+    end loop;
+  end Smallest_Forward_Pole;
+
+  procedure Smallest_Forward_Pole
+              ( v : in Standard_Complex_VecVecs.VecVec;
+                leadidx,idx : out integer32; minval : out double_float ) is
+
+    vkidx : integer32;
+    radval : double_float;
+
+  begin
+    leadidx := v'first;
+    Smallest_Forward_Pole(v(leadidx).all,idx,minval);
+    for k in v'first+1..v'last loop
+      Smallest_Forward_Pole(v(k).all,vkidx,radval);
+      if minval < 0.0 then
+        if radval < 0.0 then
+          if -radval < -minval -- found smaller backward pole
+           then minval := radval; leadidx := k; idx := vkidx;
+          end if;
+        else
+          minval := radval; leadidx := k; idx := vkidx; -- first forward pole
+        end if;
+      end if;
+      if radval > 0.0 then -- check if smaller forward pole found
+        if radval < minval
+         then minval := radval; leadidx := k; idx := vkidx;
+        end if;
+      end if;
+    end loop;
+  end Smallest_Forward_Pole;
+
+  procedure Smallest_Forward_Pole
+              ( v : in DoblDobl_Complex_VecVecs.VecVec;
+                leadidx,idx : out integer32; minval : out double_double ) is
+
+    vkidx : integer32;
+    radval : double_double;
+
+  begin
+    leadidx := v'first;
+    Smallest_Forward_Pole(v(leadidx).all,idx,minval);
+    for k in v'first+1..v'last loop
+      Smallest_Forward_Pole(v(k).all,vkidx,radval);
+      if minval < 0.0 then
+        if radval < 0.0 then
+          if -radval < -minval -- found smaller backward pole
+           then minval := radval; leadidx := k; idx := vkidx;
+          end if;
+        else
+          minval := radval; leadidx := k; idx := vkidx; -- first forward pole
+        end if;
+      end if;
+      if radval > 0.0 then -- check if smaller forward pole found
+        if radval < minval
+         then minval := radval; leadidx := k; idx := vkidx;
+        end if;
+      end if;
+    end loop;
+  end Smallest_Forward_Pole;
+
+  procedure Smallest_Forward_Pole
+              ( v : in QuadDobl_Complex_VecVecs.VecVec;
+                leadidx,idx : out integer32; minval : out quad_double ) is
+
+    vkidx : integer32;
+    radval : quad_double;
+
+  begin
+    leadidx := v'first;
+    Smallest_Forward_Pole(v(leadidx).all,idx,minval);
+    for k in v'first+1..v'last loop
+      Smallest_Forward_Pole(v(k).all,vkidx,radval);
+      if minval < 0.0 then
+        if radval < 0.0 then
+          if -radval < -minval -- found smaller backward pole
+           then minval := radval; leadidx := k; idx := vkidx;
+          end if;
+        else
+          minval := radval; leadidx := k; idx := vkidx; -- first forward pole
+        end if;
+      end if;
+      if radval > 0.0 then -- check if smaller forward pole found
+        if radval < minval
+         then minval := radval; leadidx := k; idx := vkidx;
+        end if;
+      end if;
+    end loop;
+  end Smallest_Forward_Pole;
+
 end Homotopy_Pade_Approximants;

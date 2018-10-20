@@ -168,6 +168,8 @@ procedure ts_padepred is
     srv : Standard_Dense_Series_Vectors.Vector(sol.v'range);
     eva : Standard_Dense_Series_Vectors.Vector(1..nbeq);
     poles : Standard_Complex_VecVecs.VecVec(pv'range);
+    lead,idx : integer32;
+    minpole : double_float;
 
   begin
     new_line;
@@ -190,6 +192,8 @@ procedure ts_padepred is
     end loop;
     poles := Homotopy_Pade_Approximants.Standard_Poles(pv);
     put_line("The poles : "); put_line(poles);
+    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,minpole);
+    put("The radius of the smallest pole : "); put(minpole,3); new_line;
   end Standard_Test_Pade_Prediction;
 
   procedure DoblDobl_Test_Pade_Prediction
@@ -208,6 +212,8 @@ procedure ts_padepred is
     srv : DoblDobl_Dense_Series_Vectors.Vector(sol.v'range);
     eva : DoblDobl_Dense_Series_Vectors.Vector(1..nbeq);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
+    lead,idx : integer32;
+    minpole : double_double;
 
   begin
     new_line;
@@ -226,6 +232,8 @@ procedure ts_padepred is
     end loop;
     poles := Homotopy_Pade_Approximants.DoblDobl_Poles(pv);
     put_line("The poles : "); put_line(poles);
+    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,minpole);
+    put("The radius of the smallest pole : "); put(minpole,3); new_line;
   end DoblDobl_Test_Pade_Prediction;
 
   procedure QuadDobl_Test_Pade_Prediction
@@ -244,6 +252,8 @@ procedure ts_padepred is
     srv : QuadDobl_Dense_Series_Vectors.Vector(sol.v'range);
     eva : QuadDobl_Dense_Series_Vectors.Vector(1..nbeq);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
+    lead,idx : integer32;
+    minpole : quad_double;
 
   begin
     new_line;
@@ -262,6 +272,8 @@ procedure ts_padepred is
     end loop;
     poles := Homotopy_Pade_Approximants.QuadDobl_Poles(pv);
     put_line("The poles : "); put_line(poles);
+    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,minpole);
+    put("The radius of the smallest pole : "); put(minpole,3); new_line;
   end QuadDobl_Test_Pade_Prediction;
 
   procedure Standard_Test_Prediction
