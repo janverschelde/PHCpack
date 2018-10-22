@@ -1,10 +1,12 @@
 // Tests the start system by evaluation of all its solutions.
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include "complexH.h"
 #include "polysys.h"
 #include "polysolset.h"
+#include "jobqueue.h"
 
 using namespace std;
 
@@ -18,12 +20,22 @@ int test ( string startfile, int precision );
 template <class ComplexType, class RealType>
 int start_test
  ( PolySys<ComplexType,RealType>& startpols,
-   PolySolSet<ComplexType,RealType>& sols,
-   int precision );
+   PolySolSet<ComplexType,RealType>& sols, int precision );
 /*
  * Evaluates all start solutions in sols in startpols.
  * The precision should be 16 (double), 32 (double double),
  * or 64 (quad double), for use in the printing of the solutions.
+ */
+
+template <class ComplexType, class RealType>
+int crew_start_test
+ ( int crewsize, PolySys<ComplexType,RealType>& startpols,
+   PolySolSet<ComplexType,RealType>& sols, int precision );
+/*
+ * Evaluates all start solutions in sols in startpols.
+ * The precision should be 16 (double), 32 (double double),
+ * or 64 (quad double), for use in the printing of the solutions,
+ * using a crew of crewsize threads.
  */
 
 int main ( void )
@@ -57,6 +69,60 @@ int main ( void )
 }
 
 template <class ComplexType, class RealType>
+int start_test
+ ( PolySys<ComplexType,RealType>& startpols,
+   PolySolSet<ComplexType,RealType>& sols, int precision )
+{
+   const int neq = startpols.n_eq;
+   const int dim = startpols.dim;
+
+   ComplexType* funval = new ComplexType[neq];
+   ComplexType** jacmat = new ComplexType*[neq];
+   for(int idx=0; idx<neq; idx++) jacmat[idx] = new ComplexType[dim];
+
+   ComplexType sum(0.0,0.0);
+
+   for(int cnt=0; cnt<sols.n_sol; cnt++)
+   {
+      ComplexType* point = sols.get_sol(0);
+
+      startpols.eval(point, funval, jacmat);
+      for(int idx=0; idx<dim; idx++) sum = sum + funval[idx];
+   }
+
+   cout << "The sum of all function values : " << sum << endl;
+
+   return 0;
+}
+
+template <class ComplexType, class RealType>
+int crew_start_test
+ ( int crewsize, PolySys<ComplexType,RealType>& startpols,
+   PolySolSet<ComplexType,RealType>& sols, int precision )
+{
+   const int nbsols = sols.n_sol;
+  
+   ComplexType** points; // stores solution coordinates
+   points = (ComplexType**) calloc(nbsols,sizeof(ComplexType*));
+
+   for(int idx=0; idx<nbsols; idx++) points[idx] = sols.get_sol(idx);
+
+   cout << scientific << setprecision(precision);
+
+   for(int idx=0; idx<nbsols; idx++)
+   {
+      cout << "The coordinates of start solution " << idx
+           << " :" << endl;
+      for(int k=0; k<startpols.dim; k++) cout << points[idx][k];
+   }
+
+   JobQueue jobs(nbsols);
+   jobs.write();
+
+   return 0;
+}
+
+template <class ComplexType, class RealType>
 int test ( string startfile, int precision )
 {
    PolySys<ComplexType,RealType> startsys;
@@ -75,23 +141,16 @@ int test ( string startfile, int precision )
    // cout << "The solutions on the file " << startfile << " :" << endl;
    // sols.print();
 
-   const int neq = startsys.n_eq;
-   const int dim = startsys.dim;
+   cout << endl << "Give the number of threads (0 for no multithreading) : ";
+   int nbthreads; cin >> nbthreads;
 
-   ComplexType* funval = new ComplexType[neq];
-   ComplexType** jacmat = new ComplexType*[neq];
-   for(int idx=0; idx<neq; idx++) jacmat[idx] = new ComplexType[dim];
+   int fail = 0;
 
-   ComplexType* point=sols.get_sol(0);
+   if(nbthreads == 0)
+      fail = start_test<ComplexType,RealType>(startsys,sols,precision);
+   else
+      fail = crew_start_test<ComplexType,RealType>
+                (nbthreads,startsys,sols,precision);
 
-   startsys.eval(point, funval, jacmat);
-
-   ComplexType sum(0.0,0.0);
-
-   for(int cnt=0; cnt<sols.n_sol; cnt++)
-      for(int idx=0; idx<dim; idx++) sum = sum + funval[idx];
-
-   cout << "The sum of all function values : " << sum << endl;
-
-   return 0;
+   return fail;
 }

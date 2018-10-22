@@ -1,3 +1,5 @@
+Sun 21 Oct 2018 : improved test_start.cpp to be ready for multithreading.
+
 Wed 17 Oct 2018 : added test_start.cpp, to test solutions of a start system.
 
 Sat 13 Oct 2018 : in workspace_host.tpp removed output written to screen.
