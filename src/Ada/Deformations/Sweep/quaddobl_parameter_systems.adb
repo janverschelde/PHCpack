@@ -16,7 +16,7 @@ package body QuadDobl_Parameter_Systems is
   end Sort;
 
   procedure Read_Solution_Parameters
-              ( infile : in file_type; outfile : out file_type;
+              ( infile : in file_type;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : out Solution_List;
                 nb_equ,nb_unk,nb_par : out integer32 ) is
@@ -32,6 +32,15 @@ package body QuadDobl_Parameter_Systems is
      then get(infile,sols);
      else Read(sols);
     end if;
+  end Read_Solution_Parameters;
+
+  procedure Read_Solution_Parameters
+              ( infile : in file_type; outfile : out file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : out Solution_List;
+                nb_equ,nb_unk,nb_par : out integer32 ) is
+  begin
+    Read_Solution_Parameters(infile,p,sols,nb_equ,nb_unk,nb_par);
     new_line;
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(outfile);
@@ -41,6 +50,21 @@ package body QuadDobl_Parameter_Systems is
     put_line(outfile,"THE SOLUTIONS : ");
     put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
   end Read_Solution_Parameters;
+
+  procedure Read_Parameter_Homotopy
+              ( lp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : out Solution_List;
+                nb_equ,nb_unk,nb_par : out integer32 ) is
+
+    infile : file_type;
+
+  begin
+    new_line;
+    put_line("Reading the file name for a polynomial system.");
+    Read_Name_and_Open_File(infile);
+    get(infile,lp);
+    Read_Solution_Parameters(infile,lp.all,sols,nb_equ,nb_unk,nb_par);
+  end Read_Parameter_Homotopy;
 
   procedure Read_Parameter_Homotopy
               ( outfile : out file_type;

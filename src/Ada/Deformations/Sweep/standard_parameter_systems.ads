@@ -23,7 +23,7 @@ package Standard_Parameter_Systems is
   --   otherwise, the substitute will not work.
 
   procedure Read_Solution_Parameters
-              ( infile : in file_type; outfile : out file_type;
+              ( infile : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : out Solution_List;
                 nb_equ,nb_unk,nb_par : out integer32 );
@@ -32,6 +32,31 @@ package Standard_Parameter_Systems is
   --   Scans the infile for the solutions for the system p.
   --   This procedure is called by Read_Parameter_Homotopy.
 
+  -- REQUIRED : number of variables > number of equations,
+  --   the symbol table is already initialized by the reading
+  --   of the polynomials which define the parameter homotopy.
+
+  -- ON ENTRY :
+  --   infile   file with system already read from;
+  --   p        a polynomial system with parameters.
+
+  -- ON RETURN :
+  --   sols     solutions for particular values of the parameters;
+  --   nb_equ   number of equations in the system;
+  --   nb_unk   number of unknowns in the system;
+  --   nb_par   number of parameters: nb_unk - nb_equ.
+
+  procedure Read_Solution_Parameters
+              ( infile : in file_type; outfile : out file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : out Solution_List;
+                nb_equ,nb_unk,nb_par : out integer32 );
+
+  -- DESCRIPTION :
+  --   Scans the infile for the solutions for the system p.
+  --   This procedure is called by Read_Parameter_Homotopy.
+  --   Prompts the user for the name of the output file.
+
   -- REQUIRED : number of variables > number of equations
 
   -- ON ENTRY :
@@ -39,6 +64,23 @@ package Standard_Parameter_Systems is
   --   p        a polynomial system with parameters.
 
   -- ON RETURN :
+  --   outfile  a file opened for output;
+  --   sols     solutions for particular values of the parameters;
+  --   nb_equ   number of equations in the system;
+  --   nb_unk   number of unknowns in the system;
+  --   nb_par   number of parameters: nb_unk - nb_equ.
+
+  procedure Read_Parameter_Homotopy
+              ( lp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : out Solution_List;
+                nb_equ,nb_unk,nb_par : out integer32 );
+
+  -- DESCRIPTION :
+  --   Reads a coefficient-paremeter homotopy with solutions for 
+  --   some values of the parameters.
+
+  -- ON RETURN :
+  --   lp       a polynomial system;
   --   sols     solutions for particular values of the parameters;
   --   nb_equ   number of equations in the system;
   --   nb_unk   number of unknowns in the system;

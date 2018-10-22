@@ -1,3 +1,6 @@
+Mon 22 Oct 2018 : added new procedures to *parameter_systems.a* to read
+  solutions and parameter homotopies without writing to an output file.
+
 Sat 27 Feb 2016 : changes in complex_convex_continuation.adb for changes in
   the increment-and-fix continuation in standard double precision.
 
