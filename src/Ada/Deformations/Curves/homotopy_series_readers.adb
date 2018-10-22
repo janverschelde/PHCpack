@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
+with Standard_Integer_Vectors;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_Systems;
@@ -18,6 +19,9 @@ with QuadDobl_System_and_Solutions_io;
 with Standard_Series_Poly_Systems;
 with DoblDobl_Series_Poly_Systems;
 with QuadDobl_Series_Poly_Systems;
+with Standard_Parameter_Systems;
+with DoblDobl_Parameter_Systems;
+with QuadDobl_Parameter_Systems;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 
@@ -118,6 +122,66 @@ package body Homotopy_Series_Readers is
   begin
     QuadDobl_Reader(nbequ,sols,tpow,gamma);
   end QuadDobl_Reader;
+
+  procedure Standard_Parameter_Reader
+              ( nbequ,nbvar,idxpar : out integer32;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Parameter_Systems;
+
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    nbpar : integer32;
+
+  begin
+    Read_Parameter_Homotopy(lp,sols,nbequ,nbvar,nbpar);
+    declare
+      par : Standard_Integer_Vectors.Vector(1..nbpar);
+    begin
+      par := Define_Parameters(nbequ,nbvar,nbpar);
+      idxpar := par(1);
+    end;
+    Standard_Homotopy.Create(lp.all,idxpar);
+  end Standard_Parameter_Reader;
+
+  procedure DoblDobl_Parameter_Reader
+              ( nbequ,nbvar,idxpar : out integer32;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Parameter_Systems;
+
+    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    nbpar : integer32;
+
+  begin
+    Read_Parameter_Homotopy(lp,sols,nbequ,nbvar,nbpar);
+    declare
+      par : Standard_Integer_Vectors.Vector(1..nbpar);
+    begin
+      par := Define_Parameters(nbequ,nbvar,nbpar);
+      idxpar := par(1);
+    end;
+    DoblDobl_Homotopy.Create(lp.all,idxpar);
+  end DoblDobl_Parameter_Reader;
+
+  procedure QuadDobl_Parameter_Reader
+              ( nbequ,nbvar,idxpar : out integer32;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Parameter_Systems;
+
+    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    nbpar : integer32;
+
+  begin
+    Read_Parameter_Homotopy(lp,sols,nbequ,nbvar,nbpar);
+    declare
+      par : Standard_Integer_Vectors.Vector(1..nbpar);
+    begin
+      par := Define_Parameters(nbequ,nbvar,nbpar);
+      idxpar := par(1);
+    end;
+    QuadDobl_Homotopy.Create(lp.all,idxpar);
+  end QuadDobl_Parameter_Reader;
 
   procedure Standard_Series_Newton
               ( sol : in Standard_Complex_Vectors.Vector;

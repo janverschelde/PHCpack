@@ -18,6 +18,7 @@ with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
+with Solution_Drops;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
@@ -217,7 +218,7 @@ procedure ts_serpred is
   end QuadDobl_Test_Prediction;
 
   procedure Standard_Test_Prediction
-              ( nq : in integer32;
+              ( nq,idxpar : in integer32;
                 sols : in Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
@@ -227,7 +228,7 @@ procedure ts_serpred is
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
     s : Standard_Series_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1);
+      := Series_and_Homotopies.Create(h,idxpar);
     len : constant integer32
         := integer32(Standard_Complex_Solutions.Length_Of(sols));
     tmp : Standard_Complex_Solutions.Solution_List := sols;
@@ -245,7 +246,7 @@ procedure ts_serpred is
   end Standard_Test_Prediction;
 
   procedure DoblDobl_Test_Prediction
-              ( nq : in integer32;
+              ( nq,idxpar : in integer32;
                 sols : in DoblDobl_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
@@ -255,7 +256,7 @@ procedure ts_serpred is
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
     s : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1);
+      := Series_and_Homotopies.Create(h,idxpar);
     len : constant integer32
         := integer32(DoblDobl_Complex_Solutions.Length_Of(sols));
     tmp : DoblDobl_Complex_Solutions.Solution_List := sols;
@@ -273,7 +274,7 @@ procedure ts_serpred is
   end DoblDobl_Test_Prediction;
 
   procedure QuadDobl_Test_Prediction
-              ( nq : in integer32;
+              ( nq,idxpar : in integer32;
                 sols : in QuadDobl_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
@@ -283,7 +284,7 @@ procedure ts_serpred is
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
     s : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1);
+      := Series_and_Homotopies.Create(h,idxpar);
     len : constant integer32
         := integer32(QuadDobl_Complex_Solutions.Length_Of(sols));
     tmp : QuadDobl_Complex_Solutions.Solution_List := sols;
@@ -306,13 +307,22 @@ procedure ts_serpred is
   --   Test on the operations of a homotopy with series coefficients,
   --   in standard double precision.
 
-    nbeq : integer32;
+    nbeq,idxpar : integer32;
     sols : Standard_Complex_Solutions.Solution_List;
 
   begin
-    Test_Series_Predictors.Standard_Homotopy_Reader(nbeq,sols);
+    Test_Series_Predictors.Standard_Homotopy_Reader(nbeq,idxpar,sols);
     new_line;
-    Standard_Test_Prediction(nbeq,sols);
+    if idxpar = 0 then -- artificial parameter is always at end
+      Standard_Test_Prediction(nbeq,nbeq+1,sols);
+    else -- drop the parameter value from the solution list
+      declare
+        dropsols : Standard_Complex_Solutions.Solution_List
+                 := Solution_Drops.Drop(sols,natural32(idxpar));
+      begin
+        Standard_Test_Prediction(nbeq,idxpar,dropsols);
+      end;
+    end if;
   end Standard_Main;
 
   procedure DoblDobl_Main is
@@ -321,13 +331,22 @@ procedure ts_serpred is
   --   Test on the operations of a homotopy with series coefficients,
   --   in double double precision.
 
-    nbeq : integer32;
+    nbeq,idxpar : integer32;
     sols : DoblDobl_Complex_Solutions.Solution_List;
 
   begin
-    Test_Series_Predictors.DoblDobl_Homotopy_Reader(nbeq,sols);
+    Test_Series_Predictors.DoblDobl_Homotopy_Reader(nbeq,idxpar,sols);
     new_line;
-    DoblDobl_Test_Prediction(nbeq,sols);
+    if idxpar = 0 then -- artificial parameter homotopy
+      DoblDobl_Test_Prediction(nbeq,nbeq+1,sols);
+    else
+      declare
+        dropsols : DoblDobl_Complex_Solutions.Solution_List
+                 := Solution_Drops.Drop(sols,natural32(idxpar));
+      begin
+        DoblDobl_Test_Prediction(nbeq,idxpar,dropsols);
+      end;
+    end if;
   end DoblDobl_Main;
 
   procedure QuadDobl_Main is
@@ -336,13 +355,22 @@ procedure ts_serpred is
   --   Test on the operations of a homotopy with series coefficients,
   --   in quad double precision.
 
-    nbeq : integer32;
+    nbeq,idxpar : integer32;
     sols : QuadDobl_Complex_Solutions.Solution_List;
 
   begin
-    Test_Series_Predictors.QuadDobl_Homotopy_Reader(nbeq,sols);
+    Test_Series_Predictors.QuadDobl_Homotopy_Reader(nbeq,idxpar,sols);
     new_line;
-    QuadDobl_Test_Prediction(nbeq,sols);
+    if idxpar = 0 then -- artificial parameter homotopy
+      QuadDobl_Test_Prediction(nbeq,nbeq+1,sols);
+    else
+      declare
+        dropsols : QuadDobl_Complex_Solutions.Solution_List
+                 := Solution_Drops.Drop(sols,natural32(idxpar));
+      begin
+        QuadDobl_Test_Prediction(nbeq,idxpar,dropsols);
+      end;
+    end if;
   end QuadDobl_Main;
 
   procedure Main is

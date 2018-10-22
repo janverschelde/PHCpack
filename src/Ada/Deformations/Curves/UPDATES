@@ -1,3 +1,7 @@
+Mon 22 Oct 2018 : wrapped reading of natural parameter homotopies into
+  homotopy_series_readers, adjusted test_series_predictors, tested by
+  ts_serpred.adb.
+
 Sat 20 Oct 2018 : added the computation to the smallest forward pole to
   homotopy_pade_approximants, tested in ts_padepred.adb.
 

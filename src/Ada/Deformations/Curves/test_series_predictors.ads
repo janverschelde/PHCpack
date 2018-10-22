@@ -46,13 +46,13 @@ package Test_Series_Predictors is
   --   step     a step size.
 
   procedure Standard_Homotopy_Reader
-              ( nbeq : out integer32;
+              ( nbeq,idxpar : out integer32;
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure DoblDobl_Homotopy_Reader
-              ( nbeq : out integer32;
+              ( nbeq,idxpar : out integer32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
   procedure QuadDobl_Homotopy_Reader
-              ( nbeq : out integer32;
+              ( nbeq,idxpar : out integer32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -61,6 +61,8 @@ package Test_Series_Predictors is
   --
   -- ON RETURN :
   --   nbeq     the number of equations in the homotopy;
+  --   idxpar   index of the natural parameter, which is zero
+  --            in case the homotopy has an artificial parameter;
   --   sols     the start solutions.
 
 end Test_Series_Predictors;

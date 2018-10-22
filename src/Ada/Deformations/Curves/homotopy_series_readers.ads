@@ -77,6 +77,27 @@ package Homotopy_Series_Readers is
   --   nbequ    number of equations in the systems in the homotopy;
   --   sols     start solutions in the homotopy.
 
+  procedure Standard_Parameter_Reader
+              ( nbequ,nbvar,idxpar : out integer32;
+                sols : out Standard_Complex_Solutions.Solution_List );
+  procedure DoblDobl_Parameter_Reader
+              ( nbequ,nbvar,idxpar : out integer32;
+                sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure QuadDobl_Parameter_Reader
+              ( nbequ,nbvar,idxpar : out integer32;
+                sols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Prompts the user for a natural parameter homotopy and start solutions
+  --   in double, double double, or quad double precision.
+  --   Assumes there is only one natural parameter.
+
+  -- ON RETURN :
+  --   nbequ    number of equations;
+  --   nbvar    number of variables;
+  --   idxpar   index of the variable which is the natural parameter;
+  --   sols     start solutions in the homotopy.
+
   procedure Standard_Series_Newton
               ( sol : in Standard_Complex_Vectors.Vector;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
