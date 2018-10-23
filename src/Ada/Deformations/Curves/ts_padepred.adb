@@ -112,6 +112,7 @@ procedure ts_padepred is
   begin
     new_line;
     put_line("Interactive loop to experiment with the step size ...");
+    skip_line; -- needed for the prompting of the double double step
     loop
       put("Give the step size : "); get(step);
       Test_Series_Predictors.DoblDobl_Check_Prediction(hom,srv,eva,step);
@@ -144,6 +145,7 @@ procedure ts_padepred is
   begin
     new_line;
     put_line("Interactive loop to experiment with the step size ...");
+    skip_line; -- needed for prompting of the quad double step
     loop
       put("Give the step size : "); get(step);
       Test_Series_Predictors.QuadDobl_Check_Prediction(hom,srv,eva,step);
@@ -328,7 +330,6 @@ procedure ts_padepred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
-    skip_line; -- needed for prompting of double double ...
     DoblDobl_Test_Pade_Prediction(hom,sol,nit,pv);
     Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     DoblDobl_Step_Prediction(hom,srv,eva,pv);
@@ -362,7 +363,6 @@ procedure ts_padepred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
-    skip_line; -- needed for prompting of quad double ...
     QuadDobl_Test_Pade_Prediction(hom,sol,nit,pv);
     Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     QuadDobl_Step_Prediction(hom,srv,eva,pv);

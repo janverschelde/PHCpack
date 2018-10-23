@@ -58,39 +58,93 @@ package body Homotopy_Pade_Approximants is
     pv := QuadDobl_Pade_Approximants.Create(numdeg,dendeg,srv);
   end QuadDobl_Pade_Approximant;
 
+  function Numerical_Degree
+              ( p : Standard_Complex_Vectors.Vector;
+                tol : double_float ) return integer32 is
+
+    val : double_float;
+
+  begin
+    for i in reverse p'range loop
+      val := Standard_Complex_Numbers.AbsVal(p(i));
+      if val > tol
+       then return i;
+      end if;
+    end loop;
+    return -1;
+  end Numerical_Degree;
+
+  function Numerical_Degree
+              ( p : DoblDobl_Complex_Vectors.Vector;
+                tol : double_float ) return integer32 is
+
+    val : double_double;
+
+  begin
+    for i in reverse p'range loop
+      val := DoblDobl_Complex_Numbers.AbsVal(p(i));
+      if val > tol
+       then return i;
+      end if;
+    end loop;
+    return -1;
+  end Numerical_Degree;
+
+  function Numerical_Degree
+              ( p : QuadDobl_Complex_Vectors.Vector;
+                tol : double_float ) return integer32 is
+
+    val : quad_double;
+
+  begin
+    for i in reverse p'range loop
+      val := QuadDobl_Complex_Numbers.AbsVal(p(i));
+      if val > tol
+       then return i;
+      end if;
+    end loop;
+    return -1;
+  end Numerical_Degree;
+
   function Standard_Poles
               ( p : Standard_Pade_Approximants.Pade )
               return Standard_Complex_Vectors.Vector is
 
     deg : constant integer32
         := Standard_Pade_Approximants.Denominator_Degree(p);
-    res : Standard_Complex_Vectors.Vector(1..deg);
+    minone : constant Standard_Complex_Numbers.Complex_Number
+           := Standard_Complex_Numbers.Create(-1.0);
+    res : Standard_Complex_Vectors.Vector(1..deg) := (1..deg => minone);
     cff : constant Standard_Complex_Vectors.Vector
         := Standard_Pade_Approximants.Denominator_Coefficients(p);
+    numdeg : constant integer32 := Numerical_Degree(cff,1.0e-14);
 
   begin
-    if deg = 1 then
-      res(1) := -cff(0)/cff(1);
-    elsif deg = 2 then
-      declare
-        dsc,sqrtdsc,den2cff2 : Standard_Complex_Numbers.Complex_Number;
-        two : constant double_float := 2.0;
-        four : constant double_float := 4.0;
-      begin
-        dsc := cff(1)**2 - four*cff(0)*cff(2);
-        sqrtdsc := Standard_Complex_Numbers_Polar.Root(dsc,2,1);
-        den2cff2 := two*cff(2);
-        res(1) := (-cff(1) + sqrtdsc)/den2cff2;
-        res(2) := (-cff(1) - sqrtdsc)/den2cff2;
-      end;
-    else
-      declare
-        err,rco,rsi : Standard_Floating_Vectors.Vector(1..deg);
-        fail : boolean;
-        use Black_Box_Univariate_Solvers;
-      begin
-        Standard_Compute_Roots(cff,res,err,rco,rsi,fail);
-      end;
+    if numdeg > 0 then
+      if numdeg = 1 then
+        res(1) := -cff(0)/cff(1);
+      elsif numdeg = 2 then
+        declare
+          dsc,sqrtdsc,den2cff2 : Standard_Complex_Numbers.Complex_Number;
+          two : constant double_float := 2.0;
+          four : constant double_float := 4.0;
+        begin
+          dsc := cff(1)**2 - four*cff(0)*cff(2);
+          sqrtdsc := Standard_Complex_Numbers_Polar.Root(dsc,2,1);
+          den2cff2 := two*cff(2);
+          res(1) := (-cff(1) + sqrtdsc)/den2cff2;
+          res(2) := (-cff(1) - sqrtdsc)/den2cff2;
+        end;
+      else
+        declare
+          err,rco,rsi : Standard_Floating_Vectors.Vector(1..numdeg);
+          fail : boolean;
+          use Black_Box_Univariate_Solvers;
+        begin
+          Standard_Compute_Roots(cff(0..numdeg),res(1..numdeg),
+                                 err,rco,rsi,fail);
+        end;
+      end if;
     end if;
     return res;
   end Standard_Poles;
@@ -101,33 +155,40 @@ package body Homotopy_Pade_Approximants is
 
     deg : constant integer32
         := DoblDobl_Pade_Approximants.Denominator_Degree(p);
-    res : DoblDobl_Complex_Vectors.Vector(1..deg);
+    dd_minone : constant double_double := create(-1.0);
+    minone : constant DoblDobl_Complex_Numbers.Complex_Number
+           := DoblDobl_Complex_Numbers.Create(dd_minone);
+    res : DoblDobl_Complex_Vectors.Vector(1..deg) := (1..deg => minone);
     cff : constant DoblDobl_Complex_Vectors.Vector
         := DoblDobl_Pade_Approximants.Denominator_Coefficients(p);
+    numdeg : constant integer32 := Numerical_Degree(cff,1.0e-30);
 
   begin
-    if deg = 1 then
-      res(1) := -cff(0)/cff(1);
-    elsif deg = 2 then
-      declare
-        dsc,sqrtdsc,den2cff2 : DoblDobl_Complex_Numbers.Complex_Number;
-        two : constant double_double := create(2.0);
-        four : constant double_double := create(4.0);
-      begin
-        dsc := cff(1)*cff(1) - four*cff(0)*cff(2);
-        sqrtdsc := DoblDobl_Complex_Numbers_Polar.Root(dsc,2,1);
-        den2cff2 := two*cff(2);
-        res(1) := (-cff(1) + sqrtdsc)/den2cff2;
-        res(2) := (-cff(1) - sqrtdsc)/den2cff2;
-      end;
-    else
-      declare
-        err,rco,rsi : Standard_Floating_Vectors.Vector(1..deg);
-        fail : boolean;
-        use Black_Box_Univariate_Solvers;
-      begin
-        DoblDobl_Compute_Roots(cff,res,err,rco,rsi,fail);
-      end;
+    if numdeg > 0 then
+      if numdeg = 1 then
+        res(1) := -cff(0)/cff(1);
+      elsif numdeg = 2 then
+        declare
+          dsc,sqrtdsc,den2cff2 : DoblDobl_Complex_Numbers.Complex_Number;
+          two : constant double_double := create(2.0);
+          four : constant double_double := create(4.0);
+        begin
+          dsc := cff(1)*cff(1) - four*cff(0)*cff(2);
+          sqrtdsc := DoblDobl_Complex_Numbers_Polar.Root(dsc,2,1);
+          den2cff2 := two*cff(2);
+          res(1) := (-cff(1) + sqrtdsc)/den2cff2;
+          res(2) := (-cff(1) - sqrtdsc)/den2cff2;
+        end;
+      else
+        declare
+          err,rco,rsi : Standard_Floating_Vectors.Vector(1..numdeg);
+          fail : boolean;
+          use Black_Box_Univariate_Solvers;
+        begin
+          DoblDobl_Compute_Roots(cff(0..numdeg),res(1..numdeg),
+                                 err,rco,rsi,fail);
+        end;
+      end if;
     end if;
     return res;
   end DoblDobl_Poles;
@@ -138,33 +199,40 @@ package body Homotopy_Pade_Approximants is
 
     deg : constant integer32
         := QuadDobl_Pade_Approximants.Denominator_Degree(p);
-    res : QuadDobl_Complex_Vectors.Vector(1..deg);
+    qd_minone : constant quad_double := create(-1.0);
+    minone : constant QuadDobl_Complex_Numbers.Complex_Number
+           := QuadDobl_Complex_Numbers.Create(qd_minone);
+    res : QuadDobl_Complex_Vectors.Vector(1..deg) := (1..deg => minone);
     cff : constant QuadDobl_Complex_Vectors.Vector
         := QuadDobl_Pade_Approximants.Denominator_Coefficients(p);
+    numdeg : constant integer32 := Numerical_Degree(cff,1.0e-60);
 
   begin
-    if deg = 1 then
-      res(1) := -cff(0)/cff(1);
-    elsif deg = 2 then
-      declare
-        dsc,sqrtdsc,den2cff2 : QuadDobl_Complex_Numbers.Complex_Number;
-        two : constant quad_double := create(2.0);
-        four : constant quad_double := create(4.0);
-      begin
-        dsc := cff(1)**2 - four*cff(0)*cff(2);
-        sqrtdsc := QuadDobl_Complex_Numbers_Polar.Root(dsc,2,1);
-        den2cff2 := two*cff(2);
-        res(1) := (-cff(1) + sqrtdsc)/den2cff2;
-        res(2) := (-cff(1) - sqrtdsc)/den2cff2;
-      end;
-    else
-      declare
-        err,rco,rsi : Standard_Floating_Vectors.Vector(1..deg);
-        fail : boolean;
-        use Black_Box_Univariate_Solvers;
-      begin
-        QuadDobl_Compute_Roots(cff,res,err,rco,rsi,fail);
-      end;
+    if numdeg > 0 then
+      if numdeg = 1 then
+        res(1) := -cff(0)/cff(1);
+      elsif numdeg = 2 then
+        declare
+          dsc,sqrtdsc,den2cff2 : QuadDobl_Complex_Numbers.Complex_Number;
+          two : constant quad_double := create(2.0);
+          four : constant quad_double := create(4.0);
+        begin
+          dsc := cff(1)**2 - four*cff(0)*cff(2);
+          sqrtdsc := QuadDobl_Complex_Numbers_Polar.Root(dsc,2,1);
+          den2cff2 := two*cff(2);
+          res(1) := (-cff(1) + sqrtdsc)/den2cff2;
+          res(2) := (-cff(1) - sqrtdsc)/den2cff2;
+        end;
+      else
+        declare
+          err,rco,rsi : Standard_Floating_Vectors.Vector(1..numdeg);
+          fail : boolean;
+          use Black_Box_Univariate_Solvers;
+        begin
+          QuadDobl_Compute_Roots(cff(0..numdeg),res(1..numdeg),
+                                 err,rco,rsi,fail);
+        end;
+      end if;
     end if;
     return res;
   end QuadDobl_Poles;

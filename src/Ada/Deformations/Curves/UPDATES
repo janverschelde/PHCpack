@@ -1,3 +1,7 @@
+Tue 23 Oct 2018 : fixed the computation of the poles for denominators with
+  leading zero coefficients, modifying homotopy_pade_approximants
+  and ts_padepred.adb.
+
 Mon 22 Oct 2018 : wrapped reading of natural parameter homotopies into
   homotopy_series_readers, adjusted test_series_predictors, tested by
   ts_serpred.adb.  Also updated ts_padepred.adb for natural homotopies.

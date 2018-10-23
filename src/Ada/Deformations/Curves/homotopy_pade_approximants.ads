@@ -70,6 +70,22 @@ package Homotopy_Pade_Approximants is
   --   eva      evaluated solution series;
   --   pv       vector of Pade approximants.
 
+  function Numerical_Degree
+              ( p : Standard_Complex_Vectors.Vector;
+                tol : double_float ) return integer32;
+  function Numerical_Degree
+              ( p : DoblDobl_Complex_Vectors.Vector;
+                tol : double_float ) return integer32;
+  function Numerical_Degree
+              ( p : QuadDobl_Complex_Vectors.Vector;
+                tol : double_float ) return integer32;
+
+  -- DESCRIPTION :
+  --   The numerical degree of a polynomial with coefficients in p
+  --   is the highest index in p for which the coefficient in absolute
+  --   value is higher than the given tolerance tol.
+  --   If all coefficients are less than tol, then -1 is returned.
+
   function Standard_Poles
               ( p : Standard_Pade_Approximants.Pade )
               return Standard_Complex_Vectors.Vector;
@@ -83,6 +99,9 @@ package Homotopy_Pade_Approximants is
   -- DESCRIPTION :
   --   Returns the poles of the Pade approximant,
   --   in standard double, double double, or quad double precision.
+  --   The vector or return is of size 1..p'last,
+  --   but only the first Numerical_Degree entries of p matter.
+  --   The default poles are -1.
 
   function Standard_Poles
               ( pv : Standard_Pade_Approximants.Pade_Vector )
