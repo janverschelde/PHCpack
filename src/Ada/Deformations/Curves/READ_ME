@@ -66,6 +66,7 @@ homotopy_pade_approximants       : wraps series Newton and Pade creators
 ts_serpade                       : test rational approximations given series
 -------------------------------------------------------------------------------
 test_pade_predictors             : procedure to help testing Pade predictors
-ts_jacrabin                      : development of Rabinowitsch trick
+jacobian_rabinowitsch_trick      : application of the Rabinowitsch trick
+ts_jacrabin                      : test application of Rabinowitsch trick
 ts_padepred                      : test the Pade predictors
 -------------------------------------------------------------------------------

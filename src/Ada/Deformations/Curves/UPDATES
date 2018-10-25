@@ -1,5 +1,7 @@
 Wed 24 Oct 2018 : new test procedure to develop the application of
-  the trick of Rabinowitsch.
+  the trick of Rabinowitsch.  Moved code out of ts_jacrabin.adb into
+  the new package jacobian_rabinowitsch_trick, with new versions for
+  double double and quad double precision.
 
 Tue 23 Oct 2018 : fixed the computation of the poles for denominators with
   leading zero coefficients, modifying homotopy_pade_approximants
