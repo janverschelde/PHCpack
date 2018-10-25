@@ -1,3 +1,4 @@
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
@@ -8,6 +9,9 @@ with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Jacobian_Rabinowitsch_Trick is
 
@@ -52,5 +56,40 @@ package Jacobian_Rabinowitsch_Trick is
   -- DESCRIPTION :
   --   Returns the system augmented with the Jacobian matrix which
   --   puts singular solutions at infinity.
+
+  function Jacobian_Rabinowitsch
+              ( s : Standard_Complex_Solutions.Solution )
+              return Standard_Complex_Solutions.Solution;
+  function Jacobian_Rabinowitsch
+              ( s : DoblDobl_Complex_Solutions.Solution )
+              return DoblDobl_Complex_Solutions.Solution;
+  function Jacobian_Rabinowitsch
+              ( s : QuadDobl_Complex_Solutions.Solution )
+              return QuadDobl_Complex_Solutions.Solution;
+
+  -- DESCRIPTION :
+  --   Adds as many zero coordinates to the solution as s.n
+  --   and adds one extra coordinate 1.0 for the last variable.
+
+  function Jacobian_Rabinowitsch
+              ( s : Standard_Complex_Solutions.Solution_List )
+              return Standard_Complex_Solutions.Solution_List;
+  function Jacobian_Rabinowitsch
+              ( s : DoblDobl_Complex_Solutions.Solution_List )
+              return DoblDobl_Complex_Solutions.Solution_List;
+  function Jacobian_Rabinowitsch
+              ( s : QuadDobl_Complex_Solutions.Solution_List )
+              return QuadDobl_Complex_Solutions.Solution_List;
+
+  -- DESCRIPTION :
+  --   Adds as many zero coordinates to each solution in s 
+  --   as the number of coordinates in the solution,
+  --   and adds one extra coordinate 1.0 for the last variable.
+
+  procedure Add_Trick_Symbols ( nvar : in natural32 );
+
+  -- DESCRIPTION :
+  --   Adds nvar+1 symbols to the symbol table for the multiplier variables
+  --   and the last variable used in the Rabinowitsch trick.
 
 end Jacobian_Rabinowitsch_Trick;

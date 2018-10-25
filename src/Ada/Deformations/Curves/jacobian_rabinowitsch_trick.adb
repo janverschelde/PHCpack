@@ -11,12 +11,14 @@ with QuadDobl_Complex_Vectors;
 with Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;
+with Symbol_Table;
 with Standard_Embed_Polynomials;
 with DoblDobl_Embed_Polynomials;
 with QuadDobl_Embed_Polynomials;
 with Standard_Deflate_Singularities;
 with DoblDobl_Deflate_Singularities;
 with QuadDobl_Deflate_Singularities;
+with Standard_Deflation_Trees_io;
 
 package body Jacobian_Rabinowitsch_Trick is
 
@@ -190,5 +192,140 @@ package body Jacobian_Rabinowitsch_Trick is
     Add_Last_Multiplier(res(res'last),resdim);
     return res;
   end Jacobian_Rabinowitsch;
+
+  function Jacobian_Rabinowitsch
+              ( s : Standard_Complex_Solutions.Solution )
+              return Standard_Complex_Solutions.Solution is
+
+    res : Standard_Complex_Solutions.Solution(2*s.n+1);
+
+  begin
+    res.t := s.t;
+    res.m := s.m;
+    res.v(s.v'range) := s.v;
+    for i in s.n+1..res.n-1 loop
+      res.v(i) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
+    res.v(res.n) := Standard_Complex_Numbers.Create(1.0);
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    return res;
+  end Jacobian_Rabinowitsch;
+
+  function Jacobian_Rabinowitsch
+              ( s : DoblDobl_Complex_Solutions.Solution )
+              return DoblDobl_Complex_Solutions.Solution is
+
+    res : DoblDobl_Complex_Solutions.Solution(2*s.n+1);
+    one : constant double_double := create(1.0);
+    zero : constant double_double := create(0.0);
+
+  begin
+    res.t := s.t;
+    res.m := s.m;
+    res.v(s.v'range) := s.v;
+    for i in s.n+1..res.n-1 loop
+      res.v(i) := DoblDobl_Complex_Numbers.Create(zero);
+    end loop;
+    res.v(res.n) := DoblDobl_Complex_Numbers.Create(one);
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    return res;
+  end Jacobian_Rabinowitsch;
+
+  function Jacobian_Rabinowitsch
+              ( s : QuadDobl_Complex_Solutions.Solution )
+              return QuadDobl_Complex_Solutions.Solution is
+
+    res : QuadDobl_Complex_Solutions.Solution(2*s.n+1);
+    one : constant quad_double := create(1.0);
+    zero : constant quad_double := create(0.0);
+
+  begin
+    res.t := s.t;
+    res.m := s.m;
+    res.v(s.v'range) := s.v;
+    for i in s.n+1..res.n-1 loop
+      res.v(i) := QuadDobl_Complex_Numbers.Create(zero);
+    end loop;
+    res.v(res.n) := QuadDobl_Complex_Numbers.Create(one);
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    return res;
+  end Jacobian_Rabinowitsch;
+
+  function Jacobian_Rabinowitsch
+              ( s : Standard_Complex_Solutions.Solution_List )
+              return Standard_Complex_Solutions.Solution_List is
+
+    use Standard_Complex_Solutions;
+
+    res,res_last : Solution_List;
+    tmp : Solution_List := s;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Jacobian_Rabinowitsch(ls.all));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Jacobian_Rabinowitsch;
+
+  function Jacobian_Rabinowitsch
+              ( s : DoblDobl_Complex_Solutions.Solution_List )
+              return DoblDobl_Complex_Solutions.Solution_List is
+
+    use DoblDobl_Complex_Solutions;
+
+    res,res_last : Solution_List;
+    tmp : Solution_List := s;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Jacobian_Rabinowitsch(ls.all));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Jacobian_Rabinowitsch;
+
+  function Jacobian_Rabinowitsch
+              ( s : QuadDobl_Complex_Solutions.Solution_List )
+              return QuadDobl_Complex_Solutions.Solution_List is
+
+    use QuadDobl_Complex_Solutions;
+
+    res,res_last : Solution_List;
+    tmp : Solution_List := s;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Jacobian_Rabinowitsch(ls.all));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Jacobian_Rabinowitsch;
+
+  procedure Add_Trick_Symbols ( nvar : in natural32 ) is
+
+    sb : Symbol_Table.Symbol;
+
+  begin
+    Standard_Deflation_Trees_io.Add_Multiplier_Symbols(1,nvar);
+    Symbol_Table.Enlarge(1);
+    sb := (sb'range => ' ');
+    sb(1) := 'y';
+    sb(2) := 'r';
+    sb(3) := 'b';
+    Symbol_Table.add(sb);
+  end Add_Trick_Symbols;
 
 end Jacobian_Rabinowitsch_Trick;
