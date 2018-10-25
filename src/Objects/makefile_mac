@@ -755,6 +755,10 @@ ts_padepred:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_padepred.adb \
                  -o $(BIN)/ts_padepred
 
+ts_jacrabin:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_jacrabin.adb \
+                 -o $(BIN)/ts_jacrabin
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:
