@@ -1,3 +1,6 @@
+Wed 24 Oct 2018 : new test procedure to develop the application of
+  the trick of Rabinowitsch.
+
 Tue 23 Oct 2018 : fixed the computation of the poles for denominators with
   leading zero coefficients, modifying homotopy_pade_approximants
   and ts_padepred.adb.
