@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
@@ -24,6 +25,7 @@ with DoblDobl_Parameter_Systems;
 with QuadDobl_Parameter_Systems;
 with Series_and_Homotopies;
 with Series_and_Predictors;
+with Jacobian_Rabinowitsch_Trick;        use Jacobian_Rabinowitsch_Trick;
 
 package body Homotopy_Series_Readers is
 
@@ -34,17 +36,37 @@ package body Homotopy_Series_Readers is
                 gamma : in Standard_Complex_Numbers.Complex_Number ) is
 
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    ans : character;
 
   begin
     new_line;
     put_line("Testing the creation of a homotopies as a series system ...");
     new_line;
     put_line("Reading the target system ..."); get(target);
-    nbequ := target'last;
     new_line;
     put_line("Reading the start system and its solutions ...");
     Standard_System_and_Solutions_io.get(start,sols);
-    Standard_Homotopy.Create(target.all,start.all,tpow,gamma);
+    new_line;
+    put("Apply Rabinowitsch trick to put singularities at infinity ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      nbequ := target'last;
+      Standard_Homotopy.Create(target.all,start.all,tpow,gamma);
+    else
+      declare
+        jrbtarget : constant Standard_Complex_Poly_Systems.Poly_Sys
+                  := Jacobian_Rabinowitsch(target.all);
+        jrbstart : constant Standard_Complex_Poly_Systems.Poly_Sys
+                 := Jacobian_Rabinowitsch(start.all);
+        jrbsols : constant Standard_Complex_Solutions.Solution_List
+                := Jacobian_Rabinowitsch(sols);
+      begin
+        nbequ := jrbtarget'last;
+        Standard_Homotopy.Create(jrbtarget,jrbstart,tpow,gamma);
+        Standard_Complex_Solutions.Deep_Clear(sols);
+        sols := jrbsols;
+      end;
+    end if;
   end Standard_Reader;
 
   procedure DoblDobl_Reader
