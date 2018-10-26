@@ -9,6 +9,12 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Standard_Floating_Vectors;
+with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
+with Double_Double_Vectors;
+with Double_Double_Vectors_io;           use Double_Double_Vectors_io;
+with Quad_Double_Vectors;
+with Quad_Double_Vectors_io;             use Quad_Double_Vectors_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Poly_Systems;
@@ -46,6 +52,7 @@ procedure ts_padepred is
   --   Tests the predictor on the solution in sol for the homotopy hom,
   --   in standard double precision.
 
+    neq : constant integer32 := hom'last;
     nit : integer32 := 4;
     srv : Standard_Dense_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Dense_Series_Vectors.Vector(hom'range);
@@ -56,7 +63,7 @@ procedure ts_padepred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
-    Test_Pade_Predictors.Standard_Test_Pade_Prediction(hom,sol,nit,pv);
+    Test_Pade_Predictors.Standard_Test_Pade_Prediction(neq,sol,pv);
     Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     Test_Pade_Predictors.Standard_Step_Prediction(hom,srv,eva,pv);
     new_line;
@@ -77,6 +84,7 @@ procedure ts_padepred is
   --   Tests the predictor on the solution in sol for the homotopy hom,
   --   in double double precision.
 
+    neq : constant integer32 := hom'last;
     nit : integer32 := 4;
     srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Dense_Series_Vectors.Vector(hom'range);
@@ -88,7 +96,7 @@ procedure ts_padepred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
-    Test_Pade_Predictors.DoblDobl_Test_Pade_Prediction(hom,sol,nit,pv);
+    Test_Pade_Predictors.DoblDobl_Test_Pade_Prediction(neq,sol,pv);
     Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     Test_Pade_Predictors.DoblDobl_Step_Prediction(hom,srv,eva,pv);
     new_line;
@@ -110,6 +118,7 @@ procedure ts_padepred is
   --   Tests the predictor on the solution in sol for the homotopy hom,
   --   in quad double precision.
 
+    neq : constant integer32 := hom'last;
     nit : integer32 := 4;
     srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Dense_Series_Vectors.Vector(hom'range);
@@ -121,7 +130,7 @@ procedure ts_padepred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
-    Test_Pade_Predictors.QuadDobl_Test_Pade_Prediction(hom,sol,nit,pv);
+    Test_Pade_Predictors.QuadDobl_Test_Pade_Prediction(neq,sol,pv);
     Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     Test_Pade_Predictors.QuadDobl_Step_Prediction(hom,srv,eva,pv);
     new_line;
@@ -134,6 +143,84 @@ procedure ts_padepred is
     Test_Series_Predictors.QuadDobl_Check_Prediction(hom,srv,eva,qd_step);
     Test_Pade_Predictors.QuadDobl_Check_Prediction(hom,srv,eva,pv,qd_step);
   end QuadDobl_Test_Prediction;
+
+  procedure Standard_Forward_Pole_Radius
+              ( nq : in integer32;
+                sols : in Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Computes the forward pole radius for the solutions in sols,
+  --   for a homotopy with nq equations, in standard double precision.
+
+  -- REQUIRED :
+  --   Standard_Homotopy has been initialized.
+
+    len : constant integer32
+        := integer32(Standard_Complex_Solutions.Length_Of(sols));
+    rad : Standard_Floating_Vectors.Vector(1..len);
+    numdeg,dendeg : integer32 := 0;
+    fpr : double_float;
+
+  begin
+    new_line;
+    put("Give the degree of the numerator : "); get(numdeg);
+    put("Give the degree of the denominator : "); get(dendeg);
+    Test_Pade_Predictors.Forward_Pole_Radius(nq,numdeg,dendeg,sols,rad,fpr);
+    put_line("The forward pole radii : "); put_line(rad);
+    put("The forward pole radius : "); put(fpr,3); new_line;
+  end Standard_Forward_Pole_Radius;
+
+  procedure DoblDobl_Forward_Pole_Radius
+              ( nq : in integer32;
+                sols : in DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Computes the forward pole radius for the solutions in sols,
+  --   for a homotopy with nq equations, in double double precision.
+
+  -- REQUIRED :
+  --   DoblDobl_Homotopy has been initialized.
+
+    len : constant integer32
+        := integer32(DoblDobl_Complex_Solutions.Length_Of(sols));
+    rad : Double_Double_Vectors.Vector(1..len);
+    numdeg,dendeg : integer32 := 0;
+    fpr : double_double;
+
+  begin
+    new_line;
+    put("Give the degree of the numerator : "); get(numdeg);
+    put("Give the degree of the denominator : "); get(dendeg);
+    Test_Pade_Predictors.Forward_Pole_Radius(nq,numdeg,dendeg,sols,rad,fpr);
+    put_line("The forward pole radii : "); put_line(rad);
+    put("The forward pole radius : "); put(fpr,3); new_line;
+  end DoblDobl_Forward_Pole_Radius;
+
+  procedure QuadDobl_Forward_Pole_Radius
+              ( nq : in integer32;
+                sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Computes the forward pole radius for the solutions in sols,
+  --   for a homotopy with nq equations, in quad double precision.
+
+  -- REQUIRED :
+  --   QuadDobl_Homotopy has been initialized.
+
+    len : constant integer32
+        := integer32(QuadDobl_Complex_Solutions.Length_Of(sols));
+    rad : Quad_Double_Vectors.Vector(1..len);
+    numdeg,dendeg : integer32 := 0;
+    fpr : quad_double;
+
+  begin
+    new_line;
+    put("Give the degree of the numerator : "); get(numdeg);
+    put("Give the degree of the denominator : "); get(dendeg);
+    Test_Pade_Predictors.Forward_Pole_Radius(nq,numdeg,dendeg,sols,rad,fpr);
+    put_line("The forward pole radii : "); put_line(rad);
+    put("The forward pole radius : "); put(fpr,3); new_line;
+  end QuadDobl_Forward_Pole_Radius;
 
   procedure Standard_Test_Prediction
               ( nq,idxpar : in integer32;
@@ -152,8 +239,14 @@ procedure ts_padepred is
         := integer32(Standard_Complex_Solutions.Length_Of(sols));
     tmp : Standard_Complex_Solutions.Solution_List := sols;
     sol : Standard_Complex_Solutions.Link_to_Solution;
+    ans : character;
 
   begin
+    put("Compute the forward pole radius ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Standard_Forward_Pole_Radius(nq,sols);
+    end if;
     put("Running the predictor on ");
     put(len,1); put_line(" solutions ...");
     for k in 1..len loop
@@ -181,8 +274,14 @@ procedure ts_padepred is
         := integer32(DoblDobl_Complex_Solutions.Length_Of(sols));
     tmp : DoblDobl_Complex_Solutions.Solution_List := sols;
     sol : DoblDobl_Complex_Solutions.Link_to_Solution;
+    ans : character;
 
   begin
+    put("Compute the forward pole radius ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then DoblDobl_Forward_Pole_Radius(nq,sols);
+    end if;
     put("Running the predictor on ");
     put(len,1); put_line(" solutions ...");
     for k in 1..len loop
@@ -210,8 +309,14 @@ procedure ts_padepred is
         := integer32(QuadDobl_Complex_Solutions.Length_Of(sols));
     tmp : QuadDobl_Complex_Solutions.Solution_List := sols;
     sol : QuadDobl_Complex_Solutions.Link_to_Solution;
+    ans : character;
 
   begin
+    put("Compute the forward pole radius ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then QuadDobl_Forward_Pole_Radius(nq,sols);
+    end if;
     put("Running the predictor on ");
     put(len,1); put_line(" solutions ...");
     for k in 1..len loop

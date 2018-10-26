@@ -1,5 +1,7 @@
 Fri 26 Oct 2018 : moved test procedures into test_pade_predictors, code
-  taken from ts_padepred.adb.
+  taken from ts_padepred.adb.  Added procedures and functions to
+  test_pade_predictors to compute the forward pole radius and tested
+  the computation of the forward pole radius in ts_padepred.
 
 Thu 25 Oct 2018 : extended jacobian_rabinowitsch trick to extend solutions
   with extra coordinates introduced by the trick, tested in ts_jacrabin.adb.
