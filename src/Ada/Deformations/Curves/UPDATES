@@ -1,3 +1,6 @@
+Fri 26 Oct 2018 : moved test procedures into test_pade_predictors, code
+  taken from ts_padepred.adb.
+
 Thu 25 Oct 2018 : extended jacobian_rabinowitsch trick to extend solutions
   with extra coordinates introduced by the trick, tested in ts_jacrabin.adb.
   Updated homotopy_series_readers.adb to prompt the user if the Rabinowitsch
