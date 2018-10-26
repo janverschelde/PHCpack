@@ -1,7 +1,8 @@
 Thu 25 Oct 2018 : extended jacobian_rabinowitsch trick to extend solutions
   with extra coordinates introduced by the trick, tested in ts_jacrabin.adb.
   Updated homotopy_series_readers.adb to prompt the user if the Rabinowitsch
-  trick needs to be applied.
+  trick needs to be applied.  Also updated homotopy_series_readers.adb
+  for the trick in double double and quad double precision.
 
 Wed 24 Oct 2018 : new test procedure to develop the application of
   the trick of Rabinowitsch.  Moved code out of ts_jacrabin.adb into

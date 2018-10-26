@@ -76,17 +76,37 @@ package body Homotopy_Series_Readers is
                 gamma : in DoblDobl_Complex_Numbers.Complex_Number ) is
 
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    ans : character;
 
   begin
     new_line;
     put_line("Testing the creation of a homotopies as a series system ...");
     new_line;
     put_line("Reading the target system ..."); get(target);
-    nbequ := target'last;
     new_line;
     put_line("Reading the start system and its solutions ...");
     DoblDobl_System_and_Solutions_io.get(start,sols);
-    DoblDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+    new_line;
+    put("Apply Rabinowitsch trick to put singularities at infinity ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      nbequ := target'last;
+      DoblDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+    else
+      declare
+        jrbtarget : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+                  := Jacobian_Rabinowitsch(target.all);
+        jrbstart : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+                 := Jacobian_Rabinowitsch(start.all);
+        jrbsols : constant DoblDobl_Complex_Solutions.Solution_List
+                := Jacobian_Rabinowitsch(sols);
+      begin
+        nbequ := jrbtarget'last;
+        DoblDobl_Homotopy.Create(jrbtarget,jrbstart,tpow,gamma);
+        DoblDobl_Complex_Solutions.Deep_Clear(sols);
+        sols := jrbsols;
+      end;
+    end if;
   end DoblDobl_Reader;
 
   procedure QuadDobl_Reader
@@ -96,17 +116,37 @@ package body Homotopy_Series_Readers is
                 gamma : in QuadDobl_Complex_Numbers.Complex_Number ) is
 
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    ans : character;
 
   begin
     new_line;
     put_line("Testing the creation of a homotopies as a series system ...");
     new_line;
     put_line("Reading the target system ..."); get(target);
-    nbequ := target'last;
     new_line;
     put_line("Reading the start system ...");
     QuadDobl_System_and_Solutions_io.get(start,sols);
-    QuadDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+    new_line;
+    put("Apply Rabinowitsch trick to put singularities at infinity ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      nbequ := target'last;
+      QuadDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+    else
+      declare
+        jrbtarget : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+                  := Jacobian_Rabinowitsch(target.all);
+        jrbstart : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+                 := Jacobian_Rabinowitsch(start.all);
+        jrbsols : constant QuadDobl_Complex_Solutions.Solution_List
+                := Jacobian_Rabinowitsch(sols);
+      begin
+        nbequ := jrbtarget'last;
+        QuadDobl_Homotopy.Create(jrbtarget,jrbstart,tpow,gamma);
+        QuadDobl_Complex_Solutions.Deep_Clear(sols);
+        sols := jrbsols;
+      end;
+    end if;
   end QuadDobl_Reader;
 
   procedure Standard_Reader
