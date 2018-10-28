@@ -1,3 +1,6 @@
+Sat 27 Oct 2018 : as a temporary patch, in algorithmic_diffeval_trackers.adb,
+  switched to multitasked root refiners for very large solution solutions.
+
 Tue 16 May 2017 : new package maximum_power_degrees to check whether simple
   algorithmic circuits will do to evaluate and differentiate,
   used in algorithmic_diffeval_trackers.adb.

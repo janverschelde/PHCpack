@@ -28,6 +28,7 @@ with Root_Refining_Parameters;
 with Standard_Root_Refiners;
 with DoblDobl_Root_Refiners;
 with QuadDobl_Root_Refiners;
+with Multitasking_Root_Refiners;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_PolySys_Container;
@@ -38,6 +39,10 @@ with PHCpack_Operations;
 with Maximum_Power_Degrees;
 
 package body Algorithmic_DiffEval_Trackers is
+
+  refine_threshold : constant natural32 := 200000;
+  -- looking for clusters become too expensive after this threshold ...
+  -- ... this constant is a temporary patch
 
   function Prompt_for_Verbose return integer32 is
 
@@ -808,8 +813,11 @@ package body Algorithmic_DiffEval_Trackers is
     use Standard_Complex_Poly_Systems;
     use Root_Refining_Parameters;
 
+    len : constant natural32
+        := Standard_Complex_Solutions.Length_Of(sols);
+
   begin
-    if not Standard_Complex_Solutions.Is_Null(sols) then
+    if len > 0 then
       PHCpack_Operations.Retrieve_Target_System(p);
       if p /= null then
         new_line(file);
@@ -821,8 +829,13 @@ package body Algorithmic_DiffEval_Trackers is
         Standard_Put_Root_Refining_Parameters
           (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
         tstart(timer);
-        Standard_Root_Refiners.Reporting_Root_Refiner
-          (file,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        if len < refine_threshold then
+          Standard_Root_Refiners.Reporting_Root_Refiner
+            (file,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        else
+          Multitasking_Root_Refiners.Silent_Multitasking_Root_Refiner
+            (file,1,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate);
+        end if;
         tstop(timer);
         new_line(file);
         print_times(file,timer,"Root refining in double precision");
@@ -844,8 +857,11 @@ package body Algorithmic_DiffEval_Trackers is
     use DoblDobl_Complex_Poly_Systems;
     use Root_Refining_Parameters;
 
+    len : constant natural32
+        := DoblDobl_Complex_Solutions.Length_Of(sols);
+
   begin
-    if not DoblDobl_Complex_Solutions.Is_Null(sols) then
+    if len > 0 then
       PHCpack_Operations.Retrieve_Target_System(p);
       if p /= null then
         new_line(file);
@@ -857,8 +873,13 @@ package body Algorithmic_DiffEval_Trackers is
         Standard_Put_Root_Refining_Parameters
           (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
         tstart(timer);
-        DoblDobl_Root_Refiners.Reporting_Root_Refiner
-          (file,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        if len < refine_threshold then
+          DoblDobl_Root_Refiners.Reporting_Root_Refiner
+            (file,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        else
+          Multitasking_Root_Refiners.Silent_Multitasking_Root_Refiner
+            (file,1,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate);
+        end if;
         tstop(timer);
         new_line(file);
         print_times(file,timer,"Root refining in double double precision");
@@ -880,8 +901,11 @@ package body Algorithmic_DiffEval_Trackers is
     use QuadDobl_Complex_Poly_Systems;
     use Root_Refining_Parameters;
 
+    len : constant natural32
+        := QuadDobl_Complex_Solutions.Length_Of(sols);
+
   begin
-    if not QuadDobl_Complex_Solutions.Is_Null(sols) then
+    if len > 0 then
       PHCpack_Operations.Retrieve_Target_System(p);
       if p /= null then
         new_line(file);
@@ -893,8 +917,13 @@ package body Algorithmic_DiffEval_Trackers is
         Standard_Put_Root_Refining_Parameters
           (file,epsxa,epsfa,tolsing,maxit,deflate,wout);
         tstart(timer);
-        QuadDobl_Root_Refiners.Reporting_Root_Refiner
-          (file,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        if len < refine_threshold then
+          QuadDobl_Root_Refiners.Reporting_Root_Refiner
+            (file,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        else
+          Multitasking_Root_Refiners.Silent_Multitasking_Root_Refiner
+            (file,1,p.all,sols,epsxa,epsfa,tolsing,numit,maxit,deflate);
+        end if;
         tstop(timer);
         new_line(file);
         print_times(file,timer,"Root refining in quad double precision");
