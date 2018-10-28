@@ -1,4 +1,4 @@
-Truncated power series with complex coefficients for PHCv2.4.38
+Truncated power series with complex coefficients for PHCv2.4.60
 
 Similar to Taylor series approximations for general functions,
 we can approximate roots of polynomials in a parameter by series.
@@ -15,6 +15,10 @@ standard_truncated_series        : defines basic operations on power series
 ts_pstrunc                       : tests proof-of-concept power series
 binomial_coefficients            : export binomial() function
 ts_bincff                        : test on binomial coefficients
+standard_dense_series2           : dense power series, standard coefficients
+standard_dense_series2_io        : basic input/output of standard series
+ts_series2                       : test on 2nd design of series
+------------------------------------------------------------------------------
 standard_dense_series            : dense power series, standard coefficients
 dobldobl_dense_series            : dense series in double double precision
 quaddobl_dense_series            : dense series in quad double precision

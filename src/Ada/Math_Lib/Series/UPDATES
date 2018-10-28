@@ -1,3 +1,8 @@
+Sun 28 Oct 2018 : extending the series type with a Link_to_Series type
+  to allow for variable degree power series.  The redevelopment starts
+  with standard_dense_series2.a* and standard_dense_series2_io.a*,
+  tested by ts_series2.adb.
+
 Fri 2 Jun 2017 : added guard test on setting the degree in
   series_and_polynomials.adb.
 
