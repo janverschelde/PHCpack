@@ -3,6 +3,8 @@ Sun 28 Oct 2018 : extending the series type with a Link_to_Series type
   with standard_dense_series2.a* and standard_dense_series2_io.a*,
   tested by ts_series2.adb.  New versions of packages to compute roots and
   norms in standard_algebraic_series2 and standard_dense_series_norms2.
+  In standard_dense_series2, wrapped the create, copy, and equal operations
+  for variable degree series.
 
 Fri 2 Jun 2017 : added guard test on setting the degree in
   series_and_polynomials.adb.

@@ -22,6 +22,33 @@ package body Standard_Dense_Series2 is
     return Create(c,0);
   end Create;
 
+  function Create ( i : integer ) return Link_to_Series is
+
+    ser : constant Series(0) := Create(i,0);
+    res : constant Link_to_Series := new Series'(ser);
+
+  begin
+    return res;
+  end Create;
+
+  function Create ( f : double_float ) return Link_to_Series is
+
+    ser : constant Series(0) := Create(f,0);
+    res : constant Link_to_Series := new Series'(ser);
+
+  begin
+    return res;
+  end Create;
+
+  function Create ( c : Complex_Number ) return Link_to_Series is
+
+    ser : constant Series(0) := Create(c,0);
+    res : constant Link_to_Series := new Series'(ser);
+
+  begin
+    return res;
+  end Create;
+
   function Create ( i : integer; deg : integer32 ) return Series is
 
     res : Series(deg);
@@ -55,12 +82,52 @@ package body Standard_Dense_Series2 is
     return res;
   end Create;
 
+  function Create ( i : integer; deg : integer32 )
+                  return Link_to_Series is
+
+    ser : constant Series(deg) := Create(i,deg);
+    res : constant Link_to_Series := new Series'(ser);
+
+  begin
+    return res;
+  end Create;
+
+  function Create ( f : double_float; deg : integer32 )
+                  return Link_to_Series is
+
+    ser : constant Series(deg) := Create(f,deg);
+    res : constant Link_to_Series := new Series'(ser);
+
+  begin
+    return res;
+  end Create;
+
+  function Create ( c : Complex_Number; deg : integer32 )
+                  return Link_to_Series is
+
+    ser : constant Series(deg) := Create(c,deg);
+    res : constant Link_to_Series := new Series'(ser);
+
+  begin
+    return res;
+  end Create;
+
   function Create ( c : Standard_Complex_Vectors.Vector ) return Series is
 
     res : Series(c'last);
 
   begin
     res.cff(0..c'last) := c;
+    return res;
+  end Create;
+
+  function Create ( c : Standard_Complex_Vectors.Vector )
+                  return Link_to_Series is
+
+    ser : constant Series(c'last) := Create(c);
+    res : constant Link_to_Series := new Series'(ser);
+
+  begin
     return res;
   end Create;
 
@@ -82,6 +149,16 @@ package body Standard_Dense_Series2 is
         res.cff(i) := zero;
       end loop;
     end if;
+    return res;
+  end Create;
+
+  function Create ( s : Series; deg : integer32 )
+                  return Link_to_Series is
+
+    ser : constant Series(deg) := Create(s,deg);
+    res : constant Link_to_Series := new Series'(ser);
+
+  begin
     return res;
   end Create;
 
@@ -109,12 +186,32 @@ package body Standard_Dense_Series2 is
     end if;
   end Equal;
 
+  function Equal ( s,t : Link_to_Series ) return boolean is
+  begin
+    if s = null then
+      if t = null
+       then return true;
+       else return false;
+      end if;
+    elsif t = null then
+      return false;
+    else
+      return Equal(s.all,t.all);
+    end if;
+  end Equal;
+
   procedure Copy ( s : in Series; t : in out Series ) is
   begin
     for i in 0..s.deg loop
       exit when (i > t.deg);
       t.cff(i) := s.cff(i);
     end loop;
+  end Copy;
+
+  procedure Copy ( s : in Link_to_Series; t : in out Link_to_Series ) is
+  begin
+    Clear(t);
+    t := Create(s.cff);
   end Copy;
 
 -- ORDER :

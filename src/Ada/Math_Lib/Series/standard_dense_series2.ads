@@ -37,10 +37,30 @@ package Standard_Dense_Series2 is
 
   -- DESCRIPTION :
   --   Returns a series with one element, the value of i, f, or c.
+  --   The degree of the series on return equals zero.
+
+  function Create ( i : integer ) return Link_to_Series;
+  function Create ( f : double_float ) return Link_to_Series;
+  function Create ( c : Complex_Number ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns a series with one element, the value of i, f, or c.
+  --   The degree of the series on return equals zero.
 
   function Create ( i : integer; deg : integer32 ) return Series;
   function Create ( f : double_float; deg : integer32 ) return Series;
   function Create ( c : Complex_Number; deg : integer32 ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns a series of the given degree where the leading element
+  --   at position 0 has the value of i, f, or c.
+
+  function Create ( i : integer; deg : integer32 )
+                  return Link_to_Series;
+  function Create ( f : double_float; deg : integer32 )
+                  return Link_to_Series;
+  function Create ( c : Complex_Number; deg : integer32 )
+                  return Link_to_Series;
 
   -- DESCRIPTION :
   --   Returns a series of the given degree where the leading element
@@ -54,7 +74,26 @@ package Standard_Dense_Series2 is
 
   -- REQUIRED : c'first = 0.
 
+  function Create ( c : Standard_Complex_Vectors.Vector )
+                  return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns a series with coefficients in c,
+  --   with degree equal to c'last.
+
+  -- REQUIRED : c'first = 0.
+
   function Create ( s : Series; deg : integer32 ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns a series of the given degree with coefficients in s.
+  --   If deg > s'last, then the series on return has all
+  --   coefficients of s, padded with zeros.
+  --   If deg < s'last, then the series on return is a truncation
+  --   of the series in s, with only the coefficients in s(0..deg).
+
+  function Create ( s : Series; deg : integer32 )
+                  return Link_to_Series;
 
   -- DESCRIPTION :
   --   Returns a series of the given degree with coefficients in s.
@@ -72,6 +111,12 @@ package Standard_Dense_Series2 is
   --   If the degrees of s and t are different,
   --   then the extra coefficients must be zero for equality to hold.
 
+  function Equal ( s,t : Link_to_Series ) return boolean;
+
+  -- DESCRIPTION :
+  --   Wraps the test on equality for the content of s and t.
+  --   Returns False if s is empty and t is not, or vice versa.
+
   procedure Copy ( s : in Series; t : in out Series );
 
   -- DESCRIPTION :
@@ -79,6 +124,14 @@ package Standard_Dense_Series2 is
   --   All coefficients of s are copied if s.deg <= t.deg,
   --   otherwise, only the first t.deg coefficients of s
   --   are copied to t.
+
+  procedure Copy ( s : in Link_to_Series; t : in out Link_to_Series );
+
+  -- DESCRIPTION :
+  --   Clears t and assign to t a series with the same degree
+  --   and the same coefficients as s.
+  --   Compared to the Copy on the fixed degree series,
+  --   all coefficients of s are copied to t.
 
 -- ORDER :
 
@@ -197,8 +250,9 @@ package Standard_Dense_Series2 is
   procedure Mul ( s : in out Series; t : in Series );
 
   -- DESCRIPTION :
-  --   Multiplies the series s with t.  If t.deg > s.deg,
-  --   then the degree of s will be upgraded to t.deg.
+  --   Multiplies the series s with t.
+
+  -- REQUIRED : s.deg = t.deg.
 
   function Inverse ( s : Series ) return Series;
 
@@ -303,5 +357,10 @@ package Standard_Dense_Series2 is
   -- DESCRIPTION :
   --   All coefficients of s are set to zero.
   --   Also the degree of s is set to zero.
+
+  procedure Clear ( s : in out Link_to_Series );
+
+  -- DESCRIPTION :
+  --   The space allocated for s is freed.
 
 end Standard_Dense_Series2;
