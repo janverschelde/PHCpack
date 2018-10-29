@@ -17,6 +17,8 @@ binomial_coefficients            : export binomial() function
 ts_bincff                        : test on binomial coefficients
 standard_dense_series2           : dense power series, standard coefficients
 standard_dense_series2_io        : basic input/output of standard series
+standard_algebraic_series2       : sqrt and n-th root of standard series
+standard_dense_series_norms      : norms and normalizations of standard series
 ts_series2                       : test on 2nd design of series
 ------------------------------------------------------------------------------
 standard_dense_series            : dense power series, standard coefficients
