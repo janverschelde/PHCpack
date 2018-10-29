@@ -23,9 +23,7 @@ package Standard_Dense_Series2 is
 -- degree via Series and series with variable size via Link_to_Series.
 
   type Series ( deg : integer32 ) is record
-    -- the last exponent in the series, the error is O(t^(deg+1))
     cff : Standard_Complex_Vectors.Vector(0..deg);
-    -- only the coefficients in the range 0..deg are used
   end record;
   type Link_to_Series is access Series;
 
@@ -102,6 +100,13 @@ package Standard_Dense_Series2 is
   --   If deg < s'last, then the series on return is a truncation
   --   of the series in s, with only the coefficients in s(0..deg).
 
+  procedure Set_Degree ( s : in out Link_to_Series; deg : in integer32 );
+
+  -- DESCRIPTION :
+  --   Sets the degree of the series s to deg,
+  --   either by truncating its coefficients if deg < s.deg, or
+  --   otherwise by padding the coefficients with deg - s.deg zeroes.
+
 -- EQUALITY AND COPY :
 
   function Equal ( s,t : Series ) return boolean;
@@ -142,6 +147,15 @@ package Standard_Dense_Series2 is
   --   for which AbsVal(s.cff(k)) > tol.
   --   If all coefficients are less than tol, then s.deg+1 is returned.
 
+  function Order ( s : Link_to_Series; tol : double_float := 0.0 )
+                 return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the smallest integer k in the range 0..s.deg
+  --   for which AbsVal(s.cff(k)) > tol.
+  --   If all coefficients are less than tol, then s.deg+1 is returned.
+  --   Returns -1 if s is null.
+
 -- COMPLEX CONJUGATE :
 
   function Conjugate ( s : Series ) return Series;
@@ -149,6 +163,12 @@ package Standard_Dense_Series2 is
   -- DESCRIPTION :
   --   The complex conjugate of a series s has as coefficients
   --   the complex conjugates of the coefficients of s.
+
+  function Conjugate ( s : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns s if s is null, otherwise returns the complex
+  --   conjugate of all coefficients in s.
 
 -- ARITHMETICAL OPERATORS :
 
@@ -158,23 +178,49 @@ package Standard_Dense_Series2 is
   --   Returns a series which is a copy of s,
   --   but with c added to the constant term of s.
 
+  function "+" ( s : Link_to_Series;
+                 c : Complex_Number ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns the series s with the constant c added to s.
+
   function "+" ( c : Complex_Number; s : Series ) return Series;
 
   -- DESCRIPTION :
   --   Returns a series which is a copy of s,
   --   but with c added to the constant term of s.
 
+  function "+" ( c : Complex_Number;
+                 s : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns the series s with the constant c added to s.
+
   procedure Add ( s : in out Series; c : in Complex_Number );
 
   -- DESCRIPTION :
   --   This is equivalent to s := s + c.
 
+  procedure Add ( s : in out Link_to_Series;
+                  c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   Does s := s + c without the creation of an extra object.
+  --   For memory efficiency, this Add(s,c) is preferred over s := s+c.
+
   function "+" ( s : Series ) return Series;
+  function "+" ( s : Link_to_Series ) return Link_to_Series;
 
   -- DESCRIPTION :
   --   Returns a copy of s.
 
   function "+" ( s,t : Series ) return Series;
+
+  -- DESCRIPTION :
+  --   Adds the series s to t.  The degree of the series
+  --   on return is the maximum of s.deg and t.deg.
+
+  function "+" ( s,t : Link_to_Series ) return Link_to_Series;
 
   -- DESCRIPTION :
   --   Adds the series s to t.  The degree of the series
@@ -186,8 +232,21 @@ package Standard_Dense_Series2 is
   --   Adds the series t to s.  If t.deg > s.deg,
   --   then the coefficients of t corresponding to degrees
   --   higher than s.deg are ignored.
+  --
+  procedure Add ( s : in out Link_to_Series; t : in Link_to_Series );
+
+  -- DESCRIPTION :
+  --   Adds the series t to s.  If t.deg > s.deg,
+  --   then the degree of s is extended to the degree of t.
 
   function "-" ( s : Series; c : Complex_Number ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns the series s - c, subtracting c from the constant
+  --   coefficient of s.
+
+  function "-" ( s : Link_to_Series;
+                 c : Complex_Number ) return Link_to_Series;
 
   -- DESCRIPTION :
   --   Returns the series s - c, subtracting c from the constant
@@ -198,26 +257,57 @@ package Standard_Dense_Series2 is
   -- DESCRIPTION :
   --   Returns the series c - s.
 
+  function "-" ( c : Complex_Number;
+                 s : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns the series c - s.
+
   procedure Sub ( s : in out Series; c : in Complex_Number );
 
   -- DESCRIPTION :
   --   This is equivalent to s := s - c.
+
+  procedure Sub ( s : in out Link_to_Series;
+                  c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   Does s := s - c without the creation of an extra object.
+  --   For memory efficiency, this Sub(s,c) is preferred over s := s-c.
 
   function "-" ( s : Series ) return Series;
 
   -- DESCRIPTION :
   --   The coefficients of series on return has all signs flipped.
 
+  function "-" ( s : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns null if s is null or otherwise returns a new series
+  --   with the same coefficients as s, but with the signs flipped.
+
   procedure Min ( s : in out Series );
 
   -- DESCRIPTION :
   --   This is equivalent to s := -s.
+
+  procedure Min ( s : in out Link_to_Series );
+
+  -- DESCRIPTION :
+  --   Flips the signs of the coefficients of s.
+  --   For memory efficiency, this is better than s := -s,
+  --   if s is of type Link_to_Series.
 
   function "-" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
   --   Subtracts the series t from s.  The degree of the series
   --   on return is the maximum of s.deg and t.deg.
+
+  function "-" ( s,t : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns s - t as a variable degree power series.
 
   procedure Sub ( s : in out Series; t : in Series );
 
@@ -226,26 +316,62 @@ package Standard_Dense_Series2 is
   --   then the coefficients of t with degrees higher than t
   --   will be ignored.
 
+  procedure Sub ( s : in out Link_to_Series;
+                  t : in Link_to_Series );
+
+  -- DESCRIPTION :
+  --   Subtracts t from s.  In case t.deg > s.deg,
+  --   the degree of s will be extended to t.deg
+  --   and the coefficients of t will be subtracted as well.
+
   function "*" ( s : Series; c : Complex_Number ) return Series;
 
   -- DESCRIPTION :
   --   Returns s*c.
+
+  function "*" ( s : Link_to_Series;
+                 c : Complex_Number ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns s*c.  Note that, if c is zero, then the series
+  --   with same degree as s and zero coefficients is returned.
 
   function "*" ( c : Complex_Number; s : Series ) return Series;
 
   -- DESCRIPTION :
   --   Returns c*s.
 
+  function "*" ( c : Complex_Number;
+                 s : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns c*s.  Note that, if c is zero, then the series
+  --   with same degree as s and zero coefficients is returned.
+
   procedure Mul ( s : in out Series; c : in Complex_Number );
 
   -- DESCRIPTION :
   --   Is equivalent to s := s*c.
+
+  procedure Mul ( s : in out Link_to_Series; c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   Does s := s*c, but for memory management,
+  --   this procedure should be applied instead of s := s*c,
+  --   as the latter will create another copy of s.
 
   function "*" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
   --   Returns the multiplication of the series s with t.
   --   The degree of the series on return is the maximum of s.deg and t.deg.
+
+  function "*" ( s,t : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns the multiplication of the series s with t.
+  --   The degree of the series on return is the maximum of s.deg and t.deg.
+  --   If either s or t is null, then null is returned.
  
   procedure Mul ( s : in out Series; t : in Series );
 
@@ -254,12 +380,28 @@ package Standard_Dense_Series2 is
 
   -- REQUIRED : s.deg = t.deg.
 
+  procedure Mul ( s : in out Link_to_Series; t : in Link_to_Series );
+
+  -- DESCRIPTION :
+  --   Multiplies t with s and unlike the fixed degree series,
+  --   the precision of s will be raised to t.deg if t.deg > s.deg.
+  --   This procedure is equivalent to s := s*t, but Mul(s,t) should
+  --   be used because of memory management.
+
   function Inverse ( s : Series ) return Series;
 
   -- DESCRIPTION :
   --   Returns the inverse of the series with coefficients in s.
 
-  -- REQUIRED : s(0) /= 0.
+  -- REQUIRED : s.cff(0) /= 0.
+
+  function Inverse ( s : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns null if s is null, otherwise returns the series
+  --   with content Inverse(s.all).
+
+  -- REQUIRED : s.cff(0) /= 0.
 
   function "/" ( s : Series; c : Complex_Number ) return Series;
 
@@ -269,20 +411,38 @@ package Standard_Dense_Series2 is
 
   -- REQUIRED : c /= 0.
 
-  procedure Div ( s : in out Series; c : in Complex_Number );
+  function "/" ( s : Link_to_Series;
+                 c : Complex_Number ) return Link_to_Series;
 
   -- DESCRIPTION :
-  --   This is equivalent to s := s/c.
+  --   Returns null if s is null, or otherwise the series s/c
+  --   where every coefficient of s is divided by c.
 
   -- REQUIRED : c /= 0.
 
   function "/" ( c : Complex_Number; s : Series ) return Series;
 
   -- DESCRIPTION :
-  --   Returns c/s, obtained by multiplying all coefficient of
+  --   Returns c/s, obtained by multiplying all coefficients of
   --   the inverse of s with c.
 
   -- REQUIRED : s.cff(0) /= 0.
+
+  function "/" ( c : Complex_Number;
+                 s : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns null if s is null (the result is undefined anyway),
+  --   or otherwise returns c/s.
+
+  -- REQUIRED : s.cff(0) /= 0.
+
+  procedure Div ( s : in out Series; c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   This is equivalent to s := s/c.
+
+  -- REQUIRED : c /= 0.
 
   function "/" ( s,t : Series ) return Series;
 

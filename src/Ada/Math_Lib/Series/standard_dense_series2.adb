@@ -162,6 +162,18 @@ package body Standard_Dense_Series2 is
     return res;
   end Create;
 
+  procedure Set_Degree ( s : in out Link_to_Series; deg : in integer32 ) is
+  begin
+    if s.deg /= deg then
+      declare
+        res : constant Link_to_Series := Create(s.all,deg);
+      begin
+        Clear(s);
+        s := res;
+      end;
+    end if;
+  end Set_Degree;
+
 -- EQUALITY AND COPY :
 
   function Equal ( s,t : Series ) return boolean is
@@ -226,6 +238,15 @@ package body Standard_Dense_Series2 is
     return s.deg+1;
   end Order;
 
+  function Order ( s : Link_to_Series; tol : double_float := 0.0 )
+                 return integer32 is
+  begin
+    if s = null
+     then return -1;
+     else return Order(s.all,tol);
+    end if;
+  end Order;
+
 -- COMPLEX CONJUGATE :
 
   function Conjugate ( s : Series ) return Series is
@@ -239,6 +260,20 @@ package body Standard_Dense_Series2 is
     return res;
   end Conjugate;
 
+  function Conjugate ( s : Link_to_Series ) return Link_to_Series is
+  begin
+    if s = null then
+      return s;
+    else
+      declare
+        sco : constant Series(s.deg) := Conjugate(s.all);
+        res : constant Link_to_Series := new Series'(sco);
+      begin
+        return res;
+      end;
+    end if;
+  end Conjugate;
+
 -- ARITHMETICAL OPERATORS :
 
   function "+" ( s : Series; c : Complex_Number ) return Series is
@@ -247,6 +282,21 @@ package body Standard_Dense_Series2 is
 
   begin
     res.cff(0) := s.cff(0) + c;
+    return res;
+  end "+";
+
+  function "+" ( s : Link_to_Series;
+                 c : Complex_Number ) return Link_to_Series is
+
+    res : Link_to_Series;
+
+  begin
+    if s = null then
+      res := Create(c);
+    else
+      res := Create(s.cff);
+      res.cff(0) := res.cff(0) + c;
+    end if;
     return res;
   end "+";
 
@@ -259,17 +309,54 @@ package body Standard_Dense_Series2 is
     return res;
   end "+";
 
+  function "+" ( c : Complex_Number;
+                 s : Link_to_Series ) return Link_to_Series is
+
+    res : Link_to_Series;
+
+  begin
+    if s = null then
+      res := Create(c);
+    else
+      res := Create(s.cff);
+      res.cff(0) := res.cff(0) + c;
+    end if;
+    return res;
+  end "+";
+
   procedure Add ( s : in out Series; c : in Complex_Number ) is
   begin
     s.cff(0) := s.cff(0) + c;
   end Add;
 
+  procedure Add ( s : in out Link_to_Series;
+                  c : in Complex_Number ) is
+  begin
+    if s = null
+     then s := Create(c);
+     else s.cff(0) := s.cff(0) + c;
+    end if;
+  end Add;
+
   function "+" ( s : Series ) return Series is
 
-    res : constant Series := s;
+    res : constant Series(s.deg) := s;
 
   begin
     return res;
+  end "+";
+
+  function "+" ( s : Link_to_Series ) return Link_to_Series is
+
+    res : Link_to_Series;
+
+  begin
+    if s = null then
+      return null;
+    else
+      res := new Series'(s.all);
+      return res;
+    end if;
   end "+";
 
   function "+" ( s,t : Series ) return Series is
@@ -310,6 +397,25 @@ package body Standard_Dense_Series2 is
     end if;
   end "+";
 
+  function "+" ( s,t : Link_to_Series ) return Link_to_Series is
+
+    res : Link_to_Series;
+
+  begin
+    if s = null then
+      res := +t; -- return a copy of t
+    elsif t = null then
+      res := +s; -- return a copy of s
+    else
+      declare
+        spt : constant Series := s.all + t.all;
+      begin
+        res := new Series'(spt);
+      end;
+    end if;
+    return res;
+  end "+";
+
   procedure Add ( s : in out Series; t : in Series ) is
   begin
     for i in 0..t.deg loop
@@ -318,12 +424,55 @@ package body Standard_Dense_Series2 is
     end loop;
   end Add;
 
+  procedure Add ( s : in out Link_to_Series; t : in Link_to_Series ) is
+  begin
+    if t /= null then
+      if s = null then
+        s := new Series'(t.all);
+      else
+        if t.deg <= s.deg then
+          for i in 0..t.deg loop
+            s.cff(i) := s.cff(i) + t.cff(i);
+          end loop;
+        else
+          declare
+            spt : Series(t.deg);
+          begin
+            for i in 0..s.deg loop
+              spt.cff(i) := s.cff(i) + t.cff(i);
+            end loop;
+            for i in s.deg+1..t.deg loop
+              spt.cff(i) := t.cff(i);
+            end loop;
+            Clear(s);
+            s := new Series'(spt);
+          end;
+        end if;
+      end if;
+    end if;
+  end Add;
+
   function "-" ( s : Series; c : Complex_Number ) return Series is
 
     res : Series(s.deg) := s;
 
   begin
     res.cff(0) := s.cff(0) - c;
+    return res;
+  end "-";
+
+  function "-" ( s : Link_to_Series;
+                 c : Complex_Number ) return Link_to_Series is
+
+    res : Link_to_Series;
+
+  begin
+    if s = null then
+      res := Create(-c);
+    else
+      res := Create(s.cff);
+      res.cff(0) := res.cff(0) - c;
+    end if;
     return res;
   end "-";
 
@@ -339,9 +488,36 @@ package body Standard_Dense_Series2 is
     return res;
   end "-";
 
+  function "-" ( c : Complex_Number;
+                 s : Link_to_Series ) return Link_to_Series is
+
+    res : Link_to_Series;
+
+  begin
+    if s = null then
+      res := Create(c);
+    else
+      res := Create(s.cff);
+      res.cff(0) := c - res.cff(0);
+      for k in 1..res.deg loop
+        res.cff(k) := -res.cff(k);
+      end loop;
+    end if;
+    return res;
+  end "-";
+
   procedure Sub ( s : in out Series; c : in Complex_Number ) is
   begin
     s.cff(0) := s.cff(0) - c;
+  end Sub;
+
+  procedure Sub ( s : in out Link_to_Series;
+                  c : in Complex_Number ) is
+  begin
+    if s = null
+     then s := Create(-c);
+     else s.cff(0) := s.cff(0) - c;
+    end if;
   end Sub;
 
   function "-" ( s : Series ) return Series is
@@ -355,11 +531,28 @@ package body Standard_Dense_Series2 is
     return res;
   end "-";
 
+  function "-" ( s : Link_to_Series ) return Link_to_Series is
+  begin
+    if s = null
+     then return null;
+     else return new Series'(-s.all);
+    end if;
+  end "-";
+
   procedure Min ( s : in out Series ) is
   begin
     for i in 0..s.deg loop
       s.cff(i) := -s.cff(i);
     end loop;
+  end Min;
+
+  procedure Min ( s : in out Link_to_Series ) is
+  begin
+    if s /= null then
+      for i in 0..s.deg loop
+        s.cff(i) := -s.cff(i);
+      end loop;
+    end if;
   end Min;
 
   function "-" ( s,t : Series ) return Series is
@@ -400,12 +593,57 @@ package body Standard_Dense_Series2 is
     end if;
   end "-";
 
+  function "-" ( s,t : Link_to_Series ) return Link_to_Series is
+  begin
+    if s = null then
+      return -t;
+    elsif t = null then
+      return +s; -- must return a copy of s, not s
+    else
+      declare
+        smt : constant Series := s.all - t.all;
+        res : constant Link_to_Series := new Series'(smt);
+      begin
+        return res;
+      end;
+    end if;
+  end "-";
+
   procedure Sub ( s : in out Series; t : in Series ) is
   begin
     for i in 0..t.deg loop
       exit when (i > s.deg); -- ignore higher degree terms of t
       s.cff(i) := s.cff(i) - t.cff(i);
     end loop;
+  end Sub;
+
+  procedure Sub ( s : in out Link_to_Series;
+                  t : in Link_to_Series ) is
+  begin
+    if t /= null then
+      if s = null then
+        s := new Series'(t.all);
+      else
+        if t.deg <= s.deg then
+          for i in 0..t.deg loop
+            s.cff(i) := s.cff(i) - t.cff(i);
+          end loop;
+        else
+          declare
+            smt : Series(t.deg);
+          begin
+            for i in 0..s.deg loop
+              smt.cff(i) := s.cff(i) - t.cff(i);
+            end loop;
+            for i in s.deg+1..t.deg loop
+              smt.cff(i) := -t.cff(i);
+            end loop;
+            Clear(s);
+            s := new Series'(smt);
+          end;
+        end if;
+      end if;
+    end if;
   end Sub;
 
   function "*" ( s : Series; c : Complex_Number ) return Series is
@@ -416,6 +654,19 @@ package body Standard_Dense_Series2 is
     for k in 0..s.deg loop
       res.cff(k) := s.cff(k)*c;
     end loop;
+    return res;
+  end "*";
+
+  function "*" ( s : Link_to_Series;
+                 c : Complex_Number ) return Link_to_Series is
+
+    res : Link_to_Series;
+
+  begin
+    if s = null
+     then res := null;
+     else res := new Series'(s.all*c);
+    end if;
     return res;
   end "*";
 
@@ -430,11 +681,33 @@ package body Standard_Dense_Series2 is
     return res;
   end "*";
 
+  function "*" ( c : Complex_Number;
+                 s : Link_to_Series ) return Link_to_Series is
+
+    res : Link_to_Series;
+
+  begin
+    if s = null
+     then res := null;
+     else res := new Series'(c*s.all);
+    end if;
+    return res;
+  end "*";
+
   procedure Mul ( s : in out Series; c : in Complex_Number ) is
   begin
     for i in 0..s.deg loop
       s.cff(i) := s.cff(i)*c;
     end loop;
+  end Mul;
+
+  procedure Mul ( s : in out Link_to_Series; c : in Complex_Number ) is
+  begin
+    if s /= null then
+      for i in 0..s.deg loop
+        s.cff(i) := s.cff(i)*c;
+      end loop;
+    end if;
   end Mul;
 
   function "*" ( s,t : Series ) return Series is
@@ -480,12 +753,46 @@ package body Standard_Dense_Series2 is
     end if;
   end "*";
 
+  function "*" ( s,t : Link_to_Series ) return Link_to_Series is
+  begin
+    if s = null or t = null
+     then return null;
+     else return new Series'(s.all*t.all);
+    end if;
+  end "*";
+
   procedure Mul ( s : in out Series; t : in Series ) is
 
     res : constant Series := s*t;
 
   begin
     s := res;
+  end Mul;
+
+  procedure Mul ( s : in out Link_to_Series; t : in Link_to_Series ) is
+  begin
+    if s /= null then
+      if t = null then
+        Clear(s);
+      else
+        if s.deg >= t.deg then
+          declare
+            st : constant Series(s.deg) := s.all*t.all;
+          begin
+            for i in 0..s.deg loop
+              s.cff(i) := st.cff(i);
+            end loop;
+          end;
+        else
+          declare
+            st : constant Series(t.deg) := s.all*t.all;
+          begin
+            Clear(s);
+            s := new Series'(st);
+          end;
+        end if;
+      end if;
+    end if;
   end Mul;
 
   function Inverse ( s : Series ) return Series is
@@ -504,6 +811,14 @@ package body Standard_Dense_Series2 is
     return res;
   end Inverse;
 
+  function Inverse ( s : Link_to_Series ) return Link_to_Series is
+  begin
+    if s = null
+     then return null;
+     else return new Series'(Inverse(s.all));
+    end if;
+  end Inverse;
+
   function "/" ( s : Series; c : Complex_Number ) return Series is
 
     res : Series(s.deg);
@@ -515,9 +830,27 @@ package body Standard_Dense_Series2 is
     return res;
   end "/";
 
+  function "/" ( s : Link_to_Series;
+                 c : Complex_Number ) return Link_to_Series is
+  begin
+    if s = null
+     then return null;
+     else return new Series'(s.all/c);
+    end if;
+  end "/";
+
   function "/" ( c : Complex_Number; s : Series ) return Series is
   begin
     return c*Inverse(s);
+  end "/";
+
+  function "/" ( c : Complex_Number;
+                 s : Link_to_Series ) return Link_to_Series is
+  begin
+    if s = null
+     then return null;
+     else return new Series'(c/Inverse(s.all));
+    end if;
   end "/";
 
   procedure Div ( s : in out Series; c : in Complex_Number ) is
