@@ -28,8 +28,17 @@ standard_dense_series2_vectors    : vectors of standard power series
 standard_dense_series2_vectors_io : i/o of vectors of standard power series
 standard_dense_series2_vecvecs    : vector of vectors of standard series
 standard_dense_vector_series2     : series with standard vector coefficients
+standard_dense_vector_series2_io  : basic output of vector series
 random_series_vectors             : generators for vectors of random series
+standard_series_vector_norms2     : norms of vectors of standard series
 ts_servec2                        : test on vectors of standard series
+------------------------------------------------------------------------------
+standard_dense_series2_matrices   : matrices of standard double power series
+standard_dense_matrix_series2     : series with matrix coefficients
+standard_dense_matrix_series2_io  : i/o of standard matrix series
+standard_linear_series2_solvers   : LU factorization to solve linear system
+random_dense_matrices             : random matrices of series
+ts_sermat2                        : test on matrices of standard series
 ------------------------------------------------------------------------------
 standard_dense_series            : dense power series, standard coefficients
 dobldobl_dense_series            : dense series in double double precision
