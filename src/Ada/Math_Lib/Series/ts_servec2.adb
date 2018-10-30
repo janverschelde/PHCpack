@@ -9,6 +9,7 @@ with Standard_Dense_Series2;
 with Standard_Dense_Series2_io;           use Standard_Dense_Series2_io;
 with Standard_Dense_Series2_Vectors;
 with Standard_Dense_Series2_Vectors_io;   use Standard_Dense_Series2_Vectors_io;
+with Standard_Dense_Vector_Series2;
 
 procedure ts_servec2 is
 
