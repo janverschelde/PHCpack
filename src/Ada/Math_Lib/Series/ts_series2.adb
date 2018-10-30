@@ -36,7 +36,7 @@ procedure ts_series2 is
     return Standard_Dense_Series2.Create(cff);
   end Random_Series;
 
-  procedure Standard_Test_Creation ( degree : in integer32 ) is
+  procedure Standard_Test_Creation1 ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Verifies that 1/(1-t) = 1 + t + t^2 + ...
@@ -61,7 +61,34 @@ procedure ts_series2 is
     put_line("Verifying multiplication with inverse : "); put(y);
     z := t*x;
     put_line("Verifying commutativity : "); put(z);
-  end Standard_Test_Creation;
+  end Standard_Test_Creation1;
+
+  procedure Standard_Test_Creation2 ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Verifies that 1/(1-t) = 1 + t + t^2 + ...
+  --   for a truncated power series with coefficients
+  --   in standard double precision.
+
+    use Standard_Complex_Numbers;
+    use Standard_Dense_Series2;
+
+    s : Link_to_Series := Create(1,degree);
+    t,x,y,z : Link_to_Series;
+
+  begin
+    put("One as series of degree "); put(degree,1); put_line(" :");
+    put(s);
+    t := Create(1,degree);
+    t.cff(1) := Create(-1.0);
+    put_line("The series 1 - t :"); put(t); 
+    x := s/t;
+    put_line("The series 1/(1-t) : "); put(x);
+    y := x*t;
+    put_line("Verifying multiplication with inverse : "); put(y);
+    z := t*x;
+    put_line("Verifying commutativity : "); put(z);
+  end Standard_Test_Creation2;
 
   procedure Standard_Random_Test_sqrt ( degree : in integer32 ) is
 
@@ -291,7 +318,7 @@ procedure ts_series2 is
   --   Prompts the user for the degree of the series.
 
     degree : integer32 := 0;
-    ans : character;
+    ans,link : character;
 
   begin
     new_line;
@@ -309,17 +336,23 @@ procedure ts_series2 is
     new_line;
     put("Give the degree of the series : "); get(degree);
     new_line;
-    case ans is
-      when '0' => Standard_Test_Creation(degree);
-      when '1' => Standard_Random_Test_Sqrt(degree);
-      when '2' => Standard_Random_Test_root(degree);
-      when '3' => Standard_Test_Conjugate(degree);
-      when '4' => Standard_Test_Norm(degree);
-      when '5' => Standard_Test_Division(degree);
-      when '6' => Standard_Test_Arithmetic(degree);
-      when '7' => Standard_Test_Shift(degree);
-      when others => null;
-    end case;
+    put("Test variable degree series ? (y/n) ");
+    Ask_Yes_or_No(link);
+    if link = 'y'
+     then Standard_Test_Creation2(degree);
+    else
+      case ans is
+        when '0' => Standard_Test_Creation1(degree);
+        when '1' => Standard_Random_Test_Sqrt(degree);
+        when '2' => Standard_Random_Test_root(degree);
+        when '3' => Standard_Test_Conjugate(degree);
+        when '4' => Standard_Test_Norm(degree);
+        when '5' => Standard_Test_Division(degree);
+        when '6' => Standard_Test_Arithmetic(degree);
+        when '7' => Standard_Test_Shift(degree);
+        when others => null;
+      end case;
+    end if;
   end Main;
 
 begin

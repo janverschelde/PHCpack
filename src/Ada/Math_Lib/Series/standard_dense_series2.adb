@@ -860,9 +860,24 @@ package body Standard_Dense_Series2 is
     end loop;
   end Div;
 
+  procedure Div ( s : in out Link_to_Series; c : in Complex_Number ) is
+  begin
+    if s /= null
+     then Div(s.all,c);
+    end if;
+  end Div;
+
   function "/" ( s,t : Series ) return Series is
   begin
     return s*Inverse(t);
+  end "/";
+
+  function "/" ( s,t : Link_to_Series ) return Link_to_Series is
+  begin
+    if s = null or t = null
+     then return null;
+     else return new Series'(s.all/t.all);
+    end if;
   end "/";
 
   procedure Div ( s : in out Series; t : in Series ) is
@@ -871,6 +886,23 @@ package body Standard_Dense_Series2 is
 
   begin
     Mul(s,invt);
+  end Div;
+
+  procedure Div ( s : in out Link_to_Series; t : in Link_to_Series ) is
+  begin
+    if s /= null and t /= null then
+      declare
+        invt : constant Series := Inverse(t.all);
+        res : constant Series := s.all*invt;
+      begin
+        if res.deg = s.deg then
+          s.cff := res.cff;
+        else
+          Clear(s);
+          s := new Series'(res);
+        end if;
+      end;
+    end if;
   end Div;
 
   function "**" ( s : Series; p : integer ) return Series is
@@ -911,6 +943,33 @@ package body Standard_Dense_Series2 is
     return res;
   end "**";
 
+  function "**" ( s : Link_to_Series;
+                  p : integer ) return Link_to_Series is
+
+    res : Link_to_Series;
+
+  begin
+    if s = null
+     then res := null;
+     else res := new Series'(s.all**p);
+    end if;
+    return res;
+  end "**";
+
+  function "**" ( s : Link_to_Series;
+                  p : natural32 ) return Link_to_Series is
+
+
+    res : Link_to_Series;
+
+  begin
+    if s = null
+     then res := null;
+     else res := new Series'(s.all**p);
+    end if;
+    return res;
+  end "**";
+
 -- EVALUATORS :
 
   function Eval ( s : Series; t : double_float ) return Complex_Number is
@@ -939,6 +998,24 @@ package body Standard_Dense_Series2 is
     end loop;
     res := res + s.cff(s.deg)*pwt;
     return res;
+  end Eval;
+
+  function Eval ( s : Link_to_Series;
+                  t : double_float ) return Complex_Number is
+  begin
+    if s = null
+     then return Create(0.0);
+     else return Eval(s.all,t);
+    end if;
+  end Eval;
+
+  function Eval ( s : Link_to_Series;
+                  t : Complex_Number ) return Complex_Number is
+  begin
+    if s = null
+     then return Create(0.0);
+     else return Eval(s.all,t);
+    end if;
   end Eval;
 
   function Eval ( s : Series; t : double_float;
@@ -977,6 +1054,24 @@ package body Standard_Dense_Series2 is
     return res;
   end Eval;
 
+  function Eval ( s : Link_to_Series; t : double_float;
+                  a,b : integer32 ) return Complex_Number is
+  begin
+    if s = null
+     then return Create(0.0);
+     else return Eval(s.all,t,a,b);
+    end if;
+  end Eval;
+
+  function Eval ( s : Link_to_Series; t : Complex_Number;
+                  a,b : integer32 ) return Complex_Number is
+  begin
+    if s = null
+     then return Create(0.0);
+     else return Eval(s.all,t,a,b);
+    end if;
+  end Eval;
+
   procedure Filter ( s : in out Series; tol : in double_float ) is
   begin
     for i in 0..s.deg loop
@@ -984,6 +1079,13 @@ package body Standard_Dense_Series2 is
        then s.cff(i) := Create(0.0);
       end if;
     end loop;
+  end Filter;
+
+  procedure Filter ( s : in out Link_to_Series; tol : in double_float ) is
+  begin
+    if s /= null
+     then Filter(s.all,tol);
+    end if;
   end Filter;
 
 -- SHIFT OPERATORS :
@@ -1033,6 +1135,24 @@ package body Standard_Dense_Series2 is
     return res;
   end Shift;
 
+  function Shift ( s : Link_to_Series;
+                   c : double_float ) return Link_to_Series is
+  begin
+    if s = null
+     then return null;
+     else return new Series'(Shift(s.all,c));
+    end if;
+  end Shift;
+
+  function Shift ( s : Link_to_Series;
+                   c : Complex_Number ) return Link_to_Series is
+  begin
+    if s = null
+     then return null;
+     else return new Series'(Shift(s.all,c));
+    end if;
+  end Shift;
+
   procedure Shift ( s : in out Series; c : in double_float ) is
  
     r : constant Series(s.deg) := Shift(s,c);
@@ -1047,6 +1167,28 @@ package body Standard_Dense_Series2 is
    
   begin
     s := r;
+  end Shift;
+
+  procedure Shift ( s : in out Link_to_Series; c : in double_float ) is
+  begin
+    if s /= null then
+      declare
+        r : constant Series(s.deg) := Shift(s.all,c);
+      begin
+        s.cff := r.cff;
+      end;
+    end if;
+  end Shift;
+
+  procedure Shift ( s : in out Link_to_Series; c : in Complex_Number ) is
+  begin
+    if s /= null then 
+      declare
+        r : constant Series(s.deg) := Shift(s.all,c);
+      begin
+        s.cff := r.cff;
+      end;
+    end if;
   end Shift;
 
 -- DESTRUCTOR :

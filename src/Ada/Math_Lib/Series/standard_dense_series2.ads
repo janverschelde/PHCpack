@@ -444,6 +444,14 @@ package Standard_Dense_Series2 is
 
   -- REQUIRED : c /= 0.
 
+  procedure Div ( s : in out Link_to_Series; c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   This is equivalent to s := s/c, but for memory management,
+  --   Div(s,c) should be used over s := s/c on a Link_to_Series.
+
+  -- REQUIRED : c /= 0.
+
   function "/" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
@@ -452,7 +460,24 @@ package Standard_Dense_Series2 is
 
   -- REQUIRED : t.cff(0) /= 0.
 
+  function "/" ( s,t : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns null if s or t are null, otherwise,
+  --   returns the series c = s/t.  The degree of the series
+  --   on return is the maximum of s.deg and t.deg.
+
+  -- REQUIRED : t.cff(0) /= 0.
+
   procedure Div ( s : in out Series; t : in Series );
+
+  -- DESCRIPTION :
+  --   Divides the series s by t.  If t.deg > s.deg,
+  --   then the degree of the series of s will be upgraded to t.deg.
+
+  -- REQUIRED : t.cff(0) /= 0.
+
+  procedure Div ( s : in out Link_to_Series; t : in Link_to_Series );
 
   -- DESCRIPTION :
   --   Divides the series s by t.  If t.deg > s.deg,
@@ -468,6 +493,17 @@ package Standard_Dense_Series2 is
 
   -- REQUIRED : if p < 0, then s.cff(0) /= 0.
 
+  function "**" ( s : Link_to_Series;
+                  p : integer ) return Link_to_Series;
+  function "**" ( s : Link_to_Series;
+                  p : natural32 ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns null if s is null, otherwise,
+  --   returns s**p, s to the power p.
+
+  -- REQUIRED : if p < 0, then s.cff(0) /= 0.
+
 -- EVALUATORS :
 
   function Eval ( s : Series; t : double_float ) return Complex_Number;
@@ -475,6 +511,16 @@ package Standard_Dense_Series2 is
 
   -- DESCRIPTION :
   --   Returns the value c(0) + c(1)*t + .. + c(s.deg)*t**s.deg,
+  --   where c abbreviates the coefficient vector s.cff.
+
+  function Eval ( s : Link_to_Series;
+                  t : double_float ) return Complex_Number;
+  function Eval ( s : Link_to_Series;
+                  t : Complex_Number ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns zero if s is null, otherwise,
+  --   returns the value c(0) + c(1)*t + .. + c(s.deg)*t**s.deg,
   --   where c abbreviates the coefficient vector s.cff.
 
   function Eval ( s : Series; t : double_float;
@@ -489,7 +535,21 @@ package Standard_Dense_Series2 is
 
   -- REQUIRED : b /= 0 and t /= 0.0 if a < 0.
 
+  function Eval ( s : Link_to_Series; t : double_float;
+                  a,b : integer32 ) return Complex_Number;
+  function Eval ( s : Link_to_Series; t : Complex_Number;
+                  a,b : integer32 ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns zero if s is null, otherwise,
+  --   evaluates the series using a as the numerator and b as the
+  --   numerator of the power for t, so the series starts with
+  --   c(0)*t**(a/b) + c(1)*t**((1+a)/b) + ...
+
+  -- REQUIRED : b /= 0 and t /= 0.0 if a < 0.
+
   procedure Filter ( s : in out Series; tol : in double_float );
+  procedure Filter ( s : in out Link_to_Series; tol : in double_float );
 
   -- DESCRIPTION :
   --   All coefficients of s that are less than tol in magnitude 
@@ -504,8 +564,24 @@ package Standard_Dense_Series2 is
   --   The series on return has the coefficients of the series s,
   --   where the series parameter is replaced by t-c.
 
+  function Shift ( s : Link_to_Series;
+                   c : double_float ) return Link_to_Series;
+  function Shift ( s : Link_to_Series;
+                   c : Complex_Number ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   if s is null, then null is returned, otherwise,
+  --   the series on return has the coefficients of the series s,
+  --   where the series parameter is replaced by t-c.
+
   procedure Shift ( s : in out Series; c : in double_float );
   procedure Shift ( s : in out Series; c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   On return, s = Shift(s,c).
+
+  procedure Shift ( s : in out Link_to_Series; c : in double_float );
+  procedure Shift ( s : in out Link_to_Series; c : in Complex_Number );
 
   -- DESCRIPTION :
   --   On return, s = Shift(s,c).
