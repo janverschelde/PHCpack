@@ -20,6 +20,7 @@ with Random_Series_Vectors;
 with Random_Series_Matrices;
 with Standard_Series_Vector_Norms2;
 with Standard_Linear_Series2_Solvers;
+with Standard_Least_Squares_Series2;
 
 procedure ts_sermat2 is
 
@@ -250,24 +251,24 @@ procedure ts_sermat2 is
     use Standard_Dense_Series2_Matrices;
 
     qr : Matrix(wrk'range(1),wrk'range(2)) := wrk;
-   -- ans : character;
+    ans : character;
 
   begin
     new_line;
     put_line("Computing the orthogonal part of the QR decomposition ...");
-   -- Standard_Least_Squares_Series2.Basis(qr,A);
-   -- Test_Normality(qr);   
-   -- new_line;
-   -- put("Continue to the orthogonality test ? (y/n) ");
-   -- Ask_Yes_or_No(ans);
-   -- if ans = 'y'
-   --  then Test_Orthogonality(qr);
-   -- end if;
+    Standard_Least_Squares_Series2.Basis(qr,A);
+    Test_Normality(qr);   
+    new_line;
+    put("Continue to the orthogonality test ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Test_Orthogonality(qr);
+    end if;
   end Test_Basis;
 
- -- procedure QR_Solve_Least_Squares
- --             ( A : in Standard_Dense_Series2_Matrices.Matrix;
- --               x,b : in Standard_Dense_Series2_Vectors.Vector ) is
+  procedure QR_Solve_Least_Squares
+              ( A : in Standard_Dense_Series2_Matrices.Matrix;
+                x,b : in Standard_Dense_Series2_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   Applies QR decomposition to the matrix A and then solves the
@@ -275,57 +276,64 @@ procedure ts_sermat2 is
   --   The computed solution is compared to the constructed solution
   --   and the residual is computed.
 
-  --  use Standard_Dense_Series2_Vectors;
-  --  use Standard_Dense_Series2_Matrices;
-  --  use Standard_Least_Squares2_Series;
+    use Standard_Dense_Series2;
+    use Standard_Dense_Series2_Vectors;
+    use Standard_Dense_Series2_Matrices;
+    use Standard_Least_Squares_Series2;
 
-  --  wrk : Standard_Dense_Series2_Matrices.Matrix(A'range(1),A'range(2)) := A;
-  --  ipvt : Standard_Integer_Vectors.Vector(A'range(2)) := (A'range(2) => 0);
-  --  qraux,sol : Standard_Dense_Series2_Vectors.Vector(A'range(2));
-  --  info : integer32;
-  --  n : constant integer32 := A'last(1);
-  --  m : constant integer32 := A'last(2);
-  --  rsd,dum,dum2,dum3,err : Standard_Dense_Series2_Vectors.Vector(1..n);
-  --  ans : character;
-  --  nrm_rsd,nrm_err : double_float;
+    deg : constant integer32 := A(A'first(1),A'first(2)).deg;
+    wrk : Standard_Dense_Series2_Matrices.Matrix(A'range(1),A'range(2));
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2)) := (A'range(2) => 0);
+    qraux,sol : Standard_Dense_Series2_Vectors.Vector(A'range(2));
+    info : integer32;
+    n : constant integer32 := A'last(1);
+    m : constant integer32 := A'last(2);
+    rsd,dum,dum2,dum3,err : Standard_Dense_Series2_Vectors.Vector(1..n);
+    ans : character;
+    nrm_rsd,nrm_err : double_float;
 
-  --begin
-  --  QRD(wrk,qraux,ipvt,false);
-  --  put_line("The output of QRD :"); Write(wrk);
-  --  new_line;
-  --  put("View the QRD of the zero degree terms ? (y/n) ");
-  --  Ask_Yes_or_No(ans);
-  --  if ans = 'y'
-  --   then Zero_QRD(A);
-  --  end if;
-   -- put_line("The matrix A :"); Write(A);
-  --  new_line;
-  --  put("Test the orthonormality of the basis ? (y/n) ");
-  --  Ask_Yes_or_No(ans);
-  --  if ans = 'y'
-  --   then Test_Basis(wrk,A);
-  --  end if;
-  --  new_line;
-  --  put("Continue with the least squares solving ? (y/n) ");
-  --  Ask_Yes_or_No(ans);
-  --  if ans = 'y' then
-  --    QRLS(wrk,n,m,qraux,b,dum2,dum3,sol,rsd,dum,110,info);
-  --    if info /= 0 then
-  --      put("info : "); put(info,1); new_line;
-  --    else
-  --      put_line("The constructed solution x to A*x = b :"); Write(x);
-  --      put_line("The computed solution x to A*x = b :"); Write(sol);
-  --      rsd := b - A*sol; -- backward error
-  --      put_line("The residual b - A*x :"); Write(rsd);
-  --      err := x - sol; -- forward error
-  --      put("Difference between constructed and computed :"); Write(err);
-  --      nrm_rsd := Standard_Series_Vector_Norms.Max_Norm(rsd);
-  --      nrm_err := Standard_Series_Vector_Norms.Max_Norm(err);
-  --      put("Max norm of backward error : "); put(nrm_rsd,3); new_line;
-  --      put("Max norm of forward error  : "); put(nrm_err,3); new_line;
-  --    end if;
-  --  end if;
-  --end QR_Solve_Least_Squares;
+  begin
+    Standard_Dense_Series2_Matrices.Copy(A,wrk);
+    for i in qraux'range loop
+      qraux(i) := new Series'(Standard_Dense_Series2.Create(0,deg));
+      sol(i) := new Series'(Standard_Dense_Series2.Create(0,deg));
+    end loop;
+    QRD(wrk,qraux,ipvt,false);
+    put_line("The output of QRD :"); Write(wrk);
+    new_line;
+    put("View the QRD of the zero degree terms ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Zero_QRD(A);
+    end if;
+    put_line("The matrix A :"); Write(A);
+    new_line;
+    put("Test the orthonormality of the basis ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Test_Basis(wrk,A);
+    end if;
+    new_line;
+    put("Continue with the least squares solving ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      QRLS(wrk,n,m,qraux,b,dum2,dum3,sol,rsd,dum,110,info);
+      if info /= 0 then
+        put("info : "); put(info,1); new_line;
+      else
+        put_line("The constructed solution x to A*x = b :"); Write(x);
+        put_line("The computed solution x to A*x = b :"); Write(sol);
+        rsd := b - A*sol; -- backward error
+        put_line("The residual b - A*x :"); Write(rsd);
+        err := x - sol; -- forward error
+        put("Difference between constructed and computed :"); Write(err);
+        nrm_rsd := Standard_Series_Vector_Norms2.Max_Norm(rsd);
+        nrm_err := Standard_Series_Vector_Norms2.Max_Norm(err);
+        put("Max norm of backward error : "); put(nrm_rsd,3); new_line;
+        put("Max norm of forward error  : "); put(nrm_err,3); new_line;
+      end if;
+    end if;
+  end QR_Solve_Least_Squares;
 
   procedure Standard_Random_Least_Squares ( n,m,degree : in integer32 ) is
 
@@ -355,12 +363,12 @@ procedure ts_sermat2 is
     if ans = 'y'
      then Solve_Normal_Equations(A,x,b);
     end if;
-  --  new_line;
-  --  put("Solve with a QR decomposition ? (y/n) ");
-  --  Ask_Yes_or_No(ans);
-  --  if ans = 'y'
-  --   then QR_Solve_Least_Squares(A,x,b);
-  --  end if;
+    new_line;
+    put("Solve with a QR decomposition ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then QR_Solve_Least_Squares(A,x,b);
+    end if;
   end Standard_Random_Least_Squares;
 
   procedure Test_Solving is

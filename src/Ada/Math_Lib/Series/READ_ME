@@ -37,6 +37,7 @@ standard_dense_series2_matrices   : matrices of standard double power series
 standard_dense_matrix_series2     : series with matrix coefficients
 standard_dense_matrix_series2_io  : i/o of standard matrix series
 standard_linear_series2_solvers   : LU factorization to solve linear system
+standard_least_squares_series2    : QR factorization to solve linear system
 random_dense_matrices             : random matrices of series
 ts_sermat2                        : test on matrices of standard series
 ------------------------------------------------------------------------------

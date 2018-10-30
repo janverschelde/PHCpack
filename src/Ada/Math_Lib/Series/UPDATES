@@ -9,6 +9,7 @@ Tue 30 Oct 2018 : new standard_dense_vector_series2, updated ts_servec2.adb.
   and standard_dense_matrix_series2_io.  The LU factorization solvers in
   standard_linear_series2_solvers are tested on randomly generated linear
   systems, using random_series_matrices, in ts_sermat2.
+  New package standard_least_squares_series2, tested by ts_sermat2.
 
 Mon 29 Oct 2018 : added definitions of arithmetical operations
   to standard_dense_series2.  Completed standard_dense_series2 and
