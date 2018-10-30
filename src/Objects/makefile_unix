@@ -525,6 +525,9 @@ ts_bincff:
 ts_servec:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_servec.adb -o $(BIN)/ts_servec
 
+ts_servec2:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_servec2.adb -o $(BIN)/ts_servec2
+
 ts_sermat:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_sermat.adb -o $(BIN)/ts_sermat
 
