@@ -9,40 +9,14 @@ with Standard_Dense_Series2;
 with Standard_Dense_Series2_io;           use Standard_Dense_Series2_io;
 with Standard_Dense_Series2_Vectors;
 with Standard_Dense_Series2_Vectors_io;   use Standard_Dense_Series2_Vectors_io;
+with Standard_Dense_Series2_VecVecs;
 with Standard_Dense_Vector_Series2;
+with Random_Series_Vectors;
 
 procedure ts_servec2 is
 
 -- DESCRIPTION :
 --   Test on vectors of truncated power series.
-
-  function Random_Series
-             ( degree : integer32 )
-             return Standard_Dense_Series2.Series is
-
-  -- DESCRIPTION :
-  --   Returns a power series of the given degree 
-  --   with random complex coefficients.
-
-    cff : constant Standard_Complex_Vectors.Vector(0..degree)
-        := Standard_Random_Vectors.Random_Vector(0,degree);
-
-  begin
-    return Standard_Dense_Series2.Create(cff);
-  end Random_Series;
-
-  function Random_Series_Vector
-             ( first,last,degree : integer32 )
-             return Standard_Dense_Series2_Vectors.Vector is
-
-    res : Standard_Dense_Series2_Vectors.Vector(first..last);
-
-  begin
-    for k in res'range loop
-      res(k) := new Standard_Dense_Series2.Series'(Random_Series(degree));
-    end loop;
-    return res;
-  end Random_Series_Vector;
 
   procedure Write ( v : in Standard_Dense_Series2_Vectors.Vector ) is
 
@@ -64,7 +38,7 @@ procedure ts_servec2 is
   --   Tests the computation of the norm and the normalization.
 
     sv : Standard_Dense_Series2_Vectors.Vector(1..dim)
-       := Random_Series_Vector(1,dim,degree);
+       := Random_Series_Vectors.Random_Series_Vector(1,dim,degree);
 
   begin
     Write(sv);

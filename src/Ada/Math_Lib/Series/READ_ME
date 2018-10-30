@@ -5,7 +5,7 @@ we can approximate roots of polynomials in a parameter by series.
 
 The library is divided in three parts:
 (1) the basic arithmetic with truncated power series
-(2) vectors, matrices, and linear solving
+(2) vectors, matrices, and linear system solving
 (3) polynomials with coefficients as truncated power series
 
 ------------------------------------------------------------------------------
@@ -18,14 +18,17 @@ ts_bincff                         : test on binomial coefficients
 standard_dense_series2            : dense power series, standard coefficients
 standard_dense_series2_io         : basic input/output of standard series
 standard_algebraic_series2        : sqrt and n-th root of standard series
-standard_dense_series_norms       : norms, normalization of standard series
+standard_dense_series_norms2      : norms, normalization of standard series
+random_series_generators          : generators for random series
 ts_series2                        : test on 2nd design of series
 ------------------------------------------------------------------------------
 standard_dense_series2_ring       : the ring of standard power series
 standard_dense_series2_ring_io    : i/o operations for ring elements
 standard_dense_series2_vectors    : vectors of standard power series
 standard_dense_series2_vectors_io : i/o of vectors of standard power series
+standard_dense_series2_vecvecs    : vector of vectors of standard series
 standard_dense_vector_series2     : series with standard vector coefficients
+random_series_vectors             : generators for vectors of random series
 ts_servec2                        : test on vectors of standard series
 ------------------------------------------------------------------------------
 standard_dense_series            : dense power series, standard coefficients

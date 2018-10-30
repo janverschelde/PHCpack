@@ -15,26 +15,12 @@ with Standard_Dense_Series2_io;          use Standard_Dense_Series2_io;
 with Standard_Algebraic_Series2;
 with Standard_Algebraic_Series2;
 with Standard_Dense_Series_Norms2;
+with Random_Series_Generators;           use Random_Series_Generators;
 
 procedure ts_series2 is
 
 -- DESCRIPTION :
 --   Tests the operations on truncated power series.
-
-  function Random_Series
-             ( degree : integer32 )
-             return Standard_Dense_Series2.Series is
-
-  -- DESCRIPTION :
-  --   Returns a power series of the given degree 
-  --   with random complex coefficients.
-
-    cff : constant Standard_Complex_Vectors.Vector(0..degree)
-        := Standard_Random_Vectors.Random_Vector(0,degree);
-
-  begin
-    return Standard_Dense_Series2.Create(cff);
-  end Random_Series;
 
   procedure Standard_Test_Creation1 ( degree : in integer32 ) is
 
