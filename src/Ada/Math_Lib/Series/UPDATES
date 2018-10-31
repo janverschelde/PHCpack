@@ -1,5 +1,7 @@
 Wed 31 Oct 2018 : fixed a bug in a test procedure in ts_sermat2.adb and
   made some small changes in standard_least_squares_series2.adb.
+  New package standard_matrix_series2_solvers to apply linearization
+  to systems with the new matrix series, tested by ts_serlin2.
 
 Tue 30 Oct 2018 : new standard_dense_vector_series2, updated ts_servec2.adb.
   Instantiated vecvecs into the new standard_dense_series2_vecvecs.ads.

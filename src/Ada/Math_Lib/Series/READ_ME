@@ -41,6 +41,11 @@ standard_least_squares_series2    : QR factorization to solve linear system
 random_dense_matrices             : random matrices of series
 ts_sermat2                        : test on matrices of standard series
 ------------------------------------------------------------------------------
+standard_echelon_forms            : echelon form for Hermite-Laurent systems
+standard_interpolating_series     : interpolation for linear series systems
+standard_matrix_series2_solvers   : linearization for matrix series systems
+ts_serlin2                        : test on linearization
+------------------------------------------------------------------------------
 standard_dense_series            : dense power series, standard coefficients
 dobldobl_dense_series            : dense series in double double precision
 quaddobl_dense_series            : dense series in quad double precision
