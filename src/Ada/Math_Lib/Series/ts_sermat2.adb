@@ -250,10 +250,11 @@ procedure ts_sermat2 is
 
     use Standard_Dense_Series2_Matrices;
 
-    qr : Matrix(wrk'range(1),wrk'range(2)) := wrk;
+    qr : Matrix(wrk'range(1),wrk'range(2));
     ans : character;
 
   begin
+    Standard_Dense_Series2_Matrices.Copy(wrk,qr);
     new_line;
     put_line("Computing the orthogonal part of the QR decomposition ...");
     Standard_Least_Squares_Series2.Basis(qr,A);
@@ -288,7 +289,8 @@ procedure ts_sermat2 is
     info : integer32;
     n : constant integer32 := A'last(1);
     m : constant integer32 := A'last(2);
-    rsd,dum,dum2,dum3,err : Standard_Dense_Series2_Vectors.Vector(1..n);
+    rsd,dum,dum2,dum3 : Standard_Dense_Series2_Vectors.Vector(1..n);
+    err : Standard_Dense_Series2_Vectors.Vector(1..m);
     ans : character;
     nrm_rsd,nrm_err : double_float;
 
@@ -317,7 +319,9 @@ procedure ts_sermat2 is
     put("Continue with the least squares solving ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      put_line("the vector b before QRLS :"); Write(b);
       QRLS(wrk,n,m,qraux,b,dum2,dum3,sol,rsd,dum,110,info);
+      put_line("the vector b after QRLS :"); Write(b);
       if info /= 0 then
         put("info : "); put(info,1); new_line;
       else
@@ -326,7 +330,7 @@ procedure ts_sermat2 is
         rsd := b - A*sol; -- backward error
         put_line("The residual b - A*x :"); Write(rsd);
         err := x - sol; -- forward error
-        put("Difference between constructed and computed :"); Write(err);
+        put_line("Difference between constructed and computed :"); Write(err);
         nrm_rsd := Standard_Series_Vector_Norms2.Max_Norm(rsd);
         nrm_err := Standard_Series_Vector_Norms2.Max_Norm(err);
         put("Max norm of backward error : "); put(nrm_rsd,3); new_line;

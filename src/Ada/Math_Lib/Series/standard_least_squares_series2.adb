@@ -52,7 +52,7 @@ package body Standard_Least_Squares_Series2 is
       exit when not iszero;
     end loop;
     if iszero
-     then res := Create(0.0);
+     then res := Create(0.0,res.deg);
      else res := Norm(s);
     end if;
     return res;
@@ -91,7 +91,9 @@ package body Standard_Least_Squares_Series2 is
 
   begin
     for i in a'range(1) loop
-      tmp := a(i,k1); a(i,k1) := a(i,k2); a(i,k2) := tmp;
+      tmp := a(i,k1);
+      a(i,k1) := a(i,k2);
+      a(i,k2) := tmp;
     end loop;
   end zswap;
 
@@ -161,8 +163,10 @@ package body Standard_Least_Squares_Series2 is
 
   begin
     for i in row..y'last loop -- res := res + Conjugate(x(i,row))*y(i);
-      wrk := Conjugate(x(i,row).all)*y(i).all;
-      res := res + wrk;
+      if y(i) /= null then
+        wrk := Conjugate(x(i,row).all)*y(i).all;
+        res := res + wrk;
+      end if;
     end loop;
     return res;
   end zdotc;
@@ -208,7 +212,10 @@ package body Standard_Least_Squares_Series2 is
   begin
     for i in row..row+n-1 loop
       wrk := f*x(i,col).all;      -- y(i) := y(i) + f*x(i,col);
-      Add(y(i).all,wrk);
+      if y(i) = null
+       then y(i) := new Series'(wrk);
+       else Add(y(i).all,wrk);
+      end if;
     end loop;
   end zaxpy;
 
@@ -228,7 +235,7 @@ package body Standard_Least_Squares_Series2 is
     nrmxl,t : Series(deg);
     fac : Complex_Number;
     negj,swapj : boolean;
-    one : constant Series := Create(1.0);
+    one : constant Series(deg) := Create(1.0,deg);
 
   begin
     for i in work'range loop
