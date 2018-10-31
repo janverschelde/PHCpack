@@ -547,6 +547,14 @@ ts_sermat2:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sermat2.adb \
               -o $(BIN)/ts_sermat2
 
+ts_serlin:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serlin.adb \
+              -o $(BIN)/ts_serlin
+
+ts_serlin2:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serlin2.adb \
+              -o $(BIN)/ts_serlin2
+
 ts_serpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpol.adb \
               -o $(BIN)/ts_serpol
@@ -554,10 +562,6 @@ ts_serpol:
 ts_sersys:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersys.adb \
               -o $(BIN)/ts_sersys
-
-ts_serlin:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serlin.adb \
-              -o $(BIN)/ts_serlin
 
 ts_serinv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serinv.adb \
