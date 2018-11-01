@@ -453,8 +453,8 @@ ts_giftwrap:
 
 test_series: ts_pstrunc ts_bincff ts_series ts_series2 \
              ts_servec ts_servec2 ts_sermat ts_sermat2 \
-             ts_serlin ts_serlin2 ts_serpol ts_sersys \
-             ts_serinv ts_seritp ts_sersin
+             ts_seritp ts_seritp2 ts_sersin ts_sersin2 \
+             ts_serlin ts_serlin2 ts_serpol ts_sersys ts_serinv
 
 ts_pstrunc:
 	make -f $(MAKEFILE) ts_pstrunc
@@ -480,6 +480,18 @@ ts_sermat:
 ts_sermat2:
 	make -f $(MAKEFILE) ts_sermat2
 
+ts_seritp:
+	make -f $(MAKEFILE) ts_seritp
+
+ts_seritp2:
+	make -f $(MAKEFILE) ts_seritp2
+
+ts_sersin:
+	make -f $(MAKEFILE) ts_sersin
+
+ts_sersin2:
+	make -f $(MAKEFILE) ts_sersin2
+
 ts_serlin:
 	make -f $(MAKEFILE) ts_serlin
 
@@ -494,12 +506,6 @@ ts_sersys:
 
 ts_serinv:
 	make -f $(MAKEFILE) ts_serinv
-
-ts_seritp:
-	make -f $(MAKEFILE) ts_seritp
-
-ts_sersin:
-	make -f $(MAKEFILE) ts_sersin
 
 # Test programs for the Deformations library :
 

@@ -547,6 +547,22 @@ ts_sermat2:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sermat2.adb \
               -o $(BIN)/ts_sermat2
 
+ts_seritp:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_seritp.adb \
+              -o $(BIN)/ts_seritp
+
+ts_seritp2:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_seritp2.adb \
+              -o $(BIN)/ts_seritp2
+
+ts_sersin:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersin.adb \
+              -o $(BIN)/ts_sersin
+
+ts_sersin2:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersin2.adb \
+              -o $(BIN)/ts_sersin2
+
 ts_serlin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serlin.adb \
               -o $(BIN)/ts_serlin
@@ -566,14 +582,6 @@ ts_sersys:
 ts_serinv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serinv.adb \
               -o $(BIN)/ts_serinv
-
-ts_seritp:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_seritp.adb \
-              -o $(BIN)/ts_seritp
-
-ts_sersin:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersin.adb \
-              -o $(BIN)/ts_sersin
 
 # Test programs for the Deformations/Solutions library :
 
