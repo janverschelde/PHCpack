@@ -45,6 +45,8 @@ standard_interpolating_series2    : interpolation for linear series systems
 ts_seritp2                        : test on linear series interpolation
 ------------------------------------------------------------------------------
 standard_echelon_forms            : echelon form for Hermite-Laurent systems
+ts_sersin2                        : test on solving singular linear systems
+------------------------------------------------------------------------------
 standard_matrix_series2_solvers   : linearization for matrix series systems
 ts_serlin2                        : test on linearization
 ------------------------------------------------------------------------------

@@ -2,6 +2,7 @@ Thu 1 Nov 2018 : extended random_series_matrices with functions to generate
   random matrix series, used in ts_seritp2, which tests the operations in
   standard_interpolating_series2.  This use of this new package causes
   a change in standard_matrix_series2_solvers.adb.
+  New ts_sersin2.adb tests the package standard_echelon_forms.
 
 Wed 31 Oct 2018 : fixed a bug in a test procedure in ts_sermat2.adb and
   made some small changes in standard_least_squares_series2.adb.
