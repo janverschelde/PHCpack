@@ -1,7 +1,7 @@
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with Standard_Complex_QR_Least_Squares;  use Standard_Complex_QR_Least_Squares;
 with Standard_Complex_Singular_Values;   use Standard_Complex_Singular_Values;
-with Standard_Interpolating_Series;
+with Standard_Interpolating_Series2;
 with Standard_Echelon_Forms;             use Standard_Echelon_Forms;
 
 package body Standard_Matrix_Series2_Solvers is
@@ -285,10 +285,10 @@ package body Standard_Matrix_Series2_Solvers is
     nrows : constant integer32 := nbr*(2*deg+1);
     ncols : constant integer32 := nbc*(2*deg+1);
     hlm : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols)
-        := Standard_Interpolating_Series.Hermite_Laurent_Matrix(A.cff(0..deg));
+        := Standard_Interpolating_Series2.Hermite_Laurent_Matrix(A.cff(0..deg));
     x : Standard_Complex_Vectors.Vector(1..ncols);
     rhs : Standard_Complex_Vectors.Vector(1..nrows)
-        := Standard_Interpolating_Series.Hermite_Laurent_Vector(b.cff(0..deg));
+        := Standard_Interpolating_Series2.Hermite_Laurent_Vector(b.cff(0..deg));
     U : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
     col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);
