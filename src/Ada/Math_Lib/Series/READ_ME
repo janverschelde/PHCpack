@@ -8,6 +8,16 @@ The library is divided in three parts:
 (2) vectors, matrices, and linear system solving
 (3) polynomials with coefficients as truncated power series
 
+In the first design, series are represented by a coefficient vector
+of fixed length, a length that is determined at compile time,
+and a variable which represents the degree of the series.
+While this design allows to treat series just as numbers,
+the degree of a series is limited to what was determined at compile time,
+which turns out to be too inflexible.
+In the second design, a type Link_to_Series was added with which the
+series vectors are instantiated.  The third design applies generics
+and defines series over any ring extended with division.
+
 ------------------------------------------------------------------------------
 file name                         : short description
 ------------------------------------------------------------------------------
@@ -15,6 +25,16 @@ standard_truncated_series         : defines basic operations on power series
 ts_pstrunc                        : tests proof-of-concept power series
 binomial_coefficients             : export binomial() function
 ts_bincff                         : test on binomial coefficients
+------------------------------------------------------------------------------
+generic_dense_series              : series over any ring with division
+standard_complex_series           : series with standard complex coefficients
+dobldobl_complex_series           : series with dobldobl complex coefficients
+quaddobl_complex_series           : series with quaddobl complex coefficients
+standard_complex_series_io        : i/o for standard complex series
+dobldobl_complex_series_io        : i/o for double double complex series
+quaddobl_complex_series_io        : i/o for quad double complex series
+ts_series3                        : test on 3rd version of series
+------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients
 standard_dense_series2_io         : basic input/output of standard series
 standard_algebraic_series2        : sqrt and n-th root of standard series

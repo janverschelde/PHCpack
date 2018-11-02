@@ -1,3 +1,8 @@
+Fri 2 Nov 2018 : defined generic series in generic_dense_series,
+  instantiated in {standard,dobldobl,quaddobl}_complex_series, with i/o
+  in {standard,dobldobl,quaddobl}_complex_series_io, and tested in
+  ts_series3.adb.
+
 Thu 1 Nov 2018 : extended random_series_matrices with functions to generate
   random matrix series, used in ts_seritp2, which tests the operations in
   standard_interpolating_series2.  This use of this new package causes
