@@ -531,6 +531,10 @@ ts_series2:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_series2.adb \
               -o $(BIN)/ts_series2
 
+ts_series3:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_series3.adb \
+              -o $(BIN)/ts_series3
+
 ts_servec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_servec.adb \
               -o $(BIN)/ts_servec
