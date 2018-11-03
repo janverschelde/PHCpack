@@ -33,6 +33,12 @@ quaddobl_complex_series           : series with quaddobl complex coefficients
 standard_complex_series_io        : i/o for standard complex series
 dobldobl_complex_series_io        : i/o for double double complex series
 quaddobl_complex_series_io        : i/o for quad double complex series
+standard_random_series3           : generators for random standard series
+dobldobl_random_series3           : generators for random dobldobl series
+quaddobl_random_series3           : generators for random quaddobl series
+standard_algebraic_series3        : sqrt and n-th root of standard series
+dobldobl_algebraic_series3        : sqrt and n-th root of dobldobl series
+quaddobl_algebraic_series3        : sqrt and n-th root of quaddobl series
 ts_series3                        : test on 3rd version of series
 ------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients

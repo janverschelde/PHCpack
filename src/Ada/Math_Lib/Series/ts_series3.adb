@@ -17,6 +17,12 @@ with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_io;        use DoblDobl_Complex_Series_io;
 with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_io;        use QuadDobl_Complex_Series_io;
+with Standard_Random_Series3;
+with DoblDobl_Random_Series3;
+with QuadDobl_Random_Series3;
+with Standard_Algebraic_Series3;
+with DoblDobl_Algebraic_Series3;
+with QuadDobl_Algebraic_Series3;
 
 procedure ts_series3 is
 
@@ -184,6 +190,189 @@ procedure ts_series3 is
     put_line("Verifying commutativity : "); put(z);
   end QuadDobl_Test_Creation;
 
+  procedure Standard_Test_Arithmetic ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does a basic test on the arithmetic in standard double precision,
+  --   on random series of the given degree.
+
+    use Standard_Complex_Series;
+
+    a,b,c : Series(degree);
+    ans : character;
+
+  begin
+    a := Standard_Random_Series3.Random_Series(degree);
+    put_line("The first random series A :"); put(a);
+    b := Standard_Random_Series3.Random_Series(degree);
+    put_line("The second random series B :"); put(b);
+    c := a+b;
+    put_line("The sum A + B :"); put(c);
+    c := c-a;
+    put_line("The sum A + B - A :"); put(c); 
+    new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      c := a*b;
+      put_line("The product A*B :"); put(c);
+      c := c/a;
+      put_line("The product A*B/A :"); put(c);
+    end if;
+  end Standard_Test_Arithmetic;
+
+  procedure DoblDobl_Test_Arithmetic ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does a basic test on the arithmetic in double double precision,
+  --   on random series of the given degree.
+
+    use DoblDobl_Complex_Series;
+
+    a,b,c : Series(degree);
+    ans : character;
+
+  begin
+    a := DoblDobl_Random_Series3.Random_Series(degree);
+    put_line("The first random series A :"); put(a);
+    b := DoblDobl_Random_Series3.Random_Series(degree);
+    put_line("The second random series B :"); put(b);
+    c := a+b;
+    put_line("The sum A + B :"); put(c);
+    c := c-a;
+    put_line("The sum A + B - A :"); put(c); 
+    new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      c := a*b;
+      put_line("The product A*B :"); put(c);
+      c := c/a;
+      put_line("The product A*B/A :"); put(c);
+    end if;
+  end DoblDobl_Test_Arithmetic;
+
+  procedure QuadDobl_Test_Arithmetic ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does a basic test on the arithmetic in quad double precision,
+  --   on random series of the given degree.
+
+    use QuadDobl_Complex_Series;
+
+    a,b,c : Series(degree);
+    ans : character;
+
+  begin
+    a := QuadDobl_Random_Series3.Random_Series(degree);
+    put_line("The first random series A :"); put(a);
+    b := QuadDobl_Random_Series3.Random_Series(degree);
+    put_line("The second random series B :"); put(b);
+    c := a+b;
+    put_line("The sum A + B :"); put(c);
+    c := c-a;
+    put_line("The sum A + B - A :"); put(c); 
+    new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      c := a*b;
+      put_line("The product A*B :"); put(c);
+      c := c/a;
+      put_line("The product A*B/A :"); put(c);
+    end if;
+  end QuadDobl_Test_Arithmetic;
+
+  procedure Standard_Random_Test_sqrt ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and tests the square root computation,
+  --   in standard double precision.
+
+    use Standard_Complex_Series;
+
+    c : constant Series(degree)
+      := Standard_Random_Series3.Random_Series(degree);
+    ans : character;
+    x,y,z : Series(degree);
+ 
+  begin
+    put("Extra output during the computation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    put("A random series c of degree "); put(degree,1); put_line(" :");
+    put(c);
+    if ans = 'y'
+     then x := Standard_Algebraic_Series3.sqrt(c,0,true);
+     else x := Standard_Algebraic_Series3.sqrt(c,0);
+    end if;
+    put_line("The square root x of the random series :"); put(x);
+    y := x*x;
+    put_line("The square y of the square root x : "); put(y);
+    z := y-c;
+    put_line("The equation x*x - c :"); put(z);
+  end Standard_Random_Test_sqrt;
+
+  procedure DoblDobl_Random_Test_sqrt ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and tests the square root computation,
+  --   in double double precision.
+
+    use DoblDobl_Complex_Series;
+
+    c : constant Series(degree)
+      := DoblDobl_Random_Series3.Random_Series(degree);
+    ans : character;
+    x,y,z : Series(degree);
+ 
+  begin
+    put("Extra output during the computation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    put("A random series c of degree "); put(degree,1); put_line(" :");
+    put(c);
+    if ans = 'y'
+     then x := DoblDobl_Algebraic_Series3.sqrt(c,0,true);
+     else x := DoblDobl_Algebraic_Series3.sqrt(c,0);
+    end if;
+    put_line("The square root x of the random series :"); put(x);
+    y := x*x;
+    put_line("The square y of the square root x : "); put(y);
+    z := y-c;
+    put_line("The equation x*x - c :"); put(z);
+  end DoblDobl_Random_Test_sqrt;
+
+  procedure QuadDobl_Random_Test_sqrt ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and tests the square root computation,
+  --   in quad double precision.
+
+    use QuadDobl_Complex_Series;
+
+    c : constant Series(degree)
+      := QuadDobl_Random_Series3.Random_Series(degree);
+    ans : character;
+    x,y,z : Series(degree);
+ 
+  begin
+    put("Extra output during the computation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    put("A random series c of degree "); put(degree,1); put_line(" :");
+    put(c);
+    if ans = 'y'
+     then x := QuadDobl_Algebraic_Series3.sqrt(c,0,true);
+     else x := QuadDobl_Algebraic_Series3.sqrt(c,0);
+    end if;
+    put_line("The square root x of the random series :"); put(x);
+    y := x*x;
+    put_line("The square y of the square root x : "); put(y);
+    z := y-c;
+    put_line("The equation x*x - c :"); put(z);
+  end QuadDobl_Random_Test_sqrt;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -197,8 +386,10 @@ procedure ts_series3 is
     put_line("MENU with testing operations :");
     put_line("  0. test the basic construct methods");
     put_line("  1. test the computation of 1/(1-t) for any degree");
-    put("Type 0, or 1 to select a test : ");
-    Ask_Alternative(ans,"01");
+    put_line("  2. test arithmetic");
+    put_line("  3. square root of a random series");
+    put("Type 0, 1, 2, or 3 to select a test : ");
+    Ask_Alternative(ans,"0123");
     if ans /= '0' then
       new_line;
       put("Give the degree of the series : "); get(degree);
@@ -216,18 +407,24 @@ procedure ts_series3 is
         case ans is 
           when '0' => Standard_Construct;
           when '1' => Standard_Test_Creation(degree);
+          when '2' => Standard_Test_Arithmetic(degree);
+          when '3' => Standard_Random_Test_Sqrt(degree);
           when others => null;
         end case;
       when '1' => 
         case ans is 
           when '0' => DoblDobl_Construct;
           when '1' => DoblDobl_Test_Creation(degree);
+          when '2' => DoblDobl_Test_Arithmetic(degree);
+          when '3' => DoblDobl_Random_Test_Sqrt(degree);
           when others => null;
         end case;
       when '2' =>
         case ans is 
           when '0' => QuadDobl_Construct;
           when '1' => QuadDobl_Test_Creation(degree);
+          when '2' => QuadDobl_Test_Arithmetic(degree);
+          when '3' => QuadDobl_Random_Test_Sqrt(degree);
           when others => null;
         end case;
       when others => null;
