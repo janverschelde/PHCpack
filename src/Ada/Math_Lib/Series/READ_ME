@@ -19,27 +19,33 @@ series vectors are instantiated.  The third design applies generics
 and defines series over any ring extended with division.
 
 ------------------------------------------------------------------------------
-file name                         : short description
+file name                          : short description
 ------------------------------------------------------------------------------
-standard_truncated_series         : defines basic operations on power series
-ts_pstrunc                        : tests proof-of-concept power series
-binomial_coefficients             : export binomial() function
-ts_bincff                         : test on binomial coefficients
+standard_truncated_series          : defines basic operations on power series
+ts_pstrunc                         : tests proof-of-concept power series
+binomial_coefficients              : export binomial() function
+ts_bincff                          : test on binomial coefficients
 ------------------------------------------------------------------------------
-generic_dense_series              : series over any ring with division
-standard_complex_series           : series with standard complex coefficients
-dobldobl_complex_series           : series with dobldobl complex coefficients
-quaddobl_complex_series           : series with quaddobl complex coefficients
-standard_complex_series_io        : i/o for standard complex series
-dobldobl_complex_series_io        : i/o for double double complex series
-quaddobl_complex_series_io        : i/o for quad double complex series
-standard_random_series3           : generators for random standard series
-dobldobl_random_series3           : generators for random dobldobl series
-quaddobl_random_series3           : generators for random quaddobl series
-standard_algebraic_series3        : sqrt and n-th root of standard series
-dobldobl_algebraic_series3        : sqrt and n-th root of dobldobl series
-quaddobl_algebraic_series3        : sqrt and n-th root of quaddobl series
-ts_series3                        : test on 3rd version of series
+generic_dense_series               : series over any ring with division
+standard_complex_series            : series with standard complex coefficients
+dobldobl_complex_series            : series with dobldobl complex coefficients
+quaddobl_complex_series            : series with quaddobl complex coefficients
+standard_complex_series_io         : i/o for standard complex series
+dobldobl_complex_series_io         : i/o for double double complex series
+quaddobl_complex_series_io         : i/o for quad double complex series
+standard_random_series3            : generators for random standard series
+dobldobl_random_series3            : generators for random dobldobl series
+quaddobl_random_series3            : generators for random quaddobl series
+standard_algebraic_series3         : sqrt and n-th root of standard series
+dobldobl_algebraic_series3         : sqrt and n-th root of dobldobl series
+quaddobl_algebraic_series3         : sqrt and n-th root of quaddobl series
+standard_complex_series_norms      : conjugates and norms of standard series
+dobldobl_complex_series_norms      : conjugates and norms of dobldobl series
+quaddobl_complex_series_norms      : conjugates and norms of quaddobl series
+standard_complex_series_functions  : evaluate and shift standard series
+dobldobl_complex_series_functions  : evaluate and shift dobldobl series
+quaddobl_complex_series_functions  : evaluate and shift quaddobl series
+ts_series3                         : test on 3rd version of series
 ------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients
 standard_dense_series2_io         : basic input/output of standard series
