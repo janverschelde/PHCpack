@@ -1,6 +1,7 @@
 Sun 4 Nov 2018 : fixed problem in {dobldobl,quaddobl}_series_vector_norms3.adb
   and defined {dobldobl,quaddobl}_series_{linear_solvers,least_squares},
   tested by ts_sermat3.  Made *interpolating_series3, tested by ts_seritp3.
+  New test procedure ts_sersin3 for testing echelon forms on singular systems.
 
 Sat 3 Nov 2018 : new packages to compute norms, to evaluate and to shift
   series in *complex_series_norms and *complex_series_functions, for

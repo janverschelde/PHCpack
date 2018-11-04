@@ -103,6 +103,11 @@ dobldobl_interpolating_series3     : interpolation for dobldobl series systems
 quaddobl_interpolating_series3     : interpolation for quaddobl series systems
 ts_seritp3                         : test on linear series interpolation
 ------------------------------------------------------------------------------
+standard_echelon_forms             : echelon standard Hermite-Laurent systems
+dobldobl_echelon_forms             : echelon dobldobl Hermite-Laurent systems
+quaddobl_echelon_forms             : echelon quaddobl Hermite-Laurent systems
+ts_sersin3                         : test on solving singular linear systems
+------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients
 standard_dense_series2_io         : basic input/output of standard series
 standard_algebraic_series2        : sqrt and n-th root of standard series
