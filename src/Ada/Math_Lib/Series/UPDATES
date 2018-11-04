@@ -1,6 +1,8 @@
 Sat 3 Nov 2018 : new packages to compute norms, to evaluate and to shift
   series in *complex_series_norms and *complex_series_functions, for
   double, double double, and quad double precision, tested by ts_series3.adb.
+  Defined a rind of complex series to instantiate vectors and vectors of
+  vectors, with io, norms, and random series, tested by ts_servec3.
 
 Fri 2 Nov 2018 : defined generic series in generic_dense_series,
   instantiated in {standard,dobldobl,quaddobl}_complex_series, with i/o

@@ -47,6 +47,37 @@ dobldobl_complex_series_functions  : evaluate and shift dobldobl series
 quaddobl_complex_series_functions  : evaluate and shift quaddobl series
 ts_series3                         : test on 3rd version of series
 ------------------------------------------------------------------------------
+standard_complex_series_ring       : ring of series in double precision
+standard_complex_series_ring_io    : i/o for standard series in the ring
+dobldobl_complex_series_ring       : ring of series in double double precision
+dobldobl_complex_series_ring_io    : i/o for dobldobl series in the ring
+quaddobl_complex_series_ring       : ring of series in quad double precision
+quaddobl_complex_series_ring_io    : i/o for quaddobl series in the ring
+standard_complex_series_vectors    : vectors of standard series
+dobldobl_complex_series_vectors    : vectors of dobldobl series
+quaddobl_complex_series_vectors    : vectors of quaddobl series
+standard_complex_series_vectors_io : i/o for vectors of standard series
+dobldobl_complex_series_vectors_io : i/o for vectors of dobldobl series
+quaddobl_complex_series_vectors_io : i/o for vectors of quaddobl series
+standard_complex_series_vecvecs    : vectors of vectors of standard series
+dobldobl_complex_series_vecvecs    : vectors of vectors of dobldobl series
+quaddobl_complex_series_vecvecs    : vectors of vectors of quaddobl series
+standard_complex_series_norms3     : norms of vectors of standard series
+dobldobl_complex_series_norms3     : norms of vectors of dobldobl series
+standard_complex_vector_series     : series with standard vector coefficients
+standard_complex_vector_series_io  : basic output of standard vector series
+dobldobl_complex_vector_series     : series with dobldobl vector coefficients
+dobldobl_complex_vector_series_io  : basic output of dobldobl vector series
+quaddobl_complex_vector_series     : series with quaddobl vector coefficients
+quaddobl_complex_vector_series_io  : basic output of quaddobl vector series
+standard_series_vector_norms3      : norms of vectors of standard series
+dobldobl_series_vector_norms3      : norms of vectors of dobldobl series
+quaddobl_series_vector_norms3      : norms of vectors of quaddobl series
+standard_random_series_vectors     : random vectors of standard series
+dobldobl_random_series_vectors     : random vectors of dobldobl series
+quaddobl_random_series_vectors     : random vectors of quaddobl series
+ts_servec3                         : test on 3rd version of vector series
+------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients
 standard_dense_series2_io         : basic input/output of standard series
 standard_algebraic_series2        : sqrt and n-th root of standard series
