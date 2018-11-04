@@ -98,6 +98,11 @@ dobldobl_series_least_squares      : dobldobl QR solver on matrices of series
 quaddobl_series_least_squares      : quaddobl QR solver on matrices of series
 ts_sermat3                         : test on 3rd version of matrices of series
 ------------------------------------------------------------------------------
+standard_interpolating_series3     : interpolation for standard series systems
+dobldobl_interpolating_series3     : interpolation for dobldobl series systems
+quaddobl_interpolating_series3     : interpolation for quaddobl series systems
+ts_seritp3                         : test on linear series interpolation
+------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients
 standard_dense_series2_io         : basic input/output of standard series
 standard_algebraic_series2        : sqrt and n-th root of standard series
