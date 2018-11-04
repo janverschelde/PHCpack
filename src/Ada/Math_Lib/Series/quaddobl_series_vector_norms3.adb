@@ -18,7 +18,8 @@ package body QuadDobl_Series_Vector_Norms3 is
   function Inner_Product ( u,v : Vector ) return Series is
 
     w : constant Vector(u'range) := Conjugate(u);
-    res : Series := Create(0);
+    deg : constant integer32 := u(u'first).cff'last;
+    res : Series := Create(0,deg);
 
   begin
     for i in w'range loop

@@ -88,8 +88,14 @@ standard_complex_matrix_series_io  : basic output of standard matrix series
 dobldobl_complex_matrix_series_io  : basic output of dobldobl matrix series
 quaddobl_complex_matrix_series_io  : basic output of quaddobl matrix series
 standard_random_series_matrices    : standard random matrices of series
+dobldobl_random_series_matrices    : dobldobl random matrices of series
+quaddobl_random_series_matrices    : quaddobl random matrices of series
 standard_series_linear_solvers     : standard LU solver on matrices of series
+dobldobl_series_linear_solvers     : dobldobl LU solver on matrices of series
+quaddobl_series_linear_solvers     : quaddobl LU solver on matrices of series
 standard_series_least_squares      : standard QR solver on matrices of series
+dobldobl_series_least_squares      : dobldobl QR solver on matrices of series
+quaddobl_series_least_squares      : quaddobl QR solver on matrices of series
 ts_sermat3                         : test on 3rd version of matrices of series
 ------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients
