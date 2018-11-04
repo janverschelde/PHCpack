@@ -567,6 +567,10 @@ ts_seritp2:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_seritp2.adb \
               -o $(BIN)/ts_seritp2
 
+ts_seritp3:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_seritp3.adb \
+              -o $(BIN)/ts_seritp3
+
 ts_sersin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersin.adb \
               -o $(BIN)/ts_sersin
