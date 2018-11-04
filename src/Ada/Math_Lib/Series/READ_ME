@@ -78,6 +78,20 @@ dobldobl_random_series_vectors     : random vectors of dobldobl series
 quaddobl_random_series_vectors     : random vectors of quaddobl series
 ts_servec3                         : test on 3rd version of vector series
 ------------------------------------------------------------------------------
+standard_complex_series_matrices   : matrices of standard series
+dobldobl_complex_series_matrices   : matrices of dobldobl series
+quaddobl_complex_series_matrices   : matrices of quaddobl series
+standard_complex_matrix_series     : series with standard matrix coefficients
+dobldobl_complex_matrix_series     : series with dobldobl matrix coefficients
+quaddobl_complex_matrix_series     : series with quaddobl matrix coefficients
+standard_complex_matrix_series_io  : basic output of standard matrix series
+dobldobl_complex_matrix_series_io  : basic output of dobldobl matrix series
+quaddobl_complex_matrix_series_io  : basic output of quaddobl matrix series
+standard_random_series_matrices    : standard random matrices of series
+standard_series_linear_solvers     : standard LU solver on matrices of series
+standard_series_least_squares      : standard QR solver on matrices of series
+ts_sermat3                         : test on 3rd version of matrices of series
+------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients
 standard_dense_series2_io         : basic input/output of standard series
 standard_algebraic_series2        : sqrt and n-th root of standard series
