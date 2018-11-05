@@ -1,4 +1,4 @@
-with QuadDobl_Random_Series3;
+with QuadDobl_Complex_Random_Series;
 
 package body QuadDobl_Random_Series_Vectors is
 
@@ -10,7 +10,7 @@ package body QuadDobl_Random_Series_Vectors is
 
   begin
     for k in res'range loop
-      res(k) := QuadDobl_Random_Series3.Random_Series(degree);
+      res(k) := QuadDobl_Complex_Random_Series.Random_Series(degree);
     end loop;
     return res;
   end Random_Series_Vector;

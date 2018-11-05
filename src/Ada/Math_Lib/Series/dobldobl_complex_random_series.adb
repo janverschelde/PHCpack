@@ -1,7 +1,7 @@
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Random_Vectors;
 
-package body DoblDobl_Random_Series3 is
+package body DoblDobl_Complex_Random_Series is
 
   function Random_Series ( degree : integer32 ) return Series is
 
@@ -20,4 +20,4 @@ package body DoblDobl_Random_Series3 is
     return res;
   end Random_Series;
 
-end DoblDobl_Random_Series3;
+end DoblDobl_Complex_Random_Series;

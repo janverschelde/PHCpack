@@ -25,12 +25,12 @@ with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_io;        use DoblDobl_Complex_Series_io;
 with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_io;        use QuadDobl_Complex_Series_io;
-with Standard_Random_Series3;
-with DoblDobl_Random_Series3;
-with QuadDobl_Random_Series3;
-with Standard_Algebraic_Series3;
-with DoblDobl_Algebraic_Series3;
-with QuadDobl_Algebraic_Series3;
+with Standard_Complex_Random_Series;
+with DoblDobl_Complex_Random_Series;
+with QuadDobl_Complex_Random_Series;
+with Standard_Complex_Algebraic_Series;
+with DoblDobl_Complex_Algebraic_Series;
+with QuadDobl_Complex_Algebraic_Series;
 with Standard_Complex_Series_Norms;
 with Standard_Complex_Series_Functions;
 with DoblDobl_Complex_Series_Norms;
@@ -38,7 +38,7 @@ with DoblDobl_Complex_Series_Functions;
 with QuadDobl_Complex_Series_Norms;
 with QuadDobl_Complex_Series_Functions;
 
-procedure ts_series3 is
+procedure ts_cseries is
 
   procedure Standard_Construct is
 
@@ -216,9 +216,9 @@ procedure ts_series3 is
     ans : character;
 
   begin
-    a := Standard_Random_Series3.Random_Series(degree);
+    a := Standard_Complex_Random_Series.Random_Series(degree);
     put_line("The first random series A :"); put(a);
-    b := Standard_Random_Series3.Random_Series(degree);
+    b := Standard_Complex_Random_Series.Random_Series(degree);
     put_line("The second random series B :"); put(b);
     c := a+b;
     put_line("The sum A + B :"); put(c);
@@ -246,9 +246,9 @@ procedure ts_series3 is
     ans : character;
 
   begin
-    a := DoblDobl_Random_Series3.Random_Series(degree);
+    a := DoblDobl_Complex_Random_Series.Random_Series(degree);
     put_line("The first random series A :"); put(a);
-    b := DoblDobl_Random_Series3.Random_Series(degree);
+    b := DoblDobl_Complex_Random_Series.Random_Series(degree);
     put_line("The second random series B :"); put(b);
     c := a+b;
     put_line("The sum A + B :"); put(c);
@@ -276,9 +276,9 @@ procedure ts_series3 is
     ans : character;
 
   begin
-    a := QuadDobl_Random_Series3.Random_Series(degree);
+    a := QuadDobl_Complex_Random_Series.Random_Series(degree);
     put_line("The first random series A :"); put(a);
-    b := QuadDobl_Random_Series3.Random_Series(degree);
+    b := QuadDobl_Complex_Random_Series.Random_Series(degree);
     put_line("The second random series B :"); put(b);
     c := a+b;
     put_line("The sum A + B :"); put(c);
@@ -304,7 +304,7 @@ procedure ts_series3 is
     use Standard_Complex_Series;
 
     c : constant Series(degree)
-      := Standard_Random_Series3.Random_Series(degree);
+      := Standard_Complex_Random_Series.Random_Series(degree);
     ans : character;
     x,y,z : Series(degree);
  
@@ -315,8 +315,8 @@ procedure ts_series3 is
     put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
-     then x := Standard_Algebraic_Series3.sqrt(c,0,true);
-     else x := Standard_Algebraic_Series3.sqrt(c,0);
+     then x := Standard_Complex_Algebraic_Series.sqrt(c,0,true);
+     else x := Standard_Complex_Algebraic_Series.sqrt(c,0);
     end if;
     put_line("The square root x of the random series :"); put(x);
     y := x*x;
@@ -335,7 +335,7 @@ procedure ts_series3 is
     use DoblDobl_Complex_Series;
 
     c : constant Series(degree)
-      := DoblDobl_Random_Series3.Random_Series(degree);
+      := DoblDobl_Complex_Random_Series.Random_Series(degree);
     ans : character;
     x,y,z : Series(degree);
  
@@ -346,8 +346,8 @@ procedure ts_series3 is
     put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
-     then x := DoblDobl_Algebraic_Series3.sqrt(c,0,true);
-     else x := DoblDobl_Algebraic_Series3.sqrt(c,0);
+     then x := DoblDobl_Complex_Algebraic_Series.sqrt(c,0,true);
+     else x := DoblDobl_Complex_Algebraic_Series.sqrt(c,0);
     end if;
     put_line("The square root x of the random series :"); put(x);
     y := x*x;
@@ -366,7 +366,7 @@ procedure ts_series3 is
     use QuadDobl_Complex_Series;
 
     c : constant Series(degree)
-      := QuadDobl_Random_Series3.Random_Series(degree);
+      := QuadDobl_Complex_Random_Series.Random_Series(degree);
     ans : character;
     x,y,z : Series(degree);
  
@@ -377,8 +377,8 @@ procedure ts_series3 is
     put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
-     then x := QuadDobl_Algebraic_Series3.sqrt(c,0,true);
-     else x := QuadDobl_Algebraic_Series3.sqrt(c,0);
+     then x := QuadDobl_Complex_Algebraic_Series.sqrt(c,0,true);
+     else x := QuadDobl_Complex_Algebraic_Series.sqrt(c,0);
     end if;
     put_line("The square root x of the random series :"); put(x);
     y := x*x;
@@ -397,7 +397,7 @@ procedure ts_series3 is
     use Standard_Complex_Series;
 
     c : constant Series(degree)
-      := Standard_Random_Series3.Random_Series(degree);
+      := Standard_Complex_Random_Series.Random_Series(degree);
     n,i : natural32 := 0;
     ans : character;
     x,y,z : Series(degree);
@@ -412,8 +412,8 @@ procedure ts_series3 is
     put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
-     then x := Standard_Algebraic_Series3.Root(c,n,i,true);
-     else x := Standard_Algebraic_Series3.Root(c,n,i);
+     then x := Standard_Complex_Algebraic_Series.Root(c,n,i,true);
+     else x := Standard_Complex_Algebraic_Series.Root(c,n,i);
     end if;
     put("The root x of index "); put(i,1);
     put_line(" of the random series :"); put(x);
@@ -433,7 +433,7 @@ procedure ts_series3 is
     use DoblDobl_Complex_Series;
 
     c : constant Series(degree)
-      := DoblDobl_Random_Series3.Random_Series(degree);
+      := DoblDobl_Complex_Random_Series.Random_Series(degree);
     n,i : natural32 := 0;
     ans : character;
     x,y,z : Series(degree);
@@ -448,8 +448,8 @@ procedure ts_series3 is
     put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
-     then x := DoblDobl_Algebraic_Series3.Root(c,n,i,true);
-     else x := DoblDobl_Algebraic_Series3.Root(c,n,i);
+     then x := DoblDobl_Complex_Algebraic_Series.Root(c,n,i,true);
+     else x := DoblDobl_Complex_Algebraic_Series.Root(c,n,i);
     end if;
     put("The root x of index "); put(i,1);
     put_line(" of the random series :"); put(x);
@@ -469,7 +469,7 @@ procedure ts_series3 is
     use QuadDobl_Complex_Series;
 
     c : constant Series(degree)
-      := QuadDobl_Random_Series3.Random_Series(degree);
+      := QuadDobl_Complex_Random_Series.Random_Series(degree);
     n,i : natural32 := 0;
     ans : character;
     x,y,z : Series(degree);
@@ -484,8 +484,8 @@ procedure ts_series3 is
     put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
-     then x := QuadDobl_Algebraic_Series3.Root(c,n,i,true);
-     else x := QuadDobl_Algebraic_Series3.Root(c,n,i);
+     then x := QuadDobl_Complex_Algebraic_Series.Root(c,n,i,true);
+     else x := QuadDobl_Complex_Algebraic_Series.Root(c,n,i);
     end if;
     put("The root x of index "); put(i,1);
     put_line(" of the random series :"); put(x);
@@ -506,7 +506,7 @@ procedure ts_series3 is
     use Standard_Complex_Series_Norms;
 
     s : constant Series(degree)
-      := Standard_Random_Series3.Random_Series(degree);
+      := Standard_Complex_Random_Series.Random_Series(degree);
     c : constant Series(degree) := Conjugate(s);
     p,r,n,q,rq : Series(degree);
 
@@ -517,12 +517,12 @@ procedure ts_series3 is
     put_line("Conjugate(s)*s : "); put(c*s);
     put_line("s*Conjugate(s) : "); put(s*c);
     p := c*s;
-    r := Standard_Algebraic_Series3.sqrt(p,0);
+    r := Standard_Complex_Algebraic_Series.sqrt(p,0);
     put_line("The square root r of Conjugate(s)*s :"); put(r);
     n := s/r;
     put_line("The normalized series s is s/r :"); put(n);
     q := Conjugate(n)*n;
-    rq := Standard_Algebraic_Series3.sqrt(q,0);
+    rq := Standard_Complex_Algebraic_Series.sqrt(q,0);
     put_line("The norm of the normalized series :"); put(rq);
   end Standard_Test_Conjugate;
 
@@ -537,7 +537,7 @@ procedure ts_series3 is
     use DoblDobl_Complex_Series_Norms;
 
     s : constant Series(degree)
-      := DoblDobl_Random_Series3.Random_Series(degree);
+      := DoblDobl_Complex_Random_Series.Random_Series(degree);
     c : constant Series(degree) := Conjugate(s);
     p,r,n,q,rq : Series(degree);
 
@@ -548,12 +548,12 @@ procedure ts_series3 is
     put_line("Conjugate(s)*s : "); put(c*s);
     put_line("s*Conjugate(s) : "); put(s*c);
     p := c*s;
-    r := DoblDobl_Algebraic_Series3.sqrt(p,0);
+    r := DoblDobl_Complex_Algebraic_Series.sqrt(p,0);
     put_line("The square root r of Conjugate(s)*s :"); put(r);
     n := s/r;
     put_line("The normalized series s is s/r :"); put(n);
     q := Conjugate(n)*n;
-    rq := DoblDobl_Algebraic_Series3.sqrt(q,0);
+    rq := DoblDobl_Complex_Algebraic_Series.sqrt(q,0);
     put_line("The norm of the normalized series :"); put(rq);
   end DoblDobl_Test_Conjugate;
 
@@ -568,7 +568,7 @@ procedure ts_series3 is
     use QuadDobl_Complex_Series_Norms;
 
     s : constant Series(degree)
-      := QuadDobl_Random_Series3.Random_Series(degree);
+      := QuadDobl_Complex_Random_Series.Random_Series(degree);
     c : constant Series(degree) := Conjugate(s);
     p,r,n,q,rq : Series(degree);
 
@@ -579,12 +579,12 @@ procedure ts_series3 is
     put_line("Conjugate(s)*s : "); put(c*s);
     put_line("s*Conjugate(s) : "); put(s*c);
     p := c*s;
-    r := QuadDobl_Algebraic_Series3.sqrt(p,0);
+    r := QuadDobl_Complex_Algebraic_Series.sqrt(p,0);
     put_line("The square root r of Conjugate(s)*s :"); put(r);
     n := s/r;
     put_line("The normalized series s is s/r :"); put(n);
     q := Conjugate(n)*n;
-    rq := QuadDobl_Algebraic_Series3.sqrt(q,0);
+    rq := QuadDobl_Complex_Algebraic_Series.sqrt(q,0);
     put_line("The norm of the normalized series :"); put(rq);
   end QuadDobl_Test_Conjugate;
 
@@ -599,7 +599,7 @@ procedure ts_series3 is
     use Standard_Complex_Series_Norms;
 
     s : constant Series(degree)
-      := Standard_Random_Series3.Random_Series(degree);
+      := Standard_Complex_Random_Series.Random_Series(degree);
     nrm : constant Series(degree) := Norm(s);
     ns : constant Series(degree) := Normalize(s);
     nrm2 : constant Series(degree) := Norm(ns);
@@ -630,7 +630,7 @@ procedure ts_series3 is
     use DoblDobl_Complex_Series_Norms;
 
     s : constant Series(degree)
-      := DoblDobl_Random_Series3.Random_Series(degree);
+      := DoblDobl_Complex_Random_Series.Random_Series(degree);
     nrm : constant Series(degree) := Norm(s);
     ns : constant Series(degree) := Normalize(s);
     nrm2 : constant Series(degree) := Norm(ns);
@@ -661,7 +661,7 @@ procedure ts_series3 is
     use QuadDobl_Complex_Series_Norms;
 
     s : constant Series(degree)
-      := QuadDobl_Random_Series3.Random_Series(degree);
+      := QuadDobl_Complex_Random_Series.Random_Series(degree);
     nrm : constant Series(degree) := Norm(s);
     ns : constant Series(degree) := Normalize(s);
     nrm2 : constant Series(degree) := Norm(ns);
@@ -694,7 +694,7 @@ procedure ts_series3 is
     use Standard_Complex_Series_Functions;
 
     s : constant Series(degree)
-      := Standard_Random_Series3.Random_Series(degree);
+      := Standard_Complex_Random_Series.Random_Series(degree);
     rc : double_float := 0.0;
     shifteds : Series(degree);
     cc,y,z : Complex_Number;
@@ -730,7 +730,7 @@ procedure ts_series3 is
     use DoblDobl_Complex_Series_Functions;
 
     s : constant Series(degree)
-      := DoblDobl_Random_Series3.Random_Series(degree);
+      := DoblDobl_Complex_Random_Series.Random_Series(degree);
     zero : constant double_double := create(0.0);
     rc : double_double := zero;
     shifteds : Series(degree);
@@ -767,7 +767,7 @@ procedure ts_series3 is
     use QuadDobl_Complex_Series_Functions;
 
     s : constant Series(degree)
-      := QuadDobl_Random_Series3.Random_Series(degree);
+      := QuadDobl_Complex_Random_Series.Random_Series(degree);
     zero : constant quad_double := create(0.0);
     rc : quad_double := zero;
     shifteds : Series(degree);
@@ -868,4 +868,4 @@ procedure ts_series3 is
 
 begin
   Main;
-end ts_series3;
+end ts_cseries;

@@ -1,5 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with DoblDobl_Algebraic_Series3;
+with DoblDobl_Complex_Algebraic_Series;
 with DoblDobl_Complex_Series_Norms;
 
 package body DoblDobl_Series_Vector_Norms3 is
@@ -40,7 +40,7 @@ package body DoblDobl_Series_Vector_Norms3 is
   function Norm ( v : Vector ) return Series is
 
     sn : constant Series := Square_of_Norm(v);
-    res : constant Series := DoblDobl_Algebraic_Series3.sqrt(sn,0);
+    res : constant Series := DoblDobl_Complex_Algebraic_Series.sqrt(sn,0);
 
   begin
     return res;

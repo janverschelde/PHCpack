@@ -1,5 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Algebraic_Series3;
+with Standard_Complex_Algebraic_Series;
 with Standard_Complex_Series_Norms;
 
 package body Standard_Series_Vector_Norms3 is
@@ -40,7 +40,7 @@ package body Standard_Series_Vector_Norms3 is
   function Norm ( v : Vector ) return Series is
 
     sn : constant Series := Square_of_Norm(v);
-    res : constant Series := Standard_Algebraic_Series3.sqrt(sn,0);
+    res : constant Series := Standard_Complex_Algebraic_Series.sqrt(sn,0);
 
   begin
     return res;

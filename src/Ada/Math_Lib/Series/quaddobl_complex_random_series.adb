@@ -1,7 +1,7 @@
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Random_Vectors;
 
-package body QuadDobl_Random_Series3 is
+package body QuadDobl_Complex_Random_Series is
 
   function Random_Series ( degree : integer32 ) return Series is
 
@@ -20,4 +20,4 @@ package body QuadDobl_Random_Series3 is
     return res;
   end Random_Series;
 
-end QuadDobl_Random_Series3;
+end QuadDobl_Complex_Random_Series;

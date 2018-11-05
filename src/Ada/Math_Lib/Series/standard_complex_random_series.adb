@@ -1,7 +1,7 @@
 with Standard_Complex_Vectors;
 with Standard_Random_Vectors;
 
-package body Standard_Random_Series3 is
+package body Standard_Complex_Random_Series is
 
   function Random_Series ( degree : integer32 ) return Series is
 
@@ -20,4 +20,4 @@ package body Standard_Random_Series3 is
     return res;
   end Random_Series;
 
-end Standard_Random_Series3;
+end Standard_Complex_Random_Series;

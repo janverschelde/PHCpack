@@ -7,7 +7,7 @@ with DoblDobl_Complex_Numbers;           use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_Polar;
 with DoblDobl_Complex_Series_io;         use DoblDobl_Complex_Series_io;
 
-package body DoblDobl_Algebraic_Series3 is
+package body DoblDobl_Complex_Algebraic_Series is
 
   function sqrt ( c : Series; i : natural32;
                   verbose : boolean := false ) return Series is
@@ -70,4 +70,4 @@ package body DoblDobl_Algebraic_Series3 is
     return res;
   end Root;
 
-end DoblDobl_Algebraic_Series3;
+end DoblDobl_Complex_Algebraic_Series;

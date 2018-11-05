@@ -1,12 +1,12 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Complex_Series;            use Standard_Complex_Series;
+with DoblDobl_Complex_Series;            use DoblDobl_Complex_Series;
 
-package Standard_Random_Series3 is
+package DoblDobl_Complex_Random_Series is
 
 -- DESCRIPTION :
 --   Exports functions that return random power series,
 --   truncated to the given degree,
---   with coefficients in standard double precision.
+--   with coefficients in double double precision.
 
   function Random_Series ( degree : integer32 ) return Series;
   function Random_Series ( degree : integer32 ) return Link_to_Series;
@@ -15,4 +15,4 @@ package Standard_Random_Series3 is
   --   Returns a series of the given degree, with random coefficients,
   --   on the unit circle on the complex plane.
 
-end Standard_Random_Series3;
+end DoblDobl_Complex_Random_Series;

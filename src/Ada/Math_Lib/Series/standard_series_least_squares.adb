@@ -2,7 +2,7 @@ with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
 with Standard_Mathematical_Functions;     use Standard_Mathematical_Functions;
 with Standard_Complex_Series;             use Standard_Complex_Series;
-with Standard_Algebraic_Series3;
+with Standard_Complex_Algebraic_Series;
 with Standard_Complex_Series_Norms;       use Standard_Complex_Series_Norms;
 
 package body Standard_Series_Least_Squares is
@@ -127,7 +127,7 @@ package body Standard_Series_Least_Squares is
       wrk := Conjugate(a(i,col).all)*a(i,col).all;
       sum := sum + wrk;
     end loop;
-    return Standard_Algebraic_Series3.sqrt(sum,0);
+    return Standard_Complex_Algebraic_Series.sqrt(sum,0);
   end znrm2;
 
   function zdot ( a : Standard_Complex_Series_Matrices.Matrix;

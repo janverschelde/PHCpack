@@ -7,7 +7,7 @@ with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_Polar;
 with QuadDobl_Complex_Series_io;         use QuadDobl_Complex_Series_io;
 
-package body QuadDobl_Algebraic_Series3 is
+package body QuadDobl_Complex_Algebraic_Series is
 
   function sqrt ( c : Series; i : natural32;
                   verbose : boolean := false ) return Series is
@@ -70,4 +70,4 @@ package body QuadDobl_Algebraic_Series3 is
     return res;
   end Root;
 
-end QuadDobl_Algebraic_Series3;
+end QuadDobl_Complex_Algebraic_Series;

@@ -2,7 +2,7 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Random_Numbers;
 with Standard_Complex_Matrices;
-with Standard_Random_Series3;
+with Standard_Complex_Random_Series;
 with Standard_Complex_Series_Vectors;
 with Standard_Random_Series_Vectors;
 
@@ -37,7 +37,7 @@ package body Standard_Random_Series_Matrices is
   begin
     for i in res'range(1) loop
       for j in res'range(2) loop
-        res(i,j) := Standard_Random_Series3.Random_Series(degree);
+        res(i,j) := Standard_Complex_Random_Series.Random_Series(degree);
       end loop;
     end loop;
     return res;

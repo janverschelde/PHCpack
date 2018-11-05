@@ -1,7 +1,7 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with QuadDobl_Complex_Series;            use QuadDobl_Complex_Series;
+with DoblDobl_Complex_Series;            use DoblDobl_Complex_Series;
 
-package QuadDobl_Algebraic_Series3 is
+package DoblDobl_Complex_Algebraic_Series is
 
 -- DESCRIPTION :
 --   An algebraic number is a root of a polynomial in one variable.
@@ -26,4 +26,4 @@ package QuadDobl_Algebraic_Series3 is
   --   The degree of the series on return equals c.deg.
   --   If verbose, then the Newton updates dx are written to screen.
 
-end QuadDobl_Algebraic_Series3;
+end DoblDobl_Complex_Algebraic_Series;

@@ -3,7 +3,7 @@ with Quad_Double_Numbers;                 use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;            use QuadDobl_Complex_Numbers;
 with QuadDobl_Mathematical_Functions;     use QuadDobl_Mathematical_Functions;
 with QuadDobl_Complex_Series;             use QuadDobl_Complex_Series;
-with QuadDobl_Algebraic_Series3;
+with QuadDobl_Complex_Algebraic_Series;
 with QuadDobl_Complex_Series_Norms;       use QuadDobl_Complex_Series_Norms;
 
 package body QuadDobl_Series_Least_Squares is
@@ -128,7 +128,7 @@ package body QuadDobl_Series_Least_Squares is
       wrk := Conjugate(a(i,col).all)*a(i,col).all;
       sum := sum + wrk;
     end loop;
-    return QuadDobl_Algebraic_Series3.sqrt(sum,0);
+    return QuadDobl_Complex_Algebraic_Series.sqrt(sum,0);
   end znrm2;
 
   function zdot ( a : QuadDobl_Complex_Series_Matrices.Matrix;

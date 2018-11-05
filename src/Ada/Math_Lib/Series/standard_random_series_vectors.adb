@@ -1,4 +1,4 @@
-with Standard_Random_Series3;
+with Standard_Complex_Random_Series;
 
 package body Standard_Random_Series_Vectors is
 
@@ -10,7 +10,7 @@ package body Standard_Random_Series_Vectors is
 
   begin
     for k in res'range loop
-      res(k) := Standard_Random_Series3.Random_Series(degree);
+      res(k) := Standard_Complex_Random_Series.Random_Series(degree);
     end loop;
     return res;
   end Random_Series_Vector;

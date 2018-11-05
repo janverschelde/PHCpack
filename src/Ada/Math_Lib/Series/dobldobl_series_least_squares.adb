@@ -3,7 +3,7 @@ with Double_Double_Numbers;               use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;            use DoblDobl_Complex_Numbers;
 with DoblDobl_Mathematical_Functions;     use DoblDobl_Mathematical_Functions;
 with DoblDobl_Complex_Series;             use DoblDobl_Complex_Series;
-with DoblDobl_Algebraic_Series3;
+with DoblDobl_Complex_Algebraic_Series;
 with DoblDobl_Complex_Series_Norms;       use DoblDobl_Complex_Series_Norms;
 
 package body DoblDobl_Series_Least_Squares is
@@ -128,7 +128,7 @@ package body DoblDobl_Series_Least_Squares is
       wrk := Conjugate(a(i,col).all)*a(i,col).all;
       sum := sum + wrk;
     end loop;
-    return DoblDobl_Algebraic_Series3.sqrt(sum,0);
+    return DoblDobl_Complex_Algebraic_Series.sqrt(sum,0);
   end znrm2;
 
   function zdot ( a : DoblDobl_Complex_Series_Matrices.Matrix;

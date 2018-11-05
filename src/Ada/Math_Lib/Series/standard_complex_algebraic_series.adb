@@ -6,7 +6,7 @@ with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_Polar;
 with Standard_Complex_Series_io;         use Standard_Complex_Series_io;
 
-package body Standard_Algebraic_Series3 is
+package body Standard_Complex_Algebraic_Series is
 
   function sqrt ( c : Series; i : natural32;
                   verbose : boolean := false ) return Series is
@@ -59,4 +59,4 @@ package body Standard_Algebraic_Series3 is
     return res;
   end Root;
 
-end Standard_Algebraic_Series3;
+end Standard_Complex_Algebraic_Series;
