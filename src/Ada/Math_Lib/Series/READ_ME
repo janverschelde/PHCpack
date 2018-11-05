@@ -113,6 +113,22 @@ dobldobl_series_matrix_solvers     : linearization for dobldobl series systems
 quaddobl_series_matrix_solvers     : linearization for quaddobl series systems
 ts_serlin3                         : test on linearization
 ------------------------------------------------------------------------------
+standard_cseries_polynomials       : polynomials with series as coefficients
+standard_cseries_poly_functions    : evaluating standard series polynomials
+standard_cseries_poly_systems      : systems of standard series polynomials
+standard_cseries_poly_sysfun       : evaluating standard series poly systems
+standard_cseries_jaco_matrices     : differentiating standard series systems
+dobldobl_cseries_polynomials       : polynomials with series as coefficients
+dobldobl_cseries_poly_functions    : evaluating dobldobl series polynomials
+dobldobl_cseries_poly_systems      : systems of dobldobl series polynomials
+dobldobl_cseries_poly_sysfun       : evaluating dobldobl series poly systems
+dobldobl_cseries_jaco_matrices     : differentiating dobldobl series systems
+quaddobl_cseries_polynomials       : polynomials with series as coefficients
+quaddobl_cseries_poly_functions    : evaluating quaddobl series polynomials
+quaddobl_cseries_poly_systems      : systems of quaddobl series polynomials
+quaddobl_cseries_poly_sysfun       : evaluating quaddobl series poly systems
+quaddobl_series_jaco_matrices      : differentiating quaddobl series systems
+------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients
 standard_dense_series2_io         : basic input/output of standard series
 standard_algebraic_series2        : sqrt and n-th root of standard series

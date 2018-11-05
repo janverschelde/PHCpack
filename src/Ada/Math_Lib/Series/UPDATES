@@ -1,3 +1,7 @@
+Mon 5 Nov 2018 : instantiated polynomials, functions, systems, and Jacobian
+  matrices to define 15 packages to work with polynomial systems with series
+  as coefficients, in double, double double, and quad double precision.
+
 Sun 4 Nov 2018 : fixed problem in {dobldobl,quaddobl}_series_vector_norms3.adb
   and defined {dobldobl,quaddobl}_series_{linear_solvers,least_squares},
   tested by ts_sermat3.  Made *interpolating_series3, tested by ts_seritp3.
