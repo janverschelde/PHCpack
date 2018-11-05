@@ -519,8 +519,8 @@ ts_series:
 ts_series2:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_series2.adb -o $(BIN)/ts_series2
 
-ts_series3:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_series3.adb -o $(BIN)/ts_series3
+ts_cseries:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cseries.adb -o $(BIN)/ts_cseries
 
 ts_bincff:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_bincff.adb -o $(BIN)/ts_bincff
