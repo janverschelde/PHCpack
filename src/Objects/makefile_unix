@@ -564,6 +564,9 @@ ts_serlin:
 ts_serlin2:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_serlin2.adb -o $(BIN)/ts_serlin2
 
+ts_serlin3:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_serlin3.adb -o $(BIN)/ts_serlin3
+
 ts_serpol:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_serpol.adb -o $(BIN)/ts_serpol
 
