@@ -58,7 +58,7 @@ with Standard_Series_Matrix_Solvers;
 with DoblDobl_Series_Matrix_Solvers;
 with QuadDobl_Series_Matrix_Solvers;
 
-procedure ts_serlin3 is
+procedure ts_cserlin is
 
 -- DESCRIPTION :
 --   Tests the linearization of solving linear systems of truncated series.
@@ -571,4 +571,4 @@ procedure ts_serlin3 is
 
 begin
   Main;
-end ts_serlin3;
+end ts_cserlin;

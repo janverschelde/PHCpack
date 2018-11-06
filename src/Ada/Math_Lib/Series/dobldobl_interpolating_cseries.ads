@@ -1,15 +1,15 @@
 with Standard_Integer_Numbers;         use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;        use Standard_Floating_Numbers;
-with QuadDobl_Complex_Numbers;         use QuadDobl_Complex_Numbers;
-with Quad_Double_Vectors;
-with QuadDobl_Complex_Vectors;
-with QuadDobl_Complex_VecVecs;
-with QuadDobl_Complex_Matrices;
-with QuadDobl_Complex_VecMats;
-with QuadDobl_Complex_Vector_Series;
-with QuadDobl_Complex_Matrix_Series;
+with DoblDobl_Complex_Numbers;         use DoblDobl_Complex_Numbers;
+with Double_Double_Vectors;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_VecMats;
+with DoblDobl_Complex_Vector_Series;
+with DoblDobl_Complex_Matrix_Series;
 
-package QuadDobl_Interpolating_Series3 is
+package DoblDobl_Interpolating_CSeries is
 
 -- DESCRIPTION :
 --   Via interpolation at random points we can solve linear systems
@@ -17,28 +17,28 @@ package QuadDobl_Interpolating_Series3 is
 --   of the matrix coefficients are singular matrices.
 --   The calculations happen in double double precision.
 
-  function Eval ( v : QuadDobl_Complex_Vector_Series.Vector;
+  function Eval ( v : DoblDobl_Complex_Vector_Series.Vector;
                   t : Complex_Number )
-                return QuadDobl_Complex_Vectors.Vector;
+                return DoblDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns the vector obtained by evaluating v at t.
 
-  function Eval ( m : QuadDobl_Complex_Matrix_Series.Matrix;
+  function Eval ( m : DoblDobl_Complex_Matrix_Series.Matrix;
                   t : Complex_Number )
-                return QuadDobl_Complex_Matrices.Matrix;
+                return DoblDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the matrix obtained by evaluating m at t.
 
-  function Rank ( A : QuadDobl_Complex_Matrices.Matrix;
+  function Rank ( A : DoblDobl_Complex_Matrices.Matrix;
                   tol : double_float ) return integer32;
 
   -- DESCRIPTION :
   --   Returns the numerical rank of the matrix.
 
   function Full_Rank
-             ( m : QuadDobl_Complex_Matrix_Series.Matrix;
+             ( m : DoblDobl_Complex_Matrix_Series.Matrix;
                d : integer32; verbose : boolean := true ) return boolean;
 
   -- DESCRIPTION :
@@ -46,7 +46,7 @@ package QuadDobl_Interpolating_Series3 is
   --   has full rank when evaluated at a random complex value.
 
   function Full_Rank
-             ( m : QuadDobl_Complex_Matrix_Series.Matrix;
+             ( m : DoblDobl_Complex_Matrix_Series.Matrix;
                verbose : boolean := true ) return integer32;
 
   -- DESCRIPTION :
@@ -57,18 +57,18 @@ package QuadDobl_Interpolating_Series3 is
   --   If the matrix series m does not have full rank, then the solution
   --   of a linear system with m as a coefficient matrix may not work.
 
-  function Sample ( v : QuadDobl_Complex_Vector_Series.Vector;
-                    t : QuadDobl_Complex_Vectors.Vector )
-                  return QuadDobl_Complex_VecVecs.VecVec;
+  function Sample ( v : DoblDobl_Complex_Vector_Series.Vector;
+                    t : DoblDobl_Complex_Vectors.Vector )
+                  return DoblDobl_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Samples the vector series m at the points in t,
   --   returning the evaluated vectors v(t).
   --   The range of the returned result is t'range.
 
-  function Sample ( m : QuadDobl_Complex_Matrix_Series.Matrix;
-                    t : QuadDobl_Complex_Vectors.Vector )
-                  return QuadDobl_Complex_VecMats.VecMat;
+  function Sample ( m : DoblDobl_Complex_Matrix_Series.Matrix;
+                    t : DoblDobl_Complex_Vectors.Vector )
+                  return DoblDobl_Complex_VecMats.VecMat;
 
   -- DESCRIPTION :
   --   Samples the matrix series m at the points in t,
@@ -76,9 +76,9 @@ package QuadDobl_Interpolating_Series3 is
   --   The range of the returned result is t'range.
 
   function Solve_Linear_Systems
-             ( m : QuadDobl_Complex_VecMats.VecMat;
-               v : QuadDobl_Complex_VecVecs.VecVec )
-             return QuadDobl_Complex_VecVecs.VecVec;
+             ( m : DoblDobl_Complex_VecMats.VecMat;
+               v : DoblDobl_Complex_VecVecs.VecVec )
+             return DoblDobl_Complex_VecVecs.VecVec;
             
   -- DESCRIPTION :
   --   Solves the linear systems m(i)*x = v(i) and returns
@@ -88,17 +88,17 @@ package QuadDobl_Interpolating_Series3 is
   --   vectors in v have the same dimension.
 
   function Residuals
-             ( m : QuadDobl_Complex_VecMats.VecMat;
-               v,x : QuadDobl_Complex_VecVecs.VecVec )
-             return Quad_Double_Vectors.Vector;
+             ( m : DoblDobl_Complex_VecMats.VecMat;
+               v,x : DoblDobl_Complex_VecVecs.VecVec )
+             return Double_Double_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns the vector of residuals for the solutions in x
   --   of the systems defined by the matrices in m and the
   --   right hand side vectors in v.
 
-  function Transpose ( x : QuadDobl_Complex_VecVecs.VecVec )
-                     return QuadDobl_Complex_VecVecs.VecVec;
+  function Transpose ( x : DoblDobl_Complex_VecVecs.VecVec )
+                     return DoblDobl_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   If the range of x is 0..deg and the range of each x(i)
@@ -107,8 +107,8 @@ package QuadDobl_Interpolating_Series3 is
   --   on return has the range 1..deg+1.
 
   function Vandermonde_Matrix
-             ( t : QuadDobl_Complex_Vectors.Vector )
-             return QuadDobl_Complex_Matrices.Matrix;
+             ( t : DoblDobl_Complex_Vectors.Vector )
+             return DoblDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the Vandermonde matrix defined by the points in t.
@@ -116,26 +116,26 @@ package QuadDobl_Interpolating_Series3 is
   --   where dim equals the number of points in t.
 
   function Solve_Interpolation_Systems
-             ( v : QuadDobl_Complex_Matrices.Matrix;
-               f : QuadDobl_Complex_VecVecs.VecVec )
-             return QuadDobl_Complex_VecVecs.VecVec;
+             ( v : DoblDobl_Complex_Matrices.Matrix;
+               f : DoblDobl_Complex_VecVecs.VecVec )
+             return DoblDobl_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Solves the interpolation linear systems defined by the
   --   Vandermonde matrix in v and the right hand side vectors in f.
 
-  function Construct ( x : QuadDobl_Complex_VecVecs.VecVec )
-                     return QuadDobl_Complex_Vector_Series.Vector;
+  function Construct ( x : DoblDobl_Complex_VecVecs.VecVec )
+                     return DoblDobl_Complex_Vector_Series.Vector;
 
   -- DESCRIPTION :
   --   Takes the solutions of the interpolation systems in x
   --   and constructs the vector series.
 
   function Interpolate
-             ( mat : QuadDobl_Complex_Matrix_Series.Matrix;
-               rhs : QuadDobl_Complex_Vector_Series.Vector;
+             ( mat : DoblDobl_Complex_Matrix_Series.Matrix;
+               rhs : DoblDobl_Complex_Vector_Series.Vector;
                verbose : boolean := true )
-             return QuadDobl_Complex_Vector_Series.Vector;
+             return DoblDobl_Complex_Vector_Series.Vector;
 
   -- DESCRIPTION :
   --   Samples the matrix and vector series at random points
@@ -149,9 +149,9 @@ package QuadDobl_Interpolating_Series3 is
   -- DESCRIPTION :
   --   Returns k! as a complex number to help the differentiation.
 
-  function Diff ( m : QuadDobl_Complex_VecMats.VecMat;
+  function Diff ( m : DoblDobl_Complex_VecMats.VecMat;
                   t : Complex_Number; pow,ord : integer32 )
-                return QuadDobl_Complex_Matrices.Matrix;
+                return DoblDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the value of the derivative of the power series 
@@ -161,9 +161,9 @@ package QuadDobl_Interpolating_Series3 is
   --   of the series.
 
   function Hermite_Matrix
-             ( m : QuadDobl_Complex_VecMats.VecMat;
+             ( m : DoblDobl_Complex_VecMats.VecMat;
                t : Complex_Number )
-             return QuadDobl_Complex_Matrices.Matrix;
+             return DoblDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the coefficient matrix for the linear system for the
@@ -175,19 +175,19 @@ package QuadDobl_Interpolating_Series3 is
   -- REQUIRED : m'first = 0.
 
   function Hermite_Vector
-             ( v : QuadDobl_Complex_VecVecs.VecVec;
+             ( v : DoblDobl_Complex_VecVecs.VecVec;
                t : Complex_Number )
-             return QuadDobl_Complex_Vectors.Vector;
+             return DoblDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns the right hand side vector corresponding to the Hermite
   --   coefficient matrix to interpolate at t.
 
   function Hermite_Interpolate
-             ( mat : QuadDobl_Complex_Matrix_Series.Matrix;
-               rhs : QuadDobl_Complex_Vector_Series.Vector;
+             ( mat : DoblDobl_Complex_Matrix_Series.Matrix;
+               rhs : DoblDobl_Complex_Vector_Series.Vector;
                t : Complex_Number; verbose : boolean := true )
-             return QuadDobl_Complex_Vector_Series.Vector;
+             return DoblDobl_Complex_Vector_Series.Vector;
 
   -- DESCRIPTION :
   --   Samples the matrix and vector series at t and solves
@@ -198,8 +198,8 @@ package QuadDobl_Interpolating_Series3 is
   -- REQUIRED : mat.deg = rhs.deg.
 
   function Hermite_Laurent_Matrix
-             ( m : QuadDobl_Complex_VecMats.VecMat )
-             return QuadDobl_Complex_Matrices.Matrix;
+             ( m : DoblDobl_Complex_VecMats.VecMat )
+             return DoblDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the block structured coefficient matrix for the
@@ -209,8 +209,8 @@ package QuadDobl_Interpolating_Series3 is
   --   and as many rows as m(0)'last(1)*(2*m'last+1).
 
   function Hermite_Laurent_Vector
-             ( v : QuadDobl_Complex_VecVecs.VecVec )
-             return QuadDobl_Complex_Vectors.Vector;
+             ( v : DoblDobl_Complex_VecVecs.VecVec )
+             return DoblDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns the right hand side vector corresponding to the Hermite
@@ -218,10 +218,10 @@ package QuadDobl_Interpolating_Series3 is
   --   The vector on return has v(0)'last*(2*v'last+1) elements.
 
   function Hermite_Laurent_Interpolate
-             ( mat : QuadDobl_Complex_Matrix_Series.Matrix;
-               rhs : QuadDobl_Complex_Vector_Series.Vector;
+             ( mat : DoblDobl_Complex_Matrix_Series.Matrix;
+               rhs : DoblDobl_Complex_Vector_Series.Vector;
                verbose : boolean := true )
-             return QuadDobl_Complex_Vector_Series.Vector;
+             return DoblDobl_Complex_Vector_Series.Vector;
 
   -- DESCRIPTION :
   --   Applies Hermite-Laurent interpolation at t = 0,
@@ -231,4 +231,4 @@ package QuadDobl_Interpolating_Series3 is
 
   -- REQUIRED : mat.deg = rhs.deg.
 
-end QuadDobl_Interpolating_Series3;
+end DoblDobl_Interpolating_CSeries;

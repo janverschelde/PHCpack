@@ -9,7 +9,7 @@ with Standard_Complex_VecMats;
 with Standard_Complex_Vector_Series;
 with Standard_Complex_Matrix_Series;
 
-package Standard_Interpolating_Series3 is
+package Standard_Interpolating_CSeries is
 
 -- DESCRIPTION :
 --   Via interpolation at random points we can solve linear systems
@@ -231,4 +231,4 @@ package Standard_Interpolating_Series3 is
 
   -- REQUIRED : mat.deg = rhs.deg.
 
-end Standard_Interpolating_Series3;
+end Standard_Interpolating_CSeries;

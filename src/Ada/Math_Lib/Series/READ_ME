@@ -99,20 +99,20 @@ dobldobl_series_least_squares      : dobldobl QR solver on matrices of series
 quaddobl_series_least_squares      : quaddobl QR solver on matrices of series
 ts_csermat                         : test on 3rd version of matrices of series
 ------------------------------------------------------------------------------
-standard_interpolating_series3     : interpolation for standard series systems
-dobldobl_interpolating_series3     : interpolation for dobldobl series systems
-quaddobl_interpolating_series3     : interpolation for quaddobl series systems
-ts_seritp3                         : test on linear series interpolation
+standard_interpolating_series      : interpolation for standard series systems
+dobldobl_interpolating_series      : interpolation for dobldobl series systems
+quaddobl_interpolating_series      : interpolation for quaddobl series systems
+ts_cseritp                         : test on linear series interpolation
 ------------------------------------------------------------------------------
 standard_echelon_forms             : echelon standard Hermite-Laurent systems
 dobldobl_echelon_forms             : echelon dobldobl Hermite-Laurent systems
 quaddobl_echelon_forms             : echelon quaddobl Hermite-Laurent systems
-ts_sersin3                         : test on solving singular linear systems
+ts_csersin                         : test on solving singular linear systems
 ------------------------------------------------------------------------------
 standard_series_matrix_solvers     : linearization for standard series systems
 dobldobl_series_matrix_solvers     : linearization for dobldobl series systems
 quaddobl_series_matrix_solvers     : linearization for quaddobl series systems
-ts_serlin3                         : test on linearization
+ts_cserlin                         : test on linearization
 ------------------------------------------------------------------------------
 standard_cseries_polynomials       : polynomials with series as coefficients
 standard_cseries_poly_functions    : evaluating standard series polynomials
@@ -129,6 +129,12 @@ quaddobl_cseries_poly_functions    : evaluating quaddobl series polynomials
 quaddobl_cseries_poly_systems      : systems of quaddobl series polynomials
 quaddobl_cseries_poly_sysfun       : evaluating quaddobl series poly systems
 quaddobl_series_jaco_matrices      : differentiating quaddobl series systems
+complex_series_and_polynomials     : convertor functions
+complex_series_and_polynomials_io  : symbolic i/o of series
+standard_polynomial_cseries        : standard polynomial series
+dobldobl_polynomial_cseries        : dobldobl polynomial series
+quaddobl_polynomial_cseries        : quaddobl polynomial series
+ts_serpol                          : test on series polynomials
 ------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients
 standard_dense_series2_io         : basic input/output of standard series

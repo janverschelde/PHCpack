@@ -1,7 +1,7 @@
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with DoblDobl_Complex_QR_Least_Squares;  use DoblDobl_Complex_QR_Least_Squares;
 with DoblDobl_Complex_Singular_Values;   use DoblDobl_Complex_Singular_Values;
-with DoblDobl_Interpolating_Series3;
+with DoblDobl_Interpolating_CSeries;
 with DoblDobl_Echelon_Forms;             use DoblDobl_Echelon_Forms;
 
 package body DoblDobl_Series_Matrix_Solvers is
@@ -289,10 +289,10 @@ package body DoblDobl_Series_Matrix_Solvers is
     nrows : constant integer32 := nbr*(2*deg+1);
     ncols : constant integer32 := nbc*(2*deg+1);
     hlm : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
-        := DoblDobl_Interpolating_Series3.Hermite_Laurent_Matrix(A.cff(0..deg));
+        := DoblDobl_Interpolating_CSeries.Hermite_Laurent_Matrix(A.cff(0..deg));
     x : DoblDobl_Complex_Vectors.Vector(1..ncols);
     rhs : DoblDobl_Complex_Vectors.Vector(1..nrows)
-        := DoblDobl_Interpolating_Series3.Hermite_Laurent_Vector(b.cff(0..deg));
+        := DoblDobl_Interpolating_CSeries.Hermite_Laurent_Vector(b.cff(0..deg));
     U : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
     col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);

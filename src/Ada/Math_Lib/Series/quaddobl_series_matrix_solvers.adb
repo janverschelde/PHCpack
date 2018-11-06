@@ -1,7 +1,7 @@
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_QR_Least_Squares;  use QuadDobl_Complex_QR_Least_Squares;
 with QuadDobl_Complex_Singular_Values;   use QuadDobl_Complex_Singular_Values;
-with QuadDobl_Interpolating_Series3;
+with QuadDobl_Interpolating_CSeries;
 with QuadDobl_Echelon_Forms;             use QuadDobl_Echelon_Forms;
 
 package body QuadDobl_Series_Matrix_Solvers is
@@ -289,10 +289,10 @@ package body QuadDobl_Series_Matrix_Solvers is
     nrows : constant integer32 := nbr*(2*deg+1);
     ncols : constant integer32 := nbc*(2*deg+1);
     hlm : QuadDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
-        := QuadDobl_Interpolating_Series3.Hermite_Laurent_Matrix(A.cff(0..deg));
+        := QuadDobl_Interpolating_CSeries.Hermite_Laurent_Matrix(A.cff(0..deg));
     x : QuadDobl_Complex_Vectors.Vector(1..ncols);
     rhs : QuadDobl_Complex_Vectors.Vector(1..nrows)
-        := QuadDobl_Interpolating_Series3.Hermite_Laurent_Vector(b.cff(0..deg));
+        := QuadDobl_Interpolating_CSeries.Hermite_Laurent_Vector(b.cff(0..deg));
     U : QuadDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
     col_ipvt,pivots : Standard_Integer_Vectors.Vector(1..ncols);

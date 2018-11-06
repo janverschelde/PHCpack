@@ -13,7 +13,7 @@ with QuadDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_QR_Least_Squares;
 with QuadDobl_Complex_Singular_Values;
 
-package body QuadDobl_Interpolating_Series3 is
+package body QuadDobl_Interpolating_CSeries is
 
   function Eval ( v : QuadDobl_Complex_Vector_Series.Vector;
                   t : Complex_Number )
@@ -656,4 +656,4 @@ package body QuadDobl_Interpolating_Series3 is
     return res;
   end Hermite_Laurent_Interpolate;
 
-end QuadDobl_Interpolating_Series3;
+end QuadDobl_Interpolating_CSeries;

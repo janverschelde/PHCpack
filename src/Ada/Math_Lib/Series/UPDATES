@@ -1,6 +1,9 @@
 Tue 6 Nov 2018 : renamed *_series_vector_norms3 into *_cseries_vector_norms
   with modification and renaming of ts_servec3 into ts_cservec and
-  ts_sermat3 into ts_csermat.
+  ts_sermat3 into ts_csermat.  Renamed *_interpolating_series3* into
+  *_interpolating_cseries*, which changed ts_seritp3, ts_sersin3,
+  and *_series_matrix_solvers.adb.  Renamed ts_seritp3 into ts_cseritp,
+  ts_sersin3 into ts_csersin, and ts_serlin3 into ts_cserlin.
 
 Mon 5 Nov 2018 : instantiated polynomials, functions, systems, and Jacobian
   matrices to define 15 packages to work with polynomial systems with series

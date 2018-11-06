@@ -53,14 +53,14 @@ with QuadDobl_Dense_Vector_Series_io;    use QuadDobl_Dense_Vector_Series_io;
 with QuadDobl_Dense_Matrix_Series;
 with QuadDobl_Dense_Matrix_Series_io;    use QuadDobl_Dense_Matrix_Series_io;
 with Random_Matrix_Series;               use Random_Matrix_Series;
-with Standard_Interpolating_Series3;
-with DoblDobl_Interpolating_Series3;
-with QuadDobl_Interpolating_Series3;
+with Standard_Interpolating_CSeries;
+with DoblDobl_Interpolating_CSeries;
+with QuadDobl_Interpolating_CSeries;
 with Standard_Echelon_Forms;             use Standard_Echelon_Forms;
 with DoblDobl_Echelon_Forms;             use DoblDobl_Echelon_Forms;
 with QuadDobl_Echelon_Forms;             use QuadDobl_Echelon_Forms;
 
-procedure ts_sersin3 is
+procedure ts_csersin is
 
 -- DESCRIPTION :
 --   Development of solving linear systems of series where the leading
@@ -743,7 +743,7 @@ procedure ts_sersin3 is
   --   Solves the linear system defined by the Hermite-Laurent
   --   interpolation conditions, in standard double precision.
 
-    use Standard_Interpolating_Series3;
+    use Standard_Interpolating_CSeries;
 
     deg : constant integer32 := mat.deg;
     nbr : constant integer32 := mat.cff(0)'last(1);
@@ -787,7 +787,7 @@ procedure ts_sersin3 is
   --   Solves the linear system defined by the Hermite-Laurent
   --   interpolation conditions, in double double precision.
 
-    use DoblDobl_Interpolating_Series3;
+    use DoblDobl_Interpolating_CSeries;
 
     deg : constant integer32 := mat.deg;
     nbr : constant integer32 := mat.cff(0)'last(1);
@@ -832,7 +832,7 @@ procedure ts_sersin3 is
   --   Solves the linear system defined by the Hermite-Laurent
   --   interpolation conditions, in quad double precision.
 
-    use QuadDobl_Interpolating_Series3;
+    use QuadDobl_Interpolating_CSeries;
 
     deg : constant integer32 := mat.deg;
     nbr : constant integer32 := mat.cff(0)'last(1);
@@ -1231,4 +1231,4 @@ procedure ts_sersin3 is
 
 begin
   Main;
-end ts_sersin3;
+end ts_csersin;

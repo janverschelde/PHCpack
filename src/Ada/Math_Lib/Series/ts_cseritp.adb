@@ -44,11 +44,11 @@ with QuadDobl_Complex_Matrix_Series;
 with QuadDobl_Complex_Matrix_Series_io;  use QuadDobl_Complex_Matrix_Series_io;
 with QuadDobl_Random_Series_Vectors;
 with QuadDobl_Random_Series_Matrices;
-with Standard_Interpolating_Series3;
-with DoblDobl_Interpolating_Series3;
-with QuadDobl_Interpolating_Series3;
+with Standard_Interpolating_CSeries;
+with DoblDobl_Interpolating_CSeries;
+with QuadDobl_Interpolating_CSeries;
 
-procedure ts_seritp3 is
+procedure ts_cseritp is
 
 -- DESCRIPTION :
 --   Development of solving linear systems of series with interpolation.
@@ -72,13 +72,13 @@ procedure ts_seritp3 is
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    rnk := Standard_Interpolating_Series3.Full_Rank(mat);
+    rnk := Standard_Interpolating_CSeries.Full_Rank(mat);
     if rnk = -1 then
       put_line("The matrix series does not have full rank.");
     else
       put_line("The matrix series has full rank.");
       put("The smallest degree for full rank : "); put(rnk,1); new_line;
-      cff := Standard_Interpolating_Series3.Interpolate(mat,rhs);
+      cff := Standard_Interpolating_CSeries.Interpolate(mat,rhs);
       put_line("The computed solution :"); put(cff);
       put_line("The constructed solution :"); put(sol);
     end if;
@@ -103,13 +103,13 @@ procedure ts_seritp3 is
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    rnk := DoblDobl_Interpolating_Series3.Full_Rank(mat);
+    rnk := DoblDobl_Interpolating_CSeries.Full_Rank(mat);
     if rnk = -1 then
       put_line("The matrix series does not have full rank.");
     else
       put_line("The matrix series has full rank.");
       put("The smallest degree for full rank : "); put(rnk,1); new_line;
-      cff := DoblDobl_Interpolating_Series3.Interpolate(mat,rhs);
+      cff := DoblDobl_Interpolating_CSeries.Interpolate(mat,rhs);
       put_line("The computed solution :"); put(cff);
       put_line("The constructed solution :"); put(sol);
     end if;
@@ -134,13 +134,13 @@ procedure ts_seritp3 is
     put_line("The generated matrix series :"); put(mat);
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
-    rnk := QuadDobl_Interpolating_Series3.Full_Rank(mat);
+    rnk := QuadDobl_Interpolating_CSeries.Full_Rank(mat);
     if rnk = -1 then
       put_line("The matrix series does not have full rank.");
     else
       put_line("The matrix series has full rank.");
       put("The smallest degree for full rank : "); put(rnk,1); new_line;
-      cff := QuadDobl_Interpolating_Series3.Interpolate(mat,rhs);
+      cff := QuadDobl_Interpolating_CSeries.Interpolate(mat,rhs);
       put_line("The computed solution :"); put(cff);
       put_line("The constructed solution :"); put(sol);
     end if;
@@ -603,7 +603,7 @@ procedure ts_seritp3 is
   --   If laurent, then Hermite-Laurent interpolation is used.
 
     use Standard_Complex_Numbers;
-    use Standard_Interpolating_Series3;
+    use Standard_Interpolating_CSeries;
 
     mat : Standard_Complex_Matrix_Series.Matrix
         := Standard_Random_Series_Matrices.Random_Matrix_Series(deg,dim,0,1);
@@ -623,7 +623,7 @@ procedure ts_seritp3 is
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
    -- mat.deg := deg; rhs.deg := deg; -- truncate the degrees
-    rnk := Standard_Interpolating_Series3.Full_Rank(mat);
+    rnk := Standard_Interpolating_CSeries.Full_Rank(mat);
     if rnk = -1 then
       put_line("The matrix series does not have full rank.");
     else
@@ -648,7 +648,7 @@ procedure ts_seritp3 is
   --   If laurent, then Hermite-Laurent interpolation is used.
 
     use DoblDobl_Complex_Numbers;
-    use DoblDobl_Interpolating_Series3;
+    use DoblDobl_Interpolating_CSeries;
 
     mat : DoblDobl_Complex_Matrix_Series.Matrix
         := DoblDobl_Random_Series_Matrices.Random_Matrix_Series(deg,dim,0,1);
@@ -669,7 +669,7 @@ procedure ts_seritp3 is
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
    -- mat.deg := deg; rhs.deg := deg; -- truncate the degrees
-    rnk := DoblDobl_Interpolating_Series3.Full_Rank(mat);
+    rnk := DoblDobl_Interpolating_CSeries.Full_Rank(mat);
     if rnk = -1 then
       put_line("The matrix series does not have full rank.");
     else
@@ -694,7 +694,7 @@ procedure ts_seritp3 is
   --   If laurent, then Hermite-Laurent interpolation is used.
 
     use QuadDobl_Complex_Numbers;
-    use QuadDobl_Interpolating_Series3;
+    use QuadDobl_Interpolating_CSeries;
 
     mat : QuadDobl_Complex_Matrix_Series.Matrix
         := QuadDobl_Random_Series_Matrices.Random_Matrix_Series(deg,dim,0,1);
@@ -715,7 +715,7 @@ procedure ts_seritp3 is
     put_line("The generated solution :"); put(sol);
     put_line("The multiplied right hand side vector : "); put(rhs);
    -- mat.deg := deg; rhs.deg := deg; -- truncate the degrees
-    rnk := QuadDobl_Interpolating_Series3.Full_Rank(mat);
+    rnk := QuadDobl_Interpolating_CSeries.Full_Rank(mat);
     if rnk = -1 then
       put_line("The matrix series does not have full rank.");
     else
@@ -748,7 +748,7 @@ procedure ts_seritp3 is
   begin
     put_line("The special matrix series : "); put(mat);
     put_line("The special vector series : "); put(rhs);
-    sol := Standard_Interpolating_Series3.Hermite_Interpolate(mat,rhs,t);
+    sol := Standard_Interpolating_CSeries.Hermite_Interpolate(mat,rhs,t);
     put_line("The solution : "); put(sol);
   end Standard_Special_Hermite_Test;
 
@@ -770,7 +770,7 @@ procedure ts_seritp3 is
   begin
     put_line("The special matrix series : "); put(mat);
     put_line("The special vector series : "); put(rhs);
-    sol := DoblDobl_Interpolating_Series3.Hermite_Interpolate(mat,rhs,t);
+    sol := DoblDobl_Interpolating_CSeries.Hermite_Interpolate(mat,rhs,t);
     put_line("The solution : "); put(sol);
   end DoblDobl_Special_Hermite_Test;
 
@@ -792,7 +792,7 @@ procedure ts_seritp3 is
   begin
     put_line("The special matrix series : "); put(mat);
     put_line("The special vector series : "); put(rhs);
-    sol := QuadDobl_Interpolating_Series3.Hermite_Interpolate(mat,rhs,t);
+    sol := QuadDobl_Interpolating_CSeries.Hermite_Interpolate(mat,rhs,t);
     put_line("The solution : "); put(sol);
   end QuadDobl_Special_Hermite_Test;
 
@@ -808,7 +808,7 @@ procedure ts_seritp3 is
         := Standard_Singular_Vector_Series;
     sol,y : Standard_Complex_Vector_Series.Vector(mat.deg);
 
-    use Standard_Interpolating_Series3;
+    use Standard_Interpolating_CSeries;
 
   begin
     put_line("The singular matrix series : "); put(mat);
@@ -831,7 +831,7 @@ procedure ts_seritp3 is
         := DoblDobl_Singular_Vector_Series;
     sol,y : DoblDobl_Complex_Vector_Series.Vector(mat.deg);
 
-    use DoblDobl_Interpolating_Series3;
+    use DoblDobl_Interpolating_CSeries;
 
   begin
     put_line("The singular matrix series : "); put(mat);
@@ -854,7 +854,7 @@ procedure ts_seritp3 is
         := QuadDobl_Singular_Vector_Series;
     sol,y : QuadDobl_Complex_Vector_Series.Vector(mat.deg);
 
-    use QuadDobl_Interpolating_Series3;
+    use QuadDobl_Interpolating_CSeries;
 
   begin
     put_line("The singular matrix series : "); put(mat);
@@ -982,4 +982,4 @@ procedure ts_seritp3 is
 
 begin
   Main;
-end ts_seritp3;
+end ts_cseritp;
