@@ -599,6 +599,10 @@ ts_serpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpol.adb \
               -o $(BIN)/ts_serpol
 
+ts_cserpol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserpol.adb \
+              -o $(BIN)/ts_cserpol
+
 ts_sersys:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersys.adb \
               -o $(BIN)/ts_sersys
