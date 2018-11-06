@@ -26,14 +26,14 @@ with DoblDobl_Complex_Vector_Series;
 with DoblDobl_Complex_Vector_Series_io;  use DoblDobl_Complex_Vector_Series_io;
 with QuadDobl_Complex_Vector_Series;
 with QuadDobl_Complex_Vector_Series_io;  use QuadDobl_Complex_Vector_Series_io;
-with Standard_Series_Vector_Norms3;
-with DoblDobl_Series_Vector_Norms3;
-with QuadDobl_Series_Vector_Norms3;
+with Standard_CSeries_Vector_Norms;
+with DoblDobl_CSeries_Vector_Norms;
+with QuadDobl_CSeries_Vector_Norms;
 with Standard_Random_Series_Vectors;
 with DoblDobl_Random_Series_Vectors;
 with QuadDobl_Random_Series_Vectors;
 
-procedure ts_servec3 is
+procedure ts_cservec is
 
 -- DESCRIPTION :
 --   Test on vectors of truncated power series.
@@ -82,7 +82,7 @@ procedure ts_servec3 is
 
     use Standard_Complex_Series;
     use Standard_Complex_Series_Vectors;
-    use Standard_Series_Vector_Norms3;
+    use Standard_CSeries_Vector_Norms;
 
     sn : constant Series := Norm(v);
     snv : Series(sn.deg);
@@ -105,7 +105,7 @@ procedure ts_servec3 is
 
     use DoblDobl_Complex_Series;
     use DoblDobl_Complex_Series_Vectors;
-    use DoblDobl_Series_Vector_Norms3;
+    use DoblDobl_CSeries_Vector_Norms;
 
     sn : constant Series := Norm(v);
     snv : Series(sn.deg);
@@ -128,7 +128,7 @@ procedure ts_servec3 is
 
     use QuadDobl_Complex_Series;
     use QuadDobl_Complex_Series_Vectors;
-    use QuadDobl_Series_Vector_Norms3;
+    use QuadDobl_CSeries_Vector_Norms;
 
     sn : constant Series := Norm(v);
     snv : Series(sn.deg);
@@ -228,4 +228,4 @@ procedure ts_servec3 is
 
 begin
   Main;
-end ts_servec3;
+end ts_cservec;

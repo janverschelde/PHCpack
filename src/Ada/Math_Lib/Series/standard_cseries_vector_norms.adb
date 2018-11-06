@@ -1,8 +1,8 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with QuadDobl_Complex_Algebraic_Series;
-with QuadDobl_Complex_Series_Norms;
+with Standard_Complex_Algebraic_Series;
+with Standard_Complex_Series_Norms;
 
-package body QuadDobl_Series_Vector_Norms3 is
+package body Standard_CSeries_Vector_Norms is
 
   function Conjugate ( v : Vector ) return Vector is
 
@@ -10,7 +10,7 @@ package body QuadDobl_Series_Vector_Norms3 is
 
   begin
     for i in v'range loop
-      res(i) := QuadDobl_Complex_Series_Norms.Conjugate(v(i));
+      res(i) := Standard_Complex_Series_Norms.Conjugate(v(i));
     end loop;
     return res;
   end Conjugate;
@@ -19,7 +19,7 @@ package body QuadDobl_Series_Vector_Norms3 is
 
     w : constant Vector(u'range) := Conjugate(u);
     deg : constant integer32 := u(u'first).cff'last;
-    res : Series := Create(0,deg);
+    res : Series(deg) := Create(0,deg);
 
   begin
     for i in w'range loop
@@ -40,7 +40,7 @@ package body QuadDobl_Series_Vector_Norms3 is
   function Norm ( v : Vector ) return Series is
 
     sn : constant Series := Square_of_Norm(v);
-    res : constant Series := QuadDobl_Complex_Algebraic_Series.sqrt(sn,0);
+    res : constant Series := Standard_Complex_Algebraic_Series.sqrt(sn,0);
 
   begin
     return res;
@@ -74,15 +74,15 @@ package body QuadDobl_Series_Vector_Norms3 is
     return res;
   end Normalize;
 
-  function Max_Norm ( v : Vector ) return quad_double is
+  function Max_Norm ( v : Vector ) return double_float is
 
-    res : quad_double
-        := QuadDobl_Complex_Series_Norms.Max_Norm(v(v'first).all);
-    nrm : quad_double;
+    res : double_float
+        := Standard_Complex_Series_Norms.Max_Norm(v(v'first).all);
+    nrm : double_float;
 
   begin
     for i in v'first+1..v'last loop
-      nrm := QuadDobl_Complex_Series_Norms.Max_Norm(v(i).all);
+      nrm := Standard_Complex_Series_Norms.Max_Norm(v(i).all);
       if nrm > res
        then res := nrm;
       end if;
@@ -90,4 +90,4 @@ package body QuadDobl_Series_Vector_Norms3 is
     return res;
   end Max_Norm;
   
-end QuadDobl_Series_Vector_Norms3;
+end Standard_CSeries_Vector_Norms;

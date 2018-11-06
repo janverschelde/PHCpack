@@ -1,8 +1,8 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with DoblDobl_Complex_Algebraic_Series;
-with DoblDobl_Complex_Series_Norms;
+with QuadDobl_Complex_Algebraic_Series;
+with QuadDobl_Complex_Series_Norms;
 
-package body DoblDobl_Series_Vector_Norms3 is
+package body QuadDobl_CSeries_Vector_Norms is
 
   function Conjugate ( v : Vector ) return Vector is
 
@@ -10,7 +10,7 @@ package body DoblDobl_Series_Vector_Norms3 is
 
   begin
     for i in v'range loop
-      res(i) := DoblDobl_Complex_Series_Norms.Conjugate(v(i));
+      res(i) := QuadDobl_Complex_Series_Norms.Conjugate(v(i));
     end loop;
     return res;
   end Conjugate;
@@ -40,7 +40,7 @@ package body DoblDobl_Series_Vector_Norms3 is
   function Norm ( v : Vector ) return Series is
 
     sn : constant Series := Square_of_Norm(v);
-    res : constant Series := DoblDobl_Complex_Algebraic_Series.sqrt(sn,0);
+    res : constant Series := QuadDobl_Complex_Algebraic_Series.sqrt(sn,0);
 
   begin
     return res;
@@ -74,15 +74,15 @@ package body DoblDobl_Series_Vector_Norms3 is
     return res;
   end Normalize;
 
-  function Max_Norm ( v : Vector ) return double_double is
+  function Max_Norm ( v : Vector ) return quad_double is
 
-    res : double_double
-        := DoblDobl_Complex_Series_Norms.Max_Norm(v(v'first).all);
-    nrm : double_double;
+    res : quad_double
+        := QuadDobl_Complex_Series_Norms.Max_Norm(v(v'first).all);
+    nrm : quad_double;
 
   begin
     for i in v'first+1..v'last loop
-      nrm := DoblDobl_Complex_Series_Norms.Max_Norm(v(i).all);
+      nrm := QuadDobl_Complex_Series_Norms.Max_Norm(v(i).all);
       if nrm > res
        then res := nrm;
       end if;
@@ -90,4 +90,4 @@ package body DoblDobl_Series_Vector_Norms3 is
     return res;
   end Max_Norm;
   
-end DoblDobl_Series_Vector_Norms3;
+end QuadDobl_CSeries_Vector_Norms;

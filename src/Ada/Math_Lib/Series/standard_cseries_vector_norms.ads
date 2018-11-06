@@ -1,8 +1,8 @@
-with Quad_Double_Numbers;                use Quad_Double_Numbers;
-with QuadDobl_Complex_Series;            use QuadDobl_Complex_Series;
-with QuadDobl_Complex_Series_Vectors;    use QuadDobl_Complex_Series_Vectors;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Complex_Series;            use Standard_Complex_Series;
+with Standard_Complex_Series_Vectors;    use Standard_Complex_Series_Vectors;
 
-package QuadDobl_Series_Vector_Norms3 is
+package Standard_CSeries_Vector_Norms is
 
 -- DESCRIPTION :
 --   The norm of a vector of series with complex coefficients is defined
@@ -40,10 +40,10 @@ package QuadDobl_Series_Vector_Norms3 is
   -- DESCRIPTION :
   --   Returns the normalized vector of v.
 
-  function Max_Norm ( v : Vector ) return quad_double;
+  function Max_Norm ( v : Vector ) return double_float;
 
   -- DESCRIPTION :
   --   The max norm of a vector is the maximum over all the max norms
   --   of its components.  Useful to test if a vector is zero or not.
 
-end QuadDobl_Series_Vector_Norms3;
+end Standard_CSeries_Vector_Norms;

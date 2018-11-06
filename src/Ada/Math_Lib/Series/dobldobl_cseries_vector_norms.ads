@@ -2,7 +2,7 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Series;            use DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_Vectors;    use DoblDobl_Complex_Series_Vectors;
 
-package DoblDobl_Series_Vector_Norms3 is
+package DoblDobl_CSeries_Vector_Norms is
 
 -- DESCRIPTION :
 --   The norm of a vector of series with complex coefficients is defined
@@ -46,4 +46,4 @@ package DoblDobl_Series_Vector_Norms3 is
   --   The max norm of a vector is the maximum over all the max norms
   --   of its components.  Useful to test if a vector is zero or not.
 
-end DoblDobl_Series_Vector_Norms3;
+end DoblDobl_CSeries_Vector_Norms;

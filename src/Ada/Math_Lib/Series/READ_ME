@@ -62,21 +62,22 @@ quaddobl_complex_series_vectors_io : i/o for vectors of quaddobl series
 standard_complex_series_vecvecs    : vectors of vectors of standard series
 dobldobl_complex_series_vecvecs    : vectors of vectors of dobldobl series
 quaddobl_complex_series_vecvecs    : vectors of vectors of quaddobl series
-standard_complex_series_norms3     : norms of vectors of standard series
-dobldobl_complex_series_norms3     : norms of vectors of dobldobl series
+standard_complex_series_norms      : norms of vectors of standard series
+dobldobl_complex_series_norms      : norms of vectors of dobldobl series
+quaddobl_complex_series_norms      : norms of vectors of dobldobl series
 standard_complex_vector_series     : series with standard vector coefficients
 standard_complex_vector_series_io  : basic output of standard vector series
 dobldobl_complex_vector_series     : series with dobldobl vector coefficients
 dobldobl_complex_vector_series_io  : basic output of dobldobl vector series
 quaddobl_complex_vector_series     : series with quaddobl vector coefficients
 quaddobl_complex_vector_series_io  : basic output of quaddobl vector series
-standard_series_vector_norms3      : norms of vectors of standard series
-dobldobl_series_vector_norms3      : norms of vectors of dobldobl series
-quaddobl_series_vector_norms3      : norms of vectors of quaddobl series
+standard_cseries_vector_norms      : norms of vectors of standard series
+dobldobl_cseries_vector_norms      : norms of vectors of dobldobl series
+quaddobl_cseries_vector_norms      : norms of vectors of quaddobl series
 standard_random_series_vectors     : random vectors of standard series
 dobldobl_random_series_vectors     : random vectors of dobldobl series
 quaddobl_random_series_vectors     : random vectors of quaddobl series
-ts_servec3                         : test on 3rd version of vector series
+ts_cservec                         : test on 3rd version of vector series
 ------------------------------------------------------------------------------
 standard_complex_series_matrices   : matrices of standard series
 dobldobl_complex_series_matrices   : matrices of dobldobl series
@@ -96,7 +97,7 @@ quaddobl_series_linear_solvers     : quaddobl LU solver on matrices of series
 standard_series_least_squares      : standard QR solver on matrices of series
 dobldobl_series_least_squares      : dobldobl QR solver on matrices of series
 quaddobl_series_least_squares      : quaddobl QR solver on matrices of series
-ts_sermat3                         : test on 3rd version of matrices of series
+ts_csermat                         : test on 3rd version of matrices of series
 ------------------------------------------------------------------------------
 standard_interpolating_series3     : interpolation for standard series systems
 dobldobl_interpolating_series3     : interpolation for dobldobl series systems

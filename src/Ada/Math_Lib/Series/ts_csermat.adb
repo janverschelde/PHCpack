@@ -46,17 +46,17 @@ with DoblDobl_Random_Series_Vectors;
 with DoblDobl_Random_Series_Matrices;
 with QuadDobl_Random_Series_Vectors;
 with QuadDobl_Random_Series_Matrices;
-with Standard_Series_Vector_Norms3;
+with Standard_CSeries_Vector_Norms;
 with Standard_Series_Linear_Solvers;
-with DoblDobl_Series_Vector_Norms3;
+with DoblDobl_CSeries_Vector_Norms;
 with DoblDobl_Series_Linear_Solvers;
-with QuadDobl_Series_Vector_Norms3;
+with QuadDobl_CSeries_Vector_Norms;
 with QuadDobl_Series_Linear_Solvers;
 with Standard_Series_Least_Squares;
 with DoblDobl_Series_Least_Squares;
 with QuadDobl_Series_Least_Squares;
 
-procedure ts_sermat3 is
+procedure ts_csermat is
 
 -- DESCRIPTION :
 --   Test on matrices of truncated dense power series.
@@ -228,8 +228,8 @@ procedure ts_sermat3 is
       put_line("The residual b - A*x :"); Write(rsd);
       err := x - y; -- forward error
       put_line("The difference between generated and computed :"); Write(err);
-      nrm_rsd := Standard_Series_Vector_Norms3.Max_Norm(rsd);
-      nrm_err := Standard_Series_Vector_Norms3.Max_Norm(err);
+      nrm_rsd := Standard_CSeries_Vector_Norms.Max_Norm(rsd);
+      nrm_err := Standard_CSeries_Vector_Norms.Max_Norm(err);
       put("Max norm of the backward error :"); put(nrm_rsd,3); new_line;
       put("Max norm of the forward error  :"); put(nrm_err,3); new_line;
     end if;
@@ -276,8 +276,8 @@ procedure ts_sermat3 is
       put_line("The residual b - A*x :"); Write(rsd);
       err := x - y; -- forward error
       put_line("The difference between generated and computed :"); Write(err);
-      nrm_rsd := DoblDobl_Series_Vector_Norms3.Max_Norm(rsd);
-      nrm_err := DoblDobl_Series_Vector_Norms3.Max_Norm(err);
+      nrm_rsd := DoblDobl_CSeries_Vector_Norms.Max_Norm(rsd);
+      nrm_err := DoblDobl_CSeries_Vector_Norms.Max_Norm(err);
       put("Max norm of the backward error : "); put(nrm_rsd,3); new_line;
       put("Max norm of the forward error  : "); put(nrm_err,3); new_line;
     end if;
@@ -324,8 +324,8 @@ procedure ts_sermat3 is
       put_line("The residual b - A*x :"); Write(rsd);
       err := x - y; -- forward error
       put_line("The difference between generated and computed :"); Write(err);
-      nrm_rsd := QuadDobl_Series_Vector_Norms3.Max_Norm(rsd);
-      nrm_err := QuadDobl_Series_Vector_Norms3.Max_Norm(err);
+      nrm_rsd := QuadDobl_CSeries_Vector_Norms.Max_Norm(rsd);
+      nrm_err := QuadDobl_CSeries_Vector_Norms.Max_Norm(err);
       put("Max norm of the backward error : "); put(nrm_rsd,3); new_line;
       put("Max norm of the forward error  : "); put(nrm_err,3); new_line;
     end if;
@@ -571,7 +571,7 @@ procedure ts_sermat3 is
       for i in col'range loop
         col(i) := qr(i,k);
       end loop;
-      nrm := Standard_Series_Vector_Norms3.Norm(col);
+      nrm := Standard_CSeries_Vector_Norms.Norm(col);
       put_line("The norm :"); put(nrm);
     end loop;
   end Test_Normality;
@@ -600,7 +600,7 @@ procedure ts_sermat3 is
       for i in col'range loop
         col(i) := qr(i,k);
       end loop;
-      nrm := DoblDobl_Series_Vector_Norms3.Norm(col);
+      nrm := DoblDobl_CSeries_Vector_Norms.Norm(col);
       put_line("The norm :"); put(nrm);
     end loop;
   end Test_Normality;
@@ -629,7 +629,7 @@ procedure ts_sermat3 is
       for i in col'range loop
         col(i) := qr(i,k);
       end loop;
-      nrm := QuadDobl_Series_Vector_Norms3.Norm(col);
+      nrm := QuadDobl_CSeries_Vector_Norms.Norm(col);
       put_line("The norm :"); put(nrm);
     end loop;
   end Test_Normality;
@@ -657,7 +657,7 @@ procedure ts_sermat3 is
         for k in v'range loop
           v(k) := qr(k,j);
         end loop;
-        ipr := Standard_Series_Vector_Norms3.Inner_Product(u,v);
+        ipr := Standard_CSeries_Vector_Norms.Inner_Product(u,v);
         put("Inner product of "); put(i,1); put(" with "); put(j,1);
         put_line(" :"); Standard_Complex_Series_io.put(ipr);
       end loop;
@@ -687,7 +687,7 @@ procedure ts_sermat3 is
         for k in v'range loop
           v(k) := qr(k,j);
         end loop;
-        ipr := DoblDobl_Series_Vector_Norms3.Inner_Product(u,v);
+        ipr := DoblDobl_CSeries_Vector_Norms.Inner_Product(u,v);
         put("Inner product of "); put(i,1); put(" with "); put(j,1);
         put_line(" :"); DoblDobl_Complex_Series_io.put(ipr);
       end loop;
@@ -717,7 +717,7 @@ procedure ts_sermat3 is
         for k in v'range loop
           v(k) := qr(k,j);
         end loop;
-        ipr := QuadDobl_Series_Vector_Norms3.Inner_Product(u,v);
+        ipr := QuadDobl_CSeries_Vector_Norms.Inner_Product(u,v);
         put("Inner product of "); put(i,1); put(" with "); put(j,1);
         put_line(" :"); QuadDobl_Complex_Series_io.put(ipr);
       end loop;
@@ -869,8 +869,8 @@ procedure ts_sermat3 is
         put_line("The residual b - A*x :"); Write(rsd);
         err := x - sol; -- forward error
         put_line("Difference between constructed and computed :"); Write(err);
-        nrm_rsd := Standard_Series_Vector_Norms3.Max_Norm(rsd);
-        nrm_err := Standard_Series_Vector_Norms3.Max_Norm(err);
+        nrm_rsd := Standard_CSeries_Vector_Norms.Max_Norm(rsd);
+        nrm_err := Standard_CSeries_Vector_Norms.Max_Norm(err);
         put("Max norm of backward error : "); put(nrm_rsd,3); new_line;
         put("Max norm of forward error  : "); put(nrm_err,3); new_line;
       end if;
@@ -941,8 +941,8 @@ procedure ts_sermat3 is
         put_line("The residual b - A*x :"); Write(rsd);
         err := x - sol; -- forward error
         put_line("Difference between constructed and computed :"); Write(err);
-        nrm_rsd := DoblDobl_Series_Vector_Norms3.Max_Norm(rsd);
-        nrm_err := DoblDobl_Series_Vector_Norms3.Max_Norm(err);
+        nrm_rsd := DoblDobl_CSeries_Vector_Norms.Max_Norm(rsd);
+        nrm_err := DoblDobl_CSeries_Vector_Norms.Max_Norm(err);
         put("Max norm of backward error : "); put(nrm_rsd,3); new_line;
         put("Max norm of forward error  : "); put(nrm_err,3); new_line;
       end if;
@@ -1013,8 +1013,8 @@ procedure ts_sermat3 is
         put_line("The residual b - A*x :"); Write(rsd);
         err := x - sol; -- forward error
         put_line("Difference between constructed and computed :"); Write(err);
-        nrm_rsd := QuadDobl_Series_Vector_Norms3.Max_Norm(rsd);
-        nrm_err := QuadDobl_Series_Vector_Norms3.Max_Norm(err);
+        nrm_rsd := QuadDobl_CSeries_Vector_Norms.Max_Norm(rsd);
+        nrm_err := QuadDobl_CSeries_Vector_Norms.Max_Norm(err);
         put("Max norm of backward error : "); put(nrm_rsd,3); new_line;
         put("Max norm of forward error  : "); put(nrm_err,3); new_line;
       end if;
@@ -1266,4 +1266,4 @@ procedure ts_sermat3 is
 
 begin
   Main;
-end ts_sermat3;
+end ts_csermat;
