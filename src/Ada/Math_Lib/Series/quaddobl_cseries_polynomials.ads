@@ -1,7 +1,7 @@
 with Generic_Polynomials;
 with QuadDobl_Complex_Series_Ring;
 
-package QuadDobl_Series_Polynomials is 
+package QuadDobl_CSeries_Polynomials is 
   new Generic_Polynomials(QuadDobl_Complex_Series_Ring);
 
 -- DESCRIPTION :

@@ -7,6 +7,7 @@ Mon 5 Nov 2018 : instantiated polynomials, functions, systems, and Jacobian
   The name changes in the packages caused changes in
   *random_series_vectors.adb, *series_vector_norms3.adb,
   *random_series_matrices.adb, and *series_least_squares.adb.
+  Fixed mistake in quaddobl_cseries_polynomials.ads.
 
 Sun 4 Nov 2018 : fixed problem in {dobldobl,quaddobl}_series_vector_norms3.adb
   and defined {dobldobl,quaddobl}_series_{linear_solvers,least_squares},
