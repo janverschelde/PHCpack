@@ -452,7 +452,7 @@ ts_giftwrap:
 # Test programs for Math_Lib/Series :
 
 test_series: ts_pstrunc ts_bincff ts_series ts_series2 ts_cseries \
-             ts_servec ts_servec2 ts_servec3 ts_sermat ts_sermat2 ts_sermat3 \
+             ts_servec ts_servec2 ts_cservec ts_sermat ts_sermat2 ts_csermat \
              ts_seritp ts_seritp2 ts_seritp3 ts_sersin ts_sersin2 ts_sersin3 \
              ts_serlin ts_serlin2 ts_serlin3 ts_serpol ts_cserpol \
              ts_sersys ts_serinv
@@ -478,8 +478,8 @@ ts_servec:
 ts_servec2:
 	make -f $(MAKEFILE) ts_servec2
 
-ts_servec3:
-	make -f $(MAKEFILE) ts_servec3
+ts_cservec:
+	make -f $(MAKEFILE) ts_cservec
 
 ts_sermat:
 	make -f $(MAKEFILE) ts_sermat
@@ -487,8 +487,8 @@ ts_sermat:
 ts_sermat2:
 	make -f $(MAKEFILE) ts_sermat2
 
-ts_sermat3:
-	make -f $(MAKEFILE) ts_sermat3
+ts_csermat:
+	make -f $(MAKEFILE) ts_csermat
 
 ts_seritp:
 	make -f $(MAKEFILE) ts_seritp
