@@ -567,9 +567,9 @@ ts_seritp2:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_seritp2.adb \
               -o $(BIN)/ts_seritp2
 
-ts_seritp3:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_seritp3.adb \
-              -o $(BIN)/ts_seritp3
+ts_cseritp:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cseritp.adb \
+              -o $(BIN)/ts_cseritp
 
 ts_sersin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersin.adb \
@@ -579,9 +579,9 @@ ts_sersin2:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersin2.adb \
               -o $(BIN)/ts_sersin2
 
-ts_sersin3:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersin3.adb \
-              -o $(BIN)/ts_sersin3
+ts_csersin:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_csersin.adb \
+              -o $(BIN)/ts_csersin
 
 ts_serlin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serlin.adb \
@@ -591,9 +591,9 @@ ts_serlin2:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serlin2.adb \
               -o $(BIN)/ts_serlin2
 
-ts_serlin3:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serlin3.adb \
-              -o $(BIN)/ts_serlin3
+ts_cserlin:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserlin.adb \
+              -o $(BIN)/ts_cserlin
 
 ts_serpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpol.adb \

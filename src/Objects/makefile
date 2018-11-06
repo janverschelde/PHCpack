@@ -453,8 +453,8 @@ ts_giftwrap:
 
 test_series: ts_pstrunc ts_bincff ts_series ts_series2 ts_cseries \
              ts_servec ts_servec2 ts_cservec ts_sermat ts_sermat2 ts_csermat \
-             ts_seritp ts_seritp2 ts_seritp3 ts_sersin ts_sersin2 ts_sersin3 \
-             ts_serlin ts_serlin2 ts_serlin3 ts_serpol ts_cserpol \
+             ts_seritp ts_seritp2 ts_cseritp ts_sersin ts_sersin2 ts_csersin \
+             ts_serlin ts_serlin2 ts_cserlin ts_serpol ts_cserpol \
              ts_sersys ts_serinv
 
 ts_pstrunc:
@@ -496,8 +496,8 @@ ts_seritp:
 ts_seritp2:
 	make -f $(MAKEFILE) ts_seritp2
 
-ts_seritp3:
-	make -f $(MAKEFILE) ts_seritp3
+ts_cseritp:
+	make -f $(MAKEFILE) ts_cseritp
 
 ts_sersin:
 	make -f $(MAKEFILE) ts_sersin
@@ -505,8 +505,8 @@ ts_sersin:
 ts_sersin2:
 	make -f $(MAKEFILE) ts_sersin2
 
-ts_sersin3:
-	make -f $(MAKEFILE) ts_sersin3
+ts_csersin:
+	make -f $(MAKEFILE) ts_csersin
 
 ts_serlin:
 	make -f $(MAKEFILE) ts_serlin
@@ -514,8 +514,8 @@ ts_serlin:
 ts_serlin2:
 	make -f $(MAKEFILE) ts_serlin2
 
-ts_serlin3:
-	make -f $(MAKEFILE) ts_serlin3
+ts_cserlin:
+	make -f $(MAKEFILE) ts_cserlin
 
 ts_serpol:
 	make -f $(MAKEFILE) ts_serpol
