@@ -1,3 +1,6 @@
+Wed 7 Nov 2018 : new test program ts_csersys and ts_cserinv,
+  based on modifications of ts_sersys and ts_serinv respectively.
+
 Tue 6 Nov 2018 : renamed *_series_vector_norms3 into *_cseries_vector_norms
   with modification and renaming of ts_servec3 into ts_cservec and
   ts_sermat3 into ts_csermat.  Renamed *_interpolating_series3* into

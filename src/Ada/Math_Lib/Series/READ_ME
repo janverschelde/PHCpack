@@ -113,6 +113,7 @@ standard_series_matrix_solvers     : linearization for standard series systems
 dobldobl_series_matrix_solvers     : linearization for dobldobl series systems
 quaddobl_series_matrix_solvers     : linearization for quaddobl series systems
 ts_cserlin                         : test on linearization
+ts_cserinv                         : test on inverting singular problems
 ------------------------------------------------------------------------------
 standard_cseries_polynomials       : polynomials with series as coefficients
 standard_cseries_poly_functions    : evaluating standard series polynomials
@@ -134,7 +135,18 @@ complex_series_and_polynomials_io  : symbolic i/o of series
 standard_polynomial_cseries        : standard polynomial series
 dobldobl_polynomial_cseries        : dobldobl polynomial series
 quaddobl_polynomial_cseries        : quaddobl polynomial series
-ts_serpol                          : test on series polynomials
+ts_cserpol                         : test on series polynomials
+ts_csersys                         : test systems of series polynomials
+------------------------------------------------------------------------------
+
+Below are the descriptions of the original design,
+with fixed maximal degree power series, written without generics.
+The second design allows for variable degree series,
+but available only in standard double precision, without generics.
+The code below will become obsolete at some later stage.
+
+------------------------------------------------------------------------------
+file name                         : short description
 ------------------------------------------------------------------------------
 standard_dense_series2            : dense power series, standard coefficients
 standard_dense_series2_io         : basic input/output of standard series
