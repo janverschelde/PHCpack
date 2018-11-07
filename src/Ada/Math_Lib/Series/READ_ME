@@ -78,6 +78,9 @@ standard_random_series_vectors     : random vectors of standard series
 dobldobl_random_series_vectors     : random vectors of dobldobl series
 quaddobl_random_series_vectors     : random vectors of quaddobl series
 ts_cservec                         : test on 3rd version of vector series
+standard_cseries_vector_functions  : evaluating vectors of standard series
+dobldobl_cseries_vector_functions  : evaluating vectors of dobldobl series
+quaddobl_cseries_vector_functions  : evaluating vectors of quaddobl series
 ------------------------------------------------------------------------------
 standard_complex_series_matrices   : matrices of standard series
 dobldobl_complex_series_matrices   : matrices of dobldobl series

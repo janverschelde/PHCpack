@@ -52,6 +52,18 @@ package QuadDobl_Complex_Series_Functions is
 
   -- REQUIRED : b /= 0 and t /= 0.0 if a < 0.
 
+-- ORDER and FILTER :
+
+  function Order ( s : Series; tol : double_float := 0.0 ) return integer32;
+  function Order ( s : Link_to_Series;
+                   tol : double_float := 0.0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the smallest integer k in the range 0..s.deg
+  --   for which AbsVal(s.cff(k)) > tol.
+  --   If all coefficients are less than tol, then s.deg+1 is returned.
+  --   If s is null, then -1 will be returned.
+
   procedure Filter ( s : in out Series; tol : in double_float );
   procedure Filter ( s : in out Link_to_Series; tol : in double_float );
 

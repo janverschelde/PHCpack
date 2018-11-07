@@ -104,6 +104,27 @@ package body Standard_Complex_Series_Functions is
     end if;
   end Eval;
 
+-- ORDER and FILTER :
+
+  function Order ( s : Series; tol : double_float := 0.0 ) return integer32 is
+  begin
+    for k in 0..s.deg loop
+      if Standard_Complex_Numbers.AbsVal(s.cff(k)) > tol
+       then return k;
+      end if;
+    end loop;
+    return s.deg+1;
+  end Order;
+
+  function Order ( s : Link_to_Series;
+                   tol : double_float := 0.0 ) return integer32 is
+  begin
+    if s = null
+     then return -1;
+     else return Order(s.all,tol);
+    end if;
+  end Order;
+
   procedure Filter ( s : in out Series; tol : in double_float ) is
   begin
     for i in 0..s.deg loop
