@@ -595,6 +595,14 @@ ts_cserlin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserlin.adb \
               -o $(BIN)/ts_cserlin
 
+ts_serinv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serinv.adb \
+              -o $(BIN)/ts_serinv
+
+ts_cserinv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserinv.adb \
+              -o $(BIN)/ts_cserinv
+
 ts_serpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpol.adb \
               -o $(BIN)/ts_serpol
@@ -603,13 +611,9 @@ ts_cserpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserpol.adb \
               -o $(BIN)/ts_cserpol
 
-ts_sersys:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersys.adb \
-              -o $(BIN)/ts_sersys
-
-ts_serinv:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serinv.adb \
-              -o $(BIN)/ts_serinv
+ts_csersys:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_csersys.adb \
+              -o $(BIN)/ts_csersys
 
 # Test programs for the Deformations/Solutions library :
 

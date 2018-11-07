@@ -543,6 +543,8 @@ ts_sermat2:
 ts_csermat:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_csermat.adb -o $(BIN)/ts_csermat
 
+ts_seritp:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_seritp.adb -o $(BIN)/ts_seritp
 ts_seritp2:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_seritp2.adb -o $(BIN)/ts_seritp2
 
@@ -567,6 +569,12 @@ ts_serlin2:
 ts_cserlin:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cserlin.adb -o $(BIN)/ts_cserlin
 
+ts_serinv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_serinv.adb -o $(BIN)/ts_serinv
+
+ts_cserinv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cserinv.adb -o $(BIN)/ts_cserinv
+
 ts_serpol:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_serpol.adb -o $(BIN)/ts_serpol
 
@@ -576,11 +584,8 @@ ts_cserpol:
 ts_sersys:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_sersys.adb -o $(BIN)/ts_sersys
 
-ts_serinv:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_serinv.adb -o $(BIN)/ts_serinv
-
-ts_seritp:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_seritp.adb -o $(BIN)/ts_seritp
+ts_csersys:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_csersys.adb -o $(BIN)/ts_csersys
 
 # Test programs for the Deformations/Solutions library :
 
