@@ -17,7 +17,7 @@ package body Homotopy_Pade_Approximants is
               ( sol : in Standard_Complex_Vectors.Vector;
                 idx,nbequ,numdeg,dendeg : in integer32;
                 nbiters : in natural32;
-                srv,eva : out Standard_Dense_Series_Vectors.Vector;
+                srv,eva : out Standard_Complex_Series_Vectors.Vector;
                 pv : out Standard_Pade_Approximants.Pade_Vector;
                 verbose : in boolean := false ) is
 
@@ -32,7 +32,7 @@ package body Homotopy_Pade_Approximants is
               ( sol : in DoblDobl_Complex_Vectors.Vector;
                 idx,nbequ,numdeg,dendeg : in integer32;
                 nbiters : in natural32;
-                srv,eva : out DoblDobl_Dense_Series_Vectors.Vector;
+                srv,eva : out DoblDobl_Complex_Series_Vectors.Vector;
                 pv : out DoblDobl_Pade_Approximants.Pade_Vector;
                 verbose : in boolean := false ) is
 
@@ -47,7 +47,7 @@ package body Homotopy_Pade_Approximants is
               ( sol : in QuadDobl_Complex_Vectors.Vector;
                 idx,nbequ,numdeg,dendeg : in integer32;
                 nbiters : in natural32;
-                srv,eva : out QuadDobl_Dense_Series_Vectors.Vector;
+                srv,eva : out QuadDobl_Complex_Series_Vectors.Vector;
                 pv : out QuadDobl_Pade_Approximants.Pade_Vector;
                 verbose : in boolean := false ) is
 

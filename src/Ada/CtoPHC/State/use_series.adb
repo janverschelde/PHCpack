@@ -20,20 +20,20 @@ with DoblDobl_Homotopy;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Homotopy;
 with QuadDobl_Complex_Solutions;
-with Standard_Dense_Series_Vectors;
-with Standard_Dense_Series_Vectors_io;
-with Standard_Dense_Series_VecVecs;
-with DoblDobl_Dense_Series_Vectors;
-with DoblDobl_Dense_Series_Vectors_io;
-with DoblDobl_Dense_Series_VecVecs;
-with QuadDobl_Dense_Series_Vectors;
-with QuadDobl_Dense_Series_Vectors_io;
-with QuadDobl_Dense_Series_VecVecs;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Series_Poly_Systems;
-with Series_and_Polynomials;
-with Series_and_Polynomials_io; -- for debugging
+with Standard_Complex_Series_Vectors;
+with Standard_Complex_Series_Vectors_io;
+with Standard_Complex_Series_VecVecs;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors_io;
+with DoblDobl_Complex_Series_VecVecs;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors_io;
+with QuadDobl_Complex_Series_VecVecs;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_Systems;
+with Complex_Series_and_Polynomials;
+with Complex_Series_and_Polynomials_io; -- for debugging
 with Series_and_Solutions;
 with Power_Series_Methods;                 use Power_Series_Methods;
 with Standard_Pade_Approximants;
@@ -108,79 +108,79 @@ function use_series ( job : integer32;
   end extract_options_for_pade;
 
   procedure Load_Series_Solutions
-              ( s : out Standard_Dense_Series_VecVecs.Link_to_VecVec ) is
+              ( s : out Standard_Complex_Series_VecVecs.Link_to_VecVec ) is
 
   -- DESCRIPTION :
   --   Loads the series s from the systems in the systems pool,
   --   converting every polynomial in the pool to a series.
 
     len : constant integer32 := integer32(Standard_Systems_Pool.Size);
-    res : Standard_Dense_Series_VecVecs.VecVec(1..len);
+    res : Standard_Complex_Series_VecVecs.VecVec(1..len);
 
   begin
     for k in 1..len loop
       declare
         lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
            := Standard_Systems_Pool.Retrieve(k);
-        sv : constant Standard_Dense_Series_Vectors.Vector
-           := Series_and_Polynomials.System_to_Series_Vector(lp.all);
+        sv : constant Standard_Complex_Series_Vectors.Vector
+           := Complex_Series_and_Polynomials.System_to_Series_Vector(lp.all);
       begin
-        res(k) := new Standard_Dense_Series_Vectors.Vector'(sv);
+        res(k) := new Standard_Complex_Series_Vectors.Vector'(sv);
       end;
     end loop;
-    s := new Standard_Dense_Series_VecVecs.VecVec'(res);
+    s := new Standard_Complex_Series_VecVecs.VecVec'(res);
   end Load_Series_Solutions;
 
   procedure Load_Series_Solutions
-              ( s : out DoblDobl_Dense_Series_VecVecs.Link_to_VecVec ) is
+              ( s : out DoblDobl_Complex_Series_VecVecs.Link_to_VecVec ) is
 
   -- DESCRIPTION :
   --   Loads the series s from the systems in the systems pool,
   --   converting every polynomial in the pool to a series.
 
     len : constant integer32 := integer32(DoblDobl_Systems_Pool.Size);
-    res : DoblDobl_Dense_Series_VecVecs.VecVec(1..len);
+    res : DoblDobl_Complex_Series_VecVecs.VecVec(1..len);
 
   begin
     for k in 1..len loop
       declare
         lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
            := DoblDobl_Systems_Pool.Retrieve(k);
-        sv : constant DoblDobl_Dense_Series_Vectors.Vector
-           := Series_and_Polynomials.System_to_Series_Vector(lp.all);
+        sv : constant DoblDobl_Complex_Series_Vectors.Vector
+           := Complex_Series_and_Polynomials.System_to_Series_Vector(lp.all);
       begin
-        res(k) := new DoblDobl_Dense_Series_Vectors.Vector'(sv);
+        res(k) := new DoblDobl_Complex_Series_Vectors.Vector'(sv);
       end;
     end loop;
-    s := new DoblDobl_Dense_Series_VecVecs.VecVec'(res);
+    s := new DoblDobl_Complex_Series_VecVecs.VecVec'(res);
   end Load_Series_Solutions;
 
   procedure Load_Series_Solutions
-              ( s : out QuadDobl_Dense_Series_VecVecs.Link_to_VecVec ) is
+              ( s : out QuadDobl_Complex_Series_VecVecs.Link_to_VecVec ) is
 
   -- DESCRIPTION :
   --   Loads the series s from the systems in the systems pool,
   --   converting every polynomial in the pool to a series.
 
     len : constant integer32 := integer32(QuadDobl_Systems_Pool.Size);
-    res : QuadDobl_Dense_Series_VecVecs.VecVec(1..len);
+    res : QuadDobl_Complex_Series_VecVecs.VecVec(1..len);
 
   begin
     for k in 1..len loop
       declare
         lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
            := QuadDobl_Systems_Pool.Retrieve(k);
-        sv : constant QuadDobl_Dense_Series_Vectors.Vector
-           := Series_and_Polynomials.System_to_Series_Vector(lp.all);
+        sv : constant QuadDobl_Complex_Series_Vectors.Vector
+           := Complex_Series_and_Polynomials.System_to_Series_Vector(lp.all);
       begin
-        res(k) := new QuadDobl_Dense_Series_Vectors.Vector'(sv);
+        res(k) := new QuadDobl_Complex_Series_Vectors.Vector'(sv);
       end;
     end loop;
-    s := new QuadDobl_Dense_Series_VecVecs.VecVec'(res);
+    s := new QuadDobl_Complex_Series_VecVecs.VecVec'(res);
   end Load_Series_Solutions;
 
   procedure Store_Series_Solutions
-              ( s : in Standard_Dense_Series_VecVecs.VecVec ) is
+              ( s : in Standard_Complex_Series_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   Stores the solutions in s in the systems pool,
@@ -191,7 +191,7 @@ function use_series ( job : integer32;
     for k in s'range loop
       declare
         p : constant Standard_Complex_Poly_Systems.Poly_Sys
-          := Series_and_Polynomials.Series_Vector_to_System(s(k).all);
+          := Complex_Series_and_Polynomials.Series_Vector_to_System(s(k).all);
       begin
         Standard_Systems_Pool.Initialize(k,p);
       end;
@@ -199,7 +199,7 @@ function use_series ( job : integer32;
   end Store_Series_Solutions;
 
   procedure Store_Series_Solutions
-              ( s : in DoblDobl_Dense_Series_VecVecs.VecVec ) is
+              ( s : in DoblDobl_Complex_Series_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   Stores the solutions in s in the systems pool,
@@ -210,7 +210,7 @@ function use_series ( job : integer32;
     for k in s'range loop
       declare
         p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
-          := Series_and_Polynomials.Series_Vector_to_System(s(k).all);
+          := Complex_Series_and_Polynomials.Series_Vector_to_System(s(k).all);
       begin
         DoblDobl_Systems_Pool.Initialize(k,p);
       end;
@@ -218,7 +218,7 @@ function use_series ( job : integer32;
   end Store_Series_Solutions;
 
   procedure Store_Series_Solutions
-              ( s : in QuadDobl_Dense_Series_VecVecs.VecVec ) is
+              ( s : in QuadDobl_Complex_Series_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   Stores the solutions in s in the systems pool,
@@ -229,7 +229,7 @@ function use_series ( job : integer32;
     for k in s'range loop
       declare
         p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
-          := Series_and_Polynomials.Series_Vector_to_System(s(k).all);
+          := Complex_Series_and_Polynomials.Series_Vector_to_System(s(k).all);
       begin
         QuadDobl_Systems_Pool.Initialize(k,p);
       end;
@@ -239,8 +239,8 @@ function use_series ( job : integer32;
   procedure Run_Newton
               ( nq,idx,dim,nbrit : in integer32;
                 echelon,verbose : in boolean;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_VecVecs.VecVec ) is
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -281,8 +281,8 @@ function use_series ( job : integer32;
   procedure Run_Newton
               ( nq,idx,dim,nbrit : in integer32;
                 echelon,verbose : in boolean;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_VecVecs.VecVec ) is
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -323,8 +323,8 @@ function use_series ( job : integer32;
   procedure Run_Newton
               ( nq,idx,dim,nbrit : in integer32;
                 echelon,verbose : in boolean;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_VecVecs.VecVec ) is
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -383,15 +383,15 @@ function use_series ( job : integer32;
     use Standard_Complex_Solutions;
 
     len : constant integer32 := integer32(Length_Of(s));
-    srv : Standard_Dense_Series_VecVecs.VecVec(1..len)
+    srv : Standard_Complex_Series_VecVecs.VecVec(1..len)
         := Series_and_Solutions.Create(s,idx);
-    srp : Standard_Series_Poly_Systems.Poly_Sys(p'range)
-        := Series_and_Polynomials.System_to_Series_System(p,idx);
+    srp : Standard_CSeries_Poly_Systems.Poly_Sys(p'range)
+        := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
     Run_Newton(nq,idx,dim,nbrit,true,verbose,srp,srv);
     Store_Series_Solutions(srv);
-    Standard_Series_Poly_Systems.Clear(srp);
+    Standard_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton;
 
   procedure Run_Newton
@@ -415,15 +415,15 @@ function use_series ( job : integer32;
     use DoblDobl_Complex_Solutions;
 
     len : constant integer32 := integer32(Length_Of(s));
-    srv : DoblDobl_Dense_Series_VecVecs.VecVec(1..len)
+    srv : DoblDobl_Complex_Series_VecVecs.VecVec(1..len)
         := Series_and_Solutions.Create(s,idx);
-    srp : DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
-        := Series_and_Polynomials.System_to_Series_System(p,idx);
+    srp : DoblDobl_CSeries_Poly_Systems.Poly_Sys(p'range)
+        := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
     Run_Newton(nq,idx,dim,nbrit,true,verbose,srp,srv);
     Store_Series_Solutions(srv);
-    DoblDobl_Series_Poly_Systems.Clear(srp);
+    DoblDobl_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton;
 
   procedure Run_Newton
@@ -447,15 +447,15 @@ function use_series ( job : integer32;
     use QuadDobl_Complex_Solutions;
 
     len : constant integer32 := integer32(Length_Of(s));
-    srv : QuadDobl_Dense_Series_VecVecs.VecVec(1..len)
+    srv : QuadDobl_Complex_Series_VecVecs.VecVec(1..len)
         := Series_and_Solutions.Create(s,idx);
-    srp : QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
-        := Series_and_Polynomials.System_to_Series_System(p,idx);
+    srp : QuadDobl_CSeries_Poly_Systems.Poly_Sys(p'range)
+        := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
     Run_Newton(nq,idx,dim,nbrit,true,verbose,srp,srv);
     Store_Series_Solutions(srv);
-    QuadDobl_Series_Poly_Systems.Clear(srp);
+    QuadDobl_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton;
 
   function Job1 return integer32 is -- standard double precision
@@ -537,13 +537,13 @@ function use_series ( job : integer32;
     nv : constant integer32 := integer32(Number_of_Unknowns(lp(lp'first)));
     idx,nbr,dim : integer32;
     verbose : boolean;
-    srv : Standard_Dense_Series_VecVecs.Link_to_VecVec;
-    srp : Standard_Series_Poly_Systems.Poly_Sys(lp'range);
+    srv : Standard_Complex_Series_VecVecs.Link_to_VecVec;
+    srp : Standard_CSeries_Poly_Systems.Poly_Sys(lp'range);
 
   begin
     Load_Series_Solutions(srv);
     extract_options(idx,nbr,verbose);
-    srp := Series_and_Polynomials.System_to_Series_System(lp.all,idx);
+    srp := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
       put("Number of equations in the system : "); put(nq,1); new_line;
@@ -551,11 +551,11 @@ function use_series ( job : integer32;
       put("The index of the parameter : "); put(idx,1); new_line;
       put_line("The polynomials in the system :"); put(lp.all);
       put_line("The system converted to series :");
-      Series_and_Polynomials_io.put(srp);
+      Complex_Series_and_Polynomials_io.put(srp);
     end if;
     Run_Newton(nq,idx,dim,nbr,true,verbose,srp,srv.all);
     Store_Series_Solutions(srv.all);
-    Standard_Series_Poly_Systems.Clear(srp);
+    Standard_CSeries_Poly_Systems.Clear(srp);
     return 0;
   end Job4;
 
@@ -569,13 +569,13 @@ function use_series ( job : integer32;
     nv : constant integer32 := integer32(Number_of_Unknowns(lp(lp'first)));
     idx,nbr,dim : integer32;
     verbose : boolean;
-    srv : DoblDobl_Dense_Series_VecVecs.Link_to_VecVec;
-    srp : DoblDobl_Series_Poly_Systems.Poly_Sys(lp'range);
+    srv : DoblDobl_Complex_Series_VecVecs.Link_to_VecVec;
+    srp : DoblDobl_CSeries_Poly_Systems.Poly_Sys(lp'range);
 
   begin
     Load_Series_Solutions(srv);
     extract_options(idx,nbr,verbose);
-    srp := Series_and_Polynomials.System_to_Series_System(lp.all,idx);
+    srp := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
       put("Number of equations in the system : "); put(nq,1); new_line;
@@ -583,7 +583,7 @@ function use_series ( job : integer32;
     end if;
     Run_Newton(nq,idx,dim,nbr,true,verbose,srp,srv.all);
     Store_Series_Solutions(srv.all);
-    DoblDobl_Series_Poly_Systems.Clear(srp);
+    DoblDobl_CSeries_Poly_Systems.Clear(srp);
     return 0;
   end Job5;
 
@@ -597,13 +597,13 @@ function use_series ( job : integer32;
     nv : constant integer32 := integer32(Number_of_Unknowns(lp(lp'first)));
     idx,nbr,dim : integer32;
     verbose : boolean;
-    srv : QuadDobl_Dense_Series_VecVecs.Link_to_VecVec;
-    srp : QuadDobl_Series_Poly_Systems.Poly_Sys(lp'range);
+    srv : QuadDobl_Complex_Series_VecVecs.Link_to_VecVec;
+    srp : QuadDobl_CSeries_Poly_Systems.Poly_Sys(lp'range);
 
   begin
     Load_Series_Solutions(srv);
     extract_options(idx,nbr,verbose);
-    srp := Series_and_Polynomials.System_to_Series_System(lp.all,idx);
+    srp := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
       put("Number of equations in the system : "); put(nq,1); new_line;
@@ -611,7 +611,7 @@ function use_series ( job : integer32;
     end if;
     Run_Newton(nq,idx,dim,nbr,true,verbose,srp,srv.all);
     Store_Series_Solutions(srv.all);
-    QuadDobl_Series_Poly_Systems.Clear(srp);
+    QuadDobl_CSeries_Poly_Systems.Clear(srp);
     return 0;
   end Job6;
 
@@ -737,8 +737,8 @@ function use_series ( job : integer32;
                := Coordinates(sol,idx);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
         nit : constant natural32 := 4*nbt;
-        srv : Standard_Dense_Series_Vectors.Vector(1..dim);
-        eva : Standard_Dense_Series_Vectors.Vector(1..nq);
+        srv : Standard_Complex_Series_Vectors.Vector(1..dim);
+        eva : Standard_Complex_Series_Vectors.Vector(1..nq);
         pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
       begin
         if verbose then
@@ -749,9 +749,9 @@ function use_series ( job : integer32;
           (solvec,idx,nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
           put_line("The solution series :");
-          Standard_Dense_Series_Vectors_io.put(srv);
+          Standard_Complex_Series_Vectors_io.put(srv);
           put_line("The evaluated solution series :");
-          Standard_Dense_Series_Vectors_io.put(eva);
+          Standard_Complex_Series_Vectors_io.put(eva);
           put_line("The Pade approximant :");
           for i in pv'range loop
             put_line(Standard_Pade_Approximants_io.Write(pv(i)));
@@ -808,17 +808,17 @@ function use_series ( job : integer32;
                := Coordinates(sol,idx);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
         nit : constant natural32 := 4*nbt;
-        srv : DoblDobl_Dense_Series_Vectors.Vector(1..dim);
-        eva : DoblDobl_Dense_Series_Vectors.Vector(1..nq);
+        srv : DoblDobl_Complex_Series_Vectors.Vector(1..dim);
+        eva : DoblDobl_Complex_Series_Vectors.Vector(1..nq);
         pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
       begin
         Homotopy_Pade_Approximants.DoblDobl_Pade_Approximant
           (solvec,idx,nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
           put_line("The solution series :");
-          DoblDobl_Dense_Series_Vectors_io.put(srv);
+          DoblDobl_Complex_Series_Vectors_io.put(srv);
           put_line("The evaluated solution series :");
-          DoblDobl_Dense_Series_Vectors_io.put(eva);
+          DoblDobl_Complex_Series_Vectors_io.put(eva);
           put_line("The Pade approximant :");
           for i in pv'range loop
             put_line(DoblDobl_Pade_Approximants_io.Write(pv(i)));
@@ -869,17 +869,17 @@ function use_series ( job : integer32;
                := Coordinates(sol,idx);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
         nit : constant natural32 := 4*nbt;
-        srv : QuadDobl_Dense_Series_Vectors.Vector(1..dim);
-        eva : QuadDobl_Dense_Series_Vectors.Vector(1..nq);
+        srv : QuadDobl_Complex_Series_Vectors.Vector(1..dim);
+        eva : QuadDobl_Complex_Series_Vectors.Vector(1..nq);
         pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
       begin
         Homotopy_Pade_Approximants.QuadDobl_Pade_Approximant
           (solvec,idx,nq,numdeg,dendeg,nit,srv,eva,pv);
         if verbose then
           put_line("The solution series :");
-          QuadDobl_Dense_Series_Vectors_io.put(srv);
+          QuadDobl_Complex_Series_Vectors_io.put(srv);
           put_line("The evaluated solution series :");
-          QuadDobl_Dense_Series_Vectors_io.put(eva);
+          QuadDobl_Complex_Series_Vectors_io.put(eva);
           put_line("The Pade approximant :");
           for i in pv'range loop
             put_line(QuadDobl_Pade_Approximants_io.Write(pv(i)));

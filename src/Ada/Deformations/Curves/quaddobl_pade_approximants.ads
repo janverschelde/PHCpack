@@ -2,7 +2,7 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Vectors;
-with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors;
 
 package QuadDobl_Pade_Approximants is
 
@@ -35,7 +35,7 @@ package QuadDobl_Pade_Approximants is
 
   -- REQUIRED : num'first = 0 = den'first.
 
-  function Coefficients ( srv : QuadDobl_Dense_Series_Vectors.Vector;
+  function Coefficients ( srv : QuadDobl_Complex_Series_Vectors.Vector;
                           idx : integer32 )
                         return QuadDobl_Complex_Vectors.Vector;
 
@@ -46,7 +46,7 @@ package QuadDobl_Pade_Approximants is
   -- REQUIRED : idx in srv'range.
 
   function Create ( numdeg,dendeg : integer32;
-                    srv : QuadDobl_Dense_Series_Vectors.Vector )
+                    srv : QuadDobl_Complex_Series_Vectors.Vector )
                   return Pade_Vector;
 
   -- DESCRIPTION :

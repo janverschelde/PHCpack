@@ -1,3 +1,8 @@
+Wed 7 Nov 2018 : adjusted all *newton* and *pade_approximants.a*
+  files for the new series definitions.  Adjusted power_series_methods,
+  series_and_solutions, series_and_predictors, series_and_homotopies,
+  and homotopy_series_readers, ts_sernew, ts_sersol, and mainseries.adb.
+
 Fri 26 Oct 2018 : moved test procedures into test_pade_predictors, code
   taken from ts_padepred.adb.  Added procedures and functions to
   test_pade_predictors to compute the forward pole radius and tested

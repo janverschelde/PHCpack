@@ -1,3 +1,6 @@
+Wed 7 Nov 2018 : adjusted the packages regular_solution_curves_series and
+  regular_newton_puiseux for the new series definitions.
+
 Sat 8 Oct 2016 : new package regular_newton_puiseux with code extracted
   from ts_puiseux.
 

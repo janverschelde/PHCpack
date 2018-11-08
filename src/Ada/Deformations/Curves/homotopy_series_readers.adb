@@ -17,9 +17,9 @@ with DoblDobl_Homotopy;
 with DoblDobl_System_and_Solutions_io;
 with QuadDobl_Homotopy;
 with QuadDobl_System_and_Solutions_io;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Series_Poly_Systems;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_Systems;
 with Standard_Parameter_Systems;
 with DoblDobl_Parameter_Systems;
 with QuadDobl_Parameter_Systems;
@@ -248,24 +248,24 @@ package body Homotopy_Series_Readers is
   procedure Standard_Series_Newton
               ( sol : in Standard_Complex_Vectors.Vector;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out Standard_Dense_Series_Vectors.Vector ) is
+                srv,eva : out Standard_Complex_Series_Vectors.Vector ) is
 
     hom : Standard_Complex_Poly_Systems.Poly_Sys(1..nbequ)
         := Standard_Homotopy.Homotopy_System;
-    sys : Standard_Series_Poly_Systems.Poly_Sys(1..nbequ)
+    sys : Standard_CSeries_Poly_Systems.Poly_Sys(1..nbequ)
         := Series_and_Homotopies.Create(hom,idx);
     nit : constant integer32 := integer32(nbiters);
 
   begin
     Series_and_Predictors.Newton_Prediction(nit,sys,sol,srv,eva);
    -- Standard_Complex_Poly_Systems.Clear(hom); -- sharing, do not clear!
-    Standard_Series_Poly_Systems.Clear(sys);
+    Standard_CSeries_Poly_Systems.Clear(sys);
   end Standard_Series_Newton;
 
   procedure Standard_Series_Newton
               ( sol : in Standard_Complex_Solutions.Solution;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out Standard_Dense_Series_Vectors.Vector ) is
+                srv,eva : out Standard_Complex_Series_Vectors.Vector ) is
   begin
     Standard_Series_Newton(sol.v,idx,nbequ,nbterms,nbiters,srv,eva);
   end Standard_Series_Newton;
@@ -273,24 +273,24 @@ package body Homotopy_Series_Readers is
   procedure DoblDobl_Series_Newton
               ( sol : in DoblDobl_Complex_Vectors.Vector;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out DoblDobl_Dense_Series_Vectors.Vector ) is
+                srv,eva : out DoblDobl_Complex_Series_Vectors.Vector ) is
 
     hom : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nbequ)
         := DoblDobl_Homotopy.Homotopy_System;
-    sys : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nbequ)
+    sys : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nbequ)
         := Series_and_Homotopies.Create(hom,idx);
     nit : constant integer32 := integer32(nbiters);
 
   begin
     Series_and_Predictors.Newton_Prediction(nit,sys,sol,srv,eva);
    -- DoblDobl_Complex_Poly_Systems.Clear(hom); -- sharing, do not clear!
-    DoblDobl_Series_Poly_Systems.Clear(sys);
+    DoblDobl_CSeries_Poly_Systems.Clear(sys);
   end DoblDobl_Series_Newton;
 
   procedure DoblDobl_Series_Newton
               ( sol : in DoblDobl_Complex_Solutions.Solution;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out DoblDobl_Dense_Series_Vectors.Vector ) is
+                srv,eva : out DoblDobl_Complex_Series_Vectors.Vector ) is
   begin
     DoblDobl_Series_Newton(sol.v,idx,nbequ,nbterms,nbiters,srv,eva);
   end DoblDobl_Series_Newton;
@@ -298,24 +298,24 @@ package body Homotopy_Series_Readers is
   procedure QuadDobl_Series_Newton
               ( sol : in QuadDobl_Complex_Vectors.Vector;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out QuadDobl_Dense_Series_Vectors.Vector ) is
+                srv,eva : out QuadDobl_Complex_Series_Vectors.Vector ) is
 
     hom : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nbequ)
         := QuadDobl_Homotopy.Homotopy_System;
-    sys : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nbequ)
+    sys : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nbequ)
         := Series_and_Homotopies.Create(hom,idx);
     nit : constant integer32 := integer32(nbiters);
 
   begin
     Series_and_Predictors.Newton_Prediction(nit,sys,sol,srv,eva);
    -- QuadDobl_Complex_Poly_Systems.Clear(hom); -- sharing, do not clear!
-    QuadDobl_Series_Poly_Systems.Clear(sys);
+    QuadDobl_CSeries_Poly_Systems.Clear(sys);
   end QuadDobl_Series_Newton;
 
   procedure QuadDobl_Series_Newton
               ( sol : in QuadDobl_Complex_Solutions.Solution;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out QuadDobl_Dense_Series_Vectors.Vector ) is
+                srv,eva : out QuadDobl_Complex_Series_Vectors.Vector ) is
   begin
     QuadDobl_Series_Newton(sol.v,idx,nbequ,nbterms,nbiters,srv,eva);
   end QuadDobl_Series_Newton;

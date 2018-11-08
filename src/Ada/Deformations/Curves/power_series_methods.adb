@@ -12,11 +12,11 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions_io;
-with Standard_Series_Poly_SysFun;
-with DoblDobl_Series_Poly_SysFun;
-with QuadDobl_Series_Poly_SysFun;
-with Series_and_Polynomials;
-with Series_and_Polynomials_io;
+with Standard_CSeries_Poly_SysFun;
+with DoblDobl_CSeries_Poly_SysFun;
+with QuadDobl_CSeries_Poly_SysFun;
+with Complex_Series_and_Polynomials;
+with Complex_Series_and_Polynomials_io;
 with Standard_Newton_Matrix_Series; -- with Standard_Newton_Series;
 with DoblDobl_Newton_Matrix_Series; -- with DoblDobl_Newton_Series;
 with QuadDobl_Newton_Matrix_Series; -- with QuadDobl_Newton_Series;
@@ -25,8 +25,8 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( nbrit : in integer32;
-               p : in Standard_Series_Poly_Systems.Poly_Sys;
-               s : in out Standard_Dense_Series_Vectors.Vector;
+               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+               s : in out Standard_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
   begin
     Run_LU_Newton(standard_output,nbrit,p,s,info,verbose);
@@ -34,15 +34,15 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in Standard_Series_Poly_Systems.Poly_Sys;
-               s : in out Standard_Dense_Series_Vectors.Vector;
+               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+               s : in out Standard_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
 
     use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
 
     order : integer32 := 1;
     tol : constant double_float := 1.0E-12;
-    eva : Standard_Dense_Series_Vectors.Vector(p'range);
+    eva : Standard_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -52,21 +52,21 @@ package body Power_Series_Methods is
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := Standard_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := Standard_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
              ( nbrit : in integer32;
-               p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out DoblDobl_Dense_Series_Vectors.Vector;
+               p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out DoblDobl_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
   begin
     Run_LU_Newton(standard_output,nbrit,p,s,info,verbose);
@@ -74,15 +74,15 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out DoblDobl_Dense_Series_Vectors.Vector;
+               p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out DoblDobl_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
 
     use DoblDobl_Newton_Matrix_Series; -- use DoblDobl_Newton_Series;
 
     order : integer32 := 1;
     tol : constant double_float := 1.0E-24;
-    eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -92,21 +92,21 @@ package body Power_Series_Methods is
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := DoblDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
              ( nbrit : in integer32;
-               p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out QuadDobl_Dense_Series_Vectors.Vector;
+               p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out QuadDobl_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
   begin
     Run_LU_Newton(standard_output,nbrit,p,s,info,verbose);
@@ -114,15 +114,15 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out QuadDobl_Dense_Series_Vectors.Vector;
+               p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out QuadDobl_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
 
     use QuadDobl_Newton_Matrix_Series; -- use QuadDobl_Newton_Series;
 
     order : integer32 := 1;
     tol : constant double_float := 1.0E-32;
-    eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -132,21 +132,21 @@ package body Power_Series_Methods is
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := QuadDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
              ( nbrit : in integer32;
-               p : in Standard_Series_Poly_Systems.Poly_Sys;
-               s : in out Standard_Dense_Series_Vectors.Vector;
+               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+               s : in out Standard_Complex_Series_Vectors.Vector;
                rcond : out double_float; verbose : in boolean := false ) is
   begin
     Run_LU_Newton(standard_output,nbrit,p,s,rcond,verbose);
@@ -154,15 +154,15 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in Standard_Series_Poly_Systems.Poly_Sys;
-               s : in out Standard_Dense_Series_Vectors.Vector;
+               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+               s : in out Standard_Complex_Series_Vectors.Vector;
                rcond : out double_float; verbose : in boolean := false ) is
 
     use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
 
     order : integer32 := 1;
     tol : constant double_float := 1.0E-12;
-    eva : Standard_Dense_Series_Vectors.Vector(p'range);
+    eva : Standard_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -171,21 +171,21 @@ package body Power_Series_Methods is
       LU_Newton_Steps(file,p,order,nbrit,s,rcond);
       put(file,"rcond : "); put(file,rcond,3); new_line(file);
       if 1.0 + rcond /= 1.0 then
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := Standard_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := Standard_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
              ( nbrit : in integer32;
-               p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out DoblDobl_Dense_Series_Vectors.Vector;
+               p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out DoblDobl_Complex_Series_Vectors.Vector;
                rcond : out double_double; verbose : in boolean := false ) is
   begin
     Run_LU_Newton(standard_output,nbrit,p,s,rcond,verbose);
@@ -193,15 +193,15 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out DoblDobl_Dense_Series_Vectors.Vector;
+               p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out DoblDobl_Complex_Series_Vectors.Vector;
                rcond : out double_double; verbose : in boolean := false ) is
 
     use DoblDobl_Newton_Matrix_Series; -- use DoblDobl_Newton_Series;
 
     order : integer32 := 1;
     tol : constant double_float := 1.0E-24;
-    eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(p'range);
     one : constant double_double := create(1.0);
 
   begin
@@ -211,21 +211,21 @@ package body Power_Series_Methods is
       LU_Newton_Steps(file,p,order,nbrit,s,rcond);
       put(file,"rcond : "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := DoblDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
              ( nbrit : in integer32;
-               p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out QuadDobl_Dense_Series_Vectors.Vector;
+               p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out QuadDobl_Complex_Series_Vectors.Vector;
                rcond : out quad_double; verbose : in boolean := false ) is
   begin
     Run_LU_Newton(standard_output,nbrit,p,s,rcond,verbose);
@@ -233,15 +233,15 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out QuadDobl_Dense_Series_Vectors.Vector;
+               p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out QuadDobl_Complex_Series_Vectors.Vector;
                rcond : out quad_double; verbose : in boolean := false ) is
 
     use QuadDobl_Newton_Matrix_Series; -- use QuadDobl_Newton_Series;
 
     order : integer32 := 1;
     tol : constant double_float := 1.0E-32;
-    eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(p'range);
     one : constant quad_double := create(1.0);
 
   begin
@@ -251,21 +251,21 @@ package body Power_Series_Methods is
       LU_Newton_Steps(file,p,order,nbrit,s,rcond);
       put(file,"rcond : "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := QuadDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_LU_Newton;
 
   procedure Run_QR_Newton
              ( nbrit : in integer32;
-               p : in Standard_Series_Poly_Systems.Poly_Sys;
-               s : in out Standard_Dense_Series_Vectors.Vector;
+               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+               s : in out Standard_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
   begin
     Run_QR_Newton(standard_output,nbrit,p,s,verbose);
@@ -273,8 +273,8 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in Standard_Series_Poly_Systems.Poly_Sys;
-               s : in out Standard_Dense_Series_Vectors.Vector;
+               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+               s : in out Standard_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
 
     use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
@@ -282,7 +282,7 @@ package body Power_Series_Methods is
     order : integer32 := 1;
     info : integer32;
     tol : constant double_float := 1.0E-12;
-    eva : Standard_Dense_Series_Vectors.Vector(p'range);
+    eva : Standard_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -292,21 +292,21 @@ package body Power_Series_Methods is
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := Standard_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := Standard_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
              ( nbrit : in integer32;
-               p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out DoblDobl_Dense_Series_Vectors.Vector;
+               p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out DoblDobl_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
   begin
     Run_QR_Newton(standard_output,nbrit,p,s,verbose);
@@ -314,8 +314,8 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out DoblDobl_Dense_Series_Vectors.Vector;
+               p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out DoblDobl_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
 
     use DoblDobl_Newton_Matrix_Series; -- use DoblDobl_Newton_Series;
@@ -323,7 +323,7 @@ package body Power_Series_Methods is
     order : integer32 := 1;
     info : integer32;
     tol : constant double_float := 1.0E-24;
-    eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -333,21 +333,21 @@ package body Power_Series_Methods is
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := DoblDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
              ( nbrit : in integer32;
-               p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out QuadDobl_Dense_Series_Vectors.Vector;
+               p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out QuadDobl_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
   begin
     Run_QR_Newton(standard_output,nbrit,p,s,verbose);
@@ -355,8 +355,8 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out QuadDobl_Dense_Series_Vectors.Vector;
+               p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out QuadDobl_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
 
     use QuadDobl_Newton_Matrix_Series; -- use QuadDobl_Newton_Series;
@@ -364,7 +364,7 @@ package body Power_Series_Methods is
     order : integer32 := 1;
     info : integer32;
     tol : constant double_float := 1.0E-32;
-    eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -374,21 +374,21 @@ package body Power_Series_Methods is
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := QuadDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_QR_Newton;
 
   procedure Run_SVD_Newton
              ( nbrit : in integer32;
-               p : in Standard_Series_Poly_Systems.Poly_Sys;
-               s : in out Standard_Dense_Series_Vectors.Vector;
+               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+               s : in out Standard_Complex_Series_Vectors.Vector;
                rcond : out double_float; verbose : in boolean := false ) is
   begin
     Run_SVD_Newton(standard_output,nbrit,p,s,rcond,verbose);
@@ -396,8 +396,8 @@ package body Power_Series_Methods is
 
   procedure Run_SVD_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in Standard_Series_Poly_Systems.Poly_Sys;
-               s : in out Standard_Dense_Series_Vectors.Vector;
+               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+               s : in out Standard_Complex_Series_Vectors.Vector;
                rcond : out double_float; verbose : in boolean := false ) is
 
     use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
@@ -405,7 +405,7 @@ package body Power_Series_Methods is
     order : integer32 := 1;
     info : integer32;
     tol : constant double_float := 1.0E-12;
-    eva : Standard_Dense_Series_Vectors.Vector(p'range);
+    eva : Standard_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -414,21 +414,21 @@ package body Power_Series_Methods is
       SVD_Newton_Steps(file,p,order,nbrit,s,info,rcond);
       put(file,"rcond = "); put(file,rcond,3); new_line(file);
       if 1.0 + rcond /= 1.0 then
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := Standard_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := Standard_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
              ( nbrit : in integer32;
-               p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out DoblDobl_Dense_Series_Vectors.Vector;
+               p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out DoblDobl_Complex_Series_Vectors.Vector;
                rcond : out double_double; verbose : in boolean := false ) is
   begin
     Run_SVD_Newton(standard_output,nbrit,p,s,rcond,verbose);
@@ -436,8 +436,8 @@ package body Power_Series_Methods is
 
   procedure Run_SVD_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out DoblDobl_Dense_Series_Vectors.Vector;
+               p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out DoblDobl_Complex_Series_Vectors.Vector;
                rcond : out double_double; verbose : in boolean := false ) is
 
     use DoblDobl_Newton_Matrix_Series; -- use DoblDobl_Newton_Series;
@@ -445,7 +445,7 @@ package body Power_Series_Methods is
     order : integer32 := 1;
     info : integer32;
     tol : constant double_float := 1.0E-24;
-    eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(p'range);
     one : constant double_double := create(1.0);
 
   begin
@@ -455,21 +455,21 @@ package body Power_Series_Methods is
       SVD_Newton_Steps(file,p,order,nbrit,s,info,rcond);
       put(file,"rcond = "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then 
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := DoblDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
              ( nbrit : in integer32;
-               p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out QuadDobl_Dense_Series_Vectors.Vector;
+               p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out QuadDobl_Complex_Series_Vectors.Vector;
                rcond : out quad_double; verbose : in boolean := false ) is
   begin
     Run_SVD_Newton(standard_output,nbrit,p,s,rcond,verbose);
@@ -477,8 +477,8 @@ package body Power_Series_Methods is
 
   procedure Run_SVD_Newton
              ( file : in file_type; nbrit : in integer32;
-               p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out QuadDobl_Dense_Series_Vectors.Vector;
+               p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out QuadDobl_Complex_Series_Vectors.Vector;
                rcond : out quad_double; verbose : in boolean := false ) is
 
     use QuadDobl_Newton_Matrix_Series; -- use QuadDobl_Newton_Series;
@@ -486,7 +486,7 @@ package body Power_Series_Methods is
     order : integer32 := 1;
     info : integer32;
     tol : constant double_float := 1.0E-32;
-    eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(p'range);
     one : constant quad_double := create(1.0);
 
   begin
@@ -496,21 +496,21 @@ package body Power_Series_Methods is
       SVD_Newton_Steps(file,p,order,nbrit,s,info,rcond);
       put(file,"rcond = "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then
-        Series_and_Polynomials.Filter(s,tol);
+        Complex_Series_and_Polynomials.Filter(s,tol);
         put_line(file,"The updated power series solution :");
-        Series_and_Polynomials_io.put(file,s);
-        eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
-        Series_and_Polynomials.Filter(eva,tol);
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := QuadDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
-        Series_and_Polynomials_io.put(file,eva);
+        Complex_Series_and_Polynomials_io.put(file,eva);
       end if;
     end if;
   end Run_SVD_Newton;
 
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Standard_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false ) is
   begin
@@ -519,8 +519,8 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Standard_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false ) is
 
@@ -528,7 +528,7 @@ package body Power_Series_Methods is
 
     order : integer32 := 1;
     tol : constant double_float := 1.0E-12;
-    eva : Standard_Dense_Series_Vectors.Vector(p'range);
+    eva : Standard_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -536,13 +536,13 @@ package body Power_Series_Methods is
     else
       Echelon_Newton_Steps(file,p,order,nbrit,s,det);
       put(file,"det : "); put(file,det); new_line(file);
-      Series_and_Polynomials.Filter(s,tol);
+      Complex_Series_and_Polynomials.Filter(s,tol);
       put_line(file,"The updated power series solution :");
-      Series_and_Polynomials_io.put(file,s);
-      eva := Standard_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
+      Complex_Series_and_Polynomials_io.put(file,s);
+      eva := Standard_CSeries_Poly_SysFun.Eval(p,s);
+      Complex_Series_and_Polynomials.Filter(eva,tol);
       put_line(file,"The evaluated solution :");
-      Series_and_Polynomials_io.put(file,eva);
+      Complex_Series_and_Polynomials_io.put(file,eva);
     end if;
   exception
     when others =>
@@ -552,8 +552,8 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 det : out DoblDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false ) is
   begin
@@ -562,8 +562,8 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 det : out DoblDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false ) is
 
@@ -571,7 +571,7 @@ package body Power_Series_Methods is
 
     order : integer32 := 1;
     tol : constant double_float := 1.0E-12;
-    eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -579,20 +579,20 @@ package body Power_Series_Methods is
     else
       Echelon_Newton_Steps(file,p,order,nbrit,s,det);
       put(file,"det : "); put(file,det); new_line(file);
-      Series_and_Polynomials.Filter(s,tol);
+      Complex_Series_and_Polynomials.Filter(s,tol);
       put_line(file,"The updated power series solution :");
-      Series_and_Polynomials_io.put(file,s);
-      eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
+      Complex_Series_and_Polynomials_io.put(file,s);
+      eva := DoblDobl_CSeries_Poly_SysFun.Eval(p,s);
+      Complex_Series_and_Polynomials.Filter(eva,tol);
       put_line(file,"The evaluated solution :");
-      Series_and_Polynomials_io.put(file,eva);
+      Complex_Series_and_Polynomials_io.put(file,eva);
     end if;
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out QuadDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false ) is
   begin
@@ -601,8 +601,8 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out QuadDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false ) is
 
@@ -610,7 +610,7 @@ package body Power_Series_Methods is
 
     order : integer32 := 1;
     tol : constant double_float := 1.0E-12;
-    eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(p'range);
 
   begin
     if not verbose then
@@ -618,20 +618,20 @@ package body Power_Series_Methods is
     else
       Echelon_Newton_Steps(file,p,order,nbrit,s,det);
       put(file,"det : "); put(file,det); new_line(file);
-      Series_and_Polynomials.Filter(s,tol);
+      Complex_Series_and_Polynomials.Filter(s,tol);
       put_line(file,"The updated power series solution :");
-      Series_and_Polynomials_io.put(file,s);
-      eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
+      Complex_Series_and_Polynomials_io.put(file,s);
+      eva := QuadDobl_CSeries_Poly_SysFun.Eval(p,s);
+      Complex_Series_and_Polynomials.Filter(eva,tol);
       put_line(file,"The evaluated solution :");
-      Series_and_Polynomials_io.put(file,eva);
+      Complex_Series_and_Polynomials_io.put(file,eva);
     end if;
   end Run_Echelon_Newton;
 
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -643,7 +643,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -664,8 +664,8 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -677,7 +677,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : DoblDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -698,8 +698,8 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -711,7 +711,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : QuadDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -732,8 +732,8 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     info : integer32;
@@ -744,7 +744,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -759,8 +759,8 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     info : integer32;
@@ -771,7 +771,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : DoblDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -786,8 +786,8 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     info : integer32;
@@ -798,7 +798,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : QuadDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -813,8 +813,8 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -825,7 +825,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -846,8 +846,8 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -858,7 +858,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : DoblDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -879,8 +879,8 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -891,7 +891,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : QuadDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -912,8 +912,8 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
   begin
     for i in v'range loop
@@ -921,7 +921,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -936,8 +936,8 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
   begin
     for i in v'range loop
@@ -945,7 +945,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : DoblDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -960,8 +960,8 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
   begin
     for i in v'range loop
@@ -969,7 +969,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : QuadDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -984,8 +984,8 @@ package body Power_Series_Methods is
 
   procedure Run_SVD_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -997,7 +997,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1018,8 +1018,8 @@ package body Power_Series_Methods is
 
   procedure Run_SVD_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -1031,7 +1031,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : DoblDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1052,8 +1052,8 @@ package body Power_Series_Methods is
 
   procedure Run_SVD_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -1065,7 +1065,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : QuadDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1086,8 +1086,8 @@ package body Power_Series_Methods is
 
   procedure Run_SVD_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     rcond : double_float;
@@ -1098,7 +1098,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1113,8 +1113,8 @@ package body Power_Series_Methods is
 
   procedure Run_SVD_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     rcond : double_double;
@@ -1125,7 +1125,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : DoblDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1140,8 +1140,8 @@ package body Power_Series_Methods is
 
   procedure Run_SVD_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     rcond : quad_double;
@@ -1152,7 +1152,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : QuadDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1167,8 +1167,8 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -1180,7 +1180,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1201,8 +1201,8 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -1214,7 +1214,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : DoblDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1235,8 +1235,8 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false ) is
 
@@ -1248,7 +1248,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : QuadDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1269,8 +1269,8 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     det : Standard_Complex_Numbers.Complex_Number;
@@ -1281,7 +1281,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : Standard_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1296,8 +1296,8 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     det : DoblDobl_Complex_Numbers.Complex_Number;
@@ -1308,7 +1308,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : DoblDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1323,8 +1323,8 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     det : QuadDobl_Complex_Numbers.Complex_Number;
@@ -1335,7 +1335,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : QuadDobl_Dense_Series_Vectors.Link_to_Vector := v(i);
+          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop

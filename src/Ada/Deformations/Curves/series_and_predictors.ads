@@ -4,17 +4,17 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
-with Standard_Dense_Series;
-with Standard_Dense_Series_Vectors;
-with Standard_Series_Poly_Systems;
+with Standard_Complex_Series;
+with Standard_Complex_Series_Vectors;
+with Standard_CSeries_Poly_Systems;
 with DoblDobl_Complex_Vectors;
-with DoblDobl_Dense_Series;
-with DoblDobl_Dense_Series_Vectors;
-with DoblDobl_Series_Poly_Systems;
+with DoblDobl_Complex_Series;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_Complex_Vectors;
-with QuadDobl_Dense_Series;
-with QuadDobl_Dense_Series_Vectors;
-with QuadDobl_Series_Poly_Systems;
+with QuadDobl_Complex_Series;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_CSeries_Poly_Systems;
 
 package Series_and_Predictors is
 
@@ -23,22 +23,22 @@ package Series_and_Predictors is
 
   procedure Newton_Prediction
               ( nit : in integer32;
-                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in Standard_Complex_Vectors.Vector;
-                srv : out Standard_Dense_Series_Vectors.Vector;
-                eva : out Standard_Dense_Series_Vectors.Vector );
+                srv : out Standard_Complex_Series_Vectors.Vector;
+                eva : out Standard_Complex_Series_Vectors.Vector );
   procedure Newton_Prediction
               ( nit : in integer32;
-                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in DoblDobl_Complex_Vectors.Vector;
-                srv : out DoblDobl_Dense_Series_Vectors.Vector;
-                eva : out DoblDobl_Dense_Series_Vectors.Vector );
+                srv : out DoblDobl_Complex_Series_Vectors.Vector;
+                eva : out DoblDobl_Complex_Series_Vectors.Vector );
   procedure Newton_Prediction
               ( nit : in integer32;
-                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in QuadDobl_Complex_Vectors.Vector;
-                srv : out QuadDobl_Dense_Series_Vectors.Vector;
-                eva : out QuadDobl_Dense_Series_Vectors.Vector );
+                srv : out QuadDobl_Complex_Series_Vectors.Vector;
+                eva : out QuadDobl_Complex_Series_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Applies Newton's method on the homotopy in hom,
@@ -63,24 +63,24 @@ package Series_and_Predictors is
 
   procedure Newton_Prediction
               ( file : in file_type; nit : in integer32;
-                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in Standard_Complex_Vectors.Vector;
-                srv : out Standard_Dense_Series_Vectors.Vector;
-                eva : out Standard_Dense_Series_Vectors.Vector;
+                srv : out Standard_Complex_Series_Vectors.Vector;
+                eva : out Standard_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Newton_Prediction
               ( file : in file_type; nit : in integer32;
-                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in DoblDobl_Complex_Vectors.Vector;
-                srv : out DoblDobl_Dense_Series_Vectors.Vector;
-                eva : out DoblDobl_Dense_Series_Vectors.Vector;
+                srv : out DoblDobl_Complex_Series_Vectors.Vector;
+                eva : out DoblDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Newton_Prediction
               ( file : in file_type; nit : in integer32;
-                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in QuadDobl_Complex_Vectors.Vector;
-                srv : out QuadDobl_Dense_Series_Vectors.Vector;
-                eva : out QuadDobl_Dense_Series_Vectors.Vector;
+                srv : out QuadDobl_Complex_Series_Vectors.Vector;
+                eva : out QuadDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -106,13 +106,13 @@ package Series_and_Predictors is
   --            eva'range = hom'range.
 
   function Predicted_Error
-             ( evls : Standard_Dense_Series_Vectors.Vector;
+             ( evls : Standard_Complex_Series_Vectors.Vector;
                step : double_float ) return double_float;
   function Predicted_Error
-             ( evls : DoblDobl_Dense_Series_Vectors.Vector;
+             ( evls : DoblDobl_Complex_Series_Vectors.Vector;
                step : double_double ) return double_double;
   function Predicted_Error
-             ( evls : QuadDobl_Dense_Series_Vectors.Vector;
+             ( evls : QuadDobl_Complex_Series_Vectors.Vector;
                step : quad_double ) return quad_double;
 
   -- DESCRIPTION :
@@ -121,11 +121,11 @@ package Series_and_Predictors is
   --   return the max norm of the series evls evaluated at step,
   --   in double, double double, or quad double precision.
 
-  procedure Order ( v : in Standard_Dense_Series_Vectors.Vector;
+  procedure Order ( v : in Standard_Complex_Series_Vectors.Vector;
                     tol : in double_float; vk,ord : out integer32 );
-  procedure Order ( v : in DoblDobl_Dense_Series_Vectors.Vector;
+  procedure Order ( v : in DoblDobl_Complex_Series_Vectors.Vector;
                     tol : in double_float; vk,ord : out integer32 );
-  procedure Order ( v : in QuadDobl_Dense_Series_Vectors.Vector;
+  procedure Order ( v : in QuadDobl_Complex_Series_Vectors.Vector;
                     tol : in double_float; vk,ord : out integer32 );
 
   -- DESCRIPTION :
@@ -134,13 +134,13 @@ package Series_and_Predictors is
   --   The corresponding coefficient with t^ord is then in v(vk).cff(ord).
 
   function Set_Step_Size
-             ( v : Standard_Dense_Series_Vectors.Vector;
+             ( v : Standard_Complex_Series_Vectors.Vector;
                tolcff,tolres : double_float ) return double_float;
   function Set_Step_Size
-             ( v : DoblDobl_Dense_Series_Vectors.Vector;
+             ( v : DoblDobl_Complex_Series_Vectors.Vector;
                tolcff,tolres : double_float ) return double_float;
   function Set_Step_Size
-             ( v : QuadDobl_Dense_Series_Vectors.Vector;
+             ( v : QuadDobl_Complex_Series_Vectors.Vector;
                tolcff,tolres : double_float ) return double_float;
 
   -- DESCRIPTION :
@@ -150,17 +150,17 @@ package Series_and_Predictors is
 
   function Set_Step_Size
              ( file : file_type;
-               v : Standard_Dense_Series_Vectors.Vector;
+               v : Standard_Complex_Series_Vectors.Vector;
                tolcff,tolres : double_float;
                verbose : boolean := false ) return double_float;
   function Set_Step_Size
              ( file : file_type;
-               v : DoblDobl_Dense_Series_Vectors.Vector;
+               v : DoblDobl_Complex_Series_Vectors.Vector;
                tolcff,tolres : double_float;
                verbose : boolean := false ) return double_float;
   function Set_Step_Size
              ( file : file_type;
-               v : QuadDobl_Dense_Series_Vectors.Vector;
+               v : QuadDobl_Complex_Series_Vectors.Vector;
                tolcff,tolres : double_float;
                verbose : boolean := false ) return double_float;
 
@@ -170,15 +170,15 @@ package Series_and_Predictors is
   --   If verbose, then extra output is written to file.
 
   function Predicted_Solution
-             ( srv : Standard_Dense_Series_Vectors.Vector;
+             ( srv : Standard_Complex_Series_Vectors.Vector;
                step : double_float )
              return Standard_Complex_Vectors.Vector;
   function Predicted_Solution
-             ( srv : DoblDobl_Dense_Series_Vectors.Vector;
+             ( srv : DoblDobl_Complex_Series_Vectors.Vector;
                step : double_double )
              return DoblDobl_Complex_Vectors.Vector;
   function Predicted_Solution
-             ( srv : QuadDobl_Dense_Series_Vectors.Vector;
+             ( srv : QuadDobl_Complex_Series_Vectors.Vector;
                step : quad_double )
              return QuadDobl_Complex_Vectors.Vector;
 

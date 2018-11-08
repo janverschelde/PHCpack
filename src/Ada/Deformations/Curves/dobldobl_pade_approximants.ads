@@ -2,7 +2,7 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Vectors;
-with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors;
 
 package DoblDobl_Pade_Approximants is
 
@@ -35,7 +35,7 @@ package DoblDobl_Pade_Approximants is
 
   -- REQUIRED : num'first = 0 = den'first.
 
-  function Coefficients ( srv : DoblDobl_Dense_Series_Vectors.Vector;
+  function Coefficients ( srv : DoblDobl_Complex_Series_Vectors.Vector;
                           idx : integer32 )
                         return DoblDobl_Complex_Vectors.Vector;
 
@@ -46,7 +46,7 @@ package DoblDobl_Pade_Approximants is
   -- REQUIRED : idx in srv'range.
 
   function Create ( numdeg,dendeg : integer32;
-                    srv : DoblDobl_Dense_Series_Vectors.Vector )
+                    srv : DoblDobl_Complex_Series_Vectors.Vector )
                   return Pade_Vector;
 
   -- DESCRIPTION :

@@ -2,7 +2,7 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
-with Standard_Dense_Series_Vectors;
+with Standard_Complex_Series_Vectors;
 
 package Standard_Pade_Approximants is
 
@@ -35,7 +35,7 @@ package Standard_Pade_Approximants is
 
   -- REQUIRED : num'first = 0 = den'first.
 
-  function Coefficients ( srv : Standard_Dense_Series_Vectors.Vector;
+  function Coefficients ( srv : Standard_Complex_Series_Vectors.Vector;
                           idx : integer32 )
                         return Standard_Complex_Vectors.Vector;
 
@@ -46,7 +46,7 @@ package Standard_Pade_Approximants is
   -- REQUIRED : idx in srv'range.
 
   function Create ( numdeg,dendeg : integer32;
-                    srv : Standard_Dense_Series_Vectors.Vector;
+                    srv : Standard_Complex_Series_Vectors.Vector;
                     verbose : boolean := false )
                   return Pade_Vector;
 

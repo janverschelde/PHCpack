@@ -26,7 +26,7 @@ package body DoblDobl_Pade_Approximants is
     return res;
   end Create;
 
-  function Coefficients ( srv : DoblDobl_Dense_Series_Vectors.Vector;
+  function Coefficients ( srv : DoblDobl_Complex_Series_Vectors.Vector;
                           idx : integer32 )
                         return DoblDobl_Complex_Vectors.Vector is
 
@@ -41,7 +41,7 @@ package body DoblDobl_Pade_Approximants is
   end Coefficients;
 
   function Create ( numdeg,dendeg : integer32;
-                    srv : DoblDobl_Dense_Series_Vectors.Vector )
+                    srv : DoblDobl_Complex_Series_Vectors.Vector )
                   return Pade_Vector is
 
     res : Pade_Vector(srv'range);

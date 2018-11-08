@@ -26,7 +26,7 @@ package body QuadDobl_Pade_Approximants is
     return res;
   end Create;
 
-  function Coefficients ( srv : QuadDobl_Dense_Series_Vectors.Vector;
+  function Coefficients ( srv : QuadDobl_Complex_Series_Vectors.Vector;
                           idx : integer32 )
                         return QuadDobl_Complex_Vectors.Vector is
 
@@ -41,7 +41,7 @@ package body QuadDobl_Pade_Approximants is
   end Coefficients;
 
   function Create ( numdeg,dendeg : integer32;
-                    srv : QuadDobl_Dense_Series_Vectors.Vector )
+                    srv : QuadDobl_Complex_Series_Vectors.Vector )
                   return Pade_Vector is
 
     res : Pade_Vector(srv'range);

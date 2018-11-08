@@ -5,15 +5,15 @@ with Double_Double_Numbers;             use Double_Double_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
-with Standard_Dense_Series_Vectors;
+with Standard_Complex_Series_Vectors;
 with Standard_Pade_Approximants;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
-with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_Pade_Approximants;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
-with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Pade_Approximants;
 
 package Homotopy_Pade_Approximants is
@@ -27,21 +27,21 @@ package Homotopy_Pade_Approximants is
               ( sol : in Standard_Complex_Vectors.Vector;
                 idx,nbequ,numdeg,dendeg : in integer32;
                 nbiters : in natural32;
-                srv,eva : out Standard_Dense_Series_Vectors.Vector;
+                srv,eva : out Standard_Complex_Series_Vectors.Vector;
                 pv : out Standard_Pade_Approximants.Pade_Vector;
                 verbose : in boolean := false );
   procedure DoblDobl_Pade_Approximant
               ( sol : in DoblDobl_Complex_Vectors.Vector;
                 idx,nbequ,numdeg,dendeg : in integer32;
                 nbiters : in natural32;
-                srv,eva : out DoblDobl_Dense_Series_Vectors.Vector;
+                srv,eva : out DoblDobl_Complex_Series_Vectors.Vector;
                 pv : out DoblDobl_Pade_Approximants.Pade_Vector;
                 verbose : in boolean := false );
   procedure QuadDobl_Pade_Approximant
               ( sol : in QuadDobl_Complex_Vectors.Vector;
                 idx,nbequ,numdeg,dendeg : in integer32;
                 nbiters : in natural32;
-                srv,eva : out QuadDobl_Dense_Series_Vectors.Vector;
+                srv,eva : out QuadDobl_Complex_Series_Vectors.Vector;
                 pv : out QuadDobl_Pade_Approximants.Pade_Vector;
                 verbose : in boolean := false );
 

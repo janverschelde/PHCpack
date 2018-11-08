@@ -24,10 +24,10 @@ with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Laur_SysFun;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
-with Standard_Series_Vector_Functions;
-with DoblDobl_Series_Vector_Functions;
-with QuadDobl_Series_Vector_Functions;
-with Series_and_Polynomials_io;
+with Standard_CSeries_Vector_Functions;
+with DoblDobl_CSeries_Vector_Functions;
+with QuadDobl_CSeries_Vector_Functions;
+with Complex_Series_and_Polynomials_io;
 with Regular_Solution_Curves_Series;     use Regular_Solution_Curves_Series;
 
 package body Regular_Newton_Puiseux is
@@ -61,13 +61,13 @@ package body Regular_Newton_Puiseux is
 
   function Standard_Residual
               ( p : Standard_Complex_Laur_Systems.Laur_Sys;
-                s : Standard_Dense_Series_Vectors.Vector;
+                s : Standard_Complex_Series_Vectors.Vector;
                 w : Standard_Integer_Vectors.Vector;
                 t : double_float ) return double_float is
 
     res : double_float := 0.0;
     x : constant Standard_Complex_Vectors.Vector(s'range)
-      := Standard_Series_Vector_Functions.Eval(s,w,t);
+      := Standard_CSeries_Vector_Functions.Eval(s,w,t);
     xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
     y : Standard_Complex_Vectors.Vector(p'range);
 
@@ -81,13 +81,13 @@ package body Regular_Newton_Puiseux is
 
   function DoblDobl_Residual
               ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                s : DoblDobl_Dense_Series_Vectors.Vector;
+                s : DoblDobl_Complex_Series_Vectors.Vector;
                 w : Standard_Integer_Vectors.Vector;
                 t : double_double ) return double_double is
 
     res : double_double := create(0.0);
     x : constant DoblDobl_Complex_Vectors.Vector(s'range)
-      := DoblDobl_Series_Vector_Functions.Eval(s,w,t);
+      := DoblDobl_CSeries_Vector_Functions.Eval(s,w,t);
     xt : DoblDobl_Complex_Vectors.Vector(x'first..x'last+1);
     y : DoblDobl_Complex_Vectors.Vector(p'range);
 
@@ -101,13 +101,13 @@ package body Regular_Newton_Puiseux is
 
   function QuadDobl_Residual
               ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                s : QuadDobl_Dense_Series_Vectors.Vector;
+                s : QuadDobl_Complex_Series_Vectors.Vector;
                 w : Standard_Integer_Vectors.Vector;
                 t : quad_double ) return quad_double is
 
     res : quad_double := create(0.0);
     x : constant QuadDobl_Complex_Vectors.Vector(s'range)
-      := QuadDobl_Series_Vector_Functions.Eval(s,w,t);
+      := QuadDobl_CSeries_Vector_Functions.Eval(s,w,t);
     xt : QuadDobl_Complex_Vectors.Vector(x'first..x'last+1);
     y : QuadDobl_Complex_Vectors.Vector(p'range);
 
@@ -122,7 +122,7 @@ package body Regular_Newton_Puiseux is
   function Standard_Residuals
               ( file : file_type;
                 p : Standard_Complex_Laur_Systems.Laur_Sys;
-                s : Standard_Dense_Series_VecVecs.VecVec;
+                s : Standard_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : double_float ) return double_float is
 
@@ -133,7 +133,7 @@ package body Regular_Newton_Puiseux is
     put_line(file,"The system p :"); put(file,p);
     for k in s'range loop
       put(file,"-> at the series "); put(file,k); put_line(file," : ");
-      Series_and_Polynomials_io.put(file,s(k).all);
+      Complex_Series_and_Polynomials_io.put(file,s(k).all);
       put(file,"with tropism "); put(file,w(k)); new_line(file);
       res := Standard_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
@@ -148,7 +148,7 @@ package body Regular_Newton_Puiseux is
 
   function Standard_Residuals
               ( p : Standard_Complex_Laur_Systems.Laur_Sys;
-                s : Standard_Dense_Series_VecVecs.VecVec;
+                s : Standard_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : double_float; report : in boolean )
               return double_float is
@@ -163,7 +163,7 @@ package body Regular_Newton_Puiseux is
     for k in s'range loop
       if report then
         put("-> at the series "); put(k); put_line(" : ");
-        Series_and_Polynomials_io.put(s(k).all);
+        Complex_Series_and_Polynomials_io.put(s(k).all);
         put("with tropism "); put(w(k)); new_line;
       end if;
       res := Standard_Residual(p,s(k).all,w(k).all,t);
@@ -183,7 +183,7 @@ package body Regular_Newton_Puiseux is
   function DoblDobl_Residuals
               ( file : file_type;
                 p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                s : DoblDobl_Dense_Series_VecVecs.VecVec;
+                s : DoblDobl_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : double_double ) return double_double is
 
@@ -194,7 +194,7 @@ package body Regular_Newton_Puiseux is
     put_line(file,"The system p :"); put(file,p);
     for k in s'range loop
       put(file,"-> at the series "); put(file,k); put_line(file," : ");
-      Series_and_Polynomials_io.put(file,s(k).all);
+      Complex_Series_and_Polynomials_io.put(file,s(k).all);
       put(file,"with tropism "); put(file,w(k)); new_line(file);
       res := DoblDobl_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
@@ -209,7 +209,7 @@ package body Regular_Newton_Puiseux is
 
   function DoblDobl_Residuals
               ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                s : DoblDobl_Dense_Series_VecVecs.VecVec;
+                s : DoblDobl_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : double_double; report : in boolean )
               return double_double is
@@ -224,7 +224,7 @@ package body Regular_Newton_Puiseux is
     for k in s'range loop
       if report then
         put("-> at the series "); put(k); put_line(" : ");
-        Series_and_Polynomials_io.put(s(k).all);
+        Complex_Series_and_Polynomials_io.put(s(k).all);
         put("with tropism "); put(w(k)); new_line;
       end if;
       res := DoblDobl_Residual(p,s(k).all,w(k).all,t);
@@ -244,7 +244,7 @@ package body Regular_Newton_Puiseux is
   function QuadDobl_Residuals
               ( file : file_type;
                 p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                s : QuadDobl_Dense_Series_VecVecs.VecVec;
+                s : QuadDobl_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : quad_double ) return quad_double is
 
@@ -255,7 +255,7 @@ package body Regular_Newton_Puiseux is
     put_line(file,"The system p :"); put(file,p);
     for k in s'range loop
       put(file,"-> at the series "); put(file,k); put_line(file," : ");
-      Series_and_Polynomials_io.put(file,s(k).all);
+      Complex_Series_and_Polynomials_io.put(file,s(k).all);
       put(file,"with tropism "); put(file,w(k)); new_line(file);
       res := QuadDobl_Residual(p,s(k).all,w(k).all,t);
       put(file,"Residual at series ");
@@ -270,7 +270,7 @@ package body Regular_Newton_Puiseux is
 
   function QuadDobl_Residuals
               ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                s : QuadDobl_Dense_Series_VecVecs.VecVec;
+                s : QuadDobl_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : quad_double; report : in boolean )
               return quad_double is
@@ -285,7 +285,7 @@ package body Regular_Newton_Puiseux is
     for k in s'range loop
       if report then
         put("-> at the series "); put(k); put_line(" : ");
-        Series_and_Polynomials_io.put(s(k).all);
+        Complex_Series_and_Polynomials_io.put(s(k).all);
         put("with tropism "); put(w(k)); new_line;
       end if;
       res := QuadDobl_Residual(p,s(k).all,w(k).all,t);
@@ -314,7 +314,7 @@ package body Regular_Newton_Puiseux is
   begin
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
-      s : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      s : Standard_Complex_Series_VecVecs.VecVec(1..integer32(mv));
       w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       r : double_float;
     begin
@@ -338,7 +338,7 @@ package body Regular_Newton_Puiseux is
   begin
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
-      s : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      s : DoblDobl_Complex_Series_VecVecs.VecVec(1..integer32(mv));
       w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       t : constant double_double := create(0.1);
       r : double_double;
@@ -363,7 +363,7 @@ package body Regular_Newton_Puiseux is
   begin
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
     declare
-      s : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      s : QuadDobl_Complex_Series_VecVecs.VecVec(1..integer32(mv));
       w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       t : constant quad_double := create(0.1);
       r : quad_double;
@@ -388,7 +388,7 @@ package body Regular_Newton_Puiseux is
   begin
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
-      s : Standard_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      s : Standard_Complex_Series_VecVecs.VecVec(1..integer32(mv));
       w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       r : double_float;
     begin
@@ -415,7 +415,7 @@ package body Regular_Newton_Puiseux is
   begin
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
-      s : DoblDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      s : DoblDobl_Complex_Series_VecVecs.VecVec(1..integer32(mv));
       w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       t : constant double_double := create(0.1);
       r : double_double;
@@ -443,7 +443,7 @@ package body Regular_Newton_Puiseux is
   begin
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
     declare
-      s : QuadDobl_Dense_Series_VecVecs.VecVec(1..integer32(mv));
+      s : QuadDobl_Complex_Series_VecVecs.VecVec(1..integer32(mv));
       w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       t : constant quad_double := create(0.1);
       r : quad_double;

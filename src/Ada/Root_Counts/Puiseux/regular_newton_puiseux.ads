@@ -11,12 +11,12 @@ with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Laur_Systems;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
-with Standard_Dense_Series_Vectors;
-with Standard_Dense_Series_VecVecs;
-with DoblDobl_Dense_Series_Vectors;
-with DoblDobl_Dense_Series_VecVecs;
-with QuadDobl_Dense_Series_Vectors;
-with QuadDobl_Dense_Series_VecVecs;
+with Standard_Complex_Series_Vectors;
+with Standard_Complex_Series_VecVecs;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_VecVecs;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_VecVecs;
 
 package Regular_Newton_Puiseux is
 
@@ -47,17 +47,17 @@ package Regular_Newton_Puiseux is
 
   function Standard_Residual
               ( p : Standard_Complex_Laur_Systems.Laur_Sys;
-                s : Standard_Dense_Series_Vectors.Vector;
+                s : Standard_Complex_Series_Vectors.Vector;
                 w : Standard_Integer_Vectors.Vector;
                 t : double_float ) return double_float;
   function DoblDobl_Residual
               ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                s : DoblDobl_Dense_Series_Vectors.Vector;
+                s : DoblDobl_Complex_Series_Vectors.Vector;
                 w : Standard_Integer_Vectors.Vector;
                 t : double_double ) return double_double;
   function QuadDobl_Residual
               ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                s : QuadDobl_Dense_Series_Vectors.Vector;
+                s : QuadDobl_Complex_Series_Vectors.Vector;
                 w : Standard_Integer_Vectors.Vector;
                 t : quad_double ) return quad_double;
 
@@ -69,19 +69,19 @@ package Regular_Newton_Puiseux is
   function Standard_Residuals
               ( file : file_type;
                 p : Standard_Complex_Laur_Systems.Laur_Sys;
-                s : Standard_Dense_Series_VecVecs.VecVec;
+                s : Standard_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : double_float ) return double_float;
   function DoblDobl_Residuals
               ( file : file_type;
                 p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                s : DoblDobl_Dense_Series_VecVecs.VecVec;
+                s : DoblDobl_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : double_double ) return double_double;
   function QuadDobl_Residuals
               ( file : file_type;
                 p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                s : QuadDobl_Dense_Series_VecVecs.VecVec;
+                s : QuadDobl_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : quad_double ) return quad_double;
 
@@ -93,19 +93,19 @@ package Regular_Newton_Puiseux is
 
   function Standard_Residuals
               ( p : Standard_Complex_Laur_Systems.Laur_Sys;
-                s : Standard_Dense_Series_VecVecs.VecVec;
+                s : Standard_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : double_float; report : in boolean )
               return double_float;
   function DoblDobl_Residuals
               ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                s : DoblDobl_Dense_Series_VecVecs.VecVec;
+                s : DoblDobl_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : double_double; report : in boolean )
               return double_double;
   function QuadDobl_Residuals
               ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                s : QuadDobl_Dense_Series_VecVecs.VecVec;
+                s : QuadDobl_Complex_Series_VecVecs.VecVec;
                 w : Standard_Integer_VecVecs.VecVec;
                 t : quad_double; report : in boolean )
               return quad_double;

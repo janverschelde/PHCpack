@@ -3,15 +3,15 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Solutions;
-with Standard_Dense_Series_Vectors;
+with Standard_Complex_Series_Vectors;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions;
-with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions;
-with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors;
 
 package Homotopy_Series_Readers is
 
@@ -101,27 +101,27 @@ package Homotopy_Series_Readers is
   procedure Standard_Series_Newton
               ( sol : in Standard_Complex_Vectors.Vector;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out Standard_Dense_Series_Vectors.Vector );
+                srv,eva : out Standard_Complex_Series_Vectors.Vector );
   procedure Standard_Series_Newton
               ( sol : in Standard_Complex_Solutions.Solution;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out Standard_Dense_Series_Vectors.Vector );
+                srv,eva : out Standard_Complex_Series_Vectors.Vector );
   procedure DoblDobl_Series_Newton
               ( sol : in DoblDobl_Complex_Vectors.Vector;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out DoblDobl_Dense_Series_Vectors.Vector );
+                srv,eva : out DoblDobl_Complex_Series_Vectors.Vector );
   procedure DoblDobl_Series_Newton
               ( sol : in DoblDobl_Complex_Solutions.Solution;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out DoblDobl_Dense_Series_Vectors.Vector );
+                srv,eva : out DoblDobl_Complex_Series_Vectors.Vector );
   procedure QuadDobl_Series_Newton
               ( sol : in QuadDobl_Complex_Vectors.Vector;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out QuadDobl_Dense_Series_Vectors.Vector );
+                srv,eva : out QuadDobl_Complex_Series_Vectors.Vector );
   procedure QuadDobl_Series_Newton
               ( sol : in QuadDobl_Complex_Solutions.Solution;
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
-                srv,eva : out QuadDobl_Dense_Series_Vectors.Vector );
+                srv,eva : out QuadDobl_Complex_Series_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Given a start solution in the stored homotopy,

@@ -2,9 +2,9 @@ with text_io;                           use text_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
-with QuadDobl_Dense_Series_Vectors;
-with QuadDobl_Series_Poly_Systems;
-with QuadDobl_Series_Jaco_Matrices;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Jaco_Matrices;
 
 package QuadDobl_Newton_Matrix_Series is
 
@@ -18,28 +18,28 @@ package QuadDobl_Newton_Matrix_Series is
 -- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Step
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure LU_Newton_Step
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
-                info : out integer32 );
-  procedure LU_Newton_Step
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure LU_Newton_Step
               ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 );
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
 
   -- DESCRIPTION :
@@ -65,28 +65,28 @@ package QuadDobl_Newton_Matrix_Series is
 -- ONE NEWTON STEP WITH LU WITH CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Step
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double );
   procedure LU_Newton_Step
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
-                rcond : out quad_double );
-  procedure LU_Newton_Step
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double );
   procedure LU_Newton_Step
               ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
+                rcond : out quad_double );
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double );
 
   -- DESCRIPTION :
@@ -112,28 +112,28 @@ package QuadDobl_Newton_Matrix_Series is
 -- ONE NEWTON STEP WITH QR :
 
   procedure QR_Newton_Step
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure QR_Newton_Step
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
-                info : out integer32 );
-  procedure QR_Newton_Step
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure QR_Newton_Step
               ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 );
+  procedure QR_Newton_Step
+              ( file : in file_type;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
 
   -- DESCRIPTION :
@@ -159,28 +159,28 @@ package QuadDobl_Newton_Matrix_Series is
 -- ONE NEWTON STEP WITH SVD :
 
   procedure SVD_Newton_Step
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; rcond : out quad_double );
   procedure SVD_Newton_Step
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
-                info : out integer32; rcond : out quad_double );
-  procedure SVD_Newton_Step
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; rcond : out quad_double );
   procedure SVD_Newton_Step
               ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
+                info : out integer32; rcond : out quad_double );
+  procedure SVD_Newton_Step
+              ( file : in file_type;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; rcond : out quad_double );
 
   -- DESCRIPTION :
@@ -206,28 +206,28 @@ package QuadDobl_Newton_Matrix_Series is
 -- ONE NEWTON STEP WITH ECHELON FORM :
 
   procedure Echelon_Newton_Step
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out Complex_Number );
   procedure Echelon_Newton_Step
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
-                det : out Complex_Number );
-  procedure Echelon_Newton_Step
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out Complex_Number );
   procedure Echelon_Newton_Step
               ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Step
+              ( file : in file_type;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                degree : in integer32;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out Complex_Number );
 
   -- DESCRIPTION :
@@ -253,28 +253,28 @@ package QuadDobl_Newton_Matrix_Series is
 -- MANY NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Steps
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure LU_Newton_Steps
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
-                info : out integer32 );
-  procedure LU_Newton_Steps
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure LU_Newton_Steps
               ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 );
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
 
   -- DESCRIPTION :
@@ -302,28 +302,28 @@ package QuadDobl_Newton_Matrix_Series is
 -- MANY NEWTON STEPS WITH LU WITH CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Steps
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double );
   procedure LU_Newton_Steps
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
-                rcond : out quad_double );
-  procedure LU_Newton_Steps
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double );
   procedure LU_Newton_Steps
               ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
+                rcond : out quad_double );
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double );
 
   -- DESCRIPTION :
@@ -351,28 +351,28 @@ package QuadDobl_Newton_Matrix_Series is
 -- MANY NEWTON STEPS WITH QR :
 
   procedure QR_Newton_Steps
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure QR_Newton_Steps
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
-                info : out integer32 );
-  procedure QR_Newton_Steps
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure QR_Newton_Steps
               ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 );
+  procedure QR_Newton_Steps
+              ( file : in file_type;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
 
   -- DESCRIPTION :
@@ -400,28 +400,28 @@ package QuadDobl_Newton_Matrix_Series is
 -- MANY NEWTON STEPS WITH SVD :
 
   procedure SVD_Newton_Steps
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; rcond : out quad_double );
   procedure SVD_Newton_Steps
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
-                info : out integer32; rcond : out quad_double );
-  procedure SVD_Newton_Steps
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; rcond : out quad_double );
   procedure SVD_Newton_Steps
               ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
+                info : out integer32; rcond : out quad_double );
+  procedure SVD_Newton_Steps
+              ( file : in file_type;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; rcond : out quad_double );
 
   -- DESCRIPTION :
@@ -449,28 +449,28 @@ package QuadDobl_Newton_Matrix_Series is
 -- MANY NEWTON STEPS WITH ECHELON FORM :
 
   procedure Echelon_Newton_Steps
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out Complex_Number );
   procedure Echelon_Newton_Steps
-              ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
-                det : out Complex_Number );
-  procedure Echelon_Newton_Steps
-              ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                jp : in QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out Complex_Number );
   procedure Echelon_Newton_Steps
               ( file : in file_type;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; nbrit : in integer32;
-                x : in out QuadDobl_Dense_Series_Vectors.Vector;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
+                det : out Complex_Number );
+  procedure Echelon_Newton_Steps
+              ( file : in file_type;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                degree : in out integer32; nbrit : in integer32;
+                x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out Complex_Number );
 
   -- DESCRIPTION :

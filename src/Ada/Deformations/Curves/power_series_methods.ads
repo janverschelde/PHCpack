@@ -6,15 +6,15 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
-with Standard_Dense_Series_Vectors;
-with Standard_Dense_Series_VecVecs;
-with DoblDobl_Dense_Series_Vectors;
-with DoblDobl_Dense_Series_VecVecs;
-with QuadDobl_Dense_Series_Vectors;
-with QuadDobl_Dense_Series_VecVecs;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Series_Poly_Systems;
+with Standard_Complex_Series_Vectors;
+with Standard_Complex_Series_VecVecs;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_VecVecs;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_VecVecs;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_Systems;
 
 package Power_Series_Methods is
 
@@ -32,33 +32,33 @@ package Power_Series_Methods is
 
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -82,33 +82,33 @@ package Power_Series_Methods is
 
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 rcond : out double_double; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 rcond : out double_double; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -133,33 +133,33 @@ package Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -182,33 +182,33 @@ package Power_Series_Methods is
 
   procedure Run_SVD_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float; verbose : in boolean := false );
   procedure Run_SVD_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float; verbose : in boolean := false );
   procedure Run_SVD_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 rcond : out double_double; verbose : in boolean := false );
   procedure Run_SVD_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 rcond : out double_double; verbose : in boolean := false );
   procedure Run_SVD_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double; verbose : in boolean := false );
   procedure Run_SVD_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -233,38 +233,38 @@ package Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Standard_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                s : in out Standard_Dense_Series_Vectors.Vector;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Standard_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 det : out DoblDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Dense_Series_Vectors.Vector;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 det : out DoblDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out QuadDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out QuadDobl_Dense_Series_Vectors.Vector;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out QuadDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
 
@@ -292,36 +292,36 @@ package Power_Series_Methods is
 
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_LU_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_LU_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -344,36 +344,36 @@ package Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_QR_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_QR_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_QR_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -396,36 +396,36 @@ package Power_Series_Methods is
 
   procedure Run_SVD_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_SVD_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_SVD_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_SVD_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_SVD_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_SVD_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -448,36 +448,36 @@ package Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_Echelon_Newton
               ( nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in Standard_Series_Poly_Systems.Poly_Sys;
-                v : in Standard_Dense_Series_VecVecs.VecVec;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                v : in DoblDobl_Dense_Series_VecVecs.VecVec;
+                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
               ( file : in file_type; nbrit : in integer32;
-                p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                v : in QuadDobl_Dense_Series_VecVecs.VecVec;
+                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :

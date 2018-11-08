@@ -21,15 +21,15 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
-with Standard_Dense_Series_Vectors;
-with Standard_Dense_Series_VecVecs;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Dense_Series_Vectors;
-with DoblDobl_Dense_Series_VecVecs;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Dense_Series_Vectors;
-with QuadDobl_Dense_Series_VecVecs;
-with QuadDobl_Series_Poly_Systems;
+with Standard_Complex_Series_Vectors;
+with Standard_Complex_Series_VecVecs;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_VecVecs;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_VecVecs;
+with QuadDobl_CSeries_Poly_Systems;
 
 package Regular_Solution_Curves_Series is
 
@@ -416,20 +416,20 @@ package Regular_Solution_Curves_Series is
   --   sols     solutions of tsq for t = 0.
 
   function Series ( file : file_type;
-                    p : Standard_Series_Poly_Systems.Poly_Sys;
+                    p : Standard_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : Standard_Complex_Vectors.Vector;
                     nit : integer32 )
-                  return Standard_Dense_Series_Vectors.Vector;
+                  return Standard_Complex_Series_Vectors.Vector;
   function Series ( file : file_type;
-                    p : DoblDobl_Series_Poly_Systems.Poly_Sys;
+                    p : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : DoblDobl_Complex_Vectors.Vector;
                     nit : integer32 )
-                  return DoblDobl_Dense_Series_Vectors.Vector;
+                  return DoblDobl_Complex_Series_Vectors.Vector;
   function Series ( file : file_type;
-                    p : QuadDobl_Series_Poly_Systems.Poly_Sys;
+                    p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : QuadDobl_Complex_Vectors.Vector;
                     nit : integer32 )
-                  return QuadDobl_Dense_Series_Vectors.Vector;
+                  return QuadDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Applies Newton's method to p, starting at xt0,
@@ -438,18 +438,18 @@ package Regular_Solution_Curves_Series is
   --   The vector on returns contains the truncated series
   --   expansion for the solution with leading coefficients xt0.
 
-  function Series ( p : Standard_Series_Poly_Systems.Poly_Sys;
+  function Series ( p : Standard_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : Standard_Complex_Vectors.Vector;
                     nit : integer32; report : boolean )
-                  return Standard_Dense_Series_Vectors.Vector;
-  function Series ( p : DoblDobl_Series_Poly_Systems.Poly_Sys;
+                  return Standard_Complex_Series_Vectors.Vector;
+  function Series ( p : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : DoblDobl_Complex_Vectors.Vector;
                     nit : integer32; report : boolean )
-                  return DoblDobl_Dense_Series_Vectors.Vector;
-  function Series ( p : QuadDobl_Series_Poly_Systems.Poly_Sys;
+                  return DoblDobl_Complex_Series_Vectors.Vector;
+  function Series ( p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : QuadDobl_Complex_Vectors.Vector;
                     nit : integer32; report : boolean )
-                  return QuadDobl_Dense_Series_Vectors.Vector;
+                  return QuadDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Applies Newton's method to p, starting at xt0,
@@ -462,17 +462,17 @@ package Regular_Solution_Curves_Series is
                     p : Standard_Complex_Poly_Systems.Poly_Sys;
                     sols : Standard_Complex_Solutions.Solution_List;
                     nit : integer32 )
-                  return Standard_Dense_Series_VecVecs.VecVec;
+                  return Standard_Complex_Series_VecVecs.VecVec;
   function Series ( file : file_type;
                     p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : DoblDobl_Complex_Solutions.Solution_List;
                     nit : integer32 )
-                  return DoblDobl_Dense_Series_VecVecs.VecVec;
+                  return DoblDobl_Complex_Series_VecVecs.VecVec;
   function Series ( file : file_type;
                     p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : QuadDobl_Complex_Solutions.Solution_List;
                     nit : integer32 )
-                  return QuadDobl_Dense_Series_VecVecs.VecVec;
+                  return QuadDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Applies Newton's method to compute series solutions,
@@ -490,15 +490,15 @@ package Regular_Solution_Curves_Series is
   function Series ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                     sols : Standard_Complex_Solutions.Solution_List;
                     nit : integer32; report : boolean )
-                  return Standard_Dense_Series_VecVecs.VecVec;
+                  return Standard_Complex_Series_VecVecs.VecVec;
   function Series ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : DoblDobl_Complex_Solutions.Solution_List;
                     nit : integer32; report : boolean )
-                  return DoblDobl_Dense_Series_VecVecs.VecVec;
+                  return DoblDobl_Complex_Series_VecVecs.VecVec;
   function Series ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : QuadDobl_Complex_Solutions.Solution_List;
                     nit : integer32; report : boolean )
-                  return QuadDobl_Dense_Series_VecVecs.VecVec;
+                  return QuadDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Applies Newton's method to compute series solutions,
@@ -513,15 +513,15 @@ package Regular_Solution_Curves_Series is
   -- ON RETURN :
   --   The sequence of series with leading coefficients in sols.
 
-  procedure Concat ( sto : in out Standard_Dense_Series_VecVecs.VecVec;
+  procedure Concat ( sto : in out Standard_Complex_Series_VecVecs.VecVec;
                      idx : in out integer32;
-                     sfrom : in Standard_Dense_Series_VecVecs.VecVec );
-  procedure Concat ( sto : in out DoblDobl_Dense_Series_VecVecs.VecVec;
+                     sfrom : in Standard_Complex_Series_VecVecs.VecVec );
+  procedure Concat ( sto : in out DoblDobl_Complex_Series_VecVecs.VecVec;
                      idx : in out integer32;
-                     sfrom : in DoblDobl_Dense_Series_VecVecs.VecVec );
-  procedure Concat ( sto : in out QuadDobl_Dense_Series_VecVecs.VecVec;
+                     sfrom : in DoblDobl_Complex_Series_VecVecs.VecVec );
+  procedure Concat ( sto : in out QuadDobl_Complex_Series_VecVecs.VecVec;
                      idx : in out integer32;
-                     sfrom : in QuadDobl_Dense_Series_VecVecs.VecVec );
+                     sfrom : in QuadDobl_Complex_Series_VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Concatenates the series in sfrom to the series in sto,
@@ -542,17 +542,17 @@ package Regular_Solution_Curves_Series is
                     p : Standard_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
                     nit : integer32 )
-                  return Standard_Dense_Series_VecVecs.VecVec;
+                  return Standard_Complex_Series_VecVecs.VecVec;
   function Series ( file : file_type;
                     p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
                     nit : integer32 )
-                  return DoblDobl_Dense_Series_VecVecs.VecVec;
+                  return DoblDobl_Complex_Series_VecVecs.VecVec;
   function Series ( file : file_type;
                     p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
                     nit : integer32 )
-                  return QuadDobl_Dense_Series_VecVecs.VecVec;
+                  return QuadDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Solves all initial form systems defined by the cells in mcc
@@ -574,15 +574,15 @@ package Regular_Solution_Curves_Series is
   function Series ( p : Standard_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
                     nit : integer32; report : boolean )
-                  return Standard_Dense_Series_VecVecs.VecVec;
+                  return Standard_Complex_Series_VecVecs.VecVec;
   function Series ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
                     nit : integer32; report : boolean )
-                  return DoblDobl_Dense_Series_VecVecs.VecVec;
+                  return DoblDobl_Complex_Series_VecVecs.VecVec;
   function Series ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
                     nit : integer32; report : boolean )
-                  return QuadDobl_Dense_Series_VecVecs.VecVec;
+                  return QuadDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Solves all initial form systems defined by the cells in mcc
