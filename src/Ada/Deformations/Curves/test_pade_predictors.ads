@@ -11,12 +11,12 @@ with DoblDobl_Complex_VecVecs;
 with Quad_Double_Vectors;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
-with Standard_Dense_Series_Vectors;
-with DoblDobl_Dense_Series_Vectors;
-with QuadDobl_Dense_Series_Vectors;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Series_Poly_Systems;
+with Standard_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -33,18 +33,18 @@ package Test_Pade_Predictors is
 --   to predict the next solution on the path.
 
   procedure Standard_Check_Prediction
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in Standard_Dense_Series_Vectors.Vector;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in Standard_Complex_Series_Vectors.Vector;
                 pv : in Standard_Pade_Approximants.Pade_Vector;
                 step : in double_float );
   procedure DoblDobl_Check_Prediction
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in DoblDobl_Dense_Series_Vectors.Vector;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in DoblDobl_Complex_Series_Vectors.Vector;
                 pv : in DoblDobl_Pade_Approximants.Pade_Vector;
                 step : in double_double );
   procedure QuadDobl_Check_Prediction
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in QuadDobl_Dense_Series_Vectors.Vector;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in QuadDobl_Complex_Series_Vectors.Vector;
                 pv : in QuadDobl_Pade_Approximants.Pade_Vector;
                 step : in quad_double );
 
@@ -63,16 +63,16 @@ package Test_Pade_Predictors is
   --   step     a step size.
 
   procedure Standard_Step_Prediction
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in Standard_Dense_Series_Vectors.Vector;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in Standard_Complex_Series_Vectors.Vector;
                 pv : in Standard_Pade_Approximants.Pade_Vector );
   procedure DoblDobl_Step_Prediction
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in DoblDobl_Dense_Series_Vectors.Vector;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in DoblDobl_Complex_Series_Vectors.Vector;
                 pv : in DoblDobl_Pade_Approximants.Pade_Vector );
   procedure QuadDobl_Step_Prediction
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in QuadDobl_Dense_Series_Vectors.Vector;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in QuadDobl_Complex_Series_Vectors.Vector;
                 pv : QuadDobl_Pade_Approximants.Pade_Vector );
 
   -- DESCRIPTION :
@@ -105,24 +105,24 @@ package Test_Pade_Predictors is
   procedure Forward_Pole_Radius
               ( neq,degnum,degden : in integer32;
                 solv : in Standard_Complex_Vectors.Vector;
-                srv : out Standard_Dense_Series_Vectors.Vector;
-                eva : out Standard_Dense_Series_Vectors.Vector;
+                srv : out Standard_Complex_Series_Vectors.Vector;
+                eva : out Standard_Complex_Series_Vectors.Vector;
                 pv : out Standard_Pade_Approximants.Pade_Vector;
                 poles : out Standard_Complex_VecVecs.VecVec;
                 fpr : out double_float; verbose : in boolean := false );
   procedure Forward_Pole_Radius
               ( neq,degnum,degden : in integer32;
                 solv : in DoblDobl_Complex_Vectors.Vector;
-                srv : out DoblDobl_Dense_Series_Vectors.Vector;
-                eva : out DoblDobl_Dense_Series_Vectors.Vector;
+                srv : out DoblDobl_Complex_Series_Vectors.Vector;
+                eva : out DoblDobl_Complex_Series_Vectors.Vector;
                 pv : out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : out DoblDobl_Complex_VecVecs.VecVec;
                 fpr : out double_double; verbose : in boolean := false );
   procedure Forward_Pole_Radius
               ( neq,degnum,degden : in integer32;
                 solv : in QuadDobl_Complex_Vectors.Vector;
-                srv : out QuadDobl_Dense_Series_Vectors.Vector;
-                eva : out QuadDobl_Dense_Series_Vectors.Vector;
+                srv : out QuadDobl_Complex_Series_Vectors.Vector;
+                eva : out QuadDobl_Complex_Series_Vectors.Vector;
                 pv : out QuadDobl_Pade_Approximants.Pade_Vector;
                 poles : out QuadDobl_Complex_VecVecs.VecVec;
                 fpr : out quad_double; verbose : in boolean := false );

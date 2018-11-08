@@ -23,11 +23,11 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Series_Poly_Systems;
-with Series_and_Polynomials;
-with Series_and_Polynomials_io;          use Series_and_Polynomials_io;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_Systems;
+with Complex_Series_and_Polynomials;
+with Complex_Series_and_Polynomials_io;  use Complex_Series_and_Polynomials_io;
 with Series_and_Homotopies;
 
 procedure ts_serhom is
@@ -46,7 +46,7 @@ procedure ts_serhom is
 
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
-    s : Standard_Series_Poly_Systems.Poly_Sys(1..nq);
+    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq);
 
   begin
     put_line("The homotopy system :"); put_line(h);
@@ -65,7 +65,7 @@ procedure ts_serhom is
 
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
-    s : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq);
+    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
 
   begin
     put_line("The homotopy system :"); put_line(h);
@@ -84,7 +84,7 @@ procedure ts_serhom is
 
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
-    s : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq);
+    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
 
   begin
     put_line("The homotopy system :"); put_line(h);
@@ -102,7 +102,7 @@ procedure ts_serhom is
     p : Standard_Complex_Poly_Systems.Poly_Sys(1..nq);
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
-    s : Standard_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     t : double_float := 0.0;
     ans : character;
@@ -128,7 +128,7 @@ procedure ts_serhom is
     p : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
-    s : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     t : double_double := create(0.0);
     ans : character;
@@ -154,7 +154,7 @@ procedure ts_serhom is
     p : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
-    s : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     t : quad_double := create(0.0);
     ans : character;
@@ -178,10 +178,10 @@ procedure ts_serhom is
 
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
-    s : Standard_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     c : double_float := 0.0;
-    shifteds : Standard_Series_Poly_Systems.Poly_Sys(1..nq);
+    shifteds : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq);
     y,z : Standard_Complex_Poly_Systems.Poly_Sys(1..nq);
 
   begin
@@ -201,11 +201,11 @@ procedure ts_serhom is
 
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
-    s : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     zero : constant double_double := create(0.0);
     c : double_double := zero;
-    shifteds : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq);
+    shifteds : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
     y,z : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
 
   begin
@@ -225,11 +225,11 @@ procedure ts_serhom is
 
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
-    s : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     zero : constant quad_double := create(0.0);
     c : quad_double := zero;
-    shifteds : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq);
+    shifteds : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
     y,z : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
 
   begin

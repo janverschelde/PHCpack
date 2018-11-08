@@ -37,15 +37,15 @@ with QuadDobl_Rational_Approximations;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
-with Standard_Dense_Series_Vectors;
-with Standard_Dense_Series_Vectors_io;
-with Standard_Series_Vector_Functions;
-with DoblDobl_Dense_Series_Vectors;
-with DoblDobl_Dense_Series_Vectors_io;
-with DoblDobl_Series_Vector_Functions;
-with QuadDobl_Dense_Series_Vectors;
-with QuadDobl_Dense_Series_Vectors_io;
-with QuadDobl_Series_Vector_Functions;
+with Standard_Complex_Series_Vectors;
+with Standard_Complex_Series_Vectors_io;
+with Standard_CSeries_Vector_Functions;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors_io;
+with DoblDobl_CSeries_Vector_Functions;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors_io;
+with QuadDobl_CSeries_Vector_Functions;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
@@ -928,7 +928,7 @@ procedure ts_serpade is
 
   procedure Standard_Pade_Approximation
               ( nbequ,nbsteps : in integer32;
-                srv : in Standard_Dense_Series_Vectors.Vector;
+                srv : in Standard_Complex_Series_Vectors.Vector;
                 pv : in Standard_Pade_Approximants.Pade_Vector ) is
 
   -- DESCRIPTION :
@@ -945,7 +945,7 @@ procedure ts_serpade is
     for k in 1..nbsteps loop
       arg := double_float(k)*0.04;
       pnt := Standard_Complex_Numbers.Create(arg);
-      valsrv := Standard_Series_Vector_Functions.Eval(srv,pnt);
+      valsrv := Standard_CSeries_Vector_Functions.Eval(srv,pnt);
       put_line("The value of the series approximation :");
       put_line(valsrv);
       approx := Standard_Pade_Approximants.Eval(pv,pnt);
@@ -962,7 +962,7 @@ procedure ts_serpade is
 
   procedure DoblDobl_Pade_Approximation
               ( nbequ,nbsteps : in integer32;
-                srv : in DoblDobl_Dense_Series_Vectors.Vector;
+                srv : in DoblDobl_Complex_Series_Vectors.Vector;
                 pv : in DoblDobl_Pade_Approximants.Pade_Vector ) is
 
   -- DESCRIPTION :
@@ -979,7 +979,7 @@ procedure ts_serpade is
     for k in 1..nbsteps loop
       arg := Double_Double_Numbers.create(double_float(k)*0.04);
       pnt := DoblDobl_Complex_Numbers.Create(arg);
-      valsrv := DoblDobl_Series_Vector_Functions.Eval(srv,pnt);
+      valsrv := DoblDobl_CSeries_Vector_Functions.Eval(srv,pnt);
       put_line("The value of the series approximation :");
       put_line(valsrv);
       approx := DoblDobl_Pade_Approximants.Eval(pv,pnt);
@@ -996,7 +996,7 @@ procedure ts_serpade is
 
   procedure QuadDobl_Pade_Approximation
               ( nbequ,nbsteps : in integer32;
-                srv : in QuadDobl_Dense_Series_Vectors.Vector;
+                srv : in QuadDobl_Complex_Series_Vectors.Vector;
                 pv : in QuadDobl_Pade_Approximants.Pade_Vector ) is
 
   -- DESCRIPTION :
@@ -1015,7 +1015,7 @@ procedure ts_serpade is
       dd_arg := Double_Double_Numbers.create(double_float(k)*0.04);
       qd_arg := Quad_Double_Numbers.create(dd_arg);
       pnt := QuadDobl_Complex_Numbers.Create(qd_arg);
-      valsrv := QuadDobl_Series_Vector_Functions.Eval(srv,pnt);
+      valsrv := QuadDobl_CSeries_Vector_Functions.Eval(srv,pnt);
       put_line("The value of the series approximation :");
       put_line(valsrv);
       approx := QuadDobl_Pade_Approximants.Eval(pv,pnt);
@@ -1282,17 +1282,17 @@ procedure ts_serpade is
     sol : Standard_Complex_Solutions.Solution := lnk.all;
     nbt : constant natural32 := natural32(numdeg+dendeg+1);
     nit : constant natural32 := 4*nbt;
-    srv : Standard_Dense_Series_Vectors.Vector(sol.v'range);
-    eva : Standard_Dense_Series_Vectors.Vector(1..nbeq);
+    srv : Standard_Complex_Series_Vectors.Vector(sol.v'range);
+    eva : Standard_Complex_Series_Vectors.Vector(1..nbeq);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
 
   begin
     Homotopy_Pade_Approximants.Standard_Pade_Approximant
       (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
     put_line("The solution series :");
-    Standard_Dense_Series_Vectors_io.put(srv);
+    Standard_Complex_Series_Vectors_io.put(srv);
     put_line("The evaluated solution series :");
-    Standard_Dense_Series_Vectors_io.put(eva);
+    Standard_Complex_Series_Vectors_io.put(eva);
     Standard_Pade_Approximation(nbeq,nbsteps,srv,pv);
     put_line("The Pade approximant :");
     for i in pv'range loop
@@ -1322,17 +1322,17 @@ procedure ts_serpade is
     sol : DoblDobl_Complex_Solutions.Solution := lnk.all;
     nbt : constant natural32 := natural32(numdeg+dendeg+1);
     nit : constant natural32 := 4*nbt;
-    srv : DoblDobl_Dense_Series_Vectors.Vector(sol.v'range);
-    eva : DoblDobl_Dense_Series_Vectors.Vector(1..nbeq);
+    srv : DoblDobl_Complex_Series_Vectors.Vector(sol.v'range);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(1..nbeq);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
 
   begin
     Homotopy_Pade_Approximants.DoblDobl_Pade_Approximant
       (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
     put_line("The solution series :");
-    DoblDobl_Dense_Series_Vectors_io.put(srv);
+    DoblDobl_Complex_Series_Vectors_io.put(srv);
     put_line("The evaluated solution series :");
-    DoblDobl_Dense_Series_Vectors_io.put(eva);
+    DoblDobl_Complex_Series_Vectors_io.put(eva);
     DoblDobl_Pade_Approximation(nbeq,nbsteps,srv,pv);
     put_line("The Pade approximant :");
     for i in pv'range loop
@@ -1362,17 +1362,17 @@ procedure ts_serpade is
     sol : QuadDobl_Complex_Solutions.Solution := lnk.all;
     nbt : constant natural32 := natural32(numdeg+dendeg+1);
     nit : constant natural32 := 4*nbt;
-    srv : QuadDobl_Dense_Series_Vectors.Vector(sol.v'range);
-    eva : QuadDobl_Dense_Series_Vectors.Vector(1..nbeq);
+    srv : QuadDobl_Complex_Series_Vectors.Vector(sol.v'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(1..nbeq);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
 
   begin
     Homotopy_Pade_Approximants.QuadDobl_Pade_Approximant
       (sol.v,nbeq+1,nbeq,numdeg,dendeg,nit,srv,eva,pv);
     put_line("The solution series :");
-    QuadDobl_Dense_Series_Vectors_io.put(srv);
+    QuadDobl_Complex_Series_Vectors_io.put(srv);
     put_line("The evaluated solution series :");
-    QuadDobl_Dense_Series_Vectors_io.put(eva);
+    QuadDobl_Complex_Series_Vectors_io.put(eva);
     QuadDobl_Pade_Approximation(nbeq,nbsteps,srv,pv);
     put_line("The Pade approximant :");
     for i in pv'range loop

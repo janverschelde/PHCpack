@@ -31,8 +31,8 @@ with Series_and_Predictors;
 package body Test_Series_Predictors is
 
   procedure Standard_Check_Prediction
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in Standard_Dense_Series_Vectors.Vector;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in Standard_Complex_Series_Vectors.Vector;
                 step : in double_float ) is
 
     pred_err : double_float;
@@ -54,8 +54,8 @@ package body Test_Series_Predictors is
   end Standard_Check_Prediction;
 
   procedure DoblDobl_Check_Prediction
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in DoblDobl_Dense_Series_Vectors.Vector;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in DoblDobl_Complex_Series_Vectors.Vector;
                 step : in double_double ) is
 
     pred_err : double_double;
@@ -77,8 +77,8 @@ package body Test_Series_Predictors is
   end DoblDobl_Check_Prediction;
 
   procedure QuadDobl_Check_Prediction
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in QuadDobl_Dense_Series_Vectors.Vector;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in QuadDobl_Complex_Series_Vectors.Vector;
                 step : in quad_double ) is
 
     pred_err : quad_double;

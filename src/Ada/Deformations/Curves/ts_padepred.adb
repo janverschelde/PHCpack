@@ -25,12 +25,12 @@ with Solution_Drops;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
-with Standard_Dense_Series_Vectors;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Dense_Series_Vectors;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Dense_Series_Vectors;
-with QuadDobl_Series_Poly_Systems;
+with Standard_Complex_Series_Vectors;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_CSeries_Poly_Systems;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 with Standard_Pade_Approximants;
@@ -45,7 +45,7 @@ procedure ts_padepred is
 --   Test on the application of Pade approximants to predict solutions.
 
   procedure Standard_Test_Prediction
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in Standard_Complex_Solutions.Solution ) is
 
   -- DESCRIPTION :
@@ -54,8 +54,8 @@ procedure ts_padepred is
 
     neq : constant integer32 := hom'last;
     nit : integer32 := 4;
-    srv : Standard_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : Standard_Dense_Series_Vectors.Vector(hom'range);
+    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0e-12;
     tolres,step : double_float := 0.0;
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
@@ -77,7 +77,7 @@ procedure ts_padepred is
   end Standard_Test_Prediction;
 
   procedure DoblDobl_Test_Prediction
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in DoblDobl_Complex_Solutions.Solution ) is
 
   -- DESCRIPTION :
@@ -86,8 +86,8 @@ procedure ts_padepred is
 
     neq : constant integer32 := hom'last;
     nit : integer32 := 4;
-    srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : DoblDobl_Dense_Series_Vectors.Vector(hom'range);
+    srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0e-12;
     tolres,step : double_float := 0.0;
     dd_step : double_double;
@@ -111,7 +111,7 @@ procedure ts_padepred is
   end DoblDobl_Test_Prediction;
 
   procedure QuadDobl_Test_Prediction
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in QuadDobl_Complex_Solutions.Solution ) is
 
   -- DESCRIPTION :
@@ -120,8 +120,8 @@ procedure ts_padepred is
 
     neq : constant integer32 := hom'last;
     nit : integer32 := 4;
-    srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : QuadDobl_Dense_Series_Vectors.Vector(hom'range);
+    srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0e-12;
     tolres,step : double_float := 0.0;
     qd_step : quad_double;
@@ -233,7 +233,7 @@ procedure ts_padepred is
 
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
-    s : Standard_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,idxpar);
     len : constant integer32
         := integer32(Standard_Complex_Solutions.Length_Of(sols));
@@ -268,7 +268,7 @@ procedure ts_padepred is
 
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
-    s : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,idxpar);
     len : constant integer32
         := integer32(DoblDobl_Complex_Solutions.Length_Of(sols));
@@ -303,7 +303,7 @@ procedure ts_padepred is
 
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
-    s : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,idxpar);
     len : constant integer32
         := integer32(QuadDobl_Complex_Solutions.Length_Of(sols));

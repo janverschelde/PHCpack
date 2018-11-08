@@ -27,10 +27,10 @@ with QuadDobl_System_and_Solutions_io;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Series_Poly_Systems;
-with Series_and_Polynomials_io;          use Series_and_Polynomials_io;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_Systems;
+with Complex_Series_and_Polynomials_io;  use Complex_Series_and_Polynomials_io;
 with Series_and_Homotopies;
 with Series_and_Trackers;
 with Homotopy_Series_Readers;
@@ -78,7 +78,7 @@ procedure ts_serpath is
 
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
-    s : Standard_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,true);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
@@ -112,7 +112,7 @@ procedure ts_serpath is
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     end if;
     Standard_Complex_Poly_Systems.Clear(h);
-    Standard_Series_Poly_Systems.Clear(s);
+    Standard_CSeries_Poly_Systems.Clear(s);
   end Standard_Test;
 
   procedure DoblDobl_Test
@@ -128,7 +128,7 @@ procedure ts_serpath is
 
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
-    s : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,true);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
@@ -163,7 +163,7 @@ procedure ts_serpath is
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     end if;
     DoblDobl_Complex_Poly_Systems.Clear(h);
-    DoblDobl_Series_Poly_Systems.Clear(s);
+    DoblDobl_CSeries_Poly_Systems.Clear(s);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test
@@ -179,7 +179,7 @@ procedure ts_serpath is
 
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
-    s : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,true);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
@@ -213,7 +213,7 @@ procedure ts_serpath is
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     end if;
     QuadDobl_Complex_Poly_Systems.Clear(h);
-    QuadDobl_Series_Poly_Systems.Clear(s);
+    QuadDobl_CSeries_Poly_Systems.Clear(s);
   end QuadDobl_Test;
 
   procedure Standard_Main is

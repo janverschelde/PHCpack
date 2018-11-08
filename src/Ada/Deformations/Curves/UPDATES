@@ -2,6 +2,8 @@ Wed 7 Nov 2018 : adjusted all *newton* and *pade_approximants.a*
   files for the new series definitions.  Adjusted power_series_methods,
   series_and_solutions, series_and_predictors, series_and_homotopies,
   and homotopy_series_readers, ts_sernew, ts_sersol, and mainseries.adb.
+  Modified test_series_predictors, ts_serpred, ts_serhom, ts_serpath,
+  series_and_trackers, test_pade_predictors, ts_serpade, ts_padepred.
 
 Fri 26 Oct 2018 : moved test procedures into test_pade_predictors, code
   taken from ts_padepred.adb.  Added procedures and functions to

@@ -9,9 +9,9 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Series_Poly_Systems;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_Systems;
 
 package Series_and_Trackers is
 
@@ -21,17 +21,17 @@ package Series_and_Trackers is
 --   The versions may be silent or verbose.
 
   procedure Correct
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 t : in double_float; nit : in natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float );
   procedure Correct
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 t : in double_double; nit : in natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_double );
   procedure Correct
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 t : in quad_double; nit : in natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double );
@@ -53,21 +53,21 @@ package Series_and_Trackers is
 
   procedure Correct
               ( file : in file_type;
-                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 t : in double_float; nit : in natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float;
                 verbose : in boolean := false );
   procedure Correct
               ( file : in file_type;
-                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 t : in double_double; nit : in natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_double;
                 verbose : in boolean := false );
   procedure Correct
               ( file : in file_type;
-                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 t : in quad_double; nit : in natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double;
@@ -91,13 +91,13 @@ package Series_and_Trackers is
   --   res      magnitude of the residual.
 
   procedure Track_one_Path
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution );
   procedure Track_one_Path
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution );
   procedure Track_one_Path
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution );
 
   -- DESCRIPTION :
@@ -107,17 +107,17 @@ package Series_and_Trackers is
 
   procedure Track_one_Path
               ( file : in file_type;
-                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 verbose : in boolean := false );
   procedure Track_one_Path
               ( file : in file_type;
-                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 verbose : in boolean := false );
   procedure Track_one_Path
               ( file : in file_type;
-                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 verbose : in boolean := false );
 
@@ -127,13 +127,13 @@ package Series_and_Trackers is
   --   This version is verbose and writes extra diagnostic output to file.
 
   procedure Track_Many_Paths
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List );
   procedure Track_Many_Paths
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
   procedure Track_Many_Paths
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -144,17 +144,17 @@ package Series_and_Trackers is
 
   procedure Track_Many_Paths
               ( file : in file_type;
-                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 verbose : in boolean := false );
   procedure Track_Many_Paths
               ( file : in file_type;
-                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 verbose : in boolean := false );
   procedure Track_Many_Paths
               ( file : in file_type;
-                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 verbose : in boolean := false );
 

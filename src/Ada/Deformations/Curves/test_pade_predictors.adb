@@ -20,11 +20,11 @@ with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_SysFun;
-with Standard_Dense_Series_Vectors_io;
-with DoblDobl_Dense_Series_Vectors_io;
-with QuadDobl_Dense_Series_Vectors_io;
-with QuadDobl_Series_Poly_Systems;
-with QuadDobl_Series_Poly_SysFun;
+with Standard_Complex_Series_Vectors_io;
+with DoblDobl_Complex_Series_Vectors_io;
+with QuadDobl_Complex_Series_Vectors_io;
+with QuadDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_SysFun;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 with Test_Series_Predictors;
@@ -36,8 +36,8 @@ with Homotopy_Pade_Approximants;
 package body Test_Pade_Predictors is
 
   procedure Standard_Check_Prediction
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in Standard_Dense_Series_Vectors.Vector;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in Standard_Complex_Series_Vectors.Vector;
                 pv : in Standard_Pade_Approximants.Pade_Vector;
                 step : in double_float ) is
 
@@ -57,8 +57,8 @@ package body Test_Pade_Predictors is
   end Standard_Check_Prediction;
 
   procedure DoblDobl_Check_Prediction
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in DoblDobl_Dense_Series_Vectors.Vector;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in DoblDobl_Complex_Series_Vectors.Vector;
                 pv : in DoblDobl_Pade_Approximants.Pade_Vector;
                 step : in double_double ) is
 
@@ -78,8 +78,8 @@ package body Test_Pade_Predictors is
   end DoblDobl_Check_Prediction;
 
   procedure QuadDobl_Check_Prediction
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in QuadDobl_Dense_Series_Vectors.Vector;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in QuadDobl_Complex_Series_Vectors.Vector;
                 pv : in QuadDobl_Pade_Approximants.Pade_Vector;
                 step : in quad_double ) is
 
@@ -99,8 +99,8 @@ package body Test_Pade_Predictors is
   end QuadDobl_Check_Prediction;
 
   procedure Standard_Step_Prediction
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in Standard_Dense_Series_Vectors.Vector;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in Standard_Complex_Series_Vectors.Vector;
                 pv : in Standard_Pade_Approximants.Pade_Vector ) is
 
     step : double_float := 0.0;
@@ -120,8 +120,8 @@ package body Test_Pade_Predictors is
   end Standard_Step_Prediction;
 
   procedure DoblDobl_Step_Prediction
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in DoblDobl_Dense_Series_Vectors.Vector;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in DoblDobl_Complex_Series_Vectors.Vector;
                 pv : in DoblDobl_Pade_Approximants.Pade_Vector ) is
 
     step : double_double := create(0.0);
@@ -142,8 +142,8 @@ package body Test_Pade_Predictors is
   end DoblDobl_Step_Prediction;
 
   procedure QuadDobl_Step_Prediction
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in QuadDobl_Dense_Series_Vectors.Vector;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in QuadDobl_Complex_Series_Vectors.Vector;
                 pv : QuadDobl_Pade_Approximants.Pade_Vector ) is
 
     step : quad_double := create(0.0);
@@ -166,8 +166,8 @@ package body Test_Pade_Predictors is
   procedure Forward_Pole_Radius
               ( neq,degnum,degden : in integer32;
                 solv : in Standard_Complex_Vectors.Vector;
-                srv : out Standard_Dense_Series_Vectors.Vector;
-                eva : out Standard_Dense_Series_Vectors.Vector;
+                srv : out Standard_Complex_Series_Vectors.Vector;
+                eva : out Standard_Complex_Series_Vectors.Vector;
                 pv : out Standard_Pade_Approximants.Pade_Vector;
                 poles : out Standard_Complex_VecVecs.VecVec;
                 fpr : out double_float; verbose : in boolean := false ) is
@@ -180,9 +180,9 @@ package body Test_Pade_Predictors is
       (solv,neq+1,neq,degnum,degden,nbt,srv,eva,pv,verbose);
     if verbose then
       put_line("The solution series :");
-      Standard_Dense_Series_Vectors_io.put(srv);
+      Standard_Complex_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
-      Standard_Dense_Series_Vectors_io.put(eva);
+      Standard_Complex_Series_Vectors_io.put(eva);
       put_line("The Pade approximant :");
       for i in pv'range loop
         put_line(Standard_Pade_Approximants_io.Write(pv(i)));
@@ -202,8 +202,8 @@ package body Test_Pade_Predictors is
   procedure Forward_Pole_Radius
               ( neq,degnum,degden : in integer32;
                 solv : in DoblDobl_Complex_Vectors.Vector;
-                srv : out DoblDobl_Dense_Series_Vectors.Vector;
-                eva : out DoblDobl_Dense_Series_Vectors.Vector;
+                srv : out DoblDobl_Complex_Series_Vectors.Vector;
+                eva : out DoblDobl_Complex_Series_Vectors.Vector;
                 pv : out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : out DoblDobl_Complex_VecVecs.VecVec;
                 fpr : out double_double; verbose : in boolean := false ) is
@@ -216,9 +216,9 @@ package body Test_Pade_Predictors is
       (solv,neq+1,neq,degnum,degden,nbt,srv,eva,pv);
     if verbose then
       put_line("The solution series :");
-      DoblDobl_Dense_Series_Vectors_io.put(srv);
+      DoblDobl_Complex_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
-      DoblDobl_Dense_Series_Vectors_io.put(eva);
+      DoblDobl_Complex_Series_Vectors_io.put(eva);
       put_line("The Pade approximant :");
       for i in pv'range loop
         put_line(DoblDobl_Pade_Approximants_io.Write(pv(i)));
@@ -238,8 +238,8 @@ package body Test_Pade_Predictors is
   procedure Forward_Pole_Radius
               ( neq,degnum,degden : in integer32;
                 solv : in QuadDobl_Complex_Vectors.Vector;
-                srv : out QuadDobl_Dense_Series_Vectors.Vector;
-                eva : out QuadDobl_Dense_Series_Vectors.Vector;
+                srv : out QuadDobl_Complex_Series_Vectors.Vector;
+                eva : out QuadDobl_Complex_Series_Vectors.Vector;
                 pv : out QuadDobl_Pade_Approximants.Pade_Vector;
                 poles : out QuadDobl_Complex_VecVecs.VecVec;
                 fpr : out quad_double; verbose : in boolean := false ) is
@@ -252,9 +252,9 @@ package body Test_Pade_Predictors is
       (solv,neq+1,neq,degnum,degden,nbt,srv,eva,pv);
     if verbose then
       put_line("The solution series :");
-      QuadDobl_Dense_Series_Vectors_io.put(srv);
+      QuadDobl_Complex_Series_Vectors_io.put(srv);
       put_line("The evaluated solution series :");
-      QuadDobl_Dense_Series_Vectors_io.put(eva);
+      QuadDobl_Complex_Series_Vectors_io.put(eva);
       put_line("The Pade approximant :");
       for i in pv'range loop
         put_line(QuadDobl_Pade_Approximants_io.Write(pv(i)));
@@ -277,8 +277,8 @@ package body Test_Pade_Predictors is
                 verbose : boolean := false ) return double_float is
 
     res : double_float;
-    srv : Standard_Dense_Series_Vectors.Vector(solv'range);
-    eva : Standard_Dense_Series_Vectors.Vector(1..neq);
+    srv : Standard_Complex_Series_Vectors.Vector(solv'range);
+    eva : Standard_Complex_Series_Vectors.Vector(1..neq);
     pv : Standard_Pade_Approximants.Pade_Vector(solv'range);
     poles : Standard_Complex_VecVecs.VecVec(solv'range);
 
@@ -286,8 +286,8 @@ package body Test_Pade_Predictors is
     Forward_Pole_Radius
       (neq,degnum,degden,solv,srv,eva,pv,poles,res,verbose);
     Standard_Pade_Approximants.Clear(pv);
-    Standard_Dense_Series_Vectors.Clear(srv);
-    Standard_Dense_Series_Vectors.Clear(eva);
+    Standard_Complex_Series_Vectors.Clear(srv);
+    Standard_Complex_Series_Vectors.Clear(eva);
     Standard_Complex_VecVecs.Clear(poles);
     return res;
   end Forward_Pole_Radius;
@@ -298,8 +298,8 @@ package body Test_Pade_Predictors is
                 verbose : boolean := false ) return double_double is
 
     res : double_double;
-    srv : DoblDobl_Dense_Series_Vectors.Vector(solv'range);
-    eva : DoblDobl_Dense_Series_Vectors.Vector(1..neq);
+    srv : DoblDobl_Complex_Series_Vectors.Vector(solv'range);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(1..neq);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(solv'range);
     poles : DoblDobl_Complex_VecVecs.VecVec(solv'range);
 
@@ -307,8 +307,8 @@ package body Test_Pade_Predictors is
     Forward_Pole_Radius
       (neq,degnum,degden,solv,srv,eva,pv,poles,res,verbose);
     DoblDobl_Pade_Approximants.Clear(pv);
-    DoblDobl_Dense_Series_Vectors.Clear(srv);
-    DoblDobl_Dense_Series_Vectors.Clear(eva);
+    DoblDobl_Complex_Series_Vectors.Clear(srv);
+    DoblDobl_Complex_Series_Vectors.Clear(eva);
     DoblDobl_Complex_VecVecs.Clear(poles);
     return res;
   end Forward_Pole_Radius;
@@ -319,8 +319,8 @@ package body Test_Pade_Predictors is
                 verbose : boolean := false ) return quad_double is
 
     res : quad_double;
-    srv : QuadDobl_Dense_Series_Vectors.Vector(solv'range);
-    eva : QuadDobl_Dense_Series_Vectors.Vector(1..neq);
+    srv : QuadDobl_Complex_Series_Vectors.Vector(solv'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(1..neq);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(solv'range);
     poles : QuadDobl_Complex_VecVecs.VecVec(solv'range);
 
@@ -328,8 +328,8 @@ package body Test_Pade_Predictors is
     Forward_Pole_Radius
       (neq,degnum,degden,solv,srv,eva,pv,poles,res,verbose);
     QuadDobl_Pade_Approximants.Clear(pv);
-    QuadDobl_Dense_Series_Vectors.Clear(srv);
-    QuadDobl_Dense_Series_Vectors.Clear(eva);
+    QuadDobl_Complex_Series_Vectors.Clear(srv);
+    QuadDobl_Complex_Series_Vectors.Clear(eva);
     QuadDobl_Complex_VecVecs.Clear(poles);
     return res;
   end Forward_Pole_Radius;
@@ -423,8 +423,8 @@ package body Test_Pade_Predictors is
                 pv : out Standard_Pade_Approximants.Pade_Vector ) is
 
     degnum,degden : integer32 := 0;
-    srv : Standard_Dense_Series_Vectors.Vector(sol.v'range);
-    eva : Standard_Dense_Series_Vectors.Vector(1..neq);
+    srv : Standard_Complex_Series_Vectors.Vector(sol.v'range);
+    eva : Standard_Complex_Series_Vectors.Vector(1..neq);
     poles : Standard_Complex_VecVecs.VecVec(sol.v'range);
     minpole : double_float;
 
@@ -442,8 +442,8 @@ package body Test_Pade_Predictors is
                 pv : out DoblDobl_Pade_Approximants.Pade_Vector ) is
 
     degnum,degden : integer32 := 0;
-    srv : DoblDobl_Dense_Series_Vectors.Vector(sol.v'range);
-    eva : DoblDobl_Dense_Series_Vectors.Vector(1..neq);
+    srv : DoblDobl_Complex_Series_Vectors.Vector(sol.v'range);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(1..neq);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
     minpole : double_double;
 
@@ -461,8 +461,8 @@ package body Test_Pade_Predictors is
                 pv : out QuadDobl_Pade_Approximants.Pade_Vector ) is
 
     degnum,degden : integer32 := 0;
-    srv : QuadDobl_Dense_Series_Vectors.Vector(sol.v'range);
-    eva : QuadDobl_Dense_Series_Vectors.Vector(1..neq);
+    srv : QuadDobl_Complex_Series_Vectors.Vector(sol.v'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(1..neq);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
     minpole : quad_double;
 

@@ -5,12 +5,12 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
-with Standard_Dense_Series_Vectors;
-with DoblDobl_Dense_Series_Vectors;
-with QuadDobl_Dense_Series_Vectors;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Series_Poly_Systems;
+with Standard_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_Systems;
 
 package Test_Series_Predictors is
 
@@ -21,16 +21,16 @@ package Test_Series_Predictors is
 --   to predict the next solution on the path.
 
   procedure Standard_Check_Prediction
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in Standard_Dense_Series_Vectors.Vector;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in Standard_Complex_Series_Vectors.Vector;
                 step : in double_float );
   procedure DoblDobl_Check_Prediction
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in DoblDobl_Dense_Series_Vectors.Vector;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in DoblDobl_Complex_Series_Vectors.Vector;
                 step : in double_double );
   procedure QuadDobl_Check_Prediction
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                srv,eva : in QuadDobl_Dense_Series_Vectors.Vector;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                srv,eva : in QuadDobl_Complex_Series_Vectors.Vector;
                 step : in quad_double );
 
   -- DESCRIPTION :

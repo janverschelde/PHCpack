@@ -19,16 +19,16 @@ with QuadDobl_Complex_Jaco_Matrices;
 with Standard_Root_Refiners;
 with DoblDobl_Root_Refiners;
 with QuadDobl_Root_Refiners;
-with Standard_Dense_Series_Vectors;
-with DoblDobl_Dense_Series_Vectors;
-with QuadDobl_Dense_Series_Vectors;
+with Standard_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 
 package body Series_and_Trackers is
 
   procedure Correct
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 t : in double_float; nit : in natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float ) is
@@ -56,7 +56,7 @@ package body Series_and_Trackers is
 
   procedure Correct
               ( file : in file_type;
-                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 t : in double_float; nit : in natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float;
@@ -89,7 +89,7 @@ package body Series_and_Trackers is
   end Correct;
 
   procedure Correct
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 t : in double_double; nit : in natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_double ) is
@@ -117,7 +117,7 @@ package body Series_and_Trackers is
 
   procedure Correct
               ( file : in file_type;
-                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 t : in double_double; nit : in natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_double;
@@ -150,7 +150,7 @@ package body Series_and_Trackers is
   end Correct;
 
   procedure Correct
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 t : in quad_double; nit : in natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double ) is
@@ -178,7 +178,7 @@ package body Series_and_Trackers is
 
   procedure Correct
               ( file : in file_type; 
-                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 t : in quad_double; nit : in natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double;
@@ -211,13 +211,13 @@ package body Series_and_Trackers is
   end Correct;
 
   procedure Track_One_Path
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution ) is
 
-    wrk : Standard_Series_Poly_Systems.Poly_Sys(hom'range);
+    wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
     nit : constant integer32 := 3;
-    srv : Standard_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : Standard_Dense_Series_Vectors.Vector(hom'range);
+    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
@@ -227,7 +227,7 @@ package body Series_and_Trackers is
     err,rco,res : double_float;
 
   begin
-    Standard_Series_Poly_Systems.Copy(hom,wrk);
+    Standard_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(nit,wrk,wrk_sol,srv,eva);
       new_line;
@@ -243,24 +243,24 @@ package body Series_and_Trackers is
         t := onetarget; 
       end if;
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
-      Standard_Series_Poly_Systems.Clear(wrk);
+      Standard_CSeries_Poly_Systems.Clear(wrk);
       wrk := Series_and_Homotopies.Shift(hom,t);
       Correct(wrk,0.0,3,wrk_sol,err,rco,res);
       exit when (t = 1.0);
     end loop;
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
-    Standard_Series_Poly_Systems.Clear(wrk);
+    Standard_CSeries_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution ) is
 
-    wrk : DoblDobl_Series_Poly_Systems.Poly_Sys(hom'range);
+    wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
     nit : constant integer32 := 4;
-    srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : DoblDobl_Dense_Series_Vectors.Vector(hom'range);
+    srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
@@ -272,7 +272,7 @@ package body Series_and_Trackers is
     zero : constant double_double := create(0.0);
 
   begin
-    DoblDobl_Series_Poly_Systems.Copy(hom,wrk);
+    DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(nit,wrk,wrk_sol,srv,eva);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
@@ -288,7 +288,7 @@ package body Series_and_Trackers is
       end if;
       dd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
-      DoblDobl_Series_Poly_Systems.Clear(wrk);
+      DoblDobl_CSeries_Poly_Systems.Clear(wrk);
       dd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
       Correct(wrk,zero,3,wrk_sol,err,rco,res);
@@ -296,17 +296,17 @@ package body Series_and_Trackers is
     end loop;
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
-    DoblDobl_Series_Poly_Systems.Clear(wrk);
+    DoblDobl_CSeries_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution ) is
 
-    wrk : QuadDobl_Series_Poly_Systems.Poly_Sys(hom'range);
+    wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
     nit : constant integer32 := 4;
-    srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : QuadDobl_Dense_Series_Vectors.Vector(hom'range);
+    srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
@@ -318,7 +318,7 @@ package body Series_and_Trackers is
     zero : constant quad_double := create(0.0);
 
   begin
-    QuadDobl_Series_Poly_Systems.Copy(hom,wrk);
+    QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(nit,wrk,wrk_sol,srv,eva);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
@@ -334,7 +334,7 @@ package body Series_and_Trackers is
       end if;
       qd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
-      QuadDobl_Series_Poly_Systems.Clear(wrk);
+      QuadDobl_CSeries_Poly_Systems.Clear(wrk);
       qd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
       Correct(wrk,zero,3,wrk_sol,err,rco,res);
@@ -342,19 +342,19 @@ package body Series_and_Trackers is
     end loop;
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
-    QuadDobl_Series_Poly_Systems.Clear(wrk);
+    QuadDobl_CSeries_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
   procedure Track_One_Path
               ( file : in file_type;
-                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 verbose : in boolean := false ) is
 
-    wrk : Standard_Series_Poly_Systems.Poly_Sys(hom'range);
+    wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
     nit : constant integer32 := 4;
-    srv : Standard_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : Standard_Dense_Series_Vectors.Vector(hom'range);
+    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
@@ -364,7 +364,7 @@ package body Series_and_Trackers is
     err,rco,res : double_float;
 
   begin
-    Standard_Series_Poly_Systems.Copy(hom,wrk);
+    Standard_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
       put(file,"Step "); put(file,k,1);
       put_line(file," in the path tracker :");
@@ -388,7 +388,7 @@ package body Series_and_Trackers is
       put(file," t = "); put(file,t,3);  new_line(file);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
       put_line(file,"Shifting the polynomial system ...");
-      Standard_Series_Poly_Systems.Clear(wrk);
+      Standard_CSeries_Poly_Systems.Clear(wrk);
       wrk := Series_and_Homotopies.Shift(hom,t);
       put_line(file,"Correcting the solution ...");
       Correct(file,wrk,0.0,3,wrk_sol,err,rco,res,verbose);
@@ -397,19 +397,19 @@ package body Series_and_Trackers is
     put_line(file,"The solution vector :"); put_line(file,wrk_sol);
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
-    Standard_Series_Poly_Systems.Clear(wrk);
+    Standard_CSeries_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
   procedure Track_One_Path
               ( file : in file_type;
-                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 verbose : in boolean := false ) is
 
-    wrk : DoblDobl_Series_Poly_Systems.Poly_Sys(hom'range);
+    wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
     nit : constant integer32 := 4;
-    srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : DoblDobl_Dense_Series_Vectors.Vector(hom'range);
+    srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
@@ -421,7 +421,7 @@ package body Series_and_Trackers is
     zero : constant double_double := create(0.0);
 
   begin
-    DoblDobl_Series_Poly_Systems.Copy(hom,wrk);
+    DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
       put(file,"Step "); put(file,k,1);
       put_line(file," in the path tracker :");
@@ -446,7 +446,7 @@ package body Series_and_Trackers is
       dd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
       put_line(file,"Shifting the polynomial system ...");
-      DoblDobl_Series_Poly_Systems.Clear(wrk);
+      DoblDobl_CSeries_Poly_Systems.Clear(wrk);
       dd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
       put_line(file,"Correcting the solution ...");
@@ -456,19 +456,19 @@ package body Series_and_Trackers is
     put_line(file,"The solution vector :"); put_line(file,wrk_sol);
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
-    DoblDobl_Series_Poly_Systems.Clear(wrk);
+    DoblDobl_CSeries_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
   procedure Track_One_Path
               ( file : in file_type;
-                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 verbose : in boolean := false ) is
 
-    wrk : QuadDobl_Series_Poly_Systems.Poly_Sys(hom'range);
+    wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
     nit : constant integer32 := 4;
-    srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : QuadDobl_Dense_Series_Vectors.Vector(hom'range);
+    srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
@@ -480,7 +480,7 @@ package body Series_and_Trackers is
     zero : constant quad_double := create(0.0);
 
   begin
-    QuadDobl_Series_Poly_Systems.Copy(hom,wrk);
+    QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
       put(file,"Step "); put(file,k,1);
       put_line(file," in the path tracker :");
@@ -505,7 +505,7 @@ package body Series_and_Trackers is
       qd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
       put_line(file,"Shifting the polynomial system ...");
-      QuadDobl_Series_Poly_Systems.Clear(wrk);
+      QuadDobl_CSeries_Poly_Systems.Clear(wrk);
       qd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
       put_line(file,"Correcting the solution ...");
@@ -515,12 +515,12 @@ package body Series_and_Trackers is
     put_line(file,"The solution vector :"); put_line(file,wrk_sol);
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
-    QuadDobl_Series_Poly_Systems.Clear(wrk);
+    QuadDobl_CSeries_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
   procedure Track_Many_Paths
               ( file : in file_type;
-                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 verbose : in boolean := false ) is
 
@@ -541,7 +541,7 @@ package body Series_and_Trackers is
 
   procedure Track_Many_Paths
               ( file : in file_type;
-                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 verbose : in boolean := false ) is
 
@@ -562,7 +562,7 @@ package body Series_and_Trackers is
 
   procedure Track_Many_Paths
               ( file : in file_type;
-                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 verbose : in boolean := false ) is
 
@@ -582,7 +582,7 @@ package body Series_and_Trackers is
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List ) is
 
     use Standard_Complex_Solutions;
@@ -600,7 +600,7 @@ package body Series_and_Trackers is
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
 
     use DoblDobl_Complex_Solutions;
@@ -618,7 +618,7 @@ package body Series_and_Trackers is
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
     use QuadDobl_Complex_Solutions;
