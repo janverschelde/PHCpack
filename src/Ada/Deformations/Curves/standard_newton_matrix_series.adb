@@ -611,10 +611,26 @@ package body Standard_Newton_Matrix_Series is
 
 -- MANY NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
+  procedure Double_Degree_with_Threshold
+              ( degree : in out integer32; maxdeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Doubles the degree and sets it equal to maxdeg
+  --   if after doubling the degree is larger than maxdeg.
+
+  begin
+    if degree < maxdeg then
+      degree := 2*degree;
+      if degree > maxdeg
+       then degree := maxdeg;
+      end if;
+    end if;
+  end Double_Degree_with_Threshold;
+
   procedure LU_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 jp : in Standard_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -623,13 +639,13 @@ package body Standard_Newton_Matrix_Series is
       LU_Newton_Step(p,jp,degree,x,info);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -637,7 +653,7 @@ package body Standard_Newton_Matrix_Series is
        := Standard_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Steps(p,jp,degree,nbrit,x,info);
+    LU_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
@@ -645,7 +661,7 @@ package body Standard_Newton_Matrix_Series is
               ( file : in file_type;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 jp : in Standard_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
   begin
@@ -654,14 +670,14 @@ package body Standard_Newton_Matrix_Series is
       LU_Newton_Step(file,p,jp,degree,x,info);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
               ( file : in file_type;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -669,7 +685,7 @@ package body Standard_Newton_Matrix_Series is
        := Standard_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Steps(file,p,jp,degree,nbrit,x,info);
+    LU_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
@@ -678,7 +694,7 @@ package body Standard_Newton_Matrix_Series is
   procedure LU_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 jp : in Standard_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float ) is
   begin
@@ -686,13 +702,13 @@ package body Standard_Newton_Matrix_Series is
       LU_Newton_Step(p,jp,degree,x,rcond);
       exit when (1.0 + rcond = 1.0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float ) is
 
@@ -700,7 +716,7 @@ package body Standard_Newton_Matrix_Series is
        := Standard_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Steps(p,jp,degree,nbrit,x,rcond);
+    LU_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,rcond);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
@@ -708,7 +724,7 @@ package body Standard_Newton_Matrix_Series is
               ( file : in file_type;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 jp : in Standard_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float ) is
   begin
@@ -717,14 +733,14 @@ package body Standard_Newton_Matrix_Series is
       LU_Newton_Step(file,p,jp,degree,x,rcond);
       exit when (1.0 + rcond = 1.0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
               ( file : in file_type;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float ) is
 
@@ -732,7 +748,7 @@ package body Standard_Newton_Matrix_Series is
        := Standard_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Steps(file,p,jp,degree,nbrit,x,rcond);
+    LU_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,rcond);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
@@ -741,7 +757,7 @@ package body Standard_Newton_Matrix_Series is
   procedure QR_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 jp : in Standard_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
   begin
@@ -749,13 +765,13 @@ package body Standard_Newton_Matrix_Series is
       QR_Newton_Step(p,jp,degree,x,info);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
   end QR_Newton_Steps;
 
   procedure QR_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -763,7 +779,7 @@ package body Standard_Newton_Matrix_Series is
        := Standard_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    QR_Newton_Steps(p,jp,degree,nbrit,x,info);
+    QR_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end QR_Newton_Steps;
 
@@ -771,7 +787,7 @@ package body Standard_Newton_Matrix_Series is
               ( file : in file_type;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 jp : in Standard_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
   begin
@@ -780,14 +796,14 @@ package body Standard_Newton_Matrix_Series is
       QR_Newton_Step(file,p,jp,degree,x,info);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
   end QR_Newton_Steps;
 
   procedure QR_Newton_Steps
               ( file : in file_type;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -795,7 +811,7 @@ package body Standard_Newton_Matrix_Series is
        := Standard_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    QR_Newton_Steps(file,p,jp,degree,nbrit,x,info);
+    QR_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end QR_Newton_Steps;
 
@@ -804,7 +820,7 @@ package body Standard_Newton_Matrix_Series is
   procedure SVD_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 jp : in Standard_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32; rcond : out double_float ) is
   begin
@@ -812,13 +828,13 @@ package body Standard_Newton_Matrix_Series is
       SVD_Newton_Step(p,jp,degree,x,info,rcond);
       exit when (1.0 + rcond = 1.0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
   end SVD_Newton_Steps;
 
   procedure SVD_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32; rcond : out double_float ) is
 
@@ -826,7 +842,7 @@ package body Standard_Newton_Matrix_Series is
        := Standard_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    SVD_Newton_Steps(p,jp,degree,nbrit,x,info,rcond);
+    SVD_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info,rcond);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end SVD_Newton_Steps;
 
@@ -834,7 +850,7 @@ package body Standard_Newton_Matrix_Series is
               ( file : in file_type;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 jp : in Standard_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32; rcond : out double_float ) is
   begin
@@ -843,14 +859,14 @@ package body Standard_Newton_Matrix_Series is
       SVD_Newton_Step(file,p,jp,degree,x,info,rcond);
       exit when (1.0 + rcond = 1.0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
   end SVD_Newton_Steps;
 
   procedure SVD_Newton_Steps
               ( file : in file_type;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32; rcond : out double_float ) is
 
@@ -858,7 +874,7 @@ package body Standard_Newton_Matrix_Series is
        := Standard_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    SVD_Newton_Steps(file,p,jp,degree,nbrit,x,info,rcond);
+    SVD_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info,rcond);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end SVD_Newton_Steps;
 
@@ -867,20 +883,20 @@ package body Standard_Newton_Matrix_Series is
   procedure Echelon_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 jp : in Standard_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Complex_Number ) is
   begin
     for i in 1..nbrit loop
       Echelon_Newton_Step(p,jp,degree,x,det);
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
   end Echelon_Newton_Steps;
 
   procedure Echelon_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Complex_Number ) is
 
@@ -888,7 +904,7 @@ package body Standard_Newton_Matrix_Series is
        := Standard_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    Echelon_Newton_Steps(p,jp,degree,nbrit,x,det);
+    Echelon_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,det);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end Echelon_Newton_Steps;
 
@@ -896,7 +912,7 @@ package body Standard_Newton_Matrix_Series is
               ( file : in file_type;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 jp : in Standard_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Complex_Number ) is
   begin
@@ -904,7 +920,7 @@ package body Standard_Newton_Matrix_Series is
       put(file,"Echelon Newton step "); put(file,i,1); put_line(file," :");
       Echelon_Newton_Step(file,p,jp,degree,x,det);
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
   exception
     when others =>
@@ -916,7 +932,7 @@ package body Standard_Newton_Matrix_Series is
   procedure Echelon_Newton_Steps
               ( file : in file_type;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Complex_Number ) is
 
@@ -924,7 +940,7 @@ package body Standard_Newton_Matrix_Series is
        := Standard_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    Echelon_Newton_Steps(file,p,jp,degree,nbrit,x,det);
+    Echelon_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,det);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end Echelon_Newton_Steps;
 

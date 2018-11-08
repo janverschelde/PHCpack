@@ -370,7 +370,7 @@ procedure ts_sernew is
   procedure LU_Newton_on_Matrix_Series
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 otp : in boolean;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in Standard_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -390,9 +390,9 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,deg);
     if otp then
       Standard_Newton_Matrix_Series.LU_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info);
+        (standard_output,p,deg,maxdeg,nbrit,z,info);
     else
-      Standard_Newton_Matrix_Series.LU_Newton_Steps(p,deg,nbrit,z,info);
+      Standard_Newton_Matrix_Series.LU_Newton_Steps(p,deg,maxdeg,nbrit,z,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -434,14 +434,14 @@ procedure ts_sernew is
     put("Run on matrix series ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y'
-     then LU_Newton_on_Matrix_Series(p,otp,degree,nbrit,x);
+     then LU_Newton_on_Matrix_Series(p,otp,degree,maxdeg,nbrit,x);
     end if;
   end Test_LU_Newton_Steps;
 
   procedure LU_Newton_on_Series_Matrices
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 otp : in boolean;
-                degree : in integer32; maxdeg,nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in DoblDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -481,7 +481,7 @@ procedure ts_sernew is
   procedure LU_Newton_on_Matrix_Series
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 otp : in boolean;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in DoblDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -501,9 +501,9 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,deg);
     if otp then
       DoblDobl_Newton_Matrix_Series.LU_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info);
+        (standard_output,p,deg,maxdeg,nbrit,z,info);
     else
-      DoblDobl_Newton_Matrix_Series.LU_Newton_Steps(p,deg,nbrit,z,info);
+      DoblDobl_Newton_Matrix_Series.LU_Newton_Steps(p,deg,maxdeg,nbrit,z,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -545,7 +545,7 @@ procedure ts_sernew is
     put("Run on matrix series ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y'
-     then LU_Newton_on_Matrix_Series(p,otp,degree,nbrit,x);
+     then LU_Newton_on_Matrix_Series(p,otp,degree,maxdeg,nbrit,x);
     end if;
   end Test_LU_Newton_Steps;
 
@@ -592,7 +592,7 @@ procedure ts_sernew is
   procedure LU_Newton_on_Matrix_Series
               ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 otp : in boolean;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in QuadDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -612,9 +612,10 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,deg);
     if otp then
       QuadDobl_Newton_Matrix_Series.LU_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info);
+        (standard_output,p,deg,maxdeg,nbrit,z,info);
     else
-      QuadDobl_Newton_Matrix_Series.LU_Newton_Steps(p,deg,nbrit,z,info);
+      QuadDobl_Newton_Matrix_Series.LU_Newton_Steps
+        (p,deg,maxdeg,nbrit,z,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -656,7 +657,7 @@ procedure ts_sernew is
     put("Run on matrix series ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y'
-     then LU_Newton_on_Matrix_Series(p,otp,degree,nbrit,x);
+     then LU_Newton_on_Matrix_Series(p,otp,degree,maxdeg,nbrit,x);
     end if;
   end Test_LU_Newton_Steps;
 
@@ -912,7 +913,7 @@ procedure ts_sernew is
   procedure QR_Newton_on_Matrix_Series
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 otp : in boolean;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in Standard_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -932,9 +933,10 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,degree);
     if otp then
       Standard_Newton_Matrix_Series.QR_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info);
+        (standard_output,p,deg,maxdeg,nbrit,z,info);
     else
-      Standard_Newton_Matrix_Series.QR_Newton_Steps(p,deg,nbrit,z,info);
+      Standard_Newton_Matrix_Series.QR_Newton_Steps
+        (p,deg,maxdeg,nbrit,z,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -974,7 +976,7 @@ procedure ts_sernew is
     new_line;
     put("Run on matrix series ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then QR_Newton_on_Matrix_Series(p,otp,degree,nbrit,x);
+     then QR_Newton_on_Matrix_Series(p,otp,degree,maxdeg,nbrit,x);
     end if;
   end Test_QR_Newton_Steps;
 
@@ -1021,7 +1023,7 @@ procedure ts_sernew is
   procedure QR_Newton_on_Matrix_Series
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 otp : in boolean;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in DoblDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1041,9 +1043,10 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,degree);
     if otp then
       DoblDobl_Newton_Matrix_Series.QR_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info);
+        (standard_output,p,deg,maxdeg,nbrit,z,info);
     else
-      DoblDobl_Newton_Matrix_Series.QR_Newton_Steps(p,deg,nbrit,z,info);
+      DoblDobl_Newton_Matrix_Series.QR_Newton_Steps
+        (p,deg,maxdeg,nbrit,z,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -1083,7 +1086,7 @@ procedure ts_sernew is
     new_line;
     put("Run on matrix series ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then QR_Newton_on_Matrix_Series(p,otp,degree,nbrit,x);
+     then QR_Newton_on_Matrix_Series(p,otp,degree,maxdeg,nbrit,x);
     end if;
   end Test_QR_Newton_Steps;
 
@@ -1130,7 +1133,7 @@ procedure ts_sernew is
   procedure QR_Newton_on_Matrix_Series
               ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 otp : in boolean;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in QuadDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1150,9 +1153,10 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,degree);
     if otp then
       QuadDobl_Newton_Matrix_Series.QR_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info);
+        (standard_output,p,deg,maxdeg,nbrit,z,info);
     else
-      QuadDobl_Newton_Matrix_Series.QR_Newton_Steps(p,deg,nbrit,z,info);
+      QuadDobl_Newton_Matrix_Series.QR_Newton_Steps
+        (p,deg,maxdeg,nbrit,z,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -1192,7 +1196,7 @@ procedure ts_sernew is
     new_line;
     put("Run on matrix series ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then QR_Newton_on_Matrix_Series(p,otp,degree,nbrit,x);
+     then QR_Newton_on_Matrix_Series(p,otp,degree,maxdeg,nbrit,x);
     end if;
   end Test_QR_Newton_Steps;
 
@@ -1329,7 +1333,7 @@ procedure ts_sernew is
 
   procedure Test_SVD_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in Standard_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1354,10 +1358,10 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,degree);
     if otp then
       Standard_Newton_Matrix_Series.SVD_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info,rcond);
+        (standard_output,p,deg,maxdeg,nbrit,z,info,rcond);
     else
       Standard_Newton_Matrix_Series.SVD_Newton_Steps
-        (p,deg,nbrit,z,info,rcond);
+        (p,deg,maxdeg,nbrit,z,info,rcond);
     end if;
     put("rcond = "); put(rcond,3); new_line;
     if 1.0 + rcond /= 1.0 then
@@ -1373,7 +1377,7 @@ procedure ts_sernew is
 
   procedure Test_SVD_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in DoblDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1399,10 +1403,10 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,degree);
     if otp then
       DoblDobl_Newton_Matrix_Series.SVD_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info,rcond);
+        (standard_output,p,deg,maxdeg,nbrit,z,info,rcond);
     else
       DoblDobl_Newton_Matrix_Series.SVD_Newton_Steps
-        (p,deg,nbrit,z,info,rcond);
+        (p,deg,maxdeg,nbrit,z,info,rcond);
     end if;
     put("rcond = "); put(rcond,3); new_line;
     if one + rcond /= one then
@@ -1418,7 +1422,7 @@ procedure ts_sernew is
 
   procedure Test_SVD_Newton_Steps
               ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in QuadDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1444,10 +1448,10 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,degree);
     if otp then
       QuadDobl_Newton_Matrix_Series.SVD_Newton_Steps
-        (standard_output,p,deg,nbrit,z,info,rcond);
+        (standard_output,p,deg,maxdeg,nbrit,z,info,rcond);
     else
       QuadDobl_Newton_Matrix_Series.SVD_Newton_Steps
-        (p,deg,nbrit,z,info,rcond);
+        (p,deg,maxdeg,nbrit,z,info,rcond);
     end if;
     put("rcond = "); put(rcond,3); new_line;
     if one + rcond /= one then
@@ -1584,7 +1588,7 @@ procedure ts_sernew is
   procedure Echelon_Newton_on_Matrix_Series
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 otp : in boolean;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in Standard_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1604,9 +1608,10 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,deg);
     if otp then
       Standard_Newton_Matrix_Series.Echelon_Newton_Steps
-        (standard_output,p,deg,nbrit,z,det);
+        (standard_output,p,deg,maxdeg,nbrit,z,det);
     else
-      Standard_Newton_Matrix_Series.Echelon_Newton_Steps(p,deg,nbrit,z,det);
+      Standard_Newton_Matrix_Series.Echelon_Newton_Steps
+        (p,deg,maxdeg,nbrit,z,det);
     end if;
     put("det : "); put(det); new_line;
     Complex_Series_and_Polynomials.Filter(z,tol);
@@ -1621,7 +1626,7 @@ procedure ts_sernew is
   procedure Echelon_Newton_on_Matrix_Series
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 otp : in boolean;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in DoblDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1641,9 +1646,10 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,deg);
     if otp then
       DoblDobl_Newton_Matrix_Series.Echelon_Newton_Steps
-        (standard_output,p,deg,nbrit,z,det);
+        (standard_output,p,deg,maxdeg,nbrit,z,det);
     else
-      DoblDobl_Newton_Matrix_Series.Echelon_Newton_Steps(p,deg,nbrit,z,det);
+      DoblDobl_Newton_Matrix_Series.Echelon_Newton_Steps
+        (p,deg,maxdeg,nbrit,z,det);
     end if;
     put("det : "); put(det); new_line;
     Complex_Series_and_Polynomials.Filter(z,tol);
@@ -1658,7 +1664,7 @@ procedure ts_sernew is
   procedure Echelon_Newton_on_Matrix_Series
               ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 otp : in boolean;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in QuadDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1678,9 +1684,10 @@ procedure ts_sernew is
     Complex_Series_and_Polynomials.Set_Degree(z,deg);
     if otp then
       QuadDobl_Newton_Matrix_Series.Echelon_Newton_Steps
-        (standard_output,p,deg,nbrit,z,det);
+        (standard_output,p,deg,maxdeg,nbrit,z,det);
     else
-      QuadDobl_Newton_Matrix_Series.Echelon_Newton_Steps(p,deg,nbrit,z,det);
+      QuadDobl_Newton_Matrix_Series.Echelon_Newton_Steps
+        (p,deg,maxdeg,nbrit,z,det);
     end if;
     put("det : "); put(det); new_line;
     Complex_Series_and_Polynomials.Filter(z,tol);
@@ -1694,7 +1701,7 @@ procedure ts_sernew is
 
   procedure Test_Echelon_Newton_Steps
               ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in Standard_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1709,12 +1716,12 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans); otp := (ans = 'y');
-    Echelon_Newton_on_Matrix_Series(p,otp,degree,nbrit,x);
+    Echelon_Newton_on_Matrix_Series(p,otp,degree,maxdeg,nbrit,x);
   end Test_Echelon_Newton_Steps;
 
   procedure Test_Echelon_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in DoblDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1729,12 +1736,12 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans); otp := (ans = 'y');
-    Echelon_Newton_on_Matrix_Series(p,otp,degree,nbrit,x);
+    Echelon_Newton_on_Matrix_Series(p,otp,degree,maxdeg,nbrit,x);
   end Test_Echelon_Newton_Steps;
 
   procedure Test_Echelon_Newton_Steps
               ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in integer32; nbrit : in integer32;
+                degree,maxdeg : in integer32; nbrit : in integer32;
                 x : in QuadDobl_Complex_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -1749,7 +1756,7 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans); otp := (ans = 'y');
-    Echelon_Newton_on_Matrix_Series(p,otp,degree,nbrit,x);
+    Echelon_Newton_on_Matrix_Series(p,otp,degree,maxdeg,nbrit,x);
   end Test_Echelon_Newton_Steps;
 
   procedure Standard_Test_LU_Newton is
@@ -1978,8 +1985,7 @@ procedure ts_sernew is
 
     ls : Standard_CSeries_Poly_Systems.Link_to_Poly_Sys;
     sol : Standard_Complex_Series_Vectors.Link_to_Vector;
-    idx,degree,nbr : integer32 := 0;
-    dim : integer32;
+    idx,degree,maxdeg,nbr,dim : integer32 := 0;
 
     use Standard_CSeries_Polynomials;
 
@@ -1998,9 +2004,11 @@ procedure ts_sernew is
     put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
-    if nbr = 1
-     then Test_SVD_Newton_Step(ls.all,degree,sol.all);
-     else Test_SVD_Newton_Steps(ls.all,degree,nbr,sol.all);
+    if nbr = 1 then
+      Test_SVD_Newton_Step(ls.all,degree,sol.all);
+    else
+      put("Give the maximal degree of the series : "); get(maxdeg);
+      Test_SVD_Newton_Steps(ls.all,degree,maxdeg,nbr,sol.all);
     end if;
   end Standard_Test_SVD_Newton;
 
@@ -2014,8 +2022,7 @@ procedure ts_sernew is
 
     ls : DoblDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
     sol : DoblDobl_Complex_Series_Vectors.Link_to_Vector;
-    idx,degree,nbr : integer32 := 0;
-    dim : integer32;
+    idx,degree,maxdeg,nbr,dim : integer32 := 0;
 
     use DoblDobl_CSeries_Polynomials;
 
@@ -2034,9 +2041,11 @@ procedure ts_sernew is
     put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
-    if nbr = 1
-     then Test_SVD_Newton_Step(ls.all,degree,sol.all);
-     else Test_SVD_Newton_Steps(ls.all,degree,nbr,sol.all);
+    if nbr = 1 then
+      Test_SVD_Newton_Step(ls.all,degree,sol.all);
+    else
+      put("Give the maximal degree of the series : "); get(maxdeg);
+      Test_SVD_Newton_Steps(ls.all,degree,maxdeg,nbr,sol.all);
     end if;
   end DoblDobl_Test_SVD_Newton;
 
@@ -2050,8 +2059,7 @@ procedure ts_sernew is
 
     ls : QuadDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
     sol : QuadDobl_Complex_Series_Vectors.Link_to_Vector;
-    idx,degree,nbr : integer32 := 0;
-    dim : integer32;
+    idx,degree,nbr,maxdeg,dim : integer32 := 0;
 
     use QuadDobl_CSeries_Polynomials;
 
@@ -2070,9 +2078,11 @@ procedure ts_sernew is
     put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
-    if nbr = 1
-     then Test_SVD_Newton_Step(ls.all,degree,sol.all);
-     else Test_SVD_Newton_Steps(ls.all,degree,nbr,sol.all);
+    if nbr = 1 then
+      Test_SVD_Newton_Step(ls.all,degree,sol.all);
+    else
+      put("Give the maximal degree of the series : "); get(maxdeg);
+      Test_SVD_Newton_Steps(ls.all,degree,maxdeg,nbr,sol.all);
     end if;
   end QuadDobl_Test_SVD_Newton;
 
@@ -2086,8 +2096,7 @@ procedure ts_sernew is
 
     ls : Standard_CSeries_Poly_Systems.Link_to_Poly_Sys;
     sol : Standard_Complex_Series_Vectors.Link_to_Vector;
-    idx,degree,nbr : integer32 := 0;
-    dim : integer32;
+    idx,degree,maxdeg,nbr,dim : integer32 := 0;
 
     use Standard_CSeries_Polynomials;
 
@@ -2106,9 +2115,11 @@ procedure ts_sernew is
     put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
-    if nbr = 1
-     then Test_Echelon_Newton_Step(ls.all,degree,sol.all);
-     else Test_Echelon_Newton_Steps(ls.all,degree,nbr,sol.all);
+    if nbr = 1 then
+      Test_Echelon_Newton_Step(ls.all,degree,sol.all);
+    else
+      put("Give the maximal degree of the series : "); get(maxdeg);
+      Test_Echelon_Newton_Steps(ls.all,degree,maxdeg,nbr,sol.all);
     end if;
   end Standard_Test_Echelon_Newton;
 
@@ -2122,8 +2133,7 @@ procedure ts_sernew is
 
     ls : DoblDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
     sol : DoblDobl_Complex_Series_Vectors.Link_to_Vector;
-    idx,degree,nbr : integer32 := 0;
-    dim : integer32;
+    idx,degree,maxdeg,nbr,dim : integer32 := 0;
 
     use DoblDobl_CSeries_Polynomials;
 
@@ -2142,9 +2152,11 @@ procedure ts_sernew is
     put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
-    if nbr = 1
-     then Test_Echelon_Newton_Step(ls.all,degree,sol.all);
-     else Test_Echelon_Newton_Steps(ls.all,degree,nbr,sol.all);
+    if nbr = 1 then
+      Test_Echelon_Newton_Step(ls.all,degree,sol.all);
+    else
+      put("Give the maximal degree of the series : "); get(maxdeg);
+      Test_Echelon_Newton_Steps(ls.all,degree,maxdeg,nbr,sol.all);
     end if;
   end DoblDobl_Test_Echelon_Newton;
 
@@ -2158,8 +2170,7 @@ procedure ts_sernew is
 
     ls : QuadDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
     sol : QuadDobl_Complex_Series_Vectors.Link_to_Vector;
-    idx,degree,nbr : integer32 := 0;
-    dim : integer32;
+    idx,degree,maxdeg,nbr,dim : integer32 := 0;
 
     use QuadDobl_CSeries_Polynomials;
 
@@ -2178,9 +2189,11 @@ procedure ts_sernew is
     put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
-    if nbr = 1
-     then Test_Echelon_Newton_Step(ls.all,degree,sol.all);
-     else Test_Echelon_Newton_Steps(ls.all,degree,nbr,sol.all);
+    if nbr = 1 then
+      Test_Echelon_Newton_Step(ls.all,degree,sol.all);
+    else
+      put("Give the maximal degree of the series : "); get(maxdeg);
+      Test_Echelon_Newton_Steps(ls.all,degree,maxdeg,nbr,sol.all);
     end if;
   end QuadDobl_Test_Echelon_Newton;
 
