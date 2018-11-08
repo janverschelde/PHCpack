@@ -209,7 +209,7 @@ package body DoblDobl_Newton_Series is
   procedure LU_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -218,13 +218,18 @@ package body DoblDobl_Newton_Series is
       LU_Newton_Step(p,jp,degree,x,info);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      if degree < maxdeg then
+        degree := 2*degree;
+        if degree > maxdeg
+         then degree := maxdeg;
+        end if;
+      end if;
     end loop;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -232,7 +237,7 @@ package body DoblDobl_Newton_Series is
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Steps(p,jp,degree,nbrit,x,info);
+    LU_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
@@ -240,7 +245,7 @@ package body DoblDobl_Newton_Series is
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -250,14 +255,19 @@ package body DoblDobl_Newton_Series is
       LU_Newton_Step(file,p,jp,degree,x,info);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      if degree < maxdeg then
+        degree := 2*degree;
+        if degree > maxdeg
+         then degree := maxdeg;
+        end if;
+      end if;
     end loop;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -265,14 +275,14 @@ package body DoblDobl_Newton_Series is
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Steps(file,p,jp,degree,nbrit,x,info);
+    LU_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
   procedure QR_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -281,13 +291,18 @@ package body DoblDobl_Newton_Series is
       QR_Newton_Step(p,jp,degree,x,info);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      if degree < maxdeg then
+        degree := 2*degree;
+        if degree > maxdeg
+         then degree := maxdeg;
+        end if;
+      end if;
     end loop;
   end QR_Newton_Steps;
 
   procedure QR_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -295,7 +310,7 @@ package body DoblDobl_Newton_Series is
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    QR_Newton_Steps(p,jp,degree,nbrit,x,info);
+    QR_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end QR_Newton_Steps;
 
@@ -303,7 +318,7 @@ package body DoblDobl_Newton_Series is
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -313,14 +328,19 @@ package body DoblDobl_Newton_Series is
       QR_Newton_Step(file,p,jp,degree,x,info);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
-      degree := 2*degree;
+      if degree < maxdeg then
+        degree := 2*degree;
+        if degree > maxdeg
+         then degree := maxdeg;
+        end if;
+      end if;
     end loop;
   end QR_Newton_Steps;
 
   procedure QR_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
 
@@ -328,7 +348,7 @@ package body DoblDobl_Newton_Series is
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    QR_Newton_Steps(file,p,jp,degree,nbrit,x,info);
+    QR_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end QR_Newton_Steps;
 

@@ -108,25 +108,25 @@ package QuadDobl_Newton_Series is
   procedure LU_Newton_Steps
               ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure LU_Newton_Steps
               ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
 
@@ -142,6 +142,7 @@ package QuadDobl_Newton_Series is
   --   p        a polynomial system with series coefficients;
   --   jp       Jacobi matrix of the system p;
   --   degree   the degree at start of the computations;
+  --   maxdeg   the maximal degree of the series in the steps;
   --   nbrit    total number of Newton steps;
   --   x        current approximation for the series solution.
 
@@ -155,25 +156,25 @@ package QuadDobl_Newton_Series is
   procedure QR_Newton_Steps
               ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure QR_Newton_Steps
               ( p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure QR_Newton_Steps
               ( file : in file_type;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
   procedure QR_Newton_Steps
               ( file : in file_type;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32 );
 
@@ -189,6 +190,7 @@ package QuadDobl_Newton_Series is
   --   p        a polynomial system with series coefficients;
   --   jp       Jacobi matrix of the system p;
   --   degree   the degree at start of the computations;
+  --   maxdeg   the maximal degree of the series in the steps;
   --   nbrit    total number of Newton steps;
   --   x        current approximation for the series solution.
 
