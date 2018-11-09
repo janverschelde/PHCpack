@@ -52,13 +52,14 @@ procedure mainseries ( precision : in character;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       initial terms in series expansion solutions.
 
-    nbrit : integer32 := 0;
+    nbrit,maxdeg : integer32 := 0;
     ans : character;
     verbose : boolean;
     timer : Timing_Widget;
 
   begin
     put("Give the number of steps in Newton's method : "); get(nbrit);
+    put("Give the maximal degree of the series : "); get(maxdeg);
     put("Do you want extra diagnostic output in every Newton step ? (y/n) ");
     Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
@@ -67,14 +68,14 @@ procedure mainseries ( precision : in character;
       put_line("Echelon Newton will be applied.  See the output file ...");
       new_line;
       tstart(timer);
-      Run_Echelon_Newton(file,nbrit,p,s,verbose);
+      Run_Echelon_Newton(file,maxdeg,nbrit,p,s,verbose);
       tstop(timer);
     else
       new_line;
       put_line("SVD Newton will be applied.  See the output file ...");
       new_line;
       tstart(timer);
-      Run_SVD_Newton(file,nbrit,p,s,verbose);
+      Run_SVD_Newton(file,maxdeg,nbrit,p,s,verbose);
       tstop(timer);
     end if;
     new_line(file);
@@ -97,13 +98,14 @@ procedure mainseries ( precision : in character;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       initial terms in series expansion solutions.
 
-    nbrit : integer32 := 0;
+    maxdeg,nbrit : integer32 := 0;
     ans : character;
     verbose : boolean;
     timer : Timing_Widget;
 
   begin
     put("Give the number of steps in Newton's method : "); get(nbrit);
+    put("Give the maximal degree of the series : "); get(maxdeg);
     put("Do you want extra diagnostic output in every Newton step ? (y/n) ");
     Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
@@ -112,14 +114,14 @@ procedure mainseries ( precision : in character;
       put_line("Echelon Newton will be applied.  See the output file ...");
       new_line;
       tstart(timer);
-      Run_Echelon_Newton(file,nbrit,p,s,verbose);
+      Run_Echelon_Newton(file,maxdeg,nbrit,p,s,verbose);
       tstop(timer);
     else
       new_line;
       put_line("SVD Newton will be applied.  See the output file ...");
       new_line;
       tstart(timer);
-      Run_SVD_Newton(file,nbrit,p,s,verbose);
+      Run_SVD_Newton(file,maxdeg,nbrit,p,s,verbose);
       tstop(timer);
     end if;
     new_line(file);
@@ -142,13 +144,14 @@ procedure mainseries ( precision : in character;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       initial terms in series expansion solutions.
 
-    nbrit : integer32 := 0;
+    maxdeg,nbrit : integer32 := 0;
     ans : character;
     verbose : boolean;
     timer : Timing_Widget;
 
   begin
     put("Give the number of steps in Newton's method : "); get(nbrit);
+    put("Give the maximal degree of the series : "); get(maxdeg);
     put("Do you want extra diagnostic output in every Newton step ? (y/n) ");
     Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
@@ -157,14 +160,14 @@ procedure mainseries ( precision : in character;
       put_line("Echelon Newton will be applied.  See the output file ...");
       new_line;
       tstart(timer);
-      Run_Echelon_Newton(file,nbrit,p,s,verbose);
+      Run_Echelon_Newton(file,maxdeg,nbrit,p,s,verbose);
       tstop(timer);
     else
       new_line;
       put_line("SVD Newton will be applied.  See the output file ...");
       new_line;
       tstart(timer);
-      Run_SVD_Newton(file,nbrit,p,s,verbose);
+      Run_SVD_Newton(file,maxdeg,nbrit,p,s,verbose);
       tstop(timer);
     end if;
     new_line(file);

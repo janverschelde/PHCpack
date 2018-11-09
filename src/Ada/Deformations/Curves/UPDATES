@@ -1,3 +1,5 @@
+Fri 9 Nov 2018 : prompt for the maximal degree bound in mainseries.adb.
+
 Thu 8 Nov 2018 : added bound on the degrees of the series in
   {standard,dobldobl,quaddobl}_newton_series and adjusted ts_sernew.adb.
   Did the same for the *_newton_matrix_series packages.
