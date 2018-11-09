@@ -237,7 +237,7 @@ function use_series ( job : integer32;
   end Store_Series_Solutions;
 
   procedure Run_Newton
-              ( nq,idx,dim,nbrit : in integer32;
+              ( nq,idx,dim,maxdeg,nbrit : in integer32;
                 echelon,verbose : in boolean;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_VecVecs.VecVec ) is
@@ -251,6 +251,7 @@ function use_series ( job : integer32;
   --   nq       number of equations in p;
   --   idx      index to the series parameter;
   --   dim      the number of coordinates in the series;
+  --   maxdeg   the maximal degree of the series;
   --   nbrit    the number of Newton steps;
   --   echelon  flag to indicate if echelon form needs to be used;
   --   verbose  flag to print message to screen;
@@ -262,24 +263,24 @@ function use_series ( job : integer32;
       if verbose
        then put_line("Echelon Newton will be applied.");
       end if;
-      Run_Echelon_Newton(nbrit,p,s,verbose);
+      Run_Echelon_Newton(maxdeg,nbrit,p,s,verbose);
     else
       if nq = dim then
         if verbose
          then put_line("LU Newton will be applied.");
         end if;
-        Run_LU_Newton(nbrit,p,s,verbose);
+        Run_LU_Newton(maxdeg,nbrit,p,s,verbose);
       else
         if verbose
          then put_line("QR Newton will be applied.");
         end if;
-        Run_QR_Newton(nbrit,p,s,verbose);
+        Run_QR_Newton(maxdeg,nbrit,p,s,verbose);
       end if;
     end if;
   end Run_Newton;
 
   procedure Run_Newton
-              ( nq,idx,dim,nbrit : in integer32;
+              ( nq,idx,dim,maxdeg,nbrit : in integer32;
                 echelon,verbose : in boolean;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_VecVecs.VecVec ) is
@@ -293,6 +294,7 @@ function use_series ( job : integer32;
   --   nq       number of equations in p;
   --   idx      index to the series parameter;
   --   dim      the number of coordinates in the series;
+  --   maxdeg   the maximal degree of the series;
   --   nbrit    the number of Newton steps;
   --   echelon  flag to indicate whether to use echelon Newton;
   --   verbose  flag for printing intermediate output;
@@ -304,24 +306,24 @@ function use_series ( job : integer32;
       if verbose
        then put_line("Echelon Newton will be applied.");
       end if;
-      Run_Echelon_Newton(nbrit,p,s,verbose);
+      Run_Echelon_Newton(maxdeg,nbrit,p,s,verbose);
     else
       if nq = dim then
         if verbose
          then put_line("LU Newton will be applied.");
         end if;
-        Run_LU_Newton(nbrit,p,s,verbose);
+        Run_LU_Newton(maxdeg,nbrit,p,s,verbose);
       else
         if verbose
          then put_line("QR Newton will be applied.");
         end if;
-        Run_QR_Newton(nbrit,p,s,verbose);
+        Run_QR_Newton(maxdeg,nbrit,p,s,verbose);
       end if;
     end if;
   end Run_Newton;
 
   procedure Run_Newton
-              ( nq,idx,dim,nbrit : in integer32;
+              ( nq,idx,dim,maxdeg,nbrit : in integer32;
                 echelon,verbose : in boolean;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_VecVecs.VecVec ) is
@@ -335,6 +337,7 @@ function use_series ( job : integer32;
   --   nq       number of equations in p;
   --   idx      index to the series parameter;
   --   dim      the number of coordinates in the series;
+  --   maxdeg   the maximal degree of the series;
   --   nbrit    the number of Newton steps;
   --   echelon  flag to indicate whether to use echelon Newton;
   --   verbose  flag for intermediate output;
@@ -346,24 +349,24 @@ function use_series ( job : integer32;
       if verbose
        then put_line("Echelon Newton will be applied.");
       end if;
-      Run_Echelon_Newton(nbrit,p,s,verbose);
+      Run_Echelon_Newton(maxdeg,nbrit,p,s,verbose);
     else
       if nq = dim then
         if verbose
          then put_line("LU Newton will be applied.");
         end if;
-        Run_LU_Newton(nbrit,p,s,verbose);
+        Run_LU_Newton(maxdeg,nbrit,p,s,verbose);
       else
         if verbose
          then put_line("QR Newton will be applied.");
         end if;
-        Run_QR_Newton(nbrit,p,s,verbose);
+        Run_QR_Newton(maxdeg,nbrit,p,s,verbose);
       end if;
     end if;
   end Run_Newton;
 
   procedure Run_Newton
-              ( nq,idx,dim,nbrit : in integer32; verbose : in boolean;
+              ( nq,idx,dim,maxdeg,nbrit : in integer32; verbose : in boolean;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 s : in Standard_Complex_Solutions.Solution_List ) is
 
@@ -376,7 +379,9 @@ function use_series ( job : integer32;
   --   nq       number of equations in p;
   --   idx      index to the series parameter;
   --   dim      the number of coordinates in the series;
+  --   maxdeg   the maximal degree of the series;
   --   nbrit    the number of Newton steps;
+  --   verbose  for additional output;
   --   p        a polynomial of nq equations in nv unknowns;
   --   s        a list of solutions.
 
@@ -389,13 +394,13 @@ function use_series ( job : integer32;
         := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
-    Run_Newton(nq,idx,dim,nbrit,true,verbose,srp,srv);
+    Run_Newton(nq,idx,dim,maxdeg,nbrit,true,verbose,srp,srv);
     Store_Series_Solutions(srv);
     Standard_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton;
 
   procedure Run_Newton
-              ( nq,idx,dim,nbrit : in integer32; verbose : in boolean;
+              ( nq,idx,dim,maxdeg,nbrit : in integer32; verbose : in boolean;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 s : in DoblDobl_Complex_Solutions.Solution_List ) is
 
@@ -408,7 +413,9 @@ function use_series ( job : integer32;
   --   nq       number of equations in p;
   --   idx      index to the series parameter;
   --   dim      the number of coordinates in the series;
+  --   maxdeg   the maximal degree of the series;
   --   nbrit    the number of Newton steps;
+  --   verbose  for additional output;
   --   p        a polynomial of nq equations in nv unknowns;
   --   s        a list of solutions.
 
@@ -421,13 +428,13 @@ function use_series ( job : integer32;
         := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
-    Run_Newton(nq,idx,dim,nbrit,true,verbose,srp,srv);
+    Run_Newton(nq,idx,dim,maxdeg,nbrit,true,verbose,srp,srv);
     Store_Series_Solutions(srv);
     DoblDobl_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton;
 
   procedure Run_Newton
-              ( nq,idx,dim,nbrit : in integer32; verbose : in boolean;
+              ( nq,idx,dim,maxdeg,nbrit : in integer32; verbose : in boolean;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 s : in QuadDobl_Complex_Solutions.Solution_List ) is
 
@@ -440,7 +447,9 @@ function use_series ( job : integer32;
   --   nq       number of equations in p;
   --   idx      index to the series parameter;
   --   dim      the number of coordinates in the series;
+  --   maxdeg   the maximal degree of the series;
   --   nbrit    the number of Newton steps;
+  --   verbose  for additional output;
   --   p        a polynomial of nq equations in nv unknowns;
   --   s        a list of solutions.
 
@@ -453,7 +462,7 @@ function use_series ( job : integer32;
         := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
-    Run_Newton(nq,idx,dim,nbrit,true,verbose,srp,srv);
+    Run_Newton(nq,idx,dim,maxdeg,nbrit,true,verbose,srp,srv);
     Store_Series_Solutions(srv);
     QuadDobl_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton;
@@ -468,6 +477,7 @@ function use_series ( job : integer32;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := Head_Of(sols).n;
     idx,nbr,dim : integer32;
+    maxdeg : constant integer32 := 16;
     verbose : boolean;
 
   begin
@@ -477,7 +487,7 @@ function use_series ( job : integer32;
       put("Number of equations in the system : "); put(nq,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
-    Run_Newton(nq,idx,dim,nbr,verbose,lp.all,sols);
+    Run_Newton(nq,idx,dim,maxdeg,nbr,verbose,lp.all,sols);
     return 0;
   end Job1;
 
@@ -491,6 +501,7 @@ function use_series ( job : integer32;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := Head_Of(sols).n;
     idx,nbr,dim : integer32;
+    maxdeg : constant integer32 := 16;
     verbose : boolean;
 
   begin
@@ -500,7 +511,7 @@ function use_series ( job : integer32;
       put("Number of equations in the system : "); put(nq,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
-    Run_Newton(nq,idx,dim,nbr,verbose,lp.all,sols);
+    Run_Newton(nq,idx,dim,maxdeg,nbr,verbose,lp.all,sols);
     return 0;
   end Job2;
 
@@ -514,6 +525,7 @@ function use_series ( job : integer32;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := Head_Of(sols).n;
     idx,nbr,dim : integer32;
+    maxdeg : constant integer32 := 16;
     verbose : boolean;
 
   begin
@@ -523,7 +535,7 @@ function use_series ( job : integer32;
       put("Number of equations in the system : "); put(nq,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
-    Run_Newton(nq,idx,dim,nbr,verbose,lp.all,sols);
+    Run_Newton(nq,idx,dim,maxdeg,nbr,verbose,lp.all,sols);
     return 0;
   end Job3;
 
@@ -536,6 +548,7 @@ function use_series ( job : integer32;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := integer32(Number_of_Unknowns(lp(lp'first)));
     idx,nbr,dim : integer32;
+    maxdeg : constant integer32 := 16;
     verbose : boolean;
     srv : Standard_Complex_Series_VecVecs.Link_to_VecVec;
     srp : Standard_CSeries_Poly_Systems.Poly_Sys(lp'range);
@@ -553,7 +566,7 @@ function use_series ( job : integer32;
       put_line("The system converted to series :");
       Complex_Series_and_Polynomials_io.put(srp);
     end if;
-    Run_Newton(nq,idx,dim,nbr,true,verbose,srp,srv.all);
+    Run_Newton(nq,idx,dim,maxdeg,nbr,true,verbose,srp,srv.all);
     Store_Series_Solutions(srv.all);
     Standard_CSeries_Poly_Systems.Clear(srp);
     return 0;
@@ -568,6 +581,7 @@ function use_series ( job : integer32;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := integer32(Number_of_Unknowns(lp(lp'first)));
     idx,nbr,dim : integer32;
+    maxdeg : constant integer32 := 16;
     verbose : boolean;
     srv : DoblDobl_Complex_Series_VecVecs.Link_to_VecVec;
     srp : DoblDobl_CSeries_Poly_Systems.Poly_Sys(lp'range);
@@ -581,7 +595,7 @@ function use_series ( job : integer32;
       put("Number of equations in the system : "); put(nq,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
-    Run_Newton(nq,idx,dim,nbr,true,verbose,srp,srv.all);
+    Run_Newton(nq,idx,dim,maxdeg,nbr,true,verbose,srp,srv.all);
     Store_Series_Solutions(srv.all);
     DoblDobl_CSeries_Poly_Systems.Clear(srp);
     return 0;
@@ -596,6 +610,7 @@ function use_series ( job : integer32;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := integer32(Number_of_Unknowns(lp(lp'first)));
     idx,nbr,dim : integer32;
+    maxdeg : constant integer32 := 16;
     verbose : boolean;
     srv : QuadDobl_Complex_Series_VecVecs.Link_to_VecVec;
     srp : QuadDobl_CSeries_Poly_Systems.Poly_Sys(lp'range);
@@ -609,7 +624,7 @@ function use_series ( job : integer32;
       put("Number of equations in the system : "); put(nq,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
-    Run_Newton(nq,idx,dim,nbr,true,verbose,srp,srv.all);
+    Run_Newton(nq,idx,dim,maxdeg,nbr,true,verbose,srp,srv.all);
     Store_Series_Solutions(srv.all);
     QuadDobl_CSeries_Poly_Systems.Clear(srp);
     return 0;
