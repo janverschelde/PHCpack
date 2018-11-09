@@ -135,7 +135,7 @@ procedure ts_serpred is
   --   Tests the predictor on the solution in sol for the homotopy hom,
   --   in standard double precision.
 
-    nit : integer32 := 4;
+    maxdeg,nit : integer32 := 4;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0e-12;
@@ -144,7 +144,8 @@ procedure ts_serpred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+    put("Give the maximal degree of the series : "); get(maxdeg);
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
     Standard_Step_Prediction(hom,srv,eva);
     new_line;
     put_line("Setting the step size based on the power series ...");
@@ -163,7 +164,7 @@ procedure ts_serpred is
   --   Tests the predictor on the solution in sol for the homotopy hom,
   --   in double double precision.
 
-    nit : integer32 := 4;
+    maxdeg,nit : integer32 := 4;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0e-12;
@@ -173,8 +174,9 @@ procedure ts_serpred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
+    put("Give the maximal degree of the series : "); get(maxdeg);
     skip_line; -- needed for prompting of double double ...
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
     DoblDobl_Step_Prediction(hom,srv,eva);
     new_line;
     put_line("Setting the step size based on the power series ...");
@@ -194,7 +196,7 @@ procedure ts_serpred is
   --   Tests the predictor on the solution in sol for the homotopy hom,
   --   in quad double precision.
 
-    nit : integer32 := 4;
+    maxdeg,nit : integer32 := 4;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0e-12;
@@ -204,8 +206,9 @@ procedure ts_serpred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
+    put("Give the maximal degree of the series : "); get(maxdeg);
     skip_line; -- needed for prompting of quad double ...
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
     QuadDobl_Step_Prediction(hom,srv,eva);
     new_line;
     put_line("Setting the step size based on the power series ...");

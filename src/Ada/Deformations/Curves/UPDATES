@@ -1,6 +1,9 @@
 Thu 8 Nov 2018 : added bound on the degrees of the series in
   {standard,dobldobl,quaddobl}_newton_series and adjusted ts_sernew.adb.
   Did the same for the *_newton_matrix_series packages.
+  Because of this added degree bound, adjusted power_series_methods,
+  ts_sersol, series_and_predictors, homotopy_series_readers.adb,
+  series_and_trackers.adb, and ts_padepred.adb.
 
 Wed 7 Nov 2018 : adjusted all *newton* and *pade_approximants.a*
   files for the new series definitions.  Adjusted power_series_methods,

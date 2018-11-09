@@ -53,7 +53,7 @@ procedure ts_padepred is
   --   in standard double precision.
 
     neq : constant integer32 := hom'last;
-    nit : integer32 := 4;
+    maxdeg,nit : integer32 := 4;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0e-12;
@@ -63,8 +63,9 @@ procedure ts_padepred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
+    put("Give the maximal degree of the series : "); get(maxdeg);
     Test_Pade_Predictors.Standard_Test_Pade_Prediction(neq,sol,pv);
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
     Test_Pade_Predictors.Standard_Step_Prediction(hom,srv,eva,pv);
     new_line;
     put_line("Setting the step size based on the power series ...");
@@ -85,7 +86,7 @@ procedure ts_padepred is
   --   in double double precision.
 
     neq : constant integer32 := hom'last;
-    nit : integer32 := 4;
+    maxdeg,nit : integer32 := 4;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0e-12;
@@ -96,8 +97,9 @@ procedure ts_padepred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
+    put("Give the maximal degree of the series : "); get(maxdeg);
     Test_Pade_Predictors.DoblDobl_Test_Pade_Prediction(neq,sol,pv);
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
     Test_Pade_Predictors.DoblDobl_Step_Prediction(hom,srv,eva,pv);
     new_line;
     put_line("Setting the step size based on the power series ...");
@@ -119,7 +121,7 @@ procedure ts_padepred is
   --   in quad double precision.
 
     neq : constant integer32 := hom'last;
-    nit : integer32 := 4;
+    maxdeg,nit : integer32 := 4;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0e-12;
@@ -130,8 +132,9 @@ procedure ts_padepred is
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
+    put("Give the maximal degree of the series : "); get(maxdeg);
     Test_Pade_Predictors.QuadDobl_Test_Pade_Prediction(neq,sol,pv);
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
     Test_Pade_Predictors.QuadDobl_Step_Prediction(hom,srv,eva,pv);
     new_line;
     put_line("Setting the step size based on the power series ...");

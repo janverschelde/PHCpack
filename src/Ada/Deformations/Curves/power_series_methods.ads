@@ -31,32 +31,32 @@ package Power_Series_Methods is
 -- NEWTON on ONE VECTOR of POWER SERIES :
 
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
@@ -70,6 +70,7 @@ package Power_Series_Methods is
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
   --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
   --   nbrit    number of new iterations;
   --   p        a polynomial system with series coefficients;
   --   s        leading coefficients for a power series solution;
@@ -81,32 +82,32 @@ package Power_Series_Methods is
   --   info     return code of lufac on the Jacobian matrix.
 
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float; verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float; verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 rcond : out double_double; verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 rcond : out double_double; verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double; verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double; verbose : in boolean := false );
@@ -120,6 +121,7 @@ package Power_Series_Methods is
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
   --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
   --   nbrit    number of new iterations;
   --   p        a polynomial system with series coefficients;
   --   s        leading coefficients for a power series solution;
@@ -132,32 +134,32 @@ package Power_Series_Methods is
   --            matrix computed by lufco.
 
   procedure Run_QR_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
@@ -171,6 +173,7 @@ package Power_Series_Methods is
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
   --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
   --   nbrit    number of new iterations;
   --   p        a polynomial system with series coefficients;
   --   s        leading coefficients for a power series solution;
@@ -181,32 +184,32 @@ package Power_Series_Methods is
   --   s        a power series solution to p, up to some order.
 
   procedure Run_SVD_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float; verbose : in boolean := false );
   procedure Run_SVD_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float; verbose : in boolean := false );
   procedure Run_SVD_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 rcond : out double_double; verbose : in boolean := false );
   procedure Run_SVD_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 rcond : out double_double; verbose : in boolean := false );
   procedure Run_SVD_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double; verbose : in boolean := false );
   procedure Run_SVD_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 rcond : out quad_double; verbose : in boolean := false );
@@ -220,6 +223,7 @@ package Power_Series_Methods is
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
   --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
   --   nbrit    number of new iterations;
   --   p        a polynomial system with series coefficients;
   --   s        leading coefficients for a power series solution;
@@ -232,37 +236,37 @@ package Power_Series_Methods is
   --            if 1.0 + rcond = 1.0, then the problem is singular.
 
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Standard_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Standard_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 det : out DoblDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 det : out DoblDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out QuadDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out QuadDobl_Complex_Numbers.Complex_Number;
@@ -277,6 +281,7 @@ package Power_Series_Methods is
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
   --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
   --   nbrit    number of new iterations;
   --   p        a polynomial system with series coefficients;
   --   s        leading coefficients for a power series solution;
@@ -291,35 +296,35 @@ package Power_Series_Methods is
 -- NEWTON on a VECTOR of VECTOR of POWER SERIES :
 
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
@@ -332,6 +337,7 @@ package Power_Series_Methods is
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
   --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
   --   nbrit    number of new iterations;
   --   p        a polynomial system with series coefficients;
   --   v        leading coefficients for power series solutions;
@@ -343,35 +349,35 @@ package Power_Series_Methods is
   --   s        updated power series solutions to p, up to some order.
 
   procedure Run_QR_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_QR_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_QR_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_QR_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_QR_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
@@ -384,6 +390,7 @@ package Power_Series_Methods is
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
   --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
   --   nbrit    number of new iterations;
   --   p        a polynomial system with series coefficients;
   --   v        leading coefficients for power series solutions;
@@ -395,35 +402,35 @@ package Power_Series_Methods is
   --   s        updated power series solutions to p, up to some order.
 
   procedure Run_SVD_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_SVD_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_SVD_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_SVD_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_SVD_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_SVD_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
@@ -436,6 +443,7 @@ package Power_Series_Methods is
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
   --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
   --   nbrit    number of new iterations;
   --   p        a polynomial system with series coefficients;
   --   v        leading coefficients for power series solutions;
@@ -447,35 +455,35 @@ package Power_Series_Methods is
   --   s        updated power series solutions to p, up to some order.
 
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 pause : in boolean := false );
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false );
@@ -488,6 +496,7 @@ package Power_Series_Methods is
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
   --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
   --   nbrit    number of new iterations;
   --   p        a polynomial system with series coefficients;
   --   v        leading coefficients for power series solutions;

@@ -54,7 +54,7 @@ procedure ts_sersol is
   --   s       a sequence of series to start Newton's method at.
 
     len : constant integer32 := s'last;
-    nbrit : integer32 := 0;
+    maxdeg,nbrit : integer32 := 0;
 
   begin
     new_line;
@@ -62,16 +62,17 @@ procedure ts_sersol is
     new_line;
     put("Give the number of steps in Newton's method : ");
     get(nbrit); new_line;
+    put("Give the maximal degree of the series : "); get(maxdeg); new_line;
     if echelon then
       put_line("Echelon Newton will be applied.");
-      Run_Echelon_Newton(nbrit,p,s,true,true);
+      Run_Echelon_Newton(maxdeg,nbrit,p,s,true,true);
     else
       if nq = dim then
         put_line("LU Newton will be applied.");
-        Run_LU_Newton(nbrit,p,s,true,true);
+        Run_LU_Newton(maxdeg,nbrit,p,s,true,true);
       else
         put_line("QR Newton will be applied.");
-        Run_QR_Newton(nbrit,p,s,true,true);
+        Run_QR_Newton(maxdeg,nbrit,p,s,true,true);
       end if;
     end if;
   end Run_Newton;
@@ -94,7 +95,7 @@ procedure ts_sersol is
   --   s       a sequence of series to start Newton's method at.
 
     len : constant integer32 := s'last;
-    nbrit : integer32 := 0;
+    maxdeg,nbrit : integer32 := 0;
 
   begin
     new_line;
@@ -102,16 +103,17 @@ procedure ts_sersol is
     new_line;
     put("Give the number of steps in Newton's method : ");
     get(nbrit); new_line;
+    put("Give the maximal degree of the series : "); get(maxdeg); new_line;
     if echelon then
       put_line("Echelon Newton will be applied.");
-      Run_Echelon_Newton(nbrit,p,s,true,true);
+      Run_Echelon_Newton(maxdeg,nbrit,p,s,true,true);
     else
       if nq = dim then
         put_line("LU Newton will be applied.");
-        Run_LU_Newton(nbrit,p,s,true,true);
+        Run_LU_Newton(maxdeg,nbrit,p,s,true,true);
       else
         put_line("QR Newton will be applied.");
-        Run_QR_Newton(nbrit,p,s,true,true);
+        Run_QR_Newton(maxdeg,nbrit,p,s,true,true);
       end if;
     end if;
   end Run_Newton;
@@ -134,7 +136,7 @@ procedure ts_sersol is
   --   s       a sequence of series to start Newton's method at.
 
     len : constant integer32 := s'last;
-    nbrit : integer32 := 0;
+    maxdeg,nbrit : integer32 := 0;
 
   begin
     new_line;
@@ -142,16 +144,18 @@ procedure ts_sersol is
     new_line;
     put("Give the number of steps in Newton's method : ");
     get(nbrit); new_line;
+    put("Give the maximal degree of the series : ");
+    get(maxdeg); new_line;
     if echelon then
       put_line("Echelon Newton will be applied.");
-      Run_Echelon_Newton(nbrit,p,s,true,true);
+      Run_Echelon_Newton(maxdeg,nbrit,p,s,true,true);
     else
       if nq = dim then
         put_line("LU Newton will be applied.");
-        Run_LU_Newton(nbrit,p,s,true,true);
+        Run_LU_Newton(maxdeg,nbrit,p,s,true,true);
       else
         put_line("QR Newton will be applied.");
-        Run_QR_Newton(nbrit,p,s,true,true);
+        Run_QR_Newton(maxdeg,nbrit,p,s,true,true);
       end if;
     end if;
   end Run_Newton;

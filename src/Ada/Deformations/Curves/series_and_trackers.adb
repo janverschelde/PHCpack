@@ -229,7 +229,7 @@ package body Series_and_Trackers is
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
-      Series_and_Predictors.Newton_Prediction(nit,wrk,wrk_sol,srv,eva);
+      Series_and_Predictors.Newton_Prediction(nit,nit,wrk,wrk_sol,srv,eva);
       new_line;
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
       if step > 0.01
@@ -274,7 +274,7 @@ package body Series_and_Trackers is
   begin
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
-      Series_and_Predictors.Newton_Prediction(nit,wrk,wrk_sol,srv,eva);
+      Series_and_Predictors.Newton_Prediction(nit,nit,wrk,wrk_sol,srv,eva);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
       if step > 0.1
        then step := 0.1;
@@ -320,7 +320,7 @@ package body Series_and_Trackers is
   begin
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
-      Series_and_Predictors.Newton_Prediction(nit,wrk,wrk_sol,srv,eva);
+      Series_and_Predictors.Newton_Prediction(nit,nit,wrk,wrk_sol,srv,eva);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
       if step > 0.1
        then step := 0.1;
@@ -369,7 +369,7 @@ package body Series_and_Trackers is
       put(file,"Step "); put(file,k,1);
       put_line(file," in the path tracker :");
       Series_and_Predictors.Newton_Prediction
-        (file,nit,wrk,wrk_sol,srv,eva,verbose);
+        (file,nit,nit,wrk,wrk_sol,srv,eva,verbose);
       new_line(file);
       put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
@@ -426,7 +426,7 @@ package body Series_and_Trackers is
       put(file,"Step "); put(file,k,1);
       put_line(file," in the path tracker :");
       Series_and_Predictors.Newton_Prediction
-        (file,nit,wrk,wrk_sol,srv,eva,verbose);
+        (file,nit,nit,wrk,wrk_sol,srv,eva,verbose);
       new_line(file);
       put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
@@ -485,7 +485,7 @@ package body Series_and_Trackers is
       put(file,"Step "); put(file,k,1);
       put_line(file," in the path tracker :");
       Series_and_Predictors.Newton_Prediction
-        (file,nit,wrk,wrk_sol,srv,eva,verbose);
+        (file,nit,nit,wrk,wrk_sol,srv,eva,verbose);
       new_line(file);
       put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size

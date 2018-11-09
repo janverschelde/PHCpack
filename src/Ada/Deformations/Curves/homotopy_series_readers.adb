@@ -254,10 +254,11 @@ package body Homotopy_Series_Readers is
         := Standard_Homotopy.Homotopy_System;
     sys : Standard_CSeries_Poly_Systems.Poly_Sys(1..nbequ)
         := Series_and_Homotopies.Create(hom,idx);
+    maxdeg : constant integer32 := integer32(nbterms);
     nit : constant integer32 := integer32(nbiters);
 
   begin
-    Series_and_Predictors.Newton_Prediction(nit,sys,sol,srv,eva);
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,sys,sol,srv,eva);
    -- Standard_Complex_Poly_Systems.Clear(hom); -- sharing, do not clear!
     Standard_CSeries_Poly_Systems.Clear(sys);
   end Standard_Series_Newton;
@@ -279,10 +280,11 @@ package body Homotopy_Series_Readers is
         := DoblDobl_Homotopy.Homotopy_System;
     sys : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nbequ)
         := Series_and_Homotopies.Create(hom,idx);
+    maxdeg : constant integer32 := integer32(nbterms);
     nit : constant integer32 := integer32(nbiters);
 
   begin
-    Series_and_Predictors.Newton_Prediction(nit,sys,sol,srv,eva);
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,sys,sol,srv,eva);
    -- DoblDobl_Complex_Poly_Systems.Clear(hom); -- sharing, do not clear!
     DoblDobl_CSeries_Poly_Systems.Clear(sys);
   end DoblDobl_Series_Newton;
@@ -304,10 +306,11 @@ package body Homotopy_Series_Readers is
         := QuadDobl_Homotopy.Homotopy_System;
     sys : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nbequ)
         := Series_and_Homotopies.Create(hom,idx);
+    maxdeg : constant integer32 := integer32(nbterms);
     nit : constant integer32 := integer32(nbiters);
 
   begin
-    Series_and_Predictors.Newton_Prediction(nit,sys,sol,srv,eva);
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,sys,sol,srv,eva);
    -- QuadDobl_Complex_Poly_Systems.Clear(hom); -- sharing, do not clear!
     QuadDobl_CSeries_Poly_Systems.Clear(sys);
   end QuadDobl_Series_Newton;

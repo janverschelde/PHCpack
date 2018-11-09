@@ -24,16 +24,16 @@ with QuadDobl_Newton_Matrix_Series; -- with QuadDobl_Newton_Series;
 package body Power_Series_Methods is
 
   procedure Run_LU_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                s : in out Standard_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
   begin
-    Run_LU_Newton(standard_output,nbrit,p,s,info,verbose);
+    Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,info,verbose);
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                s : in out Standard_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
@@ -46,9 +46,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      LU_Newton_Steps(p,order,nbrit,s,info);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,info);
     else
-      LU_Newton_Steps(file,p,order,nbrit,s,info);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -64,16 +64,16 @@ package body Power_Series_Methods is
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
   begin
-    Run_LU_Newton(standard_output,nbrit,p,s,info,verbose);
+    Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,info,verbose);
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
@@ -86,9 +86,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      LU_Newton_Steps(p,order,nbrit,s,info);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,info);
     else
-      LU_Newton_Steps(file,p,order,nbrit,s,info);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -104,16 +104,16 @@ package body Power_Series_Methods is
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
   begin
-    Run_LU_Newton(standard_output,nbrit,p,s,info,verbose);
+    Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,info,verbose);
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is
@@ -126,9 +126,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      LU_Newton_Steps(p,order,nbrit,s,info);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,info);
     else
-      LU_Newton_Steps(file,p,order,nbrit,s,info);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -144,16 +144,16 @@ package body Power_Series_Methods is
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                s : in out Standard_Complex_Series_Vectors.Vector;
                rcond : out double_float; verbose : in boolean := false ) is
   begin
-    Run_LU_Newton(standard_output,nbrit,p,s,rcond,verbose);
+    Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose);
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                s : in out Standard_Complex_Series_Vectors.Vector;
                rcond : out double_float; verbose : in boolean := false ) is
@@ -166,9 +166,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      LU_Newton_Steps(p,order,nbrit,s,rcond);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond);
     else
-      LU_Newton_Steps(file,p,order,nbrit,s,rcond);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,rcond);
       put(file,"rcond : "); put(file,rcond,3); new_line(file);
       if 1.0 + rcond /= 1.0 then
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -183,16 +183,16 @@ package body Power_Series_Methods is
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                rcond : out double_double; verbose : in boolean := false ) is
   begin
-    Run_LU_Newton(standard_output,nbrit,p,s,rcond,verbose);
+    Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose);
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                rcond : out double_double; verbose : in boolean := false ) is
@@ -206,9 +206,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      LU_Newton_Steps(p,order,nbrit,s,rcond);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond);
     else
-      LU_Newton_Steps(file,p,order,nbrit,s,rcond);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,rcond);
       put(file,"rcond : "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -223,16 +223,16 @@ package body Power_Series_Methods is
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                rcond : out quad_double; verbose : in boolean := false ) is
   begin
-    Run_LU_Newton(standard_output,nbrit,p,s,rcond,verbose);
+    Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose);
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                rcond : out quad_double; verbose : in boolean := false ) is
@@ -246,9 +246,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      LU_Newton_Steps(p,order,nbrit,s,rcond);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond);
     else
-      LU_Newton_Steps(file,p,order,nbrit,s,rcond);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,rcond);
       put(file,"rcond : "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -263,16 +263,16 @@ package body Power_Series_Methods is
   end Run_LU_Newton;
 
   procedure Run_QR_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                s : in out Standard_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
   begin
-    Run_QR_Newton(standard_output,nbrit,p,s,verbose);
+    Run_QR_Newton(standard_output,maxdeg,nbrit,p,s,verbose);
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                s : in out Standard_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
@@ -286,9 +286,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      QR_Newton_Steps(p,order,nbrit,s,info);
+      QR_Newton_Steps(p,order,maxdeg,nbrit,s,info);
     else
-      QR_Newton_Steps(file,p,order,nbrit,s,info);
+      QR_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -304,16 +304,16 @@ package body Power_Series_Methods is
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
   begin
-    Run_QR_Newton(standard_output,nbrit,p,s,verbose);
+    Run_QR_Newton(standard_output,maxdeg,nbrit,p,s,verbose);
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
@@ -327,9 +327,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      QR_Newton_Steps(p,order,nbrit,s,info);
+      QR_Newton_Steps(p,order,maxdeg,nbrit,s,info);
     else
-      QR_Newton_Steps(file,p,order,nbrit,s,info);
+      QR_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -345,16 +345,16 @@ package body Power_Series_Methods is
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
   begin
-    Run_QR_Newton(standard_output,nbrit,p,s,verbose);
+    Run_QR_Newton(standard_output,maxdeg,nbrit,p,s,verbose);
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                verbose : in boolean := false ) is
@@ -368,9 +368,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      QR_Newton_Steps(p,order,nbrit,s,info);
+      QR_Newton_Steps(p,order,maxdeg,nbrit,s,info);
     else
-      QR_Newton_Steps(file,p,order,nbrit,s,info);
+      QR_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -386,16 +386,16 @@ package body Power_Series_Methods is
   end Run_QR_Newton;
 
   procedure Run_SVD_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                s : in out Standard_Complex_Series_Vectors.Vector;
                rcond : out double_float; verbose : in boolean := false ) is
   begin
-    Run_SVD_Newton(standard_output,nbrit,p,s,rcond,verbose);
+    Run_SVD_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose);
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                s : in out Standard_Complex_Series_Vectors.Vector;
                rcond : out double_float; verbose : in boolean := false ) is
@@ -409,9 +409,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      SVD_Newton_Steps(p,order,nbrit,s,info,rcond);
+      SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond);
     else
-      SVD_Newton_Steps(file,p,order,nbrit,s,info,rcond);
+      SVD_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,rcond);
       put(file,"rcond = "); put(file,rcond,3); new_line(file);
       if 1.0 + rcond /= 1.0 then
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -426,16 +426,16 @@ package body Power_Series_Methods is
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                rcond : out double_double; verbose : in boolean := false ) is
   begin
-    Run_SVD_Newton(standard_output,nbrit,p,s,rcond,verbose);
+    Run_SVD_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose);
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                rcond : out double_double; verbose : in boolean := false ) is
@@ -450,9 +450,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      SVD_Newton_Steps(p,order,nbrit,s,info,rcond);
+      SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond);
     else
-      SVD_Newton_Steps(file,p,order,nbrit,s,info,rcond);
+      SVD_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,rcond);
       put(file,"rcond = "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then 
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -467,16 +467,16 @@ package body Power_Series_Methods is
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-             ( nbrit : in integer32;
+             ( maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                rcond : out quad_double; verbose : in boolean := false ) is
   begin
-    Run_SVD_Newton(standard_output,nbrit,p,s,rcond,verbose);
+    Run_SVD_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose);
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-             ( file : in file_type; nbrit : in integer32;
+             ( file : in file_type; maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                rcond : out quad_double; verbose : in boolean := false ) is
@@ -491,9 +491,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      SVD_Newton_Steps(p,order,nbrit,s,info,rcond);
+      SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond);
     else
-      SVD_Newton_Steps(file,p,order,nbrit,s,info,rcond);
+      SVD_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,rcond);
       put(file,"rcond = "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -508,17 +508,17 @@ package body Power_Series_Methods is
   end Run_SVD_Newton;
 
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Standard_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false ) is
   begin
-    Run_Echelon_Newton(standard_output,nbrit,p,s,det,verbose);
+    Run_Echelon_Newton(standard_output,maxdeg,nbrit,p,s,det,verbose);
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 det : out Standard_Complex_Numbers.Complex_Number;
@@ -532,9 +532,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      Echelon_Newton_Steps(p,order,nbrit,s,det);
+      Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det);
     else
-      Echelon_Newton_Steps(file,p,order,nbrit,s,det);
+      Echelon_Newton_Steps(file,p,order,maxdeg,nbrit,s,det);
       put(file,"det : "); put(file,det); new_line(file);
       Complex_Series_and_Polynomials.Filter(s,tol);
       put_line(file,"The updated power series solution :");
@@ -551,17 +551,17 @@ package body Power_Series_Methods is
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 det : out DoblDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false ) is
   begin
-    Run_Echelon_Newton(standard_output,nbrit,p,s,det,verbose);
+    Run_Echelon_Newton(standard_output,maxdeg,nbrit,p,s,det,verbose);
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out DoblDobl_Complex_Series_Vectors.Vector;
                 det : out DoblDobl_Complex_Numbers.Complex_Number;
@@ -575,9 +575,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      Echelon_Newton_Steps(p,order,nbrit,s,det);
+      Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det);
     else
-      Echelon_Newton_Steps(file,p,order,nbrit,s,det);
+      Echelon_Newton_Steps(file,p,order,maxdeg,nbrit,s,det);
       put(file,"det : "); put(file,det); new_line(file);
       Complex_Series_and_Polynomials.Filter(s,tol);
       put_line(file,"The updated power series solution :");
@@ -590,17 +590,17 @@ package body Power_Series_Methods is
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out QuadDobl_Complex_Numbers.Complex_Number;
                 verbose : in boolean := false ) is
   begin
-    Run_Echelon_Newton(standard_output,nbrit,p,s,det,verbose);
+    Run_Echelon_Newton(standard_output,maxdeg,nbrit,p,s,det,verbose);
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out QuadDobl_Complex_Numbers.Complex_Number;
@@ -614,9 +614,9 @@ package body Power_Series_Methods is
 
   begin
     if not verbose then
-      Echelon_Newton_Steps(p,order,nbrit,s,det);
+      Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det);
     else
-      Echelon_Newton_Steps(file,p,order,nbrit,s,det);
+      Echelon_Newton_Steps(file,p,order,maxdeg,nbrit,s,det);
       put(file,"det : "); put(file,det); new_line(file);
       Complex_Series_and_Polynomials.Filter(s,tol);
       put_line(file,"The updated power series solution :");
@@ -629,7 +629,7 @@ package body Power_Series_Methods is
   end Run_Echelon_Newton;
 
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -652,7 +652,7 @@ package body Power_Series_Methods is
           Standard_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_LU_Newton(nbrit,p,v(i).all,info,verbose);
+      Run_LU_Newton(maxdeg,nbrit,p,v(i).all,info,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -663,7 +663,7 @@ package body Power_Series_Methods is
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -686,7 +686,7 @@ package body Power_Series_Methods is
           DoblDobl_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_LU_Newton(nbrit,p,v(i).all,info,verbose);
+      Run_LU_Newton(maxdeg,nbrit,p,v(i).all,info,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -697,7 +697,7 @@ package body Power_Series_Methods is
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -720,7 +720,7 @@ package body Power_Series_Methods is
           QuadDobl_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_LU_Newton(nbrit,p,v(i).all,info,verbose);
+      Run_LU_Newton(maxdeg,nbrit,p,v(i).all,info,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -731,7 +731,7 @@ package body Power_Series_Methods is
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -753,12 +753,12 @@ package body Power_Series_Methods is
           Standard_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_LU_Newton(file,nbrit,p,v(i).all,info,verbose);
+      Run_LU_Newton(file,maxdeg,nbrit,p,v(i).all,info,verbose);
     end loop;
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -780,12 +780,12 @@ package body Power_Series_Methods is
           DoblDobl_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_LU_Newton(file,nbrit,p,v(i).all,info,verbose);
+      Run_LU_Newton(file,maxdeg,nbrit,p,v(i).all,info,verbose);
     end loop;
   end Run_LU_Newton;
 
   procedure Run_LU_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -807,12 +807,12 @@ package body Power_Series_Methods is
           QuadDobl_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_LU_Newton(file,nbrit,p,v(i).all,info,verbose);
+      Run_LU_Newton(file,maxdeg,nbrit,p,v(i).all,info,verbose);
     end loop;
   end Run_LU_Newton;
 
   procedure Run_QR_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -834,7 +834,7 @@ package body Power_Series_Methods is
           Standard_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_QR_Newton(nbrit,p,v(i).all,verbose);
+      Run_QR_Newton(maxdeg,nbrit,p,v(i).all,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -845,7 +845,7 @@ package body Power_Series_Methods is
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -867,7 +867,7 @@ package body Power_Series_Methods is
           DoblDobl_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_QR_Newton(nbrit,p,v(i).all,verbose);
+      Run_QR_Newton(maxdeg,nbrit,p,v(i).all,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -878,7 +878,7 @@ package body Power_Series_Methods is
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -900,7 +900,7 @@ package body Power_Series_Methods is
           QuadDobl_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_QR_Newton(nbrit,p,v(i).all,verbose);
+      Run_QR_Newton(maxdeg,nbrit,p,v(i).all,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -911,7 +911,7 @@ package body Power_Series_Methods is
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -930,12 +930,12 @@ package body Power_Series_Methods is
           Standard_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_QR_Newton(file,nbrit,p,v(i).all,verbose);
+      Run_QR_Newton(file,maxdeg,nbrit,p,v(i).all,verbose);
     end loop;
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -954,12 +954,12 @@ package body Power_Series_Methods is
           DoblDobl_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_QR_Newton(file,nbrit,p,v(i).all,verbose);
+      Run_QR_Newton(file,maxdeg,nbrit,p,v(i).all,verbose);
     end loop;
   end Run_QR_Newton;
 
   procedure Run_QR_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -978,12 +978,12 @@ package body Power_Series_Methods is
           QuadDobl_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_QR_Newton(file,nbrit,p,v(i).all,verbose);
+      Run_QR_Newton(file,maxdeg,nbrit,p,v(i).all,verbose);
     end loop;
   end Run_QR_Newton;
 
   procedure Run_SVD_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -1006,7 +1006,7 @@ package body Power_Series_Methods is
           Standard_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_SVD_Newton(nbrit,p,v(i).all,rcond,verbose);
+      Run_SVD_Newton(maxdeg,nbrit,p,v(i).all,rcond,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -1017,7 +1017,7 @@ package body Power_Series_Methods is
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -1040,7 +1040,7 @@ package body Power_Series_Methods is
           DoblDobl_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_SVD_Newton(nbrit,p,v(i).all,rcond,verbose);
+      Run_SVD_Newton(maxdeg,nbrit,p,v(i).all,rcond,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -1051,7 +1051,7 @@ package body Power_Series_Methods is
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -1074,7 +1074,7 @@ package body Power_Series_Methods is
           QuadDobl_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_SVD_Newton(nbrit,p,v(i).all,rcond,verbose);
+      Run_SVD_Newton(maxdeg,nbrit,p,v(i).all,rcond,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -1085,7 +1085,7 @@ package body Power_Series_Methods is
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -1107,12 +1107,12 @@ package body Power_Series_Methods is
           Standard_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_SVD_Newton(file,nbrit,p,v(i).all,rcond,verbose);
+      Run_SVD_Newton(file,maxdeg,nbrit,p,v(i).all,rcond,verbose);
     end loop;
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -1134,12 +1134,12 @@ package body Power_Series_Methods is
           DoblDobl_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_SVD_Newton(file,nbrit,p,v(i).all,rcond,verbose);
+      Run_SVD_Newton(file,maxdeg,nbrit,p,v(i).all,rcond,verbose);
     end loop;
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -1161,12 +1161,12 @@ package body Power_Series_Methods is
           QuadDobl_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_SVD_Newton(file,nbrit,p,v(i).all,rcond,verbose);
+      Run_SVD_Newton(file,maxdeg,nbrit,p,v(i).all,rcond,verbose);
     end loop;
   end Run_SVD_Newton;
 
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -1189,7 +1189,7 @@ package body Power_Series_Methods is
           Standard_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_Echelon_Newton(nbrit,p,v(i).all,det,verbose);
+      Run_Echelon_Newton(maxdeg,nbrit,p,v(i).all,det,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -1200,7 +1200,7 @@ package body Power_Series_Methods is
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -1223,7 +1223,7 @@ package body Power_Series_Methods is
           DoblDobl_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_Echelon_Newton(nbrit,p,v(i).all,det,verbose);
+      Run_Echelon_Newton(maxdeg,nbrit,p,v(i).all,det,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -1234,7 +1234,7 @@ package body Power_Series_Methods is
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
-              ( nbrit : in integer32;
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -1257,7 +1257,7 @@ package body Power_Series_Methods is
           QuadDobl_Complex_Solutions_io.put_vector(sol);
         end;
       end if;
-      Run_Echelon_Newton(nbrit,p,v(i).all,det,verbose);
+      Run_Echelon_Newton(maxdeg,nbrit,p,v(i).all,det,verbose);
       if verbose then
         if pause then
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -1268,7 +1268,7 @@ package body Power_Series_Methods is
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 v : in Standard_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -1290,12 +1290,12 @@ package body Power_Series_Methods is
           Standard_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_Echelon_Newton(file,nbrit,p,v(i).all,det,verbose);
+      Run_Echelon_Newton(file,maxdeg,nbrit,p,v(i).all,det,verbose);
     end loop;
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -1317,12 +1317,12 @@ package body Power_Series_Methods is
           DoblDobl_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_Echelon_Newton(file,nbrit,p,v(i).all,det,verbose);
+      Run_Echelon_Newton(file,maxdeg,nbrit,p,v(i).all,det,verbose);
     end loop;
   end Run_Echelon_Newton;
 
   procedure Run_Echelon_Newton
-              ( file : in file_type; nbrit : in integer32;
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false ) is
@@ -1344,7 +1344,7 @@ package body Power_Series_Methods is
           QuadDobl_Complex_Solutions_io.put_vector(file,sol);
         end;
       end if;
-      Run_Echelon_Newton(file,nbrit,p,v(i).all,det,verbose);
+      Run_Echelon_Newton(file,maxdeg,nbrit,p,v(i).all,det,verbose);
     end loop;
   end Run_Echelon_Newton;
 

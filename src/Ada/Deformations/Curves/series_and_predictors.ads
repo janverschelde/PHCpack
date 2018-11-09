@@ -22,19 +22,19 @@ package Series_and_Predictors is
 --   Evaluates power series to predict a solution.
 
   procedure Newton_Prediction
-              ( nit : in integer32;
+              ( maxdeg,nit : in integer32;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Complex_Series_Vectors.Vector;
                 eva : out Standard_Complex_Series_Vectors.Vector );
   procedure Newton_Prediction
-              ( nit : in integer32;
+              ( maxdeg,nit : in integer32;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;
                 eva : out DoblDobl_Complex_Series_Vectors.Vector );
   procedure Newton_Prediction
-              ( nit : in integer32;
+              ( maxdeg,nit : in integer32;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Complex_Series_Vectors.Vector;
@@ -48,6 +48,7 @@ package Series_and_Predictors is
   --   The versions are silent, do not write extra output.
 
   -- ON ENTRY :
+  --   maxdeg   maximal degree of the series;
   --   nit      number of iterations with Newton's method;
   --   hom      a homotopy with coefficients as power series,
   --            where the series parameter is the continuation parameter;
@@ -62,21 +63,21 @@ package Series_and_Predictors is
   --            eva'range = hom'range.
 
   procedure Newton_Prediction
-              ( file : in file_type; nit : in integer32;
+              ( file : in file_type; maxdeg,nit : in integer32;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Complex_Series_Vectors.Vector;
                 eva : out Standard_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Newton_Prediction
-              ( file : in file_type; nit : in integer32;
+              ( file : in file_type; maxdeg,nit : in integer32;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;
                 eva : out DoblDobl_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
   procedure Newton_Prediction
-              ( file : in file_type; nit : in integer32;
+              ( file : in file_type; maxdeg,nit : in integer32;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Complex_Series_Vectors.Vector;
@@ -91,6 +92,7 @@ package Series_and_Predictors is
 
   -- ON ENTRY :
   --   file     to write extra diagnostic output to;
+  --   maxdeg   maximal degree of the series;
   --   nit      number of iterations with Newton's method;
   --   hom      a homotopy with coefficients as power series,
   --            where the series parameter is the continuation parameter;
