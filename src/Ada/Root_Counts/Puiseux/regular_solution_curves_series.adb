@@ -1050,7 +1050,7 @@ package body Regular_Solution_Curves_Series is
   function Series ( file : file_type;
                     p : Standard_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : Standard_Complex_Vectors.Vector;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return Standard_Complex_Series_Vectors.Vector is
 
     use Standard_Newton_Matrix_Series;
@@ -1063,7 +1063,7 @@ package body Regular_Solution_Curves_Series is
     for i in res'range loop
       res(i) := Standard_Complex_Series.Create(xt0(i));
     end loop;
-    LU_Newton_Steps(file,p,deg,nit,res,info);
+    LU_Newton_Steps(file,p,deg,maxdeg,nit,res,info);
     put_line(file,"The solution series : ");
     Complex_Series_and_Polynomials_io.put(file,res);
     return res;
@@ -1071,7 +1071,7 @@ package body Regular_Solution_Curves_Series is
 
   function Series ( p : Standard_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : Standard_Complex_Vectors.Vector;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return Standard_Complex_Series_Vectors.Vector is
 
     use Standard_Newton_Matrix_Series;
@@ -1085,11 +1085,11 @@ package body Regular_Solution_Curves_Series is
       res(i) := Standard_Complex_Series.Create(xt0(i));
     end loop;
     if report then
-      LU_Newton_Steps(standard_output,p,deg,nit,res,info);
+      LU_Newton_Steps(standard_output,p,deg,maxdeg,nit,res,info);
       put_line("The solution series : ");
       Complex_Series_and_Polynomials_io.put(res);
     else
-      LU_Newton_Steps(p,deg,nit,res,info);
+      LU_Newton_Steps(p,deg,maxdeg,nit,res,info);
     end if;
     return res;
   end Series;
@@ -1097,7 +1097,7 @@ package body Regular_Solution_Curves_Series is
   function Series ( file : file_type;
                     p : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : DoblDobl_Complex_Vectors.Vector;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return DoblDobl_Complex_Series_Vectors.Vector is
 
     use DoblDobl_Newton_Matrix_Series;
@@ -1110,7 +1110,7 @@ package body Regular_Solution_Curves_Series is
     for i in res'range loop
       res(i) := DoblDobl_Complex_Series.Create(xt0(i));
     end loop;
-    LU_Newton_Steps(file,p,deg,nit,res,info);
+    LU_Newton_Steps(file,p,deg,maxdeg,nit,res,info);
     put_line(file,"The solution series : ");
     Complex_Series_and_Polynomials_io.put(file,res);
     return res;
@@ -1118,7 +1118,7 @@ package body Regular_Solution_Curves_Series is
 
   function Series ( p : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : DoblDobl_Complex_Vectors.Vector;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return DoblDobl_Complex_Series_Vectors.Vector is
 
     use DoblDobl_Newton_Matrix_Series;
@@ -1132,11 +1132,11 @@ package body Regular_Solution_Curves_Series is
       res(i) := DoblDobl_Complex_Series.Create(xt0(i));
     end loop;
     if report then
-      LU_Newton_Steps(standard_output,p,deg,nit,res,info);
+      LU_Newton_Steps(standard_output,p,deg,maxdeg,nit,res,info);
       put_line("The solution series : ");
       Complex_Series_and_Polynomials_io.put(res);
     else
-      LU_Newton_Steps(p,deg,nit,res,info);
+      LU_Newton_Steps(p,deg,maxdeg,nit,res,info);
     end if;
     return res;
   end Series;
@@ -1144,7 +1144,7 @@ package body Regular_Solution_Curves_Series is
   function Series ( file : file_type;
                     p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : QuadDobl_Complex_Vectors.Vector;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return QuadDobl_Complex_Series_Vectors.Vector is
 
     use QuadDobl_Newton_Matrix_Series;
@@ -1157,7 +1157,7 @@ package body Regular_Solution_Curves_Series is
     for i in res'range loop
       res(i) := QuadDobl_Complex_Series.Create(xt0(i));
     end loop;
-    LU_Newton_Steps(file,p,deg,nit,res,info);
+    LU_Newton_Steps(file,p,deg,maxdeg,nit,res,info);
     put_line(file,"The solution series : ");
     Complex_Series_and_Polynomials_io.put(file,res);
     return res;
@@ -1165,7 +1165,7 @@ package body Regular_Solution_Curves_Series is
 
   function Series ( p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : QuadDobl_Complex_Vectors.Vector;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return QuadDobl_Complex_Series_Vectors.Vector is
 
     use QuadDobl_Newton_Matrix_Series;
@@ -1179,11 +1179,11 @@ package body Regular_Solution_Curves_Series is
       res(i) := QuadDobl_Complex_Series.Create(xt0(i));
     end loop;
     if report then
-      LU_Newton_Steps(standard_output,p,deg,nit,res,info);
+      LU_Newton_Steps(standard_output,p,deg,maxdeg,nit,res,info);
       put_line("The solution series : ");
       Complex_Series_and_Polynomials_io.put(res);
     else
-      LU_Newton_Steps(p,deg,nit,res,info);
+      LU_Newton_Steps(p,deg,maxdeg,nit,res,info);
     end if;
     return res;
   end Series;
@@ -1191,7 +1191,7 @@ package body Regular_Solution_Curves_Series is
   function Series ( file : file_type;
                     p : Standard_Complex_Poly_Systems.Poly_Sys;
                     sols : Standard_Complex_Solutions.Solution_List;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return Standard_Complex_Series_VecVecs.VecVec is
 
     use Standard_Complex_Solutions;
@@ -1209,7 +1209,7 @@ package body Regular_Solution_Curves_Series is
       declare
         sersol : Standard_Complex_Series_Vectors.Vector(p'range);
       begin
-        sersol := Series(file,s,ls.v,nit);
+        sersol := Series(file,s,ls.v,maxdeg,nit);
         res(k) := new Standard_Complex_Series_Vectors.Vector'(sersol);
       end;
       tmp := Tail_Of(tmp);
@@ -1219,7 +1219,7 @@ package body Regular_Solution_Curves_Series is
 
   function Series ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                     sols : Standard_Complex_Solutions.Solution_List;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return Standard_Complex_Series_VecVecs.VecVec is
 
     use Standard_Complex_Solutions;
@@ -1237,7 +1237,7 @@ package body Regular_Solution_Curves_Series is
       declare
         sersol : Standard_Complex_Series_Vectors.Vector(p'range);
       begin
-        sersol := Series(s,ls.v,nit,report);
+        sersol := Series(s,ls.v,maxdeg,nit,report);
         res(k) := new Standard_Complex_Series_Vectors.Vector'(sersol);
       end;
       tmp := Tail_Of(tmp);
@@ -1248,7 +1248,7 @@ package body Regular_Solution_Curves_Series is
   function Series ( file : file_type;
                     p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : DoblDobl_Complex_Solutions.Solution_List;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return DoblDobl_Complex_Series_VecVecs.VecVec is
 
     use DoblDobl_Complex_Solutions;
@@ -1266,7 +1266,7 @@ package body Regular_Solution_Curves_Series is
       declare
         sersol : DoblDobl_Complex_Series_Vectors.Vector(p'range);
       begin
-        sersol := Series(file,s,ls.v,nit);
+        sersol := Series(file,s,ls.v,maxdeg,nit);
         res(k) := new DoblDobl_Complex_Series_Vectors.Vector'(sersol);
       end;
       tmp := Tail_Of(tmp);
@@ -1276,7 +1276,7 @@ package body Regular_Solution_Curves_Series is
 
   function Series ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : DoblDobl_Complex_Solutions.Solution_List;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return DoblDobl_Complex_Series_VecVecs.VecVec is
 
     use DoblDobl_Complex_Solutions;
@@ -1294,7 +1294,7 @@ package body Regular_Solution_Curves_Series is
       declare
         sersol : DoblDobl_Complex_Series_Vectors.Vector(p'range);
       begin
-        sersol := Series(s,ls.v,nit,report);
+        sersol := Series(s,ls.v,maxdeg,nit,report);
         res(k) := new DoblDobl_Complex_Series_Vectors.Vector'(sersol);
       end;
       tmp := Tail_Of(tmp);
@@ -1305,7 +1305,7 @@ package body Regular_Solution_Curves_Series is
   function Series ( file : file_type;
                     p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : QuadDobl_Complex_Solutions.Solution_List;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return QuadDobl_Complex_Series_VecVecs.VecVec is
 
     use QuadDobl_Complex_Solutions;
@@ -1323,7 +1323,7 @@ package body Regular_Solution_Curves_Series is
       declare
         sersol : QuadDobl_Complex_Series_Vectors.Vector(p'range);
       begin
-        sersol := Series(file,s,ls.v,nit);
+        sersol := Series(file,s,ls.v,maxdeg,nit);
         res(k) := new QuadDobl_Complex_Series_Vectors.Vector'(sersol);
       end;
       tmp := Tail_Of(tmp);
@@ -1333,7 +1333,7 @@ package body Regular_Solution_Curves_Series is
 
   function Series ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : QuadDobl_Complex_Solutions.Solution_List;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return QuadDobl_Complex_Series_VecVecs.VecVec is
 
     use QuadDobl_Complex_Solutions;
@@ -1351,7 +1351,7 @@ package body Regular_Solution_Curves_Series is
       declare
         sersol : QuadDobl_Complex_Series_Vectors.Vector(p'range);
       begin
-        sersol := Series(s,ls.v,nit,report);
+        sersol := Series(s,ls.v,maxdeg,nit,report);
         res(k) := new QuadDobl_Complex_Series_Vectors.Vector'(sersol);
       end;
       tmp := Tail_Of(tmp);
@@ -1392,7 +1392,7 @@ package body Regular_Solution_Curves_Series is
   function Series ( file : in file_type;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     mcc : in Mixed_Subdivision; mv : in natural32;
-                    nit : in integer32 ) 
+                    maxdeg,nit : in integer32 ) 
                   return Standard_Complex_Series_VecVecs.VecVec is
 
     res : Standard_Complex_Series_VecVecs.VecVec(1..integer32(mv));
@@ -1414,7 +1414,7 @@ package body Regular_Solution_Curves_Series is
               := integer32(Standard_Complex_Solutions.Length_Of(qsols));
           srs : Standard_Complex_Series_VecVecs.VecVec(1..len);
         begin
-          srs := Series(file,q,qsols,nit);
+          srs := Series(file,q,qsols,maxdeg,nit);
           Concat(res,idx,srs);
         end;
       end;
@@ -1425,7 +1425,7 @@ package body Regular_Solution_Curves_Series is
 
   function Series ( p : Standard_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return Standard_Complex_Series_VecVecs.VecVec is
 
     res : Standard_Complex_Series_VecVecs.VecVec(1..integer32(mv));
@@ -1449,7 +1449,7 @@ package body Regular_Solution_Curves_Series is
               := integer32(Standard_Complex_Solutions.Length_Of(qsols));
           srs : Standard_Complex_Series_VecVecs.VecVec(1..len);
         begin
-          srs := Series(q,qsols,nit,report);
+          srs := Series(q,qsols,maxdeg,nit,report);
           Concat(res,idx,srs);
         end;
       end;
@@ -1461,7 +1461,7 @@ package body Regular_Solution_Curves_Series is
   function Series ( file : in file_type;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : in Mixed_Subdivision; mv : in natural32;
-                    nit : in integer32 )
+                    maxdeg,nit : in integer32 )
                   return DoblDobl_Complex_Series_VecVecs.VecVec is
 
     res : DoblDobl_Complex_Series_VecVecs.VecVec(1..integer32(mv));
@@ -1483,7 +1483,7 @@ package body Regular_Solution_Curves_Series is
               := integer32(DoblDobl_Complex_Solutions.Length_Of(qsols));
           srs : DoblDobl_Complex_Series_VecVecs.VecVec(1..len);
         begin
-          srs := Series(file,q,qsols,nit);
+          srs := Series(file,q,qsols,maxdeg,nit);
           Concat(res,idx,srs);
         end;
       end;
@@ -1494,7 +1494,7 @@ package body Regular_Solution_Curves_Series is
 
   function Series ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return DoblDobl_Complex_Series_VecVecs.VecVec is
 
     res : DoblDobl_Complex_Series_VecVecs.VecVec(1..integer32(mv));
@@ -1518,7 +1518,7 @@ package body Regular_Solution_Curves_Series is
               := integer32(DoblDobl_Complex_Solutions.Length_Of(qsols));
           srs : DoblDobl_Complex_Series_VecVecs.VecVec(1..len);
         begin
-          srs := Series(q,qsols,nit,report);
+          srs := Series(q,qsols,maxdeg,nit,report);
           Concat(res,idx,srs);
         end;
       end;
@@ -1530,7 +1530,7 @@ package body Regular_Solution_Curves_Series is
   function Series ( file : file_type;
                     p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return QuadDobl_Complex_Series_VecVecs.VecVec is
 
     res : QuadDobl_Complex_Series_VecVecs.VecVec(1..integer32(mv));
@@ -1552,7 +1552,7 @@ package body Regular_Solution_Curves_Series is
               := integer32(QuadDobl_Complex_Solutions.Length_Of(qsols));
           srs : QuadDobl_Complex_Series_VecVecs.VecVec(1..len);
         begin
-          srs := Series(file,q,qsols,nit);
+          srs := Series(file,q,qsols,maxdeg,nit);
           Concat(res,idx,srs);
         end;
       end;
@@ -1563,7 +1563,7 @@ package body Regular_Solution_Curves_Series is
 
   function Series ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
-                    nit : integer32; report : boolean ) 
+                    maxdeg,nit : integer32; report : boolean ) 
                   return QuadDobl_Complex_Series_VecVecs.VecVec is
 
     res : QuadDobl_Complex_Series_VecVecs.VecVec(1..integer32(mv));
@@ -1587,7 +1587,7 @@ package body Regular_Solution_Curves_Series is
               := integer32(QuadDobl_Complex_Solutions.Length_Of(qsols));
           srs : QuadDobl_Complex_Series_VecVecs.VecVec(1..len);
         begin
-          srs := Series(q,qsols,nit,report);
+          srs := Series(q,qsols,maxdeg,nit,report);
           Concat(res,idx,srs);
         end;
       end;

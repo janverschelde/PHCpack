@@ -418,17 +418,17 @@ package Regular_Solution_Curves_Series is
   function Series ( file : file_type;
                     p : Standard_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : Standard_Complex_Vectors.Vector;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return Standard_Complex_Series_Vectors.Vector;
   function Series ( file : file_type;
                     p : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : DoblDobl_Complex_Vectors.Vector;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return DoblDobl_Complex_Series_Vectors.Vector;
   function Series ( file : file_type;
                     p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : QuadDobl_Complex_Vectors.Vector;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return QuadDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
@@ -440,15 +440,15 @@ package Regular_Solution_Curves_Series is
 
   function Series ( p : Standard_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : Standard_Complex_Vectors.Vector;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return Standard_Complex_Series_Vectors.Vector;
   function Series ( p : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : DoblDobl_Complex_Vectors.Vector;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return DoblDobl_Complex_Series_Vectors.Vector;
   function Series ( p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                     xt0 : QuadDobl_Complex_Vectors.Vector;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return QuadDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
@@ -461,17 +461,17 @@ package Regular_Solution_Curves_Series is
   function Series ( file : file_type;
                     p : Standard_Complex_Poly_Systems.Poly_Sys;
                     sols : Standard_Complex_Solutions.Solution_List;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return Standard_Complex_Series_VecVecs.VecVec;
   function Series ( file : file_type;
                     p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : DoblDobl_Complex_Solutions.Solution_List;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return DoblDobl_Complex_Series_VecVecs.VecVec;
   function Series ( file : file_type;
                     p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : QuadDobl_Complex_Solutions.Solution_List;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return QuadDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
@@ -482,6 +482,7 @@ package Regular_Solution_Curves_Series is
   --   file     to write output to;
   --   p        system with solutions for t = 0;
   --   sols     solutions of p for t = 0;
+  --   maxdeg   the maximal degree of the series;
   --   nit      number of iterations of Newton's method.
 
   -- ON RETURN :
@@ -489,15 +490,15 @@ package Regular_Solution_Curves_Series is
 
   function Series ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                     sols : Standard_Complex_Solutions.Solution_List;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return Standard_Complex_Series_VecVecs.VecVec;
   function Series ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : DoblDobl_Complex_Solutions.Solution_List;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return DoblDobl_Complex_Series_VecVecs.VecVec;
   function Series ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     sols : QuadDobl_Complex_Solutions.Solution_List;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return QuadDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
@@ -507,6 +508,7 @@ package Regular_Solution_Curves_Series is
   -- ON ENTRY :
   --   p        system with solutions for t = 0;
   --   sols     solutions of p for t = 0;
+  --   maxdeg   the maximal degree of the series;
   --   nit      number of iterations of Newton's method;
   --   report   flag to write output to screen.
 
@@ -541,17 +543,17 @@ package Regular_Solution_Curves_Series is
   function Series ( file : file_type;
                     p : Standard_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return Standard_Complex_Series_VecVecs.VecVec;
   function Series ( file : file_type;
                     p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return DoblDobl_Complex_Series_VecVecs.VecVec;
   function Series ( file : file_type;
                     p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
-                    nit : integer32 )
+                    maxdeg,nit : integer32 )
                   return QuadDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
@@ -566,6 +568,7 @@ package Regular_Solution_Curves_Series is
   --   mcc      regular mixed cell configuration defined by the
   --            lower hull of the supports of p;
   --   mv       the mixed volume of the supports of p;
+  --   maxdeg   the maximal degree of the series;
   --   nit      number of Newton steps per solution series.
 
   -- ON RETURN :
@@ -573,15 +576,15 @@ package Regular_Solution_Curves_Series is
 
   function Series ( p : Standard_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return Standard_Complex_Series_VecVecs.VecVec;
   function Series ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return DoblDobl_Complex_Series_VecVecs.VecVec;
   function Series ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     mcc : Mixed_Subdivision; mv : natural32;
-                    nit : integer32; report : boolean )
+                    maxdeg,nit : integer32; report : boolean )
                   return QuadDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
@@ -595,6 +598,7 @@ package Regular_Solution_Curves_Series is
   --   mcc      regular mixed cell configuration defined by the
   --            lower hull of the supports of p;
   --   mv       the mixed volume of the supports of p;
+  --   maxdeg   the maximal degree of the series;
   --   nit      number of Newton steps per solution series;
   --   report   if true, then output is written to screen.
 

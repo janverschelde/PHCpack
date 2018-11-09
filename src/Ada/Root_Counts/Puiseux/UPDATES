@@ -1,3 +1,6 @@
+Fri 9 Nov 2018 : updated regular_solution_curves_series and
+  regular_newton_puiseux.adb for the maximal degree bound on the series.
+
 Wed 7 Nov 2018 : adjusted the packages regular_solution_curves_series and
   regular_newton_puiseux for the new series definitions.
 

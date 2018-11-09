@@ -310,6 +310,7 @@ package body Regular_Newton_Puiseux is
     mcc : Mixed_Subdivision;
     mv : natural32;
     nit : constant integer32 := 7;
+    maxdeg : constant integer32 := 16;
 
   begin
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
@@ -318,7 +319,7 @@ package body Regular_Newton_Puiseux is
       w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       r : double_float;
     begin
-      s := Series(file,p,mcc,mv,nit);
+      s := Series(file,p,mcc,mv,maxdeg,nit);
       put_line(file,"Evaluating series at 0.1 ...");
       r := Standard_Residuals(file,p,s,w,0.1);
       put(file,"The reported sum of residuals : ");
@@ -334,6 +335,7 @@ package body Regular_Newton_Puiseux is
     mcc : Mixed_Subdivision;
     mv : natural32;
     nit : constant integer32 := 7;
+    maxdeg : constant integer32 := 16;
 
   begin
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
@@ -343,7 +345,7 @@ package body Regular_Newton_Puiseux is
       t : constant double_double := create(0.1);
       r : double_double;
     begin
-      s := Series(file,p,mcc,mv,nit);
+      s := Series(file,p,mcc,mv,maxdeg,nit);
       put_line(file,"Evaluating series at 0.1 ...");
       r := DoblDobl_Residuals(file,p,s,w,t);
       put(file,"The reported sum of residuals : ");
@@ -359,6 +361,7 @@ package body Regular_Newton_Puiseux is
     mcc : Mixed_Subdivision;
     mv : natural32;
     nit : constant integer32 := 7;
+    maxdeg : constant integer32 := 16;
 
   begin
     Tropisms_by_Mixed_Cells(file,sup,mcc,mv);
@@ -368,7 +371,7 @@ package body Regular_Newton_Puiseux is
       t : constant quad_double := create(0.1);
       r : quad_double;
     begin
-      s := Series(file,p,mcc,mv,nit);
+      s := Series(file,p,mcc,mv,maxdeg,nit);
       put_line(file,"Evaluating series at 0.1 ...");
       r := QuadDobl_Residuals(file,p,s,w,t);
       put(file,"The reported sum of residuals : ");
@@ -384,6 +387,7 @@ package body Regular_Newton_Puiseux is
     mcc : Mixed_Subdivision;
     mv : natural32;
     nit : constant integer32 := 7;
+    maxdeg : constant integer32 := 16;
 
   begin
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
@@ -392,7 +396,7 @@ package body Regular_Newton_Puiseux is
       w : constant Standard_Integer_VecVecs.VecVec := Tropisms(mcc,mv);
       r : double_float;
     begin
-      s := Series(p,mcc,mv,nit,report);
+      s := Series(p,mcc,mv,maxdeg,nit,report);
       if report
        then put_line("Evaluating the series at 0.1 ...");
       end if;
@@ -411,6 +415,7 @@ package body Regular_Newton_Puiseux is
     mcc : Mixed_Subdivision;
     mv : natural32;
     nit : constant integer32 := 7;
+    maxdeg : constant integer32 := 16;
 
   begin
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
@@ -420,7 +425,7 @@ package body Regular_Newton_Puiseux is
       t : constant double_double := create(0.1);
       r : double_double;
     begin
-      s := Series(p,mcc,mv,nit,report);
+      s := Series(p,mcc,mv,maxdeg,nit,report);
       if report
        then put_line("Evaluating the series at 0.1 ...");
       end if;
@@ -439,6 +444,7 @@ package body Regular_Newton_Puiseux is
     mcc : Mixed_Subdivision;
     mv : natural32;
     nit : constant integer32 := 7;
+    maxdeg : constant integer32 := 16;
 
   begin
     Tropisms_by_Mixed_Cells(sup,mcc,mv,report);
@@ -448,7 +454,7 @@ package body Regular_Newton_Puiseux is
       t : constant quad_double := create(0.1);
       r : quad_double;
     begin
-      s := Series(p,mcc,mv,nit,report);
+      s := Series(p,mcc,mv,maxdeg,nit,report);
       if report
        then put_line("Evaluating the series at 0.1 ...");
       end if;
