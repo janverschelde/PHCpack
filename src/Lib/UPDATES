@@ -1,3 +1,6 @@
+Fri 9 Nov 2018 : added the maximal degree bound to series, lib_series,
+  and phcpy2c.h, phcpy2c2.c, phcpy2c3.c.
+
 Fri 24 Aug 2018 : added functions to witsols, to copy the witness sets
   into the system and solution containers, tested by lib_witsols.c.
   Added the functions to phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.

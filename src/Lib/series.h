@@ -17,7 +17,7 @@ extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c );
 extern void adafinal( void );
 #endif
 
-int standard_Newton_series ( int idx, int nbr, int verbose );
+int standard_Newton_series ( int idx, int maxdeg, int nbr, int verbose );
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
@@ -30,13 +30,14 @@ int standard_Newton_series ( int idx, int nbr, int verbose );
  * ON ENTRY :
  *   idx     index of the series parameter;
  *   nbr     number of Newton steps to be done on each solution;
+ *   maxdeg  the maximal degree of the series;
  *   verbose is 0 or 1 to indicate whether additional diagnostic output needs
  *           to be written to screen.
  *
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int dobldobl_Newton_series ( int idx, int nbr, int verbose );
+int dobldobl_Newton_series ( int idx, int maxdeg, int nbr, int verbose );
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
@@ -48,6 +49,7 @@ int dobldobl_Newton_series ( int idx, int nbr, int verbose );
  *
  * ON ENTRY :
  *   idx     index of the series parameter;
+ *   maxdeg  the maximal degree of the series;
  *   nbr     number of Newton steps to be done on each solution;
  *   verbose is 0 or 1 to indicate whether additional diagnostic output needs
  *           to be written to screen.
@@ -55,7 +57,7 @@ int dobldobl_Newton_series ( int idx, int nbr, int verbose );
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int quaddobl_Newton_series ( int idx, int nbr, int verbose );
+int quaddobl_Newton_series ( int idx, int maxdeg, int nbr, int verbose );
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
@@ -67,6 +69,7 @@ int quaddobl_Newton_series ( int idx, int nbr, int verbose );
  *
  * ON ENTRY :
  *   idx     index of the series parameter;
+ *   maxdeg  the maximal degree of the series;
  *   nbr     number of Newton steps to be done on each solution;
  *   verbose is 0 or 1 to indicate whether additional diagnostic output needs
  *           to be written to screen.
@@ -74,7 +77,7 @@ int quaddobl_Newton_series ( int idx, int nbr, int verbose );
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int standard_Newton_power_series ( int idx, int nbr, int verbose );
+int standard_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose );
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
@@ -86,6 +89,7 @@ int standard_Newton_power_series ( int idx, int nbr, int verbose );
  *
  * ON ENTRY :
  *   idx     index of the series parameter;
+ *   maxdeg  the maximal degree of the series;
  *   nbr     number of Newton steps to be done on each solution;
  *   verbose is 0 or 1 to indicate whether additional diagnostic output needs
  *           to be written to screen.
@@ -93,7 +97,7 @@ int standard_Newton_power_series ( int idx, int nbr, int verbose );
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int dobldobl_Newton_power_series ( int idx, int nbr, int verbose );
+int dobldobl_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose );
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
@@ -105,6 +109,7 @@ int dobldobl_Newton_power_series ( int idx, int nbr, int verbose );
  *
  * ON ENTRY :
  *   idx     index of the series parameter;
+ *   maxdeg  the maximal degree of the series;
  *   nbr     number of Newton steps to be done on each solution;
  *   verbose is 0 or 1 to indicate whether additional diagnostic output needs
  *           to be written to screen.
@@ -112,7 +117,7 @@ int dobldobl_Newton_power_series ( int idx, int nbr, int verbose );
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int quaddobl_Newton_power_series ( int idx, int nbr, int verbose );
+int quaddobl_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose );
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
@@ -124,6 +129,7 @@ int quaddobl_Newton_power_series ( int idx, int nbr, int verbose );
  *
  * ON ENTRY :
  *   idx     index of the series parameter;
+ *   maxdeg  the maximal degree of the series;
  *   nbr     number of Newton steps to be done on each solution;
  *   verbose is 0 or 1 to indicate whether additional diagnostic output needs
  *           to be written to screen.

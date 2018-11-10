@@ -5440,10 +5440,11 @@ static PyObject *py2c_standard_Newton_series ( PyObject *self, PyObject *args );
  *   in standard double precision, and in the solutions container the
  *   leading coefficients of the power series, this function runs Newton's
  *   method to compute power series solutions of the system in the container,
- *   in standard double precision.  There are three integers on input:
+ *   in standard double precision.  There are four integers on input:
  *   1) the index of the series parameter;
- *   2) the number of Newton steps to be done on each solution;
- *   3) a 0/1-flag to indicate whether additional diagnostic output needs
+ *   2) the maximal degree of the series;
+ *   3) the number of Newton steps to be done on each solution;
+ *   4) a 0/1-flag to indicate whether additional diagnostic output needs
  *   to be written to screen.
  *   The solution series are stored in the standard systems pool.
  *   On return is the failure code, which equals zero if all went well. */
@@ -5455,10 +5456,11 @@ static PyObject *py2c_dobldobl_Newton_series ( PyObject *self, PyObject *args );
  *   in double double precision, and in the solutions container the
  *   leading coefficients of the power series, this function runs Newton's
  *   method to compute power series solutions of the system in the container,
- *   in double double precision.  There are three integers on input:
+ *   in double double precision.  There are four integers on input:
  *   1) the index of the series parameter;
- *   2) the number of Newton steps to be done on each solution;
- *   3) a 0/1-flag to indicate whether additional diagnostic output needs
+ *   2) the maximal degree of the series;
+ *   3) the number of Newton steps to be done on each solution;
+ *   4) a 0/1-flag to indicate whether additional diagnostic output needs
  *   to be written to screen.
  *   The solution series are stored in the double double systems pool.
  *   On return is the failure code, which equals zero if all went well. */
@@ -5470,10 +5472,11 @@ static PyObject *py2c_quaddobl_Newton_series ( PyObject *self, PyObject *args );
  *   in quad double precision, and in the solutions container the
  *   leading coefficients of the power series, this function runs Newton's
  *   method to compute power series solutions of the system in the container,
- *   in quad double precision.  There are three integers on input:
+ *   in quad double precision.  There are four integers on input:
  *   1) the index of the series parameter;
- *   2) the number of Newton steps to be done on each solution;
- *   3) a 0/1-flag to indicate whether additional diagnostic output needs
+ *   2) the maximal degree of the series;
+ *   3) the number of Newton steps to be done on each solution;
+ *   4) a 0/1-flag to indicate whether additional diagnostic output needs
  *   to be written to screen.
  *   The solution series are stored in the quad double systems pool.
  *   On return is the failure code, which equals zero if all went well. */
@@ -5486,10 +5489,11 @@ static PyObject *py2c_standard_Newton_power_series
  *   in standard double precision, and in the standard systems pool the
  *   leading terms of the power series, this function runs Newton's method
  *   to compute power series solutions of the system in the container,
- *   in standard double precision.  There are three integers on input:
+ *   in standard double precision.  There are four integers on input:
  *   1) the index of the series parameter;
- *   2) the number of Newton steps to be done on each solution;
- *   3) a 0/1-flag to indicate whether additional diagnostic output needs
+ *   2) the maximal degree of the series;
+ *   3) the number of Newton steps to be done on each solution;
+ *   4) a 0/1-flag to indicate whether additional diagnostic output needs
  *   to be written to screen.
  *   The solution series are stored in the standard systems pool.
  *   On return is the failure code, which equals zero if all went well. */
@@ -5502,10 +5506,11 @@ static PyObject *py2c_dobldobl_Newton_power_series
  *   in double double precision, and in the dobldobl systems pool the
  *   leading terms of the power series, this function runs Newton's method
  *   to compute power series solutions of the system in the container,
- *   in double double precision.  There are three integers on input:
+ *   in double double precision.  There are four integers on input:
  *   1) the index of the series parameter;
- *   2) the number of Newton steps to be done on each solution;
- *   3) a 0/1-flag to indicate whether additional diagnostic output needs
+ *   2) the maximal degree of the series;
+ *   3) the number of Newton steps to be done on each solution;
+ *   4) a 0/1-flag to indicate whether additional diagnostic output needs
  *   to be written to screen.
  *   The solution series are stored in the double double systems pool.
  *   On return is the failure code, which equals zero if all went well. */
@@ -5518,10 +5523,11 @@ static PyObject *py2c_quaddobl_Newton_power_series
  *   in quad double precision, and in the quaddobl systems pool the
  *   leading terms of the power series, this function runs Newton's method
  *   to compute power series solutions of the system in the container,
- *   in quad double precision.  There are three integers on input:
+ *   in quad double precision.  There are four integers on input:
  *   1) the index of the series parameter;
- *   2) the number of Newton steps to be done on each solution;
- *   3) a 0/1-flag to indicate whether additional diagnostic output needs
+ *   2) the maximal degree of the series;
+ *   3) the number of Newton steps to be done on each solution;
+ *   4) a 0/1-flag to indicate whether additional diagnostic output needs
  *   to be written to screen.
  *   The solution series are stored in the quad double systems pool.
  *   On return is the failure code, which equals zero if all went well. */

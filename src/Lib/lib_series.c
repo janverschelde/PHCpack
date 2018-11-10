@@ -48,7 +48,7 @@ void quaddobl_Pade_test ( void );
 /*
  * Tests the Pade approximant constructor in quad double precision. */
 
-void ask_options_for_series ( int *idx, int *nbr, int *verbose );
+void ask_options_for_series ( int *idx, int *maxdeg, int *nbr, int *verbose );
 /*
  * DESCRIPTION :
  *   Prompts the user for the options of the power series method.
@@ -56,6 +56,7 @@ void ask_options_for_series ( int *idx, int *nbr, int *verbose );
  * ON RETURN :
  *   idx       index of the series parameter;
  *   nbr       number of steps with Newton's method;
+ *   maxdeg    maximal degree of the series;
  *   verbose   0 for false, 1 for true. */
 
 void ask_options_for_Pade
@@ -165,15 +166,15 @@ void quaddobl_query_pool ( void )
 
 void standard_series_test ( void )
 {
-   int fail,idx,nbr,verbose;
+   int fail,idx,maxdeg,nbr,verbose;
 
    printf("\nNewton power series method in double precision ...\n");
    fail = read_standard_start_system();
    fail = copy_start_system_to_container();
    fail = copy_start_solutions_to_container();
 
-   ask_options_for_series(&idx,&nbr,&verbose);
-   fail = standard_Newton_series(idx,nbr,verbose);
+   ask_options_for_series(&idx,&maxdeg,&nbr,&verbose);
+   fail = standard_Newton_series(idx,maxdeg,nbr,verbose);
 
    printf("\nDone with Newton's method.");
    standard_query_pool();
@@ -181,15 +182,15 @@ void standard_series_test ( void )
 
 void dobldobl_series_test ( void )
 {
-   int fail,idx,nbr,verbose;
+   int fail,idx,maxdeg,nbr,verbose;
 
    printf("\nNewton power series method in double double precision ...\n");
    fail = read_dobldobl_start_system();
    fail = copy_dobldobl_start_system_to_container();
    fail = copy_dobldobl_start_solutions_to_container();
 
-   ask_options_for_series(&idx,&nbr,&verbose);
-   fail = dobldobl_Newton_series(idx,nbr,verbose);
+   ask_options_for_series(&idx,&maxdeg,&nbr,&verbose);
+   fail = dobldobl_Newton_series(idx,maxdeg,nbr,verbose);
 
    printf("\nDone with Newton's method.");
    dobldobl_query_pool();
@@ -197,26 +198,27 @@ void dobldobl_series_test ( void )
 
 void quaddobl_series_test ( void )
 {
-   int fail,idx,nbr,verbose;
+   int fail,idx,maxdeg,nbr,verbose;
 
    printf("\nNewton power series method in quad double precision ...\n");
    fail = read_quaddobl_start_system();
    fail = copy_quaddobl_start_system_to_container();
    fail = copy_quaddobl_start_solutions_to_container();
 
-   ask_options_for_series(&idx,&nbr,&verbose);
-   fail = quaddobl_Newton_series(idx,nbr,verbose);
+   ask_options_for_series(&idx,&maxdeg,&nbr,&verbose);
+   fail = quaddobl_Newton_series(idx,maxdeg,nbr,verbose);
 
    printf("\nDone with Newton's method.");
    quaddobl_query_pool();
 }
 
-void ask_options_for_series ( int *idx, int *nbr, int *verbose )
+void ask_options_for_series ( int *idx, int *maxdeg, int *nbr, int *verbose )
 {
    char ch;
 
    printf("\nReading the settings of the power series method ...\n");
    printf("  Give the index of the series parameter : "); scanf("%d",idx);
+   printf("  Give the maximal degree of the series : "); scanf("%d",maxdeg);
    printf("  Give the number of Newton steps : "); scanf("%d",nbr);
    printf("  Extra output during computations ? (y/n) ");
    scanf("%c",&ch); /* skip newline symbol */

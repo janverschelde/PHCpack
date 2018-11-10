@@ -4,85 +4,91 @@
 #include <stdio.h>
 #include "series.h"
 
-int standard_Newton_series ( int idx, int nbr, int verbose )
+int standard_Newton_series ( int idx, int maxdeg, int nbr, int verbose )
 {
    int fail = 0;
-   int idxnbr[2];
+   int idxnbr[3];
    double *c;
 
    /* printf("idx = %d, nbr = %d, verbose = %d\n",idx,nbr,verbose); */
 
    idxnbr[0] = idx;
-   idxnbr[1] = nbr;
+   idxnbr[1] = maxdeg;
+   idxnbr[2] = nbr;
 
    fail = _ada_use_c2phc4c(691,idxnbr,&verbose,c);
 
    return fail;
 }
 
-int dobldobl_Newton_series ( int idx, int nbr, int verbose )
+int dobldobl_Newton_series ( int idx, int maxdeg, int nbr, int verbose )
 {
    int fail = 0;
-   int idxnbr[2];
+   int idxnbr[3];
    double *c;
 
    idxnbr[0] = idx;
-   idxnbr[1] = nbr;
+   idxnbr[1] = maxdeg;
+   idxnbr[2] = nbr;
    fail = _ada_use_c2phc4c(692,idxnbr,&verbose,c);
 
    return fail;
 }
 
-int quaddobl_Newton_series ( int idx, int nbr, int verbose )
+int quaddobl_Newton_series ( int idx, int maxdeg, int nbr, int verbose )
 {
    int fail = 0;
-   int idxnbr[2];
+   int idxnbr[3];
    double *c;
 
    idxnbr[0] = idx;
-   idxnbr[1] = nbr;
+   idxnbr[1] = maxdeg;
+   idxnbr[2] = nbr;
    fail = _ada_use_c2phc4c(693,idxnbr,&verbose,c);
 
    return fail;
 }
 
-int standard_Newton_power_series ( int idx, int nbr, int verbose )
+int standard_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose )
 {
    int fail = 0;
-   int idxnbr[2];
+   int idxnbr[3];
    double *c;
 
    /* printf("idx = %d, nbr = %d, verbose = %d\n",idx,nbr,verbose); */
 
    idxnbr[0] = idx;
-   idxnbr[1] = nbr;
+   idxnbr[1] = maxdeg;
+   idxnbr[2] = nbr;
 
    fail = _ada_use_c2phc4c(694,idxnbr,&verbose,c);
 
    return fail;
 }
 
-int dobldobl_Newton_power_series ( int idx, int nbr, int verbose )
+int dobldobl_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose )
 {
    int fail = 0;
-   int idxnbr[2];
+   int idxnbr[3];
    double *c;
 
    idxnbr[0] = idx;
-   idxnbr[1] = nbr;
+   idxnbr[1] = maxdeg;
+   idxnbr[2] = nbr;
    fail = _ada_use_c2phc4c(695,idxnbr,&verbose,c);
 
    return fail;
 }
 
-int quaddobl_Newton_power_series ( int idx, int nbr, int verbose )
+int quaddobl_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose )
 {
    int fail = 0;
-   int idxnbr[2];
+   int idxnbr[3];
    double *c;
 
    idxnbr[0] = idx;
-   idxnbr[1] = nbr;
+   idxnbr[1] = maxdeg;
+   idxnbr[2] = nbr;
    fail = _ada_use_c2phc4c(696,idxnbr,&verbose,c);
 
    return fail;
