@@ -215,6 +215,7 @@ package body Series_and_Trackers is
                 sol : in out Standard_Complex_Solutions.Solution ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    maxdeg : constant integer32 := 16;
     nit : constant integer32 := 3;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
@@ -229,9 +230,10 @@ package body Series_and_Trackers is
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
-      Series_and_Predictors.Newton_Prediction(nit,nit,wrk,wrk_sol,srv,eva);
+      Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       new_line;
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      Standard_Complex_Series_Vectors.Clear(eva);
       if step > 0.01
        then step := 0.01;
       end if;
@@ -258,6 +260,7 @@ package body Series_and_Trackers is
                 sol : in out DoblDobl_Complex_Solutions.Solution ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    maxdeg : constant integer32 := 16;
     nit : constant integer32 := 4;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -274,8 +277,9 @@ package body Series_and_Trackers is
   begin
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
-      Series_and_Predictors.Newton_Prediction(nit,nit,wrk,wrk_sol,srv,eva);
+      Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      DoblDobl_Complex_Series_Vectors.Clear(eva);
       if step > 0.1
        then step := 0.1;
       end if;
@@ -304,6 +308,7 @@ package body Series_and_Trackers is
                 sol : in out Quaddobl_Complex_Solutions.Solution ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    maxdeg : constant integer32 := 16;
     nit : constant integer32 := 4;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -320,8 +325,9 @@ package body Series_and_Trackers is
   begin
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
-      Series_and_Predictors.Newton_Prediction(nit,nit,wrk,wrk_sol,srv,eva);
+      Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      QuadDobl_Complex_Series_Vectors.Clear(eva);
       if step > 0.1
        then step := 0.1;
       end if;
@@ -353,6 +359,7 @@ package body Series_and_Trackers is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
     nit : constant integer32 := 4;
+    maxdeg : constant integer32 := 16;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     tolcff : constant double_float := 1.0E-12;
@@ -369,11 +376,12 @@ package body Series_and_Trackers is
       put(file,"Step "); put(file,k,1);
       put_line(file," in the path tracker :");
       Series_and_Predictors.Newton_Prediction
-        (file,nit,nit,wrk,wrk_sol,srv,eva,verbose);
+        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
       new_line(file);
       put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
+      Standard_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
       if step > 0.01
        then step := 0.01;
@@ -407,6 +415,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    maxdeg : constant integer32 := 16;
     nit : constant integer32 := 4;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -426,11 +435,12 @@ package body Series_and_Trackers is
       put(file,"Step "); put(file,k,1);
       put_line(file," in the path tracker :");
       Series_and_Predictors.Newton_Prediction
-        (file,nit,nit,wrk,wrk_sol,srv,eva,verbose);
+        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
       new_line(file);
       put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
+      DoblDobl_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
       if step > 0.1
        then step := 0.1;
@@ -466,6 +476,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    maxdeg : constant integer32 := 16;
     nit : constant integer32 := 4;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -485,11 +496,12 @@ package body Series_and_Trackers is
       put(file,"Step "); put(file,k,1);
       put_line(file," in the path tracker :");
       Series_and_Predictors.Newton_Prediction
-        (file,nit,nit,wrk,wrk_sol,srv,eva,verbose);
+        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
       new_line(file);
       put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
+      QuadDobl_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
       if step > 0.1
        then step := 0.1;

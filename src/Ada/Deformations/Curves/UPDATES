@@ -1,3 +1,6 @@
+Sat 10 Nov 2018 : added value for the maximal degree of the series 
+  in series_and_trackers.adb, improved ts_serpath.adb.
+
 Fri 9 Nov 2018 : prompt for the maximal degree bound in mainseries.adb.
 
 Thu 8 Nov 2018 : added bound on the degrees of the series in

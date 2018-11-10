@@ -53,15 +53,11 @@ procedure ts_serpath is
   begin
     put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
-    if verbose then
-      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
-      tofile := (ans = 'y');
-      if tofile then
-        put_line("Reading the name of the output file ...");
-        Read_Name_and_Create_File(file);
-      end if;
-    else
-      tofile := false;
+    put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+    tofile := (ans = 'y');
+    if tofile then
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(file);
     end if;
   end Set_Output;
 
