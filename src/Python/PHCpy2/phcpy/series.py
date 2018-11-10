@@ -27,7 +27,7 @@ def substitute_symbol(pols, idx):
             result.append(replace_symbol(pol, idx))
         return result
 
-def standard_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
+def standard_newton_series(pols, sols, idx=1, maxdeg=4, nbr=4, verbose=True):
     r"""
     Computes series in standard double precision for the polynomials
     in *pols*, where the leading coefficients are the solutions in *sols*.
@@ -38,6 +38,8 @@ def standard_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     *sols*: a list of solutions of the polynomials in *pols*,
 
     *idx*: index of the series parameter, by default equals 1,
+
+    *maxdeg*: maximal degree of the series,
 
     *nbr*: number of steps with Newton's method,
 
@@ -61,7 +63,7 @@ def standard_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
         print "Number of variables :", nbsym
     store_standard_system(pols, nbvar=nbsym)
     store_standard_solutions(nbsym, sols)
-    fail = newton(idx, nbr, int(verbose))
+    fail = newton(idx, maxdeg, nbr, int(verbose))
     size = (-1 if fail else poolsize())
     if verbose:
         if size == -1:
@@ -76,7 +78,7 @@ def standard_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     py2c_syspool_standard_clear()
     return result
 
-def dobldobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
+def dobldobl_newton_series(pols, sols, idx=1, maxdeg=4, nbr=4, verbose=True):
     r"""
     Computes series in double double precision for the polynomials
     in *pols*, where the leading coefficients are the solutions in *sols*.
@@ -87,6 +89,8 @@ def dobldobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     *sols*: a list of solutions of the polynomials in *pols*,
 
     *idx*: index of the series parameter, by default equals 1,
+
+    *maxdeg*: maximal degree of the series,
 
     *nbr*: number of steps with Newton's method,
 
@@ -110,7 +114,7 @@ def dobldobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
         print "Number of variables :", nbsym
     store_dobldobl_system(pols, nbvar=nbsym)
     store_dobldobl_solutions(nbsym, sols)
-    fail = newton(idx, nbr, int(verbose))
+    fail = newton(idx, maxdeg, nbr, int(verbose))
     size = (-1 if fail else poolsize())
     if verbose:
         if size == -1:
@@ -125,7 +129,7 @@ def dobldobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     py2c_syspool_dobldobl_clear()
     return result
 
-def quaddobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
+def quaddobl_newton_series(pols, sols, idx=1, maxdeg=4, nbr=4, verbose=True):
     r"""
     Computes series in quad double precision for the polynomials
     in *pols*, where the leading coefficients are the solutions in *sols*.
@@ -136,6 +140,8 @@ def quaddobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
     *sols*: a list of solutions of the polynomials in *pols*,
 
     *idx*: index of the series parameter, by default equals 1,
+
+    *maxdeg*: maximal degree of the series,
 
     *nbr*: number of steps with Newton's method,
 
@@ -159,7 +165,7 @@ def quaddobl_newton_series(pols, sols, idx=1, nbr=4, verbose=True):
         print "Number of variables :", nbsym
     store_quaddobl_system(pols, nbvar=nbsym)
     store_quaddobl_solutions(nbsym, sols)
-    fail = newton(idx, nbr, int(verbose))
+    fail = newton(idx, maxdeg, nbr, int(verbose))
     size = (-1 if fail else poolsize())
     if verbose:
         if size == -1:
@@ -198,7 +204,7 @@ def checkin_newton_power_series(nbsym, lser, idx):
        
     return okay   
 
-def standard_newton_power_series(pols, lser, idx=1, nbr=4, \
+def standard_newton_power_series(pols, lser, idx=1, maxdeg=4, nbr=4, \
     checkin=True, verbose=True):
     r"""
     Computes series in standard double precision for the polynomials
@@ -211,6 +217,8 @@ def standard_newton_power_series(pols, lser, idx=1, nbr=4, \
     for use as start terms in Newton's method,
 
     *idx*: index of the series parameter, by default equals 1,
+
+    *maxdeg*: maximal degree of the power series,
 
     *nbr*: number of steps with Newton's method,
 
@@ -245,7 +253,7 @@ def standard_newton_power_series(pols, lser, idx=1, nbr=4, \
     py2c_syspool_standard_init(1);
     py2c_syspool_standard_create(1);
     store_standard_system(pols, nbvar=nbsym)
-    fail = newton(idx, nbr, int(verbose))
+    fail = newton(idx, maxdeg, nbr, int(verbose))
     size = (-1 if fail else poolsize())
     if verbose:
         if size == -1:
@@ -258,7 +266,7 @@ def standard_newton_power_series(pols, lser, idx=1, nbr=4, \
     py2c_syspool_standard_clear()
     return result
 
-def dobldobl_newton_power_series(pols, lser, idx=1, nbr=4, \
+def dobldobl_newton_power_series(pols, lser, idx=1, maxdeg=4, nbr=4, \
     checkin=True, verbose=True):
     r"""
     Computes series in double double precision for the polynomials
@@ -271,6 +279,8 @@ def dobldobl_newton_power_series(pols, lser, idx=1, nbr=4, \
     for use as start terms in Newton's method,
 
     *idx*: index of the series parameter, by default equals 1,
+
+    *maxdeg*: maximal degree of the series,
 
     *nbr*: number of steps with Newton's method,
 
@@ -305,7 +315,7 @@ def dobldobl_newton_power_series(pols, lser, idx=1, nbr=4, \
     py2c_syspool_dobldobl_init(1);
     py2c_syspool_dobldobl_create(1);
     store_dobldobl_system(pols, nbvar=nbsym)
-    fail = newton(idx, nbr, int(verbose))
+    fail = newton(idx, maxdeg, nbr, int(verbose))
     size = (-1 if fail else poolsize())
     if verbose:
         if size == -1:
@@ -318,7 +328,7 @@ def dobldobl_newton_power_series(pols, lser, idx=1, nbr=4, \
     py2c_syspool_dobldobl_clear()
     return result
 
-def quaddobl_newton_power_series(pols, lser, idx=1, nbr=4, \
+def quaddobl_newton_power_series(pols, lser, idx=1, maxdeg=4, nbr=4, \
     checkin=True, verbose=True):
     r"""
     Computes series in quad double precision for the polynomials
@@ -332,6 +342,8 @@ def quaddobl_newton_power_series(pols, lser, idx=1, nbr=4, \
 
     *idx*: index of the series parameter, by default equals 1,
 
+    *maxdeg*: maximal degree of the series,
+ 
     *nbr*: number of steps with Newton's method,
 
     *checkin*: checks whether the number of symbols in pols matches
@@ -365,7 +377,7 @@ def quaddobl_newton_power_series(pols, lser, idx=1, nbr=4, \
     py2c_syspool_quaddobl_init(1);
     py2c_syspool_quaddobl_create(1);
     store_quaddobl_system(pols, nbvar=nbsym)
-    fail = newton(idx, nbr, int(verbose))
+    fail = newton(idx, maxdeg, nbr, int(verbose))
     size = (-1 if fail else poolsize())
     if verbose:
         if size == -1:
@@ -604,11 +616,11 @@ def viviani2(precision='d'):
              '(x-1)^2 + y^2 - 1;']
     lser = [ '2*t^2;', '2*t;', '2;']
     if precision == 'd':
-        nser = standard_newton_power_series(pols, lser, nbr=8)
+        nser = standard_newton_power_series(pols, lser, maxdeg=12, nbr=8)
     elif precision == 'dd':
-        nser = dobldobl_newton_power_series(pols, lser, nbr=8)
+        nser = dobldobl_newton_power_series(pols, lser, maxdeg=12, nbr=8)
     elif precision == 'qd':
-        nser = quaddobl_newton_power_series(pols, lser, nbr=8)
+        nser = quaddobl_newton_power_series(pols, lser, maxdeg=12, nbr=8)
     else:
         print 'invalid argument for the precision'
     print nser
@@ -627,14 +639,14 @@ def apollonius(precision='d'):
     lser1 = ['1;', '1 + 0.536*t;', '1 + 0.904*t;']
     lser2 = ['1;', '1 + 7.464*t;', '1 + 11.196*t;']
     if precision == 'd':
-        nser1 = standard_newton_power_series(pols, lser1, idx=4, nbr=8)
-        nser2 = standard_newton_power_series(pols, lser2, idx=4, nbr=8)
+        nser1 = standard_newton_power_series(pols, lser1, idx=4, nbr=7)
+        nser2 = standard_newton_power_series(pols, lser2, idx=4, nbr=7)
     elif precision == 'dd':
-        nser1 = dobldobl_newton_power_series(pols, lser1, idx=4, nbr=8)
-        nser2 = dobldobl_newton_power_series(pols, lser2, idx=4, nbr=8)
+        nser1 = dobldobl_newton_power_series(pols, lser1, idx=4, nbr=7)
+        nser2 = dobldobl_newton_power_series(pols, lser2, idx=4, nbr=7)
     elif precision == 'qd':
-        nser1 = quaddobl_newton_power_series(pols, lser1, idx=4, nbr=8)
-        nser2 = quaddobl_newton_power_series(pols, lser2, idx=4, nbr=8)
+        nser1 = quaddobl_newton_power_series(pols, lser1, idx=4, nbr=7)
+        nser2 = quaddobl_newton_power_series(pols, lser2, idx=4, nbr=7)
     else:
         print 'invalid argument for the precision'
     print nser1
