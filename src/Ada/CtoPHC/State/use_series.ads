@@ -17,19 +17,22 @@ function use_series ( job : integer32;
 --   job =  0 : power series Newton method in standard double precision,
 --              the input parameters are
 --              a[0] : the index of the series parameter,
---              a[1] : the number of steps in Newton's method,
+--              a[1] : the maximal degree of the series,
+--              a[2] : the number of steps in Newton's method,
 --              b[0] : the verbose flag, 0 for false, 1 for true.
 --              If verbose, then intermediate results are written to screen.
 --   job =  1 : power series Newton method in double double precision,
 --              the input parameters are
 --              a[0] : the index of the series parameter,
---              a[1] : the number of steps in Newton's method,
+--              a[1] : the maximal degree of the series,
+--              a[2] : the number of steps in Newton's method,
 --              b[0] : the verbose flag, 0 for false, 1 for true.
 --              If verbose, then intermediate results are written to screen.
 --   job =  2 : power series Newton method in quad double precision,
 --              the input parameters are
 --              a[0] : the index of the series parameter,
---              a[1] : the number of steps in Newton's method,
+--              a[1] : the maximal degree of the series,
+--              a[2] : the number of steps in Newton's method,
 --              b[0] : the verbose flag, 0 for false, 1 for true.
 --              If verbose, then intermediate results are written to screen.
 --   job =  3 : same as 0, but instead of solutions, the start terms

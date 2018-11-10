@@ -1,4 +1,6 @@
-Fri 9 Nov 2018 : added constant degree bounds in use_series.adb.
+Fri 9 Nov 2018 : added constant degree bounds in use_series.adb; and then
+  extracted the degree bound from the parameters, updated use_series.adb,
+  as well as the specifications in use_series.ads.
 
 Wed 7 Nov 2018 : adjusted use_series.adb for the new definitions of
   the series.

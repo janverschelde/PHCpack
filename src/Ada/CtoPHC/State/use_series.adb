@@ -59,7 +59,7 @@ function use_series ( job : integer32;
                       c : C_dblarrs.Pointer ) return integer32 is
 
   procedure extract_options
-              ( idx,nbrit : out integer32; verbose : out boolean ) is
+              ( idx,maxdeg,nbrit : out integer32; verbose : out boolean ) is
 
   -- DESCRIPTION :
   --   Extracts the options from the arguments a and b.
@@ -67,15 +67,17 @@ function use_series ( job : integer32;
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
     vrb : constant integer32 := integer32(v_b(v_b'first));
     v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
     use Interfaces.C;
 
   begin
     verbose := (vrb = 1);
     idx := integer32(v_a(v_a'first));
-    nbrit := integer32(v_a(v_a'first+1));
+    maxdeg := integer32(v_a(v_a'first+1));
+    nbrit := integer32(v_a(v_a'first+2));
     if verbose then
       put("The index of the series parameter : "); put(idx,1); new_line;
+      put("The maximal degree of the series : "); put(maxdeg,1); new_line;
       put("The number of Newton steps : "); put(nbrit,1); new_line;
     end if;
   end extract_options;
@@ -476,12 +478,11 @@ function use_series ( job : integer32;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := Head_Of(sols).n;
-    idx,nbr,dim : integer32;
-    maxdeg : constant integer32 := 16;
+    idx,maxdeg,nbr,dim : integer32;
     verbose : boolean;
 
   begin
-    extract_options(idx,nbr,verbose);
+    extract_options(idx,maxdeg,nbr,verbose);
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
       put("Number of equations in the system : "); put(nq,1); new_line;
@@ -500,12 +501,11 @@ function use_series ( job : integer32;
     sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := Head_Of(sols).n;
-    idx,nbr,dim : integer32;
-    maxdeg : constant integer32 := 16;
+    idx,maxdeg,nbr,dim : integer32;
     verbose : boolean;
 
   begin
-    extract_options(idx,nbr,verbose);
+    extract_options(idx,maxdeg,nbr,verbose);
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
       put("Number of equations in the system : "); put(nq,1); new_line;
@@ -524,12 +524,11 @@ function use_series ( job : integer32;
     sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := Head_Of(sols).n;
-    idx,nbr,dim : integer32;
-    maxdeg : constant integer32 := 16;
+    idx,maxdeg,nbr,dim : integer32;
     verbose : boolean;
 
   begin
-    extract_options(idx,nbr,verbose);
+    extract_options(idx,maxdeg,nbr,verbose);
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
       put("Number of equations in the system : "); put(nq,1); new_line;
@@ -547,15 +546,14 @@ function use_series ( job : integer32;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := integer32(Number_of_Unknowns(lp(lp'first)));
-    idx,nbr,dim : integer32;
-    maxdeg : constant integer32 := 16;
+    idx,maxdeg,nbr,dim : integer32;
     verbose : boolean;
     srv : Standard_Complex_Series_VecVecs.Link_to_VecVec;
     srp : Standard_CSeries_Poly_Systems.Poly_Sys(lp'range);
 
   begin
     Load_Series_Solutions(srv);
-    extract_options(idx,nbr,verbose);
+    extract_options(idx,maxdeg,nbr,verbose);
     srp := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
@@ -580,15 +578,14 @@ function use_series ( job : integer32;
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := integer32(Number_of_Unknowns(lp(lp'first)));
-    idx,nbr,dim : integer32;
-    maxdeg : constant integer32 := 16;
+    idx,maxdeg,nbr,dim : integer32;
     verbose : boolean;
     srv : DoblDobl_Complex_Series_VecVecs.Link_to_VecVec;
     srp : DoblDobl_CSeries_Poly_Systems.Poly_Sys(lp'range);
 
   begin
     Load_Series_Solutions(srv);
-    extract_options(idx,nbr,verbose);
+    extract_options(idx,maxdeg,nbr,verbose);
     srp := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
@@ -609,15 +606,14 @@ function use_series ( job : integer32;
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
     nq : constant integer32 := lp'last;
     nv : constant integer32 := integer32(Number_of_Unknowns(lp(lp'first)));
-    idx,nbr,dim : integer32;
-    maxdeg : constant integer32 := 16;
+    idx,maxdeg,nbr,dim : integer32;
     verbose : boolean;
     srv : QuadDobl_Complex_Series_VecVecs.Link_to_VecVec;
     srp : QuadDobl_CSeries_Poly_Systems.Poly_Sys(lp'range);
 
   begin
     Load_Series_Solutions(srv);
-    extract_options(idx,nbr,verbose);
+    extract_options(idx,maxdeg,nbr,verbose);
     srp := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     dim := (if idx = 0 then nv else nv-1);
     if verbose then
