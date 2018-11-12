@@ -1,7 +1,7 @@
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Mathematical_Functions;
 with QuadDobl_Complex_Numbers_Polar;
-with QuadDobl_Algebraic_Series3;
+with QuadDobl_Complex_Algebraic_Series;
 
 package body QuadDobl_Complex_Series_Norms is
 
@@ -37,7 +37,7 @@ package body QuadDobl_Complex_Series_Norms is
     res : Series(s.deg);
 
   begin
-    res := QuadDobl_Algebraic_Series3.sqrt(p,0);
+    res := QuadDobl_Complex_Algebraic_Series.sqrt(p,0);
     return res;
   end Norm;
 

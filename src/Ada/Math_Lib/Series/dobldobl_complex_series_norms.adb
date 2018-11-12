@@ -1,7 +1,7 @@
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Mathematical_Functions;
 with DoblDobl_Complex_Numbers_Polar;
-with DoblDobl_Algebraic_Series3;
+with DoblDobl_Complex_Algebraic_Series;
 
 package body DoblDobl_Complex_Series_Norms is
 
@@ -37,7 +37,7 @@ package body DoblDobl_Complex_Series_Norms is
     res : Series(s.deg);
 
   begin
-    res := DoblDobl_Algebraic_Series3.sqrt(p,0);
+    res := DoblDobl_Complex_Algebraic_Series.sqrt(p,0);
     return res;
   end Norm;
 

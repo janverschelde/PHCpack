@@ -1,7 +1,7 @@
 with Standard_Complex_Numbers;
 with Standard_Mathematical_Functions;
 with Standard_Complex_Numbers_Polar;
-with Standard_Algebraic_Series3;
+with Standard_Complex_Algebraic_Series;
 
 package body Standard_Complex_Series_Norms is
 
@@ -37,7 +37,7 @@ package body Standard_Complex_Series_Norms is
     res : Series(s.deg);
 
   begin
-    res := Standard_Algebraic_Series3.sqrt(p,0);
+    res := Standard_Complex_Algebraic_Series.sqrt(p,0);
     return res;
   end Norm;
 
