@@ -1,3 +1,6 @@
+Sun 11 Nov 2018 : prepare files setup.py, __init__.py, and conf.py, for
+  version 0.8.9 of phcpy for python2 and python3.
+
 Fri 9 Nov 2018 : to series.py, added the maximal degree bound, both
   for the Python2 and Python3 versions.
 
