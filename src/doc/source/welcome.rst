@@ -334,6 +334,12 @@ global optimization, and computational physics:
    4th Asian Conference on Computer Vision* (ACCV2000),
    pages 140-145, 2000.
 
+#. Carlos Amendola, Nathan Bliss, Isaac Burke,
+   Courtney R. Gibbons, Martin Helmer, Serkan Hosten,
+   Evan D. Nash, Jose Israel Rodriguez, Daniel Smolkin:
+   **The maximum likelihood degree of toric varieties.**
+   *Journal of Symbolic Computation*, article in Press, 2018.
+
 #. Gianni Amisano and Oreste Tristani:
    **Exact likelihood computation for nonlinear DSGE models with
    heteroskedastic innovations**.
@@ -866,7 +872,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-107. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+108. Ali Baharev, Ferenc Domes, Arnold Neumaier:
      **A robust approach for finding all well-separated solutions of
      sparse systems of nonlinear equations**.
      *Numerical Algorithms* 76:163-189, 2017.
@@ -874,6 +880,14 @@ benchmark to measure the progress of new algorithms in the following papers:
 #. Ada Boralevi, Jasper van Doornmalen, Jan Draisma, Michiel E. Hochstenbach,
    and Bor Plestenjak: **Uniform Determinantal Representations**.
    *SIAM J. Appl. Algebra Geometry*, vol. 1, pages 415-441, 2017.
+
+#. P. Breiding and S. Timme. **HomotopyContinuation.jl: 
+   A package for homotopy continuation in Julia.**
+   In J. H. Davenport, M. Kauers, G. Labahn, and J. Urban, editors, 
+   *Mathematical Software -- ICMS 2018. 6th International Conference, 
+   South Bend, IN, USA, July 24-27, 2018. Proceedings*, 
+   volume 10931 of *Lecture Notes in Computer Science*, pages 458-465. 
+   Springer-Verlag, 2018.
 
 #. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
    and Jeff Sommars: **Solving polynomial systems via homotopy continuation
@@ -925,6 +939,10 @@ benchmark to measure the progress of new algorithms in the following papers:
    **Numerical Schubert Calculus by the Pieri Homotopy Algorithm**.
    *SIAM J. Numer Anal.* 40(2): 578-600, 2002.
 
+#. Bernard Mourrain, Simon Telen, and Marc Van Barel:
+   **Solving Polynomial Systems Efficiently and Accurately.**
+   arXiv:1803.07974v2 [math.AG] 22 Mar 2018.
+
 #. J.M. Porta, L. Ros, T. Creemers, and F. Thomas:
    **Box approximations of planar linkage configuration spaces**.
    *Journal of Mechanical Design* 129(4):397-405, 2007.
@@ -937,10 +955,20 @@ benchmark to measure the progress of new algorithms in the following papers:
    **Incomplete Groebner basis as a preconditioner for polynomial systems**.
    *Journal of Computational and Applied Mathematics* 226(1):2-9, 2009.
 
+#. Simon Telen and Marc Van Barel:
+   **A stabilized normal form algorithm for generic systems of 
+   polynomial equations**.
+   * Journal of Computational and Applied Mathematics*
+   342(November 2018): 119-132, 2018. 
+
 #. S. Telen, B. Mourrain, and M. Van Barel:
    **Solving Polynomial Systems via a Stabilized Representation
    of Quotient Algebras.**
    arXiv:1711.04543v1 [math.AG] 13 Nov 2017
+
+#. S. Telen, B. Mourrain, and M. Van Barel:
+   **Solving Polynomial Systems via Truncated Normal Forms.**
+   *SIAM J. Matrix Anal. Appl.* 39(3):1421-1447, 2018.
 
 #. A. Zachariah and Z. Charles:
    **Efficiently Finding All Power Flow Solutions to Tree Networks.**
@@ -949,7 +977,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-125. Bo Dong, Bo Yu, and Yan Yu:
+130. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -968,7 +996,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-128. B. Sturmfels:
+133. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
