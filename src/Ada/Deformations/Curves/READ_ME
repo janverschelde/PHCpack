@@ -1,4 +1,4 @@
-Univariate solvers and plane algebraic curves in PHCpack version 2.4.60
+Univariate solvers and plane algebraic curves in PHCpack version 2.4.61
 
 The numerical treatment of plane algebraic curves needs the solution of
 polynomial equations in one variable.  To solve univariate polynomials,

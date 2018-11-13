@@ -46,7 +46,8 @@ package DoblDobl_Pade_Approximants is
   -- REQUIRED : idx in srv'range.
 
   function Create ( numdeg,dendeg : integer32;
-                    srv : DoblDobl_Complex_Series_Vectors.Vector )
+                    srv : DoblDobl_Complex_Series_Vectors.Vector;
+                    verbose : boolean := false )
                   return Pade_Vector;
 
   -- DESCRIPTION :

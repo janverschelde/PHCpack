@@ -1,3 +1,9 @@
+Tue 13 Nov 2018 : made double double and quad double version like the
+  double versions, updated *dobl_rational_approximations and
+  *dobl_pade_approximants, wrapped smallest_forward_pole procedure into
+  a function in homotopy_pade_approximants, better tests in ts_padepred.
+  Documented a verbose option in standard_rational_approximations.ads.
+
 Sat 10 Nov 2018 : added value for the maximal degree of the series 
   in series_and_trackers.adb, improved ts_serpath.adb.
 

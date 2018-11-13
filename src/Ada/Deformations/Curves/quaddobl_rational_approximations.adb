@@ -1,6 +1,8 @@
+with text_io;                           use text_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Integer_Vectors;
+with QuadDobl_Complex_Matrices_io;      use QuadDobl_Complex_Matrices_io;
 with QuadDobl_Complex_Linear_Solvers;   use QuadDobl_Complex_Linear_Solvers;
 
 package body QuadDobl_Rational_Approximations is
@@ -60,7 +62,7 @@ package body QuadDobl_Rational_Approximations is
   procedure Pade ( numdeg,dendeg : in integer32;
                    cff : in QuadDobl_Complex_Vectors.Vector;
                    numcff,dencff : out QuadDobl_Complex_Vectors.Vector;
-                   info : out integer32 ) is
+                   info : out integer32; verbose : in boolean := false ) is
 
     dim : constant integer32 := numdeg + dendeg;
     mat : QuadDobl_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
@@ -72,6 +74,10 @@ package body QuadDobl_Rational_Approximations is
 
   begin
     Denominator_System(numdeg,dendeg,cff,mat,rhs);
+    if verbose then
+      put_line("The matrix of the denominator system :");
+      put(mat,3);
+    end if;
     lufac(mat,dendeg,ipvt,info);
     if info = 0 then
       lusolve(mat,dendeg,ipvt,rhs);

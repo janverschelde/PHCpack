@@ -47,7 +47,7 @@ package DoblDobl_Rational_Approximations is
               ( numdeg,dendeg : in integer32;
                 cff : in DoblDobl_Complex_Vectors.Vector;
                 numcff,dencff : out DoblDobl_Complex_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Tests the construction in standard floating point arithmetic
@@ -57,7 +57,8 @@ package DoblDobl_Rational_Approximations is
   -- ON ENTRY :
   --   numdeg   degree of the numerator;
   --   dendeg   degree of the denominator;
-  --   cff      coefficients of the power series.
+  --   cff      coefficients of the power series;
+  --   verbose  if verbose, then the matrices are written to screen.
 
   -- ON RETURN :
   --   numcff   coefficients of the numerator, if info is nonzero;

@@ -58,6 +58,7 @@ package Standard_Rational_Approximations is
   --   numdeg   degree of the numerator;
   --   dendeg   degree of the denominator;
   --   cff      coefficients of the power series.
+  --   verbose  if verbose, then the matrices are written to screen.
 
   -- ON RETURN :
   --   numcff   coefficients of the numerator, if info is nonzero;

@@ -164,4 +164,15 @@ package Homotopy_Pade_Approximants is
   --   minval   the smallest radius, equals radius(v(leadidx)(idx)),
   --            which is negative if all poles have negative real part.
 
+  function Smallest_Forward_Pole
+             ( v : Standard_Complex_VecVecs.VecVec ) return double_float;
+  function Smallest_Forward_Pole
+             ( v : DoblDobl_Complex_VecVecs.VecVec ) return double_double;
+  function Smallest_Forward_Pole
+             ( v : QuadDobl_Complex_VecVecs.VecVec ) return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns the smallest number in v with strictly positive real part.
+  --   If all real parts are negative, then -1 is returned.
+
 end Homotopy_Pade_Approximants;

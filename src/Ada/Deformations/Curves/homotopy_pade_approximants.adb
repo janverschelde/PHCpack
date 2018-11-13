@@ -462,4 +462,37 @@ package body Homotopy_Pade_Approximants is
     end loop;
   end Smallest_Forward_Pole;
 
+  function Smallest_Forward_Pole
+             ( v : Standard_Complex_VecVecs.VecVec ) return double_float is
+
+    res : double_float;
+    leadidx,idx : integer32;
+
+  begin
+    Smallest_Forward_Pole(v,leadidx,idx,res);
+    return res;
+  end Smallest_Forward_Pole;
+
+  function Smallest_Forward_Pole
+             ( v : DoblDobl_Complex_VecVecs.VecVec ) return double_double is
+
+    res : double_double;
+    leadidx,idx : integer32;
+
+  begin
+    Smallest_Forward_Pole(v,leadidx,idx,res);
+    return res;
+  end Smallest_Forward_Pole;
+
+  function Smallest_Forward_Pole
+             ( v : QuadDobl_Complex_VecVecs.VecVec ) return quad_double is
+
+    res : quad_double;
+    leadidx,idx : integer32;
+
+  begin
+    Smallest_Forward_Pole(v,leadidx,idx,res);
+    return res;
+  end Smallest_Forward_Pole;
+
 end Homotopy_Pade_Approximants;
