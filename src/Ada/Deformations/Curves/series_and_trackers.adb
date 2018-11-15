@@ -210,6 +210,25 @@ package body Series_and_Trackers is
     QuadDobl_Complex_Jaco_Matrices.Clear(jf);
   end Correct;
 
+  procedure Set_Step
+              ( t,step : in out double_float;
+                maxstep,target : in double_float ) is
+
+    update : double_float;
+
+  begin
+    if step > maxstep
+     then step := maxstep;
+    end if;
+    update := t + step;
+    if update <= target then
+      t := update;
+    else
+      step := target - t;
+      t := target; 
+    end if;
+  end Set_Step;
+
   procedure Track_One_Path
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution ) is
@@ -234,16 +253,7 @@ package body Series_and_Trackers is
       new_line;
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
       Standard_Complex_Series_Vectors.Clear(eva);
-      if step > 0.01
-       then step := 0.01;
-      end if;
-      update := t + step;
-      if update <= onetarget then
-        t := update;
-      else
-        step := onetarget - t;
-        t := onetarget; 
-      end if;
+      Set_Step(t,step,0.01,onetarget);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
       Standard_CSeries_Poly_Systems.Clear(wrk);
       wrk := Series_and_Homotopies.Shift(hom,t);
@@ -280,16 +290,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
-      if step > 0.1
-       then step := 0.1;
-      end if;
-      update := t + step;
-      if update <= onetarget then
-        t := update;
-      else
-        step := onetarget - t;
-        t := onetarget; 
-      end if;
+      Set_Step(t,step,0.01,onetarget);
       dd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -328,16 +329,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
-      if step > 0.1
-       then step := 0.1;
-      end if;
-      update := t + step;
-      if update <= onetarget then
-        t := update;
-      else
-        step := onetarget - t;
-        t := onetarget; 
-      end if;
+      Set_Step(t,step,0.01,onetarget);
       qd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -383,16 +375,7 @@ package body Series_and_Trackers is
                 (file,eva,tolcff,tolres,verbose);
       Standard_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
-      if step > 0.01
-       then step := 0.01;
-      end if;
-      update := t + step;
-      if update <= onetarget then
-        t := update;
-      else
-        step := onetarget - t;
-        t := onetarget; 
-      end if;
+      Set_Step(t,step,0.01,onetarget);
       put(file," t = "); put(file,t,3);  new_line(file);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
       put_line(file,"Shifting the polynomial system ...");
@@ -442,16 +425,7 @@ package body Series_and_Trackers is
                 (file,eva,tolcff,tolres,verbose);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
-      if step > 0.1
-       then step := 0.1;
-      end if;
-      update := t + step;
-      if update <= onetarget then
-        t := update;
-      else
-        step := onetarget - t;
-        t := onetarget; 
-      end if;
+      Set_Step(t,step,0.01,onetarget);
       put(file," t = "); put(file,t,3);  new_line(file);
       dd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
@@ -503,16 +477,7 @@ package body Series_and_Trackers is
                 (file,eva,tolcff,tolres,verbose);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
-      if step > 0.1
-       then step := 0.1;
-      end if;
-      update := t + step;
-      if update <= onetarget then
-        t := update;
-      else
-        step := onetarget - t;
-        t := onetarget; 
-      end if;
+      Set_Step(t,step,0.01,onetarget);
       put(file," t = "); put(file,t,3);  new_line(file);
       qd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);

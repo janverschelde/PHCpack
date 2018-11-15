@@ -90,6 +90,15 @@ package Series_and_Trackers is
   --   rco      estimate for the inverse condition number;
   --   res      magnitude of the residual.
 
+  procedure Set_Step
+              ( t,step : in out double_float;
+                maxstep,target : in double_float );
+
+  -- DESCRIPTION :
+  --   Sets the step size and the new value for t,
+  --   taking into account the maximal step size maxstep
+  --   and the value for the target for t.
+
   procedure Track_one_Path
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution );
