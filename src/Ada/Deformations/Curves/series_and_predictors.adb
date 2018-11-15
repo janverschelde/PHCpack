@@ -25,6 +25,7 @@ with QuadDobl_CSeries_Poly_SysFun;
 with Complex_Series_and_Polynomials_io;
 with Power_Series_Methods;               use Power_Series_Methods;
 with Series_and_Solutions;
+with Homotopy_Pade_Approximants;
 
 package body Series_and_Predictors is
 
@@ -204,6 +205,42 @@ package body Series_and_Predictors is
       Complex_Series_and_Polynomials_io.put(file,eva);
     end if;
   end Newton_Prediction;
+
+  procedure Pade_Approximants
+              ( numdeg,dendeg : in integer32;
+                srv : in Standard_Complex_Series_Vectors.Vector;
+                pv : out Standard_Pade_Approximants.Pade_Vector;
+                poles : out Standard_Complex_VecVecs.VecVec;
+                frp : out double_float; verbose : in boolean := false ) is
+  begin
+    pv := Standard_Pade_Approximants.Create(numdeg,dendeg,srv,verbose);
+    poles := Homotopy_Pade_Approximants.Standard_Poles(pv);
+    frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
+  end Pade_Approximants;
+
+  procedure Pade_Approximants
+              ( numdeg,dendeg : in integer32;
+                srv : in DoblDobl_Complex_Series_Vectors.Vector;
+                pv : out DoblDobl_Pade_Approximants.Pade_Vector;
+                poles : out DoblDobl_Complex_VecVecs.VecVec;
+                frp : out double_double; verbose : in boolean := false ) is
+  begin
+    pv := DoblDobl_Pade_Approximants.Create(numdeg,dendeg,srv,verbose);
+    poles := Homotopy_Pade_Approximants.DoblDobl_Poles(pv);
+    frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
+  end Pade_Approximants;
+
+  procedure Pade_Approximants
+              ( numdeg,dendeg : in integer32;
+                srv : in QuadDobl_Complex_Series_Vectors.Vector;
+                pv : out QuadDobl_Pade_Approximants.Pade_Vector;
+                poles : out QuadDobl_Complex_VecVecs.VecVec;
+                frp : out quad_double; verbose : in boolean := false ) is
+  begin
+    pv := QuadDobl_Pade_Approximants.Create(numdeg,dendeg,srv,verbose);
+    poles := Homotopy_Pade_Approximants.QuadDobl_Poles(pv);
+    frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
+  end Pade_Approximants;
 
   function Predicted_Error
              ( evls : Standard_Complex_Series_Vectors.Vector;
@@ -493,6 +530,42 @@ package body Series_and_Predictors is
 
     res : constant QuadDobl_Complex_Vectors.Vector
         := QuadDobl_CSeries_Vector_Functions.Eval(srv,step);
+
+  begin
+    return res;
+  end Predicted_Solution;
+
+  function Predicted_Solution
+             ( pv : Standard_Pade_Approximants.Pade_Vector;
+               step : double_float )
+             return Standard_Complex_Vectors.Vector is
+
+    res : constant Standard_Complex_Vectors.Vector
+        := Standard_Pade_Approximants.Eval(pv,step);
+
+  begin
+    return res;
+  end Predicted_Solution;
+
+  function Predicted_Solution
+             ( pv : DoblDobl_Pade_Approximants.Pade_Vector;
+               step : double_double )
+             return DoblDobl_Complex_Vectors.Vector is
+
+    res : constant DoblDobl_Complex_Vectors.Vector
+        := DoblDobl_Pade_Approximants.Eval(pv,step);
+
+  begin
+    return res;
+  end Predicted_Solution;
+
+  function Predicted_Solution
+             ( pv : QuadDobl_Pade_Approximants.Pade_Vector;
+               step : quad_double )
+             return QuadDobl_Complex_Vectors.Vector is
+
+    res : constant QuadDobl_Complex_Vectors.Vector
+        := QuadDobl_Pade_Approximants.Eval(pv,step);
 
   begin
     return res;

@@ -4,17 +4,23 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
 with Standard_CSeries_Poly_Systems;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_CSeries_Poly_Systems;
+with Standard_Pade_Approximants;
+with DoblDobl_Pade_Approximants;
+with QuadDobl_Pade_Approximants;
 
 package Series_and_Predictors is
 
@@ -107,6 +113,45 @@ package Series_and_Predictors is
   --   eva      evaluated series vector srv in the homotopy hom;
   --            eva'range = hom'range.
 
+  procedure Pade_Approximants
+              ( numdeg,dendeg : in integer32;
+                srv : in Standard_Complex_Series_Vectors.Vector;
+                pv : out Standard_Pade_Approximants.Pade_Vector;
+                poles : out Standard_Complex_VecVecs.VecVec;
+                frp : out double_float; verbose : in boolean := false );
+  procedure Pade_Approximants
+              ( numdeg,dendeg : in integer32;
+                srv : in DoblDobl_Complex_Series_Vectors.Vector;
+                pv : out DoblDobl_Pade_Approximants.Pade_Vector;
+                poles : out DoblDobl_Complex_VecVecs.VecVec;
+                frp : out double_double; verbose : in boolean := false );
+  procedure Pade_Approximants
+              ( numdeg,dendeg : in integer32;
+                srv : in QuadDobl_Complex_Series_Vectors.Vector;
+                pv : out QuadDobl_Pade_Approximants.Pade_Vector;
+                poles : out QuadDobl_Complex_VecVecs.VecVec;
+                frp : out quad_double; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Given a power series vector, constructs Pade approximants,
+  --   computes its poles and the smallest forward pole radius,
+  --   in double, double double, or quad double precision.
+
+  -- REQUIRED : the degree of the series in srv is large enough
+  --   for the sum of numdeg and dendeg: srv.deg >= numdeg+dendeg.
+
+  -- ON ENTRY :
+  --   numdeg   degree of the numerator of the Pade approximants;
+  --   dendeg   degree of the denominator of the Pade approximants;
+  --   srv      vector power series, truncated to a certain degree;
+  --   verbose  if verbose, then extra information is written to screen
+  --            during the construction of the Pade approximants.
+
+  -- ON RETURN :
+  --   pv       vector of Pade approximants
+  --   poles    poles of the Pade approximants;
+  --   frp      radius of the pole with the smallest real part.
+
   function Predicted_Error
              ( evls : Standard_Complex_Series_Vectors.Vector;
                step : double_float ) return double_float;
@@ -186,6 +231,23 @@ package Series_and_Predictors is
 
   -- DESCRIPTION :
   --   Evaluates the vector of power series srv at the step,
+  --   in double, double double, or quad double precision.
+
+  function Predicted_Solution
+             ( pv : Standard_Pade_Approximants.Pade_Vector;
+               step : double_float )
+             return Standard_Complex_Vectors.Vector;
+  function Predicted_Solution
+             ( pv : DoblDobl_Pade_Approximants.Pade_Vector;
+               step : double_double )
+             return DoblDobl_Complex_Vectors.Vector;
+  function Predicted_Solution
+             ( pv : QuadDobl_Pade_Approximants.Pade_Vector;
+               step : quad_double )
+             return QuadDobl_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Evaluates the vector of Pade approximants pv at the step,
   --   in double, double double, or quad double precision.
 
 end Series_and_Predictors;

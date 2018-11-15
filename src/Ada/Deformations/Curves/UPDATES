@@ -1,3 +1,6 @@
+Wed 14 Nov 2018 : added the construction of Pade approximants to
+  series_and_predictors.
+
 Tue 13 Nov 2018 : made double double and quad double version like the
   double versions, updated *dobl_rational_approximations and
   *dobl_pade_approximants, wrapped smallest_forward_pole procedure into
