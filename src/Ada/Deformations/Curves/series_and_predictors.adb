@@ -499,6 +499,18 @@ package body Series_and_Predictors is
     return res;
   end Set_Step_Size;
 
+  function Cap_Step_Size
+             ( step,frp,factor : double_float ) return double_float is
+
+    threshold : constant double_float := factor*frp;
+
+  begin
+    if step <= threshold
+     then return step;
+     else return threshold;
+    end if;
+  end Cap_Step_Size;
+
   function Predicted_Solution
              ( srv : Standard_Complex_Series_Vectors.Vector;
                step : double_float )

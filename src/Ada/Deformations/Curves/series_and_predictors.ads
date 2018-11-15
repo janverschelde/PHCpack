@@ -216,6 +216,14 @@ package Series_and_Predictors is
   --   The tolcff is needed to compute the least order of v.
   --   If verbose, then extra output is written to file.
 
+  function Cap_Step_Size
+             ( step,frp,factor : double_float ) return double_float;
+
+  -- DESCRIPTION :
+  --   Caps the step size with the smallest forward pole radius,
+  --   multiplied by a factor, which is typically smaller than one.
+  --   The formula is min(step,frp*factor).
+
   function Predicted_Solution
              ( srv : Standard_Complex_Series_Vectors.Vector;
                step : double_float )
