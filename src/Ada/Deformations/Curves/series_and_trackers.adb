@@ -4,9 +4,15 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
@@ -22,6 +28,9 @@ with QuadDobl_Root_Refiners;
 with Standard_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_Vectors;
+with Standard_Pade_Approximants;
+with DoblDobl_Pade_Approximants;
+with QuadDobl_Pade_Approximants;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 
@@ -238,23 +247,33 @@ package body Series_and_Trackers is
     nit : constant integer32 := 3;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
+    pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
+    poles : Standard_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
     max_steps : constant natural32 := 500;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
-    err,rco,res : double_float;
+    err,rco,res,frp : double_float;
+    numdeg : constant integer32 := 4;
+    dendeg : constant integer32 := 1;
 
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
+      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      Standard_Complex_VecVecs.Clear(poles);
       new_line;
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
       Standard_Complex_Series_Vectors.Clear(eva);
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size(step,frp,0.5);
+      end if;
       Set_Step(t,step,0.01,onetarget);
-      wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
+     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
+      wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_Complex_Series_Vectors.Clear(eva);
       Standard_CSeries_Poly_Systems.Clear(wrk);
@@ -262,6 +281,7 @@ package body Series_and_Trackers is
       Correct(wrk,0.0,3,wrk_sol,err,rco,res);
       exit when (t = 1.0);
     end loop;
+    sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     Standard_CSeries_Poly_Systems.Clear(wrk);
@@ -276,6 +296,8 @@ package body Series_and_Trackers is
     nit : constant integer32 := 4;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
+    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
+    poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
@@ -285,16 +307,25 @@ package body Series_and_Trackers is
     onetarget : constant double_float := 1.0;
     err,rco,res : double_double;
     zero : constant double_double := create(0.0);
+    numdeg : constant integer32 := 4;
+    dendeg : constant integer32 := 1;
+    frp : double_double;
 
   begin
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
+      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      DoblDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size(step,hi_part(frp),0.5);
+      end if;
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,0.01,onetarget);
       dd_step := create(step);
-      wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
+     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
+      wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
       DoblDobl_Complex_Series_Vectors.Clear(srv);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -303,6 +334,7 @@ package body Series_and_Trackers is
       Correct(wrk,zero,3,wrk_sol,err,rco,res);
       exit when (t = 1.0);
     end loop;
+    sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     DoblDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -317,6 +349,8 @@ package body Series_and_Trackers is
     nit : constant integer32 := 4;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
+    poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
@@ -326,16 +360,25 @@ package body Series_and_Trackers is
     onetarget : constant double_float := 1.0;
     err,rco,res : quad_double;
     zero : constant quad_double := create(0.0);
+    numdeg : constant integer32 := 4;
+    dendeg : constant integer32 := 1;
+    frp : quad_double;
 
   begin
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
+      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      QuadDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      if frp > 0.0 then
+        step := Series_and_Predictors.Cap_Step_Size(step,hihi_part(frp),0.5);
+      end if;
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,0.01,onetarget);
       qd_step := create(step);
-      wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
+     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
+      wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -344,6 +387,7 @@ package body Series_and_Trackers is
       Correct(wrk,zero,3,wrk_sol,err,rco,res);
       exit when (t = 1.0);
     end loop;
+    sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -360,13 +404,17 @@ package body Series_and_Trackers is
     maxdeg : constant integer32 := 16;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
+    pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
+    poles : Standard_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
     max_steps : constant natural32 := 500;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
-    err,rco,res : double_float;
+    err,rco,res,frp : double_float;
+    numdeg : constant integer32 := 4;
+    dendeg : constant integer32 := 1;
 
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -375,15 +423,25 @@ package body Series_and_Trackers is
       put_line(file," in the path tracker :");
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
+      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      if verbose then
+        put(file,"The smallest forward pole radius : ");
+        put(file,frp,3); new_line(file);
+      end if;
+      Standard_Complex_VecVecs.Clear(poles);
       new_line(file);
       put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size(step,frp,0.5);
+      end if;
       Standard_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
       Set_Step(t,step,0.01,onetarget);
       put(file," t = "); put(file,t,3);  new_line(file);
-      wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
+     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
+      wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_Complex_Series_Vectors.Clear(eva);
       put_line(file,"Shifting the polynomial system ...");
@@ -394,6 +452,7 @@ package body Series_and_Trackers is
       exit when (t = 1.0);
     end loop;
     put_line(file,"The solution vector :"); put_line(file,wrk_sol);
+    sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     Standard_CSeries_Poly_Systems.Clear(wrk);
@@ -410,6 +469,8 @@ package body Series_and_Trackers is
     nit : constant integer32 := 4;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
+    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
+    poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
@@ -419,6 +480,9 @@ package body Series_and_Trackers is
     onetarget : constant double_float := 1.0;
     err,rco,res : double_double;
     zero : constant double_double := create(0.0);
+    numdeg : constant integer32 := 4;
+    dendeg : constant integer32 := 1;
+    frp : double_double;
 
   begin
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -427,16 +491,22 @@ package body Series_and_Trackers is
       put_line(file," in the path tracker :");
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
+      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      DoblDobl_Complex_VecVecs.Clear(poles);
       new_line(file);
       put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size(step,hi_part(frp),0.5);
+      end if;
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
       Set_Step(t,step,0.01,onetarget);
       put(file," t = "); put(file,t,3);  new_line(file);
       dd_step := create(step);
-      wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
+     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
+      wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
       DoblDobl_Complex_Series_Vectors.Clear(srv);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       put_line(file,"Shifting the polynomial system ...");
@@ -448,6 +518,7 @@ package body Series_and_Trackers is
       exit when (t = 1.0);
     end loop;
     put_line(file,"The solution vector :"); put_line(file,wrk_sol);
+    sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     DoblDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -464,6 +535,8 @@ package body Series_and_Trackers is
     nit : constant integer32 := 4;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
+    poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := 1.0E-12;
     tolres : constant double_float := 1.0E-5;
     t,step,update : double_float := 0.0;
@@ -473,6 +546,9 @@ package body Series_and_Trackers is
     onetarget : constant double_float := 1.0;
     err,rco,res : quad_double;
     zero : constant quad_double := create(0.0);
+    numdeg : constant integer32 := 4;
+    dendeg : constant integer32 := 1;
+    frp : quad_double;
 
   begin
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -481,16 +557,22 @@ package body Series_and_Trackers is
       put_line(file," in the path tracker :");
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
+      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      QuadDobl_Complex_VecVecs.Clear(poles);
       new_line(file);
       put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
+      if frp > 0.0 then
+        step := Series_and_Predictors.Cap_Step_Size(step,hihi_part(frp),0.5);
+      end if;
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
       Set_Step(t,step,0.01,onetarget);
       put(file," t = "); put(file,t,3);  new_line(file);
       qd_step := create(step);
-      wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
+     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
+      wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       put_line(file,"Shifting the polynomial system ...");
@@ -502,6 +584,7 @@ package body Series_and_Trackers is
       exit when (t = 1.0);
     end loop;
     put_line(file,"The solution vector :"); put_line(file,wrk_sol);
+    sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);

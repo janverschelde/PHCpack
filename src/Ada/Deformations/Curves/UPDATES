@@ -1,5 +1,6 @@
 Thu 15 Nov 2018 : added clear() calls in series_and_trackers.adb in an
-  attempt to stop the memory leak.
+  attempt to stop the memory leak.  To series_and_trackers.adb, added
+  the application of the Pade approximants in the predictors.
 
 Wed 14 Nov 2018 : added the construction of Pade approximants to
   series_and_predictors.  Factored the setting of the step size into
