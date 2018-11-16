@@ -1,3 +1,5 @@
+Fri 16 Nov 2018 : added clear()'s to standard_newton_matrix_series.adb.
+
 Thu 15 Nov 2018 : added clear() calls in series_and_trackers.adb in an
   attempt to stop the memory leak.  To series_and_trackers.adb, added
   the application of the Pade approximants in the predictors.
