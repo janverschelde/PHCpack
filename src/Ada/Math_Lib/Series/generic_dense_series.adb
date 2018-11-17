@@ -543,6 +543,9 @@ package body Generic_Dense_Series is
     if t /= null then
       if s = null then
         s := new Series'(t.all);
+        for i in s.cff'range loop  -- s = -t
+          s.cff(i) := -s.cff(i);
+        end loop;
       else
         if t.deg <= s.deg then
           for i in 0..t.deg loop

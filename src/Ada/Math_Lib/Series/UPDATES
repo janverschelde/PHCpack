@@ -1,3 +1,6 @@
+Sat 17 Nov 2018 : fixed bug in Sub() method with empty first argument
+  in generic_dense_series.adb.
+
 Wed 7 Nov 2018 : new test program ts_csersys and ts_cserinv,
   based on modifications of ts_sersys and ts_serinv respectively.
   Extended *_complex_series_functions* with Order functions.
