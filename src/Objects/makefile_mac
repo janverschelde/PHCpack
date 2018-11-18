@@ -611,6 +611,10 @@ ts_cserpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserpol.adb \
               -o $(BIN)/ts_cserpol
 
+ts_sersys:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersys.adb \
+              -o $(BIN)/ts_sersys
+
 ts_csersys:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_csersys.adb \
               -o $(BIN)/ts_csersys
@@ -806,6 +810,7 @@ ts_serpath:
 
 ts_serpade:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpade.adb \
+                 -o $(BIN)/ts_serpade
 
 ts_padepred:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_padepred.adb \
@@ -2255,7 +2260,11 @@ ts_mtmva:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmva.adb -o $(BIN)/ts_mtmva
 
 ts_mtperm:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtperm.adb \
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtperm.adb -o $(BIN)/ts_mtperm
+
+ts_mtpermtrol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtpermtrol.adb \
+              -o $(BIN)/ts_mtpermtrol
 
 ts_mtmbthom:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmbthom.adb \

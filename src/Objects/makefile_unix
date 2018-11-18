@@ -545,6 +545,7 @@ ts_csermat:
 
 ts_seritp:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_seritp.adb -o $(BIN)/ts_seritp
+
 ts_seritp2:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_seritp2.adb -o $(BIN)/ts_seritp2
 
@@ -2740,6 +2741,10 @@ ts_mtmva:
 
 ts_mtperm:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtperm.adb -o $(BIN)/ts_mtperm
+
+ts_mtpermctl:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtpermctl.adb \
+              -o $(BIN)/ts_mtpermctl
 
 ts_mtmbthom:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtmbthom.adb \

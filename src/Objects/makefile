@@ -529,6 +529,9 @@ ts_serpol:
 ts_cserpol:
 	make -f $(MAKEFILE) ts_cserpol
 
+ts_sersys:
+	make -f $(MAKEFILE) ts_sersys
+
 ts_csersys:
 	make -f $(MAKEFILE) ts_csersys
 
@@ -1610,7 +1613,7 @@ ts_pathpars:
 
 test_tasking: ts_mutex ts_jobs ts_mtvol ts_mtvolcon ts_mtverify ts_mtcont \
               ts_mtmva ts_mtddref ts_mtqdref ts_mtsols ts_mtsharp ts_mtperm \
-              ts_mtmbthom ts_mtcelidx
+              ts_mtpermtrol ts_mtmbthom ts_mtcelidx
 #             ts_mtmatvec ts_mtpolval ts_mtlinsol
 
 ts_mtmatvec:
@@ -1675,6 +1678,9 @@ ts_mtmva:
 
 ts_mtperm:
 	make -f $(MAKEFILE) ts_mtperm
+
+ts_mtpermtrol:
+	make -f $(MAKEFILE) ts_mtpermtrol
 
 ts_mtmbthom:
 	make -f $(MAKEFILE) ts_mtmbthom

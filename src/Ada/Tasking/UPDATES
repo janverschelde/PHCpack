@@ -1,3 +1,6 @@
+Sun 18 Nov 2018 : new ts_mtpermtrol to add a control to the permanent
+  computation with multitasking.
+
 Sun 3 Jun 2018 : added another producer to pipelined_cell_indices for stable
   mixed volumes, tested by ts_mtcelidx.adb.
 
