@@ -239,11 +239,12 @@ package body Series_and_Trackers is
   end Set_Step;
 
   procedure Track_One_Path
-              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    maxdeg : constant integer32 := 16;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := 3;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
@@ -256,8 +257,6 @@ package body Series_and_Trackers is
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res,frp : double_float;
-    numdeg : constant integer32 := 4;
-    dendeg : constant integer32 := 1;
 
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -288,11 +287,12 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    maxdeg : constant integer32 := 16;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := 4;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -307,8 +307,6 @@ package body Series_and_Trackers is
     onetarget : constant double_float := 1.0;
     err,rco,res : double_double;
     zero : constant double_double := create(0.0);
-    numdeg : constant integer32 := 4;
-    dendeg : constant integer32 := 1;
     frp : double_double;
 
   begin
@@ -341,11 +339,12 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    maxdeg : constant integer32 := 16;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := 4;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -360,8 +359,6 @@ package body Series_and_Trackers is
     onetarget : constant double_float := 1.0;
     err,rco,res : quad_double;
     zero : constant quad_double := create(0.0);
-    numdeg : constant integer32 := 4;
-    dendeg : constant integer32 := 1;
     frp : quad_double;
 
   begin
@@ -394,14 +391,14 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 verbose : in boolean := false ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
     nit : constant integer32 := 4;
-    maxdeg : constant integer32 := 16;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
@@ -413,8 +410,6 @@ package body Series_and_Trackers is
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res,frp : double_float;
-    numdeg : constant integer32 := 4;
-    dendeg : constant integer32 := 1;
 
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -459,13 +454,13 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 verbose : in boolean := false ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    maxdeg : constant integer32 := 16;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := 4;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -480,8 +475,6 @@ package body Series_and_Trackers is
     onetarget : constant double_float := 1.0;
     err,rco,res : double_double;
     zero : constant double_double := create(0.0);
-    numdeg : constant integer32 := 4;
-    dendeg : constant integer32 := 1;
     frp : double_double;
 
   begin
@@ -525,13 +518,13 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 verbose : in boolean := false ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    maxdeg : constant integer32 := 16;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := 4;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -546,8 +539,6 @@ package body Series_and_Trackers is
     onetarget : constant double_float := 1.0;
     err,rco,res : quad_double;
     zero : constant quad_double := create(0.0);
-    numdeg : constant integer32 := 4;
-    dendeg : constant integer32 := 1;
     frp : quad_double;
 
   begin
@@ -591,7 +582,7 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_Many_Paths
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 verbose : in boolean := false ) is
@@ -606,13 +597,13 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
-      Series_and_Trackers.Track_One_Path(file,hom,ls.all,verbose);
+      Track_One_Path(file,numdeg,dendeg,hom,ls.all,verbose);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 verbose : in boolean := false ) is
@@ -627,13 +618,13 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
-      Series_and_Trackers.Track_One_Path(file,hom,ls.all,verbose);
+      Track_One_Path(file,numdeg,dendeg,hom,ls.all,verbose);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 verbose : in boolean := false ) is
@@ -648,13 +639,14 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
-      Series_and_Trackers.Track_One_Path(file,hom,ls.all,verbose);
+      Track_One_Path(file,numdeg,dendeg,hom,ls.all,verbose);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32; 
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List ) is
 
     use Standard_Complex_Solutions;
@@ -666,13 +658,14 @@ package body Series_and_Trackers is
   begin
     for i in 1..len loop
       ls := Head_Of(tmp);
-      Series_and_Trackers.Track_One_Path(hom,ls.all);
+      Track_One_Path(numdeg,dendeg,hom,ls.all);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
 
     use DoblDobl_Complex_Solutions;
@@ -684,13 +677,14 @@ package body Series_and_Trackers is
   begin
     for i in 1..len loop
       ls := Head_Of(tmp);
-      Series_and_Trackers.Track_One_Path(hom,ls.all);
+      Track_One_Path(numdeg,dendeg,hom,ls.all);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
     use QuadDobl_Complex_Solutions;
@@ -702,7 +696,7 @@ package body Series_and_Trackers is
   begin
     for i in 1..len loop
       ls := Head_Of(tmp);
-      Series_and_Trackers.Track_One_Path(hom,ls.all);
+      Track_One_Path(numdeg,dendeg,hom,ls.all);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;

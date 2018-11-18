@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;  
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
@@ -100,13 +101,16 @@ package Series_and_Trackers is
   --   and the value for the target for t.
 
   procedure Track_one_Path
-              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution );
   procedure Track_one_Path
-              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution );
   procedure Track_one_Path
-              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution );
 
   -- DESCRIPTION :
@@ -114,18 +118,27 @@ package Series_and_Trackers is
   --   in standard double, double double, or quad double precision.
   --   This version remains silent and does not write any output.
 
+  -- ON ENTRY :
+  --   numdeg   degree of the numerator in the Pade approximants;
+  --   dendeg   degree of the denominator in the Pade approximants;
+  --   hom      a homotopy with series coefficients;
+  --   sol      start solution in the homotopy.
+
+  -- ON RETURN :
+  --   sol      solution at the end of the paths.
+
   procedure Track_one_Path
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 verbose : in boolean := false );
   procedure Track_one_Path
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 verbose : in boolean := false );
   procedure Track_one_Path
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 verbose : in boolean := false );
@@ -135,14 +148,27 @@ package Series_and_Trackers is
   --   in standard double, double double, or quad double precision.
   --   This version is verbose and writes extra diagnostic output to file.
 
+  -- ON ENTRY :
+  --   file     for writing output during the computations;
+  --   numdeg   degree of the numerator in the Pade approximants;
+  --   dendeg   degree of the denominator in the Pade approximants;
+  --   hom      a homotopy with series coefficients;
+  --   sol      start solution in the homotopy.
+
+  -- ON RETURN :
+  --   sol      solution at the end of the paths.
+
   procedure Track_Many_Paths
-              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List );
   procedure Track_Many_Paths
-              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
   procedure Track_Many_Paths
-              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( numdeg,dendeg : in integer32;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -151,18 +177,27 @@ package Series_and_Trackers is
   --   in double, double double, or quad double precision.
   --   The procedures are silent and do not write any output.
 
+  -- ON ENTRY :
+  --   numdeg   degree of the numerator in the Pade approximants;
+  --   dendeg   degree of the denominator in the Pade approximants;
+  --   hom      a homotopy with series coefficients;
+  --   sols     start solutions in the homotopy.
+
+  -- ON RETURN :
+  --   sols     solutions at the end of the paths.
+
   procedure Track_Many_Paths
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 verbose : in boolean := false );
   procedure Track_Many_Paths
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 verbose : in boolean := false );
   procedure Track_Many_Paths
-              ( file : in file_type;
+              ( file : in file_type; numdeg,dendeg : in integer32;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 verbose : in boolean := false );
@@ -171,6 +206,16 @@ package Series_and_Trackers is
   --   Tracks the paths starting at the solutions in the list sols,
   --   as defined by the homotopy in hom,
   --   in double, double double, or quad double precision.
-  --   If verbose, then extra output is written to file.
+
+  -- ON ENTRY :
+  --   file     for output to file;
+  --   numdeg   degree of the numerator in the Pade approximants;
+  --   dendeg   degree of the denominator in the Pade approximants;
+  --   hom      a homotopy with series coefficients;
+  --   sols     start solutions in the homotopy;
+  --   verbose  if true, then extra output is written to file.
+
+  -- ON RETURN :
+  --   sols     solutions at the end of the paths.
 
 end Series_and_Trackers;

@@ -61,6 +61,20 @@ procedure ts_serpath is
     end if;
   end Set_Output;
 
+  procedure Prompt_for_Degrees ( numdeg,dendeg : out integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the degrees of the numerator and denominator,
+  --   returned respectively in numdeg and dendeg.
+
+  begin
+    new_line;
+    put("Give the degree of numerator of the Pade approximants : ");
+    numdeg := 0; get(numdeg);
+    put("Give the degree of denominator of the Pade approximants : ");
+    dendeg := 0; get(dendeg);
+  end Prompt_for_Degrees;
+
   procedure Standard_Test
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List ) is
@@ -82,18 +96,22 @@ procedure ts_serpath is
     ans : character;
     verbose,tofile : boolean;
     file : file_type;
+    numdeg,dendeg : integer32 := 0;
 
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1); new_line;
+    Prompt_for_Degrees(numdeg,dendeg);
     Set_Output(file,verbose,tofile);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
-        Series_and_Trackers.Track_One_Path(file,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path
+          (file,numdeg,dendeg,s,ls.all,verbose);
       else
-        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path
+          (standard_output,numdeg,dendeg,s,ls.all,verbose);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;
@@ -132,18 +150,22 @@ procedure ts_serpath is
     ans : character;
     verbose,tofile : boolean;
     file : file_type;
+    numdeg,dendeg : integer32 := 0;
 
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1); new_line;
+    Prompt_for_Degrees(numdeg,dendeg);
     Set_Output(file,verbose,tofile);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
-        Series_and_Trackers.Track_One_Path(file,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path
+          (file,numdeg,dendeg,s,ls.all,verbose);
       else
-        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path
+          (standard_output,numdeg,dendeg,s,ls.all,verbose);
         put("Continue to the next path ? (y/n) ");
         Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
@@ -183,18 +205,22 @@ procedure ts_serpath is
     ans : character;
     verbose,tofile : boolean;
     file : file_type;
+    numdeg,dendeg : integer32 := 0;
 
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1); new_line;
+    Prompt_for_Degrees(numdeg,dendeg);
     Set_Output(file,verbose,tofile);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
-        Series_and_Trackers.Track_One_Path(file,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path
+          (file,numdeg,dendeg,s,ls.all,verbose);
       else
-        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path
+          (standard_output,numdeg,dendeg,s,ls.all,verbose);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;
