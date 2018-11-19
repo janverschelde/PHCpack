@@ -274,7 +274,7 @@ package body Series_and_Trackers is
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
       Standard_Complex_Series_Vectors.Clear(srv);
-      Standard_Complex_Series_Vectors.Clear(eva);
+      Standard_Pade_Approximants.Clear(pv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
       wrk := Series_and_Homotopies.Shift(hom,t);
       Correct(wrk,0.0,3,wrk_sol,err,rco,res);
@@ -325,7 +325,7 @@ package body Series_and_Trackers is
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
       DoblDobl_Complex_Series_Vectors.Clear(srv);
-      DoblDobl_Complex_Series_Vectors.Clear(eva);
+      DoblDobl_Pade_Approximants.Clear(pv);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
       dd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
@@ -376,8 +376,8 @@ package body Series_and_Trackers is
       qd_step := create(step);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
+      QuadDobl_Pade_Approximants.Clear(pv);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
-      QuadDobl_Complex_Series_Vectors.Clear(eva);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
       qd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
@@ -437,8 +437,8 @@ package body Series_and_Trackers is
       put(file," t = "); put(file,t,3);  new_line(file);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
+      Standard_Pade_Approximants.Clear(pv);
       Standard_Complex_Series_Vectors.Clear(srv);
-      Standard_Complex_Series_Vectors.Clear(eva);
       put_line(file,"Shifting the polynomial system ...");
       Standard_CSeries_Poly_Systems.Clear(wrk);
       wrk := Series_and_Homotopies.Shift(hom,t);
@@ -501,7 +501,7 @@ package body Series_and_Trackers is
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
       DoblDobl_Complex_Series_Vectors.Clear(srv);
-      DoblDobl_Complex_Series_Vectors.Clear(eva);
+      DoblDobl_Pade_Approximants.Clear(pv);
       put_line(file,"Shifting the polynomial system ...");
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
       dd_t := create(t);
@@ -565,7 +565,7 @@ package body Series_and_Trackers is
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
-      QuadDobl_Complex_Series_Vectors.Clear(eva);
+      QuadDobl_Pade_Approximants.Clear(pv);
       put_line(file,"Shifting the polynomial system ...");
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
       qd_t := create(t);
