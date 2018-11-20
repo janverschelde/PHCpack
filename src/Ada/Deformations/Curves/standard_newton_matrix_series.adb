@@ -44,6 +44,7 @@ package body Standard_Newton_Matrix_Series is
       Standard_Complex_Series_Vectors.Clear(dx);
     end if;
     Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_Complex_Matrix_Series.Clear(mj);
     Standard_Complex_Vector_Series.Clear(xp);
     Standard_Complex_Vector_Series.Clear(xd);
@@ -102,6 +103,7 @@ package body Standard_Newton_Matrix_Series is
       Standard_Complex_Series_Vectors.Clear(dx);
     end if;
     Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_Complex_Matrix_Series.Clear(mj);
     Standard_Complex_Vector_Series.Clear(xp);
     Standard_Complex_Vector_Series.Clear(xd);
@@ -152,6 +154,7 @@ package body Standard_Newton_Matrix_Series is
       Standard_Complex_Series_Vectors.Clear(dx);
     end if;
     Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_Complex_Matrix_Series.Clear(mj);
     Standard_Complex_Vector_Series.Clear(xp);
     Standard_Complex_Vector_Series.Clear(xd);
@@ -209,6 +212,7 @@ package body Standard_Newton_Matrix_Series is
       Standard_Complex_Series_Vectors.Clear(dx);
     end if;
     Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_Complex_Matrix_Series.Clear(mj);
     Standard_Complex_Vector_Series.Clear(xp);
     Standard_Complex_Vector_Series.Clear(xd);
@@ -275,6 +279,7 @@ package body Standard_Newton_Matrix_Series is
       Standard_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
     Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_CSeries_Poly_Systems.Clear(wp);
     Standard_Complex_Matrix_Series.Clear(mj);
     Standard_Complex_Vector_Series.Clear(xp);
@@ -352,6 +357,7 @@ package body Standard_Newton_Matrix_Series is
       Standard_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
     Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_CSeries_Poly_Systems.Clear(wp);
     Standard_Complex_Matrix_Series.Clear(mj);
     Standard_Complex_Vector_Series.Clear(xp);
@@ -419,6 +425,7 @@ package body Standard_Newton_Matrix_Series is
       Standard_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
     Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_CSeries_Poly_Systems.Clear(wp);
     Standard_Complex_Matrix_Series.Clear(mj);
     Standard_Complex_Vector_Series.Clear(xp);
@@ -495,6 +502,7 @@ package body Standard_Newton_Matrix_Series is
       Standard_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
     Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_CSeries_Poly_Systems.Clear(wp);
     Standard_Complex_Matrix_Series.Clear(mj);
     Standard_Complex_Vector_Series.Clear(xp);
@@ -544,6 +552,7 @@ package body Standard_Newton_Matrix_Series is
     Standard_Complex_Series_Vectors.Add(x,dx);
     Standard_Complex_Series_Vectors.Clear(dx);
     Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_Complex_Matrix_Series.Clear(mj);
     Standard_Complex_Vector_Series.Clear(xp);
     Standard_Complex_Vector_Series.Clear(xd);
@@ -604,6 +613,7 @@ package body Standard_Newton_Matrix_Series is
     end loop;
     Standard_Complex_Series_Vectors.Clear(dx);
     Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_Complex_Matrix_Series.Clear(mj);
     Standard_Complex_Vector_Series.Clear(xp);
     Standard_Complex_Vector_Series.Clear(xd);

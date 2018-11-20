@@ -1,3 +1,6 @@
+Tue 20 Nov 2018 : cleared the Jacobian series matrices in
+  {standard,dobldobl,quaddobl}_newton_matrix_series.adb.
+
 Mon 19 Nov 2018 : added clear() of Pade approximants vector after use in
   series_and_trackers.adb.  Fixed memory leak in series_and_homotopies.adb.
   In the verbose methods in power_series_methods.adb, clear(eva) added.

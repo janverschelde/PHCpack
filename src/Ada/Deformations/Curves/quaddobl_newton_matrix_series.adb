@@ -43,7 +43,10 @@ package body QuadDobl_Newton_Matrix_Series is
     if info = 0 then
       dx := QuadDobl_Complex_Vector_Series.Create(xd);
       QuadDobl_Complex_Series_Vectors.Add(x,dx);
+      QuadDobl_Complex_Series_Vectors.Clear(dx);
     end if;
+    QuadDobl_Complex_Series_Vectors.Clear(px);
+    QuadDobl_Complex_Series_Matrices.Clear(jm);
     QuadDobl_Complex_Matrix_Series.Clear(mj);
     QuadDobl_Complex_Vector_Series.Clear(xp);
     QuadDobl_Complex_Vector_Series.Clear(xd);
@@ -99,7 +102,10 @@ package body QuadDobl_Newton_Matrix_Series is
         QuadDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
       end loop;
       QuadDobl_Complex_Series_Vectors.Add(x,dx);
+      QuadDobl_Complex_Series_Vectors.Clear(dx);
     end if;
+    QuadDobl_Complex_Series_Vectors.Clear(px);
+    QuadDobl_Complex_Series_Matrices.Clear(jm);
     QuadDobl_Complex_Matrix_Series.Clear(mj);
     QuadDobl_Complex_Vector_Series.Clear(xp);
     QuadDobl_Complex_Vector_Series.Clear(xd);
@@ -148,7 +154,10 @@ package body QuadDobl_Newton_Matrix_Series is
     if one + rcond /= one then
       dx := QuadDobl_Complex_Vector_Series.Create(xd);
       QuadDobl_Complex_Series_Vectors.Add(x,dx);
+      QuadDobl_Complex_Series_Vectors.Clear(dx);
     end if;
+    QuadDobl_Complex_Series_Vectors.Clear(px);
+    QuadDobl_Complex_Series_Matrices.Clear(jm);
     QuadDobl_Complex_Matrix_Series.Clear(mj);
     QuadDobl_Complex_Vector_Series.Clear(xp);
     QuadDobl_Complex_Vector_Series.Clear(xd);
@@ -204,7 +213,10 @@ package body QuadDobl_Newton_Matrix_Series is
         QuadDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
       end loop;
       QuadDobl_Complex_Series_Vectors.Add(x,dx);
+      QuadDobl_Complex_Series_Vectors.Clear(dx);
     end if;
+    QuadDobl_Complex_Series_Vectors.Clear(px);
+    QuadDobl_Complex_Series_Matrices.Clear(jm);
     QuadDobl_Complex_Matrix_Series.Clear(mj);
     QuadDobl_Complex_Vector_Series.Clear(xp);
     QuadDobl_Complex_Vector_Series.Clear(xd);
@@ -266,9 +278,12 @@ package body QuadDobl_Newton_Matrix_Series is
       if info = 0 then
         dx := QuadDobl_Complex_Vector_Series.Create(xd);
         QuadDobl_Complex_Series_Vectors.Add(x,dx);
+        QuadDobl_Complex_Series_Vectors.Clear(dx);
       end if;
       QuadDobl_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
+    QuadDobl_Complex_Series_Vectors.Clear(px);
+    QuadDobl_Complex_Series_Matrices.Clear(jm);
     QuadDobl_CSeries_Poly_Systems.Clear(wp);
     QuadDobl_Complex_Matrix_Series.Clear(mj);
     QuadDobl_Complex_Vector_Series.Clear(xp);
@@ -341,9 +356,12 @@ package body QuadDobl_Newton_Matrix_Series is
           QuadDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
         end loop;
         QuadDobl_Complex_Series_Vectors.Add(x,dx);
+        QuadDobl_Complex_Series_Vectors.Clear(dx);
       end if;
       QuadDobl_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
+    QuadDobl_Complex_Series_Vectors.Clear(px);
+    QuadDobl_Complex_Series_Matrices.Clear(jm);
     QuadDobl_CSeries_Poly_Systems.Clear(wp);
     QuadDobl_Complex_Matrix_Series.Clear(mj);
     QuadDobl_Complex_Vector_Series.Clear(xp);
@@ -407,9 +425,12 @@ package body QuadDobl_Newton_Matrix_Series is
       if one + rcond /= one then
         dx := QuadDobl_Complex_Vector_Series.Create(xd);
         QuadDobl_Complex_Series_Vectors.Add(x,dx);
+        QuadDobl_Complex_Series_Vectors.Clear(dx);
       end if;
       QuadDobl_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
+    QuadDobl_Complex_Series_Vectors.Clear(px);
+    QuadDobl_Complex_Series_Matrices.Clear(jm);
     QuadDobl_CSeries_Poly_Systems.Clear(wp);
     QuadDobl_Complex_Matrix_Series.Clear(mj);
     QuadDobl_Complex_Vector_Series.Clear(xp);
@@ -482,9 +503,12 @@ package body QuadDobl_Newton_Matrix_Series is
           QuadDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
         end loop;
         QuadDobl_Complex_Series_Vectors.Add(x,dx);
+        QuadDobl_Complex_Series_Vectors.Clear(dx);
       end if;
       QuadDobl_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
+    QuadDobl_Complex_Series_Vectors.Clear(px);
+    QuadDobl_Complex_Series_Matrices.Clear(jm);
     QuadDobl_CSeries_Poly_Systems.Clear(wp);
     QuadDobl_Complex_Matrix_Series.Clear(mj);
     QuadDobl_Complex_Vector_Series.Clear(xp);

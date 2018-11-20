@@ -43,7 +43,10 @@ package body DoblDobl_Newton_Matrix_Series is
     if info = 0 then
       dx := DoblDobl_Complex_Vector_Series.Create(xd);
       DoblDobl_Complex_Series_Vectors.Add(x,dx);
+      DoblDobl_Complex_Series_Vectors.Clear(dx);
     end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_Complex_Matrix_Series.Clear(mj);
     DoblDobl_Complex_Vector_Series.Clear(xp);
     DoblDobl_Complex_Vector_Series.Clear(xd);
@@ -99,7 +102,10 @@ package body DoblDobl_Newton_Matrix_Series is
         DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
       end loop;
       DoblDobl_Complex_Series_Vectors.Add(x,dx);
+      DoblDobl_Complex_Series_Vectors.Clear(dx);
     end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_Complex_Matrix_Series.Clear(mj);
     DoblDobl_Complex_Vector_Series.Clear(xp);
     DoblDobl_Complex_Vector_Series.Clear(xd);
@@ -148,7 +154,10 @@ package body DoblDobl_Newton_Matrix_Series is
     if one + rcond /= one then
       dx := DoblDobl_Complex_Vector_Series.Create(xd);
       DoblDobl_Complex_Series_Vectors.Add(x,dx);
+      DoblDobl_Complex_Series_Vectors.Clear(dx);
     end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_Complex_Matrix_Series.Clear(mj);
     DoblDobl_Complex_Vector_Series.Clear(xp);
     DoblDobl_Complex_Vector_Series.Clear(xd);
@@ -204,7 +213,10 @@ package body DoblDobl_Newton_Matrix_Series is
         DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
       end loop;
       DoblDobl_Complex_Series_Vectors.Add(x,dx);
+      DoblDobl_Complex_Series_Vectors.Clear(dx);
     end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_Complex_Matrix_Series.Clear(mj);
     DoblDobl_Complex_Vector_Series.Clear(xp);
     DoblDobl_Complex_Vector_Series.Clear(xd);
@@ -266,9 +278,12 @@ package body DoblDobl_Newton_Matrix_Series is
       if info = 0 then
         dx := DoblDobl_Complex_Vector_Series.Create(xd);
         DoblDobl_Complex_Series_Vectors.Add(x,dx);
+        DoblDobl_Complex_Series_Vectors.Clear(dx);
       end if;
       DoblDobl_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_CSeries_Poly_Systems.Clear(wp);
     DoblDobl_Complex_Matrix_Series.Clear(mj);
     DoblDobl_Complex_Vector_Series.Clear(xp);
@@ -341,9 +356,12 @@ package body DoblDobl_Newton_Matrix_Series is
           DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
         end loop;
         DoblDobl_Complex_Series_Vectors.Add(x,dx);
+        DoblDobl_Complex_Series_Vectors.Clear(dx);
       end if;
       DoblDobl_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_CSeries_Poly_Systems.Clear(wp);
     DoblDobl_Complex_Matrix_Series.Clear(mj);
     DoblDobl_Complex_Vector_Series.Clear(xp);
@@ -407,9 +425,12 @@ package body DoblDobl_Newton_Matrix_Series is
       if one + rcond /= one then
         dx := DoblDobl_Complex_Vector_Series.Create(xd);
         DoblDobl_Complex_Series_Vectors.Add(x,dx);
+        DoblDobl_Complex_Series_Vectors.Clear(dx);
       end if;
       DoblDobl_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_CSeries_Poly_Systems.Clear(wp);
     DoblDobl_Complex_Matrix_Series.Clear(mj);
     DoblDobl_Complex_Vector_Series.Clear(xp);
@@ -482,9 +503,12 @@ package body DoblDobl_Newton_Matrix_Series is
           DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
         end loop;
         DoblDobl_Complex_Series_Vectors.Add(x,dx);
+        DoblDobl_Complex_Series_Vectors.Clear(dx);
       end if;
       DoblDobl_CSeries_Jaco_Matrices.Clear(wjp);
     end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_CSeries_Poly_Systems.Clear(wp);
     DoblDobl_Complex_Matrix_Series.Clear(mj);
     DoblDobl_Complex_Vector_Series.Clear(xp);
@@ -532,6 +556,9 @@ package body DoblDobl_Newton_Matrix_Series is
     Echelon_Solve(mj,xp,det,xd,xdn);
     dx := DoblDobl_Complex_Vector_Series.Create(xd);
     DoblDobl_Complex_Series_Vectors.Add(x,dx);
+    DoblDobl_Complex_Series_Vectors.Clear(dx);
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_Complex_Matrix_Series.Clear(mj);
     DoblDobl_Complex_Vector_Series.Clear(xp);
     DoblDobl_Complex_Vector_Series.Clear(xd);
@@ -586,6 +613,9 @@ package body DoblDobl_Newton_Matrix_Series is
     for i in dx'range loop
       DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
     end loop;
+    DoblDobl_Complex_Series_Vectors.Clear(dx);
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_Complex_Matrix_Series.Clear(mj);
     DoblDobl_Complex_Vector_Series.Clear(xp);
     DoblDobl_Complex_Vector_Series.Clear(xd);
