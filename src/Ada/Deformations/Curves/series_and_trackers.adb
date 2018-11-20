@@ -1,3 +1,4 @@
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -592,14 +593,19 @@ package body Series_and_Trackers is
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
+    timer : Timing_Widget;
 
   begin
+    tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       Track_One_Path(file,numdeg,dendeg,hom,ls.all,verbose);
       tmp := Tail_Of(tmp);
     end loop;
+    tstop(timer);
+    new_line(file);
+    print_times(file,timer,"Tracking in double precision.");
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
@@ -613,14 +619,19 @@ package body Series_and_Trackers is
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
+    timer : Timing_Widget;
 
   begin
+    tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       Track_One_Path(file,numdeg,dendeg,hom,ls.all,verbose);
       tmp := Tail_Of(tmp);
     end loop;
+    tstop(timer);
+    new_line(file);
+    print_times(file,timer,"Tracking in double double precision.");
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
@@ -634,14 +645,19 @@ package body Series_and_Trackers is
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
+    timer : Timing_Widget;
 
   begin
+    tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       Track_One_Path(file,numdeg,dendeg,hom,ls.all,verbose);
       tmp := Tail_Of(tmp);
     end loop;
+    tstop(timer);
+    new_line(file);
+    print_times(file,timer,"Tracking in quad double precision.");
   end Track_Many_Paths;
 
   procedure Track_Many_Paths

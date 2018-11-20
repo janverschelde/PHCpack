@@ -1,5 +1,7 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
+with Characters_and_Numbers;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -75,6 +77,31 @@ procedure ts_serpath is
     dendeg := 0; get(dendeg);
   end Prompt_for_Degrees;
 
+  procedure Write_Timer
+              ( file : in file_type;
+                numdeg,dendeg,precision : in integer32;
+                timer : in Timing_Widget ) is
+
+  -- DESCRIPTION :
+  --   Writes the times with as well the degrees of numerator
+  --   and denominator of the Pade approximants.
+  --   The precision is 0, 1, or 2, respectively
+  --   for double, double double, or quad double precision.
+
+    s : constant string
+      := "[" & Characters_and_Numbers.Convert(numdeg) &
+         "," & Characters_and_Numbers.Convert(dendeg) & "]-Tracking";
+ 
+  begin
+    new_line(file);
+    case precision is
+      when 0 => print_times(file,timer,s & " in double precision.");
+      when 1 => print_times(file,timer,s & " in double double precision.");
+      when 2 => print_times(file,timer,s & " in quad double precision.");
+      when others => null;
+    end case;
+  end Write_Timer;
+
   procedure Standard_Test
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List ) is
@@ -97,12 +124,14 @@ procedure ts_serpath is
     verbose,tofile : boolean;
     file : file_type;
     numdeg,dendeg : integer32 := 0;
+    timer : Timing_Widget;
 
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1); new_line;
     Prompt_for_Degrees(numdeg,dendeg);
     Set_Output(file,verbose,tofile);
+    tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
@@ -118,12 +147,15 @@ procedure ts_serpath is
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
     end loop;
+    tstop(timer);
     if tofile then
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Write_Timer(file,numdeg,dendeg,0,timer);
     else
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Write_Timer(standard_output,numdeg,dendeg,0,timer);
     end if;
     Standard_Complex_Poly_Systems.Clear(h);
     Standard_CSeries_Poly_Systems.Clear(s);
@@ -151,12 +183,14 @@ procedure ts_serpath is
     verbose,tofile : boolean;
     file : file_type;
     numdeg,dendeg : integer32 := 0;
+    timer : Timing_Widget;
 
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1); new_line;
     Prompt_for_Degrees(numdeg,dendeg);
     Set_Output(file,verbose,tofile);
+    tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
@@ -173,12 +207,15 @@ procedure ts_serpath is
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
     end loop;
+    tstop(timer);
     if tofile then
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Write_Timer(file,numdeg,dendeg,1,timer);
     else
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Write_Timer(standard_output,numdeg,dendeg,1,timer);
     end if;
     DoblDobl_Complex_Poly_Systems.Clear(h);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
@@ -206,12 +243,14 @@ procedure ts_serpath is
     verbose,tofile : boolean;
     file : file_type;
     numdeg,dendeg : integer32 := 0;
+    timer : Timing_Widget;
 
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1); new_line;
     Prompt_for_Degrees(numdeg,dendeg);
     Set_Output(file,verbose,tofile);
+    tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
@@ -227,12 +266,15 @@ procedure ts_serpath is
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
     end loop;
+    tstop(timer);
     if tofile then
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Write_Timer(file,numdeg,dendeg,2,timer);
     else
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Write_Timer(standard_output,numdeg,dendeg,2,timer);
     end if;
     QuadDobl_Complex_Poly_Systems.Clear(h);
     QuadDobl_CSeries_Poly_Systems.Clear(s);
