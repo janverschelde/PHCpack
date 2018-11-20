@@ -1,3 +1,6 @@
+Mon 19 Nov 2018 : added clear() statements to the frequency tests to
+  ts_cserlin.adb to ensure there is no memory leak in linear system solving.
+
 Sat 17 Nov 2018 : fixed bug in Sub() method with empty first argument
   in generic_dense_series.adb.
 

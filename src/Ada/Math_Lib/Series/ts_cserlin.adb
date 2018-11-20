@@ -419,6 +419,7 @@ procedure ts_cserlin is
       tstart(timer);
       for k in 1..f loop
         Solve_by_lufac(As,bs,info,xs);
+        Standard_Complex_Vector_Series.Clear(xs); -- test on memory leaks
       end loop;
       tstop(timer);
       new_line;
@@ -427,6 +428,7 @@ procedure ts_cserlin is
       tstart(timer);
       for k in 1..f loop
         Solve_by_QRLS(As,bs,info,xs);
+        Standard_Complex_Vector_Series.Clear(xs); -- test on memory leaks
       end loop;
       tstop(timer);
       new_line;
@@ -466,6 +468,7 @@ procedure ts_cserlin is
       tstart(timer);
       for k in 1..f loop
         Solve_by_lufac(As,bs,info,xs);
+        DoblDobl_Complex_Vector_Series.Clear(xs); -- test on memory leaks
       end loop;
       tstop(timer);
       new_line;
@@ -474,6 +477,7 @@ procedure ts_cserlin is
       tstart(timer);
       for k in 1..f loop
         Solve_by_QRLS(As,bs,info,xs);
+        DoblDobl_Complex_Vector_Series.Clear(xs); -- test on memory leaks
       end loop;
       tstop(timer);
       new_line;
@@ -513,6 +517,7 @@ procedure ts_cserlin is
       tstart(timer);
       for k in 1..f loop
         Solve_by_lufac(As,bs,info,xs);
+        QuadDobl_Complex_Vector_Series.Clear(xs); -- test on memory leaks
       end loop;
       tstop(timer);
       new_line;
@@ -521,6 +526,7 @@ procedure ts_cserlin is
       tstart(timer);
       for k in 1..f loop
         Solve_by_QRLS(As,bs,info,xs);
+        QuadDobl_Complex_Vector_Series.Clear(xs); -- test on memory leaks
       end loop;
       tstop(timer);
       new_line;
