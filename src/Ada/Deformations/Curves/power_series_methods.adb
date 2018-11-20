@@ -59,6 +59,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        Standard_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_LU_Newton;
@@ -99,6 +100,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        DoblDobl_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_LU_Newton;
@@ -139,6 +141,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        QuadDobl_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_LU_Newton;
@@ -178,6 +181,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        Standard_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_LU_Newton;
@@ -218,6 +222,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        DoblDobl_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_LU_Newton;
@@ -258,6 +263,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        QuadDobl_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_LU_Newton;
@@ -299,6 +305,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        Standard_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_QR_Newton;
@@ -340,6 +347,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        DoblDobl_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_QR_Newton;
@@ -381,6 +389,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        QuadDobl_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_QR_Newton;
@@ -421,6 +430,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        Standard_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_SVD_Newton;
@@ -462,6 +472,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        DoblDobl_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_SVD_Newton;
@@ -503,6 +514,7 @@ package body Power_Series_Methods is
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
+        QuadDobl_Complex_Series_Vectors.Clear(eva);
       end if;
     end if;
   end Run_SVD_Newton;
@@ -543,6 +555,7 @@ package body Power_Series_Methods is
       Complex_Series_and_Polynomials.Filter(eva,tol);
       put_line(file,"The evaluated solution :");
       Complex_Series_and_Polynomials_io.put(file,eva);
+      Standard_Complex_Series_Vectors.Clear(eva);
     end if;
   exception
     when others =>
@@ -586,6 +599,7 @@ package body Power_Series_Methods is
       Complex_Series_and_Polynomials.Filter(eva,tol);
       put_line(file,"The evaluated solution :");
       Complex_Series_and_Polynomials_io.put(file,eva);
+      DoblDobl_Complex_Series_Vectors.Clear(eva);
     end if;
   end Run_Echelon_Newton;
 
@@ -625,6 +639,7 @@ package body Power_Series_Methods is
       Complex_Series_and_Polynomials.Filter(eva,tol);
       put_line(file,"The evaluated solution :");
       Complex_Series_and_Polynomials_io.put(file,eva);
+      QuadDobl_Complex_Series_Vectors.Clear(eva);
     end if;
   end Run_Echelon_Newton;
 

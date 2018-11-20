@@ -1,5 +1,6 @@
 Mon 19 Nov 2018 : added clear() of Pade approximants vector after use in
   series_and_trackers.adb.  Fixed memory leak in series_and_homotopies.adb.
+  In the verbose methods in power_series_methods.adb, clear(eva) added.
 
 Sat 17 Nov 2018 : added degrees of numerator and denominator to the
   procedures in series_and_trackers, tested by ts_serpath.
