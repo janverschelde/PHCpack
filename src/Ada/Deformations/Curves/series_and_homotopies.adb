@@ -313,6 +313,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       Standard_CSeries_Polynomials.Add(res,rt);
+      Standard_CSeries_Polynomials.Clear(rt);
       cont := true;
     end Shift_Term;
     procedure Shift_Terms is
@@ -342,6 +343,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       Standard_CSeries_Polynomials.Add(res,rt);
+      Standard_CSeries_Polynomials.Clear(rt);
       cont := true;
     end Shift_Term;
     procedure Shift_Terms is
@@ -371,6 +373,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       DoblDobl_CSeries_Polynomials.Add(res,rt);
+      DoblDobl_CSeries_Polynomials.Clear(rt);
       cont := true;
     end Shift_Term;
     procedure Shift_Terms is
@@ -400,6 +403,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       DoblDobl_CSeries_Polynomials.Add(res,rt);
+      DoblDobl_CSeries_Polynomials.Clear(rt);
       cont := true;
     end Shift_Term;
     procedure Shift_Terms is
@@ -429,6 +433,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       QuadDobl_CSeries_Polynomials.Add(res,rt);
+      QuadDobl_CSeries_Polynomials.Clear(rt);
       cont := true;
     end Shift_Term;
     procedure Shift_Terms is
@@ -458,6 +463,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       QuadDobl_CSeries_Polynomials.Add(res,rt);
+      QuadDobl_CSeries_Polynomials.Clear(rt);
       cont := true;
     end Shift_Term;
     procedure Shift_Terms is
