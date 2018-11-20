@@ -1,3 +1,6 @@
+Tue 20 Nov 2018 : added frequency test to ts_cserpol.adb, to ensure no
+  memory leaks occur with evaluating series polynomials.
+
 Mon 19 Nov 2018 : added clear() statements to the frequency tests to
   ts_cserlin.adb to ensure there is no memory leak in linear system solving.
 

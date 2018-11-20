@@ -376,6 +376,105 @@ procedure ts_cserpol is
     return res;
   end Product;
 
+  procedure Standard_Frequent_Evaluation 
+              ( dim,deg : in integer32;
+                pol : in Standard_CSeries_Polynomials.Poly ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a number and the evaluates the
+  --   polynomial as many times as the number at a random series,
+  --   in double precision arithmetic.
+  --   Memory consumption during the loop should remain constant.
+
+  -- ON ENTRY :
+  --   dim      number of variables in the polynomial pol;
+  --   deg      degree of the power series;
+  --   pol      a polynomial in dim variables with power series
+  --            coefficients of degree deg.
+
+    freq : natural32 := 0;
+    rns : Standard_Complex_Series_Vectors.Vector(1..dim);
+    eva : Standard_Complex_Series.Link_to_Series;
+
+  begin
+    new_line;
+    put("Give the number of evaluations : "); get(freq);
+    new_line;
+    put("Evaluating "); put(freq,1); put_line(" times ...");
+    for i in 1..freq loop
+      rns := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+      eva := Standard_CSeries_Poly_Functions.Eval(pol,rns);
+      Standard_Complex_Series_Vectors.Clear(rns);
+      Standard_Complex_Series.Clear(eva);
+    end loop;
+  end Standard_Frequent_Evaluation;
+
+  procedure DoblDobl_Frequent_Evaluation 
+              ( dim,deg : in integer32;
+                pol : in DoblDobl_CSeries_Polynomials.Poly ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a number and the evaluates the
+  --   polynomial as many times as the number at a random series,
+  --   in double double precision arithmetic.
+  --   Memory consumption during the loop should remain constant.
+
+  -- ON ENTRY :
+  --   dim      number of variables in the polynomial pol;
+  --   deg      degree of the power series;
+  --   pol      a polynomial in dim variables with power series
+  --            coefficients of degree deg.
+
+    freq : natural32 := 0;
+    rns : DoblDobl_Complex_Series_Vectors.Vector(1..dim);
+    eva : DoblDobl_Complex_Series.Link_to_Series;
+
+  begin
+    new_line;
+    put("Give the number of evaluations : "); get(freq);
+    new_line;
+    put("Evaluating "); put(freq,1); put_line(" times ...");
+    for i in 1..freq loop
+      rns := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+      eva := DoblDobl_CSeries_Poly_Functions.Eval(pol,rns);
+      DoblDobl_Complex_Series_Vectors.Clear(rns);
+      DoblDobl_Complex_Series.Clear(eva);
+    end loop;
+  end DoblDobl_Frequent_Evaluation;
+
+  procedure QuadDobl_Frequent_Evaluation 
+              ( dim,deg : in integer32;
+                pol : in QuadDobl_CSeries_Polynomials.Poly ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a number and the evaluates the
+  --   polynomial as many times as the number at a random series,
+  --   in quad double precision arithmetic.
+  --   Memory consumption during the loop should remain constant.
+
+  -- ON ENTRY :
+  --   dim      number of variables in the polynomial pol;
+  --   deg      degree of the power series;
+  --   pol      a polynomial in dim variables with power series
+  --            coefficients of degree deg.
+
+    freq : natural32 := 0;
+    rns : QuadDobl_Complex_Series_Vectors.Vector(1..dim);
+    eva : QuadDobl_Complex_Series.Link_to_Series;
+
+  begin
+    new_line;
+    put("Give the number of evaluations : "); get(freq);
+    new_line;
+    put("Evaluating "); put(freq,1); put_line(" times ...");
+    for i in 1..freq loop
+      rns := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+      eva := QuadDobl_CSeries_Poly_Functions.Eval(pol,rns);
+      QuadDobl_Complex_Series_Vectors.Clear(rns);
+      QuadDobl_Complex_Series.Clear(eva);
+    end loop;
+  end QuadDobl_Frequent_Evaluation;
+
   procedure Standard_Test_Evaluation is
 
   -- DESCRIPTION :
@@ -386,6 +485,7 @@ procedure ts_cserpol is
   --   So the evaluation at the series should produce zero.
 
     degree,dim : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
@@ -403,7 +503,14 @@ procedure ts_cserpol is
         put(rns(i));
       end loop;
       put_line("The polynomial :"); Write(pol);
+      put_line("Evaluation of the product of (x[k]-r[k]) at r[k] ...");
       put_line("The value at the polynomial :"); put(eva);
+      new_line; 
+      put("Run a frequency test on memory management ? ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then Standard_Frequent_Evaluation(dim,degree,pol);
+      end if;
     end;
   end Standard_Test_Evaluation;
 
@@ -417,6 +524,7 @@ procedure ts_cserpol is
   --   So the evaluation at the series should produce zero.
 
     degree,dim : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
@@ -435,6 +543,12 @@ procedure ts_cserpol is
       end loop;
       put_line("The polynomial :"); Write(pol);
       put_line("The value at the polynomial :"); put(eva);
+      new_line; 
+      put("Run a frequency test on memory management ? ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then DoblDobl_Frequent_Evaluation(dim,degree,pol);
+      end if;
     end;
   end DoblDobl_Test_Evaluation;
 
@@ -448,6 +562,7 @@ procedure ts_cserpol is
   --   So the evaluation at the series should produce zero.
 
     degree,dim : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
@@ -466,6 +581,12 @@ procedure ts_cserpol is
       end loop;
       put_line("The polynomial :"); Write(pol);
       put_line("The value at the polynomial :"); put(eva);
+      new_line; 
+      put("Run a frequency test on memory management ? ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then QuadDobl_Frequent_Evaluation(dim,degree,pol);
+      end if;
     end;
   end QuadDobl_Test_Evaluation;
 
