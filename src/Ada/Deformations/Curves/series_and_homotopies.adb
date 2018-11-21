@@ -61,6 +61,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       Standard_Complex_Polynomials.Add(res,rt);
+      Standard_Complex_Polynomials.Clear(rt);
       cont := true;
     end Eval_Term;
     procedure Eval_Terms is
@@ -90,6 +91,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       Standard_Complex_Polynomials.Add(res,rt);
+      Standard_Complex_Polynomials.Clear(rt);
       cont := true;
     end Eval_Term;
     procedure Eval_Terms is
@@ -119,6 +121,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       DoblDobl_Complex_Polynomials.Add(res,rt);
+      DoblDobl_Complex_Polynomials.Clear(rt);
       cont := true;
     end Eval_Term;
     procedure Eval_Terms is
@@ -148,6 +151,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       DoblDobl_Complex_Polynomials.Add(res,rt);
+      DoblDobl_Complex_Polynomials.Clear(rt);
       cont := true;
     end Eval_Term;
     procedure Eval_Terms is
@@ -177,6 +181,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       QuadDobl_Complex_Polynomials.Add(res,rt);
+      QuadDobl_Complex_Polynomials.Clear(rt);
       cont := true;
     end Eval_Term;
     procedure Eval_Terms is
@@ -206,6 +211,7 @@ package body Series_and_Homotopies is
         rt.dg(k) := trm.dg(k);
       end loop;
       QuadDobl_Complex_Polynomials.Add(res,rt);
+      QuadDobl_Complex_Polynomials.Clear(rt);
       cont := true;
     end Eval_Term;
     procedure Eval_Terms is

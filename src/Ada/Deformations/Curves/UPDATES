@@ -1,3 +1,5 @@
+Wed 21 Nov 2018 : fixed another memory leak in series_and_homotopies.adb.
+
 Tue 20 Nov 2018 : cleared the Jacobian series matrices in
   {standard,dobldobl,quaddobl}_newton_matrix_series.adb.
   Added timers to series_and_trackers.adb and ts_serpath.adb.
