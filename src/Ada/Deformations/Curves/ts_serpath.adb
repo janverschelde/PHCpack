@@ -5,6 +5,7 @@ with Characters_and_Numbers;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
@@ -33,6 +34,10 @@ with Standard_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 with Complex_Series_and_Polynomials_io;  use Complex_Series_and_Polynomials_io;
+with Root_Refining_Parameters;
+with Standard_Root_Refiners;
+with DoblDobl_Root_Refiners;
+with QuadDobl_Root_Refiners;
 with Series_and_Homotopies;
 with Series_and_Trackers;
 with Homotopy_Series_Readers;
@@ -55,6 +60,7 @@ procedure ts_serpath is
     ans : character;
 
   begin
+    new_line;
     put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
     put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
@@ -104,6 +110,81 @@ procedure ts_serpath is
       when others => null;
     end case;
   end Write_Timer;
+
+  procedure Refine_Roots
+              ( file : in file_type; nq : in integer32;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Applies the root refiners to the solutions in sols,
+  --   writing the output to file.  The number of equations
+  --   of the target system in the homotoy is nq.
+
+    p : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := Standard_Homotopy.Target_System;
+    epsxa,epsfa,tolsing : double_float;
+    numit,maxit : natural32 := 0;
+    deflate,wout : boolean;
+
+    use Root_Refining_Parameters,Standard_Root_Refiners;
+
+  begin
+    Standard_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    deflate := false;
+    Reporting_Root_Refiner
+      (file,p,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+  end Refine_Roots;
+
+  procedure Refine_Roots
+              ( file : in file_type; nq : in integer32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Applies the root refiners to the solutions in sols,
+  --   writing the output to file.  The number of equations
+  --   of the target system in the homotoy is nq.
+
+    p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := DoblDobl_Homotopy.Target_System;
+    epsxa,epsfa,tolsing : double_float;
+    numit,maxit : natural32 := 0;
+    deflate,wout : boolean;
+
+    use Root_Refining_Parameters,DoblDobl_Root_Refiners;
+
+  begin
+    DoblDobl_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    deflate := false;
+    Reporting_Root_Refiner
+      (file,p,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+  end Refine_Roots;
+
+  procedure Refine_Roots
+              ( file : in file_type; nq : in integer32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Applies the root refiners to the solutions in sols,
+  --   writing the output to file.  The number of equations
+  --   of the target system in the homotoy is nq.
+
+    p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := QuadDobl_Homotopy.Target_System;
+    epsxa,epsfa,tolsing : double_float;
+    numit,maxit : natural32 := 0;
+    deflate,wout : boolean;
+
+    use Root_Refining_Parameters,QuadDobl_Root_Refiners;
+
+  begin
+    QuadDobl_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    deflate := false;
+    Reporting_Root_Refiner
+      (file,p,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+  end Refine_Roots;
 
   procedure Standard_Test
               ( nq : in integer32;
@@ -156,10 +237,12 @@ procedure ts_serpath is
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,0,timer);
+      Refine_Roots(file,nq,sols);
     else
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,0,timer);
+      Refine_Roots(standard_output,nq,sols);
     end if;
     Standard_Complex_Poly_Systems.Clear(h);
     Standard_CSeries_Poly_Systems.Clear(s);
@@ -217,10 +300,12 @@ procedure ts_serpath is
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,1,timer);
+      Refine_Roots(file,nq,sols);
     else
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,1,timer);
+      Refine_Roots(standard_output,nq,sols);
     end if;
     DoblDobl_Complex_Poly_Systems.Clear(h);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
@@ -277,10 +362,12 @@ procedure ts_serpath is
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,2,timer);
+      Refine_Roots(file,nq,sols);
     else
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,2,timer);
+      Refine_Roots(standard_output,nq,sols);
     end if;
     QuadDobl_Complex_Poly_Systems.Clear(h);
     QuadDobl_CSeries_Poly_Systems.Clear(s);
