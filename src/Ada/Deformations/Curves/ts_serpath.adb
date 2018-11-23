@@ -36,6 +36,8 @@ with Complex_Series_and_Polynomials_io;  use Complex_Series_and_Polynomials_io;
 with Series_and_Homotopies;
 with Series_and_Trackers;
 with Homotopy_Series_Readers;
+with Homotopy_Continuation_Parameters;
+with Homotopy_Continuation_Parameters_io;
 
 procedure ts_serpath is
 
@@ -79,7 +81,7 @@ procedure ts_serpath is
 
   procedure Write_Timer
               ( file : in file_type;
-                numdeg,dendeg,precision : in integer32;
+                numdeg,dendeg,precision : in natural32;
                 timer : in Timing_Widget ) is
 
   -- DESCRIPTION :
@@ -89,8 +91,9 @@ procedure ts_serpath is
   --   for double, double double, or quad double precision.
 
     s : constant string
-      := "[" & Characters_and_Numbers.Convert(numdeg) &
-         "," & Characters_and_Numbers.Convert(dendeg) & "]-Tracking";
+      := "[" & Characters_and_Numbers.Convert(integer32(numdeg))
+       & "," & Characters_and_Numbers.Convert(integer32(dendeg))
+       & "]-Tracking";
  
   begin
     new_line(file);
@@ -116,31 +119,32 @@ procedure ts_serpath is
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
     s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1,true);
+      := Series_and_Homotopies.Create(h,nq+1,false);
+    p : Homotopy_Continuation_Parameters.Parameters
+      := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
     verbose,tofile : boolean;
     file : file_type;
-    numdeg,dendeg : integer32 := 0;
+   -- numdeg,dendeg : integer32 := 0;
     timer : Timing_Widget;
 
   begin
-    put_line("The homotopy system :"); put_line(h);
-    put_line("The series system :"); put(s,1); new_line;
-    Prompt_for_Degrees(numdeg,dendeg);
+   -- put_line("The homotopy system :"); put_line(h);
+   -- put_line("The series system :"); put(s,1); new_line;
+   -- Prompt_for_Degrees(numdeg,dendeg);
+    Homotopy_Continuation_Parameters_io.Tune(p);
     Set_Output(file,verbose,tofile);
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
-        Series_and_Trackers.Track_One_Path
-          (file,numdeg,dendeg,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path(file,s,ls.all,p,verbose);
       else
-        Series_and_Trackers.Track_One_Path
-          (standard_output,numdeg,dendeg,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,p,verbose);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;
@@ -151,11 +155,11 @@ procedure ts_serpath is
     if tofile then
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(file,numdeg,dendeg,0,timer);
+      Write_Timer(file,p.numdeg,p.dendeg,0,timer);
     else
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(standard_output,numdeg,dendeg,0,timer);
+      Write_Timer(standard_output,p.numdeg,p.dendeg,0,timer);
     end if;
     Standard_Complex_Poly_Systems.Clear(h);
     Standard_CSeries_Poly_Systems.Clear(s);
@@ -175,31 +179,32 @@ procedure ts_serpath is
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
     s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1,true);
+      := Series_and_Homotopies.Create(h,nq+1,false);
+    p : Homotopy_Continuation_Parameters.Parameters
+      := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
     verbose,tofile : boolean;
     file : file_type;
-    numdeg,dendeg : integer32 := 0;
+   -- numdeg,dendeg : integer32 := 0;
     timer : Timing_Widget;
 
   begin
-    put_line("The homotopy system :"); put_line(h);
-    put_line("The series system :"); put(s,1); new_line;
-    Prompt_for_Degrees(numdeg,dendeg);
+   -- put_line("The homotopy system :"); put_line(h);
+   -- put_line("The series system :"); put(s,1); new_line;
+   -- Prompt_for_Degrees(numdeg,dendeg);
+    Homotopy_Continuation_Parameters_io.Tune(p);
     Set_Output(file,verbose,tofile);
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
-        Series_and_Trackers.Track_One_Path
-          (file,numdeg,dendeg,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path(file,s,ls.all,p,verbose);
       else
-        Series_and_Trackers.Track_One_Path
-          (standard_output,numdeg,dendeg,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,p,verbose);
         put("Continue to the next path ? (y/n) ");
         Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
@@ -211,11 +216,11 @@ procedure ts_serpath is
     if tofile then
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(file,numdeg,dendeg,1,timer);
+      Write_Timer(file,p.numdeg,p.dendeg,1,timer);
     else
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(standard_output,numdeg,dendeg,1,timer);
+      Write_Timer(standard_output,p.numdeg,p.dendeg,1,timer);
     end if;
     DoblDobl_Complex_Poly_Systems.Clear(h);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
@@ -235,31 +240,32 @@ procedure ts_serpath is
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
     s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1,true);
+      := Series_and_Homotopies.Create(h,nq+1,false);
+    p : Homotopy_Continuation_Parameters.Parameters
+      := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
     verbose,tofile : boolean;
     file : file_type;
-    numdeg,dendeg : integer32 := 0;
+   -- numdeg,dendeg : integer32 := 0;
     timer : Timing_Widget;
 
   begin
-    put_line("The homotopy system :"); put_line(h);
-    put_line("The series system :"); put(s,1); new_line;
-    Prompt_for_Degrees(numdeg,dendeg);
+   -- put_line("The homotopy system :"); put_line(h);
+   -- put_line("The series system :"); put(s,1); new_line;
+   -- Prompt_for_Degrees(numdeg,dendeg);
+    Homotopy_Continuation_Parameters_io.Tune(p);
     Set_Output(file,verbose,tofile);
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
-        Series_and_Trackers.Track_One_Path
-          (file,numdeg,dendeg,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path(file,s,ls.all,p,verbose);
       else
-        Series_and_Trackers.Track_One_Path
-          (standard_output,numdeg,dendeg,s,ls.all,verbose);
+        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,p,verbose);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;
@@ -270,11 +276,11 @@ procedure ts_serpath is
     if tofile then
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(file,numdeg,dendeg,2,timer);
+      Write_Timer(file,p.numdeg,p.dendeg,2,timer);
     else
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(standard_output,numdeg,dendeg,2,timer);
+      Write_Timer(standard_output,p.numdeg,p.dendeg,2,timer);
     end if;
     QuadDobl_Complex_Poly_Systems.Clear(h);
     QuadDobl_CSeries_Poly_Systems.Clear(s);

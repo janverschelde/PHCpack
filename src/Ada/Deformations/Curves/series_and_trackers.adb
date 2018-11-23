@@ -240,21 +240,23 @@ package body Series_and_Trackers is
   end Set_Step;
 
   procedure Track_One_Path
-              ( numdeg,dendeg : in integer32;
-                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                sol : in out Standard_Complex_Solutions.Solution ) is
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                sol : in out Standard_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := 3;
+    nit : constant integer32 := integer32(pars.corsteps);
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
     poles : Standard_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := 1.0E-12;
-    tolres : constant double_float := 1.0E-5;
+    tolcff : constant double_float := pars.tolcff;
+    tolres : constant double_float := pars.alpha;
     t,step,update : double_float := 0.0;
-    max_steps : constant natural32 := 500;
+    max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res,frp : double_float;
@@ -269,16 +271,17 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
       Standard_Complex_Series_Vectors.Clear(eva);
       if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,frp,0.5);
+       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.beta);
       end if;
-      Set_Step(t,step,0.01,onetarget);
+      Set_Step(t,step,pars.maxsize,onetarget);
+      exit when (step < pars.minsize);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_Pade_Approximants.Clear(pv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
       wrk := Series_and_Homotopies.Shift(hom,t);
-      Correct(wrk,0.0,3,wrk_sol,err,rco,res);
+      Correct(wrk,0.0,pars.corsteps,wrk_sol,err,rco,res);
       exit when (t = 1.0);
     end loop;
     sol.t := Standard_Complex_Numbers.Create(t);
@@ -288,22 +291,24 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( numdeg,dendeg : in integer32;
-                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                sol : in out DoblDobl_Complex_Solutions.Solution ) is
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                sol : in out DoblDobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := 4;
+    nit : constant integer32 := integer32(pars.corsteps);
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := 1.0E-12;
-    tolres : constant double_float := 1.0E-5;
+    tolcff : constant double_float := pars.tolcff;
+    tolres : constant double_float := pars.alpha;
     t,step,update : double_float := 0.0;
     dd_t,dd_step : double_double;
-    max_steps : constant natural32 := 500;
+    max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res : double_double;
@@ -317,11 +322,13 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       DoblDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,hi_part(frp),0.5);
+      if frp > 0.0 then
+        step := Series_and_Predictors.Cap_Step_Size
+                  (step,hi_part(frp),pars.beta);
       end if;
       DoblDobl_Complex_Series_Vectors.Clear(eva);
-      Set_Step(t,step,0.01,onetarget);
+      Set_Step(t,step,pars.maxsize,onetarget);
+      exit when (step < pars.minsize);
       dd_step := create(step);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
@@ -330,7 +337,7 @@ package body Series_and_Trackers is
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
       dd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
-      Correct(wrk,zero,3,wrk_sol,err,rco,res);
+      Correct(wrk,zero,pars.corsteps,wrk_sol,err,rco,res);
       exit when (t = 1.0);
     end loop;
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
@@ -340,22 +347,24 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( numdeg,dendeg : in integer32;
-                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                sol : in out Quaddobl_Complex_Solutions.Solution ) is
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                sol : in out Quaddobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := 4;
+    nit : constant integer32 := integer32(pars.corsteps);
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := 1.0E-12;
-    tolres : constant double_float := 1.0E-5;
+    tolcff : constant double_float := pars.tolcff;
+    tolres : constant double_float := pars.alpha;
     t,step,update : double_float := 0.0;
     qd_t,qd_step : quad_double;
-    max_steps : constant natural32 := 500;
+    max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res : quad_double;
@@ -370,10 +379,12 @@ package body Series_and_Trackers is
       QuadDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
       if frp > 0.0 then
-        step := Series_and_Predictors.Cap_Step_Size(step,hihi_part(frp),0.5);
+        step := Series_and_Predictors.Cap_Step_Size
+                  (step,hihi_part(frp),pars.beta);
       end if;
       QuadDobl_Complex_Series_Vectors.Clear(eva);
-      Set_Step(t,step,0.01,onetarget);
+      Set_Step(t,step,pars.maxsize,onetarget);
+      exit when (step < pars.minsize);
       qd_step := create(step);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
@@ -382,7 +393,7 @@ package body Series_and_Trackers is
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
       qd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
-      Correct(wrk,zero,3,wrk_sol,err,rco,res);
+      Correct(wrk,zero,pars.corsteps,wrk_sol,err,rco,res);
       exit when (t = 1.0);
     end loop;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
@@ -392,22 +403,25 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( file : in file_type; numdeg,dendeg : in integer32;
+              ( file : in file_type;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 verbose : in boolean := false ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    nit : constant integer32 := 4;
+    nit : constant integer32 := integer32(pars.corsteps);
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
     poles : Standard_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := 1.0E-12;
-    tolres : constant double_float := 1.0E-5;
+    tolcff : constant double_float := pars.tolcff;
+    tolres : constant double_float := pars.alpha;
     t,step,update : double_float := 0.0;
-    max_steps : constant natural32 := 500;
+    max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res,frp : double_float;
@@ -430,12 +444,13 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
       if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,frp,0.5);
+       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.beta);
       end if;
       Standard_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
-      Set_Step(t,step,0.01,onetarget);
+      Set_Step(t,step,pars.maxsize,onetarget);
       put(file," t = "); put(file,t,3);  new_line(file);
+      exit when (step < pars.minsize);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
       Standard_Pade_Approximants.Clear(pv);
@@ -444,7 +459,7 @@ package body Series_and_Trackers is
       Standard_CSeries_Poly_Systems.Clear(wrk);
       wrk := Series_and_Homotopies.Shift(hom,t);
       put_line(file,"Correcting the solution ...");
-      Correct(file,wrk,0.0,3,wrk_sol,err,rco,res,verbose);
+      Correct(file,wrk,0.0,pars.corsteps,wrk_sol,err,rco,res,verbose);
       exit when (t = 1.0);
     end loop;
     put_line(file,"The solution vector :"); put_line(file,wrk_sol);
@@ -455,23 +470,26 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( file : in file_type; numdeg,dendeg : in integer32;
+              ( file : in file_type;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 verbose : in boolean := false ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := 4;
+    nit : constant integer32 := integer32(pars.corsteps);
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := 1.0E-12;
-    tolres : constant double_float := 1.0E-5;
+    tolcff : constant double_float := pars.tolcff;
+    tolres : constant double_float := pars.alpha;
     t,step,update : double_float := 0.0;
     dd_t,dd_step : double_double;
-    max_steps : constant natural32 := 500;
+    max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res : double_double;
@@ -491,13 +509,15 @@ package body Series_and_Trackers is
       put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,hi_part(frp),0.5);
+      if frp > 0.0 then
+        step := Series_and_Predictors.Cap_Step_Size
+                  (step,hi_part(frp),pars.beta);
       end if;
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
-      Set_Step(t,step,0.01,onetarget);
+      Set_Step(t,step,pars.maxsize,onetarget);
       put(file," t = "); put(file,t,3);  new_line(file);
+      exit when (step < pars.minsize);
       dd_step := create(step);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
@@ -519,23 +539,26 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( file : in file_type; numdeg,dendeg : in integer32;
+              ( file : in file_type;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 verbose : in boolean := false ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := 4;
+    nit : constant integer32 := integer32(pars.corsteps);
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := 1.0E-12;
-    tolres : constant double_float := 1.0E-5;
+    tolcff : constant double_float := pars.tolcff;
+    tolres : constant double_float := pars.alpha;
     t,step,update : double_float := 0.0;
     qd_t,qd_step : quad_double;
-    max_steps : constant natural32 := 500;
+    max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res : quad_double;
@@ -556,12 +579,14 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
       if frp > 0.0 then
-        step := Series_and_Predictors.Cap_Step_Size(step,hihi_part(frp),0.5);
+        step := Series_and_Predictors.Cap_Step_Size
+                  (step,hihi_part(frp),pars.beta);
       end if;
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       put(file,"The computed step size : "); put(file,step,3);
-      Set_Step(t,step,0.01,onetarget);
+      Set_Step(t,step,pars.maxsize,onetarget);
       put(file," t = "); put(file,t,3);  new_line(file);
+      exit when (step < pars.minsize);
       qd_step := create(step);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
@@ -572,7 +597,7 @@ package body Series_and_Trackers is
       qd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
       put_line(file,"Correcting the solution ...");
-      Correct(file,wrk,zero,3,wrk_sol,err,rco,res,verbose);
+      Correct(file,wrk,zero,pars.corsteps,wrk_sol,err,rco,res,verbose);
       exit when (t = 1.0);
     end loop;
     put_line(file,"The solution vector :"); put_line(file,wrk_sol);
@@ -583,9 +608,10 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_Many_Paths
-              ( file : in file_type; numdeg,dendeg : in integer32;
+              ( file : in file_type;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 verbose : in boolean := false ) is
 
     use Standard_Complex_Solutions;
@@ -600,7 +626,7 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
-      Track_One_Path(file,numdeg,dendeg,hom,ls.all,verbose);
+      Track_One_Path(file,hom,ls.all,pars,verbose);
       tmp := Tail_Of(tmp);
     end loop;
     tstop(timer);
@@ -609,9 +635,10 @@ package body Series_and_Trackers is
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( file : in file_type; numdeg,dendeg : in integer32;
+              ( file : in file_type;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 verbose : in boolean := false ) is
 
     use DoblDobl_Complex_Solutions;
@@ -626,7 +653,7 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
-      Track_One_Path(file,numdeg,dendeg,hom,ls.all,verbose);
+      Track_One_Path(file,hom,ls.all,pars,verbose);
       tmp := Tail_Of(tmp);
     end loop;
     tstop(timer);
@@ -635,9 +662,10 @@ package body Series_and_Trackers is
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( file : in file_type; numdeg,dendeg : in integer32;
+              ( file : in file_type;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 verbose : in boolean := false ) is
 
     use QuadDobl_Complex_Solutions;
@@ -652,7 +680,7 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
-      Track_One_Path(file,numdeg,dendeg,hom,ls.all,verbose);
+      Track_One_Path(file,hom,ls.all,pars,verbose);
       tmp := Tail_Of(tmp);
     end loop;
     tstop(timer);
@@ -661,9 +689,9 @@ package body Series_and_Trackers is
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( numdeg,dendeg : in integer32; 
-                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
     use Standard_Complex_Solutions;
 
@@ -674,15 +702,15 @@ package body Series_and_Trackers is
   begin
     for i in 1..len loop
       ls := Head_Of(tmp);
-      Track_One_Path(numdeg,dendeg,hom,ls.all);
+      Track_One_Path(hom,ls.all,pars);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( numdeg,dendeg : in integer32;
-                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -693,15 +721,15 @@ package body Series_and_Trackers is
   begin
     for i in 1..len loop
       ls := Head_Of(tmp);
-      Track_One_Path(numdeg,dendeg,hom,ls.all);
+      Track_One_Path(hom,ls.all,pars);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
-              ( numdeg,dendeg : in integer32;
-                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -712,7 +740,7 @@ package body Series_and_Trackers is
   begin
     for i in 1..len loop
       ls := Head_Of(tmp);
-      Track_One_Path(numdeg,dendeg,hom,ls.all);
+      Track_One_Path(hom,ls.all,pars);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;

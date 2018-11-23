@@ -1,5 +1,7 @@
 Thu 22 Nov 2018 : made the prompting for the Jacobian Rabinowitsch trick
-  optional in homotopy_series_readers.
+  optional in homotopy_series_readers.  New packages to manage the values
+  of parameters: homotopy_continuation_parameters, and its *_io,
+  used in series_and_trackers, tested by ts_serpath.
 
 Wed 21 Nov 2018 : fixed another memory leak in series_and_homotopies.adb.
 

@@ -68,6 +68,8 @@ jacobian_rabinowitsch_trick      : application of the Rabinowitsch trick
 ts_jacrabin                      : test application of Rabinowitsch trick
 ts_padepred                      : test the Pade predictors
 -------------------------------------------------------------------------------
-series_and_trackers              : power series predictor in path tracker
-ts_serpath                       : test on series path tracker
+homotopy_continuation_parameters    : parameters and tolerances
+homotopy_continuation_parameters_io : output and tuning of arameters 
+series_and_trackers                 : power series predictor in path tracker
+ts_serpath                          : test on series path tracker
 -------------------------------------------------------------------------------
