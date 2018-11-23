@@ -51,6 +51,70 @@ procedure ts_serpath is
 -- DESCRIPTION :
 --   Developing path tracers with power series.
 
+  procedure Standard_Reset_Gamma
+              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   Resets the gamma with a new Standard_Homotopy.Create.
+
+    start : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Start_System;
+    target : constant Standard_Complex_Poly_Systems.Poly_Sys
+           := Standard_Homotopy.Target_System;
+    q : Standard_Complex_Poly_Systems.Poly_Sys(start'range);
+    p : Standard_Complex_Poly_Systems.Poly_Sys(target'range);
+
+  begin
+    Standard_Complex_Poly_Systems.Copy(start,q);
+    Standard_Complex_Poly_Systems.Copy(target,p);
+    Standard_Homotopy.Clear;
+    Standard_Homotopy.Create(p,q,1,gamma);
+  end Standard_Reset_Gamma;
+
+  procedure DoblDobl_Reset_Gamma
+              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   Resets the gamma with a new DoblDobl_Homotopy.Create.
+
+    start : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Start_System;
+    target : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+           := DoblDobl_Homotopy.Target_System;
+    q : DoblDobl_Complex_Poly_Systems.Poly_Sys(start'range);
+    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(target'range);
+    ddgamma : constant DoblDobl_Complex_Numbers.Complex_Number
+            := DoblDobl_Complex_Numbers_cv.Standard_to_DoblDobl_Complex(gamma);
+
+  begin
+    DoblDobl_Complex_Poly_Systems.Copy(start,q);
+    DoblDobl_Complex_Poly_Systems.Copy(target,p);
+    DoblDobl_Homotopy.Clear;
+    DoblDobl_Homotopy.Create(p,q,1,ddgamma);
+  end DoblDobl_Reset_Gamma;
+
+  procedure QuadDobl_Reset_Gamma
+              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   Resets the gamma with a new QuadDobl_Homotopy.Create.
+
+    start : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Start_System;
+    target : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+           := QuadDobl_Homotopy.Target_System;
+    q : QuadDobl_Complex_Poly_Systems.Poly_Sys(start'range);
+    p : QuadDobl_Complex_Poly_Systems.Poly_Sys(target'range);
+    qdgamma : constant QuadDobl_Complex_Numbers.Complex_Number
+            := QuadDobl_Complex_Numbers_cv.Standard_to_QuadDobl_Complex(gamma);
+
+  begin
+    QuadDobl_Complex_Poly_Systems.Copy(start,q);
+    QuadDobl_Complex_Poly_Systems.Copy(target,p);
+    QuadDobl_Homotopy.Clear;
+    QuadDobl_Homotopy.Create(p,q,1,qdgamma);
+  end QuadDobl_Reset_Gamma;
+
   procedure Set_Output
               ( file : in out file_type; verbose,tofile : out boolean ) is
 
@@ -213,14 +277,22 @@ procedure ts_serpath is
     file : file_type;
    -- numdeg,dendeg : integer32 := 0;
     timer : Timing_Widget;
+    prevgamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
    -- put_line("The series system :"); put(s,1); new_line;
    -- Prompt_for_Degrees(numdeg,dendeg);
     p.gamma := Standard_Homotopy.Accessibility_Constant;
+    prevgamma := p.gamma;
     Homotopy_Continuation_Parameters_io.Tune(p);
+    if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
+     then Standard_Reset_Gamma(p.gamma);
+    end if;
     Set_Output(file,verbose,tofile);
+    if tofile
+     then Homotopy_Continuation_Parameters_io.put(file,p);
+    end if;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -280,14 +352,22 @@ procedure ts_serpath is
             := DoblDobl_Homotopy.Accessibility_Constant;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := DoblDobl_Complex_Numbers_cv.DoblDobl_Complex_to_Standard(ddgamma);
+    prevgamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
    -- put_line("The series system :"); put(s,1); new_line;
    -- Prompt_for_Degrees(numdeg,dendeg);
     p.gamma := gamma;
+    prevgamma := p.gamma;
     Homotopy_Continuation_Parameters_io.Tune(p);
+    if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
+     then DoblDobl_Reset_Gamma(p.gamma);
+    end if;
     Set_Output(file,verbose,tofile);
+    if tofile
+     then Homotopy_Continuation_Parameters_io.put(file,p);
+    end if;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -348,14 +428,22 @@ procedure ts_serpath is
             := QuadDobl_Homotopy.Accessibility_Constant;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := QuadDobl_Complex_Numbers_cv.QuadDobl_Complex_to_Standard(qdgamma);
+    prevgamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
    -- put_line("The series system :"); put(s,1); new_line;
    -- Prompt_for_Degrees(numdeg,dendeg);
     p.gamma := gamma;
+    prevgamma := p.gamma;
     Homotopy_Continuation_Parameters_io.Tune(p);
+    if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
+     then QuadDobl_Reset_Gamma(p.gamma);
+    end if;
     Set_Output(file,verbose,tofile);
+    if tofile
+     then Homotopy_Continuation_Parameters_io.put(file,p);
+    end if;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
