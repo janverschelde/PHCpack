@@ -28,10 +28,12 @@ package Homotopy_Continuation_Parameters_io is
   --   Given a number in the range 1..10, prompts for a new value
   --   and assigns the corresponding value in pars.
 
-  procedure Tune ( pars : out Parameters );
+  procedure Tune ( pars : in out Parameters );
 
   -- DESCRIPTION :
   --   Runs a loop to allow the user to interactive change 
-  --   the default values of the parameters.
+  --   the values of the parameters.
+  --   A good initial choice for the parameters are provided by
+  --   Homotopy_Continuation_Parameters.Default_Values.
 
 end Homotopy_Continuation_Parameters_io;

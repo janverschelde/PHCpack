@@ -8,7 +8,9 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_cv;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
@@ -216,6 +218,7 @@ procedure ts_serpath is
    -- put_line("The homotopy system :"); put_line(h);
    -- put_line("The series system :"); put(s,1); new_line;
    -- Prompt_for_Degrees(numdeg,dendeg);
+    p.gamma := Standard_Homotopy.Accessibility_Constant;
     Homotopy_Continuation_Parameters_io.Tune(p);
     Set_Output(file,verbose,tofile);
     tstart(timer);
@@ -273,11 +276,16 @@ procedure ts_serpath is
     file : file_type;
    -- numdeg,dendeg : integer32 := 0;
     timer : Timing_Widget;
+    ddgamma : constant DoblDobl_Complex_Numbers.Complex_Number
+            := DoblDobl_Homotopy.Accessibility_Constant;
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := DoblDobl_Complex_Numbers_cv.DoblDobl_Complex_to_Standard(ddgamma);
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
    -- put_line("The series system :"); put(s,1); new_line;
    -- Prompt_for_Degrees(numdeg,dendeg);
+    p.gamma := gamma;
     Homotopy_Continuation_Parameters_io.Tune(p);
     Set_Output(file,verbose,tofile);
     tstart(timer);
@@ -336,11 +344,16 @@ procedure ts_serpath is
     file : file_type;
    -- numdeg,dendeg : integer32 := 0;
     timer : Timing_Widget;
+    qdgamma : constant QuadDobl_Complex_Numbers.Complex_Number
+            := QuadDobl_Homotopy.Accessibility_Constant;
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := QuadDobl_Complex_Numbers_cv.QuadDobl_Complex_to_Standard(qdgamma);
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
    -- put_line("The series system :"); put(s,1); new_line;
    -- Prompt_for_Degrees(numdeg,dendeg);
+    p.gamma := gamma;
     Homotopy_Continuation_Parameters_io.Tune(p);
     Set_Output(file,verbose,tofile);
     tstart(timer);

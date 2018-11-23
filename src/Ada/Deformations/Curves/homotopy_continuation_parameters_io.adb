@@ -96,12 +96,11 @@ package body Homotopy_Continuation_Parameters_io is
     end case;
   end Prompt_for_Parameter;
 
-  procedure Tune ( pars : out Parameters ) is
+  procedure Tune ( pars : in out Parameters ) is
 
     nbr : natural32;
 
   begin
-    pars := Default_Values;
     loop
       put(pars);
       Prompt_for_Selection(nbr);
