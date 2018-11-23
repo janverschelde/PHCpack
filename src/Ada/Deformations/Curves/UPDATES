@@ -1,3 +1,6 @@
+Thu 22 Nov 2018 : made the prompting for the Jacobian Rabinowitsch trick
+  optional in homotopy_series_readers.
+
 Wed 21 Nov 2018 : fixed another memory leak in series_and_homotopies.adb.
 
 Tue 20 Nov 2018 : cleared the Jacobian series matrices in
