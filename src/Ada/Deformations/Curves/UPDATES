@@ -3,6 +3,7 @@ Fri 23 Nov 2018 : in Tune() of homotopy_continuation_parameters_io,
   the default values.  In ts_serpath, reset the gamma constant to
   the accessibility constant from the homotopy packages.
   Reset the gamma constant in ts_serpath, for repeatable runs.
+  New package drivers_to_series_trackers, with code from ts_serpath.
 
 Thu 22 Nov 2018 : made the prompting for the Jacobian Rabinowitsch trick
   optional in homotopy_series_readers.  New packages to manage the values

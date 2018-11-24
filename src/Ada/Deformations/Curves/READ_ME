@@ -71,5 +71,6 @@ ts_padepred                      : test the Pade predictors
 homotopy_continuation_parameters    : parameters and tolerances
 homotopy_continuation_parameters_io : output and tuning of arameters 
 series_and_trackers                 : power series predictor in path tracker
+drivers_to_series_trackers          : helps to launch series trackers
 ts_serpath                          : test on series path tracker
 -------------------------------------------------------------------------------

@@ -11,9 +11,6 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
-with Standard_Random_Numbers;
-with DoblDobl_Random_Numbers;
-with QuadDobl_Random_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
@@ -36,221 +33,17 @@ with Standard_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 with Complex_Series_and_Polynomials_io;  use Complex_Series_and_Polynomials_io;
-with Root_Refining_Parameters;
-with Standard_Root_Refiners;
-with DoblDobl_Root_Refiners;
-with QuadDobl_Root_Refiners;
 with Series_and_Homotopies;
 with Series_and_Trackers;
 with Homotopy_Series_Readers;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
+with Drivers_to_Series_Trackers;         use Drivers_to_Series_Trackers;
 
 procedure ts_serpath is
 
 -- DESCRIPTION :
---   Developing path tracers with power series.
-
-  procedure Standard_Reset_Gamma
-              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
-
-  -- DESCRIPTION :
-  --   Resets the gamma with a new Standard_Homotopy.Create.
-
-    start : constant Standard_Complex_Poly_Systems.Poly_Sys
-          := Standard_Homotopy.Start_System;
-    target : constant Standard_Complex_Poly_Systems.Poly_Sys
-           := Standard_Homotopy.Target_System;
-    q : Standard_Complex_Poly_Systems.Poly_Sys(start'range);
-    p : Standard_Complex_Poly_Systems.Poly_Sys(target'range);
-
-  begin
-    Standard_Complex_Poly_Systems.Copy(start,q);
-    Standard_Complex_Poly_Systems.Copy(target,p);
-    Standard_Homotopy.Clear;
-    Standard_Homotopy.Create(p,q,1,gamma);
-  end Standard_Reset_Gamma;
-
-  procedure DoblDobl_Reset_Gamma
-              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
-
-  -- DESCRIPTION :
-  --   Resets the gamma with a new DoblDobl_Homotopy.Create.
-
-    start : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
-          := DoblDobl_Homotopy.Start_System;
-    target : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
-           := DoblDobl_Homotopy.Target_System;
-    q : DoblDobl_Complex_Poly_Systems.Poly_Sys(start'range);
-    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(target'range);
-    ddgamma : constant DoblDobl_Complex_Numbers.Complex_Number
-            := DoblDobl_Complex_Numbers_cv.Standard_to_DoblDobl_Complex(gamma);
-
-  begin
-    DoblDobl_Complex_Poly_Systems.Copy(start,q);
-    DoblDobl_Complex_Poly_Systems.Copy(target,p);
-    DoblDobl_Homotopy.Clear;
-    DoblDobl_Homotopy.Create(p,q,1,ddgamma);
-  end DoblDobl_Reset_Gamma;
-
-  procedure QuadDobl_Reset_Gamma
-              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
-
-  -- DESCRIPTION :
-  --   Resets the gamma with a new QuadDobl_Homotopy.Create.
-
-    start : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
-          := QuadDobl_Homotopy.Start_System;
-    target : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
-           := QuadDobl_Homotopy.Target_System;
-    q : QuadDobl_Complex_Poly_Systems.Poly_Sys(start'range);
-    p : QuadDobl_Complex_Poly_Systems.Poly_Sys(target'range);
-    qdgamma : constant QuadDobl_Complex_Numbers.Complex_Number
-            := QuadDobl_Complex_Numbers_cv.Standard_to_QuadDobl_Complex(gamma);
-
-  begin
-    QuadDobl_Complex_Poly_Systems.Copy(start,q);
-    QuadDobl_Complex_Poly_Systems.Copy(target,p);
-    QuadDobl_Homotopy.Clear;
-    QuadDobl_Homotopy.Create(p,q,1,qdgamma);
-  end QuadDobl_Reset_Gamma;
-
-  procedure Set_Output
-              ( file : in out file_type; verbose,tofile : out boolean ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user if verbose or not, and if so, whether the output
-  --   should be written to a file or not, which sets tofile to true.
-  --   If tofile, then file is created, ready for output.
-
-    ans : character;
-
-  begin
-    new_line;
-    put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
-    verbose := (ans = 'y');
-    put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
-    tofile := (ans = 'y');
-    if tofile then
-      put_line("Reading the name of the output file ...");
-      Read_Name_and_Create_File(file);
-    end if;
-  end Set_Output;
-
-  procedure Prompt_for_Degrees ( numdeg,dendeg : out integer32 ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user for the degrees of the numerator and denominator,
-  --   returned respectively in numdeg and dendeg.
-
-  begin
-    new_line;
-    put("Give the degree of numerator of the Pade approximants : ");
-    numdeg := 0; get(numdeg);
-    put("Give the degree of denominator of the Pade approximants : ");
-    dendeg := 0; get(dendeg);
-  end Prompt_for_Degrees;
-
-  procedure Write_Timer
-              ( file : in file_type;
-                numdeg,dendeg,precision : in natural32;
-                timer : in Timing_Widget ) is
-
-  -- DESCRIPTION :
-  --   Writes the times with as well the degrees of numerator
-  --   and denominator of the Pade approximants.
-  --   The precision is 0, 1, or 2, respectively
-  --   for double, double double, or quad double precision.
-
-    s : constant string
-      := "[" & Characters_and_Numbers.Convert(integer32(numdeg))
-       & "," & Characters_and_Numbers.Convert(integer32(dendeg))
-       & "]-Tracking";
- 
-  begin
-    new_line(file);
-    case precision is
-      when 0 => print_times(file,timer,s & " in double precision.");
-      when 1 => print_times(file,timer,s & " in double double precision.");
-      when 2 => print_times(file,timer,s & " in quad double precision.");
-      when others => null;
-    end case;
-  end Write_Timer;
-
-  procedure Refine_Roots
-              ( file : in file_type; nq : in integer32;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Applies the root refiners to the solutions in sols,
-  --   writing the output to file.  The number of equations
-  --   of the target system in the homotoy is nq.
-
-    p : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
-      := Standard_Homotopy.Target_System;
-    epsxa,epsfa,tolsing : double_float;
-    numit,maxit : natural32 := 0;
-    deflate,wout : boolean;
-
-    use Root_Refining_Parameters,Standard_Root_Refiners;
-
-  begin
-    Standard_Default_Root_Refining_Parameters
-      (epsxa,epsfa,tolsing,maxit,deflate,wout);
-    deflate := false;
-    Reporting_Root_Refiner
-      (file,p,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
-  end Refine_Roots;
-
-  procedure Refine_Roots
-              ( file : in file_type; nq : in integer32;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Applies the root refiners to the solutions in sols,
-  --   writing the output to file.  The number of equations
-  --   of the target system in the homotoy is nq.
-
-    p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
-      := DoblDobl_Homotopy.Target_System;
-    epsxa,epsfa,tolsing : double_float;
-    numit,maxit : natural32 := 0;
-    deflate,wout : boolean;
-
-    use Root_Refining_Parameters,DoblDobl_Root_Refiners;
-
-  begin
-    DoblDobl_Default_Root_Refining_Parameters
-      (epsxa,epsfa,tolsing,maxit,deflate,wout);
-    deflate := false;
-    Reporting_Root_Refiner
-      (file,p,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
-  end Refine_Roots;
-
-  procedure Refine_Roots
-              ( file : in file_type; nq : in integer32;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Applies the root refiners to the solutions in sols,
-  --   writing the output to file.  The number of equations
-  --   of the target system in the homotoy is nq.
-
-    p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
-      := QuadDobl_Homotopy.Target_System;
-    epsxa,epsfa,tolsing : double_float;
-    numit,maxit : natural32 := 0;
-    deflate,wout : boolean;
-
-    use Root_Refining_Parameters,QuadDobl_Root_Refiners;
-
-  begin
-    QuadDobl_Default_Root_Refining_Parameters
-      (epsxa,epsfa,tolsing,maxit,deflate,wout);
-    deflate := false;
-    Reporting_Root_Refiner
-      (file,p,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
-  end Refine_Roots;
+--   Developing path trackers with power series.
 
   procedure Standard_Test
               ( nq : in integer32;
@@ -275,14 +68,12 @@ procedure ts_serpath is
     ans : character;
     verbose,tofile : boolean;
     file : file_type;
-   -- numdeg,dendeg : integer32 := 0;
     timer : Timing_Widget;
     prevgamma : Standard_Complex_Numbers.Complex_Number;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
    -- put_line("The series system :"); put(s,1); new_line;
-   -- Prompt_for_Degrees(numdeg,dendeg);
     p.gamma := Standard_Homotopy.Accessibility_Constant;
     prevgamma := p.gamma;
     Homotopy_Continuation_Parameters_io.Tune(p);
@@ -346,7 +137,6 @@ procedure ts_serpath is
     ans : character;
     verbose,tofile : boolean;
     file : file_type;
-   -- numdeg,dendeg : integer32 := 0;
     timer : Timing_Widget;
     ddgamma : constant DoblDobl_Complex_Numbers.Complex_Number
             := DoblDobl_Homotopy.Accessibility_Constant;
@@ -357,7 +147,6 @@ procedure ts_serpath is
   begin
    -- put_line("The homotopy system :"); put_line(h);
    -- put_line("The series system :"); put(s,1); new_line;
-   -- Prompt_for_Degrees(numdeg,dendeg);
     p.gamma := gamma;
     prevgamma := p.gamma;
     Homotopy_Continuation_Parameters_io.Tune(p);
@@ -422,7 +211,6 @@ procedure ts_serpath is
     ans : character;
     verbose,tofile : boolean;
     file : file_type;
-   -- numdeg,dendeg : integer32 := 0;
     timer : Timing_Widget;
     qdgamma : constant QuadDobl_Complex_Numbers.Complex_Number
             := QuadDobl_Homotopy.Accessibility_Constant;
@@ -433,7 +221,6 @@ procedure ts_serpath is
   begin
    -- put_line("The homotopy system :"); put_line(h);
    -- put_line("The series system :"); put(s,1); new_line;
-   -- Prompt_for_Degrees(numdeg,dendeg);
     p.gamma := gamma;
     prevgamma := p.gamma;
     Homotopy_Continuation_Parameters_io.Tune(p);
