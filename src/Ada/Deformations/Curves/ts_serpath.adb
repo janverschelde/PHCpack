@@ -82,7 +82,7 @@ procedure ts_serpath is
     end if;
     Set_Output(file,verbose,tofile);
     if tofile
-     then Homotopy_Continuation_Parameters_io.put(file,p);
+     then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
     tstart(timer);
     for i in 1..len loop
@@ -90,8 +90,11 @@ procedure ts_serpath is
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
         Series_and_Trackers.Track_One_Path(file,s,ls.all,p,verbose);
+        put(file,"Solution "); put(file,i,1); put_line(file," :");
+        put(file,ls.all); new_line(file);
       else
         Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,p,verbose);
+        put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;
@@ -155,7 +158,7 @@ procedure ts_serpath is
     end if;
     Set_Output(file,verbose,tofile);
     if tofile
-     then Homotopy_Continuation_Parameters_io.put(file,p);
+     then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
     tstart(timer);
     for i in 1..len loop
@@ -163,8 +166,11 @@ procedure ts_serpath is
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
         Series_and_Trackers.Track_One_Path(file,s,ls.all,p,verbose);
+        put(file,"Solution "); put(file,i,1); put_line(file," :");
+        put(file,ls.all); new_line(file);
       else
         Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,p,verbose);
+        put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) ");
         Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
@@ -229,7 +235,7 @@ procedure ts_serpath is
     end if;
     Set_Output(file,verbose,tofile);
     if tofile
-     then Homotopy_Continuation_Parameters_io.put(file,p);
+     then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
     tstart(timer);
     for i in 1..len loop
@@ -237,8 +243,11 @@ procedure ts_serpath is
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
         Series_and_Trackers.Track_One_Path(file,s,ls.all,p,verbose);
+        put(file,"Solution "); put(file,i,1); put_line(file," :");
+        put(file,ls.all); new_line(file);
       else
         Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,p,verbose);
+        put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;

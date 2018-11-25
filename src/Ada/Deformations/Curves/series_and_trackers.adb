@@ -23,6 +23,9 @@ with DoblDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
+with Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;
 with Standard_Root_Refiners;
 with DoblDobl_Root_Refiners;
 with QuadDobl_Root_Refiners;
@@ -267,7 +270,6 @@ package body Series_and_Trackers is
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       Standard_Complex_VecVecs.Clear(poles);
-      new_line;
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
       Standard_Complex_Series_Vectors.Clear(eva);
       if frp > 0.0
@@ -429,8 +431,9 @@ package body Series_and_Trackers is
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
-      put(file,"Step "); put(file,k,1);
-      put_line(file," in the path tracker :");
+      if verbose then
+        put(file,"Step "); put(file,k,1); put(file," : ");
+      end if;
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
@@ -439,30 +442,27 @@ package body Series_and_Trackers is
         put(file,frp,3); new_line(file);
       end if;
       Standard_Complex_VecVecs.Clear(poles);
-      new_line(file);
-      put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
       if frp > 0.0
        then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.beta);
       end if;
       Standard_Complex_Series_Vectors.Clear(eva);
-      put(file,"The computed step size : "); put(file,step,3);
       Set_Step(t,step,pars.maxsize,onetarget);
-      put(file," t = "); put(file,t,3);  new_line(file);
+      if verbose then
+        put(file,"The computed step size : "); put(file,step,3);
+        put(file," t = "); put(file,t,3); new_line(file);
+      end if;
       exit when (step < pars.minsize);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
       Standard_Pade_Approximants.Clear(pv);
       Standard_Complex_Series_Vectors.Clear(srv);
-      put_line(file,"Shifting the polynomial system ...");
       Standard_CSeries_Poly_Systems.Clear(wrk);
       wrk := Series_and_Homotopies.Shift(hom,t);
-      put_line(file,"Correcting the solution ...");
       Correct(file,wrk,0.0,pars.corsteps,wrk_sol,err,rco,res,verbose);
       exit when (t = 1.0);
     end loop;
-    put_line(file,"The solution vector :"); put_line(file,wrk_sol);
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
@@ -499,14 +499,13 @@ package body Series_and_Trackers is
   begin
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
-      put(file,"Step "); put(file,k,1);
-      put_line(file," in the path tracker :");
+      if verbose then
+        put(file,"Step "); put(file,k,1); put(file," : ");
+      end if;
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       DoblDobl_Complex_VecVecs.Clear(poles);
-      new_line(file);
-      put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
       if frp > 0.0 then
@@ -514,24 +513,23 @@ package body Series_and_Trackers is
                   (step,hi_part(frp),pars.beta);
       end if;
       DoblDobl_Complex_Series_Vectors.Clear(eva);
-      put(file,"The computed step size : "); put(file,step,3);
       Set_Step(t,step,pars.maxsize,onetarget);
-      put(file," t = "); put(file,t,3);  new_line(file);
+      if verbose then
+        put(file,"The computed step size : "); put(file,step,3);
+        put(file," t = "); put(file,t,3);  new_line(file);
+      end if;
       exit when (step < pars.minsize);
       dd_step := create(step);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
       DoblDobl_Complex_Series_Vectors.Clear(srv);
       DoblDobl_Pade_Approximants.Clear(pv);
-      put_line(file,"Shifting the polynomial system ...");
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
       dd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
-      put_line(file,"Correcting the solution ...");
       Correct(file,wrk,zero,3,wrk_sol,err,rco,res,verbose);
       exit when (t = 1.0);
     end loop;
-    put_line(file,"The solution vector :"); put_line(file,wrk_sol);
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
@@ -568,14 +566,13 @@ package body Series_and_Trackers is
   begin
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     for k in 1..max_steps loop
-      put(file,"Step "); put(file,k,1);
-      put_line(file," in the path tracker :");
+      if verbose then
+        put(file,"Step "); put(file,k,1); put(file," : ");
+      end if;
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       QuadDobl_Complex_VecVecs.Clear(poles);
-      new_line(file);
-      put_line(file,"Setting the step size based on the power series ...");
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
       if frp > 0.0 then
@@ -583,24 +580,23 @@ package body Series_and_Trackers is
                   (step,hihi_part(frp),pars.beta);
       end if;
       QuadDobl_Complex_Series_Vectors.Clear(eva);
-      put(file,"The computed step size : "); put(file,step,3);
       Set_Step(t,step,pars.maxsize,onetarget);
-      put(file," t = "); put(file,t,3);  new_line(file);
+      if verbose then
+        put(file,"The computed step size : "); put(file,step,3);
+        put(file," t = "); put(file,t,3);  new_line(file);
+      end if;
       exit when (step < pars.minsize);
       qd_step := create(step);
      -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
       QuadDobl_Pade_Approximants.Clear(pv);
-      put_line(file,"Shifting the polynomial system ...");
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
       qd_t := create(t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
-      put_line(file,"Correcting the solution ...");
       Correct(file,wrk,zero,pars.corsteps,wrk_sol,err,rco,res,verbose);
       exit when (t = 1.0);
     end loop;
-    put_line(file,"The solution vector :"); put_line(file,wrk_sol);
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
@@ -627,6 +623,8 @@ package body Series_and_Trackers is
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       Track_One_Path(file,hom,ls.all,pars,verbose);
+      put(file,"Solution "); put(file,i,1); put_line(file," :");
+      Standard_Complex_Solutions_io.put(file,ls.all);
       tmp := Tail_Of(tmp);
     end loop;
     tstop(timer);
@@ -654,6 +652,8 @@ package body Series_and_Trackers is
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       Track_One_Path(file,hom,ls.all,pars,verbose);
+      put(file,"Solution "); put(file,i,1); put_line(file," :");
+      DoblDobl_Complex_Solutions_io.put(file,ls.all);
       tmp := Tail_Of(tmp);
     end loop;
     tstop(timer);
@@ -681,6 +681,8 @@ package body Series_and_Trackers is
       ls := Head_Of(tmp);
       put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       Track_One_Path(file,hom,ls.all,pars,verbose);
+      put(file,"Solution "); put(file,i,1); put_line(file," :");
+      QuadDobl_Complex_Solutions_io.put(file,ls.all);
       tmp := Tail_Of(tmp);
     end loop;
     tstop(timer);

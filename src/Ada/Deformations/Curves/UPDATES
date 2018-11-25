@@ -1,3 +1,6 @@
+Sat 24 Nov 2018 : improved the output in series_and_trackers.adb and
+  ts_serpath.adb.
+
 Fri 23 Nov 2018 : in Tune() of homotopy_continuation_parameters_io,
   changed the out into an in out type and did not reset the pars to
   the default values.  In ts_serpath, reset the gamma constant to
