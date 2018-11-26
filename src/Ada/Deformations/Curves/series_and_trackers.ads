@@ -101,6 +101,23 @@ package Series_and_Trackers is
   --   taking into account the maximal step size maxstep
   --   and the value for the target for t.
 
+  function Residual_Prediction
+              ( hom : Standard_CSeries_Poly_Systems.Poly_Sys;
+                sol : Standard_Complex_Vectors.Vector;
+                step : double_float ) return double_float;
+  function Residual_Prediction
+              ( hom : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                sol : DoblDobl_Complex_Vectors.Vector;
+                step : double_float ) return double_float;
+  function Residual_Prediction
+              ( hom : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                sol : QuadDobl_Complex_Vectors.Vector;
+                step : double_float ) return double_float;
+
+  -- DESCRIPTION :
+  --   Given a homotopy, a predicted solution, with a step,
+  --   returns the norm of the evaluated homotopy at the solution.
+
   procedure Track_one_Path
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;

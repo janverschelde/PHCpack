@@ -1,3 +1,7 @@
+Sun 25 Nov 2018 : added residual computation on prediction solution to
+  series_and_trackers.adb, with a step reduction.  Adjusted the default
+  values in homotopy_continuation_parameters.adb.
+
 Sat 24 Nov 2018 : improved the output in series_and_trackers.adb and
   ts_serpath.adb.
 

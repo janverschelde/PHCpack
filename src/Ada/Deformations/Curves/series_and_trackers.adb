@@ -10,10 +10,13 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Vector_Norms;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_Vector_Norms;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
@@ -242,6 +245,71 @@ package body Series_and_Trackers is
     end if;
   end Set_Step;
 
+  function Residual_Prediction
+              ( hom : Standard_CSeries_Poly_Systems.Poly_Sys;
+                sol : Standard_Complex_Vectors.Vector;
+                step : double_float ) return double_float is
+
+  -- DESCRIPTION :
+  --   Given a homotopy, a predicted solution, with a step,
+  --   returns the norm of the evaluated homotopy at the solution.
+
+    res : double_float;
+    phm : Standard_Complex_Poly_Systems.Poly_Sys(hom'range);
+    val : Standard_Complex_Vectors.Vector(phm'range);
+
+  begin
+    phm := Series_and_Homotopies.Eval(hom,step);
+    val := Standard_Complex_Poly_SysFun.Eval(phm,sol);
+    res := Standard_Complex_Vector_Norms.Max_Norm(val);
+    Standard_Complex_Poly_Systems.Clear(phm);
+    return res;
+  end Residual_Prediction;
+
+  function Residual_Prediction
+              ( hom : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                sol : DoblDobl_Complex_Vectors.Vector;
+                step : double_float ) return double_float is
+
+  -- DESCRIPTION :
+  --   Given a homotopy, a predicted solution, with a step,
+  --   returns the norm of the evaluated homotopy at the solution.
+
+    res : double_double;
+    phm : DoblDobl_Complex_Poly_Systems.Poly_Sys(hom'range);
+    val : DoblDobl_Complex_Vectors.Vector(phm'range);
+    dd_step : constant double_double := create(step);
+
+  begin
+    phm := Series_and_Homotopies.Eval(hom,dd_step);
+    val := DoblDobl_Complex_Poly_SysFun.Eval(phm,sol);
+    res := DoblDobl_Complex_Vector_Norms.Max_Norm(val);
+    DoblDobl_Complex_Poly_Systems.Clear(phm);
+    return hi_part(res);
+  end Residual_Prediction;
+
+  function Residual_Prediction
+              ( hom : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                sol : QuadDobl_Complex_Vectors.Vector;
+                step : double_float ) return double_float is
+
+  -- DESCRIPTION :
+  --   Given a homotopy, a predicted solution, with a step,
+  --   returns the norm of the evaluated homotopy at the solution.
+
+    res : quad_double;
+    phm : QuadDobl_Complex_Poly_Systems.Poly_Sys(hom'range);
+    val : QuadDobl_Complex_Vectors.Vector(phm'range);
+    qd_step : constant quad_double := create(step);
+
+  begin
+    phm := Series_and_Homotopies.Eval(hom,qd_step);
+    val := QuadDobl_Complex_Poly_SysFun.Eval(phm,sol);
+    res := QuadDobl_Complex_Vector_Norms.Max_Norm(val);
+    QuadDobl_Complex_Poly_Systems.Clear(phm);
+    return hihi_part(res);
+  end Residual_Prediction;
+
   procedure Track_One_Path
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
@@ -262,7 +330,7 @@ package body Series_and_Trackers is
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
-    err,rco,res,frp : double_float;
+    err,rco,res,frp,predres : double_float;
 
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -277,8 +345,14 @@ package body Series_and_Trackers is
       end if;
       Set_Step(t,step,pars.maxsize,onetarget);
       exit when (step < pars.minsize);
-     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
-      wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
+      loop
+        wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
+        predres := Residual_Prediction(wrk,wrk_sol,step);
+        exit when (predres <= pars.alpha);
+        t := t - step; step := step/2.0; t := t + step;
+        exit when (step < pars.minsize);
+      end loop;
+      exit when (step < pars.minsize);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_Pade_Approximants.Clear(pv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
@@ -426,7 +500,7 @@ package body Series_and_Trackers is
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
-    err,rco,res,frp : double_float;
+    err,rco,res,frp,predres : double_float;
 
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -450,12 +524,25 @@ package body Series_and_Trackers is
       Standard_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
-        put(file,"The computed step size : "); put(file,step,3);
-        put(file," t = "); put(file,t,3); new_line(file);
+        put(file,"Step size : "); put(file,step,3);
+        put(file," t = "); put(file,t,3);
       end if;
       exit when (step < pars.minsize);
-     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,step);
-      wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
+      loop
+        wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
+        predres := Residual_Prediction(wrk,wrk_sol,step);
+        if verbose
+         then put(file,"  residual : "); put(file,predres,3); new_line(file);
+        end if;
+        exit when (predres <= pars.alpha);
+        t := t - step; step := step/2.0; t := t + step;
+        if verbose then
+          put(file,"Step size : "); put(file,step,3);
+          put(file," t = "); put(file,t,3);
+        end if;
+        exit when (step < pars.minsize);
+      end loop;
+      exit when (step < pars.minsize);
       Standard_Pade_Approximants.Clear(pv);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
@@ -515,7 +602,7 @@ package body Series_and_Trackers is
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
-        put(file,"The computed step size : "); put(file,step,3);
+        put(file,"Step size : "); put(file,step,3);
         put(file," t = "); put(file,t,3);  new_line(file);
       end if;
       exit when (step < pars.minsize);
@@ -582,7 +669,7 @@ package body Series_and_Trackers is
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
-        put(file,"The computed step size : "); put(file,step,3);
+        put(file,"Step size : "); put(file,step,3);
         put(file," t = "); put(file,t,3);  new_line(file);
       end if;
       exit when (step < pars.minsize);
