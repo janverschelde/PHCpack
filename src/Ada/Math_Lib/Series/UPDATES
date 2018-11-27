@@ -1,5 +1,6 @@
 Mon 26 Nov 2018 : fixed sign error in the Shift functions in
   {standard,dobldobl,quaddobl}_complex_series_functions.adb.
+  Corrected a fix in standard_complex_series_functions.adb.
 
 Tue 20 Nov 2018 : added frequency test to ts_cserpol.adb, to ensure no
   memory leaks occur with evaluating series polynomials.

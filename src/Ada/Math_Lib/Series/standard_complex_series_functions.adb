@@ -158,7 +158,6 @@ package body Standard_Complex_Series_Functions is
        then sgn := 1;
        else sgn := -1;
       end if;
-      sgn := 1;
       for j in 0..i loop
         bcf := double_float(sgn*binomial(i,j));
         bcf := bcf*(c**(natural(i-j)));
