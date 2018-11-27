@@ -1,5 +1,7 @@
 Mon 26 Nov 2018 : in series_and_trackers.adb, set the verbose option to
   false when calling the Series_and_Predictors.Newton_Prediction().
+  In series_and_trackers.adb, swapped the correct() before the shift
+  and added an extra round of corrections at the end of the tracking.
 
 Sun 25 Nov 2018 : added residual computation on prediction solution to
   series_and_trackers.adb, with a step reduction.  Adjusted the default

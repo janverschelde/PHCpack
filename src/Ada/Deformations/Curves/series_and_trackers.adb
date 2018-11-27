@@ -63,7 +63,7 @@ package body Series_and_Trackers is
   begin
     for k in 1..nit loop
       Standard_Newton_Step(f,jf,sol,err,rco,res);
-     -- exit when (res < 1.0e-12);
+      exit when (res < 1.0e-12);
     end loop;
     Standard_Complex_Poly_Systems.Clear(p);
     Standard_Complex_Poly_SysFun.Clear(f);
@@ -354,13 +354,16 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       exit when (step < pars.minsize);
+      Correct(wrk,step,pars.corsteps,wrk_sol,err,rco,res);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_Pade_Approximants.Clear(pv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
-      wrk := Series_and_Homotopies.Shift(hom,t);
-      Correct(wrk,0.0,pars.corsteps,wrk_sol,err,rco,res);
       exit when (t = 1.0);
+      wrk := Series_and_Homotopies.Shift(hom,t);
+     -- Correct(wrk,0.0,pars.corsteps,wrk_sol,err,rco,res);
     end loop;
+    wrk := Series_and_Homotopies.Shift(hom,1.0);
+    Correct(wrk,0.0,pars.corsteps,wrk_sol,err,rco,res);
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
@@ -544,13 +547,16 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       exit when (step < pars.minsize);
+      Correct(file,wrk,step,pars.corsteps,wrk_sol,err,rco,res,verbose);
       Standard_Pade_Approximants.Clear(pv);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
-      wrk := Series_and_Homotopies.Shift(hom,t);
-      Correct(file,wrk,0.0,pars.corsteps,wrk_sol,err,rco,res,verbose);
       exit when (t = 1.0);
+      wrk := Series_and_Homotopies.Shift(hom,t);
+     -- Correct(file,wrk,0.0,pars.corsteps,wrk_sol,err,rco,res,verbose);
     end loop;
+    wrk := Series_and_Homotopies.Shift(hom,1.0);
+    Correct(file,wrk,0.0,pars.corsteps,wrk_sol,err,rco,res,verbose);
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
