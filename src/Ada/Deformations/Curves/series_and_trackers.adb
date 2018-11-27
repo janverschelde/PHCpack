@@ -98,6 +98,7 @@ package body Series_and_Trackers is
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
+      exit when (res < 1.0e-12);
     end loop;
     Standard_Complex_Poly_Systems.Clear(p);
     Standard_Complex_Poly_SysFun.Clear(f);
