@@ -126,6 +126,7 @@ package body Series_and_Trackers is
   begin
     for k in 1..nit loop
       DoblDobl_Newton_Step(f,jf,sol,err,rco,res);
+      exit when (res < 1.0e-12);
     end loop;
     DoblDobl_Complex_Poly_Systems.Clear(p);
     DoblDobl_Complex_Poly_SysFun.Clear(f);
@@ -160,6 +161,7 @@ package body Series_and_Trackers is
         put(file,"  rco : "); put(file,rco,3);
         put(file,"  res : "); put(file,res,3); new_line(file);
       end if;
+      exit when (res < 1.0e-12);
     end loop;
     DoblDobl_Complex_Poly_Systems.Clear(p);
     DoblDobl_Complex_Poly_SysFun.Clear(f);
@@ -187,6 +189,7 @@ package body Series_and_Trackers is
   begin
     for k in 1..nit loop
       QuadDobl_Newton_Step(f,jf,sol,err,rco,res);
+      exit when (res < 1.0e-12);
     end loop;
     QuadDobl_Complex_Poly_Systems.Clear(p);
     QuadDobl_Complex_Poly_SysFun.Clear(f);
@@ -221,6 +224,7 @@ package body Series_and_Trackers is
         put(file,"  rco : "); put(file,rco,3);
         put(file,"  res : "); put(file,res,3); new_line(file);
       end if;
+      exit when (res < 1.0e-12);
     end loop;
     QuadDobl_Complex_Poly_Systems.Clear(p);
     QuadDobl_Complex_Poly_SysFun.Clear(f);
@@ -360,10 +364,9 @@ package body Series_and_Trackers is
       Standard_Pade_Approximants.Clear(pv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
       exit when (t = 1.0);
-      wrk := Series_and_Homotopies.Shift(hom,t);
-     -- Correct(wrk,0.0,pars.corsteps,wrk_sol,err,rco,res);
+      wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
-    wrk := Series_and_Homotopies.Shift(hom,1.0);
+    wrk := Series_and_Homotopies.Shift(hom,-1.0);
     Correct(wrk,0.0,pars.corsteps,wrk_sol,err,rco,res);
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -411,17 +414,16 @@ package body Series_and_Trackers is
       Set_Step(t,step,pars.maxsize,onetarget);
       exit when (step < pars.minsize);
       dd_step := create(step);
-     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
+      Correct(wrk,dd_step,pars.corsteps,wrk_sol,err,rco,res);
       DoblDobl_Complex_Series_Vectors.Clear(srv);
       DoblDobl_Pade_Approximants.Clear(pv);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
-      dd_t := create(t);
+      dd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
-      Correct(wrk,zero,pars.corsteps,wrk_sol,err,rco,res);
       exit when (t = 1.0);
     end loop;
-    sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
+    sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(-t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     DoblDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -467,17 +469,16 @@ package body Series_and_Trackers is
       Set_Step(t,step,pars.maxsize,onetarget);
       exit when (step < pars.minsize);
       qd_step := create(step);
-     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
+      Correct(wrk,qd_step,pars.corsteps,wrk_sol,err,rco,res);
       QuadDobl_Pade_Approximants.Clear(pv);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
-      qd_t := create(t);
+      qd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
-      Correct(wrk,zero,pars.corsteps,wrk_sol,err,rco,res);
       exit when (t = 1.0);
     end loop;
-    sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
+    sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(-t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -553,10 +554,9 @@ package body Series_and_Trackers is
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
       exit when (t = 1.0);
-      wrk := Series_and_Homotopies.Shift(hom,t);
-     -- Correct(file,wrk,0.0,pars.corsteps,wrk_sol,err,rco,res,verbose);
+      wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
-    wrk := Series_and_Homotopies.Shift(hom,1.0);
+    wrk := Series_and_Homotopies.Shift(hom,-1.0);
     Correct(file,wrk,0.0,pars.corsteps,wrk_sol,err,rco,res,verbose);
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -615,17 +615,16 @@ package body Series_and_Trackers is
       end if;
       exit when (step < pars.minsize);
       dd_step := create(step);
-     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,dd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
+      Correct(file,wrk,dd_step,pars.corsteps,wrk_sol,err,rco,res,verbose);
       DoblDobl_Complex_Series_Vectors.Clear(srv);
       DoblDobl_Pade_Approximants.Clear(pv);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
-      dd_t := create(t);
+      dd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
-      Correct(file,wrk,zero,3,wrk_sol,err,rco,res,verbose);
       exit when (t = 1.0);
     end loop;
-    sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
+    sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(-t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     DoblDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -682,17 +681,16 @@ package body Series_and_Trackers is
       end if;
       exit when (step < pars.minsize);
       qd_step := create(step);
-     -- wrk_sol := Series_and_Predictors.Predicted_Solution(srv,qd_step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
+      Correct(file,wrk,qd_step,pars.corsteps,wrk_sol,err,rco,res,verbose);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
       QuadDobl_Pade_Approximants.Clear(pv);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
-      qd_t := create(t);
+      qd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
-      Correct(file,wrk,zero,pars.corsteps,wrk_sol,err,rco,res,verbose);
       exit when (t = 1.0);
     end loop;
-    sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
+    sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(-t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);

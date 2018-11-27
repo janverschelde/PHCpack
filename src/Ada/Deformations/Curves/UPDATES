@@ -1,3 +1,7 @@
+Tue 27 Nov 2018 : set the default number of steps on a path to 1000
+  in homotopy_continuation_parameters.adb and flipped the sign of the
+  argument of the shift() in series_and_trackers.adb.
+
 Mon 26 Nov 2018 : in series_and_trackers.adb, set the verbose option to
   false when calling the Series_and_Predictors.Newton_Prediction().
   In series_and_trackers.adb, swapped the correct() before the shift
