@@ -154,6 +154,10 @@ package body Standard_Complex_Series_Functions is
   begin
     for i in 0..s.deg loop
       res.cff(i) := Create(0.0);
+      if i mod 2 = 0
+       then sgn := 1;
+       else sgn := -1;
+      end if;
       sgn := 1;
       for j in 0..i loop
         bcf := double_float(sgn*binomial(i,j));
@@ -177,7 +181,10 @@ package body Standard_Complex_Series_Functions is
   begin
     for i in 0..s.deg loop
       res.cff(i) := Create(0.0);
-      sgn := 1;
+      if i mod 2 = 0
+       then sgn := 1;
+       else sgn := -1;
+      end if;
       for j in 0..i loop
         bcf := double_float(sgn*binomial(i,j));
         rcf := bcf*(c**(natural(i-j)));
