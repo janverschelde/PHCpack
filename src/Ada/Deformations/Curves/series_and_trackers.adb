@@ -63,6 +63,7 @@ package body Series_and_Trackers is
   begin
     for k in 1..nit loop
       Standard_Newton_Step(f,jf,sol,err,rco,res);
+     -- exit when (res < 1.0e-12);
     end loop;
     Standard_Complex_Poly_Systems.Clear(p);
     Standard_Complex_Poly_SysFun.Clear(f);
@@ -509,7 +510,7 @@ package body Series_and_Trackers is
         put(file,"Step "); put(file,k,1); put(file," : ");
       end if;
       Series_and_Predictors.Newton_Prediction
-        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
+        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       if verbose then
         put(file,"The smallest forward pole radius : ");
@@ -590,7 +591,7 @@ package body Series_and_Trackers is
         put(file,"Step "); put(file,k,1); put(file," : ");
       end if;
       Series_and_Predictors.Newton_Prediction
-        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
+        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       DoblDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size
@@ -657,7 +658,7 @@ package body Series_and_Trackers is
         put(file,"Step "); put(file,k,1); put(file," : ");
       end if;
       Series_and_Predictors.Newton_Prediction
-        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,verbose);
+        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       QuadDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size

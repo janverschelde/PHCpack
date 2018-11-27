@@ -1,3 +1,6 @@
+Mon 26 Nov 2018 : in series_and_trackers.adb, set the verbose option to
+  false when calling the Series_and_Predictors.Newton_Prediction().
+
 Sun 25 Nov 2018 : added residual computation on prediction solution to
   series_and_trackers.adb, with a step reduction.  Adjusted the default
   values in homotopy_continuation_parameters.adb.
