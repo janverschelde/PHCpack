@@ -10,7 +10,8 @@ package Homotopy_Continuation_Parameters is
 
   type Parameters is record
     alpha : double_float;      -- tolerance on the residual
-    beta : double_float;       -- multiplication factor of the pole radius
+    sbeta : double_float;      -- multiplication factor of the series step
+    pbeta : double_float;      -- multiplication factor of the pole radius
     gamma : Complex_Number;    -- the gamma constant in the homotopy
     numdeg : natural32;        -- degree of numerator of Pade approximant
     dendeg : natural32;        -- degree of denominator of Pade approximant

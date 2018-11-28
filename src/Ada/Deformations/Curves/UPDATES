@@ -1,3 +1,8 @@
+Wed 28 Nov 2018 : renamed the beta in homotopy_continuation_parameters
+  into pbeta and added the sbeta parameter, which then changed the put
+  and tune in homotopy_continuation_parameters_io.adb, and also changed
+  series_and_trackers.adb.
+
 Tue 27 Nov 2018 : set the default number of steps on a path to 1000
   in homotopy_continuation_parameters.adb and flipped the sign of the
   argument of the shift() in series_and_trackers.adb.

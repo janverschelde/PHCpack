@@ -25,15 +25,17 @@ package body Homotopy_Continuation_Parameters_io is
     put(file,pars.maxsize,2); new_line(file);
     put(file," 5. minimum step size                         :");
     put(file,pars.minsize,2); new_line(file);
-    put(file," 6. multiplication factor of the pole radius  :");
-    put(file,pars.beta,2); new_line(file);
-    put(file," 7. tolerance on the residual                 :");
+    put(file," 6. multiplication factor of the series step  :");
+    put(file,pars.sbeta,2); new_line(file);
+    put(file," 7. multiplication factor of the pole radius  :");
+    put(file,pars.pbeta,2); new_line(file);
+    put(file," 8. tolerance on the residual                 :");
     put(file,pars.alpha,2); new_line(file);
-    put(file," 8. tolerance on zero series coefficient      :");
+    put(file," 9. tolerance on zero series coefficient      :");
     put(file,pars.tolcff,2); new_line(file);
-    put(file," 9. number of corrector steps                 : ");
+    put(file,"10. number of corrector steps                 : ");
     put(file,pars.corsteps,1); new_line(file);
-    put(file,"10. maximum steps on a path                   : ");
+    put(file,"11. maximum steps on a path                   : ");
     put(file,pars.maxsteps,1); new_line(file);
   end put;
 
@@ -42,8 +44,8 @@ package body Homotopy_Continuation_Parameters_io is
     loop
       put("Type a number to change a value, or 0 to exit : ");
       Numbers_io.Read_Natural(nbr);
-      exit when (nbr < 11);
-      put_line("Your number should be 10 or less.  Please try again.");
+      exit when (nbr < 12);
+      put_line("Your number should be 11 or less.  Please try again.");
     end loop;
   end Prompt_for_Selection;
 
@@ -76,19 +78,22 @@ package body Homotopy_Continuation_Parameters_io is
         put("-> give a new value for the minimum step size  : ");
         Numbers_io.Read_Positive_Float(pars.minsize);
       when 6 =>
-        put("-> give a new value for the multiplication factor : ");
-        Numbers_io.Read_Positive_Float(pars.beta);
+        put("-> give a new multiplication factor for the series step : ");
+        Numbers_io.Read_Positive_Float(pars.sbeta);
       when 7 =>
+        put("-> give a new multiplication factor for the pole radius : ");
+        Numbers_io.Read_Positive_Float(pars.pbeta);
+      when 8 =>
         put("-> give a new value for the tolerance on the residual : ");
         Numbers_io.Read_Positive_Float(pars.alpha);
-      when 8 =>
+      when 9 =>
         put("-> give a new tolerance on a zero series coefficient : ");
         Numbers_io.Read_Positive_Float(pars.tolcff);
-      when 9 =>
+      when 10 =>
         put("-> give a new value for the number of corrector steps : ");
         Numbers_io.Read_Positive(pos);
         pars.corsteps := natural32(pos);
-      when 10 =>
+      when 11 =>
         put("-> give a new maximum number of steps on a path : ");
         Numbers_io.Read_Positive(pos);
         pars.maxsteps := natural32(pos);

@@ -345,9 +345,10 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       Standard_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      step := pars.sbeta*step;
       Standard_Complex_Series_Vectors.Clear(eva);
       if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.beta);
+       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
       end if;
       Set_Step(t,step,pars.maxsize,onetarget);
       exit when (step < pars.minsize);
@@ -406,9 +407,10 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       DoblDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
-                  (step,hi_part(frp),pars.beta);
+                  (step,hi_part(frp),pars.pbeta);
       end if;
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
@@ -461,9 +463,10 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       QuadDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
-                  (step,hihi_part(frp),pars.beta);
+                  (step,hihi_part(frp),pars.pbeta);
       end if;
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
@@ -524,8 +527,9 @@ package body Series_and_Trackers is
       Standard_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
+      step := pars.sbeta*step;
       if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.beta);
+       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
       end if;
       Standard_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
@@ -603,9 +607,10 @@ package body Series_and_Trackers is
       DoblDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
+      step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
-                  (step,hi_part(frp),pars.beta);
+                  (step,hi_part(frp),pars.pbeta);
       end if;
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
@@ -669,9 +674,10 @@ package body Series_and_Trackers is
       QuadDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,tolres,verbose);
+      step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
-                  (step,hihi_part(frp),pars.beta);
+                  (step,hihi_part(frp),pars.pbeta);
       end if;
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);

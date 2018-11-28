@@ -8,7 +8,8 @@ package body Homotopy_Continuation_Parameters is
 
   begin
     res.alpha := 1.0E-4;
-    res.beta := 0.5;
+    res.sbeta := 0.5;
+    res.pbeta := 0.5;
     res.gamma := Standard_Random_Numbers.Random1;
     res.numdeg := 4;
     res.dendeg := 4;
