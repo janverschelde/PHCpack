@@ -45,7 +45,8 @@ package body Series_and_Trackers is
 
   procedure Correct
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_float; nit : in natural32;
+                t : in double_float; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float ) is
 
@@ -61,9 +62,12 @@ package body Series_and_Trackers is
     use Standard_Root_Refiners;
 
   begin
-    for k in 1..nit loop
+    nbrit := maxit;
+    for k in 1..maxit loop
       Standard_Newton_Step(f,jf,sol,err,rco,res);
-      exit when (res < 1.0e-12);
+      if res <= tolres
+       then nbrit := k; exit;
+      end if;
     end loop;
     Standard_Complex_Poly_Systems.Clear(p);
     Standard_Complex_Poly_SysFun.Clear(f);
@@ -74,7 +78,8 @@ package body Series_and_Trackers is
   procedure Correct
               ( file : in file_type;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_float; nit : in natural32;
+                t : in double_float; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float;
                 verbose : in boolean := false ) is
@@ -91,14 +96,17 @@ package body Series_and_Trackers is
     use Standard_Root_Refiners;
 
   begin
-    for k in 1..nit loop
+    nbrit := maxit;
+    for k in 1..maxit loop
       Standard_Newton_Step(f,jf,sol,err,rco,res);
       if verbose then
         put(file,"  err :"); put(file,err,3);
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
-      exit when (res < 1.0e-12);
+      if res <= tolres
+       then nbrit := k; exit;
+      end if;
     end loop;
     Standard_Complex_Poly_Systems.Clear(p);
     Standard_Complex_Poly_SysFun.Clear(f);
@@ -108,7 +116,8 @@ package body Series_and_Trackers is
 
   procedure Correct
               ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_double; nit : in natural32;
+                t : in double_double; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_double ) is
 
@@ -124,9 +133,12 @@ package body Series_and_Trackers is
     use DoblDobl_Root_Refiners;
 
   begin
-    for k in 1..nit loop
+    nbrit := maxit;
+    for k in 1..maxit loop
       DoblDobl_Newton_Step(f,jf,sol,err,rco,res);
-      exit when (res < 1.0e-12);
+      if res <= tolres
+       then nbrit := k; exit;
+      end if;
     end loop;
     DoblDobl_Complex_Poly_Systems.Clear(p);
     DoblDobl_Complex_Poly_SysFun.Clear(f);
@@ -137,7 +149,8 @@ package body Series_and_Trackers is
   procedure Correct
               ( file : in file_type;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_double; nit : in natural32;
+                t : in double_double; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_double;
                 verbose : in boolean := false ) is
@@ -154,14 +167,17 @@ package body Series_and_Trackers is
     use DoblDobl_Root_Refiners;
 
   begin
-    for k in 1..nit loop
+    nbrit := maxit;
+    for k in 1..maxit loop
       DoblDobl_Newton_Step(f,jf,sol,err,rco,res);
       if verbose then
         put(file,"  err : "); put(file,err,3);
         put(file,"  rco : "); put(file,rco,3);
         put(file,"  res : "); put(file,res,3); new_line(file);
       end if;
-      exit when (res < 1.0e-12);
+      if res <= tolres
+       then nbrit := k; exit;
+      end if;
     end loop;
     DoblDobl_Complex_Poly_Systems.Clear(p);
     DoblDobl_Complex_Poly_SysFun.Clear(f);
@@ -171,7 +187,8 @@ package body Series_and_Trackers is
 
   procedure Correct
               ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in quad_double; nit : in natural32;
+                t : in quad_double; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double ) is
 
@@ -187,9 +204,12 @@ package body Series_and_Trackers is
     use QuadDobl_Root_Refiners;
 
   begin
-    for k in 1..nit loop
+    nbrit := maxit;
+    for k in 1..nbrit loop
       QuadDobl_Newton_Step(f,jf,sol,err,rco,res);
-      exit when (res < 1.0e-12);
+      if res <= tolres
+       then nbrit := k; exit;
+      end if;
     end loop;
     QuadDobl_Complex_Poly_Systems.Clear(p);
     QuadDobl_Complex_Poly_SysFun.Clear(f);
@@ -200,7 +220,8 @@ package body Series_and_Trackers is
   procedure Correct
               ( file : in file_type; 
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in quad_double; nit : in natural32;
+                t : in quad_double; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double;
                 verbose : in boolean := false ) is
@@ -217,14 +238,17 @@ package body Series_and_Trackers is
     use QuadDobl_Root_Refiners;
 
   begin
-    for k in 1..nit loop
+    nbrit := maxit;
+    for k in 1..maxit loop
       QuadDobl_Newton_Step(f,jf,sol,err,rco,res);
       if verbose then
         put(file,"  err : "); put(file,err,3);
         put(file,"  rco : "); put(file,rco,3);
         put(file,"  res : "); put(file,res,3); new_line(file);
       end if;
-      exit when (res < 1.0e-12);
+      if res <= tolres
+       then nbrit := k; exit;
+      end if;
     end loop;
     QuadDobl_Complex_Poly_Systems.Clear(p);
     QuadDobl_Complex_Poly_SysFun.Clear(f);
@@ -337,6 +361,7 @@ package body Series_and_Trackers is
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res,frp,predres : double_float;
+    nbrit : natural32 := 0;
 
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -360,7 +385,7 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       exit when (step < pars.minsize);
-      Correct(wrk,step,pars.corsteps,wrk_sol,err,rco,res);
+      Correct(wrk,step,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_Pade_Approximants.Clear(pv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
@@ -368,7 +393,7 @@ package body Series_and_Trackers is
       wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
-    Correct(wrk,0.0,pars.corsteps,wrk_sol,err,rco,res);
+    Correct(wrk,0.0,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
@@ -399,6 +424,7 @@ package body Series_and_Trackers is
     err,rco,res : double_double;
     zero : constant double_double := create(0.0);
     frp : double_double;
+    nbrit : natural32 := 0;
 
   begin
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -417,7 +443,7 @@ package body Series_and_Trackers is
       exit when (step < pars.minsize);
       dd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
-      Correct(wrk,dd_step,pars.corsteps,wrk_sol,err,rco,res);
+      Correct(wrk,dd_step,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
       DoblDobl_Complex_Series_Vectors.Clear(srv);
       DoblDobl_Pade_Approximants.Clear(pv);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -425,6 +451,10 @@ package body Series_and_Trackers is
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
       exit when (t = 1.0);
     end loop;
+    dd_t := create(-1.0);
+    wrk := Series_and_Homotopies.Shift(hom,dd_t);
+    dd_step := create(0.0);
+    Correct(wrk,dd_step,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(-t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
@@ -455,6 +485,7 @@ package body Series_and_Trackers is
     err,rco,res : quad_double;
     zero : constant quad_double := create(0.0);
     frp : quad_double;
+    nbrit : natural32 := 0;
 
   begin
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -473,7 +504,7 @@ package body Series_and_Trackers is
       exit when (step < pars.minsize);
       qd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-      Correct(wrk,qd_step,pars.corsteps,wrk_sol,err,rco,res);
+      Correct(wrk,qd_step,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
       QuadDobl_Pade_Approximants.Clear(pv);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -481,6 +512,10 @@ package body Series_and_Trackers is
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
       exit when (t = 1.0);
     end loop;
+    qd_t := create(-1.0);
+    wrk := Series_and_Homotopies.Shift(hom,qd_t);
+    qd_step := create(0.0);
+    Correct(wrk,qd_step,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(-t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
@@ -510,6 +545,7 @@ package body Series_and_Trackers is
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res,frp,predres : double_float;
+    nbrit : natural32 := 0;
 
   begin
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -553,7 +589,8 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       exit when (step < pars.minsize);
-      Correct(file,wrk,step,pars.corsteps,wrk_sol,err,rco,res,verbose);
+      Correct(file,wrk,step,tolcff,pars.corsteps,nbrit,
+              wrk_sol,err,rco,res,verbose);
       Standard_Pade_Approximants.Clear(pv);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
@@ -561,7 +598,8 @@ package body Series_and_Trackers is
       wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
-    Correct(file,wrk,0.0,pars.corsteps,wrk_sol,err,rco,res,verbose);
+    Correct(file,wrk,0.0,tolcff,pars.corsteps,nbrit,
+            wrk_sol,err,rco,res,verbose);
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
@@ -594,6 +632,7 @@ package body Series_and_Trackers is
     err,rco,res : double_double;
     zero : constant double_double := create(0.0);
     frp : double_double;
+    nbrit : natural32 := 0;
 
   begin
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -621,7 +660,8 @@ package body Series_and_Trackers is
       exit when (step < pars.minsize);
       dd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
-      Correct(file,wrk,dd_step,pars.corsteps,wrk_sol,err,rco,res,verbose);
+      Correct(file,wrk,dd_step,tolcff,pars.corsteps,nbrit,
+              wrk_sol,err,rco,res,verbose);
       DoblDobl_Complex_Series_Vectors.Clear(srv);
       DoblDobl_Pade_Approximants.Clear(pv);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -629,6 +669,11 @@ package body Series_and_Trackers is
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
       exit when (t = 1.0);
     end loop;
+    dd_t := create(-1.0);
+    wrk := Series_and_Homotopies.Shift(hom,dd_t);
+    dd_step := create(0.0);
+    Correct(file,wrk,dd_step,tolcff,pars.corsteps,nbrit,
+            wrk_sol,err,rco,res,verbose);
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(-t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
@@ -661,6 +706,7 @@ package body Series_and_Trackers is
     err,rco,res : quad_double;
     zero : constant quad_double := create(0.0);
     frp : quad_double;
+    nbrit : natural32 := 0;
 
   begin
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
@@ -688,7 +734,8 @@ package body Series_and_Trackers is
       exit when (step < pars.minsize);
       qd_step := create(step);
       wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-      Correct(file,wrk,qd_step,pars.corsteps,wrk_sol,err,rco,res,verbose);
+      Correct(file,wrk,qd_step,tolcff,pars.corsteps,nbrit,
+              wrk_sol,err,rco,res,verbose);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
       QuadDobl_Pade_Approximants.Clear(pv);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -696,6 +743,11 @@ package body Series_and_Trackers is
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
       exit when (t = 1.0);
     end loop;
+    qd_t := create(-1.0);
+    wrk := Series_and_Homotopies.Shift(hom,qd_t);
+    qd_step := create(0.0);
+    Correct(file,wrk,qd_step,tolcff,pars.corsteps,nbrit,
+            wrk_sol,err,rco,res,verbose);
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(-t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;

@@ -24,17 +24,20 @@ package Series_and_Trackers is
 
   procedure Correct
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_float; nit : in natural32;
+                t : in double_float; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float );
   procedure Correct
               ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_double; nit : in natural32;
+                t : in double_double; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_double );
   procedure Correct
               ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in quad_double; nit : in natural32;
+                t : in quad_double; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double );
 
@@ -45,10 +48,13 @@ package Series_and_Trackers is
   -- ON ENTRY :
   --   hom      the homotopy with series coefficients;
   --   t        value for th series parameter to evaluate the series in hom;
-  --   nit      number of steps to do with Newton's method;
+  --   tolres   tolerance on the residual, stops when res <= tolres;
+  --   maxit    maximum number of steps done with Newton's method;
   --   sol      predicted value for the solution.
 
   -- ON RETURN :
+  --   nbrit    number of iterations done;
+  --   sol      the correct value for the solution;
   --   err      magnitude of the correction term;
   --   rco      estimate for the inverse condition number;
   --   res      magnitude of the residual.
@@ -56,21 +62,24 @@ package Series_and_Trackers is
   procedure Correct
               ( file : in file_type;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_float; nit : in natural32;
+                t : in double_float; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float;
                 verbose : in boolean := false );
   procedure Correct
               ( file : in file_type;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_double; nit : in natural32;
+                t : in double_double; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_double;
                 verbose : in boolean := false );
   procedure Correct
               ( file : in file_type;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in quad_double; nit : in natural32;
+                t : in quad_double; tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double;
                 verbose : in boolean := false );
@@ -83,11 +92,14 @@ package Series_and_Trackers is
   --   file     for writing extra diagnostic output, if verbose;
   --   hom      the homotopy with series coefficients;
   --   t        value for th series parameter to evaluate the series in hom;
-  --   nit      number of steps to do with Newton's method;
+  --   tolres   tolerance on the residual, stops when res <= tolres;
+  --   maxit    maximum number of steps to do with Newton's method;
   --   sol      predicted value for the solution;
   --   verbose  to indicate that extra output is wanted.
 
   -- ON RETURN :
+  --   sol      corrected value of the solution;
+  --   nbrit    number of iterations done;
   --   err      magnitude of the correction term;
   --   rco      estimate for the inverse condition number;
   --   res      magnitude of the residual.
