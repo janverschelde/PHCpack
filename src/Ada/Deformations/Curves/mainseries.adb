@@ -552,11 +552,15 @@ procedure mainseries ( precision : in character;
     end;
   end QuadDobl_Main_at_Series;
 
-  procedure Nonzero_Precision_Main is
+  procedure Nonzero_Precision_Main ( valprc : in character ) is
 
   -- DESCRIPTION :
-  --   This main procedure must be called when precision /= '0',
-  --   when the working precision was set at the command line.
+  --   This main procedure is called when the precision is determined,
+  --   either interactively or via the value of precision.
+  --   The value for the precision in valprc is not '0', it is
+  --   '1' for double, '2' for double double, or '4' for quad double.
+  --   The procedure can be called immediately if the precision is
+  --   set at the command line.
 
     ans : character;
 
@@ -611,13 +615,13 @@ procedure mainseries ( precision : in character;
 
   -- DESCRIPTION :
   --   Prompts the user to select the working precision
-  --   if precision /= '0' and then launches the corresponding procedure.
+  --   if precision /= '0' and then launches Nonzero_Precision_Main.
 
-    prc,ans : character;
+    prc : character;
 
   begin
     if precision /= '0' then
-      Nonzero_Precision_Main;
+      Nonzero_Precision_Main(precision);
     else
       new_line;
       put_line("MENU to select the working precision :");
@@ -626,38 +630,12 @@ procedure mainseries ( precision : in character;
       put_line("  2. quad double precision.");
       put("Type 0, 1, or 2 to select the working precision : ");
       Ask_Alternative(prc,"012");
-      new_line;
-      put("Compute tropisms with polyhedral methods ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      if ans = 'y' then
-        put_line("Using as lifting the powers of the first variable,");
-        put_line("assuming coefficients are sufficiently generic ...");
-        case prc is
-          when '0' => Regular_Newton_Puiseux.Standard_Main;
-          when '1' => Regular_Newton_Puiseux.DoblDobl_Main;
-          when '2' => Regular_Newton_Puiseux.QuadDobl_Main;
-          when others => null;
-        end case;
-      else
-        new_line;
-        put("Start Newton's method at constant ? (y/n) ");
-        Ask_Yes_or_No(ans);
-        if ans = 'y' then
-          case prc is
-            when '0' => Standard_Main_at_Constant;
-            when '1' => DoblDobl_Main_at_Constant;
-            when '2' => QuadDobl_Main_at_Constant;
-            when others => null;
-          end case;
-        else
-          case prc is
-            when '0' => Standard_Main_at_Series;
-            when '1' => DoblDobl_Main_at_Series;
-            when '2' => QuadDobl_Main_at_Series;
-            when others => null;
-          end case;
-        end if;
-      end if;
+      case prc is
+        when '0' => Nonzero_Precision_Main('1');
+        when '1' => Nonzero_Precision_Main('2');
+        when '2' => Nonzero_Precision_Main('4');
+        when others => null;
+      end case;
     end if;
   end Main;
 
