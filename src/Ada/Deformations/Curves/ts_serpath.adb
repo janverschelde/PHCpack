@@ -70,6 +70,9 @@ procedure ts_serpath is
     file : file_type;
     timer : Timing_Widget;
     prevgamma : Standard_Complex_Numbers.Complex_Number;
+    nbrsteps,minnbrsteps,maxnbrsteps : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
+    minsize,maxsize : double_float;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
@@ -84,30 +87,51 @@ procedure ts_serpath is
     if tofile
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
+    minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
+    minnbrcorrs := p.corsteps+1; maxnbrcorrs := 0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
-        Series_and_Trackers.Track_One_Path(file,s,ls.all,p,verbose);
+        Series_and_Trackers.Track_One_Path
+          (file,s,ls.all,p,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
+        if verbose then
+          Series_and_Trackers.Write_Path_Statistics
+            (file,nbrsteps,nbrcorrs,minsize,maxsize);
+        end if;
         put(file,"Solution "); put(file,i,1); put_line(file," :");
         put(file,ls.all); new_line(file);
       else
-        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,p,verbose);
+        Series_and_Trackers.Track_One_Path
+          (standard_output,s,ls.all,p,
+           nbrsteps,nbrcorrs,minsize,maxsize,verbose);
+        if verbose then
+          Series_and_Trackers.Write_Path_Statistics
+            (standard_output,nbrsteps,nbrcorrs,minsize,maxsize);
+        end if;
         put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
+      Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
+      Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
     end loop;
     tstop(timer);
     if tofile then
+      Series_and_Trackers.Write_Total_Path_Statistics
+        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+      new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,0,timer);
       Refine_Roots(file,nq,sols);
     else
+      Series_and_Trackers.Write_Total_Path_Statistics
+        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+      new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,0,timer);
@@ -146,6 +170,9 @@ procedure ts_serpath is
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := DoblDobl_Complex_Numbers_cv.DoblDobl_Complex_to_Standard(ddgamma);
     prevgamma : Standard_Complex_Numbers.Complex_Number;
+    nbrsteps,minnbrsteps,maxnbrsteps : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
+    minsize,maxsize : double_float;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
@@ -160,16 +187,29 @@ procedure ts_serpath is
     if tofile
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
+    minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
+    minnbrcorrs := p.corsteps+1; maxnbrcorrs := 0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
-        Series_and_Trackers.Track_One_Path(file,s,ls.all,p,verbose);
+        Series_and_Trackers.Track_One_Path
+          (file,s,ls.all,p,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
+        if verbose then
+          Series_and_Trackers.Write_Path_Statistics
+            (file,nbrsteps,nbrcorrs,minsize,maxsize);
+        end if;
         put(file,"Solution "); put(file,i,1); put_line(file," :");
         put(file,ls.all); new_line(file);
       else
-        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,p,verbose);
+        Series_and_Trackers.Track_One_Path
+          (standard_output,s,ls.all,p,
+           nbrsteps,nbrcorrs,minsize,maxsize,verbose);
+        if verbose then
+          Series_and_Trackers.Write_Path_Statistics
+            (standard_output,nbrsteps,nbrcorrs,minsize,maxsize);
+        end if;
         put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) ");
         Ask_Yes_or_No(ans);
@@ -177,14 +217,22 @@ procedure ts_serpath is
       end if;
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
+      Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
+      Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
     end loop;
     tstop(timer);
     if tofile then
+      Series_and_Trackers.Write_Total_Path_Statistics
+        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+      new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,1,timer);
       Refine_Roots(file,nq,sols);
     else
+      Series_and_Trackers.Write_Total_Path_Statistics
+        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+      new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,1,timer);
@@ -223,6 +271,9 @@ procedure ts_serpath is
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := QuadDobl_Complex_Numbers_cv.QuadDobl_Complex_to_Standard(qdgamma);
     prevgamma : Standard_Complex_Numbers.Complex_Number;
+    nbrsteps,minnbrsteps,maxnbrsteps : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
+    minsize,maxsize : double_float;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
@@ -237,30 +288,51 @@ procedure ts_serpath is
     if tofile
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
+    minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
+    minnbrcorrs := p.corsteps+1; maxnbrcorrs := 0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
       if tofile then
-        Series_and_Trackers.Track_One_Path(file,s,ls.all,p,verbose);
+        Series_and_Trackers.Track_One_Path
+          (file,s,ls.all,p,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
+        if verbose then
+          Series_and_Trackers.Write_Path_Statistics
+            (file,nbrsteps,nbrcorrs,minsize,maxsize);
+        end if;
         put(file,"Solution "); put(file,i,1); put_line(file," :");
         put(file,ls.all); new_line(file);
       else
-        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,p,verbose);
+        Series_and_Trackers.Track_One_Path
+          (standard_output,s,ls.all,p,
+           nbrsteps,nbrcorrs,minsize,maxsize,verbose);
+        if verbose then
+          Series_and_Trackers.Write_Path_Statistics
+            (standard_output,nbrsteps,nbrcorrs,minsize,maxsize);
+        end if;
         put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
+      Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
+      Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
     end loop;
     tstop(timer);
     if tofile then
+      Series_and_Trackers.Write_Total_Path_Statistics
+        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+      new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,2,timer);
       Refine_Roots(file,nq,sols);
     else
+      Series_and_Trackers.Write_Total_Path_Statistics
+        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+      new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,2,timer);

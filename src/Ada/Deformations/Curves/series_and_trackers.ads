@@ -113,6 +113,14 @@ package Series_and_Trackers is
   --   taking into account the maximal step size maxstep
   --   and the value for the target for t.
 
+  procedure Update_Step_Sizes
+              ( minsize,maxsize : in out double_float;
+                step : in double_float );
+
+  -- DESCRIPTION :
+  --   Given in step is a size of a step,
+  --   the smallest and largest sizes in minsize and maxsize are updated.
+
   function Residual_Prediction
               ( hom : Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : Standard_Complex_Vectors.Vector;
@@ -130,18 +138,24 @@ package Series_and_Trackers is
   --   Given a homotopy, a predicted solution, with a step,
   --   returns the norm of the evaluated homotopy at the solution.
 
-  procedure Track_one_Path
+  procedure Track_One_Path
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters );
-  procedure Track_one_Path
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs : out natural32;
+                minsize,maxsize : out double_float );
+  procedure Track_One_Path
               ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters );
-  procedure Track_one_Path
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs : out natural32;
+                minsize,maxsize : out double_float );
+  procedure Track_One_Path
               ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters );
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs : out natural32;
+                minsize,maxsize : out double_float );
 
   -- DESCRIPTION :
   --   Tracks one path starting at the solution sol using the homotopy hom,
@@ -154,25 +168,35 @@ package Series_and_Trackers is
   --   pars     values of the parameters and tolerances.
 
   -- ON RETURN :
-  --   sol      solution at the end of the paths.
+  --   sol      solution at the end of the path;
+  --   nbrsteps is the total number of steps on the path;
+  --   nbrcorrs is the total number of corrector iterations on the path;
+  --   minsize  is the smallest step size on the path;
+  --   maxsize  is the largest step size on the path.
 
-  procedure Track_one_Path
+  procedure Track_One_Path
               ( file : in file_type;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs : out natural32;
+                minsize,maxsize : out double_float;
                 verbose : in boolean := false );
-  procedure Track_one_Path
+  procedure Track_One_Path
               ( file : in file_type;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs : out natural32;
+                minsize,maxsize : out double_float;
                 verbose : in boolean := false );
-  procedure Track_one_Path
+  procedure Track_One_Path
               ( file : in file_type;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs : out natural32;
+                minsize,maxsize : out double_float;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -187,7 +211,18 @@ package Series_and_Trackers is
   --   pars     values of the parameters and tolerances.
 
   -- ON RETURN :
-  --   sol      solution at the end of the paths.
+  --   sol      solution at the end of the path;
+  --   nbrsteps is the total number of steps on the path;
+  --   nbrcorrs is the total number of corrector iterations on the path;
+  --   minsize  is the smallest step size on the path;
+  --   maxsize  is the largest step size on the path.
+
+  procedure Update_Counters
+              ( mincnt,maxcnt : in out natural32; cnt : in natural32 );
+
+  -- DESCRIPTION :
+  --   Given the value of a counter in cnt, updates the smallest and
+  --   largest value for the counter in mincnt and maxcnt.
 
   procedure Track_Many_Paths
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
@@ -249,5 +284,33 @@ package Series_and_Trackers is
 
   -- ON RETURN :
   --   sols     solutions at the end of the paths.
+
+  procedure Write_Path_Statistics
+              ( file : in file_type;
+                nbrsteps,nbrcorrs : in natural32;
+                minsize,maxsize : in double_float );
+
+  -- DESCRIPTION :
+  --   Writes the path statistics to file.
+
+  -- ON ENTRY :
+  --   nbrsteps is the total number of steps on the path;
+  --   nbrcorrs is the total number of corrector iterations on the path;
+  --   minsize  is the smallest step size on the path;
+  --   maxsize  is the largest step size on the path.
+
+  procedure Write_Total_Path_Statistics
+              ( file : in file_type;
+                minnbrsteps,maxnbrsteps : in natural32;
+                minnbrcorrs,maxnbrcorrs : in natural32 );
+
+  -- DESCRIPTION :
+  --   Writes the statistic for all paths.
+
+  -- ON RETURN :
+  --   minnbrsteps is the smallest number of steps on a path;
+  --   maxnbrsteps is the largest number of steps on a path;
+  --   minnbrcorrs is the smallest number of corrector iterations on a path;
+  --   maxnbrcorrs is the largest number of corrector iterations on a path.
 
 end Series_and_Trackers;
