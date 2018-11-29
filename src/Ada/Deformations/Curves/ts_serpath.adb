@@ -88,7 +88,7 @@ procedure ts_serpath is
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
     minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
-    minnbrcorrs := p.corsteps+1; maxnbrcorrs := 0;
+    minnbrcorrs := (p.maxsteps+1)*p.corsteps+1; maxnbrcorrs := 0;
     smallest := p.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
@@ -191,7 +191,7 @@ procedure ts_serpath is
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
     minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
-    minnbrcorrs := p.corsteps+1; maxnbrcorrs := 0;
+    minnbrcorrs := (p.maxsteps+1)*p.corsteps+1; maxnbrcorrs := 0;
     smallest := p.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
@@ -295,7 +295,7 @@ procedure ts_serpath is
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
     minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
-    minnbrcorrs := p.corsteps+1; maxnbrcorrs := 0;
+    minnbrcorrs := (p.maxsteps+1)*p.corsteps+1; maxnbrcorrs := 0;
     smallest := p.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop

@@ -913,7 +913,7 @@ package body Series_and_Trackers is
 
   begin
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
-    minnbrcorrs := pars.corsteps+1; maxnbrcorrs := 0;
+    minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
@@ -957,7 +957,7 @@ package body Series_and_Trackers is
 
   begin
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
-    minnbrcorrs := pars.corsteps+1; maxnbrcorrs := 0;
+    minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
@@ -1001,7 +1001,7 @@ package body Series_and_Trackers is
 
   begin
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
-    minnbrcorrs := pars.corsteps+1; maxnbrcorrs := 0;
+    minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
