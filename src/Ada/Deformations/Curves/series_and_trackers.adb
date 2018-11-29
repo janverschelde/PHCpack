@@ -730,7 +730,7 @@ package body Series_and_Trackers is
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
         put(file,"Step size : "); put(file,step,3);
-        put(file," t = "); put(file,t,3);  new_line(file);
+        put(file," t = "); put(file,t,3);
       end if;
       loop
         dd_step := create(step);
@@ -829,7 +829,7 @@ package body Series_and_Trackers is
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
         put(file,"Step size : "); put(file,step,3);
-        put(file," t = "); put(file,t,3);  new_line(file);
+        put(file," t = "); put(file,t,3);
       end if;
       loop
         qd_step := create(step);

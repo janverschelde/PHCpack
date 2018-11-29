@@ -42,7 +42,6 @@ ts_sernew                        : test on the Newton series packages
 series_and_solutions             : making series from solution vectors
 power_series_methods             : Newton's method on power series solutions
 ts_sersol                        : test on series and solutions
-mainseries                       : defines the phc -u
 -------------------------------------------------------------------------------
 series_and_homotopies            : homotopies as systems with series coeffs
 ts_serhom                        : test on series and homotopies
@@ -72,5 +71,7 @@ homotopy_continuation_parameters    : parameters and tolerances
 homotopy_continuation_parameters_io : output and tuning of arameters 
 series_and_trackers                 : power series predictor in path tracker
 drivers_to_series_trackers          : helps to launch series trackers
+series_path_trackers                : runs the series path trackers
 ts_serpath                          : test on series path tracker
+mainseries                          : defines the phc -u
 -------------------------------------------------------------------------------

@@ -5,6 +5,8 @@ Thu 29 Nov 2018 : added a parameter for the tolerance on the corrector
   smallest and largest step sizes on a path, tested by ts_serpath.
   Corrected wrong initialization in series_and_trackers.adb and
   in ts_serpath.  Refactored the Main procedures in mainseries.adb.
+  Moved code from ts_serpath into series_path_trackers, for use in
+  mainseries.adb.  Remove superfluous new_line in series_and_trackers.adb.
 
 Wed 28 Nov 2018 : renamed the beta in homotopy_continuation_parameters
   into pbeta and added the sbeta parameter, which then changed the put

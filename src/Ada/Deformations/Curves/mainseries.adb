@@ -32,6 +32,7 @@ with Complex_Series_and_Polynomials_io;
 with Series_and_Solutions;
 with Power_Series_Methods;              use Power_Series_Methods;
 with Regular_Newton_Puiseux;
+with Series_Path_Trackers;
 
 procedure mainseries ( precision : in character;
                        infilename,outfilename : in string ) is
@@ -566,49 +567,62 @@ procedure mainseries ( precision : in character;
 
   begin 
     new_line;
-    put("Compute tropisms with polyhedral methods ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      put_line("Using as lifting the powers of the first variable,");
-      put_line("assuming coefficients are sufficiently generic ...");
-      case precision is
-        when '1' =>
-          put_line("The working precision is double precision");
-          Regular_Newton_Puiseux.Standard_Main;
-        when '2' =>
-          put_line("The working precision is double double precision.");
-          Regular_Newton_Puiseux.DoblDobl_Main;
-        when '4' =>
-          put_line("The working precision is quad double precision.");
-          Regular_Newton_Puiseux.QuadDobl_Main;
-        when others => null;
-      end case;
-    else
-      new_line;
-      put("Start Newton's method at a constant term ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      case precision is
-        when '1' =>
-          put_line("The working precision is double precision");
-          if ans = 'y'
-           then Standard_Main_at_Constant;
-           else Standard_Main_at_Series;
-          end if;
-        when '2' =>
-          put_line("The working precision is double double precision.");
-          if ans = 'y'
-           then DoblDobl_Main_at_Constant;
-           else DoblDobl_Main_at_Series;
-          end if;
-        when '4' =>
-          put_line("The working precision is quad double precision.");
-          if ans = 'y'
-           then QuadDobl_Main_at_Constant;
-           else QuadDobl_Main_at_Series;
-          end if;
-        when others => null;
-      end case;
-    end if;
+    put_line("MENU for power series methods :");
+    put_line("  1. apply polyhedral methods for tropisms;");
+    put_line("  2. run Newton's method starting at a series or a point;");
+    put_line("  3. track paths with Pade approximants as predictor.");
+    put("Type 1, 2, or 3 to select the method : ");
+    Ask_Alternative(ans,"123");
+    case ans is
+      when '1' =>
+        put_line("Using as lifting the powers of the first variable,");
+        put_line("assuming coefficients are sufficiently generic ...");
+        case precision is
+          when '1' =>
+            put_line("The working precision is double precision");
+            Regular_Newton_Puiseux.Standard_Main;
+          when '2' =>
+            put_line("The working precision is double double precision.");
+            Regular_Newton_Puiseux.DoblDobl_Main;
+          when '4' =>
+            put_line("The working precision is quad double precision.");
+            Regular_Newton_Puiseux.QuadDobl_Main;
+          when others => null;
+        end case;
+      when '2' =>
+        new_line;
+        put("Start Newton's method at a constant term ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        case precision is
+          when '1' =>
+            put_line("The working precision is double precision");
+            if ans = 'y'
+             then Standard_Main_at_Constant;
+             else Standard_Main_at_Series;
+            end if;
+          when '2' =>
+            put_line("The working precision is double double precision.");
+            if ans = 'y'
+             then DoblDobl_Main_at_Constant;
+             else DoblDobl_Main_at_Series;
+            end if;
+          when '4' =>
+            put_line("The working precision is quad double precision.");
+            if ans = 'y'
+             then QuadDobl_Main_at_Constant;
+             else QuadDobl_Main_at_Series;
+            end if;
+          when others => null;
+        end case;
+      when '3' =>
+        case valprc is
+          when '1' => Series_Path_Trackers.Standard_Main;
+          when '2' => Series_Path_Trackers.DoblDobl_Main;
+          when '4' => Series_Path_Trackers.QuadDobl_Main;
+          when others => null;
+        end case;
+      when others => null;
+    end case;
   end Nonzero_Precision_Main;
 
   procedure Main is
