@@ -588,13 +588,23 @@ procedure Dispatch is
 
   begin
     case o2 is
-      when 'h' | '-' => Greeting_Banners.help4series;
-      when others => put_line(welcome); put_line(seriesban);
+      when 'h' | '-' =>
+        Greeting_Banners.help4series;
+      when others =>
+        put_line(welcome);
         case prc is
-          when 1 => mainseries('1',infile,outfile);
-          when 2 => mainseries('2',infile,outfile);
-          when 4 => mainseries('4',infile,outfile);
-          when others => mainseries('0',infile,outfile);
+          when 1 =>
+            put_line(seriesban & ", in double precision.");
+            mainseries('1',infile,outfile);
+          when 2 =>
+            put_line(seriesban & ", with double doubles.");
+            mainseries('2',infile,outfile);
+          when 4 =>
+            put_line(seriesban & ", with quad doubles.");
+            mainseries('4',infile,outfile);
+          when others =>
+            put_line(seriesban & ".");
+            mainseries('0',infile,outfile);
         end case;
     end case;
   end Series_Dispatcher;

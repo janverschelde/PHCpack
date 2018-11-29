@@ -1,3 +1,7 @@
+Thu 29 Nov 2018 : in greetings_banners.ads, renamed the banner for phc -u,
+  and updated the handler for phc -u in dispatch.adb.
+  Extended the help information on phc -u in greeting_banners.adb.
+
 Sun 11 Nov 2018 : adjusted greeting_banners for version 2.4.60.
 
 Sun 14 Oct 2018 : adjusted greeting_banners for version 2.4.59.

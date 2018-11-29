@@ -591,12 +591,15 @@ package body Greeting_Banners is
     put_line("After reading the input file, phc -u prompts the user for the");
     put_line("index of the series parameter.  This index points to one of");
     put_line("the variables in the input system.  The next prompt is for the");
-    put_line("number of Newton updates to the solution.  The maximum order of");
-    put_line("the power series is set to 16.  By the quadratic convergence of");
-    put_line("Newton's method, starting at order 1, five stepts will suffice");
-    put_line("to attain that maximum order of the series.");
+    put_line("number of Newton updates to the solution.");
+    put_line("If the maximum degree of the power series is set to 16,");
+    put_line("by the quadratic convergence of Newton's method, starting at");
+    put_line("degree 1, five stepts will suffice to compute all coefficients.");
     put_line("For a regular solution, the quadratic convergence can be seen");
     put_line("when answering 'y' to the question on extra diagnostic output.");
+    new_line;
+    put_line("With power series, Pade approximants are computed to predict");
+    put_line("the next point on a solution path in a polynomial homotopy.");
   end help4series;
 
   procedure help4verification is

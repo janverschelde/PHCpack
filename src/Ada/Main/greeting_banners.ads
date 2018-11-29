@@ -53,7 +53,7 @@ package Greeting_Banners is
     "Tracking Solution Paths with Algorithmic Differentiation Methods.";
 
   seriesban : constant string :=
-    "Newton's method to compute power series solutions of polynomial systems.";
+    "Newton's Method and Path Tracking with Power Series";
 
   veriban : constant string :=
     "Verification, refinement and purification of computed solution lists.";
