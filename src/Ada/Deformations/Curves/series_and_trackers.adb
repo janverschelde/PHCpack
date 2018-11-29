@@ -367,8 +367,9 @@ package body Series_and_Trackers is
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
     poles : Standard_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := pars.tolcff;
-    tolres : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+    tolpredres : constant double_float := pars.alpha;
+    tolcorrres : constant double_float := pars.tolres;
     t,step,update : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -385,7 +386,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       Standard_Complex_VecVecs.Clear(poles);
-      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolpredres);
       step := pars.sbeta*step;
       Standard_Complex_Series_Vectors.Clear(eva);
       if frp > 0.0
@@ -402,7 +403,7 @@ package body Series_and_Trackers is
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
       exit when (step < pars.minsize);
-      Correct(wrk,step,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
+      Correct(wrk,step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
       nbrcorrs := nbrcorrs + nbrit;
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_Pade_Approximants.Clear(pv);
@@ -413,7 +414,7 @@ package body Series_and_Trackers is
       wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
-    Correct(wrk,0.0,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
+    Correct(wrk,0.0,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -437,8 +438,9 @@ package body Series_and_Trackers is
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := pars.tolcff;
-    tolres : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+    tolpredres : constant double_float := pars.alpha;
+    tolcorrres : constant double_float := pars.tolres;
     t,step,update : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
@@ -459,7 +461,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       DoblDobl_Complex_VecVecs.Clear(poles);
-      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolpredres);
       step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
@@ -477,7 +479,7 @@ package body Series_and_Trackers is
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
       exit when (step < pars.minsize);
-      Correct(wrk,dd_step,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
+      Correct(wrk,dd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
       nbrcorrs := nbrcorrs + nbrit;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
       DoblDobl_Pade_Approximants.Clear(pv);
@@ -491,7 +493,7 @@ package body Series_and_Trackers is
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
     dd_step := create(0.0);
-    Correct(wrk,dd_step,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
+    Correct(wrk,dd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(-t));
     sol.v := wrk_sol;
@@ -515,8 +517,9 @@ package body Series_and_Trackers is
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := pars.tolcff;
-    tolres : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+    tolpredres : constant double_float := pars.alpha;
+    tolcorrres : constant double_float := pars.tolres;
     t,step,update : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
@@ -537,7 +540,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       QuadDobl_Complex_VecVecs.Clear(poles);
-      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres);
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolpredres);
       step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
@@ -555,7 +558,7 @@ package body Series_and_Trackers is
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
       exit when (step < pars.minsize);
-      Correct(wrk,qd_step,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
+      Correct(wrk,qd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
       nbrcorrs := nbrcorrs + nbrit;
       QuadDobl_Pade_Approximants.Clear(pv);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
@@ -569,7 +572,7 @@ package body Series_and_Trackers is
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     qd_step := create(0.0);
-    Correct(wrk,qd_step,tolcff,pars.corsteps,nbrit,wrk_sol,err,rco,res);
+    Correct(wrk,qd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(-t));
     sol.v := wrk_sol;
@@ -595,8 +598,9 @@ package body Series_and_Trackers is
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
     poles : Standard_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := pars.tolcff;
-    tolres : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+    tolpredres : constant double_float := pars.alpha;
+    tolcorrres : constant double_float := pars.tolres;
     t,step,update : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -622,7 +626,7 @@ package body Series_and_Trackers is
       end if;
       Standard_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,tolres,verbose);
+                (file,eva,tolcff,tolpredres,verbose);
       step := pars.sbeta*step;
       if frp > 0.0
        then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
@@ -649,7 +653,7 @@ package body Series_and_Trackers is
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
       exit when (step < pars.minsize);
-      Correct(file,wrk,step,tolcff,pars.corsteps,nbrit,
+      Correct(file,wrk,step,tolcorrres,pars.corsteps,nbrit,
               wrk_sol,err,rco,res,verbose);
       nbrcorrs := nbrcorrs + nbrit;
       Standard_Pade_Approximants.Clear(pv);
@@ -661,7 +665,7 @@ package body Series_and_Trackers is
       wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
-    Correct(file,wrk,0.0,tolcff,pars.corsteps,nbrit,
+    Correct(file,wrk,0.0,tolcorrres,pars.corsteps,nbrit,
             wrk_sol,err,rco,res,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
@@ -688,8 +692,9 @@ package body Series_and_Trackers is
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := pars.tolcff;
-    tolres : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+    tolpredres : constant double_float := pars.alpha;
+    tolcorrres : constant double_float := pars.tolres;
     t,step,update : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
@@ -715,7 +720,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       DoblDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,tolres,verbose);
+                (file,eva,tolcff,tolpredres,verbose);
       step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
@@ -744,7 +749,7 @@ package body Series_and_Trackers is
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
       exit when (step < pars.minsize);
-      Correct(file,wrk,dd_step,tolcff,pars.corsteps,nbrit,
+      Correct(file,wrk,dd_step,tolcorrres,pars.corsteps,nbrit,
               wrk_sol,err,rco,res,verbose);
       nbrcorrs := nbrcorrs + nbrit;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
@@ -759,7 +764,7 @@ package body Series_and_Trackers is
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
     dd_step := create(0.0);
-    Correct(file,wrk,dd_step,tolcff,pars.corsteps,nbrit,
+    Correct(file,wrk,dd_step,tolcorrres,pars.corsteps,nbrit,
             wrk_sol,err,rco,res,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(-t));
@@ -786,8 +791,9 @@ package body Series_and_Trackers is
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
-    tolcff : constant double_float := pars.tolcff;
-    tolres : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+    tolpredres : constant double_float := pars.alpha;
+    tolcorrres : constant double_float := pars.tolres;
     t,step,update : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
@@ -813,7 +819,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       QuadDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,tolres,verbose);
+                (file,eva,tolcff,tolpredres,verbose);
       step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
@@ -842,7 +848,7 @@ package body Series_and_Trackers is
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
       exit when (step < pars.minsize);
-      Correct(file,wrk,qd_step,tolcff,pars.corsteps,nbrit,
+      Correct(file,wrk,qd_step,tolcorrres,pars.corsteps,nbrit,
               wrk_sol,err,rco,res,verbose);
       nbrcorrs := nbrcorrs + nbrit;
       QuadDobl_Complex_Series_Vectors.Clear(srv);
@@ -857,7 +863,7 @@ package body Series_and_Trackers is
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     qd_step := create(0.0);
-    Correct(file,wrk,qd_step,tolcff,pars.corsteps,nbrit,
+    Correct(file,wrk,qd_step,tolcorrres,pars.corsteps,nbrit,
             wrk_sol,err,rco,res,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(-t));
@@ -876,6 +882,18 @@ package body Series_and_Trackers is
     end if;
   end Update_Counters;
 
+  procedure Update_MinMax
+              ( smallest,largest : in out double_float;
+                minsize,maxsize : in double_float ) is
+  begin
+    if minsize < smallest
+     then smallest := minsize;
+    end if;
+    if maxsize > largest
+     then largest := maxsize;
+    end if;
+  end Update_MinMax;
+
   procedure Track_Many_Paths
               ( file : in file_type;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
@@ -891,11 +909,12 @@ package body Series_and_Trackers is
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
-    minsize,maxsize : double_float;
+    minsize,maxsize,smallest,largest : double_float;
 
   begin
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := pars.corsteps+1; maxnbrcorrs := 0;
+    smallest := pars.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -910,10 +929,11 @@ package body Series_and_Trackers is
       tmp := Tail_Of(tmp);
       Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
+      Update_MinMax(smallest,largest,minsize,maxsize);
     end loop;
     tstop(timer);
     Write_Total_Path_Statistics
-      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
     new_line(file);
     print_times(file,timer,"Tracking in double precision.");
   end Track_Many_Paths;
@@ -933,11 +953,12 @@ package body Series_and_Trackers is
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
-    minsize,maxsize : double_float;
+    minsize,maxsize,smallest,largest : double_float;
 
   begin
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := pars.corsteps+1; maxnbrcorrs := 0;
+    smallest := pars.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -952,10 +973,11 @@ package body Series_and_Trackers is
       tmp := Tail_Of(tmp);
       Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
+      Update_MinMax(smallest,largest,minsize,maxsize);
     end loop;
     tstop(timer);
     Write_Total_Path_Statistics
-      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
     new_line(file);
     print_times(file,timer,"Tracking in double double precision.");
   end Track_Many_Paths;
@@ -975,11 +997,12 @@ package body Series_and_Trackers is
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
-    minsize,maxsize : double_float;
+    minsize,maxsize,smallest,largest : double_float;
 
   begin
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := pars.corsteps+1; maxnbrcorrs := 0;
+    smallest := pars.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -994,10 +1017,11 @@ package body Series_and_Trackers is
       tmp := Tail_Of(tmp);
       Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
+      Update_MinMax(smallest,largest,minsize,maxsize);
     end loop;
     tstop(timer);
     Write_Total_Path_Statistics
-      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
     new_line(file);
     print_times(file,timer,"Tracking in quad double precision.");
   end Track_Many_Paths;
@@ -1083,7 +1107,8 @@ package body Series_and_Trackers is
   procedure Write_Total_Path_Statistics
               ( file : in file_type;
                 minnbrsteps,maxnbrsteps : in natural32;
-                minnbrcorrs,maxnbrcorrs : in natural32 ) is
+                minnbrcorrs,maxnbrcorrs : in natural32;
+                smallestsize,largestsize : in double_float ) is
   begin
     new_line(file);
     put(file,"The smallest number of total steps : ");
@@ -1091,9 +1116,13 @@ package body Series_and_Trackers is
     put(file,"The largest number of total steps  : ");
     put(file,maxnbrsteps,1); new_line(file);
     put(file,"The smallest number of corrector iterations : ");
-    put(file,minnbrsteps,1); new_line(file);
+    put(file,minnbrcorrs,1); new_line(file);
     put(file,"The largest number of corrector iterations  : ");
-    put(file,maxnbrsteps,1); new_line(file);
+    put(file,maxnbrcorrs,1); new_line(file);
+    put(file,"The smallest step size on a path :");
+    put(file,smallestsize,2); new_line(file);
+    put(file,"The largest step size on a path  :");
+    put(file,largestsize,2); new_line(file);
   end Write_Total_Path_Statistics;
 
 end Series_and_Trackers;

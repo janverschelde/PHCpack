@@ -72,7 +72,7 @@ procedure ts_serpath is
     prevgamma : Standard_Complex_Numbers.Complex_Number;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
-    minsize,maxsize : double_float;
+    minsize,maxsize,smallest,largest : double_float;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
@@ -89,6 +89,7 @@ procedure ts_serpath is
     end if;
     minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := p.corsteps+1; maxnbrcorrs := 0;
+    smallest := p.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -118,11 +119,12 @@ procedure ts_serpath is
       tmp := Tail_Of(tmp);
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
+      Series_and_Trackers.Update_MinMax(smallest,largest,minsize,maxsize);
     end loop;
     tstop(timer);
     if tofile then
       Series_and_Trackers.Write_Total_Path_Statistics
-        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -130,7 +132,8 @@ procedure ts_serpath is
       Refine_Roots(file,nq,sols);
     else
       Series_and_Trackers.Write_Total_Path_Statistics
-        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+         smallest,largest);
       new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -172,7 +175,7 @@ procedure ts_serpath is
     prevgamma : Standard_Complex_Numbers.Complex_Number;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
-    minsize,maxsize : double_float;
+    minsize,maxsize,smallest,largest : double_float;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
@@ -189,6 +192,7 @@ procedure ts_serpath is
     end if;
     minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := p.corsteps+1; maxnbrcorrs := 0;
+    smallest := p.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -219,11 +223,12 @@ procedure ts_serpath is
       tmp := Tail_Of(tmp);
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
+      Series_and_Trackers.Update_MinMax(smallest,largest,minsize,maxsize);
     end loop;
     tstop(timer);
     if tofile then
       Series_and_Trackers.Write_Total_Path_Statistics
-        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -231,7 +236,8 @@ procedure ts_serpath is
       Refine_Roots(file,nq,sols);
     else
       Series_and_Trackers.Write_Total_Path_Statistics
-        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+         smallest,largest);
       new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -273,7 +279,7 @@ procedure ts_serpath is
     prevgamma : Standard_Complex_Numbers.Complex_Number;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
-    minsize,maxsize : double_float;
+    minsize,maxsize,smallest,largest : double_float;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
@@ -290,6 +296,7 @@ procedure ts_serpath is
     end if;
     minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := p.corsteps+1; maxnbrcorrs := 0;
+    smallest := p.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -319,11 +326,12 @@ procedure ts_serpath is
       tmp := Tail_Of(tmp);
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
+      Series_and_Trackers.Update_MinMax(smallest,largest,minsize,maxsize);
     end loop;
     tstop(timer);
     if tofile then
       Series_and_Trackers.Write_Total_Path_Statistics
-        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -331,7 +339,8 @@ procedure ts_serpath is
       Refine_Roots(file,nq,sols);
     else
       Series_and_Trackers.Write_Total_Path_Statistics
-        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs);
+        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+         smallest,largest);
       new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);

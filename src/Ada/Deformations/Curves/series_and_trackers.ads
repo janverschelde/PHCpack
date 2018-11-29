@@ -224,6 +224,14 @@ package Series_and_Trackers is
   --   Given the value of a counter in cnt, updates the smallest and
   --   largest value for the counter in mincnt and maxcnt.
 
+  procedure Update_MinMax
+              ( smallest,largest : in out double_float;
+                minsize,maxsize : in double_float );
+
+  -- DESCRIPTION :
+  --   Given the current smallest and largest step sizes,
+  --   updates their values with the new minimum and maximum step sizes.
+
   procedure Track_Many_Paths
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
@@ -302,7 +310,8 @@ package Series_and_Trackers is
   procedure Write_Total_Path_Statistics
               ( file : in file_type;
                 minnbrsteps,maxnbrsteps : in natural32;
-                minnbrcorrs,maxnbrcorrs : in natural32 );
+                minnbrcorrs,maxnbrcorrs : in natural32;
+                smallestsize,largestsize : in double_float );
 
   -- DESCRIPTION :
   --   Writes the statistic for all paths.
@@ -312,5 +321,7 @@ package Series_and_Trackers is
   --   maxnbrsteps is the largest number of steps on a path;
   --   minnbrcorrs is the smallest number of corrector iterations on a path;
   --   maxnbrcorrs is the largest number of corrector iterations on a path.
+  --   smallestsize is the smallest step size on a path;
+  --   largestsize is the largest step size on a path.
 
 end Series_and_Trackers;
