@@ -1187,8 +1187,8 @@ The option ``-t`` can also be added to ``phc -m`` at the command line,
 to solve random coefficient start systems with polyhedral homotopies 
 with multiple tasks.
 
-phc -u : Newton's method for power series solution
-==================================================
+phc -u : Newton's method and continuation with power series
+===========================================================
 
 The application of Newton's method over the field of truncated power
 series in double, double double, or quad double precision,
