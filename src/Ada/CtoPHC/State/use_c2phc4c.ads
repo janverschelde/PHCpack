@@ -999,6 +999,10 @@ function use_c2phc4c ( job : integer32;
 --                 b[0] : the verbose flag, 0 for false, 1 for true.
 --                 If verbose, then intermediate results are written to screen.
 --
+-- PADE CONTINUATION :
+--
+--   job   = 735 : set default values for homotopy continuation parameters.
+--
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --
 --   job   =  66 : given in a[0] the dimension of the embedding,

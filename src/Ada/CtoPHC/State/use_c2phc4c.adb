@@ -94,6 +94,7 @@ with use_nxtsol;
 with unisolve,use_giftwrap;
 with use_numbtrop;
 with use_series;
+with use_padcon;
 with use_multip;  -- multiplicity structure
 with use_witsols;
 
@@ -3150,6 +3151,8 @@ function use_c2phc4c ( job : integer32;
       when 732 => return use_multip(0,a,b,c); -- standard double precision
       when 733 => return use_multip(0,a,b,c); -- double double precision
       when 734 => return use_multip(0,a,b,c); -- quad double precision
+     -- pade continuation
+      when 735 => return use_padcon(0,a,b,c); -- default parameter values
      -- integer mixed cell configurations
       when 741..758 => return use_celcon(job-690,a,b,c);
      -- reading, writing Laurent start and target systems
