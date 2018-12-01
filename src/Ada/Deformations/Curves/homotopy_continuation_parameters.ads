@@ -23,9 +23,16 @@ package Homotopy_Continuation_Parameters is
     maxsteps : natural32;    -- maximum number of steps on a path
   end record;
 
+  type Link_to_Parameters is access Parameters;
+
   function Default_Values return Parameters;
 
   -- DESCRIPTION :
   --   Returns default values for the parameters.
+
+  procedure Clear ( pars : in out Link_to_Parameters );
+
+  -- DESCRIPTION :
+  --   Deallocates the space for the parameters.
 
 end Homotopy_Continuation_Parameters;

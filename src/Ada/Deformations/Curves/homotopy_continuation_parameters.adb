@@ -1,3 +1,4 @@
+with unchecked_deallocation;
 with Standard_Random_Numbers;
 
 package body Homotopy_Continuation_Parameters is
@@ -21,5 +22,16 @@ package body Homotopy_Continuation_Parameters is
     res.maxsteps := 1000;
     return res;
   end Default_Values;
+
+  procedure Clear ( pars : in out Link_to_Parameters ) is
+
+    procedure free is
+      new unchecked_deallocation(Parameters,Link_to_Parameters);
+
+  begin
+    if pars /= null
+     then free(pars);
+    end if;
+  end Clear;
 
 end Homotopy_Continuation_Parameters;
