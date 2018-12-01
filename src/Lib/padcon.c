@@ -5,5 +5,8 @@
 
 void padcon_set_default_parameters ( void )
 {
-   int fail = 0;
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(735,a,b,c);
 }

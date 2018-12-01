@@ -1,5 +1,5 @@
 Fri 30 Nov 2018 : new padcon.h, padcon.c, and lib_padcon.c to run
-  Pade continuations.
+  Pade continuations.  Added a call to use_c2phc in padcon.c.
 
 Fri 9 Nov 2018 : added the maximal degree bound to series, lib_series,
   and phcpy2c.h, phcpy2c2.c, phcpy2c3.c.
