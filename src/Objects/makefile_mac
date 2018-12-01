@@ -2788,6 +2788,23 @@ lib_series_cpp:
                     /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_series -lm --LINK=g++
 
+lib_padcon:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
+	gcc -c $(PHCLib)/padcon.c
+	gcc -c $(PHCLib)/lib_padcon.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c padcon.o lib_padcon.o \
+                 -o $(BIN)/lib_padcon -lm
+
+lib_padcon_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/padcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_padcon.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c padcon.o lib_padcon.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_padcon -lm --LINK=g++
+
 lib_nbrvar:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/phcpack.c
