@@ -35,4 +35,21 @@ package Homotopy_Continuation_Parameters is
   -- DESCRIPTION :
   --   Deallocates the space for the parameters.
 
+-- STORAGE of an instance of the parameters :
+
+  procedure Construct ( pars : in Parameters );
+
+  -- DESCRIPTION :
+  --   Makes a pointer to pars which points to the parameters in pars.
+
+  function Retrieve return Link_to_Parameters;
+
+  -- DESCRIPTION :
+  --   Returns the pointer stored with the Construct procedure.
+
+  procedure Destruct;
+
+  -- DESCRIPTION :
+  --   Deallocates the space allocated with the Construct.
+
 end Homotopy_Continuation_Parameters;

@@ -34,4 +34,25 @@ package body Homotopy_Continuation_Parameters is
     end if;
   end Clear;
 
+-- STORAGE of an instance of the parameters :
+
+  parameters_instance : Link_to_Parameters;
+
+  procedure Construct ( pars : in Parameters ) is
+  begin
+    parameters_instance := new Parameters'(pars);
+  end Construct;
+
+  function Retrieve return Link_to_Parameters is
+  begin
+    return parameters_instance;
+  end Retrieve;
+
+  procedure Destruct is
+  begin
+    if parameters_instance /= null
+     then clear(parameters_instance);
+    end if;
+  end Destruct;
+
 end Homotopy_Continuation_Parameters;

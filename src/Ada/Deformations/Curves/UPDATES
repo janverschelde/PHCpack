@@ -1,4 +1,6 @@
-Sat 1 Dec 2018 : added an access type to homotopy_continuation_parameters.
+Sat 1 Dec 2018 : added an access type to homotopy_continuation_parameters,
+  plus operations for the storage of an instance of the parameters.
+  Adjusted the output in the tune of homotopy_continuation_parameters_io.adb.
 
 Thu 29 Nov 2018 : added a parameter for the tolerance on the corrector
   residual to homotopy_continuation_parameters and updated the tuning

@@ -35,7 +35,7 @@ package body Homotopy_Continuation_Parameters_io is
     put(file,pars.tolres,2); new_line(file);
     put(file,"10. tolerance on zero series coefficients      :");
     put(file,pars.epsilon,2); new_line(file);
-    put(file,"11. number of corrector steps                  : ");
+    put(file,"11. maximum number of corrector steps          : ");
     put(file,pars.corsteps,1); new_line(file);
     put(file,"12. maximum steps on a path                    : ");
     put(file,pars.maxsteps,1); new_line(file);
