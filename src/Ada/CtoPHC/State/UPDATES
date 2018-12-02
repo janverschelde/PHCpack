@@ -1,3 +1,6 @@
+Sat 1 Dec 2018 : added jobs to use_padcon, use_padcon, with modifications
+  to use_c2phc4c for tuning the homotopy continuation parameters.
+
 Fri 30 Nov 2018 : new procedure use_padcon for Pade continuation,
   with updates in use_c2phc4c.adb, documented in use_c2phc4c.ads.
 

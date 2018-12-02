@@ -1002,6 +1002,39 @@ function use_c2phc4c ( job : integer32;
 -- PADE CONTINUATION :
 --
 --   job   = 735 : set default values for homotopy continuation parameters.
+--   job   = 736 : clears the homotopy continuation parameters;
+--   job   = 737 : given in a[0] is a number k between 1 and 12,
+--                 on return in b[0] or c is the value of the k-th
+--                 homotopy continuation parameter, as follows:
+--                 if k = 1, then c[0] contains the real part of gamma,
+--                 and c[1] contains the imaginary part of gamma;
+--                 if k = 2, then b[0] is the degree of Pade numerator,
+--                 if k = 3, then b[0] is the degree of Pade denominator,
+--                 if k = 4, then c[0] is the maximum step size,
+--                 if k = 5, then c[0] is the minimum step size,
+--                 if k = 6, then c[0] is the series step factor,
+--                 if k = 7, then c[0] is the pole radius step factor,
+--                 if k = 8, then c[0] is the predictor residual tolerance,
+--                 if k = 9, then c[0] is the corrector residual tolerance,
+--                 if k = 10, then c[0] is the zero coefficient tolerance,
+--                 if k = 11, then b[0] is the maximum #corrector steps,
+--                 if k = 12, then b[0] is the maximum #steps on a path.
+--   job   = 738 : given in a[0] is a number k between 1 and 12,
+--                 and in b[0] or c the value of the k-th parameter,
+--                 sets the value of the k-th parameter to c[0],
+--                 if k = 1, then c[0] must contain the real part
+--                 of gamma and c[1] the imaginary part of gamma,
+--                 if k = 2, then b[0] is the degree of Pade numerator,
+--                 if k = 3, then b[0] is the degree of Pade denominator,
+--                 if k = 4, then c[0] is the maximum step size,
+--                 if k = 5, then c[0] is the minimum step size,
+--                 if k = 6, then c[0] is the series step factor,
+--                 if k = 7, then c[0] is the pole radius step factor,
+--                 if k = 8, then c[0] is the predictor residual tolerance,
+--                 if k = 9, then c[0] is the corrector residual tolerance,
+--                 if k = 10, then c[0] is the zero coefficient tolerance,
+--                 if k = 11, then b[0] is the maximum #corrector steps,
+--                 if k = 12, then b[0] is the maximum #steps on a path.
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --
