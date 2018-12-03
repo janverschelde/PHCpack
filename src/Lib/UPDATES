@@ -1,3 +1,6 @@
+Sun 2 Dec 2018 : added functions to padcon.h and padcon.c to launch the
+  Pade continuation.
+
 Sat 1 Dec 2018 : updated padcon.h and padcon.c with more functions to tune
   the homotopy continuation parameters, tested by lib_padcon.c.
 
