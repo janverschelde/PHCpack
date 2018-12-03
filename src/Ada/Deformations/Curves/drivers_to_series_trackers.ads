@@ -41,6 +41,43 @@ package Drivers_to_Series_Trackers is
   --   should be written to a file or not, which sets tofile to true.
   --   If tofile, then file is created, ready for output.
 
+  procedure Standard_Track
+              ( nq : in integer32;
+                sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Standard_Track
+              ( file : in file_type; nq : in integer32;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                verbose : in boolean := false );
+  procedure DoblDobl_Track
+              ( nq : in integer32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure DoblDobl_Track
+              ( file : in file_type; nq : in integer32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in boolean := false );
+  procedure QuadDobl_Track
+              ( nq : in integer32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+  procedure QuadDobl_Track
+              ( file : in file_type; nq : in integer32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Given the homotopy defined in Standard_Homotopy, or DoblDob_Homotopy,
+  --   or QuadDobl_Homotopy, and the homotopy continuation parameters tuned,
+  --   the series trackers start at the solutions in sols,
+  --   in double, or double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file     optional file for writing statistics;
+  --   nq       number of equations in the homotopy;
+  --   sols     start solutions;
+  --   verbose  if extra output during the tracking is needed.
+
+  -- ON RETURN :
+  --   sols     the solutions at the end of the tracking.
+
   procedure Write_Timer
               ( file : in file_type;
                 numdeg,dendeg,precision : in natural32;
