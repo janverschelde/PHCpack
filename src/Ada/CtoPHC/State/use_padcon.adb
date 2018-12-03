@@ -3,15 +3,22 @@ with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
---with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_cv;
+with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_cv;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with Standard_Homotopy;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;
+with DoblDobl_Homotopy;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
+with QuadDobl_Homotopy;
 with Homotopy_Continuation_Parameters;
+with Drivers_to_Series_Trackers;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
 
@@ -94,10 +101,11 @@ function use_padcon ( job : integer32;
       homconpars := Homotopy_Continuation_Parameters.Retrieve;
     end if;
     case idx is
-      when  1 => v_gamma := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(2));
-                 regamma := double_float(v_gamma(v_gamma'first));
-                 imgamma := double_float(v_gamma(v_gamma'first+1));
-                 homconpars.gamma := Create(regamma,imgamma);
+      when  1 =>
+        v_gamma := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(2));
+        regamma := double_float(v_gamma(v_gamma'first));
+        imgamma := double_float(v_gamma(v_gamma'first+1));
+        homconpars.gamma := Standard_Complex_Numbers.Create(regamma,imgamma);
       when  2 => v_b := C_intarrs.Value(b);
                  homconpars.numdeg := natural32(v_b(v_b'first));
       when  3 => v_b := C_intarrs.Value(b);
@@ -133,13 +141,25 @@ function use_padcon ( job : integer32;
   --   writing no output if name is empty,
   --   otherwise, creates an output file with the given name.
 
+    file : file_type;
     start,target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
+    tpow : constant natural32 := 2;
+
+    homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters
+               := Homotopy_Continuation_Parameters.Retrieve;
 
   begin
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     PHCpack_Operations.Retrieve_Target_System(target);
+    Standard_Homotopy.Create(target.all,start.all,tpow,homconpars.gamma);
+    if name = "" then
+      Drivers_to_Series_Trackers.Standard_Track(target'last,sols);
+    else
+      Create(file,out_file,name);
+      Drivers_to_Series_Trackers.Standard_Track(file,target'last,sols);
+    end if;
   end Standard_Track;
 
   procedure DoblDobl_Track ( name : in string ) is
@@ -149,13 +169,32 @@ function use_padcon ( job : integer32;
   --   writing no output if name is empty,
   --   otherwise, creates an output file with the given name.
 
+    use DoblDobl_Complex_Numbers_cv;
+
+    file : file_type;
     start,target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
+    tpow : constant natural32 := 2;
+
+    homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters
+               := Homotopy_Continuation_Parameters.Retrieve;
+
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := homconpars.gamma;
+    dd_gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+             := Standard_to_DoblDobl_Complex(gamma);
 
   begin
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     PHCpack_Operations.Retrieve_Target_System(target);
+    DoblDobl_Homotopy.Create(target.all,start.all,tpow,dd_gamma);
+    if name = "" then
+      Drivers_to_Series_Trackers.DoblDobl_Track(target'last,sols);
+    else
+      Create(file,out_file,name);
+      Drivers_to_Series_Trackers.DoblDobl_Track(file,target'last,sols);
+    end if;
   end DoblDobl_Track;
 
   procedure QuadDobl_Track ( name : in string ) is
@@ -165,13 +204,32 @@ function use_padcon ( job : integer32;
   --   writing no output if name is empty,
   --   otherwise, creates an output file with the given name.
 
+    use QuadDobl_Complex_Numbers_cv;
+
+    file : file_type;
     start,target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
+    tpow : constant natural32 := 2;
+
+    homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters
+               := Homotopy_Continuation_Parameters.Retrieve;
+
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := homconpars.gamma;
+    qd_gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+             := Standard_to_QuadDobl_Complex(gamma);
 
   begin
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     PHCpack_Operations.Retrieve_Target_System(target);
+    QuadDobl_Homotopy.Create(target.all,start.all,tpow,qd_gamma);
+    if name = "" then
+      Drivers_to_Series_Trackers.QuadDobl_Track(target'last,sols);
+    else
+      Create(file,out_file,name);
+      Drivers_to_Series_Trackers.QuadDobl_Track(file,target'last,sols);
+    end if;
   end QuadDobl_Track;
 
   function Job4 return integer32 is -- track paths
