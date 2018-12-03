@@ -45,6 +45,16 @@ function use_padcon ( job : integer32;
 --                 if k = 10, then c[0] is the zero coefficient tolerance,
 --                 if k = 11, then b[0] is the maximum #corrector steps,
 --                 if k = 12, then b[0] is the maximum #steps on a path.
+--   job   =   4 : tracks the paths with the Pade predictors,
+--                 for an artificial parameter homotopy,
+--                 the value of a[0] is 0, 1, 2, for double, double double,
+--                 or quad double precision, with target, start system, and
+--                 start solutions defined via PHCpack_Operations,
+--                 in a[1] is the number of characters of the name of the
+--                 output file, if a[1] is zero, then no output is written,
+--                 otherwise, the characters of the output file name are
+--                 defined by b; on return are the end of the solution
+--                 paths in the proper solutions container.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

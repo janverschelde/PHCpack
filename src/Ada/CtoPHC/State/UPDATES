@@ -1,3 +1,6 @@
+Sun 2 Dec 2018 : added a job to use_padcon and use_c2phc4c to track paths
+  with the new Pade predictors.
+
 Sat 1 Dec 2018 : added jobs to use_padcon, use_padcon, with modifications
   to use_c2phc4c for tuning the homotopy continuation parameters.
 

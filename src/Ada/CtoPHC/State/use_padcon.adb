@@ -5,8 +5,15 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 --with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
-with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Solutions;
 with Homotopy_Continuation_Parameters;
+with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
+with PHCpack_Operations;
 
 function use_padcon ( job : integer32;
                       a : C_intarrs.Pointer;
@@ -119,6 +126,75 @@ function use_padcon ( job : integer32;
     return 0;
   end Job3;
 
+  procedure Standard_Track ( name : in string ) is
+
+  -- DESCRIPTION :
+  --   Tracks the solution paths in standard precision,
+  --   writing no output if name is empty,
+  --   otherwise, creates an output file with the given name.
+
+    start,target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : Standard_Complex_Solutions.Solution_List;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(start);
+    PHCpack_Operations.Retrieve_Start_Solutions(sols);
+    PHCpack_Operations.Retrieve_Target_System(target);
+  end Standard_Track;
+
+  procedure DoblDobl_Track ( name : in string ) is
+
+  -- DESCRIPTION :
+  --   Tracks the solution paths in standard precision,
+  --   writing no output if name is empty,
+  --   otherwise, creates an output file with the given name.
+
+    start,target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(start);
+    PHCpack_Operations.Retrieve_Start_Solutions(sols);
+    PHCpack_Operations.Retrieve_Target_System(target);
+  end DoblDobl_Track;
+
+  procedure QuadDobl_Track ( name : in string ) is
+
+  -- DESCRIPTION :
+  --   Tracks the solution paths in standard precision,
+  --   writing no output if name is empty,
+  --   otherwise, creates an output file with the given name.
+
+    start,target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(start);
+    PHCpack_Operations.Retrieve_Start_Solutions(sols);
+    PHCpack_Operations.Retrieve_Target_System(target);
+  end QuadDobl_Track;
+
+  function Job4 return integer32 is -- track paths
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    nbc : constant natural32 := natural32(v_a(v_a'first+1));
+
+  begin
+    if nbc = 0 then
+      case prc is
+        when 0 => Standard_Track("");
+        when 1 => DoblDobl_Track("");
+        when 2 => QuadDobl_Track("");
+        when others => null;
+      end case;
+    end if;
+    return 0;
+  end Job4;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -126,6 +202,7 @@ function use_padcon ( job : integer32;
       when 1 => return Job1; -- clear parameter values
       when 2 => return Job2; -- get value
       when 3 => return Job3; -- set value
+      when 4 => return Job4; -- track paths
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception
