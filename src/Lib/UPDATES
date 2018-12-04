@@ -1,3 +1,5 @@
+Mon 3 Dec 2018 : extended the C test function to Pade continuation.
+
 Sun 2 Dec 2018 : added functions to padcon.h and padcon.c to launch the
   Pade continuation.
 
