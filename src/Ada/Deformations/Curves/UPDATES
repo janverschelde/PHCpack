@@ -1,3 +1,6 @@
+Tue 4 Dec 2018 : added new_line(file); after printing solutions
+  in series_and_trackers.adb.
+
 Mon 3 Dec 2018 : extended drivers_to_series_trackers with procedures to
   launch the path trackers.  Added to drivers_to_series_trackers the
   procedures which take values of the homotopy continuation parameters.

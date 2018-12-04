@@ -925,7 +925,7 @@ package body Series_and_Trackers is
        then Write_Path_Statistics(file,nbrsteps,nbrcorrs,minsize,maxsize);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
-      Standard_Complex_Solutions_io.put(file,ls.all);
+      Standard_Complex_Solutions_io.put(file,ls.all); new_line(file);
       tmp := Tail_Of(tmp);
       Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
@@ -969,7 +969,7 @@ package body Series_and_Trackers is
        then Write_Path_Statistics(file,nbrsteps,nbrcorrs,minsize,maxsize);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
-      DoblDobl_Complex_Solutions_io.put(file,ls.all);
+      DoblDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
       tmp := Tail_Of(tmp);
       Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
@@ -1013,7 +1013,7 @@ package body Series_and_Trackers is
        then Write_Path_Statistics(file,nbrsteps,nbrcorrs,minsize,maxsize);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
-      QuadDobl_Complex_Solutions_io.put(file,ls.all);
+      QuadDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
       tmp := Tail_Of(tmp);
       Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
