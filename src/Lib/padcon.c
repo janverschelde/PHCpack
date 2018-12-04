@@ -50,15 +50,16 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val )
 
 }
 
-int padcon_standard_track ( int nbc, char* name )
+int padcon_standard_track ( int nbc, char* name, int verbose )
 {
    int fail;
-   int pars[2];
+   int pars[3];
    int *b;
    double *c;
 
    pars[0] = 0;   // set precision to double
    pars[1] = nbc;
+   pars[2] = verbose;
 
    if(nbc == 0)
       fail = _ada_use_c2phc4c(739,pars,b,c);
@@ -71,15 +72,16 @@ int padcon_standard_track ( int nbc, char* name )
    return fail;
 }
 
-int padcon_dobldobl_track ( int nbc, char* name )
+int padcon_dobldobl_track ( int nbc, char* name, int verbose )
 {
    int fail;
-   int pars[2];
+   int pars[3];
    int *b;
    double *c;
 
    pars[0] = 1;   // set precision to double double
    pars[1] = nbc;
+   pars[2] = verbose;
 
    if(nbc == 0)
       fail = _ada_use_c2phc4c(739,pars,b,c);
@@ -92,15 +94,16 @@ int padcon_dobldobl_track ( int nbc, char* name )
    return fail;
 }
 
-int padcon_quaddobl_track ( int nbc, char* name )
+int padcon_quaddobl_track ( int nbc, char* name, int verbose )
 {
    int fail;
-   int pars[2];
+   int pars[3];
    int *b;
    double *c;
 
    pars[0] = 2;   // set precision to quad double
    pars[1] = nbc;
+   pars[2] = verbose;
 
    if(nbc == 0)
       fail = _ada_use_c2phc4c(739,pars,b,c);

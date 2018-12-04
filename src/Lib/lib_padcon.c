@@ -16,42 +16,46 @@ void tune_homotopy_continuation_parameters ( void );
  * DESCRIPTION :
  *   Interactive loop to tune the homotopy continuation parameters. */
 
-void prompt_for_output_file ( int* nbc, char* name );
+void prompt_for_output_file ( int* nbc, char* name, int *verbose );
 /*
  * DESCRIPTION :
+ *   Prompts the user for the verbosity, returned in verbose.
  *   Prompts the user for an output file, returned in name,
  *   with in nbc the number of characters in name. */
 
-void standard_track ( int nbc, char* name );
+void standard_track ( int nbc, char* name, int verbose );
 /*
  * DESCRIPTION :
  *   Tracks in standard double precision.  On input is the name of the
  *   output file, with its number of characters in nbc.
  *   If nbc = 0, then no output is written to file,
- *   otherwise, the output is written to the name with file name. */
+ *   otherwise, the output is written to the name with file name.
+ *   If verbose > 0, then more output is written. */
 
-void dobldobl_track ( int nbc, char* name );
+void dobldobl_track ( int nbc, char* name, int verbose );
 /*
  * DESCRIPTION :
  *   Tracks in double double precision.  On input is the name of the
  *   output file, with its number of characters in nbc.
  *   If nbc = 0, then no output is written to file,
- *   otherwise, the output is written to the name with file name. */
+ *   otherwise, the output is written to the name with file name.
+ *   If verbose > 0, then more output is written. */
 
-void quaddobl_track ( int nbc, char* name );
+void quaddobl_track ( int nbc, char* name, int verbose );
 /*
  * DESCRIPTION :
  *   Tracks in quad double precision.  On input is the name of the
  *   output file, with its number of characters in nbc.
  *   If nbc = 0, then no output is written to file,
- *   otherwise, the output is written to the name with file name. */
+ *   otherwise, the output is written to the name with file name.
+ *   If verbose > 0, then more output is written. */
 
 int main ( void )
 {
    adainit();
 
    char nlsb;
-   int precision,nbchar;
+   int precision,nbchar,verbose;
    char filename[80];
 
    printf("\nMENU for the precision :\n");
@@ -68,14 +72,14 @@ int main ( void )
 
    scanf("%c", &nlsb); // swallow new line symbol
 
-   prompt_for_output_file(&nbchar,filename);
+   prompt_for_output_file(&nbchar,filename,&verbose);
 
    if(nbchar > 0)
       printf("\nThe name of the output file is %s.\n", filename);
 
-   if(precision == 0) standard_track(nbchar,filename);
-   if(precision == 1) dobldobl_track(nbchar,filename);
-   if(precision == 2) quaddobl_track(nbchar,filename);
+   if(precision == 0) standard_track(nbchar,filename,verbose);
+   if(precision == 1) dobldobl_track(nbchar,filename,verbose);
+   if(precision == 2) quaddobl_track(nbchar,filename,verbose);
 
    adafinal();
 
@@ -209,9 +213,14 @@ void tune_homotopy_continuation_parameters ( void )
    while (choice != 0);
 }
 
-void prompt_for_output_file ( int* nbc, char* name )
+void prompt_for_output_file ( int* nbc, char* name, int *verbose )
 {
    char ans,nlsb;
+
+   printf("\nVerbose?  Extra output desired ? (y/n) ? ");
+   scanf("%c",&ans);
+   scanf("%c",&nlsb); /* skip newline symbol */
+   *verbose = (ans == 'y');
 
    printf("\nOutput to separate file ? (y/n) ? ");
    scanf("%c",&ans);
@@ -228,7 +237,7 @@ void prompt_for_output_file ( int* nbc, char* name )
    }
 }
 
-void standard_track ( int nbc, char* name )
+void standard_track ( int nbc, char* name, int verbose )
 {
    int fail,length;
 
@@ -240,12 +249,12 @@ void standard_track ( int nbc, char* name )
 
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 
-   fail = padcon_standard_track(nbc,name);
+   fail = padcon_standard_track(nbc,name,verbose);
 
    if(nbc == 0) fail = solcon_write_standard_solutions();
 }
 
-void dobldobl_track ( int nbc, char* name )
+void dobldobl_track ( int nbc, char* name, int verbose )
 {
    int fail,length;
 
@@ -257,12 +266,12 @@ void dobldobl_track ( int nbc, char* name )
 
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 
-   fail = padcon_dobldobl_track(nbc,name);
+   fail = padcon_dobldobl_track(nbc,name,verbose);
 
    if(nbc == 0) fail = solcon_write_dobldobl_solutions();
 }
 
-void quaddobl_track ( int nbc, char* name )
+void quaddobl_track ( int nbc, char* name, int verbose )
 {
    int fail,length;
 
@@ -274,7 +283,7 @@ void quaddobl_track ( int nbc, char* name )
 
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 
-   fail = padcon_quaddobl_track(nbc,name);
+   fail = padcon_quaddobl_track(nbc,name,verbose);
 
    if(nbc == 0) fail = solcon_write_quaddobl_solutions();
 }

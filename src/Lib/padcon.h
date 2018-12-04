@@ -51,7 +51,7 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val );
  * ON RETURN 
  *   val      the value for the k-th homotopy continuation parameter. */
 
-int padcon_standard_track ( int nbc, char* name );
+int padcon_standard_track ( int nbc, char* name, int verbose );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -61,9 +61,10 @@ int padcon_standard_track ( int nbc, char* name );
  *   nbc      number of characters of the output file name,
  *            equals 0 if no output will be written to file;
  *   name     defines the name of the output file,
- *            the file name has nbc characters. */
+ *            the file name has nbc characters;
+ *   verbose  if > 0, then more information is written. */
 
-int padcon_dobldobl_track ( int nbc, char* name );
+int padcon_dobldobl_track ( int nbc, char* name, int verbose );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -73,9 +74,10 @@ int padcon_dobldobl_track ( int nbc, char* name );
  *   nbc      number of characters of the output file name,
  *            equals 0 if no output will be written to file;
  *   name     defines the name of the output file,
- *            the file name has nbc characters. */
+ *            the file name has nbc characters;
+ *   verbose  if > 0, then more information is written. */
 
-int padcon_quaddobl_track ( int nbc, char* name );
+int padcon_quaddobl_track ( int nbc, char* name, int verbose );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -85,6 +87,7 @@ int padcon_quaddobl_track ( int nbc, char* name );
  *   nbc      number of characters of the output file name,
  *            equals 0 if no output will be written to file;
  *   name     defines the name of the output file,
- *            the file name has nbc characters. */
+ *            the file name has nbc characters;
+ *   verbose  if > 0, then more information is written. */
 
 #endif
