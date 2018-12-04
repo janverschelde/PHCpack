@@ -20,6 +20,9 @@ with QuadDobl_Homotopy;
 with Homotopy_Continuation_Parameters;
 with Drivers_to_Series_Trackers;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
+with Standard_Solutions_Container;
+with DoblDobl_Solutions_Container;
+with QuadDobl_Solutions_Container;
 with PHCpack_Operations;
 
 function use_padcon ( job : integer32;
@@ -155,11 +158,15 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Target_System(target);
     Standard_Homotopy.Create(target.all,start.all,tpow,homconpars.gamma);
     if name = "" then
-      Drivers_to_Series_Trackers.Standard_Track(target'last,sols);
+      Drivers_to_Series_Trackers.Standard_Track
+        (target'last,sols,homconpars.all);
     else
       Create(file,out_file,name);
-      Drivers_to_Series_Trackers.Standard_Track(file,target'last,sols);
+      Drivers_to_Series_Trackers.Standard_Track
+        (file,target'last,sols,homconpars.all);
     end if;
+    Standard_Solutions_Container.Clear;
+    Standard_Solutions_Container.Initialize(sols);
   end Standard_Track;
 
   procedure DoblDobl_Track ( name : in string ) is
@@ -190,11 +197,15 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Target_System(target);
     DoblDobl_Homotopy.Create(target.all,start.all,tpow,dd_gamma);
     if name = "" then
-      Drivers_to_Series_Trackers.DoblDobl_Track(target'last,sols);
+      Drivers_to_Series_Trackers.DoblDobl_Track
+        (target'last,sols,homconpars.all);
     else
       Create(file,out_file,name);
-      Drivers_to_Series_Trackers.DoblDobl_Track(file,target'last,sols);
+      Drivers_to_Series_Trackers.DoblDobl_Track
+        (file,target'last,sols,homconpars.all);
     end if;
+    DoblDobl_Solutions_Container.Clear;
+    DoblDobl_Solutions_Container.Initialize(sols);
   end DoblDobl_Track;
 
   procedure QuadDobl_Track ( name : in string ) is
@@ -225,11 +236,15 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Target_System(target);
     QuadDobl_Homotopy.Create(target.all,start.all,tpow,qd_gamma);
     if name = "" then
-      Drivers_to_Series_Trackers.QuadDobl_Track(target'last,sols);
+      Drivers_to_Series_Trackers.QuadDobl_Track
+        (target'last,sols,homconpars.all);
     else
       Create(file,out_file,name);
-      Drivers_to_Series_Trackers.QuadDobl_Track(file,target'last,sols);
+      Drivers_to_Series_Trackers.QuadDobl_Track
+        (file,target'last,sols,homconpars.all);
     end if;
+    QuadDobl_Solutions_Container.Clear;
+    QuadDobl_Solutions_Container.Initialize(sols);
   end QuadDobl_Track;
 
   function Job4 return integer32 is -- track paths
@@ -240,6 +255,8 @@ function use_padcon ( job : integer32;
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
     prc : constant natural32 := natural32(v_a(v_a'first));
     nbc : constant natural32 := natural32(v_a(v_a'first+1));
+    v_b : C_Integer_Array(0..Interfaces.C.size_T(nbc-1))
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
 
   begin
     if nbc = 0 then
@@ -249,6 +266,17 @@ function use_padcon ( job : integer32;
         when 2 => QuadDobl_Track("");
         when others => null;
       end case;
+    else
+      declare
+        name : constant string := C_Integer_Array_to_String(nbc,v_b);
+      begin
+        case prc is
+          when 0 => Standard_Track(name);
+          when 1 => DoblDobl_Track(name);
+          when 2 => QuadDobl_Track(name);
+          when others => null;
+        end case;
+      end;
     end if;
     return 0;
   end Job4;
@@ -264,7 +292,7 @@ function use_padcon ( job : integer32;
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception
-    when others => put("Exception raised in use_numbtrop handling job ");
+    when others => put("Exception raised in use_padcon handling job ");
                    put(job,1); put_line(".  Will not ignore."); raise;
   end Handle_Jobs;
 
