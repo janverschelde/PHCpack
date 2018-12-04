@@ -17,12 +17,12 @@ extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c );
 extern void adafinal( void );
 #endif
 
-void padcon_set_default_parameters ( void );
+int padcon_set_default_parameters ( void );
 /*
  * DESCRIPTION :
  *   Sets the default values of the homotopy continuation parameters. */
 
-void padcon_clear_parameters ( void );
+int padcon_clear_parameters ( void );
 /*
  * DESCRIPTION :
  *   Deallocates the allocated space for the parameters. */

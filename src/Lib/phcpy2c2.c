@@ -23,6 +23,7 @@
 #include "witsols.h"
 #include "mapcon.h"
 #include "series.h"
+#include "padcon.h"
 #include "jump_track.h"
 #include "next_track.h"
 #include "structmember.h"
@@ -7869,6 +7870,111 @@ static PyObject *py2c_quaddobl_Pade_approximant
    return Py_BuildValue("i",fail);
 }
 
+/* The wrapping of Pade continuation starts here. */
+
+static PyObject *py2c_padcon_set_default_parameters
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = padcon_set_default_parameters();
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_clear_parameters
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = padcon_clear_parameters();
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_get_homotopy_continuation_parameter
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx;
+   double val[2];
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;
+   fail = padcon_get_homotopy_continuation_parameter(idx,val);
+
+   if(idx == 1)
+      return Py_BuildValue("(d,d)", val[0], val[1]);
+   else if((idx == 2) || (idx == 3) || (idx == 11) || (idx == 12))
+   {
+      int parval = (int) val[0];
+      return Py_BuildValue("i",parval);
+   }
+   else
+      return Py_BuildValue("d",val[0]);
+}
+
+static PyObject *py2c_padcon_set_homotopy_continuation_gamma
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double val[2];
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"dd",&val[0],&val[1])) return NULL;
+   fail = padcon_set_homotopy_continuation_parameter(1,val);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_set_homotopy_continuation_parameter
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx;
+   double val;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"id",&idx,&val)) return NULL;
+   fail = padcon_set_homotopy_continuation_parameter(idx,&val);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_standard_track
+ ( PyObject *self, PyObject *args )
+{
+   int nbc,fail,verbose;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
+   fail = padcon_standard_track(nbc,name,verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_dobldobl_track
+ ( PyObject *self, PyObject *args )
+{
+   int nbc,fail,verbose;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
+   fail = padcon_dobldobl_track(nbc,name,verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_quaddobl_track
+ ( PyObject *self, PyObject *args )
+{
+   int nbc,fail,verbose;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
+   fail = padcon_quaddobl_track(nbc,name,verbose);
+   return Py_BuildValue("i",fail);
+}
+
 /* The wrapping of functions with prototypes in syspool.h starts below. */
 
 static PyObject *py2c_syspool_standard_init ( PyObject *self, PyObject *args )
@@ -10113,6 +10219,30 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_quaddobl_Pade_approximant",
      py2c_quaddobl_Pade_approximant, METH_VARARGS,
     "Given in the systems container a polynomial system with coefficients\n in quad double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in quad double precision, followed by the construction of the\n Pade approximants, for each solution. There are five integers on input:\n 1) the index of the series parameter;\n 2) the degree of the numerator of the Pade approximant;\n 3) the degree of the denominator of the Pade approximant;\n 4) the number of Newton steps to be done on each solution;\n 5) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n The Pade approximants are stored in the quaddobl systems pool,\n numerators in the odd indexed entries and denominators in the entries\n with even index in each system.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_padcon_set_default_parameters",
+     py2c_padcon_set_default_parameters, METH_VARARGS,
+    "Sets the default values of the homotopy continuation parameters."},
+   {"py2c_padcon_clear_parameters",
+     py2c_padcon_clear_parameters, METH_VARARGS,
+    "Deallocates the allocated space for the parameters."},
+   {"py2c_padcon_get_homotopy_continuation_parameter",
+     py2c_padcon_get_homotopy_continuation_parameter, METH_VARARGS,
+    "Returns the value of the k-th continuation parameter,\n if k ranges between 1 and 12.  The integer k is given on entry."},
+   {"py2c_padcon_set_homotopy_continuation_gamma",
+     py2c_padcon_set_homotopy_continuation_gamma, METH_VARARGS,
+    "The gamma constant is the first homotopy continuation parameter.\n The gamma is a complex number and it should be given as two\n doubles, as its real and imaginary part respectively."},
+   {"py2c_padcon_set_homotopy_continuation_parameter",
+     py2c_padcon_set_homotopy_continuation_parameter, METH_VARARGS,
+    "Sets the value of the k-th continuation parameter to the given value.\n The first parameter k is an integer number between 2 and 12.\n The second parameter is the value of the k-th parameter,\n parsed as a floating point number."},
+   {"py2c_padcon_standard_track",
+     py2c_padcon_standard_track, METH_VARARGS,
+    "For the defined target, start system, and start solutions,\n launches the Pade continuation in standard double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file,\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen."},
+   {"py2c_padcon_dobldobl_track",
+     py2c_padcon_dobldobl_track, METH_VARARGS, 
+    "For the defined target, start system, and start solutions,\n launches the Pade continuation in double double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file,\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen."},
+   {"py2c_padcon_quaddobl_track",
+     py2c_padcon_quaddobl_track, METH_VARARGS,
+    "For the defined target, start system, and start solutions,\n launches the Pade continuation in quad double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file,\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen."},
    {"py2c_syspool_standard_init", py2c_syspool_standard_init, METH_VARARGS,
     "Initializes the pool for systems in standard double precision."},
    {"py2c_syspool_dobldobl_init", py2c_syspool_dobldobl_init, METH_VARARGS,

@@ -5595,6 +5595,83 @@ static PyObject *py2c_quaddobl_Pade_approximant
  *   with even index in each system.
  *   On return is the failure code, which equals zero if all went well. */
 
+/* The wrapping of Pade continuation starts here. */
+
+static PyObject *py2c_padcon_set_default_parameters
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the default values of the homotopy continuation parameters. */
+
+static PyObject *py2c_padcon_clear_parameters
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the allocated space for the parameters. */
+
+static PyObject *py2c_padcon_get_homotopy_continuation_parameter
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the value of the k-th continuation parameter,
+ *   if k ranges between 1 and 12.  The integer k is given on entry. */
+
+static PyObject *py2c_padcon_set_homotopy_continuation_gamma
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The gamma constant is the first homotopy continuation parameter.
+ *   The gamma is a complex number and it should be given as two
+ *   doubles, as its real and imaginary part respectively. */
+
+static PyObject *py2c_padcon_set_homotopy_continuation_parameter
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the value of the k-th continuation parameter to the given value.
+ *   The first parameter k is an integer number between 2 and 12.
+ *   The second parameter is the value of the k-th parameter,
+ *   parsed as a floating point number. */
+
+static PyObject *py2c_padcon_standard_track
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For the defined target, start system, and start solutions,
+ *   launches the Pade continuation in standard double precision.
+ *   Three input parameters are expected:
+ *   1) the number of characters in the name of the output file,
+ *   2) a string which defines the name of the output file,
+ *   if the string is empty, then no file is created;
+ *   3) an integer for the verbose flag, if zero, then no extra
+ *   information is written to file or screen. */
+
+static PyObject *py2c_padcon_dobldobl_track
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For the defined target, start system, and start solutions,
+ *   launches the Pade continuation in double double precision.
+ *   Three input parameters are expected:
+ *   1) the number of characters in the name of the output file,
+ *   2) a string which defines the name of the output file,
+ *   if the string is empty, then no file is created;
+ *   3) an integer for the verbose flag, if zero, then no extra
+ *   information is written to file or screen. */
+
+static PyObject *py2c_padcon_quaddobl_track
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For the defined target, start system, and start solutions,
+ *   launches the Pade continuation in quad double precision.
+ *   Three input parameters are expected:
+ *   1) the number of characters in the name of the output file,
+ *   2) a string which defines the name of the output file,
+ *   if the string is empty, then no file is created;
+ *   3) an integer for the verbose flag, if zero, then no extra
+ *   information is written to file or screen. */
+
 /* The wrapping of functions with prototypes in syspool.h starts below. */
 
 static PyObject *py2c_syspool_standard_init ( PyObject *self, PyObject *args );

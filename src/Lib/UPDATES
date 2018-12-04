@@ -1,5 +1,7 @@
 Tue 4 Dec 2018 : added verbose flag to the track functions in padcon,
-  and prompted user for verbosity in lib_padcon.
+  and prompted user for verbosity in lib_padcon.  Added int returns
+  to padcon, for consistency with other functions, changed lib_padcon.
+  Extended phcpy2c.h, phcpy2c2.c, and phcpy2c3.c, with Pade continuation.
 
 Mon 3 Dec 2018 : extended the C test function to Pade continuation.
 

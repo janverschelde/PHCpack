@@ -55,7 +55,7 @@ int main ( void )
    adainit();
 
    char nlsb;
-   int precision,nbchar,verbose;
+   int fail,precision,nbchar,verbose;
    char filename[80];
 
    printf("\nMENU for the precision :\n");
@@ -67,7 +67,7 @@ int main ( void )
 
    printf("\nTuning the homotopy continuation parameters ...\n");
 
-   padcon_set_default_parameters();
+   fail = padcon_set_default_parameters();
    tune_homotopy_continuation_parameters();
 
    scanf("%c", &nlsb); // swallow new line symbol
