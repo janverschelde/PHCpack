@@ -18,6 +18,7 @@ with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Homotopy;
 with Homotopy_Continuation_Parameters;
+with Homotopy_Continuation_Parameters_io;
 with Drivers_to_Series_Trackers;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_Solutions_Container;
@@ -137,7 +138,7 @@ function use_padcon ( job : integer32;
     return 0;
   end Job3;
 
-  procedure Standard_Track ( name : in string ) is
+  procedure Standard_Track ( name : in string; verbose : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
@@ -159,17 +160,18 @@ function use_padcon ( job : integer32;
     Standard_Homotopy.Create(target.all,start.all,tpow,homconpars.gamma);
     if name = "" then
       Drivers_to_Series_Trackers.Standard_Track
-        (target'last,sols,homconpars.all);
+        (target'last,sols,homconpars.all); --,verbose);
     else
       Create(file,out_file,name);
+      Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
       Drivers_to_Series_Trackers.Standard_Track
-        (file,target'last,sols,homconpars.all);
+        (file,target'last,sols,homconpars.all,verbose);
     end if;
     Standard_Solutions_Container.Clear;
     Standard_Solutions_Container.Initialize(sols);
   end Standard_Track;
 
-  procedure DoblDobl_Track ( name : in string ) is
+  procedure DoblDobl_Track ( name : in string; verbose : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
@@ -198,17 +200,18 @@ function use_padcon ( job : integer32;
     DoblDobl_Homotopy.Create(target.all,start.all,tpow,dd_gamma);
     if name = "" then
       Drivers_to_Series_Trackers.DoblDobl_Track
-        (target'last,sols,homconpars.all);
+        (target'last,sols,homconpars.all); -- ,verbose);
     else
       Create(file,out_file,name);
+      Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
       Drivers_to_Series_Trackers.DoblDobl_Track
-        (file,target'last,sols,homconpars.all);
+        (file,target'last,sols,homconpars.all,verbose);
     end if;
     DoblDobl_Solutions_Container.Clear;
     DoblDobl_Solutions_Container.Initialize(sols);
   end DoblDobl_Track;
 
-  procedure QuadDobl_Track ( name : in string ) is
+  procedure QuadDobl_Track ( name : in string; verbose : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
@@ -237,11 +240,12 @@ function use_padcon ( job : integer32;
     QuadDobl_Homotopy.Create(target.all,start.all,tpow,qd_gamma);
     if name = "" then
       Drivers_to_Series_Trackers.QuadDobl_Track
-        (target'last,sols,homconpars.all);
+        (target'last,sols,homconpars.all); -- ,verbose);
     else
       Create(file,out_file,name);
+      Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
       Drivers_to_Series_Trackers.QuadDobl_Track
-        (file,target'last,sols,homconpars.all);
+        (file,target'last,sols,homconpars.all,verbose);
     end if;
     QuadDobl_Solutions_Container.Clear;
     QuadDobl_Solutions_Container.Initialize(sols);
@@ -252,28 +256,30 @@ function use_padcon ( job : integer32;
     use Interfaces.C;
 
     v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
     prc : constant natural32 := natural32(v_a(v_a'first));
     nbc : constant natural32 := natural32(v_a(v_a'first+1));
-    v_b : C_Integer_Array(0..Interfaces.C.size_T(nbc-1))
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
+    vrb : constant natural32 := natural32(v_a(v_a'first+2));
+    verbose : constant boolean := (vrb > 0);
 
   begin
     if nbc = 0 then
       case prc is
-        when 0 => Standard_Track("");
-        when 1 => DoblDobl_Track("");
-        when 2 => QuadDobl_Track("");
+        when 0 => Standard_Track("",verbose);
+        when 1 => DoblDobl_Track("",verbose);
+        when 2 => QuadDobl_Track("",verbose);
         when others => null;
       end case;
     else
       declare
+        v_b : C_Integer_Array(0..Interfaces.C.size_T(nbc-1))
+            := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
         name : constant string := C_Integer_Array_to_String(nbc,v_b);
       begin
         case prc is
-          when 0 => Standard_Track(name);
-          when 1 => DoblDobl_Track(name);
-          when 2 => QuadDobl_Track(name);
+          when 0 => Standard_Track(name,verbose);
+          when 1 => DoblDobl_Track(name,verbose);
+          when 2 => QuadDobl_Track(name,verbose);
           when others => null;
         end case;
       end;

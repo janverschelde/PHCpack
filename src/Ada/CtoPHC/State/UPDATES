@@ -1,3 +1,6 @@
+Tue 4 Dec 2018 : fixed bug with getting the file name in use_padcon.adb,
+  added verbose flag, documented in use_padcon.ads and use_c2phc4c.ads.
+
 Mon 3 Dec 2018 : added calling the path trackers in use_padcon.adb.
   In use_padcon.adb, captured the name of the file.
 

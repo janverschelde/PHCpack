@@ -1043,8 +1043,9 @@ function use_c2phc4c ( job : integer32;
 --                 in a[1] is the number of characters of the name of the
 --                 output file, if a[1] is zero, then no output is written,
 --                 otherwise, the characters of the output file name are
---                 defined by b; on return are the end of the solution
---                 paths in the proper solutions container.
+--                 defined by b, in a[2] is the value of the verbose flag;
+--                 on return are the end of the solution paths in the
+--                 double, double double, or quad double solutions container.
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --
