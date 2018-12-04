@@ -159,8 +159,14 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Target_System(target);
     Standard_Homotopy.Create(target.all,start.all,tpow,homconpars.gamma);
     if name = "" then
-      Drivers_to_Series_Trackers.Standard_Track
-        (target'last,sols,homconpars.all); --,verbose);
+      if not verbose then
+        Drivers_to_Series_Trackers.Standard_Track
+          (target'last,sols,homconpars.all); --,verbose);
+      else
+        Homotopy_Continuation_Parameters_io.put(homconpars.all);
+        Drivers_to_Series_Trackers.Standard_Track
+          (standard_output,target'last,sols,homconpars.all,verbose);
+      end if;
     else
       Create(file,out_file,name);
       Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
@@ -199,8 +205,14 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Target_System(target);
     DoblDobl_Homotopy.Create(target.all,start.all,tpow,dd_gamma);
     if name = "" then
-      Drivers_to_Series_Trackers.DoblDobl_Track
-        (target'last,sols,homconpars.all); -- ,verbose);
+      if not verbose then
+        Drivers_to_Series_Trackers.DoblDobl_Track
+          (target'last,sols,homconpars.all); -- ,verbose);
+      else
+        Homotopy_Continuation_Parameters_io.put(homconpars.all);
+        Drivers_to_Series_Trackers.DoblDobl_Track
+          (standard_output,target'last,sols,homconpars.all,verbose);
+      end if;
     else
       Create(file,out_file,name);
       Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
@@ -239,8 +251,14 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Target_System(target);
     QuadDobl_Homotopy.Create(target.all,start.all,tpow,qd_gamma);
     if name = "" then
-      Drivers_to_Series_Trackers.QuadDobl_Track
-        (target'last,sols,homconpars.all); -- ,verbose);
+      if not verbose then
+        Drivers_to_Series_Trackers.QuadDobl_Track
+          (target'last,sols,homconpars.all); -- ,verbose);
+      else
+        Homotopy_Continuation_Parameters_io.put(homconpars.all);
+        Drivers_to_Series_Trackers.QuadDobl_Track
+          (standard_output,target'last,sols,homconpars.all,verbose);
+      end if;
     else
       Create(file,out_file,name);
       Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
