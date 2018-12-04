@@ -1,5 +1,6 @@
-Mon 3 Dec 2018 : extende drivers_to_series_trackers with procedures to
-  launch the path trackers.
+Mon 3 Dec 2018 : extended drivers_to_series_trackers with procedures to
+  launch the path trackers.  Added to drivers_to_series_trackers the
+  procedures which take values of the homotopy continuation parameters.
 
 Sat 1 Dec 2018 : added an access type to homotopy_continuation_parameters,
   plus operations for the storage of an instance of the parameters.

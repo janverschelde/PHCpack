@@ -8,6 +8,7 @@ with QuadDobl_Complex_Numbers;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with Homotopy_Continuation_Parameters;
 
 package Drivers_to_Series_Trackers is
 
@@ -45,22 +46,49 @@ package Drivers_to_Series_Trackers is
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List );
   procedure Standard_Track
+              ( nq : in integer32;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters );
+  procedure Standard_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                verbose : in boolean := false );
+  procedure Standard_Track
+              ( file : in file_type; nq : in integer32;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 verbose : in boolean := false );
   procedure DoblDobl_Track
               ( nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
   procedure DoblDobl_Track
+              ( nq : in integer32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters );
+  procedure DoblDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in boolean := false );
+  procedure DoblDobl_Track
+              ( file : in file_type; nq : in integer32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 verbose : in boolean := false );
   procedure QuadDobl_Track
               ( nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
   procedure QuadDobl_Track
+              ( nq : in integer32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters );
+  procedure QuadDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in boolean := false );
+  procedure QuadDobl_Track
+              ( file : in file_type; nq : in integer32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -73,6 +101,8 @@ package Drivers_to_Series_Trackers is
   --   file     optional file for writing statistics;
   --   nq       number of equations in the homotopy;
   --   sols     start solutions;
+  --   pars     values for the homotopy continuation parameters,
+  --            if omitted, then default values are used;
   --   verbose  if extra output during the tracking is needed.
 
   -- ON RETURN :

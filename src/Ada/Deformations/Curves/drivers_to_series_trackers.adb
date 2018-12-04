@@ -18,7 +18,6 @@ with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 with Series_and_Homotopies;
 with Series_and_Trackers;
-with Homotopy_Continuation_Parameters;
 
 package body Drivers_to_Series_Trackers is
 
@@ -96,17 +95,44 @@ package body Drivers_to_Series_Trackers is
 
   procedure Standard_Track
               ( nq : in integer32;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
     s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,false);
-    p : Homotopy_Continuation_Parameters.Parameters
+
+  begin
+    Series_and_Trackers.Track_Many_Paths(s,sols,pars);
+    Standard_CSeries_Poly_Systems.Clear(s);
+    Standard_Complex_Poly_Systems.Clear(h);
+  end Standard_Track;
+
+  procedure Standard_Track
+              ( nq : in integer32;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    Series_and_Trackers.Track_Many_Paths(s,sols,p);
+    Standard_Track(nq,sols,p);
+  end Standard_Track;
+
+  procedure Standard_Track
+              ( file : in file_type; nq : in integer32;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                verbose : in boolean := false ) is
+
+    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := Standard_Homotopy.Homotopy_System;
+    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
+      := Series_and_Homotopies.Create(h,nq+1,false);
+
+  begin
+    Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,verbose);
     Standard_CSeries_Poly_Systems.Clear(s);
     Standard_Complex_Poly_Systems.Clear(h);
   end Standard_Track;
@@ -116,32 +142,53 @@ package body Drivers_to_Series_Trackers is
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 verbose : in boolean := false ) is
 
-    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
-      := Standard_Homotopy.Homotopy_System;
-    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1,false);
-    p : Homotopy_Continuation_Parameters.Parameters
+    p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    Series_and_Trackers.Track_Many_Paths(file,s,sols,p,verbose);
-    Standard_CSeries_Poly_Systems.Clear(s);
-    Standard_Complex_Poly_Systems.Clear(h);
+    Standard_Track(file,nq,sols,p,verbose);
   end Standard_Track;
 
   procedure DoblDobl_Track
               ( nq : in integer32;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
     s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,false);
-    p : Homotopy_Continuation_Parameters.Parameters
+
+  begin
+    Series_and_Trackers.Track_Many_Paths(s,sols,pars);
+    DoblDobl_CSeries_Poly_Systems.Clear(s);
+    DoblDobl_Complex_Poly_Systems.Clear(h);
+  end DoblDobl_Track;
+
+  procedure DoblDobl_Track
+              ( nq : in integer32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    Series_and_Trackers.Track_Many_Paths(s,sols,p);
+    DoblDobl_Track(nq,sols,p);
+  end DoblDobl_Track;
+
+  procedure DoblDobl_Track
+              ( file : in file_type; nq : in integer32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                verbose : in boolean := false ) is
+
+    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := DoblDobl_Homotopy.Homotopy_System;
+    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
+      := Series_and_Homotopies.Create(h,nq+1,false);
+
+  begin
+    Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,verbose);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
     DoblDobl_Complex_Poly_Systems.Clear(h);
   end DoblDobl_Track;
@@ -151,32 +198,53 @@ package body Drivers_to_Series_Trackers is
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 verbose : in boolean := false ) is
 
-    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
-      := DoblDobl_Homotopy.Homotopy_System;
-    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1,false);
-    p : Homotopy_Continuation_Parameters.Parameters
+    p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    Series_and_Trackers.Track_Many_Paths(file,s,sols,p,verbose);
-    DoblDobl_CSeries_Poly_Systems.Clear(s);
-    DoblDobl_Complex_Poly_Systems.Clear(h);
+    DoblDobl_Track(file,nq,sols,p,verbose);
   end DoblDobl_Track;
 
   procedure QuadDobl_Track
               ( nq : in integer32;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
     s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,false);
-    p : Homotopy_Continuation_Parameters.Parameters
+
+  begin
+    Series_and_Trackers.Track_Many_Paths(s,sols,pars);
+    QuadDobl_CSeries_Poly_Systems.Clear(s);
+    QuadDobl_Complex_Poly_Systems.Clear(h);
+  end QuadDobl_Track;
+
+  procedure QuadDobl_Track
+              ( nq : in integer32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    Series_and_Trackers.Track_Many_Paths(s,sols,p);
+    QuadDobl_Track(nq,sols,p);
+  end QuadDobl_Track;
+
+  procedure QuadDobl_Track
+              ( file : in file_type; nq : in integer32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                verbose : in boolean := false ) is
+
+    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := QuadDobl_Homotopy.Homotopy_System;
+    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
+      := Series_and_Homotopies.Create(h,nq+1,false);
+
+  begin
+    Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,verbose);
     QuadDobl_CSeries_Poly_Systems.Clear(s);
     QuadDobl_Complex_Poly_Systems.Clear(h);
   end QuadDobl_Track;
@@ -186,17 +254,11 @@ package body Drivers_to_Series_Trackers is
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 verbose : in boolean := false ) is
 
-    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
-      := QuadDobl_Homotopy.Homotopy_System;
-    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1,false);
-    p : Homotopy_Continuation_Parameters.Parameters
+    p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    Series_and_Trackers.Track_Many_Paths(file,s,sols,p,verbose);
-    QuadDobl_CSeries_Poly_Systems.Clear(s);
-    QuadDobl_Complex_Poly_Systems.Clear(h);
+    QuadDobl_Track(file,nq,sols,p,verbose);
   end QuadDobl_Track;
 
   procedure Write_Timer
