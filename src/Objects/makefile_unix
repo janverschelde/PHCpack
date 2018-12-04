@@ -3513,6 +3513,7 @@ phcpy2c2.so: parameter.o lib2path.o
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/schubert.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/mapcon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/series.c
+	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/padcon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/syspool.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/jump_track.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/next_track.c
@@ -3568,6 +3569,7 @@ phcpy2c3.so: parameter.o lib2path.o
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/schubert.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/mapcon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/series.c
+	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/padcon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/syspool.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/jump_track.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/next_track.c
