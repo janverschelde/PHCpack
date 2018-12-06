@@ -205,6 +205,15 @@ computes series expansions for solution curves.
 .. automodule:: series
    :members:
 
+functions in the module curves
+------------------------------
+
+Power series are input to Padé approximants,
+which provide accurate predictors to approximate algebraic curves.
+
+.. automodule:: curves
+   :members:
+
 a graphical user interface
 ==========================
 

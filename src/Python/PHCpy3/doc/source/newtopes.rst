@@ -20,6 +20,9 @@ power series.  In this field, Newton's method computes power series
 solutions of polynomial systems.
 The module **phcpy.series** exports functions to compute power series
 with Newton's method.
+Power series are input to Padé approximants,
+which lead to more accurate path trackers,
+exported by the module **phcpy.curves**.
 
 convex hulls of lattice polytopes
 ---------------------------------
@@ -298,3 +301,9 @@ In the session below, the output is formatted with continuation symbols.
 Starting at the solution for ``s = 0``, the series solution
 allows to predict the solution as the plane moves away from ``y = 0``
 towards ``y = 1``.
+
+approximating algebraic curves
+------------------------------
+
+Power series are the input to algorithms to construct rational
+approximations, also called Padé approximants.
