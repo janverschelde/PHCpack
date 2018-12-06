@@ -1,5 +1,6 @@
 Wed 5 Dec 2018 : new module curves, to export Pade continuation,
   defines the tuning of the homotopy continuation parameters.
+  Wrapped the path trackers in the new module curves.py.
 
 Sun 11 Nov 2018 : prepare files setup.py, __init__.py, and conf.py, for
   version 0.8.9 of phcpy for python2 and python3.
