@@ -495,7 +495,7 @@ package body Series_and_Trackers is
     dd_step := create(0.0);
     Correct(wrk,dd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
     nbrcorrs := nbrcorrs + nbrit;
-    sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(-t));
+    sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     DoblDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -574,7 +574,7 @@ package body Series_and_Trackers is
     qd_step := create(0.0);
     Correct(wrk,qd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
     nbrcorrs := nbrcorrs + nbrit;
-    sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(-t));
+    sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -767,7 +767,7 @@ package body Series_and_Trackers is
     Correct(file,wrk,dd_step,tolcorrres,pars.corsteps,nbrit,
             wrk_sol,err,rco,res,verbose);
     nbrcorrs := nbrcorrs + nbrit;
-    sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(-t));
+    sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     DoblDobl_CSeries_Poly_Systems.Clear(wrk);
@@ -866,7 +866,7 @@ package body Series_and_Trackers is
     Correct(file,wrk,qd_step,tolcorrres,pars.corsteps,nbrit,
             wrk_sol,err,rco,res,verbose);
     nbrcorrs := nbrcorrs + nbrit;
-    sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(-t));
+    sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);

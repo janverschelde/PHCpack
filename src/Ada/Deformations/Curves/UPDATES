@@ -1,3 +1,6 @@
+Wed 5 Dec 2018 : flipped the sign of the t when assigning to the solution
+  data structure at the end of tracking a path in series_and_trackers.adb.
+
 Tue 4 Dec 2018 : added new_line(file); after printing solutions
   in series_and_trackers.adb.
 
