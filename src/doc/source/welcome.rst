@@ -546,6 +546,11 @@ global optimization, and computational physics:
    **Stationary points of the finite length constant modulus optimization**.
    *Signal Processing* 82(4): 625-641, 2002.
 
+#. Hamadi Jamali:
+   **The unsupervised optimum linear finite length filter for fourth order
+   wide sense stationary single output systems**.
+   *Digital Signal Processing*, in press, 2018.
+
 #. A. Jensen, A. Leykin, and J. Yu:
    **Computing tropical curves via homotopy continuation**.
    *Experimental Mathematics* 25(1): 83--93, 2016.
@@ -568,8 +573,9 @@ global optimization, and computational physics:
    and Control Conference*, Toronto, Canada, 02-05 August 2010.
 
 #. Dimitra Kosta and Kaie Kubjas:
-   **Geometry of symmetry group-based models**.
-   arXiv:1705.09228v2 [q-bio.PE] 17 Aug 2017
+   **Maximum Likelihood Estimation of Symmetric Group-Based Models 
+   via Numerical Algebraic Geometry**.
+   *Bulletin of Mathematical Biology*, October 2018, pages 1-24.
 
 #. P.U. Lamalle, A. Messiaen, P. Dumortier, F. Durodie, M. Evrard, F. Louche:
    **Study of mutual coupling effects in the antenna array of the ICRH
@@ -872,7 +878,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-108. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+109. Ali Baharev, Ferenc Domes, Arnold Neumaier:
      **A robust approach for finding all well-separated solutions of
      sparse systems of nonlinear equations**.
      *Numerical Algorithms* 76:163-189, 2017.
@@ -977,7 +983,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-130. Bo Dong, Bo Yu, and Yan Yu:
+131. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -996,7 +1002,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-133. B. Sturmfels:
+134. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
