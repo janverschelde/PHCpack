@@ -393,7 +393,7 @@ package body Series_and_Trackers is
        then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
       end if;
       Set_Step(t,step,pars.maxsize,onetarget);
-      exit when (step < pars.minsize);
+     -- exit when (step < pars.minsize); -- wait to check predres
       loop
         wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
         predres := Residual_Prediction(wrk,wrk_sol,step);
@@ -402,7 +402,7 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
-      exit when (step < pars.minsize);
+      exit when ((step < pars.minsize) and (predres > pars.alpha));
       Correct(wrk,step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
       nbrcorrs := nbrcorrs + nbrit;
       Standard_Complex_Series_Vectors.Clear(srv);
@@ -478,7 +478,7 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
-      exit when (step < pars.minsize);
+      exit when ((step < pars.minsize) and (predres > pars.alpha));
       Correct(wrk,dd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
       nbrcorrs := nbrcorrs + nbrit;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
@@ -557,7 +557,7 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
-      exit when (step < pars.minsize);
+      exit when ((step < pars.minsize) and (predres > pars.alpha));
       Correct(wrk,qd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
       nbrcorrs := nbrcorrs + nbrit;
       QuadDobl_Pade_Approximants.Clear(pv);
@@ -652,7 +652,7 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
-      exit when (step < pars.minsize);
+      exit when ((step < pars.minsize) and (predres > pars.alpha));
       Correct(file,wrk,step,tolcorrres,pars.corsteps,nbrit,
               wrk_sol,err,rco,res,verbose);
       nbrcorrs := nbrcorrs + nbrit;
@@ -748,7 +748,7 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
-      exit when (step < pars.minsize);
+      exit when ((step < pars.minsize) and (predres > pars.alpha));
       Correct(file,wrk,dd_step,tolcorrres,pars.corsteps,nbrit,
               wrk_sol,err,rco,res,verbose);
       nbrcorrs := nbrcorrs + nbrit;
@@ -847,7 +847,7 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Update_Step_Sizes(minsize,maxsize,step);
-      exit when (step < pars.minsize);
+      exit when ((step < pars.minsize) and (predres > pars.alpha));
       Correct(file,wrk,qd_step,tolcorrres,pars.corsteps,nbrit,
               wrk_sol,err,rco,res,verbose);
       nbrcorrs := nbrcorrs + nbrit;

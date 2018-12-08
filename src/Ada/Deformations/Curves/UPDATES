@@ -1,3 +1,6 @@
+Fri 7 Dec 2018 : only drop out with too small step size if the predictor
+  residual is larger than alpha, modified series_and_trackers.adb.
+
 Wed 5 Dec 2018 : flipped the sign of the t when assigning to the solution
   data structure at the end of tracking a path in series_and_trackers.adb.
 
