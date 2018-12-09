@@ -1,5 +1,5 @@
 Sat 8 Dec 2018 : to the module curves.py added extra function to document
-  better each parameter, in the python2 version.
+  better each parameter, in the python2 version.  Updated for python3 too.
 
 Thu 6 Dec 2018 : updated the documentation with a few words about the
   new module curves.

@@ -11,6 +11,102 @@ def get_homotopy_continuation_parameter(idx):
     from phcpy.phcpy2c3 import py2c_padcon_get_homotopy_continuation_parameter
     return py2c_padcon_get_homotopy_continuation_parameter(idx)
 
+def get_gamma_constant():
+    """
+    Returns the current value of the gamma constant in the homotopy.
+    A random value for gamma will guarantee the absence of singular
+    solutions along a path, as unlucky choices belong to an algebraic set.
+    A tuple of two floats is returned, respectively with the real
+    and imaginary parts of the complex value for the gamma constant.
+    """
+    return get_homotopy_continuation_parameter(1)
+
+def get_degree_of_numerator():
+    """
+    Returns the current value of the degree of the numerator of the
+    Pade approximant, evaluated to predict the next solution on a path.
+    """
+    return get_homotopy_continuation_parameter(2)
+
+def get_degree_of_denominator():
+    """
+    Returns the current value of the degree of the denominator of the
+    Pade approximant, evaluated to predict the next solution on a path.
+    """
+    return get_homotopy_continuation_parameter(3)
+
+def get_maximum_step_size():
+    """
+    Returns the current value of the maximum step size.
+    The step size is the increment to the continuation parameter.
+    """
+    return get_homotopy_continuation_parameter(4)
+
+def get_minimum_step_size():
+    """
+    Returns the current value of the minimum step size.
+    The path tracking will stop if the step size is larger than the
+    minimum step size and if the predictor residual is larger than
+    the value for alpha, the tolerance on the predictor residual.
+    """
+    return get_homotopy_continuation_parameter(5)
+
+def get_series_beta_factor():
+    """
+    Returns the current multiplication factor of the step size set
+    by the power series approximation for the algebraic curve.
+    """
+    return get_homotopy_continuation_parameter(6)
+
+def get_pole_radius_beta_factor():
+    """
+    Returns the current multiplication factor of the smallest pole radius.
+    The smallest radius of the poles of the Pade approximant gives
+    an upper bound on a safe step size.  The step size is set by
+    multiplication of the smallest pole radius with the beta factor. 
+    """
+    return get_homotopy_continuation_parameter(7)
+
+def get_predictor_residual_alpha():
+    """
+    Returns the current tolerance on the residual of the predictor.
+    This alpha parameter controls the accuracy of the tracking.
+    As long as the residual of the evaluated predicted solution
+    is larger than alpha, the step size is cut in half.
+    """
+    return get_homotopy_continuation_parameter(8)
+
+def get_corrector_residual_tolerance():
+    """
+    Returns the current tolerance on the corrector residual.
+    The corrector stops if the residual of the current approximation
+    drops below this tolerance.
+    """
+    return get_homotopy_continuation_parameter(9)
+
+def get_zero_series_coefficient_tolerance():
+    """
+    Returns the current tolerance on the series coefficient to be zero.
+    A coefficient in a power series will be considered as zero if
+    its absolute value drops below this tolerance.
+    """
+    return get_homotopy_continuation_parameter(10)
+
+def get_maximum_corrector_steps():
+    """
+    Returns the current value of the maximum number of corrector steps
+    executed after the predictor stage.
+    """
+    return get_homotopy_continuation_parameter(11)
+
+def get_maximum_steps_on_path():
+    """
+    Returns the current value of the maximum number of steps on a path.
+    The path trackers abandons the tracking of a path once the number
+    of steps reaches this maximum number.
+    """
+    return get_homotopy_continuation_parameter(12)
+
 def set_homotopy_continuation_parameter(idx, val):
     """
     Sets the value of the homotopy continuation parameter with index idx,
@@ -203,6 +299,18 @@ def test(precision='d'):
     """
     pars = [get_homotopy_continuation_parameter(k) for k in range(1, 13)]
     print(pars)
+    print('gamma constant :', get_gamma_constant())
+    print('degree of numerator :', get_degree_of_numerator())
+    print('degree of denominator :', get_degree_of_denominator())
+    print('maximum step size :', get_maximum_step_size())
+    print('minimum step size :', get_minimum_step_size())
+    print('series beta factor :', get_series_beta_factor())
+    print('pole radius beta factor :', get_pole_radius_beta_factor())
+    print('predictor residual alpha :', get_predictor_residual_alpha())
+    print('corrector residual tolerance :', get_corrector_residual_tolerance())
+    print('coefficient tolerance :',  get_zero_series_coefficient_tolerance())
+    print('maximum #corrector steps :', get_maximum_corrector_steps())
+    print('maximum #steps on path :',  get_maximum_steps_on_path())
     tune_homotopy_continuation_parameters()
     from phcpy.families import katsura
     k3 = katsura(3)
