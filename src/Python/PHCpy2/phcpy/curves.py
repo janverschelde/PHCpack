@@ -184,9 +184,7 @@ def standard_track(target, start, sols, filename="", verbose=False):
     from phcpy.phcpy2c2 import py2c_copy_standard_container_to_target_system
     from phcpy.phcpy2c2 import py2c_copy_standard_container_to_start_system
     from phcpy.phcpy2c2 import py2c_copy_standard_container_to_start_solutions
-    from phcpy.phcpy2c2 import py2c_create_standard_homotopy
     from phcpy.phcpy2c2 import py2c_create_standard_homotopy_with_gamma
-    from phcpy.phcpy2c2 import py2c_solve_by_standard_homotopy_continuation
     from phcpy.phcpy2c2 import py2c_clear_standard_homotopy
     from phcpy.phcpy2c2 import py2c_clear_standard_operations_data
     from phcpy.interface import store_standard_system
@@ -199,10 +197,10 @@ def standard_track(target, start, sols, filename="", verbose=False):
     py2c_copy_standard_container_to_target_system()
     store_standard_system(start, nbvar=dim)
     py2c_copy_standard_container_to_start_system()
-    (regamma, imgamma) = get_homotopy_continuation_parameter(1)
-    py2c_create_standard_homotopy_with_gamma(regamma, imgamma)
     store_standard_solutions(dim, sols)
     py2c_copy_standard_container_to_start_solutions()
+    (regamma, imgamma) = get_homotopy_continuation_parameter(1)
+    py2c_create_standard_homotopy_with_gamma(regamma, imgamma)
     nbc = len(filename)
     fail = py2c_padcon_standard_track(nbc,filename,int(verbose))
     # py2c_clear_standard_homotopy()
@@ -225,9 +223,7 @@ def dobldobl_track(target, start, sols, filename="", verbose=False):
     from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_target_system
     from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_start_system
     from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_start_solutions
-    from phcpy.phcpy2c2 import py2c_create_dobldobl_homotopy
     from phcpy.phcpy2c2 import py2c_create_dobldobl_homotopy_with_gamma
-    from phcpy.phcpy2c2 import py2c_solve_by_dobldobl_homotopy_continuation
     from phcpy.phcpy2c2 import py2c_clear_dobldobl_homotopy
     from phcpy.phcpy2c2 import py2c_clear_dobldobl_operations_data
     from phcpy.interface import store_dobldobl_system
@@ -241,10 +237,11 @@ def dobldobl_track(target, start, sols, filename="", verbose=False):
     store_dobldobl_system(start, nbvar=dim)
     py2c_copy_dobldobl_container_to_start_system()
     (regamma, imgamma) = get_homotopy_continuation_parameter(1)
-    py2c_create_dobldobl_homotopy_with_gamma(regamma, imgamma)
     store_dobldobl_solutions(dim, sols)
     py2c_copy_dobldobl_container_to_start_solutions()
     nbc = len(filename)
+    (regamma, imgamma) = get_homotopy_continuation_parameter(1)
+    py2c_create_dobldobl_homotopy_with_gamma(regamma, imgamma)
     fail = py2c_padcon_dobldobl_track(nbc,filename,int(verbose))
     # py2c_clear_dobldobl_homotopy()
     # py2c_clear_dobldobl_operations_data()
@@ -266,9 +263,7 @@ def quaddobl_track(target, start, sols, filename="", verbose=False):
     from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_target_system
     from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_start_system
     from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_start_solutions
-    from phcpy.phcpy2c2 import py2c_create_quaddobl_homotopy
     from phcpy.phcpy2c2 import py2c_create_quaddobl_homotopy_with_gamma
-    from phcpy.phcpy2c2 import py2c_solve_by_quaddobl_homotopy_continuation
     from phcpy.phcpy2c2 import py2c_clear_quaddobl_homotopy
     from phcpy.phcpy2c2 import py2c_clear_quaddobl_operations_data
     from phcpy.interface import store_quaddobl_system
@@ -282,9 +277,10 @@ def quaddobl_track(target, start, sols, filename="", verbose=False):
     store_quaddobl_system(start, nbvar=dim)
     py2c_copy_quaddobl_container_to_start_system()
     (regamma, imgamma) = get_homotopy_continuation_parameter(1)
-    py2c_create_quaddobl_homotopy_with_gamma(regamma, imgamma)
     store_quaddobl_solutions(dim, sols)
     py2c_copy_quaddobl_container_to_start_solutions()
+    (regamma, imgamma) = get_homotopy_continuation_parameter(1)
+    py2c_create_quaddobl_homotopy_with_gamma(regamma, imgamma)
     nbc = len(filename)
     fail = py2c_padcon_quaddobl_track(nbc,filename,int(verbose))
     # py2c_clear_quaddobl_homotopy()
