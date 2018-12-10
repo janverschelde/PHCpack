@@ -307,3 +307,71 @@ approximating algebraic curves
 
 Power series are the input to algorithms to construct rational
 approximations, also called Padé approximants.
+
+A session can start with the tuning of the homotopy
+continuation parameters, as indicated below:
+
+::
+
+   >>> from phcpy.curves import tune_homotopy_continuation_parameters as tune
+   >>> tune()
+   Values of the HOMOTOPY CONTINUATION PARAMETERS :
+    1. gamma : (-0.797398052335-0.603453681844j)
+    2. degree of numerator of Pade approximant    : 4
+    3. degree of denominator of Pade approximant  : 4
+    4. maximum step size                          : 0.1
+    5. minimum step size                          : 1e-06
+    6. multiplication factor of the series step   : 0.5
+    7. multiplication factor of the pole radius   : 0.5
+    8. tolerance on the residual of the predictor : 0.0001
+    9. tolerance on the residual of the corrector : 1e-12
+   10. tolerance on zero series coefficients      : 1e-12
+   11. maximum number of corrector steps          : 4
+   12. maximum steps on a path                    : 1000
+   To change a value, give an index (0 to exit) : 0
+
+The function ``tune()`` enters an interactive loop.
+In this loop the user can alter all values for the twelve parameters.
+In the session above, the user entered zero to exit the loop
+without modifications to the default values of the parameters.
+The parameters can be queried and altered separately with the
+``get_`` and ``set_`` functions of the module curves.
+
+To illustrate the application of the trackers,
+we consider a small example of the Katsura family of systems.
+
+::
+
+   >>> from phcpy.families import katsura
+   >>> k3 = katsura(3)
+   >>> from phcpy.solver import total_degree_start_system as startsys
+   >>> (k3q, k3qsols) = startsys(k3)
+   >>> len(k3qsols)
+   8
+
+The total degree start system for this problem of three quadrics
+has eight solutions.  With the target system in ``k3``, 
+the start system in ``k3q``, and the start solutions in ``k3qsols``,
+we can launch the path tracker in standard double precision as follows:
+
+::
+
+   >>> from phcpy.curves import standard_track as track
+   >>> k3sols = track(k3, k3q, k3qsols, "/tmp/out", True)
+
+The solutions at the end of the paths are assigned to ``k3sols``.
+The output will be written to the file with name ``/tmp/out``
+and the verbose flag is set to ``True``.
+The verbose flag is optional.  If no output to file is needed,
+then also the file name may be omitted.
+If an emtpy string is given as the value for the file name
+and ``True`` for the verbose option, then all extra output
+is written to screen.
+
+To print the last 40 lines of ``/tmp/out`` one can do the following:
+
+::
+
+   >> file = open("/tmp/out")
+   >> lines = file.readlines()
+   >> for k in range(-40,0): print(lines[k][:-1])
