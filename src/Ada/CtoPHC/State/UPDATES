@@ -1,3 +1,6 @@
+Mon 10 Dec 2018 : in use_padcon.adb, added a close(file) at the end of
+  the track procedures to ensure all output ended up on file.
+
 Tue 4 Dec 2018 : fixed bug with getting the file name in use_padcon.adb,
   added verbose flag, documented in use_padcon.ads and use_c2phc4c.ads.
   Updated use_padcon.adb, so the verbose, not-to-file options writes all

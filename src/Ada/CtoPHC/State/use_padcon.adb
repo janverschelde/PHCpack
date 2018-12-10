@@ -172,6 +172,7 @@ function use_padcon ( job : integer32;
       Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
       Drivers_to_Series_Trackers.Standard_Track
         (file,target'last,sols,homconpars.all,verbose);
+      close(file);
     end if;
     Standard_Solutions_Container.Clear;
     Standard_Solutions_Container.Initialize(sols);
@@ -218,6 +219,7 @@ function use_padcon ( job : integer32;
       Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
       Drivers_to_Series_Trackers.DoblDobl_Track
         (file,target'last,sols,homconpars.all,verbose);
+      close(file);
     end if;
     DoblDobl_Solutions_Container.Clear;
     DoblDobl_Solutions_Container.Initialize(sols);
@@ -264,6 +266,7 @@ function use_padcon ( job : integer32;
       Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
       Drivers_to_Series_Trackers.QuadDobl_Track
         (file,target'last,sols,homconpars.all,verbose);
+      close(file);
     end if;
     QuadDobl_Solutions_Container.Clear;
     QuadDobl_Solutions_Container.Initialize(sols);
