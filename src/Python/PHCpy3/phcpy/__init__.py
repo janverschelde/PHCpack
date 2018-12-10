@@ -64,6 +64,8 @@ maps
    that have exactly two monomials in every equation (binomial systems).
 series
    Newton's method to compute truncated power series solutions.
+curves
+   approximate algebraic curves with rational expressions: Pade approximants
 dashboard
    prototype of a graphical user interface with Tkinter
 server
@@ -131,4 +133,4 @@ except:
     print('Is the phcpy2c3.so not suited for this platform?')
 
 # The version number is defined as a data attribute.
-__version__ = '0.8.9'
+__version__ = '0.9.0'
