@@ -1,3 +1,4 @@
+with Ada.Calendar;
 with text_io;                            use text_io;
 with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
@@ -54,13 +55,14 @@ package body Series_Path_Trackers is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
-    verbose,tofile : boolean;
+    monitor,verbose,tofile : boolean;
     file : file_type;
     timer : Timing_Widget;
     prevgamma : Standard_Complex_Numbers.Complex_Number;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
     minsize,maxsize,smallest,largest : double_float;
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
@@ -71,7 +73,7 @@ package body Series_Path_Trackers is
     if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
      then Standard_Reset_Gamma(p.gamma);
     end if;
-    Set_Output(file,verbose,tofile);
+    Set_Output(file,monitor,verbose,tofile);
     if tofile
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
@@ -81,7 +83,9 @@ package body Series_Path_Trackers is
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
-      put("Tracking path "); put(i,1); put_line(" ...");
+      if monitor
+       then put("Tracking path "); put(i,1); put_line(" ...");
+      end if;
       if tofile then
         Series_and_Trackers.Track_One_Path
           (file,s,ls.all,p,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
@@ -118,6 +122,7 @@ package body Series_Path_Trackers is
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,0,timer);
       Refine_Roots(file,nq,sols);
+      Write_Conclusion(file,start_moment);
     else
       Series_and_Trackers.Write_Total_Path_Statistics
         (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
@@ -127,6 +132,7 @@ package body Series_Path_Trackers is
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,0,timer);
       Refine_Roots(standard_output,nq,sols);
+      Write_Conclusion(standard_output,start_moment);
     end if;
     Standard_Complex_Poly_Systems.Clear(h);
     Standard_CSeries_Poly_Systems.Clear(s);
@@ -148,7 +154,7 @@ package body Series_Path_Trackers is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
-    verbose,tofile : boolean;
+    monitor,verbose,tofile : boolean;
     file : file_type;
     timer : Timing_Widget;
     ddgamma : constant DoblDobl_Complex_Numbers.Complex_Number
@@ -159,6 +165,7 @@ package body Series_Path_Trackers is
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
     minsize,maxsize,smallest,largest : double_float;
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
@@ -169,7 +176,7 @@ package body Series_Path_Trackers is
     if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
      then DoblDobl_Reset_Gamma(p.gamma);
     end if;
-    Set_Output(file,verbose,tofile);
+    Set_Output(file,monitor,verbose,tofile);
     if tofile
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
@@ -179,7 +186,9 @@ package body Series_Path_Trackers is
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
-      put("Tracking path "); put(i,1); put_line(" ...");
+      if monitor
+       then put("Tracking path "); put(i,1); put_line(" ...");
+      end if;
       if tofile then
         Series_and_Trackers.Track_One_Path
           (file,s,ls.all,p,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
@@ -217,6 +226,7 @@ package body Series_Path_Trackers is
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,1,timer);
       Refine_Roots(file,nq,sols);
+      Write_Conclusion(file,start_moment);
     else
       Series_and_Trackers.Write_Total_Path_Statistics
         (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
@@ -226,6 +236,7 @@ package body Series_Path_Trackers is
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,1,timer);
       Refine_Roots(standard_output,nq,sols);
+      Write_Conclusion(standard_output,start_moment);
     end if;
     DoblDobl_Complex_Poly_Systems.Clear(h);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
@@ -247,7 +258,7 @@ package body Series_Path_Trackers is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
-    verbose,tofile : boolean;
+    monitor,verbose,tofile : boolean;
     file : file_type;
     timer : Timing_Widget;
     qdgamma : constant QuadDobl_Complex_Numbers.Complex_Number
@@ -258,6 +269,7 @@ package body Series_Path_Trackers is
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
     minsize,maxsize,smallest,largest : double_float;
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
   begin
    -- put_line("The homotopy system :"); put_line(h);
@@ -268,7 +280,7 @@ package body Series_Path_Trackers is
     if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
      then QuadDobl_Reset_Gamma(p.gamma);
     end if;
-    Set_Output(file,verbose,tofile);
+    Set_Output(file,monitor,verbose,tofile);
     if tofile
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
     end if;
@@ -278,7 +290,9 @@ package body Series_Path_Trackers is
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
-      put("Tracking path "); put(i,1); put_line(" ...");
+      if monitor
+       then put("Tracking path "); put(i,1); put_line(" ...");
+      end if;
       if tofile then
         Series_and_Trackers.Track_One_Path
           (file,s,ls.all,p,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
@@ -315,6 +329,7 @@ package body Series_Path_Trackers is
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,2,timer);
       Refine_Roots(file,nq,sols);
+      Write_Conclusion(file,start_moment);
     else
       Series_and_Trackers.Write_Total_Path_Statistics
         (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
@@ -324,6 +339,7 @@ package body Series_Path_Trackers is
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,2,timer);
       Refine_Roots(standard_output,nq,sols);
+      Write_Conclusion(standard_output,start_moment);
     end if;
     QuadDobl_Complex_Poly_Systems.Clear(h);
     QuadDobl_CSeries_Poly_Systems.Clear(s);

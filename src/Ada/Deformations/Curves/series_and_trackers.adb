@@ -899,7 +899,7 @@ package body Series_and_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false ) is
+                monitor,verbose : in boolean := false ) is
 
     use Standard_Complex_Solutions;
 
@@ -918,7 +918,9 @@ package body Series_and_Trackers is
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
-      put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
+      if monitor
+       then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
+      end if;
       Track_One_Path
         (file,hom,ls.all,pars,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
       if verbose
@@ -943,7 +945,7 @@ package body Series_and_Trackers is
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false ) is
+                monitor,verbose : in boolean := false ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -962,7 +964,9 @@ package body Series_and_Trackers is
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
-      put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
+      if monitor
+       then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
+      end if;
       Track_One_Path
         (file,hom,ls.all,pars,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
       if verbose
@@ -987,7 +991,7 @@ package body Series_and_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false ) is
+                monitor,verbose : in boolean := false ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -1006,7 +1010,9 @@ package body Series_and_Trackers is
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
-      put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
+      if monitor
+       then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
+      end if;
       Track_One_Path
         (file,hom,ls.all,pars,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
       if verbose

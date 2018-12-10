@@ -1,4 +1,5 @@
 with Communications_with_User;           use Communications_with_User;
+with Time_Stamps;
 with Characters_and_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with DoblDobl_Complex_Numbers_cv;
@@ -18,6 +19,8 @@ with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 with Series_and_Homotopies;
 with Series_and_Trackers;
+with Write_Seed_Number;
+with Greeting_Banners;
 
 package body Drivers_to_Series_Trackers is
 
@@ -77,12 +80,16 @@ package body Drivers_to_Series_Trackers is
   end QuadDobl_Reset_Gamma;
 
   procedure Set_Output
-              ( file : in out file_type; verbose,tofile : out boolean ) is
+              ( file : in out file_type;
+                monitor,verbose,tofile : out boolean ) is
 
     ans : character;
 
   begin
     new_line;
+    put("Monitor progress of the path tracker ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    monitor := (ans = 'y');
     put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
     put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
@@ -90,6 +97,11 @@ package body Drivers_to_Series_Trackers is
     if tofile then
       put_line("Reading the name of the output file ...");
       Read_Name_and_Create_File(file);
+      if not monitor then
+        new_line;
+        put_line("See the output file for results ...");
+        new_line;
+      end if;
     end if;
   end Set_Output;
 
@@ -280,6 +292,23 @@ package body Drivers_to_Series_Trackers is
       when others => null;
     end case;
   end Write_Timer;
+
+  procedure Write_Conclusion 
+              ( file : in file_type; start_moment : in Ada.Calendar.Time ) is
+
+    ended_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+
+  begin
+    new_line(file);
+    put(file,"PHC ran from ");
+    Time_Stamps.Write_Time_Stamp(file,start_moment);
+    put(file," till ");
+    Time_Stamps.Write_Time_Stamp(file,ended_moment);
+    put_line(file,".");
+    Time_Stamps.Write_Elapsed_Time(file,start_moment,ended_moment);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
+  end Write_Conclusion;
 
   procedure Refine_Roots
               ( file : in file_type; nq : in integer32;

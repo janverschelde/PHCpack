@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Ada.Calendar;
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
@@ -35,12 +36,15 @@ package Drivers_to_Series_Trackers is
   --   Resets the gamma with a new QuadDobl_Homotopy.Create.
 
   procedure Set_Output
-              ( file : in out file_type; verbose,tofile : out boolean );
+              ( file : in out file_type;
+                monitor,verbose,tofile : out boolean );
 
   -- DESCRIPTION :
   --   Prompts the user if verbose or not, and if so, whether the output
   --   should be written to a file or not, which sets tofile to true.
   --   If tofile, then file is created, ready for output.
+  --   If the user wants to monitor the progress of the trackers,
+  --   then the flag monitor is true on return.
 
   procedure Standard_Track
               ( nq : in integer32;
@@ -118,6 +122,13 @@ package Drivers_to_Series_Trackers is
   --   and denominator of the Pade approximants.
   --   The precision is 0, 1, or 2, respectively
   --   for double, double double, or quad double precision.
+
+  procedure Write_Conclusion 
+              ( file : in file_type; start_moment : in Ada.Calendar.Time );
+
+  -- DESCRIPTION :
+  --   Given the moment of the start of the computations, writes the time
+  --   stamp for the start and current moment and the seed number to file.
 
   procedure Refine_Roots
               ( file : in file_type; nq : in integer32;

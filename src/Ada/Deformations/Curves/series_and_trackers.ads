@@ -264,19 +264,19 @@ package Series_and_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false );
+                monitor,verbose : in boolean := false );
   procedure Track_Many_Paths
               ( file : in file_type;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false );
+                monitor,verbose : in boolean := false );
   procedure Track_Many_Paths
               ( file : in file_type;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false );
+                monitor,verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Tracks the paths starting at the solutions in the list sols,

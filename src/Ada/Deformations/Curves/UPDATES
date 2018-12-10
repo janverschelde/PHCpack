@@ -1,3 +1,6 @@
+Mon 10 Dec 2018 : added time stamp writing to drivers_to_series_trackers,
+  updated series_and_trackers, and series_path_trackers.adb.
+
 Fri 7 Dec 2018 : only drop out with too small step size if the predictor
   residual is larger than alpha, modified series_and_trackers.adb.
 
