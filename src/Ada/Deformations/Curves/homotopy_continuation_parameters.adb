@@ -12,7 +12,7 @@ package body Homotopy_Continuation_Parameters is
     res.sbeta := 0.5;
     res.pbeta := 0.5;
     res.gamma := Standard_Random_Numbers.Random1;
-    res.tolres := 1.0E-12;
+    res.tolres := 1.0E-9;
     res.epsilon := 1.0E-12;
     res.numdeg := 4;
     res.dendeg := 4;

@@ -27,19 +27,19 @@ package Series_and_Trackers is
                 t : in double_float; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
-                err,rco,res : out double_float );
+                err,rco,res : out double_float; fail : out boolean );
   procedure Correct
               ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 t : in double_double; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
-                err,rco,res : out double_double );
+                err,rco,res : out double_double; fail : out boolean );
   procedure Correct
               ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 t : in quad_double; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double; fail : out boolean );
 
   -- DESCRIPTION :
   --   Applies Newton's method to correct the solution, silent version,
@@ -57,7 +57,10 @@ package Series_and_Trackers is
   --   sol      the correct value for the solution;
   --   err      magnitude of the correction term;
   --   rco      estimate for the inverse condition number;
-  --   res      magnitude of the residual.
+  --   res      magnitude of the residual;
+  --   fail     true if tolres was not met within maxit steps,
+  --            and/or Newton's method diverged,
+  --            false if Newton's method converged well.
 
   procedure Correct
               ( file : in file_type;
@@ -65,7 +68,7 @@ package Series_and_Trackers is
                 t : in double_float; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
-                err,rco,res : out double_float;
+                err,rco,res : out double_float; fail : out boolean;
                 verbose : in boolean := false );
   procedure Correct
               ( file : in file_type;
@@ -73,7 +76,7 @@ package Series_and_Trackers is
                 t : in double_double; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
-                err,rco,res : out double_double;
+                err,rco,res : out double_double; fail : out boolean;
                 verbose : in boolean := false );
   procedure Correct
               ( file : in file_type;
@@ -81,7 +84,7 @@ package Series_and_Trackers is
                 t : in quad_double; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double;
+                err,rco,res : out quad_double; fail : out boolean;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -102,7 +105,10 @@ package Series_and_Trackers is
   --   nbrit    number of iterations done;
   --   err      magnitude of the correction term;
   --   rco      estimate for the inverse condition number;
-  --   res      magnitude of the residual.
+  --   res      magnitude of the residual;
+  --   fail     true if tolres was not met within maxit steps,
+  --            and/or Newton's method diverged,
+  --            false if Newton's method converged well.
 
   procedure Set_Step
               ( t,step : in out double_float;

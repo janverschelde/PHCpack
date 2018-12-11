@@ -1,3 +1,7 @@
+Tue 11 Dec 2018 : added a corrector feedback loop to the package
+  series_and_trackers, relaxed the default corrector residual tolerance
+  in homotopy_continuation_parameters.adb.
+
 Mon 10 Dec 2018 : added time stamp writing to drivers_to_series_trackers,
   updated series_and_trackers, and series_path_trackers.adb.
 

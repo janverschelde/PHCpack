@@ -48,7 +48,7 @@ package body Series_and_Trackers is
                 t : in double_float; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
-                err,rco,res : out double_float ) is
+                err,rco,res : out double_float; fail : out boolean ) is
 
     p : Standard_Complex_Poly_Systems.Poly_Sys(hom'range)
       := Series_and_Homotopies.Eval(hom,t);
@@ -58,16 +58,24 @@ package body Series_and_Trackers is
        := Standard_Complex_Poly_SysFun.Create(p);
     jf : Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
        := Standard_Complex_Jaco_Matrices.Create(jm);
+    prev_err,prev_res : double_float := 1.0;
 
     use Standard_Root_Refiners;
 
   begin
+    fail := true;
     nbrit := maxit;
     for k in 1..maxit loop
       Standard_Newton_Step(f,jf,sol,err,rco,res);
-      if res <= tolres
-       then nbrit := k; exit;
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        if ((res > prev_res) or (err > prev_err))
+         then nbrit := k; exit;
+        end if;
       end if;
+      prev_err := err; -- previous forward error
+      prev_res := res; -- previous backward error
     end loop;
     Standard_Complex_Poly_Systems.Clear(p);
     Standard_Complex_Poly_SysFun.Clear(f);
@@ -81,7 +89,7 @@ package body Series_and_Trackers is
                 t : in double_float; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
-                err,rco,res : out double_float;
+                err,rco,res : out double_float; fail : out boolean;
                 verbose : in boolean := false ) is
 
     p : Standard_Complex_Poly_Systems.Poly_Sys(hom'range)
@@ -92,10 +100,12 @@ package body Series_and_Trackers is
        := Standard_Complex_Poly_SysFun.Create(p);
     jf : Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
        := Standard_Complex_Jaco_Matrices.Create(jm);
+    prev_err,prev_res : double_float := 1.0;
 
     use Standard_Root_Refiners;
 
   begin
+    fail := true;
     nbrit := maxit;
     for k in 1..maxit loop
       Standard_Newton_Step(f,jf,sol,err,rco,res);
@@ -104,9 +114,15 @@ package body Series_and_Trackers is
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
-      if res <= tolres
-       then nbrit := k; exit;
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        if ((res > prev_res) or (err > prev_err))
+         then nbrit := k; exit;
+        end if;
       end if;
+      prev_err := err; -- previous forward error
+      prev_res := res; -- previous backward error
     end loop;
     Standard_Complex_Poly_Systems.Clear(p);
     Standard_Complex_Poly_SysFun.Clear(f);
@@ -119,7 +135,7 @@ package body Series_and_Trackers is
                 t : in double_double; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
-                err,rco,res : out double_double ) is
+                err,rco,res : out double_double; fail : out boolean ) is
 
     p : DoblDobl_Complex_Poly_Systems.Poly_Sys(hom'range)
       := Series_and_Homotopies.Eval(hom,t);
@@ -129,16 +145,24 @@ package body Series_and_Trackers is
        := DoblDobl_Complex_Poly_SysFun.Create(p);
     jf : DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
        := DoblDobl_Complex_Jaco_Matrices.Create(jm);
+    prev_err,prev_res : double_double := create(1.0);
 
     use DoblDobl_Root_Refiners;
 
   begin
+    fail := true;
     nbrit := maxit;
     for k in 1..maxit loop
       DoblDobl_Newton_Step(f,jf,sol,err,rco,res);
-      if res <= tolres
-       then nbrit := k; exit;
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then
+        if ((res > prev_res) or (err > prev_err))
+         then nbrit := k; exit;
+        end if;
       end if;
+      prev_err := err; -- previous forward error
+      prev_res := res; -- previous backward error
     end loop;
     DoblDobl_Complex_Poly_Systems.Clear(p);
     DoblDobl_Complex_Poly_SysFun.Clear(f);
@@ -152,7 +176,7 @@ package body Series_and_Trackers is
                 t : in double_double; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
-                err,rco,res : out double_double;
+                err,rco,res : out double_double; fail : out boolean;
                 verbose : in boolean := false ) is
 
     p : DoblDobl_Complex_Poly_Systems.Poly_Sys(hom'range)
@@ -163,10 +187,12 @@ package body Series_and_Trackers is
        := DoblDobl_Complex_Poly_SysFun.Create(p);
     jf : DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
        := DoblDobl_Complex_Jaco_Matrices.Create(jm);
+    prev_err,prev_res : double_double := create(1.0);
 
     use DoblDobl_Root_Refiners;
 
   begin
+    fail := true;
     nbrit := maxit;
     for k in 1..maxit loop
       DoblDobl_Newton_Step(f,jf,sol,err,rco,res);
@@ -175,9 +201,15 @@ package body Series_and_Trackers is
         put(file,"  rco : "); put(file,rco,3);
         put(file,"  res : "); put(file,res,3); new_line(file);
       end if;
-      if res <= tolres
-       then nbrit := k; exit;
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        if ((res > prev_res) or (err > prev_err))
+         then nbrit := k; exit;
+        end if;
       end if;
+      prev_err := err; -- previous forward error
+      prev_res := res; -- previous backward error
     end loop;
     DoblDobl_Complex_Poly_Systems.Clear(p);
     DoblDobl_Complex_Poly_SysFun.Clear(f);
@@ -190,7 +222,7 @@ package body Series_and_Trackers is
                 t : in quad_double; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double; fail : out boolean ) is
 
     p : QuadDobl_Complex_Poly_Systems.Poly_Sys(hom'range)
       := Series_and_Homotopies.Eval(hom,t);
@@ -200,16 +232,24 @@ package body Series_and_Trackers is
        := QuadDobl_Complex_Poly_SysFun.Create(p);
     jf : QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
        := QuadDobl_Complex_Jaco_Matrices.Create(jm);
+    prev_err,prev_res : quad_double := create(1.0);
 
     use QuadDobl_Root_Refiners;
 
   begin
+    fail := true;
     nbrit := maxit;
     for k in 1..nbrit loop
       QuadDobl_Newton_Step(f,jf,sol,err,rco,res);
-      if res <= tolres
-       then nbrit := k; exit;
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        if ((res > prev_res) or (err > prev_err))
+         then nbrit := k; exit;
+        end if;
       end if;
+      prev_err := err; -- previous forward error
+      prev_res := res; -- previous backward error
     end loop;
     QuadDobl_Complex_Poly_Systems.Clear(p);
     QuadDobl_Complex_Poly_SysFun.Clear(f);
@@ -223,7 +263,7 @@ package body Series_and_Trackers is
                 t : in quad_double; tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double;
+                err,rco,res : out quad_double; fail : out boolean;
                 verbose : in boolean := false ) is
 
     p : QuadDobl_Complex_Poly_Systems.Poly_Sys(hom'range)
@@ -234,10 +274,12 @@ package body Series_and_Trackers is
        := QuadDobl_Complex_Poly_SysFun.Create(p);
     jf : QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
        := QuadDobl_Complex_Jaco_Matrices.Create(jm);
+    prev_err,prev_res : quad_double := create(1.0);
 
     use QuadDobl_Root_Refiners;
 
   begin
+    fail := true;
     nbrit := maxit;
     for k in 1..maxit loop
       QuadDobl_Newton_Step(f,jf,sol,err,rco,res);
@@ -246,9 +288,15 @@ package body Series_and_Trackers is
         put(file,"  rco : "); put(file,rco,3);
         put(file,"  res : "); put(file,res,3); new_line(file);
       end if;
-      if res <= tolres
-       then nbrit := k; exit;
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        if ((res > prev_res) or (err > prev_err))
+         then nbrit := k; exit;
+        end if;
       end if;
+      prev_err := err; -- previous forward error
+      prev_res := res; -- previous backward error
     end loop;
     QuadDobl_Complex_Poly_Systems.Clear(p);
     QuadDobl_Complex_Poly_SysFun.Clear(f);
@@ -368,8 +416,9 @@ package body Series_and_Trackers is
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
     poles : Standard_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := pars.epsilon;
-    tolpredres : constant double_float := pars.alpha;
-    tolcorrres : constant double_float := pars.tolres;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
     t,step,update : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -386,7 +435,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       Standard_Complex_VecVecs.Clear(poles);
-      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolpredres);
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       Standard_Complex_Series_Vectors.Clear(eva);
       if frp > 0.0
@@ -395,26 +444,33 @@ package body Series_and_Trackers is
       Set_Step(t,step,pars.maxsize,onetarget);
      -- exit when (step < pars.minsize); -- wait to check predres
       loop
-        wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-        predres := Residual_Prediction(wrk,wrk_sol,step);
-        exit when (predres <= pars.alpha);
-        t := t - step; step := step/2.0; t := t + step;
+        loop
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
+          predres := Residual_Prediction(wrk,wrk_sol,step);
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Correct(wrk,step,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0;
         exit when (step < pars.minsize);
       end loop;
-      Update_Step_Sizes(minsize,maxsize,step);
-      exit when ((step < pars.minsize) and (predres > pars.alpha));
-      Correct(wrk,step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
-      nbrcorrs := nbrcorrs + nbrit;
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_Pade_Approximants.Clear(pv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
-      if t = 1.0
-       then nbrsteps := k; exit;
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
       end if;
       wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
-    Correct(wrk,0.0,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
+    Correct(wrk,0.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -439,8 +495,9 @@ package body Series_and_Trackers is
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := pars.epsilon;
-    tolpredres : constant double_float := pars.alpha;
-    tolcorrres : constant double_float := pars.tolres;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
     t,step,update : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
@@ -461,7 +518,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       DoblDobl_Complex_VecVecs.Clear(poles);
-      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolpredres);
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
@@ -470,30 +527,38 @@ package body Series_and_Trackers is
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
-        dd_step := create(step);
-        wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
-        predres := Residual_Prediction(wrk,wrk_sol,step);
-        exit when (predres <= pars.alpha);
-        t := t - step; step := step/2.0; t := t + step;
+        loop
+          dd_step := create(step);
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
+          predres := Residual_Prediction(wrk,wrk_sol,step);
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > pars.alpha));
+        Correct(wrk,dd_step,tolres,pars.corsteps,nbrit,wrk_sol,
+                err,rco,res,fail);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0;
         exit when (step < pars.minsize);
       end loop;
-      Update_Step_Sizes(minsize,maxsize,step);
-      exit when ((step < pars.minsize) and (predres > pars.alpha));
-      Correct(wrk,dd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
-      nbrcorrs := nbrcorrs + nbrit;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
       DoblDobl_Pade_Approximants.Clear(pv);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
       dd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
-      if t = 1.0
-       then nbrsteps := k; exit;
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
       end if;
     end loop;
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
     dd_step := create(0.0);
-    Correct(wrk,dd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
+    Correct(wrk,dd_step,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
@@ -518,8 +583,9 @@ package body Series_and_Trackers is
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := pars.epsilon;
-    tolpredres : constant double_float := pars.alpha;
-    tolcorrres : constant double_float := pars.tolres;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
     t,step,update : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
@@ -540,7 +606,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       QuadDobl_Complex_VecVecs.Clear(poles);
-      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolpredres);
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
@@ -549,30 +615,38 @@ package body Series_and_Trackers is
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
-        qd_step := create(step);
-        wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-        predres := Residual_Prediction(wrk,wrk_sol,step);
-        exit when (predres <= pars.alpha);
-        t := t - step; step := step/2.0; t := t + step;
+        loop
+          qd_step := create(step);
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
+          predres := Residual_Prediction(wrk,wrk_sol,step);
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Correct(wrk,qd_step,tolres,pars.corsteps,nbrit,wrk_sol,
+                err,rco,res,fail);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0;
         exit when (step < pars.minsize);
       end loop;
-      Update_Step_Sizes(minsize,maxsize,step);
-      exit when ((step < pars.minsize) and (predres > pars.alpha));
-      Correct(wrk,qd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
-      nbrcorrs := nbrcorrs + nbrit;
       QuadDobl_Pade_Approximants.Clear(pv);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
       qd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
-      if t = 1.0
-       then nbrsteps := k; exit;
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
       end if;
     end loop;
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     qd_step := create(0.0);
-    Correct(wrk,qd_step,tolcorrres,pars.corsteps,nbrit,wrk_sol,err,rco,res);
+    Correct(wrk,qd_step,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
@@ -599,8 +673,9 @@ package body Series_and_Trackers is
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
     poles : Standard_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := pars.epsilon;
-    tolpredres : constant double_float := pars.alpha;
-    tolcorrres : constant double_float := pars.tolres;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
     t,step,update : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -626,7 +701,7 @@ package body Series_and_Trackers is
       end if;
       Standard_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,tolpredres,verbose);
+                (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
       if frp > 0.0
        then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
@@ -638,35 +713,42 @@ package body Series_and_Trackers is
         put(file," t = "); put(file,t,3);
       end if;
       loop
-        wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-        predres := Residual_Prediction(wrk,wrk_sol,step);
-        if verbose
-         then put(file,"  residual : "); put(file,predres,3); new_line(file);
-        end if;
-        exit when (predres <= pars.alpha);
-        t := t - step; step := step/2.0; t := t + step;
-        if verbose then
-          put(file,"Step size : "); put(file,step,3);
-          put(file," t = "); put(file,t,3);
-        end if;
+        loop
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
+          predres := Residual_Prediction(wrk,wrk_sol,step);
+          if verbose
+           then put(file,"  residual : "); put(file,predres,3); new_line(file);
+          end if;
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          if verbose then
+            put(file,"Step size : "); put(file,step,3);
+            put(file," t = "); put(file,t,3);
+          end if;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Correct(file,wrk,step,tolres,pars.corsteps,nbrit,
+                wrk_sol,err,rco,res,fail,verbose);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0;
         exit when (step < pars.minsize);
       end loop;
-      Update_Step_Sizes(minsize,maxsize,step);
-      exit when ((step < pars.minsize) and (predres > pars.alpha));
-      Correct(file,wrk,step,tolcorrres,pars.corsteps,nbrit,
-              wrk_sol,err,rco,res,verbose);
-      nbrcorrs := nbrcorrs + nbrit;
       Standard_Pade_Approximants.Clear(pv);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
-      if t = 1.0
-       then nbrsteps := k; exit;
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
       end if;
       wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
-    Correct(file,wrk,0.0,tolcorrres,pars.corsteps,nbrit,
-            wrk_sol,err,rco,res,verbose);
+    Correct(file,wrk,0.0,tolres,pars.corsteps,nbrit,
+            wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -693,8 +775,9 @@ package body Series_and_Trackers is
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := pars.epsilon;
-    tolpredres : constant double_float := pars.alpha;
-    tolcorrres : constant double_float := pars.tolres;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
     t,step,update : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
@@ -720,7 +803,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       DoblDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,tolpredres,verbose);
+                (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
@@ -733,39 +816,46 @@ package body Series_and_Trackers is
         put(file," t = "); put(file,t,3);
       end if;
       loop
-        dd_step := create(step);
-        wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
-        predres := Residual_Prediction(wrk,wrk_sol,step);
-        if verbose
-         then put(file,"  residual : "); put(file,predres,3); new_line(file);
-        end if;
-        exit when (predres <= pars.alpha);
-        t := t - step; step := step/2.0; t := t + step;
-        if verbose then
-          put(file,"Step size : "); put(file,step,3);
-          put(file," t = "); put(file,t,3);
-        end if;
+        loop
+          dd_step := create(step);
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
+          predres := Residual_Prediction(wrk,wrk_sol,step);
+          if verbose
+           then put(file,"  residual : "); put(file,predres,3); new_line(file);
+          end if;
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          if verbose then
+            put(file,"Step size : "); put(file,step,3);
+            put(file," t = "); put(file,t,3);
+          end if;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Correct(file,wrk,dd_step,tolres,pars.corsteps,nbrit,
+                wrk_sol,err,rco,res,fail,verbose);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0;
         exit when (step < pars.minsize);
       end loop;
-      Update_Step_Sizes(minsize,maxsize,step);
-      exit when ((step < pars.minsize) and (predres > pars.alpha));
-      Correct(file,wrk,dd_step,tolcorrres,pars.corsteps,nbrit,
-              wrk_sol,err,rco,res,verbose);
-      nbrcorrs := nbrcorrs + nbrit;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
       DoblDobl_Pade_Approximants.Clear(pv);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
       dd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
-      if t = 1.0
-       then nbrsteps := k; exit;
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
       end if;
     end loop;
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
     dd_step := create(0.0);
-    Correct(file,wrk,dd_step,tolcorrres,pars.corsteps,nbrit,
-            wrk_sol,err,rco,res,verbose);
+    Correct(file,wrk,dd_step,tolres,pars.corsteps,nbrit,
+            wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
@@ -792,8 +882,9 @@ package body Series_and_Trackers is
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
     tolcff : constant double_float := pars.epsilon;
-    tolpredres : constant double_float := pars.alpha;
-    tolcorrres : constant double_float := pars.tolres;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
     t,step,update : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
@@ -819,7 +910,7 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
       QuadDobl_Complex_VecVecs.Clear(poles);
       step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,tolpredres,verbose);
+                (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
       if frp > 0.0 then
         step := Series_and_Predictors.Cap_Step_Size
@@ -832,39 +923,46 @@ package body Series_and_Trackers is
         put(file," t = "); put(file,t,3);
       end if;
       loop
-        qd_step := create(step);
-        wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-        predres := Residual_Prediction(wrk,wrk_sol,step);
-        if verbose
-         then put(file,"  residual : "); put(file,predres,3); new_line(file);
-        end if;
-        exit when (predres <= pars.alpha);
-        t := t - step; step := step/2.0; t := t + step;
-        if verbose then
-          put(file,"Step size : "); put(file,step,3);
-          put(file," t = "); put(file,t,3);
-        end if;
+        loop
+          qd_step := create(step);
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
+          predres := Residual_Prediction(wrk,wrk_sol,step);
+          if verbose
+           then put(file,"  residual : "); put(file,predres,3); new_line(file);
+          end if;
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          if verbose then
+            put(file,"Step size : "); put(file,step,3);
+            put(file," t = "); put(file,t,3);
+          end if;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Correct(file,wrk,qd_step,tolres,pars.corsteps,nbrit,
+                wrk_sol,err,rco,res,fail,verbose);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0;
         exit when (step < pars.minsize);
       end loop;
-      Update_Step_Sizes(minsize,maxsize,step);
-      exit when ((step < pars.minsize) and (predres > pars.alpha));
-      Correct(file,wrk,qd_step,tolcorrres,pars.corsteps,nbrit,
-              wrk_sol,err,rco,res,verbose);
-      nbrcorrs := nbrcorrs + nbrit;
       QuadDobl_Complex_Series_Vectors.Clear(srv);
       QuadDobl_Pade_Approximants.Clear(pv);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
       qd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
-      if t = 1.0
-       then nbrsteps := k; exit;
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
       end if;
     end loop;
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     qd_step := create(0.0);
-    Correct(file,wrk,qd_step,tolcorrres,pars.corsteps,nbrit,
-            wrk_sol,err,rco,res,verbose);
+    Correct(file,wrk,qd_step,tolres,pars.corsteps,nbrit,
+            wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
