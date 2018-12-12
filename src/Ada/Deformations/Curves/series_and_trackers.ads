@@ -148,19 +148,19 @@ package Series_and_Trackers is
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float );
   procedure Track_One_Path
               ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float );
   procedure Track_One_Path
               ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float );
 
   -- DESCRIPTION :
@@ -177,6 +177,7 @@ package Series_and_Trackers is
   --   sol      solution at the end of the path;
   --   nbrsteps is the total number of steps on the path;
   --   nbrcorrs is the total number of corrector iterations on the path;
+  --   cntfail  is the total number of corrector failures on the path;
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path.
 
@@ -185,7 +186,7 @@ package Series_and_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false );
   procedure Track_One_Path
@@ -193,7 +194,7 @@ package Series_and_Trackers is
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false );
   procedure Track_One_Path
@@ -201,7 +202,7 @@ package Series_and_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false );
 
@@ -220,6 +221,7 @@ package Series_and_Trackers is
   --   sol      solution at the end of the path;
   --   nbrsteps is the total number of steps on the path;
   --   nbrcorrs is the total number of corrector iterations on the path;
+  --   cntfail  is the total number of corrector failes on the paths;
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path.
 
@@ -301,7 +303,7 @@ package Series_and_Trackers is
 
   procedure Write_Path_Statistics
               ( file : in file_type;
-                nbrsteps,nbrcorrs : in natural32;
+                nbrsteps,nbrcorrs,cntfail : in natural32;
                 minsize,maxsize : in double_float );
 
   -- DESCRIPTION :
@@ -310,6 +312,7 @@ package Series_and_Trackers is
   -- ON ENTRY :
   --   nbrsteps is the total number of steps on the path;
   --   nbrcorrs is the total number of corrector iterations on the path;
+  --   cntfail  is the number of corrector failures on the path;
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path.
 

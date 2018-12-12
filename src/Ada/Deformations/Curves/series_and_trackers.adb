@@ -403,7 +403,7 @@ package body Series_and_Trackers is
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
@@ -429,7 +429,7 @@ package body Series_and_Trackers is
   begin
     minsize := 1.0; maxsize := 0.0;
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0;
+    nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
@@ -456,7 +456,7 @@ package body Series_and_Trackers is
         Correct(wrk,step,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
-        step := step/2.0;
+        step := step/2.0; cntfail := cntfail + 1;
         exit when (step < pars.minsize);
       end loop;
       Standard_Complex_Series_Vectors.Clear(srv);
@@ -482,7 +482,7 @@ package body Series_and_Trackers is
               ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
@@ -512,7 +512,7 @@ package body Series_and_Trackers is
   begin
     minsize := 1.0; maxsize := 0.0;
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0;
+    nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
@@ -541,7 +541,7 @@ package body Series_and_Trackers is
                 err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
-        step := step/2.0;
+        step := step/2.0; cntfail := cntfail + 1;
         exit when (step < pars.minsize);
       end loop;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
@@ -570,7 +570,7 @@ package body Series_and_Trackers is
               ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
@@ -600,7 +600,7 @@ package body Series_and_Trackers is
   begin
     minsize := 1.0; maxsize := 0.0;
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0;
+    nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
@@ -629,7 +629,7 @@ package body Series_and_Trackers is
                 err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
-        step := step/2.0;
+        step := step/2.0; cntfail := cntfail + 1;
         exit when (step < pars.minsize);
       end loop;
       QuadDobl_Pade_Approximants.Clear(pv);
@@ -659,7 +659,7 @@ package body Series_and_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false ) is
 
@@ -686,7 +686,7 @@ package body Series_and_Trackers is
   begin
     minsize := 1.0; maxsize := 0.0;
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0;
+    nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       if verbose then
@@ -733,7 +733,7 @@ package body Series_and_Trackers is
                 wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
-        step := step/2.0;
+        step := step/2.0; cntfail := cntfail + 1;
         exit when (step < pars.minsize);
       end loop;
       Standard_Pade_Approximants.Clear(pv);
@@ -761,7 +761,7 @@ package body Series_and_Trackers is
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false ) is
 
@@ -792,7 +792,7 @@ package body Series_and_Trackers is
   begin
     minsize := 1.0; maxsize := 0.0;
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0;
+    nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       if verbose then
@@ -837,7 +837,7 @@ package body Series_and_Trackers is
                 wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
-        step := step/2.0;
+        step := step/2.0; cntfail := cntfail + 1;
         exit when (step < pars.minsize);
       end loop;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
@@ -868,7 +868,7 @@ package body Series_and_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs : out natural32;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false ) is
 
@@ -899,7 +899,7 @@ package body Series_and_Trackers is
   begin
     minsize := 1.0; maxsize := 0.0;
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0;
+    nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       if verbose then
@@ -944,7 +944,7 @@ package body Series_and_Trackers is
                 wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
-        step := step/2.0;
+        step := step/2.0; cntfail := cntfail + 1;
         exit when (step < pars.minsize);
       end loop;
       QuadDobl_Complex_Series_Vectors.Clear(srv);
@@ -1006,7 +1006,7 @@ package body Series_and_Trackers is
     ls : Link_to_Solution;
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
-    nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
 
   begin
@@ -1019,10 +1019,10 @@ package body Series_and_Trackers is
       if monitor
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
-      Track_One_Path
-        (file,hom,ls.all,pars,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
-      if verbose
-       then Write_Path_Statistics(file,nbrsteps,nbrcorrs,minsize,maxsize);
+      Track_One_Path(file,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
+                     minsize,maxsize,verbose);
+      if verbose then
+        Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       Standard_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -1052,7 +1052,7 @@ package body Series_and_Trackers is
     ls : Link_to_Solution;
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
-    nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
 
   begin
@@ -1065,10 +1065,10 @@ package body Series_and_Trackers is
       if monitor
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
-      Track_One_Path
-        (file,hom,ls.all,pars,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
-      if verbose
-       then Write_Path_Statistics(file,nbrsteps,nbrcorrs,minsize,maxsize);
+      Track_One_Path(file,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
+                     minsize,maxsize,verbose);
+      if verbose then
+        Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       DoblDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -1098,7 +1098,7 @@ package body Series_and_Trackers is
     ls : Link_to_Solution;
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
-    nbrcorrs,minnbrcorrs,maxnbrcorrs : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
 
   begin
@@ -1111,10 +1111,10 @@ package body Series_and_Trackers is
       if monitor
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
-      Track_One_Path
-        (file,hom,ls.all,pars,nbrsteps,nbrcorrs,minsize,maxsize,verbose);
-      if verbose
-       then Write_Path_Statistics(file,nbrsteps,nbrcorrs,minsize,maxsize);
+      Track_One_Path(file,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
+                     minsize,maxsize,verbose);
+      if verbose then
+        Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       QuadDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -1140,13 +1140,14 @@ package body Series_and_Trackers is
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
-    nbrsteps,nbrcorrs : natural32;
+    nbrsteps,nbrcorrs,cntfail : natural32;
     minsize,maxsize : double_float;
 
   begin
     for i in 1..len loop
       ls := Head_Of(tmp);
-      Track_One_Path(hom,ls.all,pars,nbrsteps,nbrcorrs,minsize,maxsize);
+      Track_One_Path
+        (hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
@@ -1161,13 +1162,14 @@ package body Series_and_Trackers is
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
-    nbrsteps,nbrcorrs : natural32;
+    nbrsteps,nbrcorrs,cntfail : natural32;
     minsize,maxsize : double_float;
 
   begin
     for i in 1..len loop
       ls := Head_Of(tmp);
-      Track_One_Path(hom,ls.all,pars,nbrsteps,nbrcorrs,minsize,maxsize);
+      Track_One_Path
+        (hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
@@ -1182,26 +1184,29 @@ package body Series_and_Trackers is
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
-    nbrsteps,nbrcorrs : natural32;
+    nbrsteps,nbrcorrs,cntfail : natural32;
     minsize,maxsize : double_float;
 
   begin
     for i in 1..len loop
       ls := Head_Of(tmp);
-      Track_One_Path(hom,ls.all,pars,nbrsteps,nbrcorrs,minsize,maxsize);
+      Track_One_Path
+        (hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
 
   procedure Write_Path_Statistics
               ( file : in file_type;
-                nbrsteps,nbrcorrs : in natural32;
+                nbrsteps,nbrcorrs,cntfail : in natural32;
                 minsize,maxsize : in double_float ) is
   begin
     put(file,"The total number of steps on the path     : ");
     put(file,nbrsteps,1); new_line(file);
     put(file,"Total number of correct steps on the path : ");
     put(file,nbrcorrs,1); new_line(file);
+    put(file,"Number of corrector failures on the path  : ");
+    put(file,cntfail,1); new_line(file);
     put(file,"The smallest step size on the path        :");
     put(file,minsize,2); new_line(file);
     put(file,"The largest step size on the path         :");
