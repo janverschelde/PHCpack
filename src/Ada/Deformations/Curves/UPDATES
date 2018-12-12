@@ -1,3 +1,6 @@
+Wed 12 Dec 2018 : started writing of standard_seriespade_tracker, with
+  a test in ts_nxtpadsol, for a get_next() method for tracking curves.
+
 Tue 11 Dec 2018 : added a corrector feedback loop to the package
   series_and_trackers, relaxed the default corrector residual tolerance
   in homotopy_continuation_parameters.adb.  To series_and_trackers, added

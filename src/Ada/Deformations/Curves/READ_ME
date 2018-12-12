@@ -75,3 +75,6 @@ series_path_trackers                : runs the series path trackers
 ts_serpath                          : test on series path tracker
 mainseries                          : defines the phc -u
 -------------------------------------------------------------------------------
+standard_seriespade_tracker      : provides a get_next() method tracker
+ts_nxtpadsol                     : test on the get_next() trackers
+-------------------------------------------------------------------------------
