@@ -1,13 +1,13 @@
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with DoblDobl_Complex_Poly_Systems;      use DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Solutions;         use DoblDobl_Complex_Solutions;
 with Homotopy_Continuation_Parameters;
 
-package Standard_SeriesPade_Tracker is
+package DoblDobl_SeriesPade_Tracker is
 
 -- DESCRIPTION :
 --   The package implements a path tracker with a next() method.
 --   The path tracker applies a Pade predictor computed via Newton's
---   method on power series, in standard double precision.
+--   method on power series, in double double precision.
 
 -- CONSTRUCTORS :
 
@@ -47,4 +47,4 @@ package Standard_SeriesPade_Tracker is
   -- DESCRIPTION :
   --   Clears the homotopy data and resets all data.
 
-end Standard_SeriesPade_Tracker;
+end DoblDobl_SeriesPade_Tracker;

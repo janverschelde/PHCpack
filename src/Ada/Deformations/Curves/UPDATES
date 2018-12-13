@@ -1,5 +1,8 @@
 Wed 12 Dec 2018 : started writing of standard_seriespade_tracker, with
   a test in ts_nxtpadsol, for a get_next() method for tracking curves.
+  Defined the init in standard_seriespade_tracker, and added new packages
+  dobldobl_seriespade_tracker and quaddobl_seriespade_tracker, with
+  test procedures in ts_nxtpadsol.
 
 Tue 11 Dec 2018 : added a corrector feedback loop to the package
   series_and_trackers, relaxed the default corrector residual tolerance

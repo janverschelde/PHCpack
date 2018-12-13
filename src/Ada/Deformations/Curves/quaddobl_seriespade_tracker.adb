@@ -1,8 +1,10 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with Standard_Homotopy;
+with Standard_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
+with QuadDobl_Homotopy;
 
-package body Standard_SeriesPade_Tracker is
+package body QuadDobl_SeriesPade_Tracker is
 
 -- INTERNAL DATA :
 
@@ -19,10 +21,13 @@ package body Standard_SeriesPade_Tracker is
   procedure Init ( p,q : in Link_to_Poly_Sys ) is
 
     tpow : constant natural32 := 2;
-    gamma : constant Complex_Number := homconpars.gamma;
+    d_gamma : constant Standard_Complex_Numbers.Complex_Number
+            := homconpars.gamma;
+    qd_gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+             := Standard_to_QuadDobl_Complex(d_gamma);
 
   begin
-    Standard_Homotopy.Create(p.all,q.all,tpow,gamma);
+    QuadDobl_Homotopy.Create(p.all,q.all,tpow,qd_gamma);
   end Init;
 
   procedure Init ( s : in Link_to_Solution ) is
@@ -46,4 +51,4 @@ package body Standard_SeriesPade_Tracker is
     Homotopy_Continuation_Parameters.Clear(homconpars);
   end Clear;
 
-end Standard_SeriesPade_Tracker;
+end QuadDobl_SeriesPade_Tracker;
