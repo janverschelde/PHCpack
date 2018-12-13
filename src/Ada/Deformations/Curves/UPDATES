@@ -1,3 +1,7 @@
+Thu 13 Dec 2018 : new package homotopy_newton_steps contains the correct
+  procedures from series_and_trackers, with memory improvements.
+  Relaxed alpha and tolres defaults in homotopy_continuation_parameters.adb.
+
 Wed 12 Dec 2018 : started writing of standard_seriespade_tracker, with
   a test in ts_nxtpadsol, for a get_next() method for tracking curves.
   Defined the init in standard_seriespade_tracker, and added new packages

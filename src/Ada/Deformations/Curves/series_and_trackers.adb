@@ -29,280 +29,17 @@ with QuadDobl_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;
-with Standard_Root_Refiners;
-with DoblDobl_Root_Refiners;
-with QuadDobl_Root_Refiners;
 with Standard_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_Vectors;
 with Standard_Pade_Approximants;
 with DoblDobl_Pade_Approximants;
 with QuadDobl_Pade_Approximants;
+with Homotopy_Newton_Steps;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 
 package body Series_and_Trackers is
-
-  procedure Correct
-              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_float; tolres : in double_float;
-                maxit : in natural32; nbrit : out natural32;
-                sol : in out Standard_Complex_Vectors.Vector;
-                err,rco,res : out double_float; fail : out boolean ) is
-
-    p : Standard_Complex_Poly_Systems.Poly_Sys(hom'range)
-      := Series_and_Homotopies.Eval(hom,t);
-    jm : Standard_Complex_Jaco_Matrices.Jaco_Mat(hom'range,sol'range)
-       := Standard_Complex_Jaco_Matrices.Create(p);
-    f : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(p'range)
-       := Standard_Complex_Poly_SysFun.Create(p);
-    jf : Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
-       := Standard_Complex_Jaco_Matrices.Create(jm);
-    prev_err,prev_res : double_float := 1.0;
-
-    use Standard_Root_Refiners;
-
-  begin
-    fail := true;
-    nbrit := maxit;
-    for k in 1..maxit loop
-      Standard_Newton_Step(f,jf,sol,err,rco,res);
-      if res <= tolres then -- convergence
-        nbrit := k; fail := false; exit;
-      elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
-         then nbrit := k; exit;
-        end if;
-      end if;
-      prev_err := err; -- previous forward error
-      prev_res := res; -- previous backward error
-    end loop;
-    Standard_Complex_Poly_Systems.Clear(p);
-    Standard_Complex_Poly_SysFun.Clear(f);
-    Standard_Complex_Jaco_Matrices.Clear(jm);
-    Standard_Complex_Jaco_Matrices.Clear(jf);
-  end Correct;
-
-  procedure Correct
-              ( file : in file_type;
-                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_float; tolres : in double_float;
-                maxit : in natural32; nbrit : out natural32;
-                sol : in out Standard_Complex_Vectors.Vector;
-                err,rco,res : out double_float; fail : out boolean;
-                verbose : in boolean := false ) is
-
-    p : Standard_Complex_Poly_Systems.Poly_Sys(hom'range)
-      := Series_and_Homotopies.Eval(hom,t);
-    jm : Standard_Complex_Jaco_Matrices.Jaco_Mat(hom'range,sol'range)
-       := Standard_Complex_Jaco_Matrices.Create(p);
-    f : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(p'range)
-       := Standard_Complex_Poly_SysFun.Create(p);
-    jf : Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
-       := Standard_Complex_Jaco_Matrices.Create(jm);
-    prev_err,prev_res : double_float := 1.0;
-
-    use Standard_Root_Refiners;
-
-  begin
-    fail := true;
-    nbrit := maxit;
-    for k in 1..maxit loop
-      Standard_Newton_Step(f,jf,sol,err,rco,res);
-      if verbose then
-        put(file,"  err :"); put(file,err,3);
-        put(file,"  rco :"); put(file,rco,3);
-        put(file,"  res :"); put(file,res,3); new_line(file);
-      end if;
-      if res <= tolres then -- convergence
-        nbrit := k; fail := false; exit;
-      elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
-         then nbrit := k; exit;
-        end if;
-      end if;
-      prev_err := err; -- previous forward error
-      prev_res := res; -- previous backward error
-    end loop;
-    Standard_Complex_Poly_Systems.Clear(p);
-    Standard_Complex_Poly_SysFun.Clear(f);
-    Standard_Complex_Jaco_Matrices.Clear(jm);
-    Standard_Complex_Jaco_Matrices.Clear(jf);
-  end Correct;
-
-  procedure Correct
-              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_double; tolres : in double_float;
-                maxit : in natural32; nbrit : out natural32;
-                sol : in out DoblDobl_Complex_Vectors.Vector;
-                err,rco,res : out double_double; fail : out boolean ) is
-
-    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(hom'range)
-      := Series_and_Homotopies.Eval(hom,t);
-    jm : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(hom'range,sol'range)
-       := DoblDobl_Complex_Jaco_Matrices.Create(p);
-    f : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(p'range)
-       := DoblDobl_Complex_Poly_SysFun.Create(p);
-    jf : DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
-       := DoblDobl_Complex_Jaco_Matrices.Create(jm);
-    prev_err,prev_res : double_double := create(1.0);
-
-    use DoblDobl_Root_Refiners;
-
-  begin
-    fail := true;
-    nbrit := maxit;
-    for k in 1..maxit loop
-      DoblDobl_Newton_Step(f,jf,sol,err,rco,res);
-      if res <= tolres then -- convergence
-        nbrit := k; fail := false; exit;
-      elsif k > 1 then
-        if ((res > prev_res) or (err > prev_err))
-         then nbrit := k; exit;
-        end if;
-      end if;
-      prev_err := err; -- previous forward error
-      prev_res := res; -- previous backward error
-    end loop;
-    DoblDobl_Complex_Poly_Systems.Clear(p);
-    DoblDobl_Complex_Poly_SysFun.Clear(f);
-    DoblDobl_Complex_Jaco_Matrices.Clear(jm);
-    DoblDobl_Complex_Jaco_Matrices.Clear(jf);
-  end Correct;
-
-  procedure Correct
-              ( file : in file_type;
-                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in double_double; tolres : in double_float;
-                maxit : in natural32; nbrit : out natural32;
-                sol : in out DoblDobl_Complex_Vectors.Vector;
-                err,rco,res : out double_double; fail : out boolean;
-                verbose : in boolean := false ) is
-
-    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(hom'range)
-      := Series_and_Homotopies.Eval(hom,t);
-    jm : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(hom'range,sol'range)
-       := DoblDobl_Complex_Jaco_Matrices.Create(p);
-    f : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(p'range)
-       := DoblDobl_Complex_Poly_SysFun.Create(p);
-    jf : DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
-       := DoblDobl_Complex_Jaco_Matrices.Create(jm);
-    prev_err,prev_res : double_double := create(1.0);
-
-    use DoblDobl_Root_Refiners;
-
-  begin
-    fail := true;
-    nbrit := maxit;
-    for k in 1..maxit loop
-      DoblDobl_Newton_Step(f,jf,sol,err,rco,res);
-      if verbose then
-        put(file,"  err : "); put(file,err,3);
-        put(file,"  rco : "); put(file,rco,3);
-        put(file,"  res : "); put(file,res,3); new_line(file);
-      end if;
-      if res <= tolres then -- convergence
-        nbrit := k; fail := false; exit;
-      elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
-         then nbrit := k; exit;
-        end if;
-      end if;
-      prev_err := err; -- previous forward error
-      prev_res := res; -- previous backward error
-    end loop;
-    DoblDobl_Complex_Poly_Systems.Clear(p);
-    DoblDobl_Complex_Poly_SysFun.Clear(f);
-    DoblDobl_Complex_Jaco_Matrices.Clear(jm);
-    DoblDobl_Complex_Jaco_Matrices.Clear(jf);
-  end Correct;
-
-  procedure Correct
-              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in quad_double; tolres : in double_float;
-                maxit : in natural32; nbrit : out natural32;
-                sol : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double; fail : out boolean ) is
-
-    p : QuadDobl_Complex_Poly_Systems.Poly_Sys(hom'range)
-      := Series_and_Homotopies.Eval(hom,t);
-    jm : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(hom'range,sol'range)
-       := QuadDobl_Complex_Jaco_Matrices.Create(p);
-    f : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(p'range)
-       := QuadDobl_Complex_Poly_SysFun.Create(p);
-    jf : QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
-       := QuadDobl_Complex_Jaco_Matrices.Create(jm);
-    prev_err,prev_res : quad_double := create(1.0);
-
-    use QuadDobl_Root_Refiners;
-
-  begin
-    fail := true;
-    nbrit := maxit;
-    for k in 1..nbrit loop
-      QuadDobl_Newton_Step(f,jf,sol,err,rco,res);
-      if res <= tolres then -- convergence
-        nbrit := k; fail := false; exit;
-      elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
-         then nbrit := k; exit;
-        end if;
-      end if;
-      prev_err := err; -- previous forward error
-      prev_res := res; -- previous backward error
-    end loop;
-    QuadDobl_Complex_Poly_Systems.Clear(p);
-    QuadDobl_Complex_Poly_SysFun.Clear(f);
-    QuadDobl_Complex_Jaco_Matrices.Clear(jm);
-    QuadDobl_Complex_Jaco_Matrices.Clear(jf);
-  end Correct;
-
-  procedure Correct
-              ( file : in file_type; 
-                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                t : in quad_double; tolres : in double_float;
-                maxit : in natural32; nbrit : out natural32;
-                sol : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double; fail : out boolean;
-                verbose : in boolean := false ) is
-
-    p : QuadDobl_Complex_Poly_Systems.Poly_Sys(hom'range)
-      := Series_and_Homotopies.Eval(hom,t);
-    jm : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(hom'range,sol'range)
-       := QuadDobl_Complex_Jaco_Matrices.Create(p);
-    f : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(p'range)
-       := QuadDobl_Complex_Poly_SysFun.Create(p);
-    jf : QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat(hom'range,sol'range)
-       := QuadDobl_Complex_Jaco_Matrices.Create(jm);
-    prev_err,prev_res : quad_double := create(1.0);
-
-    use QuadDobl_Root_Refiners;
-
-  begin
-    fail := true;
-    nbrit := maxit;
-    for k in 1..maxit loop
-      QuadDobl_Newton_Step(f,jf,sol,err,rco,res);
-      if verbose then
-        put(file,"  err : "); put(file,err,3);
-        put(file,"  rco : "); put(file,rco,3);
-        put(file,"  res : "); put(file,res,3); new_line(file);
-      end if;
-      if res <= tolres then -- convergence
-        nbrit := k; fail := false; exit;
-      elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
-         then nbrit := k; exit;
-        end if;
-      end if;
-      prev_err := err; -- previous forward error
-      prev_res := res; -- previous backward error
-    end loop;
-    QuadDobl_Complex_Poly_Systems.Clear(p);
-    QuadDobl_Complex_Poly_SysFun.Clear(f);
-    QuadDobl_Complex_Jaco_Matrices.Clear(jm);
-    QuadDobl_Complex_Jaco_Matrices.Clear(jf);
-  end Correct;
 
   procedure Set_Step
               ( t,step : in out double_float;
@@ -407,6 +144,7 @@ package body Series_and_Trackers is
                 minsize,maxsize : out double_float ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
@@ -453,7 +191,8 @@ package body Series_and_Trackers is
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
-        Correct(wrk,step,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+        Homotopy_Newton_Steps.Correct
+          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -470,7 +209,8 @@ package body Series_and_Trackers is
       wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
-    Correct(wrk,0.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+    Homotopy_Newton_Steps.Correct
+      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -486,6 +226,7 @@ package body Series_and_Trackers is
                 minsize,maxsize : out double_float ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
@@ -503,7 +244,7 @@ package body Series_and_Trackers is
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
-    err,rco,res : double_double;
+    err,rco,res : double_float;
     zero : constant double_double := create(0.0);
     frp : double_double;
     predres : double_float;
@@ -537,8 +278,8 @@ package body Series_and_Trackers is
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > pars.alpha));
-        Correct(wrk,dd_step,tolres,pars.corsteps,nbrit,wrk_sol,
-                err,rco,res,fail);
+        Homotopy_Newton_Steps.Correct
+          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -558,11 +299,14 @@ package body Series_and_Trackers is
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
     dd_step := create(0.0);
-    Correct(wrk,dd_step,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+    Homotopy_Newton_Steps.Correct
+      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
-    sol.err := err; sol.rco := rco; sol.res := res;
+    sol.err := Double_Double_Numbers.create(err);
+    sol.rco := Double_Double_Numbers.create(rco);
+    sol.res := Double_Double_Numbers.create(res);
     DoblDobl_CSeries_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
@@ -574,6 +318,7 @@ package body Series_and_Trackers is
                 minsize,maxsize : out double_float ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
@@ -591,7 +336,7 @@ package body Series_and_Trackers is
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
-    err,rco,res : quad_double;
+    err,rco,res : double_float;
     zero : constant quad_double := create(0.0);
     frp : quad_double;
     predres : double_float;
@@ -625,8 +370,8 @@ package body Series_and_Trackers is
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
-        Correct(wrk,qd_step,tolres,pars.corsteps,nbrit,wrk_sol,
-                err,rco,res,fail);
+        Homotopy_Newton_Steps.Correct
+          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -646,11 +391,14 @@ package body Series_and_Trackers is
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     qd_step := create(0.0);
-    Correct(wrk,qd_step,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+    Homotopy_Newton_Steps.Correct
+      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
-    sol.err := err; sol.rco := rco; sol.res := res;
+    sol.err := Quad_Double_Numbers.create(err);
+    sol.rco := Quad_Double_Numbers.create(rco);
+    sol.res := Quad_Double_Numbers.create(res);
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
@@ -664,6 +412,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    nbq : constant integer32 := hom'last;
     nit : constant integer32 := integer32(pars.corsteps);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
@@ -729,8 +478,9 @@ package body Series_and_Trackers is
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
-        Correct(file,wrk,step,tolres,pars.corsteps,nbrit,
-                wrk_sol,err,rco,res,fail,verbose);
+        Homotopy_Newton_Steps.Correct
+          (file,nbq,t,tolres,pars.corsteps,nbrit,
+           wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -747,8 +497,9 @@ package body Series_and_Trackers is
       wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
-    Correct(file,wrk,0.0,tolres,pars.corsteps,nbrit,
-            wrk_sol,err,rco,res,fail,verbose);
+    Homotopy_Newton_Steps.Correct
+      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+       wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -766,6 +517,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
@@ -783,7 +535,7 @@ package body Series_and_Trackers is
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
-    err,rco,res : double_double;
+    err,rco,res : double_float;
     zero : constant double_double := create(0.0);
     frp : double_double;
     predres : double_float;
@@ -833,8 +585,9 @@ package body Series_and_Trackers is
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
-        Correct(file,wrk,dd_step,tolres,pars.corsteps,nbrit,
-                wrk_sol,err,rco,res,fail,verbose);
+        Homotopy_Newton_Steps.Correct
+          (file,nbq,t,tolres,pars.corsteps,nbrit,
+           wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -854,12 +607,15 @@ package body Series_and_Trackers is
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
     dd_step := create(0.0);
-    Correct(file,wrk,dd_step,tolres,pars.corsteps,nbrit,
-            wrk_sol,err,rco,res,fail,verbose);
+    Homotopy_Newton_Steps.Correct
+      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+       wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
-    sol.err := err; sol.rco := rco; sol.res := res;
+    sol.err := Double_Double_Numbers.create(err);
+    sol.rco := Double_Double_Numbers.create(rco);
+    sol.res := Double_Double_Numbers.create(res);
     DoblDobl_CSeries_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
@@ -873,6 +629,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
@@ -890,7 +647,7 @@ package body Series_and_Trackers is
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
-    err,rco,res : quad_double;
+    err,rco,res : double_float;
     zero : constant quad_double := create(0.0);
     frp : quad_double;
     predres : double_float;
@@ -940,8 +697,9 @@ package body Series_and_Trackers is
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
-        Correct(file,wrk,qd_step,tolres,pars.corsteps,nbrit,
-                wrk_sol,err,rco,res,fail,verbose);
+        Homotopy_Newton_Steps.Correct
+          (file,nbq,t,tolres,pars.corsteps,nbrit,
+           wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -961,12 +719,15 @@ package body Series_and_Trackers is
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     qd_step := create(0.0);
-    Correct(file,wrk,qd_step,tolres,pars.corsteps,nbrit,
-            wrk_sol,err,rco,res,fail,verbose);
+    Homotopy_Newton_Steps.Correct
+      (file,nbq,t,tolres,pars.corsteps,nbrit,
+       wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
-    sol.err := err; sol.rco := rco; sol.res := res;
+    sol.err := Quad_Double_Numbers.Create(err);
+    sol.rco := Quad_Double_Numbers.Create(rco);
+    sol.res := Quad_Double_Numbers.Create(res);
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
