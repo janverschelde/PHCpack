@@ -31,6 +31,39 @@ package Standard_SeriesPade_Tracker is
   -- DESCRIPTION :
   --   Stores s as the current solution for tracking the next path.
 
+-- PREDICTOR-CORRECTOR STAGE :
+
+  procedure Predict ( fail : out boolean; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Starting at the current solution, computes the next power series,
+  --   the next vector of Pade approximants, sets the step size, and
+  --   sets the current solution to the predicted solution.
+  --   If verbose, then extra output is written to screen,
+  --   otherwise, the procedure remains silent.
+  --   The fail flag is true on return if the step size dropped below
+  --   the minimum step size set in the homotopy continuation parameters.
+
+  procedure Correct ( fail : out boolean; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to correct the current solution.
+  --   If verbose, then extra output is written to screen,
+  --   otherwise, the procedure remains silent.
+  --   On return is the fail flag, which is true if the required
+  --   accuracy is not met within the allowed number of corrector steps,
+  --   and/or when Newton's method diverges.
+
+  procedure Predict_and_Correct
+              ( fail : out boolean; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Applies the Predict and Correct stages after each other.
+  --   If verbose, then extra output is written to screen,
+  --   otherwise, the procedure remains silent.
+  --   If fail is true on return, then the tracker failed to meet
+  --   the requested accuracy requirements.
+
 -- SELECTORS :
 
   function Get_Parameters
@@ -39,6 +72,11 @@ package Standard_SeriesPade_Tracker is
   -- DESCRIPTION :
   --   Returns the link to the current values of the parameters.
   --   This link can be used to change the values of the parameters.
+
+  function Get_Current_Solution return Link_to_Solution;
+
+  -- DESCRIPTION :
+  --   Returns the current solution.
 
 -- DESTRUCTOR :
 

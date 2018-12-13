@@ -36,6 +36,7 @@ procedure ts_nxtpadsol is
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
     ls : Standard_Complex_Solutions.Link_to_Solution;
+    fail : boolean;
 
   begin
     new_line;
@@ -56,6 +57,12 @@ procedure ts_nxtpadsol is
     Standard_SeriesPade_Tracker.Init(target,start);
     ls := Standard_Complex_Solutions.Head_Of(sols);
     Standard_SeriesPade_Tracker.Init(ls);
+    put_line("Checking the start solution ...");
+    Standard_SeriesPade_Tracker.Correct(fail,true);
+    if fail
+     then put_line("The start solution is NOT okay!?");
+     else put_line("The start solution is okay.");
+    end if;
   end Standard_Main;
 
   procedure DoblDobl_Main is
@@ -70,6 +77,7 @@ procedure ts_nxtpadsol is
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+    fail : boolean;
 
   begin
     new_line;
@@ -90,6 +98,12 @@ procedure ts_nxtpadsol is
     DoblDobl_SeriesPade_Tracker.Init(target,start);
     ls := DoblDobl_Complex_Solutions.Head_Of(sols);
     DoblDobl_SeriesPade_Tracker.Init(ls);
+    put_line("Checking the start solution ...");
+    DoblDobl_SeriesPade_Tracker.Correct(fail,true);
+    if fail
+     then put_line("The start solution is NOT okay!?");
+     else put_line("The start solution is okay.");
+    end if;
   end DoblDobl_Main;
 
   procedure QuadDobl_Main is
@@ -104,6 +118,7 @@ procedure ts_nxtpadsol is
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+    fail : boolean;
 
   begin
     new_line;
@@ -124,6 +139,12 @@ procedure ts_nxtpadsol is
     QuadDobl_SeriesPade_Tracker.Init(target,start);
     ls := QuadDobl_Complex_Solutions.Head_Of(sols);
     QuadDobl_SeriesPade_Tracker.Init(ls);
+    put_line("Checking the start solution ...");
+    QuadDobl_SeriesPade_Tracker.Correct(fail,true);
+    if fail
+     then put_line("The start solution is NOT okay!?");
+     else put_line("The start solution is okay.");
+    end if;
   end QuadDobl_Main;
 
   procedure Main is
