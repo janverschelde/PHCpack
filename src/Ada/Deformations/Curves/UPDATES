@@ -7,6 +7,8 @@ Thu 13 Dec 2018 : new package homotopy_newton_steps contains the correct
   changed drivers_to_series_trackers, exposing the tpow value.
   Basic version of the get_next() works for standard double precision,
   in standard_seriespade_trackers.adb, tested by ts_nxtpadsol.adb.
+  Updated dobldobl_seriespade_tracker.adb, quaddobl_seriespade_tracker.adb,
+  and ts_nxtpadsol.adb.
 
 Wed 12 Dec 2018 : started writing of standard_seriespade_tracker, with
   a test in ts_nxtpadsol, for a get_next() method for tracking curves.

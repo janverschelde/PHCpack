@@ -2,11 +2,21 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_CSeries_Poly_Systems;
+with QuadDobl_Pade_Approximants;
 with QuadDobl_Homotopy;
+with Series_and_Homotopies;
+with Series_and_Predictors;
+with Series_and_Trackers;
 with Homotopy_Newton_Steps;
 
 package body QuadDobl_SeriesPade_Tracker is
@@ -15,6 +25,7 @@ package body QuadDobl_SeriesPade_Tracker is
 
   nbeqs : integer32;
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
+  htp : QuadDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
   current : Link_to_Solution;
 
 -- CONSTRUCTORS :
@@ -35,6 +46,14 @@ package body QuadDobl_SeriesPade_Tracker is
   begin
     QuadDobl_Homotopy.Create(p.all,q.all,tpow,qd_gamma);
     nbeqs := p'last;
+    declare
+      h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
+        := QuadDobl_Homotopy.Homotopy_System;
+      s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
+        := Series_and_Homotopies.Create(h,nbeqs+1,false);
+    begin
+      htp := new QuadDobl_CSeries_Poly_Systems.Poly_Sys'(s);
+    end;
   end Init;
 
   procedure Init ( s : in Link_to_Solution ) is
@@ -45,8 +64,67 @@ package body QuadDobl_SeriesPade_Tracker is
 -- PREDICTOR-CORRECTOR STAGE :
 
   procedure Predict ( fail : out boolean; verbose : in boolean := false ) is
+
+    numdeg : constant integer32 := integer32(homconpars.numdeg);
+    dendeg : constant integer32 := integer32(homconpars.dendeg);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := integer32(homconpars.corsteps);
+    sol : QuadDobl_Complex_Vectors.Vector(1..current.n) := current.v;
+    srv : QuadDobl_Complex_Series_Vectors.Vector(1..current.n);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(1..nbeqs);
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
+    poles : QuadDobl_Complex_VecVecs.VecVec(pv'range);
+    t,step,predres : double_float;
+    qd_t,qd_step,frp : quad_double;
+    tolcff : constant double_float := homconpars.epsilon;
+    alpha : constant double_float := homconpars.alpha;
+
   begin
-    fail := true;
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,htp.all,sol,srv,eva);
+    Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+    if verbose
+     then put("The smallest forward pole radius : "); put(frp,2); new_line;
+    end if;
+    QuadDobl_Complex_VecVecs.Clear(poles);
+    step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    step := homconpars.sbeta*step;
+    QuadDobl_Complex_Series_Vectors.Clear(eva);
+    if frp > 0.0 then
+      step := Series_and_Predictors.Cap_Step_Size
+                (step,hihi_part(frp),homconpars.pbeta);
+    end if;
+    qd_t := QuadDobl_Complex_Numbers.REAL_PART(current.t);
+    t := hihi_part(qd_t);
+    Series_and_Trackers.Set_Step(t,step,homconpars.maxsize,1.0);
+    if verbose
+     then put("Step size :"); put(step,2); put("  t ="); put(t,2);
+    end if;
+    loop
+      qd_step := Quad_Double_Numbers.Create(step);
+      sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
+      predres := Series_and_Trackers.Residual_Prediction(htp.all,sol,step);
+      if verbose
+       then put("  residual :"); put(predres,2); new_line;
+      end if;
+      exit when (predres <= alpha);
+      t := t - step; step := step/2.0; t := t + step;
+      if verbose
+       then put("Step size :"); put(step,2); put("  t ="); put(t,2);
+      end if;
+      exit when (step < homconpars.minsize);
+    end loop;
+    qd_t := Quad_Double_Numbers.Create(t);
+    current.t := QuadDobl_Complex_Numbers.Create(qd_t);
+    current.v := sol;
+    if t = 1.0 
+     then fail := false;
+     else fail := (step < homconpars.minsize);
+    end if;
+    QuadDobl_Complex_VecVecs.Clear(poles);
+    QuadDobl_Complex_Series_Vectors.Clear(eva);
+    QuadDobl_Complex_Series_Vectors.Clear(srv);
+    QuadDobl_Pade_Approximants.Clear(pv);
+    Series_and_Homotopies.Shift(htp.all,-qd_step);
   end Predict;
 
   procedure Correct ( fail : out boolean; verbose : in boolean := false ) is
@@ -99,6 +177,7 @@ package body QuadDobl_SeriesPade_Tracker is
   procedure Clear is
   begin
     Homotopy_Continuation_Parameters.Clear(homconpars);
+    QuadDobl_CSeries_Poly_Systems.Clear(htp);
   end Clear;
 
 end QuadDobl_SeriesPade_Tracker;

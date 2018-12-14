@@ -9,7 +9,9 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;
 with Standard_System_and_Solutions_io;
 with DoblDobl_System_and_Solutions_io;
 with QuadDobl_System_and_Solutions_io;
@@ -92,6 +94,7 @@ procedure ts_nxtpadsol is
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+    ans : character;
     fail : boolean;
 
   begin
@@ -115,9 +118,22 @@ procedure ts_nxtpadsol is
     DoblDobl_SeriesPade_Tracker.Init(ls);
     put_line("Checking the start solution ...");
     DoblDobl_SeriesPade_Tracker.Correct(fail,true);
-    if fail
-     then put_line("The start solution is NOT okay!?");
-     else put_line("The start solution is okay.");
+    if fail then
+      put_line("The start solution is NOT okay!?");
+    else
+      put_line("The start solution is okay.");
+      loop
+        DoblDobl_SeriesPade_Tracker.Predict_and_Correct(fail,true);
+        if fail
+         then put_line("Failed to meet the accuracy requirements.  Abort.");
+        end if;
+        exit when fail;
+        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+      end loop;
+      ls := DoblDobl_SeriesPade_Tracker.Get_Current_Solution;
+      put_line("The solution : ");
+      DoblDobl_Complex_Solutions_io.put(ls.all); new_line;
     end if;
   end DoblDobl_Main;
 
@@ -133,6 +149,7 @@ procedure ts_nxtpadsol is
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+    ans : character;
     fail : boolean;
 
   begin
@@ -156,9 +173,22 @@ procedure ts_nxtpadsol is
     QuadDobl_SeriesPade_Tracker.Init(ls);
     put_line("Checking the start solution ...");
     QuadDobl_SeriesPade_Tracker.Correct(fail,true);
-    if fail
-     then put_line("The start solution is NOT okay!?");
-     else put_line("The start solution is okay.");
+    if fail then
+      put_line("The start solution is NOT okay!?");
+    else
+      put_line("The start solution is okay.");
+      loop
+        QuadDobl_SeriesPade_Tracker.Predict_and_Correct(fail,true);
+        if fail
+         then put_line("Failed to meet the accuracy requirements.  Abort.");
+        end if;
+        exit when fail;
+        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+      end loop;
+      ls := QuadDobl_SeriesPade_Tracker.Get_Current_Solution;
+      put_line("The solution : ");
+      QuadDobl_Complex_Solutions_io.put(ls.all); new_line;
     end if;
   end QuadDobl_Main;
 
