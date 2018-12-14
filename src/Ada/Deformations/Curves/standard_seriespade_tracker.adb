@@ -7,9 +7,11 @@ with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Series_Vectors;
+with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_CSeries_Poly_Systems;
-with Standard_Pade_Approximants;
 with Standard_Homotopy;
+with Standard_Pade_Approximants;
+with Homotopy_Pade_Approximants;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 with Series_and_Trackers;
@@ -22,6 +24,8 @@ package body Standard_SeriesPade_Tracker is
   nbeqs : integer32;
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : Standard_CSeries_Poly_Systems.Link_to_Poly_Sys;
+  poles : Standard_Complex_VecVecs.Link_to_VecVec;
+  pv : Standard_Pade_Approximants.Link_to_Pade_Vector;
   current : Link_to_Solution;
 
 -- CONSTRUCTORS :
@@ -35,6 +39,10 @@ package body Standard_SeriesPade_Tracker is
 
     tpow : constant natural32 := 2;
     gamma : constant Complex_Number := homconpars.gamma;
+    nbvar : constant integer32
+          := integer32(Number_of_Unknowns(p(p'first)));
+    numdeg : constant integer32 := integer32(homconpars.numdeg);
+    dendeg : constant integer32 := integer32(homconpars.dendeg);
 
   begin
     Standard_Homotopy.Create(p.all,q.all,tpow,gamma);
@@ -46,6 +54,19 @@ package body Standard_SeriesPade_Tracker is
         := Series_and_Homotopies.Create(h,nbeqs+1,false);
     begin
       htp := new Standard_CSeries_Poly_Systems.Poly_Sys'(s);
+    end;
+    declare
+      padvec : constant Standard_Pade_Approximants.Pade_Vector
+             := Standard_Pade_Approximants.Allocate(nbvar,numdeg,dendeg);
+    begin
+      pv := new Standard_Pade_Approximants.Pade_Vector'(padvec);
+    end;
+    declare
+      use Homotopy_Pade_Approximants;
+      allpoles : constant Standard_Complex_VecVecs.VecVec
+               := Allocate_Standard_Poles(nbeqs,dendeg);
+    begin
+      poles := new Standard_Complex_VecVecs.VecVec'(allpoles);
     end;
   end Init;
 
@@ -65,19 +86,16 @@ package body Standard_SeriesPade_Tracker is
     sol : Standard_Complex_Vectors.Vector(1..current.n) := current.v;
     srv : Standard_Complex_Series_Vectors.Vector(1..current.n);
     eva : Standard_Complex_Series_Vectors.Vector(1..nbeqs);
-    pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
-    poles : Standard_Complex_VecVecs.VecVec(pv'range);
     t,step,frp,predres : double_float;
     tolcff : constant double_float := homconpars.epsilon;
     alpha : constant double_float := homconpars.alpha;
 
   begin
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,htp.all,sol,srv,eva);
-    Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+    Series_and_Predictors.Pade_Approximants(srv,pv.all,poles.all,frp);
     if verbose
      then put("The smallest forward pole radius :"); put(frp,2); new_line;
     end if;
-    Standard_Complex_VecVecs.Clear(poles);
     step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     step := homconpars.sbeta*step;
     Standard_Complex_Series_Vectors.Clear(eva);
@@ -90,7 +108,7 @@ package body Standard_SeriesPade_Tracker is
      then put("Step size :"); put(step,2); put("  t ="); put(t,2);
     end if;
     loop
-      sol := Series_and_Predictors.Predicted_Solution(pv,step);
+      sol := Series_and_Predictors.Predicted_Solution(pv.all,step);
       predres := Series_and_Trackers.Residual_Prediction(htp.all,sol,step);
       if verbose
        then put("  residual :"); put(predres,2); new_line;
@@ -108,10 +126,8 @@ package body Standard_SeriesPade_Tracker is
      then fail := false;
      else fail := (step < homconpars.minsize);
     end if;
-    Standard_Complex_VecVecs.Clear(poles);
     Standard_Complex_Series_Vectors.Clear(eva);
     Standard_Complex_Series_Vectors.Clear(srv);
-    Standard_Pade_Approximants.Clear(pv);
     Series_and_Homotopies.Shift(htp.all,-step);
   end Predict;
 
@@ -161,6 +177,8 @@ package body Standard_SeriesPade_Tracker is
   begin
     Homotopy_Continuation_Parameters.Clear(homconpars);
     Standard_CSeries_Poly_Systems.Clear(htp);
+    Standard_Complex_VecVecs.Deep_Clear(poles);
+    Standard_Pade_Approximants.Clear(pv);
   end Clear;
 
 end Standard_SeriesPade_Tracker;

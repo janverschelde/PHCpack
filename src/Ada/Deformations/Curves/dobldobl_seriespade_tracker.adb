@@ -11,9 +11,11 @@ with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_Complex_Polynomials;       use DoblDobl_Complex_Polynomials;
 with DoblDobl_CSeries_Poly_Systems;
-with DoblDobl_Pade_Approximants;
 with DoblDobl_Homotopy;
+with DoblDobl_Pade_Approximants;
+with Homotopy_Pade_Approximants;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 with Series_and_Trackers;
@@ -26,6 +28,8 @@ package body DoblDobl_SeriesPade_Tracker is
   nbeqs : integer32;
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : DoblDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
+  pv : DoblDobl_Pade_Approximants.Link_to_Pade_Vector;
+  poles : DoblDobl_Complex_VecVecs.Link_to_VecVec;
   current : Link_to_Solution;
 
 -- CONSTRUCTORS :
@@ -42,6 +46,10 @@ package body DoblDobl_SeriesPade_Tracker is
             := homconpars.gamma;
     dd_gamma : constant DoblDobl_Complex_Numbers.Complex_Number
              := Standard_to_DoblDobl_Complex(d_gamma);
+    nbvar : constant integer32
+          := integer32(Number_of_Unknowns(p(p'first)));
+    numdeg : constant integer32 := integer32(homconpars.numdeg);
+    dendeg : constant integer32 := integer32(homconpars.dendeg);
 
   begin
     DoblDobl_Homotopy.Create(p.all,q.all,tpow,dd_gamma);
@@ -53,6 +61,19 @@ package body DoblDobl_SeriesPade_Tracker is
         := Series_and_Homotopies.Create(h,nbeqs+1,false);
     begin
       htp := new DoblDobl_CSeries_Poly_Systems.Poly_Sys'(s);
+    end;
+    declare
+      padvec : constant DoblDobl_Pade_Approximants.Pade_Vector
+             := DoblDobl_Pade_Approximants.Allocate(nbvar,numdeg,dendeg);
+    begin
+      pv := new DoblDobl_Pade_Approximants.Pade_Vector'(padvec);
+    end;
+    declare
+      use Homotopy_Pade_Approximants;
+      allpoles : constant DoblDobl_Complex_VecVecs.VecVec
+               := Allocate_DoblDobl_Poles(nbeqs,dendeg);
+    begin
+      poles := new DoblDobl_Complex_VecVecs.VecVec'(allpoles);
     end;
   end Init;
 
@@ -72,8 +93,6 @@ package body DoblDobl_SeriesPade_Tracker is
     sol : DoblDobl_Complex_Vectors.Vector(1..current.n) := current.v;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..current.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(1..nbeqs);
-    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
-    poles : DoblDobl_Complex_VecVecs.VecVec(pv'range);
     t,step,predres : double_float;
     dd_t,dd_step,frp : double_double;
     tolcff : constant double_float := homconpars.epsilon;
@@ -81,11 +100,10 @@ package body DoblDobl_SeriesPade_Tracker is
 
   begin
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,htp.all,sol,srv,eva);
-    Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+    Series_and_Predictors.Pade_Approximants(srv,pv.all,poles.all,frp);
     if verbose
      then put("The smallest forward pole radius : "); put(frp,2); new_line;
     end if;
-    DoblDobl_Complex_VecVecs.Clear(poles);
     step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     step := homconpars.sbeta*step;
     DoblDobl_Complex_Series_Vectors.Clear(eva);
@@ -101,7 +119,7 @@ package body DoblDobl_SeriesPade_Tracker is
     end if;
     loop
       dd_step := Double_Double_Numbers.Create(step);
-      sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
+      sol := Series_and_Predictors.Predicted_Solution(pv.all,dd_step);
       predres := Series_and_Trackers.Residual_Prediction(htp.all,sol,step);
       if verbose
        then put("  residual :"); put(predres,2); new_line;
@@ -120,10 +138,8 @@ package body DoblDobl_SeriesPade_Tracker is
      then fail := false;
      else fail := (step < homconpars.minsize);
     end if;
-    DoblDobl_Complex_VecVecs.Clear(poles);
     DoblDobl_Complex_Series_Vectors.Clear(eva);
     DoblDobl_Complex_Series_Vectors.Clear(srv);
-    DoblDobl_Pade_Approximants.Clear(pv);
     Series_and_Homotopies.Shift(htp.all,-dd_step);
   end Predict;
 
@@ -178,6 +194,8 @@ package body DoblDobl_SeriesPade_Tracker is
   begin
     Homotopy_Continuation_Parameters.Clear(homconpars);
     DoblDobl_CSeries_Poly_Systems.Clear(htp);
+    DoblDobl_Complex_VecVecs.Deep_Clear(poles);
+    DoblDobl_Pade_Approximants.Clear(pv);
   end Clear;
 
 end DoblDobl_SeriesPade_Tracker;

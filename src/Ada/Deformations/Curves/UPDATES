@@ -4,7 +4,8 @@ Fri 14 Dec 2018 : added procedures to homotopy_pade_approximants to
   Added procedures to {standard,dobldobl,quaddobl}_pade_approximants
   to define the Pade vector in place, without extra allocations,
   updated series_and_predictors, and applied the new procedures 
-  in series_and_trackers.adb.
+  in series_and_trackers.adb.  Adjusted the calls to the new procedures
+  in the bodies of the packages *_seriespade_tracker.adb.
 
 Thu 13 Dec 2018 : new package homotopy_newton_steps contains the correct
   procedures from series_and_trackers, with memory improvements.
