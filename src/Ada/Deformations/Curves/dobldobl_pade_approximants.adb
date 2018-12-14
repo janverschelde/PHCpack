@@ -64,6 +64,50 @@ package body DoblDobl_Pade_Approximants is
     return res;
   end Create;
 
+  function Allocate ( numdeg,dendeg : integer32 ) return Pade is
+
+    zero : constant Complex_Number := Create(integer32(0));
+    num : constant DoblDobl_Complex_Vectors.Vector(0..numdeg)
+        := (0..numdeg => zero);
+    den : constant DoblDobl_Complex_Vectors.Vector(0..numdeg)
+        := (0..numdeg => zero);
+    res : Pade := Create(num,den);
+
+  begin
+    return res;
+  end Allocate;
+
+  function Allocate ( dim,numdeg,dendeg : integer32 ) return Pade_Vector is
+
+    res : Pade_Vector(1..dim);
+
+  begin
+    for i in 1..dim loop
+      res(i) := Allocate(numdeg,dendeg);
+    end loop;
+    return res;
+  end Allocate;
+
+  procedure Create ( pv : in out Pade_Vector;
+                     srv : in DoblDobl_Complex_Series_Vectors.Vector;
+                     verbose : in boolean := false ) is
+
+    numdeg : constant integer32 := pv(pv'first).numdeg;
+    dendeg : constant integer32 := pv(pv'first).dendeg;
+    info : integer32;
+
+  begin
+    for i in srv'range loop
+      declare
+        cff : constant DoblDobl_Complex_Vectors.Vector
+            := Coefficients(srv,i);
+      begin
+        DoblDobl_Rational_Approximations.Pade
+          (numdeg,dendeg,cff,pv(i).num,pv(i).den,info,verbose);
+      end;
+    end loop;
+  end Create;
+
 -- SELECTORS :
 
   function Numerator_Degree ( p : Pade ) return integer32 is

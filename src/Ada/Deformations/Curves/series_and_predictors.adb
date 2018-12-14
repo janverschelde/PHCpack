@@ -207,37 +207,34 @@ package body Series_and_Predictors is
   end Newton_Prediction;
 
   procedure Pade_Approximants
-              ( numdeg,dendeg : in integer32;
-                srv : in Standard_Complex_Series_Vectors.Vector;
-                pv : out Standard_Pade_Approximants.Pade_Vector;
+              ( srv : in Standard_Complex_Series_Vectors.Vector;
+                pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
                 frp : out double_float; verbose : in boolean := false ) is
   begin
-    pv := Standard_Pade_Approximants.Create(numdeg,dendeg,srv,verbose);
+    Standard_Pade_Approximants.Create(pv,srv,verbose);
     Homotopy_Pade_Approximants.Standard_Poles(pv,poles);
     frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
   end Pade_Approximants;
 
   procedure Pade_Approximants
-              ( numdeg,dendeg : in integer32;
-                srv : in DoblDobl_Complex_Series_Vectors.Vector;
-                pv : out DoblDobl_Pade_Approximants.Pade_Vector;
+              ( srv : in DoblDobl_Complex_Series_Vectors.Vector;
+                pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
                 frp : out double_double; verbose : in boolean := false ) is
   begin
-    pv := DoblDobl_Pade_Approximants.Create(numdeg,dendeg,srv,verbose);
+    DoblDobl_Pade_Approximants.Create(pv,srv,verbose);
     Homotopy_Pade_Approximants.DoblDobl_Poles(pv,poles);
     frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
   end Pade_Approximants;
 
   procedure Pade_Approximants
-              ( numdeg,dendeg : in integer32;
-                srv : in QuadDobl_Complex_Series_Vectors.Vector;
-                pv : out QuadDobl_Pade_Approximants.Pade_Vector;
+              ( srv : in QuadDobl_Complex_Series_Vectors.Vector;
+                pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
                 poles : in out QuadDobl_Complex_VecVecs.VecVec;
                 frp : out quad_double; verbose : in boolean := false ) is
   begin
-    pv := QuadDobl_Pade_Approximants.Create(numdeg,dendeg,srv,verbose);
+    QuadDobl_Pade_Approximants.Create(pv,srv,verbose);
     Homotopy_Pade_Approximants.QuadDobl_Poles(pv,poles);
     frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
   end Pade_Approximants;

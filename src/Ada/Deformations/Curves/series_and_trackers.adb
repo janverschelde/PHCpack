@@ -152,7 +152,8 @@ package body Series_and_Trackers is
     nit : constant integer32 := integer32(pars.corsteps);
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
-    pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
+    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
+       := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_Standard_Poles(sol.n,dendeg);
     tolcff : constant double_float := pars.epsilon;
@@ -173,7 +174,7 @@ package body Series_and_Trackers is
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
-      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       Standard_Complex_Series_Vectors.Clear(eva);
@@ -200,7 +201,6 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Standard_Complex_Series_Vectors.Clear(srv);
-      Standard_Pade_Approximants.Clear(pv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
@@ -209,6 +209,7 @@ package body Series_and_Trackers is
       end if;
       wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
+    Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
     Homotopy_Newton_Steps.Correct
@@ -235,7 +236,8 @@ package body Series_and_Trackers is
     nit : constant integer32 := integer32(pars.corsteps);
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
-    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
+    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
+       := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_DoblDobl_Poles(sol.n,dendeg);
     tolcff : constant double_float := pars.epsilon;
@@ -260,7 +262,7 @@ package body Series_and_Trackers is
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
-      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       if frp > 0.0 then
@@ -288,7 +290,6 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
-      DoblDobl_Pade_Approximants.Clear(pv);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
       dd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
@@ -298,6 +299,7 @@ package body Series_and_Trackers is
         nbrsteps := k; exit;
       end if;
     end loop;
+    DoblDobl_Pade_Approximants.Clear(pv);
     DoblDobl_Complex_VecVecs.Clear(poles);
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
@@ -328,7 +330,8 @@ package body Series_and_Trackers is
     nit : constant integer32 := integer32(pars.corsteps);
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
-    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
+       := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_QuadDobl_Poles(sol.n,dendeg);
     tolcff : constant double_float := pars.epsilon;
@@ -353,7 +356,7 @@ package body Series_and_Trackers is
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
-      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       if frp > 0.0 then
@@ -380,7 +383,6 @@ package body Series_and_Trackers is
         step := step/2.0; cntfail := cntfail + 1;
         exit when (step < pars.minsize);
       end loop;
-      QuadDobl_Pade_Approximants.Clear(pv);
       QuadDobl_Complex_Series_Vectors.Clear(srv);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
       qd_t := create(-t);
@@ -391,6 +393,7 @@ package body Series_and_Trackers is
         nbrsteps := k; exit;
       end if;
     end loop;
+    QuadDobl_Pade_Approximants.Clear(pv);
     QuadDobl_Complex_VecVecs.Clear(poles);
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
@@ -423,7 +426,8 @@ package body Series_and_Trackers is
     maxdeg : constant integer32 := numdeg + dendeg + 2;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
-    pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
+    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
+       := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_Standard_Poles(sol.n,dendeg);
     tolcff : constant double_float := pars.epsilon;
@@ -448,7 +452,7 @@ package body Series_and_Trackers is
       end if;
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
-      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
       if verbose then
         put(file,"The smallest forward pole radius :");
         put(file,frp,3); new_line(file);
@@ -490,7 +494,6 @@ package body Series_and_Trackers is
         step := step/2.0; cntfail := cntfail + 1;
         exit when (step < pars.minsize);
       end loop;
-      Standard_Pade_Approximants.Clear(pv);
       Standard_Complex_Series_Vectors.Clear(srv);
       Standard_CSeries_Poly_Systems.Clear(wrk);
       if t = 1.0 then        -- converged and reached the end
@@ -500,6 +503,7 @@ package body Series_and_Trackers is
       end if;
       wrk := Series_and_Homotopies.Shift(hom,-t);
     end loop;
+    Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
     Homotopy_Newton_Steps.Correct
@@ -529,7 +533,8 @@ package body Series_and_Trackers is
     nit : constant integer32 := integer32(pars.corsteps);
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
-    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
+    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
+       := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_DoblDobl_Poles(sol.n,dendeg);
     tolcff : constant double_float := pars.epsilon;
@@ -558,7 +563,7 @@ package body Series_and_Trackers is
       end if;
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
-      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
       if verbose then
         put(file,"The smallest forward pole radius : ");
         put(file,frp,3); new_line(file);
@@ -603,7 +608,6 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
-      DoblDobl_Pade_Approximants.Clear(pv);
       DoblDobl_CSeries_Poly_Systems.Clear(wrk);
       dd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,dd_t);
@@ -613,6 +617,7 @@ package body Series_and_Trackers is
         nbrsteps := k; exit;
       end if;
     end loop;
+    DoblDobl_Pade_Approximants.Clear(pv);
     DoblDobl_Complex_VecVecs.Clear(poles);
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
@@ -646,7 +651,8 @@ package body Series_and_Trackers is
     nit : constant integer32 := integer32(pars.corsteps);
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
-    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
+       := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_QuadDobl_Poles(sol.n,dendeg);
     tolcff : constant double_float := pars.epsilon;
@@ -675,7 +681,7 @@ package body Series_and_Trackers is
       end if;
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
-      Series_and_Predictors.Pade_Approximants(numdeg,dendeg,srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
       if verbose then
         put(file,"The smallest forward pole radius : ");
         put(file,frp,3); new_line(file);
@@ -720,7 +726,6 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       QuadDobl_Complex_Series_Vectors.Clear(srv);
-      QuadDobl_Pade_Approximants.Clear(pv);
       QuadDobl_CSeries_Poly_Systems.Clear(wrk);
       qd_t := create(-t);
       wrk := Series_and_Homotopies.Shift(hom,qd_t);
@@ -730,6 +735,7 @@ package body Series_and_Trackers is
         nbrsteps := k; exit;
       end if;
     end loop;
+    QuadDobl_Pade_Approximants.Clear(pv);
     QuadDobl_Complex_VecVecs.Clear(poles);
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);

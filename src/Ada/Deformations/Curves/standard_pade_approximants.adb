@@ -64,6 +64,50 @@ package body Standard_Pade_Approximants is
     return res;
   end Create;
 
+  function Allocate ( numdeg,dendeg : integer32 ) return Pade is
+
+    zero : constant Complex_Number := Create(0.0);
+    num : constant Standard_Complex_Vectors.Vector(0..numdeg)
+        := (0..numdeg => zero);
+    den : constant Standard_Complex_Vectors.Vector(0..numdeg)
+        := (0..numdeg => zero);
+    res : Pade := Create(num,den);
+
+  begin
+    return res;
+  end Allocate;
+
+  function Allocate ( dim,numdeg,dendeg : integer32 ) return Pade_Vector is
+
+    res : Pade_Vector(1..dim);
+
+  begin
+    for i in 1..dim loop
+      res(i) := Allocate(numdeg,dendeg);
+    end loop;
+    return res;
+  end Allocate;
+
+  procedure Create ( pv : in out Pade_Vector;
+                     srv : in Standard_Complex_Series_Vectors.Vector;
+                     verbose : in boolean := false ) is
+
+    numdeg : constant integer32 := pv(pv'first).numdeg;
+    dendeg : constant integer32 := pv(pv'first).dendeg;
+    info : integer32;
+
+  begin
+    for i in srv'range loop
+      declare
+        cff : constant Standard_Complex_Vectors.Vector
+            := Coefficients(srv,i);
+      begin
+        Standard_Rational_Approximations.Pade
+          (numdeg,dendeg,cff,pv(i).num,pv(i).den,info,verbose);
+      end;
+    end loop;
+  end Create;
+
 -- SELECTORS :
 
   function Numerator_Degree ( p : Pade ) return integer32 is

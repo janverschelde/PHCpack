@@ -58,6 +58,34 @@ package QuadDobl_Pade_Approximants is
 
   -- REQUIRED : each series has at least numdeg+dendeg+1 coefficients.
 
+  function Allocate ( numdeg,dendeg : integer32 ) return Pade;
+
+  -- DESCRIPTION :
+  --   Returns an allocated Pade approximant with coefficients of
+  --   numerator to degree numdeg and denominator to degree dendeg.
+  --   The coefficient vectors are initialized to zero.
+
+  function Allocate ( dim,numdeg,dendeg : integer32 ) return Pade_Vector;
+
+  -- DESCRIPTION :
+  --   Returns a vector of Pade approximants of dimension dim,
+  --   allocated with coefficients of each numerator to degree numdeg
+  --   and coefficients of each denominator to degree dendeg.
+  --   The coefficient vectors are initialized to zero.
+
+  procedure Create ( pv : in out Pade_Vector;
+                     srv : in QuadDobl_Complex_Series_Vectors.Vector;
+                     verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Given an allocated Pade vector in pv,
+  --   defines the coefficients of the Pade approximants using
+  --   the vector of power series in srv.
+
+  -- REQUIRED :
+  --   The Pade approximants all have the same degrees 
+  --   and each series has sufficiently many coefficients.
+
 -- SELECTORS :
 
   function Numerator_Degree ( p : Pade ) return integer32;

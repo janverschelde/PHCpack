@@ -114,21 +114,18 @@ package Series_and_Predictors is
   --            eva'range = hom'range.
 
   procedure Pade_Approximants
-              ( numdeg,dendeg : in integer32;
-                srv : in Standard_Complex_Series_Vectors.Vector;
-                pv : out Standard_Pade_Approximants.Pade_Vector;
+              ( srv : in Standard_Complex_Series_Vectors.Vector;
+                pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
                 frp : out double_float; verbose : in boolean := false );
   procedure Pade_Approximants
-              ( numdeg,dendeg : in integer32;
-                srv : in DoblDobl_Complex_Series_Vectors.Vector;
-                pv : out DoblDobl_Pade_Approximants.Pade_Vector;
+              ( srv : in DoblDobl_Complex_Series_Vectors.Vector;
+                pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
                 frp : out double_double; verbose : in boolean := false );
   procedure Pade_Approximants
-              ( numdeg,dendeg : in integer32;
-                srv : in QuadDobl_Complex_Series_Vectors.Vector;
-                pv : out QuadDobl_Pade_Approximants.Pade_Vector;
+              ( srv : in QuadDobl_Complex_Series_Vectors.Vector;
+                pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
                 poles : in out QuadDobl_Complex_VecVecs.VecVec;
                 frp : out quad_double; verbose : in boolean := false );
 
@@ -139,11 +136,11 @@ package Series_and_Predictors is
 
   -- REQUIRED : the degree of the series in srv is large enough
   --   for the sum of numdeg and dendeg: srv.deg >= numdeg+dendeg.
+  --   The numdeg and dendeg are defined in the allocated Pade vector.
 
   -- ON ENTRY :
-  --   numdeg   degree of the numerator of the Pade approximants;
-  --   dendeg   degree of the denominator of the Pade approximants;
   --   srv      vector power series, truncated to a certain degree;
+  --   pv       space allocated for Pade vector of numdeg and dendeg;
   --   poles    space allocated to hold all poles;
   --   verbose  if verbose, then extra information is written to screen
   --            during the construction of the Pade approximants.
