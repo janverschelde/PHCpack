@@ -1,3 +1,7 @@
+Fri 14 Dec 2018 : added procedures to homotopy_pade_approximants to
+  compute the poles without memory allocation, adjusted the corresponding
+  procedures in series_and_predictors, applied in series_and_trackers.adb.
+
 Thu 13 Dec 2018 : new package homotopy_newton_steps contains the correct
   procedures from series_and_trackers, with memory improvements.
   Relaxed alpha and tolres defaults in homotopy_continuation_parameters.adb.
@@ -7,8 +11,6 @@ Thu 13 Dec 2018 : new package homotopy_newton_steps contains the correct
   changed drivers_to_series_trackers, exposing the tpow value.
   Basic version of the get_next() works for standard double precision,
   in standard_seriespade_trackers.adb, tested by ts_nxtpadsol.adb.
-  Updated dobldobl_seriespade_tracker.adb, quaddobl_seriespade_tracker.adb,
-  and ts_nxtpadsol.adb.
 
 Wed 12 Dec 2018 : started writing of standard_seriespade_tracker, with
   a test in ts_nxtpadsol, for a get_next() method for tracking curves.

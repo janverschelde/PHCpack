@@ -86,6 +86,58 @@ package Homotopy_Pade_Approximants is
   --   value is higher than the given tolerance tol.
   --   If all coefficients are less than tol, then -1 is returned.
 
+  procedure Standard_Poles
+              ( p : in Standard_Pade_Approximants.Pade;
+                poles : out Standard_Complex_Vectors.Vector );
+  procedure DoblDobl_Poles
+              ( p : in DoblDobl_Pade_Approximants.Pade;
+                poles : out DoblDobl_Complex_Vectors.Vector );
+  procedure QuadDobl_Poles
+              ( p : in QuadDobl_Pade_Approximants.Pade;
+                poles : out QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Computes the poles of the Pade approximant,
+  --   in standard double, double double, or quad double precision.
+  --   The default poles are -1.
+  --   Only the first Numerical_Degree entries of poles matter.
+
+  -- REQUIRED :
+  --   The vector poles starts at 1 and end at the degree of denominator of p.
+
+  function Allocate_Standard_Poles
+             ( dim,deg : in integer32 )
+             return Standard_Complex_VecVecs.VecVec;
+  function Allocate_DoblDobl_Poles
+             ( dim,deg : in integer32 )
+             return DoblDobl_Complex_VecVecs.VecVec;
+  function Allocate_QuadDobl_Poles
+             ( dim,deg : in integer32 )
+             return QuadDobl_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Allocates space to hold all poles for a Pade vector of
+  --   dimension dim and degree of denominator equal to deg,
+  --   for standard double, double double, or quad double precision.
+
+  procedure Standard_Poles
+              ( pv : in Standard_Pade_Approximants.Pade_Vector;
+                poles : in out Standard_Complex_VecVecs.VecVec );
+  procedure DoblDobl_Poles
+              ( pv : in DoblDobl_Pade_Approximants.Pade_Vector;
+                poles : in out DoblDobl_Complex_VecVecs.VecVec );
+  procedure QuadDobl_Poles
+              ( pv : in QuadDobl_Pade_Approximants.Pade_Vector;
+                poles : in out QuadDobl_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Computes the poles of all approximants in the Pade vector pv,
+  --   in standard double, double double, or quad double precision.
+
+  -- REQUIRED :
+  --   All vectors in poles range from 1 till the degree of the
+  --   denominator of the approximant in the Pade vector.
+
   function Standard_Poles
               ( p : Standard_Pade_Approximants.Pade )
               return Standard_Complex_Vectors.Vector;
@@ -99,9 +151,9 @@ package Homotopy_Pade_Approximants is
   -- DESCRIPTION :
   --   Returns the poles of the Pade approximant,
   --   in standard double, double double, or quad double precision.
-  --   The vector or return is of size 1..p'last,
-  --   but only the first Numerical_Degree entries of p matter.
-  --   The default poles are -1.
+  --   The vector on return ranges between 1 and the degree of the denominator
+  --   of p, although only the first Numerical_Degree entries in the returned
+  --   vector matter.  The default poles are -1.
 
   function Standard_Poles
               ( pv : Standard_Pade_Approximants.Pade_Vector )

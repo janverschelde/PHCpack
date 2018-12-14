@@ -117,19 +117,19 @@ package Series_and_Predictors is
               ( numdeg,dendeg : in integer32;
                 srv : in Standard_Complex_Series_Vectors.Vector;
                 pv : out Standard_Pade_Approximants.Pade_Vector;
-                poles : out Standard_Complex_VecVecs.VecVec;
+                poles : in out Standard_Complex_VecVecs.VecVec;
                 frp : out double_float; verbose : in boolean := false );
   procedure Pade_Approximants
               ( numdeg,dendeg : in integer32;
                 srv : in DoblDobl_Complex_Series_Vectors.Vector;
                 pv : out DoblDobl_Pade_Approximants.Pade_Vector;
-                poles : out DoblDobl_Complex_VecVecs.VecVec;
+                poles : in out DoblDobl_Complex_VecVecs.VecVec;
                 frp : out double_double; verbose : in boolean := false );
   procedure Pade_Approximants
               ( numdeg,dendeg : in integer32;
                 srv : in QuadDobl_Complex_Series_Vectors.Vector;
                 pv : out QuadDobl_Pade_Approximants.Pade_Vector;
-                poles : out QuadDobl_Complex_VecVecs.VecVec;
+                poles : in out QuadDobl_Complex_VecVecs.VecVec;
                 frp : out quad_double; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -144,6 +144,7 @@ package Series_and_Predictors is
   --   numdeg   degree of the numerator of the Pade approximants;
   --   dendeg   degree of the denominator of the Pade approximants;
   --   srv      vector power series, truncated to a certain degree;
+  --   poles    space allocated to hold all poles;
   --   verbose  if verbose, then extra information is written to screen
   --            during the construction of the Pade approximants.
 
