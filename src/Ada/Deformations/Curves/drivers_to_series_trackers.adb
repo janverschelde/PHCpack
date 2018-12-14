@@ -25,7 +25,8 @@ with Greeting_Banners;
 package body Drivers_to_Series_Trackers is
 
   procedure Standard_Reset_Gamma
-              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
+              ( gamma : in Standard_Complex_Numbers.Complex_Number;
+                tpow : in natural32 := 2 ) is
 
     start : constant Standard_Complex_Poly_Systems.Poly_Sys
           := Standard_Homotopy.Start_System;
@@ -38,11 +39,12 @@ package body Drivers_to_Series_Trackers is
     Standard_Complex_Poly_Systems.Copy(start,q);
     Standard_Complex_Poly_Systems.Copy(target,p);
     Standard_Homotopy.Clear;
-    Standard_Homotopy.Create(p,q,1,gamma);
+    Standard_Homotopy.Create(p,q,tpow,gamma);
   end Standard_Reset_Gamma;
 
   procedure DoblDobl_Reset_Gamma
-              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
+              ( gamma : in Standard_Complex_Numbers.Complex_Number;
+                tpow : in natural32 := 2 ) is
 
     start : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
           := DoblDobl_Homotopy.Start_System;
@@ -57,11 +59,12 @@ package body Drivers_to_Series_Trackers is
     DoblDobl_Complex_Poly_Systems.Copy(start,q);
     DoblDobl_Complex_Poly_Systems.Copy(target,p);
     DoblDobl_Homotopy.Clear;
-    DoblDobl_Homotopy.Create(p,q,1,ddgamma);
+    DoblDobl_Homotopy.Create(p,q,tpow,ddgamma);
   end DoblDobl_Reset_Gamma;
 
   procedure QuadDobl_Reset_Gamma
-              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
+              ( gamma : in Standard_Complex_Numbers.Complex_Number;
+                tpow : in natural32 := 2 ) is
 
     start : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
           := QuadDobl_Homotopy.Start_System;
@@ -76,7 +79,7 @@ package body Drivers_to_Series_Trackers is
     QuadDobl_Complex_Poly_Systems.Copy(start,q);
     QuadDobl_Complex_Poly_Systems.Copy(target,p);
     QuadDobl_Homotopy.Clear;
-    QuadDobl_Homotopy.Create(p,q,1,qdgamma);
+    QuadDobl_Homotopy.Create(p,q,tpow,qdgamma);
   end QuadDobl_Reset_Gamma;
 
   procedure Set_Output

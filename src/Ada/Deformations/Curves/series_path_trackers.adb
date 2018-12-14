@@ -45,10 +45,8 @@ package body Series_Path_Trackers is
 
     use Standard_Complex_Solutions;
 
-    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
-      := Standard_Homotopy.Homotopy_System;
-    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1,false);
+    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq);
+    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq);
     p : Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
@@ -73,6 +71,8 @@ package body Series_Path_Trackers is
     if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
      then Standard_Reset_Gamma(p.gamma);
     end if;
+    h := Standard_Homotopy.Homotopy_System;
+    s := Series_and_Homotopies.Create(h,nq+1,false);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
@@ -144,10 +144,8 @@ package body Series_Path_Trackers is
 
     use DoblDobl_Complex_Solutions;
 
-    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
-      := DoblDobl_Homotopy.Homotopy_System;
-    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1,false);
+    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
     p : Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
@@ -176,6 +174,8 @@ package body Series_Path_Trackers is
     if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
      then DoblDobl_Reset_Gamma(p.gamma);
     end if;
+    h := DoblDobl_Homotopy.Homotopy_System;
+    s := Series_and_Homotopies.Create(h,nq+1,false);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
@@ -248,10 +248,8 @@ package body Series_Path_Trackers is
 
     use QuadDobl_Complex_Solutions;
 
-    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
-      := QuadDobl_Homotopy.Homotopy_System;
-    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
-      := Series_and_Homotopies.Create(h,nq+1,false);
+    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
     p : Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
@@ -280,6 +278,8 @@ package body Series_Path_Trackers is
     if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
      then QuadDobl_Reset_Gamma(p.gamma);
     end if;
+    h := QuadDobl_Homotopy.Homotopy_System;
+    s := Series_and_Homotopies.Create(h,nq+1,false);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
      then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);

@@ -3,6 +3,8 @@ Thu 13 Dec 2018 : new package homotopy_newton_steps contains the correct
   Relaxed alpha and tolres defaults in homotopy_continuation_parameters.adb.
   The Correct in *seriespade_tracker works, tested in ts_nxtpadsol 
   on the first given start solution.
+  Fixed bug in resetting gamma in series_path_trackers.adb,
+  changed drivers_to_series_trackers, exposing the tpow value.
 
 Wed 12 Dec 2018 : started writing of standard_seriespade_tracker, with
   a test in ts_nxtpadsol, for a get_next() method for tracking curves.

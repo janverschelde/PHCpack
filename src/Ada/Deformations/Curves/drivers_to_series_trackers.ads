@@ -18,19 +18,22 @@ package Drivers_to_Series_Trackers is
 --   which apply power series methods as predictors.
 
   procedure Standard_Reset_Gamma
-              ( gamma : in Standard_Complex_Numbers.Complex_Number );
+              ( gamma : in Standard_Complex_Numbers.Complex_Number;
+                tpow : in natural32 := 2 );
 
   -- DESCRIPTION :
   --   Resets the gamma with a new Standard_Homotopy.Create.
 
   procedure DoblDobl_Reset_Gamma
-              ( gamma : in Standard_Complex_Numbers.Complex_Number );
+              ( gamma : in Standard_Complex_Numbers.Complex_Number;
+                tpow : in natural32 := 2 );
 
   -- DESCRIPTION :
   --   Resets the gamma with a new DoblDobl_Homotopy.Create.
 
   procedure QuadDobl_Reset_Gamma
-              ( gamma : in Standard_Complex_Numbers.Complex_Number );
+              ( gamma : in Standard_Complex_Numbers.Complex_Number;
+                tpow : in natural32 := 2 );
 
   -- DESCRIPTION :
   --   Resets the gamma with a new QuadDobl_Homotopy.Create.
