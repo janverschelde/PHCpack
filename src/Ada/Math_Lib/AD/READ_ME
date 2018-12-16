@@ -16,3 +16,13 @@ quaddobl_complex_monomials_io   : basic output of quaddobl complex monomials
 random_monomials                : generators of random monomials
 ts_monom                        : test on the monomials
 ------------------------------------------------------------------------------
+generic_monomial_vectors        : vectors of monomials over a ring
+standard_monomial_vectors       : vectors of double complex monomials
+standard_monomial_vectors_io    : basic output of standard monomial vectors
+dobldobl_monomial_vectors       : vectors of double double complex monomials
+dobldobl_monomial_vectors_io    : basic output of dobldobl monomial vectors
+quaddobl_monomial_vectors       : vectors of quad double complex monomials
+quaddobl_monomial_vectors_io    : basic output of quaddobl monomial vectors
+random_monomial_vectors         : generators of random monomial vectors
+ts_monvec                       : test on the monomial vectors
+------------------------------------------------------------------------------

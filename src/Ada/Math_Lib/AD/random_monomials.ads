@@ -25,7 +25,7 @@ package Random_Monomials is
              return Standard_Complex_Monomials.Monomial;
 
   -- DESCRIPTION :
-  --   Generates a random complex coefficients and an exponent vector
+  --   Generates a random complex coefficient and an exponent vector
   --   of dimension dim, with entries in the range 0..expmax.
   --   The coefficient is a double complex number.
   --   If verbose, then the coefficient and exponents are shown.
@@ -36,7 +36,7 @@ package Random_Monomials is
              return DoblDobl_Complex_Monomials.Monomial;
 
   -- DESCRIPTION :
-  --   Generates a random complex coefficients and an exponent vector
+  --   Generates a random complex coefficient and an exponent vector
   --   of dimension dim, with entries in the range 0..expmax.
   --   The coefficient is a double double complex number.
   --   If verbose, then the coefficient and exponents are shown.
@@ -47,7 +47,7 @@ package Random_Monomials is
              return QuadDobl_Complex_Monomials.Monomial;
 
   -- DESCRIPTION :
-  --   Generates a random complex coefficients and an exponent vector
+  --   Generates a random complex coefficient and an exponent vector
   --   of dimension dim, with entries in the range 0..expmax.
   --   The coefficient is a quad double complex number.
   --   If verbose, then the coefficient and exponents are shown.
