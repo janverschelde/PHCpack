@@ -1,4 +1,4 @@
-Mathematical library in PHCpack version 2.4.23
+Mathematical library in PHCpack version 2.4.63
 
 The mathematical library contains general tools that are not specific
 for polynomial homotopy continuation.
@@ -15,13 +15,14 @@ and polynomial evaluation.  The directory Functions was added in v2.3.69
 for the new polynomial evaluation and differentiation routines.
 In v2.3.71, code from Vectors and Matrices was redistributed into the 
 directories Divisors and Reduction.  Tasking was moved in version 2.3.78.
-The latest major change in 2.3.98 is a seperate directory Circuits for the
+The latest major change in 2.3.98 is a separate directory Circuits for the
 code for algorithmic differentation.  The directory Series was added in
 version 2.4.21 and improved with linearization in version 2.3.23.
+In 2.4.63, the directory AD was added.
 
   Math_Lib             : 1. general mathematical library
      |-- Numbers       : 1.1. number representations
-     |-- QD            : 1.2. quad doubles
+     |-- QD            : 1.2. double double and quad double arithmetic
      |-- Vectors       : 1.3. vectors and vectors of vectors
      |-- Matrices      : 1.4. matrices and linear-system solvers
      |-- Divisors      : 1.5. common divisors, integer linear algebra
@@ -29,8 +30,9 @@ version 2.4.21 and improved with linearization in version 2.3.23.
      |-- Polynomials   : 1.7. multivariate polynomial systems
      |-- Functions     : 1.8. evaluation and differentiation
      |-- Supports      : 1.9. support sets and linear programming
-     |-- Circuits      : 1.A. circuits for algorithmic differentation
+     |-- Circuits      : 1.A. circuits for algorithmic differentiation
      |-- Series        : 1.B. manipulating truncated series
+     |-- AD            : 1.C. algorithmic differentiation of the Path library
 
 The directory Numbers specifies the coefficient rings and contains
 definitions of floating-point and complex numbers.

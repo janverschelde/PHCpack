@@ -1,0 +1,2 @@
+Sat 15 Dec 2018 : new package generic_monomials, instantiated for double,
+  double double and quad double complex coefficients, tested by ts_monom.

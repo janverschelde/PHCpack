@@ -1,0 +1,14 @@
+Algorithmic differentation from the Path library for PHCv2.4.63
+
+The packages in this folder are based on the reference code on the host
+of the GPU library Path, developed by Xiangcheng Yu.
+
+------------------------------------------------------------------------------
+file name                       : short description
+------------------------------------------------------------------------------
+generic_monomials               : monomials in several variables over a ring
+standard_complex_monomials      : double precision coefficient monomials
+dobldobl_complex_monomials      : double double precision monomials
+quaddobl_complex_monomials      : quad double precision monomials
+ts_monom                        : test on the monomials
+------------------------------------------------------------------------------
