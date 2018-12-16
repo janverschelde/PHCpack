@@ -105,7 +105,7 @@ ts_threads:
 
 test_math_lib: test_numbers test_qd test_vectors test_matrices test_divisors \
                test_reduction test_polynomials test_functions test_supports \
-               test_circuits
+               test_circuits test_ad
 
 # Test programs for the library Math_Lib/Numbers :
 
@@ -534,6 +534,13 @@ ts_sersys:
 
 ts_csersys:
 	make -f $(MAKEFILE) ts_csersys
+
+# Test programs for the Math_Lib/AD library :
+
+test_ad: test_monom
+
+ts_monom:
+	make -f $(MAKEFILE) ts_monom
 
 # Test programs for the Deformations library :
 
