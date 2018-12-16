@@ -537,10 +537,13 @@ ts_csersys:
 
 # Test programs for the Math_Lib/AD library :
 
-test_ad: test_monom
+test_ad: test_monom ts_monvec
 
 ts_monom:
 	make -f $(MAKEFILE) ts_monom
+
+ts_monvec:
+	make -f $(MAKEFILE) ts_monvec
 
 # Test programs for the Deformations library :
 

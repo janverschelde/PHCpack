@@ -625,6 +625,10 @@ ts_monom:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_monom.adb \
               -o $(BIN)/ts_monom
 
+ts_monvec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_monvec.adb \
+              -o $(BIN)/ts_monvec
+
 # Test programs for the Deformations/Solutions library :
 
 ts_solfilt:

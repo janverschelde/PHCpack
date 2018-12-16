@@ -593,6 +593,9 @@ ts_csersys:
 ts_monom:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_monom.adb -o $(BIN)/ts_monom
 
+ts_monvec:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_monvec.adb -o $(BIN)/ts_monvec
+
 # Test programs for the Deformations/Solutions library :
 
 ts_solfilt:
