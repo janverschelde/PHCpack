@@ -1,2 +1,6 @@
+Sun 16 Dec 2018 : moved the put procedures from ts_monom into separate i/o,
+  into the packages {standard,dobldobl,quaddobl}_monomials_io.
+  New package random_monomials with the code from ts_monom.adb.
+
 Sat 15 Dec 2018 : new package generic_monomials, instantiated for double,
   double double and quad double complex coefficients, tested by ts_monom.

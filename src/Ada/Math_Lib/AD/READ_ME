@@ -8,7 +8,11 @@ file name                       : short description
 ------------------------------------------------------------------------------
 generic_monomials               : monomials in several variables over a ring
 standard_complex_monomials      : double precision coefficient monomials
+standard_complex_monomials_io   : basic output of standard complex monomials
 dobldobl_complex_monomials      : double double precision monomials
+dobldobl_complex_monomials_io   : basic output of dobldobl complex monomials
 quaddobl_complex_monomials      : quad double precision monomials
+quaddobl_complex_monomials_io   : basic output of quaddobl complex monomials
+random_monomials                : generators of random monomials
 ts_monom                        : test on the monomials
 ------------------------------------------------------------------------------
