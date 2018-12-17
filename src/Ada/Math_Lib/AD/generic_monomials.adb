@@ -68,14 +68,15 @@ package body Generic_Monomials is
 
   function Eval ( m : Monomial; x : Vectors.Vector ) return Ring.number is
 
-    res : Ring.number := m.cff;
+    res : Ring.number;
 
     use Ring;
 
   begin
+    Copy(m.cff,res);
     for i in 1..integer32(m.nvr) loop
       for j in 1..m.exp(i) loop
-        res := res*x(integer32(m.pos(i)));
+        Mul(res,x(integer32(m.pos(i)))); -- works in place
       end loop;
     end loop;
     return res;
@@ -84,14 +85,15 @@ package body Generic_Monomials is
   function Eval ( m : Link_to_Monomial;
                   x : Vectors.Vector ) return Ring.number is
 
-    res : Ring.number := m.cff;
+    res : Ring.number;
 
     use Ring;
 
   begin
+    Copy(m.cff,res);
     for i in 1..integer32(m.nvr) loop
       for j in 1..m.exp(i) loop
-        res := res*x(integer32(m.pos(i)));
+        Mul(res,x(integer32(m.pos(i)))); -- works in place
       end loop;
     end loop;
     return res;

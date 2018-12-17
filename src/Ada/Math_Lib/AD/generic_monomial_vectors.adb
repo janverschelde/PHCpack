@@ -8,12 +8,15 @@ package body Generic_Monomial_Vectors is
                   x : Vectors.Vector ) return Ring.number is
 
     res : Ring.number := Monomials.Eval(v(v'first),x);
+    eva : Ring.number;
 
     use Ring;
 
   begin
     for i in v'first+1..v'last loop
-      res := res + Monomials.Eval(v(i),x);
+      eva := Monomials.Eval(v(i),x);
+      Add(res,eva);
+      Clear(eva);
     end loop;
     return res;
   end Eval;
@@ -22,12 +25,15 @@ package body Generic_Monomial_Vectors is
                   x : Vectors.Vector ) return Ring.number is
 
     res : Ring.number := Monomials.Eval(v(v'first),x);
+    eva : Ring.number;
 
     use Ring;
 
   begin
     for i in v'first+1..v'last loop
-      res := res + Monomials.Eval(v(i),x);
+      eva := Monomials.Eval(v(i),x);
+      Add(res,eva);
+      Clear(eva);
     end loop;
     return res;
   end Eval;
