@@ -699,13 +699,16 @@ package body Generic_Dense_Series is
         Clear(s);
       else
         if s.deg >= t.deg then
-          declare
-            st : constant Series(s.deg) := s.all*t.all;
-          begin
-            for i in 0..s.deg loop
-              s.cff(i) := st.cff(i);
+          for i in reverse 1..s.deg loop
+            if i > t.deg
+             then s.cff(i) := s.cff(i)*t.cff(0);
+             else s.cff(i) := s.cff(i)*t.cff(0) + s.cff(0)*t.cff(i); 
+            end if;
+            for j in 1..(i-1) loop
+              s.cff(i) := s.cff(i) + s.cff(i-j)*t.cff(j);
             end loop;
-          end;
+          end loop;
+          s.cff(0) := s.cff(0)*t.cff(0);
         else
           declare
             st : constant Series(t.deg) := s.all*t.all;
@@ -834,7 +837,7 @@ package body Generic_Dense_Series is
 
   begin
     if p = 0 then
-      res := Create(1);
+      res := Create(1,s.deg); -- keep the same degree as s
     elsif p > 0 then
       res := s;
       for k in 2..p loop
@@ -856,12 +859,34 @@ package body Generic_Dense_Series is
     res : Link_to_Series;
 
   begin
-    if s = null
-     then res := null;
-     else res := new Series'(s.all**p);
+    if s = null then
+      if p = 0
+       then res := Create(1); -- 0**0 = 1
+       else res := null;
+      end if;
+    else
+      res := new Series'(s.all**p);
     end if;
     return res;
   end "**";
+
+  procedure Power ( result : in out Link_to_Series;
+                    s : in Link_to_Series; p : in integer ) is
+  begin
+    if p = 0 then
+      result.cff(0) := Ring.one;
+      for i in 1..result.deg loop
+        result.cff(i) := Ring.zero;
+      end loop;
+    else
+      for i in 0..result.deg loop
+        result.cff(i) := s.cff(i);
+      end loop;
+      for i in 2..p loop
+        Mul(result,s);
+      end loop;
+    end if;
+  end Power;
 
 -- DESTRUCTORS :
 

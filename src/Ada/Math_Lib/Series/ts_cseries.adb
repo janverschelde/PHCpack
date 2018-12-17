@@ -792,6 +792,99 @@ procedure ts_cseries is
     put("shifted series(0) : "); put(z); new_line;
   end QuadDobl_Test_Shift;
 
+  procedure Standard_Test_Power ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the computation of powers on series of the given degree,
+  --   in standard double precision.
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Series;
+    use Standard_Complex_Series_Functions;
+
+    s : constant Series(degree)
+      := Standard_Complex_Random_Series.Random_Series(degree);
+    xs : constant Link_to_Series := new Series'(s);
+    ls : Link_to_Series := new Series'(s);
+    ps : Series(degree);
+    pwr : integer32 := 0;
+
+  begin
+    put_line("Taking powers of a series ...");
+    put_line("on a random series s :"); put(s);
+    ps := s*s;
+    put_line(" s**2 : "); put(ps);
+    Mul(ls,ls);
+    put_line("ls**2 : "); put(ls);
+    put("Give a power : "); get(pwr);
+    ps := s**integer(pwr);
+    put(" s**"); put(pwr,1); put_line(" :"); put(ps);
+    Power(ls,xs,integer(pwr));
+    put("ls**"); put(pwr,1); put_line(" :"); put(ls);
+  end Standard_Test_Power;
+
+  procedure DoblDobl_Test_Power ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the computation of powers on series of the given degree,
+  --   in double double precision.
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Series;
+    use DoblDobl_Complex_Series_Functions;
+
+    s : constant Series(degree)
+      := DoblDobl_Complex_Random_Series.Random_Series(degree);
+    xs : constant Link_to_Series := new Series'(s);
+    ls : Link_to_Series := new Series'(s);
+    ps : Series(degree);
+    pwr : integer32 := 0;
+
+  begin
+    put_line("Taking powers of a series ...");
+    put_line("on a random series s :"); put(s);
+    ps := s*s;
+    put_line(" s**2 : "); put(ps);
+    Mul(ls,ls);
+    put_line("ls**2 : "); put(ls);
+    put("Give a power : "); get(pwr);
+    ps := s**integer(pwr);
+    put(" s**"); put(pwr,1); put_line(" :"); put(ps);
+    Power(ls,xs,integer(pwr));
+    put("ls**"); put(pwr,1); put_line(" :"); put(ls);
+  end DoblDobl_Test_Power;
+
+  procedure QuadDobl_Test_Power ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the computation of powers on series of the given degree,
+  --   in quad double precision.
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Series;
+    use QuadDobl_Complex_Series_Functions;
+
+    s : constant Series(degree)
+      := QuadDobl_Complex_Random_Series.Random_Series(degree);
+    xs : constant Link_to_Series := new Series'(s);
+    ls : Link_to_Series := new Series'(s);
+    ps : Series(degree);
+    pwr : integer32 := 0;
+
+  begin
+    put_line("Taking powers of a series ...");
+    put_line("on a random series s :"); put(s);
+    ps := s*s;
+    put_line(" s**2 : "); put(ps);
+    Mul(ls,ls);
+    put_line("ls**2 : "); put(ls);
+    put("Give a power : "); get(pwr);
+    ps := s**integer(pwr);
+    put(" s**"); put(pwr,1); put_line(" :"); put(ps);
+    Power(ls,xs,integer(pwr));
+    put("ls**"); put(pwr,1); put_line(" :"); put(ls);
+  end QuadDobl_Test_Power;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -811,8 +904,9 @@ procedure ts_cseries is
     put_line("  5. test complex conjugate of a series");
     put_line("  6. test the norm of a series");
     put_line("  7. test shift of series parameter");
-    put("Type 0, 1, 2, 3, 4, 5, 6, or 7 to select a test : ");
-    Ask_Alternative(ans,"01234567");
+    put_line("  8. test computation of powers");
+    put("Type 0, 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
+    Ask_Alternative(ans,"012345678");
     if ans /= '0' then
       new_line;
       put("Give the degree of the series : "); get(degree);
@@ -836,6 +930,7 @@ procedure ts_cseries is
           when '5' => Standard_Test_Conjugate(degree);
           when '6' => Standard_Test_Norm(degree);
           when '7' => Standard_Test_Shift(degree);
+          when '8' => Standard_Test_Power(degree);
           when others => null;
         end case;
       when '1' => 
@@ -848,6 +943,7 @@ procedure ts_cseries is
           when '5' => DoblDobl_Test_Conjugate(degree);
           when '6' => DoblDobl_Test_Norm(degree);
           when '7' => DoblDobl_Test_Shift(degree);
+          when '8' => DoblDobl_Test_Power(degree);
           when others => null;
         end case;
       when '2' =>
@@ -860,6 +956,7 @@ procedure ts_cseries is
           when '5' => QuadDobl_Test_Conjugate(degree);
           when '6' => QuadDobl_Test_Norm(degree);
           when '7' => QuadDobl_Test_Shift(degree);
+          when '8' => QuadDobl_Test_Power(degree);
           when others => null;
         end case;
       when others => null;

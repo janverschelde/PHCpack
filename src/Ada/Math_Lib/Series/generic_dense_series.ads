@@ -334,6 +334,8 @@ package Generic_Dense_Series is
   --   the precision of s will be raised to t.deg if t.deg > s.deg.
   --   This procedure is equivalent to s := s*t, but Mul(s,t) should
   --   be used because of memory management.
+  --   If t.deg <= s.deg, then Mul(s,t) is performed "in place"
+  --   without any extra memory locations.
 
   function Inverse ( s : Series ) return Series;
 
@@ -447,6 +449,15 @@ package Generic_Dense_Series is
   --   returns s**p, s to the power p.
 
   -- REQUIRED : if p < 0, then s.cff(0) /= 0.
+
+  procedure Power ( result : in out Link_to_Series;
+                    s : in Link_to_Series; p : in integer );
+
+  -- DESCRIPTION :
+  --   Returns in result the value of s**p for p >= 0.
+
+  -- REQUIRED :
+  --   result.deg >= s.deg and p >= 0
 
 -- DESTRUCTORS :
 

@@ -1,3 +1,8 @@
+Mon 17 Dec 2018 : modified Mul() in generic_dense_series so "in place"
+  is possible for the Link_to_Series types and added a Power procedure
+  which computes without extra memory locations.
+  Tested the power procedure with an test added to ts_cseries.adb.
+
 Mon 26 Nov 2018 : fixed sign error in the Shift functions in
   {standard,dobldobl,quaddobl}_complex_series_functions.adb.
   Corrected a fix in standard_complex_series_functions.adb.
