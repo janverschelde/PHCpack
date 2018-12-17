@@ -4,7 +4,7 @@ Sun 16 Dec 2018 : moved the put procedures from ts_monom into separate i/o,
   Defined vectors of monomials in generic_monomial_vectors and instantiated
   {standard,dobldobl,quaddobl}_monomial_vectors, with output in the
   corresponding _io packages, defined random_monomial_vectors, tested
-  by ts_monvec.adb.
+  by ts_monvec.adb.  Defined the analogue polynomial_vectors packages.
 
 Sat 15 Dec 2018 : new package generic_monomials, instantiated for double,
   double double and quad double complex coefficients, tested by ts_monom.

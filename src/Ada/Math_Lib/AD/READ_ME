@@ -26,3 +26,13 @@ quaddobl_monomial_vectors_io    : basic output of quaddobl monomial vectors
 random_monomial_vectors         : generators of random monomial vectors
 ts_monvec                       : test on the monomial vectors
 ------------------------------------------------------------------------------
+generic_polynomial_vectors      : vectors of polynomials over a ring
+standard_polynomial_vectors     : vectors of double complex polynomials
+standard_polynomial_vectors_io  : basic output of standard polynomial vectors
+dobldobl_polynomial_vectors     : vectors of double double complex polynomials
+dobldobl_polynomial_vectors_io  : basic output of dobldobl polynomial vectors
+quaddobl_polynomial_vectors     : vectors of quad double complex polynomials
+quaddobl_polynomial_vectors_io  : basic output of quaddobl polynomial vectors
+random_polynomial_vectors       : generators of random polynomial vectors
+ts_polvec                       : test on the polynomial vectors
+------------------------------------------------------------------------------
