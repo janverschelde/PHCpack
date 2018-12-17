@@ -24,8 +24,20 @@ package Generic_Polynomial_Vectors is
 
   type Link_to_Polynomial_Vector is access Polynomial_Vector;
 
-  procedure Clear ( v : in out Polynomial_Vector );
-  procedure Clear ( v : in out Link_to_Polynomial_Vector );
+-- EVALUATORS :
+
+  function Eval ( p : Polynomial_Vector;
+                  x : Vectors.Vector ) return Vectors.Vector;
+  function Eval ( p : Link_to_Polynomial_Vector;
+                  x : Vectors.Vector ) return Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Applies the straightforward algorithm to evaluate p at x.
+
+-- DESTRUCTORS :
+
+  procedure Clear ( p : in out Polynomial_Vector );
+  procedure Clear ( p : in out Link_to_Polynomial_Vector );
 
   -- DESCRIPTION :
   --   Deallocates the space occupied by the monomial vector m.

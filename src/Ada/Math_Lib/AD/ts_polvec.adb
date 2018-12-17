@@ -4,10 +4,25 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Complex_Numbers;
+with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
+with Standard_Random_Vectors;
+with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Random_Vectors;
+with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Random_Vectors;
+with Standard_Monomial_Vectors;
 with Standard_Polynomial_Vectors;
 with Standard_Polynomial_Vectors_io;    use Standard_Polynomial_Vectors_io;
+with DoblDobl_Monomial_Vectors;
 with DoblDobl_Polynomial_Vectors;
 with DoblDobl_Polynomial_Vectors_io;    use DoblDobl_Polynomial_Vectors_io;
+with QuadDobl_Monomial_Vectors;
 with QuadDobl_Polynomial_Vectors;
 with QuadDobl_Polynomial_Vectors_io;    use QuadDobl_Polynomial_Vectors_io;
 with Random_Polynomial_Vectors;         use Random_Polynomial_Vectors;
@@ -15,7 +30,64 @@ with Random_Polynomial_Vectors;         use Random_Polynomial_Vectors;
 procedure ts_polvec is
 
 -- DESCRIPTION :
---   Tests the operations on monomials.
+--   Tests the operations on polynomial vectors.
+
+  procedure Standard_Eval
+              ( p : in Standard_Polynomial_Vectors.Link_to_Polynomial_Vector )
+  is
+
+  -- DESCRIPTION :
+  --   Evaluates p at a random vector, in double precision.
+
+    m : constant Standard_Monomial_Vectors.Link_to_Monomial_Vector
+      := p(p'first);
+    dim : constant integer32 := integer32(m(m'first).dim);
+    x : constant Standard_Complex_Vectors.Vector(1..dim)
+      := Standard_Random_Vectors.Random_Vector(1,dim);
+    y : Standard_Complex_Vectors.Vector(p'range);
+
+  begin
+    y := Standard_Polynomial_Vectors.Eval(p,x);
+    put_line("y : "); put_line(y); new_line;
+  end Standard_Eval;
+
+  procedure DoblDobl_Eval
+              ( p : in DoblDobl_Polynomial_Vectors.Link_to_Polynomial_Vector )
+  is
+
+  -- DESCRIPTION :
+  --   Evaluates p at a random vector, in double double precision.
+
+    m : constant DoblDobl_Monomial_Vectors.Link_to_Monomial_Vector
+      := p(p'first);
+    dim : constant integer32 := integer32(m(m'first).dim);
+    x : constant DoblDobl_Complex_Vectors.Vector(1..dim)
+      := DoblDobl_Random_Vectors.Random_Vector(1,dim);
+    y : DoblDobl_Complex_Vectors.Vector(p'range);
+
+  begin
+    y := DoblDobl_Polynomial_Vectors.Eval(p,x);
+    put_line("y : "); put_line(y); new_line;
+  end DoblDobl_Eval;
+
+  procedure QuadDobl_Eval
+              ( p : in QuadDobl_Polynomial_Vectors.Link_to_Polynomial_Vector )
+  is
+
+  -- DESCRIPTION :
+  --   Evaluates m at a random vector, in quad double precision.
+
+    m : constant QuadDobl_Monomial_Vectors.Link_to_Monomial_Vector
+      := p(p'first);
+    dim : constant integer32 := integer32(m(m'first).dim);
+    x : constant QuadDobl_Complex_Vectors.Vector(1..dim)
+      := QuadDobl_Random_Vectors.Random_Vector(1,dim);
+    y : QuadDobl_Complex_Vectors.Vector(p'range);
+
+  begin
+    y := QuadDobl_Polynomial_Vectors.Eval(p,x);
+    put_line("y : "); put_line(y); new_line;
+  end QuadDobl_Eval;
 
   procedure Standard_Test is
 
@@ -39,6 +111,7 @@ procedure ts_polvec is
     begin
       p := new Standard_Polynomial_Vectors.Polynomial_Vector'(ranvec);
       put_line("a random polynomial vector : "); put(p);
+      Standard_Eval(p);
     end;
   end Standard_Test;
 
@@ -64,6 +137,7 @@ procedure ts_polvec is
     begin
       p := new DoblDobl_Polynomial_Vectors.Polynomial_Vector'(ranvec);
       put_line("a random polynomial vector : "); put(p);
+      DoblDobl_Eval(p);
     end;
   end DoblDobl_Test;
 
@@ -89,6 +163,7 @@ procedure ts_polvec is
     begin
       p := new QuadDobl_Polynomial_Vectors.Polynomial_Vector'(ranvec);
       put_line("a random monomial vector :"); put(p);
+      QuadDobl_Eval(p);
     end;
   end QuadDobl_Test;
 

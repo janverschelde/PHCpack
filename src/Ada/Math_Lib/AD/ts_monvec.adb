@@ -4,6 +4,18 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
+with Standard_Complex_Vectors;
+with Standard_Random_Vectors;
+with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Random_Vectors;
+with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Random_Vectors;
 with Standard_Monomial_Vectors;
 with Standard_Monomial_Vectors_io;      use Standard_Monomial_Vectors_io;
 with DoblDobl_Monomial_Vectors;
@@ -15,7 +27,55 @@ with Random_Monomial_Vectors;           use Random_Monomial_Vectors;
 procedure ts_monvec is
 
 -- DESCRIPTION :
---   Tests the operations on monomials.
+--   Tests the operations on monomial vectors.
+
+  procedure Standard_Eval
+              ( m : in Standard_Monomial_Vectors.Link_to_Monomial_Vector ) is
+
+  -- DESCRIPTION :
+  --   Evaluates m at a random vector, in double precision.
+
+    dim : constant integer32 := integer32(m(m'first).dim);
+    x : constant Standard_Complex_Vectors.Vector(1..dim)
+      := Standard_Random_Vectors.Random_Vector(1,dim);
+    y : Standard_Complex_Numbers.Complex_Number;
+
+  begin
+    y := Standard_Monomial_Vectors.Eval(m,x);
+    put("y : "); put(y); new_line;
+  end Standard_Eval;
+
+  procedure DoblDobl_Eval
+              ( m : in DoblDobl_Monomial_Vectors.Link_to_Monomial_Vector ) is
+
+  -- DESCRIPTION :
+  --   Evaluates m at a random vector, in double double precision.
+
+    dim : constant integer32 := integer32(m(m'first).dim);
+    x : constant DoblDobl_Complex_Vectors.Vector(1..dim)
+      := DoblDobl_Random_Vectors.Random_Vector(1,dim);
+    y : DoblDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    y := DoblDobl_Monomial_Vectors.Eval(m,x);
+    put("y : "); put(y); new_line;
+  end DoblDobl_Eval;
+
+  procedure QuadDobl_Eval
+              ( m : in QuadDobl_Monomial_Vectors.Link_to_Monomial_Vector ) is
+
+  -- DESCRIPTION :
+  --   Evaluates m at a random vector, in quad double precision.
+
+    dim : constant integer32 := integer32(m(m'first).dim);
+    x : constant QuadDobl_Complex_Vectors.Vector(1..dim)
+      := QuadDobl_Random_Vectors.Random_Vector(1,dim);
+    y : QuadDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    y := QuadDobl_Monomial_Vectors.Eval(m,x);
+    put("y : "); put(y); new_line;
+  end QuadDobl_Eval;
 
   procedure Standard_Main is
 
@@ -39,6 +99,7 @@ procedure ts_monvec is
     begin
       v := new Standard_Monomial_Vectors.Monomial_Vector'(ranvec);
       put_line("a random monomial vector : "); put(v);
+      Standard_Eval(v);
     end;
   end Standard_Main;
 
@@ -64,6 +125,7 @@ procedure ts_monvec is
     begin
       v := new DoblDobl_Monomial_Vectors.Monomial_Vector'(ranvec);
       put_line("a random monomial vector : "); put(v);
+      DoblDobl_Eval(v);
     end;
   end DoblDobl_Main;
 
@@ -89,6 +151,7 @@ procedure ts_monvec is
     begin
       v := new QuadDobl_Monomial_Vectors.Monomial_Vector'(ranvec);
       put_line("a random monomial vector :"); put(v);
+      QuadDobl_Eval(v);
     end;
   end QuadDobl_Main;
 

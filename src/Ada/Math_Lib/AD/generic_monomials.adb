@@ -3,6 +3,8 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 
 package body Generic_Monomials is
 
+-- CONSTRUCTORS :
+
   function Create ( c : Ring.number; dim : natural32 ) return Monomial is
 
     res : Monomial;
@@ -61,6 +63,41 @@ package body Generic_Monomials is
     end if;
     return res;
   end Create;
+
+-- EVALUATORS :
+
+  function Eval ( m : Monomial; x : Vectors.Vector ) return Ring.number is
+
+    res : Ring.number := m.cff;
+
+    use Ring;
+
+  begin
+    for i in 1..integer32(m.nvr) loop
+      for j in 1..m.exp(i) loop
+        res := res*x(integer32(m.pos(i)));
+      end loop;
+    end loop;
+    return res;
+  end Eval;
+
+  function Eval ( m : Link_to_Monomial;
+                  x : Vectors.Vector ) return Ring.number is
+
+    res : Ring.number := m.cff;
+
+    use Ring;
+
+  begin
+    for i in 1..integer32(m.nvr) loop
+      for j in 1..m.exp(i) loop
+        res := res*x(integer32(m.pos(i)));
+      end loop;
+    end loop;
+    return res;
+  end Eval;
+
+-- DESTRUCTORS :
     
   procedure Clear ( m : in out Monomial ) is
   begin

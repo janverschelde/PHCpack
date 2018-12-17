@@ -21,6 +21,18 @@ package Generic_Monomial_Vectors is
 
   type Link_to_Monomial_Vector is access Monomial_Vector;
 
+-- EVALUATORS :
+
+  function Eval ( v : Monomial_Vector;
+                  x : Vectors.Vector ) return Ring.number;
+  function Eval ( v : Link_to_Monomial_Vector;
+                  x : Vectors.Vector ) return Ring.number;
+
+  -- DESCRIPTION :
+  --   Applies the straightforward algorithm to evaluate v at x.
+
+-- DESTRUCTORS :
+
   procedure Clear ( v : in out Monomial_Vector );
   procedure Clear ( v : in out Link_to_Monomial_Vector );
 

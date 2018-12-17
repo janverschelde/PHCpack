@@ -1,3 +1,7 @@
+Mon 17 Dec 2018 : added the straightforward evaluation functions to
+  generic_monomials, generic_monomial_vectors, generic_polynomial_vectors,
+  tested by ts_monom, ts_monvec, and ts_polvec.
+
 Sun 16 Dec 2018 : moved the put procedures from ts_monom into separate i/o,
   into the packages {standard,dobldobl,quaddobl}_monomials_io.
   New package random_monomials with the code from ts_monom.adb.

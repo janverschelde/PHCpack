@@ -35,6 +35,8 @@ package Generic_Monomials is
 
   type Link_to_Monomial is access Monomial;
 
+-- CONSTRUCTORS :
+
   function Create ( c : Ring.number; dim : natural32 ) return Monomial;
 
   -- DESCRIPTION :
@@ -47,6 +49,17 @@ package Generic_Monomials is
   -- DESCRIPTION :
   --   Returns the constant monomial with coefficient c
   --   and exponents in e.
+
+-- EVALUATORS :
+
+  function Eval ( m : Monomial; x : Vectors.Vector ) return Ring.number;
+  function Eval ( m : Link_to_Monomial;
+                  x : Vectors.Vector ) return Ring.number;
+
+  -- DESCRIPTION :
+  --   Applies the straightforward algorithm to evaluate m at x.
+
+-- DESTRUCTORS :
 
   procedure Clear ( m : in out Monomial );
   procedure Clear ( m : in out Link_to_Monomial );
