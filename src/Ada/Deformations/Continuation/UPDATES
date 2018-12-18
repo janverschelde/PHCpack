@@ -1,3 +1,5 @@
+Tue 18 Dec 2018 : added writing of time stamps to mainpoco.adb.
+
 Fri 31 Aug 2018 : filtered the solutions on reaching the target in
   {standard,dobldobl,quaddobl}_blackbox_refiners.adb.
 

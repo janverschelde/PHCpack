@@ -1,5 +1,7 @@
 with text_io;                            use text_io;
+with Ada.Calendar;
 with Communications_with_User;           use Communications_with_User;
+with Time_Stamps;
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
@@ -423,6 +425,27 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     end if;
   end Write_Solutions;
 
+  procedure Write_Conclusion
+              ( file : in file_type;
+                start_moment,ended_moment : in Ada.Calendar.Time ) is
+
+  -- DESCRIPTION :
+  --   Writes to file the time stamps for the wall clock time elapsed
+  --   between the start and end moment of the computations.
+  --   Writes to file also the seed and version number.
+
+  begin
+    new_line(file);
+    put(file,"PHC ran from ");
+    Time_Stamps.Write_Time_Stamp(file,start_moment);
+    put(file," till ");
+    Time_Stamps.Write_Time_Stamp(file,ended_moment);
+    put_line(file,".");
+    Time_Stamps.Write_Elapsed_Time(file,start_moment,ended_moment);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
+  end Write_Conclusion;
+
   procedure Secant_Homotopy
               ( nbequ,nbvar : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -445,6 +468,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     nv_p : natural32;
     dd_p : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     qd_p : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
 
   begin
     Create_Output_File(outft,outfilename);
@@ -479,10 +505,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
       qd_p := QuadDobl_Complex_Poly_Strings.Parse(nv_p,ls.all);
       Refine_Solutions(outft,qd_p,target,qdsols,qdrefsols,solsfile);
     end if;
-    new_line(outft);
-    Write_Seed_Number(outft);
-    put_line(outft,Greeting_Banners.Version);
-   -- put(outft,Bye_Bye_Message);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Conclusion(outft,start_moment,ended_moment);
     Close(outft);
     if solsfile then
       Write_Solutions(solsft,refsols,ddrefsols,qdrefsols,mpsols);
@@ -512,6 +536,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     nv_p : natural32;
     dd_p : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     qd_p : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
 
   begin
     Create_Output_File(outft,outfilename);
@@ -545,9 +572,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
       qd_p := QuadDobl_Complex_Laur_Strings.Parse(nv_p,ls.all);
       Refine_Solutions(outft,qd_p,target,qdsols,qdrefsols,solsfile);
     end if;
-    Write_Seed_Number(outft);
-    put_line(outft,Greeting_Banners.Version);
-   -- put(outft,Bye_Bye_Message);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Conclusion(outft,start_moment,ended_moment);
     Close(outft);
     if solsfile then
       Write_Solutions(solsft,refsols,ddrefsols,qdrefsols,mpsols);
@@ -583,10 +609,16 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     nb_equ,nb_unk,nb_par : integer32;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
+
   begin
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Coefficient_Parameter_Homotopy_Continuation
       (outfile,p,sols,nb_equ,nb_unk,nb_par);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Conclusion(outfile,start_moment,ended_moment);
+    close(outfile);
   end Parameter_Homotopy;
 
   procedure Parameter_Homotopy
@@ -600,10 +632,16 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     nb_equ,nb_unk,nb_par : integer32;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
+
   begin
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Coefficient_Parameter_Homotopy_Continuation
       (outfile,p,sols,nb_equ,nb_unk,nb_par);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Conclusion(outfile,start_moment,ended_moment);
+    close(outfile);
   end Parameter_Homotopy;
 
   procedure Sweep_Homotopy
@@ -619,9 +657,15 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     nb_equ,nb_unk,nb_par : integer32;
     isreal : boolean := Standard_Complex_to_Real_Poly.Is_Real(p);
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
+
   begin
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Sweep(outfile,isreal,p,sols,nb_equ,nb_unk,nb_par);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Conclusion(outfile,start_moment,ended_moment);
+    close(outfile);
   end Sweep_Homotopy;
 
   procedure Sweep_Homotopy
@@ -637,9 +681,15 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     nb_equ,nb_unk,nb_par : integer32;
     isreal : boolean := DoblDobl_Complex_to_Real_Poly.Is_Real(p);
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
+
   begin
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Sweep(outfile,isreal,p,sols,nb_equ,nb_unk,nb_par);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Conclusion(outfile,start_moment,ended_moment);
+    close(outfile);
   end Sweep_Homotopy;
 
   procedure Sweep_Homotopy
@@ -655,9 +705,15 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     nb_equ,nb_unk,nb_par : integer32;
     isreal : boolean := QuadDobl_Complex_to_Real_Poly.Is_Real(p);
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
+
   begin
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Sweep(outfile,isreal,p,sols,nb_equ,nb_unk,nb_par);
+    ended_moment := Ada.Calendar.Clock;
+    Write_Conclusion(outfile,start_moment,ended_moment);
+    close(outfile);
   end Sweep_Homotopy;
 
   procedure Multitasking_Secant_Homotopy
@@ -677,10 +733,16 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
     outft : file_type;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
+
   begin
     Create_Output_File(outft,outfilename);
     Multitasking_Continuation.Driver_to_Path_Tracker
       (outft,p,prclvl,ls,integer32(nt),integer32(nbequ),integer32(nbvar));
+    ended_moment := Ada.Calendar.Clock;
+    Write_Conclusion(outft,start_moment,ended_moment);
+    close(outft);
   end Multitasking_Secant_Homotopy;
 
   procedure Multitasking_Secant_Homotopy
@@ -700,10 +762,16 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
     outft : file_type;
 
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+    ended_moment : Ada.Calendar.Time;
+
   begin
     Create_Output_File(outft,outfilename);
     Multitasking_Continuation.Driver_to_Path_Tracker
       (outft,p,prclvl,ls,integer32(nt),integer32(nbequ),integer32(nbvar));
+    ended_moment := Ada.Calendar.Clock;
+    Write_Conclusion(outft,start_moment,ended_moment);
+    close(outft);
   end Multitasking_Secant_Homotopy;
 
   procedure Parameter_or_Sweep_Homotopy
