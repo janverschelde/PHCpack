@@ -64,7 +64,7 @@ package body Generic_Monomials is
     return res;
   end Create;
 
--- EVALUATORS :
+-- EVALUATION and DIFFERENTIATION :
 
   function Eval ( m : Monomial; x : Vectors.Vector ) return Ring.number is
 
@@ -98,6 +98,47 @@ package body Generic_Monomials is
     end loop;
     return res;
   end Eval;
+
+  procedure Diff ( m : in Monomial; x : in Vectors.Vector;
+                   yd : in out Vectors.Vector ) is
+
+    idx : integer32;
+
+    use Ring;
+
+  begin
+    for i in 1..integer32(m.nvr) loop
+      idx := integer32(m.pos(i));
+      Copy(m.cff,yd(i));
+      for j in 1..integer32(m.nvr) loop
+        if i /= j then
+          idx := integer32(m.pos(j));
+          for k in 1..integer32(m.exp(j)) loop
+            Mul(yd(i),x(idx));
+          end loop;
+        end if;
+      end loop;
+    end loop;
+  end Diff;
+
+  procedure Speel ( m : in Monomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    use Ring;
+
+  begin
+    Copy(x(integer32(m.pos(1))),yd(2));
+    for i in 2..integer32(m.nvr-1) loop
+      yd(i+1) := yd(i)*x(integer32(m.pos(i)));
+    end loop;
+    Copy(m.cff,y);
+    for i in reverse 2..integer32(m.nvr) loop
+      Mul(yd(i),y);
+      Mul(y,x(integer32(m.pos(i))));
+    end loop;
+    Copy(y,yd(1));
+    Mul(y,x(integer32(m.pos(1))));
+  end Speel;
 
 -- DESTRUCTORS :
     

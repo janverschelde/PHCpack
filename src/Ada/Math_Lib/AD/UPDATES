@@ -3,6 +3,8 @@ Mon 17 Dec 2018 : added the straightforward evaluation functions to
   tested by ts_monom, ts_monvec, and ts_polvec.
   Modified generic_monomials.adb and generic_monomial_vectors.adb
   so the Eval() functions perform the multiplications in place.
+  Added the straighforward differentiation and Speelpenning algorithm
+  for a product of variables to generic_monomials, tested by ts_monom.adb.
 
 Sun 16 Dec 2018 : moved the put procedures from ts_monom into separate i/o,
   into the packages {standard,dobldobl,quaddobl}_monomials_io.

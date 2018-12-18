@@ -50,7 +50,7 @@ package Generic_Monomials is
   --   Returns the constant monomial with coefficient c
   --   and exponents in e.
 
--- EVALUATORS :
+-- EVALUATION and DIFFERENTIATION :
 
   function Eval ( m : Monomial; x : Vectors.Vector ) return Ring.number;
   function Eval ( m : Link_to_Monomial;
@@ -58,6 +58,33 @@ package Generic_Monomials is
 
   -- DESCRIPTION :
   --   Applies the straightforward algorithm to evaluate m at x.
+
+  procedure Diff ( m : in Monomial; x : in Vectors.Vector;
+                   yd : in out Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Applies the straightforward algorithm to differentiate m at x.
+  --   The evaluated derivatives of m at x are in the vector yd,
+  --   stored in the first m.nvr positions.
+
+  procedure Speel ( m : in Monomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Applies the algorithm of Speelpenning to evaluate the monomial m and
+  --   all its derivatives at x.
+
+  -- REQUIRED : m.nvr > 0, at least one variable has exponent 1 and
+  --   m.n_base = 0, i.e.: no variables appear with exponent 2 or higher.
+
+  -- ON ENTRY :
+  --   m       a monomial;
+  --   x       a vector of range 1..m.dim.
+
+  -- ON RETURN :
+  --   y       the value of the monomial at x;
+  --   yd      all partial derivatives of m at x,
+  --           stored in the first m.nvr positions.
 
 -- DESTRUCTORS :
 

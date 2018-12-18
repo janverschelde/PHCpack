@@ -7,14 +7,17 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Random_Vectors;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Random_Vectors;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Random_Vectors;
 with Standard_Complex_Monomials;
 with Standard_Complex_Monomials_io;     use Standard_Complex_Monomials_io;
@@ -36,11 +39,20 @@ procedure ts_monom is
 
     x : constant Standard_Complex_Vectors.Vector(1..integer32(m.dim))
       := Standard_Random_Vectors.Random_Vector(1,integer32(m.dim));
-    y : Standard_Complex_Numbers.Complex_Number;
+    y,z : Standard_Complex_Numbers.Complex_Number;
+    yd,zd : Standard_Complex_Vectors.Vector(x'range)
+          := (x'range => Standard_Complex_Numbers.Create(0.0));
 
   begin
-    y := Standard_Complex_Monomials.Eval(m,x);
+    z := Standard_Complex_Monomials.Eval(m,x);
+    put("z : "); put(z); new_line;
+    Standard_Complex_Monomials.Diff(m,x,zd);
+    Standard_Complex_Monomials.Speel(m,x,y,yd);
     put("y : "); put(y); new_line;
+    put_line("The derivatives computed with the Speelpenning algorithm :");
+    put_line(yd(1..integer32(m.nvr)));
+    put_line("The derivatives computed with the straightforward algorithm :");
+    put_line(zd(1..integer32(m.nvr)));
   end Standard_Eval;
 
   procedure DoblDobl_Eval ( m : in DoblDobl_Complex_Monomials.Monomial ) is
@@ -50,11 +62,20 @@ procedure ts_monom is
 
     x : constant DoblDobl_Complex_Vectors.Vector(1..integer32(m.dim))
       := DoblDobl_Random_Vectors.Random_Vector(1,integer32(m.dim));
-    y : DoblDobl_Complex_Numbers.Complex_Number;
+    y,z : DoblDobl_Complex_Numbers.Complex_Number;
+    yd,zd : DoblDobl_Complex_Vectors.Vector(x'range)
+          := (x'range => DoblDobl_Complex_Numbers.Create(integer32(0)));
 
   begin
-    y := DoblDobl_Complex_Monomials.Eval(m,x);
+    z := DoblDobl_Complex_Monomials.Eval(m,x);
+    put("z : "); put(z); new_line;
+    DoblDobl_Complex_Monomials.Diff(m,x,zd);
+    DoblDobl_Complex_Monomials.Speel(m,x,y,yd);
     put("y : "); put(y); new_line;
+    put_line("The derivatives computed with the Speelpenning algorithm :");
+    put_line(yd(1..integer32(m.nvr)));
+    put_line("The derivatives computed with the straightforward algorithm :");
+    put_line(zd(1..integer32(m.nvr)));
   end DoblDobl_Eval;
 
   procedure QuadDobl_Eval ( m : in QuadDobl_Complex_Monomials.Monomial ) is
@@ -64,11 +85,20 @@ procedure ts_monom is
 
     x : constant QuadDobl_Complex_Vectors.Vector(1..integer32(m.dim))
       := QuadDobl_Random_Vectors.Random_Vector(1,integer32(m.dim));
-    y : QuadDobl_Complex_Numbers.Complex_Number;
+    y,z : QuadDobl_Complex_Numbers.Complex_Number;
+    yd,zd : QuadDobl_Complex_Vectors.Vector(x'range)
+          := (x'range => QuadDobl_Complex_Numbers.Create(integer32(0)));
 
   begin
-    y := QuadDobl_Complex_Monomials.Eval(m,x);
+    z := QuadDobl_Complex_Monomials.Eval(m,x);
+    put("z : "); put(z); new_line;
+    QuadDobl_Complex_Monomials.Diff(m,x,zd);
+    QuadDobl_Complex_Monomials.Speel(m,x,y,yd);
     put("y : "); put(y); new_line;
+    put_line("The derivatives computed with the Speelpenning algorithm :");
+    put_line(yd(1..integer32(m.nvr)));
+    put_line("The derivatives computed with the straightforward algorithm :");
+    put_line(zd(1..integer32(m.nvr)));
   end QuadDobl_Eval;
 
   procedure Standard_Test is
