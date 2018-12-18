@@ -15,4 +15,13 @@ package DoblDobl_Monomial_Vectors_io is
   --   Writes the contents of the monomial vector to standard output
   --   or to file.
 
+  procedure put ( p : in Polynomial );
+  procedure put ( file : in file_type; p : in Polynomial );
+  procedure put ( p : in Link_to_Polynomial );
+  procedure put ( file : in file_type; p : in Link_to_Polynomial );
+
+  -- DESCRIPTION :
+  --   Writes the contents of the polynomial to standard output
+  --   or to file.
+
 end DoblDobl_Monomial_Vectors_io;

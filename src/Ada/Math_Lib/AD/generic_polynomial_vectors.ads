@@ -20,7 +20,7 @@ package Generic_Polynomial_Vectors is
 --   A polynomial vector is a vector of monomial vectors.
 
   type Polynomial_Vector is 
-    array ( integer32 range <> ) of Polynomials.Link_to_Monomial_Vector;
+    array ( integer32 range <> ) of Polynomials.Link_to_Polynomial;
 
   type Link_to_Polynomial_Vector is access Polynomial_Vector;
 

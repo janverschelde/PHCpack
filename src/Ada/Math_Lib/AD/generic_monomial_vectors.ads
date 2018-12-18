@@ -19,9 +19,17 @@ package Generic_Monomial_Vectors is
   type Monomial_Vector is 
     array ( integer32 range <> ) of Monomials.Link_to_Monomial;
 
-  type Link_to_Monomial_Vector is access Monomial_Vector;
+  type Polynomial ( dim,nbr : integer32 ) is record
+   -- dim is the ambient dimension, the total number of variables
+   -- nbr is the number of monomials, excluding the constant term
+    cff0 : Ring.number;             -- constant term of the polynomial
+    mons : Monomial_Vector(1..nbr); -- monomials with at least one variable
+  end record;
 
--- EVALUATORS :
+  type Link_to_Monomial_Vector is access Monomial_Vector;
+  type Link_to_Polynomial is access Polynomial;
+
+-- EVALUATION and DIFFERENTIATION :
 
   function Eval ( v : Monomial_Vector;
                   x : Vectors.Vector ) return Ring.number;
@@ -31,12 +39,48 @@ package Generic_Monomial_Vectors is
   -- DESCRIPTION :
   --   Applies the straightforward algorithm to evaluate v at x.
 
+  function Eval ( p : Polynomial;
+                  x : Vectors.Vector ) return Ring.number;
+  function Eval ( p : Link_to_Polynomial;
+                  x : Vectors.Vector ) return Ring.number;
+
+  -- DESCRIPTION :
+  --   Applies the straightforward algorithm to evaluate p at x.
+
+  procedure Speel ( v : in Monomial_Vector; x : in Vectors.Vector;
+                    y : in out Ring.number; yd,wrk : in out Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Applies the algorithm of Speelpenning to evaluate the monomials
+  --   in v and all its derivatives at x.
+
+  -- REQUIRED : m.nvr > 0, at least one variable has exponent 1 and
+  --   m.n_base = 0, i.e.: no variables appear with exponent 2 or higher.
+  --   The ranges of yd and wrk start at 1 and end at m.nvr or higher.
+
+  -- ON ENTRY :
+  --   m       a monomial;
+  --   x       a vector of range 1..m.dim.
+
+  -- ON RETURN :
+  --   y       the value of the monomial at x;
+  --   yd      all partial derivatives of m at x,
+  --           stored in the first m.nvr positions;
+  --   wrk     work space to hold intermedidate values of the derivatives
+  --           of the monomials.
+
 -- DESTRUCTORS :
 
   procedure Clear ( v : in out Monomial_Vector );
   procedure Clear ( v : in out Link_to_Monomial_Vector );
 
   -- DESCRIPTION :
-  --   Deallocates the space occupied by the monomial vector m.
+  --   Deallocates the space occupied by the monomial vector v.
+
+  procedure Clear ( p : in out Polynomial );
+  procedure Clear ( p : in out Link_to_Polynomial );
+
+  -- DESCRIPTION :
+  --   Deallocates the space occupied by the polynomial p.
 
 end Generic_Monomial_Vectors;

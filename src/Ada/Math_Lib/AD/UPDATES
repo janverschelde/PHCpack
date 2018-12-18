@@ -1,3 +1,9 @@
+Tue 18 Dec 2018 : added a polynomial type to generic_monomial_vectors,
+  which changed {standard,dobldobl,quaddobl}_monomial_vectors_io.
+  This caused changes in generic_polynomial_vectors and ts_polvec.
+  All generators for random instances, the random_monomials, the
+  random_monomial_vectors, and random_polynomial_vectors were modified.
+
 Mon 17 Dec 2018 : added the straightforward evaluation functions to
   generic_monomials, generic_monomial_vectors, generic_polynomial_vectors,
   tested by ts_monom, ts_monvec, and ts_polvec.

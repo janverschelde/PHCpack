@@ -1,3 +1,6 @@
+with Standard_Random_Numbers;
+with DoblDobl_Random_Numbers;
+with QuadDobl_Random_Numbers;
 with Standard_Complex_Monomials;
 with DoblDobl_Complex_Monomials;
 with QuadDobl_Complex_Monomials;
@@ -14,12 +17,7 @@ package body Random_Monomial_Vectors is
 
   begin
     for i in 1..size loop
-      declare
-        mon : constant Standard_Complex_Monomials.Monomial
-            := Random_Monomials.Standard_Random_Monomial(dim,expmax,verbose);
-      begin
-        res(i) := new Standard_Complex_Monomials.Monomial'(mon);
-      end;
+      res(i) := Random_Monomials.Standard_Random_Monomial(dim,expmax,verbose);
     end loop;
     return res;
   end Standard_Random_Monomial_Vector;
@@ -33,12 +31,7 @@ package body Random_Monomial_Vectors is
 
   begin
     for i in 1..size loop
-      declare
-        mon : constant DoblDobl_Complex_Monomials.Monomial
-            := Random_Monomials.DoblDobl_Random_Monomial(dim,expmax,verbose);
-      begin
-        res(i) := new DoblDobl_Complex_Monomials.Monomial'(mon);
-      end;
+      res(i) := Random_Monomials.DoblDobl_Random_Monomial(dim,expmax,verbose);
     end loop;
     return res;
   end DoblDobl_Random_Monomial_Vector;
@@ -52,14 +45,90 @@ package body Random_Monomial_Vectors is
 
   begin
     for i in 1..size loop
-      declare
-        mon : constant QuadDobl_Complex_Monomials.Monomial
-            := Random_Monomials.QuadDobl_Random_Monomial(dim,expmax,verbose);
-      begin
-        res(i) := new QuadDobl_Complex_Monomials.Monomial'(mon);
-      end;
+      res(i) := Random_Monomials.QuadDobl_Random_Monomial(dim,expmax,verbose);
     end loop;
     return res;
   end QuadDobl_Random_Monomial_Vector;
- 
+
+  function Standard_Random_Polynomial
+             ( size,dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return Standard_Monomial_Vectors.Polynomial is
+
+    res : Standard_Monomial_Vectors.Polynomial(dim,size);
+
+  begin
+    res.cff0 := Standard_Random_Numbers.Random1;
+    res.mons := Standard_Random_Monomial_Vector(size,dim,expmax,verbose);
+    return res;
+  end Standard_Random_Polynomial;
+
+  function Standard_Random_Polynomial
+             ( size,dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return Standard_Monomial_Vectors.Link_to_Polynomial is
+
+    res : Standard_Monomial_Vectors.Link_to_Polynomial;
+    rnd : constant Standard_Monomial_Vectors.Polynomial(dim,size)
+        := Standard_Random_Polynomial(size,dim,expmax,verbose);
+
+  begin
+    res := new Standard_Monomial_Vectors.Polynomial'(rnd);
+    return res;
+  end Standard_Random_Polynomial;
+
+  function DoblDobl_Random_Polynomial
+             ( size,dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return DoblDobl_Monomial_Vectors.Polynomial is
+
+    res : DoblDobl_Monomial_Vectors.Polynomial(dim,size);
+
+  begin
+    res.cff0 := DoblDobl_Random_Numbers.Random1;
+    res.mons := DoblDobl_Random_Monomial_Vector(size,dim,expmax,verbose);
+    return res;
+  end DoblDobl_Random_Polynomial;
+
+  function DoblDobl_Random_Polynomial
+             ( size,dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return DoblDobl_Monomial_Vectors.Link_to_Polynomial is
+
+    res : DoblDobl_Monomial_Vectors.Link_to_Polynomial;
+    rnd : constant DoblDobl_Monomial_Vectors.Polynomial(dim,size)
+        := DoblDobl_Random_Polynomial(size,dim,expmax,verbose);
+
+  begin
+    res := new DoblDobl_Monomial_Vectors.Polynomial'(rnd);
+    return res;
+  end DoblDobl_Random_Polynomial;
+
+  function QuadDobl_Random_Polynomial
+             ( size,dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return QuadDobl_Monomial_Vectors.Polynomial is
+
+    res : QuadDobl_Monomial_Vectors.Polynomial(dim,size);
+
+  begin
+    res.cff0 := QuadDobl_Random_Numbers.Random1;
+    res.mons := QuadDobl_Random_Monomial_Vector(size,dim,expmax,verbose);
+    return res;
+  end QuadDobl_Random_Polynomial;
+
+  function QuadDobl_Random_Polynomial
+             ( size,dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return QuadDobl_Monomial_Vectors.Link_to_Polynomial is
+
+    res : QuadDobl_Monomial_Vectors.Link_to_Polynomial;
+    rnd : constant QuadDobl_Monomial_Vectors.Polynomial(dim,size)
+        := QuadDobl_Random_Polynomial(size,dim,expmax,verbose);
+
+  begin
+    res := new QuadDobl_Monomial_Vectors.Polynomial'(rnd);
+    return res;
+  end QuadDobl_Random_Polynomial;
+
 end Random_Monomial_Vectors;

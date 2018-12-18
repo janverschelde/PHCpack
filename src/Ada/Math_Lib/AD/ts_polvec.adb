@@ -39,9 +39,7 @@ procedure ts_polvec is
   -- DESCRIPTION :
   --   Evaluates p at a random vector, in double precision.
 
-    m : constant Standard_Monomial_Vectors.Link_to_Monomial_Vector
-      := p(p'first);
-    dim : constant integer32 := integer32(m(m'first).dim);
+    dim : constant integer32 := integer32(p(p'first).dim);
     x : constant Standard_Complex_Vectors.Vector(1..dim)
       := Standard_Random_Vectors.Random_Vector(1,dim);
     y : Standard_Complex_Vectors.Vector(p'range);
@@ -58,9 +56,7 @@ procedure ts_polvec is
   -- DESCRIPTION :
   --   Evaluates p at a random vector, in double double precision.
 
-    m : constant DoblDobl_Monomial_Vectors.Link_to_Monomial_Vector
-      := p(p'first);
-    dim : constant integer32 := integer32(m(m'first).dim);
+    dim : constant integer32 := integer32(p(p'first).dim);
     x : constant DoblDobl_Complex_Vectors.Vector(1..dim)
       := DoblDobl_Random_Vectors.Random_Vector(1,dim);
     y : DoblDobl_Complex_Vectors.Vector(p'range);
@@ -77,9 +73,7 @@ procedure ts_polvec is
   -- DESCRIPTION :
   --   Evaluates m at a random vector, in quad double precision.
 
-    m : constant QuadDobl_Monomial_Vectors.Link_to_Monomial_Vector
-      := p(p'first);
-    dim : constant integer32 := integer32(m(m'first).dim);
+    dim : constant integer32 := integer32(p(p'first).dim);
     x : constant QuadDobl_Complex_Vectors.Vector(1..dim)
       := QuadDobl_Random_Vectors.Random_Vector(1,dim);
     y : QuadDobl_Complex_Vectors.Vector(p'range);

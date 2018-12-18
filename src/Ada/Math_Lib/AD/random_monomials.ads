@@ -23,6 +23,10 @@ package Random_Monomials is
              ( dim : integer32; expmax : natural32;
                verbose : boolean := false )  
              return Standard_Complex_Monomials.Monomial;
+  function Standard_Random_Monomial
+             ( dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return Standard_Complex_Monomials.Link_to_Monomial;
 
   -- DESCRIPTION :
   --   Generates a random complex coefficient and an exponent vector
@@ -34,6 +38,10 @@ package Random_Monomials is
              ( dim : integer32; expmax : natural32;
                verbose : boolean := false )  
              return DoblDobl_Complex_Monomials.Monomial;
+  function DoblDobl_Random_Monomial
+             ( dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return DoblDobl_Complex_Monomials.Link_to_Monomial;
 
   -- DESCRIPTION :
   --   Generates a random complex coefficient and an exponent vector
@@ -45,6 +53,10 @@ package Random_Monomials is
              ( dim : integer32; expmax : natural32;
                verbose : boolean := false )  
              return QuadDobl_Complex_Monomials.Monomial;
+  function QuadDobl_Random_Monomial
+             ( dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return QuadDobl_Complex_Monomials.Link_to_Monomial;
 
   -- DESCRIPTION :
   --   Generates a random complex coefficient and an exponent vector

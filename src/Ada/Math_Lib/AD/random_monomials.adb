@@ -47,6 +47,20 @@ package body Random_Monomials is
     return res;
   end Standard_Random_Monomial;
 
+  function Standard_Random_Monomial
+             ( dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return Standard_Complex_Monomials.Link_to_Monomial is
+
+    res : Standard_Complex_Monomials.Link_to_Monomial;
+    rnd : constant Standard_Complex_Monomials.Monomial
+        := Standard_Random_Monomial(dim,expmax,verbose);
+
+  begin
+    res := new Standard_Complex_Monomials.Monomial'(rnd);
+    return res;
+  end Standard_Random_Monomial;
+
   function DoblDobl_Random_Monomial
              ( dim : integer32; expmax : natural32;
                verbose : boolean := false )  
@@ -67,6 +81,20 @@ package body Random_Monomials is
     return res;
   end DoblDobl_Random_Monomial;
 
+  function DoblDobl_Random_Monomial
+             ( dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return DoblDobl_Complex_Monomials.Link_to_Monomial is
+
+    res : DoblDobl_Complex_Monomials.Link_to_Monomial;
+    rnd : constant DoblDobl_Complex_Monomials.Monomial
+        := DoblDobl_Random_Monomial(dim,expmax,verbose);
+
+  begin
+    res := new DoblDobl_Complex_Monomials.Monomial'(rnd);
+    return res;
+  end DoblDobl_Random_Monomial;
+
   function QuadDobl_Random_Monomial
              ( dim : integer32; expmax : natural32;
                verbose : boolean := false )  
@@ -84,6 +112,20 @@ package body Random_Monomials is
       put("Exponents : "); put(exp); new_line;
     end if;
     res := QuadDobl_Complex_Monomials.Create(cff,exp);
+    return res;
+  end QuadDobl_Random_Monomial;
+
+  function QuadDobl_Random_Monomial
+             ( dim : integer32; expmax : natural32;
+               verbose : boolean := false )  
+             return QuadDobl_Complex_Monomials.Link_to_Monomial is
+
+    res : QuadDobl_Complex_Monomials.Link_to_Monomial;
+    rnd : constant QuadDobl_Complex_Monomials.Monomial
+        := QuadDobl_Random_Monomial(dim,expmax,verbose);
+
+  begin
+    res := new QuadDobl_Complex_Monomials.Monomial'(rnd);
     return res;
   end QuadDobl_Random_Monomial;
 
