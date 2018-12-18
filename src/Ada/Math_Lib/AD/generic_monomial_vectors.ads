@@ -47,8 +47,38 @@ package Generic_Monomial_Vectors is
   -- DESCRIPTION :
   --   Applies the straightforward algorithm to evaluate p at x.
 
+  procedure Diff ( v : in Monomial_Vector; x : in Vectors.Vector;
+                   yd,wrk : in out Vectors.Vector );
+  procedure Diff ( v : in Monomial_Vector; x : in Vectors.Vector;
+                   yd : in out Vectors.Vector );
+  procedure Diff ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+                   yd,wrk : in out Vectors.Vector );
+  procedure Diff ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+                   yd : in out Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Applies the straightforward algorithm to compute all derivatives
+  --   of the polynomial defined by the sum of the monomials in v at x.
+
+  -- REQUIRED : the ranges for yd and wrk are equal to x'range.
+
+  -- ON ENTRY :
+  --   v        a monomial vector;
+  --   x        a vector of range 1..m.dim.
+
+  -- ON RETURN :
+  --   yd      all partial derivatives of v at x;
+  --   wrk     work space to hold intermediate values of the derivatives
+  --           of the monomials.
+
   procedure Speel ( v : in Monomial_Vector; x : in Vectors.Vector;
                     y : in out Ring.number; yd,wrk : in out Vectors.Vector );
+  procedure Speel ( v : in Monomial_Vector; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector );
+  procedure Speel ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+                    y : in out Ring.number; yd,wrk : in out Vectors.Vector );
+  procedure Speel ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector );
 
   -- DESCRIPTION :
   --   Applies the algorithm of Speelpenning to evaluate the monomials
@@ -56,17 +86,43 @@ package Generic_Monomial_Vectors is
 
   -- REQUIRED : m.nvr > 0, at least one variable has exponent 1 and
   --   m.n_base = 0, i.e.: no variables appear with exponent 2 or higher.
-  --   The ranges of yd and wrk start at 1 and end at m.nvr or higher.
+  --   The ranges of yd and wrk are equal to x'range.
 
   -- ON ENTRY :
-  --   m       a monomial;
-  --   x       a vector of range 1..m.dim.
+  --   v       a monomial vector;
+  --   x       a vector of range 1..v(i).dim.
 
   -- ON RETURN :
   --   y       the value of the monomial at x;
-  --   yd      all partial derivatives of m at x,
-  --           stored in the first m.nvr positions;
-  --   wrk     work space to hold intermedidate values of the derivatives
+  --   yd      all partial derivatives of v at x;
+  --   wrk     work space to hold intermediate values of the derivatives
+  --           of the monomials.
+
+  procedure Speel ( p : in Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd,wrk : in out Vectors.Vector );
+  procedure Speel ( p : in Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector );
+  procedure Speel ( p : in Link_to_Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd,wrk : in out Vectors.Vector );
+  procedure Speel ( p : in Link_to_Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Applies the algorithm of Speelpenning to evaluate the polynomial p
+  --   and all its derivatives at x.
+
+  -- REQUIRED : m.nvr > 0, at least one variable has exponent 1 and
+  --   m.n_base = 0, i.e.: no variables appear with exponent 2 or higher.
+  --   The ranges of yd and wrk are equal to x'range.
+
+  -- ON ENTRY :
+  --   p       a polynomial;
+  --   x       a vector of range 1..p.dim.
+
+  -- ON RETURN :
+  --   y       the value of the monomial at x;
+  --   yd      all partial derivatives of p at x;
+  --   wrk     work space to hold intermediate values of the derivatives
   --           of the monomials.
 
 -- DESTRUCTORS :

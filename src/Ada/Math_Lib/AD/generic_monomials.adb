@@ -121,7 +121,34 @@ package body Generic_Monomials is
     end loop;
   end Diff;
 
+  procedure Diff ( m : in Link_to_Monomial; x : in Vectors.Vector;
+                   yd : in out Vectors.Vector ) is
+  begin
+    if m /= null
+     then Diff(m.all,x,yd);
+    end if;
+  end Diff;
+
   procedure Speel ( m : in Monomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    use Ring;
+
+  begin
+    Copy(x(integer32(m.pos(1))),yd(2));
+    for i in 2..integer32(m.nvr-1) loop
+      yd(i+1) := yd(i)*x(integer32(m.pos(i)));
+    end loop;
+    Copy(m.cff,y);
+    for i in reverse 2..integer32(m.nvr) loop
+      Mul(yd(i),y);
+      Mul(y,x(integer32(m.pos(i))));
+    end loop;
+    Copy(y,yd(1));
+    Mul(y,x(integer32(m.pos(1))));
+  end Speel;
+
+  procedure Speel ( m : in Link_to_Monomial; x : in Vectors.Vector;
                     y : in out Ring.number; yd : in out Vectors.Vector ) is
 
     use Ring;

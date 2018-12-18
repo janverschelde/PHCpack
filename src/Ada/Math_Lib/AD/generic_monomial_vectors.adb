@@ -51,20 +51,137 @@ package body Generic_Monomial_Vectors is
   function Eval ( p : Link_to_Polynomial;
                   x : Vectors.Vector ) return Ring.number is
 
+    res : Ring.number;
+
   begin
     if p = null
-     then return Ring.zero;
-     else return Eval(p.all,x);
+     then Ring.copy(Ring.zero,res);
+     else res := Eval(p.all,x);
     end if;
+    return res;
   end Eval;
+
+  procedure Diff ( v : in Monomial_Vector; x : in Vectors.Vector;
+                   yd,wrk : in out Vectors.Vector ) is
+  begin
+    for i in wrk'range loop
+      Ring.copy(Ring.zero,yd(i));
+    end loop;
+    for i in v'range loop
+      Monomials.Diff(v(i),x,wrk);
+      for j in 1..integer32(v(i).nvr) loop
+        Ring.add(yd(integer32(v(i).pos(j))),wrk(j));
+      end loop;
+    end loop;
+  end Diff;
+
+  procedure Diff ( v : in Monomial_Vector; x : in Vectors.Vector;
+                   yd : in out Vectors.Vector ) is
+
+    wrk : Vectors.Vector(x'range);
+
+  begin
+    Diff(v,x,yd,wrk);
+  end Diff;
+
+  procedure Diff ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+                   yd,wrk : in out Vectors.Vector ) is
+  begin
+    if v /= null
+     then Diff(v.all,x,yd,wrk);
+    end if;
+  end Diff;
+
+  procedure Diff ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+                   yd : in out Vectors.Vector ) is
+  begin
+    if v /= null
+     then Diff(v.all,x,yd);
+    end if;
+  end Diff;
 
   procedure Speel ( v : in Monomial_Vector; x : in Vectors.Vector;
                     y : in out Ring.number;
                     yd,wrk : in out Vectors.Vector ) is
+
+    mon : Monomials.Link_to_Monomial;
+    val : Ring.number;
+
   begin
     for i in wrk'range loop
-      wrk(i) := Ring.zero;
+      Ring.copy(Ring.zero,yd(i));
     end loop;
+    mon := v(v'first);
+    Monomials.Speel(mon,x,y,wrk);
+    for j in 1..integer32(mon.nvr) loop
+      Ring.add(yd(integer32(mon.pos(j))),wrk(j));
+    end loop;
+    for i in v'first+1..v'last loop
+      mon := v(i);
+      Monomials.Speel(mon,x,val,wrk);
+      Ring.add(y,val);
+      for j in 1..integer32(mon.nvr) loop
+        Ring.add(yd(integer32(mon.pos(j))),wrk(j));
+      end loop;
+    end loop;
+  end Speel;
+
+  procedure Speel ( v : in Monomial_Vector; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    wrk : Vectors.Vector(x'range);
+
+  begin
+    Speel(v,x,y,yd,wrk);
+  end Speel;
+
+  procedure Speel ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+                    y : in out Ring.number;
+                    yd,wrk : in out Vectors.Vector ) is
+  begin
+    if v /= null
+     then Speel(v.all,x,y,yd,wrk);
+    end if;
+  end Speel;
+
+  procedure Speel ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+  begin
+    if v /= null
+     then Speel(v.all,x,y,yd);
+    end if;
+  end Speel;
+
+  procedure Speel ( p : in Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number;
+                    yd,wrk : in out Vectors.Vector ) is
+  begin
+    Speel(p.mons,x,y,yd,wrk);
+    Ring.add(y,p.cff0);
+  end Speel;
+
+  procedure Speel ( p : in Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+  begin
+    Speel(p.mons,x,y,yd);
+    Ring.add(y,p.cff0);
+  end Speel;
+
+  procedure Speel ( p : in Link_to_Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number;
+                    yd,wrk : in out Vectors.Vector ) is
+  begin
+    if p /= null
+     then Speel(p.all,x,y,yd,wrk);
+    end if;
+  end Speel;
+
+  procedure Speel ( p : in Link_to_Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+  begin
+    if p /= null
+     then Speel(p.all,x,y,yd);
+    end if;
   end Speel;
 
 -- DESTRUCTORS :

@@ -61,6 +61,8 @@ package Generic_Monomials is
 
   procedure Diff ( m : in Monomial; x : in Vectors.Vector;
                    yd : in out Vectors.Vector );
+  procedure Diff ( m : in Link_to_Monomial; x : in Vectors.Vector;
+                   yd : in out Vectors.Vector );
 
   -- DESCRIPTION :
   --   Applies the straightforward algorithm to differentiate m at x.
@@ -68,6 +70,8 @@ package Generic_Monomials is
   --   stored in the first m.nvr positions.
 
   procedure Speel ( m : in Monomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector );
+  procedure Speel ( m : in Link_to_Monomial; x : in Vectors.Vector;
                     y : in out Ring.number; yd : in out Vectors.Vector );
 
   -- DESCRIPTION :
