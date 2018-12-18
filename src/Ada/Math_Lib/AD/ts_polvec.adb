@@ -5,17 +5,23 @@ with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Random_Vectors;
+with Standard_Complex_Matrices;
 with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Random_Vectors;
+with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Random_Vectors;
+with QuadDobl_Complex_Matrices;
 with Standard_Monomial_Vectors;
 with Standard_Polynomial_Vectors;
 with Standard_Polynomial_Vectors_io;    use Standard_Polynomial_Vectors_io;
@@ -32,6 +38,63 @@ procedure ts_polvec is
 -- DESCRIPTION :
 --   Tests the operations on polynomial vectors.
 
+  procedure Write ( A,B : in Standard_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Writes all entries of the two matrices A and B consecutively,
+  --   useful for comparing differences.
+
+  -- REQUIRED : A'range(1) = B'range(1) and A'range(2) = B'range(2).
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        put("A("); put(i,1); put(","); put(j,1); put(") : ");
+        put(A(i,j)); new_line;
+        put("B("); put(i,1); put(","); put(j,1); put(") : ");
+        put(B(i,j)); new_line;
+      end loop;
+    end loop;
+  end Write;
+
+  procedure Write ( A,B : in DoblDobl_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Writes all entries of the two matrices A and B consecutively,
+  --   useful for comparing differences.
+
+  -- REQUIRED : A'range(1) = B'range(1) and A'range(2) = B'range(2).
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        put("A("); put(i,1); put(","); put(j,1); put(") : ");
+        put(A(i,j)); new_line;
+        put("B("); put(i,1); put(","); put(j,1); put(") : ");
+        put(B(i,j)); new_line;
+      end loop;
+    end loop;
+  end Write;
+
+  procedure Write ( A,B : in QuadDobl_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Writes all entries of the two matrices A and B consecutively,
+  --   useful for comparing differences.
+
+  -- REQUIRED : A'range(1) = B'range(1) and A'range(2) = B'range(2).
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        put("A("); put(i,1); put(","); put(j,1); put(") : ");
+        put(A(i,j)); new_line;
+        put("B("); put(i,1); put(","); put(j,1); put(") : ");
+        put(B(i,j)); new_line;
+      end loop;
+    end loop;
+  end Write;
+
   procedure Standard_Eval
               ( p : in Standard_Polynomial_Vectors.Link_to_Polynomial_Vector )
   is
@@ -42,11 +105,16 @@ procedure ts_polvec is
     dim : constant integer32 := integer32(p(p'first).dim);
     x : constant Standard_Complex_Vectors.Vector(1..dim)
       := Standard_Random_Vectors.Random_Vector(1,dim);
-    y : Standard_Complex_Vectors.Vector(p'range);
+    y,z : Standard_Complex_Vectors.Vector(p'range);
+    ym,zm : Standard_Complex_Matrices.Matrix(p'range,x'range);
 
   begin
     y := Standard_Polynomial_Vectors.Eval(p,x);
     put_line("y : "); put_line(y); new_line;
+    Standard_Polynomial_Vectors.Diff(p,x,ym);
+    Standard_Polynomial_Vectors.Speel(p,x,z,zm);
+    put_line("z : "); put_line(z); new_line;
+    put_line("Comparing the partial derivatives : "); Write(ym,zm);
   end Standard_Eval;
 
   procedure DoblDobl_Eval
@@ -59,11 +127,16 @@ procedure ts_polvec is
     dim : constant integer32 := integer32(p(p'first).dim);
     x : constant DoblDobl_Complex_Vectors.Vector(1..dim)
       := DoblDobl_Random_Vectors.Random_Vector(1,dim);
-    y : DoblDobl_Complex_Vectors.Vector(p'range);
+    y,z : DoblDobl_Complex_Vectors.Vector(p'range);
+    ym,zm : DoblDobl_Complex_Matrices.Matrix(p'range,x'range);
 
   begin
     y := DoblDobl_Polynomial_Vectors.Eval(p,x);
     put_line("y : "); put_line(y); new_line;
+    DoblDobl_Polynomial_Vectors.Diff(p,x,ym);
+    DoblDobl_Polynomial_Vectors.Speel(p,x,z,zm);
+    put_line("z : "); put_line(z); new_line;
+    put_line("Comparing the partial derivatives : "); Write(ym,zm);
   end DoblDobl_Eval;
 
   procedure QuadDobl_Eval
@@ -76,11 +149,16 @@ procedure ts_polvec is
     dim : constant integer32 := integer32(p(p'first).dim);
     x : constant QuadDobl_Complex_Vectors.Vector(1..dim)
       := QuadDobl_Random_Vectors.Random_Vector(1,dim);
-    y : QuadDobl_Complex_Vectors.Vector(p'range);
+    y,z : QuadDobl_Complex_Vectors.Vector(p'range);
+    ym,zm : QuadDobl_Complex_Matrices.Matrix(p'range,x'range);
 
   begin
     y := QuadDobl_Polynomial_Vectors.Eval(p,x);
     put_line("y : "); put_line(y); new_line;
+    QuadDobl_Polynomial_Vectors.Diff(p,x,ym);
+    QuadDobl_Polynomial_Vectors.Speel(p,x,z,zm);
+    put_line("z : "); put_line(z); new_line;
+    put_line("Comparing the partial derivatives : "); Write(ym,zm);
   end QuadDobl_Eval;
 
   procedure Standard_Test is

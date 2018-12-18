@@ -2,7 +2,7 @@ with unchecked_deallocation;
 
 package body Generic_Polynomial_Vectors is
 
--- EVALUATORS :
+-- EVALUATION and DIFFERENTIATION :
 
   function Eval ( p : Polynomial_Vector;
                   x : Vectors.Vector ) return Vectors.Vector is
@@ -27,6 +27,66 @@ package body Generic_Polynomial_Vectors is
     end loop;
     return res;
   end Eval;
+
+  procedure Diff ( p : in Polynomial_Vector; x : in Vectors.Vector;
+                   m : out Matrices.Matrix ) is
+
+    yd,wrk : Vectors.Vector(x'range);
+
+  begin
+    for i in p'range loop
+      Polynomials.Diff(p(i).mons,x,yd,wrk);
+      for j in yd'range loop
+        Ring.Copy(yd(j),m(i,j));
+      end loop;
+    end loop;
+  end Diff;
+
+  procedure Diff ( p : in Link_to_Polynomial_Vector; x : in Vectors.Vector;
+                   m : out Matrices.Matrix ) is
+  begin
+    if p /= null
+     then Diff(p.all,x,m);
+    end if;
+  end Diff;
+
+  procedure Speel ( p : in Polynomial_Vector; x : in Vectors.Vector;
+                    y : out Vectors.Vector; m : out Matrices.Matrix;
+                    yd,wrk : in out Vectors.Vector ) is
+  begin
+    for i in p'range loop
+      Polynomials.Speel(p(i).mons,x,y(i),yd,wrk);
+      for j in yd'range loop
+        Ring.Copy(yd(j),m(i,j));
+      end loop;
+    end loop;
+  end Speel;
+
+  procedure Speel ( p : in Polynomial_Vector; x : in Vectors.Vector;
+                    y : out Vectors.Vector; m : out Matrices.Matrix ) is
+
+    yd,wrk : Vectors.Vector(x'range);
+
+  begin
+    Speel(p,x,y,m,yd,wrk);
+  end Speel;
+
+  procedure Speel ( p : in Link_to_Polynomial_Vector; x : in Vectors.Vector;
+                    y : out Vectors.Vector; m : out Matrices.Matrix;
+                    yd,wrk : in out Vectors.Vector ) is
+  begin
+    if p /= null
+     then Speel(p.all,x,y,m,yd,wrk);
+    end if;
+  end Speel;
+
+  procedure Speel ( p : in Link_to_Polynomial_Vector; x : in Vectors.Vector;
+                    y : out Vectors.Vector; m : out Matrices.Matrix ) is
+  begin
+    if p /= null
+     then Speel(p.all,x,y,m);
+    end if;
+  end Speel;
 
 -- DESTRUCTORS :
 
