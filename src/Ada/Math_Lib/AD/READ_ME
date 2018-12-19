@@ -36,3 +36,6 @@ quaddobl_polynomial_vectors_io  : basic output of quaddobl polynomial vectors
 random_polynomial_vectors       : generators of random polynomial vectors
 ts_polvec                       : test on the polynomial vectors
 ------------------------------------------------------------------------------
+system_vector_convertors        : converting system into polynomial vectors
+ts_sys2vec                      : test on system to polynomial vector converts
+------------------------------------------------------------------------------

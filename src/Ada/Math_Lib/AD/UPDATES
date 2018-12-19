@@ -6,6 +6,8 @@ Tue 18 Dec 2018 : added a polynomial type to generic_monomial_vectors,
   Extended the evaluation and differentiation in generic_monomials
   and generic_monomial_vectors, tested by ts_monvec.adb.
   Added differentiation to generic_polynomial_vectors, tested by ts_polvec.
+  Added a Create() function to generic_monomials.
+  New package system_vector_convertors tested by ts_sys2vec.adb.
 
 Mon 17 Dec 2018 : added the straightforward evaluation functions to
   generic_monomials, generic_monomial_vectors, generic_polynomial_vectors,
