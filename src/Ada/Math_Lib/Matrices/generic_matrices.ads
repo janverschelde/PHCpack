@@ -40,6 +40,9 @@ package Generic_Matrices is
   function "-" ( a : Matrix ) return Matrix;               -- return -a
   function "*" ( a,b : Matrix ) return Matrix;             -- return a*b
 
+  procedure Add ( a : in out Matrix; b : in Matrix );      -- a := a+b
+  procedure Sub ( a : in out Matrix; b : in Matrix );      -- a := a-b
+
   procedure Mul1 ( a : in out Matrix; b : in Matrix );     -- a := a*b    
   procedure Mul2 ( a : in Matrix; b : in out Matrix );     -- b := a*b
 

@@ -113,6 +113,24 @@ package body Generic_Matrices is
     return res;
   end "*";
 
+  procedure Add ( a : in out Matrix; b : in Matrix ) is
+  begin
+    for i in a'range(1) loop
+      for j in a'range(2) loop
+        Add(a(i,j),b(i,j));
+      end loop;
+    end loop;
+  end Add;
+
+  procedure Sub ( a : in out Matrix; b : in Matrix ) is
+  begin
+    for i in a'range(1) loop
+      for j in a'range(2) loop
+        Sub(a(i,j),b(i,j));
+      end loop;
+    end loop;
+  end Sub;
+
   procedure Mul1 ( a : in out Matrix; b : in Matrix ) is
 
     temp : Vector(a'range(2));

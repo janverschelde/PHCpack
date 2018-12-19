@@ -1,3 +1,5 @@
+Wed 19 Dec 2018 : added inplace Add and Sub procedures to generic_matrices.
+
 Fri 23 Feb 2018 : to standard_random_matrices, added a function to generate
   random Boolean matrices with a different number of rows than columns.
 
