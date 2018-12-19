@@ -1,3 +1,6 @@
+Wed 19 Dec 2018 : defined the max norm for complex matrices in the packages
+  {standard,dobldobl,quaddobl}_complex_matrix_norms.
+
 Thu 23 Jun 2016 : bug fix in range of wrk in Basis() procedure of all 
   eight *qr_least_squares.adb files.
 
