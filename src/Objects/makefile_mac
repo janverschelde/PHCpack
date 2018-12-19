@@ -633,6 +633,10 @@ ts_polvec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_polvec.adb \
               -o $(BIN)/ts_polvec
 
+ts_sys2vec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sys2vec.adb \
+              -o $(BIN)/ts_sys2vec
+
 # Test programs for the Deformations/Solutions library :
 
 ts_solfilt:

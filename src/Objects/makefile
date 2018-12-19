@@ -537,7 +537,7 @@ ts_csersys:
 
 # Test programs for the Math_Lib/AD library :
 
-test_ad: test_monom ts_monvec ts_polvec
+test_ad: test_monom ts_monvec ts_polvec ts_sys2vec
 
 ts_monom:
 	make -f $(MAKEFILE) ts_monom
@@ -547,6 +547,9 @@ ts_monvec:
 
 ts_polvec:
 	make -f $(MAKEFILE) ts_polvec
+
+ts_sys2vec:
+	make -f $(MAKEFILE) ts_sys2vec
 
 # Test programs for the Deformations library :
 
