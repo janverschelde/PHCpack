@@ -40,6 +40,16 @@ package System_Vector_Convertors is
   -- DESCRIPTION :
   --   Returns true if all entries in v are zero.
 
+  function Count_Constant
+             ( p : Standard_Complex_Polynomials.Poly ) return integer32;
+  function Count_Constant
+             ( p : DoblDobl_Complex_Polynomials.Poly ) return integer32;
+  function Count_Constant
+             ( p : QuadDobl_Complex_Polynomials.Poly ) return integer32;
+
+  -- DESCRIPITON :
+  --   Returns 1 if p has a nonzero constant term, returns 0 otherwise.
+
   function Convert ( p : Standard_Complex_Polynomials.Poly )
                    return Standard_Monomial_Vectors.Polynomial;
   function Convert ( p : DoblDobl_Complex_Polynomials.Poly )

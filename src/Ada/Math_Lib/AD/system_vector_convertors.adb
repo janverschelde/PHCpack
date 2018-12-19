@@ -1,5 +1,8 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 
 package body System_Vector_Convertors is
 
@@ -45,14 +48,81 @@ package body System_Vector_Convertors is
     return true;
   end Is_Zero;
 
+  function Count_Constant
+             ( p : Standard_Complex_Polynomials.Poly ) return integer32 is
+
+    res : integer32 := 0;
+
+    procedure Visit_Term ( t : in Standard_Complex_Polynomials.Term;
+                           continue : out boolean ) is
+
+    begin
+      if Is_Zero(t.dg.all)
+       then continue := false; res := 1;
+       else continue := true;
+      end if;
+    end Visit_Term;
+    procedure Visit_Terms is
+      new Standard_Complex_Polynomials.Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    return res;
+  end Count_Constant;
+
+  function Count_Constant
+             ( p : DoblDobl_Complex_Polynomials.Poly ) return integer32 is
+
+    res : integer32 := 0;
+
+    procedure Visit_Term ( t : in DoblDobl_Complex_Polynomials.Term;
+                           continue : out boolean ) is
+
+    begin
+      if Is_Zero(t.dg.all)
+       then continue := false; res := 1;
+       else continue := true;
+      end if;
+    end Visit_Term;
+    procedure Visit_Terms is
+      new DoblDobl_Complex_Polynomials.Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    return res;
+  end Count_Constant;
+
+  function Count_Constant
+             ( p : QuadDobl_Complex_Polynomials.Poly ) return integer32 is
+
+    res : integer32 := 0;
+
+    procedure Visit_Term ( t : in QuadDobl_Complex_Polynomials.Term;
+                           continue : out boolean ) is
+
+    begin
+      if Is_Zero(t.dg.all)
+       then continue := false; res := 1;
+       else continue := true;
+      end if;
+    end Visit_Term;
+    procedure Visit_Terms is
+      new QuadDobl_Complex_Polynomials.Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    return res;
+  end Count_Constant;
+
   function Convert ( p : Standard_Complex_Polynomials.Poly )
                    return Standard_Monomial_Vectors.Polynomial is
 
+    cnt : constant integer32 := Count_Constant(p);
     nbr : constant integer32
         := integer32(Standard_Complex_Polynomials.Number_of_Terms(p));
     dim : constant integer32
         := integer32(Standard_Complex_Polynomials.Number_of_Unknowns(p));
-    res : Standard_Monomial_Vectors.Polynomial(dim,nbr);
+    res : Standard_Monomial_Vectors.Polynomial(dim,nbr-cnt);
     idx : integer32 := 0;
 
     procedure Visit_Term ( t : in Standard_Complex_Polynomials.Term;
@@ -71,6 +141,7 @@ package body System_Vector_Convertors is
       new Standard_Complex_Polynomials.Visiting_Iterator(Visit_Term);
 
   begin
+    res.cff0 := Standard_Complex_Numbers.Create(0.0);
     Visit_Terms(p);
     return res;
   end Convert;
@@ -78,11 +149,12 @@ package body System_Vector_Convertors is
   function Convert ( p : DoblDobl_Complex_Polynomials.Poly )
                    return DoblDobl_Monomial_Vectors.Polynomial is
 
+    cnt : constant integer32 := Count_Constant(p);
     nbr : constant integer32
         := integer32(DoblDobl_Complex_Polynomials.Number_of_Terms(p));
     dim : constant integer32
         := integer32(DoblDobl_Complex_Polynomials.Number_of_Unknowns(p));
-    res : DoblDobl_Monomial_Vectors.Polynomial(dim,nbr);
+    res : DoblDobl_Monomial_Vectors.Polynomial(dim,nbr-cnt);
     idx : integer32 := 0;
 
     procedure Visit_Term ( t : in DoblDobl_Complex_Polynomials.Term;
@@ -101,6 +173,7 @@ package body System_Vector_Convertors is
       new DoblDobl_Complex_Polynomials.Visiting_Iterator(Visit_Term);
 
   begin
+    res.cff0 := DoblDobl_Complex_Numbers.Create(integer32(0));
     Visit_Terms(p);
     return res;
   end Convert;
@@ -108,11 +181,12 @@ package body System_Vector_Convertors is
   function Convert ( p : QuadDobl_Complex_Polynomials.Poly )
                    return QuadDobl_Monomial_Vectors.Polynomial is
 
+    cnt : constant integer32 := Count_Constant(p);
     nbr : constant integer32
         := integer32(QuadDobl_Complex_Polynomials.Number_of_Terms(p));
     dim : constant integer32
         := integer32(QuadDobl_Complex_Polynomials.Number_of_Unknowns(p));
-    res : QuadDobl_Monomial_Vectors.Polynomial(dim,nbr);
+    res : QuadDobl_Monomial_Vectors.Polynomial(dim,nbr-cnt);
     idx : integer32 := 0;
 
     procedure Visit_Term ( t : in QuadDobl_Complex_Polynomials.Term;
@@ -131,6 +205,7 @@ package body System_Vector_Convertors is
       new QuadDobl_Complex_Polynomials.Visiting_Iterator(Visit_Term);
 
   begin
+    res.cff0 := QuadDobl_Complex_Numbers.Create(integer32(0));
     Visit_Terms(p);
     return res;
   end Convert;

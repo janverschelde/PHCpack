@@ -55,7 +55,7 @@ package body Generic_Polynomial_Vectors is
                     yd,wrk : in out Vectors.Vector ) is
   begin
     for i in p'range loop
-      Polynomials.Speel(p(i).mons,x,y(i),yd,wrk);
+      Polynomials.Speel(p(i),x,y(i),yd,wrk);
       for j in yd'range loop
         Ring.Copy(yd(j),m(i,j));
       end loop;
