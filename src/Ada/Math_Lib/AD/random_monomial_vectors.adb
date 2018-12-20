@@ -1,3 +1,4 @@
+with text_io;                           use text_io;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
@@ -16,9 +17,13 @@ package body Random_Monomial_Vectors is
     res : Standard_Monomial_Vectors.Monomial_Vector(1..size);
 
   begin
-    for i in 1..size loop
-      res(i) := Random_Monomials.Standard_Random_Monomial(dim,expmax,verbose);
-    end loop;
+    if expmax = 0 then
+      put_line("The upper bound on the exponent, expmax must be positive!");
+    else
+      for i in 1..size loop
+        res(i) := Random_Monomials.Standard_Random_Monomial(dim,expmax,verbose);
+      end loop;
+    end if;
     return res;
   end Standard_Random_Monomial_Vector;
 
@@ -30,9 +35,13 @@ package body Random_Monomial_Vectors is
     res : DoblDobl_Monomial_Vectors.Monomial_Vector(1..size);
 
   begin
-    for i in 1..size loop
-      res(i) := Random_Monomials.DoblDobl_Random_Monomial(dim,expmax,verbose);
-    end loop;
+    if expmax = 0 then
+      put_line("The upper bound on the exponent, expmax must be positive!");
+    else
+      for i in 1..size loop
+        res(i) := Random_Monomials.DoblDobl_Random_Monomial(dim,expmax,verbose);
+      end loop;
+    end if;
     return res;
   end DoblDobl_Random_Monomial_Vector;
 
@@ -44,9 +53,13 @@ package body Random_Monomial_Vectors is
     res : QuadDobl_Monomial_Vectors.Monomial_Vector(1..size);
 
   begin
-    for i in 1..size loop
-      res(i) := Random_Monomials.QuadDobl_Random_Monomial(dim,expmax,verbose);
-    end loop;
+    if expmax = 0 then
+      put_line("The upper bound on the exponent, expmax must be positive!");
+    else
+      for i in 1..size loop
+        res(i) := Random_Monomials.QuadDobl_Random_Monomial(dim,expmax,verbose);
+      end loop;
+    end if;
     return res;
   end QuadDobl_Random_Monomial_Vector;
 

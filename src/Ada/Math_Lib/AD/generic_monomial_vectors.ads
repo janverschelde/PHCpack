@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Natural_Vectors;
 with Abstract_Ring;
 with Generic_Vectors;
 with Generic_VecVecs;
@@ -39,6 +40,25 @@ package Generic_Monomial_Vectors is
   -- DESCRIPTION :
   --   Returns -1 for an empty monomial vector or polynomial,
   --   otherwise the degree of the vector or polynomial is returned.
+
+  procedure Largest_Exponents
+              ( v : in Monomial_Vector;
+                e : out Standard_Natural_Vectors.Vector );
+  procedure Largest_Exponents
+              ( v : in Link_to_Monomial_Vector;
+                e : out Standard_Natural_Vectors.Vector );
+  procedure Largest_Exponents
+              ( p : in Polynomial;
+                e : out Standard_Natural_Vectors.Vector );
+  procedure Largest_Exponents
+              ( p : in Link_to_Polynomial;
+                e : out Standard_Natural_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Returns in e the largest exponents which occur in v or p.
+
+  -- REQUIRED :
+  --   The range of e should be 1..v(v'first).dim = p.dim.
 
 -- EVALUATION and DIFFERENTIATION :
 

@@ -29,6 +29,8 @@ package Random_Polynomial_Vectors is
   --   The coefficients are double complex numbers.
   --   If verbose, then the coefficient and exponents are shown.
 
+  -- REQUIRED : expmax > 0.
+
   function DoblDobl_Random_Polynomial_Vector
              ( size,dim : integer32; expmax : natural32;
                verbose : boolean := false )  
@@ -46,6 +48,8 @@ package Random_Polynomial_Vectors is
   --   The coefficients are double double complex numbers.
   --   If verbose, then the coefficient and exponents are shown.
 
+  -- REQUIRED : expmax > 0.
+
   function QuadDobl_Random_Polynomial_Vector
              ( size,dim : integer32; expmax : natural32;
                verbose : boolean := false )  
@@ -62,5 +66,7 @@ package Random_Polynomial_Vectors is
   --   Each monomial has dimension dim and exponents are in range 0..expmax.
   --   The coefficients are quad double complex numbers.
   --   If verbose, then the coefficient and exponents are shown.
+
+  -- REQUIRED : expmax > 0.
  
 end Random_Polynomial_Vectors;

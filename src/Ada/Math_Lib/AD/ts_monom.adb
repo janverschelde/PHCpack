@@ -143,7 +143,7 @@ procedure ts_monom is
     put_line("Testing monomial operations in double precision ...");
     put("Give the dimension : "); get(dim);
     put("Give the largest exponent : "); get(expmax);
-    m := Random_Monomials.Standard_Random_Monomial(dim,expmax);
+    m := Random_Monomials.Standard_Random_Monomial(dim,expmax,true);
     put_line("A random monomial :"); put(m);
     Standard_Eval(m);
   end Standard_Test;
@@ -162,7 +162,7 @@ procedure ts_monom is
     put_line("Testing monomial operations in double double precision ...");
     put("Give the dimension : "); get(dim);
     put("Give the largest exponent : "); get(expmax);
-    m := Random_Monomials.DoblDobl_Random_Monomial(dim,expmax);
+    m := Random_Monomials.DoblDobl_Random_Monomial(dim,expmax,true);
     put_line("A random monomial :"); put(m);
     DoblDobl_Eval(m);
   end DoblDobl_Test;
@@ -181,7 +181,7 @@ procedure ts_monom is
     put_line("Testing monomial operations in quad double precision ...");
     put("Give the dimension : "); get(dim);
     put("Give the largest exponent : "); get(expmax);
-    m := Random_Monomials.QuadDobl_Random_Monomial(dim,expmax);
+    m := Random_Monomials.QuadDobl_Random_Monomial(dim,expmax,true);
     put_line("A random monomial :"); put(m);
     QuadDobl_Eval(m);
   end QuadDobl_Test;

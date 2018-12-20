@@ -1,3 +1,4 @@
+with text_io;                           use text_io;
 with Standard_Monomial_Vectors;
 with DoblDobl_Monomial_Vectors;
 with QuadDobl_Monomial_Vectors;
@@ -13,9 +14,13 @@ package body Random_Polynomial_Vectors is
     res : Standard_Polynomial_Vectors.Polynomial_Vector(1..size);
 
   begin
-    for i in 1..size loop
-      res(i) := Standard_Random_Polynomial(size,dim,expmax,verbose);
-    end loop;
+    if expmax = 0 then
+      put_line("The upper bound on the exponent, expmax must be positive!");
+    else
+      for i in 1..size loop
+        res(i) := Standard_Random_Polynomial(size,dim,expmax,verbose);
+      end loop;
+    end if;
     return res;
   end Standard_Random_Polynomial_Vector;
 
@@ -41,9 +46,13 @@ package body Random_Polynomial_Vectors is
     res : DoblDobl_Polynomial_Vectors.Polynomial_Vector(1..size);
 
   begin
-    for i in 1..size loop
-      res(i) := DoblDobl_Random_Polynomial(size,dim,expmax,verbose);
-    end loop;
+    if expmax = 0 then
+      put_line("The upper bound on the exponent, expmax must be positive!");
+    else
+      for i in 1..size loop
+        res(i) := DoblDobl_Random_Polynomial(size,dim,expmax,verbose);
+      end loop;
+    end if;
     return res;
   end DoblDobl_Random_Polynomial_Vector;
 
@@ -69,9 +78,13 @@ package body Random_Polynomial_Vectors is
     res : QuadDobl_Polynomial_Vectors.Polynomial_Vector(1..size);
 
   begin
-    for i in 1..size loop
-      res(i) := QuadDobl_Random_Polynomial(size,dim,expmax,verbose);
-    end loop;
+    if expmax = 0 then
+      put_line("The upper bound on the exponent, expmax must be positive!");
+    else
+      for i in 1..size loop
+        res(i) := QuadDobl_Random_Polynomial(size,dim,expmax,verbose);
+      end loop;
+    end if;
     return res;
   end QuadDobl_Random_Polynomial_Vector;
 

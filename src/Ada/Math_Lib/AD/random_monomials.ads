@@ -34,6 +34,8 @@ package Random_Monomials is
   --   The coefficient is a double complex number.
   --   If verbose, then the coefficient and exponents are shown.
 
+  -- REQUIRED : expmax > 0.
+
   function DoblDobl_Random_Monomial
              ( dim : integer32; expmax : natural32;
                verbose : boolean := false )  
@@ -49,6 +51,8 @@ package Random_Monomials is
   --   The coefficient is a double double complex number.
   --   If verbose, then the coefficient and exponents are shown.
 
+  -- REQUIRED : expmax > 0.
+
   function QuadDobl_Random_Monomial
              ( dim : integer32; expmax : natural32;
                verbose : boolean := false )  
@@ -63,5 +67,7 @@ package Random_Monomials is
   --   of dimension dim, with entries in the range 0..expmax.
   --   The coefficient is a quad double complex number.
   --   If verbose, then the coefficient and exponents are shown.
+
+  -- REQUIRED : expmax > 0.
  
 end Random_Monomials;

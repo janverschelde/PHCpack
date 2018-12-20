@@ -1,3 +1,9 @@
+Thu 20 Dec 2018 : modified random_monomials to retry if the degree of the
+  generated monomial equals zero.  Set verbose flag in ts_monom.adb.
+  Made similar modifications to random_monomial_vectors.a* and
+  random_polynomial_vectors.adb.  Added the computation of the largest
+  exponents to generic_monomial_vectors, updated the *_io.adb packages.
+
 Wed 19 Dec 2018 : fixed bug in system_vector_convertors, added a function
   to check on the constant term, fixed bug in generic_polynomial_vectors.adb,
   updated the ts_sys2vec.adb to compute norms of the differences.

@@ -1,4 +1,5 @@
 with unchecked_deallocation;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 
 package body Generic_Monomial_Vectors is
 
@@ -48,6 +49,45 @@ package body Generic_Monomial_Vectors is
      else return Degree(p.all);
     end if;
   end Degree;
+
+  procedure Largest_Exponents
+              ( v : in Monomial_Vector;
+                e : out Standard_Natural_Vectors.Vector ) is
+  begin
+    e := (e'range => 0);
+    for i in v'range loop
+      for j in v(i).exp'range loop
+        if v(i).exp(j) > e(j)
+         then e(j) := v(i).exp(j);
+        end if;
+      end loop;
+    end loop;
+  end Largest_Exponents;
+
+  procedure Largest_Exponents
+              ( v : in Link_to_Monomial_Vector;
+                e : out Standard_Natural_Vectors.Vector ) is
+  begin
+    if v /= null
+     then Largest_Exponents(v.all,e);
+    end if;
+  end Largest_Exponents;
+
+  procedure Largest_Exponents
+              ( p : in Polynomial;
+                e : out Standard_Natural_Vectors.Vector ) is
+  begin
+    Largest_Exponents(p.mons,e);
+  end Largest_Exponents;
+
+  procedure Largest_Exponents
+              ( p : in Link_to_Polynomial;
+                e : out Standard_Natural_Vectors.Vector ) is
+  begin
+    if p /= null
+     then Largest_Exponents(p.all,e);
+    end if;
+  end Largest_Exponents;
 
 -- EVALUATION and DIFFERENTIATION :
 
