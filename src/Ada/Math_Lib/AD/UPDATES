@@ -1,6 +1,13 @@
 Wed 19 Dec 2018 : fixed bug in system_vector_convertors, added a function
   to check on the constant term, fixed bug in generic_polynomial_vectors.adb,
   updated the ts_sys2vec.adb to compute norms of the differences.
+  Added power table code to generic_monomials for general evaluation,
+  which changed the instantiations *complex_monomials.ads and also
+  added more output to the *complex_monomials_io.adb, with better tests
+  in ts_monvec.adb.  The generic_monomial_vectors.ads changed and all its
+  instantiations in *monomial_vectors.ads, improved ts_monvec.adb.
+  The generic_polynomial_vectors.ads changed and so did all its
+  instantiations in *polynomial_vectors.ads, improved ts_polvec.adb.
 
 Tue 18 Dec 2018 : added a polynomial type to generic_monomial_vectors,
   which changed {standard,dobldobl,quaddobl}_monomial_vectors_io.

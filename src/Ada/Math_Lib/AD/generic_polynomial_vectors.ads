@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Abstract_Ring;
 with Generic_Vectors;
+with Generic_VecVecs;
 with Generic_Matrices;
 with Generic_Monomials;
 with Generic_Monomial_Vectors;
@@ -9,10 +10,11 @@ generic
 
   with package Ring is new Abstract_Ring(<>);
   with package Vectors is new Generic_Vectors(Ring);
+  with package VecVecs is new Generic_VecVecs(Ring,Vectors);
   with package Matrices is new Generic_Matrices(Ring,Vectors);
-  with package Monomials is new Generic_Monomials(Ring,Vectors,Matrices);
+  with package Monomials is new Generic_Monomials(Ring,Vectors,VecVecs);
   with package Polynomials is
-    new Generic_Monomial_Vectors(Ring,Vectors,Matrices,Monomials);
+    new Generic_Monomial_Vectors(Ring,Vectors,VecVecs,Monomials);
 
 package Generic_Polynomial_Vectors is
 

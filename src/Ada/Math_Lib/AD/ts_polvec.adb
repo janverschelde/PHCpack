@@ -4,24 +4,34 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
+with Standard_Complex_Vector_Norms;
 with Standard_Random_Vectors;
 with Standard_Complex_Matrices;
+with Standard_Complex_Matrix_Norms;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Random_Vectors;
 with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_Matrix_Norms;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Random_Vectors;
 with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrix_Norms;
 with Standard_Monomial_Vectors;
 with Standard_Polynomial_Vectors;
 with Standard_Polynomial_Vectors_io;    use Standard_Polynomial_Vectors_io;
@@ -106,7 +116,9 @@ procedure ts_polvec is
     x : constant Standard_Complex_Vectors.Vector(1..dim)
       := Standard_Random_Vectors.Random_Vector(1,dim);
     y,z : Standard_Complex_Vectors.Vector(p'range);
-    ym,zm : Standard_Complex_Matrices.Matrix(p'range,x'range);
+    dm,ym,zm : Standard_Complex_Matrices.Matrix(p'range,x'range);
+    nrm : double_float;
+    ans : character;
 
   begin
     y := Standard_Polynomial_Vectors.Eval(p,x);
@@ -114,7 +126,19 @@ procedure ts_polvec is
     Standard_Polynomial_Vectors.Diff(p,x,ym);
     Standard_Polynomial_Vectors.Speel(p,x,z,zm);
     put_line("z : "); put_line(z); new_line;
-    put_line("Comparing the partial derivatives : "); Write(ym,zm);
+    Standard_Complex_Vectors.Sub(y,z);
+    nrm := Standard_Complex_Vector_Norms.Max_Norm(y);
+    put("Max norm of the difference :"); put(nrm,3); new_line;
+    Standard_Complex_Matrices.Copy(ym,dm);
+    Standard_Complex_Matrices.Sub(dm,zm);
+    nrm := Standard_Complex_Matrix_Norms.Max_Norm(dm);
+    put("Max norm of the difference in partial derivatives :");
+    put(nrm,3); new_line;
+    put("Compare the matrix of all partial derivatives ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("Comparing the partial derivatives : "); Write(ym,zm);
+    end if;
   end Standard_Eval;
 
   procedure DoblDobl_Eval
@@ -128,7 +152,9 @@ procedure ts_polvec is
     x : constant DoblDobl_Complex_Vectors.Vector(1..dim)
       := DoblDobl_Random_Vectors.Random_Vector(1,dim);
     y,z : DoblDobl_Complex_Vectors.Vector(p'range);
-    ym,zm : DoblDobl_Complex_Matrices.Matrix(p'range,x'range);
+    dm,ym,zm : DoblDobl_Complex_Matrices.Matrix(p'range,x'range);
+    nrm : double_float;
+    ans : character;
 
   begin
     y := DoblDobl_Polynomial_Vectors.Eval(p,x);
@@ -136,7 +162,19 @@ procedure ts_polvec is
     DoblDobl_Polynomial_Vectors.Diff(p,x,ym);
     DoblDobl_Polynomial_Vectors.Speel(p,x,z,zm);
     put_line("z : "); put_line(z); new_line;
-    put_line("Comparing the partial derivatives : "); Write(ym,zm);
+    DoblDobl_Complex_Vectors.Sub(y,z);
+    nrm := hi_part(DoblDobl_Complex_Vector_Norms.Max_Norm(y));
+    put("Max norm of the difference :"); put(nrm,3); new_line;
+    DoblDobl_Complex_Matrices.Copy(ym,dm);
+    DoblDobl_Complex_Matrices.Sub(dm,zm);
+    nrm := hi_part(DoblDobl_Complex_Matrix_Norms.Max_Norm(dm));
+    put("Max norm of the difference in partial derivatives :");
+    put(nrm,3); new_line;
+    put("Compare the matrix of all partial derivatives ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("Comparing the partial derivatives : "); Write(ym,zm);
+    end if;
   end DoblDobl_Eval;
 
   procedure QuadDobl_Eval
@@ -150,7 +188,9 @@ procedure ts_polvec is
     x : constant QuadDobl_Complex_Vectors.Vector(1..dim)
       := QuadDobl_Random_Vectors.Random_Vector(1,dim);
     y,z : QuadDobl_Complex_Vectors.Vector(p'range);
-    ym,zm : QuadDobl_Complex_Matrices.Matrix(p'range,x'range);
+    dm,ym,zm : QuadDobl_Complex_Matrices.Matrix(p'range,x'range);
+    nrm : double_float;
+    ans : character;
 
   begin
     y := QuadDobl_Polynomial_Vectors.Eval(p,x);
@@ -158,7 +198,19 @@ procedure ts_polvec is
     QuadDobl_Polynomial_Vectors.Diff(p,x,ym);
     QuadDobl_Polynomial_Vectors.Speel(p,x,z,zm);
     put_line("z : "); put_line(z); new_line;
-    put_line("Comparing the partial derivatives : "); Write(ym,zm);
+    QuadDobl_Complex_Vectors.Sub(y,z);
+    nrm := hihi_part(QuadDobl_Complex_Vector_Norms.Max_Norm(y));
+    put("Max norm of the difference :"); put(nrm,3); new_line;
+    QuadDobl_Complex_Matrices.Copy(ym,dm);
+    QuadDobl_Complex_Matrices.Sub(dm,zm);
+    nrm := hihi_part(QuadDobl_Complex_Matrix_Norms.Max_Norm(dm));
+    put("Max norm of the difference in partial derivatives :");
+    put(nrm,3); new_line;
+    put("Compare the matrix of all partial derivatives ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("Comparing the partial derivatives : "); Write(ym,zm);
+    end if;
   end QuadDobl_Eval;
 
   procedure Standard_Test is

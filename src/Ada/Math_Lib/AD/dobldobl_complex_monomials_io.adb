@@ -1,5 +1,6 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 
@@ -13,6 +14,9 @@ package body DoblDobl_Complex_Monomials_io is
     put(file,m.nvr,1); new_line(file);
     put(file,"number of variables with exponent > 1 : ");
     put(file,m.n_base,1); new_line(file);
+    put(file,"degree : "); put(file,Degree(m),1); new_line(file);
+    put(file,"largest exponent : ");
+    put(file,Largest_Exponent(m),1); new_line(file);
     if m.nvr > 0 then
       put(file,"positions : "); put(file,m.pos); new_line(file);
       put(file,"exponents : "); put(file,m.exp); new_line(file);

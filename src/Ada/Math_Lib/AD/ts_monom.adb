@@ -4,20 +4,27 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
+with Standard_Complex_Vector_Norms;
 with Standard_Random_Vectors;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Random_Vectors;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Random_Vectors;
 with Standard_Complex_Monomials;
 with Standard_Complex_Monomials_io;     use Standard_Complex_Monomials_io;
@@ -42,6 +49,7 @@ procedure ts_monom is
     y,z : Standard_Complex_Numbers.Complex_Number;
     yd,zd : Standard_Complex_Vectors.Vector(x'range)
           := (x'range => Standard_Complex_Numbers.Create(0.0));
+    nrm : double_float;
 
   begin
     z := Standard_Complex_Monomials.Eval(m,x);
@@ -49,10 +57,16 @@ procedure ts_monom is
     Standard_Complex_Monomials.Diff(m,x,zd);
     Standard_Complex_Monomials.Speel(m,x,y,yd);
     put("y : "); put(y); new_line;
+    Standard_Complex_Numbers.Sub(y,z);
+    nrm := Standard_Complex_Numbers.AbsVal(y);
+    put("Norm of the difference :"); put(nrm,3); new_line;
     put_line("The derivatives computed with the Speelpenning algorithm :");
     put_line(yd(1..integer32(m.nvr)));
     put_line("The derivatives computed with the straightforward algorithm :");
     put_line(zd(1..integer32(m.nvr)));
+    Standard_Complex_Vectors.Sub(yd,zd);
+    nrm := Standard_Complex_Vector_Norms.Max_Norm(yd);
+    put("Max norm of the difference :"); put(nrm,3); new_line;
   end Standard_Eval;
 
   procedure DoblDobl_Eval ( m : in DoblDobl_Complex_Monomials.Monomial ) is
@@ -65,6 +79,7 @@ procedure ts_monom is
     y,z : DoblDobl_Complex_Numbers.Complex_Number;
     yd,zd : DoblDobl_Complex_Vectors.Vector(x'range)
           := (x'range => DoblDobl_Complex_Numbers.Create(integer32(0)));
+    nrm : double_float;
 
   begin
     z := DoblDobl_Complex_Monomials.Eval(m,x);
@@ -72,10 +87,16 @@ procedure ts_monom is
     DoblDobl_Complex_Monomials.Diff(m,x,zd);
     DoblDobl_Complex_Monomials.Speel(m,x,y,yd);
     put("y : "); put(y); new_line;
+    DoblDobl_Complex_Numbers.Sub(y,z);
+    nrm := hi_part(DoblDobl_Complex_Numbers.AbsVal(y));
+    put("Norm of the difference :"); put(nrm,3); new_line;
     put_line("The derivatives computed with the Speelpenning algorithm :");
     put_line(yd(1..integer32(m.nvr)));
     put_line("The derivatives computed with the straightforward algorithm :");
     put_line(zd(1..integer32(m.nvr)));
+    DoblDobl_Complex_Vectors.Sub(yd,zd);
+    nrm := hi_part(DoblDobl_Complex_Vector_Norms.Max_Norm(yd));
+    put("Max norm of the difference :"); put(nrm,3); new_line;
   end DoblDobl_Eval;
 
   procedure QuadDobl_Eval ( m : in QuadDobl_Complex_Monomials.Monomial ) is
@@ -88,6 +109,7 @@ procedure ts_monom is
     y,z : QuadDobl_Complex_Numbers.Complex_Number;
     yd,zd : QuadDobl_Complex_Vectors.Vector(x'range)
           := (x'range => QuadDobl_Complex_Numbers.Create(integer32(0)));
+    nrm : double_float;
 
   begin
     z := QuadDobl_Complex_Monomials.Eval(m,x);
@@ -95,10 +117,16 @@ procedure ts_monom is
     QuadDobl_Complex_Monomials.Diff(m,x,zd);
     QuadDobl_Complex_Monomials.Speel(m,x,y,yd);
     put("y : "); put(y); new_line;
+    QuadDobl_Complex_Numbers.Sub(y,z);
+    nrm := hihi_part(QuadDobl_Complex_Numbers.AbsVal(y));
+    put("Norm of the difference :"); put(nrm,3); new_line;
     put_line("The derivatives computed with the Speelpenning algorithm :");
     put_line(yd(1..integer32(m.nvr)));
     put_line("The derivatives computed with the straightforward algorithm :");
     put_line(zd(1..integer32(m.nvr)));
+    QuadDobl_Complex_Vectors.Sub(yd,zd);
+    nrm := hihi_part(QuadDobl_Complex_Vector_Norms.Max_Norm(yd));
+    put("Max norm of the difference :"); put(nrm,3); new_line;
   end QuadDobl_Eval;
 
   procedure Standard_Test is

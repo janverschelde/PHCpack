@@ -1,5 +1,4 @@
 with unchecked_deallocation;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 
 package body Generic_Monomials is
 
@@ -64,6 +63,71 @@ package body Generic_Monomials is
     return res;
   end Create;
 
+  function Create ( c : Ring.number;
+                    e : Standard_Natural_Vectors.Vector )
+                  return Link_to_Monomial is
+
+    res : Link_to_Monomial;
+    mon : constant Monomial := Create(c,e);
+
+  begin
+    res := new Monomial'(mon);
+    return res;
+  end Create;
+
+-- SELECTORS :
+
+  function Degree ( m : Monomial ) return integer32 is
+
+    res : integer32 := 0;
+
+  begin
+    if m.n_base = 0 then -- no degrees higher than one
+      if m.nvr = 0 then
+        if Ring.Equal(m.cff,Ring.zero)
+         then res := -1;
+         else res := 0;
+        end if;
+      else
+        res := integer32(m.nvr);
+      end if;
+    else -- return the sum of the exponents of the variables in m
+      for i in 1..integer32(m.nvr) loop
+        res := res + integer32(m.exp(i));
+      end loop;
+    end if;
+    return res;
+  end Degree;
+
+  function Degree ( m : Link_to_Monomial ) return integer32 is
+  begin
+    if m = null
+     then return -1;
+     else return Degree(m.all);
+    end if;
+  end Degree;
+
+  function Largest_Exponent ( m : Monomial ) return natural32 is
+
+    res : natural32 := 0;
+
+  begin
+    for i in 1..integer32(m.nvr) loop
+      if m.exp(i) > res
+       then res := m.exp(i);
+      end if;
+    end loop;
+    return res;
+  end Largest_Exponent;
+
+  function Largest_Exponent ( m : Link_to_Monomial ) return natural32 is
+  begin
+    if m = null
+     then return 0;
+     else return Largest_Exponent(m.all);
+    end if;
+  end Largest_Exponent;
+
 -- EVALUATION and DIFFERENTIATION :
 
   function Eval ( m : Monomial; x : Vectors.Vector ) return Ring.number is
@@ -103,6 +167,7 @@ package body Generic_Monomials is
                    yd : in out Vectors.Vector ) is
 
     idx : integer32;
+    intfac : Ring.number;
 
     use Ring;
 
@@ -110,6 +175,13 @@ package body Generic_Monomials is
     for i in 1..integer32(m.nvr) loop
       idx := integer32(m.pos(i));
       Copy(m.cff,yd(i));
+      if m.exp(i) > 1 then
+        for k in 1..integer32(m.exp(i))-1 loop
+          Mul(yd(i),x(idx));
+        end loop;
+        intfac := Ring.create(integer(m.exp(i)));
+        Mul(yd(i),intfac);
+      end if;
       for j in 1..integer32(m.nvr) loop
         if i /= j then
           idx := integer32(m.pos(j));
@@ -131,25 +203,39 @@ package body Generic_Monomials is
 
   procedure Speel ( m : in Monomial; x : in Vectors.Vector;
                     y : in out Ring.number; yd : in out Vectors.Vector ) is
-
-    use Ring;
-
   begin
-    Copy(x(integer32(m.pos(1))),yd(2));
-    for i in 2..integer32(m.nvr-1) loop
-      yd(i+1) := yd(i)*x(integer32(m.pos(i)));
-    end loop;
-    Copy(m.cff,y);
-    for i in reverse 2..integer32(m.nvr) loop
-      Mul(yd(i),y);
-      Mul(y,x(integer32(m.pos(i))));
-    end loop;
-    Copy(y,yd(1));
-    Mul(y,x(integer32(m.pos(1))));
+    if m.n_base = 0 then
+      Speel_on_Product(m,x,y,yd);
+    else
+      declare
+        powtab : VecVecs.VecVec(x'range);
+      begin
+        Power_Table(m,x,powtab);
+        Speel(m,x,powtab,y,yd);
+        VecVecs.Clear(powtab);
+      end;
+    end if;
   end Speel;
 
   procedure Speel ( m : in Link_to_Monomial; x : in Vectors.Vector;
                     y : in out Ring.number; yd : in out Vectors.Vector ) is
+  begin
+    if m.n_base = 0 then
+      Speel_on_Product(m,x,y,yd);
+    else
+      declare
+        powtab : VecVecs.VecVec(x'range);
+      begin
+        Power_Table(m,x,powtab);
+        Speel(m,x,powtab,y,yd);
+        VecVecs.Clear(powtab);
+      end;
+    end if;
+  end Speel;
+
+  procedure Speel_on_Product
+              ( m : in Monomial; x : in Vectors.Vector;
+                y : in out Ring.number; yd : in out Vectors.Vector ) is
 
     use Ring;
 
@@ -165,6 +251,177 @@ package body Generic_Monomials is
     end loop;
     Copy(y,yd(1));
     Mul(y,x(integer32(m.pos(1))));
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( m : in Link_to_Monomial; x : in Vectors.Vector;
+                y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    use Ring;
+
+  begin
+    Copy(x(integer32(m.pos(1))),yd(2));
+    for i in 2..integer32(m.nvr-1) loop
+      yd(i+1) := yd(i)*x(integer32(m.pos(i)));
+    end loop;
+    Copy(m.cff,y);
+    for i in reverse 2..integer32(m.nvr) loop
+      Mul(yd(i),y);
+      Mul(y,x(integer32(m.pos(i))));
+    end loop;
+    Copy(y,yd(1));
+    Mul(y,x(integer32(m.pos(1))));
+  end Speel_on_Product;
+
+  procedure Power_Table
+              ( m : in monomial; x : Vectors.Vector;
+                powtab : out VecVecs.VecVec ) is
+
+    row,size : integer32;
+
+    use Ring;
+
+  begin
+    if m.n_base /= 0 then
+      for i in 1..integer32(m.nvr) loop
+        row := integer32(m.pos(i));
+        size := integer32(m.exp(i));
+        powtab(row) := new Vectors.Vector(0..size);
+        Ring.Copy(x(row),powtab(row)(0));
+        for j in 1..size loop
+          powtab(row)(j) := powtab(row)(j-1)*x(row);
+        end loop;
+      end loop;
+    end if;
+  end Power_Table;
+
+  procedure Power_Table
+              ( m : in Link_to_monomial; x : Vectors.Vector;
+                powtab : out VecVecs.VecVec ) is
+  begin
+    if m /= null
+     then Power_Table(m.all,x,powtab);
+    end if;
+  end Power_Table;
+
+  procedure Common_Factor
+              ( m : in Monomial; powtab : in VecVecs.VecVec;
+                y : in out Ring.number ) is
+
+    row,col : integer32;
+
+  begin
+    Ring.Copy(m.cff,y);
+    for i in 1..integer32(m.n_base) loop
+      row := integer32(m.pos_base(i));
+      col := integer32(m.exp_tbl_base(i));
+      Ring.Mul(y,powtab(row)(col));
+    end loop;
+  end Common_Factor;
+
+  procedure Common_Factor
+              ( m : in Link_to_Monomial; powtab : in VecVecs.VecVec;
+                y : in out Ring.number ) is
+
+    row,col : integer32;
+
+  begin
+    Ring.Copy(m.cff,y);
+    for i in 1..integer32(m.n_base) loop
+      row := integer32(m.pos_base(i));
+      col := integer32(m.exp_tbl_base(i));
+      Ring.Mul(y,powtab(row)(col));
+    end loop;
+  end Common_Factor;
+
+  procedure Speel ( m : in Monomial;
+                    x : in Vectors.Vector; b : in Ring.number;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    intfac : Ring.number;
+
+    use Ring;
+
+  begin
+    if m.nvr > 1
+     then Copy(x(integer32(m.pos(1))),yd(2));
+    end if;
+    for i in 2..integer32(m.nvr-1) loop
+      yd(i+1) := yd(i)*x(integer32(m.pos(i)));
+    end loop;
+    Copy(b,y);
+    for i in reverse 2..integer32(m.nvr) loop
+      if m.exp(i) > 1 then
+        intfac := Ring.create(integer(m.exp(i)));
+        Mul(yd(i),intfac);
+        Ring.clear(intfac);
+      end if;
+      Mul(yd(i),y);
+      Mul(y,x(integer32(m.pos(i))));
+    end loop;
+    Copy(y,yd(1));
+    if m.exp(1) > 1 then
+      intfac := Ring.create(integer(m.exp(1)));
+      Mul(yd(1),intfac);
+      Ring.clear(intfac);
+    end if;
+    Mul(y,x(integer32(m.pos(1))));
+  end Speel;
+
+  procedure Speel ( m : in Link_to_Monomial;
+                    x : in Vectors.Vector; b : in Ring.number;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    intfac : Ring.number;
+
+    use Ring;
+
+  begin
+    if m.nvr > 1
+     then Copy(x(integer32(m.pos(1))),yd(2));
+    end if;
+    for i in 2..integer32(m.nvr-1) loop
+      yd(i+1) := yd(i)*x(integer32(m.pos(i)));
+    end loop;
+    Copy(b,y);
+    for i in reverse 2..integer32(m.nvr) loop
+      if m.exp(i) > 1 then
+        intfac := Ring.create(integer(m.exp(i)));
+        Mul(yd(i),intfac);
+        Ring.clear(intfac);
+      end if;
+      Mul(yd(i),y);
+      Mul(y,x(integer32(m.pos(i))));
+    end loop;
+    Copy(y,yd(1));
+    if m.exp(1) > 1 then
+      intfac := Ring.create(integer(m.exp(1)));
+      Mul(yd(1),intfac);
+      Ring.clear(intfac);
+    end if;
+    Mul(y,x(integer32(m.pos(1))));
+  end Speel;
+
+  procedure Speel ( m : in Monomial;
+                    x : in Vectors.Vector; powtab : in VecVecs.VecVec;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    b : Ring.number;
+
+  begin
+    Common_Factor(m,powtab,b);
+    Speel(m,x,b,y,yd);
+  end Speel;
+
+  procedure Speel ( m : in Link_to_Monomial;
+                    x : in Vectors.Vector; powtab : in VecVecs.VecVec;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    b : Ring.number;
+
+  begin
+    Common_Factor(m,powtab,b);
+    Speel(m,x,b,y,yd);
   end Speel;
 
 -- DESTRUCTORS :
