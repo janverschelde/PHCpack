@@ -14,13 +14,7 @@ package body QuadDobl_Monomial_Vectors_io is
   end put;
 
   procedure put ( file : in file_type; v : in Monomial_Vector ) is
-
-    e : Standard_Natural_Vectors.Vector(1..integer32(v(v'first).dim));
-
   begin
-    put(file,"degree : "); put(file,Degree(v),1); new_line(file);
-    Largest_Exponents(v,e);
-    put(file,"largest exponents : "); put(file,e); new_line(file);
     for i in v'range loop
       if v(i) /= null then
         put(file,"-> monomial "); put(file,i,1); put_line(file," :");
@@ -47,13 +41,13 @@ package body QuadDobl_Monomial_Vectors_io is
   end put;
 
   procedure put ( file : in file_type; p : in Polynomial ) is
-
-    e : Standard_Natural_Vectors.Vector(1..p.dim);
-
   begin
     put(file,"degree : "); put(file,Degree(p),1); new_line(file);
-    Largest_Exponents(p,e);
-    put(file,"largest exponents : "); put(file,e); new_line(file);
+    put(file,"largest exponents : "); put(file,p.maxexp);
+    if p.deg1
+     then put_line(file,"  no large exponents");
+     else put_line(file,"  exponents larger than one");
+    end if;
     put_line(file,"-> monomial 0 : ");
     put(file,"coefficient : ");
     put(file,p.cff0); new_line(file);

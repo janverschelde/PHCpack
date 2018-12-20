@@ -73,6 +73,7 @@ package body Random_Monomial_Vectors is
   begin
     res.cff0 := Standard_Random_Numbers.Random1;
     res.mons := Standard_Random_Monomial_Vector(size,dim,expmax,verbose);
+    Standard_Monomial_Vectors.Power_Update(res);
     return res;
   end Standard_Random_Polynomial;
 
@@ -100,6 +101,7 @@ package body Random_Monomial_Vectors is
   begin
     res.cff0 := DoblDobl_Random_Numbers.Random1;
     res.mons := DoblDobl_Random_Monomial_Vector(size,dim,expmax,verbose);
+    DoblDobl_Monomial_Vectors.Power_Update(res);
     return res;
   end DoblDobl_Random_Polynomial;
 
@@ -127,6 +129,7 @@ package body Random_Monomial_Vectors is
   begin
     res.cff0 := QuadDobl_Random_Numbers.Random1;
     res.mons := QuadDobl_Random_Monomial_Vector(size,dim,expmax,verbose);
+    QuadDobl_Monomial_Vectors.Power_Update(res);
     return res;
   end QuadDobl_Random_Polynomial;
 

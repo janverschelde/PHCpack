@@ -3,6 +3,159 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 
 package body Generic_Monomial_Vectors is
 
+-- CONSTRUCTORS :
+
+  procedure Power_Update ( p : in out Polynomial ) is
+  begin
+    p.deg1 := Compute_Deg1(p.mons);
+    Largest_Exponents(p.mons,p.maxexp);
+    if not p.deg1
+     then p.powtab := Allocate_Power_Table(p.maxexp);
+    end if;
+  end Power_Update;
+
+  procedure Power_Update ( p : in out Link_to_Polynomial ) is
+  begin
+    if p /= null then
+      p.deg1 := Compute_Deg1(p.mons);
+      Largest_Exponents(p.mons,p.maxexp);
+      if not p.deg1
+       then p.powtab := Allocate_Power_Table(p.maxexp);
+      end if;
+    end if;
+  end Power_Update;
+
+  function Compute_Deg1 ( v : Monomial_Vector ) return boolean is
+  begin
+    for i in v'range loop
+      if v(i).n_base > 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Compute_Deg1;
+
+  function Compute_Deg1 ( v : Link_to_Monomial_Vector ) return boolean is
+  begin
+    if v = null
+     then return true;
+     else return Compute_Deg1(v.all);
+    end if;
+  end Compute_Deg1;
+
+  function Compute_Deg1 ( p : Polynomial ) return boolean is
+  begin
+    return Compute_Deg1(p.mons);
+  end Compute_Deg1;
+
+  function Compute_Deg1 ( p : Link_to_Polynomial ) return boolean is
+  begin
+    if p = null
+     then return true;
+     else return Compute_Deg1(p.mons);
+    end if;
+  end Compute_Deg1;
+
+  procedure Largest_Exponents
+              ( v : in Monomial_Vector;
+                e : out Standard_Natural_Vectors.Vector ) is
+  begin
+    e := (e'range => 0);
+    for i in v'range loop
+      for j in v(i).exp'range loop
+        if v(i).exp(j) > e(j)
+         then e(j) := v(i).exp(j);
+        end if;
+      end loop;
+    end loop;
+  end Largest_Exponents;
+
+  procedure Largest_Exponents
+              ( v : in Link_to_Monomial_Vector;
+                e : out Standard_Natural_Vectors.Vector ) is
+  begin
+    if v /= null
+     then Largest_Exponents(v.all,e);
+    end if;
+  end Largest_Exponents;
+
+  procedure Largest_Exponents
+              ( p : in Polynomial;
+                e : out Standard_Natural_Vectors.Vector ) is
+  begin
+    Largest_Exponents(p.mons,e);
+  end Largest_Exponents;
+
+  procedure Largest_Exponents
+              ( p : in Link_to_Polynomial;
+                e : out Standard_Natural_Vectors.Vector ) is
+  begin
+    if p /= null
+     then Largest_Exponents(p.all,e);
+    end if;
+  end Largest_Exponents;
+
+  function Allocate_Power_Table
+              ( maxexp : Standard_Natural_Vectors.Vector )
+              return VecVecs.Link_to_VecVec is
+
+    res : VecVecs.Link_to_VecVec;
+    powtab : VecVecs.VecVec(maxexp'range);
+
+  begin
+    Allocate_Power_Table(powtab,maxexp);
+    res := new VecVecs.VecVec'(powtab);
+    return res;
+  end Allocate_Power_Table;
+
+  procedure Allocate_Power_Table
+              ( powtab : in out VecVecs.VecVec;
+                maxexp : in Standard_Natural_Vectors.Vector ) is
+  begin
+    for i in powtab'range loop
+      powtab(i) := new Vectors.Vector(0..integer32(maxexp(i)));
+    end loop;
+  end Allocate_Power_Table;
+
+  procedure Update_Power_Table
+              ( powtab : in out VecVecs.VecVec; x : in Vectors.Vector ) is
+
+    size : integer32;
+    lv : Vectors.Link_to_Vector;
+
+    use Ring;
+
+  begin
+    for i in powtab'range loop
+      lv := powtab(i);
+      Ring.Copy(x(i),lv(0));
+      size := lv'last;
+      for j in 1..size loop
+        lv(j) := lv(j-1)*x(i);
+      end loop;
+    end loop;
+  end Update_Power_Table;
+
+  procedure Update_Power_Table
+              ( powtab : in VecVecs.Link_to_VecVec;
+                x : in Vectors.Vector ) is
+
+    size : integer32;
+    lv : Vectors.Link_to_Vector;
+
+    use Ring;
+
+  begin
+    for i in powtab'range loop
+      lv := powtab(i);
+      Ring.Copy(x(i),lv(0));
+      size := lv'last;
+      for j in 1..size loop
+        lv(j) := lv(j-1)*x(i);
+      end loop;
+    end loop;
+  end Update_Power_Table;
+
 -- SELECTORS :
 
   function Degree ( v : Monomial_Vector ) return integer32 is
@@ -49,45 +202,6 @@ package body Generic_Monomial_Vectors is
      else return Degree(p.all);
     end if;
   end Degree;
-
-  procedure Largest_Exponents
-              ( v : in Monomial_Vector;
-                e : out Standard_Natural_Vectors.Vector ) is
-  begin
-    e := (e'range => 0);
-    for i in v'range loop
-      for j in v(i).exp'range loop
-        if v(i).exp(j) > e(j)
-         then e(j) := v(i).exp(j);
-        end if;
-      end loop;
-    end loop;
-  end Largest_Exponents;
-
-  procedure Largest_Exponents
-              ( v : in Link_to_Monomial_Vector;
-                e : out Standard_Natural_Vectors.Vector ) is
-  begin
-    if v /= null
-     then Largest_Exponents(v.all,e);
-    end if;
-  end Largest_Exponents;
-
-  procedure Largest_Exponents
-              ( p : in Polynomial;
-                e : out Standard_Natural_Vectors.Vector ) is
-  begin
-    Largest_Exponents(p.mons,e);
-  end Largest_Exponents;
-
-  procedure Largest_Exponents
-              ( p : in Link_to_Polynomial;
-                e : out Standard_Natural_Vectors.Vector ) is
-  begin
-    if p /= null
-     then Largest_Exponents(p.all,e);
-    end if;
-  end Largest_Exponents;
 
 -- EVALUATION and DIFFERENTIATION :
 
@@ -187,7 +301,142 @@ package body Generic_Monomial_Vectors is
     end if;
   end Diff;
 
-  procedure Speel ( v : in Monomial_Vector; x : in Vectors.Vector;
+  procedure Speel ( p : in Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number;
+                    yd,wrk : in out Vectors.Vector ) is
+  begin
+    if p.deg1 then
+      Speel_on_Product(p,x,y,yd,wrk);
+    else
+      Update_Power_Table(p.powtab,x);
+      Speel(p.mons,x,p.powtab,y,yd,wrk);
+      Ring.add(y,p.cff0);
+    end if;
+  end Speel;
+
+  procedure Speel ( p : in Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    wrk : Vectors.Vector(x'range);
+
+  begin
+    Speel(p,x,y,yd,wrk);
+  end Speel;
+
+  procedure Speel ( p : in Link_to_Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number;
+                    yd,wrk : in out Vectors.Vector ) is
+  begin
+    if p /= null then
+      if p.deg1 then
+        Speel_on_Product(p,x,y,yd,wrk);
+      else
+        Update_Power_Table(p.powtab,x);
+        Speel(p.mons,x,p.powtab,y,yd,wrk);
+        Ring.add(y,p.cff0);
+      end if;
+    end if;
+  end Speel;
+
+  procedure Speel ( p : in Link_to_Polynomial; x : in Vectors.Vector;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    wrk : Vectors.Vector(x'range);
+
+  begin
+    Speel(p,x,y,yd,wrk);
+  end Speel;
+
+  procedure Speel_on_Product
+              ( v : in Monomial_Vector; x : in Vectors.Vector;
+                y : in out Ring.number; yd,wrk : in out Vectors.Vector ) is
+
+    mon : Monomials.Link_to_Monomial;
+    val : Ring.number;
+
+  begin
+    for i in wrk'range loop
+      Ring.copy(Ring.zero,yd(i));
+    end loop;
+    mon := v(v'first);
+    Monomials.Speel_on_Product(mon,x,y,wrk);
+    for j in 1..integer32(mon.nvr) loop
+      Ring.add(yd(integer32(mon.pos(j))),wrk(j));
+    end loop;
+    for i in v'first+1..v'last loop
+      mon := v(i);
+      Monomials.Speel_on_Product(mon,x,val,wrk);
+      Ring.add(y,val);
+      for j in 1..integer32(mon.nvr) loop
+        Ring.add(yd(integer32(mon.pos(j))),wrk(j));
+      end loop;
+    end loop;
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( v : in Monomial_Vector; x : in Vectors.Vector;
+                y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    wrk : Vectors.Vector(x'range);
+
+  begin
+    Speel_on_Product(v,x,y,yd,wrk);
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+                y : in out Ring.number; yd,wrk : in out Vectors.Vector ) is
+  begin
+    if v /= null
+     then Speel_on_Product(v.all,x,y,yd,wrk);
+    end if;
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+                y : in out Ring.number; yd : in out Vectors.Vector ) is
+  begin
+    if v /= null
+     then Speel_on_Product(v.all,x,y,yd);
+    end if;
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( p : in Polynomial; x : in Vectors.Vector;
+                y : in out Ring.number; yd,wrk : in out Vectors.Vector ) is
+  begin
+    Speel_on_Product(p.mons,x,y,yd,wrk);
+    Ring.add(y,p.cff0);
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( p : in Polynomial; x : in Vectors.Vector;
+                y : in out Ring.number; yd : in out Vectors.Vector ) is
+  begin
+    Speel_on_Product(p.mons,x,y,yd);
+    Ring.add(y,p.cff0);
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( p : in Link_to_Polynomial; x : in Vectors.Vector;
+                y : in out Ring.number; yd,wrk : in out Vectors.Vector ) is
+  begin
+    if p /= null
+     then Speel_on_Product(p.all,x,y,yd,wrk);
+    end if;
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( p : in Link_to_Polynomial; x : in Vectors.Vector;
+                y : in out Ring.number; yd : in out Vectors.Vector ) is
+  begin
+    if p /= null
+     then Speel_on_Product(p.all,x,y,yd);
+    end if;
+  end Speel_on_Product;
+
+  procedure Speel ( v : in Monomial_Vector;
+                    x : in Vectors.Vector; powtab : in VecVecs.VecVec;
                     y : in out Ring.number;
                     yd,wrk : in out Vectors.Vector ) is
 
@@ -199,13 +448,13 @@ package body Generic_Monomial_Vectors is
       Ring.copy(Ring.zero,yd(i));
     end loop;
     mon := v(v'first);
-    Monomials.Speel(mon,x,y,wrk);
+    Monomials.Speel(mon,x,powtab,y,wrk);
     for j in 1..integer32(mon.nvr) loop
       Ring.add(yd(integer32(mon.pos(j))),wrk(j));
     end loop;
     for i in v'first+1..v'last loop
       mon := v(i);
-      Monomials.Speel(mon,x,val,wrk);
+      Monomials.Speel(mon,x,powtab,val,wrk);
       Ring.add(y,val);
       for j in 1..integer32(mon.nvr) loop
         Ring.add(yd(integer32(mon.pos(j))),wrk(j));
@@ -213,61 +462,49 @@ package body Generic_Monomial_Vectors is
     end loop;
   end Speel;
 
-  procedure Speel ( v : in Monomial_Vector; x : in Vectors.Vector;
-                    y : in out Ring.number; yd : in out Vectors.Vector ) is
-
-    wrk : Vectors.Vector(x'range);
-
-  begin
-    Speel(v,x,y,yd,wrk);
-  end Speel;
-
-  procedure Speel ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
+  procedure Speel ( v : in Monomial_Vector;
+                    x : in Vectors.Vector;
+                    powtab : in VecVecs.Link_to_VecVec;
                     y : in out Ring.number;
                     yd,wrk : in out Vectors.Vector ) is
+
+    mon : Monomials.Link_to_Monomial;
+    val : Ring.number;
+
+  begin
+    for i in wrk'range loop
+      Ring.copy(Ring.zero,yd(i));
+    end loop;
+    mon := v(v'first);
+    Monomials.Speel(mon,x,powtab,y,wrk);
+    for j in 1..integer32(mon.nvr) loop
+      Ring.add(yd(integer32(mon.pos(j))),wrk(j));
+    end loop;
+    for i in v'first+1..v'last loop
+      mon := v(i);
+      Monomials.Speel(mon,x,powtab,val,wrk);
+      Ring.add(y,val);
+      for j in 1..integer32(mon.nvr) loop
+        Ring.add(yd(integer32(mon.pos(j))),wrk(j));
+      end loop;
+    end loop;
+  end Speel;
+
+  procedure Speel ( v : in Link_to_Monomial_Vector;
+                    x : in Vectors.Vector; powtab : in VecVecs.VecVec;
+                    y : in out Ring.number; yd,wrk : in out Vectors.Vector ) is
   begin
     if v /= null
-     then Speel(v.all,x,y,yd,wrk);
+     then Speel(v.all,x,powtab,y,yd,wrk);
     end if;
   end Speel;
 
-  procedure Speel ( v : in Link_to_Monomial_Vector; x : in Vectors.Vector;
-                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+  procedure Speel ( v : in Link_to_Monomial_Vector;
+                    x : in Vectors.Vector; powtab : in VecVecs.Link_to_VecVec;
+                    y : in out Ring.number; yd,wrk : in out Vectors.Vector ) is
   begin
     if v /= null
-     then Speel(v.all,x,y,yd);
-    end if;
-  end Speel;
-
-  procedure Speel ( p : in Polynomial; x : in Vectors.Vector;
-                    y : in out Ring.number;
-                    yd,wrk : in out Vectors.Vector ) is
-  begin
-    Speel(p.mons,x,y,yd,wrk);
-    Ring.add(y,p.cff0);
-  end Speel;
-
-  procedure Speel ( p : in Polynomial; x : in Vectors.Vector;
-                    y : in out Ring.number; yd : in out Vectors.Vector ) is
-  begin
-    Speel(p.mons,x,y,yd);
-    Ring.add(y,p.cff0);
-  end Speel;
-
-  procedure Speel ( p : in Link_to_Polynomial; x : in Vectors.Vector;
-                    y : in out Ring.number;
-                    yd,wrk : in out Vectors.Vector ) is
-  begin
-    if p /= null
-     then Speel(p.all,x,y,yd,wrk);
-    end if;
-  end Speel;
-
-  procedure Speel ( p : in Link_to_Polynomial; x : in Vectors.Vector;
-                    y : in out Ring.number; yd : in out Vectors.Vector ) is
-  begin
-    if p /= null
-     then Speel(p.all,x,y,yd);
+     then Speel(v.all,x,powtab,y,yd,wrk);
     end if;
   end Speel;
 
@@ -295,6 +532,9 @@ package body Generic_Monomial_Vectors is
   procedure Clear ( p : in out Polynomial ) is
   begin
     Clear(p.mons);
+    if not p.deg1
+     then VecVecs.Deep_Clear(p.powtab);
+    end if;
   end Clear;
 
   procedure Clear ( p : in out Link_to_Polynomial ) is

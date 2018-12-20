@@ -157,7 +157,13 @@ package Generic_Monomials is
               ( m : in Monomial; powtab : in VecVecs.VecVec;
                 y : in out Ring.number );
   procedure Common_Factor
+              ( m : in Monomial; powtab : in VecVecs.Link_to_VecVec;
+                y : in out Ring.number );
+  procedure Common_Factor
               ( m : in Link_to_Monomial; powtab : in VecVecs.VecVec;
+                y : in out Ring.number );
+  procedure Common_Factor
+              ( m : in Link_to_Monomial; powtab : in VecVecs.Link_to_VecVec;
                 y : in out Ring.number );
 
   -- DESCRIPTION :
@@ -203,8 +209,14 @@ package Generic_Monomials is
   procedure Speel ( m : in Monomial;
                     x : in Vectors.Vector; powtab : in VecVecs.VecVec;
                     y : in out Ring.number; yd : in out Vectors.Vector );
+  procedure Speel ( m : in Monomial;
+                    x : in Vectors.Vector; powtab : in VecVecs.Link_to_VecVec;
+                    y : in out Ring.number; yd : in out Vectors.Vector );
   procedure Speel ( m : in Link_to_Monomial;
                     x : in Vectors.Vector; powtab : in VecVecs.VecVec;
+                    y : in out Ring.number; yd : in out Vectors.Vector );
+  procedure Speel ( m : in Link_to_Monomial;
+                    x : in Vectors.Vector; powtab : in VecVecs.Link_to_VecVec;
                     y : in out Ring.number; yd : in out Vectors.Vector );
 
   -- DESCRIPTION :

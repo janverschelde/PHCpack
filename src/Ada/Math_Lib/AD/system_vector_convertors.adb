@@ -143,6 +143,7 @@ package body System_Vector_Convertors is
   begin
     res.cff0 := Standard_Complex_Numbers.Create(0.0);
     Visit_Terms(p);
+    Standard_Monomial_Vectors.Power_Update(res);
     return res;
   end Convert;
 
@@ -175,6 +176,7 @@ package body System_Vector_Convertors is
   begin
     res.cff0 := DoblDobl_Complex_Numbers.Create(integer32(0));
     Visit_Terms(p);
+    DoblDobl_Monomial_Vectors.Power_Update(res);
     return res;
   end Convert;
 
@@ -207,6 +209,7 @@ package body System_Vector_Convertors is
   begin
     res.cff0 := QuadDobl_Complex_Numbers.Create(integer32(0));
     Visit_Terms(p);
+    QuadDobl_Monomial_Vectors.Power_Update(res);
     return res;
   end Convert;
 

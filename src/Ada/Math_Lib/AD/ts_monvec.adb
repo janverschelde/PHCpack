@@ -37,26 +37,25 @@ with Random_Monomial_Vectors;           use Random_Monomial_Vectors;
 procedure ts_monvec is
 
 -- DESCRIPTION :
---   Tests the operations on monomial vectors.
+--   Tests the operations on monomial vectors and polynomials.
 
   procedure Standard_Eval
-              ( m : in Standard_Monomial_Vectors.Link_to_Monomial_Vector ) is
+              ( p : in Standard_Monomial_Vectors.Link_to_Polynomial ) is
 
   -- DESCRIPTION :
-  --   Evaluates m at a random vector, in double precision.
+  --   Evaluates p at a random vector, in double precision.
 
-    dim : constant integer32 := integer32(m(m'first).dim);
-    x : constant Standard_Complex_Vectors.Vector(1..dim)
-      := Standard_Random_Vectors.Random_Vector(1,dim);
+    x : constant Standard_Complex_Vectors.Vector(1..p.dim)
+      := Standard_Random_Vectors.Random_Vector(1,p.dim);
     y,z : Standard_Complex_Numbers.Complex_Number;
-    yd,zd : Standard_Complex_Vectors.Vector(1..dim);
+    yd,zd : Standard_Complex_Vectors.Vector(1..p.dim);
     nrm : double_float;
 
   begin
-    y := Standard_Monomial_Vectors.Eval(m,x);
+    y := Standard_Monomial_Vectors.Eval(p,x);
     put("y : "); put(y); new_line;
-    Standard_Monomial_Vectors.Diff(m,x,yd);
-    Standard_Monomial_Vectors.Speel(m,x,z,zd);
+    Standard_Monomial_Vectors.Diff(p.mons,x,yd);
+    Standard_Monomial_Vectors.Speel(p,x,z,zd);
     put("z : "); put(z); new_line;
     Standard_Complex_Numbers.Sub(y,z);
     nrm := Standard_Complex_Numbers.AbsVal(y);
@@ -71,23 +70,22 @@ procedure ts_monvec is
   end Standard_Eval;
 
   procedure DoblDobl_Eval
-              ( m : in DoblDobl_Monomial_Vectors.Link_to_Monomial_Vector ) is
+              ( p : in DoblDobl_Monomial_Vectors.Link_to_Polynomial ) is
 
   -- DESCRIPTION :
-  --   Evaluates m at a random vector, in double double precision.
+  --   Evaluates p at a random vector, in double double precision.
 
-    dim : constant integer32 := integer32(m(m'first).dim);
-    x : constant DoblDobl_Complex_Vectors.Vector(1..dim)
-      := DoblDobl_Random_Vectors.Random_Vector(1,dim);
+    x : constant DoblDobl_Complex_Vectors.Vector(1..p.dim)
+      := DoblDobl_Random_Vectors.Random_Vector(1,p.dim);
     y,z : DoblDobl_Complex_Numbers.Complex_Number;
-    yd,zd : DoblDobl_Complex_Vectors.Vector(1..dim);
+    yd,zd : DoblDobl_Complex_Vectors.Vector(1..p.dim);
     nrm : double_float;
 
   begin
-    y := DoblDobl_Monomial_Vectors.Eval(m,x);
+    y := DoblDobl_Monomial_Vectors.Eval(p,x);
     put("y : "); put(y); new_line;
-    DoblDobl_Monomial_Vectors.Diff(m,x,yd);
-    DoblDobl_Monomial_Vectors.Speel(m,x,z,zd);
+    DoblDobl_Monomial_Vectors.Diff(p.mons,x,yd);
+    DoblDobl_Monomial_Vectors.Speel(p,x,z,zd);
     put("z : "); put(z); new_line;
     DoblDobl_Complex_Numbers.Sub(y,z);
     nrm := hi_part(DoblDobl_Complex_Numbers.AbsVal(y));
@@ -102,23 +100,22 @@ procedure ts_monvec is
   end DoblDobl_Eval;
 
   procedure QuadDobl_Eval
-              ( m : in QuadDobl_Monomial_Vectors.Link_to_Monomial_Vector ) is
+              ( p : in QuadDobl_Monomial_Vectors.Link_to_Polynomial ) is
 
   -- DESCRIPTION :
-  --   Evaluates m at a random vector, in quad double precision.
+  --   Evaluates p at a random vector, in quad double precision.
 
-    dim : constant integer32 := integer32(m(m'first).dim);
-    x : constant QuadDobl_Complex_Vectors.Vector(1..dim)
-      := QuadDobl_Random_Vectors.Random_Vector(1,dim);
+    x : constant QuadDobl_Complex_Vectors.Vector(1..p.dim)
+      := QuadDobl_Random_Vectors.Random_Vector(1,p.dim);
     y,z : QuadDobl_Complex_Numbers.Complex_Number;
-    yd,zd : QuadDobl_Complex_Vectors.Vector(1..dim);
+    yd,zd : QuadDobl_Complex_Vectors.Vector(1..p.dim);
     nrm : double_float;
 
   begin
-    y := QuadDobl_Monomial_Vectors.Eval(m,x);
+    y := QuadDobl_Monomial_Vectors.Eval(p,x);
     put("y : "); put(y); new_line;
-    QuadDobl_Monomial_Vectors.Diff(m,x,yd);
-    QuadDobl_Monomial_Vectors.Speel(m,x,z,zd);
+    QuadDobl_Monomial_Vectors.Diff(p.mons,x,yd);
+    QuadDobl_Monomial_Vectors.Speel(p,x,z,zd);
     put("z : "); put(z); new_line;
     QuadDobl_Complex_Numbers.Sub(y,z);
     nrm := hihi_part(QuadDobl_Complex_Numbers.AbsVal(y));
@@ -141,7 +138,7 @@ procedure ts_monvec is
 
     size,dim : integer32 := 0;
     expmax : natural32 := 0;
-    v : Standard_Monomial_Vectors.Link_to_Monomial_Vector;
+    p : Standard_Monomial_Vectors.Link_to_Polynomial;
 
   begin
     put_line("Testing monomial operations in double precision ...");
@@ -149,12 +146,12 @@ procedure ts_monvec is
     put("Give the dimension : "); get(dim);
     put("Give the largest exponent : "); get(expmax);
     declare
-      ranvec : constant Standard_Monomial_Vectors.Monomial_Vector
-             := Standard_Random_Monomial_Vector(size,dim,expmax,true);
+      ranpol : constant Standard_Monomial_Vectors.Polynomial
+             := Standard_Random_Polynomial(size,dim,expmax,true);
     begin
-      v := new Standard_Monomial_Vectors.Monomial_Vector'(ranvec);
-      put_line("a random monomial vector : "); put(v);
-      Standard_Eval(v);
+      p := new Standard_Monomial_Vectors.Polynomial'(ranpol);
+      put_line("a random monomial vector : "); put(p);
+      Standard_Eval(p);
     end;
   end Standard_Main;
 
@@ -167,7 +164,7 @@ procedure ts_monvec is
 
     size,dim : integer32 := 0;
     expmax : natural32 := 0;
-    v : DoblDobl_Monomial_Vectors.Link_to_Monomial_Vector;
+    p : DoblDobl_Monomial_Vectors.Link_to_Polynomial;
 
   begin
     put_line("Testing monomial operations in double double precision ...");
@@ -175,12 +172,12 @@ procedure ts_monvec is
     put("Give the dimension : "); get(dim);
     put("Give the largest exponent : "); get(expmax);
     declare
-      ranvec : constant DoblDobl_Monomial_Vectors.Monomial_Vector
-             := DoblDobl_Random_Monomial_Vector(size,dim,expmax,true);
+      ranpol : constant DoblDobl_Monomial_Vectors.Polynomial
+             := DoblDobl_Random_Polynomial(size,dim,expmax,true);
     begin
-      v := new DoblDobl_Monomial_Vectors.Monomial_Vector'(ranvec);
-      put_line("a random monomial vector : "); put(v);
-      DoblDobl_Eval(v);
+      p := new DoblDobl_Monomial_Vectors.Polynomial'(ranpol);
+      put_line("a random monomial vector : "); put(p);
+      DoblDobl_Eval(p);
     end;
   end DoblDobl_Main;
 
@@ -193,7 +190,7 @@ procedure ts_monvec is
 
     size,dim : integer32 := 0;
     expmax : natural32 := 0;
-    v : QuadDobl_Monomial_Vectors.Link_to_Monomial_Vector;
+    p : QuadDobl_Monomial_Vectors.Link_to_Polynomial;
 
   begin
     put_line("Testing monomial operations in quad double precision ...");
@@ -201,12 +198,12 @@ procedure ts_monvec is
     put("Give the dimension : "); get(dim);
     put("Give the largest exponent : "); get(expmax);
     declare
-      ranvec : constant QuadDobl_Monomial_Vectors.Monomial_Vector
-             := QuadDobl_Random_Monomial_Vector(size,dim,expmax,true);
+      ranpol : constant QuadDobl_Monomial_Vectors.Polynomial
+             := QuadDobl_Random_Polynomial(size,dim,expmax,true);
     begin
-      v := new QuadDobl_Monomial_Vectors.Monomial_Vector'(ranvec);
-      put_line("a random monomial vector :"); put(v);
-      QuadDobl_Eval(v);
+      p := new QuadDobl_Monomial_Vectors.Polynomial'(ranpol);
+      put_line("a random monomial vector :"); put(p);
+      QuadDobl_Eval(p);
     end;
   end QuadDobl_Main;
 

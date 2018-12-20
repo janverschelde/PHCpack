@@ -278,6 +278,7 @@ package body Generic_Monomials is
                 powtab : out VecVecs.VecVec ) is
 
     row,size : integer32;
+    lv : Vectors.Link_to_Vector;
 
     use Ring;
 
@@ -287,9 +288,10 @@ package body Generic_Monomials is
         row := integer32(m.pos(i));
         size := integer32(m.exp(i));
         powtab(row) := new Vectors.Vector(0..size);
-        Ring.Copy(x(row),powtab(row)(0));
+        lv := powtab(row);
+        Ring.Copy(x(row),lv(0));
         for j in 1..size loop
-          powtab(row)(j) := powtab(row)(j-1)*x(row);
+          lv(j) := lv(j-1)*x(row);
         end loop;
       end loop;
     end if;
@@ -320,7 +322,38 @@ package body Generic_Monomials is
   end Common_Factor;
 
   procedure Common_Factor
+              ( m : in Monomial; powtab : in VecVecs.Link_to_VecVec;
+                y : in out Ring.number ) is
+
+    row,col : integer32;
+
+  begin
+    Ring.Copy(m.cff,y);
+    for i in 1..integer32(m.n_base) loop
+      row := integer32(m.pos_base(i));
+      col := integer32(m.exp_tbl_base(i));
+      Ring.Mul(y,powtab(row)(col));
+    end loop;
+  end Common_Factor;
+
+  procedure Common_Factor
               ( m : in Link_to_Monomial; powtab : in VecVecs.VecVec;
+                y : in out Ring.number ) is
+
+    row,col : integer32;
+
+  begin
+    Ring.Copy(m.cff,y);
+    for i in 1..integer32(m.n_base) loop
+      row := integer32(m.pos_base(i));
+      col := integer32(m.exp_tbl_base(i));
+      Ring.Mul(y,powtab(row)(col));
+    end loop;
+  end Common_Factor;
+
+  procedure Common_Factor
+              ( m : in Link_to_Monomial;
+                powtab : in VecVecs.Link_to_VecVec;
                 y : in out Ring.number ) is
 
     row,col : integer32;
@@ -413,8 +446,30 @@ package body Generic_Monomials is
     Speel(m,x,b,y,yd);
   end Speel;
 
-  procedure Speel ( m : in Link_to_Monomial;
-                    x : in Vectors.Vector; powtab : in VecVecs.VecVec;
+  procedure Speel ( m : in Monomial; x : in Vectors.Vector;
+                    powtab : in VecVecs.Link_to_VecVec;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    b : Ring.number;
+
+  begin
+    Common_Factor(m,powtab,b);
+    Speel(m,x,b,y,yd);
+  end Speel;
+
+  procedure Speel ( m : in Link_to_Monomial; x : in Vectors.Vector;
+                    powtab : in VecVecs.VecVec;
+                    y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    b : Ring.number;
+
+  begin
+    Common_Factor(m,powtab,b);
+    Speel(m,x,b,y,yd);
+  end Speel;
+
+  procedure Speel ( m : in Link_to_Monomial; x : in Vectors.Vector;
+                    powtab : in VecVecs.Link_to_VecVec;
                     y : in out Ring.number; yd : in out Vectors.Vector ) is
 
     b : Ring.number;
