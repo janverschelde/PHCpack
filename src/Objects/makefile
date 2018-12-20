@@ -537,7 +537,7 @@ ts_csersys:
 
 # Test programs for the Math_Lib/AD library :
 
-test_ad: test_monom ts_monvec ts_polvec ts_sys2vec
+test_ad: ts_monom ts_monvec ts_polvec ts_sys2vec
 
 ts_monom:
 	make -f $(MAKEFILE) ts_monom
