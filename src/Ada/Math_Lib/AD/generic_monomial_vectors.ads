@@ -29,6 +29,17 @@ package Generic_Monomial_Vectors is
   type Link_to_Monomial_Vector is access Monomial_Vector;
   type Link_to_Polynomial is access Polynomial;
 
+-- SELECTORS :
+
+  function Degree ( v : Monomial_Vector ) return integer32;
+  function Degree ( v : Link_to_Monomial_Vector ) return integer32;
+  function Degree ( p : Polynomial ) return integer32;
+  function Degree ( p : Link_to_Polynomial ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns -1 for an empty monomial vector or polynomial,
+  --   otherwise the degree of the vector or polynomial is returned.
+
 -- EVALUATION and DIFFERENTIATION :
 
   function Eval ( v : Monomial_Vector;

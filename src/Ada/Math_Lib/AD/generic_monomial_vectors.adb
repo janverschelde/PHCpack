@@ -2,6 +2,53 @@ with unchecked_deallocation;
 
 package body Generic_Monomial_Vectors is
 
+-- SELECTORS :
+
+  function Degree ( v : Monomial_Vector ) return integer32 is
+
+    res : integer32 := Monomials.Degree(v(v'first));
+    deg : integer32;
+
+  begin
+    for i in v'first+1..v'last loop
+      deg := Monomials.Degree(v(i));
+      if deg > res
+       then res := deg;
+      end if;
+    end loop;
+    return res;
+  end Degree;
+
+  function Degree ( v : Link_to_Monomial_Vector ) return integer32 is
+  begin
+    if v = null
+     then return -1;
+     else return Degree(v.all);
+    end if;
+  end Degree;
+
+  function Degree ( p : Polynomial ) return integer32 is
+
+    res : integer32 := Degree(p.mons);
+
+  begin
+    if res >= 0 then
+      return res;
+    elsif not Ring.Equal(p.cff0,Ring.zero) then
+      return 0;
+    else
+      return -1;
+    end if;
+  end Degree;
+
+  function Degree ( p : Link_to_Polynomial ) return integer32 is
+  begin
+    if p = null
+     then return -1;
+     else return Degree(p.all);
+    end if;
+  end Degree;
+
 -- EVALUATION and DIFFERENTIATION :
 
   function Eval ( v : Monomial_Vector;

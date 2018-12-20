@@ -8,6 +8,8 @@ Wed 19 Dec 2018 : fixed bug in system_vector_convertors, added a function
   instantiations in *monomial_vectors.ads, improved ts_monvec.adb.
   The generic_polynomial_vectors.ads changed and so did all its
   instantiations in *polynomial_vectors.ads, improved ts_polvec.adb.
+  Added degree() functions to generic_monomial_vectors and updated
+  {standard,dobldobl,quaddobl}_monomial_vectors_io.adb.
 
 Tue 18 Dec 2018 : added a polynomial type to generic_monomial_vectors,
   which changed {standard,dobldobl,quaddobl}_monomial_vectors_io.

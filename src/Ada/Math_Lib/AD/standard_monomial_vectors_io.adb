@@ -12,6 +12,7 @@ package body Standard_Monomial_Vectors_io is
 
   procedure put ( file : in file_type; v : in Monomial_Vector ) is
   begin
+    put(file,"degree : "); put(file,Degree(v),1); new_line(file);
     for i in v'range loop
       if v(i) /= null then
         put(file,"-> monomial "); put(file,i,1); put_line(file," :");
@@ -39,6 +40,7 @@ package body Standard_Monomial_Vectors_io is
 
   procedure put ( file : in file_type; p : in Polynomial ) is
   begin
+    put(file,"degree : "); put(file,Degree(p),1); new_line(file);
     put_line(file,"-> monomial 0 :");
     put(file,"coefficient : ");
     put(file,p.cff0); new_line(file);
