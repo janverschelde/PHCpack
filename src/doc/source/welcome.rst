@@ -406,7 +406,7 @@ global optimization, and computational physics:
 #. Zachary Charles and Nigel Boston:
    **Exploiting algebraic structure in global optimization and the
    Belgian chocolate problem**.
-   arXiv:1708.08114 [math.OC] 27 Aug 2017.
+   *Journal of Global Optimization* 72(2): 241-254, 2018.
 
 #. Tom Creemers, Josep M. Porta, Lluis Ros, and Federico Thomas:
    **Fast Multiresolutive Approximations of Planar Linkage Configuration
