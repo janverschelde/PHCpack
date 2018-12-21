@@ -283,6 +283,21 @@ package Generic_Monomial_Vectors is
   --   wrk      work space to hold intermediate values of the derivatives
   --            of the monomials.
 
+  procedure Speel_without_Cache
+              ( v : in Monomial_Vector; x : in Vectors.Vector;
+                y : in out Ring.number;
+                yd,wrk : in out Vectors.Vector );
+  procedure Speel_without_Cache
+              ( p : in Polynomial; x : in Vectors.Vector;
+                y : in out Ring.number; yd : in out Vectors.Vector );
+  procedure Speel_without_Cache
+              ( p : in Link_to_Polynomial; x : in Vectors.Vector;
+                y : in out Ring.number; yd : in out Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Similar to the general Speel, but without p.powtab.
+  --   For debugging purposes only.
+
 -- DESTRUCTORS :
 
   procedure Clear ( v : in out Monomial_Vector );

@@ -448,13 +448,19 @@ package body Generic_Monomial_Vectors is
       Ring.copy(Ring.zero,yd(i));
     end loop;
     mon := v(v'first);
-    Monomials.Speel(mon,x,powtab,y,wrk);
+    if mon.n_base = 0
+     then Monomials.Speel_on_Product(mon,x,y,wrk);
+     else Monomials.Speel(mon,x,powtab,y,wrk);
+    end if;
     for j in 1..integer32(mon.nvr) loop
       Ring.add(yd(integer32(mon.pos(j))),wrk(j));
     end loop;
     for i in v'first+1..v'last loop
       mon := v(i);
-      Monomials.Speel(mon,x,powtab,val,wrk);
+      if mon.n_base = 0
+       then Monomials.Speel_on_Product(mon,x,val,wrk);
+       else Monomials.Speel(mon,x,powtab,val,wrk);
+      end if;
       Ring.add(y,val);
       for j in 1..integer32(mon.nvr) loop
         Ring.add(yd(integer32(mon.pos(j))),wrk(j));
@@ -476,13 +482,19 @@ package body Generic_Monomial_Vectors is
       Ring.copy(Ring.zero,yd(i));
     end loop;
     mon := v(v'first);
-    Monomials.Speel(mon,x,powtab,y,wrk);
+    if mon.n_base = 0
+     then Monomials.Speel_on_Product(mon,x,y,wrk);
+     else Monomials.Speel(mon,x,powtab,y,wrk);
+    end if;
     for j in 1..integer32(mon.nvr) loop
       Ring.add(yd(integer32(mon.pos(j))),wrk(j));
     end loop;
     for i in v'first+1..v'last loop
       mon := v(i);
-      Monomials.Speel(mon,x,powtab,val,wrk);
+      if mon.n_base = 0
+       then Monomials.Speel_on_Product(mon,x,val,wrk);
+       else Monomials.Speel(mon,x,powtab,val,wrk);
+      end if;
       Ring.add(y,val);
       for j in 1..integer32(mon.nvr) loop
         Ring.add(yd(integer32(mon.pos(j))),wrk(j));
@@ -507,6 +519,57 @@ package body Generic_Monomial_Vectors is
      then Speel(v.all,x,powtab,y,yd,wrk);
     end if;
   end Speel;
+
+  procedure Speel_without_Cache
+              ( v : in Monomial_Vector; x : in Vectors.Vector;
+                y : in out Ring.number;
+                yd,wrk : in out Vectors.Vector ) is
+
+    mon : Monomials.Link_to_Monomial;
+    val : Ring.number;
+
+  begin
+    for i in wrk'range loop
+      Ring.copy(Ring.zero,yd(i));
+    end loop;
+    mon := v(v'first);
+    Monomials.Speel(mon,x,y,wrk);
+    for j in 1..integer32(mon.nvr) loop
+      Ring.add(yd(integer32(mon.pos(j))),wrk(j));
+    end loop;
+    for i in v'first+1..v'last loop
+      mon := v(i);
+      Monomials.Speel(mon,x,val,wrk);
+      Ring.add(y,val);
+      for j in 1..integer32(mon.nvr) loop
+        Ring.add(yd(integer32(mon.pos(j))),wrk(j));
+      end loop;
+    end loop;
+  end Speel_without_Cache;
+
+  procedure Speel_without_Cache
+              ( p : in Polynomial; x : in Vectors.Vector;
+                y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    wrk : Vectors.Vector(x'range);
+
+  begin
+    Speel_without_Cache(p.mons,x,y,yd,wrk);
+    Ring.add(y,p.cff0);
+  end Speel_without_Cache;
+
+  procedure Speel_without_Cache
+              ( p : in Link_to_Polynomial; x : in Vectors.Vector;
+                y : in out Ring.number; yd : in out Vectors.Vector ) is
+
+    wrk : Vectors.Vector(x'range);
+
+  begin
+    if p /= null then
+      Speel_without_Cache(p.mons,x,y,yd,wrk);
+      Ring.add(y,p.cff0);
+    end if;
+  end Speel_without_Cache;
 
 -- DESTRUCTORS :
 

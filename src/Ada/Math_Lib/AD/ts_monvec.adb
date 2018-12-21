@@ -47,8 +47,8 @@ procedure ts_monvec is
 
     x : constant Standard_Complex_Vectors.Vector(1..p.dim)
       := Standard_Random_Vectors.Random_Vector(1,p.dim);
-    y,z : Standard_Complex_Numbers.Complex_Number;
-    yd,zd : Standard_Complex_Vectors.Vector(1..p.dim);
+    y,z,w : Standard_Complex_Numbers.Complex_Number;
+    yd,zd,wd : Standard_Complex_Vectors.Vector(1..p.dim);
     nrm : double_float;
 
   begin
@@ -57,6 +57,8 @@ procedure ts_monvec is
     Standard_Monomial_Vectors.Diff(p.mons,x,yd);
     Standard_Monomial_Vectors.Speel(p,x,z,zd);
     put("z : "); put(z); new_line;
+    Standard_Monomial_Vectors.Speel_without_Cache(p,x,w,wd);
+    put("w : "); put(w); new_line;
     Standard_Complex_Numbers.Sub(y,z);
     nrm := Standard_Complex_Numbers.AbsVal(y);
     put("Norm of the difference :"); put(nrm,3); new_line;
@@ -64,6 +66,8 @@ procedure ts_monvec is
     put_line(yd);
     put_line("The derivatives with the Speelpenning algorithm :");
     put_line(zd);
+    put_line("The derivatives with Speelpenning, no caching :");
+    put_line(wd);
     Standard_Complex_Vectors.Sub(yd,zd);
     nrm := Standard_Complex_Vector_Norms.Max_Norm(yd);
     put("Max norm of the difference :"); put(nrm,3); new_line;
@@ -77,8 +81,8 @@ procedure ts_monvec is
 
     x : constant DoblDobl_Complex_Vectors.Vector(1..p.dim)
       := DoblDobl_Random_Vectors.Random_Vector(1,p.dim);
-    y,z : DoblDobl_Complex_Numbers.Complex_Number;
-    yd,zd : DoblDobl_Complex_Vectors.Vector(1..p.dim);
+    y,z,w : DoblDobl_Complex_Numbers.Complex_Number;
+    yd,zd,wd : DoblDobl_Complex_Vectors.Vector(1..p.dim);
     nrm : double_float;
 
   begin
@@ -87,6 +91,8 @@ procedure ts_monvec is
     DoblDobl_Monomial_Vectors.Diff(p.mons,x,yd);
     DoblDobl_Monomial_Vectors.Speel(p,x,z,zd);
     put("z : "); put(z); new_line;
+    DoblDobl_Monomial_Vectors.Speel_without_Cache(p,x,w,wd);
+    put("w : "); put(w); new_line;
     DoblDobl_Complex_Numbers.Sub(y,z);
     nrm := hi_part(DoblDobl_Complex_Numbers.AbsVal(y));
     put("Norm of the difference :"); put(nrm,3); new_line;
@@ -94,6 +100,8 @@ procedure ts_monvec is
     put_line(yd);
     put_line("The derivatives with the Speelpenning algorithm :");
     put_line(zd);
+    put_line("The derivatives with Speelpenning, no caching :");
+    put_line(wd);
     DoblDobl_Complex_Vectors.Sub(yd,zd);
     nrm := hi_part(DoblDobl_Complex_Vector_Norms.Max_Norm(yd));
     put("Max norm of the difference :"); put(nrm,3); new_line;
@@ -107,8 +115,8 @@ procedure ts_monvec is
 
     x : constant QuadDobl_Complex_Vectors.Vector(1..p.dim)
       := QuadDobl_Random_Vectors.Random_Vector(1,p.dim);
-    y,z : QuadDobl_Complex_Numbers.Complex_Number;
-    yd,zd : QuadDobl_Complex_Vectors.Vector(1..p.dim);
+    y,z,w : QuadDobl_Complex_Numbers.Complex_Number;
+    yd,zd,wd : QuadDobl_Complex_Vectors.Vector(1..p.dim);
     nrm : double_float;
 
   begin
@@ -117,6 +125,8 @@ procedure ts_monvec is
     QuadDobl_Monomial_Vectors.Diff(p.mons,x,yd);
     QuadDobl_Monomial_Vectors.Speel(p,x,z,zd);
     put("z : "); put(z); new_line;
+    QuadDobl_Monomial_Vectors.Speel_without_Cache(p,x,w,wd);
+    put("w : "); put(w); new_line;
     QuadDobl_Complex_Numbers.Sub(y,z);
     nrm := hihi_part(QuadDobl_Complex_Numbers.AbsVal(y));
     put("Norm of the difference :"); put(nrm,3); new_line;
@@ -124,6 +134,8 @@ procedure ts_monvec is
     put_line(yd);
     put_line("The derivatives with the Speelpenning algorithm :");
     put_line(zd);
+    put_line("The derivatives with Speelpenning, no caching :");
+    put_line(wd);
     QuadDobl_Complex_Vectors.Sub(yd,zd);
     nrm := hihi_part(QuadDobl_Complex_Vector_Norms.Max_Norm(yd));
     put("Max norm of the difference :"); put(nrm,3); new_line;
