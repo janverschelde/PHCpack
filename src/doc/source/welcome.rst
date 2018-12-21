@@ -353,7 +353,8 @@ global optimization, and computational physics:
 #. E. Bartzos, I. Emiris, J. Legersky, and E. Tsigaridas:
    **On the maximal number of real embeddings of spatial minimally
    rigid graphs.**
-   arXiv: 1802.05860v1 [math.AG] 16 Feb 2018.
+   In *Proceedings of the 2018 International Symposium on Symbolic and
+   Algebraic Computation (ISSAC 2018)*, pages 55-62, ACM 2018.
 
 #. Bassi, I.G., Abdullahi Mohammed, and Okechukwu C.E.:
    **Analysis Of Solving Polynomial Equations Using Homotopy Continuation
