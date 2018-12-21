@@ -8,6 +8,7 @@ Thu 20 Dec 2018 : modified random_monomials to retry if the degree of the
   Updated generic_monomials, ts_monvec, random_monomial_vectors.adb,
   and system_vector_convertors.adb.  Distinguished case with m.n_base = 0
   in generic_monomial_vectors, added speel_without_cache for bug fix...
+  In generic_monomial_vectors.adb, fixed bug in Largest_Exponents.
 
 Wed 19 Dec 2018 : fixed bug in system_vector_convertors, added a function
   to check on the constant term, fixed bug in generic_polynomial_vectors.adb,

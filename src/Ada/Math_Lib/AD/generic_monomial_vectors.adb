@@ -59,12 +59,16 @@ package body Generic_Monomial_Vectors is
   procedure Largest_Exponents
               ( v : in Monomial_Vector;
                 e : out Standard_Natural_Vectors.Vector ) is
+
+    idx : integer32;
+
   begin
     e := (e'range => 0);
     for i in v'range loop
       for j in v(i).exp'range loop
-        if v(i).exp(j) > e(j)
-         then e(j) := v(i).exp(j);
+        idx := integer32(v(i).pos(j));
+        if v(i).exp(j) > e(idx)
+         then e(idx) := v(i).exp(j);
         end if;
       end loop;
     end loop;
