@@ -2,6 +2,8 @@ Fri 21 Dec 2018 : new type system in generic_polynomial_vectors to
   hold maximal exponents, which extended random_polynomial_vectors,
   all *polynomial_vectors_io, system_vector_convertors, and the
   test procedures ts_polvec.adb and ts_sys2vec.adb.
+  To generic_polynomial_vectors, added speel() procedure to use the cached
+  power tables for evaluation and differentiation.
 
 Thu 20 Dec 2018 : modified random_monomials to retry if the degree of the
   generated monomial equals zero.  Set verbose flag in ts_monom.adb.

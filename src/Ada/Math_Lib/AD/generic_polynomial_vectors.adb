@@ -9,6 +9,9 @@ package body Generic_Polynomial_Vectors is
   begin
     s.deg1 := Compute_Deg1(s.pols);
     Largest_Exponents(s.pols,s.maxexp);
+    if not s.deg1
+     then s.powtab := Allocate_Power_Table(s.maxexp);
+    end if;
   end Power_Update;
 
   procedure Power_Update ( s : in out Link_to_System ) is
@@ -16,6 +19,9 @@ package body Generic_Polynomial_Vectors is
     if s /= null then
       s.deg1 := Compute_Deg1(s.pols);
       Largest_Exponents(s.pols,s.maxexp);
+      if not s.deg1
+       then s.powtab := Allocate_Power_Table(s.maxexp);
+      end if;
     end if;
   end Power_Update;
 
@@ -92,6 +98,32 @@ package body Generic_Polynomial_Vectors is
      then Largest_Exponents(s.pols,e);
     end if;
   end Largest_Exponents;
+
+  function Allocate_Power_Table
+              ( maxexp : Standard_Natural_Vectors.Vector )
+              return VecVecs.Link_to_VecVec is
+  begin
+    return Polynomials.Allocate_Power_Table(maxexp);
+  end Allocate_Power_Table;
+
+  procedure Allocate_Power_Table
+              ( powtab : in out VecVecs.VecVec;
+                maxexp : in Standard_Natural_Vectors.Vector ) is
+  begin
+    Polynomials.Allocate_Power_Table(powtab,maxexp);
+  end Allocate_Power_Table;
+
+  procedure Update_Power_Table
+              ( powtab : in out VecVecs.VecVec; x : in Vectors.Vector ) is
+  begin
+    Polynomials.Update_Power_Table(powtab,x);
+  end Update_Power_Table;
+
+  procedure Update_Power_Table
+              ( powtab : in VecVecs.Link_to_VecVec; x : in Vectors.Vector ) is
+  begin
+    Polynomials.Update_Power_Table(powtab,x);
+  end Update_Power_Table;
 
 -- EVALUATION and DIFFERENTIATION :
 
@@ -170,34 +202,106 @@ package body Generic_Polynomial_Vectors is
                     y : out Vectors.Vector; m : out Matrices.Matrix;
                     yd,wrk : in out Vectors.Vector ) is
   begin
-    Speel(s.pols,x,y,m,yd,wrk);
+    if s.deg1 then
+      Speel_on_Product(s,x,y,m,yd,wrk);
+    else
+      Update_Power_Table(s.powtab,x);
+      Speel(s.pols,x,s.powtab,y,m,yd,wrk);
+    end if;
   end Speel;
 
   procedure Speel ( s : in System; x : in Vectors.Vector;
                     y : out Vectors.Vector; m : out Matrices.Matrix ) is
   begin
-    Speel(s.pols,x,y,m);
+    if s.deg1 then
+      Speel_on_Product(s,x,y,m);
+    else
+      Update_Power_Table(s.powtab,x);
+      Speel(s.pols,x,s.powtab,y,m);
+    end if;
   end Speel;
 
   procedure Speel ( s : in Link_to_System; x : in Vectors.Vector;
                     y : out Vectors.Vector; m : out Matrices.Matrix;
                     yd,wrk : in out Vectors.Vector ) is
   begin
-    Speel(s.pols,x,y,m,yd,wrk);
+    if s /= null then
+      if s.deg1 then
+        Speel_on_Product(s,x,y,m,yd,wrk);
+      else
+        Update_Power_Table(s.powtab,x);
+        Speel(s.pols,x,s.powtab,y,m,yd,wrk);
+      end if;
+    end if;
   end Speel;
 
   procedure Speel ( s : in Link_to_System; x : in Vectors.Vector;
                     y : out Vectors.Vector; m : out Matrices.Matrix ) is
   begin
-    Speel(s.pols,x,y,m);
+    if s /= null then
+      if s.deg1 then
+        Speel_on_Product(s,x,y,m);
+      else
+        Update_Power_Table(s.powtab,x);
+        Speel(s.pols,x,s.powtab,y,m);
+      end if;
+    end if;
   end Speel;
 
+  procedure Speel_on_Product
+              ( s : in System; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix;
+                yd,wrk : in out Vectors.Vector ) is
+  begin
+    for i in s.pols'range loop
+      Polynomials.Speel_on_Product(s.pols(i),x,y(i),yd,wrk);
+      for j in yd'range loop
+        Ring.Copy(yd(j),m(i,j));
+      end loop;
+    end loop;
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( s : in System; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix ) is
+
+    yd,wrk : Vectors.Vector(x'range);
+
+  begin
+    Speel_on_Product(s,x,y,m,yd,wrk);
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( s : in Link_to_System; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix;
+                yd,wrk : in out Vectors.Vector ) is
+  begin
+    for i in s.pols'range loop
+      Polynomials.Speel_on_Product(s.pols(i),x,y(i),yd,wrk);
+      for j in yd'range loop
+        Ring.Copy(yd(j),m(i,j));
+      end loop;
+    end loop;
+  end Speel_on_Product;
+
+  procedure Speel_on_Product
+              ( s : in Link_to_System; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix ) is
+
+    yd,wrk : Vectors.Vector(x'range);
+
+  begin
+    Speel_on_Product(s,x,y,m,yd,wrk);
+  end Speel_on_Product;
+
   procedure Speel ( p : in Polynomial_Vector; x : in Vectors.Vector;
+                    powtab : in VecVecs.Link_to_VecVec;
                     y : out Vectors.Vector; m : out Matrices.Matrix;
                     yd,wrk : in out Vectors.Vector ) is
   begin
     for i in p'range loop
-      Polynomials.Speel(p(i),x,y(i),yd,wrk);
+      Polynomials.Speel(p(i).mons,x,powtab,y(i),yd,wrk);
+      Ring.add(y(i),p(i).cff0);
       for j in yd'range loop
         Ring.Copy(yd(j),m(i,j));
       end loop;
@@ -205,30 +309,105 @@ package body Generic_Polynomial_Vectors is
   end Speel;
 
   procedure Speel ( p : in Polynomial_Vector; x : in Vectors.Vector;
+                    powtab : in VecVecs.Link_to_VecVec;
                     y : out Vectors.Vector; m : out Matrices.Matrix ) is
 
     yd,wrk : Vectors.Vector(x'range);
 
   begin
-    Speel(p,x,y,m,yd,wrk);
+    Speel(p,x,powtab,y,m,yd,wrk);
   end Speel;
 
   procedure Speel ( p : in Link_to_Polynomial_Vector; x : in Vectors.Vector;
+                    powtab : in VecVecs.Link_to_VecVec;
                     y : out Vectors.Vector; m : out Matrices.Matrix;
                     yd,wrk : in out Vectors.Vector ) is
   begin
     if p /= null
-     then Speel(p.all,x,y,m,yd,wrk);
+     then Speel(p.all,x,powtab,y,m,yd,wrk);
     end if;
   end Speel;
 
   procedure Speel ( p : in Link_to_Polynomial_Vector; x : in Vectors.Vector;
+                    powtab : in VecVecs.Link_to_VecVec;
                     y : out Vectors.Vector; m : out Matrices.Matrix ) is
   begin
     if p /= null
-     then Speel(p.all,x,y,m);
+     then Speel(p.all,x,powtab,y,m);
     end if;
   end Speel;
+
+  procedure Speel_without_System_Cache
+              ( s : in System; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix;
+                yd,wrk : in out Vectors.Vector ) is
+  begin
+    Speel_without_System_Cache(s.pols,x,y,m,yd,wrk);
+  end Speel_without_System_Cache;
+
+  procedure Speel_without_System_Cache
+              ( s : in System; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix ) is
+  begin
+    Speel_without_System_Cache(s.pols,x,y,m);
+  end Speel_without_System_Cache;
+
+  procedure Speel_without_System_Cache
+              ( s : in Link_to_System; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix;
+                yd,wrk : in out Vectors.Vector ) is
+  begin
+    Speel_without_System_Cache(s.pols,x,y,m,yd,wrk);
+  end Speel_without_System_Cache;
+
+  procedure Speel_without_System_Cache
+              ( s : in Link_to_System; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix ) is
+  begin
+    Speel_without_System_Cache(s.pols,x,y,m);
+  end Speel_without_System_Cache;
+
+  procedure Speel_without_System_Cache
+              ( p : in Polynomial_Vector; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix;
+                yd,wrk : in out Vectors.Vector ) is
+  begin
+    for i in p'range loop
+      Polynomials.Speel(p(i),x,y(i),yd,wrk);
+      for j in yd'range loop
+        Ring.Copy(yd(j),m(i,j));
+      end loop;
+    end loop;
+  end Speel_without_System_Cache;
+
+  procedure Speel_without_System_Cache
+              ( p : in Polynomial_Vector; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix ) is
+
+    yd,wrk : Vectors.Vector(x'range);
+
+  begin
+    Speel_without_System_Cache(p,x,y,m,yd,wrk);
+  end Speel_without_System_Cache;
+
+  procedure Speel_without_System_Cache
+              ( p : in Link_to_Polynomial_Vector; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix;
+                yd,wrk : in out Vectors.Vector ) is
+  begin
+    if p /= null
+     then Speel_without_System_Cache(p.all,x,y,m,yd,wrk);
+    end if;
+  end Speel_without_System_Cache;
+
+  procedure Speel_without_System_Cache
+              ( p : in Link_to_Polynomial_Vector; x : in Vectors.Vector;
+                y : out Vectors.Vector; m : out Matrices.Matrix ) is
+  begin
+    if p /= null
+     then Speel_without_System_Cache(p.all,x,y,m);
+    end if;
+  end Speel_without_System_Cache;
 
 -- DESTRUCTORS :
 
