@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with DoblDobl_Monomial_Vectors;         use DoblDobl_Monomial_Vectors;
 with DoblDobl_Monomial_Vectors_io;      use DoblDobl_Monomial_Vectors_io;
 
@@ -33,6 +34,33 @@ package body DoblDobl_Polynomial_Vectors_io is
           put(file,v(i).all);
         end if;
       end loop;
+    end if;
+  end put;
+
+  procedure put ( s : in System ) is
+  begin
+    put(standard_output,s);
+  end put;
+
+  procedure put ( file : in file_type; s : in System ) is
+  begin
+    put(file,"largest exponents : "); put(file,s.maxexp);
+    if s.deg1
+     then put_line(file,"  no large exponents");
+     else put_line(file,"  exponents larger than one");
+    end if;
+    put(file,s.pols);
+  end put;
+
+  procedure put ( s : in Link_to_System ) is
+  begin
+    put(standard_output,s);
+  end put;
+
+  procedure put ( file : in file_type; s : in Link_to_System ) is
+  begin
+    if s /= null
+     then put(file,s.all);
     end if;
   end put;
 

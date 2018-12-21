@@ -247,96 +247,105 @@ package body System_Vector_Convertors is
   end Convert;
 
   function Convert ( p : Standard_Complex_Poly_Systems.Poly_Sys )
-                   return Standard_Polynomial_Vectors.Polynomial_Vector is
+                   return Standard_Polynomial_Vectors.System is
 
-    res : Standard_Polynomial_Vectors.Polynomial_Vector(p'range);
+    p1 : constant Standard_Complex_Polynomials.Poly := p(p'first);
+    dim : constant integer32
+        := integer32(Standard_Complex_Polynomials.Number_of_Unknowns(p1));
+    nbr : constant integer32 := p'last;
+    res : Standard_Polynomial_Vectors.System(dim,nbr);
 
   begin
     for i in p'range loop
-      res(i) := Convert(p(i));
+      res.pols(i) := Convert(p(i));
     end loop;
+    Standard_Polynomial_Vectors.Power_Update(res);
     return res;
   end Convert;
 
   function Convert ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
-                   return DoblDobl_Polynomial_Vectors.Polynomial_Vector is
+                   return DoblDobl_Polynomial_Vectors.System is
 
-    res : DoblDobl_Polynomial_Vectors.Polynomial_Vector(p'range);
+    p1 : constant DoblDobl_Complex_Polynomials.Poly := p(p'first);
+    dim : constant integer32
+        := integer32(DoblDobl_Complex_Polynomials.Number_of_Unknowns(p1));
+    nbr : constant integer32 := p'last;
+    res : DoblDobl_Polynomial_Vectors.System(dim,nbr);
 
   begin
     for i in p'range loop
-      res(i) := Convert(p(i));
+      res.pols(i) := Convert(p(i));
     end loop;
+    DoblDobl_Polynomial_Vectors.Power_Update(res);
     return res;
   end Convert;
 
   function Convert ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
-                   return QuadDobl_Polynomial_Vectors.Polynomial_Vector is
+                   return QuadDobl_Polynomial_Vectors.System is
 
-    res : QuadDobl_Polynomial_Vectors.Polynomial_Vector(p'range);
+    p1 : constant QuadDobl_Complex_Polynomials.Poly := p(p'first);
+    dim : constant integer32
+        := integer32(QuadDobl_Complex_Polynomials.Number_of_Unknowns(p1));
+    nbr : constant integer32 := p'last;
+    res : QuadDobl_Polynomial_Vectors.System(dim,nbr);
 
   begin
     for i in p'range loop
-      res(i) := Convert(p(i));
+      res.pols(i) := Convert(p(i));
     end loop;
+    QuadDobl_Polynomial_Vectors.Power_Update(res);
     return res;
   end Convert;
 
-  function Convert
-             ( p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys )
-             return Standard_Polynomial_Vectors.Link_to_Polynomial_Vector is
+  function Convert ( p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys )
+                   return Standard_Polynomial_Vectors.Link_to_System is
 
-    res : Standard_Polynomial_Vectors.Link_to_Polynomial_Vector := null;
+    res : Standard_Polynomial_Vectors.Link_to_System:= null;
 
     use Standard_Complex_Poly_Systems;
 
   begin
     if p /= null then
       declare
-        pv : constant Standard_Polynomial_Vectors.Polynomial_Vector
-           := Convert(p.all);
+        s : constant Standard_Polynomial_Vectors.System := Convert(p.all);
       begin
-        res := new Standard_Polynomial_Vectors.Polynomial_Vector'(pv);
+        res := new Standard_Polynomial_Vectors.System'(s);
       end;
     end if;
     return res;
   end Convert;
 
-  function Convert
-             ( p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys )
-             return DoblDobl_Polynomial_Vectors.Link_to_Polynomial_Vector is
+  function Convert ( p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys )
+                   return DoblDobl_Polynomial_Vectors.Link_to_System is
 
-    res : DoblDobl_Polynomial_Vectors.Link_to_Polynomial_Vector := null;
+    res : DoblDobl_Polynomial_Vectors.Link_to_System := null;
 
     use DoblDobl_Complex_Poly_Systems;
 
   begin
     if p /= null then
       declare
-        pv : constant DoblDobl_Polynomial_Vectors.Polynomial_Vector
-           := Convert(p.all);
+        s : constant DoblDobl_Polynomial_Vectors.System := Convert(p.all);
       begin
-        res := new DoblDobl_Polynomial_Vectors.Polynomial_Vector'(pv);
+        res := new DoblDobl_Polynomial_Vectors.System'(s);
       end;
     end if;
     return res;
   end Convert;
 
-  function Convert
-             ( p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys )
-             return QuadDobl_Polynomial_Vectors.Link_to_Polynomial_Vector is
+  function Convert ( p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys )
+                   return QuadDobl_Polynomial_Vectors.Link_to_System is
 
-    res : QuadDobl_Polynomial_Vectors.Link_to_Polynomial_Vector := null;
+    res : QuadDobl_Polynomial_Vectors.Link_to_System := null;
 
     use QuadDobl_Complex_Poly_Systems;
 
   begin
     if p /= null then
       declare
-        pv : constant QuadDobl_Polynomial_Vectors.Polynomial_Vector
-           := Convert(p.all);
+        s : constant QuadDobl_Polynomial_Vectors.System := Convert(p.all);
       begin
-        res := new QuadDobl_Polynomial_Vectors.Polynomial_Vector'(pv);
+        res := new QuadDobl_Polynomial_Vectors.System'(s);
       end;
     end if;
     return res;

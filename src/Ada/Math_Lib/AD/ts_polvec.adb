@@ -105,18 +105,15 @@ procedure ts_polvec is
     end loop;
   end Write;
 
-  procedure Standard_Eval
-              ( p : in Standard_Polynomial_Vectors.Link_to_Polynomial_Vector )
-  is
+  procedure Standard_Eval ( p : in Standard_Polynomial_Vectors.System ) is
 
   -- DESCRIPTION :
   --   Evaluates p at a random vector, in double precision.
 
-    dim : constant integer32 := integer32(p(p'first).dim);
-    x : constant Standard_Complex_Vectors.Vector(1..dim)
-      := Standard_Random_Vectors.Random_Vector(1,dim);
-    y,z : Standard_Complex_Vectors.Vector(p'range);
-    dm,ym,zm : Standard_Complex_Matrices.Matrix(p'range,x'range);
+    x : constant Standard_Complex_Vectors.Vector(1..p.dim)
+      := Standard_Random_Vectors.Random_Vector(1,p.dim);
+    y,z : Standard_Complex_Vectors.Vector(1..p.nbr);
+    dm,ym,zm : Standard_Complex_Matrices.Matrix(y'range,x'range);
     nrm : double_float;
     ans : character;
 
@@ -141,18 +138,15 @@ procedure ts_polvec is
     end if;
   end Standard_Eval;
 
-  procedure DoblDobl_Eval
-              ( p : in DoblDobl_Polynomial_Vectors.Link_to_Polynomial_Vector )
-  is
+  procedure DoblDobl_Eval ( p : in DoblDobl_Polynomial_Vectors.System ) is
 
   -- DESCRIPTION :
   --   Evaluates p at a random vector, in double double precision.
 
-    dim : constant integer32 := integer32(p(p'first).dim);
-    x : constant DoblDobl_Complex_Vectors.Vector(1..dim)
-      := DoblDobl_Random_Vectors.Random_Vector(1,dim);
-    y,z : DoblDobl_Complex_Vectors.Vector(p'range);
-    dm,ym,zm : DoblDobl_Complex_Matrices.Matrix(p'range,x'range);
+    x : constant DoblDobl_Complex_Vectors.Vector(1..p.dim)
+      := DoblDobl_Random_Vectors.Random_Vector(1,p.dim);
+    y,z : DoblDobl_Complex_Vectors.Vector(1..p.nbr);
+    dm,ym,zm : DoblDobl_Complex_Matrices.Matrix(y'range,x'range);
     nrm : double_float;
     ans : character;
 
@@ -177,18 +171,15 @@ procedure ts_polvec is
     end if;
   end DoblDobl_Eval;
 
-  procedure QuadDobl_Eval
-              ( p : in QuadDobl_Polynomial_Vectors.Link_to_Polynomial_Vector )
-  is
+  procedure QuadDobl_Eval ( p : in QuadDobl_Polynomial_Vectors.System ) is
 
   -- DESCRIPTION :
-  --   Evaluates m at a random vector, in quad double precision.
+  --   Evaluates p at a random vector, in quad double precision.
 
-    dim : constant integer32 := integer32(p(p'first).dim);
-    x : constant QuadDobl_Complex_Vectors.Vector(1..dim)
-      := QuadDobl_Random_Vectors.Random_Vector(1,dim);
-    y,z : QuadDobl_Complex_Vectors.Vector(p'range);
-    dm,ym,zm : QuadDobl_Complex_Matrices.Matrix(p'range,x'range);
+    x : constant QuadDobl_Complex_Vectors.Vector(1..p.dim)
+      := QuadDobl_Random_Vectors.Random_Vector(1,p.dim);
+    y,z : QuadDobl_Complex_Vectors.Vector(1..p.nbr);
+    dm,ym,zm : QuadDobl_Complex_Matrices.Matrix(y'range,x'range);
     nrm : double_float;
     ans : character;
 
@@ -222,21 +213,16 @@ procedure ts_polvec is
 
     size,dim : integer32 := 0;
     expmax : natural32 := 0;
-    p : Standard_Polynomial_Vectors.Link_to_Polynomial_Vector;
+    s : Standard_Polynomial_Vectors.Link_to_System;
 
   begin
     put_line("Testing monomial operations in double precision ...");
     put("Give the size of the vector : "); get(size);
     put("Give the dimension : "); get(dim);
     put("Give the largest exponent : "); get(expmax);
-    declare
-      ranvec : constant Standard_Polynomial_Vectors.Polynomial_Vector
-             := Standard_Random_Polynomial_Vector(size,dim,expmax,true);
-    begin
-      p := new Standard_Polynomial_Vectors.Polynomial_Vector'(ranvec);
-      put_line("a random polynomial vector : "); put(p);
-      Standard_Eval(p);
-    end;
+    s := Standard_Random_System(size,dim,expmax,true);
+    put_line("a random polynomial system : "); put(s);
+    Standard_Eval(s.all);
   end Standard_Test;
 
   procedure DoblDobl_Test is
@@ -248,21 +234,16 @@ procedure ts_polvec is
 
     size,dim : integer32 := 0;
     expmax : natural32 := 0;
-    p : DoblDobl_Polynomial_Vectors.Link_to_Polynomial_Vector;
+    s : DoblDobl_Polynomial_Vectors.Link_to_System;
 
   begin
     put_line("Testing monomial operations in double double precision ...");
     put("Give the size of the vector : "); get(size);
     put("Give the dimension : "); get(dim);
     put("Give the largest exponent : "); get(expmax);
-    declare
-      ranvec : constant DoblDobl_Polynomial_Vectors.Polynomial_Vector
-             := DoblDobl_Random_Polynomial_Vector(size,dim,expmax,true);
-    begin
-      p := new DoblDobl_Polynomial_Vectors.Polynomial_Vector'(ranvec);
-      put_line("a random polynomial vector : "); put(p);
-      DoblDobl_Eval(p);
-    end;
+    s := DoblDobl_Random_System(size,dim,expmax,true);
+    put_line("a random polynomial vector : "); put(s);
+    DoblDobl_Eval(s.all);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test is
@@ -274,21 +255,16 @@ procedure ts_polvec is
 
     size,dim : integer32 := 0;
     expmax : natural32 := 0;
-    p : QuadDobl_Polynomial_Vectors.Link_to_Polynomial_Vector;
+    s : QuadDobl_Polynomial_Vectors.Link_to_System;
 
   begin
     put_line("Testing monomial operations in quad double precision ...");
     put("Give the size of the vector : "); get(size);
     put("Give the dimension : "); get(dim);
     put("Give the largest exponent : "); get(expmax);
-    declare
-      ranvec : constant QuadDobl_Polynomial_Vectors.Polynomial_Vector
-             := QuadDobl_Random_Polynomial_Vector(size,dim,expmax,true);
-    begin
-      p := new QuadDobl_Polynomial_Vectors.Polynomial_Vector'(ranvec);
-      put_line("a random monomial vector :"); put(p);
-      QuadDobl_Eval(p);
-    end;
+    s := QuadDobl_Random_System(size,dim,expmax,true);
+    put_line("a random monomial vector :"); put(s);
+    QuadDobl_Eval(s.all);
   end QuadDobl_Test;
 
   procedure Main is

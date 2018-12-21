@@ -57,7 +57,7 @@ procedure ts_sys2vec is
 
   procedure Standard_Eval
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                q : in Standard_Polynomial_Vectors.Polynomial_Vector ) is
+                q : in Standard_Polynomial_Vectors.System ) is
 
   -- DESCRIPTION :
   --   Evaluates p and q at a random point in standard double precision.
@@ -69,7 +69,7 @@ procedure ts_sys2vec is
         := Standard_Random_Vectors.Random_Vector(1,dim);
     yvp : Standard_Complex_Vectors.Vector(p'range);
     yjm : Standard_Complex_Matrices.Matrix(p'range,xpt'range);
-    zvp : Standard_Complex_Vectors.Vector(q'range);
+    zvp : Standard_Complex_Vectors.Vector(q.pols'range);
     zjm : Standard_Complex_Matrices.Matrix(p'range,xpt'range);
     jmt : Standard_Complex_Jaco_Matrices.Jaco_Mat(p'range,xpt'range)
         := Standard_Complex_Jaco_Matrices.Create(p);
@@ -91,7 +91,7 @@ procedure ts_sys2vec is
 
   procedure DoblDobl_Eval
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                q : in DoblDobl_Polynomial_Vectors.Polynomial_Vector ) is
+                q : in DoblDobl_Polynomial_Vectors.System ) is
 
   -- DESCRIPTION :
   --   Evaluates p and q at a random point in double double precision.
@@ -103,7 +103,7 @@ procedure ts_sys2vec is
         := DoblDobl_Random_Vectors.Random_Vector(1,dim);
     yvp : DoblDobl_Complex_Vectors.Vector(p'range);
     yjm : DoblDobl_Complex_Matrices.Matrix(p'range,xpt'range);
-    zvp : DoblDobl_Complex_Vectors.Vector(q'range);
+    zvp : DoblDobl_Complex_Vectors.Vector(q.pols'range);
     zjm : DoblDobl_Complex_Matrices.Matrix(p'range,xpt'range);
     jmt : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,xpt'range)
         := DoblDobl_Complex_Jaco_Matrices.Create(p);
@@ -126,7 +126,7 @@ procedure ts_sys2vec is
 
   procedure QuadDobl_Eval
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                q : in QuadDobl_Polynomial_Vectors.Polynomial_Vector ) is
+                q : in QuadDobl_Polynomial_Vectors.System ) is
 
   -- DESCRIPTION :
   --   Evaluates p and q at a random point in quad double precision.
@@ -138,7 +138,7 @@ procedure ts_sys2vec is
         := QuadDobl_Random_Vectors.Random_Vector(1,dim);
     yvp : QuadDobl_Complex_Vectors.Vector(p'range);
     yjm : QuadDobl_Complex_Matrices.Matrix(p'range,xpt'range);
-    zvp : QuadDobl_Complex_Vectors.Vector(q'range);
+    zvp : QuadDobl_Complex_Vectors.Vector(q.pols'range);
     zjm : QuadDobl_Complex_Matrices.Matrix(p'range,xpt'range);
     jmt : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,xpt'range)
         := QuadDobl_Complex_Jaco_Matrices.Create(p);
@@ -166,7 +166,7 @@ procedure ts_sys2vec is
   --   into polynomial vectors, in standard double precision.
 
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-    pv : Standard_Polynomial_Vectors.Link_to_Polynomial_Vector;
+    pv : Standard_Polynomial_Vectors.Link_to_System;
     ans : character;
  
   begin
@@ -186,7 +186,7 @@ procedure ts_sys2vec is
   --   into polynomial vectors, in double double precision.
 
     lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    pv : DoblDobl_Polynomial_Vectors.Link_to_Polynomial_Vector;
+    pv : DoblDobl_Polynomial_Vectors.Link_to_System;
     ans : character;
  
   begin
@@ -206,7 +206,7 @@ procedure ts_sys2vec is
   --   into polynomial vectors, in quad double precision.
 
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    pv : QuadDobl_Polynomial_Vectors.Link_to_Polynomial_Vector;
+    pv : QuadDobl_Polynomial_Vectors.Link_to_System;
     ans : character;
  
   begin

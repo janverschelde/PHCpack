@@ -73,25 +73,22 @@ package System_Vector_Convertors is
   --   in double, double double, and quad double precision.
 
   function Convert ( p : Standard_Complex_Poly_Systems.Poly_Sys )
-                   return Standard_Polynomial_Vectors.Polynomial_Vector;
+                   return Standard_Polynomial_Vectors.System;
   function Convert ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
-                   return DoblDobl_Polynomial_Vectors.Polynomial_Vector;
+                   return DoblDobl_Polynomial_Vectors.System;
   function Convert ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
-                   return QuadDobl_Polynomial_Vectors.Polynomial_Vector;
+                   return QuadDobl_Polynomial_Vectors.System;
 
   -- DESCRIPTION :
   --   Returns the polynomial vector corresponding to the system p,
   --   in double, double double, and quad double precision.
 
-  function Convert
-             ( p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys )
-             return Standard_Polynomial_Vectors.Link_to_Polynomial_Vector;
-  function Convert
-             ( p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys )
-             return DoblDobl_Polynomial_Vectors.Link_to_Polynomial_Vector;
-  function Convert
-             ( p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys )
-             return QuadDobl_Polynomial_Vectors.Link_to_Polynomial_Vector;
+  function Convert ( p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys )
+                   return Standard_Polynomial_Vectors.Link_to_System;
+  function Convert ( p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys )
+                   return DoblDobl_Polynomial_Vectors.Link_to_System;
+  function Convert ( p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys )
+                   return QuadDobl_Polynomial_Vectors.Link_to_System;
 
   -- DESCRIPTION :
   --   Returns the polynomial vector corresponding to the system p,

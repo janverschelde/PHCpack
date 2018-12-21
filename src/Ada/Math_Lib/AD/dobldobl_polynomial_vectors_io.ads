@@ -12,7 +12,14 @@ package DoblDobl_Polynomial_Vectors_io is
   procedure put ( file : in file_type; v : in Link_to_Polynomial_Vector );
 
   -- DESCRIPTION :
-  --   Writes the contents of the monomial vector to standard output
-  --   or to file.
+  --   Writes the polynomial vector to standard output or to file.
+
+  procedure put ( s : in System );
+  procedure put ( file : in file_type; s : in System );
+  procedure put ( s : in Link_to_System );
+  procedure put ( file : in file_type; s : in Link_to_System );
+
+  -- DESCRIPTION :
+  --   Writes the contents of the system to standard output or to file.
 
 end DoblDobl_Polynomial_Vectors_io;
