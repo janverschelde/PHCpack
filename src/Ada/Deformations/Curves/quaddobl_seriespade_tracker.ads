@@ -1,6 +1,8 @@
 with QuadDobl_Complex_Poly_Systems;      use QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;         use QuadDobl_Complex_Solutions;
 with Homotopy_Continuation_Parameters;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_Pade_Approximants;
 
 package QuadDobl_SeriesPade_Tracker is
 
@@ -77,6 +79,18 @@ package QuadDobl_SeriesPade_Tracker is
 
   -- DESCRIPTION :
   --   Returns the current solution.
+
+  function Get_Current_Series_Vector
+    return QuadDobl_Complex_Series_Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Returns the current series vector.
+
+  function Get_Current_Pade_Vector
+    return QuadDobl_Pade_Approximants.Link_to_Pade_Vector;
+
+  -- DESCRIPTION :
+  --   Returns the current vector of Pade approximants.
 
 -- DESTRUCTOR :
 

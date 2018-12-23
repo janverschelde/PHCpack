@@ -1,6 +1,8 @@
 with DoblDobl_Complex_Poly_Systems;      use DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;         use DoblDobl_Complex_Solutions;
 with Homotopy_Continuation_Parameters;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_Pade_Approximants;
 
 package DoblDobl_SeriesPade_Tracker is
 
@@ -77,6 +79,18 @@ package DoblDobl_SeriesPade_Tracker is
 
   -- DESCRIPTION :
   --   Returns the current solution.
+
+  function Get_Current_Series_Vector
+    return DoblDobl_Complex_Series_Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Returns the current series vector.
+
+  function Get_Current_Pade_Vector
+    return DoblDobl_Pade_Approximants.Link_to_Pade_Vector;
+
+  -- DESCRIPTION :
+  --   Returns the current vector of Pade approximants.
 
 -- DESTRUCTOR :
 

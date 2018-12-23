@@ -6,11 +6,9 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
-with Standard_Complex_Series_Vectors;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_CSeries_Poly_Systems;
 with Standard_Homotopy;
-with Standard_Pade_Approximants;
 with Homotopy_Pade_Approximants;
 with Series_and_Homotopies;
 with Series_and_Predictors;
@@ -25,8 +23,9 @@ package body Standard_SeriesPade_Tracker is
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : Standard_CSeries_Poly_Systems.Link_to_Poly_Sys;
   poles : Standard_Complex_VecVecs.Link_to_VecVec;
-  pv : Standard_Pade_Approximants.Link_to_Pade_Vector;
   current : Link_to_Solution;
+  current_servec : Standard_Complex_Series_Vectors.Link_to_Vector;
+  current_padvec : Standard_Pade_Approximants.Link_to_Pade_Vector;
 
 -- CONSTRUCTORS :
 
@@ -56,10 +55,12 @@ package body Standard_SeriesPade_Tracker is
       htp := new Standard_CSeries_Poly_Systems.Poly_Sys'(s);
     end;
     declare
+      servec : Standard_Complex_Series_Vectors.Vector(1..nbvar);
       padvec : constant Standard_Pade_Approximants.Pade_Vector
              := Standard_Pade_Approximants.Allocate(nbvar,numdeg,dendeg);
     begin
-      pv := new Standard_Pade_Approximants.Pade_Vector'(padvec);
+      current_servec := new Standard_Complex_Series_Vectors.Vector'(servec);
+      current_padvec := new Standard_Pade_Approximants.Pade_Vector'(padvec);
     end;
     declare
       use Homotopy_Pade_Approximants;
@@ -84,19 +85,28 @@ package body Standard_SeriesPade_Tracker is
     maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := integer32(homconpars.corsteps);
     sol : Standard_Complex_Vectors.Vector(1..current.n) := current.v;
-    srv : Standard_Complex_Series_Vectors.Vector(1..current.n);
     eva : Standard_Complex_Series_Vectors.Vector(1..nbeqs);
-    t,step,frp,predres : double_float;
+    t,step,frp,predres : double_float := 0.0;
     tolcff : constant double_float := homconpars.epsilon;
     alpha : constant double_float := homconpars.alpha;
 
   begin
-    Series_and_Predictors.Newton_Prediction(maxdeg,nit,htp.all,sol,srv,eva);
-    Series_and_Predictors.Pade_Approximants(srv,pv.all,poles.all,frp);
-    if verbose
-     then put("The smallest forward pole radius :"); put(frp,2); new_line;
+    if verbose then
+      Series_and_Predictors.Newton_Prediction
+        (standard_output,maxdeg,nit,htp.all,sol,current_servec.all,eva,verbose);
+    else
+      Series_and_Predictors.Newton_Prediction
+        (maxdeg,nit,htp.all,sol,current_servec.all,eva);
     end if;
-    step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    Series_and_Predictors.Pade_Approximants
+      (current_servec.all,current_padvec.all,poles.all,frp);
+    if verbose then
+      put("The smallest forward pole radius :"); put(frp,2); new_line;
+      step := Series_and_Predictors.Set_Step_Size
+                (standard_output,eva,tolcff,alpha,verbose);
+    else
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    end if;
     step := homconpars.sbeta*step;
     Standard_Complex_Series_Vectors.Clear(eva);
     if frp > 0.0 then
@@ -108,7 +118,8 @@ package body Standard_SeriesPade_Tracker is
      then put("Step size :"); put(step,2); put("  t ="); put(t,2);
     end if;
     loop
-      sol := Series_and_Predictors.Predicted_Solution(pv.all,step);
+      sol := Series_and_Predictors.Predicted_Solution
+               (current_padvec.all,step);
       predres := Series_and_Trackers.Residual_Prediction(htp.all,sol,step);
       if verbose
        then put("  residual :"); put(predres,2); new_line;
@@ -127,7 +138,6 @@ package body Standard_SeriesPade_Tracker is
      else fail := (step < homconpars.minsize);
     end if;
     Standard_Complex_Series_Vectors.Clear(eva);
-    Standard_Complex_Series_Vectors.Clear(srv);
     Series_and_Homotopies.Shift(htp.all,-step);
   end Predict;
 
@@ -171,6 +181,18 @@ package body Standard_SeriesPade_Tracker is
     return current;
   end Get_Current_Solution;
 
+  function Get_Current_Series_Vector
+    return Standard_Complex_Series_Vectors.Link_to_Vector is
+  begin
+    return current_servec;
+  end Get_Current_Series_Vector;
+
+  function Get_Current_Pade_Vector
+    return Standard_Pade_Approximants.Link_to_Pade_Vector is
+  begin
+    return current_padvec;
+  end Get_Current_Pade_Vector;
+
 -- DESTRUCTOR :
 
   procedure Clear is
@@ -178,7 +200,8 @@ package body Standard_SeriesPade_Tracker is
     Homotopy_Continuation_Parameters.Clear(homconpars);
     Standard_CSeries_Poly_Systems.Clear(htp);
     Standard_Complex_VecVecs.Deep_Clear(poles);
-    Standard_Pade_Approximants.Clear(pv);
+    Standard_Complex_Series_Vectors.Clear(current_servec);
+    Standard_Pade_Approximants.Clear(current_padvec);
   end Clear;
 
 end Standard_SeriesPade_Tracker;

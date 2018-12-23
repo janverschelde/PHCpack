@@ -10,11 +10,9 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
-with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Polynomials;       use QuadDobl_Complex_Polynomials;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_Homotopy;
-with QuadDobl_Pade_Approximants;
 with Homotopy_Pade_Approximants;
 with Series_and_Homotopies;
 with Series_and_Predictors;
@@ -28,9 +26,10 @@ package body QuadDobl_SeriesPade_Tracker is
   nbeqs : integer32;
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : QuadDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
-  pv : QuadDobl_Pade_Approximants.Link_to_Pade_Vector;
   poles : QuadDobl_Complex_VecVecs.Link_to_VecVec;
   current : Link_to_Solution;
+  current_servec : QuadDobl_Complex_Series_Vectors.Link_to_Vector;
+  current_padvec : QuadDobl_Pade_Approximants.Link_to_Pade_Vector;
 
 -- CONSTRUCTORS :
 
@@ -63,10 +62,12 @@ package body QuadDobl_SeriesPade_Tracker is
       htp := new QuadDobl_CSeries_Poly_Systems.Poly_Sys'(s);
     end;
     declare
+      servec : QuadDobl_Complex_Series_Vectors.Vector(1..nbvar);
       padvec : constant QuadDobl_Pade_Approximants.Pade_Vector
              := QuadDobl_Pade_Approximants.Allocate(nbvar,numdeg,dendeg);
     begin
-      pv := new QuadDobl_Pade_Approximants.Pade_Vector'(padvec);
+      current_servec := new QuadDobl_Complex_Series_Vectors.Vector'(servec);
+      current_padvec := new QuadDobl_Pade_Approximants.Pade_Vector'(padvec);
     end;
     declare
       use Homotopy_Pade_Approximants;
@@ -91,7 +92,6 @@ package body QuadDobl_SeriesPade_Tracker is
     maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := integer32(homconpars.corsteps);
     sol : QuadDobl_Complex_Vectors.Vector(1..current.n) := current.v;
-    srv : QuadDobl_Complex_Series_Vectors.Vector(1..current.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(1..nbeqs);
     t,step,predres : double_float;
     qd_t,qd_step,frp : quad_double;
@@ -99,12 +99,22 @@ package body QuadDobl_SeriesPade_Tracker is
     alpha : constant double_float := homconpars.alpha;
 
   begin
-    Series_and_Predictors.Newton_Prediction(maxdeg,nit,htp.all,sol,srv,eva);
-    Series_and_Predictors.Pade_Approximants(srv,pv.all,poles.all,frp);
-    if verbose
-     then put("The smallest forward pole radius : "); put(frp,2); new_line;
+    if verbose then
+      Series_and_Predictors.Newton_Prediction
+        (standard_output,maxdeg,nit,htp.all,sol,current_servec.all,eva,verbose);
+    else
+      Series_and_Predictors.Newton_Prediction
+        (maxdeg,nit,htp.all,sol,current_servec.all,eva);
     end if;
-    step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    Series_and_Predictors.Pade_Approximants
+      (current_servec.all,current_padvec.all,poles.all,frp);
+    if verbose then
+      put("The smallest forward pole radius : "); put(frp,2); new_line;
+      step := Series_and_Predictors.Set_Step_Size
+                (standard_output,eva,tolcff,alpha,verbose);
+    else
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    end if;
     step := homconpars.sbeta*step;
     QuadDobl_Complex_Series_Vectors.Clear(eva);
     if frp > 0.0 then
@@ -119,7 +129,8 @@ package body QuadDobl_SeriesPade_Tracker is
     end if;
     loop
       qd_step := Quad_Double_Numbers.Create(step);
-      sol := Series_and_Predictors.Predicted_Solution(pv.all,qd_step);
+      sol := Series_and_Predictors.Predicted_Solution
+               (current_padvec.all,qd_step);
       predres := Series_and_Trackers.Residual_Prediction(htp.all,sol,step);
       if verbose
        then put("  residual :"); put(predres,2); new_line;
@@ -139,7 +150,6 @@ package body QuadDobl_SeriesPade_Tracker is
      else fail := (step < homconpars.minsize);
     end if;
     QuadDobl_Complex_Series_Vectors.Clear(eva);
-    QuadDobl_Complex_Series_Vectors.Clear(srv);
     Series_and_Homotopies.Shift(htp.all,-qd_step);
   end Predict;
 
@@ -188,14 +198,27 @@ package body QuadDobl_SeriesPade_Tracker is
     return current;
   end Get_Current_Solution;
 
+  function Get_Current_Series_Vector
+    return QuadDobl_Complex_Series_Vectors.Link_to_Vector is
+  begin
+    return current_servec;
+  end Get_Current_Series_Vector;
+
+  function Get_Current_Pade_Vector
+    return QuadDobl_Pade_Approximants.Link_to_Pade_Vector is
+  begin
+    return current_padvec;
+  end Get_Current_Pade_Vector;
+
 -- DESTRUCTOR :
 
   procedure Clear is
   begin
     Homotopy_Continuation_Parameters.Clear(homconpars);
     QuadDobl_CSeries_Poly_Systems.Clear(htp);
-    QuadDobl_Pade_Approximants.Clear(pv);
     QuadDobl_Complex_VecVecs.Deep_Clear(poles);
+    QuadDobl_Complex_Series_Vectors.Clear(current_servec);
+    QuadDobl_Pade_Approximants.Clear(current_padvec);
   end Clear;
 
 end QuadDobl_SeriesPade_Tracker;
