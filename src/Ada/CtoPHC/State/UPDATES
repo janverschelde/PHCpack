@@ -1,3 +1,6 @@
+Sun 23 Dec 2018 : added 5 jobs in use_padcon and use_c2phc4c for the
+  step-by-step Pade continuation.
+
 Mon 10 Dec 2018 : in use_padcon.adb, added a close(file) at the end of
   the track procedures to ensure all output ended up on file.
 

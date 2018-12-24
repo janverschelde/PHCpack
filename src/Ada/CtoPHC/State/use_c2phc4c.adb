@@ -3253,6 +3253,12 @@ function use_c2phc4c ( job : integer32;
      -- when 844 => return use_outdata(10,a,b,c); -- stable mv by DEMiCs
      -- numerical irreducible decomposition
       when 845..859 => return use_witsols(job-845,a,b,c); -- solvers
+     -- Pade continuation in a step wise fashion
+      when 860 => return use_padcon(5,a,b,c); -- init series-Pade homotopy
+      when 861 => return use_padcon(6,a,b,c); -- init next start solution
+      when 862 => return use_padcon(7,a,b,c); -- next predict-correct step
+      when 863 => return use_padcon(8,a,b,c); -- get current solution
+      when 864 => return use_padcon(9,a,b,c); -- clear data
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

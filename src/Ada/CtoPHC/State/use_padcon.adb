@@ -1,6 +1,7 @@
 with Interfaces.C;
 with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
@@ -10,16 +11,22 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Homotopy;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with DoblDobl_Homotopy;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with QuadDobl_Homotopy;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
 with Drivers_to_Series_Trackers;
+with Standard_SeriesPade_Tracker;
+with DoblDobl_SeriesPade_Tracker;
+with QuadDobl_SeriesPade_Tracker;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
@@ -40,12 +47,20 @@ function use_padcon ( job : integer32;
    -- put_line("setting default values for parameters ...");
     Homotopy_Continuation_Parameters.Construct(pars);
     return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 0 of use_padcon.");
+      return 735;
   end Job0;
 
   function Job1 return integer32 is -- clear parameter values
   begin
     Homotopy_Continuation_Parameters.Destruct;
     return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 1 of use_padcon.");
+      return 736;
   end Job1;
 
   function Job2 return integer32 is -- get a value
@@ -81,6 +96,10 @@ function use_padcon ( job : integer32;
         put_line("Index value for the parameter is out of range.");
     end case;
     return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 2 of use_padcon.");
+      return 737;
   end Job2;
 
   function Job3 return integer32 is -- set a value
@@ -136,6 +155,10 @@ function use_padcon ( job : integer32;
         put_line("Index value for the parameter is out of range.");
     end case;
     return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 3 of use_padcon.");
+      return 738;
   end Job3;
 
   procedure Standard_Track ( name : in string; verbose : in boolean ) is
@@ -154,10 +177,21 @@ function use_padcon ( job : integer32;
                := Homotopy_Continuation_Parameters.Retrieve;
 
   begin
+   -- put_line("Retrieving the data from PHCpack_Operations ...");
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     PHCpack_Operations.Retrieve_Target_System(target);
+   -- put_line("Entering the creation of the homotopy ...");
+   -- declare
+   --   cp,cq : Standard_Complex_Poly_Systems.Poly_Sys(target'range);
+   -- begin
+   --   Standard_Complex_Poly_Systems.Copy(target.all,cp);
+   --   Standard_Complex_Poly_Systems.Copy(start.all,cq);
+     -- Standard_Homotopy.Clear;
+   --   Standard_Homotopy.Create(cp,cq,tpow,homconpars.gamma);
     Standard_Homotopy.Create(target.all,start.all,tpow,homconpars.gamma);
+   -- end;
+   -- put_line("Done with the creation of the homotopy, call trackers ...");
     if name = "" then
       if not verbose then
         Drivers_to_Series_Trackers.Standard_Track
@@ -174,6 +208,7 @@ function use_padcon ( job : integer32;
         (file,target'last,sols,homconpars.all,verbose);
       close(file);
     end if;
+   -- put_line("Clearing the solutions container ...");
     Standard_Solutions_Container.Clear;
     Standard_Solutions_Container.Initialize(sols);
   end Standard_Track;
@@ -306,7 +341,307 @@ function use_padcon ( job : integer32;
       end;
     end if;
     return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 4 of use_padcon.");
+      return 739;
   end Job4;
+
+  procedure Standard_Initialize_Tracker is
+
+  -- DESCRIPTION :
+  --   Retrieves target and start system and initializes the
+  --   Series-Pade tracker in standard double precision.
+
+    start,target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(start);
+    PHCpack_Operations.Retrieve_Target_System(target);
+    Standard_SeriesPade_Tracker.Init(target,start);
+  end Standard_Initialize_Tracker;
+
+  procedure DoblDobl_Initialize_Tracker is
+
+  -- DESCRIPTION :
+  --   Retrieves target and start system and initializes the
+  --   Series-Pade tracker in double double precision.
+
+    start,target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(start);
+    PHCpack_Operations.Retrieve_Target_System(target);
+    DoblDobl_SeriesPade_Tracker.Init(target,start);
+  end DoblDobl_Initialize_Tracker;
+
+  procedure QuadDobl_Initialize_Tracker is
+
+  -- DESCRIPTION :
+  --   Retrieves target and start system and initializes the
+  --   Series-Pade tracker in quad double precision.
+
+    start,target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Start_System(start);
+    PHCpack_Operations.Retrieve_Target_System(target);
+    QuadDobl_SeriesPade_Tracker.Init(target,start);
+  end QuadDobl_Initialize_Tracker;
+
+  function Job5 return integer32 is -- initialize seriespade tracker
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    vrb : constant natural32 := natural32(v_b(v_b'first));
+    verbose : constant boolean := (vrb = 1);
+
+    homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters
+               := Homotopy_Continuation_Parameters.Retrieve;
+
+  begin
+    case prc is
+      when 0 =>
+        if verbose then
+          put("Initializing homotopy in Series-Pade tracker ");
+          put("in double precision ...");
+        end if;
+        Standard_SeriesPade_Tracker.Init(homconpars.all);
+        Standard_Initialize_Tracker;
+      when 1 =>
+        if verbose then
+          put("Initializing homotopy in Series-Pade tracker ");
+          put_line("in double double precision ...");
+        end if;
+        DoblDobl_SeriesPade_Tracker.Init(homconpars.all);
+        DoblDobl_Initialize_Tracker;
+      when 2 =>
+        if verbose then
+          put("Initializing homotopy in Series-Pade tracker ");
+          put_line("in quad double precision ...");
+        end if;
+        QuadDobl_SeriesPade_Tracker.Init(homconpars.all);
+        QuadDobl_Initialize_Tracker;
+      when others =>
+        put_line("Wrong value for the precision.");
+    end case;
+    if verbose
+     then put_line(" done!");
+    end if;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 5 of use_padcon.");
+      return 860;
+  end Job5;
+
+  procedure Standard_Initialize_Solution
+              ( idx : in natural32; verbose : in boolean;
+                fail : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Retrieves the solution at index idx from the solutions container
+  --   in standard double precision and writes output if verbose.
+
+    ls : Standard_Complex_Solutions.Link_to_Solution;
+
+  begin
+    if verbose
+     then put("initializing solution "); put(idx,1); put_line(" :");
+    end if;
+    Standard_Solutions_Container.Retrieve(idx,ls,fail);
+    Standard_SeriesPade_Tracker.Init(ls);
+    if verbose
+     then put(ls.all);
+    end if;
+  end Standard_Initialize_Solution;
+
+  procedure DoblDobl_Initialize_Solution
+              ( idx : in natural32; verbose : in boolean;
+                fail : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Retrieves the solution at index idx from the solutions container
+  --   in double double precision and writes output if verbose.
+
+    ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    if verbose
+     then put("initializing solution "); put(idx,1); put_line(" :");
+    end if;
+    DoblDobl_Solutions_Container.Retrieve(idx,ls,fail);
+    DoblDobl_SeriesPade_Tracker.Init(ls);
+    if verbose
+     then put(ls.all);
+    end if;
+  end DoblDobl_Initialize_Solution;
+
+  procedure QuadDobl_Initialize_Solution
+              ( idx : in natural32; verbose : in boolean;
+                fail : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Retrieves the solution at index idx from the solutions container
+  --   in quad double precision and writes output if verbose.
+  --   The failure code of the retrieval is returned in fail.
+
+    ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    if verbose
+     then put("initializing solution "); put(idx,1); put_line(" :");
+    end if;
+    QuadDobl_Solutions_Container.Retrieve(idx,ls,fail);
+    QuadDobl_SeriesPade_Tracker.Init(ls);
+    if verbose
+     then put(ls.all);
+    end if;
+  end QuadDobl_Initialize_Solution;
+
+  function Job6 return integer32 is -- initialize next start solution
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    idx : constant natural32 := natural32(v_a(v_a'first+1));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    vrb : constant natural32 := natural32(v_b(v_b'first));
+    verbose : constant boolean := (vrb = 1);
+    fail : boolean;
+
+  begin
+    case prc is
+      when 0 => Standard_Initialize_Solution(idx,verbose,fail);
+      when 1 => DoblDobl_Initialize_Solution(idx,verbose,fail);
+      when 2 => QuadDobl_Initialize_Solution(idx,verbose,fail);
+      when others => put_line("Wrong value for the precision.");
+    end case;
+    if fail then
+      if verbose
+       then put_line("The initialization of the start solution failed.");
+      end if;
+      assign(1,a);
+    else
+      if verbose
+       then put_line("The initialization of the start solution succeeded.");
+      end if;
+      assign(0,a);
+    end if;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 6 of use_padcon.");
+      return 861;
+  end Job6;
+
+  function Job7 return integer32 is -- run next predict-correct step
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    vrb : constant natural32 := natural32(v_b(v_b'first));
+    verbose : constant boolean := (vrb = 1);
+    fail : boolean;
+
+  begin
+    case prc is
+      when 0 => Standard_SeriesPade_Tracker.Predict_and_Correct(fail,verbose);
+      when 1 => DoblDobl_SeriesPade_Tracker.Predict_and_Correct(fail,verbose);
+      when 2 => QuadDobl_SeriesPade_Tracker.Predict_and_Correct(fail,verbose);
+      when others => put_line("Wrong value for the precision.");
+    end case;
+    if fail then
+      if verbose
+       then put_line("The predict-correct step failed.");
+      end if;
+      assign(1,a);
+    else
+      if verbose
+       then put_line("The predict-correct step succeeded.");
+      end if;
+      assign(0,a);
+    end if;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 7 of use_padcon.");
+      return 862;
+  end Job7;
+
+  function Job8 return integer32 is -- get the current solution
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    idx : constant natural32 := natural32(v_a(v_a'first+1));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    vrb : constant natural32 := natural32(v_b(v_b'first));
+    verbose : constant boolean := (vrb = 1);
+    st_ls : Standard_Complex_Solutions.Link_to_Solution;
+    dd_ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+    qd_ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+    fail : boolean;
+
+  begin
+    if verbose then
+      put("Retrieving the current solution, at index "); put(idx,1);
+      put_line(" ...");
+    end if;
+    case prc is
+      when 0 =>
+        st_ls := Standard_SeriesPade_Tracker.Get_Current_Solution;
+        Standard_Solutions_Container.Replace(idx,st_ls,fail);
+      when 1 =>
+        dd_ls := DoblDobl_SeriesPade_Tracker.Get_Current_Solution;
+        DoblDobl_Solutions_Container.Replace(idx,dd_ls,fail);
+      when 2 =>
+        qd_ls := QuadDobl_SeriesPade_Tracker.Get_Current_Solution;
+        QuadDobl_Solutions_Container.Replace(idx,qd_ls,fail);
+      when others =>
+        put_line("Wrong value for the precision.");
+    end case;
+    if fail then
+      if verbose
+       then put_line("Placement of the current solution failed.");
+      end if;
+      assign(1,a);
+    else
+      if verbose
+       then put_line("Placement of the current solution succeeded.");
+      end if;
+      assign(0,a);
+    end if;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 8 of use_padcon.");
+      return 863;
+  end Job8;
+
+  function Job9 return integer32 is -- clear data
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    prc : constant natural32 := natural32(v_a(v_a'first));
+
+  begin
+    case prc is
+      when 0 => Standard_SeriesPade_Tracker.Clear;
+      when 1 => DoblDobl_SeriesPade_Tracker.Clear;
+      when 2 => QuadDobl_SeriesPade_Tracker.Clear;
+      when others => put_line("Wrong value for the precision.");
+    end case;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 9 of use_padcon.");
+      return 864;
+  end Job9;
 
   function Handle_Jobs return integer32 is
   begin
@@ -316,6 +651,11 @@ function use_padcon ( job : integer32;
       when 2 => return Job2; -- get value
       when 3 => return Job3; -- set value
       when 4 => return Job4; -- track paths
+      when 5 => return Job5; -- initialize seriespade homotopy tracker
+      when 6 => return Job6; -- initialize next start solution
+      when 7 => return Job7; -- run next predict-correct step
+      when 8 => return Job8; -- get the current solution
+      when 9 => return Job9; -- deallocates seriespade homotopy tracker data
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception
