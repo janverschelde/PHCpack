@@ -1,3 +1,6 @@
+Mon 24 Dec 2018 : added new_line after writing of solution in use_padcon.adb,
+  at initialization time in verbose mode.
+
 Sun 23 Dec 2018 : added 5 jobs in use_padcon and use_c2phc4c for the
   step-by-step Pade continuation.
 

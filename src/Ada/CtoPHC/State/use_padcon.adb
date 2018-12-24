@@ -453,7 +453,7 @@ function use_padcon ( job : integer32;
     Standard_Solutions_Container.Retrieve(idx,ls,fail);
     Standard_SeriesPade_Tracker.Init(ls);
     if verbose
-     then put(ls.all);
+     then put(ls.all); new_line;
     end if;
   end Standard_Initialize_Solution;
 
@@ -474,7 +474,7 @@ function use_padcon ( job : integer32;
     DoblDobl_Solutions_Container.Retrieve(idx,ls,fail);
     DoblDobl_SeriesPade_Tracker.Init(ls);
     if verbose
-     then put(ls.all);
+     then put(ls.all); new_line;
     end if;
   end DoblDobl_Initialize_Solution;
 
@@ -496,7 +496,7 @@ function use_padcon ( job : integer32;
     QuadDobl_Solutions_Container.Retrieve(idx,ls,fail);
     QuadDobl_SeriesPade_Tracker.Init(ls);
     if verbose
-     then put(ls.all);
+     then put(ls.all); new_line;
     end if;
   end QuadDobl_Initialize_Solution;
 
