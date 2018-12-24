@@ -90,4 +90,100 @@ int padcon_quaddobl_track ( int nbc, char* name, int verbose );
  *            the file name has nbc characters;
  *   verbose  if > 0, then more information is written. */
 
+int padcon_standard_initialize_homotopy ( int verbose );
+/*
+ * DESCRIPTION :
+ *   For the defined target and start system,
+ *   initializes the homotopy in standard double precision,
+ *   for the step-by-step Pade continuation.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_dobldobl_initialize_homotopy ( int verbose );
+/*
+ * DESCRIPTION :
+ *   For the defined target and start system,
+ *   initializes the homotopy in double double precision,
+ *   for the step-by-step Pade continuation.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_quaddobl_initialize_homotopy ( int verbose );
+/*
+ * DESCRIPTION :
+ *   For the defined target and start system,
+ *   initializes the homotopy in quad double precision,
+ *   for the step-by-step Pade continuation.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_initialize_standard_solution ( int idx, int verbose );
+/*
+ * DESCRIPTION :
+ *   Takes the solution with index idx in the solutions container in
+ *   standard double precision and initializes the series-Pade tracker.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_initialize_dobldobl_solution ( int idx, int verbose );
+/*
+ * DESCRIPTION :
+ *   Takes the solution with index idx in the solutions container in
+ *   double double precision and initializes the series-Pade tracker.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_initialize_quaddobl_solution ( int idx, int verbose );
+/*
+ * DESCRIPTION :
+ *   Takes the solution with index idx in the solutions container in
+ *   quad double precision and initializes the series-Pade tracker.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_standard_predict_correct ( int* fail, int verbose );
+/*
+ * DESCRIPTION :
+ *   Executes one predict-correct step on the current solution and
+ *   the defined homotopy in standard double precision.
+ *   In return in fail is the failure code of the predict-correct step:
+ *   if fail is zero, then the required accuracies were met,
+ *   otherwise, either the predict or the correct step failed.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_dobldobl_predict_correct ( int* fail, int verbose );
+/*
+ * DESCRIPTION :
+ *   Executes one predict-correct step on the current solution and
+ *   the defined homotopy in double double precision.
+ *   In return in fail is the failure code of the predict-correct step:
+ *   if fail is zero, then the required accuracies were met,
+ *   otherwise, either the predict or the correct step failed.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_quaddobl_predict_correct ( int* fail, int verbose );
+/*
+ * DESCRIPTION :
+ *   Executes one predict-correct step on the current solution and
+ *   the defined homotopy in quad double precision.
+ *   In return in fail is the failure code of the predict-correct step:
+ *   if fail is zero, then the required accuracies were met,
+ *   otherwise, either the predict or the correct step failed.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_get_standard_solution ( int idx, int verbose );
+/*
+ * DESCRIPTION :
+ *   Retrieves the current solution and places it at position idx
+ *   in the solutions container in standard double precision.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_get_dobldobl_solution ( int idx, int verbose );
+/*
+ * DESCRIPTION :
+ *   Retrieves the current solution and places it at position idx
+ *   in the solutions container in standard double precision.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_get_quaddobl_solution ( int idx, int verbose );
+/*
+ * DESCRIPTION :
+ *   Retrieves the current solution and places it at position idx
+ *   in the solutions container in standard double precision.
+ *   If verbose = 1, then extra output will be written. */
+
 #endif

@@ -1,3 +1,6 @@
+Mon 24 Dec 2018 : extended padcon and the test lib_padcon with functions
+  for a step-by-step run of the series-Pade trackers.
+
 Tue 4 Dec 2018 : added verbose flag to the track functions in padcon,
   and prompted user for verbosity in lib_padcon.  Added int returns
   to padcon, for consistency with other functions, changed lib_padcon.

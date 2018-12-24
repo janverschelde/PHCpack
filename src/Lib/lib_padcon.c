@@ -50,11 +50,26 @@ void quaddobl_track ( int nbc, char* name, int verbose );
  *   otherwise, the output is written to the name with file name.
  *   If verbose > 0, then more output is written. */
 
+void standard_next_step ( void );
+/*
+ *  DESCRIPTION :
+ *    Runs the series-Pade tracker step by step in double precision. */
+
+void dobldobl_next_step ( void );
+/*
+ *  DESCRIPTION :
+ *    Runs the series-Pade tracker step by step in double double precision. */
+
+void quaddobl_next_step ( void );
+/*
+ *  DESCRIPTION :
+ *    Runs the series-Pade tracker step by step in quad double precision. */
+
 int main ( void )
 {
    adainit();
 
-   char nlsb;
+   char nlsb,ans;
    int fail,precision,nbchar,verbose;
    char filename[80];
 
@@ -72,15 +87,26 @@ int main ( void )
 
    scanf("%c", &nlsb); // swallow new line symbol
 
-   prompt_for_output_file(&nbchar,filename,&verbose);
+   printf("\nStep-by-step run ? (y/n) ");
+   ans = getchar();
+   scanf("%c", &nlsb); // swallow new line symbol
+   if(ans == 'y')
+   {
+      if(precision == 0) standard_next_step();
+      if(precision == 1) dobldobl_next_step();
+      if(precision == 2) quaddobl_next_step();
+   }
+   else
+   {
+      prompt_for_output_file(&nbchar,filename,&verbose);
 
-   if(nbchar > 0)
-      printf("\nThe name of the output file is %s.\n", filename);
+      if(nbchar > 0)
+         printf("\nThe name of the output file is %s.\n", filename);
 
-   if(precision == 0) standard_track(nbchar,filename,verbose);
-   if(precision == 1) dobldobl_track(nbchar,filename,verbose);
-   if(precision == 2) quaddobl_track(nbchar,filename,verbose);
-
+      if(precision == 0) standard_track(nbchar,filename,verbose);
+      if(precision == 1) dobldobl_track(nbchar,filename,verbose);
+      if(precision == 2) quaddobl_track(nbchar,filename,verbose);
+   }
    adafinal();
 
    return 0;
@@ -286,4 +312,145 @@ void quaddobl_track ( int nbc, char* name, int verbose )
    fail = padcon_quaddobl_track(nbc,name,verbose);
 
    if(nbc == 0) fail = solcon_write_quaddobl_solutions();
+}
+
+void standard_next_step ( void )
+{
+   int fail,length,index,failed,strlensol;
+   char contstep,nlsb;
+
+   fail = read_standard_target_system();
+   fail = read_standard_start_system();
+   fail = copy_start_solutions_to_container();
+   fail = solcon_number_of_standard_solutions(&length);
+   printf("Read %d start solutions.\n", length);
+
+   fail = padcon_standard_initialize_homotopy(1);
+   index = 1;
+   do
+   {
+      fail = padcon_initialize_standard_solution(index,1);
+      do
+      {
+         fail = padcon_standard_predict_correct(&failed,1);
+         if(failed != 0)
+            contstep = 'n';
+         else
+         {
+            printf("continue ? (y/n) ");
+            contstep = getchar();
+            scanf("%c",&nlsb);
+         }
+      }
+      while(contstep == 'y');
+
+      fail = padcon_get_standard_solution(index,1);
+      fail = solcon_length_standard_solution_string(index,&strlensol);
+      {
+         char idxsol[strlensol+1];
+
+         fail = solcon_write_standard_solution_string
+                  (index,strlensol,idxsol);
+         printf("Solution %d :\n%s\n", index, idxsol);
+      }
+      printf("Continue with the next solution ? (y/n) ");
+      contstep = getchar();
+      scanf("%c",&nlsb);
+      if(contstep == 'y') index = index + 1;
+   }
+   while(contstep == 'y');
+}
+
+void dobldobl_next_step ( void )
+{
+   int fail,length,index,failed,strlensol;
+   char contstep,nlsb;
+
+   fail = read_dobldobl_target_system();
+   fail = read_dobldobl_start_system();
+   fail = copy_dobldobl_start_solutions_to_container();
+   fail = solcon_number_of_dobldobl_solutions(&length);
+   printf("Read %d start solutions.\n", length);
+
+   fail = padcon_dobldobl_initialize_homotopy(1);
+   index = 1;
+   do
+   {
+      fail = padcon_initialize_dobldobl_solution(index,1);
+      do
+      {
+         fail = padcon_dobldobl_predict_correct(&failed,1);
+         if(failed != 0)
+            contstep = 'n';
+         else
+         {
+            printf("continue ? (y/n) ");
+            contstep = getchar();
+            scanf("%c",&nlsb);
+         }
+      }
+      while(contstep == 'y');
+
+      fail = padcon_get_dobldobl_solution(index,1);
+      fail = solcon_length_dobldobl_solution_string(index,&strlensol);
+      {
+         char idxsol[strlensol+1];
+
+         fail = solcon_write_dobldobl_solution_string
+                  (index,strlensol,idxsol);
+         printf("Solution %d :\n%s\n", index, idxsol);
+      }
+      printf("Continue with the next solution ? (y/n) ");
+      contstep = getchar();
+      scanf("%c",&nlsb);
+      if(contstep == 'y') index = index + 1;
+   }
+   while(contstep == 'y');
+}
+
+void quaddobl_next_step ( void )
+{
+   int fail,length,index,failed,strlensol;
+   char contstep,nlsb;
+
+   fail = read_quaddobl_target_system();
+   fail = read_quaddobl_start_system();
+   fail = copy_quaddobl_start_solutions_to_container();
+   fail = solcon_number_of_quaddobl_solutions(&length);
+   printf("Read %d start solutions.\n", length);
+
+   fail = padcon_quaddobl_initialize_homotopy(1);
+   index = 1;
+   do
+   {
+      fail = padcon_initialize_quaddobl_solution(index,1);
+      do
+      {
+         fail = padcon_quaddobl_predict_correct(&failed,1);
+         if(failed != 0)
+            contstep = 'n';
+         else
+         {
+            printf("continue ? (y/n) ");
+            contstep = getchar();
+            scanf("%c",&nlsb);
+         }
+      }
+      while(contstep == 'y');
+
+      fail = padcon_get_quaddobl_solution(index,1);
+      fail = solcon_length_quaddobl_solution_string(index,&strlensol);
+      {
+         char idxsol[strlensol+1];
+
+         fail = solcon_write_quaddobl_solution_string
+                  (index,strlensol,idxsol);
+         printf("Solution %d :\n%s\n", index, idxsol);
+      }
+      printf("Continue with the next solution ? (y/n) ");
+      contstep = getchar();
+      scanf("%c",&nlsb);
+      if(contstep == 'y') index = index + 1;
+   }
+   while(contstep == 'y');
 }
