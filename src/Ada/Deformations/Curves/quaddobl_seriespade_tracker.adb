@@ -53,14 +53,14 @@ package body QuadDobl_SeriesPade_Tracker is
   begin
     QuadDobl_Homotopy.Create(p.all,q.all,tpow,qd_gamma);
     nbeqs := p'last;
-    declare
-      h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
-        := QuadDobl_Homotopy.Homotopy_System;
-      s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
-        := Series_and_Homotopies.Create(h,nbeqs+1,false);
-    begin
-      htp := new QuadDobl_CSeries_Poly_Systems.Poly_Sys'(s);
-    end;
+   -- declare
+   --   h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
+   --     := QuadDobl_Homotopy.Homotopy_System;
+   --   s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
+   --     := Series_and_Homotopies.Create(h,nbeqs+1,false);
+   -- begin
+   --   htp := new QuadDobl_CSeries_Poly_Systems.Poly_Sys'(s);
+   -- end;
     declare
       servec : QuadDobl_Complex_Series_Vectors.Vector(1..nbvar);
       padvec : constant QuadDobl_Pade_Approximants.Pade_Vector
@@ -81,6 +81,15 @@ package body QuadDobl_SeriesPade_Tracker is
   procedure Init ( s : in Link_to_Solution ) is
   begin
     current := s;
+    QuadDobl_CSeries_Poly_Systems.Clear(htp);
+    declare -- reset the shifted homotopy
+      hs : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
+         := QuadDobl_Homotopy.Homotopy_System;
+      sh : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
+         := Series_and_Homotopies.Create(hs,nbeqs+1,false);
+    begin
+      htp := new QuadDobl_CSeries_Poly_Systems.Poly_Sys'(sh);
+    end;
   end Init;
 
 -- PREDICTOR-CORRECTOR STAGE :

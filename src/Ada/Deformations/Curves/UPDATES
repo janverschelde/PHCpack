@@ -1,3 +1,7 @@
+Mon 24 Dec 2018 : bug fix in *seriespade_tracker.adb, must reset the
+  cseries homotopy with each new start solution.  Updated the test
+  procedure ts_nxtpadsol.adb with a loop for all start solutions.
+
 Sat 22 Dec 2018 : added more selectors to the *seriespade_predictors.a*
   and extended the verbose option for the Newton predictor and step size.
 

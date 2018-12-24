@@ -46,14 +46,15 @@ package body Standard_SeriesPade_Tracker is
   begin
     Standard_Homotopy.Create(p.all,q.all,tpow,gamma);
     nbeqs := p'last;
-    declare
-      h : Standard_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
-        := Standard_Homotopy.Homotopy_System;
-      s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
-        := Series_and_Homotopies.Create(h,nbeqs+1,false);
-    begin
-      htp := new Standard_CSeries_Poly_Systems.Poly_Sys'(s);
-    end;
+   -- setting of homotopy is done when initializing the solution
+   -- declare
+   --   h : Standard_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
+   --     := Standard_Homotopy.Homotopy_System;
+   --   s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
+   --     := Series_and_Homotopies.Create(h,nbeqs+1,false);
+   -- begin
+   --   htp := new Standard_CSeries_Poly_Systems.Poly_Sys'(s);
+   -- end;
     declare
       servec : Standard_Complex_Series_Vectors.Vector(1..nbvar);
       padvec : constant Standard_Pade_Approximants.Pade_Vector
@@ -74,6 +75,15 @@ package body Standard_SeriesPade_Tracker is
   procedure Init ( s : in Link_to_Solution ) is
   begin
     current := s;
+    Standard_CSeries_Poly_Systems.Clear(htp);
+    declare -- reset the shifted homotopy
+      hs : Standard_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
+         := Standard_Homotopy.Homotopy_System;
+      sh : Standard_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
+         := Series_and_Homotopies.Create(hs,nbeqs+1,false);
+    begin
+      htp := new Standard_CSeries_Poly_Systems.Poly_Sys'(sh);
+    end;
   end Init;
 
 -- PREDICTOR-CORRECTOR STAGE :

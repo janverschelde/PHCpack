@@ -37,7 +37,7 @@ procedure ts_nxtpadsol is
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-    sols : Standard_Complex_Solutions.Solution_List;
+    sols,solsptr : Standard_Complex_Solutions.Solution_List;
     ls : Standard_Complex_Solutions.Link_to_Solution;
     ans : character;
     fail : boolean;
@@ -59,27 +59,35 @@ procedure ts_nxtpadsol is
     put_line("Reading the start system and its solutions ...");
     Standard_System_and_Solutions_io.get(start,sols);
     Standard_SeriesPade_Tracker.Init(target,start);
-    ls := Standard_Complex_Solutions.Head_Of(sols);
-    Standard_SeriesPade_Tracker.Init(ls);
-    put_line("Checking the start solution ...");
-    Standard_SeriesPade_Tracker.Correct(fail,true);
-    if fail then
-      put_line("The start solution is NOT okay!?");
-    else
-      put_line("The start solution is okay.");
-      loop
-        Standard_SeriesPade_Tracker.Predict_and_Correct(fail,true);
-        if fail
-         then put_line("Failed to meet the accuracy requirements.  Abort.");
-        end if;
-        exit when fail;
-        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-      end loop;
-      ls := Standard_SeriesPade_Tracker.Get_Current_Solution;
-      put_line("The solution : ");
-      Standard_Complex_Solutions_io.put(ls.all); new_line;
-    end if;
+    solsptr := sols;
+    loop
+      ls := Standard_Complex_Solutions.Head_Of(solsptr);
+      Standard_SeriesPade_Tracker.Init(ls);
+      put_line("Checking the start solution ...");
+      Standard_SeriesPade_Tracker.Correct(fail,true);
+      if fail then
+        put_line("The start solution is NOT okay!?");
+      else
+        put_line("The start solution is okay.");
+        loop
+          Standard_SeriesPade_Tracker.Predict_and_Correct(fail,true);
+          if fail
+           then put_line("Failed to meet the accuracy requirements.  Abort.");
+          end if;
+          exit when fail;
+          put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+          exit when (ans /= 'y');
+        end loop;
+        ls := Standard_SeriesPade_Tracker.Get_Current_Solution;
+        put_line("The solution : ");
+        Standard_Complex_Solutions_io.put(ls.all); new_line;
+      end if;
+      solsptr := Standard_Complex_Solutions.Tail_Of(solsptr);
+      exit when Standard_Complex_Solutions.Is_Null(solsptr);
+      put("Continue to the next solution ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
   end Standard_Main;
 
   procedure DoblDobl_Main is
@@ -92,7 +100,7 @@ procedure ts_nxtpadsol is
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    sols : DoblDobl_Complex_Solutions.Solution_List;
+    sols,solsptr : DoblDobl_Complex_Solutions.Solution_List;
     ls : DoblDobl_Complex_Solutions.Link_to_Solution;
     ans : character;
     fail : boolean;
@@ -114,27 +122,35 @@ procedure ts_nxtpadsol is
     put_line("Reading the start system and its solutions ...");
     DoblDobl_System_and_Solutions_io.get(start,sols);
     DoblDobl_SeriesPade_Tracker.Init(target,start);
-    ls := DoblDobl_Complex_Solutions.Head_Of(sols);
-    DoblDobl_SeriesPade_Tracker.Init(ls);
-    put_line("Checking the start solution ...");
-    DoblDobl_SeriesPade_Tracker.Correct(fail,true);
-    if fail then
-      put_line("The start solution is NOT okay!?");
-    else
-      put_line("The start solution is okay.");
-      loop
-        DoblDobl_SeriesPade_Tracker.Predict_and_Correct(fail,true);
-        if fail
-         then put_line("Failed to meet the accuracy requirements.  Abort.");
-        end if;
-        exit when fail;
-        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-      end loop;
-      ls := DoblDobl_SeriesPade_Tracker.Get_Current_Solution;
-      put_line("The solution : ");
-      DoblDobl_Complex_Solutions_io.put(ls.all); new_line;
-    end if;
+    solsptr := sols;
+    loop
+      ls := DoblDobl_Complex_Solutions.Head_Of(solsptr);
+      DoblDobl_SeriesPade_Tracker.Init(ls);
+      put_line("Checking the start solution ...");
+      DoblDobl_SeriesPade_Tracker.Correct(fail,true);
+      if fail then
+        put_line("The start solution is NOT okay!?");
+      else
+        put_line("The start solution is okay.");
+        loop
+          DoblDobl_SeriesPade_Tracker.Predict_and_Correct(fail,true);
+          if fail
+           then put_line("Failed to meet the accuracy requirements.  Abort.");
+          end if;
+          exit when fail;
+          put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+          exit when (ans /= 'y');
+        end loop;
+        ls := DoblDobl_SeriesPade_Tracker.Get_Current_Solution;
+        put_line("The solution : ");
+        DoblDobl_Complex_Solutions_io.put(ls.all); new_line;
+      end if;
+      solsptr := DoblDobl_Complex_Solutions.Tail_Of(solsptr);
+      exit when DoblDobl_Complex_Solutions.Is_Null(solsptr);
+      put("Continue to the next solution ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
   end DoblDobl_Main;
 
   procedure QuadDobl_Main is
@@ -147,7 +163,7 @@ procedure ts_nxtpadsol is
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    sols : QuadDobl_Complex_Solutions.Solution_List;
+    sols,solsptr : QuadDobl_Complex_Solutions.Solution_List;
     ls : QuadDobl_Complex_Solutions.Link_to_Solution;
     ans : character;
     fail : boolean;
@@ -169,27 +185,35 @@ procedure ts_nxtpadsol is
     put_line("Reading the start system and its solutions ...");
     QuadDobl_System_and_Solutions_io.get(start,sols);
     QuadDobl_SeriesPade_Tracker.Init(target,start);
-    ls := QuadDobl_Complex_Solutions.Head_Of(sols);
-    QuadDobl_SeriesPade_Tracker.Init(ls);
-    put_line("Checking the start solution ...");
-    QuadDobl_SeriesPade_Tracker.Correct(fail,true);
-    if fail then
-      put_line("The start solution is NOT okay!?");
-    else
-      put_line("The start solution is okay.");
-      loop
-        QuadDobl_SeriesPade_Tracker.Predict_and_Correct(fail,true);
-        if fail
-         then put_line("Failed to meet the accuracy requirements.  Abort.");
-        end if;
-        exit when fail;
-        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-      end loop;
-      ls := QuadDobl_SeriesPade_Tracker.Get_Current_Solution;
-      put_line("The solution : ");
-      QuadDobl_Complex_Solutions_io.put(ls.all); new_line;
-    end if;
+    solsptr := sols;
+    loop
+      ls := QuadDobl_Complex_Solutions.Head_Of(sols);
+      QuadDobl_SeriesPade_Tracker.Init(ls);
+      put_line("Checking the start solution ...");
+      QuadDobl_SeriesPade_Tracker.Correct(fail,true);
+      if fail then
+        put_line("The start solution is NOT okay!?");
+      else
+        put_line("The start solution is okay.");
+        loop
+          QuadDobl_SeriesPade_Tracker.Predict_and_Correct(fail,true);
+          if fail
+           then put_line("Failed to meet the accuracy requirements.  Abort.");
+          end if;
+          exit when fail;
+          put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+          exit when (ans /= 'y');
+        end loop;
+        ls := QuadDobl_SeriesPade_Tracker.Get_Current_Solution;
+        put_line("The solution : ");
+        QuadDobl_Complex_Solutions_io.put(ls.all); new_line;
+      end if;
+      solsptr := QuadDobl_Complex_Solutions.Tail_Of(solsptr);
+      exit when QuadDobl_Complex_Solutions.Is_Null(solsptr);
+      put("Continue to the next solution ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
   end QuadDobl_Main;
 
   procedure Main is
