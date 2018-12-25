@@ -302,6 +302,14 @@ Pointers to the literature are mentioned below.
    **Polynomial Homotopy Continuation on GPUs.**
    *ACM Communications in Computer Algebra*, 49(4):130-133, 2015.
 
+#. J. Verschelde:
+   **A Blackbox Polynomial System Solver on Parallel Shared Memory Computers.**
+   In the *Proceedings of the 20th International
+   Workshop on Computer Algebra in Scientific Computing (CASC 2018)*,
+   edited by V.P. Gerdt, W. Koepf, W.M. Seiler, and E.V. Vorozhtsov,
+   volume 11077 of Lecture Notes in Computer Science,
+   pages 361-375, Springer-Verlag, 2018.
+
 Users
 =====
 
