@@ -140,7 +140,7 @@ int padcon_standard_predict_correct ( int* fail, int verbose );
  * DESCRIPTION :
  *   Executes one predict-correct step on the current solution and
  *   the defined homotopy in standard double precision.
- *   In return in fail is the failure code of the predict-correct step:
+ *   On return in fail is the failure code of the predict-correct step:
  *   if fail is zero, then the required accuracies were met,
  *   otherwise, either the predict or the correct step failed.
  *   If verbose = 1, then extra output will be written. */
@@ -150,7 +150,7 @@ int padcon_dobldobl_predict_correct ( int* fail, int verbose );
  * DESCRIPTION :
  *   Executes one predict-correct step on the current solution and
  *   the defined homotopy in double double precision.
- *   In return in fail is the failure code of the predict-correct step:
+ *   On return in fail is the failure code of the predict-correct step:
  *   if fail is zero, then the required accuracies were met,
  *   otherwise, either the predict or the correct step failed.
  *   If verbose = 1, then extra output will be written. */
@@ -160,7 +160,7 @@ int padcon_quaddobl_predict_correct ( int* fail, int verbose );
  * DESCRIPTION :
  *   Executes one predict-correct step on the current solution and
  *   the defined homotopy in quad double precision.
- *   In return in fail is the failure code of the predict-correct step:
+ *   On return in fail is the failure code of the predict-correct step:
  *   if fail is zero, then the required accuracies were met,
  *   otherwise, either the predict or the correct step failed.
  *   If verbose = 1, then extra output will be written. */
@@ -176,14 +176,14 @@ int padcon_get_dobldobl_solution ( int idx, int verbose );
 /*
  * DESCRIPTION :
  *   Retrieves the current solution and places it at position idx
- *   in the solutions container in standard double precision.
+ *   in the solutions container in double double precision.
  *   If verbose = 1, then extra output will be written. */
 
 int padcon_get_quaddobl_solution ( int idx, int verbose );
 /*
  * DESCRIPTION :
  *   Retrieves the current solution and places it at position idx
- *   in the solutions container in standard double precision.
+ *   in the solutions container in quad double precision.
  *   If verbose = 1, then extra output will be written. */
 
 #endif

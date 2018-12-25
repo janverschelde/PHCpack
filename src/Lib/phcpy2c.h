@@ -5672,6 +5672,132 @@ static PyObject *py2c_padcon_quaddobl_track
  *   3) an integer for the verbose flag, if zero, then no extra
  *   information is written to file or screen. */
 
+static PyObject *py2c_padcon_standard_initialize_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For the defined target and start system,
+ *   initializes the homotopy in standard double precision,
+ *   for the step-by-step Pade continuation.
+ *   On entry is one parameter, the verbose flag which is zero or one.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_dobldobl_initialize_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For the defined target and start system,
+ *   initializes the homotopy in double double precision,
+ *   for the step-by-step Pade continuation.
+ *   On entry is one parameter, the verbose flag which is zero or one.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_quaddobl_initialize_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For the defined target and start system,
+ *   initializes the homotopy in quad double precision,
+ *   for the step-by-step Pade continuation.
+ *   On entry is one parameter, the verbose flag which is zero or one.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_initialize_standard_solution
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Takes the solution with a given index in the solutions container in
+ *   standard double precision and initializes the series-Pade tracker.
+ *   On entry are two integers: 1) the index of the position of the solution
+ *   in the container and 2) the verbose flag, which is zero or one.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_initialize_dobldobl_solution
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Takes the solution with a given index in the solutions container in
+ *   double double precision and initializes the series-Pade tracker.
+ *   On entry are two integers: 1) the index of the position of the solution
+ *   in the container and 2) the verbose flag, which is zero or one.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_initialize_quaddobl_solution
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Takes the solution with a given index in the solutions container in
+ *   quad double precision and initializes the series-Pade tracker.
+ *   On entry are two integers: 1) the index of the position of the solution
+ *   in the container and 2) the verbose flag, which is zero or one.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_standard_predict_correct
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Executes one predict-correct step on the current solution and
+ *   the defined homotopy in standard double precision.
+ *   On entry is one integer, the verbose flag which is zero or one.
+ *   On return is the failure code of the predict-correct step:
+ *   if zero, then the required accuracies were met,
+ *   otherwise, either the predict or the correct step failed.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_dobldobl_predict_correct
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Executes one predict-correct step on the current solution and
+ *   the defined homotopy in double double precision.
+ *   On entry is one integer, the verbose flag which is zero or one.
+ *   On return is the failure code of the predict-correct step:
+ *   if zero, then the required accuracies were met,
+ *   otherwise, either the predict or the correct step failed.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_quaddobl_predict_correct
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Executes one predict-correct step on the current solution and
+ *   the defined homotopy in quad double precision.
+ *   On entry is one integer, the verbose flag which is zero or one.
+ *   On return is the failure code of the predict-correct step:
+ *   if zero, then the required accuracies were met,
+ *   otherwise, either the predict or the correct step failed.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_get_standard_solution
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On entry are two integer parameters: 1) the index of the position of
+ *   the solution and 2) the verbose flag, which is zero or one.
+ *   Retrieves the current solution and places it at the given position
+ *   in the solutions container in standard double precision.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_get_dobldobl_solution
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On entry are two integer parameters: 1) the index of the position of
+ *   the solution and 2) the verbose flag, which is zero or one.
+ *   Retrieves the current solution and places it at the given position
+ *   in the solutions container in double double precision.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_get_quaddobl_solution
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On entry are two integer parameters: 1) the index of the position of
+ *   the solution and 2) the verbose flag, which is zero or one.
+ *   Retrieves the current solution and places it at the given position
+ *   in the solutions container in quad double precision.
+ *   If the verbose flag is 1, then extra output will be written. */
+
 /* The wrapping of functions with prototypes in syspool.h starts below. */
 
 static PyObject *py2c_syspool_standard_init ( PyObject *self, PyObject *args );

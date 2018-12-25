@@ -7964,8 +7964,11 @@ static PyObject *py2c_padcon_standard_track
    int nbc,fail,verbose;
    char *name;
 
+   // printf("inside py2c_padcon_standard track ...\n");
+
    initialize();
    if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
+   // printf("calling padcon_standard_track ...\n");
    fail = padcon_standard_track(nbc,name,verbose);
    return Py_BuildValue("i",fail);
 }
@@ -7991,6 +7994,138 @@ static PyObject *py2c_padcon_quaddobl_track
    initialize();
    if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
    fail = padcon_quaddobl_track(nbc,name,verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_standard_initialize_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
+   fail = padcon_standard_initialize_homotopy(verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_dobldobl_initialize_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
+   fail = padcon_dobldobl_initialize_homotopy(verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_quaddobl_initialize_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
+   fail = padcon_quaddobl_initialize_homotopy(verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_initialize_standard_solution
+ ( PyObject *self, PyObject *args )
+{
+   int fail,index,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&index,&verbose)) return NULL;
+   fail = padcon_initialize_standard_solution(index,verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_initialize_dobldobl_solution
+ ( PyObject *self, PyObject *args )
+{
+   int fail,index,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&index,&verbose)) return NULL;
+   fail = padcon_initialize_dobldobl_solution(index,verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_initialize_quaddobl_solution
+ ( PyObject *self, PyObject *args )
+{
+   int fail,index,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&index,&verbose)) return NULL;
+   fail = padcon_initialize_quaddobl_solution(index,verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_standard_predict_correct
+ ( PyObject *self, PyObject *args )
+{
+   int fail,precorfail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
+   fail = padcon_standard_predict_correct(&precorfail,verbose);
+   return Py_BuildValue("i",precorfail);
+}
+
+static PyObject *py2c_padcon_dobldobl_predict_correct
+ ( PyObject *self, PyObject *args )
+{
+   int fail,precorfail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
+   fail = padcon_dobldobl_predict_correct(&precorfail,verbose);
+   return Py_BuildValue("i",precorfail);
+}
+
+static PyObject *py2c_padcon_quaddobl_predict_correct
+ ( PyObject *self, PyObject *args )
+{
+   int fail,precorfail,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
+   fail = padcon_quaddobl_predict_correct(&precorfail,verbose);
+   return Py_BuildValue("i",precorfail);
+}
+
+static PyObject *py2c_padcon_get_standard_solution
+ ( PyObject *self, PyObject *args )
+{
+   int fail,index,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&index,&verbose)) return NULL;
+   fail = padcon_get_standard_solution(index,verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_get_dobldobl_solution
+ ( PyObject *self, PyObject *args )
+{
+   int fail,index,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&index,&verbose)) return NULL;
+   fail = padcon_get_dobldobl_solution(index,verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_get_quaddobl_solution
+ ( PyObject *self, PyObject *args )
+{
+   int fail,index,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&index,&verbose)) return NULL;
+   fail = padcon_get_quaddobl_solution(index,verbose);
    return Py_BuildValue("i",fail);
 }
 
@@ -10262,6 +10397,42 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_padcon_quaddobl_track",
      py2c_padcon_quaddobl_track, METH_VARARGS,
     "For the defined target, start system, and start solutions,\n launches the Pade continuation in quad double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file,\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen."},
+   {"py2c_padcon_standard_initialize_homotopy",
+     py2c_padcon_standard_initialize_homotopy, METH_VARARGS,
+    "For the defined target and start system,\n initializes the homotopy in standard double precision,\n for the step-by-step Pade continuation.\n On entry is one parameter, the verbose flag which is zero or one.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_dobldobl_initialize_homotopy",
+     py2c_padcon_dobldobl_initialize_homotopy, METH_VARARGS,
+    "For the defined target and start system,\n initializes the homotopy in double double precision,\n for the step-by-step Pade continuation.\n On entry is one parameter, the verbose flag which is zero or one.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_quaddobl_initialize_homotopy",
+     py2c_padcon_quaddobl_initialize_homotopy, METH_VARARGS,
+    "For the defined target and start system,\n initializes the homotopy in quad double precision,\n for the step-by-step Pade continuation.\n On entry is one parameter, the verbose flag which is zero or one.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_initialize_standard_solution",
+     py2c_padcon_initialize_standard_solution, METH_VARARGS,
+    "Takes the solution with a given index in the solutions container in\n standard double precision and initializes the series-Pade tracker.\n On entry are two integers: 1) the index of the position of the solution\n in the container and 2) the verbose flag, which is zero or one.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_initialize_dobldobl_solution",
+     py2c_padcon_initialize_dobldobl_solution, METH_VARARGS,
+    "Takes the solution with a given index in the solutions container in\n double double precision and initializes the series-Pade tracker.\n On entry are two integers: 1) the index of the position of the solution\n in the container and 2) the verbose flag, which is zero or one.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_initialize_quaddobl_solution",
+     py2c_padcon_initialize_quaddobl_solution, METH_VARARGS,
+    "Takes the solution with a given index in the solutions container in\n quad double precision and initializes the series-Pade tracker.\n On entry are two integers: 1) the index of the position of the solution\n in the container and 2) the verbose flag, which is zero or one.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_standard_predict_correct",
+     py2c_padcon_standard_predict_correct, METH_VARARGS,
+    "Executes one predict-correct step on the current solution and\n the defined homotopy in standard double precision.\n On entry is one integer, the verbose flag which is zero or one.\n On return is the failure code of the predict-correct step:\n if zero, then the required accuracies were met,\n otherwise, either the predict or the correct step failed.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_dobldobl_predict_correct",
+     py2c_padcon_dobldobl_predict_correct, METH_VARARGS,
+    "Executes one predict-correct step on the current solution and\n the defined homotopy in double double precision.\n On entry is one integer, the verbose flag which is zero or one.\n On return is the failure code of the predict-correct step:\n if zero, then the required accuracies were met,\n otherwise, either the predict or the correct step failed.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_quaddobl_predict_correct",
+     py2c_padcon_quaddobl_predict_correct, METH_VARARGS,
+    "Executes one predict-correct step on the current solution and\n the defined homotopy in quad double precision.\n On entry is one integer, the verbose flag which is zero or one.\n On return is the failure code of the predict-correct step:\n if zero, then the required accuracies were met,\n otherwise, either the predict or the correct step failed.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_get_standard_solution",
+     py2c_padcon_get_standard_solution, METH_VARARGS,
+    "On entry are two integer parameters: 1) the index of the position of\n the solution and 2) the verbose flag, which is zero or one.\n Retrieves the current solution and places it at the given position\n in the solutions container in standard double precision.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_get_dobldobl_solution",
+     py2c_padcon_get_dobldobl_solution, METH_VARARGS,
+    "On entry are two integer parameters: 1) the index of the position of\n the solution and 2) the verbose flag, which is zero or one.\n Retrieves the current solution and places it at the given position\n in the solutions container in double double precision.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_get_quaddobl_solution",
+     py2c_padcon_get_quaddobl_solution, METH_VARARGS,
+    "On entry are two integer parameters: 1) the index of the position of\n the solution and 2) the verbose flag, which is zero or one.\n Retrieves the current solution and places it at the given position\n in the solutions container in quad double precision.\n If the verbose flag is 1, then extra output will be written."},
    {"py2c_syspool_standard_init", py2c_syspool_standard_init, METH_VARARGS,
     "Initializes the pool for systems in standard double precision."},
    {"py2c_syspool_dobldobl_init", py2c_syspool_dobldobl_init, METH_VARARGS,
