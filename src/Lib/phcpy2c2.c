@@ -8107,6 +8107,39 @@ static PyObject *py2c_padcon_get_quaddobl_solution
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_padcon_clear_standard_data
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_clear_standard_data();
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_clear_dobldobl_data
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_clear_dobldobl_data();
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_clear_quaddobl_data
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_clear_quaddobl_data();
+   return Py_BuildValue("i",fail);
+}
+
 /* The wrapping of functions with prototypes in syspool.h starts below. */
 
 static PyObject *py2c_syspool_standard_init ( PyObject *self, PyObject *args )
@@ -10411,6 +10444,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_padcon_get_quaddobl_solution",
      py2c_padcon_get_quaddobl_solution, METH_VARARGS,
     "On entry are two integer parameters: 1) the index of the position of\n the solution and 2) the verbose flag, which is zero or one.\n Retrieves the current solution and places it at the given position\n in the solutions container in quad double precision.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_clear_standard_data",
+     py2c_padcon_clear_standard_data, METH_VARARGS,
+    "Deallocates data for the series-Pade tracker in double precision."},
+   {"py2c_padcon_clear_dobldobl_data",
+     py2c_padcon_clear_dobldobl_data, METH_VARARGS,
+    "Deallocates data for the series-Pade tracker in double double precision."},
+   {"py2c_padcon_clear_quaddobl_data",
+     py2c_padcon_clear_quaddobl_data, METH_VARARGS,
+    "Deallocates data for the series-Pade tracker in quad double precision."},
    {"py2c_syspool_standard_init", py2c_syspool_standard_init, METH_VARARGS,
     "Initializes the pool for systems in standard double precision."},
    {"py2c_syspool_dobldobl_init", py2c_syspool_dobldobl_init, METH_VARARGS,

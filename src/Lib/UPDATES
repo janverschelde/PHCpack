@@ -1,3 +1,8 @@
+Tue 25 Dec 2018 : improved the descriptions in padcon.h, added the new
+  functions to phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
+  Wrapped the deallocation functions for the series-pade trackers in
+  padcon, phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
+
 Mon 24 Dec 2018 : extended padcon and the test lib_padcon with functions
   for a step-by-step run of the series-Pade trackers.
 

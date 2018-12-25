@@ -281,3 +281,39 @@ int padcon_get_quaddobl_solution ( int idx, int verbose )
 
    return fail;
 }
+
+int padcon_clear_standard_data ( void )
+{
+   int fail;
+   int precision = 0;
+   int *b;
+   double *c;
+   
+   fail = _ada_use_c2phc4c(864,&precision,b,c);
+
+   return fail;
+}
+
+int padcon_clear_dobldobl_data ( void )
+{
+   int fail;
+   int precision = 1;
+   int *b;
+   double *c;
+   
+   fail = _ada_use_c2phc4c(864,&precision,b,c);
+
+   return fail;
+}
+
+int padcon_clear_quaddobl_data ( void )
+{
+   int fail;
+   int precision = 2;
+   int *b;
+   double *c;
+   
+   fail = _ada_use_c2phc4c(864,&precision,b,c);
+
+   return fail;
+}

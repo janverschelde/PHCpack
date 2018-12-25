@@ -5798,6 +5798,26 @@ static PyObject *py2c_padcon_get_quaddobl_solution
  *   in the solutions container in quad double precision.
  *   If the verbose flag is 1, then extra output will be written. */
 
+static PyObject *py2c_padcon_clear_standard_data
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates data for the series-Pade tracker in double precision. */
+
+static PyObject *py2c_padcon_clear_dobldobl_data
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates data for the series-Pade tracker
+ *   in double double precision. */
+
+static PyObject *py2c_padcon_clear_quaddobl_data
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates data for the series-Pade tracker
+ *   in quad double precision. */
+
 /* The wrapping of functions with prototypes in syspool.h starts below. */
 
 static PyObject *py2c_syspool_standard_init ( PyObject *self, PyObject *args );

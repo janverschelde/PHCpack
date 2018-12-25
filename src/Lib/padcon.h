@@ -186,4 +186,21 @@ int padcon_get_quaddobl_solution ( int idx, int verbose );
  *   in the solutions container in quad double precision.
  *   If verbose = 1, then extra output will be written. */
 
+int padcon_clear_standard_data ( void );
+/*
+ * DESCRIPTION :
+ *   Deallocates data for the series-Pade tracker in double precision. */
+
+int padcon_clear_dobldobl_data ( void );
+/*
+ * DESCRIPTION :
+ *   Deallocates data for the series-Pade tracker
+ *   in double double precision. */
+
+int padcon_clear_quaddobl_data ( void );
+/*
+ * DESCRIPTION :
+ *   Deallocates data for the series-Pade tracker
+ *   in quad double precision. */
+
 #endif
