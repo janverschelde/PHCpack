@@ -12,7 +12,7 @@ package body Standard_Complex_Algebraic_Series is
                   verbose : boolean := false ) return Series is
 
     res : Series(c.deg) := Create(0,c.deg);
-    cpc : Series(c.deg) := c;
+    cpc : constant Series(c.deg) := c;
     wrk,dx : Series(c.deg);
     fac : constant Complex_Number := Create(0.5);
     tol : constant double_float := 1.0E-13;
@@ -21,7 +21,7 @@ package body Standard_Complex_Algebraic_Series is
     if AbsVal(cpc.cff(0)) < tol then
       res := Create(0,c.deg);
     else
-      res := Create(0);
+      res := Create(0,c.deg);
       res.cff(0) := Standard_Complex_Numbers_Polar.Root(cpc.cff(0),2,i);
       for i in 0..c.deg loop
         wrk := res*res - cpc;
@@ -40,7 +40,7 @@ package body Standard_Complex_Algebraic_Series is
                   verbose : boolean := false ) return Series is
 
     res : Series(c.deg) := Create(0,c.deg);
-    cpc : Series(c.deg) := c;
+    cpc : constant Series(c.deg) := c;
     wrk,dx : Series(c.deg);
     denominator : constant double_float := 1.0/double_float(n);
     fac : constant Complex_Number := Create(denominator);

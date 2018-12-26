@@ -705,6 +705,7 @@ package body Generic_Dense_Series is
              else s.cff(i) := s.cff(i)*t.cff(0) + s.cff(0)*t.cff(i); 
             end if;
             for j in 1..(i-1) loop
+              exit when j > t.deg;
               s.cff(i) := s.cff(i) + s.cff(i-j)*t.cff(j);
             end loop;
           end loop;

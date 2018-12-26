@@ -1,3 +1,6 @@
+Wed 26 Dec 2018 : bug fix in generic_dense_series.adb and in the
+  {standard,dobldobl,quaddobl}_complex_algebraic_series.adb.
+
 Mon 17 Dec 2018 : modified Mul() in generic_dense_series so "in place"
   is possible for the Link_to_Series types and added a Power procedure
   which computes without extra memory locations.

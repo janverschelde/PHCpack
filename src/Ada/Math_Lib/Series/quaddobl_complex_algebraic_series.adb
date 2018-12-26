@@ -13,12 +13,10 @@ package body QuadDobl_Complex_Algebraic_Series is
                   verbose : boolean := false ) return Series is
 
     res : Series(c.deg) := Create(0,c.deg);
-    cpc : Series(c.deg) := c;
+    cpc : constant Series(c.deg) := c;
     wrk,dx : Series(c.deg);
-    zero : constant quad_double := create(0.0);
     one : constant quad_double := create(integer32(1));
     two : constant quad_double := create(integer32(2));
-    ctwo : constant Complex_Number := create(two);
     half : constant quad_double := one/two;
     fac : constant Complex_Number := Create(half);
     tol : constant double_float := 1.0E-48;
@@ -27,7 +25,7 @@ package body QuadDobl_Complex_Algebraic_Series is
     if AbsVal(cpc.cff(0)) < tol then
       res := Create(0,c.deg);
     else
-      res := Create(0);
+      res := Create(0,c.deg);
       res.cff(0) := QuadDobl_Complex_Numbers_Polar.Root(cpc.cff(0),2,i);
       for i in 0..c.deg loop
         wrk := res*res - cpc;
@@ -48,9 +46,8 @@ package body QuadDobl_Complex_Algebraic_Series is
                   verbose : boolean := false ) return Series is
 
     res : Series(c.deg) := Create(0,c.deg);
-    cpc : Series(c.deg) := c;
+    cpc : constant Series(c.deg) := c;
     wrk,dx : Series(c.deg);
-    zero : constant quad_double := create(0.0);
     one : constant quad_double := create(1.0);
     ddn : constant quad_double := create(n);
     denominator : constant quad_double := one/ddn;
