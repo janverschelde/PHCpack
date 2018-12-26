@@ -326,9 +326,9 @@ void standard_next_step ( void )
    printf("Read %d start solutions.\n", length);
 
    fail = padcon_standard_initialize_homotopy(1);
-   index = 1;
-   do
+   for(index=1; index <= length; index++)
    {
+      printf("\nTracking path %d ...\n", index);
       fail = padcon_initialize_standard_solution(index,1);
       do
       {
@@ -353,12 +353,12 @@ void standard_next_step ( void )
                   (index,strlensol,idxsol);
          printf("Solution %d :\n%s\n", index, idxsol);
       }
+      if(index == length) break;
       printf("Continue with the next solution ? (y/n) ");
       contstep = getchar();
       scanf("%c",&nlsb);
-      if(contstep == 'y') index = index + 1;
+      if(contstep != 'y') break;
    }
-   while(contstep == 'y');
 }
 
 void dobldobl_next_step ( void )
@@ -373,9 +373,9 @@ void dobldobl_next_step ( void )
    printf("Read %d start solutions.\n", length);
 
    fail = padcon_dobldobl_initialize_homotopy(1);
-   index = 1;
-   do
+   for(index = 1; index <= length; index++)
    {
+      printf("\nTracking path %d ...\n", index);
       fail = padcon_initialize_dobldobl_solution(index,1);
       do
       {
@@ -400,12 +400,12 @@ void dobldobl_next_step ( void )
                   (index,strlensol,idxsol);
          printf("Solution %d :\n%s\n", index, idxsol);
       }
+      if(index == length) break;
       printf("Continue with the next solution ? (y/n) ");
       contstep = getchar();
       scanf("%c",&nlsb);
-      if(contstep == 'y') index = index + 1;
+      if(contstep != 'y') break;
    }
-   while(contstep == 'y');
 }
 
 void quaddobl_next_step ( void )
@@ -420,9 +420,9 @@ void quaddobl_next_step ( void )
    printf("Read %d start solutions.\n", length);
 
    fail = padcon_quaddobl_initialize_homotopy(1);
-   index = 1;
-   do
+   for(index = 1; index <= length; index++)
    {
+      printf("\nTracking path %d ...\n", index);
       fail = padcon_initialize_quaddobl_solution(index,1);
       do
       {
@@ -447,10 +447,10 @@ void quaddobl_next_step ( void )
                   (index,strlensol,idxsol);
          printf("Solution %d :\n%s\n", index, idxsol);
       }
+      if(index == length) break;
       printf("Continue with the next solution ? (y/n) ");
       contstep = getchar();
       scanf("%c",&nlsb);
-      if(contstep == 'y') index = index + 1;
+      if(contstep != 'y') break;
    }
-   while(contstep == 'y');
 }
