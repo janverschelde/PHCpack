@@ -1,3 +1,6 @@
+Tue 25 Dec 2018 : added the step-by-step run of the series-Pade tracker
+  to the module curves, both for python2 and python3.
+
 Mon 10 Dec 2018 : improved the track functions in curves.py.
 
 Sun 9 Dec 2018 : prepared files for release 0.9.0 of phcpy.

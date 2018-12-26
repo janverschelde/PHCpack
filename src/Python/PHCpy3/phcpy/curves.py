@@ -279,7 +279,268 @@ def quaddobl_track(target, start, sols, filename="", verbose=False):
     # py2c_clear_quaddobl_operations_data()
     return load_quaddobl_solutions()
 
-def test(precision='d'):
+def standard_set_homotopy(target, start, verbose=False):
+    """
+    Initializes the homotopy with the target and start system for a
+    step-by-step run of the series-Pade tracker, in double precision.
+    If verbose, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_target_system
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_start_system
+    from phcpy.interface import store_standard_system
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(start)
+    store_standard_system(target, nbvar=dim)
+    py2c_copy_standard_container_to_target_system()
+    store_standard_system(start, nbvar=dim)
+    py2c_copy_standard_container_to_start_system()
+    from phcpy.phcpy2c3 import py2c_padcon_standard_initialize_homotopy
+    return py2c_padcon_standard_initialize_homotopy(int(verbose))
+
+def dobldobl_set_homotopy(target, start, verbose=False):
+    """
+    Initializes the homotopy with the target and start system for a
+    step-by-step run of the series-Pade tracker, in double double precision.
+    If verbose, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_target_system
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_start_system
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(start)
+    store_dobldobl_system(target, nbvar=dim)
+    py2c_copy_dobldobl_container_to_target_system()
+    store_dobldobl_system(start, nbvar=dim)
+    py2c_copy_dobldobl_container_to_start_system()
+    from phcpy.phcpy2c3 import py2c_padcon_dobldobl_initialize_homotopy
+    return py2c_padcon_dobldobl_initialize_homotopy(int(verbose))
+
+def quaddobl_set_homotopy(target, start, verbose=False):
+    """
+    Initializes the homotopy with the target and start system for a
+    step-by-step run of the series-Pade tracker, in quad double precision.
+    If verbose, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_target_system
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_start_system
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(start)
+    store_quaddobl_system(target, nbvar=dim)
+    py2c_copy_quaddobl_container_to_target_system()
+    store_quaddobl_system(start, nbvar=dim)
+    py2c_copy_quaddobl_container_to_start_system()
+    from phcpy.phcpy2c3 import py2c_padcon_quaddobl_initialize_homotopy
+    return py2c_padcon_quaddobl_initialize_homotopy(int(verbose))
+
+def standard_set_solution(nvar, sol, verbose=False):
+    r"""
+    Sets the start solution in *sol* for the step-by-step run of
+    the series-Pade tracker, in standard double precision.
+    If verbose, then extra output is written.
+    The number of variables is in *nvar*.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_initialize_standard_solution
+    from phcpy.interface import store_standard_solutions
+    store_standard_solutions(nvar, [sol])
+    return py2c_padcon_initialize_standard_solution(1, int(verbose))
+
+def dobldobl_set_solution(nvar, sol, verbose=False):
+    r"""
+    Sets the start solution in *sol* for the step-by-step run of
+    the series-Pade tracker, in double double precision.
+    If verbose, then extra output is written.
+    The number of variables is in *nvar*.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_initialize_dobldobl_solution
+    from phcpy.interface import store_dobldobl_solutions
+    store_dobldobl_solutions(nvar, [sol])
+    return py2c_padcon_initialize_dobldobl_solution(1, int(verbose))
+
+def quaddobl_set_solution(nvar, sol, verbose=False):
+    r"""
+    Sets the start solution in *sol* for the step-by-step run of
+    the series-Pade tracker, in quad double precision.
+    If verbose, then extra output is written.
+    The number of variables is in *nvar*.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_initialize_quaddobl_solution
+    from phcpy.interface import store_quaddobl_solutions
+    store_quaddobl_solutions(nvar, [sol])
+    return py2c_padcon_initialize_quaddobl_solution(1, int(verbose))
+
+def standard_get_solution(verbose=False):
+    """
+    Returns the current solution on the path, in double precision,
+    which starts at the solution set with standard_set_solution().
+    If verbose, then extra output is written.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_get_standard_solution
+    from phcpy.phcpy2c3 import py2c_solcon_length_standard_solution_string
+    from phcpy.phcpy2c3 import py2c_solcon_write_standard_solution_string
+    py2c_padcon_get_standard_solution(1, int(verbose))
+    lns = py2c_solcon_length_standard_solution_string(1)
+    return py2c_solcon_write_standard_solution_string(1, lns)
+
+def dobldobl_get_solution(verbose=False):
+    """
+    Returns the current solution on the path, in double double precision,
+    which starts at the solution set with dobldobl_set_solution().
+    If verbose, then extra output is written.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_get_dobldobl_solution
+    from phcpy.phcpy2c3 import py2c_solcon_length_dobldobl_solution_string
+    from phcpy.phcpy2c3 import py2c_solcon_write_dobldobl_solution_string
+    py2c_padcon_get_dobldobl_solution(1, int(verbose))
+    lns = py2c_solcon_length_dobldobl_solution_string(1)
+    return py2c_solcon_write_dobldobl_solution_string(1, lns)
+
+def quaddobl_get_solution(verbose=False):
+    """
+    Returns the current solution on the path, in quad double precision,
+    which starts at the solution set with quaddobl_set_solution().
+    If verbose, then extra output is written.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_get_quaddobl_solution
+    from phcpy.phcpy2c3 import py2c_solcon_length_quaddobl_solution_string
+    from phcpy.phcpy2c3 import py2c_solcon_write_quaddobl_solution_string
+    py2c_padcon_get_quaddobl_solution(1, int(verbose))
+    lns = py2c_solcon_length_quaddobl_solution_string(1)
+    return py2c_solcon_write_quaddobl_solution_string(1, lns)
+
+def standard_predict_correct(verbose=False):
+    """
+    Performs one predictor and one corrector step on the set homotopy
+    and the set solution, in standard double precision.
+    If verbose, then extra output is written.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_standard_predict_correct
+    py2c_padcon_standard_predict_correct(int(verbose))
+
+def dobldobl_predict_correct(verbose=False):
+    """
+    Performs one predictor and one corrector step on the set homotopy
+    and the set solution, in double double precision.
+    If verbose, then extra output is written.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_dobldobl_predict_correct
+    py2c_padcon_dobldobl_predict_correct(int(verbose))
+
+def quaddobl_predict_correct(verbose=False):
+    """
+    Performs one predictor and one corrector step on the set homotopy
+    and the set solution, in quad double precision.
+    If verbose, then extra output is written.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_quaddobl_predict_correct
+    py2c_padcon_quaddobl_predict_correct(int(verbose))
+
+def standard_next_track(target, start, sols, verbose=False):
+    """
+    Runs the series-Pade tracker step by step in double precision.
+    On input are a target system and a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If verbose, then extra output is written.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    from phcpy.solver import number_of_symbols
+    result = []
+    dim = number_of_symbols(start)
+    standard_set_homotopy(target, start, verbose)
+    idx = 0
+    for sol in sols:
+        idx = idx + 1
+        standard_set_solution(dim, sol, verbose)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                standard_predict_correct(verbose)
+                sol = standard_get_solution(verbose)
+                print(sol)
+    return result
+
+def dobldobl_next_track(target, start, sols, verbose=False):
+    """
+    Runs the series-Pade tracker step by step in double double precision.
+    On input are a target system and a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If verbose, then extra output is written.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    from phcpy.solver import number_of_symbols
+    result = []
+    dim = number_of_symbols(start)
+    dobldobl_set_homotopy(target, start, verbose)
+    idx = 0
+    for sol in sols:
+        idx = idx + 1
+        dobldobl_set_solution(dim, sol, verbose)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                dobldobl_predict_correct(verbose)
+                sol = dobldobl_get_solution(verbose)
+                print(sol)
+    return result
+
+def quaddobl_next_track(target, start, sols, verbose=False):
+    """
+    Runs the series-Pade tracker step by step in quad double precision.
+    On input are a target system and a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If verbose, then extra output is written.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    from phcpy.solver import number_of_symbols
+    result = []
+    dim = number_of_symbols(start)
+    quaddobl_set_homotopy(target, start, verbose)
+    idx = 0
+    for sol in sols:
+        idx = idx + 1
+        quaddobl_set_solution(dim, sol, verbose)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                quaddobl_predict_correct(verbose)
+                sol = quaddobl_get_solution(verbose)
+                print(sol)
+    return result
+
+def test_simple_track(precision='d'):
     """
     Tunes the parameters and runs a simple test on the trackers.
     The precision is either double ('d'), double double ('dd'),
@@ -316,5 +577,29 @@ def test(precision='d'):
     for sol in k3sols:
         print(sol)
 
+def test_next_track(precision='d'):
+    """
+    Tunes the parameters and runs the step-by-step tracker.
+    The precision is either double ('d'), double double ('dd'),
+    or quad double ('qd').
+    """
+    tune_homotopy_continuation_parameters()
+    from phcpy.families import katsura
+    k3 = katsura(3)
+    from phcpy.solver import total_degree_start_system as tdss
+    (k3q, k3qsols) = tdss(k3)
+    print('tracking', len(k3qsols), 'paths ...')
+    if(precision == 'd'):
+        k3sols = standard_next_track(k3, k3q, k3qsols, True)
+    elif(precision == 'dd'):
+        k3sols = dobldobl_next_track(k3, k3q, k3qsols, True)
+    elif(precision == 'qd'):
+        k3sols = quaddobl_next_track(k3, k3q, k3qsols, True)
+    else:
+        print('wrong precision')
+    for sol in k3sols:
+        print(sol)
+
 if __name__ == "__main__":
-    test('qd')
+    test_next_track()
+    test_simple_track('qd')
