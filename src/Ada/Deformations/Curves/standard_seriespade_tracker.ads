@@ -1,3 +1,5 @@
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Homotopy_Continuation_Parameters;
@@ -91,6 +93,17 @@ package Standard_SeriesPade_Tracker is
 
   -- DESCRIPTION :
   --   Returns the current vector of Pade approximants.
+
+  function Get_Current_Smallest_Forward_Pole return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the smallest forward pole, computed by the predictor.
+
+  function Get_Current_Closest_Pole return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the closest pole, computed by the predictor.
+  --   Note: only meaningful if the real part is positive.
 
 -- DESTRUCTOR :
 

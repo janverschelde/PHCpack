@@ -3,6 +3,9 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Series;
@@ -117,17 +120,23 @@ package Series_and_Predictors is
               ( srv : in Standard_Complex_Series_Vectors.Vector;
                 pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
-                frp : out double_float; verbose : in boolean := false );
+                frp : out double_float;
+                cfp : out Standard_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false );
   procedure Pade_Approximants
               ( srv : in DoblDobl_Complex_Series_Vectors.Vector;
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
-                frp : out double_double; verbose : in boolean := false );
+                frp : out double_double;
+                cfp : out DoblDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false );
   procedure Pade_Approximants
               ( srv : in QuadDobl_Complex_Series_Vectors.Vector;
                 pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
                 poles : in out QuadDobl_Complex_VecVecs.VecVec;
-                frp : out quad_double; verbose : in boolean := false );
+                frp : out quad_double;
+                cfp : out QuadDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Given a power series vector, constructs Pade approximants,
@@ -148,7 +157,8 @@ package Series_and_Predictors is
   -- ON RETURN :
   --   pv       vector of Pade approximants
   --   poles    poles of the Pade approximants;
-  --   frp      radius of the pole with the smallest real part.
+  --   frp      radius of the pole with the smallest real part;
+  --   cfp      closest forward pole.
 
   function Predicted_Error
              ( evls : Standard_Complex_Series_Vectors.Vector;

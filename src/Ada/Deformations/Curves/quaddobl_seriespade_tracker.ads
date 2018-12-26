@@ -1,3 +1,5 @@
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Poly_Systems;      use QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;         use QuadDobl_Complex_Solutions;
 with Homotopy_Continuation_Parameters;
@@ -91,6 +93,18 @@ package QuadDobl_SeriesPade_Tracker is
 
   -- DESCRIPTION :
   --   Returns the current vector of Pade approximants.
+
+  function Get_Current_Smallest_Forward_Pole return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns the smallest forward pole, computed by the predictor.
+
+  function Get_Current_Closest_Pole
+             return QuadDobl_Complex_Numbers.Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the closest pole, computed by the predictor.
+  --   Note: only meaningful if the real part is positive.
 
 -- DESTRUCTOR :
 

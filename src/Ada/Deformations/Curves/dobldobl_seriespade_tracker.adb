@@ -3,10 +3,9 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Standard_Complex_Numbers;
-with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
@@ -31,6 +30,8 @@ package body DoblDobl_SeriesPade_Tracker is
   current : Link_to_Solution;
   current_servec : DoblDobl_Complex_Series_Vectors.Link_to_Vector;
   current_padvec : DoblDobl_Pade_Approximants.Link_to_Pade_Vector;
+  current_frp : double_double;
+  current_cfp : DoblDobl_Complex_Numbers.Complex_Number;
 
 -- CONSTRUCTORS :
 
@@ -104,7 +105,7 @@ package body DoblDobl_SeriesPade_Tracker is
     sol : DoblDobl_Complex_Vectors.Vector(1..current.n) := current.v;
     eva : DoblDobl_Complex_Series_Vectors.Vector(1..nbeqs);
     t,step,predres : double_float;
-    dd_t,dd_step,frp : double_double;
+    dd_t,dd_step : double_double;
     tolcff : constant double_float := homconpars.epsilon;
     alpha : constant double_float := homconpars.alpha;
 
@@ -117,10 +118,13 @@ package body DoblDobl_SeriesPade_Tracker is
         (maxdeg,nit,htp.all,sol,current_servec.all,eva);
     end if;
     Series_and_Predictors.Pade_Approximants
-      (current_servec.all,current_padvec.all,poles.all,frp);
+      (current_servec.all,current_padvec.all,poles.all,current_frp,current_cfp);
     if verbose then
       put_line("The poles :"); put_line(poles.all);
-      put("The smallest forward pole radius : "); put(frp,2); new_line;
+      put("Smallest forward pole radius : "); put(current_frp,3); new_line;
+      if DoblDobl_Complex_Numbers.REAL_PART(current_cfp) >= 0.0
+       then put("Closest forward pole : "); put(current_cfp); new_line;
+      end if;
       step := Series_and_Predictors.Set_Step_Size
                (standard_output,eva,tolcff,alpha,verbose);
     else
@@ -128,9 +132,9 @@ package body DoblDobl_SeriesPade_Tracker is
     end if;
     step := homconpars.sbeta*step;
     DoblDobl_Complex_Series_Vectors.Clear(eva);
-    if frp > 0.0 then
+    if current_frp > 0.0 then
       step := Series_and_Predictors.Cap_Step_Size
-                (step,hi_part(frp),homconpars.pbeta);
+                (step,hi_part(current_frp),homconpars.pbeta);
     end if;
     dd_t := DoblDobl_Complex_Numbers.REAL_PART(current.t);
     t := hi_part(dd_t);
@@ -220,6 +224,17 @@ package body DoblDobl_SeriesPade_Tracker is
   begin
     return current_padvec;
   end Get_Current_Pade_Vector;
+
+  function Get_Current_Smallest_Forward_Pole return double_double is
+  begin
+    return current_frp;
+  end Get_Current_Smallest_Forward_Pole;
+
+  function Get_Current_Closest_Pole
+             return DoblDobl_Complex_Numbers.Complex_Number is
+  begin
+    return current_cfp;
+  end Get_Current_Closest_Pole;
 
 -- DESTRUCTOR :
 

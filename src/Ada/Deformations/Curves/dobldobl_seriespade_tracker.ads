@@ -1,3 +1,5 @@
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Poly_Systems;      use DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;         use DoblDobl_Complex_Solutions;
 with Homotopy_Continuation_Parameters;
@@ -91,6 +93,18 @@ package DoblDobl_SeriesPade_Tracker is
 
   -- DESCRIPTION :
   --   Returns the current vector of Pade approximants.
+
+  function Get_Current_Smallest_Forward_Pole return double_double;
+
+  -- DESCRIPTION :
+  --   Returns the smallest forward pole, computed by the predictor.
+
+  function Get_Current_Closest_Pole
+             return DoblDobl_Complex_Numbers.Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the closest pole, computed by the predictor.
+  --   Note: only meaningful if the real part is positive.
 
 -- DESTRUCTOR :
 

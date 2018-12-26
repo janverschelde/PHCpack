@@ -6,8 +6,11 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Vector_Norms;
@@ -165,6 +168,7 @@ package body Series_and_Trackers is
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res,frp,predres : double_float;
+    cfp : Standard_Complex_Numbers.Complex_Number;
     nbrit : natural32 := 0;
 
   begin
@@ -174,7 +178,7 @@ package body Series_and_Trackers is
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       Standard_Complex_Series_Vectors.Clear(eva);
@@ -252,6 +256,7 @@ package body Series_and_Trackers is
     err,rco,res : double_float;
     zero : constant double_double := create(0.0);
     frp : double_double;
+    cfp : DoblDobl_Complex_Numbers.Complex_Number;
     predres : double_float;
     nbrit : natural32 := 0;
 
@@ -262,7 +267,7 @@ package body Series_and_Trackers is
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       if frp > 0.0 then
@@ -346,6 +351,7 @@ package body Series_and_Trackers is
     err,rco,res : double_float;
     zero : constant quad_double := create(0.0);
     frp : quad_double;
+    cfp : QuadDobl_Complex_Numbers.Complex_Number;
     predres : double_float;
     nbrit : natural32 := 0;
 
@@ -356,7 +362,7 @@ package body Series_and_Trackers is
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       if frp > 0.0 then
@@ -439,6 +445,7 @@ package body Series_and_Trackers is
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res,frp,predres : double_float;
+    cfp : Standard_Complex_Numbers.Complex_Number;
     nbrit : natural32 := 0;
 
   begin
@@ -452,10 +459,13 @@ package body Series_and_Trackers is
       end if;
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
-        put(file,"The smallest forward pole radius :");
+        put(file,"Smallest forward pole radius :");
         put(file,frp,3); new_line(file);
+        if Standard_Complex_Numbers.REAL_PART(cfp) >= 0.0
+         then put(file,"Closest pole :"); put(file,cfp); new_line(file);
+        end if;
       end if;
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
@@ -549,6 +559,7 @@ package body Series_and_Trackers is
     err,rco,res : double_float;
     zero : constant double_double := create(0.0);
     frp : double_double;
+    cfp : DoblDobl_Complex_Numbers.Complex_Number;
     predres : double_float;
     nbrit : natural32 := 0;
 
@@ -563,10 +574,13 @@ package body Series_and_Trackers is
       end if;
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
-        put(file,"The smallest forward pole radius : ");
+        put(file,"Smallest forward pole radius : ");
         put(file,frp,3); new_line(file);
+        if DoblDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
+         then put(file,"Closest pole : "); put(file,cfp); new_line(file);
+        end if;
       end if;
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
@@ -667,6 +681,7 @@ package body Series_and_Trackers is
     err,rco,res : double_float;
     zero : constant quad_double := create(0.0);
     frp : quad_double;
+    cfp : QuadDobl_Complex_Numbers.Complex_Number;
     predres : double_float;
     nbrit : natural32 := 0;
 
@@ -681,10 +696,13 @@ package body Series_and_Trackers is
       end if;
       Series_and_Predictors.Newton_Prediction
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
-        put(file,"The smallest forward pole radius : ");
+        put(file,"Smallest forward pole radius : ");
         put(file,frp,3); new_line(file);
+        if QuadDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
+         then put(file,"Closest pole : "); put(file,cfp); new_line(file);
+        end if;
       end if;
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);

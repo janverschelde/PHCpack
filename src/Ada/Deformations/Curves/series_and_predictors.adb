@@ -1,21 +1,18 @@
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Mathematical_Functions;
-with Standard_Complex_Numbers;
 with Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
 with Standard_Complex_Series_Functions;
 with Standard_Complex_Series_Vectors_io;
 with Standard_CSeries_Vector_Functions;
 with Standard_CSeries_Poly_SysFun;
-with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Complex_Series_Functions;
 with DoblDobl_Complex_Series_Vectors_io;
 with DoblDobl_CSeries_Vector_Functions;
 with DoblDobl_CSeries_Poly_SysFun;
-with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Series_Functions;
@@ -210,33 +207,54 @@ package body Series_and_Predictors is
               ( srv : in Standard_Complex_Series_Vectors.Vector;
                 pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
-                frp : out double_float; verbose : in boolean := false ) is
+                frp : out double_float;
+                cfp : out Standard_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false ) is
+
+    lead,idx : integer32;
+
   begin
     Standard_Pade_Approximants.Create(pv,srv,verbose);
     Homotopy_Pade_Approximants.Standard_Poles(pv,poles);
-    frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
+    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,frp);
+    cfp := poles(lead)(idx);
+   -- frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
   end Pade_Approximants;
 
   procedure Pade_Approximants
               ( srv : in DoblDobl_Complex_Series_Vectors.Vector;
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
-                frp : out double_double; verbose : in boolean := false ) is
+                frp : out double_double;
+                cfp : out DoblDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false ) is
+
+    lead,idx : integer32;
+
   begin
     DoblDobl_Pade_Approximants.Create(pv,srv,verbose);
     Homotopy_Pade_Approximants.DoblDobl_Poles(pv,poles);
-    frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
+    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,frp);
+    cfp := poles(lead)(idx);
+   -- frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
   end Pade_Approximants;
 
   procedure Pade_Approximants
               ( srv : in QuadDobl_Complex_Series_Vectors.Vector;
                 pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
                 poles : in out QuadDobl_Complex_VecVecs.VecVec;
-                frp : out quad_double; verbose : in boolean := false ) is
+                frp : out quad_double;
+                cfp : out QuadDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false ) is
+
+    lead,idx : integer32;
+
   begin
     QuadDobl_Pade_Approximants.Create(pv,srv,verbose);
     Homotopy_Pade_Approximants.QuadDobl_Poles(pv,poles);
-    frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
+    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,frp);
+    cfp := poles(lead)(idx);
+   -- frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
   end Pade_Approximants;
 
   function Predicted_Error

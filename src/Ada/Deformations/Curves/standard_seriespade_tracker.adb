@@ -1,9 +1,8 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
@@ -27,6 +26,8 @@ package body Standard_SeriesPade_Tracker is
   current : Link_to_Solution;
   current_servec : Standard_Complex_Series_Vectors.Link_to_Vector;
   current_padvec : Standard_Pade_Approximants.Link_to_Pade_Vector;
+  current_frp : double_float;
+  current_cfp : Complex_Number;
 
 -- CONSTRUCTORS :
 
@@ -97,7 +98,7 @@ package body Standard_SeriesPade_Tracker is
     nit : constant integer32 := integer32(homconpars.corsteps);
     sol : Standard_Complex_Vectors.Vector(1..current.n) := current.v;
     eva : Standard_Complex_Series_Vectors.Vector(1..nbeqs);
-    t,step,frp,predres : double_float := 0.0;
+    t,step,predres : double_float := 0.0;
     tolcff : constant double_float := homconpars.epsilon;
     alpha : constant double_float := homconpars.alpha;
 
@@ -110,10 +111,13 @@ package body Standard_SeriesPade_Tracker is
         (maxdeg,nit,htp.all,sol,current_servec.all,eva);
     end if;
     Series_and_Predictors.Pade_Approximants
-      (current_servec.all,current_padvec.all,poles.all,frp);
+      (current_servec.all,current_padvec.all,poles.all,current_frp,current_cfp);
     if verbose then
       put_line("The poles : "); put_line(poles.all);
-      put("The smallest forward pole radius :"); put(frp,2); new_line;
+      put("Smallest forward pole radius : "); put(current_frp,2); new_line;
+      if Standard_Complex_Numbers.REAL_PART(current_cfp) >= 0.0
+       then put("Closest forward pole :"); put(current_cfp); new_line;
+      end if;
       step := Series_and_Predictors.Set_Step_Size
                 (standard_output,eva,tolcff,alpha,verbose);
     else
@@ -121,8 +125,9 @@ package body Standard_SeriesPade_Tracker is
     end if;
     step := homconpars.sbeta*step;
     Standard_Complex_Series_Vectors.Clear(eva);
-    if frp > 0.0 then
-      step := Series_and_Predictors.Cap_Step_Size(step,frp,homconpars.pbeta);
+    if current_frp > 0.0 then
+      step := Series_and_Predictors.Cap_Step_Size
+                (step,current_frp,homconpars.pbeta);
     end if;
     t := Standard_Complex_Numbers.REAL_PART(current.t);
     Series_and_Trackers.Set_Step(t,step,homconpars.maxsize,1.0);
@@ -204,6 +209,16 @@ package body Standard_SeriesPade_Tracker is
   begin
     return current_padvec;
   end Get_Current_Pade_Vector;
+
+  function Get_Current_Smallest_Forward_Pole return double_float is
+  begin
+    return current_frp;
+  end Get_Current_Smallest_Forward_Pole;
+
+  function Get_Current_Closest_Pole return Complex_Number is
+  begin
+    return current_cfp;
+  end Get_Current_Closest_Pole;
 
 -- DESTRUCTOR :
 
