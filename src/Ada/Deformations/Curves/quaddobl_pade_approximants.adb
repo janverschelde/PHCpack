@@ -69,8 +69,8 @@ package body QuadDobl_Pade_Approximants is
     zero : constant Complex_Number := Create(integer32(0));
     num : constant QuadDobl_Complex_Vectors.Vector(0..numdeg)
         := (0..numdeg => zero);
-    den : constant QuadDobl_Complex_Vectors.Vector(0..numdeg)
-        := (0..numdeg => zero);
+    den : constant QuadDobl_Complex_Vectors.Vector(0..dendeg)
+        := (0..dendeg => zero);
     res : Pade := Create(num,den);
 
   begin

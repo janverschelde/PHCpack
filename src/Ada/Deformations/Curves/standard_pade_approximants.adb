@@ -69,8 +69,8 @@ package body Standard_Pade_Approximants is
     zero : constant Complex_Number := Create(0.0);
     num : constant Standard_Complex_Vectors.Vector(0..numdeg)
         := (0..numdeg => zero);
-    den : constant Standard_Complex_Vectors.Vector(0..numdeg)
-        := (0..numdeg => zero);
+    den : constant Standard_Complex_Vectors.Vector(0..dendeg)
+        := (0..dendeg => zero);
     res : Pade := Create(num,den);
 
   begin
