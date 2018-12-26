@@ -430,7 +430,7 @@ package body Homotopy_Pade_Approximants is
      else minval := Standard_Complex_Numbers_Polar.Radius(v(idx));
     end if;
     for k in v'first+1..v'last loop
-      if Standard_Complex_Numbers.REAL_PART(v(idx)) >= 0.0 then
+      if Standard_Complex_Numbers.REAL_PART(v(k)) >= 0.0 then
         radval := Standard_Complex_Numbers_Polar.Radius(v(k));
         if radval < minval
          then minval := radval; idx := k; -- found smaller forward pole
@@ -452,7 +452,7 @@ package body Homotopy_Pade_Approximants is
      else minval := DoblDobl_Complex_Numbers_Polar.Radius(v(idx));
     end if;
     for k in v'first+1..v'last loop
-      if DoblDobl_Complex_Numbers.REAL_PART(v(idx)) >= 0.0 then
+      if DoblDobl_Complex_Numbers.REAL_PART(v(k)) >= 0.0 then
         radval := DoblDobl_Complex_Numbers_Polar.Radius(v(k));
         if radval < minval
          then minval := radval; idx := k; -- found smaller forward pole
@@ -474,7 +474,7 @@ package body Homotopy_Pade_Approximants is
      else minval := QuadDobl_Complex_Numbers_Polar.Radius(v(idx));
     end if;
     for k in v'first+1..v'last loop
-      if QuadDobl_Complex_Numbers.REAL_PART(v(idx)) >= 0.0 then
+      if QuadDobl_Complex_Numbers.REAL_PART(v(k)) >= 0.0 then
         radval := QuadDobl_Complex_Numbers_Polar.Radius(v(k));
         if radval < minval
          then minval := radval; idx := k; -- found smaller forward pole
