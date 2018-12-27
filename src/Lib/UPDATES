@@ -1,5 +1,7 @@
 Thu 27 Dec 2018 : extended phcpy2c.h, phcpy2c2.c, and phcpy2c3.c with
   functions to return the pole radius and the closest pole.
+  Added functions to return the t value and the step size to padcon,
+  tested by lib_padcon and wrapped in phcpy2c.h, phcpy2c2.c, phcpy2c3.c.
 
 Wed 26 Dec 2018 : better outer loop in the step-by-step tracking in
   lib_padcon.c.  Added functions in padcon to get the pole radius and

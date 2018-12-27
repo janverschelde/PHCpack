@@ -8185,6 +8185,84 @@ static PyObject *py2c_padcon_quaddobl_closest_pole
    return Py_BuildValue("(d,d)",repole,impole);
 }
 
+static PyObject *py2c_padcon_standard_t_value
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double tval;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_standard_t_value(&tval);
+
+   return Py_BuildValue("d",tval);
+}
+
+static PyObject *py2c_padcon_dobldobl_t_value
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double tval;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_dobldobl_t_value(&tval);
+
+   return Py_BuildValue("d",tval);
+}
+
+static PyObject *py2c_padcon_quaddobl_t_value
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double tval;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_quaddobl_t_value(&tval);
+
+   return Py_BuildValue("d",tval);
+}
+
+static PyObject *py2c_padcon_standard_step_size
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_standard_step_size(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_dobldobl_step_size
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_dobldobl_step_size(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_quaddobl_step_size
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_quaddobl_step_size(&step);
+
+   return Py_BuildValue("d",step);
+}
+
 static PyObject *py2c_padcon_clear_standard_data
  ( PyObject *self, PyObject *args )
 {
@@ -10540,6 +10618,24 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_padcon_quaddobl_closest_pole",
      py2c_padcon_quaddobl_closest_pole, METH_VARARGS,
     "Returns the complex number representation of the closest pole,\n computed by the predictor in quad double precision.\n The returned numbers are the highest parts of the quad doubles.\n Results are meaningful only if the real part >= 0.0."},
+   {"py2c_padcon_standard_t_value",
+     py2c_padcon_standard_t_value, METH_VARARGS,
+    "Returns the current t value of the path tracker\n which runs in standard double precision."},
+   {"py2c_padcon_dobldobl_t_value",
+     py2c_padcon_dobldobl_t_value, METH_VARARGS,
+    "Returns the current t value of the path tracker\n which runs in double double precision."},
+   {"py2c_padcon_quaddobl_t_value",
+     py2c_padcon_quaddobl_t_value, METH_VARARGS,
+    "Returns the current t value of the path tracker\n which runs in quad double precision."},
+   {"py2c_padcon_standard_step_size",
+     py2c_padcon_standard_step_size, METH_VARARGS,
+    "Returns the current step size of the path tracker\n which runs in standard double precision."},
+   {"py2c_padcon_dobldobl_step_size",
+     py2c_padcon_dobldobl_step_size, METH_VARARGS,
+    "Returns the current step size of the path tracker\n which runs in double double precision."},
+   {"py2c_padcon_quaddobl_step_size",
+     py2c_padcon_quaddobl_step_size, METH_VARARGS,
+    "Returns the current step size of the path tracker\n which runs in quad double precision."},
    {"py2c_padcon_clear_standard_data",
      py2c_padcon_clear_standard_data, METH_VARARGS,
     "Deallocates data for the series-Pade tracker in double precision."},

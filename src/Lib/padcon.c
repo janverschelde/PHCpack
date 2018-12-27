@@ -360,6 +360,72 @@ int padcon_get_quaddobl_closest_pole ( double* cre, double* cim )
    return fail;
 }
 
+int padcon_get_standard_t_value ( double *tval )
+{
+   int fail;
+   int precision = 0;
+   int *b;
+
+   fail = _ada_use_c2phc4c(867,&precision,b,tval);
+
+   return fail;
+}
+
+int padcon_get_dobldobl_t_value ( double *tval )
+{
+   int fail;
+   int precision = 1;
+   int *b;
+
+   fail = _ada_use_c2phc4c(867,&precision,b,tval);
+
+   return fail;
+}
+
+int padcon_get_quaddobl_t_value ( double *tval )
+{
+   int fail;
+   int precision = 2;
+   int *b;
+
+   fail = _ada_use_c2phc4c(867,&precision,b,tval);
+
+   return fail;
+}
+
+int padcon_get_standard_step_size ( double *step )
+{
+   int fail;
+   int precision = 0;
+   int *b;
+
+   fail = _ada_use_c2phc4c(868,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_dobldobl_step_size ( double *step )
+{
+   int fail;
+   int precision = 1;
+   int *b;
+
+   fail = _ada_use_c2phc4c(868,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_quaddobl_step_size ( double *step )
+{
+   int fail;
+   int precision = 2;
+   int *b;
+
+   fail = _ada_use_c2phc4c(868,&precision,b,step);
+
+   return fail;
+}
+
 int padcon_clear_standard_data ( void )
 {
    int fail;

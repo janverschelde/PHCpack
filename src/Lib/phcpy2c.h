@@ -5847,6 +5847,48 @@ static PyObject *py2c_padcon_quaddobl_closest_pole
  *   The returned numbers are the highest parts of the quad doubles.
  *   Results are meaningful only if the real part >= 0.0. */
 
+static PyObject *py2c_padcon_standard_t_value
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current t value of the path tracker
+ *   which runs in standard double precision. */
+
+static PyObject *py2c_padcon_dobldobl_t_value
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current t value of the path tracker
+ *   which runs in double double precision. */
+
+static PyObject *py2c_padcon_quaddobl_t_value
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current t value of the path tracker
+ *   which runs in quad double precision. */
+
+static PyObject *py2c_padcon_standard_step_size
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current step size of the path tracker
+ *   which runs in standard double precision. */
+
+static PyObject *py2c_padcon_dobldobl_step_size
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current step size of the path tracker
+ *   which runs in double double precision. */
+
+static PyObject *py2c_padcon_quaddobl_step_size
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current step size of the path tracker
+ *   which runs in quad double precision. */
+
 static PyObject *py2c_padcon_clear_standard_data
  ( PyObject *self, PyObject *args );
 /*

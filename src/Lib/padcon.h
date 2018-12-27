@@ -232,6 +232,42 @@ int padcon_get_quaddobl_closest_pole ( double* cre, double* cim );
  *   The cre and cim are the highest parts of the quad doubles.
  *   Results are meaningful only if cre >= 0.0. */
 
+int padcon_get_standard_t_value ( double *tval );
+/*
+ * DESCRIPTION :
+ *   Returns in tval the current t value of the path tracker
+ *   which runs in standard double precision. */
+
+int padcon_get_dobldobl_t_value ( double *tval );
+/*
+ * DESCRIPTION :
+ *   Returns in tval the current t value of the path tracker
+ *   which runs in double double precision. */
+
+int padcon_get_quaddobl_t_value ( double *tval );
+/*
+ * DESCRIPTION :
+ *   Returns in tval the current t value of the path tracker
+ *   which runs in quad double precision. */
+
+int padcon_get_standard_step_size ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in tval the current step size of the path tracker
+ *   which runs in standard double precision. */
+
+int padcon_get_dobldobl_step_size ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in tval the current step size of the path tracker
+ *   which runs in double double precision. */
+
+int padcon_get_quaddobl_step_size ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in tval the current step size of the path tracker
+ *   which runs in quad double precision. */
+
 int padcon_clear_standard_data ( void );
 /*
  * DESCRIPTION :

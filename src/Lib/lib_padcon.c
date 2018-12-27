@@ -318,7 +318,7 @@ void standard_next_step ( void )
 {
    int fail,length,index,failed,strlensol;
    char contstep,nlsb;
-   double frp,re_pole,im_pole;
+   double frp,re_pole,im_pole,tval,step;
 
    fail = read_standard_target_system();
    fail = read_standard_start_system();
@@ -340,6 +340,9 @@ void standard_next_step ( void )
          {
             fail = padcon_get_standard_forward_pole_radius(&frp);
             fail = padcon_get_standard_closest_pole(&re_pole,&im_pole);
+            fail = padcon_get_standard_t_value(&tval);
+            fail = padcon_get_standard_step_size(&step);
+            printf("t : %.3e  step : %.3e\n", tval, step);
             printf("Smallest forward pole radius : %.3e\n", frp);
             if(re_pole >= 0.0)
                printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
@@ -371,7 +374,7 @@ void dobldobl_next_step ( void )
 {
    int fail,length,index,failed,strlensol;
    char contstep,nlsb;
-   double frp,re_pole,im_pole;
+   double frp,re_pole,im_pole,tval,step;
 
    fail = read_dobldobl_target_system();
    fail = read_dobldobl_start_system();
@@ -393,6 +396,9 @@ void dobldobl_next_step ( void )
          {
             fail = padcon_get_dobldobl_forward_pole_radius(&frp);
             fail = padcon_get_dobldobl_closest_pole(&re_pole,&im_pole);
+            fail = padcon_get_dobldobl_t_value(&tval);
+            fail = padcon_get_dobldobl_step_size(&step);
+            printf("t : %.3e  step : %.3e\n", tval, step);
             printf("Smallest forward pole radius : %.3e\n", frp);
             if(re_pole >= 0.0)
                printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
@@ -424,7 +430,7 @@ void quaddobl_next_step ( void )
 {
    int fail,length,index,failed,strlensol;
    char contstep,nlsb;
-   double frp,re_pole,im_pole;
+   double frp,re_pole,im_pole,tval,step;
 
    fail = read_quaddobl_target_system();
    fail = read_quaddobl_start_system();
@@ -446,6 +452,9 @@ void quaddobl_next_step ( void )
          {
             fail = padcon_get_quaddobl_forward_pole_radius(&frp);
             fail = padcon_get_quaddobl_closest_pole(&re_pole,&im_pole);
+            fail = padcon_get_quaddobl_t_value(&tval);
+            fail = padcon_get_quaddobl_step_size(&step);
+            printf("t : %.3e  step : %.3e\n", tval, step);
             printf("Smallest forward pole radius : %.3e\n", frp);
             if(re_pole >= 0.0)
                printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
