@@ -3263,6 +3263,8 @@ function use_c2phc4c ( job : integer32;
       when 866 => return use_padcon(11,a,b,c); -- get closest radius
       when 867 => return use_padcon(12,a,b,c); -- get t value
       when 868 => return use_padcon(13,a,b,c); -- get step size
+      when 869 => return use_padcon(14,a,b,c); -- get series coefficient
+      when 870 => return use_padcon(15,a,b,c); -- get Pade coefficient
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

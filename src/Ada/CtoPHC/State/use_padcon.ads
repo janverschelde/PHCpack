@@ -96,7 +96,19 @@ function use_padcon ( job : integer32;
 --                 depending whether a[0] is 0, 1, or 2;
 --   job   =  13 : returns in c[0] the current step size of the path tracker
 --                 in double, double double, or quad double precision,
---                 depending whether a[0] is 0, 1, or 2.
+--                 depending whether a[0] is 0, 1, or 2;
+--   job   =  14 : returns in c[0] and c[1] the real and imaginary parts of
+--                 the series coefficient at component a[1] with power a[2],
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2,
+--                 the verbose flag (0 or 1) is in b[0].
+--   job   =  15 : returns in c[0] and c[1] the real and imaginary parts of
+--                 the Pade coefficient at component a[2] with power a[3],
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2,
+--                 if a[1] = 0, then the denominator coefficient is returned,
+--                 otherwise, on return is the numerator coefficient,
+--                 the verbose flag (0 or 1) is in b[0].
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

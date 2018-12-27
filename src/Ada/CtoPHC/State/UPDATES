@@ -1,5 +1,7 @@
 Thu 27 Dec 2018 : added functions to use_padcon and use_c2phc4c to pass
   the t value and the step size of the series-Pade tracker to C.
+  Added functions to use_padcon and use_c2phc4c to pass the coefficients
+  of the series and the Pade approximants to C.
 
 Wed 26 Dec 2018 : added new functions to use_padcon and use_c2phc4c to
   pass the pole radius and the closest pole to the C interface.

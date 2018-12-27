@@ -7,10 +7,16 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_cv;
+with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
@@ -23,6 +29,12 @@ with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with QuadDobl_Homotopy;
+with Standard_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors;
+with Standard_Pade_Approximants;
+with DoblDobl_Pade_Approximants;
+with QuadDobl_Pade_Approximants;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
 with Drivers_to_Series_Trackers;
@@ -744,6 +756,292 @@ function use_padcon ( job : integer32;
       return 868;
   end Job13;
 
+  function Standard_Series_Coefficient
+             ( leadidx,cffidx : integer32; verbose : boolean )
+             return Standard_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the coefficient at position cffidx in component leadidx
+  --   of the current series vectors in standard double precision.
+  --   If verbose, then extra output is written to screen.
+
+    res : Standard_Complex_Numbers.Complex_Number;
+    srv : constant Standard_Complex_Series_Vectors.Link_to_Vector
+        := Standard_SeriesPade_Tracker.Get_Current_Series_Vector;
+
+  begin
+    res := srv(leadidx).cff(cffidx);
+    if verbose
+     then put("Returning "); put(res); new_line;
+    end if;
+    return res;
+  end Standard_Series_Coefficient;
+
+  function DoblDobl_Series_Coefficient
+             ( leadidx,cffidx : integer32; verbose : boolean )
+             return DoblDobl_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the coefficient at position cffidx in component leadidx
+  --   of the current series vectors in double double precision.
+  --   If verbose, then extra output is written to screen.
+
+    res : DoblDobl_Complex_Numbers.Complex_Number;
+    srv : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector
+        := DoblDobl_SeriesPade_Tracker.Get_Current_Series_Vector;
+
+  begin
+    res := srv(leadidx).cff(cffidx);
+    if verbose
+     then put("Returning "); put(res); new_line;
+    end if;
+    return res;
+  end DoblDobl_Series_Coefficient;
+
+  function QuadDobl_Series_Coefficient
+             ( leadidx,cffidx : integer32; verbose : boolean )
+             return QuadDobl_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the coefficient at position cffidx in component leadidx
+  --   of the current series vectors in quad double precision.
+  --   If verbose, then extra output is written to screen.
+
+    res : QuadDobl_Complex_Numbers.Complex_Number;
+    srv : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector
+        := QuadDobl_SeriesPade_Tracker.Get_Current_Series_Vector;
+
+  begin
+    res := srv(leadidx).cff(cffidx);
+    if verbose
+     then put("Returning "); put(res); new_line;
+    end if;
+    return res;
+  end QuadDobl_Series_Coefficient;
+
+  function Job14 return integer32 is -- get series coefficient
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    leadidx : constant integer32 := integer32(v_a(v_a'first+1));
+    cffidx : constant integer32 := integer32(v_a(v_a'first+2));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    vrb : constant natural32 := natural32(v_b(v_b'first));
+    verbose : constant boolean := (vrb = 1);
+    st_cff : Standard_Complex_Numbers.Complex_Number;
+    dd_cff : DoblDobl_Complex_Numbers.Complex_Number;
+    qd_cff : QuadDobl_Complex_Numbers.Complex_Number;
+
+    use DoblDobl_Complex_Numbers_cv;
+    use QuadDobl_Complex_Numbers_cv;
+
+  begin
+    if verbose then
+      put("Precision : ");
+      case prc is
+        when 0 => put("double");
+        when 1 => put("double double");
+        when 2 => put("quad double");
+        when others => put("invalid!");
+      end case;
+      put("  lead idx : "); put(leadidx,1);
+      put("  cff idx : "); put(cffidx,1); new_line;
+    end if;
+    case prc is
+      when 0 => st_cff := Standard_Series_Coefficient(leadidx,cffidx,verbose);
+      when 1 => dd_cff := DoblDobl_Series_Coefficient(leadidx,cffidx,verbose);
+                st_cff := DoblDobl_Complex_to_Standard(dd_cff);
+      when 2 => qd_cff := QuadDobl_Series_Coefficient(leadidx,cffidx,verbose);
+                st_cff := QuadDobl_Complex_to_Standard(qd_cff);
+      when others => put_line("Invalid precision.");
+    end case;
+    Assign(st_cff,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 14 of use_padcon.");
+      return 869;
+  end Job14;
+
+  function Standard_Pade_Coefficient
+             ( leadidx,cffidx : integer32; num : natural32;
+               verbose : boolean )
+             return Standard_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the coefficient at position cffidx in component leadidx
+  --   of the current Pade vectors in standard double precision.
+  --   If num = 0, then the denominator coefficient will be returned,
+  --   otherwise, the numerator coefficient will be returned.
+  --   If verbose, then extra output is written to screen.
+
+    res : Standard_Complex_Numbers.Complex_Number;
+    pv : constant Standard_Pade_Approximants.Link_to_Pade_Vector
+       := Standard_SeriesPade_Tracker.Get_Current_Pade_Vector;
+
+    use Standard_Pade_Approximants;
+
+  begin
+    if num = 0 then
+      declare
+        c : constant Standard_Complex_Vectors.Vector
+          := Denominator_Coefficients(pv(leadidx));
+      begin
+        res := c(cffidx);
+      end;
+    else
+      declare
+        c : constant Standard_Complex_Vectors.Vector
+          := Numerator_Coefficients(pv(leadidx));
+      begin
+        res := c(cffidx);
+      end;
+    end if;
+    if verbose
+     then put("Returning "); put(res); new_line;
+    end if;
+    return res;
+  end Standard_Pade_Coefficient;
+
+  function DoblDobl_Pade_Coefficient
+             ( leadidx,cffidx : integer32; num : natural32;
+               verbose : boolean )
+             return DoblDobl_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the coefficient at position cffidx in component leadidx
+  --   of the current Pade vectors in double double precision.
+  --   If num = 0, then the denominator coefficient will be returned,
+  --   otherwise, the numerator coefficient will be returned.
+  --   If verbose, then extra output is written to screen.
+
+    res : DoblDobl_Complex_Numbers.Complex_Number;
+    pv : constant DoblDobl_Pade_Approximants.Link_to_Pade_Vector
+       := DoblDobl_SeriesPade_Tracker.Get_Current_Pade_Vector;
+
+    use DoblDobl_Pade_Approximants;
+
+  begin
+    if num = 0 then
+      declare
+        c : constant DoblDobl_Complex_Vectors.Vector
+          := Denominator_Coefficients(pv(leadidx));
+      begin
+        res := c(cffidx);
+      end;
+    else
+      declare
+        c : constant DoblDobl_Complex_Vectors.Vector
+          := Numerator_Coefficients(pv(leadidx));
+      begin
+        res := c(cffidx);
+      end;
+    end if;
+    if verbose
+     then put("Returning "); put(res); new_line;
+    end if;
+    return res;
+  end DoblDobl_Pade_Coefficient;
+
+  function QuadDobl_Pade_Coefficient
+             ( leadidx,cffidx : integer32; num : natural32;
+               verbose : boolean )
+             return QuadDobl_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the coefficient at position cffidx in component leadidx
+  --   of the current Pade vectors in quad double precision.
+  --   If num = 0, then the denominator coefficient will be returned,
+  --   otherwise, the numerator coefficient will be returned.
+  --   If verbose, then extra output is written to screen.
+
+    res : QuadDobl_Complex_Numbers.Complex_Number;
+    pv : constant QuadDobl_Pade_Approximants.Link_to_Pade_Vector
+       := QuadDobl_SeriesPade_Tracker.Get_Current_Pade_Vector;
+
+    use QuadDobl_Pade_Approximants;
+
+  begin
+    if num = 0 then
+      declare
+        c : constant QuadDobl_Complex_Vectors.Vector
+          := Denominator_Coefficients(pv(leadidx));
+      begin
+        res := c(cffidx);
+      end;
+    else
+      declare
+        c : constant QuadDobl_Complex_Vectors.Vector
+          := Numerator_Coefficients(pv(leadidx));
+      begin
+        res := c(cffidx);
+      end;
+    end if;
+    if verbose
+     then put("Returning "); put(res); new_line;
+    end if;
+    return res;
+  end QuadDobl_Pade_Coefficient;
+
+  function Job15 return integer32 is -- get Pade coefficient
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    num : constant natural32 := natural32(v_a(v_a'first+1));
+    leadidx : constant integer32 := integer32(v_a(v_a'first+2));
+    cffidx : constant integer32 := integer32(v_a(v_a'first+3));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    vrb : constant natural32 := natural32(v_b(v_b'first));
+    verbose : constant boolean := (vrb = 1);
+    st_cff : Standard_Complex_Numbers.Complex_Number;
+    dd_cff : DoblDobl_Complex_Numbers.Complex_Number;
+    qd_cff : QuadDobl_Complex_Numbers.Complex_Number;
+
+    use DoblDobl_Complex_Numbers_cv;
+    use QuadDobl_Complex_Numbers_cv;
+
+  begin
+    if verbose then
+      put("Precision : ");
+      case prc is
+        when 0 => put("double");
+        when 1 => put("double double");
+        when 2 => put("quad double");
+        when others => put("invalid!");
+      end case;
+      put("  lead idx : "); put(leadidx,1);
+      put("  cff idx : "); put(cffidx,1);
+      if num = 0
+       then put_line("  denominator");
+       else put_line("  numernator");
+      end if;
+    end if;
+    case prc is
+      when 0 =>
+        st_cff := Standard_Pade_Coefficient(leadidx,cffidx,num,verbose);
+      when 1 =>
+        dd_cff := DoblDobl_Pade_Coefficient(leadidx,cffidx,num,verbose);
+        st_cff := DoblDobl_Complex_to_Standard(dd_cff);
+      when 2 =>
+        qd_cff := QuadDobl_Pade_Coefficient(leadidx,cffidx,num,verbose);
+        st_cff := QuadDobl_Complex_to_Standard(qd_cff);
+      when others =>
+        put_line("Invalid value for the precision.");
+    end case;
+    Assign(st_cff,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 15 of use_padcon.");
+      return 870;
+  end Job15;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -761,6 +1059,8 @@ function use_padcon ( job : integer32;
       when 11 => return Job11; -- get the closest pole
       when 12 => return Job12; -- get the current t value
       when 13 => return Job13; -- get the current step size
+      when 14 => return Job14; -- get series coefficient
+      when 15 => return Job15; -- get Pade coefficient
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception
