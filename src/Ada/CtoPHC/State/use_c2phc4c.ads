@@ -1080,7 +1080,13 @@ function use_c2phc4c ( job : integer32;
 --   job   = 866 : returns in c[0] and c[1] the real and imaginary parts
 --                 of the closest pole (only meaningful if c[0] >= 0.0),
 --                 computed in double, double double, or quad double,
---                 depending on whether a[0] is 0, 1, or 2.
+--                 depending on whether a[0] is 0, 1, or 2;
+--   job   = 867 : returns in c[0] the current t value of the path tracker
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2;
+--   job   = 868 : returns in c[0] the current step size of the path tracker
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2.
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --

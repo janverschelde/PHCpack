@@ -58,25 +58,25 @@ function use_padcon ( job : integer32;
 --                 double, double double, or quad double solutions container.
 --   job   =   5 : initializes homotopy for a step-by-step execution
 --                 in double, double double, or quad double precision,
---                 depending on whether a[0] is 0, 1, or 2,
+--                 depending whether a[0] is 0, 1, or 2,
 --                 the verbose option is in b[0], before execution,
 --                 the homotopy continuation parameters with job 0 is set,
 --                 target and start system are defined in PHCpack_Operations.
 --   job   =   6 : initializes next start solution in series-Pade tracker,
 --                 in double, double double, or quad double precision,
---                 depending on whether a[0] is 0, 1, or 2,
+--                 depending whether a[0] is 0, 1, or 2,
 --                 the index of the solution is a[1],
 --                 the verbose option is in b[0],
 --                 on return in a[0] is the failure code of the retrieval;
 --   job   =   7 : runs the next predict-correct step in series-Pade tracker,
 --                 in double, double double, or quad double precision,
---                 depending on whether a[0] is 0, 1, or 2,
+--                 depending whether a[0] is 0, 1, or 2,
 --                 the verbose option is in b[0],
 --                 on return in a[0] is the failure code of the next
 --                 predict-correct step;
 --   job   =   8 : gets the current solution at index a[1], 
 --                 in double, double double, or quad double precision,
---                 depending on whether a[0] is 0, 1, or 2,
+--                 depending whether a[0] is 0, 1, or 2,
 --                 the verbose option is in b[0],
 --                 the current solution is placed at position index in
 --                 the solutions container and the failure code of the
@@ -86,11 +86,17 @@ function use_padcon ( job : integer32;
 --                 depending on whether a[0] is 0, 1, or 2;
 --   job   =  10 : returns in c[0] the value of the pole radius,
 --                 computed in double, double double, or quad double,
---                 depending on whether a[0] is 0, 1, or 2;
+--                 depending whether a[0] is 0, 1, or 2;
 --   job   =  11 : returns in c[0] and c[1] the real and imaginary parts
 --                 of the closest pole (only meaningful if c[0] >= 0.0),
 --                 computed in double, double double, or quad double,
---                 depending on whether a[0] is 0, 1, or 2.
+--                 depending whether a[0] is 0, 1, or 2;
+--   job   =  12 : returns in c[0] the current t value of the path tracker
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2;
+--   job   =  13 : returns in c[0] the current step size of the path tracker
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

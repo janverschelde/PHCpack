@@ -702,6 +702,48 @@ function use_padcon ( job : integer32;
       return 866;
   end Job11;
 
+  function Job12 return integer32 is -- get current t value
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    tval : double_float;
+
+  begin
+    case prc is
+      when 0 => tval := Standard_SeriesPade_Tracker.Get_Current_t_Value;
+      when 1 => tval := DoblDobl_SeriesPade_Tracker.Get_Current_t_Value;
+      when 2 => tval := QuadDobl_SeriesPade_Tracker.Get_Current_t_Value;
+      when others => put_line("Wrong value for the precision.");
+    end case;
+    Assign(tval,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 12 of use_padcon.");
+      return 867;
+  end Job12;
+
+  function Job13 return integer32 is -- get current step size
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    step : double_float;
+
+  begin
+    case prc is
+      when 0 => step := Standard_SeriesPade_Tracker.Get_Current_Step_Size;
+      when 1 => step := DoblDobl_SeriesPade_Tracker.Get_Current_Step_Size;
+      when 2 => step := QuadDobl_SeriesPade_Tracker.Get_Current_Step_Size;
+      when others => put_line("Wrong value for the precision.");
+    end case;
+    Assign(step,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 13 of use_padcon.");
+      return 868;
+  end Job13;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -717,6 +759,8 @@ function use_padcon ( job : integer32;
       when 9 => return Job9; -- deallocates seriespade homotopy tracker data
       when 10 => return Job10; -- get the smallest forward pole radius
       when 11 => return Job11; -- get the closest pole
+      when 12 => return Job12; -- get the current t value
+      when 13 => return Job13; -- get the current step size
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception

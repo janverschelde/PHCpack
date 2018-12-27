@@ -3261,6 +3261,8 @@ function use_c2phc4c ( job : integer32;
       when 864 => return use_padcon(9,a,b,c); -- clear data
       when 865 => return use_padcon(10,a,b,c); -- get pole radius
       when 866 => return use_padcon(11,a,b,c); -- get closest radius
+      when 867 => return use_padcon(12,a,b,c); -- get t value
+      when 868 => return use_padcon(13,a,b,c); -- get step size
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
