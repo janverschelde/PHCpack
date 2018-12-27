@@ -186,6 +186,52 @@ int padcon_get_quaddobl_solution ( int idx, int verbose );
  *   in the solutions container in quad double precision.
  *   If verbose = 1, then extra output will be written. */
 
+int padcon_get_standard_forward_pole_radius ( double* frp );
+/*
+ * DESCRIPTION :
+ *   Returns in frp the smallest forward pole radius computed 
+ *   by the predictor in standard double precision. */
+
+int padcon_get_dobldobl_forward_pole_radius ( double* frp );
+/*
+ * DESCRIPTION :
+ *   Returns in frp the smallest forward pole radius computed
+ *   by the predictor in double double precision.
+ *   The returned frp is the high part of the double double number. */
+
+int padcon_get_quaddobl_forward_pole_radius ( double* frp );
+/*
+ * DESCRIPTION :
+ *   Returns in frp the smallest forward pole radius computed
+ *   by the predictor in quad double precision.
+ *   The returned frp is the highest part of the quad double number. */
+
+int padcon_get_standard_closest_pole ( double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns the real and imaginary parts of the closest pole
+ *   respectively in cre and cim, computed by the predictor
+ *   in standard double precision.
+ *   Results are meaningful only if cre >= 0.0. */
+
+int padcon_get_dobldobl_closest_pole ( double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns the real and imaginary parts of the closest pole
+ *   respectively in cre and cim, computed by the predictor
+ *   in double double precision.
+ *   The cre and cim are the high parts of the double doubles.
+ *   Results are meaningful only if cre >= 0.0.  */
+
+int padcon_get_quaddobl_closest_pole ( double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns the real and imaginary parts of the closest pole
+ *   respectively in cre and cim, computed by the predictor
+ *   in quad double precision.
+ *   The cre and cim are the highest parts of the quad doubles.
+ *   Results are meaningful only if cre >= 0.0. */
+
 int padcon_clear_standard_data ( void );
 /*
  * DESCRIPTION :

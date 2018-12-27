@@ -282,6 +282,84 @@ int padcon_get_quaddobl_solution ( int idx, int verbose )
    return fail;
 }
 
+int padcon_get_standard_forward_pole_radius ( double* frp )
+{
+   int fail;
+   int precision = 0;
+   int *b;
+
+   fail = _ada_use_c2phc4c(865,&precision,b,frp);
+
+   return fail;
+}
+
+int padcon_get_dobldobl_forward_pole_radius ( double* frp )
+{
+   int fail;
+   int precision = 1;
+   int *b;
+
+   fail = _ada_use_c2phc4c(865,&precision,b,frp);
+
+   return fail;
+}
+
+int padcon_get_quaddobl_forward_pole_radius ( double* frp )
+{
+   int fail;
+   int precision = 2;
+   int *b;
+
+   fail = _ada_use_c2phc4c(865,&precision,b,frp);
+
+   return fail;
+}
+
+int padcon_get_standard_closest_pole ( double* cre, double* cim )
+{
+   int fail;
+   int precision = 0;
+   int *b;
+   double nbr[2];
+
+   fail = _ada_use_c2phc4c(866,&precision,b,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_dobldobl_closest_pole ( double* cre, double* cim )
+{
+   int fail;
+   int precision = 1;
+   int *b;
+   double nbr[2];
+
+   fail = _ada_use_c2phc4c(866,&precision,b,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_quaddobl_closest_pole ( double* cre, double* cim )
+{
+   int fail;
+   int precision = 2;
+   int *b;
+   double nbr[2];
+
+   fail = _ada_use_c2phc4c(866,&precision,b,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
 int padcon_clear_standard_data ( void )
 {
    int fail;
