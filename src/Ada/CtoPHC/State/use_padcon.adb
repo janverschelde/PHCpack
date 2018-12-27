@@ -4,6 +4,8 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
@@ -643,6 +645,63 @@ function use_padcon ( job : integer32;
       return 864;
   end Job9;
 
+  function Job10 return integer32 is -- get pole radius
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    frp : double_float;
+
+  begin
+    case prc is
+      when 0 =>
+        frp := Standard_SeriesPade_Tracker.Get_Current_Pole_Radius;
+      when 1 =>
+        frp := hi_part(DoblDobl_SeriesPade_Tracker.Get_Current_Pole_Radius);
+      when 2 =>
+        frp := hihi_part(QuadDobl_SeriesPade_Tracker.Get_Current_Pole_Radius);
+      when others =>
+        put_line("Wrong value for the precision.");
+    end case;
+    Assign(frp,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 10 of use_padcon.");
+      return 865;
+  end Job10;
+
+  function Job11 return integer32 is -- get closest pole
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    st_cfp : Standard_Complex_Numbers.Complex_Number;
+    dd_cfp : DoblDobl_Complex_Numbers.Complex_Number;
+    qd_cfp : QuadDobl_Complex_Numbers.Complex_Number;
+
+    use DoblDobl_Complex_Numbers_cv;
+    use QuadDobl_Complex_Numbers_cv;
+
+  begin
+    case prc is
+      when 0 =>
+        st_cfp := Standard_SeriesPade_Tracker.Get_Current_Closest_Pole;
+      when 1 =>
+        dd_cfp := DoblDobl_SeriesPade_Tracker.Get_Current_Closest_Pole;
+        st_cfp := DoblDobl_Complex_to_Standard(dd_cfp);
+      when 2 =>
+        qd_cfp := QuadDobl_SeriesPade_Tracker.Get_Current_Closest_Pole;
+        st_cfp := QuadDobl_Complex_to_Standard(qd_cfp);
+      when others =>
+        put_line("Wrong value for the precision.");
+    end case;
+    Assign(st_cfp,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 11 of use_padcon.");
+      return 866;
+  end Job11;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -656,6 +715,8 @@ function use_padcon ( job : integer32;
       when 7 => return Job7; -- run next predict-correct step
       when 8 => return Job8; -- get the current solution
       when 9 => return Job9; -- deallocates seriespade homotopy tracker data
+      when 10 => return Job10; -- get the smallest forward pole radius
+      when 11 => return Job11; -- get the closest pole
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception

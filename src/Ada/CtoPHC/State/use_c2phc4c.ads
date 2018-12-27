@@ -1073,6 +1073,13 @@ function use_c2phc4c ( job : integer32;
 --                 placement is returned in a[0];
 --   job   = 864 : clears the data in the series-pade tracker,
 --                 in double, double double, or quad double precision,
+--                 depending on whether a[0] is 0, 1, or 2;
+--   job   = 865 : returns in c[0] the value of the pole radius,
+--                 computed in double, double double, or quad double,
+--                 depending on whether a[0] is 0, 1, or 2.
+--   job   = 866 : returns in c[0] and c[1] the real and imaginary parts
+--                 of the closest pole (only meaningful if c[0] >= 0.0),
+--                 computed in double, double double, or quad double,
 --                 depending on whether a[0] is 0, 1, or 2.
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :

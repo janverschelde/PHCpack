@@ -3259,6 +3259,8 @@ function use_c2phc4c ( job : integer32;
       when 862 => return use_padcon(7,a,b,c); -- next predict-correct step
       when 863 => return use_padcon(8,a,b,c); -- get current solution
       when 864 => return use_padcon(9,a,b,c); -- clear data
+      when 865 => return use_padcon(10,a,b,c); -- get pole radius
+      when 866 => return use_padcon(11,a,b,c); -- get closest radius
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
