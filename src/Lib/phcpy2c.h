@@ -5798,6 +5798,55 @@ static PyObject *py2c_padcon_get_quaddobl_solution
  *   in the solutions container in quad double precision.
  *   If the verbose flag is 1, then extra output will be written. */
 
+static PyObject *py2c_padcon_standard_pole_radius
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the smallest forward pole radius computed 
+ *   by the predictor in standard double precision. */
+
+static PyObject *py2c_padcon_dobldobl_pole_radius
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the smallest forward pole radius computed
+ *   by the predictor in double double precision.
+ *   The returned number is the high part of the double double number. */
+
+static PyObject *py2c_padcon_quaddobl_pole_radius
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the smallest forward pole radius computed
+ *   by the predictor in quad double precision.
+ *   The returned number is the highest part of the quad double number. */
+
+static PyObject *py2c_padcon_standard_closest_pole
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the complex number representation of the closest pole,
+ *   computed by the predictor in standard double precision.
+ *   Results are meaningful only if the real part >= 0.0. */
+
+static PyObject *py2c_padcon_dobldobl_closest_pole
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the complex number representation of the closest pole,
+ *   computed by the predictor in double double precision.
+ *   The returned numbers are the high parts of the double doubles.
+ *   Results are meaningful only if the real part >= 0.0.  */
+
+static PyObject *py2c_padcon_quaddobl_closest_pole
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the complex number representation of the closest pole,
+ *   computed by the predictor in quad double precision.
+ *   The returned numbers are the highest parts of the quad doubles.
+ *   Results are meaningful only if the real part >= 0.0. */
+
 static PyObject *py2c_padcon_clear_standard_data
  ( PyObject *self, PyObject *args );
 /*
