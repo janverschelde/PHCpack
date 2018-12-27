@@ -438,6 +438,99 @@ def quaddobl_predict_correct(verbose=False):
     from phcpy.phcpy2c3 import py2c_padcon_quaddobl_predict_correct
     py2c_padcon_quaddobl_predict_correct(int(verbose))
 
+def standard_t_value():
+    """
+    Returns the current t value in the tracker in double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_standard_t_value
+    return py2c_padcon_standard_t_value()
+
+def dobldobl_t_value():
+    """
+    Returns the current t value in the tracker in double double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_dobldobl_t_value
+    return py2c_padcon_dobldobl_t_value()
+
+def quaddobl_t_value():
+    """
+    Returns the current t value in the tracker in quad double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_quaddobl_t_value
+    return py2c_padcon_quaddobl_t_value()
+
+def standard_step_size():
+    """
+    Returns the current step size in the tracker in double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_standard_step_size
+    return py2c_padcon_standard_step_size()
+
+def dobldobl_step_size():
+    """
+    Returns the current step size in the tracker in double double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_dobldobl_step_size
+    return py2c_padcon_dobldobl_step_size()
+
+def quaddobl_step_size():
+    """
+    Returns the current step size in the tracker in quad double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_quaddobl_step_size
+    return py2c_padcon_quaddobl_step_size()
+
+def standard_pole_radius():
+    """
+    Returns the smallest forward pole radius,
+    used in the predictor in standard double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_standard_pole_radius
+    return py2c_padcon_standard_pole_radius()
+
+def dobldobl_pole_radius():
+    """
+    Returns the smallest forward pole radius,
+    used in the predictor in double double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_dobldobl_pole_radius
+    return py2c_padcon_dobldobl_pole_radius()
+
+def quaddobl_pole_radius():
+    """
+    Returns the smallest forward pole radius,
+    used in the predictor in quad double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_quaddobl_pole_radius
+    return py2c_padcon_quaddobl_pole_radius()
+
+def standard_closest_pole():
+    """
+    Returns a tuple with the real and imaginary part of the closest pole
+    used in the predictor in standard double precision.
+    The result is only meaningful is the real part is positive.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_standard_closest_pole
+    return py2c_padcon_standard_closest_pole()
+
+def dobldobl_closest_pole():
+    """
+    Returns a tuple with the real and imaginary part of the closest pole
+    used in the predictor in double double precision.
+    The result is only meaningful is the real part is positive.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_dobldobl_closest_pole
+    return py2c_padcon_dobldobl_closest_pole()
+
+def quaddobl_closest_pole():
+    """
+    Returns a tuple with the real and imaginary part of the closest pole
+    used in the predictor in quad double precision.
+    The result is only meaningful is the real part is positive.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_quaddobl_closest_pole
+    return py2c_padcon_quaddobl_closest_pole()
+
 def standard_next_track(target, start, sols, verbose=False):
     """
     Runs the series-Pade tracker step by step in double precision.
@@ -470,6 +563,11 @@ def standard_next_track(target, start, sols, verbose=False):
                 standard_predict_correct(verbose)
                 sol = standard_get_solution(verbose)
                 print(sol)
+                (tval, step) = (standard_t_value(), standard_step_size())
+                frp = standard_pole_radius()
+                print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
+                cfp = standard_closest_pole()
+                print("closest pole : ", cfp)
     return result
 
 def dobldobl_next_track(target, start, sols, verbose=False):
@@ -504,6 +602,11 @@ def dobldobl_next_track(target, start, sols, verbose=False):
                 dobldobl_predict_correct(verbose)
                 sol = dobldobl_get_solution(verbose)
                 print(sol)
+                (tval, step) = (dobldobl_t_value(), dobldobl_step_size())
+                frp = dobldobl_pole_radius()
+                print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
+                cfp = dobldobl_closest_pole()
+                print("closest pole : ", cfp)
     return result
 
 def quaddobl_next_track(target, start, sols, verbose=False):
@@ -538,6 +641,11 @@ def quaddobl_next_track(target, start, sols, verbose=False):
                 quaddobl_predict_correct(verbose)
                 sol = quaddobl_get_solution(verbose)
                 print(sol)
+                (tval, step) = (quaddobl_t_value(), quaddobl_step_size())
+                frp = quaddobl_pole_radius()
+                print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
+                cfp = quaddobl_closest_pole()
+                print("closest pole : ", cfp)
     return result
 
 def test_simple_track(precision='d'):

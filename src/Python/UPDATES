@@ -1,3 +1,6 @@
+Thu 27 Dec 2018 : extended the curves module with functions to return
+  the t value, the step size, pole radius, and closest pole.
+
 Tue 25 Dec 2018 : added the step-by-step run of the series-Pade tracker
   to the module curves, both for python2 and python3.
 
