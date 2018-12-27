@@ -94,10 +94,10 @@ package QuadDobl_SeriesPade_Tracker is
   -- DESCRIPTION :
   --   Returns the current vector of Pade approximants.
 
-  function Get_Current_Smallest_Forward_Pole return quad_double;
+  function Get_Current_Pole_Radius return quad_double;
 
   -- DESCRIPTION :
-  --   Returns the smallest forward pole, computed by the predictor.
+  --   Returns the smallest forward pole radius, computed by the predictor.
 
   function Get_Current_Closest_Pole
              return QuadDobl_Complex_Numbers.Complex_Number;

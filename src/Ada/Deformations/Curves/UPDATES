@@ -7,6 +7,7 @@ Wed 26 Dec 2018 : in *seriespade_tracker.adb, output of all poles.
   Extended the *tracker.a* packages with functions to return the
   smallest forward pole radius and the closest pole, after extending
   series_and_predictors, and updating series_and_trackers.adb.
+  Improved the name of a function in *seriespade_tracker.a*.
 
 Mon 24 Dec 2018 : bug fix in *seriespade_tracker.adb, must reset the
   cseries homotopy with each new start solution.  Updated the test

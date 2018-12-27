@@ -226,10 +226,10 @@ package body QuadDobl_SeriesPade_Tracker is
     return current_padvec;
   end Get_Current_Pade_Vector;
 
-  function Get_Current_Smallest_Forward_Pole return quad_double is
+  function Get_Current_Pole_Radius return quad_double is
   begin
     return current_frp;
-  end Get_Current_Smallest_Forward_Pole;
+  end Get_Current_Pole_Radius;
 
   function Get_Current_Closest_Pole
              return QuadDobl_Complex_Numbers.Complex_Number is

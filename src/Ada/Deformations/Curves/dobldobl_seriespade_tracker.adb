@@ -225,10 +225,10 @@ package body DoblDobl_SeriesPade_Tracker is
     return current_padvec;
   end Get_Current_Pade_Vector;
 
-  function Get_Current_Smallest_Forward_Pole return double_double is
+  function Get_Current_Pole_Radius return double_double is
   begin
     return current_frp;
-  end Get_Current_Smallest_Forward_Pole;
+  end Get_Current_Pole_Radius;
 
   function Get_Current_Closest_Pole
              return DoblDobl_Complex_Numbers.Complex_Number is

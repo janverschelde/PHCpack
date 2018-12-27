@@ -94,10 +94,10 @@ package DoblDobl_SeriesPade_Tracker is
   -- DESCRIPTION :
   --   Returns the current vector of Pade approximants.
 
-  function Get_Current_Smallest_Forward_Pole return double_double;
+  function Get_Current_Pole_Radius return double_double;
 
   -- DESCRIPTION :
-  --   Returns the smallest forward pole, computed by the predictor.
+  --   Returns the smallest forward pole radius, computed by the predictor.
 
   function Get_Current_Closest_Pole
              return DoblDobl_Complex_Numbers.Complex_Number;
