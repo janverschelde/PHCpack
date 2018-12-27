@@ -1,3 +1,4 @@
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Poly_Systems;      use DoblDobl_Complex_Poly_Systems;
@@ -105,6 +106,16 @@ package DoblDobl_SeriesPade_Tracker is
   -- DESCRIPTION :
   --   Returns the closest pole, computed by the predictor.
   --   Note: only meaningful if the real part is positive.
+
+  function Get_Current_Step_Size return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the current value of the step size.
+
+  function Get_Current_t_Value return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the current value of the continuation parameter.
 
 -- DESTRUCTOR :
 

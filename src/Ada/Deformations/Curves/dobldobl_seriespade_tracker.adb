@@ -1,7 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Standard_Complex_Numbers;
@@ -32,6 +31,7 @@ package body DoblDobl_SeriesPade_Tracker is
   current_padvec : DoblDobl_Pade_Approximants.Link_to_Pade_Vector;
   current_frp : double_double;
   current_cfp : DoblDobl_Complex_Numbers.Complex_Number;
+  current_step : double_float;
 
 -- CONSTRUCTORS :
 
@@ -104,7 +104,7 @@ package body DoblDobl_SeriesPade_Tracker is
     nit : constant integer32 := integer32(homconpars.corsteps);
     sol : DoblDobl_Complex_Vectors.Vector(1..current.n) := current.v;
     eva : DoblDobl_Complex_Series_Vectors.Vector(1..nbeqs);
-    t,step,predres : double_float;
+    t,predres : double_float;
     dd_t,dd_step : double_double;
     tolcff : constant double_float := homconpars.epsilon;
     alpha : constant double_float := homconpars.alpha;
@@ -125,44 +125,47 @@ package body DoblDobl_SeriesPade_Tracker is
       if DoblDobl_Complex_Numbers.REAL_PART(current_cfp) >= 0.0
        then put("Closest forward pole : "); put(current_cfp); new_line;
       end if;
-      step := Series_and_Predictors.Set_Step_Size
-               (standard_output,eva,tolcff,alpha,verbose);
+      current_step := Series_and_Predictors.Set_Step_Size
+                        (standard_output,eva,tolcff,alpha,verbose);
     else
-      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+      current_step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     end if;
-    step := homconpars.sbeta*step;
+    current_step := homconpars.sbeta*current_step;
     DoblDobl_Complex_Series_Vectors.Clear(eva);
     if current_frp > 0.0 then
-      step := Series_and_Predictors.Cap_Step_Size
-                (step,hi_part(current_frp),homconpars.pbeta);
+      current_step := Series_and_Predictors.Cap_Step_Size
+                        (current_step,hi_part(current_frp),homconpars.pbeta);
     end if;
     dd_t := DoblDobl_Complex_Numbers.REAL_PART(current.t);
     t := hi_part(dd_t);
-    Series_and_Trackers.Set_Step(t,step,homconpars.maxsize,1.0);
+    Series_and_Trackers.Set_Step(t,current_step,homconpars.maxsize,1.0);
     if verbose
-     then put("Step size :"); put(step,2); put("  t ="); put(t,2);
+     then put("Step size :"); put(current_step,2); put("  t ="); put(t,2);
     end if;
     loop
-      dd_step := Double_Double_Numbers.Create(step);
+      dd_step := Double_Double_Numbers.Create(current_step);
       sol := Series_and_Predictors.Predicted_Solution
                (current_padvec.all,dd_step);
-      predres := Series_and_Trackers.Residual_Prediction(htp.all,sol,step);
+      predres := Series_and_Trackers.Residual_Prediction
+                   (htp.all,sol,current_step);
       if verbose
        then put("  residual :"); put(predres,2); new_line;
       end if;
       exit when (predres <= alpha);
-      t := t - step; step := step/2.0; t := t + step;
+      t := t - current_step; current_step := current_step/2.0;
+      t := t + current_step;
       if verbose
-       then put("Step size :"); put(step,2); put("  t ="); put(t,2);
+       then put("Step size :"); put(current_step,2); put("  t ="); put(t,2);
       end if;
-      exit when (step < homconpars.minsize);
+      exit when (current_step < homconpars.minsize);
     end loop;
     dd_t := Double_Double_Numbers.Create(t);
+    dd_step := Double_Double_Numbers.Create(current_step);
     current.t := DoblDobl_Complex_Numbers.Create(dd_t);
     current.v := sol;
     if t = 1.0 
      then fail := false;
-     else fail := (step < homconpars.minsize);
+     else fail := (current_step < homconpars.minsize);
     end if;
     DoblDobl_Complex_Series_Vectors.Clear(eva);
     Series_and_Homotopies.Shift(htp.all,-dd_step);
@@ -235,6 +238,16 @@ package body DoblDobl_SeriesPade_Tracker is
   begin
     return current_cfp;
   end Get_Current_Closest_Pole;
+
+  function Get_Current_Step_Size return double_float is
+  begin
+    return current_step;
+  end Get_Current_Step_Size;
+
+  function Get_Current_t_Value return double_float is
+  begin
+    return hi_part(DoblDobl_Complex_Numbers.REAL_PART(current.t));
+  end Get_Current_t_Value;
 
 -- DESTRUCTOR :
 

@@ -1,3 +1,6 @@
+Thu 27 Dec 2018 : added functions to return the current step size and
+  t value in the *tracker.a* packages.
+
 Wed 26 Dec 2018 : in *seriespade_tracker.adb, output of all poles.
   In homotopy_pade_approximants.adb, simplified the computation of
   the smallest forward pole radius.  Fixed bug in the allocation of a

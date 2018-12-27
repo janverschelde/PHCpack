@@ -28,6 +28,7 @@ package body Standard_SeriesPade_Tracker is
   current_padvec : Standard_Pade_Approximants.Link_to_Pade_Vector;
   current_frp : double_float;
   current_cfp : Complex_Number;
+  current_step : double_float;
 
 -- CONSTRUCTORS :
 
@@ -98,7 +99,7 @@ package body Standard_SeriesPade_Tracker is
     nit : constant integer32 := integer32(homconpars.corsteps);
     sol : Standard_Complex_Vectors.Vector(1..current.n) := current.v;
     eva : Standard_Complex_Series_Vectors.Vector(1..nbeqs);
-    t,step,predres : double_float := 0.0;
+    t,predres : double_float := 0.0;
     tolcff : constant double_float := homconpars.epsilon;
     alpha : constant double_float := homconpars.alpha;
 
@@ -118,44 +119,46 @@ package body Standard_SeriesPade_Tracker is
       if Standard_Complex_Numbers.REAL_PART(current_cfp) >= 0.0
        then put("Closest forward pole :"); put(current_cfp); new_line;
       end if;
-      step := Series_and_Predictors.Set_Step_Size
-                (standard_output,eva,tolcff,alpha,verbose);
+      current_step := Series_and_Predictors.Set_Step_Size
+                        (standard_output,eva,tolcff,alpha,verbose);
     else
-      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+      current_step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     end if;
-    step := homconpars.sbeta*step;
+    current_step := homconpars.sbeta*current_step;
     Standard_Complex_Series_Vectors.Clear(eva);
     if current_frp > 0.0 then
-      step := Series_and_Predictors.Cap_Step_Size
-                (step,current_frp,homconpars.pbeta);
+      current_step := Series_and_Predictors.Cap_Step_Size
+                        (current_step,current_frp,homconpars.pbeta);
     end if;
     t := Standard_Complex_Numbers.REAL_PART(current.t);
-    Series_and_Trackers.Set_Step(t,step,homconpars.maxsize,1.0);
+    Series_and_Trackers.Set_Step(t,current_step,homconpars.maxsize,1.0);
     if verbose
-     then put("Step size :"); put(step,2); put("  t ="); put(t,2);
+     then put("Step size :"); put(current_step,2); put("  t ="); put(t,2);
     end if;
     loop
       sol := Series_and_Predictors.Predicted_Solution
-               (current_padvec.all,step);
-      predres := Series_and_Trackers.Residual_Prediction(htp.all,sol,step);
+               (current_padvec.all,current_step);
+      predres := Series_and_Trackers.Residual_Prediction
+                   (htp.all,sol,current_step);
       if verbose
        then put("  residual :"); put(predres,2); new_line;
       end if;
       exit when (predres <= alpha);
-      t := t - step; step := step/2.0; t := t + step;
+      t := t - current_step; current_step := current_step/2.0;
+      t := t + current_step;
       if verbose
-       then put("Step size :"); put(step,2); put("  t ="); put(t,2);
+       then put("Step size :"); put(current_step,2); put("  t ="); put(t,2);
       end if;
-      exit when (step < homconpars.minsize);
+      exit when (current_step < homconpars.minsize);
     end loop;
     current.t := Standard_Complex_Numbers.Create(t);
     current.v := sol;
     if t = 1.0 
      then fail := false;
-     else fail := (step < homconpars.minsize);
+     else fail := (current_step < homconpars.minsize);
     end if;
     Standard_Complex_Series_Vectors.Clear(eva);
-    Series_and_Homotopies.Shift(htp.all,-step);
+    Series_and_Homotopies.Shift(htp.all,-current_step);
   end Predict;
 
   procedure Correct ( fail : out boolean; verbose : in boolean := false ) is
@@ -219,6 +222,16 @@ package body Standard_SeriesPade_Tracker is
   begin
     return current_cfp;
   end Get_Current_Closest_Pole;
+
+  function Get_Current_Step_Size return double_float is
+  begin
+    return current_step;
+  end Get_Current_Step_Size;
+
+  function Get_Current_t_Value return double_float is
+  begin
+    return REAL_PART(current.t);
+  end Get_Current_t_Value;
 
 -- DESTRUCTOR :
 

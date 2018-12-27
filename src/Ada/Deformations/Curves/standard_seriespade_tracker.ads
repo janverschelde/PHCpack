@@ -105,6 +105,16 @@ package Standard_SeriesPade_Tracker is
   --   Returns the closest pole, computed by the predictor.
   --   Note: only meaningful if the real part is positive.
 
+  function Get_Current_Step_Size return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the current value of the step size.
+
+  function Get_Current_t_Value return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the current value of the continuation parameter.
+
 -- DESTRUCTOR :
 
   procedure Clear;
