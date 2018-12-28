@@ -1,6 +1,7 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Poly_Systems;      use DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;         use DoblDobl_Complex_Solutions;
 with Homotopy_Continuation_Parameters;
@@ -94,6 +95,13 @@ package DoblDobl_SeriesPade_Tracker is
 
   -- DESCRIPTION :
   --   Returns the current vector of Pade approximants.
+
+  function Get_Current_Poles return DoblDobl_Complex_VecVecs.Link_to_VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the roots of all the denominators of the Pade vector.
+  --   The i-th component in the vecvec on return contains the poles
+  --   for the i-th Pade approximant.
 
   function Get_Current_Pole_Radius return double_double;
 

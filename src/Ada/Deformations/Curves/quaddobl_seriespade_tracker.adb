@@ -8,7 +8,6 @@ with Standard_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Vectors;
-with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Polynomials;       use QuadDobl_Complex_Polynomials;
 with QuadDobl_CSeries_Poly_Systems;
@@ -26,7 +25,7 @@ package body QuadDobl_SeriesPade_Tracker is
   nbeqs : integer32;
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : QuadDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
-  poles : QuadDobl_Complex_VecVecs.Link_to_VecVec;
+  current_poles : QuadDobl_Complex_VecVecs.Link_to_VecVec;
   current : Link_to_Solution;
   current_servec : QuadDobl_Complex_Series_Vectors.Link_to_Vector;
   current_padvec : QuadDobl_Pade_Approximants.Link_to_Pade_Vector;
@@ -77,7 +76,7 @@ package body QuadDobl_SeriesPade_Tracker is
       allpoles : constant QuadDobl_Complex_VecVecs.VecVec
                := Allocate_QuadDobl_Poles(nbeqs,dendeg);
     begin
-      poles := new QuadDobl_Complex_VecVecs.VecVec'(allpoles);
+      current_poles := new QuadDobl_Complex_VecVecs.VecVec'(allpoles);
     end;
   end Init;
 
@@ -119,9 +118,10 @@ package body QuadDobl_SeriesPade_Tracker is
         (maxdeg,nit,htp.all,sol,current_servec.all,eva);
     end if;
     Series_and_Predictors.Pade_Approximants
-      (current_servec.all,current_padvec.all,poles.all,current_frp,current_cfp);
+      (current_servec.all,current_padvec.all,current_poles.all,
+       current_frp,current_cfp);
     if verbose then
-      put_line("The poles :"); put_line(poles.all);
+      put_line("The poles :"); put_line(current_poles.all);
       put("Smallest forward pole radius : "); put(current_frp,3); new_line;
       if QuadDobl_Complex_Numbers.REAL_PART(current_cfp) >= 0.0
        then put("Closest forward pole : "); put(current_cfp); new_line;
@@ -229,6 +229,11 @@ package body QuadDobl_SeriesPade_Tracker is
     return current_padvec;
   end Get_Current_Pade_Vector;
 
+  function Get_Current_Poles return QuadDobl_Complex_VecVecs.Link_to_VecVec is
+  begin
+    return current_poles;
+  end Get_Current_Poles;
+
   function Get_Current_Pole_Radius return quad_double is
   begin
     return current_frp;
@@ -256,7 +261,7 @@ package body QuadDobl_SeriesPade_Tracker is
   begin
     Homotopy_Continuation_Parameters.Clear(homconpars);
     QuadDobl_CSeries_Poly_Systems.Clear(htp);
-    QuadDobl_Complex_VecVecs.Deep_Clear(poles);
+    QuadDobl_Complex_VecVecs.Deep_Clear(current_poles);
     QuadDobl_Complex_Series_Vectors.Clear(current_servec);
     QuadDobl_Pade_Approximants.Clear(current_padvec);
   end Clear;

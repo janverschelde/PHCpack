@@ -1,6 +1,7 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Poly_Systems;      use QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;         use QuadDobl_Complex_Solutions;
 with Homotopy_Continuation_Parameters;
@@ -94,6 +95,13 @@ package QuadDobl_SeriesPade_Tracker is
 
   -- DESCRIPTION :
   --   Returns the current vector of Pade approximants.
+
+  function Get_Current_Poles return QuadDobl_Complex_VecVecs.Link_to_VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the roots of all the denominators of the Pade vector.
+  --   The i-th component in the vecvec on return contains the poles
+  --   for the i-th Pade approximant.
 
   function Get_Current_Pole_Radius return quad_double;
 

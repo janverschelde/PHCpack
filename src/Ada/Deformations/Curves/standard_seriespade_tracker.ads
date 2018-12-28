@@ -1,5 +1,6 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Homotopy_Continuation_Parameters;
@@ -93,6 +94,13 @@ package Standard_SeriesPade_Tracker is
 
   -- DESCRIPTION :
   --   Returns the current vector of Pade approximants.
+
+  function Get_Current_Poles return Standard_Complex_VecVecs.Link_to_VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the roots of all the denominators of the Pade vector.
+  --   The i-th component in the vecvec on return contains the poles
+  --   for the i-th Pade approximant.
 
   function Get_Current_Pole_Radius return double_float;
 

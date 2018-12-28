@@ -4,7 +4,6 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors;
-with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_CSeries_Poly_Systems;
@@ -22,7 +21,7 @@ package body Standard_SeriesPade_Tracker is
   nbeqs : integer32;
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : Standard_CSeries_Poly_Systems.Link_to_Poly_Sys;
-  poles : Standard_Complex_VecVecs.Link_to_VecVec;
+  current_poles : Standard_Complex_VecVecs.Link_to_VecVec;
   current : Link_to_Solution;
   current_servec : Standard_Complex_Series_Vectors.Link_to_Vector;
   current_padvec : Standard_Pade_Approximants.Link_to_Pade_Vector;
@@ -71,7 +70,7 @@ package body Standard_SeriesPade_Tracker is
       allpoles : constant Standard_Complex_VecVecs.VecVec
                := Allocate_Standard_Poles(nbeqs,dendeg);
     begin
-      poles := new Standard_Complex_VecVecs.VecVec'(allpoles);
+      current_poles := new Standard_Complex_VecVecs.VecVec'(allpoles);
     end;
   end Init;
 
@@ -112,9 +111,10 @@ package body Standard_SeriesPade_Tracker is
         (maxdeg,nit,htp.all,sol,current_servec.all,eva);
     end if;
     Series_and_Predictors.Pade_Approximants
-      (current_servec.all,current_padvec.all,poles.all,current_frp,current_cfp);
+      (current_servec.all,current_padvec.all,current_poles.all,
+       current_frp,current_cfp);
     if verbose then
-      put_line("The poles : "); put_line(poles.all);
+      put_line("The poles : "); put_line(current_poles.all);
       put("Smallest forward pole radius : "); put(current_frp,2); new_line;
       if Standard_Complex_Numbers.REAL_PART(current_cfp) >= 0.0
        then put("Closest forward pole :"); put(current_cfp); new_line;
@@ -213,6 +213,11 @@ package body Standard_SeriesPade_Tracker is
     return current_padvec;
   end Get_Current_Pade_Vector;
 
+  function Get_Current_Poles return Standard_Complex_VecVecs.Link_to_VecVec is
+  begin
+    return current_poles;
+  end Get_Current_Poles;
+
   function Get_Current_Pole_Radius return double_float is
   begin
     return current_frp;
@@ -239,7 +244,7 @@ package body Standard_SeriesPade_Tracker is
   begin
     Homotopy_Continuation_Parameters.Clear(homconpars);
     Standard_CSeries_Poly_Systems.Clear(htp);
-    Standard_Complex_VecVecs.Deep_Clear(poles);
+    Standard_Complex_VecVecs.Deep_Clear(current_poles);
     Standard_Complex_Series_Vectors.Clear(current_servec);
     Standard_Pade_Approximants.Clear(current_padvec);
   end Clear;
