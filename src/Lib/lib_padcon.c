@@ -50,6 +50,55 @@ void quaddobl_track ( int nbc, char* name, int verbose );
  *   otherwise, the output is written to the name with file name.
  *   If verbose > 0, then more output is written. */
 
+int maximal_series_degree ( void );
+/*
+ * DESCRIPTION :
+ *   After the homotopy continuation parameters are set,
+ *   the maximal degree of the series is determined as well.
+ *   This function returns the maximal series degree. */
+
+void show_standard_series_coefficients ( int dim );
+/*
+ * DESCRIPTION :
+ *   Shows all coefficients of the power series computed by
+ *   the predictor in standard double precision for a system with
+ *   as many variables as the value of dim. */
+
+void show_dobldobl_series_coefficients ( int dim );
+/*
+ * DESCRIPTION :
+ *   Shows all coefficients of the power series computed by
+ *   the predictor in double double precision for a system with
+ *   as many variables as the value of dim. */
+
+void show_quaddobl_series_coefficients ( int dim );
+/*
+ * DESCRIPTION :
+ *   Shows all coefficients of the power series computed by
+ *   the predictor in quad double precision for a system with
+ *   as many variables as the value of dim. */
+
+void show_standard_pade_coefficients ( int dim );
+/*
+ * DESCRIPTION :
+ *   Shows all coefficients of the Pade approximants computed by
+ *   the predictor in standard double precision for a system with
+ *   as many variables as the value of dim. */
+
+void show_dobldobl_pade_coefficients ( int dim );
+/*
+ * DESCRIPTION :
+ *   Shows all coefficients of the Pade approximants computed by
+ *   the predictor in double double precision for a system with
+ *   as many variables as the value of dim. */
+
+void show_quaddobl_pade_coefficients ( int dim );
+/*
+ * DESCRIPTION :
+ *   Shows all coefficients of the Pade approximants computed by
+ *   the predictor in quad double precision for a system with
+ *   as many variables as the value of dim. */
+
 void standard_next_step ( void );
 /*
  *  DESCRIPTION :
@@ -314,9 +363,163 @@ void quaddobl_track ( int nbc, char* name, int verbose )
    if(nbc == 0) fail = solcon_write_quaddobl_solutions();
 }
 
+int maximal_series_degree ( void )
+{
+   int fail,numdeg,dendeg;
+   double val;
+
+   fail = padcon_get_homotopy_continuation_parameter(2,&val);
+   numdeg = (int) val;
+   fail = padcon_get_homotopy_continuation_parameter(3,&val);
+   dendeg = (int) val;
+
+   return numdeg + dendeg;
+}
+
+void show_standard_series_coefficients ( int dim )
+{
+   int fail,leadidx,idx;
+   const int maxdeg = maximal_series_degree();
+   double re,im;
+  
+   for(leadidx=1; leadidx<=dim; leadidx++)
+   {
+      printf("Coefficient of series at component %d :\n", leadidx);
+      for(idx=0; idx<=maxdeg; idx++)
+      {
+         fail = padcon_get_standard_series_coefficient(leadidx,idx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", idx, re, im);
+      }
+   }
+}
+
+void show_dobldobl_series_coefficients ( int dim )
+{
+   int fail,leadidx,idx;
+   const int maxdeg = maximal_series_degree();
+   double re,im;
+  
+   for(leadidx=1; leadidx<=dim; leadidx++)
+   {
+      printf("Coefficient of series at component %d :\n", leadidx);
+      for(idx=0; idx<=maxdeg; idx++)
+      {
+         fail = padcon_get_dobldobl_series_coefficient(leadidx,idx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", idx, re, im);
+      }
+   }
+}
+
+void show_quaddobl_series_coefficients ( int dim )
+{
+   int fail,leadidx,idx;
+   const int maxdeg = maximal_series_degree();
+   double re,im;
+  
+   for(leadidx=1; leadidx<=dim; leadidx++)
+   {
+      printf("Coefficient of series at component %d :\n", leadidx);
+      for(idx=0; idx<=maxdeg; idx++)
+      {
+         fail = padcon_get_quaddobl_series_coefficient(leadidx,idx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", idx, re, im);
+      }
+   }
+}
+
+void show_standard_pade_coefficients ( int dim )
+{
+   int fail,lead,idx,numdeg,dendeg;
+   double val,re,im;
+  
+   fail = padcon_get_homotopy_continuation_parameter(2,&val);
+   numdeg = (int) val;
+   fail = padcon_get_homotopy_continuation_parameter(3,&val);
+   dendeg = (int) val;
+
+   for(lead=1; lead<=dim; lead++)
+   {
+      printf("Numerator coefficient of Pade approximant %d :\n", lead);
+      for(idx=0; idx<=numdeg; idx++)
+      {
+         fail = padcon_get_standard_numerator_coefficient(lead,idx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", idx, re, im);
+      }
+   }
+   for(lead=1; lead<=dim; lead++)
+   {
+      printf("Denominator coefficient of Pade approximant %d :\n", lead);
+      for(idx=0; idx<=numdeg; idx++)
+      {
+         fail = padcon_get_standard_denominator_coefficient(lead,idx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", idx, re, im);
+      }
+   }
+}
+
+void show_dobldobl_pade_coefficients ( int dim )
+{
+   int fail,lead,idx,numdeg,dendeg;
+   double val,re,im;
+  
+   fail = padcon_get_homotopy_continuation_parameter(2,&val);
+   numdeg = (int) val;
+   fail = padcon_get_homotopy_continuation_parameter(3,&val);
+   dendeg = (int) val;
+
+   for(lead=1; lead<=dim; lead++)
+   {
+      printf("Numerator coefficient of Pade approximant %d :\n", lead);
+      for(idx=0; idx<=numdeg; idx++)
+      {
+         fail = padcon_get_dobldobl_numerator_coefficient(lead,idx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", idx, re, im);
+      }
+   }
+   for(lead=1; lead<=dim; lead++)
+   {
+      printf("Denominator coefficient of Pade approximant %d :\n", lead);
+      for(idx=0; idx<=numdeg; idx++)
+      {
+         fail = padcon_get_dobldobl_denominator_coefficient(lead,idx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", idx, re, im);
+      }
+   }
+}
+
+void show_quaddobl_pade_coefficients ( int dim )
+{
+   int fail,lead,idx,numdeg,dendeg;
+   double val,re,im;
+  
+   fail = padcon_get_homotopy_continuation_parameter(2,&val);
+   numdeg = (int) val;
+   fail = padcon_get_homotopy_continuation_parameter(3,&val);
+   dendeg = (int) val;
+
+   for(lead=1; lead<=dim; lead++)
+   {
+      printf("Numerator coefficient of Pade approximant %d :\n", lead);
+      for(idx=0; idx<=numdeg; idx++)
+      {
+         fail = padcon_get_quaddobl_numerator_coefficient(lead,idx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", idx, re, im);
+      }
+   }
+   for(lead=1; lead<=dim; lead++)
+   {
+      printf("Denominator coefficient of Pade approximant %d :\n", lead);
+      for(idx=0; idx<=numdeg; idx++)
+      {
+         fail = padcon_get_quaddobl_denominator_coefficient(lead,idx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", idx, re, im);
+      }
+   }
+}
+
 void standard_next_step ( void )
 {
-   int fail,length,index,failed,strlensol;
+   int fail,length,index,failed,strlensol,dim;
    char contstep,nlsb;
    double frp,re_pole,im_pole,tval,step;
 
@@ -324,7 +527,8 @@ void standard_next_step ( void )
    fail = read_standard_start_system();
    fail = copy_start_solutions_to_container();
    fail = solcon_number_of_standard_solutions(&length);
-   printf("Read %d start solutions.\n", length);
+   fail = solcon_dimension_of_standard_solutions(&dim);
+   printf("Read %d start solutions in dimension %d.\n", length, dim);
 
    fail = padcon_standard_initialize_homotopy(1);
    for(index=1; index <= length; index++)
@@ -334,6 +538,8 @@ void standard_next_step ( void )
       do
       {
          fail = padcon_standard_predict_correct(&failed,1);
+         show_standard_series_coefficients(dim);
+         show_standard_pade_coefficients(dim);
          if(failed != 0)
             contstep = 'n';
          else
@@ -372,7 +578,7 @@ void standard_next_step ( void )
 
 void dobldobl_next_step ( void )
 {
-   int fail,length,index,failed,strlensol;
+   int fail,length,index,failed,strlensol,dim;
    char contstep,nlsb;
    double frp,re_pole,im_pole,tval,step;
 
@@ -380,7 +586,8 @@ void dobldobl_next_step ( void )
    fail = read_dobldobl_start_system();
    fail = copy_dobldobl_start_solutions_to_container();
    fail = solcon_number_of_dobldobl_solutions(&length);
-   printf("Read %d start solutions.\n", length);
+   fail = solcon_dimension_of_dobldobl_solutions(&dim);
+   printf("Read %d start solutions of dimension %d.\n", length, dim);
 
    fail = padcon_dobldobl_initialize_homotopy(1);
    for(index = 1; index <= length; index++)
@@ -390,6 +597,8 @@ void dobldobl_next_step ( void )
       do
       {
          fail = padcon_dobldobl_predict_correct(&failed,1);
+         show_dobldobl_series_coefficients(dim);
+         show_dobldobl_pade_coefficients(dim);
          if(failed != 0)
             contstep = 'n';
          else
@@ -428,7 +637,7 @@ void dobldobl_next_step ( void )
 
 void quaddobl_next_step ( void )
 {
-   int fail,length,index,failed,strlensol;
+   int fail,length,index,failed,strlensol,dim;
    char contstep,nlsb;
    double frp,re_pole,im_pole,tval,step;
 
@@ -436,7 +645,8 @@ void quaddobl_next_step ( void )
    fail = read_quaddobl_start_system();
    fail = copy_quaddobl_start_solutions_to_container();
    fail = solcon_number_of_quaddobl_solutions(&length);
-   printf("Read %d start solutions.\n", length);
+   fail = solcon_dimension_of_quaddobl_solutions(&dim);
+   printf("Read %d start solutions of dimension %d.\n", length, dim);
 
    fail = padcon_quaddobl_initialize_homotopy(1);
    for(index = 1; index <= length; index++)
@@ -446,6 +656,8 @@ void quaddobl_next_step ( void )
       do
       {
          fail = padcon_quaddobl_predict_correct(&failed,1);
+         show_quaddobl_series_coefficients(dim);
+         show_quaddobl_pade_coefficients(dim);
          if(failed != 0)
             contstep = 'n';
          else
