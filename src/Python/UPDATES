@@ -1,6 +1,7 @@
 Fri 28 Dec 2018 : the curves module has functions to extract the coefficients
   of the power series and the Pade approximants.
   Extended the curves module with functions to return all poles.
+  Prepared files for version 0.9.1 of phcpy.
 
 Thu 27 Dec 2018 : extended the curves module with functions to return
   the t value, the step size, pole radius, and closest pole.
