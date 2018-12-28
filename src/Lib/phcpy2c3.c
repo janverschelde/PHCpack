@@ -8285,6 +8285,123 @@ static PyObject *py2c_padcon_quaddobl_step_size
    return Py_BuildValue("d",step);
 }
 
+static PyObject *py2c_padcon_standard_series_coefficient
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lead,idx,vrb;
+   double cre,cim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&lead,&idx,&vrb)) return NULL;
+   fail = padcon_get_standard_series_coefficient(lead,idx,vrb,&cre,&cim);
+
+   return Py_BuildValue("(d,d)",cre,cim);
+}
+
+static PyObject *py2c_padcon_dobldobl_series_coefficient
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lead,idx,vrb;
+   double cre,cim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&lead,&idx,&vrb)) return NULL;
+   fail = padcon_get_dobldobl_series_coefficient(lead,idx,vrb,&cre,&cim);
+
+   return Py_BuildValue("(d,d)",cre,cim);
+}
+
+static PyObject *py2c_padcon_quaddobl_series_coefficient
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lead,idx,vrb;
+   double cre,cim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&lead,&idx,&vrb)) return NULL;
+   fail = padcon_get_quaddobl_series_coefficient(lead,idx,vrb,&cre,&cim);
+
+   return Py_BuildValue("(d,d)",cre,cim);
+}
+
+static PyObject *py2c_padcon_standard_numerator_coefficient
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lead,idx,vrb;
+   double cre,cim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&lead,&idx,&vrb)) return NULL;
+   fail = padcon_get_standard_numerator_coefficient(lead,idx,vrb,&cre,&cim);
+
+   return Py_BuildValue("(d,d)",cre,cim);
+}
+
+static PyObject *py2c_padcon_dobldobl_numerator_coefficient
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lead,idx,vrb;
+   double cre,cim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&lead,&idx,&vrb)) return NULL;
+   fail = padcon_get_dobldobl_numerator_coefficient(lead,idx,vrb,&cre,&cim);
+
+   return Py_BuildValue("(d,d)",cre,cim);
+}
+
+static PyObject *py2c_padcon_quaddobl_numerator_coefficient
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lead,idx,vrb;
+   double cre,cim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&lead,&idx,&vrb)) return NULL;
+   fail = padcon_get_quaddobl_numerator_coefficient(lead,idx,vrb,&cre,&cim);
+
+   return Py_BuildValue("(d,d)",cre,cim);
+}
+
+static PyObject *py2c_padcon_standard_denominator_coefficient
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lead,idx,vrb;
+   double cre,cim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&lead,&idx,&vrb)) return NULL;
+   fail = padcon_get_standard_denominator_coefficient(lead,idx,vrb,&cre,&cim);
+
+   return Py_BuildValue("(d,d)",cre,cim);
+}
+
+static PyObject *py2c_padcon_dobldobl_denominator_coefficient
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lead,idx,vrb;
+   double cre,cim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&lead,&idx,&vrb)) return NULL;
+   fail = padcon_get_dobldobl_denominator_coefficient(lead,idx,vrb,&cre,&cim);
+
+   return Py_BuildValue("(d,d)",cre,cim);
+}
+
+static PyObject *py2c_padcon_quaddobl_denominator_coefficient
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lead,idx,vrb;
+   double cre,cim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&lead,&idx,&vrb)) return NULL;
+   fail = padcon_get_quaddobl_denominator_coefficient(lead,idx,vrb,&cre,&cim);
+
+   return Py_BuildValue("(d,d)",cre,cim);
+}
+
 static PyObject *py2c_padcon_clear_standard_data
  ( PyObject *self, PyObject *args )
 {
@@ -10658,6 +10775,33 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_padcon_quaddobl_step_size",
      py2c_padcon_quaddobl_step_size, METH_VARARGS,
     "Returns the current step size of the path tracker\n which runs in quad double precision."},
+   {"py2c_padcon_standard_series_coefficient",
+     py2c_padcon_standard_series_coefficient, METH_VARARGS,
+    "Returns a tuple: the real and imaginary parts of the series\n coefficient of component with leadidx at position idx,\n of the series computed by the predictor in double precision.\n The integers leadidx and idx are two input parameters,\n the third input integer is the verbose flag."},
+   {"py2c_padcon_dobldobl_series_coefficient",
+     py2c_padcon_dobldobl_series_coefficient, METH_VARARGS,
+    "Returns a tuple: the real and imaginary parts of the series\n coefficient of component with leadidx at position idx, of the\n series computed by the predictor in double double precision.\n The doubles are the highest parts of the double doubles.\n The integers leadidx and idx are two input parameters,\n the third input integer is the verbose flag."},
+   {"py2c_padcon_quaddobl_series_coefficient",
+     py2c_padcon_quaddobl_series_coefficient, METH_VARARGS,
+    "Returns a tuple: the real and imaginary parts of the series\n coefficient of component with leadidx at position idx, of the\n series computed by the predictor in quad double precision.\n The doubles are the highest parts of the quad doubles.\n The integers leadidx and idx are two input parameters,\n the third input integer is the verbose flag."},
+   {"py2c_padcon_standard_numerator_coefficient",
+     py2c_padcon_standard_numerator_coefficient, METH_VARARGS,
+    "Returns a tuple: the real and imaginary parts of the\n coefficient of the numerator of the Pade approximant,\n at the component with leadidx at position idx,\n computed by the predictor in double precision.\n The integers leadidx and idx are two input parameters,\n the third input integer is the verbose flag."},
+   {"py2c_padcon_dobldobl_numerator_coefficient",
+     py2c_padcon_dobldobl_numerator_coefficient, METH_VARARGS,
+    "Returns a tuple: the real and imaginary parts of the\n coefficient of the numerator of the Pade approximant,\n at the component with leadidx at position idx,\n computed by the predictor in double double precision.\n The doubles are the highest parts of the double doubles.\n The integers leadidx and idx are two input parameters,\n the third input integer is the verbose flag."},
+   {"py2c_padcon_quaddobl_numerator_coefficient",
+     py2c_padcon_quaddobl_numerator_coefficient, METH_VARARGS,
+    "Returns a tuple: the real and imaginary parts of the series\n coefficient of the numerator of the Pade approximant,\n at the component with leadidx at position idx,\n computed by the predictor in quad double precision.\n The doubles are the highest parts of the quad doubles.\n The integers leadidx and idx are two input parameters,\n the third input integer is the verbose flag."},
+   {"py2c_padcon_standard_denominator_coefficient",
+     py2c_padcon_standard_denominator_coefficient, METH_VARARGS,
+    "Returns a tuple: the real and imaginary parts of the\n coefficient of the denominator of the Pade approximant,\n at the component with leadidx at position idx,\n computed by the predictor in double precision.\n The integers leadidx and idx are two input parameters,\n the third input integer is the verbose flag."},
+   {"py2c_padcon_dobldobl_denominator_coefficient",
+     py2c_padcon_dobldobl_denominator_coefficient, METH_VARARGS,
+    "Returns a tuple: the real and imaginary parts of the\n coefficient of the denominator of the Pade approximant,\n at the component with leadidx at position idx,\n computed by the predictor in double double precision.\n The doubles are the highest parts of the double doubles.\n The integers leadidx and idx are two input parameters,\n the third input integer is the verbose flag."},
+   {"py2c_padcon_quaddobl_denominator_coefficient",
+     py2c_padcon_quaddobl_denominator_coefficient, METH_VARARGS,
+    "Returns a tuple: the real and imaginary parts of the series\n coefficient of the denominator of the Pade approximant,\n at the component with leadidx at position idx,\n computed by the predictor in quad double precision.\n The doubles are the highest parts of the quad doubles.\n The integers leadidx and idx are two input parameters,\n the third input integer is the verbose flag."},
    {"py2c_padcon_clear_standard_data",
      py2c_padcon_clear_standard_data, METH_VARARGS,
     "Deallocates data for the series-Pade tracker in double precision."},
