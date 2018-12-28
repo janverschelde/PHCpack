@@ -15,8 +15,11 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_cv;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
@@ -1042,6 +1045,116 @@ function use_padcon ( job : integer32;
       return 870;
   end Job15;
 
+  function Standard_Pole
+             ( leadidx,poleidx : integer32; verbose : boolean )
+             return Standard_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the pole at position cffidx in component leadidx
+  --   of the current poles in standard double precision.
+  --   If verbose, then extra output is written to screen.
+
+    res : Standard_Complex_Numbers.Complex_Number;
+    poles: constant Standard_Complex_VecVecs.Link_to_VecVec
+        := Standard_SeriesPade_Tracker.Get_Current_Poles;
+
+  begin
+    res := poles(leadidx)(poleidx);
+    if verbose
+     then put("Returning "); put(res); new_line;
+    end if;
+    return res;
+  end Standard_Pole;
+
+  function DoblDobl_Pole
+             ( leadidx,poleidx : integer32; verbose : boolean )
+             return DoblDobl_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the pole at position cffidx in component leadidx
+  --   of the current poles in double double precision.
+  --   If verbose, then extra output is written to screen.
+
+    res : DoblDobl_Complex_Numbers.Complex_Number;
+    poles: constant DoblDobl_Complex_VecVecs.Link_to_VecVec
+        := DoblDobl_SeriesPade_Tracker.Get_Current_Poles;
+
+  begin
+    res := poles(leadidx)(poleidx);
+    if verbose
+     then put("Returning "); put(res); new_line;
+    end if;
+    return res;
+  end DoblDobl_Pole;
+
+  function QuadDobl_Pole
+             ( leadidx,poleidx : integer32; verbose : boolean )
+             return QuadDobl_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the pole at position cffidx in component leadidx
+  --   of the current poles in quad double precision.
+  --   If verbose, then extra output is written to screen.
+
+    res : QuadDobl_Complex_Numbers.Complex_Number;
+    poles: constant QuadDobl_Complex_VecVecs.Link_to_VecVec
+        := QuadDobl_SeriesPade_Tracker.Get_Current_Poles;
+
+  begin
+    res := poles(leadidx)(poleidx);
+    if verbose
+     then put("Returning "); put(res); new_line;
+    end if;
+    return res;
+  end QuadDobl_Pole;
+
+  function Job16 return integer32 is  -- get pole
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    leadidx : constant integer32 := integer32(v_a(v_a'first+1));
+    poleidx : constant integer32 := integer32(v_a(v_a'first+2));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    vrb : constant natural32 := natural32(v_b(v_b'first));
+    verbose : constant boolean := (vrb = 1);
+    st_pole : Standard_Complex_Numbers.Complex_Number;
+    dd_pole : DoblDobl_Complex_Numbers.Complex_Number;
+    qd_pole : QuadDobl_Complex_Numbers.Complex_Number;
+
+    use DoblDobl_Complex_Numbers_cv;
+    use QuadDobl_Complex_Numbers_cv;
+
+  begin
+    if verbose then
+      put("Precision : ");
+      case prc is
+        when 0 => put("double");
+        when 1 => put("double double");
+        when 2 => put("quad double");
+        when others => put("invalid!");
+      end case;
+      put("  lead idx : "); put(leadidx,1);
+      put("  pole idx : "); put(poleidx,1); new_line;
+    end if;
+    case prc is
+      when 0 => st_pole := Standard_Pole(leadidx,poleidx,verbose);
+      when 1 => dd_pole := DoblDobl_Pole(leadidx,poleidx,verbose);
+                st_pole := DoblDobl_Complex_to_Standard(dd_pole);
+      when 2 => qd_pole := QuadDobl_Pole(leadidx,poleidx,verbose);
+                st_pole := QuadDobl_Complex_to_Standard(qd_pole);
+      when others => put_line("Invalid value for the precision.");
+    end case;
+    Assign(st_pole,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 16 of use_padcon.");
+      return 871;
+  end Job16;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -1061,6 +1174,7 @@ function use_padcon ( job : integer32;
       when 13 => return Job13; -- get the current step size
       when 14 => return Job14; -- get series coefficient
       when 15 => return Job15; -- get Pade coefficient
+      when 16 => return Job16; -- get pole
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception

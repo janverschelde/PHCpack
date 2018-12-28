@@ -3265,6 +3265,7 @@ function use_c2phc4c ( job : integer32;
       when 868 => return use_padcon(13,a,b,c); -- get step size
       when 869 => return use_padcon(14,a,b,c); -- get series coefficient
       when 870 => return use_padcon(15,a,b,c); -- get Pade coefficient
+      when 871 => return use_padcon(16,a,b,c); -- get pole
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
