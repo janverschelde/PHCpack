@@ -426,6 +426,183 @@ int padcon_get_quaddobl_step_size ( double *step )
    return fail;
 }
 
+int padcon_get_standard_series_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[3];
+   double nbr[2];
+
+   inpars[0] = 0;
+   inpars[1] = leadidx;
+   inpars[2] = idx;
+
+   fail = _ada_use_c2phc4c(869,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_dobldobl_series_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[3];
+   double nbr[2];
+
+   inpars[0] = 1;
+   inpars[1] = leadidx;
+   inpars[2] = idx;
+
+   fail = _ada_use_c2phc4c(869,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_quaddobl_series_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[3];
+   double nbr[2];
+
+   inpars[0] = 2;
+   inpars[1] = leadidx;
+   inpars[2] = idx;
+
+   fail = _ada_use_c2phc4c(869,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_standard_numerator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[4];
+   double nbr[2];
+
+   inpars[0] = 0;
+   inpars[1] = 1;
+   inpars[2] = leadidx;
+   inpars[3] = idx;
+
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_dobldobl_numerator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[4];
+   double nbr[2];
+
+   inpars[0] = 1;
+   inpars[1] = 1;
+   inpars[2] = leadidx;
+   inpars[3] = idx;
+
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_quaddobl_numerator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[4];
+   double nbr[2];
+
+   inpars[0] = 2;
+   inpars[1] = 1;
+   inpars[2] = leadidx;
+   inpars[3] = idx;
+
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_standard_denominator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[4];
+   double nbr[2];
+
+   inpars[0] = 0;
+   inpars[1] = 0;
+   inpars[2] = leadidx;
+   inpars[3] = idx;
+
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_dobldobl_denominator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[4];
+   double nbr[2];
+
+   inpars[0] = 1;
+   inpars[1] = 0;
+   inpars[2] = leadidx;
+   inpars[3] = idx;
+
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_quaddobl_denominator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[3];
+   double nbr[2];
+
+   inpars[0] = 2;
+   inpars[1] = 0;
+   inpars[2] = leadidx;
+   inpars[3] = idx;
+
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
 int padcon_clear_standard_data ( void )
 {
    int fail;

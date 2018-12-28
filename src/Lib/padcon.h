@@ -268,6 +268,90 @@ int padcon_get_quaddobl_step_size ( double *step );
  *   Returns in tval the current step size of the path tracker
  *   which runs in quad double precision. */
 
+int padcon_get_standard_series_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the series
+ *   coefficient of component with leadidx at position idx, of the
+ *   series computed by the predictor in double precision. */
+
+int padcon_get_dobldobl_series_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the series
+ *   coefficient of component with leadidx at position idx, of the
+ *   series computed by the predictor in double double precision.
+ *   The doubles are the highest parts of the double doubles. */
+
+int padcon_get_quaddobl_series_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the series
+ *   coefficient of component with leadidx at position idx, of the
+ *   series computed by the predictor in quad double precision.
+ *   The doubles are the highest parts of the quad doubles. */
+
+int padcon_get_standard_numerator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the 
+ *   coefficient of the numerator of the Pade approximant,
+ *   at the component with leadidx at position idx,
+ *   computed by the predictor in double precision. */
+
+int padcon_get_dobldobl_numerator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the
+ *   coefficient of the numerator of the Pade approximant,
+ *   at the component with leadidx at position idx,
+ *   computed by the predictor in double double precision.
+ *   The doubles are the highest parts of the double doubles. */
+
+int padcon_get_quaddobl_numerator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the series
+ *   coefficient of the numerator of the Pade approximant,
+ *   at the component with leadidx at position idx,
+ *   computed by the predictor in quad double precision.
+ *   The doubles are the highest parts of the quad doubles. */
+
+int padcon_get_standard_denominator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the 
+ *   coefficient of the denominator of the Pade approximant,
+ *   at the component with leadidx at position idx,
+ *   computed by the predictor in double precision. */
+
+int padcon_get_dobldobl_denominator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the
+ *   coefficient of the denominator of the Pade approximant,
+ *   at the component with leadidx at position idx,
+ *   computed by the predictor in double double precision.
+ *   The doubles are the highest parts of the double doubles. */
+
+int padcon_get_quaddobl_denominator_coefficient
+ ( int leadidx, int idx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the series
+ *   coefficient of the denominator of the Pade approximant,
+ *   at the component with leadidx at position idx,
+ *   computed by the predictor in quad double precision.
+ *   The doubles are the highest parts of the quad doubles. */
+
 int padcon_clear_standard_data ( void );
 /*
  * DESCRIPTION :
