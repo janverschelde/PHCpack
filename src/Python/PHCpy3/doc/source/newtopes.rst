@@ -323,8 +323,8 @@ continuation parameters, as indicated below:
     5. minimum step size                          : 1e-06
     6. multiplication factor of the series step   : 0.5
     7. multiplication factor of the pole radius   : 0.5
-    8. tolerance on the residual of the predictor : 0.0001
-    9. tolerance on the residual of the corrector : 1e-12
+    8. tolerance on the residual of the predictor : 0.001
+    9. tolerance on the residual of the corrector : 1e-8
    10. tolerance on zero series coefficients      : 1e-12
    11. maximum number of corrector steps          : 4
    12. maximum steps on a path                    : 1000
@@ -372,6 +372,21 @@ To print the last 40 lines of ``/tmp/out`` one can do the following:
 
 ::
 
-   >> file = open("/tmp/out")
-   >> lines = file.readlines()
-   >> for k in range(-40,0): print(lines[k][:-1])
+   >>> file = open("/tmp/out")
+   >>> lines = file.readlines()
+   >>> for k in range(-40,0): print(lines[k][:-1])
+
+The module exports functions to run the path trackers step by step.
+In each step, the user can retrieve the power series,
+the Padé approximants, its poles, the step size and solution.
+
+To test this step-by-step path tracking, do
+
+::
+
+   >>> from phcpy.curves import test_next_track as test
+   >>> test()
+
+The default precision is double, providing 'dd' or 'qd' to the argument
+of ``test()`` sets the precision respectively to double double
+and quad double.
