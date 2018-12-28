@@ -500,6 +500,7 @@ def dobldobl_pole_radius():
     """
     Returns the smallest forward pole radius,
     used in the predictor in double double precision.
+    The returned double is the high part of the quad double.
     """
     from phcpy.phcpy2c2 import py2c_padcon_dobldobl_pole_radius
     return py2c_padcon_dobldobl_pole_radius()
@@ -508,6 +509,7 @@ def quaddobl_pole_radius():
     """
     Returns the smallest forward pole radius,
     used in the predictor in quad double precision.
+    The returned double is the highest part of the quad double.
     """
     from phcpy.phcpy2c2 import py2c_padcon_quaddobl_pole_radius
     return py2c_padcon_quaddobl_pole_radius()
@@ -526,6 +528,7 @@ def dobldobl_closest_pole():
     Returns a tuple with the real and imaginary part of the closest pole
     used in the predictor in double double precision.
     The result is only meaningful is the real part is positive.
+    The double coefficients are the high parts of the double doubles.
     """
     from phcpy.phcpy2c2 import py2c_padcon_dobldobl_closest_pole
     return py2c_padcon_dobldobl_closest_pole()
@@ -535,6 +538,7 @@ def quaddobl_closest_pole():
     Returns a tuple with the real and imaginary part of the closest pole
     used in the predictor in quad double precision.
     The result is only meaningful is the real part is positive.
+    The double coefficients are the highest parts of the quad doubles.
     """
     from phcpy.phcpy2c2 import py2c_padcon_quaddobl_closest_pole
     return py2c_padcon_quaddobl_closest_pole()
@@ -561,6 +565,7 @@ def dobldobl_series_coefficients(dim):
     Returns a list of lists with the coefficients of the series
     computed by the predictor in double double precision.
     On entry in dim is the number of variables.
+    The double coefficients are the high parts of the double doubles.
     """
     from phcpy.phcpy2c2 import py2c_padcon_dobldobl_series_coefficient
     deg = get_degree_of_numerator() + get_degree_of_denominator()
@@ -578,6 +583,7 @@ def quaddobl_series_coefficients(dim):
     Returns a list of lists with the coefficients of the series
     computed by the predictor in quad double precision.
     On entry in dim is the number of variables.
+    The double coefficients are the highest parts of the quad doubles.
     """
     from phcpy.phcpy2c2 import py2c_padcon_quaddobl_series_coefficient
     deg = get_degree_of_numerator() + get_degree_of_denominator()
@@ -616,6 +622,7 @@ def dobldobl_pade_coefficients(idx):
     """
     Returns a tuple of lists with the coefficients of the Pade approximants
     computed by the predictor in double double precision.
+    The double coefficients are the high parts of the double doubles.
     The first list in the tuple holds the coefficients of the numerator,
     the second list in the tuple holds the denominator coefficients.
     On entry in idx is the index of a variable.
@@ -638,6 +645,7 @@ def quaddobl_pade_coefficients(idx):
     """
     Returns a tuple of lists with the coefficients of the Pade approximants
     computed by the predictor in quad double precision.
+    The double coefficients are the highest parts of the quad doubles.
     The first list in the tuple holds the coefficients of the numerator,
     the second list in the tuple holds the denominator coefficients.
     On entry in idx is the index of a variable.
@@ -670,6 +678,7 @@ def dobldobl_pade_vector(dim):
     """
     Returns the list of all coefficients over all dim variables,
     computed by the predictor in double double precision.
+    The double coefficients are the high parts of the double doubles.
     """
     result = []
     for i in range(1, dim+1):
@@ -680,10 +689,61 @@ def quaddobl_pade_vector(dim):
     """
     Returns the list of all coefficients over all dim variables,
     computed by the predictor in quad double precision.
+    The double coefficients are the highest parts of the quad doubles.
     """
     result = []
     for i in range(1, dim+1):
         result.append(quaddobl_pade_coefficients(i))
+    return result
+
+def standard_poles(dim):
+    """
+    Returns a list of lists of all poles of the vector of length dim,
+    computed by the predictor in standard double precision.
+    """
+    from phcpy.phcpy2c2 import py2c_padcon_standard_pole
+    dendeg = get_degree_of_denominator()
+    result = []
+    for i in range(1, dim+1):
+        poles = []
+        for j in range(1, dendeg+1):
+            (repole, impole) = py2c_padcon_standard_pole(i, j, 0)
+            poles.append(complex(repole, impole))
+        result.append(poles)
+    return result
+
+def dobldobl_poles(dim):
+    """
+    Returns a list of lists of all poles of the vector of length dim,
+    computed by the predictor in double double precision.
+    The doubles in the poles are the high parts of the double doubles.
+    """
+    from phcpy.phcpy2c2 import py2c_padcon_dobldobl_pole
+    dendeg = get_degree_of_denominator()
+    result = []
+    for i in range(1, dim+1):
+        poles = []
+        for j in range(1, dendeg+1):
+            (repole, impole) = py2c_padcon_dobldobl_pole(i, j, 0)
+            poles.append(complex(repole, impole))
+        result.append(poles)
+    return result
+
+def quaddobl_poles(dim):
+    """
+    Returns a list of lists of all poles of the vector of length dim,
+    computed by the predictor in quad double precision.
+    The doubles in the poles are the highest parts of the quad doubles.
+    """
+    from phcpy.phcpy2c2 import py2c_padcon_quaddobl_pole
+    dendeg = get_degree_of_denominator()
+    result = []
+    for i in range(1, dim+1):
+        poles = []
+        for j in range(1, dendeg+1):
+            (repole, impole) = py2c_padcon_quaddobl_pole(i, j, 0)
+            poles.append(complex(repole, impole))
+        result.append(poles)
     return result
 
 def standard_next_track(target, start, sols, verbose=False):
@@ -725,6 +785,7 @@ def standard_next_track(target, start, sols, verbose=False):
                 print "closest pole : ", cfp
                 print 'the series:', standard_series_coefficients(dim)
                 print 'Pade vector:', standard_pade_vector(dim)
+                print 'poles:', standard_poles(dim)
     return result
 
 def dobldobl_next_track(target, start, sols, verbose=False):
@@ -766,6 +827,7 @@ def dobldobl_next_track(target, start, sols, verbose=False):
                 print "closest pole : ", cfp
                 print 'the series:', dobldobl_series_coefficients(dim)
                 print 'Pade vector:', dobldobl_pade_vector(dim)
+                print 'poles:', dobldobl_poles(dim)
     return result
 
 def quaddobl_next_track(target, start, sols, verbose=False):
@@ -807,6 +869,7 @@ def quaddobl_next_track(target, start, sols, verbose=False):
                 print "closest pole : ", cfp
                 print 'the series:', quaddobl_series_coefficients(dim)
                 print 'Pade vector:', quaddobl_pade_vector(dim)
+                print 'poles:', quaddobl_poles(dim)
     return result
 
 def test_simple_track(precision='d'):
