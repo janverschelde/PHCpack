@@ -39,6 +39,84 @@ with Drivers_to_Series_Trackers;         use Drivers_to_Series_Trackers;
 
 package body Series_Path_Trackers is
 
+  procedure Standard_Write 
+              ( file : in file_type; nq : in natural32;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+
+  -- DESCRIPTION :
+  --   Writes target system, start system, start solutions,
+  --   and the homotopy continuation parameters in pars to file.
+  --   The number of equations is in nq.
+
+  -- REQUIRED : Standard_Homotopy is well defined.
+
+  begin
+    put(file,nq,Standard_Homotopy.Target_System);
+    new_line(file);
+    put_line(file,"THE START SYSTEM :");
+    put(file,nq,Standard_Homotopy.Start_System);
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+        natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars);
+    new_line(file); flush(file);
+  end Standard_Write;
+
+  procedure DoblDobl_Write 
+              ( file : in file_type; nq : in natural32;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+
+  -- DESCRIPTION :
+  --   Writes target system, start system, start solutions,
+  --   and the homotopy continuation parameters in pars to file.
+  --   The number of equations is in nq.
+
+  -- REQUIRED : DoblDobl_Homotopy is well defined.
+
+  begin
+    put(file,nq,DoblDobl_Homotopy.Target_System);
+    new_line(file);
+    put_line(file,"THE START SYSTEM :");
+    put(file,nq,DoblDobl_Homotopy.Start_System);
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+        natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars);
+    new_line(file); flush(file);
+  end DoblDobl_Write;
+
+  procedure QuadDobl_Write 
+              ( file : in file_type; nq : in natural32;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+
+  -- DESCRIPTION :
+  --   Writes target system, start system, start solutions,
+  --   and the homotopy continuation parameters in pars to file.
+  --   The number of equations is in nq.
+
+  -- REQUIRED : QuadDobl_Homotopy is well defined.
+
+  begin
+    put(file,nq,QuadDobl_Homotopy.Target_System);
+    new_line(file);
+    put_line(file,"THE START SYSTEM :");
+    put(file,nq,QuadDobl_Homotopy.Start_System);
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+        natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars);
+    new_line(file); flush(file);
+  end QuadDobl_Write;
+
   procedure Standard_Run
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List ) is
@@ -75,7 +153,7 @@ package body Series_Path_Trackers is
     s := Series_and_Homotopies.Create(h,nq+1,false);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
-     then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
+     then Standard_Write(file,natural32(nq),sols,p);
     end if;
     minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (p.maxsteps+1)*p.corsteps+1; maxnbrcorrs := 0;
@@ -178,7 +256,7 @@ package body Series_Path_Trackers is
     s := Series_and_Homotopies.Create(h,nq+1,false);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
-     then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
+     then DoblDobl_Write(file,natural32(nq),sols,p);
     end if;
     minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (p.maxsteps+1)*p.corsteps+1; maxnbrcorrs := 0;
@@ -282,7 +360,7 @@ package body Series_Path_Trackers is
     s := Series_and_Homotopies.Create(h,nq+1,false);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
-     then Homotopy_Continuation_Parameters_io.put(file,p); flush(file);
+     then QuadDobl_Write(file,natural32(nq),sols,p);
     end if;
     minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (p.maxsteps+1)*p.corsteps+1; maxnbrcorrs := 0;

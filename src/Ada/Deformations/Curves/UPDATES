@@ -1,3 +1,6 @@
+Fri 28 Dec 2018 : modified series_path_trackers.adb so target system,
+  start system, and start solutions are written to the output file.
+
 Thu 27 Dec 2018 : added functions to return the current step size and
   t value in the *tracker.a* packages.
 
