@@ -1,3 +1,5 @@
+Fri 28 Dec 2018 : updated greeting_banners for version 2.4.63.
+
 Sun 9 Dec 2018 : updated greeting_banners for version 2.4.62.
 
 Thu 29 Nov 2018 : in greetings_banners.ads, renamed the banner for phc -u,

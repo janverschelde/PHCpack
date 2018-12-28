@@ -85,6 +85,7 @@ The Ada sources are organized in a tree of directories:
     |      |-- Supports      : 1.9. support sets and linear programming
     |      |-- Circuits      : 1.A. circuits for algorithmic differentation
     |      |-- Series        : 1.B. manipulating truncated series
+    |      |-- AD            : 1.C. algorithmic differentiation of Path library
     |-- Deformations         : 2. homotopies, Newton's method & path trackers
     |      |-- Solutions     : 2.1. solutions of systems and homotopies
     |      |-- Homotopy      : 2.2. homotopies, scaling and reduction
@@ -218,7 +219,9 @@ which appear with nonzero coefficients.  Basic linear programming
 and tools to work with polytopes are provided in the subdirectory
 ``Supports``.  The subdirectory ``Circuits`` defines arithmetic
 circuits to evaluate and differentiate polynomials via the reverse
-mode of algorithmic differentiation.  Truncated power series define
+mode of algorithmic differentiation.  A better algorithmic differentiation
+library is in the subdirectory ``AD``, modeled after the Path library
+of Xiangcheng Yu.  Truncated power series define
 a field (that is: dividing two series gives again a series)
 and the arithmetic to manipulate power series is exported by the
 packages in the subdirectory ``Series``.
@@ -742,6 +745,20 @@ The current state of the code in this directory is still experimental,
 mostly geared towards algorithmic correctness rather than performance.
 An efficient implementation is available in the GPU part of the source code.
 
+AD: Algorithmic Differentiation of the Path Library
+---------------------------------------------------
+
+The code in this directory is based on the reference code on the host
+of the GPU library Path, developed by Xiangcheng Yu.
+
+The evaluation of monomials, vectors of monomials, and 
+vectors of polynomials works over any ring.
+For higher degree powers, the evaluated table of powers is cached
+and shared as a common factor among all derivatives.
+
+The generic code (defined over any ring) is instantiated for
+complex numbers in double, double double, and quad double precision.
+
 Truncated Power Series
 ----------------------
 
@@ -860,8 +877,8 @@ The rank is computed using the singular value decomposition.
 Derivatives are computed in an efficient hierarchy encoded 
 in a tree data structure.
 
-Curves, Univariate Solvers, and Extrapolators
----------------------------------------------
+Curves, Univariate Solvers, and Newton for Power Series
+-------------------------------------------------------
 
 The directory ``Curves`` contains an implementation of
 the method of Weierstrass (also called the Durand-Kerner method)
@@ -880,6 +897,10 @@ The directory provides packages to run Newton's method to
 compute series solutions of polynomial homotopies,
 both in the basic version with operator overloading
 and the more efficient version with linearization.
+The power series are the input to the methods to compute
+Padé approximants for the algebraic curves.
+The Padé approximants in turn lead to more accurate predictors
+and path trackers, exported by ``phc -u``.
 
 Polyhedral End Games
 --------------------

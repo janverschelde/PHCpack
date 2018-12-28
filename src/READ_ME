@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.62 contains
+The public distribution for PHCpack version 2.4.63 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -29,6 +29,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.63 on 2018-12-28 : improved phc -u, new AD library
 release 2.4.62 on 2018-12-10 : module curves in phcpy for Pade predictors
 release 2.4.61 on 2018-11-29 : phc -u offers a robust path tracker
 release 2.4.60 on 2018-11-11 : phc -u no longer fixed degree of the series

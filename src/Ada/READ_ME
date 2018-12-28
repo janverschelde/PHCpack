@@ -28,7 +28,7 @@ Since version 2.4.13, phc -p can track paths in overdetermined homotopies.
 The directory Series was added in version 2.4.21 to define the power
 series arithmetic for use in phc -u to compute power series solutions.
 DEMiCs for dynamic enumeration to compute all mixed cells was added
-in version 2.4.53.
+in version 2.4.53.  The directory AD was added to Math_Lib in 2.4.63.
 
 The Ada sources are organized in a tree of directories:
 
