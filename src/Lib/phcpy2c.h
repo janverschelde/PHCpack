@@ -5991,6 +5991,35 @@ static PyObject *py2c_padcon_quaddobl_denominator_coefficient
  *   The integers leadidx and idx are two input parameters,
  *   the third input integer is the verbose flag. */
 
+static PyObject *py2c_padcon_standard_pole ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a tuple: the real and imaginary parts of the pole
+ *   Pade approximant with leadidx at position poleidx,
+ *   computed by the predictor in double precision.
+ *   The integers leadidx and poleidx are two input parameters,
+ *   the third input integer is the verbose flag. */
+
+static PyObject *py2c_padcon_dobldobl_pole ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a tuple: the real and imaginary parts of the pole
+ *   Pade approximant with leadidx at position poleidx,
+ *   computed by the predictor in double double precision.
+ *   The integers leadidx and poleidx are two input parameters,
+ *   the third input integer is the verbose flag.
+ *   The returned doubles are the highest parts of the double doubles. */
+
+static PyObject *py2c_padcon_quaddobl_pole ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a tuple: the real and imaginary parts of the pole
+ *   Pade approximant with leadidx at position poleidx,
+ *   computed by the predictor in quad double precision.
+ *   The integers leadidx and poleidx are two input parameters,
+ *   the third input integer is the verbose flag.
+ *   The returned doubles are the highest parts of the quad doubles. */
+
 static PyObject *py2c_padcon_clear_standard_data
  ( PyObject *self, PyObject *args );
 /*

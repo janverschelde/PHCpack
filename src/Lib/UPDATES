@@ -1,11 +1,12 @@
+Fri 28 Dec 2018 : added functions to padcon and phcpy2c to retrieve the
+  poles one after the other, tested by lib_padcon.
+
 Thu 27 Dec 2018 : extended phcpy2c.h, phcpy2c2.c, and phcpy2c3.c with
   functions to return the pole radius and the closest pole.
   Added functions to return the t value and the step size to padcon,
   tested by lib_padcon and wrapped in phcpy2c.h, phcpy2c2.c, phcpy2c3.c.
-  Added functions to padcon to retrieve series and Pade coefficients.
+  Added function to padcon to retrieve series and Pade coefficients.
   Tests on the retrieval of the coefficients added to lib_padcon.
-  Added functions to phcpy2c.h, phcpy2c2.c, and phcpy2c3.c to retrieve
-  the coefficients of the series and Pade approximants.
 
 Wed 26 Dec 2018 : better outer loop in the step-by-step tracking in
   lib_padcon.c.  Added functions in padcon to get the pole radius and

@@ -99,6 +99,24 @@ void show_quaddobl_pade_coefficients ( int dim );
  *   the predictor in quad double precision for a system with
  *   as many variables as the value of dim. */
 
+void show_standard_poles ( int dim );
+/*
+ * DESCRIPTION :
+ *   Shows all poles computed by the predictor in double precision.
+ *   The value of dim equals the number of variables. */
+
+void show_dobldobl_poles ( int dim );
+/*
+ * DESCRIPTION :
+ *   Shows all poles computed by the predictor in double double precision.
+ *   The value of dim equals the number of variables. */
+
+void show_quaddobl_poles ( int dim );
+/*
+ * DESCRIPTION :
+ *   Shows all poles computed by the predictor in quad double precision.
+ *   The value of dim equals the number of variables. */
+
 void standard_next_step ( void );
 /*
  *  DESCRIPTION :
@@ -517,6 +535,63 @@ void show_quaddobl_pade_coefficients ( int dim )
    }
 }
 
+void show_standard_poles ( int dim )
+{
+   int fail,dendeg,leadidx,poleidx;
+   double val,re,im;
+
+   fail = padcon_get_homotopy_continuation_parameter(3,&val);
+   dendeg = (int) val;
+
+   for(leadidx=1; leadidx<=dim; leadidx++)
+   {
+      printf("poles for Pade approximant %d :\n", leadidx);
+      for(poleidx=1; poleidx<=dendeg; poleidx++)
+      {
+         fail = padcon_get_standard_pole(leadidx,poleidx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", poleidx, re, im);
+      }
+   }
+}
+
+void show_dobldobl_poles ( int dim )
+{
+   int fail,dendeg,leadidx,poleidx;
+   double val,re,im;
+
+   fail = padcon_get_homotopy_continuation_parameter(3,&val);
+   dendeg = (int) val;
+
+   for(leadidx=1; leadidx<=dim; leadidx++)
+   {
+      printf("poles for Pade approximant %d :\n", leadidx);
+      for(poleidx=1; poleidx<=dendeg; poleidx++)
+      {
+         fail = padcon_get_dobldobl_pole(leadidx,poleidx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", poleidx, re, im);
+      }
+   }
+}
+
+void show_quaddobl_poles ( int dim )
+{
+   int fail,dendeg,leadidx,poleidx;
+   double val,re,im;
+
+   fail = padcon_get_homotopy_continuation_parameter(3,&val);
+   dendeg = (int) val;
+
+   for(leadidx=1; leadidx<=dim; leadidx++)
+   {
+      printf("poles for Pade approximant %d :\n", leadidx);
+      for(poleidx=1; poleidx<=dendeg; poleidx++)
+      {
+         fail = padcon_get_quaddobl_pole(leadidx,poleidx,0,&re,&im);
+         printf(" %d : %.14e  %.14e\n", poleidx, re, im);
+      }
+   }
+}
+
 void standard_next_step ( void )
 {
    int fail,length,index,failed,strlensol,dim;
@@ -540,6 +615,7 @@ void standard_next_step ( void )
          fail = padcon_standard_predict_correct(&failed,1);
          show_standard_series_coefficients(dim);
          show_standard_pade_coefficients(dim);
+         show_standard_poles(dim);
          if(failed != 0)
             contstep = 'n';
          else
@@ -599,6 +675,7 @@ void dobldobl_next_step ( void )
          fail = padcon_dobldobl_predict_correct(&failed,1);
          show_dobldobl_series_coefficients(dim);
          show_dobldobl_pade_coefficients(dim);
+         show_dobldobl_poles(dim);
          if(failed != 0)
             contstep = 'n';
          else
@@ -658,6 +735,7 @@ void quaddobl_next_step ( void )
          fail = padcon_quaddobl_predict_correct(&failed,1);
          show_quaddobl_series_coefficients(dim);
          show_quaddobl_pade_coefficients(dim);
+         show_quaddobl_poles(dim);
          if(failed != 0)
             contstep = 'n';
          else

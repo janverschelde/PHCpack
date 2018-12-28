@@ -603,6 +603,63 @@ int padcon_get_quaddobl_denominator_coefficient
    return fail;
 }
 
+int padcon_get_standard_pole
+ ( int leadidx, int poleidx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[3];
+   double nbr[2];
+
+   inpars[0] = 0;        /* double precision */
+   inpars[1] = leadidx;
+   inpars[2] = poleidx;
+
+   fail = _ada_use_c2phc4c(871,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_dobldobl_pole
+ ( int leadidx, int poleidx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[3];
+   double nbr[2];
+
+   inpars[0] = 1;        /* double double precision */
+   inpars[1] = leadidx;
+   inpars[2] = poleidx;
+
+   fail = _ada_use_c2phc4c(871,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
+int padcon_get_quaddobl_pole
+ ( int leadidx, int poleidx, int verbose, double* cre, double* cim )
+{
+   int fail;
+   int inpars[3];
+   double nbr[2];
+
+   inpars[0] = 2;        /* quad double precision */
+   inpars[1] = leadidx;
+   inpars[2] = poleidx;
+
+   fail = _ada_use_c2phc4c(871,inpars,&verbose,nbr);
+
+   *cre = nbr[0];
+   *cim = nbr[1];
+
+   return fail;
+}
+
 int padcon_clear_standard_data ( void )
 {
    int fail;

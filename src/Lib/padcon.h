@@ -352,6 +352,32 @@ int padcon_get_quaddobl_denominator_coefficient
  *   computed by the predictor in quad double precision.
  *   The doubles are the highest parts of the quad doubles. */
 
+int padcon_get_standard_pole
+ ( int leadidx, int poleidx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the pole
+ *   Pade approximant with leadidx at position poleidx,
+ *   computed by the predictor in double precision. */
+
+int padcon_get_dobldobl_pole
+ ( int leadidx, int poleidx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the pole
+ *   Pade approximant with leadidx at position poleidx,
+ *   computed by the predictor in double double precision.
+ *   The returned doubles are the highest parts of the double doubles. */
+
+int padcon_get_quaddobl_pole
+ ( int leadidx, int poleidx, int verbose, double* cre, double* cim );
+/*
+ * DESCRIPTION :
+ *   Returns in cre and cim the real and imaginary parts of the pole
+ *   Pade approximant with leadidx at position poleidx,
+ *   computed by the predictor in quad double precision.
+ *   The returned doubles are the highest parts of the quad doubles. */
+
 int padcon_clear_standard_data ( void );
 /*
  * DESCRIPTION :
