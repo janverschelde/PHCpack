@@ -1,3 +1,6 @@
+Sat 29 Dec 2018 : new procedure ts_trasols_io.adb to develop processing of
+  the output file of a tracker.
+
 Fri 6 Apr 2018 : added a zero_singular_split_filter to the
   {standard,dobldobl,quaddobl}_solution_splitters, to remove the singular
   solutions from the solutions with nonzero slack variables.
