@@ -560,7 +560,8 @@ test_deformations: test_solutions test_homotopy test_newton test_curves \
 
 test_solutions: ts_sols ts_ddsols ts_qdsols ts_solfilt ts_solar ts_solstr \
                 ts_mapsols_io ts_dicsols_io ts_grepsols ts_selsol \
-                ts_ptlists ts_quadpart ts_contab ts_quad ts_soldrop
+                ts_ptlists ts_quadpart ts_contab ts_quad ts_soldrop \
+                ts_trasols_io
 
 ts_sols:
 	make -f $(MAKEFILE) ts_sols
@@ -606,6 +607,9 @@ ts_soldrop:
 
 ts_ptlists:
 	make -f $(MAKEFILE) ts_ptlists
+
+ts_trasols_io:
+	make -f $(MAKEFILE) ts_trasols_io
 
 # Test programs for the Deformations/Homotopy library :
 

@@ -694,6 +694,10 @@ ts_ptlists:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ptlists.adb \
               -o $(BIN)/ts_ptlists
 
+ts_trasols_io:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_trasols_io.adb \
+              -o $(BIN)/ts_trasols_io
+
 # Test programs for the Deformations/Homotopy library :
 
 ts_drivscal:
