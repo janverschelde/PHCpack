@@ -98,6 +98,9 @@ solution_drops                     : drop a coordinate of a solution
 ts_drops                           : interactive tests on solution drops
 varbprec_complex_solutions         : variable precision solutions
 ------------------------------------------------------------------------------
+standard_tracked_solutions_io      : reading tracked data in double precision
+dobldobl_tracked_solutions_io      : reading tracked data with double doubles
+quaddobl_tracked_solutions_io      : reading tracked data with quad doubles
 ts_trasols_io                      : processing output files of trackers
 ------------------------------------------------------------------------------
 
