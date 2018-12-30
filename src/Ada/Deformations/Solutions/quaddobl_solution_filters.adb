@@ -427,4 +427,40 @@ package body QuadDobl_Solution_Filters is
           put_line("."); return;
   end Select_Solutions;
 
+  function Select_Failed_Solutions
+              ( psols,qsols : Solution_List; tol : double_float;
+                verbose : boolean := false ) return Solution_List is
+
+    res,res_last : Solution_List;
+    plist : Solution_List := psols;
+    qlist : Solution_List := qsols;
+    pls,qls : Link_to_Solution;
+    cnt : natural32 := 0;
+    target : constant Complex_Number := Create(integer32(1));
+
+  begin
+    while not Is_Null(plist) loop
+      pls := Head_Of(plist);
+      cnt := cnt + 1;
+      if not On_Target(pls.all,target,tol) then
+        qls := Head_Of(qlist);
+        Append(res,res_last,qls.all);
+        if verbose then
+          put("Solution path "); put(cnt,1);
+          put_line(" failed: did not reach 1.0.");
+        end if;
+      elsif not Vanishing(pls.all,tol) then
+        qls := Head_Of(qlist);
+        Append(res,res_last,qls.all);
+        if verbose then
+          put("Solution path "); put(cnt,1);
+          put_line(" failed: is not vanishing.");
+        end if;
+      end if;
+      plist := Tail_Of(plist);
+      qlist := Tail_Of(qlist);
+    end loop;
+    return res;
+  end Select_Failed_Solutions;
+
 end QuadDobl_Solution_Filters;

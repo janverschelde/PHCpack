@@ -1,3 +1,6 @@
+Sun 30 Dec 2018 : extended *_solution_filters* with functions to select the
+  start solutions corresponding to failed paths, tested in ts_trasols_io.
+
 Sat 29 Dec 2018 : new procedure ts_trasols_io.adb to develop processing of
   the output file of a tracker.  Extended the code in ts_trasols_io and
   moved to new packages {standard,dobldobl,quaddobl}_tracked_solutions_io.

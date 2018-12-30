@@ -231,4 +231,22 @@ package DoblDobl_Solution_Filters is
 
   -- REQUIRED : the entries in nb are sorted in increasing order.
 
+  function Select_Failed_Solutions
+              ( psols,qsols : Solution_List; tol : double_float;
+                verbose : boolean := false ) return Solution_List;
+
+  -- DESCRIPTION :
+  --   Given a list of solutions at the end of paths in psols,
+  --   returns the corresponding start solutions in qsols,
+  --   relative to the tolerance tol.
+  --   If verbose, then at every failed path, one line is written to screen.
+
+  -- REQUIRED : Length_Of(psols) = Length_Of(qsols).
+
+  -- ON ENTRY :
+  --   psols    solutions at the end of the paths;
+  --   qsols    start solutions corresponding to psols;
+  --   tol      tolerance using in functions On_Target and Vanishing;
+  --   verbose  if true, then extra output is written for every failed path.
+
 end DoblDobl_Solution_Filters;
