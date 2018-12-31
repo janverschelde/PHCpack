@@ -80,6 +80,12 @@ dobldobl_select_solutions          : tools to select dobldobl solutions
 quaddobl_select_solutions          : tools to select quaddobl solutions
 ts_selsol                          : select solutions from file
 ------------------------------------------------------------------------------
+standard_tracked_solutions_io      : reading tracked data in double precision
+dobldobl_tracked_solutions_io      : reading tracked data with double doubles
+quaddobl_tracked_solutions_io      : reading tracked data with quad doubles
+drivers_for_failed_paths           : i/o and driver procedures
+ts_trasols_io                      : processing output files of trackers
+------------------------------------------------------------------------------
 standard_solution_diagnostics      : diagnostics on standard solutions
 dobldobl_solution_diagnostics      : diagnostics on dobldobl solutions
 quaddobl_solution_diagnostics      : diagnostics on quaddobl solutions
@@ -97,11 +103,6 @@ ts_contab                          : test on frequency tables for solutions
 solution_drops                     : drop a coordinate of a solution
 ts_drops                           : interactive tests on solution drops
 varbprec_complex_solutions         : variable precision solutions
-------------------------------------------------------------------------------
-standard_tracked_solutions_io      : reading tracked data in double precision
-dobldobl_tracked_solutions_io      : reading tracked data with double doubles
-quaddobl_tracked_solutions_io      : reading tracked data with quad doubles
-ts_trasols_io                      : processing output files of trackers
 ------------------------------------------------------------------------------
 
 The standard and multiprecision solutions lists are two separate packages,

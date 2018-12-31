@@ -16,6 +16,7 @@ with Standard_Select_Solutions;
 with Standard_Condition_Report;
 with DoblDobl_Condition_Report;
 with QuadDobl_Condition_Report;
+with Drivers_for_Failed_Paths;
 
 package body Drivers_for_Condition_Tables is
 
@@ -320,7 +321,9 @@ package body Drivers_for_Condition_Tables is
   procedure Main_Driver_to_Scan_Solution_Lists
               ( infilename,outfilename : in string ) is
 
-     ans : character;
+    prc,ans : character;
+
+    use Drivers_for_Failed_Paths;
 
   begin
     new_line;
@@ -331,14 +334,26 @@ package body Drivers_for_Condition_Tables is
     put_line("  1. double double precision;");
     put_line("  2. quad double precision;");
     put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(ans,"012");
+    Ask_Alternative(prc,"012");
     new_line;
-    case ans is
-      when '0' => Standard_Scan_Solution_Lists(infilename,outfilename);
-      when '1' => DoblDobl_Scan_Solution_Lists(infilename,outfilename);
-      when '2' => QuadDobl_Scan_Solution_Lists(infilename,outfilename);
-      when others => null;
-    end case;
+    put("Output file of a path tracker ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      case prc is
+        when '0' => Standard_Scan_Failed_Paths(infilename,outfilename);
+        when '1' => DoblDobl_Scan_Failed_Paths(infilename,outfilename);
+        when '2' => QuadDobl_Scan_Failed_Paths(infilename,outfilename);
+        when others => null;
+      end case;
+    else
+      new_line;
+      case prc is
+        when '0' => Standard_Scan_Solution_Lists(infilename,outfilename);
+        when '1' => DoblDobl_Scan_Solution_Lists(infilename,outfilename);
+        when '2' => QuadDobl_Scan_Solution_Lists(infilename,outfilename);
+        when others => null;
+      end case;
+    end if;
   end Main_Driver_to_Scan_Solution_Lists;
 
 end Drivers_for_Condition_Tables;
