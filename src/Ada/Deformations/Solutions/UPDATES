@@ -1,5 +1,7 @@
 Sun 30 Dec 2018 : extended *_solution_filters* with functions to select the
   start solutions corresponding to failed paths, tested in ts_trasols_io.
+  Updated ts_trasols_io, so the start system is written in front of the
+  start solutions which correspond to failed paths.
 
 Sat 29 Dec 2018 : new procedure ts_trasols_io.adb to develop processing of
   the output file of a tracker.  Extended the code in ts_trasols_io and
