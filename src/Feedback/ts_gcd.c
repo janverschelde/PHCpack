@@ -3,8 +3,11 @@
 #include <time.h>
 
 #include "dcmplx.h" 
+#include "dc_roots.h"
 #include "poly_gcd.h"
 #include "poly_dcmplx.h"
+
+#include "pieri_sols.h"
 
 void random_test ( int n, int m, int l );
 void manual_test ( int n, int m, int l );

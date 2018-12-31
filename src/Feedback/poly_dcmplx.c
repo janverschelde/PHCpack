@@ -199,7 +199,7 @@ dcmplx** div_poly ( int n, dcmplx a[], int m, dcmplx b[],
   if ( iszero (m, b) ) 
   {
 	  printf("The divisor can not be 0!\n"); 
-	  return;
+	  return result;
   }
   if ( m>n )
   {
@@ -255,7 +255,7 @@ dcmplx* div_poly1 ( int n, dcmplx a[], int m, dcmplx b[], int *dq )
   if ( iszero (m, b) ) 
   {
 	  printf("The divisor can not be 0!\n"); 
-	  return;
+	  return result;
   }
  
   /* n>=m */
@@ -297,7 +297,7 @@ dcmplx* div_poly2 ( int n, dcmplx a[], int m, dcmplx b[],
   if ( iszero (m, b) ) 
   {
 	  printf("The divisor can not be 0!\n"); 
-	  return;
+	  return result[0];
   }
   if ( m>n )
   {
@@ -344,16 +344,6 @@ dcmplx* div_poly2 ( int n, dcmplx a[], int m, dcmplx b[],
 
         return result[0];
 }
-
-
-
-
-
-
-
-
-
-
 
 int degree ( dcmplx *a, int d )
 {
@@ -491,18 +481,3 @@ void mult_by_number( int n, dcmplx a[], dcmplx num)
         for(i=0; i<=n; i++)
 	  a[i]=mul_dcmplx(a[i], num);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

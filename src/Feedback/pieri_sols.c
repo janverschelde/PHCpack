@@ -1,5 +1,6 @@
 /* file "pieri_sols.c" contains definitions of prototypes in pieri_sols.h" */
 #include <stdlib.h>
+#include <ctype.h>
 #include "pieri_sols.h"
 #include "poly_matrix.h"
 #include "poly_dcmplx.h"

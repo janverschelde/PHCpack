@@ -10,7 +10,7 @@ struct timedata
    time_t  time1, time2;
 };
 
-void tstrat ( timer *tmr );
+void tstart ( timer *tmr );
 /* initializes the timer */
 
 void tstop ( timer *tmr );

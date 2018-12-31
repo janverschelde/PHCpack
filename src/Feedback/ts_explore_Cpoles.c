@@ -12,6 +12,8 @@
 
 #include "dcmplx.h"
 
+#include "pieri_sols.h"
+
 extern int _ada_pieri_solver(int m, int p, int q, int nb, int output_level,
                              double *pts, double *input, char *filename);
 extern void adainit();

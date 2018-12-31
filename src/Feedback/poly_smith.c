@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "poly_matrix.h"
 #include "poly_gcd.h"
 #include "poly_smith.h"
 

@@ -1,3 +1,13 @@
+Mon 31 Dec 2018 : took care of compiler warnings.  Fixed typo in timer.h.  
+  Fixed function declarations in ts_multiply.c and ts_divide.c.
+  Added #include <ctype.h> in pieri_sols.c and added "include "pieri_sols.h"
+  to feedback.c, ts_feedback.c, ts_explore_poles.c, ts_explore_Cpoles.c,
+  and ts_gcd.c, for the implicit declaration of the function skip().
+  Added #include "poly_matrix.h" to poly_smith.c and poly_hermite.c.
+  Added #include "dc_roots.h" to ts_gcd.c.
+  In poly_dcmplx.c, replaced the "return;" with "return result"
+  in the exceptional cases of a zero denominator.
+
 Thu 21 Jul 2016 : formatted code in feedback.c
 
 Sun 19 Dec 2010 : inserted "#include <stdlib.h>"

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <string.h>
 
 #include "timer.h"
 #include "c2ada_dc_matrix.h"
@@ -12,7 +13,7 @@
 
 #include "dcmplx.h"
 
-#include <string.h>
+#include "pieri_sols.h"
 
 extern void adainit();
 extern int _ada_pieri_solver
@@ -29,6 +30,8 @@ int main_feedback ( char *inputfile, char *outputfile )
    int n, m,p,q, nb, level, nn, i, input;
    double *points,*planes;
    FILE *ifp, *ofp;
+
+   printf("the output put file name : %s\n", outputfile);
 
    ifp=fopen(inputfile, "r");  /* open for reading */
    if(ifp == NULL)

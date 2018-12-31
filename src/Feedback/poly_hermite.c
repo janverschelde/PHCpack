@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include "poly_gcd.h"
-#include "poly_hermite.h"
+
 #include "dcmplx.h"
 #include "dc_matrix.h"
+#include "poly_matrix.h"
+#include "poly_gcd.h"
+#include "poly_hermite.h"
 
 #define  tol 10e-8
 

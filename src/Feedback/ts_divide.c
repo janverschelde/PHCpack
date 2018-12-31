@@ -7,7 +7,7 @@
 #include "poly_dcmplx.h"
 #include "poly_smith.h"
 
-void manual_test( int n, int m);
+void manual_test ( int n, int m );
 
 int main(void)
 {
@@ -23,7 +23,7 @@ int main(void)
   return 0;
 }
 
-void manual_test(n , m)
+void manual_test ( int n, int m )
 {
   POLY a, b;
   int i;
