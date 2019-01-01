@@ -79,6 +79,7 @@ package body DoblDobl_Newton_Matrix_Series is
     jm : DoblDobl_Complex_Series_Matrices.Matrix(p'range,x'range);
     xp,xd : DoblDobl_Complex_Vector_Series.Vector(degree);
     mj : DoblDobl_Complex_Matrix_Series.Matrix(degree);
+    nrm : double_double;
 
   begin
     px := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
@@ -86,6 +87,9 @@ package body DoblDobl_Newton_Matrix_Series is
     for i in px'range loop
       DoblDobl_Complex_Series_io.put(file,px(i)); new_line(file);
     end loop;
+    nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(px);
+    put(file,"The max norm of the evaluation : ");
+    put(file,nrm,3); new_line(file);
     DoblDobl_Complex_Series_Vectors.Min(px);
     Complex_Series_and_Polynomials.Set_degree(px,degree);
     jm := DoblDobl_CSeries_Jaco_Matrices.Eval(jp,x);
@@ -101,6 +105,9 @@ package body DoblDobl_Newton_Matrix_Series is
       for i in dx'range loop
         DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
       end loop;
+      nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(dx);
+      put(file,"The max norm of the update : ");
+      put(file,nrm,3); new_line(file);
       DoblDobl_Complex_Series_Vectors.Add(x,dx);
       DoblDobl_Complex_Series_Vectors.Clear(dx);
     end if;
@@ -191,6 +198,7 @@ package body DoblDobl_Newton_Matrix_Series is
     xp,xd : DoblDobl_Complex_Vector_Series.Vector(degree);
     mj : DoblDobl_Complex_Matrix_Series.Matrix(degree);
     one : constant double_double := create(1.0);
+    nrm : double_double;
 
   begin
     px := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
@@ -198,6 +206,9 @@ package body DoblDobl_Newton_Matrix_Series is
     for i in px'range loop
       DoblDobl_Complex_Series_io.put(file,px(i)); new_line(file);
     end loop;
+    nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(px);
+    put(file,"The max norm of the evaluation : ");
+    put(file,nrm,3); new_line(file);
     DoblDobl_Complex_Series_Vectors.Min(px);
     Complex_Series_and_Polynomials.Set_degree(px,degree);
     jm := DoblDobl_CSeries_Jaco_Matrices.Eval(jp,x);
@@ -212,6 +223,9 @@ package body DoblDobl_Newton_Matrix_Series is
       for i in dx'range loop
         DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
       end loop;
+      nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(dx);
+      put(file,"The max norm of the update : ");
+      put(file,nrm,3); new_line(file);
       DoblDobl_Complex_Series_Vectors.Add(x,dx);
       DoblDobl_Complex_Series_Vectors.Clear(dx);
     end if;
@@ -355,6 +369,9 @@ package body DoblDobl_Newton_Matrix_Series is
         for i in dx'range loop
           DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
         end loop;
+        nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(dx);
+        put(file,"The max norm of the update : ");
+        put(file,nrm,3); new_line(file);
         DoblDobl_Complex_Series_Vectors.Add(x,dx);
         DoblDobl_Complex_Series_Vectors.Clear(dx);
       end if;
@@ -502,6 +519,9 @@ package body DoblDobl_Newton_Matrix_Series is
         for i in dx'range loop
           DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
         end loop;
+        nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(dx);
+        put(file,"The max norm of the update : ");
+        put(file,nrm,3); new_line(file);
         DoblDobl_Complex_Series_Vectors.Add(x,dx);
         DoblDobl_Complex_Series_Vectors.Clear(dx);
       end if;
@@ -591,6 +611,7 @@ package body DoblDobl_Newton_Matrix_Series is
     jm : DoblDobl_Complex_Series_Matrices.Matrix(p'range,x'range);
     xp,xd,xdn : DoblDobl_Complex_Vector_Series.Vector(degree);
     mj : DoblDobl_Complex_Matrix_Series.Matrix(degree);
+    nrm : double_double;
 
   begin
     px := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
@@ -598,6 +619,9 @@ package body DoblDobl_Newton_Matrix_Series is
     for i in px'range loop
       DoblDobl_Complex_Series_io.put(file,px(i)); new_line(file);
     end loop;
+    nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(px);
+    put(file,"The max norm of the evaluation : ");
+    put(file,nrm,3); new_line(file);
     DoblDobl_Complex_Series_Vectors.Min(px);
     Complex_Series_and_Polynomials.Set_degree(px,degree);
     jm := DoblDobl_CSeries_Jaco_Matrices.Eval(jp,x);
@@ -613,6 +637,9 @@ package body DoblDobl_Newton_Matrix_Series is
     for i in dx'range loop
       DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
     end loop;
+    nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(dx);
+    put(file,"The max norm of the update : ");
+    put(file,nrm,3); new_line(file);
     DoblDobl_Complex_Series_Vectors.Clear(dx);
     DoblDobl_Complex_Series_Vectors.Clear(px);
     DoblDobl_Complex_Series_Matrices.Clear(jm);

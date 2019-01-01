@@ -79,6 +79,7 @@ package body QuadDobl_Newton_Matrix_Series is
     jm : QuadDobl_Complex_Series_Matrices.Matrix(p'range,x'range);
     xp,xd : QuadDobl_Complex_Vector_Series.Vector(degree);
     mj : QuadDobl_Complex_Matrix_Series.Matrix(degree);
+    nrm : quad_double;
 
   begin
     px := QuadDobl_CSeries_Poly_SysFun.Eval(p,x);
@@ -86,6 +87,9 @@ package body QuadDobl_Newton_Matrix_Series is
     for i in px'range loop
       QuadDobl_Complex_Series_io.put(file,px(i)); new_line(file);
     end loop;
+    nrm := QuadDobl_CSeries_Vector_Norms.Max_Norm(px);
+    put(file,"The max norm of the evaluation : ");
+    put(file,nrm,3); new_line(file);
     QuadDobl_Complex_Series_Vectors.Min(px);
     Complex_Series_and_Polynomials.Set_degree(px,degree);
     jm := QuadDobl_CSeries_Jaco_Matrices.Eval(jp,x);
@@ -101,6 +105,9 @@ package body QuadDobl_Newton_Matrix_Series is
       for i in dx'range loop
         QuadDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
       end loop;
+      nrm := QuadDobl_CSeries_Vector_Norms.Max_Norm(dx);
+      put(file,"The max norm of the update : ");
+      put(file,nrm,3); new_line(file);
       QuadDobl_Complex_Series_Vectors.Add(x,dx);
       QuadDobl_Complex_Series_Vectors.Clear(dx);
     end if;
@@ -191,6 +198,7 @@ package body QuadDobl_Newton_Matrix_Series is
     xp,xd : QuadDobl_Complex_Vector_Series.Vector(degree);
     mj : QuadDobl_Complex_Matrix_Series.Matrix(degree);
     one : constant quad_double := create(1.0);
+    nrm : quad_double;
 
   begin
     px := QuadDobl_CSeries_Poly_SysFun.Eval(p,x);
@@ -198,6 +206,9 @@ package body QuadDobl_Newton_Matrix_Series is
     for i in px'range loop
       QuadDobl_Complex_Series_io.put(file,px(i)); new_line(file);
     end loop;
+    nrm := QuadDobl_CSeries_Vector_Norms.Max_Norm(px);
+    put(file,"The max norm of the evaluation : ");
+    put(file,nrm,3); new_line(file);
     QuadDobl_Complex_Series_Vectors.Min(px);
     Complex_Series_and_Polynomials.Set_degree(px,degree);
     jm := QuadDobl_CSeries_Jaco_Matrices.Eval(jp,x);
@@ -212,6 +223,9 @@ package body QuadDobl_Newton_Matrix_Series is
       for i in dx'range loop
         QuadDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
       end loop;
+      nrm := QuadDobl_CSeries_Vector_Norms.Max_Norm(dx);
+      put(file,"The max norm of the update : ");
+      put(file,nrm,3); new_line(file);
       QuadDobl_Complex_Series_Vectors.Add(x,dx);
       QuadDobl_Complex_Series_Vectors.Clear(dx);
     end if;
@@ -355,6 +369,9 @@ package body QuadDobl_Newton_Matrix_Series is
         for i in dx'range loop
           QuadDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
         end loop;
+        nrm := QuadDobl_CSeries_Vector_Norms.Max_Norm(dx);
+        put(file,"The max norm of the update : ");
+        put(file,nrm,3); new_line(file);
         QuadDobl_Complex_Series_Vectors.Add(x,dx);
         QuadDobl_Complex_Series_Vectors.Clear(dx);
       end if;
@@ -502,6 +519,9 @@ package body QuadDobl_Newton_Matrix_Series is
         for i in dx'range loop
           QuadDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
         end loop;
+        nrm := QuadDobl_CSeries_Vector_Norms.Max_Norm(dx);
+        put(file,"The max norm of the update : ");
+        put(file,nrm,3); new_line(file);
         QuadDobl_Complex_Series_Vectors.Add(x,dx);
         QuadDobl_Complex_Series_Vectors.Clear(dx);
       end if;
@@ -588,6 +608,7 @@ package body QuadDobl_Newton_Matrix_Series is
     jm : QuadDobl_Complex_Series_Matrices.Matrix(p'range,x'range);
     xp,xd,xdn : QuadDobl_Complex_Vector_Series.Vector(degree);
     mj : QuadDobl_Complex_Matrix_Series.Matrix(degree);
+    nrm : quad_double;
 
   begin
     px := QuadDobl_CSeries_Poly_SysFun.Eval(p,x);
@@ -595,6 +616,9 @@ package body QuadDobl_Newton_Matrix_Series is
     for i in px'range loop
       QuadDobl_Complex_Series_io.put(file,px(i)); new_line(file);
     end loop;
+    nrm := QuadDobl_CSeries_Vector_Norms.Max_Norm(px);
+    put(file,"The max norm of the evaluation : ");
+    put(file,nrm,3); new_line(file);
     QuadDobl_Complex_Series_Vectors.Min(px);
     Complex_Series_and_Polynomials.Set_degree(px,degree);
     jm := QuadDobl_CSeries_Jaco_Matrices.Eval(jp,x);
@@ -610,6 +634,9 @@ package body QuadDobl_Newton_Matrix_Series is
     for i in dx'range loop
       QuadDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
     end loop;
+    nrm := QuadDobl_CSeries_Vector_Norms.Max_Norm(dx);
+    put(file,"The max norm of the update : ");
+    put(file,nrm,3); new_line(file);
     QuadDobl_Complex_Matrix_Series.Clear(mj);
     QuadDobl_Complex_Vector_Series.Clear(xp);
     QuadDobl_Complex_Vector_Series.Clear(xd);
