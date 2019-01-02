@@ -119,18 +119,24 @@ ts_cserlin                         : test on linearization
 ts_cserinv                         : test on inverting singular problems
 ------------------------------------------------------------------------------
 standard_cseries_polynomials       : polynomials with series as coefficients
-standard_cseries_poly_functions    : evaluating standard series polynomials
-standard_cseries_poly_systems      : systems of standard series polynomials
+standard_cseries_polynomials_io    : output of standard cseries polynomials
+standard_cseries_poly_functions    : evaluating standard cseries polynomials
+standard_cseries_poly_systems      : systems of standard cseries polynomials
+standard_cseries_poly_systems_io   : output of standard cseries poly systems
 standard_cseries_poly_sysfun       : evaluating standard series poly systems
 standard_cseries_jaco_matrices     : differentiating standard series systems
 dobldobl_cseries_polynomials       : polynomials with series as coefficients
-dobldobl_cseries_poly_functions    : evaluating dobldobl series polynomials
-dobldobl_cseries_poly_systems      : systems of dobldobl series polynomials
+dobldobl_cseries_polynomials_io    : output of dobldobl cseries polynomials
+dobldobl_cseries_poly_functions    : evaluating dobldobl cseries polynomials
+dobldobl_cseries_poly_systems      : systems of dobldobl cseries polynomials
+dobldobl_cseries_poly_systems_io   : output of dobldobl cseries poly systems
 dobldobl_cseries_poly_sysfun       : evaluating dobldobl series poly systems
 dobldobl_cseries_jaco_matrices     : differentiating dobldobl series systems
 quaddobl_cseries_polynomials       : polynomials with series as coefficients
-quaddobl_cseries_poly_functions    : evaluating quaddobl series polynomials
-quaddobl_cseries_poly_systems      : systems of quaddobl series polynomials
+quaddobl_cseries_polynomials_io    : output of quaddobl cseries polynomials
+quaddobl_cseries_poly_functions    : evaluating quaddobl cseries polynomials
+quaddobl_cseries_poly_systems      : systems of quaddobl cseries polynomials
+quaddobl_cseries_poly_systems_io   : output of quaddobl cseries poly systems
 quaddobl_cseries_poly_sysfun       : evaluating quaddobl series poly systems
 quaddobl_series_jaco_matrices      : differentiating quaddobl series systems
 complex_series_and_polynomials     : convertor functions
@@ -140,6 +146,8 @@ dobldobl_polynomial_cseries        : dobldobl polynomial series
 quaddobl_polynomial_cseries        : quaddobl polynomial series
 ts_cserpol                         : test on series polynomials
 ts_csersys                         : test systems of series polynomials
+random_series_polynomials          : random polynomials with series coeff
+ts_sercffpol                       : test series coefficient-parameter eval
 ------------------------------------------------------------------------------
 
 Below are the descriptions of the original design,

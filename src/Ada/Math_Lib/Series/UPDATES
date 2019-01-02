@@ -1,3 +1,9 @@
+Wed 2 Jan 2019 : new test procedure ts_sercffpol, to test the coefficient
+  parameter evaluation and differentiation of series polynomials,
+  which lead to new packages random_series_polynomials and better output
+  defined by {standard,dobldobl,quaddobl}__cseries_polynomial_io
+  and {standard,dobldobl,quaddobl}__cseries_poly_systems_io.
+
 Wed 26 Dec 2018 : bug fix in generic_dense_series.adb and in the
   {standard,dobldobl,quaddobl}_complex_algebraic_series.adb.
 
