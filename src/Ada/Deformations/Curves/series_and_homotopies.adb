@@ -1,6 +1,9 @@
 with Standard_Natural_Vectors;
+with Standard_Complex_Series;
 with Standard_Complex_Series_Functions;
+with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_Functions;
+with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_Functions;
 with Complex_Series_and_Polynomials;
 
@@ -483,61 +486,115 @@ package body Series_and_Homotopies is
   procedure Shift ( p : in out Standard_CSeries_Polynomials.Poly;
                     c : in double_float ) is
 
-    res : constant Standard_CSeries_Polynomials.Poly := Shift(p,c);
+    procedure Shift_Term ( trm : in Standard_CSeries_Polynomials.Term;
+                           cont : out boolean ) is
+
+      cff : Standard_Complex_Series.Link_to_Series := trm.cf;
+
+    begin
+      Standard_Complex_Series_Functions.Shift(cff,c);
+      cont := true;
+    end Shift_Term;
+    procedure Shift_Terms is
+      new Standard_CSeries_Polynomials.Visiting_Iterator(Shift_Term);
 
   begin
-    Standard_CSeries_Polynomials.Clear(p);
-    p := res;
+    Shift_Terms(p);
   end Shift;
 
   procedure Shift ( p : in out Standard_CSeries_Polynomials.Poly;
                     c : in Standard_Complex_Numbers.Complex_Number ) is
 
-    res : constant Standard_CSeries_Polynomials.Poly := Shift(p,c);
+    procedure Shift_Term ( trm : in Standard_CSeries_Polynomials.Term;
+                           cont : out boolean ) is
+
+      cff : Standard_Complex_Series.Link_to_Series := trm.cf;
+
+    begin
+      Standard_Complex_Series_Functions.Shift(cff,c);
+      cont := true;
+    end Shift_Term;
+    procedure Shift_Terms is
+      new Standard_CSeries_Polynomials.Visiting_Iterator(Shift_Term);
 
   begin
-    Standard_CSeries_Polynomials.Clear(p);
-    p := res;
+    Shift_Terms(p);
   end Shift;
 
   procedure Shift ( p : in out DoblDobl_CSeries_Polynomials.Poly;
                     c : in double_double ) is
 
-    res : constant DoblDobl_CSeries_Polynomials.Poly := Shift(p,c);
+    procedure Shift_Term ( trm : in DoblDobl_CSeries_Polynomials.Term;
+                           cont : out boolean ) is
+
+      cff : DoblDobl_Complex_Series.Link_to_Series := trm.cf;
+
+    begin
+      DoblDobl_Complex_Series_Functions.Shift(cff,c);
+      cont := true;
+    end Shift_Term;
+    procedure Shift_Terms is
+      new DoblDobl_CSeries_Polynomials.Visiting_Iterator(Shift_Term);
 
   begin
-    DoblDobl_CSeries_Polynomials.Clear(p);
-    p := res;
+    Shift_Terms(p);
   end Shift;
 
   procedure Shift ( p : in out DoblDobl_CSeries_Polynomials.Poly;
                     c : in DoblDobl_Complex_Numbers.Complex_Number ) is
 
-    res : constant DoblDobl_CSeries_Polynomials.Poly := Shift(p,c);
+    procedure Shift_Term ( trm : in DoblDobl_CSeries_Polynomials.Term;
+                           cont : out boolean ) is
+
+      cff : DoblDobl_Complex_Series.Link_to_Series := trm.cf;
+
+    begin
+      DoblDobl_Complex_Series_Functions.Shift(cff,c);
+      cont := true;
+    end Shift_Term;
+    procedure Shift_Terms is
+      new DoblDobl_CSeries_Polynomials.Visiting_Iterator(Shift_Term);
 
   begin
-    DoblDobl_CSeries_Polynomials.Clear(p);
-    p := res;
+    Shift_Terms(p);
   end Shift;
 
   procedure Shift ( p : in out QuadDobl_CSeries_Polynomials.Poly;
                     c : in quad_double ) is
 
-    res : constant QuadDobl_CSeries_Polynomials.Poly := Shift(p,c);
+    procedure Shift_Term ( trm : in QuadDobl_CSeries_Polynomials.Term;
+                           cont : out boolean ) is
+
+      cff : QuadDobl_Complex_Series.Link_to_Series := trm.cf;
+
+    begin
+      QuadDobl_Complex_Series_Functions.Shift(cff,c);
+      cont := true;
+    end Shift_Term;
+    procedure Shift_Terms is
+      new QuadDobl_CSeries_Polynomials.Visiting_Iterator(Shift_Term);
 
   begin
-    QuadDobl_CSeries_Polynomials.Clear(p);
-    p := res;
+    Shift_Terms(p);
   end Shift;
 
   procedure Shift ( p : in out QuadDobl_CSeries_Polynomials.Poly;
                     c : in QuadDobl_Complex_Numbers.Complex_Number ) is
 
-    res : constant QuadDobl_CSeries_Polynomials.Poly := Shift(p,c);
+    procedure Shift_Term ( trm : in QuadDobl_CSeries_Polynomials.Term;
+                           cont : out boolean ) is
+
+      cff : QuadDobl_Complex_Series.Link_to_Series := trm.cf;
+
+    begin
+      QuadDobl_Complex_Series_Functions.Shift(cff,c);
+      cont := true;
+    end Shift_Term;
+    procedure Shift_Terms is
+      new QuadDobl_CSeries_Polynomials.Visiting_Iterator(Shift_Term);
 
   begin
-    QuadDobl_CSeries_Polynomials.Clear(p);
-    p := res;
+    Shift_Terms(p);
   end Shift;
 
   function Shift ( p : Standard_CSeries_Poly_Systems.Poly_Sys;
@@ -620,62 +677,50 @@ package body Series_and_Homotopies is
 
   procedure Shift ( p : in out Standard_CSeries_Poly_Systems.Poly_Sys;
                     c : in double_float ) is
-
-    res : Standard_CSeries_Poly_Systems.Poly_Sys(p'range) := Shift(p,c);
-
   begin
-    Standard_CSeries_Poly_Systems.Clear(p);
-    p := res;
+    for i in p'range loop
+      Shift(p(i),c);
+    end loop;
   end Shift;
 
   procedure Shift ( p : in out Standard_CSeries_Poly_Systems.Poly_Sys;
                     c : in Standard_Complex_Numbers.Complex_Number ) is
-
-    res : Standard_CSeries_Poly_Systems.Poly_Sys(p'range) := Shift(p,c);
-
   begin
-    Standard_CSeries_Poly_Systems.Clear(p);
-    p := res;
+    for i in p'range loop
+      Shift(p(i),c);
+    end loop;
   end Shift;
 
   procedure Shift ( p : in out DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                     c : in double_double ) is
-
-    res : DoblDobl_CSeries_Poly_Systems.Poly_Sys(p'range) := Shift(p,c);
-
   begin
-    DoblDobl_CSeries_Poly_Systems.Clear(p);
-    p := res;
+    for i in p'range loop
+      Shift(p(i),c);
+    end loop;
   end Shift;
 
   procedure Shift ( p : in out DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                     c : in DoblDobl_Complex_Numbers.Complex_Number ) is
-
-    res : DoblDobl_CSeries_Poly_Systems.Poly_Sys(p'range) := Shift(p,c);
-
   begin
-    DoblDobl_CSeries_Poly_Systems.Clear(p);
-    p := res;
+    for i in p'range loop
+      Shift(p(i),c);
+    end loop;
   end Shift;
 
   procedure Shift ( p : in out QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                     c : in quad_double ) is
-
-    res : QuadDobl_CSeries_Poly_Systems.Poly_Sys(p'range) := Shift(p,c);
-
   begin
-    QuadDobl_CSeries_Poly_Systems.Clear(p);
-    p := res;
+    for i in p'range loop
+      Shift(p(i),c);
+    end loop;
   end Shift;
 
   procedure Shift ( p : in out QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                     c : in QuadDobl_Complex_Numbers.Complex_Number ) is
-
-    res : QuadDobl_CSeries_Poly_Systems.Poly_Sys(p'range) := Shift(p,c);
-
   begin
-    QuadDobl_CSeries_Poly_Systems.Clear(p);
-    p := res;
+    for i in p'range loop
+      Shift(p(i),c);
+    end loop;
   end Shift;
 
 end Series_and_Homotopies;
