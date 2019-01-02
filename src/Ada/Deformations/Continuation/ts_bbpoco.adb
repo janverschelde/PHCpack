@@ -62,7 +62,8 @@ procedure ts_bbpoco is
     Read_Name_and_Create_File(file);
     new_line;
     put("Give the number of tasks : "); get(nt);
-    Black_Box_Polynomial_Continuation(file,nt,lp.all,lq.all,gamma,sols,elap);
+    Black_Box_Polynomial_Continuation
+      (file,true,nt,lp.all,lq.all,gamma,sols,elap);
   end Standard_Continuation;
 
   procedure DoblDobl_Continuation is

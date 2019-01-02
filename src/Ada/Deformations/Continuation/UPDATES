@@ -1,3 +1,5 @@
+Wed 2 Jan 2019 : fixed error in ts_bbpoco.adb.
+
 Tue 18 Dec 2018 : added writing of time stamps to mainpoco.adb.
 
 Fri 31 Aug 2018 : filtered the solutions on reaching the target in
