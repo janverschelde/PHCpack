@@ -1,3 +1,6 @@
+Wed 2 Jan 2019 : fixed compiler error in ts_tropawit.adb because of
+  changed specification in standard_blackbox_continuations.
+
 Fri 11 Dec 2015 : updated ts_tropawit.adb for standard_blackbox_continuations,
   a package name change from black_box_poly_continuations.
 

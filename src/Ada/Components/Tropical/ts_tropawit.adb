@@ -81,7 +81,7 @@ procedure ts_tropawit is
     Set_Continuation_Parameter(rsols,Create(0.0));
     put_line("moving the hyperplane ...");
    -- Black_Box_Polynomial_Continuation(standard_output,r,p,one,rsols,pd);
-    Black_Box_Polynomial_Continuation(standard_output,r,p,rsols,pd);
+    Black_Box_Polynomial_Continuation(standard_output,true,r,p,rsols,pd);
   end Move;
 
   procedure Main is
