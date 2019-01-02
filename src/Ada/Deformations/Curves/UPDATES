@@ -1,6 +1,7 @@
 Tue 1 Jan 2019 : added consistently the max norm computation to
   {standard,dobldobl,quaddobl}_newton_matrix_series.adb.
   Improved the shift procedures in series_and_homotopies.adb.
+  Applied the improved shift procedures in series_and_trackers.adb.
 
 Fri 28 Dec 2018 : modified series_path_trackers.adb so target system,
   start system, and start solutions are written to the output file.

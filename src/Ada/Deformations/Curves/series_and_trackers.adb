@@ -205,16 +205,18 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Standard_Complex_Series_Vectors.Clear(srv);
-      Standard_CSeries_Poly_Systems.Clear(wrk);
+     -- Standard_CSeries_Poly_Systems.Clear(wrk);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      wrk := Series_and_Homotopies.Shift(hom,-t);
+     -- wrk := Series_and_Homotopies.Shift(hom,-t);
+      Series_and_Homotopies.Shift(wrk,-step);
     end loop;
     Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
+    Standard_CSeries_Poly_Systems.Clear(wrk);
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
     Homotopy_Newton_Steps.Correct
       (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
@@ -295,9 +297,11 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
-      DoblDobl_CSeries_Poly_Systems.Clear(wrk);
-      dd_t := create(-t);
-      wrk := Series_and_Homotopies.Shift(hom,dd_t);
+     -- DoblDobl_CSeries_Poly_Systems.Clear(wrk);
+     -- dd_t := create(-t);
+     -- wrk := Series_and_Homotopies.Shift(hom,dd_t);
+      dd_step := create(step);
+      Series_and_Homotopies.Shift(wrk,-dd_step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
@@ -306,6 +310,7 @@ package body Series_and_Trackers is
     end loop;
     DoblDobl_Pade_Approximants.Clear(pv);
     DoblDobl_Complex_VecVecs.Clear(poles);
+    DoblDobl_CSeries_Poly_Systems.Clear(wrk);
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
     dd_step := create(0.0);
@@ -390,9 +395,11 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       QuadDobl_Complex_Series_Vectors.Clear(srv);
-      QuadDobl_CSeries_Poly_Systems.Clear(wrk);
-      qd_t := create(-t);
-      wrk := Series_and_Homotopies.Shift(hom,qd_t);
+     -- QuadDobl_CSeries_Poly_Systems.Clear(wrk);
+     -- qd_t := create(-t);
+     -- wrk := Series_and_Homotopies.Shift(hom,qd_t);
+      qd_step := create(step);
+      Series_and_Homotopies.Shift(wrk,-qd_step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
@@ -401,6 +408,7 @@ package body Series_and_Trackers is
     end loop;
     QuadDobl_Pade_Approximants.Clear(pv);
     QuadDobl_Complex_VecVecs.Clear(poles);
+    QuadDobl_CSeries_Poly_Systems.Clear(wrk);
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     qd_step := create(0.0);
@@ -505,16 +513,18 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Standard_Complex_Series_Vectors.Clear(srv);
-      Standard_CSeries_Poly_Systems.Clear(wrk);
+     -- Standard_CSeries_Poly_Systems.Clear(wrk);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      wrk := Series_and_Homotopies.Shift(hom,-t);
+     -- wrk := Series_and_Homotopies.Shift(hom,-t);
+      Series_and_Homotopies.Shift(wrk,-step);
     end loop;
     Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
+    Standard_CSeries_Poly_Systems.Clear(wrk);
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
     Homotopy_Newton_Steps.Correct
       (file,nbq,1.0,tolres,pars.corsteps,nbrit,
@@ -622,9 +632,11 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
-      DoblDobl_CSeries_Poly_Systems.Clear(wrk);
-      dd_t := create(-t);
-      wrk := Series_and_Homotopies.Shift(hom,dd_t);
+     -- DoblDobl_CSeries_Poly_Systems.Clear(wrk);
+     -- dd_t := create(-t);
+     -- wrk := Series_and_Homotopies.Shift(hom,dd_t);
+      dd_step := create(step);
+      Series_and_Homotopies.Shift(wrk,-dd_step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
@@ -633,6 +645,7 @@ package body Series_and_Trackers is
     end loop;
     DoblDobl_Pade_Approximants.Clear(pv);
     DoblDobl_Complex_VecVecs.Clear(poles);
+    DoblDobl_CSeries_Poly_Systems.Clear(wrk);
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
     dd_step := create(0.0);
@@ -744,9 +757,11 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       QuadDobl_Complex_Series_Vectors.Clear(srv);
-      QuadDobl_CSeries_Poly_Systems.Clear(wrk);
-      qd_t := create(-t);
-      wrk := Series_and_Homotopies.Shift(hom,qd_t);
+     -- QuadDobl_CSeries_Poly_Systems.Clear(wrk);
+     -- qd_t := create(-t);
+     -- wrk := Series_and_Homotopies.Shift(hom,qd_t);
+      qd_step := create(step);
+      Series_and_Homotopies.Shift(wrk,-qd_step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
@@ -755,6 +770,7 @@ package body Series_and_Trackers is
     end loop;
     QuadDobl_Pade_Approximants.Clear(pv);
     QuadDobl_Complex_VecVecs.Clear(poles);
+    QuadDobl_CSeries_Poly_Systems.Clear(wrk);
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     qd_step := create(0.0);
