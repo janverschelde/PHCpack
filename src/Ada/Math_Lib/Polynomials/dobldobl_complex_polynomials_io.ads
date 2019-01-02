@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Symbol_Table;                       use Symbol_Table;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with DoblDobl_Complex_Numbers;           use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Polynomials;       use DoblDobl_Complex_Polynomials;
 
 package DoblDobl_Complex_Polynomials_io is
@@ -14,6 +15,12 @@ package DoblDobl_Complex_Polynomials_io is
 
   -- DESCRIPTION :
   --   Reads a multivariate polynomial from standard input or from file.
+
+  procedure Write_Number ( file : in file_type; c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   Writes the double double complex number to file
+  --   in the format ( real_part(c) + imag_part(c)*I ).
 
   procedure put ( p : in Poly );
   procedure put ( file : in file_type; p : in Poly );

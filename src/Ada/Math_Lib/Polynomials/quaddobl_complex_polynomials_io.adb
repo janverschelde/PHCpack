@@ -24,13 +24,9 @@ package body QuadDobl_Complex_Polynomials_io is
     Multprec_Complex_Polynomials.Clear(mp);
   end get;
 
--- AUXILIARIES FOR OUTPUT ROUTINES :
+-- THE OUTPUT OPERATIONS :
 
   procedure Write_Number ( file : in file_type; c : in Complex_Number ) is
-
-  -- DESCRIPTION :
-  --   Writes the double double complex number to file
-  --   in the format ( real_part(c) + imag_part(c)*I ).
 
     re : constant quad_double := REAL_PART(c);
     im : constant quad_double := IMAG_PART(c);
@@ -43,8 +39,6 @@ package body QuadDobl_Complex_Polynomials_io is
     put(file,im);
     put(file,"*I)");
   end Write_Number;
-
--- THE OUTPUT OPERATIONS :
 
   procedure put ( p : in Poly ) is
   begin

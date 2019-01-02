@@ -1,6 +1,5 @@
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
-with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
 with Write_Factors;                     use Write_Factors;
 with DoblDobl_Polynomial_Convertors;    use DoblDobl_Polynomial_Convertors;
 with Multprec_Complex_Polynomials;
@@ -24,13 +23,9 @@ package body DoblDobl_Complex_Polynomials_io is
     Multprec_Complex_Polynomials.Clear(mp);
   end get;
 
--- AUXILIARIES FOR OUTPUT ROUTINES :
+-- THE OUTPUT OPERATIONS :
 
   procedure Write_Number ( file : in file_type; c : in Complex_Number ) is
-
-  -- DESCRIPTION :
-  --   Writes the double double complex number to file
-  --   in the format ( real_part(c) + imag_part(c)*I ).
 
     re : constant double_double := REAL_PART(c);
     im : constant double_double := IMAG_PART(c);
