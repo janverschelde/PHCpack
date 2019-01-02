@@ -34,7 +34,7 @@ package body Witness_Generate_and_Classify is
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
     Set_Continuation_Parameter(sols,Create(0.0));
-    Black_Box_Polynomial_Continuation(file,target,embsys,sols,pocotime);
+    Black_Box_Polynomial_Continuation(file,true,target,embsys,sols,pocotime);
   end Down_Continuation;
 
   procedure Timing_Summary ( file : in file_type;
@@ -94,7 +94,7 @@ package body Witness_Generate_and_Classify is
       Black_Box_Root_Counting(file,0,pp,deg,rc,q,sols,qsols0,roco,hoco);
       if rc /= 0 then
         Scale(pp);
-        Black_Box_Polynomial_Continuation(file,pp,q,sols,poco);
+        Black_Box_Polynomial_Continuation(file,true,pp,q,sols,poco);
       end if;
       Clear(pp);
     end;

@@ -1,3 +1,6 @@
+Wed 2 Jan 2019 : fixed compiler error in witness_generate_and_classify.adb,
+  for changed specifications in black_box_continuations.
+
 Thu 23 Aug 2018 : new package store_witness_solutions contains the definitions
   of the Store procedures, used in ts_witsols.adb.  Isolated the computation
   of a lower bound on the dimension of a solution set into a separate function
