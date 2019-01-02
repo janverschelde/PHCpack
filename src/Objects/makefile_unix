@@ -588,6 +588,10 @@ ts_sersys:
 ts_csersys:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_csersys.adb -o $(BIN)/ts_csersys
 
+ts_sercffpol:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_sercffpol.adb \
+              -o $(BIN)/ts_sercffpol
+
 # Test programs for the Math_Lib/AD library :
 
 ts_monom:
