@@ -1,3 +1,6 @@
+Wed 2 Jan 2019 : extended generic_{poly,laur}_system_functions with
+  a function to get the coefficients of all polynomials in the system.
+
 Tue 22 Mar 2016 : new test procedure ts_evddpol.adb to test evaluation of
   polynomials with double double complex coefficients.
 

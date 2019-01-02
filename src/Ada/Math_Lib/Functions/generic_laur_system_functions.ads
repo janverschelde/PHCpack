@@ -42,6 +42,13 @@ package Generic_Laur_System_Functions is
   function Create ( p : Laur_Sys ) return Eval_Laur_Sys;
   function Create ( p : Laur_Sys ) return Eval_Coeff_Laur_Sys;
 
+  function Coeff ( p : Laur_Sys ) return VecVec;
+
+  -- DESCRIPTION :
+  --   Returns for each polynomial in p the coefficient vector.
+  --   The coefficients on return are used as the "c" parameter in
+  --   the evaluation of a coefficient parameter system below.
+
 -- EVALUATORS :
 
   function Eval ( p : Laur_Sys; x : number; i : integer32 ) return Laur_Sys;

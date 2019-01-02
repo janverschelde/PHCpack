@@ -43,6 +43,13 @@ package Generic_Poly_System_Functions is
   function Create ( p : Poly_Sys ) return Eval_Poly_Sys;
   function Create ( p : Poly_Sys ) return Eval_Coeff_Poly_Sys;
 
+  function Coeff ( p : Poly_Sys ) return VecVec;
+
+  -- DESCRIPTION :
+  --   Returns for each polynomial in p the coefficient vector.
+  --   The coefficients on return are used as the "c" parameter in
+  --   the evaluation of a coefficient parameter system below.
+
 -- EVALUATORS :
 
   function Eval ( p : Poly_Sys; x : number; i : integer32 ) return Poly_Sys;

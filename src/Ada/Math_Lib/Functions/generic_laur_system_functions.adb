@@ -28,6 +28,17 @@ package body Generic_Laur_System_Functions is
     return res;
   end Create;
 
+  function Coeff ( p : Laur_Sys ) return VecVec is
+
+    res : VecVec(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := new Vector'(Coeff(p(i)));
+    end loop;
+    return res;
+  end Coeff;
+
 -- EVALUATORS :
 
   function Eval ( p : Laur_Sys; x : number; i : integer32 ) return Laur_Sys is
