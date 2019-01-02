@@ -1,3 +1,6 @@
+Wed 2 Jan 2019 : removed the superfluous Coeff() functions from the
+  package polyhedral_start_systems.
+
 Sun 18 Nov 2018 : new ts_mtpermtrol to add a control to the permanent
   computation with multitasking.
 

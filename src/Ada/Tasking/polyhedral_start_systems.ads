@@ -42,16 +42,6 @@ package Polyhedral_Start_Systems is
 
 -- (1) TABLEAU DATA STRUCTURES FOR START SYSTEM SELECTION :
 
-  function Coeff ( q : Standard_Complex_Laur_Systems.Laur_Sys )
-                 return Standard_Complex_VecVecs.VecVec;
-  function Coeff ( q : DoblDobl_Complex_Laur_Systems.Laur_Sys )
-                 return DoblDobl_Complex_VecVecs.VecVec;
-  function Coeff ( q : QuadDobl_Complex_Laur_Systems.Laur_Sys )
-                 return QuadDobl_Complex_VecVecs.VecVec;
-
-  -- DESCRIPTION :
-  --   Returns the coefficient arrays of the polynomials in q.
-  
   function Is_Equal
              ( x : Standard_Integer_Vectors.Link_to_Vector;
                y : Standard_Floating_Vectors.Link_to_Vector )
