@@ -123,6 +123,51 @@ package body Series_and_Predictors is
 
   procedure Newton_Prediction
               ( file : in file_type; maxdeg,nit : in integer32;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in Standard_Complex_Vectors.Vector;
+                srv : out Standard_Complex_Series_Vectors.Vector;
+                eva : out Standard_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+    info : integer32;
+
+  begin
+    srv := Series_and_Solutions.Create(sol,0);
+    if verbose then
+      put_line(file,"The solution :");
+      Standard_Complex_Vectors_io.put_line(file,sol);
+      new_line(file);
+      put_line(file,"The series for the solution :");
+      Standard_Complex_Series_Vectors_io.put(file,srv);
+    end if;
+    if hom'last = sol'last then
+      if not verbose then
+        Run_LU_Newton(maxdeg,nit,hom,fhm,fcf,ejm,mlt,srv,info);
+      else
+        put_line(file,"Applying LU Newton ...");
+        Run_LU_Newton(file,maxdeg,nit,hom,fhm,fcf,ejm,mlt,srv,info,true);
+      end if;
+    else
+      if not verbose then
+        Run_QR_Newton(maxdeg,nit,hom,srv);
+      else
+        put_line(file,"Applying QR Newton ...");
+        Run_QR_Newton(file,maxdeg,nit,hom,srv,true);
+      end if;
+    end if;
+    eva := Standard_CSeries_Poly_SysFun.Eval(hom,srv);
+    if verbose then
+      put_line(file,"The evaluated series : ");
+      Complex_Series_and_Polynomials_io.put(file,eva);
+    end if;
+  end Newton_Prediction;
+
+  procedure Newton_Prediction
+              ( file : in file_type; maxdeg,nit : in integer32;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;

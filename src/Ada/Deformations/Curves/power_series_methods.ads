@@ -13,6 +13,8 @@ with DoblDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_VecVecs;
 with Standard_CSeries_Poly_Systems;
+with Standard_CSeries_Poly_SysFun;
+with Standard_CSeries_Jaco_Matrices;
 with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 
@@ -73,6 +75,49 @@ package Power_Series_Methods is
   --   maxdeg   maximal degree of the series;
   --   nbrit    number of new iterations;
   --   p        a polynomial system with series coefficients;
+  --   s        leading coefficients for a power series solution;
+  --   verbose  indicates if results of intermediate Newton steps
+  --            need to be written to file or to standard output.
+
+  -- ON RETURN :
+  --   s        a power series solution to p, up to some order;
+  --   info     return code of lufac on the Jacobian matrix.
+
+  procedure Run_LU_Newton
+              ( maxdeg,nbrit : in integer32;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out Standard_Complex_Series_Vectors.Vector;
+                info : out integer32; verbose : in boolean := false );
+  procedure Run_LU_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out Standard_Complex_Series_Vectors.Vector;
+                info : out integer32; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Applies as many steps with Newton's method as the value of nbrit,
+  --   starting at the solution in s to the system p,
+  --   applying LU factorization to compute the Newton updates,
+  --   in standard double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output, to write results,
+  --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
+  --   nbrit    number of new iterations;
+  --   p        a polynomial system with series coefficients;
+  --   f        coefficient-parameter homotopy for faster evaluation;
+  --   c        coefficient vectors of the homotopy;
+  --   ejm      coefficient-parameter matrix of all derivatives;
+  --   mlt      multiplication factors for the derivatives;
   --   s        leading coefficients for a power series solution;
   --   verbose  indicates if results of intermediate Newton steps
   --            need to be written to file or to standard output.

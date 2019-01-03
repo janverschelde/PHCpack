@@ -10,7 +10,10 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions;
+with Standard_Complex_Series_VecVecs;
 with Standard_CSeries_Poly_Systems;
+with Standard_CSeries_Poly_SysFun;
+with Standard_CSeries_Jaco_Matrices;
 with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 with Homotopy_Continuation_Parameters;
@@ -126,6 +129,42 @@ package Series_and_Trackers is
   -- ON ENTRY :
   --   file     for writing output during the computations;
   --   hom      a homotopy with series coefficients;
+  --   sol      start solution in the homotopy;
+  --   pars     values of the parameters and tolerances.
+
+  -- ON RETURN :
+  --   sol      solution at the end of the path;
+  --   nbrsteps is the total number of steps on the path;
+  --   nbrcorrs is the total number of corrector iterations on the path;
+  --   cntfail  is the total number of corrector failes on the paths;
+  --   minsize  is the smallest step size on the path;
+  --   maxsize  is the largest step size on the path.
+
+  procedure Track_One_Path
+              ( file : in file_type;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out Standard_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Tracks one path starting at the solution sol using the homotopy hom,
+  --   in standard double precision.
+  --   This version is verbose and writes extra diagnostic output to file.
+
+  -- ON ENTRY :
+  --   file     for writing output during the computations;
+  --   hom      a homotopy with series coefficients;
+  --   fhm      coefficient-parameter homotopy;
+  --   fcf      coefficient vectors of the homotopy;
+  --   ejm      coefficient-parameter matrix of all derivatives;
+  --   mlt      multiplication factors for the derivatives;
   --   sol      start solution in the homotopy;
   --   pars     values of the parameters and tolerances.
 

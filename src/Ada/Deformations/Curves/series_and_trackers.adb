@@ -32,9 +32,11 @@ with QuadDobl_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;
+with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_Vectors;
+with Standard_CSeries_Vector_Functions;
 with Standard_Pade_Approximants;
 with DoblDobl_Pade_Approximants;
 with QuadDobl_Pade_Approximants;
@@ -538,6 +540,128 @@ package body Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out Standard_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float;
+                verbose : in boolean := false ) is
+
+    wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
+    nbq : constant integer32 := hom'last;
+    nit : constant integer32 := integer32(pars.corsteps);
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : Standard_Complex_Series_Vectors.Vector(hom'range);
+    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
+       := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
+    poles : Standard_Complex_VecVecs.VecVec(pv'range)
+          := Homotopy_Pade_Approximants.Allocate_Standard_Poles(sol.n,dendeg);
+    tolcff : constant double_float := pars.epsilon;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
+    t,step,update : double_float := 0.0;
+    max_steps : constant natural32 := pars.maxsteps;
+    wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
+    onetarget : constant double_float := 1.0;
+    err,rco,res,frp,predres : double_float;
+    cfp : Standard_Complex_Numbers.Complex_Number;
+    nbrit : natural32 := 0;
+    wrk_fcf : Standard_Complex_Series_VecVecs.VecVec(fcf'range);
+
+  begin
+    minsize := 1.0; maxsize := 0.0;
+    Standard_CSeries_Poly_Systems.Copy(hom,wrk);
+    nbrcorrs := 0; cntfail := 0;
+    nbrsteps := max_steps;
+    wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
+    for k in 1..max_steps loop
+      if verbose then
+        put(file,"Step "); put(file,k,1); put(file," : ");
+      end if;
+     -- Series_and_Predictors.Newton_Prediction
+     --   (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
+      Series_and_Predictors.Newton_Prediction
+        (file,maxdeg,nit,wrk,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
+         -- verbose);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+      if verbose then
+        put(file,"Smallest forward pole radius :");
+        put(file,frp,3); new_line(file);
+        if Standard_Complex_Numbers.REAL_PART(cfp) >= 0.0
+         then put(file,"Closest pole :"); put(file,cfp); new_line(file);
+        end if;
+      end if;
+      step := Series_and_Predictors.Set_Step_Size
+                (file,eva,tolcff,alpha,verbose);
+      step := pars.sbeta*step;
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+      end if;
+      Standard_Complex_Series_Vectors.Clear(eva);
+      Set_Step(t,step,pars.maxsize,onetarget);
+      if verbose then
+        put(file,"Step size : "); put(file,step,3);
+        put(file," t = "); put(file,t,3);
+      end if;
+      loop
+        loop
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
+          predres := Residual_Prediction(wrk,wrk_sol,step);
+          if verbose
+           then put(file,"  residual : "); put(file,predres,3); new_line(file);
+          end if;
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          if verbose then
+            put(file,"Step size : "); put(file,step,3);
+            put(file," t = "); put(file,t,3);
+          end if;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Homotopy_Newton_Steps.Correct
+          (file,nbq,t,tolres,pars.corsteps,nbrit,
+           wrk_sol,err,rco,res,fail,verbose);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0; cntfail := cntfail + 1;
+        exit when (step < pars.minsize);
+      end loop;
+      Standard_Complex_Series_Vectors.Clear(srv);
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
+      end if;
+      Series_and_Homotopies.Shift(wrk,-step);
+      Standard_CSeries_Vector_Functions.Shift(wrk_fcf,-step);
+    end loop;
+    Standard_Pade_Approximants.Clear(pv);
+    Standard_Complex_VecVecs.Clear(poles);
+    Standard_CSeries_Poly_Systems.Clear(wrk);
+    wrk := Series_and_Homotopies.Shift(hom,-1.0);
+    Homotopy_Newton_Steps.Correct
+      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+       wrk_sol,err,rco,res,fail,verbose);
+    nbrcorrs := nbrcorrs + nbrit;
+    sol.t := Standard_Complex_Numbers.Create(t);
+    sol.v := wrk_sol;
+    sol.err := err; sol.rco := rco; sol.res := res;
+    Standard_CSeries_Poly_Systems.Clear(wrk);
+    Standard_Complex_Series_VecVecs.Clear(wrk_fcf);
+  end Track_One_Path;
+
+  procedure Track_One_Path
+              ( file : in file_type;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -817,6 +941,13 @@ package body Series_and_Trackers is
 
     use Standard_Complex_Solutions;
 
+    nvr : constant integer32 := integer32(Head_Of(sols).n);
+    fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+        := Standard_CSeries_Poly_SysFun.Create(hom);
+    fcf : Standard_Complex_Series_VecVecs.VecVec(hom'range)
+        := Standard_CSeries_Poly_SysFun.Coeff(hom);
+    ejm : Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(hom'range,1..nvr);
+    mlt : Standard_CSeries_Jaco_Matrices.Mult_Factors(hom'range,1..nvr);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -826,6 +957,7 @@ package body Series_and_Trackers is
     minsize,maxsize,smallest,largest : double_float;
 
   begin
+    Standard_CSeries_Jaco_Matrices.Create(hom,ejm,mlt);
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -835,8 +967,8 @@ package body Series_and_Trackers is
       if monitor
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
-      Track_One_Path(file,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
-                     minsize,maxsize,verbose);
+      Track_One_Path(file,hom,fhm,fcf,ejm,mlt,ls.all,pars,
+                     nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
       if verbose then
         Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       end if;
@@ -852,6 +984,10 @@ package body Series_and_Trackers is
       (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
     new_line(file);
     print_times(file,timer,"Tracking in double precision.");
+    Standard_CSeries_Poly_SysFun.Clear(fhm);
+    Standard_Complex_Series_VecVecs.Clear(fcf);
+    Standard_CSeries_Jaco_Matrices.Clear(ejm);
+    Standard_CSeries_Jaco_Matrices.Clear(mlt);
   end Track_Many_Paths;
 
   procedure Track_Many_Paths

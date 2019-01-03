@@ -66,6 +66,55 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( maxdeg,nbrit : in integer32;
+               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+               f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+               c : in Standard_Complex_Series_VecVecs.VecVec;
+               ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+               mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+               s : in out Standard_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false ) is
+  begin
+    Run_LU_Newton(standard_output,maxdeg,nbrit,p,f,c,ejm,mlt,s,info,verbose);
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( file : in file_type; maxdeg,nbrit : in integer32;
+               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+               f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+               c : in Standard_Complex_Series_VecVecs.VecVec;
+               ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+               mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+               s : in out Standard_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false ) is
+
+    use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-12;
+    eva : Standard_Complex_Series_Vectors.Vector(p'range);
+
+  begin
+    if not verbose then
+      LU_Newton_Steps(p,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+    else
+      LU_Newton_Steps(file,p,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := Standard_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        Standard_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( maxdeg,nbrit : in integer32;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out DoblDobl_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false ) is

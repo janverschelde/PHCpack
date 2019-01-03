@@ -10,7 +10,10 @@ with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
+with Standard_Complex_Series_VecVecs;
 with Standard_CSeries_Poly_Systems;
+with Standard_CSeries_Poly_SysFun;
+with Standard_CSeries_Jaco_Matrices;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Series;
@@ -105,6 +108,44 @@ package Series_and_Predictors is
   --   nit      number of iterations with Newton's method;
   --   hom      a homotopy with coefficients as power series,
   --            where the series parameter is the continuation parameter;
+  --   sol      solution of the homotopy for t = 0, its coordinates
+  --            contain the leading coefficients of the power series;
+  --   verbose  if true, then additional output is written to file.
+
+  -- ON RETURN :
+  --   srv      vector of power series, to predict the solution
+  --            for some small positive value of the continuation parameter,
+  --            srv'range = sol'range;
+  --   eva      evaluated series vector srv in the homotopy hom;
+  --            eva'range = hom'range.
+
+  procedure Newton_Prediction
+              ( file : in file_type; maxdeg,nit : in integer32;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in Standard_Complex_Vectors.Vector;
+                srv : out Standard_Complex_Series_Vectors.Vector;
+                eva : out Standard_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method on the homotopy in hom,
+  --   starting at the coordinates of the solution as the leading
+  --   coefficients in the power series in double precision.
+
+  -- ON ENTRY :
+  --   file     to write extra diagnostic output to;
+  --   maxdeg   maximal degree of the series;
+  --   nit      number of iterations with Newton's method;
+  --   hom      a homotopy with coefficients as power series,
+  --            where the series parameter is the continuation parameter;
+  --   fhm      coefficient-parameter homotopy for evaluation;
+  --   fcf      coefficient vectors of the homotopy;
+  --   ejm      coefficient-parameter matrix of all partial derivatives;
+  --   mlt      multiplication factors for the derivatives;
   --   sol      solution of the homotopy for t = 0, its coordinates
   --            contain the leading coefficients of the power series;
   --   verbose  if true, then additional output is written to file.
