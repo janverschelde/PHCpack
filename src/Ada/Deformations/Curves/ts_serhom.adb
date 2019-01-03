@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -14,6 +15,7 @@ with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
+with Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_Systems;
@@ -23,9 +25,24 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
+with Standard_Complex_Series_Vectors;
+with Standard_Random_Series_Vectors;
+with Standard_Complex_Series_VecVecs;
+with Standard_CSeries_Vector_Functions;
 with Standard_CSeries_Poly_Systems;
+with Standard_CSeries_Poly_SysFun;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_Random_Series_Vectors;
+with DoblDobl_Complex_Series_VecVecs;
+with DoblDobl_CSeries_Vector_Functions;
 with DoblDobl_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_SysFun;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_Random_Series_Vectors;
+with QuadDobl_Complex_Series_VecVecs;
+with QuadDobl_CSeries_Vector_Functions;
 with QuadDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_SysFun;
 with Complex_Series_and_Polynomials;
 with Complex_Series_and_Polynomials_io;  use Complex_Series_and_Polynomials_io;
 with Series_and_Homotopies;
@@ -170,6 +187,57 @@ procedure ts_serhom is
     end loop;
   end QuadDobl_Test_Evaluation;
 
+  procedure Standard_Shift_Eval
+              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                sfh : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                c : in double_float; d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Evaluates the polynomial system at a random series
+  --   with respect to the shift value in c.
+
+  -- ON ENTRY :
+  --   hom      square homotopy;
+  --   sfh      shifted homotopy with respected to c;
+  --   c        value of the shift;
+  --   d        degree of the series used for evaluation.
+
+  -- REQUIRED :
+  --   The homotopy in hom has as many equations as unknowns.
+
+    n : constant integer32 := hom'last;
+    x : constant Standard_Complex_Series_Vectors.Vector
+      := Standard_Random_Series_Vectors.Random_Series_Vector(1,n,d);
+    cffhom : Standard_Complex_Series_VecVecs.VecVec(hom'range)
+           := Standard_CSeries_Poly_SysFun.Coeff(hom);
+    cshift : Standard_Complex_Series_VecVecs.VecVec(hom'range)
+           := Standard_CSeries_Vector_Functions.Shift(cffhom,c);
+    f : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+      := Standard_CSeries_Poly_SysFun.Create(hom);
+    y : constant Standard_Complex_Series_Vectors.Vector
+      := Standard_CSeries_Poly_SysFun.Eval(hom,x);
+    sy : constant Standard_Complex_Series_Vectors.Vector
+       := Standard_CSeries_Poly_SysFun.Eval(sfh,x);
+    z : constant Standard_Complex_Series_Vectors.Vector
+      := Standard_CSeries_Poly_SysFun.Eval(f,cffhom,x);
+    sz : constant Standard_Complex_Series_Vectors.Vector
+       := Standard_CSeries_Poly_SysFun.Eval(f,cshift,x);
+    ans : character;
+
+  begin
+    Symbol_Table.Init(1);
+    Symbol_Table.Add_String("t");
+    put_line("Evaluation at a random vector ..."); put(x);
+    put_line("The value at the polynomial :"); put(y);
+    put_line("The value at the coefficient polynomial :"); put(z);
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("Evaluations after the shift ...");
+      put_line("The value at the polynomial :"); put(sy);
+      put_line("The value at the coefficient polynomial :"); put(sz);
+    end if;
+  end Standard_Shift_Eval;
+
   procedure Standard_Test_Shift ( nq : in integer32 ) is
 
   -- DESCRIPTION :
@@ -183,6 +251,8 @@ procedure ts_serhom is
     c : double_float := 0.0;
     shifteds : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq);
     y,z : Standard_Complex_Poly_Systems.Poly_Sys(1..nq);
+    ans : character;
+    deg : integer32 := 0;
 
   begin
     put("Give a value for the shift : "); get(c);
@@ -191,7 +261,64 @@ procedure ts_serhom is
     z := Series_and_Homotopies.Eval(shifteds,0.0);
     put_line("system(shift value) :"); put_line(y);
     put_line("shifted system(0.0) :"); put_line(z);
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put("Give the degree of the series in x : "); get(deg);
+      Standard_Shift_Eval(s,shifteds,c,deg);
+    end if;
   end Standard_Test_Shift;
+
+  procedure DoblDobl_Shift_Eval
+              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                sfh : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+                c : in double_double; d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Evaluates the polynomial system at a random series
+  --   with respect to the shift value in c.
+
+  -- ON ENTRY :
+  --   hom      square homotopy;
+  --   sfh      shifted homotopy with respected to c;
+  --   c        value of the shift;
+  --   d        degree of the series used for evaluation.
+
+  -- REQUIRED :
+  --   The homotopy in hom has as many equations as unknowns.
+
+    n : constant integer32 := hom'last;
+    x : constant DoblDobl_Complex_Series_Vectors.Vector
+      := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
+    cffhom : DoblDobl_Complex_Series_VecVecs.VecVec(hom'range)
+           := DoblDobl_CSeries_Poly_SysFun.Coeff(hom);
+    cshift : DoblDobl_Complex_Series_VecVecs.VecVec(hom'range)
+           := DoblDobl_CSeries_Vector_Functions.Shift(cffhom,c);
+    f : DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+      := DoblDobl_CSeries_Poly_SysFun.Create(hom);
+    y : constant DoblDobl_Complex_Series_Vectors.Vector
+      := DoblDobl_CSeries_Poly_SysFun.Eval(hom,x);
+    sy : constant DoblDobl_Complex_Series_Vectors.Vector
+       := DoblDobl_CSeries_Poly_SysFun.Eval(sfh,x);
+    z : constant DoblDobl_Complex_Series_Vectors.Vector
+      := DoblDobl_CSeries_Poly_SysFun.Eval(f,cffhom,x);
+    sz : constant DoblDobl_Complex_Series_Vectors.Vector
+       := DoblDobl_CSeries_Poly_SysFun.Eval(f,cshift,x);
+    ans : character;
+
+  begin
+    Symbol_Table.Init(1);
+    Symbol_Table.Add_String("t");
+    put_line("Evaluation at a random vector ..."); put(x);
+    put_line("The value at the polynomial :"); put(y);
+    put_line("The value at the coefficient polynomial :"); put(z);
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("Evaluations after the shift ...");
+      put_line("The value at the polynomial :"); put(sy);
+      put_line("The value at the coefficient polynomial :"); put(sz);
+    end if;
+  end DoblDobl_Shift_Eval;
 
   procedure DoblDobl_Test_Shift ( nq : in integer32 ) is
 
@@ -207,6 +334,8 @@ procedure ts_serhom is
     c : double_double := zero;
     shifteds : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
     y,z : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+    ans : character;
+    deg : integer32 := 0;
 
   begin
     put("Give a value for the shift : "); get(c);
@@ -215,7 +344,64 @@ procedure ts_serhom is
     z := Series_and_Homotopies.Eval(shifteds,zero);
     put_line("system(shift value) :"); put_line(y);
     put_line("shifted system(0.0) :"); put_line(z);
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put("Give the degree of the series in x : "); get(deg);
+      DoblDobl_Shift_Eval(s,shifteds,c,deg);
+    end if;
   end DoblDobl_Test_Shift;
+
+  procedure QuadDobl_Shift_Eval
+              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                sfh : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                c : in quad_double; d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Evaluates the polynomial system at a random series
+  --   with respect to the shift value in c.
+
+  -- ON ENTRY :
+  --   hom      square homotopy;
+  --   sfh      shifted homotopy with respected to c;
+  --   c        value of the shift;
+  --   d        degree of the series used for evaluation.
+
+  -- REQUIRED :
+  --   The homotopy in hom has as many equations as unknowns.
+
+    n : constant integer32 := hom'last;
+    x : constant QuadDobl_Complex_Series_Vectors.Vector
+      := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
+    cffhom : QuadDobl_Complex_Series_VecVecs.VecVec(hom'range)
+           := QuadDobl_CSeries_Poly_SysFun.Coeff(hom);
+    cshift : QuadDobl_Complex_Series_VecVecs.VecVec(hom'range)
+           := QuadDobl_CSeries_Vector_Functions.Shift(cffhom,c);
+    f : QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+      := QuadDobl_CSeries_Poly_SysFun.Create(hom);
+    y : constant QuadDobl_Complex_Series_Vectors.Vector
+      := QuadDobl_CSeries_Poly_SysFun.Eval(hom,x);
+    sy : constant QuadDobl_Complex_Series_Vectors.Vector
+       := QuadDobl_CSeries_Poly_SysFun.Eval(sfh,x);
+    z : constant QuadDobl_Complex_Series_Vectors.Vector
+      := QuadDobl_CSeries_Poly_SysFun.Eval(f,cffhom,x);
+    sz : constant QuadDobl_Complex_Series_Vectors.Vector
+       := QuadDobl_CSeries_Poly_SysFun.Eval(f,cshift,x);
+    ans : character;
+
+  begin
+    Symbol_Table.Init(1);
+    Symbol_Table.Add_String("t");
+    put_line("Evaluation at a random vector ..."); put(x);
+    put_line("The value at the polynomial :"); put(y);
+    put_line("The value at the coefficient polynomial :"); put(z);
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("Evaluations after the shift ...");
+      put_line("The value at the polynomial :"); put(sy);
+      put_line("The value at the coefficient polynomial :"); put(sz);
+    end if;
+  end QuadDobl_Shift_Eval;
 
   procedure QuadDobl_Test_Shift ( nq : in integer32 ) is
 
@@ -231,6 +417,8 @@ procedure ts_serhom is
     c : quad_double := zero;
     shifteds : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
     y,z : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+    ans : character;
+    deg : integer32 := 0;
 
   begin
     put("Give a value for the shift : "); get(c);
@@ -239,6 +427,12 @@ procedure ts_serhom is
     z := Series_and_Homotopies.Eval(shifteds,zero);
     put_line("system(shift value) :"); put_line(y);
     put_line("shifted system(0.0) :"); put_line(z);
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put("Give the degree of the series in x : "); get(deg);
+      QuadDobl_Shift_Eval(s,shifteds,c,deg);
+    end if;
   end QuadDobl_Test_Shift;
 
   procedure Standard_Main is

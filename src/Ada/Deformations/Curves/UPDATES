@@ -1,3 +1,6 @@
+Thu 3 Jan 2019 : added tests on coefficient-parameter homotopies 
+  to ts_serhom.adb.
+
 Tue 1 Jan 2019 : added consistently the max norm computation to
   {standard,dobldobl,quaddobl}_newton_matrix_series.adb.
   Improved the shift procedures in series_and_homotopies.adb.
