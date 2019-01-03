@@ -1,5 +1,6 @@
 Thu 3 Jan 2019 : to {standard,dobldobl,quaddobl}_cseries_vector_functions
-  added shift functions and shift procedures.
+  added shift functions and shift procedures.  Added Make_Deep_Copy()
+  functions to {standard,dobldobl,quaddobl}_cseries_vector_functions.
 
 Wed 2 Jan 2019 : new test procedure ts_sercffpol, to test the coefficient
   parameter evaluation and differentiation of series polynomials,

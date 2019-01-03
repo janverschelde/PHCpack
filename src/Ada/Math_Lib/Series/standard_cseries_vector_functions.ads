@@ -70,4 +70,14 @@ package Standard_CSeries_Vector_Functions is
   --   coefficients with the same effect that the series parameter t
   --   is replaced by t-c, so that Eval(v,c) = Eval(Shift(v,c),0).
 
+  function Make_Deep_Copy
+             ( v : Standard_Complex_Series_Vectors.Vector )
+             return Standard_Complex_Series_Vectors.Vector;
+  function Make_Deep_Copy
+             ( v : Standard_Complex_Series_VecVecs.VecVec )
+             return Standard_Complex_Series_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns a deep copy of all series in v.
+
 end Standard_CSeries_Vector_Functions;

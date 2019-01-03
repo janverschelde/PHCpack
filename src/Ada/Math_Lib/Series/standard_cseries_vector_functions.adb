@@ -1,3 +1,4 @@
+with Standard_Complex_Series;
 with Standard_Complex_Series_Functions;
 
 package body Standard_CSeries_Vector_Functions is
@@ -165,5 +166,42 @@ package body Standard_CSeries_Vector_Functions is
       end if;
     end loop;
   end Shift;
+
+  function Make_Deep_Copy
+             ( v : Standard_Complex_Series_Vectors.Vector )
+             return Standard_Complex_Series_Vectors.Vector is
+
+    res : Standard_Complex_Series_Vectors.Vector(v'range);
+
+    use Standard_Complex_Series;
+
+  begin
+    for i in v'range loop
+      res(i) := new Series'(Create(v(i).all,v(i).deg));
+    end loop;
+    return res;
+  end Make_Deep_Copy;
+
+  function Make_Deep_Copy
+             ( v : Standard_Complex_Series_VecVecs.VecVec )
+             return Standard_Complex_Series_VecVecs.VecVec is
+
+    res : Standard_Complex_Series_VecVecs.VecVec(v'range);
+
+    use Standard_Complex_Series_Vectors;
+
+  begin
+    for i in v'range loop
+      if v(i) /= null then
+        declare
+          cp : constant Standard_Complex_Series_Vectors.Vector(v(i)'range)
+             := Make_Deep_Copy(v(i).all);
+        begin
+          res(i) := new Standard_Complex_Series_Vectors.Vector'(cp);
+        end;
+      end if;
+    end loop;
+    return res;
+  end Make_Deep_Copy;
 
 end Standard_CSeries_Vector_Functions;

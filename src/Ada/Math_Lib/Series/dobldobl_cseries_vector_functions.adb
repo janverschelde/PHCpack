@@ -1,3 +1,4 @@
+with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_Functions;
 
 package body DoblDobl_CSeries_Vector_Functions is
@@ -165,5 +166,42 @@ package body DoblDobl_CSeries_Vector_Functions is
       end if;
     end loop;
   end Shift;
+
+  function Make_Deep_Copy
+             ( v : DoblDobl_Complex_Series_Vectors.Vector )
+             return DoblDobl_Complex_Series_Vectors.Vector is
+
+    res : DoblDobl_Complex_Series_Vectors.Vector(v'range);
+
+    use DoblDobl_Complex_Series;
+
+  begin
+    for i in v'range loop
+      res(i) := new Series'(Create(v(i).all,v(i).deg));
+    end loop;
+    return res;
+  end Make_Deep_Copy;
+
+  function Make_Deep_Copy
+             ( v : DoblDobl_Complex_Series_VecVecs.VecVec )
+             return DoblDobl_Complex_Series_VecVecs.VecVec is
+
+    res : DoblDobl_Complex_Series_VecVecs.VecVec(v'range);
+
+    use DoblDobl_Complex_Series_Vectors;
+
+  begin
+    for i in v'range loop
+      if v(i) /= null then
+        declare
+          cp : constant DoblDobl_Complex_Series_Vectors.Vector(v(i)'range)
+             := Make_Deep_Copy(v(i).all);
+        begin
+          res(i) := new DoblDobl_Complex_Series_Vectors.Vector'(cp);
+        end;
+      end if;
+    end loop;
+    return res;
+  end Make_Deep_Copy;
 
 end DoblDobl_CSeries_Vector_Functions;
