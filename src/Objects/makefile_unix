@@ -1675,11 +1675,15 @@ ts_c2str: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
                  simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
                  -o $(BIN)/ts_c2str --LINK=$(gpp) 
 
-ts_use_c2phc:
+ts_use_c2phc: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+              reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCAda)/CtoPHC/State/ts_use_c2phc.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc ts_use_c2phc.o -o $(BIN)/ts_use_c2phc
+	gnatlink -C use_c2phc ts_use_c2phc.o \
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o $(BIN)/ts_use_c2phc --LINK=$(gpp)
 
 ts_pirhom:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pirhom.adb -o $(BIN)/ts_pirhom

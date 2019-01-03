@@ -23,8 +23,7 @@ gpp=/usr/bin/g++
 # To extend sage on Mac OS X with python, we must link with the python
 # of the Sage distribution, which is defined here:
 
-SAGEPYTHONLIB=/Users/jan/Downloads/sage-8.0/local/lib
-# SAGEPYTHONLIB=/Users/jan/SageMath/Sage/local/lib
+SAGEPYTHONLIB=/Users/jan/sage-8.5/local/lib
 
 # The location of the QD library
 
@@ -1746,11 +1745,18 @@ ts_c2str: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
                  /usr/lib/libstdc++.dylib \
                  --LINK=g++
 
-ts_use_c2phc:
+ts_use_c2phc: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+              reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCAda)/CtoPHC/State/ts_use_c2phc.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc ts_use_c2phc.o -o $(BIN)/ts_use_c2phc
+	gnatlink -C use_c2phc ts_use_c2phc.o \
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o $(BIN)/ts_use_c2phc \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=g++
 
 ts_pirhom:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pirhom.adb -o $(BIN)/ts_pirhom
