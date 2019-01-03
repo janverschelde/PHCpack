@@ -56,4 +56,114 @@ package body QuadDobl_CSeries_Vector_Functions is
     return res;
   end Eval;
 
+  function Shift ( v : QuadDobl_Complex_Series_Vectors.Vector;
+                   c : quad_double )
+                 return QuadDobl_Complex_Series_Vectors.Vector is
+
+    res : QuadDobl_Complex_Series_Vectors.Vector(v'range);
+
+  begin
+    for i in v'range loop
+      res(i) := QuadDobl_Complex_Series_Functions.Shift(v(i),c);
+    end loop;
+    return res;
+  end Shift;
+
+  function Shift ( v : QuadDobl_Complex_Series_Vectors.Vector;
+                   c : Complex_Number )
+                 return QuadDobl_Complex_Series_Vectors.Vector is
+
+    res : QuadDobl_Complex_Series_Vectors.Vector(v'range);
+
+  begin
+    for i in v'range loop
+      res(i) := QuadDobl_Complex_Series_Functions.Shift(v(i),c);
+    end loop;
+    return res;
+  end Shift;
+
+  function Shift ( v : QuadDobl_Complex_Series_VecVecs.VecVec;
+                   c : quad_double )
+                 return QuadDobl_Complex_Series_VecVecs.VecVec is
+
+    res : QuadDobl_Complex_Series_VecVecs.VecVec(v'range);
+
+    use QuadDobl_Complex_Series_Vectors;
+
+  begin
+    for i in v'range loop
+      if v(i) /= null then
+        declare
+          svi : constant Vector := Shift(v(i).all,c);
+        begin
+          res(i) := new Vector'(svi); 
+        end;
+      end if;
+    end loop;
+    return res;
+  end Shift;
+
+  function Shift ( v : QuadDobl_Complex_Series_VecVecs.VecVec;
+                   c : Complex_Number )
+                 return QuadDobl_Complex_Series_VecVecs.VecVec is
+
+    res : QuadDobl_Complex_Series_VecVecs.VecVec(v'range);
+
+    use QuadDobl_Complex_Series_Vectors;
+
+  begin
+    for i in v'range loop
+      if v(i) /= null then
+        declare
+          svi : constant Vector := Shift(v(i).all,c);
+        begin
+          res(i) := new Vector'(svi); 
+        end;
+      end if;
+    end loop;
+    return res;
+  end Shift;
+
+  procedure Shift ( v : in out QuadDobl_Complex_Series_Vectors.Vector;
+                    c : in quad_double ) is
+  begin
+    for i in v'range loop
+      QuadDobl_Complex_Series_Functions.Shift(v(i),c);
+    end loop;
+  end Shift;
+
+  procedure Shift ( v : in out QuadDobl_Complex_Series_Vectors.Vector;
+                    c : in Complex_Number ) is
+  begin
+    for i in v'range loop
+      QuadDobl_Complex_Series_Functions.Shift(v(i),c);
+    end loop;
+  end Shift;
+
+  procedure Shift ( v : in out QuadDobl_Complex_Series_VecVecs.VecVec;
+                    c : in quad_double ) is
+
+    use QuadDobl_Complex_Series_Vectors;
+
+  begin
+    for i in v'range loop
+      if v(i) /= null
+       then Shift(v(i).all,c);
+      end if;
+    end loop;
+  end Shift;
+
+  procedure Shift ( v : in out QuadDobl_Complex_Series_VecVecs.VecVec;
+                    c : in Complex_Number ) is
+
+    use QuadDobl_Complex_Series_Vectors;
+
+  begin
+    for i in v'range loop
+      if v(i) /= null
+       then Shift(v(i).all,c);
+      end if;
+    end loop;
+  end Shift;
+
 end QuadDobl_CSeries_Vector_Functions;
