@@ -204,4 +204,31 @@ package body Standard_CSeries_Vector_Functions is
     return res;
   end Make_Deep_Copy;
 
+  procedure Deep_Clear
+              ( v : in out Standard_Complex_Series_Vectors.Vector ) is
+
+    use Standard_Complex_Series;
+
+  begin
+    for i in v'range loop
+      if v(i) /= null
+       then Standard_Complex_Series.Clear(v(i));
+      end if;
+    end loop;
+  end Deep_Clear;
+
+  procedure Deep_Clear
+              ( v : in out Standard_Complex_Series_VecVecs.VecVec ) is
+
+    use Standard_Complex_Series_Vectors;
+
+  begin
+    for i in v'range loop
+      if v(i) /= null
+       then Deep_Clear(v(i).all);
+      end if;
+    end loop;
+    Standard_Complex_Series_VecVecs.Clear(v);
+  end Deep_Clear;
+
 end Standard_CSeries_Vector_Functions;
