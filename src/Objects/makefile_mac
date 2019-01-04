@@ -3098,7 +3098,9 @@ sage_phcpy2c2.so: parameter.o lib2path.o inputData.o outputData.o iTest.o \
 #     check if import phcpy2c2 works at the python shell prompt.
 # (2) If (1) gave no errors, then move phcpy2c2.so into the phcpy folder
 #     of the source directory Python/PHCpy2.
-# (3) With the sage python interpreter do 'python setup.py install'
+# (3) Uncomment two lines in the try block of the __init__.py to do
+#     init_cysignals() after the import of phcpy2c2
+# (4) With the sage python interpreter do 'python setup.py install'
 #     and then check if import phcpy works at the sage prompt.
 
 phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
