@@ -64,9 +64,10 @@ package Standard_Newton_Matrix_Series is
   --            otherwise, info indicates the column at which the
   --            pivoting failed to find an invertible element.
 
+-- ONE NEWTON STEP WITH LU ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
   procedure LU_Newton_Step
-              ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+              ( f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
@@ -75,7 +76,6 @@ package Standard_Newton_Matrix_Series is
                 info : out integer32 );
   procedure LU_Newton_Step
               ( file : in file_type;
-                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -93,7 +93,6 @@ package Standard_Newton_Matrix_Series is
   -- ON ENTRY :
   --   file     for intermediate output: p(x) and the update dx,
   --            if omitted, LU_Newton_Step is silent;
-  --   p        a polynomial system with series coefficients;
   --   f        coefficient-parameter homotopy for evaluation;
   --   c        coefficient vectors of the homotopy;
   --   ejm      coefficient-parameter matrix of all derivatives;
@@ -351,9 +350,10 @@ package Standard_Newton_Matrix_Series is
   --            otherwise, info indicates the column at which the
   --            pivoting failed to find an invertible element.
 
+-- MANY NEWTON STEPS WITH LU ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
   procedure LU_Newton_Steps
-              ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+              ( f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
@@ -362,7 +362,6 @@ package Standard_Newton_Matrix_Series is
                 info : out integer32 );
   procedure LU_Newton_Steps
               ( file : in file_type;
-                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -380,7 +379,6 @@ package Standard_Newton_Matrix_Series is
   -- ON ENTRY :
   --   file     for intermediate output: p(x) and the update dx,
   --            if omitted, LU_Newton_Step is silent;
-  --   p        a polynomial system with series coefficients;
   --   f        coefficient-parameter homotopy for evaluation;
   --   c        coefficient vectors of the homotopy;
   --   ejm      coefficient-parameter matrix of all derivatives;

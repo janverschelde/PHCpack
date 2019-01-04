@@ -147,8 +147,7 @@ package body QuadDobl_SeriesPade_Tracker is
       qd_step := Quad_Double_Numbers.Create(current_step);
       sol := Series_and_Predictors.Predicted_Solution
                (current_padvec.all,qd_step);
-      predres := Series_and_Trackers.Residual_Prediction
-                   (htp.all,sol,current_step);
+      predres := Series_and_Trackers.Residual_Prediction(sol,t);
       if verbose
        then put("  residual :"); put(predres,2); new_line;
       end if;

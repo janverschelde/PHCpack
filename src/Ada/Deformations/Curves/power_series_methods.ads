@@ -83,9 +83,10 @@ package Power_Series_Methods is
   --   s        a power series solution to p, up to some order;
   --   info     return code of lufac on the Jacobian matrix.
 
+-- LU ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
   procedure Run_LU_Newton
               ( maxdeg,nbrit : in integer32;
-                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -94,7 +95,6 @@ package Power_Series_Methods is
                 info : out integer32; verbose : in boolean := false );
   procedure Run_LU_Newton
               ( file : in file_type; maxdeg,nbrit : in integer32;
-                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;

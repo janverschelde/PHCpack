@@ -130,9 +130,10 @@ package body Standard_Newton_Matrix_Series is
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Step;
 
+-- ONE NEWTON STEP WITH LU ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
   procedure LU_Newton_Step
-              ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+              ( f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
@@ -141,8 +142,8 @@ package body Standard_Newton_Matrix_Series is
                 info : out integer32 ) is
 
     dx : Standard_Complex_Series_Vectors.Vector(x'range);
-    px : Standard_Complex_Series_Vectors.Vector(p'range);
-    jm : Standard_Complex_Series_Matrices.Matrix(p'range,x'range);
+    px : Standard_Complex_Series_Vectors.Vector(f'range);
+    jm : Standard_Complex_Series_Matrices.Matrix(f'range,x'range);
     xp,xd : Standard_Complex_Vector_Series.Vector(degree);
     mj : Standard_Complex_Matrix_Series.Matrix(degree);
 
@@ -169,7 +170,6 @@ package body Standard_Newton_Matrix_Series is
 
   procedure LU_Newton_Step
               ( file : in file_type;
-                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -179,8 +179,8 @@ package body Standard_Newton_Matrix_Series is
                 info : out integer32 ) is
 
     dx : Standard_Complex_Series_Vectors.Vector(x'range);
-    px : Standard_Complex_Series_Vectors.Vector(p'range);
-    jm : Standard_Complex_Series_Matrices.Matrix(p'range,x'range);
+    px : Standard_Complex_Series_Vectors.Vector(f'range);
+    jm : Standard_Complex_Series_Matrices.Matrix(f'range,x'range);
     xp,xd : Standard_Complex_Vector_Series.Vector(degree);
     mj : Standard_Complex_Matrix_Series.Matrix(degree);
     nrm : double_float;
@@ -837,9 +837,10 @@ package body Standard_Newton_Matrix_Series is
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
+-- MANY NEWTON STEPS WITH LU ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
   procedure LU_Newton_Steps
-              ( p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+              ( f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
@@ -849,7 +850,7 @@ package body Standard_Newton_Matrix_Series is
 
   begin
     for i in 1..nbrit loop
-      LU_Newton_Step(p,f,c,ejm,mlt,degree,x,info);
+      LU_Newton_Step(f,c,ejm,mlt,degree,x,info);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Double_Degree_with_Threshold(degree,maxdeg);
@@ -858,7 +859,6 @@ package body Standard_Newton_Matrix_Series is
 
   procedure LU_Newton_Steps
               ( file : in file_type;
-                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -869,7 +869,7 @@ package body Standard_Newton_Matrix_Series is
   begin
     for i in 1..nbrit loop
       put(file,"LU Newton step "); put(file,i,1); put_line(file," :");
-      LU_Newton_Step(file,p,f,c,ejm,mlt,degree,x,info);
+      LU_Newton_Step(file,f,c,ejm,mlt,degree,x,info);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Double_Degree_with_Threshold(degree,maxdeg);

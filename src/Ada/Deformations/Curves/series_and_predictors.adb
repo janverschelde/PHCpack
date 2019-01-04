@@ -146,10 +146,10 @@ package body Series_and_Predictors is
     end if;
     if hom'last = sol'last then
       if not verbose then
-        Run_LU_Newton(maxdeg,nit,hom,fhm,fcf,ejm,mlt,srv,info);
+        Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(file,maxdeg,nit,hom,fhm,fcf,ejm,mlt,srv,info,true);
+        Run_LU_Newton(file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,true);
       end if;
     else
       if not verbose then

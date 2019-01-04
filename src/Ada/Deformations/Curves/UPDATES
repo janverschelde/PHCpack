@@ -1,3 +1,8 @@
+Fri 4 Jan 2019 : from standard_newton_matrix_series, power_series_methods,
+  series_and_predictors.adb, removed superfluous parameters.
+  Improved the residual prediction in series_and_trackers, which changed
+  {standard,dobldobl,quaddobl}_seriespade_tracker.adb.
+
 Thu 3 Jan 2019 : added tests on coefficient-parameter homotopies 
   to ts_serhom.adb.  Added coefficient-parameter evaluation to
   standard_newton_matrix_series, power_series_methods, series_and_predictors,

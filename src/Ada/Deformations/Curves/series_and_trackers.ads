@@ -43,21 +43,23 @@ package Series_and_Trackers is
   --   the smallest and largest sizes in minsize and maxsize are updated.
 
   function Residual_Prediction
-              ( hom : Standard_CSeries_Poly_Systems.Poly_Sys;
-                sol : Standard_Complex_Vectors.Vector;
-                step : double_float ) return double_float;
+              ( sol : Standard_Complex_Vectors.Vector;
+                t : double_float ) return double_float;
   function Residual_Prediction
-              ( hom : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                sol : DoblDobl_Complex_Vectors.Vector;
-                step : double_float ) return double_float;
+              ( sol : DoblDobl_Complex_Vectors.Vector;
+                t : double_float ) return double_float;
   function Residual_Prediction
-              ( hom : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                sol : QuadDobl_Complex_Vectors.Vector;
-                step : double_float ) return double_float;
+              ( sol : QuadDobl_Complex_Vectors.Vector;
+                t : double_float ) return double_float;
 
   -- DESCRIPTION :
-  --   Given a homotopy, a predicted solution, with a step,
+  --   Given a predicted solution and a value for t,
   --   returns the norm of the evaluated homotopy at the solution.
+
+  -- REQUIRED :
+  --   For double, double double, or quad double precision,
+  --   the Standard_Homotopy, DoblDobl_Homotopy, or QuadDobl_Homotopy
+  --   must have been properly initialized.
 
   procedure Track_One_Path
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
@@ -139,6 +141,8 @@ package Series_and_Trackers is
   --   cntfail  is the total number of corrector failes on the paths;
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path.
+
+-- VERSIONS WITH COEFFICIENT-PARAMETER HOMOTOPIES :
 
   procedure Track_One_Path
               ( file : in file_type;

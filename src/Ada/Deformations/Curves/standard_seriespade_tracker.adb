@@ -138,8 +138,7 @@ package body Standard_SeriesPade_Tracker is
     loop
       sol := Series_and_Predictors.Predicted_Solution
                (current_padvec.all,current_step);
-      predres := Series_and_Trackers.Residual_Prediction
-                   (htp.all,sol,current_step);
+      predres := Series_and_Trackers.Residual_Prediction(sol,t);
       if verbose
        then put("  residual :"); put(predres,2); new_line;
       end if;
