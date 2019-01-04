@@ -98,6 +98,9 @@ package body Generic_Jacobian_Matrices is
             cm(i) := mkl(i)*ck(i);
           end loop;
           res(k,ell) := Eval(j(k,ell),cm,x);
+          for i in cm'range loop  -- clean up auxiliary coefficients!
+            Clear(cm(i));
+          end loop;
         end loop;
       end;
     end loop;

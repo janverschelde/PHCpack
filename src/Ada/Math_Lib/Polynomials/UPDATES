@@ -1,3 +1,6 @@
+Thu 3 Jan 2019 : fixed memory leak in the coefficient-parameter evaluation
+  in generic_jacobian_matrices.adb.
+
 Wed 2 Jan 2019 : exported the write_number procedure in the packages
   {dobldobl,quaddobl}_complex_polynomials_io.
 
