@@ -487,6 +487,106 @@ package body Standard_Newton_Matrix_Series is
     Standard_CSeries_Jaco_Matrices.Clear(jp);
   end QR_Newton_Step;
 
+-- ONE NEWTON STEP WITH QR ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure QR_Newton_Step
+              ( f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in integer32;
+                x : in out Standard_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+
+    dx : Standard_Complex_Series_Vectors.Vector(x'range);
+    px : Standard_Complex_Series_Vectors.Vector(f'range);
+    jm : Standard_Complex_Series_Matrices.Matrix(f'range,x'range);
+    mj : Standard_Complex_Matrix_Series.Matrix(degree);
+    xp,xd : Standard_Complex_Vector_Series.Vector(degree);
+    nrm : double_float;
+    tol : constant double_float := 1.0E-13;
+
+  begin
+    px := Standard_CSeries_Poly_SysFun.Eval(f,c,x);
+    nrm := Standard_CSeries_Vector_Norms.Max_Norm(px);
+    if nrm > tol then
+      Standard_Complex_Series_Vectors.Min(px);
+      Complex_Series_and_Polynomials.Set_degree(px,degree);
+      jm := Standard_CSeries_Jaco_Matrices.Eval(ejm,mlt,c,x);
+      Complex_Series_and_Polynomials.Set_degree(jm,degree);
+      mj := Standard_Complex_Matrix_Series.Create(jm);
+      xp := Standard_Complex_Vector_Series.Create(px);
+      Solve_by_QRLS(mj,xp,info,xd);
+      if info = 0 then
+        dx := Standard_Complex_Vector_Series.Create(xd);
+        Standard_Complex_Series_Vectors.Add(x,dx);
+        Standard_Complex_Series_Vectors.Clear(dx);
+      end if;
+    end if;
+    Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
+    Standard_Complex_Matrix_Series.Clear(mj);
+    Standard_Complex_Vector_Series.Clear(xp);
+    Standard_Complex_Vector_Series.Clear(xd);
+  end QR_Newton_Step;
+
+  procedure QR_Newton_Step
+              ( file : in file_type;
+                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in integer32;
+                x : in out Standard_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+
+    dx : Standard_Complex_Series_Vectors.Vector(x'range);
+    px : Standard_Complex_Series_Vectors.Vector(f'range);
+    jm : Standard_Complex_Series_Matrices.Matrix(f'range,x'range);
+    mj : Standard_Complex_Matrix_Series.Matrix(degree);
+    xp,xd : Standard_Complex_Vector_Series.Vector(degree);
+    nrm : double_float;
+    tol : constant double_float := 1.0E-13;
+
+  begin
+    px := Standard_CSeries_Poly_SysFun.Eval(f,c,x);
+    put_line(file,"The evaluated series :");
+    for i in px'range loop
+      Standard_Complex_Series_io.put(file,px(i)); new_line(file);
+    end loop;
+    nrm := Standard_CSeries_Vector_Norms.Max_Norm(px);
+    put(file,"The max norm of the evaluation : ");
+    put(file,nrm,3); new_line(file);
+    if nrm > tol then
+      Standard_Complex_Series_Vectors.Min(px);
+      Complex_Series_and_Polynomials.Set_degree(px,degree);
+      jm := Standard_CSeries_Jaco_Matrices.Eval(ejm,mlt,c,x);
+      Complex_Series_and_Polynomials.Set_degree(jm,degree);
+      mj := Standard_Complex_Matrix_Series.Create(jm);
+      xp := Standard_Complex_Vector_Series.Create(px);
+      Solve_by_QRLS(mj,xp,info,xd);
+      if info /= 0 then
+        put(file,"QRLS info : "); put(file,info,1); new_line(file);
+      else
+        dx := Standard_Complex_Vector_Series.Create(xd);
+        put_line(file,"The update to the series :");
+        for i in dx'range loop
+          Standard_Complex_Series_io.put(file,dx(i)); new_line(file);
+        end loop;
+        nrm := Standard_CSeries_Vector_Norms.Max_Norm(dx);
+        put(file,"The max norm of the update : ");
+        put(file,nrm,3); new_line(file);
+        Standard_Complex_Series_Vectors.Add(x,dx);
+        Standard_Complex_Series_Vectors.Clear(dx);
+      end if;
+    end if;
+    Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
+    Standard_Complex_Matrix_Series.Clear(mj);
+    Standard_Complex_Vector_Series.Clear(xp);
+    Standard_Complex_Vector_Series.Clear(xd);
+  end QR_Newton_Step;
+
 -- ONE NEWTON STEP WITH SVD :
 
   procedure SVD_Newton_Step
@@ -1000,6 +1100,33 @@ package body Standard_Newton_Matrix_Series is
   begin
     QR_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
+  end QR_Newton_Steps;
+
+-- MANY QR NEWTON STEPS ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure QR_Newton_Steps
+              ( f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
+                x : in out Standard_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+  begin
+    null;
+  end QR_Newton_Steps;
+
+  procedure QR_Newton_Steps
+              ( file : in file_type;
+                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
+                x : in out Standard_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+  begin
+    null;
   end QR_Newton_Steps;
 
 -- MANY NEWTON STEPS WITH SVD :

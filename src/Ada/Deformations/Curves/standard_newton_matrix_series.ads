@@ -200,6 +200,48 @@ package Standard_Newton_Matrix_Series is
   --            otherwise, info indicates the column at which the
   --            pivoting failed to find an invertible element.
 
+-- ONE NEWTON STEP WITH QR ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure QR_Newton_Step
+              ( f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in integer32;
+                x : in out Standard_Complex_Series_Vectors.Vector;
+                info : out integer32 );
+  procedure QR_Newton_Step
+              ( file : in file_type;
+                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in integer32;
+                x : in out Standard_Complex_Series_Vectors.Vector;
+                info : out integer32 );
+
+  -- DESCRIPTION :
+  --   Performs one step with Newton's method on the system p,
+  --   starting at the series approximation x, 
+  --   calculating with power series up to the given degree,
+  --   using QR decomposition to solve the linear system.
+
+  -- ON ENTRY :
+  --   file     for intermediate output: p(x) and the update dx,
+  --            if omitted, LU_Newton_Step is silent;
+  --   f        coefficient-parameter homotopy for evaluation;
+  --   c        coefficient vectors of the homotopy;
+  --   ejm      coefficient-parameter matrix of all derivatives;
+  --   mlt      multiplication factors for the derivatives;
+  --   degree   the degree at which to solve the linear system;
+  --   x        current approximation for the series solution.
+
+  -- ON RETURN :
+  --   x        updated approximation for the series solution;
+  --   info     if zero, then the Jacobian matrix at x is regular,
+  --            otherwise, info indicates the column at which the
+  --            pivoting failed to find an invertible element.
+
 -- ONE NEWTON STEP WITH SVD :
 
   procedure SVD_Newton_Step
@@ -482,6 +524,51 @@ package Standard_Newton_Matrix_Series is
   --            if omitted, QR_Newton_Step is silent;
   --   p        a polynomial system with series coefficients;
   --   jp       Jacobi matrix of the system p;
+  --   degree   the degree at start of the computations;
+  --   maxdeg   the maximal degree of the series in the steps;
+  --   nbrit    total number of Newton steps;
+  --   x        current approximation for the series solution.
+
+  -- ON RETURN :
+  --   degree   last degree of the computation;
+  --   x        updated approximation for the series solution;
+  --   info     if zero, then the Jacobian matrix at x is regular,
+  --            otherwise, info indicates the column at which the
+  --            pivoting failed to find an invertible element.
+
+-- MANY NEWTON STEPS WITH QR ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure QR_Newton_Steps
+              ( f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
+                x : in out Standard_Complex_Series_Vectors.Vector;
+                info : out integer32 );
+  procedure QR_Newton_Steps
+              ( file : in file_type;
+                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
+                x : in out Standard_Complex_Series_Vectors.Vector;
+                info : out integer32 );
+
+  -- DESCRIPTION :
+  --   Does a number of Newton steps on the system p,
+  --   starting at x, doubling the degree after each step,
+  --   with QR decomposition on the Jacobian matrix,
+  --   terminating if info /= 0 or if nbrit is reached.
+
+  -- ON ENTRY :
+  --   file     for intermediate output: p(x) and the update dx,
+  --            if omitted, QR_Newton_Step is silent;
+  --   f        coefficient-parameter homotopy for evaluation;
+  --   c        coefficient vectors of the homotopy;
+  --   ejm      coefficient-parameter matrix of all derivatives;
+  --   mlt      multiplication factors for the derivatives;
   --   degree   the degree at start of the computations;
   --   maxdeg   the maximal degree of the series in the steps;
   --   nbrit    total number of Newton steps;

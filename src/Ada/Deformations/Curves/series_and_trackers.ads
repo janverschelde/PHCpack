@@ -146,7 +146,6 @@ package Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
-                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -164,8 +163,8 @@ package Series_and_Trackers is
 
   -- ON ENTRY :
   --   file     for writing output during the computations;
-  --   hom      a homotopy with series coefficients;
-  --   fhm      coefficient-parameter homotopy;
+  --   fhm      coefficient-parameter homotopy for efficient evaluation,
+  --            the series parameter is the continuation parameter;
   --   fcf      coefficient vectors of the homotopy;
   --   ejm      coefficient-parameter matrix of all derivatives;
   --   mlt      multiplication factors for the derivatives;

@@ -64,6 +64,8 @@ package body Power_Series_Methods is
     end if;
   end Run_LU_Newton;
 
+-- LU NEWTON ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
   procedure Run_LU_Newton
              ( maxdeg,nbrit : in integer32;
                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -440,6 +442,34 @@ package body Power_Series_Methods is
       end if;
     end if;
   end Run_QR_Newton;
+
+-- QR NEWTON ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure Run_QR_Newton
+              ( maxdeg,nbrit : in integer32;
+                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out Standard_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false ) is
+  begin
+    Run_QR_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,verbose);
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out Standard_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false ) is
+  begin
+    null;
+  end Run_QR_Newton;
+
+-- SVD NEWTON :
 
   procedure Run_SVD_Newton
              ( maxdeg,nbrit : in integer32;

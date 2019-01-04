@@ -523,7 +523,6 @@ package body Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
-                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -534,14 +533,13 @@ package body Series_and_Trackers is
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false ) is
 
-    wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    nbq : constant integer32 := hom'last;
+    nbq : constant integer32 := fhm'last;
     nit : constant integer32 := integer32(pars.corsteps);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
-    eva : Standard_Complex_Series_Vectors.Vector(hom'range);
+    eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
@@ -561,7 +559,6 @@ package body Series_and_Trackers is
 
   begin
     minsize := 1.0; maxsize := 0.0;
-    Standard_CSeries_Poly_Systems.Copy(hom,wrk);
     nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
     wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
@@ -570,7 +567,7 @@ package body Series_and_Trackers is
         put(file,"Step "); put(file,k,1); put(file," : ");
       end if;
       Series_and_Predictors.Newton_Prediction -- verbose flag set to false
-        (file,maxdeg,nit,wrk,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
+        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
         put(file,"Smallest forward pole radius :");
@@ -622,12 +619,10 @@ package body Series_and_Trackers is
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      Series_and_Homotopies.Shift(wrk,-step);
       Standard_CSeries_Vector_Functions.Shift(wrk_fcf,-step);
     end loop;
     Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
-    Standard_CSeries_Poly_Systems.Clear(wrk);
     Homotopy_Newton_Steps.Correct
       (file,nbq,1.0,tolres,pars.corsteps,nbrit,
        wrk_sol,err,rco,res,fail,verbose);
@@ -945,7 +940,7 @@ package body Series_and_Trackers is
       if monitor
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
-      Track_One_Path(file,hom,fhm,fcf,ejm,mlt,ls.all,pars,
+      Track_One_Path(file,fhm,fcf,ejm,mlt,ls.all,pars,
                      nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
       if verbose then
         Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);

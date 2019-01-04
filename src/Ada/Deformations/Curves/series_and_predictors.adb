@@ -123,7 +123,6 @@ package body Series_and_Predictors is
 
   procedure Newton_Prediction
               ( file : in file_type; maxdeg,nit : in integer32;
-                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -144,7 +143,7 @@ package body Series_and_Predictors is
       put_line(file,"The series for the solution :");
       Standard_Complex_Series_Vectors_io.put(file,srv);
     end if;
-    if hom'last = sol'last then
+    if fhm'last = sol'last then
       if not verbose then
         Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info);
       else
@@ -153,13 +152,13 @@ package body Series_and_Predictors is
       end if;
     else
       if not verbose then
-        Run_QR_Newton(maxdeg,nit,hom,srv);
+        Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv);
       else
         put_line(file,"Applying QR Newton ...");
-        Run_QR_Newton(file,maxdeg,nit,hom,srv,true);
+        Run_QR_Newton(file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,true);
       end if;
     end if;
-    eva := Standard_CSeries_Poly_SysFun.Eval(hom,srv);
+    eva := Standard_CSeries_Poly_SysFun.Eval(fhm,fcf,srv);
     if verbose then
       put_line(file,"The evaluated series : ");
       Complex_Series_and_Polynomials_io.put(file,eva);

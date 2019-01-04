@@ -177,7 +177,7 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         Series_and_Trackers.Track_One_Path
-          (file,s,fhm,fcf,ejm,mlt,ls.all,p,
+          (file,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -187,7 +187,7 @@ package body Series_Path_Trackers is
         put(file,ls.all); new_line(file);
       else
         Series_and_Trackers.Track_One_Path
-          (standard_output,s,fhm,fcf,ejm,mlt,ls.all,p,
+          (standard_output,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
