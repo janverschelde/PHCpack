@@ -3052,7 +3052,8 @@ phcpy2c2.so: lib2path.o parameter.o inputData.o outputData.o iTest.o fTest.o \
 
 # to extend the Python interpreter of Sage with phcpy2c2.so :
 
-sage_phcpy2c2.so: parameter.o lib2path.o
+sage_phcpy2c2.so: parameter.o lib2path.o inputData.o outputData.o iTest.o \
+                  fTest.o simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
 	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
