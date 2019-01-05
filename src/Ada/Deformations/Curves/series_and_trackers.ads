@@ -11,11 +11,17 @@ with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions;
 with Standard_Complex_Series_VecVecs;
+with DoblDobl_Complex_Series_VecVecs;
+with QuadDobl_Complex_Series_VecVecs;
 with Standard_CSeries_Poly_Systems;
 with Standard_CSeries_Poly_SysFun;
 with Standard_CSeries_Jaco_Matrices;
 with DoblDobl_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_SysFun;
+with DoblDobl_CSeries_Jaco_Matrices;
 with QuadDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_SysFun;
+with QuadDobl_CSeries_Jaco_Matrices;
 with Homotopy_Continuation_Parameters;
 
 package Series_and_Trackers is
@@ -145,6 +151,56 @@ package Series_and_Trackers is
 -- VERSIONS WITH COEFFICIENT-PARAMETER HOMOTOPIES :
 
   procedure Track_One_Path
+              ( fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out Standard_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float );
+  procedure Track_One_Path
+              ( fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out DoblDobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float );
+  procedure Track_One_Path
+              ( fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out QuadDobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float );
+
+  -- DESCRIPTION :
+  --   Tracks one path starting using a coefficient-parameter homotopy
+  --   in standard double, double double, or quad double precision.
+  --   This version remains silent and does not write any output.
+
+  -- ON ENTRY :
+  --   fhm      coefficient-parameter homotopy for efficient evaluation,
+  --            the series parameter is the continuation parameter;
+  --   fcf      coefficient vectors of the homotopy;
+  --   ejm      coefficient-parameter matrix of all derivatives;
+  --   mlt      multiplication factors for the derivatives;
+  --   sol      start solution in the homotopy;
+  --   pars     values of the parameters and tolerances.
+
+  -- ON RETURN :
+  --   sol      solution at the end of the path;
+  --   nbrsteps is the total number of steps on the path;
+  --   nbrcorrs is the total number of corrector iterations on the path;
+  --   cntfail  is the total number of corrector failures on the path;
+  --   minsize  is the smallest step size on the path;
+  --   maxsize  is the largest step size on the path.
+
+  procedure Track_One_Path
               ( file : in file_type;
                 fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in Standard_Complex_Series_VecVecs.VecVec;
@@ -155,10 +211,32 @@ package Series_and_Trackers is
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false );
+  procedure Track_One_Path
+              ( file : in file_type;
+                fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out DoblDobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float;
+                verbose : in boolean := false );
+  procedure Track_One_Path
+              ( file : in file_type;
+                fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out QuadDobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float;
+                verbose : in boolean := false );
 
   -- DESCRIPTION :
-  --   Tracks one path starting at the solution sol using the homotopy hom,
-  --   in standard double precision.
+  --   Tracks one path starting using a coefficient-parameter homotopy
+  --   in standard double, double double, or quad double precision.
   --   This version is verbose and writes extra diagnostic output to file.
 
   -- ON ENTRY :

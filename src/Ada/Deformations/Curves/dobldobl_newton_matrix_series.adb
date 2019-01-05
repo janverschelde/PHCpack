@@ -11,7 +11,6 @@ with DoblDobl_Complex_Matrix_Series;
 with DoblDobl_Series_Matrix_Solvers;    use DoblDobl_Series_Matrix_Solvers;
 with DoblDobl_CSeries_Polynomials;
 with Complex_Series_and_Polynomials;
-with DoblDobl_CSeries_Poly_SysFun;
 with Standard_Newton_Matrix_Series; -- for the Double_Degree_with_Threshold
 
 package body DoblDobl_Newton_Matrix_Series is
@@ -131,6 +130,98 @@ package body DoblDobl_Newton_Matrix_Series is
   begin
     LU_Newton_Step(file,p,jp,degree,x,info);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
+  end LU_Newton_Step;
+
+-- ONE NEWTON STEP WITH LU ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure LU_Newton_Step
+              ( f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in integer32;
+                x : in out DoblDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+
+    dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
+    px : DoblDobl_Complex_Series_Vectors.Vector(f'range);
+    jm : DoblDobl_Complex_Series_Matrices.Matrix(f'range,x'range);
+    xp,xd : DoblDobl_Complex_Vector_Series.Vector(degree);
+    mj : DoblDobl_Complex_Matrix_Series.Matrix(degree);
+
+  begin
+    px := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,x);
+    DoblDobl_Complex_Series_Vectors.Min(px);
+    Complex_Series_and_Polynomials.Set_degree(px,degree);
+    jm := DoblDobl_CSeries_Jaco_Matrices.Eval(ejm,mlt,c,x);
+    Complex_Series_and_Polynomials.Set_degree(jm,degree);
+    mj := DoblDobl_Complex_Matrix_Series.Create(jm);
+    xp := DoblDobl_Complex_Vector_Series.Create(px);
+    Solve_by_lufac(mj,xp,info,xd);
+    if info = 0 then
+      dx := DoblDobl_Complex_Vector_Series.Create(xd);
+      DoblDobl_Complex_Series_Vectors.Add(x,dx);
+      DoblDobl_Complex_Series_Vectors.Clear(dx);
+    end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
+    DoblDobl_Complex_Matrix_Series.Clear(mj);
+    DoblDobl_Complex_Vector_Series.Clear(xp);
+    DoblDobl_Complex_Vector_Series.Clear(xd);
+  end LU_Newton_Step;
+
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in integer32;
+                x : in out DoblDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+
+    dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
+    px : DoblDobl_Complex_Series_Vectors.Vector(f'range);
+    jm : DoblDobl_Complex_Series_Matrices.Matrix(f'range,x'range);
+    xp,xd : DoblDobl_Complex_Vector_Series.Vector(degree);
+    mj : DoblDobl_Complex_Matrix_Series.Matrix(degree);
+    nrm : double_double;
+
+  begin
+    px := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,x);
+    put_line(file,"The evaluated series :");
+    for i in px'range loop
+      DoblDobl_Complex_Series_io.put(file,px(i)); new_line(file);
+    end loop;
+    nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(px);
+    put(file,"The max norm of the evaluation : ");
+    put(file,nrm,3); new_line(file);
+    DoblDobl_Complex_Series_Vectors.Min(px);
+    Complex_Series_and_Polynomials.Set_degree(px,degree);
+    jm := DoblDobl_CSeries_Jaco_Matrices.Eval(ejm,mlt,c,x);
+    Complex_Series_and_Polynomials.Set_degree(jm,degree);
+    mj := DoblDobl_Complex_Matrix_Series.Create(jm);
+    xp := DoblDobl_Complex_Vector_Series.Create(px);
+    Solve_by_lufac(mj,xp,info,xd);
+    if info /= 0 then
+      put(file,"LUfac info : "); put(file,info,1); new_line(file);
+    else
+      dx := DoblDobl_Complex_Vector_Series.Create(xd);
+      put_line(file,"The update to the series :");
+      for i in dx'range loop
+        DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
+      end loop;
+      nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(px);
+      put(file,"The max norm of the evaluation : ");
+      put(file,nrm,3); new_line(file);
+      DoblDobl_Complex_Series_Vectors.Add(x,dx);
+      DoblDobl_Complex_Series_Vectors.Clear(dx);
+    end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
+    DoblDobl_Complex_Matrix_Series.Clear(mj);
+    DoblDobl_Complex_Vector_Series.Clear(xp);
+    DoblDobl_Complex_Vector_Series.Clear(xd);
   end LU_Newton_Step;
 
 -- ONE NEWTON STEP WITH LU WITH CONDITION NUMBER ESTIMATE :
@@ -398,6 +489,106 @@ package body DoblDobl_Newton_Matrix_Series is
   begin
     QR_Newton_Step(file,p,jp,degree,x,info);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
+  end QR_Newton_Step;
+
+-- ONE NEWTON STEP WITH QR ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure QR_Newton_Step
+              ( f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in integer32;
+                x : in out DoblDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+
+    dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
+    px : DoblDobl_Complex_Series_Vectors.Vector(f'range);
+    jm : DoblDobl_Complex_Series_Matrices.Matrix(f'range,x'range);
+    mj : DoblDobl_Complex_Matrix_Series.Matrix(degree);
+    xp,xd : DoblDobl_Complex_Vector_Series.Vector(degree);
+    nrm : double_double;
+    tol : constant double_float := 1.0E-26;
+
+  begin
+    px := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,x);
+    nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(px);
+    if nrm > tol then
+      DoblDobl_Complex_Series_Vectors.Min(px);
+      Complex_Series_and_Polynomials.Set_degree(px,degree);
+      jm := DoblDobl_CSeries_Jaco_Matrices.Eval(ejm,mlt,c,x);
+      Complex_Series_and_Polynomials.Set_degree(jm,degree);
+      mj := DoblDobl_Complex_Matrix_Series.Create(jm);
+      xp := DoblDobl_Complex_Vector_Series.Create(px);
+      Solve_by_QRLS(mj,xp,info,xd);
+      if info = 0 then
+        dx := DoblDobl_Complex_Vector_Series.Create(xd);
+        DoblDobl_Complex_Series_Vectors.Add(x,dx);
+        DoblDobl_Complex_Series_Vectors.Clear(dx);
+      end if;
+    end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
+    DoblDobl_Complex_Matrix_Series.Clear(mj);
+    DoblDobl_Complex_Vector_Series.Clear(xp);
+    DoblDobl_Complex_Vector_Series.Clear(xd);
+  end QR_Newton_Step;
+
+  procedure QR_Newton_Step
+              ( file : in file_type;
+                f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in integer32;
+                x : in out DoblDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+
+    dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
+    px : DoblDobl_Complex_Series_Vectors.Vector(f'range);
+    jm : DoblDobl_Complex_Series_Matrices.Matrix(f'range,x'range);
+    mj : DoblDobl_Complex_Matrix_Series.Matrix(degree);
+    xp,xd : DoblDobl_Complex_Vector_Series.Vector(degree);
+    nrm : double_double;
+    tol : constant double_float := 1.0E-26;
+
+  begin
+    px := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,x);
+    put_line(file,"The evaluated series :");
+    for i in px'range loop
+      DoblDobl_Complex_Series_io.put(file,px(i)); new_line(file);
+    end loop;
+    nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(px);
+    put(file,"The max norm of the evaluation : ");
+    put(file,nrm,3); new_line(file);
+    if nrm > tol then
+      DoblDobl_Complex_Series_Vectors.Min(px);
+      Complex_Series_and_Polynomials.Set_degree(px,degree);
+      jm := DoblDobl_CSeries_Jaco_Matrices.Eval(ejm,mlt,c,x);
+      Complex_Series_and_Polynomials.Set_degree(jm,degree);
+      mj := DoblDobl_Complex_Matrix_Series.Create(jm);
+      xp := DoblDobl_Complex_Vector_Series.Create(px);
+      Solve_by_QRLS(mj,xp,info,xd);
+      if info /= 0 then
+        put(file,"QRLS info : "); put(file,info,1); new_line(file);
+      else
+        dx := DoblDobl_Complex_Vector_Series.Create(xd);
+        put_line(file,"The update to the series :");
+        for i in dx'range loop
+          DoblDobl_Complex_Series_io.put(file,dx(i)); new_line(file);
+        end loop;
+        nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(dx);
+        put(file,"The max norm of the update : ");
+        put(file,nrm,3); new_line(file);
+        DoblDobl_Complex_Series_Vectors.Add(x,dx);
+        DoblDobl_Complex_Series_Vectors.Clear(dx);
+      end if;
+    end if;
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
+    DoblDobl_Complex_Matrix_Series.Clear(mj);
+    DoblDobl_Complex_Vector_Series.Clear(xp);
+    DoblDobl_Complex_Vector_Series.Clear(xd);
   end QR_Newton_Step;
 
 -- ONE NEWTON STEP WITH SVD :
@@ -728,6 +919,45 @@ package body DoblDobl_Newton_Matrix_Series is
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
+-- MANY NEWTON STEPS WITH LU ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure LU_Newton_Steps
+              ( f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
+                x : in out DoblDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+
+  begin
+    for i in 1..nbrit loop
+      LU_Newton_Step(f,c,ejm,mlt,degree,x,info);
+      exit when (info /= 0); -- stop if Jacobian matrix is singular
+      exit when (i = nbrit); -- do not double degree after last step
+      Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
+    end loop;
+  end LU_Newton_Steps;
+
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
+                x : in out DoblDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+  begin
+    for i in 1..nbrit loop
+      put(file,"LU Newton step "); put(file,i,1); put_line(file," :");
+      LU_Newton_Step(file,f,c,ejm,mlt,degree,x,info);
+      exit when (info /= 0); -- stop if Jacobian matrix is singular
+      exit when (i = nbrit); -- do not double degree after last step
+      Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
+    end loop;
+  end LU_Newton_Steps;
+
 -- MANY NEWTON STEPS WITH LU WITH CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Steps
@@ -860,6 +1090,44 @@ package body DoblDobl_Newton_Matrix_Series is
   begin
     QR_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
+  end QR_Newton_Steps;
+
+-- MANY QR NEWTON STEPS ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure QR_Newton_Steps
+              ( f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
+                x : in out DoblDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+  begin
+    for i in 1..nbrit loop
+      QR_Newton_Step(f,c,ejm,mlt,degree,x,info);
+      exit when (info /= 0); -- stop if Jacobian matrix is singular
+      exit when (i = nbrit); -- do not double degree after last step
+      Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
+    end loop;
+  end QR_Newton_Steps;
+
+  procedure QR_Newton_Steps
+              ( file : in file_type;
+                f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                degree : in out integer32; maxdeg,nbrit : in integer32;
+                x : in out DoblDobl_Complex_Series_Vectors.Vector;
+                info : out integer32 ) is
+  begin
+    for i in 1..nbrit loop
+      put(file,"QR Newton step "); put(file,i,1); put_line(file," :");
+      QR_Newton_Step(file,f,c,ejm,mlt,degree,x,info);
+      exit when (info /= 0); -- stop if Jacobian matrix is singular
+      exit when (i = nbrit); -- do not double degree after last step
+      Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
+    end loop;
   end QR_Newton_Steps;
 
 -- MANY NEWTON STEPS WITH SVD :

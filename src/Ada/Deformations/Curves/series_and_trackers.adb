@@ -40,6 +40,8 @@ with Standard_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_Vectors;
 with Standard_CSeries_Vector_Functions;
+with DoblDobl_CSeries_Vector_Functions;
+with QuadDobl_CSeries_Vector_Functions;
 with Standard_Pade_Approximants;
 with DoblDobl_Pade_Approximants;
 with QuadDobl_Pade_Approximants;
@@ -523,118 +525,6 @@ package body Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
-                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
-                fcf : in Standard_Complex_Series_VecVecs.VecVec;
-                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
-                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
-                sol : in out Standard_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float;
-                verbose : in boolean := false ) is
-
-    nbq : constant integer32 := fhm'last;
-    nit : constant integer32 := integer32(pars.corsteps);
-    numdeg : constant integer32 := integer32(pars.numdeg);
-    dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
-    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
-    eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
-    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
-       := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
-    poles : Standard_Complex_VecVecs.VecVec(pv'range)
-          := Homotopy_Pade_Approximants.Allocate_Standard_Poles(sol.n,dendeg);
-    tolcff : constant double_float := pars.epsilon;
-    alpha : constant double_float := pars.alpha;
-    tolres : constant double_float := pars.tolres;
-    fail : boolean;
-    t,step,update : double_float := 0.0;
-    max_steps : constant natural32 := pars.maxsteps;
-    wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
-    onetarget : constant double_float := 1.0;
-    err,rco,res,frp,predres : double_float;
-    cfp : Standard_Complex_Numbers.Complex_Number;
-    nbrit : natural32 := 0;
-    wrk_fcf : Standard_Complex_Series_VecVecs.VecVec(fcf'range);
-
-  begin
-    minsize := 1.0; maxsize := 0.0;
-    nbrcorrs := 0; cntfail := 0;
-    nbrsteps := max_steps;
-    wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
-    for k in 1..max_steps loop
-      if verbose then
-        put(file,"Step "); put(file,k,1); put(file," : ");
-      end if;
-      Series_and_Predictors.Newton_Prediction -- verbose flag set to false
-        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-      if verbose then
-        put(file,"Smallest forward pole radius :");
-        put(file,frp,3); new_line(file);
-        if Standard_Complex_Numbers.REAL_PART(cfp) >= 0.0
-         then put(file,"Closest pole :"); put(file,cfp); new_line(file);
-        end if;
-      end if;
-      step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,alpha,verbose);
-      step := pars.sbeta*step;
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-      end if;
-      Standard_Complex_Series_Vectors.Clear(eva);
-      Set_Step(t,step,pars.maxsize,onetarget);
-      if verbose then
-        put(file,"Step size : "); put(file,step,3);
-        put(file," t = "); put(file,t,3);
-      end if;
-      loop
-        loop
-          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-          predres := Residual_Prediction(wrk_sol,t);
-          if verbose
-           then put(file,"  residual : "); put(file,predres,3); new_line(file);
-          end if;
-          exit when (predres <= alpha);
-          t := t - step; step := step/2.0; t := t + step;
-          if verbose then
-            put(file,"Step size : "); put(file,step,3);
-            put(file," t = "); put(file,t,3);
-          end if;
-          exit when (step < pars.minsize);
-        end loop;
-        Update_Step_Sizes(minsize,maxsize,step);
-        exit when ((step < pars.minsize) and (predres > alpha));
-        Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,pars.corsteps,nbrit,
-           wrk_sol,err,rco,res,fail,verbose);
-        nbrcorrs := nbrcorrs + nbrit;
-        exit when (not fail);
-        step := step/2.0; cntfail := cntfail + 1;
-        exit when (step < pars.minsize);
-      end loop;
-      Standard_Complex_Series_Vectors.Clear(srv);
-      if t = 1.0 then        -- converged and reached the end
-        nbrsteps := k; exit;
-      elsif (fail and (step < pars.minsize)) then -- diverged
-        nbrsteps := k; exit;
-      end if;
-      Standard_CSeries_Vector_Functions.Shift(wrk_fcf,-step);
-    end loop;
-    Standard_Pade_Approximants.Clear(pv);
-    Standard_Complex_VecVecs.Clear(poles);
-    Homotopy_Newton_Steps.Correct
-      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
-       wrk_sol,err,rco,res,fail,verbose);
-    nbrcorrs := nbrcorrs + nbrit;
-    sol.t := Standard_Complex_Numbers.Create(t);
-    sol.v := wrk_sol;
-    sol.err := err; sol.rco := rco; sol.res := res;
-    Standard_CSeries_Vector_Functions.Deep_Clear(wrk_fcf);
-  end Track_One_Path;
-
-  procedure Track_One_Path
-              ( file : in file_type;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -881,6 +771,638 @@ package body Series_and_Trackers is
     sol.rco := Quad_Double_Numbers.Create(rco);
     sol.res := Quad_Double_Numbers.Create(res);
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);
+  end Track_One_Path;
+
+-- VERSIONS ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure Track_One_Path
+              ( fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out Standard_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float ) is
+
+    nbq : constant integer32 := fhm'last;
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := integer32(pars.corsteps);
+    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
+    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
+       := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
+    poles : Standard_Complex_VecVecs.VecVec(pv'range)
+          := Homotopy_Pade_Approximants.Allocate_Standard_Poles(sol.n,dendeg);
+    tolcff : constant double_float := pars.epsilon;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
+    t,step,update : double_float := 0.0;
+    max_steps : constant natural32 := pars.maxsteps;
+    wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
+    onetarget : constant double_float := 1.0;
+    err,rco,res,frp,predres : double_float;
+    cfp : Standard_Complex_Numbers.Complex_Number;
+    nbrit : natural32 := 0;
+    wrk_fcf : Standard_Complex_Series_VecVecs.VecVec(fcf'range);
+
+  begin
+    minsize := 1.0; maxsize := 0.0;
+    nbrcorrs := 0; cntfail := 0;
+    nbrsteps := max_steps;
+    wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
+    for k in 1..max_steps loop
+      Series_and_Predictors.Newton_Prediction
+        (maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+      step := pars.sbeta*step;
+      Standard_Complex_Series_Vectors.Clear(eva);
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+      end if;
+      Set_Step(t,step,pars.maxsize,onetarget);
+     -- exit when (step < pars.minsize); -- wait to check predres
+      loop
+        loop
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
+          predres := Residual_Prediction(wrk_sol,t);
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Homotopy_Newton_Steps.Correct
+          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0; cntfail := cntfail + 1;
+        exit when (step < pars.minsize);
+      end loop;
+      Standard_Complex_Series_Vectors.Clear(srv);
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
+      end if;
+      Standard_CSeries_Vector_Functions.Shift(wrk_fcf,-step);
+    end loop;
+    Standard_Pade_Approximants.Clear(pv);
+    Standard_Complex_VecVecs.Clear(poles);
+    Homotopy_Newton_Steps.Correct
+      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+    nbrcorrs := nbrcorrs + nbrit;
+    sol.t := Standard_Complex_Numbers.Create(t);
+    sol.v := wrk_sol;
+    sol.err := err; sol.rco := rco; sol.res := res;
+    Standard_CSeries_Vector_Functions.Deep_Clear(wrk_fcf);
+  end Track_One_Path;
+
+  procedure Track_One_Path
+              ( fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out DoblDobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float ) is
+
+    nbq : constant integer32 := fhm'last;
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := integer32(pars.corsteps);
+    srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
+    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
+       := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
+    poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
+          := Homotopy_Pade_Approximants.Allocate_DoblDobl_Poles(sol.n,dendeg);
+    tolcff : constant double_float := pars.epsilon;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
+    t,step,update : double_float := 0.0;
+    dd_t,dd_step : double_double;
+    max_steps : constant natural32 := pars.maxsteps;
+    wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
+    onetarget : constant double_float := 1.0;
+    err,rco,res,predres : double_float;
+    frp : double_double;
+    cfp : DoblDobl_Complex_Numbers.Complex_Number;
+    nbrit : natural32 := 0;
+    wrk_fcf : DoblDobl_Complex_Series_VecVecs.VecVec(fcf'range);
+
+  begin
+    minsize := 1.0; maxsize := 0.0;
+    nbrcorrs := 0; cntfail := 0;
+    nbrsteps := max_steps;
+    wrk_fcf := DoblDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
+    for k in 1..max_steps loop
+      Series_and_Predictors.Newton_Prediction
+        (maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+      step := pars.sbeta*step;
+      DoblDobl_Complex_Series_Vectors.Clear(eva);
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size
+                      (step,hi_part(frp),pars.pbeta);
+      end if;
+      Set_Step(t,step,pars.maxsize,onetarget);
+     -- exit when (step < pars.minsize); -- wait to check predres
+      loop
+        loop
+          dd_step := create(step);
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
+          predres := Residual_Prediction(wrk_sol,t);
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Homotopy_Newton_Steps.Correct
+          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0; cntfail := cntfail + 1;
+        exit when (step < pars.minsize);
+      end loop;
+      DoblDobl_Complex_Series_Vectors.Clear(srv);
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
+      end if;
+      dd_step := create(step);
+      DoblDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-dd_step);
+    end loop;
+    DoblDobl_Pade_Approximants.Clear(pv);
+    DoblDobl_Complex_VecVecs.Clear(poles);
+    Homotopy_Newton_Steps.Correct
+      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+    nbrcorrs := nbrcorrs + nbrit;
+    dd_t := Double_Double_Numbers.Create(t);
+    sol.t := DoblDobl_Complex_Numbers.Create(dd_t);
+    sol.v := wrk_sol;
+    sol.err := Double_Double_Numbers.Create(err);
+    sol.rco := Double_Double_Numbers.Create(rco);
+    sol.res := Double_Double_Numbers.Create(res);
+    DoblDobl_CSeries_Vector_Functions.Deep_Clear(wrk_fcf);
+  end Track_One_Path;
+
+
+  procedure Track_One_Path
+              ( fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out QuadDobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float ) is
+
+    nbq : constant integer32 := fhm'last;
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := integer32(pars.corsteps);
+    srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
+       := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
+    poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
+          := Homotopy_Pade_Approximants.Allocate_QuadDobl_Poles(sol.n,dendeg);
+    tolcff : constant double_float := pars.epsilon;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
+    t,step,update : double_float := 0.0;
+    qd_t,qd_step : quad_double;
+    max_steps : constant natural32 := pars.maxsteps;
+    wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
+    onetarget : constant double_float := 1.0;
+    err,rco,res,predres : double_float;
+    frp : quad_double;
+    cfp : QuadDobl_Complex_Numbers.Complex_Number;
+    nbrit : natural32 := 0;
+    wrk_fcf : QuadDobl_Complex_Series_VecVecs.VecVec(fcf'range);
+
+  begin
+    minsize := 1.0; maxsize := 0.0;
+    nbrcorrs := 0; cntfail := 0;
+    nbrsteps := max_steps;
+    wrk_fcf := QuadDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
+    for k in 1..max_steps loop
+      Series_and_Predictors.Newton_Prediction
+        (maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+      step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+      step := pars.sbeta*step;
+      QuadDobl_Complex_Series_Vectors.Clear(eva);
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size
+                      (step,hihi_part(frp),pars.pbeta);
+      end if;
+      Set_Step(t,step,pars.maxsize,onetarget);
+     -- exit when (step < pars.minsize); -- wait to check predres
+      loop
+        loop
+          qd_step := create(step);
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
+          predres := Residual_Prediction(wrk_sol,t);
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Homotopy_Newton_Steps.Correct
+          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0; cntfail := cntfail + 1;
+        exit when (step < pars.minsize);
+      end loop;
+      QuadDobl_Complex_Series_Vectors.Clear(srv);
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
+      end if;
+      qd_step := create(step);
+      QuadDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-qd_step);
+    end loop;
+    QuadDobl_Pade_Approximants.Clear(pv);
+    QuadDobl_Complex_VecVecs.Clear(poles);
+    Homotopy_Newton_Steps.Correct
+      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+    nbrcorrs := nbrcorrs + nbrit;
+    qd_t := Quad_Double_Numbers.Create(t);
+    sol.t := QuadDobl_Complex_Numbers.Create(qd_t);
+    sol.v := wrk_sol;
+    sol.err := Quad_Double_Numbers.Create(err);
+    sol.rco := Quad_Double_Numbers.Create(rco);
+    sol.res := Quad_Double_Numbers.Create(res);
+    QuadDobl_CSeries_Vector_Functions.Deep_Clear(wrk_fcf);
+  end Track_One_Path;
+
+  procedure Track_One_Path
+              ( file : in file_type;
+                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out Standard_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float;
+                verbose : in boolean := false ) is
+
+    nbq : constant integer32 := fhm'last;
+    nit : constant integer32 := integer32(pars.corsteps);
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
+    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
+       := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
+    poles : Standard_Complex_VecVecs.VecVec(pv'range)
+          := Homotopy_Pade_Approximants.Allocate_Standard_Poles(sol.n,dendeg);
+    tolcff : constant double_float := pars.epsilon;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
+    t,step,update : double_float := 0.0;
+    max_steps : constant natural32 := pars.maxsteps;
+    wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
+    onetarget : constant double_float := 1.0;
+    err,rco,res,frp,predres : double_float;
+    cfp : Standard_Complex_Numbers.Complex_Number;
+    nbrit : natural32 := 0;
+    wrk_fcf : Standard_Complex_Series_VecVecs.VecVec(fcf'range);
+
+  begin
+    minsize := 1.0; maxsize := 0.0;
+    nbrcorrs := 0; cntfail := 0;
+    nbrsteps := max_steps;
+    wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
+    for k in 1..max_steps loop
+      if verbose then
+        put(file,"Step "); put(file,k,1); put(file," : ");
+      end if;
+      Series_and_Predictors.Newton_Prediction -- verbose flag set to false
+        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+      if verbose then
+        put(file,"Smallest forward pole radius :");
+        put(file,frp,3); new_line(file);
+        if Standard_Complex_Numbers.REAL_PART(cfp) >= 0.0
+         then put(file,"Closest pole :"); put(file,cfp); new_line(file);
+        end if;
+      end if;
+      step := Series_and_Predictors.Set_Step_Size
+                (file,eva,tolcff,alpha,verbose);
+      step := pars.sbeta*step;
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+      end if;
+      Standard_Complex_Series_Vectors.Clear(eva);
+      Set_Step(t,step,pars.maxsize,onetarget);
+      if verbose then
+        put(file,"Step size : "); put(file,step,3);
+        put(file," t = "); put(file,t,3);
+      end if;
+      loop
+        loop
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
+          predres := Residual_Prediction(wrk_sol,t);
+          if verbose
+           then put(file,"  residual : "); put(file,predres,3); new_line(file);
+          end if;
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          if verbose then
+            put(file,"Step size : "); put(file,step,3);
+            put(file," t = "); put(file,t,3);
+          end if;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Homotopy_Newton_Steps.Correct
+          (file,nbq,t,tolres,pars.corsteps,nbrit,
+           wrk_sol,err,rco,res,fail,verbose);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0; cntfail := cntfail + 1;
+        exit when (step < pars.minsize);
+      end loop;
+      Standard_Complex_Series_Vectors.Clear(srv);
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
+      end if;
+      Standard_CSeries_Vector_Functions.Shift(wrk_fcf,-step);
+    end loop;
+    Standard_Pade_Approximants.Clear(pv);
+    Standard_Complex_VecVecs.Clear(poles);
+    Homotopy_Newton_Steps.Correct
+      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+       wrk_sol,err,rco,res,fail,verbose);
+    nbrcorrs := nbrcorrs + nbrit;
+    sol.t := Standard_Complex_Numbers.Create(t);
+    sol.v := wrk_sol;
+    sol.err := err; sol.rco := rco; sol.res := res;
+    Standard_CSeries_Vector_Functions.Deep_Clear(wrk_fcf);
+  end Track_One_Path;
+
+  procedure Track_One_Path
+              ( file : in file_type;
+                fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out DoblDobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float;
+                verbose : in boolean := false ) is
+
+    nbq : constant integer32 := fhm'last;
+    nit : constant integer32 := integer32(pars.corsteps);
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
+    pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
+       := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
+    poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
+          := Homotopy_Pade_Approximants.Allocate_DoblDobl_Poles(sol.n,dendeg);
+    tolcff : constant double_float := pars.epsilon;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
+    t,step,update : double_float := 0.0;
+    dd_t,dd_step : double_double;
+    max_steps : constant natural32 := pars.maxsteps;
+    wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
+    onetarget : constant double_float := 1.0;
+    err,rco,res,predres : double_float;
+    frp : double_double;
+    cfp : DoblDobl_Complex_Numbers.Complex_Number;
+    nbrit : natural32 := 0;
+    wrk_fcf : DoblDobl_Complex_Series_VecVecs.VecVec(fcf'range);
+
+  begin
+    minsize := 1.0; maxsize := 0.0;
+    nbrcorrs := 0; cntfail := 0;
+    nbrsteps := max_steps;
+    wrk_fcf := DoblDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
+    for k in 1..max_steps loop
+      if verbose then
+        put(file,"Step "); put(file,k,1); put(file," : ");
+      end if;
+      Series_and_Predictors.Newton_Prediction -- verbose flag set to false
+        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+      if verbose then
+        put(file,"Smallest forward pole radius :");
+        put(file,frp,3); new_line(file);
+        if DoblDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
+         then put(file,"Closest pole :"); put(file,cfp); new_line(file);
+        end if;
+      end if;
+      step := Series_and_Predictors.Set_Step_Size
+                (file,eva,tolcff,alpha,verbose);
+      step := pars.sbeta*step;
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size
+                      (step,hi_part(frp),pars.pbeta);
+      end if;
+      DoblDobl_Complex_Series_Vectors.Clear(eva);
+      Set_Step(t,step,pars.maxsize,onetarget);
+      if verbose then
+        put(file,"Step size : "); put(file,step,3);
+        put(file," t = "); put(file,t,3);
+      end if;
+      loop
+        loop
+          dd_step := create(step);
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
+          predres := Residual_Prediction(wrk_sol,t);
+          if verbose
+           then put(file,"  residual : "); put(file,predres,3); new_line(file);
+          end if;
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          if verbose then
+            put(file,"Step size : "); put(file,step,3);
+            put(file," t = "); put(file,t,3);
+          end if;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Homotopy_Newton_Steps.Correct
+          (file,nbq,t,tolres,pars.corsteps,nbrit,
+           wrk_sol,err,rco,res,fail,verbose);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0; cntfail := cntfail + 1;
+        exit when (step < pars.minsize);
+      end loop;
+      DoblDobl_Complex_Series_Vectors.Clear(srv);
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
+      end if;
+      dd_step := create(step);
+      DoblDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-dd_step);
+    end loop;
+    DoblDobl_Pade_Approximants.Clear(pv);
+    DoblDobl_Complex_VecVecs.Clear(poles);
+    Homotopy_Newton_Steps.Correct
+      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+       wrk_sol,err,rco,res,fail,verbose);
+    nbrcorrs := nbrcorrs + nbrit;
+    dd_t := Double_Double_Numbers.Create(t);
+    sol.t := DoblDobl_Complex_Numbers.Create(dd_t);
+    sol.v := wrk_sol;
+    sol.err := Double_Double_Numbers.Create(err);
+    sol.rco := Double_Double_Numbers.Create(rco);
+    sol.res := Double_Double_Numbers.Create(res);
+    DoblDobl_CSeries_Vector_Functions.Deep_Clear(wrk_fcf);
+  end Track_One_Path;
+
+  procedure Track_One_Path
+              ( file : in file_type;
+                fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in out QuadDobl_Complex_Solutions.Solution;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbrsteps,nbrcorrs,cntfail : out natural32;
+                minsize,maxsize : out double_float;
+                verbose : in boolean := false ) is
+
+    nbq : constant integer32 := fhm'last;
+    nit : constant integer32 := integer32(pars.corsteps);
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
+       := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
+    poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
+          := Homotopy_Pade_Approximants.Allocate_QuadDobl_Poles(sol.n,dendeg);
+    tolcff : constant double_float := pars.epsilon;
+    alpha : constant double_float := pars.alpha;
+    tolres : constant double_float := pars.tolres;
+    fail : boolean;
+    t,step,update : double_float := 0.0;
+    qd_t,qd_step : quad_double;
+    max_steps : constant natural32 := pars.maxsteps;
+    wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
+    onetarget : constant double_float := 1.0;
+    err,rco,res,predres : double_float;
+    frp : quad_double;
+    cfp : QuadDobl_Complex_Numbers.Complex_Number;
+    nbrit : natural32 := 0;
+    wrk_fcf : QuadDobl_Complex_Series_VecVecs.VecVec(fcf'range);
+
+  begin
+    minsize := 1.0; maxsize := 0.0;
+    nbrcorrs := 0; cntfail := 0;
+    nbrsteps := max_steps;
+    wrk_fcf := QuadDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
+    for k in 1..max_steps loop
+      if verbose then
+        put(file,"Step "); put(file,k,1); put(file," : ");
+      end if;
+      Series_and_Predictors.Newton_Prediction -- verbose flag set to false
+        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
+      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+      if verbose then
+        put(file,"Smallest forward pole radius :");
+        put(file,frp,3); new_line(file);
+        if QuadDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
+         then put(file,"Closest pole :"); put(file,cfp); new_line(file);
+        end if;
+      end if;
+      step := Series_and_Predictors.Set_Step_Size
+                (file,eva,tolcff,alpha,verbose);
+      step := pars.sbeta*step;
+      if frp > 0.0
+       then step := Series_and_Predictors.Cap_Step_Size
+                      (step,hihi_part(frp),pars.pbeta);
+      end if;
+      QuadDobl_Complex_Series_Vectors.Clear(eva);
+      Set_Step(t,step,pars.maxsize,onetarget);
+      if verbose then
+        put(file,"Step size : "); put(file,step,3);
+        put(file," t = "); put(file,t,3);
+      end if;
+      loop
+        loop
+          qd_step := create(step);
+          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
+          predres := Residual_Prediction(wrk_sol,t);
+          if verbose
+           then put(file,"  residual : "); put(file,predres,3); new_line(file);
+          end if;
+          exit when (predres <= alpha);
+          t := t - step; step := step/2.0; t := t + step;
+          if verbose then
+            put(file,"Step size : "); put(file,step,3);
+            put(file," t = "); put(file,t,3);
+          end if;
+          exit when (step < pars.minsize);
+        end loop;
+        Update_Step_Sizes(minsize,maxsize,step);
+        exit when ((step < pars.minsize) and (predres > alpha));
+        Homotopy_Newton_Steps.Correct
+          (file,nbq,t,tolres,pars.corsteps,nbrit,
+           wrk_sol,err,rco,res,fail,verbose);
+        nbrcorrs := nbrcorrs + nbrit;
+        exit when (not fail);
+        step := step/2.0; cntfail := cntfail + 1;
+        exit when (step < pars.minsize);
+      end loop;
+      QuadDobl_Complex_Series_Vectors.Clear(srv);
+      if t = 1.0 then        -- converged and reached the end
+        nbrsteps := k; exit;
+      elsif (fail and (step < pars.minsize)) then -- diverged
+        nbrsteps := k; exit;
+      end if;
+      qd_step := create(step);
+      QuadDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-qd_step);
+    end loop;
+    QuadDobl_Pade_Approximants.Clear(pv);
+    QuadDobl_Complex_VecVecs.Clear(poles);
+    Homotopy_Newton_Steps.Correct
+      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+       wrk_sol,err,rco,res,fail,verbose);
+    nbrcorrs := nbrcorrs + nbrit;
+    qd_t := Quad_Double_Numbers.Create(t);
+    sol.t := QuadDobl_Complex_Numbers.Create(qd_t);
+    sol.v := wrk_sol;
+    sol.err := Quad_Double_Numbers.Create(err);
+    sol.rco := Quad_Double_Numbers.Create(rco);
+    sol.res := Quad_Double_Numbers.Create(res);
+    QuadDobl_CSeries_Vector_Functions.Deep_Clear(wrk_fcf);
   end Track_One_Path;
 
   procedure Update_Counters

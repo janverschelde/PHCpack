@@ -16,7 +16,11 @@ with Standard_CSeries_Poly_Systems;
 with Standard_CSeries_Poly_SysFun;
 with Standard_CSeries_Jaco_Matrices;
 with DoblDobl_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_SysFun;
+with DoblDobl_CSeries_Jaco_Matrices;
 with QuadDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_SysFun;
+with QuadDobl_CSeries_Jaco_Matrices;
 
 package Power_Series_Methods is
 
@@ -101,12 +105,44 @@ package Power_Series_Methods is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32; verbose : in boolean := false );
+  procedure Run_LU_Newton
+              ( maxdeg,nbrit : in integer32;
+                f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
+                info : out integer32; verbose : in boolean := false );
+  procedure Run_LU_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
+                info : out integer32; verbose : in boolean := false );
+  procedure Run_LU_Newton
+              ( maxdeg,nbrit : in integer32;
+                f : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
+                info : out integer32; verbose : in boolean := false );
+  procedure Run_LU_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                f : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
+                info : out integer32; verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Applies as many steps with Newton's method as the value of nbrit,
   --   starting at the solution in s to the system p,
   --   applying LU factorization to compute the Newton updates,
-  --   in standard double precision.
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file     must be opened for output, to write results,
@@ -246,12 +282,44 @@ package Power_Series_Methods is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false );
+  procedure Run_QR_Newton
+              ( maxdeg,nbrit : in integer32;
+                f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false );
+  procedure Run_QR_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false );
+  procedure Run_QR_Newton
+              ( maxdeg,nbrit : in integer32;
+                f : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false );
+  procedure Run_QR_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                f : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Applies as many steps with Newton's method as the value of nbrit,
   --   starting at the solution in s to the system p,
   --   applying QR decomposition to compute the Newton updates,
-  --   in standard double precision.
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file     must be opened for output, to write results,

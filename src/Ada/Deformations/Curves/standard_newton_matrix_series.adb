@@ -1113,7 +1113,12 @@ package body Standard_Newton_Matrix_Series is
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
   begin
-    null;
+    for i in 1..nbrit loop
+      QR_Newton_Step(f,c,ejm,mlt,degree,x,info);
+      exit when (info /= 0); -- stop if Jacobian matrix is singular
+      exit when (i = nbrit); -- do not double degree after last step
+      Double_Degree_with_Threshold(degree,maxdeg);
+    end loop;
   end QR_Newton_Steps;
 
   procedure QR_Newton_Steps
@@ -1126,7 +1131,13 @@ package body Standard_Newton_Matrix_Series is
                 x : in out Standard_Complex_Series_Vectors.Vector;
                 info : out integer32 ) is
   begin
-    null;
+    for i in 1..nbrit loop
+      put(file,"QR Newton step "); put(file,i,1); put_line(file," :");
+      QR_Newton_Step(file,f,c,ejm,mlt,degree,x,info);
+      exit when (info /= 0); -- stop if Jacobian matrix is singular
+      exit when (i = nbrit); -- do not double degree after last step
+      Double_Degree_with_Threshold(degree,maxdeg);
+    end loop;
   end QR_Newton_Steps;
 
 -- MANY NEWTON STEPS WITH SVD :

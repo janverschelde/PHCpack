@@ -5,6 +5,9 @@ Fri 4 Jan 2019 : from standard_newton_matrix_series, power_series_methods,
   In standard_newton_matrix_series, added coefficient-parameter homotopies 
   to the QR methods, improved power_series_methods, series_and_predictors,
   series_and_trackers, updated series_path_trackers.adb.
+  Completed definitions in standard_newton_matrix_series.adb and made
+  extensions in {dobldobl,quaddobl}_newton_matrix_series, applied in
+  power_series_methods, series_and_predictors, and series_and_trackers.
 
 Thu 3 Jan 2019 : added tests on coefficient-parameter homotopies 
   to ts_serhom.adb.  Added coefficient-parameter evaluation to

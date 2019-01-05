@@ -12,9 +12,6 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions_io;
-with Standard_CSeries_Poly_SysFun;
-with DoblDobl_CSeries_Poly_SysFun;
-with QuadDobl_CSeries_Poly_SysFun;
 with Complex_Series_and_Polynomials;
 with Complex_Series_and_Polynomials_io;
 with Standard_Newton_Matrix_Series; -- with Standard_Newton_Series;
@@ -56,55 +53,6 @@ package body Power_Series_Methods is
         put_line(file,"The updated power series solution :");
         Complex_Series_and_Polynomials_io.put(file,s);
         eva := Standard_CSeries_Poly_SysFun.Eval(p,s);
-        Complex_Series_and_Polynomials.Filter(eva,tol);
-        put_line(file,"The evaluated solution :");
-        Complex_Series_and_Polynomials_io.put(file,eva);
-        Standard_Complex_Series_Vectors.Clear(eva);
-      end if;
-    end if;
-  end Run_LU_Newton;
-
--- LU NEWTON ON COEFFICIENT-PARAMETER HOMOTOPIES :
-
-  procedure Run_LU_Newton
-             ( maxdeg,nbrit : in integer32;
-               f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
-               c : in Standard_Complex_Series_VecVecs.VecVec;
-               ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
-               mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
-               s : in out Standard_Complex_Series_Vectors.Vector;
-               info : out integer32; verbose : in boolean := false ) is
-  begin
-    Run_LU_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,info,verbose);
-  end Run_LU_Newton;
-
-  procedure Run_LU_Newton
-             ( file : in file_type; maxdeg,nbrit : in integer32;
-               f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
-               c : in Standard_Complex_Series_VecVecs.VecVec;
-               ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
-               mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
-               s : in out Standard_Complex_Series_Vectors.Vector;
-               info : out integer32; verbose : in boolean := false ) is
-
-    use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
-
-    order : integer32 := 1;
-    tol : constant double_float := 1.0E-12;
-    eva : Standard_Complex_Series_Vectors.Vector(f'range);
-
-  begin
-    if not verbose then
-      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
-    else
-      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
-      if info /= 0 then
-        put(file,"info = "); put(file,info,1); new_line(file);
-      else
-        Complex_Series_and_Polynomials.Filter(s,tol);
-        put_line(file,"The updated power series solution :");
-        Complex_Series_and_Polynomials_io.put(file,s);
-        eva := Standard_CSeries_Poly_SysFun.Eval(f,c,s);
         Complex_Series_and_Polynomials.Filter(eva,tol);
         put_line(file,"The evaluated solution :");
         Complex_Series_and_Polynomials_io.put(file,eva);
@@ -317,6 +265,149 @@ package body Power_Series_Methods is
     end if;
   end Run_LU_Newton;
 
+-- LU NEWTON ON COEFFICIENT-PARAMETER HOMOTOPIES :
+
+  procedure Run_LU_Newton
+             ( maxdeg,nbrit : in integer32;
+               f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+               c : in Standard_Complex_Series_VecVecs.VecVec;
+               ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+               mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+               s : in out Standard_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false ) is
+  begin
+    Run_LU_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,info,verbose);
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( file : in file_type; maxdeg,nbrit : in integer32;
+               f : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+               c : in Standard_Complex_Series_VecVecs.VecVec;
+               ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+               mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+               s : in out Standard_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false ) is
+
+    use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-12;
+    eva : Standard_Complex_Series_Vectors.Vector(f'range);
+
+  begin
+    if not verbose then
+      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+    else
+      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := Standard_CSeries_Poly_SysFun.Eval(f,c,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        Standard_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( maxdeg,nbrit : in integer32;
+               f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+               c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+               ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+               mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+               s : in out DoblDobl_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false ) is
+  begin
+    Run_LU_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,info,verbose);
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( file : in file_type; maxdeg,nbrit : in integer32;
+               f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+               c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+               ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+               mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+               s : in out DoblDobl_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false ) is
+
+    use DoblDobl_Newton_Matrix_Series; -- use DoblDobl_Newton_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-12;
+    eva : DoblDobl_Complex_Series_Vectors.Vector(f'range);
+
+  begin
+    if not verbose then
+      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+    else
+      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        DoblDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( maxdeg,nbrit : in integer32;
+               f : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+               c : in QuadDobl_Complex_Series_VecVecs.VecVec;
+               ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+               mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+               s : in out QuadDobl_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false ) is
+  begin
+    Run_LU_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,info,verbose);
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( file : in file_type; maxdeg,nbrit : in integer32;
+               f : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+               c : in QuadDobl_Complex_Series_VecVecs.VecVec;
+               ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+               mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+               s : in out QuadDobl_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false ) is
+
+    use QuadDobl_Newton_Matrix_Series; -- use QuadDobl_Newton_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-12;
+    eva : QuadDobl_Complex_Series_Vectors.Vector(f'range);
+
+  begin
+    if not verbose then
+      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+    else
+      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := QuadDobl_CSeries_Poly_SysFun.Eval(f,c,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        QuadDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_LU_Newton;
+
   procedure Run_QR_Newton
              ( maxdeg,nbrit : in integer32;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
@@ -465,8 +556,128 @@ package body Power_Series_Methods is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 verbose : in boolean := false ) is
+
+    use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
+
+    order : integer32 := 1;
+    info : integer32;
+    tol : constant double_float := 1.0E-12;
+    eva : Standard_Complex_Series_Vectors.Vector(f'range);
+
   begin
-    null;
+    if not verbose then
+      QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+    else
+      QR_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := Standard_CSeries_Poly_SysFun.Eval(f,c,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        Standard_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+              ( maxdeg,nbrit : in integer32;
+                f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false ) is
+  begin
+    Run_QR_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,verbose);
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out DoblDobl_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+    use DoblDobl_Newton_Matrix_Series; -- use DoblDobl_Newton_Series;
+
+    order : integer32 := 1;
+    info : integer32;
+    tol : constant double_float := 1.0E-24;
+    eva : DoblDobl_Complex_Series_Vectors.Vector(f'range);
+
+  begin
+    if not verbose then
+      QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+    else
+      QR_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        DoblDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+              ( maxdeg,nbrit : in integer32;
+                f : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false ) is
+  begin
+    Run_QR_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,verbose);
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                f : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out QuadDobl_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+    use QuadDobl_Newton_Matrix_Series; -- use QuadDobl_Newton_Series;
+
+    order : integer32 := 1;
+    info : integer32;
+    tol : constant double_float := 1.0E-48;
+    eva : QuadDobl_Complex_Series_Vectors.Vector(f'range);
+
+  begin
+    if not verbose then
+      QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+    else
+      QR_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := QuadDobl_CSeries_Poly_SysFun.Eval(f,c,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        QuadDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
   end Run_QR_Newton;
 
 -- SVD NEWTON :
