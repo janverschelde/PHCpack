@@ -27,11 +27,17 @@ with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
 with Standard_Complex_Series_VecVecs;
+with DoblDobl_Complex_Series_VecVecs;
+with QuadDobl_Complex_Series_VecVecs;
 with Standard_CSeries_Poly_Systems;
 with Standard_CSeries_Poly_SysFun;
 with Standard_CSeries_Jaco_Matrices;
 with DoblDobl_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_SysFun;
+with DoblDobl_CSeries_Jaco_Matrices;
 with QuadDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_SysFun;
+with QuadDobl_CSeries_Jaco_Matrices;
 with Complex_Series_and_Polynomials_io;  use Complex_Series_and_Polynomials_io;
 with Series_and_Homotopies;
 with Series_and_Trackers;
@@ -240,6 +246,11 @@ package body Series_Path_Trackers is
 
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
     s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
+    fhm : DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
+    fcf : DoblDobl_Complex_Series_VecVecs.VecVec(1..nq);
+    nvr : constant integer32 := integer32(Head_Of(sols).n);
+    ejm : DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..nvr);
+    mlt : DoblDobl_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..nvr);
     p : Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
@@ -270,6 +281,9 @@ package body Series_Path_Trackers is
     end if;
     h := DoblDobl_Homotopy.Homotopy_System;
     s := Series_and_Homotopies.Create(h,nq+1,false);
+    fhm := DoblDobl_CSeries_Poly_SysFun.Create(s);
+    fcf := DoblDobl_CSeries_Poly_SysFun.Coeff(s);
+    DoblDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
      then DoblDobl_Write(file,natural32(nq),sols,p);
@@ -285,7 +299,8 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         Series_and_Trackers.Track_One_Path
-          (file,s,ls.all,p,nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
+          (file,fhm,fcf,ejm,mlt,ls.all,p,
+           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -294,7 +309,7 @@ package body Series_Path_Trackers is
         put(file,ls.all); new_line(file);
       else
         Series_and_Trackers.Track_One_Path
-          (standard_output,s,ls.all,p,
+          (standard_output,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -334,6 +349,10 @@ package body Series_Path_Trackers is
     end if;
     DoblDobl_Complex_Poly_Systems.Clear(h);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
+    DoblDobl_CSeries_Poly_SysFun.Clear(fhm);
+    DoblDobl_Complex_Series_VecVecs.Clear(fcf);
+    DoblDobl_CSeries_Jaco_Matrices.Clear(ejm);
+    DoblDobl_Cseries_Jaco_Matrices.Clear(mlt);
   end DoblDobl_Run;
 
   procedure QuadDobl_Run
@@ -344,6 +363,11 @@ package body Series_Path_Trackers is
 
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
     s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
+    fhm : QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
+    fcf : QuadDobl_Complex_Series_VecVecs.VecVec(1..nq);
+    nvr : constant integer32 := integer32(Head_Of(sols).n);
+    ejm : QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..nvr);
+    mlt : QuadDobl_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..nvr);
     p : Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
@@ -374,6 +398,9 @@ package body Series_Path_Trackers is
     end if;
     h := QuadDobl_Homotopy.Homotopy_System;
     s := Series_and_Homotopies.Create(h,nq+1,false);
+    fhm := QuadDobl_CSeries_Poly_SysFun.Create(s);
+    fcf := QuadDobl_CSeries_Poly_SysFun.Coeff(s);
+    QuadDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
      then QuadDobl_Write(file,natural32(nq),sols,p);
@@ -389,7 +416,8 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         Series_and_Trackers.Track_One_Path
-          (file,s,ls.all,p,nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
+          (file,fhm,fcf,ejm,mlt,ls.all,p,
+           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -398,7 +426,7 @@ package body Series_Path_Trackers is
         put(file,ls.all); new_line(file);
       else
         Series_and_Trackers.Track_One_Path
-          (standard_output,s,ls.all,p,
+          (standard_output,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -437,6 +465,10 @@ package body Series_Path_Trackers is
     end if;
     QuadDobl_Complex_Poly_Systems.Clear(h);
     QuadDobl_CSeries_Poly_Systems.Clear(s);
+    QuadDobl_CSeries_Poly_SysFun.Clear(fhm);
+    QuadDobl_Complex_Series_VecVecs.Clear(fcf);
+    QuadDobl_CSeries_Jaco_Matrices.Clear(ejm);
+    QuadDobl_Cseries_Jaco_Matrices.Clear(mlt);
   end QuadDobl_Run;
 
   procedure Standard_Main is

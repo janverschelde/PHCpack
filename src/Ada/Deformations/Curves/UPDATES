@@ -1,3 +1,6 @@
+Sat 5 Jan 2019 : extended series_path_trackers.adb with double double and
+  quad double versions of coefficient-parameter evaluation.
+
 Fri 4 Jan 2019 : from standard_newton_matrix_series, power_series_methods,
   series_and_predictors.adb, removed superfluous parameters.
   Improved the residual prediction in series_and_trackers, which changed
