@@ -1,4 +1,5 @@
-Fri 4 Jan 2019 : added deep_clear to standard_cseries_vector_functions.
+Fri 4 Jan 2019 : added deep_clear to standard_cseries_vector_functions,
+  and also to the dobldobl and quaddobl versions.
 
 Thu 3 Jan 2019 : to {standard,dobldobl,quaddobl}_cseries_vector_functions
   added shift functions and shift procedures.  Added Make_Deep_Copy()

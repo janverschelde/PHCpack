@@ -204,4 +204,31 @@ package body DoblDobl_CSeries_Vector_Functions is
     return res;
   end Make_Deep_Copy;
 
+  procedure Deep_Clear
+              ( v : in out DoblDobl_Complex_Series_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Series;
+
+  begin
+    for i in v'range loop
+      if v(i) /= null
+       then DoblDobl_Complex_Series.Clear(v(i));
+      end if;
+    end loop;
+  end Deep_Clear;
+
+  procedure Deep_Clear
+              ( v : in out DoblDobl_Complex_Series_VecVecs.VecVec ) is
+
+    use DoblDobl_Complex_Series_Vectors;
+
+  begin
+    for i in v'range loop
+      if v(i) /= null
+       then Deep_Clear(v(i).all);
+      end if;
+    end loop;
+    DoblDobl_Complex_Series_VecVecs.Clear(v);
+  end Deep_Clear;
+
 end DoblDobl_CSeries_Vector_Functions;

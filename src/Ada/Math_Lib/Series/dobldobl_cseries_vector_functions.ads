@@ -80,4 +80,10 @@ package DoblDobl_CSeries_Vector_Functions is
   -- DESCRIPTION :
   --   Returns a deep copy of all series in v.
 
+  procedure Deep_Clear ( v : in out DoblDobl_Complex_Series_Vectors.Vector );
+  procedure Deep_Clear ( v : in out DoblDobl_Complex_Series_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Deallocates all memory occupied by the series in v.
+
 end DoblDobl_CSeries_Vector_Functions;
