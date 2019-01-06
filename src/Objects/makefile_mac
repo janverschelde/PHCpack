@@ -3201,29 +3201,46 @@ mpi2sol:
 	gnatlink -C use_solcon mpi2sol.o -o ../bin/mpi2sol \
                  --LINK=$(CLINKER)
 
-mpi2hom:
-	gcc -c $(MPILib)/mpi2hom.c
+mpi2hom: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+         reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gcc -c $(MPILib)/mpi2hom.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc mpi2hom.o -o ../bin/mpi2hom \
+	gnatlink -C use_c2phc mpi2hom.o \
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o $(BIN)/mpi2hom \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
                  --LINK=$(CLINKER)
 
-mpi2phc_s:
+mpi2phc_s: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc4phc.o demicsrun4phc.o
 	gcc -c $(MPILib)/mpi2phc_s.c
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc mpi2phc_s.o -o ../bin/mpi2phc_s \
+	gnatlink -C use_c2phc mpi2phc_s.o \
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/mpi2phc_s \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
                  --LINK=$(CLINKER)
 
-mpi2phc_d2: standard_solutions_container.o
+mpi2phc_d2: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(MPILib)/mpi2phc_d2.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o \
-                    mpi2phc_d2.o -o ../bin/mpi2phc_d2 \
+	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o mpi2phc_d2.o \
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/mpi2phc_d2 \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
                  --LINK=$(CLINKER)
 
 double_double.o:
@@ -3234,7 +3251,9 @@ quad_double.o:
 	gcc -c -I$(PHCAda)/Math_Lib/QD $(PHCAda)/Math_Lib/QD/quad_double.c \
             -o quad_double.o
 
-mpi2phc_dd: standard_solutions_container.o double_double.o
+mpi2phc_dd: double_double.o \
+            inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -3242,10 +3261,17 @@ mpi2phc_dd: standard_solutions_container.o double_double.o
 	gcc -c -I$(PHCAda)/Math_Lib/QD $(MPILib)/mpi2phc_dd.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o double_double.o \
-                    mpi2phc_dd.o -o ../bin/mpi2phc_dd \
+                    mpi2phc_dd.o \
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/mpi2phc_dd \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
                  --LINK=$(CLINKER) -lm
 
-mpi2phc_qd: standard_solutions_container.o double_double.o quad_double.o
+mpi2phc_qd: double_double.o quad_double.o \
+            inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -3253,10 +3279,16 @@ mpi2phc_qd: standard_solutions_container.o double_double.o quad_double.o
 	gcc -c $(MPILib)/mpi2phc_qd.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o double_double.o \
-                    quad_double.o mpi2phc_qd.o -o ../bin/mpi2phc_qd \
+                    quad_double.o mpi2phc_qd.o \
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/mpi2phc_qd \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
                  --LINK=$(CLINKER)
 
-mpi2track: standard_solutions_container.o
+mpi2track: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(COFLAGS) $(PHCLib)/phcpack.c
 	gcc -c $(COFLAGS) $(PHCLib)/syscon.c
@@ -3268,7 +3300,11 @@ mpi2track: standard_solutions_container.o
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o witset.o \
                     jump_track.o parallel_phcpack.o mpi2track.o \
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
                  -o ../bin/mpi2track \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
                  --LINK=$(CLINKER)
 
 parallel_pieri:
@@ -3279,7 +3315,8 @@ parallel_pieri:
 	gnatlink -C use_c2pieri parallel_pieri.o parallel_tree.o queue.o \
                  -o $(BIN)/parallel_pieri --LINK=$(CLINKER)
 
-parallel_subsystem:
+parallel_subsystem: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+                    reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -3295,17 +3332,28 @@ parallel_subsystem:
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o witset.o \
                     jump_track.o from_mpi2track.o parallel_phcpack.o \
                     job_queue.o idle_queue.o parallel_subsystem.o \
-                 -o ../bin/parallel_subsystem --LINK=$(CLINKER)
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/parallel_subsystem \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=$(CLINKER)
 
-mpi2fac:
-#	mpicc -c $(MPILib)/mpi2fac.c
+mpi2fac: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+         reltab.o mvc4phc.o demicsrun4phc.o
 	gcc -c $(MPILib)/mpi2fac.c
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc mpi2fac.o -o ../bin/mpi2fac \
+	gnatlink -C use_c2phc mpi2fac.o \
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/mpi2fac \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
                  --LINK=$(CLINKER)
 
-mpi2fac_s:
+mpi2fac_s: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -3319,9 +3367,15 @@ mpi2fac_s:
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o witset.o \
                     jump_track.o parallel_phcpack.o parallel_monodromy.o \
                     mpi2fac_s.o \
-                 -o ../bin/mpi2fac_s --LINK=$(CLINKER)
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/mpi2fac_s \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=$(CLINKER)
 
-mpi2fac_d:
+mpi2fac_d: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+           reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -3336,9 +3390,15 @@ mpi2fac_d:
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o witset.o \
                     jump_track.o parallel_phcpack.o parallel_monodromy.o \
 		    manage_components.o mpi2fac_d.o \
-                 -o ../bin/mpi2fac_d --LINK=$(CLINKER)
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/mpi2fac_d \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=$(CLINKER)
 
-monodromyMPI:
+monodromyMPI: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+              reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -3353,9 +3413,15 @@ monodromyMPI:
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o witset.o \
                     jump_track.o parallel_phcpack.o parallel_monodromy.o \
 		    manage_components.o monodromyMPI.o \
-                 -o ../bin/monodrom --LINK=$(CLINKER)
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/monodrom \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=$(CLINKER)
 
-mpi2cell_s:
+mpi2cell_s: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -3369,9 +3435,15 @@ mpi2cell_s:
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o celcon.o \
                     jump_track.o parallel_phcpack.o parallel_cells.o \
                     mpi2cell_s.o \
-		-o ../bin/mpi2cell_s --LINK=$(CLINKER)
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/mpi2cell_s \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=$(CLINKER)
 
-mpi2cell_d:
+mpi2cell_d: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc4phc.o demicsrun4phc.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -3385,7 +3457,12 @@ mpi2cell_d:
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o celcon.o \
                     jump_track.o parallel_phcpack.o parallel_cells.o \
                     mpi2cell_d.o \
-		-o ../bin/mpi2cell_d --LINK=$(CLINKER)
+                 inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o ../bin/mpi2cell_d \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=$(CLINKER)
 
 # cleaning up the object files :
 
