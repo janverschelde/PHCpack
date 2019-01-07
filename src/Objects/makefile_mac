@@ -3201,17 +3201,18 @@ mpi2sol:
 	gnatlink -C use_solcon mpi2sol.o -o ../bin/mpi2sol \
                  --LINK=$(CLINKER)
 
-mpi2hom: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
-         reltab.o mvc4phc.o demicsrun4phc.o
+mpi2hom:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/jump_track.c
+	gcc -c $(MPILib)/parallel_phcpack.c
 	gcc -c $(MPILib)/mpi2hom.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc mpi2hom.o \
-                 inputData.o outputData.o iTest.o fTest.o \
-                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c mpi2hom.o syscon.o solcon.o phcpack.o \
+                    jump_track.o parallel_phcpack.o \
                  -o $(BIN)/mpi2hom \
-                 /usr/lib/libc++.dylib \
-                 /usr/lib/libstdc++.dylib \
                  --LINK=$(CLINKER)
 
 mpi2phc_s: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
