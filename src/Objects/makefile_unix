@@ -37,7 +37,7 @@ gpp=g++
 
 # The location of the MPI:
 
-MPI_HOME=/usr/local/mpi/gcc/openmpi-1.4.3
+MPI_HOME=/home/microway/Downloads/openmpi-4.0.0
 
 # Location of the QD library and its GPU version:
 
@@ -109,9 +109,9 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o parameter.o lib2path.o \
 
 # some settings for MPI :
 
-CC          = $(MPI_HOME)/bin/mpicc
+CC          = /usr/local/bin/mpicc
 CLINKER     = $(CC)
-CCC         = $(MPI_HOME)/bin/mpiCC
+CCC         = /usr/local/bin/mpiCC
 CCLINKER    = $(CCC)
 
 # Test program to see if compiler works, "hello world" :
@@ -3809,17 +3809,24 @@ mpi2sol:
                  --LINK=$(CLINKER)
 
 mpi2hom:
+	$(CC) -c $(PHCLib)/syscon.c
+	$(CC) -c $(PHCLib)/solcon.c
+	$(CC) -c $(PHCLib)/phcpack.c
+	$(CC) -c $(PHCLib)/jump_track.c
+	$(CC) -c $(MPILib)/parallel_phcpack.c
 	$(CC) -c $(MPILib)/mpi2hom.c
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc mpi2hom.o -o ../bin/mpi2hom \
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c mpi2hom.o syscon.o solcon.o phcpack.o \
+                    jump_track.o parallel_phcpack.o \
+                 -o ../bin/mpi2hom \
                  --LINK=$(CLINKER)
 
 mpi2phc_s:
 	$(CC) -c $(MPILib)/mpi2phc_s.c
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc mpi2phc_s.o -o ../bin/mpi2phc_s \
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c mpi2phc_s.o -o ../bin/mpi2phc_s \
                  --LINK=$(CLINKER)
 
 mpi2phc_d2:
@@ -3864,7 +3871,7 @@ mpi2phc_qd: double_double.o quad_double.o
                  --LINK=$(CLINKER) -lm
 
 mpi2track:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(COFLAGS) $(PHCLib)/phcpack.c
 	gcc -c $(COFLAGS) $(PHCLib)/syscon.c
 	gcc -c $(COFLAGS) $(PHCLib)/solcon.c
@@ -3872,8 +3879,8 @@ mpi2track:
 	gcc -c $(COFLAGS) $(PHCLib)/jump_track.c
 	$(CC) -c $(COFLAGS) $(MPILib)/parallel_phcpack.c
 	$(CC) -c $(COFLAGS) $(MPILib)/mpi2track.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o witset.o \
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c phcpack.o solcon.o syscon.o witset.o \
                     jump_track.o parallel_phcpack.o mpi2track.o \
                  -o ../bin/mpi2track -lm \
                  --LINK=$(CLINKER)
