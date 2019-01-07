@@ -9,6 +9,7 @@
 #include "../Lib/phcpack.h"
 #include "../Lib/syscon.h"
 #include "../Lib/solcon.h"
+#include "../Lib/jump_track.h"
 #include "parallel_phcpack.h"
 
 #define v 0  /* verbose flag:
@@ -388,8 +389,8 @@ void solutions_broadcast ( int myid, int nbsols, int n )
    if(myid == 0) printf("\n");
 }
 
-void solutions_distribute ( int myid, int nbsols, int n, int nprocs,
-                            int *solnum )
+void solutions_distribute
+ ( int myid, int nbsols, int n, int nprocs, int *solnum )
 {
    int i,k,m,fail,dest;
    double sol[2*n+5];
@@ -454,7 +455,7 @@ void solutions_collect ( int myid, int nbsols, int n,
    if(v>1)
    {
       printf("After collect, node %d has in its container:\n",myid);
-      fail = solcon_write_solutions();
+      fail = solcon_write_standard_solutions();
    }
 
    if(myid != 0) fail = solcon_clear_standard_solutions();
