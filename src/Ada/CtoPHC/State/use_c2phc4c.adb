@@ -3269,6 +3269,8 @@ function use_c2phc4c ( job : integer32;
      -- reading dobldobl and quaddobl target systems without solutions
       when 872 => return use_track(67,a,b,c); -- read dobldobl target
       when 873 => return use_track(68,a,b,c); -- read quaddobl target
+     -- write homotopy continuation paramaters to defined output file
+      when 874 => return use_padcon(17,a,b,c); 
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

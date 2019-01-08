@@ -1155,6 +1155,27 @@ function use_padcon ( job : integer32;
       return 871;
   end Job16;
 
+  function Job17 return integer32 is -- write parameters to defined file
+
+    pars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
+         := Homotopy_Continuation_Parameters.Retrieve;
+
+  begin
+    if PHCpack_Operations.Is_File_Defined then
+      new_line(PHCpack_Operations.output_file);
+      Homotopy_Continuation_Parameters_io.put
+        (PHCpack_Operations.output_file,pars.all);
+      text_io.flush(PHCpack_Operations.output_file);
+    else
+      Homotopy_Continuation_Parameters_io.put(pars.all);
+    end if;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 17 of use_padcon.");
+      return 874;
+  end Job17;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -1175,6 +1196,7 @@ function use_padcon ( job : integer32;
       when 14 => return Job14; -- get series coefficient
       when 15 => return Job15; -- get Pade coefficient
       when 16 => return Job16; -- get pole
+      when 17 => return Job17; -- write parameters to defined output file
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception

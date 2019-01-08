@@ -1,4 +1,6 @@
 Tue 8 Jan 2019 : added flushing of file in phcpack_operations_io.adb.
+  Added job to write the homotopy continuation parameters to the defined
+  output file in use_padcon and use_c2phc4c.
 
 Mon 7 Jan 2019 : added procedures to phcpack_operations_io to read
   a target system in double double and quad double precision without

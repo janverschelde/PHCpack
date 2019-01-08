@@ -1104,6 +1104,8 @@ function use_c2phc4c ( job : integer32;
 --                 in double, double double, or quad double precision,
 --                 depending whether a[0] is 0, 1, or 2,
 --                 the verbose flag (0 or 1) is in b[0].
+--   job   = 874 : writes the homotopy continuation parameters to the
+--                 defined output file.
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --

@@ -114,6 +114,8 @@ function use_padcon ( job : integer32;
 --                 in double, double double, or quad double precision,
 --                 depending whether a[0] is 0, 1, or 2,
 --                 the verbose flag (0 or 1) is in b[0].
+--   job   =  17 : writes the homotopy continuation parameters to the
+--                 defined output file.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
