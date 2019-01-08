@@ -1,3 +1,8 @@
+Mon 7 Jan 2019 : new mpi2padcon.c broadcasts the target system.
+
+Sun 6 Jan 2019 : updated mpi2hom.c and parallel_phcpack.c for use_c2phc4c.
+  Improved mpi2hom.c to use the proper interface C functions.
+
 Fri 14 Jul 2017 : normalization of function names in witset changed
   parallel_monodromy.c, manage_components.c, monodromyMPI.c, mpi2fac.c,
   mpi2fac_s.c, and mpi2fac_d.c.
