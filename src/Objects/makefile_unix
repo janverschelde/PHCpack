@@ -4001,6 +4001,20 @@ mpi2cell_d:
                     mpi2cell_d.o \
 		-o ../bin/mpi2cell_d --LINK=$(CLINKER)
 
+mpi2padcon:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+	$(CC) -c -I$(PHCLib) $(COFLAGS) $(MPILib)/mpi2padcon.c
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/jump_track.c
+	gcc -c $(MPILib)/parallel_phcpack.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c mpi2padcon.o syscon.o solcon.o phcpack.o \
+                    jump_track.o parallel_phcpack.o \
+                 -o ../bin/mpi2padcon -lm \
+                 --LINK=$(CLINKER)
+
 # cleaning up the object files :
 
 clean:

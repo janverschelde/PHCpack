@@ -3202,7 +3202,7 @@ mpi2sol:
                  --LINK=$(CLINKER)
 
 mpi2hom:
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/phcpack.c
@@ -3463,6 +3463,20 @@ mpi2cell_d: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
                  -o ../bin/mpi2cell_d \
                  /usr/lib/libc++.dylib \
                  /usr/lib/libstdc++.dylib \
+                 --LINK=$(CLINKER)
+
+mpi2padcon:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/jump_track.c
+	gcc -c $(MPILib)/parallel_phcpack.c
+	gcc -c -I$(PHCLib) $(MPILib)/mpi2padcon.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c mpi2padcon.o syscon.o solcon.o phcpack.o \
+                    jump_track.o parallel_phcpack.o \
+                 -o $(BIN)/mpi2padcon \
                  --LINK=$(CLINKER)
 
 # cleaning up the object files :

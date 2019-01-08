@@ -1928,7 +1928,7 @@ lib_witsols_cpp:
 test_mpi: adatest mpi2sys mpi2sol mpi2hom mpi2phc_s mpi2phc_d2 mpi2track \
           mpi2phc_dd mpi2phc_qd \
           mpi2cell_s mpi2cell_d mpi2fac mpi2fac_s mpi2fac_d \
-          parallel_pieri parallel_subsystem monodromyMPI
+          parallel_pieri parallel_subsystem monodromyMPI mpi2padcon
 
 adatest:
 	make -f $(MAKEFILE) adatest
@@ -1980,6 +1980,9 @@ mpi2cell_s:
 
 mpi2cell_d:
 	make -f $(MAKEFILE) mpi2cell_d
+
+mpi2padcon:
+	make -f $(MAKEFILE) mpi2padcon
 
 # cleaning up the object files :
 
