@@ -94,6 +94,20 @@ package PHCpack_Operations_io is
   procedure Read_Target_System_without_Solutions;
   procedure Read_Target_System_without_Solutions ( filename : in string );
 
+  procedure Read_DoblDobl_Target_System_without_Solutions;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a file name and reads from file
+  --   a system with double double precision coefficients.
+  --   The system is stored as a dobldobl target system.
+
+  procedure Read_QuadDobl_Target_System_without_Solutions;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a file name and reads from file
+  --   a system with quad double precision coefficients.
+  --   The system is stored as a quaddobl target system.
+
   procedure Read_Target_Solutions;
   procedure Read_Target_Solutions ( filename : in string );
 

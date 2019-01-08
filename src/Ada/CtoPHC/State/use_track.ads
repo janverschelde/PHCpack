@@ -260,6 +260,11 @@ function use_track ( job : integer32;
 --                  container in quad double precision for the Laurent
 --                  polynomial stored in b.
 --
+-- extra jobs for double double and quad double precision :
+--
+--          =  67 : read double double target system without solutions;
+--          =  68 : read quad double target system without solutions.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   e.g.: job not in the right range.

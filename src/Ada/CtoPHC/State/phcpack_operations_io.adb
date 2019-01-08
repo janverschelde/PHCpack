@@ -724,6 +724,34 @@ package body PHCpack_Operations_io is
     PHCpack_Operations.Store_Target_System(p.all);
   end Read_Target_System_without_Solutions;
 
+  procedure Read_DoblDobl_Target_System_without_Solutions is
+
+    file : file_type;
+    p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file for the target system.");
+    Read_Name_and_Open_File(file);
+    get(file,p);
+    Close(file);
+    PHCpack_Operations.Store_Target_System(p.all);
+  end Read_DoblDobl_Target_System_without_Solutions;
+
+  procedure Read_QuadDobl_Target_System_without_Solutions is
+
+    file : file_type;
+    p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file for the target system.");
+    Read_Name_and_Open_File(file);
+    get(file,p);
+    Close(file);
+    PHCpack_Operations.Store_Target_System(p.all);
+  end Read_QuadDobl_Target_System_without_Solutions;
+
   procedure Read_Target_Solutions is
 
     file : file_type;

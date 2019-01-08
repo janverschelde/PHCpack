@@ -1377,6 +1377,12 @@ function use_track ( job : integer32;
       when 64 => return Job64; -- witness set for standard Laurent polynomial
       when 65 => return Job65; -- witness set for dobldobl Laurent polynomial
       when 66 => return Job66; -- witness set for quaddobl Laurent polynomial
+      when 67
+        => PHCpack_Operations_io.Read_DoblDobl_Target_System_without_Solutions;
+           return 0;
+      when 68
+        => PHCpack_Operations_io.Read_QuadDobl_Target_System_without_Solutions;
+           return 0;
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;

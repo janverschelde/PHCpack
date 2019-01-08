@@ -1,3 +1,7 @@
+Mon 7 Jan 2019 : added procedures to phcpack_operations_io to read
+  a target system in double double and quad double precision without
+  its solutions, addded 2 jobs to use_track and use_c2phc4c.
+
 Fri 28 Dec 2018 : added a function to use_padcon and use_c2phc4c to
   get the poles one after the other, for the C interface.
 

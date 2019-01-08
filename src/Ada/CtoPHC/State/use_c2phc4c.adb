@@ -3266,6 +3266,9 @@ function use_c2phc4c ( job : integer32;
       when 869 => return use_padcon(14,a,b,c); -- get series coefficient
       when 870 => return use_padcon(15,a,b,c); -- get Pade coefficient
       when 871 => return use_padcon(16,a,b,c); -- get pole
+     -- reading dobldobl and quaddobl target systems without solutions
+      when 872 => return use_track(67,a,b,c); -- read dobldobl target
+      when 873 => return use_track(68,a,b,c); -- read quaddobl target
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

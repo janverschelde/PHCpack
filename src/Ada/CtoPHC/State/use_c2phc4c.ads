@@ -1728,6 +1728,13 @@ function use_c2phc4c ( job : integer32;
 --                 and the solutions in the container, on input is
 --                 in a the current number of slack variables.
 --
+-- extra jobs for double double and quad double precision :
+--
+--         = 872 : read double double target system without solutions;
+--         = 873 : read quad double target system without solutions.
+--
+-- ON RETURN :
+--
 -- track operations for double double precision :
 --
 --   job   = 172 : make a homotopy in double double precision
