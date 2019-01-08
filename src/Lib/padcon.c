@@ -68,6 +68,16 @@ void padcon_write_homotopy_continuation_parameters ( void )
    printf("%d\n", (int) fltval[0]);
 }
 
+int padcon_write_homotopy_continuation_parameters_to_defined_output ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(874,a,b,c);
+
+   return fail;
+}
+
 void padcon_tune_homotopy_continuation_parameters ( void )
 {
    int choice,intpar,fail;
@@ -179,7 +189,6 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val )
    }
    else
       fail = _ada_use_c2phc4c(738,&k,&parval,val);
-
 }
 
 int padcon_standard_track ( int nbc, char* name, int verbose )

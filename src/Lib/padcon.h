@@ -34,6 +34,13 @@ void padcon_write_homotopy_continuation_parameters ( void );
  *   As a pure C routine which makes no direct access to the Ada code,
  *   but it is too useful to be omitted from the padcon library. */
 
+int padcon_write_homotopy_continuation_parameters_to_defined_output ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the current values of the homotopy continuation parameters
+ *   to the defined output file, or to screen if there is no defined
+ *   output file set by define_output_file* in phcpack. */
+
 void padcon_tune_homotopy_continuation_parameters ( void );
 /*
  * DESCRIPTION :
