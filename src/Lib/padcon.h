@@ -27,6 +27,20 @@ int padcon_clear_parameters ( void );
  * DESCRIPTION :
  *   Deallocates the allocated space for the parameters. */
 
+void padcon_write_homotopy_continuation_parameters ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the current values of the homotopy continuation parameters.
+ *   As a pure C routine which makes no direct access to the Ada code,
+ *   but it is too useful to be omitted from the padcon library. */
+
+void padcon_tune_homotopy_continuation_parameters ( void );
+/*
+ * DESCRIPTION :
+ *   Interactive loop to tune the homotopy continuation parameters.
+ *   As a pure C routine it makes no direct access to the Ada code,
+ *   but it is too useful to be omitted from the padcon library. */
+
 int padcon_get_homotopy_continuation_parameter ( int k, double *val );
 /*
  * DESCRIPTION :

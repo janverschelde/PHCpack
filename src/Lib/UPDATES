@@ -1,3 +1,6 @@
+Tue 8 Jan 2019 : moved the tuning of the homotopy continuation parameters
+  from lib_padcon.c into padcon.h and padcon.c.
+
 Mon 7 Jan 2019 : added two functions to jump_track to read a target system
   without solutions in double double and quad double precision.
 
