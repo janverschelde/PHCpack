@@ -1,3 +1,5 @@
+Tue 8 Jan 2019 : added broadcast of start system and parameters to mpi2padcon.
+
 Mon 7 Jan 2019 : new mpi2padcon.c broadcasts the target system.
 
 Sun 6 Jan 2019 : updated mpi2hom.c and parallel_phcpack.c for use_c2phc4c.

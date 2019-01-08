@@ -13,6 +13,7 @@
 #include "phcpack.h"
 #include "jump_track.h"
 #include "parallel_phcpack.h"
+#include "padcon.h"
 
 extern void adainit ( void );
 extern void adafinal ( void );
@@ -23,6 +24,14 @@ int prompt_for_precision ( void );
  *   Prompts the user for the working precision,
  *   which is either double, double double, or quad double,
  *   and returns 0, 1, or 2 respectively. */
+
+int parameters_broadcast ( int myid, int nbrp, int verbose );
+/*
+ * DESCRIPTION :
+ *   After tuning the parameters for Pade continuation,
+ *   the root node broadcasts all values for the parameters
+ *   to all nbrp processes.
+ *   If verbose, then extra data is written to screen for testing. */
 
 int standard_run ( int myid, int nbrp, char* outfile, int verbose );
 /*
@@ -134,6 +143,69 @@ int prompt_for_precision ( void )
    return answer;
 }
 
+int parameters_broadcast ( int myid, int nbrp, int verbose )
+{
+   int fail;
+   double fltval,minstep,maxstep,beta1,beta2,alpha,epsilon,tolzero;
+   double gamma[2];
+   int numdeg,dendeg,maxiter,maxsteps;
+
+   if(myid == 0)
+   {
+      fail = padcon_set_default_parameters();
+      padcon_tune_homotopy_continuation_parameters();
+      fail = padcon_get_homotopy_continuation_parameter(1,gamma);
+      fail = padcon_get_homotopy_continuation_parameter(2,&fltval);
+      numdeg = (int) fltval;
+      fail = padcon_get_homotopy_continuation_parameter(3,&fltval);
+      dendeg = (int) fltval;
+      fail = padcon_get_homotopy_continuation_parameter(4,&maxstep);
+      fail = padcon_get_homotopy_continuation_parameter(5,&minstep);
+      fail = padcon_get_homotopy_continuation_parameter(6,&beta1);
+      fail = padcon_get_homotopy_continuation_parameter(7,&beta2);
+      fail = padcon_get_homotopy_continuation_parameter(8,&alpha);
+      fail = padcon_get_homotopy_continuation_parameter(9,&epsilon);
+      fail = padcon_get_homotopy_continuation_parameter(10,&tolzero);
+      fail = padcon_get_homotopy_continuation_parameter(11,&fltval);
+      maxiter = (int) fltval;
+      fail = padcon_get_homotopy_continuation_parameter(12,&fltval);
+      maxsteps = (int) fltval;
+   }
+   MPI_Bcast(gamma,2,MPI_DOUBLE,0,MPI_COMM_WORLD); 
+   MPI_Bcast(&numdeg,1,MPI_INT,0,MPI_COMM_WORLD);
+   MPI_Bcast(&dendeg,1,MPI_INT,0,MPI_COMM_WORLD);
+   MPI_Bcast(&maxstep,1,MPI_DOUBLE,0,MPI_COMM_WORLD); 
+   MPI_Bcast(&minstep,1,MPI_DOUBLE,0,MPI_COMM_WORLD); 
+   MPI_Bcast(&beta1,1,MPI_DOUBLE,0,MPI_COMM_WORLD); 
+   MPI_Bcast(&beta2,1,MPI_DOUBLE,0,MPI_COMM_WORLD); 
+   MPI_Bcast(&alpha,1,MPI_DOUBLE,0,MPI_COMM_WORLD); 
+   MPI_Bcast(&epsilon,1,MPI_DOUBLE,0,MPI_COMM_WORLD); 
+   MPI_Bcast(&tolzero,1,MPI_DOUBLE,0,MPI_COMM_WORLD); 
+   MPI_Bcast(&maxiter,1,MPI_INT,0,MPI_COMM_WORLD);
+   MPI_Bcast(&maxsteps,1,MPI_INT,0,MPI_COMM_WORLD);
+   if(myid != 0)
+   {
+      fail = padcon_set_homotopy_continuation_parameter(1,gamma);
+      fltval = (double) numdeg;
+      fail = padcon_set_homotopy_continuation_parameter(2,&fltval);
+      fltval = (double) dendeg;
+      fail = padcon_set_homotopy_continuation_parameter(3,&fltval);
+      fail = padcon_set_homotopy_continuation_parameter(4,&maxstep);
+      fail = padcon_set_homotopy_continuation_parameter(5,&minstep);
+      fail = padcon_set_homotopy_continuation_parameter(6,&beta1);
+      fail = padcon_set_homotopy_continuation_parameter(7,&beta2);
+      fail = padcon_set_homotopy_continuation_parameter(8,&alpha);
+      fail = padcon_set_homotopy_continuation_parameter(9,&epsilon);
+      fail = padcon_set_homotopy_continuation_parameter(10,&tolzero);
+      fltval = (double) maxiter;
+      fail = padcon_set_homotopy_continuation_parameter(11,&fltval);
+      fltval = (double) maxsteps;
+      fail = padcon_set_homotopy_continuation_parameter(12,&fltval);
+   }
+   if(verbose > 0)
+      if(myid == 1) padcon_write_homotopy_continuation_parameters();
+}
+
 int standard_run ( int myid, int nbrp, char* outfile, int verbose )
 {
    int fail,dim;
@@ -143,18 +215,34 @@ int standard_run ( int myid, int nbrp, char* outfile, int verbose )
       fail = read_target_system_without_solutions();
       fail = copy_target_system_to_container();
       fail = syscon_number_of_standard_polynomials(&dim);
-      fail = write_standard_target_system();
+      fail = write_standard_target_system(); // writes to file
    }
    standard_dimensions_broadcast(myid,&dim,&dim);
 
    if(verbose > 0) printf("Process %d has dimension %d.\n",myid,dim);
 
-   monomials_broadcast(myid,dim);
+   monomials_broadcast(myid,dim); // broadcast target system
 
    if(myid != 0) fail = copy_container_to_target_system();
 
    if(verbose > 0)
       if(myid == 1) fail = write_standard_target_system();
+
+   if(myid == 0)
+   {
+      fail = read_standard_start_system();
+      fail = copy_start_system_to_container();
+      fail = write_standard_start_system(); // writes to file
+      fail = write_start_solutions(); // writes solutions to file
+   }
+   monomials_broadcast(myid,dim); // broadcast start system
+
+   if(myid != 0) fail = copy_container_to_start_system();
+
+   if(verbose > 0)
+      if(myid == 1) fail = write_standard_start_system();
+
+   parameters_broadcast(myid,nbrp,1);
 
    return 0;
 }
@@ -181,6 +269,22 @@ int dobldobl_run ( int myid, int nbrp, char* outfile, int verbose )
    if(verbose > 0)
       if(myid == 1) fail = write_dobldobl_target_system();
 
+   if(myid == 0)
+   {
+      fail = read_dobldobl_start_system();
+      fail = copy_dobldobl_start_system_to_container();
+      fail = write_dobldobl_start_system(); // writes to file
+      fail = write_dobldobl_start_solutions(); // writes solutions to file
+   }
+   monomials_broadcast(myid,dim); // broadcast start system
+
+   if(myid != 0) fail = copy_dobldobl_container_to_start_system();
+
+   if(verbose > 0)
+      if(myid == 1) fail = write_dobldobl_start_system();
+
+   parameters_broadcast(myid,nbrp,1);
+
    return 0;
 }
 
@@ -205,6 +309,22 @@ int quaddobl_run ( int myid, int nbrp, char* outfile, int verbose )
 
    if(verbose > 0)
       if(myid == 1) fail = write_quaddobl_target_system();
+
+   if(myid == 0)
+   {
+      fail = read_quaddobl_start_system();
+      fail = copy_quaddobl_start_system_to_container();
+      fail = write_quaddobl_start_system(); // writes to file
+      fail = write_quaddobl_start_solutions(); // writes solutions to file
+   }
+   monomials_broadcast(myid,dim); // broadcast start system
+
+   if(myid != 0) fail = copy_quaddobl_container_to_start_system();
+
+   if(verbose > 0)
+      if(myid == 1) fail = write_quaddobl_start_system();
+
+   parameters_broadcast(myid,nbrp,1);
 
    return 0;
 }
