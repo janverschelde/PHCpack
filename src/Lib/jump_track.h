@@ -23,6 +23,22 @@ int read_target_system_without_solutions ( void );
  *   Prompts the user for a file name and reads the target system from file.
  *   Even if available on file, its solutions will not be read and stored. */
 
+int read_dobldobl_target_system_without_solutions ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the target system from file.
+ *   The coefficients are parsed in double double precision and the system
+ *   is stored as a double double target system.
+ *   Even if available on file, its solutions will not be read and stored. */
+
+int read_quaddobl_target_system_without_solutions ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and reads the target system from file.
+ *   The coefficients are parsed in double double precision and the system
+ *   is stored as a double double target system.
+ *   Even if available on file, its solutions will not be read and stored. */
+
 int read_named_target_without_solutions ( int n, char *s );
 /*
  * DESCRITPION :

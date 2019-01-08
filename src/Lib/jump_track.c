@@ -16,6 +16,22 @@ int read_target_system_without_solutions ( void )
    return fail;
 }
 
+int read_dobldobl_target_system_without_solutions ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc4c(872,a,b,c);
+   return fail;
+}
+
+int read_quaddobl_target_system_without_solutions ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc4c(873,a,b,c);
+   return fail;
+}
+
 int read_named_target_without_solutions ( int n, char *s )
 {
    int fail,i,b[n];

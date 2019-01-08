@@ -1,3 +1,6 @@
+Mon 7 Jan 2019 : added two functions to jump_track to read a target system
+  without solutions in double double and quad double precision.
+
 Fri 28 Dec 2018 : added functions to padcon and phcpy2c to retrieve the
   poles one after the other, tested by lib_padcon.
 
