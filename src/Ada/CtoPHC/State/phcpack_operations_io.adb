@@ -787,8 +787,10 @@ package body PHCpack_Operations_io is
   begin
     PHCpack_Operations.Retrieve_Start_System(p);
     if PHCpack_Operations.Is_File_Defined then
+      new_line(PHCpack_Operations.output_file);
       put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
       put(PHCpack_Operations.output_file,natural32(p'last),p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put_line(standard_output,"THE START SYSTEM :");
       put(standard_output,natural32(p'last),p.all);
@@ -817,10 +819,12 @@ package body PHCpack_Operations_io is
   begin
     PHCpack_Operations.Retrieve_Start_System(p);
     if PHCpack_Operations.Is_File_Defined then
+      new_line(PHCpack_Operations.output_file);
       put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
       put(PHCpack_Operations.output_file,p'last,1);
       new_line(PHCpack_Operations.output_file);
       put(PHCpack_Operations.output_file,p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put_line(standard_output,"THE START SYSTEM :");
       put(standard_output,p'last,1);
@@ -836,10 +840,12 @@ package body PHCpack_Operations_io is
   begin
     PHCpack_Operations.Retrieve_Start_System(p);
     if PHCpack_Operations.Is_File_Defined then
+      new_line(PHCpack_Operations.output_file);
       put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
       put(PHCpack_Operations.output_file,p'last,1);
       new_line(PHCpack_Operations.output_file);
       put(PHCpack_Operations.output_file,p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put_line(standard_output,"THE START SYSTEM :");
       put(standard_output,p'last,1);
@@ -855,10 +861,12 @@ package body PHCpack_Operations_io is
   begin
     PHCpack_Operations.Retrieve_Start_System(p);
     if PHCpack_Operations.Is_File_Defined then
+      new_line(PHCpack_Operations.output_file);
       put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
       put(PHCpack_Operations.output_file,p'last,1);
       new_line(PHCpack_Operations.output_file);
       put(PHCpack_Operations.output_file,p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put_line(standard_output,"THE START SYSTEM :");
       put(standard_output,p'last,1);
@@ -874,10 +882,12 @@ package body PHCpack_Operations_io is
   begin
     PHCpack_Operations.Retrieve_Start_System(p);
     if PHCpack_Operations.Is_File_Defined then
+      new_line(PHCpack_Operations.output_file);
       put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
       put(PHCpack_Operations.output_file,p'last,1);
       new_line(PHCpack_Operations.output_file);
       put(PHCpack_Operations.output_file,p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put_line(standard_output,"THE START SYSTEM :");
       put(standard_output,p'last,1);
@@ -893,10 +903,12 @@ package body PHCpack_Operations_io is
   begin
     PHCpack_Operations.Retrieve_Start_System(p);
     if PHCpack_Operations.Is_File_Defined then
+      new_line(PHCpack_Operations.output_file);
       put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
       put(PHCpack_Operations.output_file,p'last,1);
       new_line(PHCpack_Operations.output_file);
       put(PHCpack_Operations.output_file,p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put_line(standard_output,"THE START SYSTEM :");
       put(standard_output,p'last,1);
@@ -1014,10 +1026,12 @@ package body PHCpack_Operations_io is
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     if not Standard_Complex_Solutions.Is_Null(sols) then
       if PHCpack_Operations.Is_File_Defined then
+        new_line(PHCpack_Operations.output_file);
         put_line(PHCpack_Operations.output_file,"THE START SOLUTIONS :");
         put(PHCpack_Operations.output_file,
             Standard_Complex_Solutions.Length_Of(sols),
             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+        text_io.flush(PHCpack_Operations.output_file);
       else
         put_line(standard_output,"THE START SOLUTIONS :");
         put(standard_output,
@@ -1035,10 +1049,12 @@ package body PHCpack_Operations_io is
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     if not DoblDobl_Complex_Solutions.Is_Null(sols) then
       if PHCpack_Operations.Is_File_Defined then
+        new_line(PHCpack_Operations.output_file);
         put_line(PHCpack_Operations.output_file,"THE START SOLUTIONS :");
         put(PHCpack_Operations.output_file,
             DoblDobl_Complex_Solutions.Length_Of(sols),
             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+        text_io.flush(PHCpack_Operations.output_file);
       else
         put_line(standard_output,"THE START SOLUTIONS :");
         put(standard_output,
@@ -1056,10 +1072,12 @@ package body PHCpack_Operations_io is
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     if not QuadDobl_Complex_Solutions.Is_Null(sols) then
       if PHCpack_Operations.Is_File_Defined then
+        new_line(PHCpack_Operations.output_file);
         put_line(PHCpack_Operations.output_file,"THE START SOLUTIONS :");
         put(PHCpack_Operations.output_file,
             QuadDobl_Complex_Solutions.Length_Of(sols),
             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+        text_io.flush(PHCpack_Operations.output_file);
       else
         put_line(standard_output,"THE START SOLUTIONS :");
         put(standard_output,
@@ -1077,10 +1095,12 @@ package body PHCpack_Operations_io is
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     if not Multprec_Complex_Solutions.Is_Null(sols) then
       if PHCpack_Operations.Is_File_Defined then
+        new_line(PHCpack_Operations.output_file);
         put_line(PHCpack_Operations.output_file,"THE START SOLUTIONS :");
         put(PHCpack_Operations.output_file,
             Multprec_Complex_Solutions.Length_Of(sols),
             natural32(Multprec_Complex_Solutions.Head_Of(sols).n),sols);
+        text_io.flush(PHCpack_Operations.output_file);
       else
         put_line(standard_output,"THE START SOLUTIONS :");
         put(standard_output,
@@ -1188,6 +1208,7 @@ package body PHCpack_Operations_io is
       put(PHCpack_Operations.output_file,p'last,1);
       new_line(PHCpack_Operations.output_file);
       put(PHCpack_Operations.output_file,p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put(standard_output,p'last,1);
       new_line(standard_output);
@@ -1205,6 +1226,7 @@ package body PHCpack_Operations_io is
       put(PHCpack_Operations.output_file,p'last,1);
       new_line(PHCpack_Operations.output_file);
       put(PHCpack_Operations.output_file,p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put(standard_output,p'last,1);
       new_line(standard_output);
@@ -1222,6 +1244,7 @@ package body PHCpack_Operations_io is
       put(PHCpack_Operations.output_file,p'last,1);
       new_line(PHCpack_Operations.output_file);
       put(PHCpack_Operations.output_file,p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put(standard_output,p'last,1);
       new_line(standard_output);
@@ -1239,6 +1262,7 @@ package body PHCpack_Operations_io is
       put(PHCpack_Operations.output_file,p'last,1);
       new_line(PHCpack_Operations.output_file);
       put(PHCpack_Operations.output_file,p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put(standard_output,p'last,1);
       new_line(standard_output);
@@ -1256,6 +1280,7 @@ package body PHCpack_Operations_io is
       put(PHCpack_Operations.output_file,p'last,1);
       new_line(PHCpack_Operations.output_file);
       put(PHCpack_Operations.output_file,p.all);
+      text_io.flush(PHCpack_Operations.output_file);
     else
       put(standard_output,p'last,1);
       new_line(standard_output);
@@ -1376,6 +1401,7 @@ package body PHCpack_Operations_io is
         put(PHCpack_Operations.output_file,
             Standard_Complex_Solutions.Length_Of(sols),
             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+        text_io.flush(PHCpack_Operations.output_file);
       else
         put_line(standard_output,"THE TARGET SOLUTIONS :");
         put(standard_output,
@@ -1397,6 +1423,7 @@ package body PHCpack_Operations_io is
         put(PHCpack_Operations.output_file,
             DoblDobl_Complex_Solutions.Length_Of(sols),
             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+        text_io.flush(PHCpack_Operations.output_file);
       else
         put_line(standard_output,"THE TARGET SOLUTIONS :");
         put(standard_output,
@@ -1418,6 +1445,7 @@ package body PHCpack_Operations_io is
         put(PHCpack_Operations.output_file,
             QuadDobl_Complex_Solutions.Length_Of(sols),
             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+        text_io.flush(PHCpack_Operations.output_file);
       else
         put_line(standard_output,"THE TARGET SOLUTIONS :");
         put(standard_output,
@@ -1439,6 +1467,7 @@ package body PHCpack_Operations_io is
         put(PHCpack_Operations.output_file,
             Multprec_Complex_Solutions.Length_Of(sols),
             natural32(Multprec_Complex_Solutions.Head_Of(sols).n),sols);
+        text_io.flush(PHCpack_Operations.output_file);
       else
         put_line(standard_output,"THE TARGET SOLUTIONS :");
         put(standard_output,
