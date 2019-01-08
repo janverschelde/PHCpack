@@ -10,6 +10,7 @@
 #include <string.h>
 #include "mpi.h"
 #include "syscon.h"
+#include "solcon.h"
 #include "phcpack.h"
 #include "jump_track.h"
 #include "parallel_phcpack.h"
@@ -33,7 +34,61 @@ int parameters_broadcast ( int myid, int nbrp, int verbose );
  *   to all nbrp processes.
  *   If verbose, then extra data is written to screen for testing. */
 
-int standard_run ( int myid, int nbrp, char* outfile, int verbose );
+int standard_track_paths
+ ( int myid, int nbrp, int nbc, char* outfile, int verbose );
+/*
+ * DESCRIPTION :
+ *   For the stored target, start system and start solutions,
+ *   worker node with myid tracks all paths in double precision
+ *   and writes to the suffixed output file if verbose.
+ *   This function is called by standard_run().
+ *
+ * ON ENTRY :
+ *   myid     identification number of the current process,
+ *            assumed is that myid > 1
+ *   nbrp     number of processes;
+ *   nbc      number of characters in the string outfile;
+ *   outfile  is the name for the output file, only valid if myid == 0;
+ *   verbose  if zero, then the run will be silent,
+ *            otherwise extra output will be written to file. */
+
+int dobldobl_track_paths
+ ( int myid, int nbrp, int nbc, char* outfile, int verbose );
+/*
+ * DESCRIPTION :
+ *   For the stored target, start system and start solutions,
+ *   worker node with myid tracks all paths in double double precision
+ *   and writes to the suffixed output file if verbose.
+ *   This function is called by dobldobl_run().
+ *
+ * ON ENTRY :
+ *   myid     identification number of the current process,
+ *            assumed is that myid > 1
+ *   nbrp     number of processes;
+ *   nbc      number of characters in the string outfile;
+ *   outfile  is the name for the output file, only valid if myid == 0;
+ *   verbose  if zero, then the run will be silent,
+ *            otherwise extra output will be written to file. */
+
+int quaddobl_track_paths
+ ( int myid, int nbrp, int nbc, char* outfile, int verbose );
+/*
+ * DESCRIPTION :
+ *   For the stored target, start system and start solutions,
+ *   worker node with myid tracks all paths in quad double precision
+ *   and writes to the suffixed output file if verbose.
+ *   This function is called by quaddobl_run().
+ *
+ * ON ENTRY :
+ *   myid     identification number of the current process,
+ *            assumed is that myid > 1
+ *   nbrp     number of processes;
+ *   nbc      number of characters in the string outfile;
+ *   outfile  is the name for the output file, only valid if myid == 0;
+ *   verbose  if zero, then the run will be silent,
+ *            otherwise extra output will be written to file. */
+
+int standard_run ( int myid, int nbrp, int nbc, char* outfile, int verbose );
 /*
  * DESCRIPTION :
  *   Prompts the user for a target system, start system with solutions,
@@ -43,11 +98,12 @@ int standard_run ( int myid, int nbrp, char* outfile, int verbose );
  * ON ENTRY :
  *   myid     identification number of the current process;
  *   nbrp     number of processes;
+ *   nbc      number of characters in the string outfile;
  *   outfile  is the name for the output file, only valid if myid == 0;
  *   verbose  if zero, then the run will be silent,
- *            otherwise extra message will be written to screen. */
+ *            otherwise extra messages will be written to screen. */
 
-int dobldobl_run ( int myid, int nbrp, char* outfile, int verbose );
+int dobldobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose );
 /*
  * DESCRIPTION :
  *   Prompts the user for a target system, start system with solutions,
@@ -57,11 +113,12 @@ int dobldobl_run ( int myid, int nbrp, char* outfile, int verbose );
  * ON ENTRY :
  *   myid     identification number of the current process;
  *   nbrp     number of processes;
+ *   nbc      number of characters in the string outfile;
  *   outfile  is the name for the output file, only valid if myid == 0;
  *   verbose  if zero, then the run will be silent,
- *            otherwise extra message will be written to screen. */
+ *            otherwise extra messages will be written to screen. */
 
-int quaddobl_run ( int myid, int nbrp, char* outfile, int verbose );
+int quaddobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose );
 /*
  * DESCRIPTION :
  *   Prompts the user for a target system, start system with solutions,
@@ -71,14 +128,15 @@ int quaddobl_run ( int myid, int nbrp, char* outfile, int verbose );
  * ON ENTRY :
  *   myid     identification number of the current process;
  *   nbrp     number of processes;
+ *   nbc      number of characters in the string outfile;
  *   outfile  is the name for the output file, only valid if myid == 0;
  *   verbose  if zero, then the run will be silent,
- *            otherwise extra message will be written to screen. */
+ *            otherwise extra messages will be written to screen. */
 
 int main ( int argc, char *argv[] )
 {
    const int verbose = 1;
-   int myid,numprocs,precision,fail;
+   int myid,numprocs,precision,fail,ns;
    char* filename;
  
    adainit();
@@ -99,11 +157,10 @@ int main ( int argc, char *argv[] )
 
    MPI_Barrier(MPI_COMM_WORLD);
 
+   filename = (char*)calloc(80,sizeof(char));
    if(myid == 0)
    {
-      filename = (char*)calloc(80,sizeof(char));
       char nl;
-      int ns;
 
       printf("\nReading the name of the output file ...");
       printf("\nGive a string of characters : "); scanf("%s",filename);
@@ -112,14 +169,19 @@ int main ( int argc, char *argv[] )
       ns = strlen(filename);
       fail = define_output_file_with_string(ns,filename);
    }
+   MPI_Bcast(&ns,1,MPI_INT,0,MPI_COMM_WORLD);
+   MPI_Bcast(filename,ns,MPI_CHAR,0,MPI_COMM_WORLD);
+
+   if(verbose > 0)
+       printf("\nNode %d has filename \"%s\".\n", myid, filename);
 
    MPI_Barrier(MPI_COMM_WORLD);
 
    switch(precision)
    {
-      case 0: fail = standard_run(myid,numprocs,filename,verbose); break;
-      case 1: fail = dobldobl_run(myid,numprocs,filename,verbose); break;
-      case 2: fail = quaddobl_run(myid,numprocs,filename,verbose); break;
+      case 0: fail = standard_run(myid,numprocs,ns,filename,verbose); break;
+      case 1: fail = dobldobl_run(myid,numprocs,ns,filename,verbose); break;
+      case 2: fail = quaddobl_run(myid,numprocs,ns,filename,verbose); break;
       default: printf("Invalid choice of precision.\n");
    }
 
@@ -170,6 +232,7 @@ int parameters_broadcast ( int myid, int nbrp, int verbose )
       maxiter = (int) fltval;
       fail = padcon_get_homotopy_continuation_parameter(12,&fltval);
       maxsteps = (int) fltval;
+      fail = padcon_write_homotopy_continuation_parameters_to_defined_output();
    }
    MPI_Bcast(gamma,2,MPI_DOUBLE,0,MPI_COMM_WORLD); 
    MPI_Bcast(&numdeg,1,MPI_INT,0,MPI_COMM_WORLD);
@@ -206,9 +269,81 @@ int parameters_broadcast ( int myid, int nbrp, int verbose )
       if(myid == 1) padcon_write_homotopy_continuation_parameters();
 }
 
-int standard_run ( int myid, int nbrp, char* outfile, int verbose )
+int standard_track_paths
+ ( int myid, int nbrp, int nbc, char* outfile, int verbose )
 {
-   int fail,dim;
+   char myfile[80];
+   char nbr[5];
+   int fail,idx,cnt;
+
+   if(nbc == 0)
+   {
+      fail = padcon_standard_track(0,"",verbose);
+   }
+   else
+   {
+      for(idx=0; idx<nbc; idx++) myfile[idx] = outfile[idx];
+      cnt = sprintf(nbr,"%d",myid);
+      // printf("the number myid %d = \"%s\", cnt = %d\n",myid,nbr,cnt);
+      for(idx=0; idx<nbc; idx++) myfile[nbc+idx] = nbr[idx];
+      myfile[nbc+cnt] = '\0';
+      printf("Node %d will write to file \"%s\".\n",myid,myfile);
+      fail = padcon_standard_track(nbc+cnt,myfile,verbose);
+   }
+   return fail;
+}
+
+int dobldobl_track_paths
+ ( int myid, int nbrp, int nbc, char* outfile, int verbose )
+{
+   char myfile[80];
+   char nbr[5];
+   int fail,idx,cnt;
+
+   if(nbc == 0)
+   {
+      fail = padcon_dobldobl_track(0,"",verbose);
+   }
+   else
+   {
+      for(idx=0; idx<nbc; idx++) myfile[idx] = outfile[idx];
+      cnt = sprintf(nbr,"%d",myid);
+      // printf("the number myid %d = \"%s\", cnt = %d\n",myid,nbr,cnt);
+      for(idx=0; idx<nbc; idx++) myfile[nbc+idx] = nbr[idx];
+      myfile[nbc+cnt] = '\0';
+      printf("Node %d will write to file \"%s\".\n",myid,myfile);
+      fail = padcon_dobldobl_track(nbc+cnt,myfile,verbose);
+   }
+   return fail;
+}
+
+int quaddobl_track_paths
+ ( int myid, int nbrp, int nbc, char* outfile, int verbose )
+{
+   char myfile[80];
+   char nbr[5];
+   int fail,idx,cnt;
+
+   if(nbc == 0)
+   {
+      fail = padcon_quaddobl_track(0,"",verbose);
+   }
+   else
+   {
+      for(idx=0; idx<nbc; idx++) myfile[idx] = outfile[idx];
+      cnt = sprintf(nbr,"%d",myid);
+      // printf("the number myid %d = \"%s\", cnt = %d\n",myid,nbr,cnt);
+      for(idx=0; idx<nbc; idx++) myfile[nbc+idx] = nbr[idx];
+      myfile[nbc+cnt] = '\0';
+      printf("Node %d will write to file \"%s\".\n",myid,myfile);
+      fail = padcon_quaddobl_track(nbc+cnt,myfile,verbose);
+   }
+   return fail;
+}
+
+int standard_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
+{
+   int fail,dim,nbsols,mysolnum,len;
 
    if(myid == 0)
    {
@@ -234,6 +369,9 @@ int standard_run ( int myid, int nbrp, char* outfile, int verbose )
       fail = copy_start_system_to_container();
       fail = write_standard_start_system(); // writes to file
       fail = write_start_solutions(); // writes solutions to file
+      fail = copy_start_solutions_to_container();
+      fail = solcon_number_of_standard_solutions(&nbsols);
+      if(verbose>0) printf("Read %d start solutions.\n",nbsols);
    }
    monomials_broadcast(myid,dim); // broadcast start system
 
@@ -242,14 +380,34 @@ int standard_run ( int myid, int nbrp, char* outfile, int verbose )
    if(verbose > 0)
       if(myid == 1) fail = write_standard_start_system();
 
-   parameters_broadcast(myid,nbrp,1);
+   parameters_broadcast(myid,nbrp,verbose);
+
+   MPI_Bcast(&nbsols,1,MPI_INT,0,MPI_COMM_WORLD);
+   solutions_distribute(myid,nbsols,dim,nbrp,&mysolnum);
+
+   fail = solcon_number_of_standard_solutions(&len);
+   if(verbose > 0) printf("Node %d has %d solutions.\n",myid,len);
+
+   if(myid > 0)
+   {
+      fail = copy_container_to_start_solutions();
+      fail = standard_track_paths(myid,nbrp,nbc,outfile,verbose);
+   }
+   MPI_Barrier(MPI_COMM_WORLD);
+   solutions_collect(myid,nbsols,dim,nbrp,mysolnum);
+
+   if(myid == 0)
+   {
+      fail = copy_container_to_target_solutions();
+      fail = write_target_solutions();
+   }
 
    return 0;
 }
 
-int dobldobl_run ( int myid, int nbrp, char* outfile, int verbose )
+int dobldobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
 {
-   int fail,dim;
+   int fail,dim,nbsols,mysolnum,len;
 
    if(myid == 0)
    {
@@ -275,22 +433,45 @@ int dobldobl_run ( int myid, int nbrp, char* outfile, int verbose )
       fail = copy_dobldobl_start_system_to_container();
       fail = write_dobldobl_start_system(); // writes to file
       fail = write_dobldobl_start_solutions(); // writes solutions to file
+      fail = copy_dobldobl_start_solutions_to_container();
+      fail = solcon_number_of_dobldobl_solutions(&nbsols);
+      if(verbose>0) printf("Read %d start solutions.\n",nbsols);
    }
-   monomials_broadcast(myid,dim); // broadcast start system
+   dobldobl_monomials_broadcast(myid,dim); // broadcast start system
 
    if(myid != 0) fail = copy_dobldobl_container_to_start_system();
 
    if(verbose > 0)
       if(myid == 1) fail = write_dobldobl_start_system();
 
-   parameters_broadcast(myid,nbrp,1);
+   parameters_broadcast(myid,nbrp,verbose);
+
+   MPI_Bcast(&nbsols,1,MPI_INT,0,MPI_COMM_WORLD);
+   dobldobl_solutions_distribute(myid,nbsols,dim,nbrp,&mysolnum,verbose);
+
+   fail = solcon_number_of_dobldobl_solutions(&len);
+   if(verbose > 0) printf("Node %d has %d solutions.\n",myid,len);
+
+   if(myid > 0)
+   {
+      fail = copy_dobldobl_container_to_start_solutions();
+      fail = dobldobl_track_paths(myid,nbrp,nbc,outfile,verbose);
+   }
+   MPI_Barrier(MPI_COMM_WORLD);
+   dobldobl_solutions_collect(myid,nbsols,dim,nbrp,mysolnum);
+
+   if(myid == 0)
+   {
+      fail = copy_dobldobl_container_to_target_solutions();
+      fail = write_dobldobl_target_solutions();
+   }
 
    return 0;
 }
 
-int quaddobl_run ( int myid, int nbrp, char* outfile, int verbose )
+int quaddobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
 {
-   int fail,dim;
+   int fail,dim,nbsols,mysolnum,len;
 
    if(myid == 0)
    {
@@ -316,8 +497,11 @@ int quaddobl_run ( int myid, int nbrp, char* outfile, int verbose )
       fail = copy_quaddobl_start_system_to_container();
       fail = write_quaddobl_start_system(); // writes to file
       fail = write_quaddobl_start_solutions(); // writes solutions to file
+      fail = copy_quaddobl_start_solutions_to_container();
+      fail = solcon_number_of_quaddobl_solutions(&nbsols);
+      if(verbose>0) printf("Read %d start solutions.\n",nbsols);
    }
-   monomials_broadcast(myid,dim); // broadcast start system
+   quaddobl_monomials_broadcast(myid,dim); // broadcast start system
 
    if(myid != 0) fail = copy_quaddobl_container_to_start_system();
 
@@ -325,6 +509,25 @@ int quaddobl_run ( int myid, int nbrp, char* outfile, int verbose )
       if(myid == 1) fail = write_quaddobl_start_system();
 
    parameters_broadcast(myid,nbrp,1);
+
+   MPI_Bcast(&nbsols,1,MPI_INT,0,MPI_COMM_WORLD);
+   quaddobl_solutions_distribute(myid,nbsols,dim,nbrp,&mysolnum,verbose);
+
+   fail = solcon_number_of_quaddobl_solutions(&len);
+   if(verbose > 0) printf("Node %d has %d solutions.\n",myid,len);
+
+   if(myid > 0)
+   {
+      fail = copy_quaddobl_container_to_start_solutions();
+      fail = quaddobl_track_paths(myid,nbrp,nbc,outfile,verbose);
+   }
+   quaddobl_solutions_collect(myid,nbsols,dim,nbrp,mysolnum);
+
+   if(myid == 0)
+   {
+      fail = copy_quaddobl_container_to_target_solutions();
+      fail = write_quaddobl_target_solutions();
+   }
 
    return 0;
 }

@@ -392,8 +392,9 @@ void solutions_broadcast ( int myid, int nbsols, int n )
 void solutions_distribute
  ( int myid, int nbsols, int n, int nprocs, int *solnum )
 {
+   const int lensol = 2*n+5;
    int i,k,m,fail,dest;
-   double sol[2*n+5];
+   double sol[lensol];
    MPI_Status status;
 
    if(myid == 0)
@@ -405,7 +406,7 @@ void solutions_distribute
          fail = solcon_retrieve_standard_solution(n,k,&m,sol);
          m = k;       /* multiplicity field labels solution ID */
          MPI_Send(&m,1,MPI_INT,dest,SEND_SMUL,MPI_COMM_WORLD);
-         MPI_Send(sol,2*n+5,MPI_DOUBLE,dest,SEND_SSOL,MPI_COMM_WORLD);
+         MPI_Send(sol,lensol,MPI_DOUBLE,dest,SEND_SSOL,MPI_COMM_WORLD);
          if(v>0) printf("Root sends solution %d to node %d.\n",k,dest);
       }
    }
@@ -416,18 +417,89 @@ void solutions_distribute
       for(k=1; k<=*solnum; k++)
       {
          MPI_Recv(&m,1,MPI_INT,0,SEND_SMUL,MPI_COMM_WORLD,&status);
-         MPI_Recv(sol,2*n+5,MPI_DOUBLE,0,SEND_SSOL,MPI_COMM_WORLD,&status); 
+         MPI_Recv(sol,lensol,MPI_DOUBLE,0,SEND_SSOL,MPI_COMM_WORLD,&status); 
          fail = solcon_append_standard_solution(n,m,sol);
          if(v>0) printf("Node %d receives solution %d.\n",myid,m); 
       }
    }
 }
 
-void solutions_collect ( int myid, int nbsols, int n,
-                         int numprocs, int mysolnum )
+void dobldobl_solutions_distribute
+ ( int myid, int nbsols, int n, int nprocs, int *solnum, int verbose )
 {
+   const int lensol = 4*n+10;
+   int i,k,m,fail,dest;
+   double sol[lensol];
+   MPI_Status status;
+
+   if(myid == 0)
+   {
+      for(k=1; k<=nbsols; k++)
+      {
+         dest = k%(nprocs-1);
+         if(dest == 0) dest=nprocs-1;    
+         fail = solcon_retrieve_dobldobl_solution(n,k,&m,sol);
+         m = k;       /* multiplicity field labels solution ID */
+         MPI_Send(&m,1,MPI_INT,dest,SEND_SMUL,MPI_COMM_WORLD);
+         MPI_Send(sol,lensol,MPI_DOUBLE,dest,SEND_SSOL,MPI_COMM_WORLD);
+         if(verbose>0) printf("Root sends solution %d to node %d.\n",k,dest);
+      }
+   }
+   else
+   {
+      *solnum = nbsols/(nprocs-1);
+      if(myid<=(nbsols%(nprocs-1))) *solnum = *solnum+1;
+      for(k=1; k<=*solnum; k++)
+      {
+         MPI_Recv(&m,1,MPI_INT,0,SEND_SMUL,MPI_COMM_WORLD,&status);
+         MPI_Recv(sol,lensol,MPI_DOUBLE,0,SEND_SSOL,MPI_COMM_WORLD,&status); 
+         fail = solcon_append_dobldobl_solution(n,m,sol);
+         if(verbose>0) printf("Node %d receives solution %d.\n",myid,m); 
+      }
+   }
+}
+
+void quaddobl_solutions_distribute
+ ( int myid, int nbsols, int n, int nprocs, int *solnum, int verbose )
+{
+   const int lensol = 8*n+20;
+   int i,k,m,fail,dest;
+   double sol[lensol];
+   MPI_Status status;
+
+   if(myid == 0)
+   {
+      for(k=1; k<=nbsols; k++)
+      {
+         dest = k%(nprocs-1);
+         if(dest == 0) dest=nprocs-1;    
+         fail = solcon_retrieve_quaddobl_solution(n,k,&m,sol);
+         m = k;       /* multiplicity field labels solution ID */
+         MPI_Send(&m,1,MPI_INT,dest,SEND_SMUL,MPI_COMM_WORLD);
+         MPI_Send(sol,lensol,MPI_DOUBLE,dest,SEND_SSOL,MPI_COMM_WORLD);
+         if(verbose>0) printf("Root sends solution %d to node %d.\n",k,dest);
+      }
+   }
+   else
+   {
+      *solnum = nbsols/(nprocs-1);
+      if(myid<=(nbsols%(nprocs-1))) *solnum = *solnum+1;
+      for(k=1; k<=*solnum; k++)
+      {
+         MPI_Recv(&m,1,MPI_INT,0,SEND_SMUL,MPI_COMM_WORLD,&status);
+         MPI_Recv(sol,lensol,MPI_DOUBLE,0,SEND_SSOL,MPI_COMM_WORLD,&status); 
+         fail = solcon_append_quaddobl_solution(n,m,sol);
+         if(verbose>0) printf("Node %d receives solution %d.\n",myid,m); 
+      }
+   }
+}
+
+void solutions_collect
+ ( int myid, int nbsols, int n, int numprocs, int mysolnum )
+{
+   const int lensol = 2*n+6;
    int k,m,fail,dest;
-   double sol[2*n+6];  /* very important to send "m" along with "sol" */
+   double sol[lensol];  /* very important to send "m" along with "sol" */
    MPI_Status status;
 
    if(myid == 0) fail = solcon_clear_standard_solutions(); 
@@ -437,17 +509,17 @@ void solutions_collect ( int myid, int nbsols, int n,
       for(k=1; k<=mysolnum; k++)
       {
          fail = solcon_retrieve_standard_solution(n,k,&m,sol);
-         sol[2*n+5] = (double) m;  /* m is last entry of array sol */
-         MPI_Send(sol,2*n+6,MPI_DOUBLE,0,SEND_TSOL,MPI_COMM_WORLD);
+         sol[lensol-1] = (double) m;  /* m is last entry of array sol */
+         MPI_Send(sol,lensol,MPI_DOUBLE,0,SEND_TSOL,MPI_COMM_WORLD);
       }
    }
    else
    {
       for(k=1; k<=nbsols; k++)
       {
-         MPI_Recv(sol,2*n+6,MPI_DOUBLE,MPI_ANY_SOURCE,SEND_TSOL,
+         MPI_Recv(sol,lensol,MPI_DOUBLE,MPI_ANY_SOURCE,SEND_TSOL,
                   MPI_COMM_WORLD,&status);
-         m = (int) sol[2*n+5];
+         m = (int) sol[lensol-1];
          fail = solcon_append_standard_solution(n,m,sol);
       }
    }
@@ -459,6 +531,84 @@ void solutions_collect ( int myid, int nbsols, int n,
    }
 
    if(myid != 0) fail = solcon_clear_standard_solutions();
+}
+
+void dobldobl_solutions_collect
+ ( int myid, int nbsols, int n, int numprocs, int mysolnum )
+{
+   const int lensol = 4*n+11;
+   int k,m,fail,dest;
+   double sol[lensol];  /* very important to send "m" along with "sol" */
+   MPI_Status status;
+
+   if(myid == 0) fail = solcon_clear_dobldobl_solutions(); 
+
+   if(myid != 0)
+   {
+      for(k=1; k<=mysolnum; k++)
+      {
+         fail = solcon_retrieve_dobldobl_solution(n,k,&m,sol);
+         sol[lensol-1] = (double) m;  /* m is last entry of array sol */
+         MPI_Send(sol,lensol,MPI_DOUBLE,0,SEND_TSOL,MPI_COMM_WORLD);
+      }
+   }
+   else
+   {
+      for(k=1; k<=nbsols; k++)
+      {
+         MPI_Recv(sol,lensol,MPI_DOUBLE,MPI_ANY_SOURCE,SEND_TSOL,
+                  MPI_COMM_WORLD,&status);
+         m = (int) sol[lensol-1];
+         fail = solcon_append_dobldobl_solution(n,m,sol);
+      }
+   }
+  
+   if(v>1)
+   {
+      printf("After collect, node %d has in its container:\n",myid);
+      fail = solcon_write_dobldobl_solutions();
+   }
+
+   if(myid != 0) fail = solcon_clear_dobldobl_solutions();
+}
+
+void quaddobl_solutions_collect
+ ( int myid, int nbsols, int n, int numprocs, int mysolnum )
+{
+   const int lensol = 8*n+21;
+   int k,m,fail,dest;
+   double sol[lensol];  /* very important to send "m" along with "sol" */
+   MPI_Status status;
+
+   if(myid == 0) fail = solcon_clear_quaddobl_solutions(); 
+
+   if(myid != 0)
+   {
+      for(k=1; k<=mysolnum; k++)
+      {
+         fail = solcon_retrieve_quaddobl_solution(n,k,&m,sol);
+         sol[lensol-1] = (double) m;  /* m is last entry of array sol */
+         MPI_Send(sol,lensol,MPI_DOUBLE,0,SEND_TSOL,MPI_COMM_WORLD);
+      }
+   }
+   else
+   {
+      for(k=1; k<=nbsols; k++)
+      {
+         MPI_Recv(sol,lensol,MPI_DOUBLE,MPI_ANY_SOURCE,SEND_TSOL,
+                  MPI_COMM_WORLD,&status);
+         m = (int) sol[lensol-1];
+         fail = solcon_append_quaddobl_solution(n,m,sol);
+      }
+   }
+  
+   if(v>1)
+   {
+      printf("After collect, node %d has in its container:\n",myid);
+      fail = solcon_write_quaddobl_solutions();
+   }
+
+   if(myid != 0) fail = solcon_clear_quaddobl_solutions();
 }
 
 void print_monomials ( void ) 

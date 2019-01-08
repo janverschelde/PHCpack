@@ -154,12 +154,12 @@ void solutions_broadcast ( int myid, int nbsols, int n );
  *   nbsols   number of solutions in the container at node 0;
  *   n        dimension of the vectors in the solution list. */
 
-void solutions_distribute ( int myid, int nbsols, int n, int nprocs,
-                            int *solnum );
+void solutions_distribute
+ ( int myid, int nbsols, int n, int nprocs, int *solnum );
 /*
  * DESCRIPTION :
  *   Distributes the solutions in the container at the root
- *   to the solutions container at each node.
+ *   to the standard solutions container at each node.
  *
  * ON ENTRY : 
  *   myid     number of the node;
@@ -170,12 +170,60 @@ void solutions_distribute ( int myid, int nbsols, int n, int nprocs,
  * ON RETURN : 
  *   solnum   number of solutions assigned to the node. */
 
-void solutions_collect ( int myid, int nbsols, int n, 
-                         int numprocs, int mysolnum );
+void dobldobl_solutions_distribute
+ ( int myid, int nbsols, int n, int nprocs, int *solnum, int verbose );
+/*
+ * DESCRIPTION :
+ *   Distributes the solutions in the container at the root
+ *   to the dobldobl solutions container at each node.
+ *
+ * ON ENTRY : 
+ *   myid     number of the node;
+ *   nbsols   total number of solutions to distribute;
+ *   n        length of the solution vectors;
+ *   nprocs   the number of nodes;
+ *   verbose  if zero, then silent, otherwise writes messages.
+ *
+ * ON RETURN : 
+ *   solnum   number of solutions assigned to the node. */
+
+void quaddobl_solutions_distribute
+ ( int myid, int nbsols, int n, int nprocs, int *solnum, int verbose );
+/*
+ * DESCRIPTION :
+ *   Distributes the solutions in the container at the root
+ *   to the quaddobl solutions container at each node.
+ *
+ * ON ENTRY : 
+ *   myid     number of the node;
+ *   nbsols   total number of solutions to distribute;
+ *   n        length of the solution vectors;
+ *   nprocs   the number of nodes;
+ *   verbose  if zero, then silent, otherwise writes messages.
+ *
+ * ON RETURN : 
+ *   solnum   number of solutions assigned to the node. */
+
+void solutions_collect
+ ( int myid, int nbsols, int n, int numprocs, int mysolnum );
 /* 
  * DESCRIPTION :
- *   Collects all target solutions in the container at the root
- *   from the solutions container at each node. */
+ *   Collects all target solutions in the container at the root from
+ *   the standard double precision solutions container at each node. */
+
+void dobldobl_solutions_collect
+ ( int myid, int nbsols, int n, int numprocs, int mysolnum );
+/* 
+ * DESCRIPTION :
+ *   Collects all target solutions in the container at the root from
+ *   the double double precision solutions container at each node. */
+
+void quaddobl_solutions_collect
+ ( int myid, int nbsols, int n, int numprocs, int mysolnum );
+/* 
+ * DESCRIPTION :
+ *   Collects all target solutions in the container at the root from
+ *   the quad double precision solutions container at each node. */
 
 void print_monomials ( void );
 /*
