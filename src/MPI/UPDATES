@@ -1,3 +1,5 @@
+Wed 9 Jan 2019 : added wall clock time to mpi2padcon.
+
 Tue 8 Jan 2019 : added broadcast of start system and parameters to mpi2padcon.
   Extended parallel_phcpack with distribute and collect functions of
   solutions in double double and quad double precision, mpi2padcon

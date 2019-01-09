@@ -1,5 +1,5 @@
 /* mpi2padcon.c defines an interactive message passing parallel program
- * to track all solution paths in a dynamic load balancing scheme with
+ * to track all solution paths in a static load balancing scheme with
  * Pade approximants as predictor.
  * The user is prompted for the precision, can adjust all parameters,
  * and is asked to provide the file names for the target, start system,
@@ -135,7 +135,7 @@ int quaddobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose );
 
 int main ( int argc, char *argv[] )
 {
-   const int verbose = 1;
+   const int verbose = 0; // set to 1 for more info
    int myid,numprocs,precision,fail,ns;
    char* filename;
  
@@ -287,7 +287,8 @@ int standard_track_paths
       // printf("the number myid %d = \"%s\", cnt = %d\n",myid,nbr,cnt);
       for(idx=0; idx<nbc; idx++) myfile[nbc+idx] = nbr[idx];
       myfile[nbc+cnt] = '\0';
-      printf("Node %d will write to file \"%s\".\n",myid,myfile);
+      if(verbose > 0)
+         printf("Node %d will write to file \"%s\".\n",myid,myfile);
       fail = padcon_standard_track(nbc+cnt,myfile,verbose);
    }
    return fail;
@@ -343,10 +344,14 @@ int quaddobl_track_paths
 
 int standard_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
 {
-   int fail,dim,nbsols,mysolnum,len;
+   int fail,dim,nbsols,mysolnum,len,*nbpaths;
+   double startwtime,endwtime,wtime,*time;
 
+   startwtime = MPI_Wtime();
    if(myid == 0)
    {
+      time = (double*)calloc(nbrp,sizeof(double));
+      nbpaths = (int*)calloc(nbrp,sizeof(int));
       fail = read_target_system_without_solutions();
       fail = copy_target_system_to_container();
       fail = syscon_number_of_standard_polynomials(&dim);
@@ -401,16 +406,30 @@ int standard_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
       fail = copy_container_to_target_solutions();
       fail = write_target_solutions();
    }
+   endwtime = MPI_Wtime();
+   wtime = endwtime-startwtime;
+   MPI_Gather(&wtime,1,MPI_DOUBLE,time,1,MPI_DOUBLE,0,MPI_COMM_WORLD);
+   MPI_Gather(&mysolnum,1,MPI_INT,nbpaths,1,MPI_INT,0,MPI_COMM_WORLD);
 
+   if(myid == 0)
+   {
+      nbpaths[0] = nbsols;
+      write_time_and_paths_to_defined_output_file(nbrp,time,nbpaths);
+      free(time); free(nbpaths);
+   }
    return 0;
 }
 
 int dobldobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
 {
-   int fail,dim,nbsols,mysolnum,len;
+   int fail,dim,nbsols,mysolnum,len,*nbpaths;
+   double startwtime,endwtime,wtime,*time;
 
+   startwtime = MPI_Wtime();
    if(myid == 0)
    {
+      time = (double*)calloc(nbrp,sizeof(double));
+      nbpaths = (int*)calloc(nbrp,sizeof(int));
       fail = read_dobldobl_target_system_without_solutions();
       fail = copy_dobldobl_target_system_to_container();
       fail = syscon_number_of_dobldobl_polynomials(&dim);
@@ -465,16 +484,30 @@ int dobldobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
       fail = copy_dobldobl_container_to_target_solutions();
       fail = write_dobldobl_target_solutions();
    }
+   endwtime = MPI_Wtime();
+   wtime = endwtime-startwtime;
+   MPI_Gather(&wtime,1,MPI_DOUBLE,time,1,MPI_DOUBLE,0,MPI_COMM_WORLD);
+   MPI_Gather(&mysolnum,1,MPI_INT,nbpaths,1,MPI_INT,0,MPI_COMM_WORLD);
 
+   if(myid == 0)
+   {
+      nbpaths[0] = nbsols;
+      write_time_and_paths_to_defined_output_file(nbrp,time,nbpaths);
+      free(time); free(nbpaths);
+   }
    return 0;
 }
 
 int quaddobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
 {
-   int fail,dim,nbsols,mysolnum,len;
+   int fail,dim,nbsols,mysolnum,len,*nbpaths;
+   double startwtime,endwtime,wtime,*time;
 
+   startwtime = MPI_Wtime();
    if(myid == 0)
    {
+      time = (double*)calloc(nbrp,sizeof(double));
+      nbpaths = (int*)calloc(nbrp,sizeof(int));
       fail = read_quaddobl_target_system_without_solutions();
       fail = copy_quaddobl_target_system_to_container();
       fail = syscon_number_of_quaddobl_polynomials(&dim);
@@ -528,6 +561,16 @@ int quaddobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
       fail = copy_quaddobl_container_to_target_solutions();
       fail = write_quaddobl_target_solutions();
    }
+   endwtime = MPI_Wtime();
+   wtime = endwtime-startwtime;
+   MPI_Gather(&wtime,1,MPI_DOUBLE,time,1,MPI_DOUBLE,0,MPI_COMM_WORLD);
+   MPI_Gather(&mysolnum,1,MPI_INT,nbpaths,1,MPI_INT,0,MPI_COMM_WORLD);
 
+   if(myid == 0)
+   {
+      nbpaths[0] = nbsols;
+      write_time_and_paths_to_defined_output_file(nbrp,time,nbpaths);
+      free(time); free(nbpaths);
+   }
    return 0;
 }
