@@ -1,4 +1,5 @@
-Wed 9 Jan 2019 : added wall clock time to mpi2padcon.
+Wed 9 Jan 2019 : added wall clock time to mpi2padcon.  In mpi2padcon,
+  initialized the systems container before the broadcast of the start system.
 
 Tue 8 Jan 2019 : added broadcast of start system and parameters to mpi2padcon.
   Extended parallel_phcpack with distribute and collect functions of

@@ -289,7 +289,7 @@ int standard_track_paths
       myfile[nbc+cnt] = '\0';
       if(verbose > 0)
          printf("Node %d will write to file \"%s\".\n",myid,myfile);
-      fail = padcon_standard_track(nbc+cnt,myfile,verbose);
+      fail = padcon_standard_track(nbc+cnt,myfile,1); // force verbose);
    }
    return fail;
 }
@@ -378,6 +378,9 @@ int standard_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
       fail = solcon_number_of_standard_solutions(&nbsols);
       if(verbose>0) printf("Read %d start solutions.\n",nbsols);
    }
+   else
+      fail = syscon_initialize_number_of_standard_polynomials(dim);
+
    monomials_broadcast(myid,dim); // broadcast start system
 
    if(myid != 0) fail = copy_container_to_start_system();
@@ -456,6 +459,9 @@ int dobldobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
       fail = solcon_number_of_dobldobl_solutions(&nbsols);
       if(verbose>0) printf("Read %d start solutions.\n",nbsols);
    }
+   else
+      fail = syscon_initialize_number_of_dobldobl_polynomials(dim);
+
    dobldobl_monomials_broadcast(myid,dim); // broadcast start system
 
    if(myid != 0) fail = copy_dobldobl_container_to_start_system();
@@ -534,6 +540,9 @@ int quaddobl_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
       fail = solcon_number_of_quaddobl_solutions(&nbsols);
       if(verbose>0) printf("Read %d start solutions.\n",nbsols);
    }
+   else
+      fail = syscon_initialize_number_of_quaddobl_polynomials(dim);
+
    quaddobl_monomials_broadcast(myid,dim); // broadcast start system
 
    if(myid != 0) fail = copy_quaddobl_container_to_start_system();
