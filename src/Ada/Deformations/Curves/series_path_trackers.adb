@@ -127,7 +127,7 @@ package body Series_Path_Trackers is
   end QuadDobl_Write;
 
   procedure Standard_Run
-              ( nq : in integer32;
+              ( nq,nvr,idxpar : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List ) is
 
     use Standard_Complex_Solutions;
@@ -136,7 +136,6 @@ package body Series_Path_Trackers is
     s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq);
     fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
     fcf : Standard_Complex_Series_VecVecs.VecVec(1..nq);
-    nvr : constant integer32 := integer32(Head_Of(sols).n);
     ejm : Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..nvr);
     mlt : Standard_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..nvr);
     p : Homotopy_Continuation_Parameters.Parameters
@@ -155,13 +154,16 @@ package body Series_Path_Trackers is
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
   begin
-   -- put_line("The homotopy system :"); put_line(h);
-   -- put_line("The series system :"); put(s,1); new_line;
-    p.gamma := Standard_Homotopy.Accessibility_Constant;
-    prevgamma := p.gamma;
-    Homotopy_Continuation_Parameters_io.Tune(p);
-    if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
-     then Standard_Reset_Gamma(p.gamma);
+    if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
+      p.gamma := Standard_Complex_Numbers.Create(1.0);
+      Homotopy_Continuation_Parameters_io.Tune(p);
+    else
+      p.gamma := Standard_Homotopy.Accessibility_Constant;
+      prevgamma := p.gamma;
+      Homotopy_Continuation_Parameters_io.Tune(p);
+      if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
+       then Standard_Reset_Gamma(p.gamma);
+      end if;
     end if;
     h := Standard_Homotopy.Homotopy_System;
     s := Series_and_Homotopies.Create(h,nq+1,false);
@@ -239,7 +241,7 @@ package body Series_Path_Trackers is
   end Standard_Run;
 
   procedure DoblDobl_Run
-              ( nq : in integer32;
+              ( nq,nvr,idxpar : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
 
     use DoblDobl_Complex_Solutions;
@@ -248,7 +250,6 @@ package body Series_Path_Trackers is
     s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
     fhm : DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
     fcf : DoblDobl_Complex_Series_VecVecs.VecVec(1..nq);
-    nvr : constant integer32 := integer32(Head_Of(sols).n);
     ejm : DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..nvr);
     mlt : DoblDobl_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..nvr);
     p : Homotopy_Continuation_Parameters.Parameters
@@ -271,13 +272,16 @@ package body Series_Path_Trackers is
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
   begin
-   -- put_line("The homotopy system :"); put_line(h);
-   -- put_line("The series system :"); put(s,1); new_line;
-    p.gamma := gamma;
-    prevgamma := p.gamma;
-    Homotopy_Continuation_Parameters_io.Tune(p);
-    if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
-     then DoblDobl_Reset_Gamma(p.gamma);
+    if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
+      p.gamma := Standard_Complex_Numbers.Create(1.0);
+      Homotopy_Continuation_Parameters_io.Tune(p);
+    else
+      p.gamma := gamma;
+      prevgamma := p.gamma;
+      Homotopy_Continuation_Parameters_io.Tune(p);
+      if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
+       then DoblDobl_Reset_Gamma(p.gamma);
+      end if;
     end if;
     h := DoblDobl_Homotopy.Homotopy_System;
     s := Series_and_Homotopies.Create(h,nq+1,false);
@@ -356,7 +360,7 @@ package body Series_Path_Trackers is
   end DoblDobl_Run;
 
   procedure QuadDobl_Run
-              ( nq : in integer32;
+              ( nq,nvr,idxpar : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
     use QuadDobl_Complex_Solutions;
@@ -365,7 +369,6 @@ package body Series_Path_Trackers is
     s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
     fhm : QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
     fcf : QuadDobl_Complex_Series_VecVecs.VecVec(1..nq);
-    nvr : constant integer32 := integer32(Head_Of(sols).n);
     ejm : QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..nvr);
     mlt : QuadDobl_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..nvr);
     p : Homotopy_Continuation_Parameters.Parameters
@@ -388,13 +391,16 @@ package body Series_Path_Trackers is
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
   begin
-   -- put_line("The homotopy system :"); put_line(h);
-   -- put_line("The series system :"); put(s,1); new_line;
-    p.gamma := gamma;
-    prevgamma := p.gamma;
-    Homotopy_Continuation_Parameters_io.Tune(p);
-    if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
-     then QuadDobl_Reset_Gamma(p.gamma);
+    if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
+      p.gamma := Standard_Complex_Numbers.Create(1.0);
+      Homotopy_Continuation_Parameters_io.Tune(p);
+    else
+      p.gamma := gamma;
+      prevgamma := p.gamma;
+      Homotopy_Continuation_Parameters_io.Tune(p);
+      if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
+       then QuadDobl_Reset_Gamma(p.gamma);
+      end if;
     end if;
     h := QuadDobl_Homotopy.Homotopy_System;
     s := Series_and_Homotopies.Create(h,nq+1,false);
@@ -471,37 +477,72 @@ package body Series_Path_Trackers is
     QuadDobl_Cseries_Jaco_Matrices.Clear(mlt);
   end QuadDobl_Run;
 
-  procedure Standard_Main is
+  function Prompt_for_Artificial return boolean is
 
-    nbeq : integer32;
-    sols : Standard_Complex_Solutions.Solution_List;
+    ans : character;
 
   begin
-    Homotopy_Series_Readers.Standard_Reader(nbeq,sols);
     new_line;
-    Standard_Run(nbeq,sols);
+    put_line("Either a homotopy has a parameter among its variables,");
+    put_line("or the parameter is artificial and the homotopy connects");
+    put_line("a target system to a start system with known solutions.");
+    put("Is the homotopy an artificial parameter homotopy ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    return (ans = 'y');
+  end Prompt_for_Artificial;
+
+  procedure Standard_Main is
+
+    nbq,nvr,idx : integer32;
+    sols : Standard_Complex_Solutions.Solution_List;
+    arth : constant boolean := Prompt_for_Artificial;
+ 
+  begin
+    if arth then
+      Homotopy_Series_Readers.Standard_Reader(nbq,sols);
+      nvr := integer32(Standard_Complex_Solutions.Head_Of(sols).n);
+      idx := 0;
+    else
+      Homotopy_Series_Readers.Standard_Parameter_Reader(nbq,nvr,idx,sols);
+    end if;
+    new_line;
+    Standard_Run(nbq,nvr,idx,sols);
   end Standard_Main;
 
   procedure DoblDobl_Main is
 
-    nbeq : integer32;
+    nbq,nvr,idx : integer32;
     sols : DoblDobl_Complex_Solutions.Solution_List;
+    arth : constant boolean := Prompt_for_Artificial;
 
   begin
-    Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols);
+    if arth then
+      Homotopy_Series_Readers.DoblDobl_Reader(nbq,sols);
+      nvr := integer32(DoblDobl_Complex_Solutions.Head_Of(sols).n);
+      idx := 0;
+    else
+      Homotopy_Series_Readers.DoblDobl_Parameter_Reader(nbq,nvr,idx,sols);
+    end if;
     new_line;
-    DoblDobl_Run(nbeq,sols);
+    DoblDobl_Run(nbq,nvr,idx,sols);
   end DoblDobl_Main;
 
   procedure QuadDobl_Main is
 
-    nbeq : integer32;
+    nbq,nvr,idx : integer32;
     sols : QuadDobl_Complex_Solutions.Solution_List;
+    arth : constant boolean := Prompt_for_Artificial;
 
   begin
-    Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols);
+    if arth then
+      Homotopy_Series_Readers.QuadDobl_Reader(nbq,sols);
+      nvr := integer32(QuadDobl_Complex_Solutions.Head_Of(sols).n);
+      idx := 0;
+    else
+      Homotopy_Series_Readers.QuadDobl_Parameter_Reader(nbq,nvr,idx,sols);
+    end if;
     new_line;
-    QuadDobl_Run(nbeq,sols);
+    QuadDobl_Run(nbq,nvr,idx,sols);
   end QuadDobl_Main;
 
 end Series_Path_Trackers;

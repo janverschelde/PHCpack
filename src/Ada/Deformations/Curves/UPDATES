@@ -1,3 +1,6 @@
+Thu 10 Jan 2019 : modified series_path_trackers for runs with natural
+  parameter homotopies.
+
 Wed 9 Jan 2019 : modified drivers_to_series_trackers.adb to take into 
   account the monitor flag, in addition to the verbose parameter.
 
