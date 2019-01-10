@@ -696,6 +696,33 @@ def quaddobl_pade_vector(dim):
         result.append(quaddobl_pade_coefficients(i))
     return result
 
+def symbolic_pade_approximant(cff):
+    """
+    Given in cff are the coefficients of numerator and denominator
+    of a Pade approximant, given as a tuple of two lists.
+    On return is the string representation of the Pade approximant,
+    using 't' as the variable.
+    """
+    (nq, dq) = cff
+    num = ['+' + str(nq[k]) + ('*t**%d' % k) for k in range(len(nq))]
+    numerator = ''.join(num)
+    den = ['+' + str(nq[k]) + ('*t**%d' % k) for k in range(len(dq))]
+    denominator = ''.join(den)
+    result = '(' + numerator + ')/(' + denominator + ')'
+    return result
+
+def symbolic_pade_vector(cff):
+    """
+    Given in cff are the coefficients of numerator and denominator
+    of a Pade vector, given as a list of tuples of two lists each.
+    On return is the string representation of the Pade approximant,
+    using 't' as the variable.
+    """
+    result = []
+    for coefficients in cff:
+        result.append(symbolic_pade_approximant(coefficients))
+    return result
+
 def standard_poles(dim):
     """
     Returns a list of lists of all poles of the vector of length dim,
