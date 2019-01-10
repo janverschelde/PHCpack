@@ -147,7 +147,10 @@ package body Drivers_to_Series_Trackers is
       := Series_and_Homotopies.Create(h,nq+1,false);
 
   begin
-    Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,verbose);
+    if verbose
+     then Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,true,true);
+     else Series_and_Trackers.Track_Many_Paths(file,s,sols,pars);
+    end if;
     Standard_CSeries_Poly_Systems.Clear(s);
     Standard_Complex_Poly_Systems.Clear(h);
   end Standard_Track;
@@ -203,7 +206,10 @@ package body Drivers_to_Series_Trackers is
       := Series_and_Homotopies.Create(h,nq+1,false);
 
   begin
-    Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,verbose);
+    if verbose
+     then Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,true,true);
+     else Series_and_Trackers.Track_Many_Paths(file,s,sols,pars);
+    end if;
     DoblDobl_CSeries_Poly_Systems.Clear(s);
     DoblDobl_Complex_Poly_Systems.Clear(h);
   end DoblDobl_Track;
@@ -259,7 +265,10 @@ package body Drivers_to_Series_Trackers is
       := Series_and_Homotopies.Create(h,nq+1,false);
 
   begin
-    Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,verbose);
+    if verbose
+     then Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,true,true);
+     else Series_and_Trackers.Track_Many_Paths(file,s,sols,pars);
+    end if;
     QuadDobl_CSeries_Poly_Systems.Clear(s);
     QuadDobl_Complex_Poly_Systems.Clear(h);
   end QuadDobl_Track;
