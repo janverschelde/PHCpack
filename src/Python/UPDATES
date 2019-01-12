@@ -1,3 +1,6 @@
+Fri 11 Jan 2019 : added the functions for a symbolic Pade vector to the
+  curves module for python3.
+
 Wed 9 Jan 2019 : to the curves module for python2, added a function to
   compute a symbolic representation of a Pade vector.
 
