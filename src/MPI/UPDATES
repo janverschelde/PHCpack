@@ -1,3 +1,6 @@
+Sat 12 Jan 2019 : in parallel_phcpack.c replaced solcon_retrieve_solution
+  by solcon_retrieve_next_solution, modified mpi2padcon.c for extra output.
+
 Wed 9 Jan 2019 : added wall clock time to mpi2padcon.  In mpi2padcon,
   initialized the systems container before the broadcast of the start system.
 

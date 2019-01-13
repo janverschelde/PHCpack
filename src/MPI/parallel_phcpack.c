@@ -393,17 +393,19 @@ void solutions_distribute
  ( int myid, int nbsols, int n, int nprocs, int *solnum )
 {
    const int lensol = 2*n+5;
-   int i,k,m,fail,dest;
+   int i,k,m,fail,dest,idx;
    double sol[lensol];
    MPI_Status status;
 
    if(myid == 0)
    {
+      fail = solcon_retrieve_next_standard_initialize();
       for(k=1; k<=nbsols; k++)
       {
          dest = k%(nprocs-1);
          if(dest == 0) dest=nprocs-1;    
-         fail = solcon_retrieve_standard_solution(n,k,&m,sol);
+         // fail = solcon_retrieve_standard_solution(n,k,&m,sol);
+         fail = solcon_retrieve_next_standard_solution(n,&idx,&m,sol);
          m = k;       /* multiplicity field labels solution ID */
          MPI_Send(&m,1,MPI_INT,dest,SEND_SMUL,MPI_COMM_WORLD);
          MPI_Send(sol,lensol,MPI_DOUBLE,dest,SEND_SSOL,MPI_COMM_WORLD);
@@ -428,17 +430,19 @@ void dobldobl_solutions_distribute
  ( int myid, int nbsols, int n, int nprocs, int *solnum, int verbose )
 {
    const int lensol = 4*n+10;
-   int i,k,m,fail,dest;
+   int i,k,m,fail,dest,idx;
    double sol[lensol];
    MPI_Status status;
 
    if(myid == 0)
    {
+      fail = solcon_retrieve_next_dobldobl_initialize();
       for(k=1; k<=nbsols; k++)
       {
          dest = k%(nprocs-1);
          if(dest == 0) dest=nprocs-1;    
-         fail = solcon_retrieve_dobldobl_solution(n,k,&m,sol);
+         // fail = solcon_retrieve_dobldobl_solution(n,k,&m,sol);
+         fail = solcon_retrieve_next_dobldobl_solution(n,&idx,&m,sol);
          m = k;       /* multiplicity field labels solution ID */
          MPI_Send(&m,1,MPI_INT,dest,SEND_SMUL,MPI_COMM_WORLD);
          MPI_Send(sol,lensol,MPI_DOUBLE,dest,SEND_SSOL,MPI_COMM_WORLD);
@@ -463,17 +467,19 @@ void quaddobl_solutions_distribute
  ( int myid, int nbsols, int n, int nprocs, int *solnum, int verbose )
 {
    const int lensol = 8*n+20;
-   int i,k,m,fail,dest;
+   int i,k,m,fail,dest,idx;
    double sol[lensol];
    MPI_Status status;
 
    if(myid == 0)
    {
+      fail = solcon_retrieve_next_quaddobl_initialize();
       for(k=1; k<=nbsols; k++)
       {
          dest = k%(nprocs-1);
          if(dest == 0) dest=nprocs-1;    
-         fail = solcon_retrieve_quaddobl_solution(n,k,&m,sol);
+         // fail = solcon_retrieve_quaddobl_solution(n,k,&m,sol);
+         fail = solcon_retrieve_next_quaddobl_solution(n,&idx,&m,sol);
          m = k;       /* multiplicity field labels solution ID */
          MPI_Send(&m,1,MPI_INT,dest,SEND_SMUL,MPI_COMM_WORLD);
          MPI_Send(sol,lensol,MPI_DOUBLE,dest,SEND_SSOL,MPI_COMM_WORLD);

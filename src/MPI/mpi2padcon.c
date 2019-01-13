@@ -312,7 +312,8 @@ int dobldobl_track_paths
       // printf("the number myid %d = \"%s\", cnt = %d\n",myid,nbr,cnt);
       for(idx=0; idx<nbc; idx++) myfile[nbc+idx] = nbr[idx];
       myfile[nbc+cnt] = '\0';
-      printf("Node %d will write to file \"%s\".\n",myid,myfile);
+      if(verbose > 0)
+         printf("Node %d will write to file \"%s\".\n",myid,myfile);
       fail = padcon_dobldobl_track(nbc+cnt,myfile,verbose);
    }
    return fail;
@@ -336,7 +337,8 @@ int quaddobl_track_paths
       // printf("the number myid %d = \"%s\", cnt = %d\n",myid,nbr,cnt);
       for(idx=0; idx<nbc; idx++) myfile[nbc+idx] = nbr[idx];
       myfile[nbc+cnt] = '\0';
-      printf("Node %d will write to file \"%s\".\n",myid,myfile);
+      if(verbose > 0)
+         printf("Node %d will write to file \"%s\".\n",myid,myfile);
       fail = padcon_quaddobl_track(nbc+cnt,myfile,verbose);
    }
    return fail;
