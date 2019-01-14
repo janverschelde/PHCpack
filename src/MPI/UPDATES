@@ -1,3 +1,5 @@
+Sun 13 Jan 2019 : improved verbose level in mpi2padcon.c.
+
 Sat 12 Jan 2019 : in parallel_phcpack.c replaced solcon_retrieve_solution
   by solcon_retrieve_next_solution, modified mpi2padcon.c for extra output.
 

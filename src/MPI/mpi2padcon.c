@@ -26,6 +26,12 @@ int prompt_for_precision ( void );
  *   which is either double, double double, or quad double,
  *   and returns 0, 1, or 2 respectively. */
 
+int prompt_for_verbose ( void );
+/*
+ * DESCRIPTION :
+ *   Ask if extra output is needed during path tracking.
+ *   Returns 0 if no, returns 1 otherwise. */
+
 int parameters_broadcast ( int myid, int nbrp, int verbose );
 /*
  * DESCRIPTION :
@@ -205,6 +211,23 @@ int prompt_for_precision ( void )
    return answer;
 }
 
+int prompt_for_verbose ( void )
+{
+   char answer = 'n';
+
+   printf("\nExtra output during path tracking ? (y/n) ");
+   do
+   {                            // loop to skip remaining newlines
+      scanf("%c", &answer);
+      if((answer == 'y') || (answer == 'n')) break;
+   }
+   while(1);
+
+   if(answer == 'y') return 1;
+
+   return 0;
+}
+
 int parameters_broadcast ( int myid, int nbrp, int verbose )
 {
    int fail;
@@ -289,7 +312,7 @@ int standard_track_paths
       myfile[nbc+cnt] = '\0';
       if(verbose > 0)
          printf("Node %d will write to file \"%s\".\n",myid,myfile);
-      fail = padcon_standard_track(nbc+cnt,myfile,1); // force verbose);
+      fail = padcon_standard_track(nbc+cnt,myfile,verbose);
    }
    return fail;
 }
@@ -391,6 +414,11 @@ int standard_run ( int myid, int nbrp, int nbc, char* outfile, int verbose )
       if(myid == 1) fail = write_standard_start_system();
 
    parameters_broadcast(myid,nbrp,verbose);
+
+   if(myid == 0) verbose = prompt_for_verbose();
+   MPI_Barrier(MPI_COMM_WORLD);
+
+   MPI_Bcast(&verbose,1,MPI_INT,0,MPI_COMM_WORLD);
 
    MPI_Bcast(&nbsols,1,MPI_INT,0,MPI_COMM_WORLD);
    solutions_distribute(myid,nbsols,dim,nbrp,&mysolnum);
