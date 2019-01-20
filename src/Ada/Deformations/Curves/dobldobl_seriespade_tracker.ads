@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;
@@ -31,6 +32,13 @@ package DoblDobl_SeriesPade_Tracker is
   -- REQUIRED :
   --   The homotopy continuation parameters have been initialized
   --   with the previous Init procedure.
+
+  procedure Init ( h : in Link_to_Poly_Sys; idx : in integer32 );
+
+  -- DESCRIPTION :
+  --   Initializes the tracker with the natural parameter homotopy h,
+  --   where the index of the continuation parameter equals idx,
+  --   the index in the list of variables of the homotopy.
 
   procedure Init ( s : in Link_to_Solution );
 

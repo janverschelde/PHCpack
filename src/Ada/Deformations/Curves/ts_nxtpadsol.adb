@@ -4,6 +4,8 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
@@ -12,6 +14,8 @@ with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Parameter_Systems;
+with DoblDobl_Parameter_Systems;
+with QuadDobl_Parameter_Systems;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
@@ -230,11 +234,16 @@ procedure ts_nxtpadsol is
   --   prompts for a target, start system, and start solutions,
   --   in double double precision.
 
+    nbq,nvr,idx,nbpar : integer32;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    sols : DoblDobl_Complex_Solutions.Solution_List;
+    sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
     arthom : boolean;
+    zero : constant DoblDobl_Complex_Numbers.Complex_Number
+         := DoblDobl_Complex_Numbers.Create(integer32(0));
+
+    use DoblDobl_Parameter_Systems;
 
   begin
     new_line;
@@ -256,6 +265,21 @@ procedure ts_nxtpadsol is
       DoblDobl_System_and_Solutions_io.get(start,sols);
       DoblDobl_SeriesPade_Tracker.Init(target,start);
       DoblDobl_Loop(sols);
+    else
+      Read_Parameter_Homotopy(target,sols,nbq,nvr,nbpar);
+      declare
+        par : Standard_Integer_Vectors.Vector(1..nbpar);
+      begin
+        par := Define_Parameters(nbq,nvr,nbpar);
+        idx := par(1);
+      end;
+      put("number of equations : "); put(nbq,1); new_line;
+      put("number of variables : "); put(nvr,1); new_line;
+      put("index of the continuation parameter : "); put(idx,1); new_line;
+      DoblDobl_SeriesPade_Tracker.Init(target,idx);
+      dropsols := Solution_Drops.Drop(sols,natural32(idx));
+      DoblDobl_Complex_Solutions.Set_Continuation_Parameter(dropsols,zero);
+      DoblDobl_Loop(dropsols);
     end if;
   end DoblDobl_Main;
 
@@ -266,11 +290,16 @@ procedure ts_nxtpadsol is
   --   prompts for a target, start system, and start solutions,
   --   in quad double precision.
 
+    nbq,nvr,idx,nbpar : integer32;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    sols : QuadDobl_Complex_Solutions.Solution_List;
+    sols,dropsols : QuadDobl_Complex_Solutions.Solution_List;
     arthom : boolean;
+    zero : constant QuadDobl_Complex_Numbers.Complex_Number
+         := QuadDobl_Complex_Numbers.Create(integer32(0));
+
+    use QuadDobl_Parameter_Systems;
 
   begin
     new_line;
@@ -292,6 +321,21 @@ procedure ts_nxtpadsol is
       QuadDobl_System_and_Solutions_io.get(start,sols);
       QuadDobl_SeriesPade_Tracker.Init(target,start);
       QuadDobl_Loop(sols);
+    else
+      Read_Parameter_Homotopy(target,sols,nbq,nvr,nbpar);
+      declare
+        par : Standard_Integer_Vectors.Vector(1..nbpar);
+      begin
+        par := Define_Parameters(nbq,nvr,nbpar);
+        idx := par(1);
+      end;
+      put("number of equations : "); put(nbq,1); new_line;
+      put("number of variables : "); put(nvr,1); new_line;
+      put("index of the continuation parameter : "); put(idx,1); new_line;
+      QuadDobl_SeriesPade_Tracker.Init(target,idx);
+      dropsols := Solution_Drops.Drop(sols,natural32(idx));
+      QuadDobl_Complex_Solutions.Set_Continuation_Parameter(dropsols,zero);
+      QuadDobl_Loop(dropsols);
     end if;
   end QuadDobl_Main;
 

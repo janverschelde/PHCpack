@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Standard_Complex_Numbers;
@@ -21,7 +20,9 @@ package body DoblDobl_SeriesPade_Tracker is
 
 -- INTERNAL DATA :
 
-  nbeqs : integer32;
+  nbeqs : integer32; -- number of equations
+  nbvar : integer32; -- number of variables
+  idxpar : integer32; -- index of the continuation parameter, 0 if artificial
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : DoblDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
   current_poles : DoblDobl_Complex_VecVecs.Link_to_VecVec;
@@ -39,6 +40,27 @@ package body DoblDobl_SeriesPade_Tracker is
     homconpars := new Homotopy_Continuation_Parameters.Parameters'(pars);
   end Init;
 
+  procedure Initialize_Series_and_Approximants is
+
+  -- DESCRIPTION :
+  --   Allocates space for power series and Pade approximants.
+
+    numdeg : constant integer32 := integer32(homconpars.numdeg);
+    dendeg : constant integer32 := integer32(homconpars.dendeg);
+    servec : DoblDobl_Complex_Series_Vectors.Vector(1..nbvar);
+    padvec : constant DoblDobl_Pade_Approximants.Pade_Vector
+           := DoblDobl_Pade_Approximants.Allocate(nbvar,numdeg,dendeg);
+
+    use Homotopy_Pade_Approximants;
+    allpoles : constant DoblDobl_Complex_VecVecs.VecVec
+             := Allocate_DoblDobl_Poles(nbeqs,dendeg);
+
+  begin
+    current_servec := new DoblDobl_Complex_Series_Vectors.Vector'(servec);
+    current_padvec := new DoblDobl_Pade_Approximants.Pade_Vector'(padvec);
+    current_poles := new DoblDobl_Complex_VecVecs.VecVec'(allpoles);
+  end Initialize_Series_and_Approximants;
+
   procedure Init ( p,q : in Link_to_Poly_Sys ) is
 
     tpow : constant natural32 := 2;
@@ -46,48 +68,41 @@ package body DoblDobl_SeriesPade_Tracker is
             := homconpars.gamma;
     dd_gamma : constant DoblDobl_Complex_Numbers.Complex_Number
              := Standard_to_DoblDobl_Complex(d_gamma);
-    nbvar : constant integer32
-          := integer32(Number_of_Unknowns(p(p'first)));
-    numdeg : constant integer32 := integer32(homconpars.numdeg);
-    dendeg : constant integer32 := integer32(homconpars.dendeg);
 
   begin
+    idxpar := 0;
     DoblDobl_Homotopy.Create(p.all,q.all,tpow,dd_gamma);
     nbeqs := p'last;
-   -- declare
-   --   h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
-   --     := DoblDobl_Homotopy.Homotopy_System;
-   --   s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
-   --     := Series_and_Homotopies.Create(h,nbeqs+1,false);
-   -- begin
-   --   htp := new DoblDobl_CSeries_Poly_Systems.Poly_Sys'(s);
-   -- end;
-    declare
-      servec : DoblDobl_Complex_Series_Vectors.Vector(1..nbvar);
-      padvec : constant DoblDobl_Pade_Approximants.Pade_Vector
-             := DoblDobl_Pade_Approximants.Allocate(nbvar,numdeg,dendeg);
-    begin
-      current_servec := new DoblDobl_Complex_Series_Vectors.Vector'(servec);
-      current_padvec := new DoblDobl_Pade_Approximants.Pade_Vector'(padvec);
-    end;
-    declare
-      use Homotopy_Pade_Approximants;
-      allpoles : constant DoblDobl_Complex_VecVecs.VecVec
-               := Allocate_DoblDobl_Poles(nbeqs,dendeg);
-    begin
-      current_poles := new DoblDobl_Complex_VecVecs.VecVec'(allpoles);
-    end;
+    nbvar := integer32(Number_of_Unknowns(p(p'first)));
+   -- definition of series homotopy is done with Init of the solution
+    Initialize_Series_and_Approximants;
+  end Init;
+
+  procedure Init ( h : in Link_to_Poly_Sys; idx : in integer32 ) is
+  begin
+    idxpar := idx;
+    DoblDobl_Homotopy.Create(h.all,idx);
+    nbeqs := h'last;
+    nbvar := integer32(Number_of_Unknowns(h(h'first))) - 1;
+    Initialize_Series_and_Approximants;
   end Init;
 
   procedure Init ( s : in Link_to_Solution ) is
+
+    conpar : integer32;
+
   begin
+    if idxpar = 0
+     then conpar := nbeqs + 1;
+     else conpar := idxpar;
+    end if;
     current := s;
     DoblDobl_CSeries_Poly_Systems.Clear(htp);
     declare -- reset the shifted homotopy
-      hs : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
+      hs : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
          := DoblDobl_Homotopy.Homotopy_System;
-      sh : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
-         := Series_and_Homotopies.Create(hs,nbeqs+1,false);
+      sh : constant DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
+         := Series_and_Homotopies.Create(hs,conpar,false);
     begin
       htp := new DoblDobl_CSeries_Poly_Systems.Poly_Sys'(sh);
     end;
