@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors;
@@ -18,7 +17,9 @@ package body Standard_SeriesPade_Tracker is
 
 -- INTERNAL DATA :
 
-  nbeqs : integer32;
+  nbeqs : integer32;  -- number of equations
+  nbvar : integer32;  -- number of variables
+  idxpar : integer32; -- index of continuation parameter, 0 if artificial
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : Standard_CSeries_Poly_Systems.Link_to_Poly_Sys;
   current_poles : Standard_Complex_VecVecs.Link_to_VecVec;
@@ -36,53 +37,66 @@ package body Standard_SeriesPade_Tracker is
     homconpars := new Homotopy_Continuation_Parameters.Parameters'(pars);
   end Init;
 
+  procedure Initialize_Series_and_Approximants is
+
+  -- DESCRIPTION :
+  --   Allocates space for power series and Pade approximants.
+
+    numdeg : constant integer32 := integer32(homconpars.numdeg);
+    dendeg : constant integer32 := integer32(homconpars.dendeg);
+    servec : Standard_Complex_Series_Vectors.Vector(1..nbvar);
+    padvec : constant Standard_Pade_Approximants.Pade_Vector
+           := Standard_Pade_Approximants.Allocate(nbvar,numdeg,dendeg);
+
+    use Homotopy_Pade_Approximants;
+    allpoles : constant Standard_Complex_VecVecs.VecVec
+             := Allocate_Standard_Poles(nbeqs,dendeg);
+
+  begin
+    current_servec := new Standard_Complex_Series_Vectors.Vector'(servec);
+    current_padvec := new Standard_Pade_Approximants.Pade_Vector'(padvec);
+    current_poles := new Standard_Complex_VecVecs.VecVec'(allpoles);
+  end Initialize_Series_and_Approximants;
+
   procedure Init ( p,q : in Link_to_Poly_Sys ) is
 
     tpow : constant natural32 := 2;
     gamma : constant Complex_Number := homconpars.gamma;
-    nbvar : constant integer32
-          := integer32(Number_of_Unknowns(p(p'first)));
-    numdeg : constant integer32 := integer32(homconpars.numdeg);
-    dendeg : constant integer32 := integer32(homconpars.dendeg);
 
   begin
+    idxpar := 0; -- artificial-parameter homotopy
     Standard_Homotopy.Create(p.all,q.all,tpow,gamma);
     nbeqs := p'last;
-   -- setting of homotopy is done when initializing the solution
-   -- declare
-   --   h : Standard_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
-   --     := Standard_Homotopy.Homotopy_System;
-   --   s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
-   --     := Series_and_Homotopies.Create(h,nbeqs+1,false);
-   -- begin
-   --   htp := new Standard_CSeries_Poly_Systems.Poly_Sys'(s);
-   -- end;
-    declare
-      servec : Standard_Complex_Series_Vectors.Vector(1..nbvar);
-      padvec : constant Standard_Pade_Approximants.Pade_Vector
-             := Standard_Pade_Approximants.Allocate(nbvar,numdeg,dendeg);
-    begin
-      current_servec := new Standard_Complex_Series_Vectors.Vector'(servec);
-      current_padvec := new Standard_Pade_Approximants.Pade_Vector'(padvec);
-    end;
-    declare
-      use Homotopy_Pade_Approximants;
-      allpoles : constant Standard_Complex_VecVecs.VecVec
-               := Allocate_Standard_Poles(nbeqs,dendeg);
-    begin
-      current_poles := new Standard_Complex_VecVecs.VecVec'(allpoles);
-    end;
+    nbvar := integer32(Number_of_Unknowns(p(p'first)));
+   -- series homotopy is define when initializing the solution
+    Initialize_Series_and_Approximants;
+  end Init;
+
+  procedure Init ( h : in Link_to_Poly_Sys; idx : in integer32 ) is
+  begin
+    idxpar := idx;
+    Standard_Homotopy.Create(h.all,idx);
+    nbeqs := h'last;
+    nbvar := integer32(Number_of_Unknowns(h(h'first))) - 1;
+    Initialize_Series_and_Approximants;
   end Init;
 
   procedure Init ( s : in Link_to_Solution ) is
+
+    conpar : integer32;
+
   begin
+    if idxpar = 0
+     then conpar := nbeqs + 1;
+     else conpar := idxpar;
+    end if;
     current := s;
     Standard_CSeries_Poly_Systems.Clear(htp);
     declare -- reset the shifted homotopy
-      hs : Standard_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
+      hs : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
          := Standard_Homotopy.Homotopy_System;
-      sh : Standard_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
-         := Series_and_Homotopies.Create(hs,nbeqs+1,false);
+      sh : constant Standard_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
+         := Series_and_Homotopies.Create(hs,conpar,false);
     begin
       htp := new Standard_CSeries_Poly_Systems.Poly_Sys'(sh);
     end;

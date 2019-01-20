@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_VecVecs;
@@ -31,10 +32,22 @@ package Standard_SeriesPade_Tracker is
   --   The homotopy continuation parameters have been initialized
   --   with the previous Init procedure.
 
+  procedure Init ( h : in Link_to_Poly_Sys; idx : in integer32 );
+
+  -- DESCRIPTION :
+  --   Initializes the tracker with the natural parameter homotopy h,
+  --   where the index of the continuation parameter equals idx,
+  --   the index in the list of variables of the homotopy.
+
   procedure Init ( s : in Link_to_Solution );
 
   -- DESCRIPTION :
   --   Stores s as the current solution for tracking the next path.
+
+  -- REQUIRED :
+  --   In case of a natural parameter homotopy, the value for the
+  --   continuation parameter is required to be zero and the coordinate
+  --   for the continuation parameter has been removed from the solution.
 
 -- PREDICTOR-CORRECTOR STAGE :
 
