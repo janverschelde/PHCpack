@@ -1,3 +1,5 @@
+Sun 20 Jan 2019 : extra jobs in solcon, modifications in lib_padcon.c.
+
 Tue 8 Jan 2019 : moved the tuning of the homotopy continuation parameters
   from lib_padcon.c into padcon.h and padcon.c.  Added function to padcon
   to write the homotopy continuation parameters to the defined output file.

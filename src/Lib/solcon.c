@@ -924,3 +924,33 @@ int solcon_quaddobl_drop_coordinate_by_name ( int nc, char *s )
    fail = _ada_use_c2phc4c(399,&nc,b,c);
    return fail;
 }
+
+int solcon_standard_set_continuation_parameter ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(875,a,b,c);
+
+   return fail;
+}
+
+int solcon_dobldobl_set_continuation_parameter ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(876,a,b,c);
+
+   return fail;
+}
+
+int solcon_quaddobl_set_continuation_parameter ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(877,a,b,c);
+
+   return fail;
+}

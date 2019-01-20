@@ -2,9 +2,22 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "syscon.h"
 #include "solcon.h"
 #include "phcpack.h"
 #include "padcon.h"
+
+int prompt_for_artificial ( void );
+/*
+ * DESCRIPTION :
+ *   Ask the user if the homotopy is artificial or not.
+ *   Returns 1 for an artificial parameter homotopy, 0 otherwise. */
+
+int prompt_for_parameter ( void );
+/*
+ * DESCRIPTION :
+ *   Displays the variable names and prompts the user for the
+ *   index of the parameter, which is returned. */
 
 void prompt_for_output_file ( int* nbc, char* name, int *verbose );
 /*
@@ -107,6 +120,27 @@ void show_quaddobl_poles ( int dim );
  *   Shows all poles computed by the predictor in quad double precision.
  *   The value of dim equals the number of variables. */
 
+void standard_next_loop ( int index );
+/*
+ *  DESCRIPTION :
+ *    Runs the series-Pade tracker step by step in double precision
+ *    on the solution with the given index in the double precision
+ *    solutions container. */
+
+void dobldobl_next_loop ( int index );
+/*
+ *  DESCRIPTION :
+ *    Runs the series-Pade tracker step by step in double double precision
+ *    on the solution with the given index in the double double precision
+ *    solutions container. */
+
+void quaddobl_next_loop ( int index );
+/*
+ *  DESCRIPTION :
+ *    Runs the series-Pade tracker step by step in quad double precision
+ *    on the solution with the given index in the quad double precision
+ *    solutions container. */
+
 void standard_next_step ( void );
 /*
  *  DESCRIPTION :
@@ -167,6 +201,42 @@ int main ( void )
    adafinal();
 
    return 0;
+}
+
+int prompt_for_artificial ( void )
+{
+   char answer,nlsb;
+
+   printf("\nEither a homotopy has a parameter among its variables,\n");
+   printf("or the parameter is artificial and the homotopy connects\n");
+   printf("a target system to a start system with known solutions.\n");
+   printf("Is the homotopy an artificial parameter homotopy ? (y/n) ");
+
+   answer = getchar();
+   scanf("%c", &nlsb); // swallow new line symbol
+
+   if(answer == 'y')
+      return 1;
+   else
+      return 0;
+}
+
+int prompt_for_parameter ( void )
+{
+   int fail,nbr,idx;
+
+   fail = syscon_number_of_symbols(&nbr);
+
+   printf("\nThe names of the variables :");
+   fail = syscon_write_symbols();
+
+   printf("\nGive the index of the continuation parameter : ");
+   scanf("%d",&idx);
+
+   if(idx < 1) printf("Index is too small!\n");
+   if(idx > nbr) printf("Index is too large!\n");
+
+   return idx;
 }
 
 void prompt_for_output_file ( int* nbc, char* name, int *verbose )
@@ -455,15 +525,129 @@ void show_quaddobl_poles ( int dim )
    }
 }
 
-void standard_next_step ( void )
+void standard_next_loop ( int index )
 {
-   int fail,length,index,failed,strlensol,dim;
+   int fail,length,failed,dim;
    char contstep,nlsb;
    double frp,re_pole,im_pole,tval,step;
 
-   fail = read_standard_target_system();
-   fail = read_standard_start_system();
-   fail = copy_start_solutions_to_container();
+   fail = padcon_initialize_standard_solution(index,1);
+   do
+   {
+      fail = padcon_standard_predict_correct(&failed,1);
+      show_standard_series_coefficients(dim);
+      show_standard_pade_coefficients(dim);
+      show_standard_poles(dim);
+      if(failed != 0)
+         contstep = 'n';
+      else
+      {
+         fail = padcon_get_standard_forward_pole_radius(&frp);
+         fail = padcon_get_standard_closest_pole(&re_pole,&im_pole);
+         fail = padcon_get_standard_t_value(&tval);
+         fail = padcon_get_standard_step_size(&step);
+         printf("t : %.3e  step : %.3e\n", tval, step);
+         printf("Smallest forward pole radius : %.3e\n", frp);
+         if(re_pole >= 0.0)
+            printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
+         printf("continue ? (y/n) ");
+         contstep = getchar();
+         scanf("%c",&nlsb);
+      }
+   }
+   while(contstep == 'y');
+}
+
+void dobldobl_next_loop ( int index )
+{
+   int fail,length,failed,dim;
+   char contstep,nlsb;
+   double frp,re_pole,im_pole,tval,step;
+
+   fail = padcon_initialize_dobldobl_solution(index,1);
+   do
+   {
+      fail = padcon_dobldobl_predict_correct(&failed,1);
+      show_dobldobl_series_coefficients(dim);
+      show_dobldobl_pade_coefficients(dim);
+      show_dobldobl_poles(dim);
+      if(failed != 0)
+         contstep = 'n';
+      else
+      {
+         fail = padcon_get_dobldobl_forward_pole_radius(&frp);
+         fail = padcon_get_dobldobl_closest_pole(&re_pole,&im_pole);
+         fail = padcon_get_dobldobl_t_value(&tval);
+         fail = padcon_get_dobldobl_step_size(&step);
+         printf("t : %.3e  step : %.3e\n", tval, step);
+         printf("Smallest forward pole radius : %.3e\n", frp);
+         if(re_pole >= 0.0)
+            printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
+         printf("continue ? (y/n) ");
+         contstep = getchar();
+         scanf("%c",&nlsb);
+      }
+   }
+   while(contstep == 'y');
+}
+
+void quaddobl_next_loop ( int index )
+{
+   int fail,length,failed,dim;
+   char contstep,nlsb;
+   double frp,re_pole,im_pole,tval,step;
+
+   fail = padcon_initialize_quaddobl_solution(index,1);
+   do
+   {
+      fail = padcon_quaddobl_predict_correct(&failed,1);
+      show_quaddobl_series_coefficients(dim);
+      show_quaddobl_pade_coefficients(dim);
+      show_quaddobl_poles(dim);
+      if(failed != 0)
+         contstep = 'n';
+      else
+      {
+         fail = padcon_get_quaddobl_forward_pole_radius(&frp);
+         fail = padcon_get_quaddobl_closest_pole(&re_pole,&im_pole);
+         fail = padcon_get_quaddobl_t_value(&tval);
+         fail = padcon_get_quaddobl_step_size(&step);
+         printf("t : %.3e  step : %.3e\n", tval, step);
+         printf("Smallest forward pole radius : %.3e\n", frp);
+         if(re_pole >= 0.0)
+            printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
+         printf("continue ? (y/n) ");
+         contstep = getchar();
+         scanf("%c",&nlsb);
+      }
+   }
+   while(contstep == 'y');
+}
+
+void standard_next_step ( void )
+{
+   int fail,length,index,strlensol,dim,arthom;
+   int idx=0;
+   char contstep,nlsb;
+
+   arthom = prompt_for_artificial();
+
+   if(arthom == 1)
+   {
+      fail = read_standard_target_system();
+      fail = read_standard_start_system();
+      fail = copy_start_solutions_to_container();
+   }
+   else
+   {
+      fail = read_standard_target_system();
+      fail = copy_target_solutions_to_container();
+
+      idx = prompt_for_parameter();
+      fail = solcon_standard_drop_coordinate_by_index(idx);
+      fail = solcon_standard_set_continuation_parameter();
+   }
+
    fail = solcon_number_of_standard_solutions(&length);
    fail = solcon_dimension_of_standard_solutions(&dim);
    printf("Read %d start solutions in dimension %d.\n", length, dim);
@@ -472,31 +656,7 @@ void standard_next_step ( void )
    for(index=1; index <= length; index++)
    {
       printf("\nTracking path %d ...\n", index);
-      fail = padcon_initialize_standard_solution(index,1);
-      do
-      {
-         fail = padcon_standard_predict_correct(&failed,1);
-         show_standard_series_coefficients(dim);
-         show_standard_pade_coefficients(dim);
-         show_standard_poles(dim);
-         if(failed != 0)
-            contstep = 'n';
-         else
-         {
-            fail = padcon_get_standard_forward_pole_radius(&frp);
-            fail = padcon_get_standard_closest_pole(&re_pole,&im_pole);
-            fail = padcon_get_standard_t_value(&tval);
-            fail = padcon_get_standard_step_size(&step);
-            printf("t : %.3e  step : %.3e\n", tval, step);
-            printf("Smallest forward pole radius : %.3e\n", frp);
-            if(re_pole >= 0.0)
-               printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
-            printf("continue ? (y/n) ");
-            contstep = getchar();
-            scanf("%c",&nlsb);
-         }
-      }
-      while(contstep == 'y');
+      standard_next_loop(index);
 
       fail = padcon_get_standard_solution(index,1);
       fail = solcon_length_standard_solution_string(index,&strlensol);
@@ -517,13 +677,28 @@ void standard_next_step ( void )
 
 void dobldobl_next_step ( void )
 {
-   int fail,length,index,failed,strlensol,dim;
+   int fail,length,index,strlensol,dim,arthom;
+   int idx=0;
    char contstep,nlsb;
-   double frp,re_pole,im_pole,tval,step;
 
-   fail = read_dobldobl_target_system();
-   fail = read_dobldobl_start_system();
-   fail = copy_dobldobl_start_solutions_to_container();
+   arthom = prompt_for_artificial();
+
+   if(arthom == 1)
+   {
+      fail = read_dobldobl_target_system();
+      fail = read_dobldobl_start_system();
+      fail = copy_dobldobl_start_solutions_to_container();
+   }
+   else
+   {
+      fail = read_dobldobl_target_system();
+      fail = copy_dobldobl_target_solutions_to_container();
+
+      idx = prompt_for_parameter();
+      fail = solcon_dobldobl_drop_coordinate_by_index(idx);
+      fail = solcon_dobldobl_set_continuation_parameter();
+   }
+
    fail = solcon_number_of_dobldobl_solutions(&length);
    fail = solcon_dimension_of_dobldobl_solutions(&dim);
    printf("Read %d start solutions of dimension %d.\n", length, dim);
@@ -532,31 +707,7 @@ void dobldobl_next_step ( void )
    for(index = 1; index <= length; index++)
    {
       printf("\nTracking path %d ...\n", index);
-      fail = padcon_initialize_dobldobl_solution(index,1);
-      do
-      {
-         fail = padcon_dobldobl_predict_correct(&failed,1);
-         show_dobldobl_series_coefficients(dim);
-         show_dobldobl_pade_coefficients(dim);
-         show_dobldobl_poles(dim);
-         if(failed != 0)
-            contstep = 'n';
-         else
-         {
-            fail = padcon_get_dobldobl_forward_pole_radius(&frp);
-            fail = padcon_get_dobldobl_closest_pole(&re_pole,&im_pole);
-            fail = padcon_get_dobldobl_t_value(&tval);
-            fail = padcon_get_dobldobl_step_size(&step);
-            printf("t : %.3e  step : %.3e\n", tval, step);
-            printf("Smallest forward pole radius : %.3e\n", frp);
-            if(re_pole >= 0.0)
-               printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
-            printf("continue ? (y/n) ");
-            contstep = getchar();
-            scanf("%c",&nlsb);
-         }
-      }
-      while(contstep == 'y');
+      dobldobl_next_loop(index);
 
       fail = padcon_get_dobldobl_solution(index,1);
       fail = solcon_length_dobldobl_solution_string(index,&strlensol);
@@ -577,13 +728,29 @@ void dobldobl_next_step ( void )
 
 void quaddobl_next_step ( void )
 {
-   int fail,length,index,failed,strlensol,dim;
+   int fail,length,index,failed,strlensol,dim,arthom;
+   int idx=0;
    char contstep,nlsb;
    double frp,re_pole,im_pole,tval,step;
 
-   fail = read_quaddobl_target_system();
-   fail = read_quaddobl_start_system();
-   fail = copy_quaddobl_start_solutions_to_container();
+   arthom = prompt_for_artificial();
+
+   if(arthom == 1)
+   {
+      fail = read_quaddobl_target_system();
+      fail = read_quaddobl_start_system();
+      fail = copy_quaddobl_start_solutions_to_container();
+   }
+   else
+   {
+      fail = read_quaddobl_target_system();
+      fail = copy_quaddobl_target_solutions_to_container();
+
+      idx = prompt_for_parameter();
+      fail = solcon_quaddobl_drop_coordinate_by_index(idx);
+      fail = solcon_quaddobl_set_continuation_parameter();
+   }
+
    fail = solcon_number_of_quaddobl_solutions(&length);
    fail = solcon_dimension_of_quaddobl_solutions(&dim);
    printf("Read %d start solutions of dimension %d.\n", length, dim);
@@ -592,31 +759,7 @@ void quaddobl_next_step ( void )
    for(index = 1; index <= length; index++)
    {
       printf("\nTracking path %d ...\n", index);
-      fail = padcon_initialize_quaddobl_solution(index,1);
-      do
-      {
-         fail = padcon_quaddobl_predict_correct(&failed,1);
-         show_quaddobl_series_coefficients(dim);
-         show_quaddobl_pade_coefficients(dim);
-         show_quaddobl_poles(dim);
-         if(failed != 0)
-            contstep = 'n';
-         else
-         {
-            fail = padcon_get_quaddobl_forward_pole_radius(&frp);
-            fail = padcon_get_quaddobl_closest_pole(&re_pole,&im_pole);
-            fail = padcon_get_quaddobl_t_value(&tval);
-            fail = padcon_get_quaddobl_step_size(&step);
-            printf("t : %.3e  step : %.3e\n", tval, step);
-            printf("Smallest forward pole radius : %.3e\n", frp);
-            if(re_pole >= 0.0)
-               printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
-            printf("continue ? (y/n) ");
-            contstep = getchar();
-            scanf("%c",&nlsb);
-         }
-      }
-      while(contstep == 'y');
+      quaddobl_next_loop(index);
 
       fail = padcon_get_quaddobl_solution(index,1);
       fail = solcon_length_quaddobl_solution_string(index,&strlensol);

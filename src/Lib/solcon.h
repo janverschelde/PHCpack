@@ -929,4 +929,22 @@ int solcon_quaddobl_drop_coordinate_by_name ( int nc, char *s );
  *   with the same solutions that have their coordinate dropped
  *   corresponding to the name in the string s of nc characters long. */
 
+int solcon_standard_set_continuation_parameter ( void );
+/*
+ * DESCRIPTION :
+ *   Sets the value of the continuation parameter to zero for all solutions
+ *   in the standard double precision solutions container. */
+
+int solcon_dobldobl_set_continuation_parameter ( void );
+/*
+ * DESCRIPTION :
+ *   Sets the value of the continuation parameter to zero for all solutions
+ *   in the double double precision solutions container. */
+
+int solcon_quaddobl_set_continuation_parameter ( void );
+/*
+ * DESCRIPTION :
+ *   Sets the value of the continuation parameter to zero for all solutions
+ *   in the quad double precision solutions container. */
+
 #endif
