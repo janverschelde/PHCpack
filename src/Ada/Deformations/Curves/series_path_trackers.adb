@@ -22,6 +22,7 @@ with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with QuadDobl_System_and_Solutions_io;
+with Solution_Drops;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
@@ -125,8 +126,9 @@ package body Series_Path_Trackers is
     s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq);
     fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
     fcf : Standard_Complex_Series_VecVecs.VecVec(1..nq);
-    ejm : Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..nvr);
-    mlt : Standard_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..nvr);
+    dim : constant integer32 := nvr - idxpar;
+    ejm : Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..dim);
+    mlt : Standard_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..dim);
     p : Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
@@ -483,7 +485,7 @@ package body Series_Path_Trackers is
   procedure Standard_Main is
 
     nbq,nvr,idx : integer32;
-    sols : Standard_Complex_Solutions.Solution_List;
+    sols,dropsols : Standard_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
  
   begin
@@ -493,15 +495,16 @@ package body Series_Path_Trackers is
       idx := 0;
     else
       Homotopy_Series_Readers.Standard_Parameter_Reader(nbq,nvr,idx,sols);
+      dropsols := Solution_Drops.Drop(sols,natural32(idx));
     end if;
     new_line;
-    Standard_Run(nbq,nvr,idx,sols);
+    Standard_Run(nbq,nvr,idx,dropsols);
   end Standard_Main;
 
   procedure DoblDobl_Main is
 
     nbq,nvr,idx : integer32;
-    sols : DoblDobl_Complex_Solutions.Solution_List;
+    sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
 
   begin
@@ -511,6 +514,7 @@ package body Series_Path_Trackers is
       idx := 0;
     else
       Homotopy_Series_Readers.DoblDobl_Parameter_Reader(nbq,nvr,idx,sols);
+      dropsols := Solution_Drops.Drop(sols,natural32(idx));
     end if;
     new_line;
     DoblDobl_Run(nbq,nvr,idx,sols);
@@ -519,7 +523,7 @@ package body Series_Path_Trackers is
   procedure QuadDobl_Main is
 
     nbq,nvr,idx : integer32;
-    sols : QuadDobl_Complex_Solutions.Solution_List;
+    sols,dropsols : QuadDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
 
   begin
@@ -529,6 +533,7 @@ package body Series_Path_Trackers is
       idx := 0;
     else
       Homotopy_Series_Readers.QuadDobl_Parameter_Reader(nbq,nvr,idx,sols);
+      dropsols := Solution_Drops.Drop(sols,natural32(idx));
     end if;
     new_line;
     QuadDobl_Run(nbq,nvr,idx,sols);
