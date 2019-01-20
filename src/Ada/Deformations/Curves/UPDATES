@@ -1,6 +1,6 @@
 Sat 19 Jan 2019 : adjusted the writing of the homotopy for natural parameter
   homotopies in series_path_trackers.  Dropped value for the natural parameter
-  from the solutions in series_path_trackers.adb.
+  from the solutions in series_path_trackers.adb, but only when idxpar /= 0!
 
 Thu 10 Jan 2019 : modified series_path_trackers for runs with natural
   parameter homotopies.

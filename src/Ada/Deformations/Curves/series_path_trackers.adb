@@ -3,6 +3,7 @@ with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
 with Characters_and_Numbers;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
@@ -29,7 +30,9 @@ with QuadDobl_Homotopy;
 with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_VecVecs;
+with Standard_CSeries_Polynomials; -- for testing only
 with Standard_CSeries_Poly_Systems;
+with Standard_CSeries_Poly_Systems_io;
 with Standard_CSeries_Poly_SysFun;
 with Standard_CSeries_Jaco_Matrices;
 with DoblDobl_CSeries_Poly_Systems;
@@ -157,7 +160,15 @@ package body Series_Path_Trackers is
       end if;
     end if;
     h := Standard_Homotopy.Homotopy_System;
-    s := Series_and_Homotopies.Create(h,nq+1,false);
+    if idxpar /= 0
+     then s := Series_and_Homotopies.Create(h,idxpar,false);
+     else s := Series_and_Homotopies.Create(h,nq+1,false);
+    end if;
+    put("Number of variables in series homotopy : ");
+    put(Standard_CSeries_Polynomials.Number_of_Unknowns(s(s'first)),1);
+    new_line;
+    put_line("The equations in the homotopy : ");
+    Standard_CSeries_Poly_Systems_io.put(s);
     fhm := Standard_CSeries_Poly_SysFun.Create(s);
     fcf := Standard_CSeries_Poly_SysFun.Coeff(s);
     Standard_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
@@ -174,6 +185,7 @@ package body Series_Path_Trackers is
       if monitor
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
+      put("ls.n : "); put(ls.n,1); new_line;
       if tofile then
         Series_and_Trackers.Track_One_Path
           (file,fhm,fcf,ejm,mlt,ls.all,p,
@@ -275,7 +287,10 @@ package body Series_Path_Trackers is
       end if;
     end if;
     h := DoblDobl_Homotopy.Homotopy_System;
-    s := Series_and_Homotopies.Create(h,nq+1,false);
+    if idxpar /= 0
+     then s := Series_and_Homotopies.Create(h,idxpar,false);
+     else s := Series_and_Homotopies.Create(h,nq+1,false);
+    end if;
     fhm := DoblDobl_CSeries_Poly_SysFun.Create(s);
     fcf := DoblDobl_CSeries_Poly_SysFun.Coeff(s);
     DoblDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
@@ -394,7 +409,10 @@ package body Series_Path_Trackers is
       end if;
     end if;
     h := QuadDobl_Homotopy.Homotopy_System;
-    s := Series_and_Homotopies.Create(h,nq+1,false);
+    if idxpar /= 0
+     then s := Series_and_Homotopies.Create(h,idxpar,false);
+     else s := Series_and_Homotopies.Create(h,nq+1,false);
+    end if;
     fhm := QuadDobl_CSeries_Poly_SysFun.Create(s);
     fcf := QuadDobl_CSeries_Poly_SysFun.Coeff(s);
     QuadDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
@@ -493,12 +511,14 @@ package body Series_Path_Trackers is
       Homotopy_Series_Readers.Standard_Reader(nbq,sols);
       nvr := integer32(Standard_Complex_Solutions.Head_Of(sols).n);
       idx := 0;
+      new_line;
+      Standard_Run(nbq,nvr,idx,sols);
     else
       Homotopy_Series_Readers.Standard_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
+      new_line;
+      Standard_Run(nbq,nvr,idx,dropsols);
     end if;
-    new_line;
-    Standard_Run(nbq,nvr,idx,dropsols);
   end Standard_Main;
 
   procedure DoblDobl_Main is
@@ -512,12 +532,14 @@ package body Series_Path_Trackers is
       Homotopy_Series_Readers.DoblDobl_Reader(nbq,sols);
       nvr := integer32(DoblDobl_Complex_Solutions.Head_Of(sols).n);
       idx := 0;
+      new_line;
+      DoblDobl_Run(nbq,nvr,idx,sols);
     else
       Homotopy_Series_Readers.DoblDobl_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
+      new_line;
+      DoblDobl_Run(nbq,nvr,idx,dropsols);
     end if;
-    new_line;
-    DoblDobl_Run(nbq,nvr,idx,sols);
   end DoblDobl_Main;
 
   procedure QuadDobl_Main is
@@ -531,12 +553,14 @@ package body Series_Path_Trackers is
       Homotopy_Series_Readers.QuadDobl_Reader(nbq,sols);
       nvr := integer32(QuadDobl_Complex_Solutions.Head_Of(sols).n);
       idx := 0;
+      new_line;
+      QuadDobl_Run(nbq,nvr,idx,sols);
     else
       Homotopy_Series_Readers.QuadDobl_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
+      new_line;
+      QuadDobl_Run(nbq,nvr,idx,dropsols);
     end if;
-    new_line;
-    QuadDobl_Run(nbq,nvr,idx,sols);
   end QuadDobl_Main;
 
 end Series_Path_Trackers;
