@@ -1,7 +1,10 @@
+with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with Homotopy_Continuation_Parameters;
 
 package Series_Path_Trackers is
 
@@ -10,6 +13,38 @@ package Series_Path_Trackers is
 --   compute Pade approximants to predict solutions in the path tracker.
 --   The procedures in this package give access to such trackers
 --   in double, double double, and quad double precision.
+
+  procedure Standard_Write 
+              ( file : in file_type; nq,nv : in natural32;
+                idxpar : in integer32;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters );
+  procedure DoblDobl_Write 
+              ( file : in file_type; nq,nv : in natural32;
+                idxpar : in integer32;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters );
+  procedure QuadDobl_Write 
+              ( file : in file_type; nq,nv : in natural32;
+                idxpar : in integer32;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters );
+
+  -- DESCRIPTION :
+  --   Writes target system, start system (if idxpar > 0), start solutions,
+  --   and the homotopy continuation parameters in pars to file.
+
+  -- REQUIRED :
+  --   Standard_Homotopy, DoblDobl_Homotopy, or QuadDobl_Homotopy 
+  --   is well defined.
+
+  -- ON ENTRY :
+  --   file     file, opened for output;
+  --   nq       number of equations;
+  --   nv       number of variables;
+  --   idxpar   index of the continuation parameter, 0 if artificial;
+  --   sols     start solutions;
+  --   pars     values of the homotopy continuation parameters.
 
   procedure Standard_Run
               ( nq,nvr,idxpar : in integer32;
