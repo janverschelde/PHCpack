@@ -84,7 +84,7 @@ function use_padcon ( job : integer32;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     idx : constant natural32 := natural32(v_a(v_a'first));
-    fail : integer32;
+    fail : integer32 := 0;
     homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters
                := Homotopy_Continuation_Parameters.Retrieve;
 
@@ -111,8 +111,9 @@ function use_padcon ( job : integer32;
       when 12 => Assign(integer32(homconpars.maxsteps),b);
       when others => 
         put_line("Index value for the parameter is out of range.");
+        fail := 737;
     end case;
-    return 0;
+    return fail;
   exception
     when others =>
       put_line("Exception raised in job 2 of use_padcon.");
@@ -121,7 +122,7 @@ function use_padcon ( job : integer32;
 
   function Job3 return integer32 is -- set a value
 
-    fail : integer32;
+    fail : integer32 := 0;
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     idx : constant natural32 := natural32(v_a(v_a'first));
     v_b : C_Integer_Array(0..0);
@@ -170,8 +171,9 @@ function use_padcon ( job : integer32;
                  homconpars.maxsteps := natural32(v_b(v_b'first));
       when others =>
         put_line("Index value for the parameter is out of range.");
+        fail := 738;
     end case;
-    return 0;
+    return fail;
   exception
     when others =>
       put_line("Exception raised in job 3 of use_padcon.");
@@ -190,7 +192,7 @@ function use_padcon ( job : integer32;
     sols : Standard_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
 
-    homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters
+    homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
                := Homotopy_Continuation_Parameters.Retrieve;
 
   begin
@@ -244,7 +246,7 @@ function use_padcon ( job : integer32;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
 
-    homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters
+    homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
                := Homotopy_Continuation_Parameters.Retrieve;
 
     gamma : constant Standard_Complex_Numbers.Complex_Number
@@ -291,7 +293,7 @@ function use_padcon ( job : integer32;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
 
-    homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters
+    homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
                := Homotopy_Continuation_Parameters.Retrieve;
 
     gamma : constant Standard_Complex_Numbers.Complex_Number
@@ -345,7 +347,7 @@ function use_padcon ( job : integer32;
       end case;
     else
       declare
-        v_b : C_Integer_Array(0..Interfaces.C.size_T(nbc-1))
+        v_b : constant C_Integer_Array(0..Interfaces.C.size_T(nbc-1))
             := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
         name : constant string := C_Integer_Array_to_String(nbc,v_b);
       begin
@@ -414,7 +416,7 @@ function use_padcon ( job : integer32;
     vrb : constant natural32 := natural32(v_b(v_b'first));
     verbose : constant boolean := (vrb = 1);
 
-    homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters
+    homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
                := Homotopy_Continuation_Parameters.Retrieve;
 
   begin

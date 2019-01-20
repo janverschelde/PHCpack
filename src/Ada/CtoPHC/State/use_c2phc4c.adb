@@ -4,7 +4,6 @@ with String_Splitters;                  use String_Splitters;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
 with Multprec_Floating_Numbers;
@@ -12,17 +11,14 @@ with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Arrays_of_Floating_Vector_Lists;
 with Symbol_Table,Symbol_Table_io;
-with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
-with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_SysFun;
 with DoblDobl_Complex_Laur_JacoMats;
-with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
@@ -1507,7 +1503,7 @@ function use_c2phc4c ( job : integer32;
     use Standard_Complex_Laur_Systems,Standard_Complex_Solutions;
     use Standard_Root_Refiners;
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
-    sols : Solution_List := Standard_Solutions_Container.Retrieve;
+    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
     work,refsols : Solution_List;
 
   begin
@@ -2766,7 +2762,7 @@ function use_c2phc4c ( job : integer32;
     nvr : constant natural32 := natural32(v_a(v_a'first));
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
     dim : constant natural32 := natural32(v_b(v_b'first));
-    p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+    p : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
       := Standard_PolySys_Container.Retrieve;
     sols : Standard_Complex_Solutions.Solution_List
          := Standard_Solutions_Container.Retrieve;
@@ -2782,7 +2778,7 @@ function use_c2phc4c ( job : integer32;
     nvr : constant natural32 := natural32(v_a(v_a'first));
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
     dim : constant natural32 := natural32(v_b(v_b'first));
-    p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+    p : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
       := DoblDobl_PolySys_Container.Retrieve;
     sols : DoblDobl_Complex_Solutions.Solution_List
          := DoblDobl_Solutions_Container.Retrieve;
@@ -2798,7 +2794,7 @@ function use_c2phc4c ( job : integer32;
     nvr : constant natural32 := natural32(v_a(v_a'first));
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
     dim : constant natural32 := natural32(v_b(v_b'first));
-    p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+    p : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
       := QuadDobl_PolySys_Container.Retrieve;
     sols : QuadDobl_Complex_Solutions.Solution_List
          := QuadDobl_Solutions_Container.Retrieve;
@@ -2814,7 +2810,7 @@ function use_c2phc4c ( job : integer32;
     nvr : constant natural32 := natural32(v_a(v_a'first));
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
     dim : constant natural32 := natural32(v_b(v_b'first));
-    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys
+    p : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
       := Standard_LaurSys_Container.Retrieve;
     sols : Standard_Complex_Solutions.Solution_List
          := Standard_Solutions_Container.Retrieve;
@@ -2830,7 +2826,7 @@ function use_c2phc4c ( job : integer32;
     nvr : constant natural32 := natural32(v_a(v_a'first));
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
     dim : constant natural32 := natural32(v_b(v_b'first));
-    p : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys
+    p : constant DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys
       := DoblDobl_LaurSys_Container.Retrieve;
     sols : DoblDobl_Complex_Solutions.Solution_List
          := DoblDobl_Solutions_Container.Retrieve;
@@ -2846,7 +2842,7 @@ function use_c2phc4c ( job : integer32;
     nvr : constant natural32 := natural32(v_a(v_a'first));
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
     dim : constant natural32 := natural32(v_b(v_b'first));
-    p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys
+    p : constant QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys
       := QuadDobl_LaurSys_Container.Retrieve;
     sols : QuadDobl_Complex_Solutions.Solution_List
          := QuadDobl_Solutions_Container.Retrieve;
@@ -3271,6 +3267,10 @@ function use_c2phc4c ( job : integer32;
       when 873 => return use_track(68,a,b,c); -- read quaddobl target
      -- write homotopy continuation paramaters to defined output file
       when 874 => return use_padcon(17,a,b,c); 
+     -- set value of the continuation parameter to zero
+      when 875 => return use_solcon(875,a,b,c);
+      when 876 => return use_solcon(876,a,b,c);
+      when 877 => return use_solcon(877,a,b,c);
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

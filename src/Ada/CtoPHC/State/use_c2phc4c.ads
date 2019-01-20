@@ -529,6 +529,18 @@ function use_c2phc4c ( job : integer32;
 --                 current multprec solution an if a[0] is nonzero, then
 --                 in b on return is the current multprec solution string.
 --
+-- setting the value of the continuation parameter to zero :
+--
+--   job   = 875 : sets the value of the continuation parameter to zero
+--                 for all the solutions in the standard double precision
+--                 solutions container;
+--   job   = 876 : sets the value of the continuation parameter to zero
+--                 for all the solutions in the double double precision
+--                 solutions container;
+--   job   = 877 : sets the value of the continuation parameter to zero
+--                 for all the solutions in the quad double precision
+--                 solutions container.
+--
 -- the operations of the monodromy factorization :
 --
 --   job    = 39 : makes the factorization with standard doubles go silent;

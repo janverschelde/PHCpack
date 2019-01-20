@@ -1,3 +1,6 @@
+Sun 20 Jan 2019 : extra jobs to set the continuation parameter of solutions
+  to zero, in use_solcon, use_c2phc4c; some modifications to use_padcon.adb.
+
 Tue 8 Jan 2019 : added flushing of file in phcpack_operations_io.adb.
   Added job to write the homotopy continuation parameters to the defined
   output file in use_padcon and use_c2phc4c.

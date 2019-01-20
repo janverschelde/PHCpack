@@ -5,6 +5,9 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
@@ -1591,7 +1594,6 @@ function use_solcon ( job : integer32;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     nc : constant natural := natural(v_a(v_a'first));
-    use Interfaces.C;
     nbdeci : constant natural32 := natural32(v_a(v_a'first+1));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1624,6 +1626,48 @@ function use_solcon ( job : integer32;
     end;
     return 0;
   end Job547;
+
+  function Job875 return integer32 is -- set t = 0 for standard solutions
+
+    use Standard_Complex_Solutions;
+    sols : Solution_List := Standard_Solutions_Container.Retrieve;
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+
+  begin
+    if not Is_Null(sols)
+     then Set_Continuation_Parameter(sols,zero);
+    end if;
+    return 0;
+  end Job875;
+
+  function Job876 return integer32 is -- set t = 0 for dobldobl solutions
+
+    use DoblDobl_Complex_Solutions;
+    sols : Solution_List := DoblDobl_Solutions_Container.Retrieve;
+    zero : constant DoblDobl_Complex_Numbers.Complex_Number
+         := DoblDobl_Complex_Numbers.Create(integer32(0));
+
+  begin
+    if not Is_Null(sols)
+     then Set_Continuation_Parameter(sols,zero);
+    end if;
+    return 0;
+  end Job876;
+
+  function Job877 return integer32 is -- set t = 0 for quaddobl solutions
+
+    use QuadDobl_Complex_Solutions;
+    sols : Solution_List := QuadDobl_Solutions_Container.Retrieve;
+    zero : constant QuadDobl_Complex_Numbers.Complex_Number
+         := QuadDobl_Complex_Numbers.Create(integer32(0));
+
+  begin
+    if not Is_Null(sols)
+     then Set_Continuation_Parameter(sols,zero);
+    end if;
+    return 0;
+  end Job877;
 
   function Handle_Jobs return integer32 is
   begin
@@ -1734,6 +1778,10 @@ function use_solcon ( job : integer32;
       when 545 => return Job545; -- read double double system and solutions
       when 546 => return Job546; -- read quad double system and solutions
       when 547 => return Job547; -- read multiprecision system and solutions
+     -- setting value of continuation parameter of the solutions to zero
+      when 875 => return Job875; -- for standard solutions, set t = 0
+      when 876 => return Job876; -- for dobldobl solutions, set t = 0
+      when 877 => return Job877; -- for quaddobl solutions, set t = 0
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

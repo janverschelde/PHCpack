@@ -296,6 +296,18 @@ function use_solcon ( job : integer32;
 --                   the value of a[1] stores the number of decimal places
 --                   as the precision for parsing the numbers;
 --
+-- setting the value of the continuation parameter to zero :
+--
+--   job     = 875 : sets the value of the continuation parameter to zero
+--                   for all the solutions in the standard double precision
+--                   solutions container;
+--   job     = 876 : sets the value of the continuation parameter to zero
+--                   for all the solutions in the double double precision
+--                   solutions container;
+--   job     = 877 : sets the value of the continuation parameter to zero
+--                   for all the solutions in the quad double precision
+--                   solutions container.
+--
 --   a       indicates the number of solution to work on;
 --   b       array with allocated memory for integers,
 --           usually only len, n, m, or the array (n,m),
