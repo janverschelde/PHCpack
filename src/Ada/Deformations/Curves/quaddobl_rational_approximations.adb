@@ -89,12 +89,12 @@ package body QuadDobl_Rational_Approximations is
     else -- singular coefficient matrix detected
       numcff := (0..numdeg => Create(zero));
       dencff := (0..dendeg => Create(zero));
+      dencff(0) := Create(one); -- denominator is just one
       for k in rhs'range loop -- check if right hand side is zero
         if rhs(k) /= cmplx_zero
          then return;
         end if;
       end loop;
-      dencff(0) := Create(one); -- denominator is just one
       numcff := Numerator_Coefficients(numdeg,dendeg,dencff,cff);
       info := 0; -- ignore the singular coefficient matrix
     end if;

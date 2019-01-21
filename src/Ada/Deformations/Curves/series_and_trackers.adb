@@ -1,9 +1,11 @@
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;  
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
@@ -11,31 +13,18 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
-with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Vector_Norms;
-with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Vector_Norms;
-with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vector_Norms;
-with Standard_Complex_Poly_Systems;
-with Standard_Complex_Poly_SysFun;
-with Standard_Complex_Jaco_Matrices;
-with DoblDobl_Complex_Poly_Systems;
-with DoblDobl_Complex_Poly_SysFun;
-with DoblDobl_Complex_Jaco_Matrices;
-with QuadDobl_Complex_Poly_Systems;
-with QuadDobl_Complex_Poly_SysFun;
-with QuadDobl_Complex_Jaco_Matrices;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;
-with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_Vectors;
@@ -152,7 +141,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
@@ -239,13 +228,12 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res : double_float;
-    zero : constant double_double := create(0.0);
     frp : double_double;
     cfp : DoblDobl_Complex_Numbers.Complex_Number;
     predres : double_float;
@@ -302,7 +290,6 @@ package body Series_and_Trackers is
     DoblDobl_CSeries_Poly_Systems.Clear(wrk);
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
-    dd_step := create(0.0);
     Homotopy_Newton_Steps.Correct
       (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
@@ -337,13 +324,12 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res : double_float;
-    zero : constant quad_double := create(0.0);
     frp : quad_double;
     cfp : QuadDobl_Complex_Numbers.Complex_Number;
     predres : double_float;
@@ -400,7 +386,6 @@ package body Series_and_Trackers is
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
-    qd_step := create(0.0);
     Homotopy_Newton_Steps.Correct
       (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
@@ -437,7 +422,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
@@ -548,13 +533,12 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res : double_float;
-    zero : constant double_double := create(0.0);
     frp : double_double;
     cfp : DoblDobl_Complex_Numbers.Complex_Number;
     predres : double_float;
@@ -635,7 +619,6 @@ package body Series_and_Trackers is
     DoblDobl_CSeries_Poly_Systems.Clear(wrk);
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
-    dd_step := create(0.0);
     Homotopy_Newton_Steps.Correct
       (file,nbq,1.0,tolres,pars.corsteps,nbrit,
        wrk_sol,err,rco,res,fail,verbose);
@@ -673,13 +656,12 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
     err,rco,res : double_float;
-    zero : constant quad_double := create(0.0);
     frp : quad_double;
     cfp : QuadDobl_Complex_Numbers.Complex_Number;
     predres : double_float;
@@ -760,7 +742,6 @@ package body Series_and_Trackers is
     QuadDobl_CSeries_Poly_Systems.Clear(wrk);
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
-    qd_step := create(0.0);
     Homotopy_Newton_Steps.Correct
       (file,nbq,t,tolres,pars.corsteps,nbrit,
        wrk_sol,err,rco,res,fail,verbose);
@@ -800,7 +781,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
@@ -887,7 +868,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -983,7 +964,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -1080,7 +1061,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
@@ -1192,7 +1173,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -1312,7 +1293,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     fail : boolean;
-    t,step,update : double_float := 0.0;
+    t,step : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -1436,7 +1417,7 @@ package body Series_and_Trackers is
 
     use Standard_Complex_Solutions;
 
-    nvr : constant integer32 := integer32(Head_Of(sols).n);
+    nvr : constant integer32 := Head_Of(sols).n;
     fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
         := Standard_CSeries_Poly_SysFun.Create(hom);
     fcf : Standard_Complex_Series_VecVecs.VecVec(hom'range)

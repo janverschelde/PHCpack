@@ -85,12 +85,12 @@ package body Standard_Rational_Approximations is
     else -- singular coefficient matrix detected
       numcff := (0..numdeg => zero);
       dencff := (0..dendeg => zero);
+      dencff(0) := Create(1.0); -- denominator is just one
       for k in rhs'range loop -- check if right hand side is zero
         if rhs(k) /= zero
          then return;
         end if;
       end loop;
-      dencff(0) := Create(1.0); -- denominator is just one
       numcff := Numerator_Coefficients(numdeg,dendeg,dencff,cff);
       info := 0; -- ignore the singular coefficient matrix
     end if;

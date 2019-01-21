@@ -10,6 +10,7 @@ with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Polynomials;       use QuadDobl_Complex_Polynomials;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_Homotopy;
+with QuadDobl_Pade_Approximants_io;
 with Homotopy_Pade_Approximants;
 with Series_and_Homotopies;
 with Series_and_Predictors;
@@ -135,6 +136,11 @@ package body QuadDobl_SeriesPade_Tracker is
       (current_servec.all,current_padvec.all,current_poles.all,
        current_frp,current_cfp);
     if verbose then
+      put_line("The Pade vector : ");
+      for i in current_padvec'range loop
+        put_line(QuadDobl_Pade_Approximants_io.Write(current_padvec(i)));
+      end loop;
+      put_line("The poles : "); put_line(current_poles.all);
       put_line("The poles :"); put_line(current_poles.all);
       put("Smallest forward pole radius : "); put(current_frp,3); new_line;
       if QuadDobl_Complex_Numbers.REAL_PART(current_cfp) >= 0.0

@@ -1,9 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;  
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Double_Double_Numbers;              use Double_Double_Numbers;
-with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Vectors;

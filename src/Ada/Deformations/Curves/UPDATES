@@ -1,5 +1,8 @@
 Mon 21 Jan 2019 : added range check on order in series_and_predictors.adb.
   Removed some with clauses from series_and_predictors.ads.
+  In *_rational_approximations.adb, ensured that the returned denominator
+  coefficients are never zero.  Updates in series_and_trackers for warnings.
+  Added writing of the Pade vector (if verbose) in *_seriespade_tracker.adb.
 
 Sun 20 Jan 2019 : added natural parameter homotopy modifications to
   standard_seriespade_tracker and ts_nxtpadsol.adb.
