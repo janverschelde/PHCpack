@@ -82,7 +82,8 @@ function use_padcon ( job : integer32;
 
   function Job2 return integer32 is -- get a value
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     idx : constant natural32 := natural32(v_a(v_a'first));
     fail : integer32 := 0;
     homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters
@@ -123,7 +124,8 @@ function use_padcon ( job : integer32;
   function Job3 return integer32 is -- set a value
 
     fail : integer32 := 0;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     idx : constant natural32 := natural32(v_a(v_a'first));
     v_b : C_Integer_Array(0..0);
     v_c : C_Double_Array(0..0);
@@ -147,27 +149,27 @@ function use_padcon ( job : integer32;
         regamma := double_float(v_gamma(v_gamma'first));
         imgamma := double_float(v_gamma(v_gamma'first+1));
         homconpars.gamma := Standard_Complex_Numbers.Create(regamma,imgamma);
-      when  2 => v_b := C_intarrs.Value(b);
+      when  2 => v_b := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
                  homconpars.numdeg := natural32(v_b(v_b'first));
-      when  3 => v_b := C_intarrs.Value(b);
+      when  3 => v_b := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
                  homconpars.dendeg := natural32(v_b(v_b'first));
-      when  4 => v_c := C_dblarrs.Value(c);
+      when  4 => v_c := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(1));
                  homconpars.maxsize := double_float(v_c(v_c'first));
-      when  5 => v_c := C_dblarrs.Value(c);
+      when  5 => v_c := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(1));
                  homconpars.minsize := double_float(v_c(v_c'first));
-      when  6 => v_c := C_dblarrs.Value(c);
+      when  6 => v_c := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(1));
                  homconpars.sbeta := double_float(v_c(v_c'first));
-      when  7 => v_c := C_dblarrs.Value(c);
+      when  7 => v_c := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(1));
                  homconpars.pbeta := double_float(v_c(v_c'first));
-      when  8 => v_c := C_dblarrs.Value(c);
+      when  8 => v_c := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(1));
                  homconpars.alpha := double_float(v_c(v_c'first));
-      when  9 => v_c := C_dblarrs.Value(c);
+      when  9 => v_c := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(1));
                  homconpars.tolres := double_float(v_c(v_c'first));
-      when 10 => v_c := C_dblarrs.Value(c);
+      when 10 => v_c := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(1));
                  homconpars.epsilon := double_float(v_c(v_c'first));
-      when 11 => v_b := C_intarrs.Value(b);
+      when 11 => v_b := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
                  homconpars.corsteps := natural32(v_b(v_b'first));
-      when 12 => v_b := C_intarrs.Value(b);
+      when 12 => v_b := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
                  homconpars.maxsteps := natural32(v_b(v_b'first));
       when others =>
         put_line("Index value for the parameter is out of range.");
@@ -452,9 +454,11 @@ function use_padcon ( job : integer32;
 
   function Job5 return integer32 is -- initialize seriespade tracker
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     prc : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     vrb : constant natural32 := natural32(v_b(v_b'first));
     verbose : constant boolean := (vrb = 1);
 
@@ -569,7 +573,8 @@ function use_padcon ( job : integer32;
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
     prc : constant natural32 := natural32(v_a(v_a'first));
     idx : constant natural32 := natural32(v_a(v_a'first+1));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     vrb : constant natural32 := natural32(v_b(v_b'first));
     verbose : constant boolean := (vrb = 1);
     fail : boolean;
@@ -601,9 +606,11 @@ function use_padcon ( job : integer32;
 
   function Job7 return integer32 is -- run next predict-correct step
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     prc : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     vrb : constant natural32 := natural32(v_b(v_b'first));
     verbose : constant boolean := (vrb = 1);
     fail : boolean;
@@ -641,7 +648,8 @@ function use_padcon ( job : integer32;
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
     prc : constant natural32 := natural32(v_a(v_a'first));
     idx : constant natural32 := natural32(v_a(v_a'first+1));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     vrb : constant natural32 := natural32(v_b(v_b'first));
     verbose : constant boolean := (vrb = 1);
     st_ls : Standard_Complex_Solutions.Link_to_Solution;
@@ -687,7 +695,8 @@ function use_padcon ( job : integer32;
 
   function Job9 return integer32 is -- clear data
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     prc : constant natural32 := natural32(v_a(v_a'first));
 
   begin
@@ -706,7 +715,8 @@ function use_padcon ( job : integer32;
 
   function Job10 return integer32 is -- get pole radius
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     prc : constant natural32 := natural32(v_a(v_a'first));
     frp : double_float;
 
@@ -731,7 +741,8 @@ function use_padcon ( job : integer32;
 
   function Job11 return integer32 is -- get closest pole
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     prc : constant natural32 := natural32(v_a(v_a'first));
     st_cfp : Standard_Complex_Numbers.Complex_Number;
     dd_cfp : DoblDobl_Complex_Numbers.Complex_Number;
@@ -763,7 +774,8 @@ function use_padcon ( job : integer32;
 
   function Job12 return integer32 is -- get current t value
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     prc : constant natural32 := natural32(v_a(v_a'first));
     tval : double_float;
 
@@ -784,7 +796,8 @@ function use_padcon ( job : integer32;
 
   function Job13 return integer32 is -- get current step size
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     prc : constant natural32 := natural32(v_a(v_a'first));
     step : double_float;
 
@@ -875,7 +888,8 @@ function use_padcon ( job : integer32;
     prc : constant natural32 := natural32(v_a(v_a'first));
     leadidx : constant integer32 := integer32(v_a(v_a'first+1));
     cffidx : constant integer32 := integer32(v_a(v_a'first+2));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     vrb : constant natural32 := natural32(v_b(v_b'first));
     verbose : constant boolean := (vrb = 1);
     st_cff : Standard_Complex_Numbers.Complex_Number;
@@ -1043,7 +1057,8 @@ function use_padcon ( job : integer32;
     num : constant natural32 := natural32(v_a(v_a'first+1));
     leadidx : constant integer32 := integer32(v_a(v_a'first+2));
     cffidx : constant integer32 := integer32(v_a(v_a'first+3));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     vrb : constant natural32 := natural32(v_b(v_b'first));
     verbose : constant boolean := (vrb = 1);
     st_cff : Standard_Complex_Numbers.Complex_Number;
@@ -1161,7 +1176,8 @@ function use_padcon ( job : integer32;
     prc : constant natural32 := natural32(v_a(v_a'first));
     leadidx : constant integer32 := integer32(v_a(v_a'first+1));
     poleidx : constant integer32 := integer32(v_a(v_a'first+2));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     vrb : constant natural32 := natural32(v_b(v_b'first));
     verbose : constant boolean := (vrb = 1);
     st_pole : Standard_Complex_Numbers.Complex_Number;
@@ -1224,7 +1240,8 @@ function use_padcon ( job : integer32;
 
     use Interfaces.C;
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     prc : constant natural32 := natural32(v_a(v_a'first));
     v_b : constant C_Integer_Array
         := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));

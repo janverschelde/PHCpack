@@ -14,7 +14,7 @@ with QuadDobl_Complex_Numbers;
 with Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
-with Symbol_Table,Symbol_Table_io;
+with Symbol_Table; -- ,Symbol_Table_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Strings;
@@ -407,7 +407,8 @@ function use_track ( job : integer32;
 
   function Job8 return integer32 is -- write a string to defined output
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer := integer(v_a(v_a'first));
     n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
     v_b : constant C_Integer_Array(0..n1)
@@ -424,7 +425,8 @@ function use_track ( job : integer32;
 
   function Job9 return integer32 is -- writes integers to defined output
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant natural32 := natural32(v_a(v_a'first));
     n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
     v_b : constant C_Integer_Array(0..n1)
@@ -451,10 +453,11 @@ function use_track ( job : integer32;
 
   function Job10 return integer32 is -- writes doubles to defined output
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant natural32 := natural32(v_a(v_a'first));
     n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_c : C_Double_Array(0..n1)
+    v_c : constant C_Double_Array(0..n1)
         := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(n));
     d : double_float;
 
@@ -482,7 +485,8 @@ function use_track ( job : integer32;
 
   function Job11 return integer32 is -- file name to read target system
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer := integer(v_a(v_a'first));
     n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
     v_b : constant C_Integer_Array(0..n1)
@@ -501,7 +505,8 @@ function use_track ( job : integer32;
 
   function Job12 return integer32 is -- file name to read start system
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer := integer(v_a(v_a'first));
     n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
     v_b : constant C_Integer_Array(0..n1)
@@ -520,7 +525,8 @@ function use_track ( job : integer32;
 
   function Job13 return integer32 is -- name to read linear-product system
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer := integer(v_a(v_a'first));
     n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
     v_b : constant C_Integer_Array(0..n1)
@@ -543,8 +549,10 @@ function use_track ( job : integer32;
 
   function Job15 return integer32 is -- create a diagonal homotopy
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     a_dim : constant natural32 := natural32(v_a(v_a'first));
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
@@ -559,8 +567,10 @@ function use_track ( job : integer32;
 
   function Job43 return integer32 is -- dobldobl diagonal homotopy
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     a_dim : constant natural32 := natural32(v_a(v_a'first));
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
@@ -575,8 +585,10 @@ function use_track ( job : integer32;
 
   function Job44 return integer32 is -- quaddobl diagonal homotopy
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     a_dim : constant natural32 := natural32(v_a(v_a'first));
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
@@ -591,8 +603,10 @@ function use_track ( job : integer32;
 
   function Job61 return integer32 is -- standard diagonal Laurent homotopy
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     a_dim : constant natural32 := natural32(v_a(v_a'first));
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
@@ -607,8 +621,10 @@ function use_track ( job : integer32;
 
   function Job62 return integer32 is -- dobldobl diagonal Laurent homotopy
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     a_dim : constant natural32 := natural32(v_a(v_a'first));
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
@@ -623,8 +639,10 @@ function use_track ( job : integer32;
 
   function Job63 return integer32 is -- quaddobl diagonal Laurent homotopy
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     a_dim : constant natural32 := natural32(v_a(v_a'first));
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
@@ -639,7 +657,8 @@ function use_track ( job : integer32;
 
   function Job16 return integer32 is -- read a witness set
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v_a(v_a'first));
     n,dim,deg : natural32;
     nbs : Standard_Natural_Vectors.Vector(1..2);
@@ -669,7 +688,8 @@ function use_track ( job : integer32;
 
   function Job17 return integer32 is -- reset input file for witness set k
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v_a(v_a'first));
     deg,dim : natural32;
     nbs : Standard_Natural_Vectors.Vector(1..2);
@@ -1126,8 +1146,10 @@ function use_track ( job : integer32;
 
   function Job41 return integer32 is -- standard startsols in diagonal cascade
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     a_dim : constant natural32 := natural32(v_a(v_a'first));
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
@@ -1142,8 +1164,10 @@ function use_track ( job : integer32;
 
   function Job45 return integer32 is -- dobldobl startsols in diagonal cascade
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     a_dim : constant natural32 := natural32(v_a(v_a'first));
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
@@ -1158,8 +1182,10 @@ function use_track ( job : integer32;
 
   function Job46 return integer32 is -- quaddobl startsols in diagonal cascade
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     a_dim : constant natural32 := natural32(v_a(v_a'first));
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
@@ -1172,17 +1198,17 @@ function use_track ( job : integer32;
       return 298;
   end Job46;
 
-  procedure Write_Symbols ( s : in Symbol_Table.Array_of_Symbols ) is
+ -- procedure Write_Symbols ( s : in Symbol_Table.Array_of_Symbols ) is
 
   -- DESCRIPTION :
   --   Writes the symbols in s to screen, useful for checking.
 
-  begin
-    for i in s'range loop
-      put(" "); Symbol_Table_io.put(s(i));
-    end loop;
-    new_line;
-  end Write_Symbols;
+ -- begin
+ --   for i in s'range loop
+ --     put(" "); Symbol_Table_io.put(s(i));
+ --   end loop;
+ --   new_line;
+ -- end Write_Symbols;
 
   function Job42 return integer32 is -- diagonal symbols doubler
 
@@ -1199,7 +1225,7 @@ function use_track ( job : integer32;
     s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
     sa1 : Array_of_Symbols(1..n);
     nb2 : constant natural32 := Symbol_Table.Number;
-    sa2e : Array_of_Symbols(1..integer32(nb2)) := Symbol_Table.Content;
+    sa2e : constant Array_of_Symbols(1..integer32(nb2)) := Symbol_Table.Content;
     sa2 : constant Array_of_Symbols := Remove_Embed_Symbols(sa2e);
     s11 : Array_of_Symbols(sa1'range);
     s22 : constant Array_of_Symbols(sa2'range) := Add_Suffix(sa2,'2');
@@ -1247,7 +1273,8 @@ function use_track ( job : integer32;
   --   Gets the flag for the verbose mode from the first parameter a[0]
   --   and launches the crude path tracker in double precision.
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     val : constant natural32 := natural32(v_a(v_a'first));
     verbose : constant boolean := (val = 1);
 
@@ -1266,7 +1293,8 @@ function use_track ( job : integer32;
   --   Gets the flag for the verbose mode from the first parameter a[0]
   --   and launches the crude path tracker in double double precision.
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     val : constant natural32 := natural32(v_a(v_a'first));
     verbose : constant boolean := (val = 1);
 
@@ -1285,7 +1313,8 @@ function use_track ( job : integer32;
   --   Gets the flag for the verbose mode from the first parameter a[0]
   --   and launches the crude path tracker in double double precision.
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     val : constant natural32 := natural32(v_a(v_a'first));
     verbose : constant boolean := (val = 1);
 

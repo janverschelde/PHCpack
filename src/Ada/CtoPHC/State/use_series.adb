@@ -64,7 +64,8 @@ function use_series ( job : integer32;
   -- DESCRIPTION :
   --   Extracts the options from the arguments a and b.
 
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     vrb : constant integer32 := integer32(v_b(v_b'first));
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
@@ -89,7 +90,8 @@ function use_series ( job : integer32;
   -- DESCRIPTION :
   --   Extracts the options from the arguments a and b.
 
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     vrb : constant integer32 := integer32(v_b(v_b'first));
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
@@ -743,7 +745,7 @@ function use_series ( job : integer32;
     tmp := sols;
     while not Is_Null(tmp) loop
       declare
-        sol : Link_to_Solution := Head_Of(tmp);
+        sol : constant Link_to_Solution := Head_Of(tmp);
         solvec : constant Standard_Complex_Vectors.Vector
                := Coordinates(sol,idx);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
@@ -814,7 +816,7 @@ function use_series ( job : integer32;
     tmp := sols;
     while not Is_Null(tmp) loop
       declare
-        sol : Link_to_Solution := Head_Of(tmp);
+        sol : constant Link_to_Solution := Head_Of(tmp);
         solvec : constant DoblDobl_Complex_Vectors.Vector
                := Coordinates(sol,idx);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);
@@ -875,7 +877,7 @@ function use_series ( job : integer32;
     tmp := sols;
     while not Is_Null(tmp) loop
       declare
-        sol : Link_to_Solution := Head_Of(tmp);
+        sol : constant Link_to_Solution := Head_Of(tmp);
         solvec : constant QuadDobl_Complex_Vectors.Vector
                := Coordinates(sol,idx);
         nbt : constant natural32 := natural32(numdeg+dendeg+1);

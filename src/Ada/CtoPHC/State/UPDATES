@@ -1,3 +1,7 @@
+Mon 21 Jan 2019 : bug fix in assignments_in_ada_and_c.adb, modifications in
+  use_syscon.adb, use_solcon.adb, use_track.adb, use_series.adb, 
+  use_padcon.adb, use_c2phc4c.adb, and use_c2phc.adb.
+
 Sun 20 Jan 2019 : extra jobs to set the continuation parameter of solutions
   to zero, in use_solcon, use_c2phc4c; some modifications to use_padcon.adb.
   Added jobs to use_padcon and use_c2phc4c to initialize the natural parameter

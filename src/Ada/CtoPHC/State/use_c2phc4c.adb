@@ -141,7 +141,8 @@ function use_c2phc4c ( job : integer32;
   --   and uses its value to initialize the seed
   --   for the random number generator.
  
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     fixed_seed : constant natural32 := natural32(v_a(v_a'first));
 
   begin
@@ -1234,7 +1235,8 @@ function use_c2phc4c ( job : integer32;
     lp : constant Link_to_Poly_Sys := Multprec_PolySys_Container.Retrieve;
     sols : constant Solution_List := Multprec_Solutions_Container.Retrieve;
     work : Solution_List;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     deci : constant natural32 := natural32(v_a(v_a'first));
     size : constant natural32
          := Multprec_Floating_Numbers.Decimal_to_Size(deci);
@@ -1275,7 +1277,8 @@ function use_c2phc4c ( job : integer32;
     lp : constant Link_to_Laur_Sys := Multprec_LaurSys_Container.Retrieve;
     sols : constant Solution_List := Multprec_Solutions_Container.Retrieve;
     work : Solution_List;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     deci : constant natural32 := natural32(v_a(v_a'first));
     size : constant natural32
          := Multprec_Floating_Numbers.Decimal_to_Size(deci);
@@ -1543,9 +1546,11 @@ function use_c2phc4c ( job : integer32;
     work : Solution_List;
    -- symbolic,output : boolean;
    -- nbdgts : natural32;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     maxitr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     maxdef : constant natural32 := natural32(v_b(v_b'first));
     v_c : constant C_Double_Array
         := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(3));
@@ -1575,9 +1580,11 @@ function use_c2phc4c ( job : integer32;
     work : Solution_List;
    -- symbolic,output : boolean;
    -- nbdgts : natural32;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     maxitr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     maxdef : constant natural32 := natural32(v_b(v_b'first));
     v_c : constant C_Double_Array
         := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(3));
@@ -1607,9 +1614,11 @@ function use_c2phc4c ( job : integer32;
     work : Solution_List;
    -- symbolic,output : boolean;
    -- nbdgts : natural32;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     maxitr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     maxdef : constant natural32 := natural32(v_b(v_b'first));
     v_c : constant C_Double_Array
         := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(3));
@@ -1633,7 +1642,8 @@ function use_c2phc4c ( job : integer32;
 
     use Standard_Complex_Poly_Systems;
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_a(v_a'first));
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     ep : Link_to_Poly_Sys;
@@ -1652,7 +1662,8 @@ function use_c2phc4c ( job : integer32;
 
     use DoblDobl_Complex_Poly_Systems;
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_a(v_a'first));
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
     ep : Link_to_Poly_Sys;
@@ -1671,7 +1682,8 @@ function use_c2phc4c ( job : integer32;
 
     use QuadDobl_Complex_Poly_Systems;
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_a(v_a'first));
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
     ep : Link_to_Poly_Sys;
@@ -1690,7 +1702,8 @@ function use_c2phc4c ( job : integer32;
 
     use Standard_Complex_Laur_Systems;
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_a(v_a'first));
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     ep : Link_to_Laur_Sys;
@@ -1709,7 +1722,8 @@ function use_c2phc4c ( job : integer32;
 
     use DoblDobl_Complex_Laur_Systems;
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_a(v_a'first));
     lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
     ep : Link_to_Laur_Sys;
@@ -1728,7 +1742,8 @@ function use_c2phc4c ( job : integer32;
 
     use QuadDobl_Complex_Laur_Systems;
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_a(v_a'first));
     lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
     ep : Link_to_Laur_Sys;
@@ -1804,8 +1819,10 @@ function use_c2phc4c ( job : integer32;
 
   function Job193 return integer32 is -- autotune continuation parameters
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     level : constant natural32  := natural32(v_a(v_a'first));
     nbdgt : constant natural32  := natural32(v_b(v_b'first));
 
@@ -2321,7 +2338,8 @@ function use_c2phc4c ( job : integer32;
 
   function Job189 return integer32 is -- get value of continuation parameter
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v_a(v_a'first));
     res : Standard_Floating_Vectors.Vector(1..1);
 
@@ -2339,9 +2357,11 @@ function use_c2phc4c ( job : integer32;
 
   function Job190 return integer32 is -- set value of continuation parameter
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v_a(v_a'first));
-    v_c : constant C_Double_Array := C_dblarrs.Value(c);
+    v_c : constant C_Double_Array
+        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(1));
     v : constant double_float := double_float(v_c(v_c'first));
 
   begin
@@ -2354,7 +2374,8 @@ function use_c2phc4c ( job : integer32;
 
   function Job191 return integer32 is -- define output file from string
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant natural32 := natural32(v_a(v_a'first));
     n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
     v_b : constant C_Integer_Array(0..n1)
@@ -2382,7 +2403,8 @@ function use_c2phc4c ( job : integer32;
 
   function Job291 return integer32 is -- remove a symbol from the table
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant natural32 := natural32(v_a(v_a'first));
 
   begin
@@ -2399,7 +2421,8 @@ function use_c2phc4c ( job : integer32;
 
   function Job296 return integer32 is -- remove a symbol by name
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural32 := natural32(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -2519,7 +2542,8 @@ function use_c2phc4c ( job : integer32;
 
   function Job491 return integer32 is -- read multiprecision target system
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     deci : constant natural32 := natural32(v_a(v_a'first));
 
   begin
@@ -2529,7 +2553,8 @@ function use_c2phc4c ( job : integer32;
 
   function Job493 return integer32 is -- read multiprecision start system
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     deci : constant natural32 := natural32(v_a(v_a'first));
 
   begin
@@ -2539,7 +2564,8 @@ function use_c2phc4c ( job : integer32;
 
   function Job16 return integer32 is -- call standard path trackers
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
 
   begin
@@ -2548,7 +2574,8 @@ function use_c2phc4c ( job : integer32;
 
   function Job236 return integer32 is -- call double double path trackers
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
 
   begin
@@ -2557,7 +2584,8 @@ function use_c2phc4c ( job : integer32;
 
   function Job246 return integer32 is -- call quad double path trackers
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
 
   begin
@@ -2566,7 +2594,8 @@ function use_c2phc4c ( job : integer32;
 
   function Job496 return integer32 is -- call multiprecision trackers
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     deci : constant natural32 := natural32(v_a(v_a'first));
 
   begin
@@ -2727,7 +2756,8 @@ function use_c2phc4c ( job : integer32;
 
     use PHCpack_Operations;
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nbr : constant natural32 := natural32(v_a(v_a'first));
 
   begin
@@ -2738,7 +2768,8 @@ function use_c2phc4c ( job : integer32;
 
     use PHCpack_Operations;
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nbr : constant natural32 := natural32(v_a(v_a'first));
 
   begin
@@ -2749,7 +2780,8 @@ function use_c2phc4c ( job : integer32;
 
     use PHCpack_Operations;
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nbr : constant natural32 := natural32(v_a(v_a'first));
 
   begin
@@ -2758,9 +2790,11 @@ function use_c2phc4c ( job : integer32;
 
   function Job816 return integer32 is -- swap slacks for standard witset
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_b(v_b'first));
     p : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
       := Standard_PolySys_Container.Retrieve;
@@ -2774,9 +2808,11 @@ function use_c2phc4c ( job : integer32;
 
   function Job817 return integer32 is -- swap slacks for dobldobl witset
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_b(v_b'first));
     p : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
       := DoblDobl_PolySys_Container.Retrieve;
@@ -2790,9 +2826,11 @@ function use_c2phc4c ( job : integer32;
 
   function Job818 return integer32 is -- swap slacks for quaddobl witset
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_b(v_b'first));
     p : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
       := QuadDobl_PolySys_Container.Retrieve;
@@ -2806,9 +2844,11 @@ function use_c2phc4c ( job : integer32;
 
   function Job819 return integer32 is -- swap slacks for standard witset
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_b(v_b'first));
     p : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
       := Standard_LaurSys_Container.Retrieve;
@@ -2822,9 +2862,11 @@ function use_c2phc4c ( job : integer32;
 
   function Job820 return integer32 is -- swap slacks for dobldobl witset
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_b(v_b'first));
     p : constant DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys
       := DoblDobl_LaurSys_Container.Retrieve;
@@ -2838,9 +2880,11 @@ function use_c2phc4c ( job : integer32;
 
   function Job821 return integer32 is -- swap slacks for quaddobl witset
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
     dim : constant natural32 := natural32(v_b(v_b'first));
     p : constant QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys
       := QuadDobl_LaurSys_Container.Retrieve;
@@ -3288,5 +3332,5 @@ begin
   return Handle_Jobs;
 exception
   when others => put_line("Ignoring the exception, returning job number.");
-                 return job;
+                 raise; -- return job;
 end use_c2phc4c;

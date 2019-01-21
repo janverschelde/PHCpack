@@ -1,4 +1,3 @@
-with Interfaces.C;
 with text_io;                           use text_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with use_outdata; -- output data for DEMiCs
@@ -8,6 +7,8 @@ function use_c2phc ( job : integer32;
                      a : C_intarrs.Pointer;
 		     b : C_intarrs.Pointer;
                      c : C_dblarrs.Pointer ) return integer32 is
+
+  pragma Unreserve_All_Interrupts;
 
   function Handle_Jobs return integer32 is
   begin
@@ -35,5 +36,5 @@ begin
   return Handle_Jobs;
 exception
   when others => put_line("Ignoring the exception, returning job number.");
-                 return job;
+                 raise; -- return job;
 end use_c2phc;

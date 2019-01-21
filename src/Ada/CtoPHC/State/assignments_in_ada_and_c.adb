@@ -369,7 +369,7 @@ package body Assignments_in_Ada_and_C is
   procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
                      ada_d : out Standard_Floating_Vectors.Vector ) is
 
-    val : C_Double_Array(0..Interfaces.C.size_t(v_n-1))
+    val : constant C_Double_Array(0..Interfaces.C.size_t(v_n-1))
         := C_dblarrs.Value(c_d,Interfaces.C.ptrdiff_t(v_n));
     ind : Interfaces.C.size_t := 0;
 
@@ -383,11 +383,11 @@ package body Assignments_in_Ada_and_C is
   procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
                      ada_d : out Double_Double_Vectors.Vector ) is
 
-    val : C_Double_Array(0..Interfaces.C.size_t(v_n-1))
+    val : constant C_Double_Array(0..Interfaces.C.size_t(v_n-1))
         := C_dblarrs.Value(c_d,Interfaces.C.ptrdiff_t(v_n));
     ind : Interfaces.C.size_t := 0;
     lo,hi : double_float;
-    dim : integer32 := integer32(v_n)/2;
+    dim : constant integer32 := integer32(v_n)/2;
 
   begin
     for i in 1..dim loop
@@ -400,11 +400,11 @@ package body Assignments_in_Ada_and_C is
   procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
                      ada_d : out Quad_Double_Vectors.Vector ) is
 
-    val : C_Double_Array(0..Interfaces.C.size_t(v_n-1))
+    val : constant C_Double_Array(0..Interfaces.C.size_t(v_n-1))
         := C_dblarrs.Value(c_d,Interfaces.C.ptrdiff_t(v_n));
     ind : Interfaces.C.size_t := 0;
     hihi,lohi,hilo,lolo : double_float;
-    dim : integer32 := integer32(v_n)/4;
+    dim : constant integer32 := integer32(v_n)/4;
 
   begin
     for i in 1..dim loop
@@ -421,7 +421,7 @@ package body Assignments_in_Ada_and_C is
 
     use Standard_Complex_Numbers;
 
-    val : C_Double_Array(0..Interfaces.C.size_t(v_n-1))
+    val : constant C_Double_Array(0..Interfaces.C.size_t(v_n-1))
         := C_dblarrs.Value(c_d,Interfaces.C.ptrdiff_t(v_n));
     ind : Interfaces.C.size_t := 0;
 
@@ -437,12 +437,12 @@ package body Assignments_in_Ada_and_C is
 
     use DoblDobl_Complex_Numbers;
 
-    val : C_Double_Array(0..Interfaces.C.size_t(v_n-1))
+    val : constant C_Double_Array(0..Interfaces.C.size_t(v_n-1))
         := C_dblarrs.Value(c_d,Interfaces.C.ptrdiff_t(v_n));
     ind : Interfaces.C.size_t := 0;
     lo,hi : double_float;
     re,im : double_double;
-    dim : integer32 := integer32(v_n)/4;
+    dim : constant integer32 := integer32(v_n)/4;
 
   begin
     for i in 1..dim loop
@@ -461,12 +461,12 @@ package body Assignments_in_Ada_and_C is
 
     use QuadDobl_Complex_Numbers;
 
-    val : C_Double_Array(0..Interfaces.C.size_t(v_n-1))
+    val : constant C_Double_Array(0..Interfaces.C.size_t(v_n-1))
         := C_dblarrs.Value(c_d,Interfaces.C.ptrdiff_t(v_n));
     ind : Interfaces.C.size_t := 0;
     lolo,hilo,lohi,hihi : double_float;
     re,im : quad_double;
-    dim : integer32 := integer32(v_n)/8;
+    dim : constant integer32 := integer32(v_n)/8;
 
   begin
     for i in 1..dim loop
@@ -492,6 +492,7 @@ package body Assignments_in_Ada_and_C is
 
   begin
     for i in v'range loop
+      exit when (integer(i)+1 > res'last);
       ch := Integer_to_Character(integer32(v(i)));
       res(integer(i)+1) := ch;
     end loop;

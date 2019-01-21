@@ -167,7 +167,8 @@ function use_solcon ( job : integer32;
 
     use Standard_Complex_Solutions;
     ls : Link_to_Solution;
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v(v'first));
     fail : boolean;
 
@@ -183,7 +184,8 @@ function use_solcon ( job : integer32;
 
     use DoblDobl_Complex_Solutions;
     ls : Link_to_Solution;
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v(v'first));
     fail : boolean;
 
@@ -199,7 +201,8 @@ function use_solcon ( job : integer32;
 
     use QuadDobl_Complex_Solutions;
     ls : Link_to_Solution;
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v(v'first));
     fail : boolean;
 
@@ -215,7 +218,8 @@ function use_solcon ( job : integer32;
 
     use Standard_Complex_Solutions;
     ls : Link_to_Solution := Convert_to_Solution(b,c);
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v(v'first));
     fail : boolean;
 
@@ -232,7 +236,8 @@ function use_solcon ( job : integer32;
 
     use DoblDobl_Complex_Solutions;
     ls : Link_to_Solution := Convert_to_Solution(b,c);
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v(v'first));
     fail : boolean;
 
@@ -249,7 +254,8 @@ function use_solcon ( job : integer32;
 
     use QuadDobl_Complex_Solutions;
     ls : Link_to_Solution := Convert_to_Solution(b,c);
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v(v'first));
     fail : boolean;
 
@@ -937,7 +943,7 @@ function use_solcon ( job : integer32;
    -- put_line("The string received in Job 38 : "); put_line(sv);
     Standard_Solution_Strings.Parse(sv,ind,nv,sol,fail);
    -- put_line("The parsed solution : ");
-   -- Standard_Complex_Solutions_io.put(sol);
+    Standard_Complex_Solutions_io.put(sol);
     if fail then
      -- put_line("Failure occurred !");
       return 208;
@@ -1078,7 +1084,8 @@ function use_solcon ( job : integer32;
 
   function Job8 return integer32 is -- drop by index from solution list
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     ind : constant natural32 := natural32(v_a(v_a'first));
     use Standard_Complex_Solutions;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
@@ -1092,7 +1099,8 @@ function use_solcon ( job : integer32;
 
   function Job9 return integer32 is -- drop by name from solution list
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant integer := integer(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1119,7 +1127,8 @@ function use_solcon ( job : integer32;
 
   function Job48 return integer32 is -- drop by index from solution list
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     ind : constant natural32 := natural32(v_a(v_a'first));
     use DoblDobl_Complex_Solutions;
     sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
@@ -1133,7 +1142,8 @@ function use_solcon ( job : integer32;
 
   function Job49 return integer32 is -- drop by name from solution list
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant integer := integer(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1160,7 +1170,8 @@ function use_solcon ( job : integer32;
 
   function Job88 return integer32 is -- drop by index from solution list
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     ind : constant natural32 := natural32(v_a(v_a'first));
     use QuadDobl_Complex_Solutions;
     sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
@@ -1174,7 +1185,8 @@ function use_solcon ( job : integer32;
 
   function Job89 return integer32 is -- drop by name from solution list
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant integer := integer(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1203,7 +1215,8 @@ function use_solcon ( job : integer32;
 
     use Standard_Complex_Solutions;
     ls : Link_to_Solution;
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v(v'first));
     idx : natural32;
 
@@ -1225,7 +1238,8 @@ function use_solcon ( job : integer32;
 
     use DoblDobl_Complex_Solutions;
     ls : Link_to_Solution;
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v(v'first));
     idx : natural32;
 
@@ -1247,7 +1261,8 @@ function use_solcon ( job : integer32;
 
     use QuadDobl_Complex_Solutions;
     ls : Link_to_Solution;
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural32 := natural32(v(v'first));
     idx : natural32;
 
@@ -1394,7 +1409,8 @@ function use_solcon ( job : integer32;
   function Job308 return integer32 is -- current standard solution string
 
     use Standard_Complex_Solutions;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     len : constant natural32 := natural32(v_a(v_a'first));
     ind : natural32;
     ls : Link_to_Solution;
@@ -1419,7 +1435,8 @@ function use_solcon ( job : integer32;
   function Job309 return integer32 is -- current dobldobl solution string
 
     use DoblDobl_Complex_Solutions;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     len : constant natural32 := natural32(v_a(v_a'first));
     ind : natural32;
     ls : Link_to_Solution;
@@ -1444,7 +1461,8 @@ function use_solcon ( job : integer32;
   function Job310 return integer32 is -- current quaddobl solution string
 
     use QuadDobl_Complex_Solutions;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     len : constant natural32 := natural32(v_a(v_a'first));
     ind : natural32;
     ls : Link_to_Solution;
@@ -1469,7 +1487,8 @@ function use_solcon ( job : integer32;
   function Job311 return integer32 is -- current multprec solution string
 
     use Multprec_Complex_Solutions;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     len : constant natural32 := natural32(v_a(v_a'first));
     ind : natural32;
     ls : Link_to_Solution;
@@ -1493,7 +1512,8 @@ function use_solcon ( job : integer32;
 
   function Job544 return integer32 is -- read standard sys+sols from file
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1526,7 +1546,8 @@ function use_solcon ( job : integer32;
 
   function Job545 return integer32 is -- read double double sys+sols from file
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1559,7 +1580,8 @@ function use_solcon ( job : integer32;
 
   function Job546 return integer32 is -- read quad double sys+sols from file
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1592,7 +1614,8 @@ function use_solcon ( job : integer32;
 
   function Job547 return integer32 is -- read multiprecision sys+sols from file
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     nbdeci : constant natural32 := natural32(v_a(v_a'first+1));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))

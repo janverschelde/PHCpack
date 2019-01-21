@@ -149,7 +149,8 @@ function use_syscon ( job : integer32;
   function Job220 return integer32 is -- read multprec system into container
 
     lp : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     deci : constant natural32 := natural32(v(v'first));
     size : constant natural32
          := Multprec_Floating_Numbers.Decimal_to_Size(deci);
@@ -339,7 +340,8 @@ function use_syscon ( job : integer32;
 
   function Job3 return integer32 is -- initialize container with dimension
 
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer32 := integer32(v(v'first));
 
   begin
@@ -350,7 +352,8 @@ function use_syscon ( job : integer32;
 
   function Job103 return integer32 is -- initialize container with dimension
 
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer32 := integer32(v(v'first));
 
   begin
@@ -361,7 +364,8 @@ function use_syscon ( job : integer32;
 
   function Job113 return integer32 is -- initialize container with dimension
 
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer32 := integer32(v(v'first));
 
   begin
@@ -372,7 +376,8 @@ function use_syscon ( job : integer32;
 
   function Job123 return integer32 is -- initialize container with dimension
 
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer32 := integer32(v(v'first));
 
   begin
@@ -383,7 +388,8 @@ function use_syscon ( job : integer32;
 
   function Job133 return integer32 is -- initialize container with dimension
 
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer32 := integer32(v(v'first));
 
   begin
@@ -394,7 +400,8 @@ function use_syscon ( job : integer32;
 
   function Job203 return integer32 is -- initialize container with dimension
 
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer32 := integer32(v(v'first));
 
   begin
@@ -405,7 +412,8 @@ function use_syscon ( job : integer32;
 
   function Job213 return integer32 is -- initialize container with dimension
 
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer32 := integer32(v(v'first));
 
   begin
@@ -416,7 +424,8 @@ function use_syscon ( job : integer32;
 
   function Job223 return integer32 is -- initialize container with dimension
 
-    v : constant C_Integer_Array := C_intarrs.Value(a);
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant integer32 := integer32(v(v'first));
 
   begin
@@ -845,8 +854,8 @@ function use_syscon ( job : integer32;
 
   function Job67 return integer32 is -- polynomial as string from container
 
-    use Standard_Complex_Poly_Systems;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant Standard_Complex_Polynomials.Poly
       := Standard_PolySys_Container.Retrieve_Poly(equ);
@@ -866,7 +875,8 @@ function use_syscon ( job : integer32;
 
   function Job68 return integer32 is -- poly as string from dobldobl container
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant DoblDobl_Complex_Polynomials.Poly
       := DoblDobl_PolySys_Container.Retrieve_Poly(equ);
@@ -887,7 +897,8 @@ function use_syscon ( job : integer32;
 
   function Job77 return integer32 is -- Laurpoly as string from st container
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant Standard_Complex_Laurentials.Poly
       := Standard_LaurSys_Container.Retrieve_Poly(equ);
@@ -908,7 +919,8 @@ function use_syscon ( job : integer32;
 
   function Job72 return integer32 is -- Laurpoly as string from dd container
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant DoblDobl_Complex_Laurentials.Poly
       := DoblDobl_LaurSys_Container.Retrieve_Poly(equ);
@@ -929,7 +941,8 @@ function use_syscon ( job : integer32;
 
   function Job73 return integer32 is -- Laurpoly as string from qd container
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant QuadDobl_Complex_Laurentials.Poly
       := QuadDobl_LaurSys_Container.Retrieve_Poly(equ);
@@ -950,7 +963,8 @@ function use_syscon ( job : integer32;
 
   function Job69 return integer32 is -- poly as string from quaddobl container
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant QuadDobl_Complex_Polynomials.Poly
       := QuadDobl_PolySys_Container.Retrieve_Poly(equ);
@@ -971,8 +985,8 @@ function use_syscon ( job : integer32;
 
   function Job70 return integer32 is -- poly as string from multprec container
 
-    use Multprec_Complex_Poly_Systems;
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant Multprec_Complex_Polynomials.Poly
       := Multprec_PolySys_Container.Retrieve_Poly(equ);
@@ -993,7 +1007,8 @@ function use_syscon ( job : integer32;
 
   function Job71 return integer32 is -- puts random system in the container
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     n : constant natural32 := natural32(v_a(v_a'first));
     p : Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
     v_b : constant C_Integer_Array
@@ -1093,7 +1108,8 @@ function use_syscon ( job : integer32;
 
   function Job80 return integer32 is -- size limit of k-th standard polynomial
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant Standard_Complex_Polynomials.Poly
       := Standard_PolySys_Container.Retrieve_Poly(equ);
@@ -1110,7 +1126,8 @@ function use_syscon ( job : integer32;
 
   function Job81 return integer32 is -- size limit of k-th dobldobl polynomial
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant DoblDobl_Complex_Polynomials.Poly
       := DoblDobl_PolySys_Container.Retrieve_Poly(equ);
@@ -1127,7 +1144,8 @@ function use_syscon ( job : integer32;
 
   function Job82 return integer32 is -- size limit of k-th quaddobl polynomial
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant QuadDobl_Complex_Polynomials.Poly
       := QuadDobl_PolySys_Container.Retrieve_Poly(equ);
@@ -1144,7 +1162,8 @@ function use_syscon ( job : integer32;
 
   function Job83 return integer32 is -- size limit of k-th multprec polynomial
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant Multprec_Complex_Polynomials.Poly
       := Multprec_PolySys_Container.Retrieve_Poly(equ);
@@ -1161,8 +1180,8 @@ function use_syscon ( job : integer32;
 
   function Job84 return integer32 is -- size limit of k-th standard Laurential
 
-
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant Standard_Complex_Laurentials.Poly
       := Standard_LaurSys_Container.Retrieve_Poly(equ);
@@ -1179,7 +1198,8 @@ function use_syscon ( job : integer32;
 
   function Job85 return integer32 is -- size limit of k-th dobldobl Laurential
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant DoblDobl_Complex_Laurentials.Poly
       := DoblDobl_LaurSys_Container.Retrieve_Poly(equ);
@@ -1196,7 +1216,8 @@ function use_syscon ( job : integer32;
 
   function Job86 return integer32 is -- size limit of k-th quaddobl Laurential
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant QuadDobl_Complex_Laurentials.Poly
       := QuadDobl_LaurSys_Container.Retrieve_Poly(equ);
@@ -1213,7 +1234,8 @@ function use_syscon ( job : integer32;
 
   function Job87 return integer32 is -- size limit of k-th multprec Laurential
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant Multprec_Complex_Laurentials.Poly
       := Multprec_LaurSys_Container.Retrieve_Poly(equ);
@@ -1333,7 +1355,8 @@ function use_syscon ( job : integer32;
 
   function Job139 return integer32 is -- Laurpoly as string from mp container
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant Multprec_Complex_Laurentials.Poly
       := Multprec_LaurSys_Container.Retrieve_Poly(equ);
@@ -1459,7 +1482,8 @@ function use_syscon ( job : integer32;
 
   function Job20 return integer32 is -- degree of a polynomial
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     deg : constant integer32 := Standard_PolySys_Container.Degree(equ);
 
@@ -1470,7 +1494,8 @@ function use_syscon ( job : integer32;
 
   function Job209 return integer32 is -- degree of a double double polynomial
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     deg : constant integer32 := DoblDobl_PolySys_Container.Degree(equ);
 
@@ -1481,7 +1506,8 @@ function use_syscon ( job : integer32;
 
   function Job219 return integer32 is -- degree of a quad double polynomial
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     deg : constant integer32 := QuadDobl_PolySys_Container.Degree(equ);
 
@@ -1492,7 +1518,8 @@ function use_syscon ( job : integer32;
 
   function Job229 return integer32 is -- degree of a multiprecision polynomial
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     equ : constant integer32 := integer32(v_a(v_a'first));
     deg : constant integer32 := Multprec_PolySys_Container.Degree(equ);
 
@@ -1508,7 +1535,8 @@ function use_syscon ( job : integer32;
 
   function Job12 return integer32 is -- drop variable by index
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     ind : constant integer32 := integer32(v_a(v_a'first));
     use Standard_Complex_Poly_Systems;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
@@ -1522,7 +1550,8 @@ function use_syscon ( job : integer32;
 
   function Job13 return integer32 is -- drop variable by index
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     ind : constant integer32 := integer32(v_a(v_a'first));
     use DoblDobl_Complex_Poly_Systems;
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
@@ -1536,7 +1565,8 @@ function use_syscon ( job : integer32;
 
   function Job14 return integer32 is -- drop variable by index
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     ind : constant integer32 := integer32(v_a(v_a'first));
     use QuadDobl_Complex_Poly_Systems;
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
@@ -1550,7 +1580,8 @@ function use_syscon ( job : integer32;
 
   function Job15 return integer32 is -- standard drop variable by name
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1578,7 +1609,8 @@ function use_syscon ( job : integer32;
 
   function Job16 return integer32 is -- dobldobl drop variable by name
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1605,7 +1637,8 @@ function use_syscon ( job : integer32;
 
   function Job17 return integer32 is -- quaddobl drop variable by name
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1632,7 +1665,8 @@ function use_syscon ( job : integer32;
 
   function Job22 return integer32 is -- drop standard Laurent variable by idx
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     ind : constant integer32 := integer32(v_a(v_a'first));
     use Standard_Complex_Laur_Systems;
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
@@ -1646,7 +1680,8 @@ function use_syscon ( job : integer32;
 
   function Job23 return integer32 is -- drop dobldobl Laurent variable by idx
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     ind : constant integer32 := integer32(v_a(v_a'first));
     use DoblDobl_Complex_Laur_Systems;
     lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
@@ -1660,7 +1695,8 @@ function use_syscon ( job : integer32;
 
   function Job24 return integer32 is -- drop quaddobl Laurent variable by idx
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     ind : constant integer32 := integer32(v_a(v_a'first));
     use QuadDobl_Complex_Laur_Systems;
     lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
@@ -1674,7 +1710,8 @@ function use_syscon ( job : integer32;
 
   function Job25 return integer32 is -- standard Laurent drop variable by name
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1702,7 +1739,8 @@ function use_syscon ( job : integer32;
 
   function Job26 return integer32 is -- dobldobl Laurent drop variable by name
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1729,7 +1767,8 @@ function use_syscon ( job : integer32;
 
   function Job27 return integer32 is -- quaddobl Laurent drop variable by name
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1756,7 +1795,8 @@ function use_syscon ( job : integer32;
 
   function Job540 return integer32 is -- read standard system from file
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1786,7 +1826,8 @@ function use_syscon ( job : integer32;
 
   function Job541 return integer32 is -- read double double system from file
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1816,7 +1857,8 @@ function use_syscon ( job : integer32;
 
   function Job542 return integer32 is -- read quad double system from file
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
@@ -1846,7 +1888,8 @@ function use_syscon ( job : integer32;
 
   function Job543 return integer32 is -- read multiprecision system from file
 
-    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     nc : constant natural := natural(v_a(v_a'first));
     use Interfaces.C;
     nbdeci : constant natural32 := natural32(v_a(v_a'first+1));
