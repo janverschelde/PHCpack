@@ -1,3 +1,6 @@
+Mon 21 Jan 2019 : added functions to the curves module to initialize
+  a parameter homotopy for the step-by-step Pade continuation.
+
 Fri 11 Jan 2019 : added the functions for a symbolic Pade vector to the
   curves module for python3.
 

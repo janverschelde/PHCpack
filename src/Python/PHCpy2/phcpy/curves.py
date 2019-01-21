@@ -344,6 +344,66 @@ def quaddobl_set_homotopy(target, start, verbose=False):
     from phcpy.phcpy2c2 import py2c_padcon_quaddobl_initialize_homotopy
     return py2c_padcon_quaddobl_initialize_homotopy(int(verbose))
 
+def standard_set_parameter_homotopy(hom, idx, verbose=False):
+    """
+    Initializes the homotopy with the polynomials in hom for a
+    step-by-step run of the series-Pade tracker, in double precision.
+    The value idx gives the index of the continuation parameter
+    and is the index of one of the variables in the homotopy hom.
+    If verbose, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_target_system
+    from phcpy.interface import store_standard_system
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(hom)
+    store_standard_system(hom, nbvar=dim)
+    py2c_copy_standard_container_to_target_system()
+    from phcpy.phcpy2c2  \
+        import py2c_padcon_standard_initialize_parameter_homotopy
+    vrb = int(verbose)
+    return py2c_padcon_standard_initialize_parameter_homotopy(idx, vrb)
+
+def dobldobl_set_parameter_homotopy(hom, idx, verbose=False):
+    """
+    Initializes the homotopy with the polynomials in hom for a
+    step-by-step run of the series-Pade tracker, in double double precision.
+    The value idx gives the index of the continuation parameter
+    and is the index of one of the variables in the homotopy hom.
+    If verbose, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_target_system
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(hom)
+    store_dobldobl_system(hom, nbvar=dim)
+    py2c_copy_dobldobl_container_to_target_system()
+    from phcpy.phcpy2c2  \
+        import py2c_padcon_dobldobl_initialize_parameter_homotopy
+    vrb = int(verbose)
+    return py2c_padcon_dobldobl_initialize_parameter_homotopy(idx, vrb)
+
+def quaddobl_set_parameter_homotopy(hom, idx, verbose=False):
+    """
+    Initializes the homotopy with the polynomials in hom for a
+    step-by-step run of the series-Pade tracker, in quad double precision.
+    The value idx gives the index of the continuation parameter
+    and is the index of one of the variables in the homotopy hom.
+    If verbose, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_target_system
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(hom)
+    store_quaddobl_system(hom, nbvar=dim)
+    py2c_copy_quaddobl_container_to_target_system()
+    from phcpy.phcpy2c2  \
+        import py2c_padcon_quaddobl_initialize_parameter_homotopy
+    vrb = int(verbose)
+    return py2c_padcon_quaddobl_initialize_parameter_homotopy(idx, vrb)
+
 def standard_set_solution(nvar, sol, verbose=False):
     r"""
     Sets the start solution in *sol* for the step-by-step run of
