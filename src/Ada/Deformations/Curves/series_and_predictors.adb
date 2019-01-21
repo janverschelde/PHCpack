@@ -6,19 +6,16 @@ with Standard_Complex_Vector_Norms;
 with Standard_Complex_Series_Functions;
 with Standard_Complex_Series_Vectors_io;
 with Standard_CSeries_Vector_Functions;
-with Standard_CSeries_Poly_SysFun;
 with DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Complex_Series_Functions;
 with DoblDobl_Complex_Series_Vectors_io;
 with DoblDobl_CSeries_Vector_Functions;
-with DoblDobl_CSeries_Poly_SysFun;
 with QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Series_Functions;
 with QuadDobl_Complex_Series_Vectors_io;
 with QuadDobl_CSeries_Vector_Functions;
-with QuadDobl_CSeries_Poly_SysFun;
 with Complex_Series_and_Polynomials_io;
 with Power_Series_Methods;               use Power_Series_Methods;
 with Series_and_Solutions;
@@ -561,8 +558,12 @@ package body Series_and_Predictors is
 
   begin
     Order(v,tolcff,vk,ord);
-    valcff := Standard_Complex_Numbers.AbsVal(v(vk).cff(ord));
-    arg := tolres/valcff;
+    if ord <= v(vk).cff'last then
+      valcff := Standard_Complex_Numbers.AbsVal(v(vk).cff(ord));
+      arg := tolres/valcff;
+    else
+      arg := 1.0;
+    end if;
     if ord = 0 then
       res := arg;
     else
@@ -584,9 +585,13 @@ package body Series_and_Predictors is
 
   begin
     Order(v,tolcff,vk,ord);
-    dd_valcff := DoblDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
-    valcff := hi_part(dd_valcff);
-    arg := tolres/valcff;
+    if ord <= v(vk).cff'last then
+      dd_valcff := DoblDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
+      valcff := hi_part(dd_valcff);
+      arg := tolres/valcff;
+    else
+      arg := 1.0;
+    end if;
     if ord = 0 then
       res := arg;
     else
@@ -608,9 +613,13 @@ package body Series_and_Predictors is
 
   begin
     Order(v,tolcff,vk,ord);
-    qd_valcff := QuadDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
-    valcff := hihi_part(qd_valcff);
-    arg := tolres/valcff;
+    if ord <= v(vk).cff'last then
+      qd_valcff := QuadDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
+      valcff := hihi_part(qd_valcff);
+      arg := tolres/valcff;
+    else
+      arg := 1.0;
+    end if;
     if ord = 0 then
       res := arg;
     else
@@ -633,11 +642,17 @@ package body Series_and_Predictors is
 
   begin
     Order(v,tolcff,vk,ord);
-    valcff := Standard_Complex_Numbers.AbsVal(v(vk).cff(ord));
-    arg := tolres/valcff;
     if verbose then
       put(file,"order : "); put(file,ord,1);
       put(file," at component : "); put(file,vk,1);
+    end if;
+    if ord <= v(vk).cff'last then
+      valcff := Standard_Complex_Numbers.AbsVal(v(vk).cff(ord));
+      arg := tolres/valcff;
+    else
+      arg := 1.0;
+    end if;
+    if verbose then
       put(file," arg = "); put(file,arg); new_line(file);
     end if;
     if ord = 0 then
@@ -663,12 +678,18 @@ package body Series_and_Predictors is
 
   begin
     Order(v,tolcff,vk,ord);
-    dd_valcff := DoblDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
-    valcff := hi_part(dd_valcff);
-    arg := tolres/valcff;
     if verbose then
       put(file,"order : "); put(file,ord,1);
       put(file," at component : "); put(file,vk,1);
+    end if;
+    if ord <= v(vk).cff'last then
+      dd_valcff := DoblDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
+      valcff := hi_part(dd_valcff);
+      arg := tolres/valcff;
+    else
+      arg := 1.0;
+    end if;
+    if verbose then
       put(file," arg = "); put(file,arg); new_line(file);
     end if;
     if ord = 0 then
@@ -694,12 +715,18 @@ package body Series_and_Predictors is
 
   begin
     Order(v,tolcff,vk,ord);
-    qd_valcff := QuadDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
-    valcff := hihi_part(qd_valcff);
-    arg := tolres/valcff;
     if verbose then
       put(file,"order : "); put(file,ord,1);
       put(file," at component : "); put(file,vk,1);
+    end if;
+    if ord <= v(vk).cff'last then
+      qd_valcff := QuadDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
+      valcff := hihi_part(qd_valcff);
+      arg := tolres/valcff;
+    else
+      arg := 1.0;
+    end if;
+    if verbose then
       put(file," arg = "); put(file,arg); new_line(file);
     end if;
     if ord = 0 then
