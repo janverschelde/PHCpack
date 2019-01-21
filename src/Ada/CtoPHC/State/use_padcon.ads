@@ -116,6 +116,14 @@ function use_padcon ( job : integer32;
 --                 the verbose flag (0 or 1) is in b[0].
 --   job   =  17 : writes the homotopy continuation parameters to the
 --                 defined output file.
+--   job   =  18 : initializes homotopy for a step-by-step execution
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2,
+--                 for a natural parameter homotopy with index in b[0],
+--                 the index of the continuation parameter,
+--                 the verbose option is in b[1], before execution,
+--                 the homotopy continuation parameters with job 0 is set
+--                 and target system is defined in PHCpack_Operations.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

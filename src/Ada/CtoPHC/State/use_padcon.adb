@@ -408,6 +408,48 @@ function use_padcon ( job : integer32;
     QuadDobl_SeriesPade_Tracker.Init(target,start);
   end QuadDobl_Initialize_Tracker;
 
+  procedure Standard_Initialize_Tracker ( idx : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Retrieves the target system and initializes the
+  --   Series-Pade tracker in standard double precision,
+  --   with the continuation parameter defined in idx.
+
+    target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Target_System(target);
+    Standard_SeriesPade_Tracker.Init(target,idx);
+  end Standard_Initialize_Tracker;
+
+  procedure DoblDobl_Initialize_Tracker ( idx : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Retrieves the target system and initializes the
+  --   Series-Pade tracker in double double precision,
+  --   with the continuation parameter defined in idx.
+
+    target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Target_System(target);
+    DoblDobl_SeriesPade_Tracker.Init(target,idx);
+  end DoblDobl_Initialize_Tracker;
+
+  procedure QuadDobl_Initialize_Tracker ( idx : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Retrieves the target system and initializes the
+  --   Series-Pade tracker in quad double precision,
+  --   with the continuation parameter defined in idx.
+
+    target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    PHCpack_Operations.Retrieve_Target_System(target);
+    QuadDobl_SeriesPade_Tracker.Init(target,idx);
+  end QuadDobl_Initialize_Tracker;
+
   function Job5 return integer32 is -- initialize seriespade tracker
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
@@ -1178,6 +1220,53 @@ function use_padcon ( job : integer32;
       return 874;
   end Job17;
 
+  function Job18 return integer32 is -- initializes natural parameter homotopy
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    idx : constant integer32 := integer32(v_b(v_b'first));
+    vrb : constant natural32 := natural32(v_b(v_b'first+1));
+    verbose : constant boolean := (vrb = 1);
+
+    homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
+               := Homotopy_Continuation_Parameters.Retrieve;
+
+  begin
+    case prc is
+      when 0 =>
+        if verbose then
+          put("Initializing parameter homotopy in Series-Pade tracker ");
+          put("in double precision ...");
+        end if;
+        Standard_SeriesPade_Tracker.Init(homconpars.all);
+        Standard_Initialize_Tracker(idx);
+      when 1 =>
+        if verbose then
+          put("Initializing parameter homotopy in Series-Pade tracker ");
+          put("in double double precision ...");
+        end if;
+        DoblDobl_SeriesPade_Tracker.Init(homconpars.all);
+        DoblDobl_Initialize_Tracker(idx);
+      when 2 =>
+        if verbose then
+          put("Initializing parameter homotopy in Series-Pade tracker ");
+          put("in quad double precision ...");
+        end if;
+        QuadDobl_SeriesPade_Tracker.Init(homconpars.all);
+        QuadDobl_Initialize_Tracker(idx);
+      when others => null;
+    end case;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 18 of use_padcon.");
+      return 878;
+  end Job18;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -1199,6 +1288,7 @@ function use_padcon ( job : integer32;
       when 15 => return Job15; -- get Pade coefficient
       when 16 => return Job16; -- get pole
       when 17 => return Job17; -- write parameters to defined output file
+      when 18 => return Job18; -- initializes natural parameter homotopy
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception

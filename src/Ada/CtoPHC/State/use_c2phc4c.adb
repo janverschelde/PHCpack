@@ -3271,6 +3271,8 @@ function use_c2phc4c ( job : integer32;
       when 875 => return use_solcon(875,a,b,c);
       when 876 => return use_solcon(876,a,b,c);
       when 877 => return use_solcon(877,a,b,c);
+     -- initializes natural parameter homotopy in series-Pade tracker
+      when 878 => return use_padcon(18,a,b,c);
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
