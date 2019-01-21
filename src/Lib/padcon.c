@@ -290,6 +290,51 @@ int padcon_quaddobl_initialize_homotopy ( int verbose )
    return fail;
 }
 
+int padcon_standard_initialize_parameter_homotopy ( int idx, int verbose )
+{
+   int fail;
+   int precision = 0;
+   int pars[2];
+   double *c;
+
+   pars[0] = idx;
+   pars[1] = verbose;
+
+   fail = _ada_use_c2phc4c(878,&precision,pars,c);
+
+   return fail;
+}
+
+int padcon_dobldobl_initialize_parameter_homotopy ( int idx, int verbose )
+{
+   int fail;
+   int precision = 1;
+   int pars[2];
+   double *c;
+
+   pars[0] = idx;
+   pars[1] = verbose;
+
+   fail = _ada_use_c2phc4c(878,&precision,pars,c);
+
+   return fail;
+}
+
+int padcon_quaddobl_initialize_parameter_homotopy ( int idx, int verbose )
+{
+   int fail;
+   int precision = 2;
+   int pars[2];
+   double *c;
+
+   pars[0] = idx;
+   pars[1] = verbose;
+
+   fail = _ada_use_c2phc4c(878,&precision,pars,c);
+
+   return fail;
+}
+
 int padcon_initialize_standard_solution ( int idx, int verbose )
 {
    int fail;

@@ -224,6 +224,7 @@ int prompt_for_artificial ( void )
 int prompt_for_parameter ( void )
 {
    int fail,nbr,idx;
+   char nlsb;
 
    fail = syscon_number_of_symbols(&nbr);
 
@@ -232,6 +233,7 @@ int prompt_for_parameter ( void )
 
    printf("\nGive the index of the continuation parameter : ");
    scanf("%d",&idx);
+   scanf("%c",&nlsb); // swallow the newline symbol
 
    if(idx < 1) printf("Index is too small!\n");
    if(idx > nbr) printf("Index is too large!\n");
@@ -647,12 +649,15 @@ void standard_next_step ( void )
       fail = solcon_standard_drop_coordinate_by_index(idx);
       fail = solcon_standard_set_continuation_parameter();
    }
-
    fail = solcon_number_of_standard_solutions(&length);
    fail = solcon_dimension_of_standard_solutions(&dim);
    printf("Read %d start solutions in dimension %d.\n", length, dim);
 
-   fail = padcon_standard_initialize_homotopy(1);
+   if(idx == 0)
+      fail = padcon_standard_initialize_homotopy(1);
+   else
+      fail = padcon_standard_initialize_parameter_homotopy(idx,1);
+
    for(index=1; index <= length; index++)
    {
       printf("\nTracking path %d ...\n", index);
@@ -698,12 +703,15 @@ void dobldobl_next_step ( void )
       fail = solcon_dobldobl_drop_coordinate_by_index(idx);
       fail = solcon_dobldobl_set_continuation_parameter();
    }
-
    fail = solcon_number_of_dobldobl_solutions(&length);
    fail = solcon_dimension_of_dobldobl_solutions(&dim);
    printf("Read %d start solutions of dimension %d.\n", length, dim);
 
-   fail = padcon_dobldobl_initialize_homotopy(1);
+   if(idx == 0)
+      fail = padcon_dobldobl_initialize_homotopy(1);
+   else
+      fail = padcon_dobldobl_initialize_parameter_homotopy(idx,1);
+
    for(index = 1; index <= length; index++)
    {
       printf("\nTracking path %d ...\n", index);
@@ -750,12 +758,15 @@ void quaddobl_next_step ( void )
       fail = solcon_quaddobl_drop_coordinate_by_index(idx);
       fail = solcon_quaddobl_set_continuation_parameter();
    }
-
    fail = solcon_number_of_quaddobl_solutions(&length);
    fail = solcon_dimension_of_quaddobl_solutions(&dim);
    printf("Read %d start solutions of dimension %d.\n", length, dim);
 
-   fail = padcon_quaddobl_initialize_homotopy(1);
+   if(idx == 0)
+      fail = padcon_quaddobl_initialize_homotopy(1);
+   else
+      fail = padcon_quaddobl_initialize_parameter_homotopy(idx,1);
+
    for(index = 1; index <= length; index++)
    {
       printf("\nTracking path %d ...\n", index);

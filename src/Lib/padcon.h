@@ -135,6 +135,30 @@ int padcon_quaddobl_initialize_homotopy ( int verbose );
  *   for the step-by-step Pade continuation.
  *   If verbose = 1, then extra output will be written. */
 
+int padcon_standard_initialize_parameter_homotopy ( int idx, int verbose );
+/*
+ * DESCRIPTION :
+ *   With the system, defined as target system, and the index idx
+ *   for the continuation parameter, initializes the homotopy in
+ *   standard double precision for the step-by-step Pade continuation.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_dobldobl_initialize_parameter_homotopy ( int idx, int verbose );
+/*
+ * DESCRIPTION :
+ *   With the system, defined as target system, and the index idx
+ *   for the continuation parameter, initializes the homotopy in
+ *   double double precision for the step-by-step Pade continuation.
+ *   If verbose = 1, then extra output will be written. */
+
+int padcon_quaddobl_initialize_parameter_homotopy ( int idx, int verbose );
+/*
+ * DESCRIPTION :
+ *   With the system, defined as target system, and the index idx
+ *   for the continuation parameter, initializes the homotopy in
+ *   double double precision for the step-by-step Pade continuation.
+ *   If verbose = 1, then extra output will be written. */
+
 int padcon_initialize_standard_solution ( int idx, int verbose );
 /*
  * DESCRIPTION :
