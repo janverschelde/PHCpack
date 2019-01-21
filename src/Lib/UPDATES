@@ -1,6 +1,7 @@
 Sun 20 Jan 2019 : extra jobs in solcon, modifications in lib_padcon.c.
   Extra jobs in padcon to initialize natural parameter homotopy for
   a step-by-step Pade continuation, tested by lib_padcon.
+  Added the functions to phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
 
 Tue 8 Jan 2019 : moved the tuning of the homotopy continuation parameters
   from lib_padcon.c into padcon.h and padcon.c.  Added function to padcon

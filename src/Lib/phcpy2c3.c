@@ -8030,6 +8030,39 @@ static PyObject *py2c_padcon_quaddobl_initialize_homotopy
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_padcon_standard_initialize_parameter_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail,index,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&index,&verbose)) return NULL;
+   fail = padcon_standard_initialize_parameter_homotopy(index,verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_dobldobl_initialize_parameter_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail,index,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&index,&verbose)) return NULL;
+   fail = padcon_dobldobl_initialize_parameter_homotopy(index,verbose);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_padcon_quaddobl_initialize_parameter_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail,index,verbose;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&index,&verbose)) return NULL;
+   fail = padcon_quaddobl_initialize_parameter_homotopy(index,verbose);
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_padcon_initialize_standard_solution
  ( PyObject *self, PyObject *args )
 {
@@ -10748,6 +10781,15 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_padcon_quaddobl_initialize_homotopy",
      py2c_padcon_quaddobl_initialize_homotopy, METH_VARARGS,
     "For the defined target and start system,\n initializes the homotopy in quad double precision,\n for the step-by-step Pade continuation.\n On entry is one parameter, the verbose flag which is zero or one.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_standard_initialize_parameter_homotopy",
+     py2c_padcon_standard_initialize_parameter_homotopy, METH_VARARGS,
+    "On entry are two integers: 1) the index for the continuation\n parameter in the natural homotopy and 2) the verbose flag.\n With the system, defined as target system, and the index\n for the continuation parameter, initializes the homotopy in\n standard double precision for the step-by-step Pade continuation.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_dobldobl_initialize_parameter_homotopy",
+     py2c_padcon_dobldobl_initialize_parameter_homotopy, METH_VARARGS,
+    "On entry are two integers: 1) the index for the continuation\n parameter in the natural homotopy and 2) the verbose flag.\n With the system, defined as target system, and the index\n for the continuation parameter, initializes the homotopy in\n double double precision for the step-by-step Pade continuation.\n If the verbose flag is 1, then extra output will be written."},
+   {"py2c_padcon_quaddobl_initialize_parameter_homotopy",
+     py2c_padcon_quaddobl_initialize_parameter_homotopy, METH_VARARGS,
+    "On entry are two integers: 1) the index for the continuation\n parameter in the natural homotopy and 2) the verbose flag.\n With the system, defined as target system, and the index\n for the continuation parameter, initializes the homotopy in\n quad double precision for the step-by-step Pade continuation.\n If the verbose flag is 1, then extra output will be written."},
    {"py2c_padcon_initialize_standard_solution",
      py2c_padcon_initialize_standard_solution, METH_VARARGS,
     "Takes the solution with a given index in the solutions container in\n standard double precision and initializes the series-Pade tracker.\n On entry are two integers: 1) the index of the position of the solution\n in the container and 2) the verbose flag, which is zero or one.\n If the verbose flag is 1, then extra output will be written."},

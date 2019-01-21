@@ -5702,6 +5702,39 @@ static PyObject *py2c_padcon_quaddobl_initialize_homotopy
  *   On entry is one parameter, the verbose flag which is zero or one.
  *   If the verbose flag is 1, then extra output will be written. */
 
+static PyObject *py2c_padcon_standard_initialize_parameter_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On entry are two integers: 1) the index for the continuation
+ *   parameter in the natural homotopy and 2) the verbose flag.
+ *   With the system, defined as target system, and the index
+ *   for the continuation parameter, initializes the homotopy in
+ *   standard double precision for the step-by-step Pade continuation.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_dobldobl_initialize_parameter_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On entry are two integers: 1) the index for the continuation
+ *   parameter in the natural homotopy and 2) the verbose flag.
+ *   With the system, defined as target system, and the index
+ *   for the continuation parameter, initializes the homotopy in
+ *   double double precision for the step-by-step Pade continuation.
+ *   If the verbose flag is 1, then extra output will be written. */
+
+static PyObject *py2c_padcon_quaddobl_initialize_parameter_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On entry are two integers: 1) the index for the continuation
+ *   parameter in the natural homotopy and 2) the verbose flag.
+ *   With the system, defined as target system, and the index
+ *   for the continuation parameter, initializes the homotopy in
+ *   quad double precision for the step-by-step Pade continuation.
+ *   If the verbose flag is 1, then extra output will be written. */
+
 static PyObject *py2c_padcon_initialize_standard_solution
  ( PyObject *self, PyObject *args );
 /*
