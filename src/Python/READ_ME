@@ -1,4 +1,4 @@
-phcpy 0.9.1 offers a simple Python interface to PHCv2.4.63
+phcpy 0.9.2 offers a simple Python interface to PHCv2.4.64
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -59,6 +59,7 @@ solver.py              : use of C extension module phcpy2c
 sweepers.py            : homotopies to sweep through parameter space
 trackers.py            : path trackers
 tropisms.py            : numerically computed tropisms
+tuning.py              : tuning tolerances and parameters for path trackers
 server.py              : client/server for beowulf clusters
 ------------------------------------------------------------------------------
 
@@ -67,6 +68,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.9.2 : 2019-01-19 : step-by-step Pade continuation for natural homotopies
 0.9.1 : 2018-12-28 : improved module curves, step-by-step Pade continuation
 0.9.0 : 2018-12-10 : new module curves to apply Pade approximants in trackers
 0.8.9 : 2018-11-11 : removed fixed degree bound on the power series
