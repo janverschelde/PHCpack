@@ -1,3 +1,5 @@
+Sat 2 Feb 2019 : added simple test on handling ctrl+c interrupt.
+
 Wed 2 Jan 2019 : removed the superfluous Coeff() functions from the
   package polyhedral_start_systems.
 

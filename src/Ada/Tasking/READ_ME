@@ -1,4 +1,4 @@
-Multitasking linear algebra, evaluation and path tracking in PHCv2.4.64
+Multitasking linear algebra, evaluation and path tracking in PHCv2.4.65
 
 This directory is entirely new in release 2.3.45 of PHCpack.
 Tasks in Ada are mapped to kernel threads.
@@ -34,6 +34,11 @@ ts_tasking                        : basic test on task creation
 semaphore                         : lock to guard a critical section
 ts_mutex                          : basic test on mutual exclusion
 ts_jobs                           : dynamic job scheduler
+-------------------------------------------------------------------------------
+global_counter                    : stores a global counter
+sigint_handler                    : simple SIGINT handler
+sigint_counter                    : counter with handling of ctrl+c
+sigint_handler_test               : test on SIGINT handling (fosdem 2019)
 -------------------------------------------------------------------------------
 multitasking_matrix_x_vector      : matrix times vector with multitasking
 ts_mtmatvec                       : test multitasked matrix*vector
