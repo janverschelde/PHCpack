@@ -1,3 +1,7 @@
+Mon 4 Feb 2019 : decreased the degree of the power series by one and added
+  one to the number of iterations in series_and_trackers.adb and in the
+  {standard,dobldobl,quaddobl}_seriespade_tracker.adb files.
+
 Mon 21 Jan 2019 : added range check on order in series_and_predictors.adb.
   Removed some with clauses from series_and_predictors.ads.
   In *_rational_approximations.adb, ensured that the returned denominator

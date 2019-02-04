@@ -115,8 +115,8 @@ package body QuadDobl_SeriesPade_Tracker is
 
     numdeg : constant integer32 := integer32(homconpars.numdeg);
     dendeg : constant integer32 := integer32(homconpars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(homconpars.corsteps);
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    nit : constant integer32 := integer32(homconpars.corsteps+1);
     sol : QuadDobl_Complex_Vectors.Vector(1..current.n) := current.v;
     eva : QuadDobl_Complex_Series_Vectors.Vector(1..nbeqs);
     t,predres : double_float;

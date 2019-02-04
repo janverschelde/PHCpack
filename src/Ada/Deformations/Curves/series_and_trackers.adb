@@ -129,8 +129,8 @@ package body Series_and_Trackers is
     nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps);
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    nit : constant integer32 := integer32(pars.corsteps+2);
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
@@ -216,8 +216,8 @@ package body Series_and_Trackers is
     nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps);
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    nit : constant integer32 := integer32(pars.corsteps+2);
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
@@ -312,8 +312,8 @@ package body Series_and_Trackers is
     nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps);
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    nit : constant integer32 := integer32(pars.corsteps+2);
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
@@ -408,10 +408,10 @@ package body Series_and_Trackers is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
     nbq : constant integer32 := hom'last;
-    nit : constant integer32 := integer32(pars.corsteps);
+    nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
@@ -521,8 +521,8 @@ package body Series_and_Trackers is
     nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps);
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- 2;
+    nit : constant integer32 := integer32(pars.corsteps+2);
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
@@ -644,8 +644,8 @@ package body Series_and_Trackers is
     nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps);
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    nit : constant integer32 := integer32(pars.corsteps+2);
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
@@ -769,8 +769,8 @@ package body Series_and_Trackers is
     nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps);
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    nit : constant integer32 := integer32(pars.corsteps+2);
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
@@ -856,8 +856,8 @@ package body Series_and_Trackers is
     nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps);
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- 2;
+    nit : constant integer32 := integer32(pars.corsteps+2);
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
@@ -952,8 +952,8 @@ package body Series_and_Trackers is
     nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps);
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    nit : constant integer32 := integer32(pars.corsteps+2);
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
@@ -1047,10 +1047,10 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     nbq : constant integer32 := fhm'last;
-    nit : constant integer32 := integer32(pars.corsteps);
+    nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
@@ -1159,10 +1159,10 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     nbq : constant integer32 := fhm'last;
-    nit : constant integer32 := integer32(pars.corsteps);
+    nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- 2;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
@@ -1279,10 +1279,10 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     nbq : constant integer32 := fhm'last;
-    nit : constant integer32 := integer32(pars.corsteps);
+    nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 1; -- 2;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
