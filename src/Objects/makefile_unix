@@ -424,6 +424,9 @@ ts_rwspol:
 ts_nbrvar:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_nbrvar -o $(BIN)/ts_nbrvar
 
+ts_hessian:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hessian -o $(BIN)/ts_hessian
+
 # Test programs for Math_Lib/Functions :
 
 ts_evaline:
