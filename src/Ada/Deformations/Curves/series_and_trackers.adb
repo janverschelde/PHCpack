@@ -129,7 +129,7 @@ package body Series_and_Trackers is
     nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
@@ -216,7 +216,7 @@ package body Series_and_Trackers is
     nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -312,7 +312,7 @@ package body Series_and_Trackers is
     nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -411,7 +411,7 @@ package body Series_and_Trackers is
     nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
@@ -443,7 +443,7 @@ package body Series_and_Trackers is
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
-        put(file,"Smallest forward pole radius :");
+        put(file,"Smallest pole radius :");
         put(file,frp,3); new_line(file);
         if Standard_Complex_Numbers.REAL_PART(cfp) >= 0.0
          then put(file,"Closest pole :"); put(file,cfp); new_line(file);
@@ -521,7 +521,7 @@ package body Series_and_Trackers is
     nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -557,7 +557,7 @@ package body Series_and_Trackers is
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
-        put(file,"Smallest forward pole radius : ");
+        put(file,"Smallest pole radius : ");
         put(file,frp,3); new_line(file);
         if DoblDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
          then put(file,"Closest pole : "); put(file,cfp); new_line(file);
@@ -644,7 +644,7 @@ package body Series_and_Trackers is
     nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -680,7 +680,7 @@ package body Series_and_Trackers is
         (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
-        put(file,"Smallest forward pole radius : ");
+        put(file,"Smallest pole radius : ");
         put(file,frp,3); new_line(file);
         if QuadDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
          then put(file,"Closest pole : "); put(file,cfp); new_line(file);
@@ -769,7 +769,7 @@ package body Series_and_Trackers is
     nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
@@ -856,7 +856,7 @@ package body Series_and_Trackers is
     nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
@@ -938,7 +938,6 @@ package body Series_and_Trackers is
     DoblDobl_CSeries_Vector_Functions.Deep_Clear(wrk_fcf);
   end Track_One_Path;
 
-
   procedure Track_One_Path
               ( fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
@@ -952,7 +951,7 @@ package body Series_and_Trackers is
     nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
@@ -1050,7 +1049,7 @@ package body Series_and_Trackers is
     nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
@@ -1083,7 +1082,7 @@ package body Series_and_Trackers is
         (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
-        put(file,"Smallest forward pole radius :");
+        put(file,"Smallest pole radius :");
         put(file,frp,3); new_line(file);
         if Standard_Complex_Numbers.REAL_PART(cfp) >= 0.0
          then put(file,"Closest pole :"); put(file,cfp); new_line(file);
@@ -1162,7 +1161,7 @@ package body Series_and_Trackers is
     nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- 2;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range)
@@ -1197,7 +1196,7 @@ package body Series_and_Trackers is
         (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
-        put(file,"Smallest forward pole radius :");
+        put(file,"Smallest pole radius :");
         put(file,frp,3); new_line(file);
         if DoblDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
          then put(file,"Closest pole :"); put(file,cfp); new_line(file);
@@ -1282,7 +1281,7 @@ package body Series_and_Trackers is
     nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- 2;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
@@ -1317,7 +1316,7 @@ package body Series_and_Trackers is
         (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
-        put(file,"Smallest forward pole radius :");
+        put(file,"Smallest pole radius :");
         put(file,frp,3); new_line(file);
         if QuadDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
          then put(file,"Closest pole :"); put(file,cfp); new_line(file);

@@ -275,8 +275,8 @@ package Series_and_Predictors is
   -- ON RETURN :
   --   pv       vector of Pade approximants
   --   poles    poles of the Pade approximants;
-  --   frp      radius of the pole with the smallest real part;
-  --   cfp      closest forward pole.
+  --   frp      radius of the closest pole;
+  --   cfp      closest pole.
 
   function Predicted_Error
              ( evls : Standard_Complex_Series_Vectors.Vector;

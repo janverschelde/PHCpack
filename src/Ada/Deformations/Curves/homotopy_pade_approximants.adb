@@ -417,7 +417,7 @@ package body Homotopy_Pade_Approximants is
     return res;
   end QuadDobl_Poles;
 
-  procedure Smallest_Forward_Pole
+  procedure Closest_Pole
               ( v : in Standard_Complex_Vectors.Vector;
                 idx : out integer32; minval : out double_float ) is
 
@@ -425,21 +425,16 @@ package body Homotopy_Pade_Approximants is
 
   begin
     idx := v'first;
-    if Standard_Complex_Numbers.REAL_Part(v(idx)) <= 0.0
-     then minval := 1.0E+8;
-     else minval := Standard_Complex_Numbers_Polar.Radius(v(idx));
-    end if;
+    minval := Standard_Complex_Numbers_Polar.Radius(v(idx));
     for k in v'first+1..v'last loop
-      if Standard_Complex_Numbers.REAL_PART(v(k)) >= 0.0 then
-        radval := Standard_Complex_Numbers_Polar.Radius(v(k));
-        if radval < minval
-         then minval := radval; idx := k; -- found smaller forward pole
-        end if;
+      radval := Standard_Complex_Numbers_Polar.Radius(v(k));
+      if radval < minval
+       then minval := radval; idx := k;
       end if;
     end loop;
-  end Smallest_Forward_Pole;
+  end Closest_Pole;
 
-  procedure Smallest_Forward_Pole
+  procedure Closest_Pole
               ( v : in DoblDobl_Complex_Vectors.Vector;
                 idx : out integer32; minval : out double_double ) is
 
@@ -447,21 +442,16 @@ package body Homotopy_Pade_Approximants is
 
   begin
     idx := v'first;
-    if DoblDobl_Complex_Numbers.REAL_Part(v(idx)) <= 0.0
-     then minval := create(1.0E+8);
-     else minval := DoblDobl_Complex_Numbers_Polar.Radius(v(idx));
-    end if;
+    minval := DoblDobl_Complex_Numbers_Polar.Radius(v(idx));
     for k in v'first+1..v'last loop
-      if DoblDobl_Complex_Numbers.REAL_PART(v(k)) >= 0.0 then
-        radval := DoblDobl_Complex_Numbers_Polar.Radius(v(k));
-        if radval < minval
-         then minval := radval; idx := k; -- found smaller forward pole
-        end if;
+      radval := DoblDobl_Complex_Numbers_Polar.Radius(v(k));
+      if radval < minval
+       then minval := radval; idx := k;
       end if;
     end loop;
-  end Smallest_Forward_Pole;
+  end Closest_Pole;
 
-  procedure Smallest_Forward_Pole
+  procedure Closest_Pole
               ( v : in QuadDobl_Complex_Vectors.Vector;
                 idx : out integer32; minval : out quad_double ) is
 
@@ -469,21 +459,16 @@ package body Homotopy_Pade_Approximants is
 
   begin
     idx := v'first;
-    if QuadDobl_Complex_Numbers.REAL_Part(v(idx)) <= 0.0
-     then minval := create(1.0E+8);
-     else minval := QuadDobl_Complex_Numbers_Polar.Radius(v(idx));
-    end if;
+    minval := QuadDobl_Complex_Numbers_Polar.Radius(v(idx));
     for k in v'first+1..v'last loop
-      if QuadDobl_Complex_Numbers.REAL_PART(v(k)) >= 0.0 then
-        radval := QuadDobl_Complex_Numbers_Polar.Radius(v(k));
-        if radval < minval
-         then minval := radval; idx := k; -- found smaller forward pole
-        end if;
+      radval := QuadDobl_Complex_Numbers_Polar.Radius(v(k));
+      if radval < minval
+       then minval := radval; idx := k;
       end if;
     end loop;
-  end Smallest_Forward_Pole;
+  end Closest_Pole;
 
-  procedure Smallest_Forward_Pole
+  procedure Closest_Pole
               ( v : in Standard_Complex_VecVecs.VecVec;
                 leadidx,idx : out integer32; minval : out double_float ) is
 
@@ -492,16 +477,16 @@ package body Homotopy_Pade_Approximants is
 
   begin
     leadidx := v'first;
-    Smallest_Forward_Pole(v(leadidx).all,idx,minval);
+    Closest_Pole(v(leadidx).all,idx,minval);
     for k in v'first+1..v'last loop
-      Smallest_Forward_Pole(v(k).all,vkidx,radval);
+      Closest_Pole(v(k).all,vkidx,radval);
       if radval < minval
        then minval := radval; leadidx := k; idx := vkidx;
       end if;
     end loop;
-  end Smallest_Forward_Pole;
+  end Closest_Pole;
 
-  procedure Smallest_Forward_Pole
+  procedure Closest_Pole
               ( v : in DoblDobl_Complex_VecVecs.VecVec;
                 leadidx,idx : out integer32; minval : out double_double ) is
 
@@ -510,16 +495,16 @@ package body Homotopy_Pade_Approximants is
 
   begin
     leadidx := v'first;
-    Smallest_Forward_Pole(v(leadidx).all,idx,minval);
+    Closest_Pole(v(leadidx).all,idx,minval);
     for k in v'first+1..v'last loop
-      Smallest_Forward_Pole(v(k).all,vkidx,radval);
+      Closest_Pole(v(k).all,vkidx,radval);
       if radval < minval
        then minval := radval; leadidx := k; idx := vkidx;
       end if;
     end loop;
-  end Smallest_Forward_Pole;
+  end Closest_Pole;
 
-  procedure Smallest_Forward_Pole
+  procedure Closest_Pole
               ( v : in QuadDobl_Complex_VecVecs.VecVec;
                 leadidx,idx : out integer32; minval : out quad_double ) is
 
@@ -528,46 +513,46 @@ package body Homotopy_Pade_Approximants is
 
   begin
     leadidx := v'first;
-    Smallest_Forward_Pole(v(leadidx).all,idx,minval);
+    Closest_Pole(v(leadidx).all,idx,minval);
     for k in v'first+1..v'last loop
-      Smallest_Forward_Pole(v(k).all,vkidx,radval);
+      Closest_Pole(v(k).all,vkidx,radval);
       if radval < minval
        then minval := radval; leadidx := k; idx := vkidx;
       end if;
     end loop;
-  end Smallest_Forward_Pole;
+  end Closest_Pole;
 
-  function Smallest_Forward_Pole
+  function Closest_Pole
              ( v : Standard_Complex_VecVecs.VecVec ) return double_float is
 
     res : double_float;
     leadidx,idx : integer32;
 
   begin
-    Smallest_Forward_Pole(v,leadidx,idx,res);
+    Closest_Pole(v,leadidx,idx,res);
     return res;
-  end Smallest_Forward_Pole;
+  end Closest_Pole;
 
-  function Smallest_Forward_Pole
+  function Closest_Pole
              ( v : DoblDobl_Complex_VecVecs.VecVec ) return double_double is
 
     res : double_double;
     leadidx,idx : integer32;
 
   begin
-    Smallest_Forward_Pole(v,leadidx,idx,res);
+    Closest_Pole(v,leadidx,idx,res);
     return res;
-  end Smallest_Forward_Pole;
+  end Closest_Pole;
 
-  function Smallest_Forward_Pole
+  function Closest_Pole
              ( v : QuadDobl_Complex_VecVecs.VecVec ) return quad_double is
 
     res : quad_double;
     leadidx,idx : integer32;
 
   begin
-    Smallest_Forward_Pole(v,leadidx,idx,res);
+    Closest_Pole(v,leadidx,idx,res);
     return res;
-  end Smallest_Forward_Pole;
+  end Closest_Pole;
 
 end Homotopy_Pade_Approximants;

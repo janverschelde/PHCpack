@@ -109,8 +109,8 @@ package body Standard_SeriesPade_Tracker is
 
     numdeg : constant integer32 := integer32(homconpars.numdeg);
     dendeg : constant integer32 := integer32(homconpars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- 2;
-    nit : constant integer32 := integer32(homconpars.corsteps+1);
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- 2;
+    nit : constant integer32 := integer32(homconpars.corsteps+2);
     sol : Standard_Complex_Vectors.Vector(1..current.n) := current.v;
     eva : Standard_Complex_Series_Vectors.Vector(1..nbeqs);
     t,predres : double_float := 0.0;
@@ -134,9 +134,9 @@ package body Standard_SeriesPade_Tracker is
         put_line(Standard_Pade_Approximants_io.Write(current_padvec(i)));
       end loop;
       put_line("The poles : "); put_line(current_poles.all);
-      put("Smallest forward pole radius : "); put(current_frp,2); new_line;
+      put("Smallest pole radius : "); put(current_frp,2); new_line;
       if Standard_Complex_Numbers.REAL_PART(current_cfp) >= 0.0
-       then put("Closest forward pole :"); put(current_cfp); new_line;
+       then put("Closest pole :"); put(current_cfp); new_line;
       end if;
       current_step := Series_and_Predictors.Set_Step_Size
                         (standard_output,eva,tolcff,alpha,verbose);

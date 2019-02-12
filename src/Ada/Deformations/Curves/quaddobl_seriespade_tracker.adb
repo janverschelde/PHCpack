@@ -115,8 +115,8 @@ package body QuadDobl_SeriesPade_Tracker is
 
     numdeg : constant integer32 := integer32(homconpars.numdeg);
     dendeg : constant integer32 := integer32(homconpars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 1; -- + 2;
-    nit : constant integer32 := integer32(homconpars.corsteps+1);
+    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
+    nit : constant integer32 := integer32(homconpars.corsteps+2);
     sol : QuadDobl_Complex_Vectors.Vector(1..current.n) := current.v;
     eva : QuadDobl_Complex_Series_Vectors.Vector(1..nbeqs);
     t,predres : double_float;
@@ -142,9 +142,9 @@ package body QuadDobl_SeriesPade_Tracker is
       end loop;
       put_line("The poles : "); put_line(current_poles.all);
       put_line("The poles :"); put_line(current_poles.all);
-      put("Smallest forward pole radius : "); put(current_frp,3); new_line;
+      put("Smallest pole radius : "); put(current_frp,3); new_line;
       if QuadDobl_Complex_Numbers.REAL_PART(current_cfp) >= 0.0
-       then put("Closest forward pole : "); put(current_cfp); new_line;
+       then put("Closest pole : "); put(current_cfp); new_line;
       end if;
       current_step := Series_and_Predictors.Set_Step_Size
                         (standard_output,eva,tolcff,alpha,verbose);

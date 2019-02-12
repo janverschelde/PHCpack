@@ -410,9 +410,8 @@ package body Series_and_Predictors is
   begin
     Standard_Pade_Approximants.Create(pv,srv,verbose);
     Homotopy_Pade_Approximants.Standard_Poles(pv,poles);
-    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,frp);
+    Homotopy_Pade_Approximants.Closest_Pole(poles,lead,idx,frp);
     cfp := poles(lead)(idx);
-   -- frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
   end Pade_Approximants;
 
   procedure Pade_Approximants
@@ -428,9 +427,8 @@ package body Series_and_Predictors is
   begin
     DoblDobl_Pade_Approximants.Create(pv,srv,verbose);
     Homotopy_Pade_Approximants.DoblDobl_Poles(pv,poles);
-    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,frp);
+    Homotopy_Pade_Approximants.Closest_Pole(poles,lead,idx,frp);
     cfp := poles(lead)(idx);
-   -- frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
   end Pade_Approximants;
 
   procedure Pade_Approximants
@@ -446,9 +444,8 @@ package body Series_and_Predictors is
   begin
     QuadDobl_Pade_Approximants.Create(pv,srv,verbose);
     Homotopy_Pade_Approximants.QuadDobl_Poles(pv,poles);
-    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,frp);
+    Homotopy_Pade_Approximants.Closest_Pole(poles,lead,idx,frp);
     cfp := poles(lead)(idx);
-   -- frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
   end Pade_Approximants;
 
   function Predicted_Error

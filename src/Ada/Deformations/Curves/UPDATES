@@ -1,3 +1,9 @@
+Tue 12 Feb 2019 : reset the degree of the power series (adding one)
+  and in homotopy_pade_approximants, compute the radius of the closest pole,
+  among all poles, not just the poles with positive real part.
+  Updated *_seriespade_tracker.adb, series_and_predictors, and
+  the series_and_trackers.adb.
+
 Mon 4 Feb 2019 : decreased the degree of the power series by one and added
   one to the number of iterations in series_and_trackers.adb and in the
   {standard,dobldobl,quaddobl}_seriespade_tracker.adb files.
