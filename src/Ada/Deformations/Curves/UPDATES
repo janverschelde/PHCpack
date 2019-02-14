@@ -1,3 +1,6 @@
+Thu 14 Feb 2019 : new package singular_values_of_hessians wraps the SVD,
+  called in ts_hesscrit.adb.
+
 Wed 13 Feb 2019 : new file ts_hesscrit to develop the Hessian criterion.
 
 Tue 12 Feb 2019 : reset the degree of the power series (adding one)

@@ -5,8 +5,6 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
-with Standard_Complex_Matrices;
-with Standard_Complex_Singular_Values;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
@@ -15,33 +13,13 @@ with Standard_Complex_Solutions;
 with Symbol_Table;
 with Standard_Homotopy;
 with Homotopy_Series_Readers;
+with Singular_Values_of_Hessians;
 
 procedure ts_hesscrit is
 
 -- DESCRIPTION :
 --   Interactive development testing of the Hessian criterion
 --   for solution curves defined by polynomial homotopies.
-
-  procedure Singular_Values
-              ( A : in out Standard_Complex_Matrices.Matrix ) is
-
-  -- DESCRIPTION :
-  --   Computes the singular values of A.
-
-    n : constant integer32 := A'last(1);
-    p : constant integer32 := A'last(2);
-    mm : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
-    s : Standard_Complex_Vectors.Vector(1..mm);
-    e : Standard_Complex_Vectors.Vector(1..p);
-    u : Standard_Complex_Matrices.Matrix(1..n,1..n);
-    v : Standard_Complex_Matrices.Matrix(1..p,1..p);
-    job : constant integer32 := 11;
-    info : integer32;
-
-  begin
-    Standard_Complex_Singular_Values.SVD(A,n,p,s,e,u,v,job,info);
-    put_line("The singular values : "); put_line(s);
-  end Singular_Values;
 
   procedure Standard_Evaluate
               ( hess : in Standard_Complex_Hessians.Array_of_Hessians;
@@ -53,16 +31,18 @@ procedure ts_hesscrit is
 
     xt : Standard_Complex_Vectors.Vector(1..sol.n+1);
 
+    use Singular_Values_of_Hessians;
+
   begin
     xt(sol.v'range) := sol.v;
     xt(xt'last) := sol.t;
     for i in hess'range loop
       declare
         hs : constant Standard_Complex_Hessians.Link_to_hessian := hess(i);
-        mh : Standard_Complex_Matrices.Matrix(hs'range(1),hs'range(2));
+        sv : constant Standard_Complex_Vectors.Vector
+           := Standard_Singular_Values(hs,xt);
       begin
-        mh := Standard_Complex_Hessians.Eval(hs,xt);
-        Singular_Values(mh);
+        put_line("The singular values : "); put_line(sv);
       end;
     end loop;
   end Standard_Evaluate;
@@ -98,7 +78,7 @@ procedure ts_hesscrit is
     n : constant integer32
       := integer32(Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first)));
     s : Symbol_Table.Symbol;
-    h : Standard_Complex_Hessians.Array_of_Hessians(p'range)
+    h : constant Standard_Complex_Hessians.Array_of_Hessians(p'range)
       := Standard_Complex_Hessians.Create(p,n);
 
   begin
