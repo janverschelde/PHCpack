@@ -1,3 +1,5 @@
+Wed 13 Feb 2019 : new file ts_hesscrit to develop the Hessian criterion.
+
 Tue 12 Feb 2019 : reset the degree of the power series (adding one)
   and in homotopy_pade_approximants, compute the radius of the closest pole,
   among all poles, not just the poles with positive real part.
