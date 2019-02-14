@@ -1,3 +1,6 @@
+Wed 13 Feb 2019 : adjusted generic_hessian_matrices for polynomials with
+  one homotopy parameter as variable, tested in ts_hessian.
+
 Tue 12 Feb 2019 : new package generic_hessian_matrices, instantiated in
   {standard,dobldobl,quaddobl}_complex_hessians, tested in ts_hessian.adb.
 

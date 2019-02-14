@@ -121,18 +121,22 @@ procedure ts_hessian is
 
   procedure Standard_Test 
               ( p : in Standard_Complex_Polynomials.Poly;
-                n : in natural32 ) is
+                n : in natural32; k : in integer32 ) is
 
   -- DESCRIPTION :
   --   Tests the Hessian of p, a polynomial in n variables,
   --   in standard double precision.
+  --   The index k is either 0 if all variables of p are considered,
+  --   or else k is the index to the skipped homotopy parameter.
 
-    h : Standard_Complex_Hessians.Link_to_Hessian
-      := Standard_Complex_Hessians.Create(p);
+    h : Standard_Complex_Hessians.Link_to_Hessian;
     x : Standard_Complex_Vectors.Vector(1..integer32(n));
-    m : Standard_Complex_Matrices.Matrix(x'range,x'range);
 
   begin
+    if k = 0
+     then h := Standard_Complex_Hessians.Create(p);
+     else h := Standard_Complex_Hessians.Create(p,k);
+    end if;
     Write(h);
     new_line;
     put("Reading "); put(n,1);
@@ -141,21 +145,31 @@ procedure ts_hessian is
       put(i,1); put(" : "); get(x(i));
     end loop;
     put_line("Evaluation at "); put_line(x);
-    m := Standard_Complex_Hessians.Eval(h,x);
-    Write(m);
+    declare
+      m : Standard_Complex_Matrices.Matrix(h'range,h'range);
+    begin
+      m := Standard_Complex_Hessians.Eval(h,x);
+      Write(m);
+    end;
   end Standard_Test;
 
   procedure Standard_Test 
-              ( p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                k : in integer32 ) is
 
   -- DESCRIPTION :
   --   Tests the Hessian of p, a polynomial system,
   --   in standard double precision.
+  --   The index k is either 0 if all variables of p are considered,
+  --   or else k is the index to the skipped homotopy parameter.
 
-    h : Standard_Complex_Hessians.Array_of_Hessians(p'range)
-      := Standard_Complex_Hessians.Create(p);
+    h : Standard_Complex_Hessians.Array_of_Hessians(p'range);
 
   begin
+    if k = 0
+     then h := Standard_Complex_Hessians.Create(p);
+     else h := Standard_Complex_Hessians.Create(p,k);
+    end if;
     for i in h'range loop
       put("The Hessian for polynomial ");
       put(i,1); put_line(" :");
@@ -165,18 +179,22 @@ procedure ts_hessian is
 
   procedure DoblDobl_Test 
               ( p : in DoblDobl_Complex_Polynomials.Poly;
-                n : in natural32 ) is
+                n : in natural32; k : in integer32 ) is
 
   -- DESCRIPTION :
   --   Tests the Hessian of p, a polynomial in n variables,
   --   in double double precision.
+  --   The index k is either 0 if all variables of p are considered,
+  --   or else k is the index to the skipped homotopy parameter.
 
-    h : DoblDobl_Complex_Hessians.Link_to_Hessian
-      := DoblDobl_Complex_Hessians.Create(p);
+    h : DoblDobl_Complex_Hessians.Link_to_Hessian;
     x : DoblDobl_Complex_Vectors.Vector(1..integer32(n));
-    m : DoblDobl_Complex_Matrices.Matrix(x'range,x'range);
 
   begin
+    if k = 0 
+     then h := DoblDobl_Complex_Hessians.Create(p);
+     else h := DoblDobl_Complex_Hessians.Create(p,k);
+    end if;
     Write(h);
     new_line;
     put("Reading "); put(n,1);
@@ -185,21 +203,31 @@ procedure ts_hessian is
       put(i,1); put(" : "); get(x(i));
     end loop;
     put_line("Evaluation at "); put_line(x);
-    m := DoblDobl_Complex_Hessians.Eval(h,x);
-    Write(m);
+    declare
+      m : DoblDobl_Complex_Matrices.Matrix(h'range,h'range);
+    begin
+      m := DoblDobl_Complex_Hessians.Eval(h,x);
+      Write(m);
+    end;
   end DoblDobl_Test;
 
   procedure DoblDobl_Test 
-              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                k : in integer32 ) is
 
   -- DESCRIPTION :
   --   Tests the Hessian of p, a polynomial system,
   --   in double double precision.
+  --   The index k is either 0 if all variables of p are considered,
+  --   or else k is the index to the skipped homotopy parameter.
 
-    h : DoblDobl_Complex_Hessians.Array_of_Hessians(p'range)
-      := DoblDobl_Complex_Hessians.Create(p);
+    h : DoblDobl_Complex_Hessians.Array_of_Hessians(p'range);
 
   begin
+    if k = 0
+     then h := DoblDobl_Complex_Hessians.Create(p);
+     else h := DoblDobl_Complex_Hessians.Create(p,k);
+    end if;
     for i in h'range loop
       put("The Hessian for polynomial ");
       put(i,1); put_line(" :");
@@ -209,18 +237,22 @@ procedure ts_hessian is
 
   procedure QuadDobl_Test 
               ( p : in QuadDobl_Complex_Polynomials.Poly;
-                n : in natural32 ) is
+                n : in natural32; k : in integer32 ) is
 
   -- DESCRIPTION :
   --   Tests the Hessian of p, a polynomial in n variables,
   --   in quad double precision.
+  --   The index k is either 0 if all variables of p are considered,
+  --   or else k is the index to the skipped homotopy parameter.
 
-    h : QuadDobl_Complex_Hessians.Link_to_Hessian
-      := QuadDobl_Complex_Hessians.Create(p);
+    h : QuadDobl_Complex_Hessians.Link_to_Hessian;
     x : QuadDobl_Complex_Vectors.Vector(1..integer32(n));
-    m : QuadDobl_Complex_Matrices.Matrix(x'range,x'range);
 
   begin
+    if k = 0
+     then h := QuadDobl_Complex_Hessians.Create(p);
+     else h := QuadDobl_Complex_Hessians.Create(p,k);
+    end if;
     Write(h);
     new_line;
     put("Reading "); put(n,1);
@@ -229,21 +261,31 @@ procedure ts_hessian is
       put(i,1); put(" : "); get(x(i));
     end loop;
     put_line("Evaluation at "); put_line(x);
-    m := QuadDobl_Complex_Hessians.Eval(h,x);
-    Write(m);
+    declare
+      m : QuadDobl_Complex_Matrices.Matrix(h'range,h'range);
+    begin
+      m := QuadDobl_Complex_Hessians.Eval(h,x);
+      Write(m);
+    end;
   end QuadDobl_Test;
 
   procedure QuadDobl_Test 
-              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                k : in integer32 ) is
 
   -- DESCRIPTION :
   --   Tests the Hessian of p, a polynomial system,
   --   in quad double precision.
+  --   The index k is either 0 if all variables of p are considered,
+  --   or else k is the index to the skipped homotopy parameter.
 
-    h : QuadDobl_Complex_Hessians.Array_of_Hessians(p'range)
-      := QuadDobl_Complex_Hessians.Create(p);
+    h : QuadDobl_Complex_Hessians.Array_of_Hessians(p'range);
 
   begin
+    if k = 0
+     then h := QuadDobl_Complex_Hessians.Create(p);
+     else h := QuadDobl_Complex_Hessians.Create(p,k);
+    end if;
     for i in h'range loop
       put("The Hessian for polynomial ");
       put(i,1); put_line(" :");
@@ -261,6 +303,7 @@ procedure ts_hessian is
     n : natural32 := 0;
     p : Standard_Complex_Polynomials.Poly;
     s : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    k : integer32 := 0;
 
   begin
     put("Polynomial system ? (y/n) "); Ask_Yes_or_No(ans);
@@ -268,14 +311,18 @@ procedure ts_hessian is
       new_line;
       put_line("Reading a polynomial system ...");
       get(s);
-      Standard_Test(s.all);
+      new_line;
+      put("Index of homotopy parameter ? (0 if none) "); get(k);
+      Standard_Test(s.all,k);
     else
       put("Give the number of variables : "); get(n);
       Symbol_Table.Init(n);
       put("Give a polynomial : "); get(p);
       new_line;
       put("-> your polynomial : "); put(p); new_line;
-      Standard_Test(p,n);
+      new_line;
+      put("Index of homotopy parameter ? (0 if none) "); get(k);
+      Standard_Test(p,n,k);
     end if;
   end Standard_Main;
 
@@ -289,6 +336,7 @@ procedure ts_hessian is
     n : natural32 := 0;
     p : DoblDobl_Complex_Polynomials.Poly;
     s : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    k : integer32 := 0;
 
   begin
     put("Polynomial system ? (y/n) "); Ask_Yes_or_No(ans);
@@ -296,14 +344,18 @@ procedure ts_hessian is
       new_line;
       put_line("Reading a polynomial system ...");
       get(s);
-      DoblDobl_Test(s.all);
+      new_line;
+      put("Index of homotopy parameter ? (0 if none) "); get(k);
+      DoblDobl_Test(s.all,k);
     else
       put("Give the number of variables : "); get(n);
       Symbol_Table.Init(n);
       put("Give a polynomial : "); get(p);
       new_line;
       put("-> your polynomial : "); put(p); new_line;
-      DoblDobl_Test(p,n);
+      new_line;
+      put("Index of homotopy parameter ? (0 if none) "); get(k);
+      DoblDobl_Test(p,n,k);
     end if;
   end DoblDobl_Main;
 
@@ -317,6 +369,7 @@ procedure ts_hessian is
     n : natural32 := 0;
     p : QuadDobl_Complex_Polynomials.Poly;
     s : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    k : integer32 := 0;
 
   begin
     put("Polynomial system ? (y/n) "); Ask_Yes_or_No(ans);
@@ -324,14 +377,18 @@ procedure ts_hessian is
       new_line;
       put_line("Reading a polynomial system ...");
       get(s);
-      QuadDobl_Test(s.all);
+      new_line;
+      put("Index of homotopy parameter ? (0 if none) "); get(k);
+      QuadDobl_Test(s.all,k);
     else
       put("Give the number of variables : "); get(n);
       Symbol_Table.Init(n);
       put("Give a polynomial : "); get(p);
       new_line;
       put("-> your polynomial : "); put(p); new_line;
-      QuadDobl_Test(p,n);
+      new_line;
+      put("Index of homotopy parameter ? (0 if none) "); get(k);
+      QuadDobl_Test(p,n,k);
     end if;
   end QuadDobl_Main;
 

@@ -48,6 +48,24 @@ package Generic_Hessian_Matrices is
   --   The array on return has p'range 
   --   with in its i-th entry the Hessian for p(i).
 
+  function Create ( p : Poly; k : integer32 ) return Hessian;
+  function Create ( p : Poly; k : integer32 ) return Link_to_Hessian;
+
+  -- DESCRIPTION :
+  --   Returns the Hessian of p, skipping the k-th variable,
+  --   which is typically the homotopy continuation parameter.
+  --   The polynomials in the Hessian on return will have as many
+  --   variables as p, including the k-th variable,
+  --   but the number of rows and columns in the Hessian
+  --   is one less than the number of variables of p.
+
+  function Create ( p : Poly_Sys; k : integer32 ) return Array_of_Hessians;
+
+  -- DESCRIPTION :
+  --   The array on return has p'range 
+  --   with in its i-th entry the Hessian for p(i),
+  --   with k as its skipped variable.
+
 -- EVALUATORS :
 
   function Eval ( h : Hessian; x : Vector ) return Matrix;
@@ -55,6 +73,10 @@ package Generic_Hessian_Matrices is
 
   -- DESCRIPTION :
   --   Returns the evaluated Hessian matrix at x.
+  --   If the Hessian is created with the index k, then the vector x 
+  --   should have a value for the k-th parameter at index k.
+
+  -- REQUIRED : x'range = 1..Number_of_Unknowns(h(i,j)) for all i and j.
   
 -- DESTRUCTORS :
 
