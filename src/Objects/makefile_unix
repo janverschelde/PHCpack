@@ -808,6 +808,10 @@ ts_nxtpadsol:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_nxtpadsol.adb \
               -o $(BIN)/ts_nxtpadsol
 
+ts_hesscrit:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hesscrit.adb \
+              -o $(BIN)/ts_hesscrit
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:

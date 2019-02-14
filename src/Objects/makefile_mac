@@ -61,12 +61,12 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
-GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+#GNATFLAGS=-gnatv -O3 -gnatp -gnatf
+#GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
-#GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
-#GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-#GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
+GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
+GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
 
@@ -852,6 +852,10 @@ ts_jacrabin:
 ts_nxtpadsol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_nxtpadsol.adb \
                  -o $(BIN)/ts_nxtpadsol
+
+ts_hesscrit:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hesscrit.adb \
+                 -o $(BIN)/ts_hesscrit
 
 # Test programs for the Deformations/End_Games library :
 
