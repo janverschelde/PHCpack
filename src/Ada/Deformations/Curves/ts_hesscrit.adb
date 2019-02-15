@@ -3,8 +3,9 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Vectors;
+with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors;
-with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
@@ -39,7 +40,7 @@ procedure ts_hesscrit is
     for i in hess'range loop
       declare
         hs : constant Standard_Complex_Hessians.Link_to_hessian := hess(i);
-        sv : constant Standard_Complex_Vectors.Vector
+        sv : constant Standard_Floating_Vectors.Vector
            := Standard_Singular_Values(hs,xt);
       begin
         put_line("The singular values : "); put_line(sv);
