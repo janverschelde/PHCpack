@@ -3,12 +3,19 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
+with Standard_Floating_Two_Norms;
+with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
+with Standard_Complex_Matrices;
+with Standard_Complex_Singular_Values;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Hessians;
 with Standard_Complex_Solutions;
 with Symbol_Table;
@@ -23,7 +30,8 @@ procedure ts_hesscrit is
 --   for solution curves defined by polynomial homotopies.
 
   procedure Standard_Evaluate
-              ( hess : in Standard_Complex_Hessians.Array_of_Hessians;
+              ( jm : in Standard_Complex_Jaco_Matrices.Jaco_Mat;
+                hess : in Standard_Complex_Hessians.Array_of_Hessians;
                 sol : in Standard_Complex_Solutions.Solution ) is
 
   -- DESCRIPTION :
@@ -31,25 +39,36 @@ procedure ts_hesscrit is
   --   with the value for sol.t added.
 
     xt : Standard_Complex_Vectors.Vector(1..sol.n+1);
+    jmx : Standard_Complex_Matrices.Matrix(jm'range(1),jm'range(2));
+    n : constant integer32 := jm'last(1);
+    p : constant integer32 := jm'last(2);
+    dim : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
+    jsv : Standard_Complex_Vectors.Vector(1..dim);
+    nrm,sigma1,eta : double_float;
 
     use Singular_Values_of_Hessians;
 
   begin
     xt(sol.v'range) := sol.v;
     xt(xt'last) := sol.t;
-    for i in hess'range loop
-      declare
-        hs : constant Standard_Complex_Hessians.Link_to_hessian := hess(i);
-        sv : constant Standard_Floating_Vectors.Vector
-           := Standard_Singular_Values(hs,xt);
-      begin
-        put_line("The singular values : "); put_line(sv);
-      end;
-    end loop;
+    jmx := Standard_Complex_Jaco_Matrices.Eval(jm,xt);
+    Singular_Values(jmx,jsv);
+    sigma1 := Standard_Complex_Numbers.REAL_PART(jsv(jsv'last));
+    declare
+      sv : constant Standard_Floating_Vectors.Vector
+         := Standard_Singular_Values(hess,xt);
+    begin
+      put_line("The singular values : "); put_line(sv);
+      nrm := Standard_Floating_Two_Norms.Norm2(sv);
+      put("The 2-norm : "); put(nrm,2); new_line;
+      eta := sigma1/nrm;
+      put("The eta value : "); put(eta,2); new_line;
+    end;
   end Standard_Evaluate;
 
   procedure Standard_Evaluate
-              ( hess : in Standard_Complex_Hessians.Array_of_Hessians;
+              ( jm : in Standard_Complex_Jaco_Matrices.Jaco_Mat;
+                hess : in Standard_Complex_Hessians.Array_of_Hessians;
                 sols : in Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
@@ -61,7 +80,7 @@ procedure ts_hesscrit is
   begin
     while not Standard_Complex_Solutions.Is_Null(tmp) loop
       ls := Standard_Complex_Solutions.Head_Of(tmp);
-      Standard_Evaluate(hess,ls.all);
+      Standard_Evaluate(jm,hess,ls.all);
       tmp := Standard_Complex_Solutions.Tail_Of(tmp);
     end loop;
   end Standard_Evaluate;
@@ -78,18 +97,25 @@ procedure ts_hesscrit is
       := Standard_Homotopy.Homotopy_System;
     n : constant integer32
       := integer32(Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first)));
+    n1 : constant integer32 := n-1; -- minus homotopy parameter
     s : Symbol_Table.Symbol;
     h : constant Standard_Complex_Hessians.Array_of_Hessians(p'range)
       := Standard_Complex_Hessians.Create(p,n);
+    jm : Standard_Complex_Jaco_Matrices.Jaco_Mat(1..nbeq,1..n1);
 
   begin
+    for i in 1..nbeq loop
+      for j in 1..n1 loop
+        jm(i,j) := Standard_Complex_Polynomials.Diff(p(i),j);
+      end loop;
+    end loop;
     s := (s'range => ' ');
     s(s'first) := 't';
     Symbol_Table.Enlarge(1);
     Symbol_Table.Add(s);
     put_line("The homotopy system : ");
     put(p);
-    Standard_Evaluate(h,sols);
+    Standard_Evaluate(jm,h,sols);
   end Standard_Test;
 
   procedure Main is

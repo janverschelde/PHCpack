@@ -2,24 +2,15 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
-with Standard_Complex_Matrices;
-with DoblDobl_Complex_Matrices;
-with QuadDobl_Complex_Matrices;
 with Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Singular_Values;
 with QuadDobl_Complex_Singular_Values;
 
 package body Singular_Values_of_Hessians is
 
--- AUXILIARY WRAPPERS :
-
   procedure Singular_Values
              ( A : in out Standard_Complex_Matrices.Matrix;
                s : out Standard_Complex_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Computes the singular values of A and returns the result in s,
-  --   computed in standard double precision.
 
     n : constant integer32 := A'last(1);
     p : constant integer32 := A'last(2);
@@ -37,10 +28,6 @@ package body Singular_Values_of_Hessians is
              ( A : in out DoblDobl_Complex_Matrices.Matrix;
                s : out DoblDobl_Complex_Vectors.Vector ) is
 
-  -- DESCRIPTION :
-  --   Computes the singular values of A and returns the result in s,
-  --   computed in double double precision.
-
     n : constant integer32 := A'last(1);
     p : constant integer32 := A'last(2);
     e : DoblDobl_Complex_Vectors.Vector(1..p);
@@ -57,10 +44,6 @@ package body Singular_Values_of_Hessians is
              ( A : in out QuadDobl_Complex_Matrices.Matrix;
                s : out QuadDobl_Complex_Vectors.Vector ) is
 
-  -- DESCRIPTION :
-  --   Computes the singular values of A and returns the result in s,
-  --   computed in quad double precision.
-
     n : constant integer32 := A'last(1);
     p : constant integer32 := A'last(2);
     e : QuadDobl_Complex_Vectors.Vector(1..p);
@@ -72,8 +55,6 @@ package body Singular_Values_of_Hessians is
   begin
     QuadDobl_Complex_Singular_Values.SVD(A,n,p,s,e,u,v,job,info);
   end Singular_Values;
-
--- TARGET FUNCTIONS :
 
   function Standard_Singular_Values
              ( h : Standard_Complex_Hessians.Link_to_Hessian;

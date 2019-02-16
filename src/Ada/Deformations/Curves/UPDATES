@@ -1,5 +1,7 @@
 Fri 15 Feb 2019 : introduced real vectors in singular_values_of_hessians
   with extensions to arrays of Hessians.  Also ts_hesscrit.adb changed.
+  Exposed wrappers in singular_values_of_hessians, used to compute the
+  singular values of the Jacobian matrix in ts_hesscrit.adb.
 
 Thu 14 Feb 2019 : new package singular_values_of_hessians wraps the SVD,
   called in ts_hesscrit.adb.
