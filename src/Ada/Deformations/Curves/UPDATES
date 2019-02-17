@@ -1,3 +1,7 @@
+Sat 16 Feb 2019 : extended singular_values_of_hessians with a function
+  to return the estimate of the distance to the nearest solution,
+  tested by ts_hesscrit.
+
 Fri 15 Feb 2019 : introduced real vectors in singular_values_of_hessians
   with extensions to arrays of Hessians.  Also ts_hesscrit.adb changed.
   Exposed wrappers in singular_values_of_hessians, used to compute the

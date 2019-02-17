@@ -1,3 +1,6 @@
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
@@ -7,6 +10,9 @@ with DoblDobl_Complex_Matrices;
 with Quad_Double_Vectors;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Matrices;
+with Standard_Complex_Jaco_Matrices;
+with DoblDobl_Complex_Jaco_Matrices;
+with QuadDobl_Complex_Jaco_Matrices;
 with Standard_Complex_Hessians;
 with DoblDobl_Complex_Hessians;
 with QuadDobl_Complex_Hessians;
@@ -17,6 +23,7 @@ package Singular_Values_of_Hessians is
 --   Given symbolic definitions of Hessian matrices,
 --   evaluates the Hessians at numerical vectors and
 --   returns the singular values.
+--   This leads to an estimate for the distance to the nearest solution.
 
   procedure Singular_Values
              ( A : in out Standard_Complex_Matrices.Matrix;
@@ -69,5 +76,36 @@ package Singular_Values_of_Hessians is
   --   or quad double precision.  On return is a vector of h'range,
   --   with in the i-th entry the first, largest singular value
   --   of the i-th Hessian in h evaluated at x.
+
+  function Standard_Distance
+             ( jm : in Standard_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in Standard_Complex_Hessians.Array_of_Hessians;
+               xt : in Standard_Complex_Vectors.Vector )
+             return double_float;
+  function DoblDobl_Distance
+             ( jm : in DoblDobl_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in DoblDobl_Complex_Hessians.Array_of_Hessians;
+               xt : in DoblDobl_Complex_Vectors.Vector )
+             return double_double;
+  function QuadDobl_Distance
+             ( jm : in QuadDobl_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in QuadDobl_Complex_Hessians.Array_of_Hessians;
+               xt : in QuadDobl_Complex_Vectors.Vector )
+             return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns an estimate to the distance to the nearest solution,
+  --   in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   jm      Jacobian matrix of a homotopy;
+  --   hs      array of Hessians of the polynomials in the homotopy;
+  --   xt      solution vector and corresponding t value.
+
+  -- REQUIRED :
+  --   The number of variables of all polynomials in jm and hs
+  --   correspond to the end of the range of xt.
+  --   Moreover, the value for the parameter in xt is at the proper place,
+  --   corresponding to the homotopy.
 
 end Singular_Values_of_Hessians;

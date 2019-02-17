@@ -2,6 +2,9 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Floating_Two_Norms;
+with Double_Double_Two_Norms;
+with Quad_Double_Two_Norms;
 with Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Singular_Values;
 with QuadDobl_Complex_Singular_Values;
@@ -175,5 +178,74 @@ package body Singular_Values_of_Hessians is
      end loop;
      return res;
    end QuadDobl_Singular_Values;
+
+  function Standard_Distance
+             ( jm : in Standard_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in Standard_Complex_Hessians.Array_of_Hessians;
+               xt : in Standard_Complex_Vectors.Vector )
+             return double_float is
+
+    jmx : Standard_Complex_Matrices.Matrix(jm'range(1),jm'range(2));
+    n : constant integer32 := jm'last(1);
+    p : constant integer32 := jm'last(2);
+    dim : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
+    jsv : Standard_Complex_Vectors.Vector(1..dim);
+    nrm,sigma1 : double_float;
+    sv : constant Standard_Floating_Vectors.Vector
+       := Standard_Singular_Values(hs,xt);
+
+  begin
+    jmx := Standard_Complex_Jaco_Matrices.Eval(jm,xt);
+    Singular_Values(jmx,jsv);
+    sigma1 := Standard_Complex_Numbers.REAL_PART(jsv(jsv'last));
+    nrm := Standard_Floating_Two_Norms.Norm2(sv);
+    return sigma1/nrm;
+  end Standard_Distance;
+
+  function DoblDobl_Distance
+             ( jm : in DoblDobl_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in DoblDobl_Complex_Hessians.Array_of_Hessians;
+               xt : in DoblDobl_Complex_Vectors.Vector )
+             return double_double is
+
+    jmx : DoblDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(2));
+    n : constant integer32 := jm'last(1);
+    p : constant integer32 := jm'last(2);
+    dim : constant integer32 := DoblDobl_Complex_Singular_Values.Min0(n+1,p);
+    jsv : DoblDobl_Complex_Vectors.Vector(1..dim);
+    nrm,sigma1 : double_double;
+    sv : constant Double_Double_Vectors.Vector
+       := DoblDobl_Singular_Values(hs,xt);
+
+  begin
+    jmx := DoblDobl_Complex_Jaco_Matrices.Eval(jm,xt);
+    Singular_Values(jmx,jsv);
+    sigma1 := DoblDobl_Complex_Numbers.REAL_PART(jsv(jsv'last));
+    nrm := Double_Double_Two_Norms.Norm2(sv);
+    return sigma1/nrm;
+  end DoblDobl_Distance;
+
+  function QuadDobl_Distance
+             ( jm : in QuadDobl_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in QuadDobl_Complex_Hessians.Array_of_Hessians;
+               xt : in QuadDobl_Complex_Vectors.Vector )
+             return quad_double is
+
+    jmx : QuadDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(2));
+    n : constant integer32 := jm'last(1);
+    p : constant integer32 := jm'last(2);
+    dim : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    jsv : QuadDobl_Complex_Vectors.Vector(1..dim);
+    nrm,sigma1 : quad_double;
+    sv : constant Quad_Double_Vectors.Vector
+       := QuadDobl_Singular_Values(hs,xt);
+
+  begin
+    jmx := QuadDobl_Complex_Jaco_Matrices.Eval(jm,xt);
+    Singular_Values(jmx,jsv);
+    sigma1 := QuadDobl_Complex_Numbers.REAL_PART(jsv(jsv'last));
+    nrm := Quad_Double_Two_Norms.Norm2(sv);
+    return sigma1/nrm;
+  end QuadDobl_Distance;
 
 end Singular_Values_of_Hessians;

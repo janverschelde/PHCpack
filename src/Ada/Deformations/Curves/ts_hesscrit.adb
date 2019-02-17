@@ -5,13 +5,7 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
-with Standard_Floating_Vectors;
-with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
-with Standard_Floating_Two_Norms;
-with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
-with Standard_Complex_Matrices;
-with Standard_Complex_Singular_Values;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
@@ -39,31 +33,15 @@ procedure ts_hesscrit is
   --   with the value for sol.t added.
 
     xt : Standard_Complex_Vectors.Vector(1..sol.n+1);
-    jmx : Standard_Complex_Matrices.Matrix(jm'range(1),jm'range(2));
-    n : constant integer32 := jm'last(1);
-    p : constant integer32 := jm'last(2);
-    dim : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
-    jsv : Standard_Complex_Vectors.Vector(1..dim);
-    nrm,sigma1,eta : double_float;
+    eta : double_float;
 
     use Singular_Values_of_Hessians;
 
   begin
     xt(sol.v'range) := sol.v;
     xt(xt'last) := sol.t;
-    jmx := Standard_Complex_Jaco_Matrices.Eval(jm,xt);
-    Singular_Values(jmx,jsv);
-    sigma1 := Standard_Complex_Numbers.REAL_PART(jsv(jsv'last));
-    declare
-      sv : constant Standard_Floating_Vectors.Vector
-         := Standard_Singular_Values(hess,xt);
-    begin
-      put_line("The singular values : "); put_line(sv);
-      nrm := Standard_Floating_Two_Norms.Norm2(sv);
-      put("The 2-norm : "); put(nrm,2); new_line;
-      eta := sigma1/nrm;
-      put("The eta value : "); put(eta,2); new_line;
-    end;
+    eta := Standard_Distance(jm,hess,xt);
+    put("eta : "); put(eta,2); new_line;
   end Standard_Evaluate;
 
   procedure Standard_Evaluate
