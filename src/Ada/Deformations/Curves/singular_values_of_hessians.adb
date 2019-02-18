@@ -199,7 +199,7 @@ package body Singular_Values_of_Hessians is
     Singular_Values(jmx,jsv);
     sigma1 := Standard_Complex_Numbers.REAL_PART(jsv(jsv'last));
     nrm := Standard_Floating_Two_Norms.Norm2(sv);
-    return sigma1/nrm;
+    return (2.0*sigma1)/nrm;
   end Standard_Distance;
 
   function DoblDobl_Distance
@@ -222,7 +222,7 @@ package body Singular_Values_of_Hessians is
     Singular_Values(jmx,jsv);
     sigma1 := DoblDobl_Complex_Numbers.REAL_PART(jsv(jsv'last));
     nrm := Double_Double_Two_Norms.Norm2(sv);
-    return sigma1/nrm;
+    return (2.0*sigma1)/nrm;
   end DoblDobl_Distance;
 
   function QuadDobl_Distance
@@ -245,7 +245,7 @@ package body Singular_Values_of_Hessians is
     Singular_Values(jmx,jsv);
     sigma1 := QuadDobl_Complex_Numbers.REAL_PART(jsv(jsv'last));
     nrm := Quad_Double_Two_Norms.Norm2(sv);
-    return sigma1/nrm;
+    return (2.0*sigma1)/nrm;
   end QuadDobl_Distance;
 
 end Singular_Values_of_Hessians;
