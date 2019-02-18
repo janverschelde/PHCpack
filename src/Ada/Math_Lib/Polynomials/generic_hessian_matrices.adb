@@ -183,4 +183,17 @@ package body Generic_Hessian_Matrices is
     end loop;
   end Clear;
 
+  procedure Clear ( h : in out Link_to_Array_of_Hessians ) is
+
+    procedure free is
+      new unchecked_deallocation
+            (Array_of_Hessians,Link_to_Array_of_Hessians);
+
+  begin
+    if h /= null then
+      Clear(h.all);
+      free(h);
+    end if;
+  end Clear;
+
 end Generic_Hessian_Matrices;

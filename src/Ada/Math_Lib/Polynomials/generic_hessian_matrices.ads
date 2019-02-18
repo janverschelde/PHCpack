@@ -32,6 +32,7 @@ package Generic_Hessian_Matrices is
   type Link_to_Hessian is access Hessian;
 
   type Array_of_Hessians is array ( integer32 range <> ) of Link_to_Hessian;
+  type Link_to_Array_of_Hessians is access Array_of_Hessians;
 
 -- CREATORS :
 
@@ -83,6 +84,7 @@ package Generic_Hessian_Matrices is
   procedure Clear ( h : in out Hessian );
   procedure Clear ( h : in out Link_to_Hessian );
   procedure Clear ( h : in out Array_of_Hessians );
+  procedure Clear ( h : in out Link_to_Array_of_Hessians );
 
   -- DESCRIPTION :
   --   Deallocation of the occupied memory.

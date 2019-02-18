@@ -1,3 +1,6 @@
+Sun 17 Feb 2019 : added link to array of Hessians type to
+  generic_hessian_matrices, along with a deallocator procedure.
+
 Wed 13 Feb 2019 : adjusted generic_hessian_matrices for polynomials with
   one homotopy parameter as variable, tested in ts_hessian.
 
