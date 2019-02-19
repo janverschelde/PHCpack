@@ -256,6 +256,48 @@ package body Singular_Values_of_Hessians is
     return (2.0*sigma1)/nrm;
   end QuadDobl_Distance;
 
+  function Standard_Distance
+             ( jm : in Standard_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in Standard_Complex_Hessians.Array_of_Hessians;
+               sol : in Standard_Complex_Solutions.Solution )
+             return double_float is
+
+    xt : Standard_Complex_Vectors.Vector(1..sol.n+1);
+
+  begin
+    xt(sol.v'range) := sol.v;
+    xt(xt'last) := sol.t;
+    return Standard_Distance(jm,hs,xt);
+  end Standard_Distance;
+
+  function DoblDobl_Distance
+             ( jm : in DoblDobl_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in DoblDobl_Complex_Hessians.Array_of_Hessians;
+               sol : in DoblDobl_Complex_Solutions.Solution )
+             return double_double is
+
+    xt : DoblDobl_Complex_Vectors.Vector(1..sol.n+1);
+
+  begin
+    xt(sol.v'range) := sol.v;
+    xt(xt'last) := sol.t;
+    return DoblDobl_Distance(jm,hs,xt);
+  end DoblDobl_Distance;
+
+  function QuadDobl_Distance
+             ( jm : in QuadDobl_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in QuadDobl_Complex_Hessians.Array_of_Hessians;
+               sol : in QuadDobl_Complex_Solutions.Solution )
+             return quad_double is
+
+    xt : QuadDobl_Complex_Vectors.Vector(1..sol.n+1);
+
+  begin
+    xt(sol.v'range) := sol.v;
+    xt(xt'last) := sol.t;
+    return QuadDobl_Distance(jm,hs,xt);
+  end QuadDobl_Distance;
+
   procedure Standard_Jacobian_Hessians_of_Homotopy
               ( jm : out Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 h : out Standard_Complex_Hessians.Link_to_Array_of_Hessians ) is

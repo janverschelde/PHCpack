@@ -14,6 +14,9 @@ with QuadDobl_Complex_Matrices;
 with Standard_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Jaco_Matrices;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Standard_Complex_Hessians;
 with DoblDobl_Complex_Hessians;
 with QuadDobl_Complex_Hessians;
@@ -21,10 +24,9 @@ with QuadDobl_Complex_Hessians;
 package Singular_Values_of_Hessians is
 
 -- DESCRIPTION :
---   Given symbolic definitions of Hessian matrices,
---   evaluates the Hessians at numerical vectors and
---   returns the singular values.
---   This leads to an estimate for the distance to the nearest solution.
+--   Given symbolic definitions of the Jacobian matrix and Hessian matrices,
+--   evaluates the Jacobian and Hessians at numerical vectors and
+--   computes an estimate of the distance to the nearest solution.
 
   procedure Singular_Values
              ( A : in out Standard_Complex_Matrices.Matrix;
@@ -108,6 +110,31 @@ package Singular_Values_of_Hessians is
   --   correspond to the end of the range of xt.
   --   Moreover, the value for the parameter in xt is at the proper place,
   --   corresponding to the homotopy.
+
+  function Standard_Distance
+             ( jm : in Standard_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in Standard_Complex_Hessians.Array_of_Hessians;
+               sol : in Standard_Complex_Solutions.Solution )
+             return double_float;
+  function DoblDobl_Distance
+             ( jm : in DoblDobl_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in DoblDobl_Complex_Hessians.Array_of_Hessians;
+               sol : in DoblDobl_Complex_Solutions.Solution )
+             return double_double;
+  function QuadDobl_Distance
+             ( jm : in QuadDobl_Complex_Jaco_Matrices.Jaco_Mat;
+               hs : in QuadDobl_Complex_Hessians.Array_of_Hessians;
+               sol : in QuadDobl_Complex_Solutions.Solution )
+             return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns an estimate to the distance to the nearest solution,
+  --   in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   jm      Jacobian matrix of a homotopy;
+  --   hs      array of Hessians of the polynomials in the homotopy;
+  --   sol     solution with the right number of coordinates.
 
   procedure Standard_Jacobian_Hessians_of_Homotopy
               ( jm : out Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;

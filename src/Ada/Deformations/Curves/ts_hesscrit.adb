@@ -10,9 +10,6 @@ with Double_Double_Numbers;             use Double_Double_Numbers;
 with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
-with Standard_Complex_Vectors;
-with DoblDobl_Complex_Vectors;
-with QuadDobl_Complex_Vectors;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_Systems;
@@ -41,70 +38,7 @@ procedure ts_hesscrit is
 --   Interactive development testing of the Hessian criterion
 --   for solution curves defined by polynomial homotopies.
 
-  procedure Standard_Evaluate
-              ( jm : in Standard_Complex_Jaco_Matrices.Jaco_Mat;
-                hess : in Standard_Complex_Hessians.Array_of_Hessians;
-                sol : in Standard_Complex_Solutions.Solution ) is
-
-  -- DESCRIPTION :
-  --   Evaluates the Hessians at the solution vector in sol,
-  --   with the value for sol.t added.
-
-    xt : Standard_Complex_Vectors.Vector(1..sol.n+1);
-    eta : double_float;
-
-    use Singular_Values_of_Hessians;
-
-  begin
-    xt(sol.v'range) := sol.v;
-    xt(xt'last) := sol.t;
-    eta := Standard_Distance(jm,hess,xt);
-    put("eta : "); put(eta,2); new_line;
-  end Standard_Evaluate;
-
-  procedure DoblDobl_Evaluate
-              ( jm : in DoblDobl_Complex_Jaco_Matrices.Jaco_Mat;
-                hess : in DoblDobl_Complex_Hessians.Array_of_Hessians;
-                sol : in DoblDobl_Complex_Solutions.Solution ) is
-
-  -- DESCRIPTION :
-  --   Evaluates the Hessians at the solution vector in sol,
-  --   with the value for sol.t added.
-
-    xt : DoblDobl_Complex_Vectors.Vector(1..sol.n+1);
-    eta : double_double;
-
-    use Singular_Values_of_Hessians;
-
-  begin
-    xt(sol.v'range) := sol.v;
-    xt(xt'last) := sol.t;
-    eta := DoblDobl_Distance(jm,hess,xt);
-    put("eta : "); put(eta,2); new_line;
-  end DoblDobl_Evaluate;
-
-  procedure QuadDobl_Evaluate
-              ( jm : in QuadDobl_Complex_Jaco_Matrices.Jaco_Mat;
-                hess : in QuadDobl_Complex_Hessians.Array_of_Hessians;
-                sol : in QuadDobl_Complex_Solutions.Solution ) is
-
-  -- DESCRIPTION :
-  --   Evaluates the Hessians at the solution vector in sol,
-  --   with the value for sol.t added.
-
-    xt : QuadDobl_Complex_Vectors.Vector(1..sol.n+1);
-    eta : quad_double;
-
-    use Singular_Values_of_Hessians;
-
-  begin
-    xt(sol.v'range) := sol.v;
-    xt(xt'last) := sol.t;
-    eta := QuadDobl_Distance(jm,hess,xt);
-    put("eta : "); put(eta,2); new_line;
-  end QuadDobl_Evaluate;
-
-  procedure Standard_Evaluate
+  procedure Standard_Distances
               ( jm : in Standard_Complex_Jaco_Matrices.Jaco_Mat;
                 hess : in Standard_Complex_Hessians.Array_of_Hessians;
                 sols : in Standard_Complex_Solutions.Solution_List ) is
@@ -114,16 +48,18 @@ procedure ts_hesscrit is
 
     tmp : Standard_Complex_Solutions.Solution_List := sols;
     ls : Standard_Complex_Solutions.Link_to_Solution;
+    eta : double_float;
 
   begin
     while not Standard_Complex_Solutions.Is_Null(tmp) loop
       ls := Standard_Complex_Solutions.Head_Of(tmp);
-      Standard_Evaluate(jm,hess,ls.all);
+      eta := Singular_Values_of_Hessians.Standard_Distance(jm,hess,ls.all);
+      put("eta : "); put(eta,2); new_line;
       tmp := Standard_Complex_Solutions.Tail_Of(tmp);
     end loop;
-  end Standard_Evaluate;
+  end Standard_Distances;
 
-  procedure DoblDobl_Evaluate
+  procedure DoblDobl_Distances
               ( jm : in DoblDobl_Complex_Jaco_Matrices.Jaco_Mat;
                 hess : in DoblDobl_Complex_Hessians.Array_of_Hessians;
                 sols : in DoblDobl_Complex_Solutions.Solution_List ) is
@@ -133,16 +69,18 @@ procedure ts_hesscrit is
 
     tmp : DoblDobl_Complex_Solutions.Solution_List := sols;
     ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+    eta : double_double;
 
   begin
     while not DoblDobl_Complex_Solutions.Is_Null(tmp) loop
       ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
-      DoblDobl_Evaluate(jm,hess,ls.all);
+      eta := Singular_Values_of_Hessians.DoblDobl_Distance(jm,hess,ls.all);
+      put("eta : "); put(eta,2); new_line;
       tmp := DoblDobl_Complex_Solutions.Tail_Of(tmp);
     end loop;
-  end DoblDobl_Evaluate;
+  end DoblDobl_Distances;
 
-  procedure QuadDobl_Evaluate
+  procedure QuadDobl_Distances
               ( jm : in QuadDobl_Complex_Jaco_Matrices.Jaco_Mat;
                 hess : in QuadDobl_Complex_Hessians.Array_of_Hessians;
                 sols : in QuadDobl_Complex_Solutions.Solution_List ) is
@@ -152,14 +90,16 @@ procedure ts_hesscrit is
 
     tmp : QuadDobl_Complex_Solutions.Solution_List := sols;
     ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+    eta : quad_double;
 
   begin
     while not QuadDobl_Complex_Solutions.Is_Null(tmp) loop
       ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
-      QuadDobl_Evaluate(jm,hess,ls.all);
+      eta := Singular_Values_of_Hessians.QuadDobl_Distance(jm,hess,ls.all);
+      put("eta : "); put(eta,2); new_line;
       tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
     end loop;
-  end QuadDobl_Evaluate;
+  end QuadDobl_Distances;
 
   procedure Standard_Test
               ( nbeq : in integer32;
@@ -184,7 +124,7 @@ procedure ts_hesscrit is
     Symbol_Table.Enlarge(1);
     Symbol_Table.Add(s);
     put_line("The homotopy system : "); put(p);
-    Standard_Evaluate(jm.all,h.all,sols);
+    Standard_Distances(jm.all,h.all,sols);
   end Standard_Test;
 
   procedure DoblDobl_Test
@@ -210,7 +150,7 @@ procedure ts_hesscrit is
     Symbol_Table.Enlarge(1);
     Symbol_Table.Add(s);
     put_line("The homotopy system : "); put(p);
-    DoblDobl_Evaluate(jm.all,h.all,sols);
+    DoblDobl_Distances(jm.all,h.all,sols);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test
@@ -236,7 +176,7 @@ procedure ts_hesscrit is
     Symbol_Table.Enlarge(1);
     Symbol_Table.Add(s);
     put_line("The homotopy system : "); put(p);
-    QuadDobl_Evaluate(jm.all,h.all,sols);
+    QuadDobl_Distances(jm.all,h.all,sols);
   end QuadDobl_Test;
 
   procedure Standard_Main is
