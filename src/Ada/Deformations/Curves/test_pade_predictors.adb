@@ -192,7 +192,7 @@ package body Test_Pade_Predictors is
     if verbose
      then put_line("The poles : "); put_line(poles);
     end if;
-    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,fpr);
+    Homotopy_Pade_Approximants.Closest_Pole(poles,lead,idx,fpr);
     if verbose then
       put("The radius of the smallest pole : ");
       put(fpr,3); new_line;
@@ -228,7 +228,7 @@ package body Test_Pade_Predictors is
     if verbose
      then put_line("The poles : "); put_line(poles);
     end if;
-    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,fpr);
+    Homotopy_Pade_Approximants.Closest_Pole(poles,lead,idx,fpr);
     if verbose then
       put("The radius of the smallest pole : ");
       put(fpr,3); new_line;
@@ -264,7 +264,7 @@ package body Test_Pade_Predictors is
     if verbose
      then put_line("The poles : "); put_line(poles);
     end if;
-    Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles,lead,idx,fpr);
+    Homotopy_Pade_Approximants.Closest_Pole(poles,lead,idx,fpr);
     if verbose then
       put("The radius of the smallest pole : ");
       put(fpr,3); new_line;

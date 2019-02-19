@@ -78,7 +78,7 @@ procedure ts_padepred is
     put("Give the degree of the denominator : "); get(degden);
     pv := Standard_Pade_Approximants.Create(degnum,degden,srv,verbose);
     poles := Homotopy_Pade_Approximants.Standard_Poles(pv);
-    frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
+    frp := Homotopy_Pade_Approximants.Closest_Pole(poles);
     put("The smallest forward pole : "); put(frp,3); new_line;
     Test_Pade_Predictors.Standard_Step_Prediction(hom,srv,eva,pv);
     new_line;
@@ -122,7 +122,7 @@ procedure ts_padepred is
     put("Give the degree of the denominator : "); get(degden);
     pv := DoblDobl_Pade_Approximants.Create(degnum,degden,srv,verbose);
     poles := Homotopy_Pade_Approximants.DoblDobl_Poles(pv);
-    frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
+    frp := Homotopy_Pade_Approximants.Closest_Pole(poles);
     put("The smallest forward pole : "); put(frp,3); new_line;
     Test_Pade_Predictors.DoblDobl_Step_Prediction(hom,srv,eva,pv);
     new_line;
@@ -167,7 +167,7 @@ procedure ts_padepred is
     put("Give the degree of the denominator : "); get(degden);
     pv := QuadDobl_Pade_Approximants.Create(degnum,degden,srv,verbose);
     poles := Homotopy_Pade_Approximants.QuadDobl_Poles(pv);
-    frp := Homotopy_Pade_Approximants.Smallest_Forward_Pole(poles);
+    frp := Homotopy_Pade_Approximants.Closest_Pole(poles);
     put("The smallest forward pole : "); put(frp,3); new_line;
     Test_Pade_Predictors.QuadDobl_Step_Prediction(hom,srv,eva,pv);
     new_line;

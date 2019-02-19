@@ -2,6 +2,7 @@ Tue 19 Feb 2019 : to singular_values_of_hessians, added the making of the
   Jacobian and Hessians, with code extracted from ts_hesscrit.adb.
   Added wrapper for the distance estimate for solution data types to
   the singular_values_of_hessians, extracting code from ts_hesscrit.
+  Fixed closest_pole name in test_pade_predictors.adb and ts_padepred.adb.
 
 Mon 18 Feb 2019 : in singular_values_of_hessians.adb, multiplied the
   sigma1 for the evaluation Jacobian with the factor 2.0.
