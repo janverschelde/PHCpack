@@ -1,13 +1,13 @@
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_Polar;
-with Double_Double_Numbers;             use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_Polar;
-with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_Polar;
 with Standard_Floating_Vectors;
+with Standard_Complex_Vector_Norms;
+with DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vector_Norms;
 with Black_Box_Univariate_Solvers;
 with Homotopy_Series_Readers;           use Homotopy_Series_Readers;
 
@@ -40,7 +40,7 @@ package body Homotopy_Pade_Approximants is
 
   begin
     DoblDobl_Series_Newton(sol,idx,nbequ,nbterms,nbiters,srv,eva);
-    pv := DoblDobl_Pade_Approximants.Create(numdeg,dendeg,srv);
+    pv := DoblDobl_Pade_Approximants.Create(numdeg,dendeg,srv,verbose);
   end DoblDobl_Pade_Approximant;
 
   procedure QuadDobl_Pade_Approximant
@@ -55,7 +55,7 @@ package body Homotopy_Pade_Approximants is
 
   begin
     QuadDobl_Series_Newton(sol,idx,nbequ,nbterms,nbiters,srv,eva);
-    pv := QuadDobl_Pade_Approximants.Create(numdeg,dendeg,srv);
+    pv := QuadDobl_Pade_Approximants.Create(numdeg,dendeg,srv,verbose);
   end QuadDobl_Pade_Approximant;
 
   function Numerical_Degree
@@ -554,5 +554,146 @@ package body Homotopy_Pade_Approximants is
     Closest_Pole(v,leadidx,idx,res);
     return res;
   end Closest_Pole;
+
+  function Solution_Error_Estimate
+             ( s : Standard_Complex_Series.Link_to_Series;
+               p : Standard_Pade_Approximants.Pade )
+             return Standard_Complex_Numbers.Complex_Number is
+
+    use Standard_Pade_Approximants;
+
+    numdeg : constant integer32 := Numerator_Degree(p);
+    dendeg : constant integer32 := Denominator_Degree(p);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    res : Standard_Complex_Numbers.Complex_Number := s.cff(maxdeg);
+    pdncff : constant Standard_Complex_Vectors.Vector(0..dendeg)
+           := Denominator_Coefficients(p);
+
+  begin
+    for i in 1..dendeg loop
+      res := res + pdncff(i)*s.cff(maxdeg-i);
+    end loop;
+    return res;
+  end Solution_Error_Estimate;
+
+  function Solution_Error_Estimate
+             ( s : DoblDobl_Complex_Series.Link_to_Series;
+               p : DoblDobl_Pade_Approximants.Pade )
+             return DoblDobl_Complex_Numbers.Complex_Number is
+
+    use DoblDobl_Pade_Approximants;
+
+    numdeg : constant integer32 := Numerator_Degree(p);
+    dendeg : constant integer32 := Denominator_Degree(p);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    res : DoblDobl_Complex_Numbers.Complex_Number := s.cff(maxdeg);
+    pdncff : constant DoblDobl_Complex_Vectors.Vector(0..dendeg)
+           := Denominator_Coefficients(p);
+
+  begin
+    for i in 1..dendeg loop
+      res := res + pdncff(i)*s.cff(maxdeg-i);
+    end loop;
+    return res;
+  end Solution_Error_Estimate;
+
+  function Solution_Error_Estimate
+             ( s : QuadDobl_Complex_Series.Link_to_Series;
+               p : QuadDobl_Pade_Approximants.Pade )
+             return QuadDobl_Complex_Numbers.Complex_Number is
+
+    use QuadDobl_Pade_Approximants;
+
+    numdeg : constant integer32 := Numerator_Degree(p);
+    dendeg : constant integer32 := Denominator_Degree(p);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    res : QuadDobl_Complex_Numbers.Complex_Number := s.cff(maxdeg);
+    pdncff : constant QuadDobl_Complex_Vectors.Vector(0..dendeg)
+           := Denominator_Coefficients(p);
+
+  begin
+    for i in 1..dendeg loop
+      res := res + pdncff(i)*s.cff(maxdeg-i);
+    end loop;
+    return res;
+  end Solution_Error_Estimate;
+
+  function Solution_Error
+             ( srv : Standard_Complex_Series_Vectors.Vector;
+               pv : Standard_Pade_Approximants.Pade_Vector )
+             return Standard_Complex_Vectors.Vector is
+
+    res : Standard_Complex_Vectors.Vector(srv'range);
+
+  begin
+    for k in res'range loop
+      res(k) := Solution_Error_Estimate(srv(k),pv(k));
+    end loop;
+    return res;
+  end Solution_Error;
+
+  function Solution_Error
+             ( srv : DoblDobl_Complex_Series_Vectors.Vector;
+               pv : DoblDobl_Pade_Approximants.Pade_Vector )
+             return DoblDobl_Complex_Vectors.Vector is
+
+    res : DoblDobl_Complex_Vectors.Vector(srv'range);
+
+  begin
+    for k in res'range loop
+      res(k) := Solution_Error_Estimate(srv(k),pv(k));
+    end loop;
+    return res;
+  end Solution_Error;
+
+  function Solution_Error
+             ( srv : QuadDobl_Complex_Series_Vectors.Vector;
+               pv : QuadDobl_Pade_Approximants.Pade_Vector )
+             return QuadDobl_Complex_Vectors.Vector is
+
+    res : QuadDobl_Complex_Vectors.Vector(srv'range);
+
+  begin
+    for k in res'range loop
+      res(k) := Solution_Error_Estimate(srv(k),pv(k));
+    end loop;
+    return res;
+  end Solution_Error;
+
+  function Solution_Error_Norm
+             ( srv : Standard_Complex_Series_Vectors.Vector;
+               pv : Standard_Pade_Approximants.Pade_Vector )
+             return double_float is
+
+    err : constant Standard_Complex_Vectors.Vector(srv'range)
+        := Solution_Error(srv,pv);
+
+  begin
+    return Standard_Complex_Vector_Norms.Norm2(err);
+  end Solution_Error_Norm;
+
+  function Solution_Error_Norm
+             ( srv : DoblDobl_Complex_Series_Vectors.Vector;
+               pv : DoblDobl_Pade_Approximants.Pade_Vector )
+             return double_double is
+
+    err : constant DoblDobl_Complex_Vectors.Vector(srv'range)
+        := Solution_Error(srv,pv);
+
+  begin
+    return DoblDobl_Complex_Vector_Norms.Norm2(err);
+  end Solution_Error_Norm;
+
+  function Solution_Error_Norm
+             ( srv : QuadDobl_Complex_Series_Vectors.Vector;
+               pv : QuadDobl_Pade_Approximants.Pade_Vector )
+             return quad_double is
+
+    err : constant QuadDobl_Complex_Vectors.Vector(srv'range)
+        := Solution_Error(srv,pv);
+
+  begin
+    return QuadDobl_Complex_Vector_Norms.Norm2(err);
+  end Solution_Error_Norm;
 
 end Homotopy_Pade_Approximants;

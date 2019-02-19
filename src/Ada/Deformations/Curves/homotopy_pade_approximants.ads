@@ -3,16 +3,22 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
 with Standard_Pade_Approximants;
+with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_Pade_Approximants;
+with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Pade_Approximants;
 
@@ -222,5 +228,56 @@ package Homotopy_Pade_Approximants is
 
   -- DESCRIPTION :
   --   Returns the smallest radius in v.
+
+  function Solution_Error_Estimate
+             ( s : Standard_Complex_Series.Link_to_Series;
+               p : Standard_Pade_Approximants.Pade )
+             return Standard_Complex_Numbers.Complex_Number;
+  function Solution_Error_Estimate
+             ( s : DoblDobl_Complex_Series.Link_to_Series;
+               p : DoblDobl_Pade_Approximants.Pade )
+             return DoblDobl_Complex_Numbers.Complex_Number;
+  function Solution_Error_Estimate
+             ( s : QuadDobl_Complex_Series.Link_to_Series;
+               p : QuadDobl_Pade_Approximants.Pade )
+             return QuadDobl_Complex_Numbers.Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns an estimate for a component of the solution vector,
+  --   based on the series s and the Pade approximant p.
+
+  function Solution_Error
+             ( srv : Standard_Complex_Series_Vectors.Vector;
+               pv : Standard_Pade_Approximants.Pade_Vector )
+             return Standard_Complex_Vectors.Vector;
+  function Solution_Error
+             ( srv : DoblDobl_Complex_Series_Vectors.Vector;
+               pv : DoblDobl_Pade_Approximants.Pade_Vector )
+             return DoblDobl_Complex_Vectors.Vector;
+  function Solution_Error
+             ( srv : QuadDobl_Complex_Series_Vectors.Vector;
+               pv : QuadDobl_Pade_Approximants.Pade_Vector )
+             return QuadDobl_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Estimates the error on the solution of the predicted Pade 
+  --   approximants pv and the series in srv.
+
+  function Solution_Error_Norm
+             ( srv : Standard_Complex_Series_Vectors.Vector;
+               pv : Standard_Pade_Approximants.Pade_Vector )
+             return double_float;
+  function Solution_Error_Norm
+             ( srv : DoblDobl_Complex_Series_Vectors.Vector;
+               pv : DoblDobl_Pade_Approximants.Pade_Vector )
+             return double_double;
+  function Solution_Error_Norm
+             ( srv : QuadDobl_Complex_Series_Vectors.Vector;
+               pv : QuadDobl_Pade_Approximants.Pade_Vector )
+             return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns the 2-norm of the estimate error of the solution vector
+  --   of the predicted Pade approximations pv and the series in srv.
 
 end Homotopy_Pade_Approximants;
