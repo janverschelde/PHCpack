@@ -1,3 +1,6 @@
+Tue 19 Feb 2019 : to singular_values_of_hessians, added the making of the
+  Jacobian and Hessians, with code extracted from ts_hesscrit.adb.
+
 Mon 18 Feb 2019 : in singular_values_of_hessians.adb, multiplied the
   sigma1 for the evaluation Jacobian with the factor 2.0.
 

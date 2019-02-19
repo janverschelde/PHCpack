@@ -1,4 +1,3 @@
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
@@ -8,6 +7,15 @@ with Quad_Double_Two_Norms;
 with Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Singular_Values;
 with QuadDobl_Complex_Singular_Values;
+with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Systems;
+with Standard_Homotopy;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Homotopy;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Homotopy;
 
 package body Singular_Values_of_Hessians is
 
@@ -247,5 +255,164 @@ package body Singular_Values_of_Hessians is
     nrm := Quad_Double_Two_Norms.Norm2(sv);
     return (2.0*sigma1)/nrm;
   end QuadDobl_Distance;
+
+  procedure Standard_Jacobian_Hessians_of_Homotopy
+              ( jm : out Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out Standard_Complex_Hessians.Link_to_Array_of_Hessians ) is
+
+    p : constant Standard_Complex_Poly_Systems.Poly_Sys
+      := Standard_Homotopy.Homotopy_System;
+    nbeq : constant integer32 := p'last;
+    n : constant integer32
+      := integer32(Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first)));
+    n1 : constant integer32 := n-1; -- minus homotopy parameter
+    hs : constant Standard_Complex_Hessians.Array_of_Hessians(p'range)
+       := Standard_Complex_Hessians.Create(p,n);
+    cm : Standard_Complex_Jaco_Matrices.Jaco_Mat(1..nbeq,1..n1);
+
+  begin
+    for i in 1..nbeq loop
+      for j in 1..n1 loop
+        cm(i,j) := Standard_Complex_Polynomials.Diff(p(i),j);
+      end loop;
+    end loop;
+    jm := new Standard_Complex_Jaco_Matrices.Jaco_Mat'(cm);
+    h := new Standard_Complex_Hessians.Array_of_Hessians'(hs);
+  end Standard_Jacobian_Hessians_of_Homotopy;
+
+  procedure DoblDobl_Jacobian_Hessians_of_Homotopy
+              ( jm : out DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians ) is
+
+    p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+      := DoblDobl_Homotopy.Homotopy_System;
+    nbeq : constant integer32 := p'last;
+    n : constant integer32
+      := integer32(DoblDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first)));
+    n1 : constant integer32 := n-1; -- minus homotopy parameter
+    hs : constant DoblDobl_Complex_Hessians.Array_of_Hessians(p'range)
+       := DoblDobl_Complex_Hessians.Create(p,n);
+    cm : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(1..nbeq,1..n1);
+
+  begin
+    for i in 1..nbeq loop
+      for j in 1..n1 loop
+        cm(i,j) := DoblDobl_Complex_Polynomials.Diff(p(i),j);
+      end loop;
+    end loop;
+    jm := new DoblDobl_Complex_Jaco_Matrices.Jaco_Mat'(cm);
+    h := new DoblDobl_Complex_Hessians.Array_of_Hessians'(hs);
+  end DoblDobl_Jacobian_Hessians_of_Homotopy;
+
+  procedure QuadDobl_Jacobian_Hessians_of_Homotopy
+              ( jm : out QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians ) is
+
+    p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+      := QuadDobl_Homotopy.Homotopy_System;
+    nbeq : constant integer32 := p'last;
+    n : constant integer32
+      := integer32(QuadDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first)));
+    n1 : constant integer32 := n-1; -- minus homotopy parameter
+    hs : constant QuadDobl_Complex_Hessians.Array_of_Hessians(p'range)
+       := QuadDobl_Complex_Hessians.Create(p,n);
+    cm : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(1..nbeq,1..n1);
+
+  begin
+    for i in 1..nbeq loop
+      for j in 1..n1 loop
+        cm(i,j) := QuadDobl_Complex_Polynomials.Diff(p(i),j);
+      end loop;
+    end loop;
+    jm := new QuadDobl_Complex_Jaco_Matrices.Jaco_Mat'(cm);
+    h := new QuadDobl_Complex_Hessians.Array_of_Hessians'(hs);
+  end QuadDobl_Jacobian_Hessians_of_Homotopy;
+
+  procedure Standard_Jacobian_Hessians_of_Homotopy
+              ( k : in integer32;
+                jm : out Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out Standard_Complex_Hessians.Link_to_Array_of_Hessians ) is
+
+    p : constant Standard_Complex_Poly_Systems.Poly_Sys
+      := Standard_Homotopy.Homotopy_System;
+    nbeq : constant integer32 := p'last;
+    n : constant integer32
+      := integer32(Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first)));
+    n1 : constant integer32 := n-1; -- minus homotopy parameter
+    hs : constant Standard_Complex_Hessians.Array_of_Hessians(p'range)
+       := Standard_Complex_Hessians.Create(p,k);
+    cm : Standard_Complex_Jaco_Matrices.Jaco_Mat(1..nbeq,1..n1);
+
+  begin
+    for i in 1..nbeq loop
+      for j in 1..n loop
+        if j < k then
+          cm(i,j) := Standard_Complex_Polynomials.Diff(p(i),j);
+        elsif j > k then
+          cm(i,j-1) := Standard_Complex_Polynomials.Diff(p(i),j);
+        end if;
+      end loop;
+    end loop;
+    jm := new Standard_Complex_Jaco_Matrices.Jaco_Mat'(cm);
+    h := new Standard_Complex_Hessians.Array_of_Hessians'(hs);
+  end Standard_Jacobian_Hessians_of_Homotopy;
+
+  procedure DoblDobl_Jacobian_Hessians_of_Homotopy
+              ( k : in integer32;
+                jm : out DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians ) is
+
+    p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+      := DoblDobl_Homotopy.Homotopy_System;
+    nbeq : constant integer32 := p'last;
+    n : constant integer32
+      := integer32(DoblDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first)));
+    n1 : constant integer32 := n-1; -- minus homotopy parameter
+    hs : constant DoblDobl_Complex_Hessians.Array_of_Hessians(p'range)
+       := DoblDobl_Complex_Hessians.Create(p,k);
+    cm : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(1..nbeq,1..n1);
+
+  begin
+    for i in 1..nbeq loop
+      for j in 1..n loop
+        if j < k then
+          cm(i,j) := DoblDobl_Complex_Polynomials.Diff(p(i),j);
+        elsif i > k then
+          cm(i,j-1) := DoblDobl_Complex_Polynomials.Diff(p(i),j);
+        end if;
+      end loop;
+    end loop;
+    jm := new DoblDobl_Complex_Jaco_Matrices.Jaco_Mat'(cm);
+    h := new DoblDobl_Complex_Hessians.Array_of_Hessians'(hs);
+  end DoblDobl_Jacobian_Hessians_of_Homotopy;
+
+  procedure QuadDobl_Jacobian_Hessians_of_Homotopy
+              ( k : in integer32;
+                jm : out QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians ) is
+
+    p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+      := QuadDobl_Homotopy.Homotopy_System;
+    nbeq : constant integer32 := p'last;
+    n : constant integer32
+      := integer32(QuadDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first)));
+    n1 : constant integer32 := n-1; -- minus homotopy parameter
+    hs : constant QuadDobl_Complex_Hessians.Array_of_Hessians(p'range)
+       := QuadDobl_Complex_Hessians.Create(p,k);
+    cm : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(1..nbeq,1..n1);
+
+  begin
+    for i in 1..nbeq loop
+      for j in 1..n loop
+        if j < k then
+          cm(i,j) := QuadDobl_Complex_Polynomials.Diff(p(i),j);
+        elsif j > k then
+          cm(i,j-1) := QuadDobl_Complex_Polynomials.Diff(p(i),j);
+        end if;
+      end loop;
+    end loop;
+    jm := new QuadDobl_Complex_Jaco_Matrices.Jaco_Mat'(cm);
+    h := new QuadDobl_Complex_Hessians.Array_of_Hessians'(hs);
+  end QuadDobl_Jacobian_Hessians_of_Homotopy;
 
 end Singular_Values_of_Hessians;

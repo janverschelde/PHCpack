@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
@@ -107,5 +108,56 @@ package Singular_Values_of_Hessians is
   --   correspond to the end of the range of xt.
   --   Moreover, the value for the parameter in xt is at the proper place,
   --   corresponding to the homotopy.
+
+  procedure Standard_Jacobian_Hessians_of_Homotopy
+              ( jm : out Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out Standard_Complex_Hessians.Link_to_Array_of_Hessians );
+  procedure DoblDobl_Jacobian_Hessians_of_Homotopy
+              ( jm : out DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians );
+  procedure QuadDobl_Jacobian_Hessians_of_Homotopy
+              ( jm : out QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians );
+
+  -- DESCRIPTION :
+  --   Given in Standard_Homotopy, DoblDobl_Homotopy, or QuadDobl_Homotopy,
+  --   the homotopy defined in double, double double, or quad double precision,
+  --   returns the Jacobian matrix and the Hessians for the homotopy.
+  --   These procedures are for artificial parameter homotopies.
+
+  -- ON RETURN :
+  --   jm       the Jacobian matrix for polynomials with a homotopy
+  --            continuation parameter, which is assumed as the last one;
+  --   h        Hessians for the polynomials in the homotopy,
+  --            with the continuation parameter as the last variable.
+
+  procedure Standard_Jacobian_Hessians_of_Homotopy
+              ( k : in integer32;
+                jm : out Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out Standard_Complex_Hessians.Link_to_Array_of_Hessians );
+  procedure DoblDobl_Jacobian_Hessians_of_Homotopy
+              ( k : in integer32;
+                jm : out DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians );
+  procedure QuadDobl_Jacobian_Hessians_of_Homotopy
+              ( k : in integer32;
+                jm : out QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                h : out QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians );
+
+  -- DESCRIPTION :
+  --   Given in Standard_Homotopy, DoblDobl_Homotopy, or QuadDobl_Homotopy,
+  --   the homotopy defined in double, double double, or quad double precision,
+  --   returns the Jacobian matrix and the Hessians for the homotopy.
+  --   These procedures are for natural parameter homotopies.
+
+  -- ON ENTRY :
+  --   k        index of the continuation parameter, as the index of
+  --            the variable in the polynomials of the homotopy.
+
+  -- ON RETURN :
+  --   jm       the Jacobian matrix for polynomials with a homotopy
+  --            continuation parameter, which is assumed at position k;
+  --   h        Hessians for the polynomials in the homotopy,
+  --            with the continuation parameter as the k-th variable.
 
 end Singular_Values_of_Hessians;
