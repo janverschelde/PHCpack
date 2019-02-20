@@ -747,6 +747,20 @@ package body Series_and_Predictors is
     end if;
   end Cap_Step_Size;
 
+  function Step_Distance
+             ( k : integer32; beta,eta,errnrm : double_float )
+             return double_float is
+
+    use Standard_Mathematical_Functions;
+
+    ratio : constant double_float := (beta*eta)/errnrm;
+    pwr : constant double_float := 1.0/double_float(k);
+    res : constant double_float := ratio**pwr;
+
+  begin
+    return res;
+  end Step_Distance;
+
   function Predicted_Solution
              ( srv : Standard_Complex_Series_Vectors.Vector;
                step : double_float )

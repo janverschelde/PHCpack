@@ -346,9 +346,22 @@ package Series_and_Predictors is
              ( step,frp,factor : double_float ) return double_float;
 
   -- DESCRIPTION :
-  --   Caps the step size with the smallest forward pole radius,
+  --   Caps the step size with the smallest pole radius frp,
   --   multiplied by a factor, which is typically smaller than one.
   --   The formula is min(step,frp*factor).
+
+  function Step_Distance
+             ( k : integer32; beta,eta,errnrm : double_float )
+             return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the k-th root of the ratio (beta*eta)/errnrm,
+  --   where k is the maximal degree L+M+2, beta is some small factor,
+  --   eta is the estimate for the distance computed with
+  --   singular values of Jacobian and Hessians, and
+  --   errnrm is the estimated solution error norm.
+  --   The returned value is an estimate for the step size,
+  --   based on the estimate to the nearest solution.
 
   function Predicted_Solution
              ( srv : Standard_Complex_Series_Vectors.Vector;
