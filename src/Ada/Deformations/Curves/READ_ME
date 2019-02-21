@@ -61,6 +61,7 @@ ts_serpade                       : test rational approximations given series
 -------------------------------------------------------------------------------
 singular_values_of_hessians      : wraps SVD for the Hessian criterion
 ts_hesscrit                      : test development of the Hessian criterion
+ts_hesspred                      : test step size based on nearest solution
 series_and_predictors            : apply power series to predict solutions
 test_series_predictors           : procedure to help in the testing
 ts_serpred                       : test on series predictor
