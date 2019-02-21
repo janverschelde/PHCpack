@@ -812,6 +812,10 @@ ts_hesscrit:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hesscrit.adb \
               -o $(BIN)/ts_hesscrit
 
+ts_hesspred:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hesspred.adb \
+              -o $(BIN)/ts_hesspred
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:
