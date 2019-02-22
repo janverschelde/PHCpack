@@ -1,4 +1,7 @@
-Thu 21 Feb 2019 : new test procedures ts_hesspred.adb to test the setting
+Fri 22 Feb 2019 : new test procedure ts_predstep.adb sets the step based
+  on both the closest pole and the nearest solution estimate.
+
+Thu 21 Feb 2019 : new test procedure ts_hesspred.adb to test the setting
   the step size based on the estimate for the nearest solution vector.
 
 Wed 20 Feb 2019 : added the candidate step size based on the estimate
