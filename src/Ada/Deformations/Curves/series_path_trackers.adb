@@ -10,12 +10,18 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Jaco_Matrices;
+with Standard_Complex_Hessians;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Jaco_Matrices;
+with DoblDobl_Complex_Hessians;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Jaco_Matrices;
+with QuadDobl_Complex_Hessians;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Solution_Drops;
 with Standard_Homotopy;
@@ -33,7 +39,7 @@ with DoblDobl_CSeries_Jaco_Matrices;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_SysFun;
 with QuadDobl_CSeries_Jaco_Matrices;
-with Complex_Series_and_Polynomials_io;  use Complex_Series_and_Polynomials_io;
+with Singular_Values_of_Hessians;
 with Series_and_Homotopies;
 with Series_and_Trackers;
 with Homotopy_Series_Readers;
@@ -134,6 +140,8 @@ package body Series_Path_Trackers is
     fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
     fcf : Standard_Complex_Series_VecVecs.VecVec(1..nq);
     dim : constant integer32 := Set_Dimension(nvr,idxpar);
+    jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
     ejm : Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..dim);
     mlt : Standard_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..dim);
     p : Homotopy_Continuation_Parameters.Parameters
@@ -151,10 +159,13 @@ package body Series_Path_Trackers is
     minsize,maxsize,smallest,largest : double_float;
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
+    use Singular_Values_of_Hessians;
+
   begin
     if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
       p.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(p);
+      Standard_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
     else
       p.gamma := Standard_Homotopy.Accessibility_Constant;
       prevgamma := p.gamma;
@@ -162,6 +173,7 @@ package body Series_Path_Trackers is
       if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
        then Standard_Reset_Gamma(p.gamma);
       end if;
+      Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
     end if;
     h := Standard_Homotopy.Homotopy_System;
     if idxpar /= 0
@@ -186,7 +198,7 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         Series_and_Trackers.Track_One_Path
-          (file,fhm,fcf,ejm,mlt,ls.all,p,
+          (file,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -196,7 +208,7 @@ package body Series_Path_Trackers is
         put(file,ls.all); new_line(file);
       else
         Series_and_Trackers.Track_One_Path
-          (standard_output,fhm,fcf,ejm,mlt,ls.all,p,
+          (standard_output,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -253,6 +265,8 @@ package body Series_Path_Trackers is
 
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
     s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
+    jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
     fhm : DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
     fcf : DoblDobl_Complex_Series_VecVecs.VecVec(1..nq);
     dim : constant integer32 := Set_Dimension(nvr,idxpar);
@@ -277,10 +291,13 @@ package body Series_Path_Trackers is
     minsize,maxsize,smallest,largest : double_float;
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
+    use Singular_Values_of_Hessians;
+
   begin
     if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
       p.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(p);
+      DoblDobl_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
     else
       p.gamma := gamma;
       prevgamma := p.gamma;
@@ -288,6 +305,7 @@ package body Series_Path_Trackers is
       if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
        then DoblDobl_Reset_Gamma(p.gamma);
       end if;
+      DoblDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
     end if;
     h := DoblDobl_Homotopy.Homotopy_System;
     if idxpar /= 0
@@ -312,7 +330,7 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         Series_and_Trackers.Track_One_Path
-          (file,fhm,fcf,ejm,mlt,ls.all,p,
+          (file,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -322,7 +340,7 @@ package body Series_Path_Trackers is
         put(file,ls.all); new_line(file);
       else
         Series_and_Trackers.Track_One_Path
-          (standard_output,fhm,fcf,ejm,mlt,ls.all,p,
+          (standard_output,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -380,6 +398,8 @@ package body Series_Path_Trackers is
 
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
     s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
+    jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
     fhm : QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
     fcf : QuadDobl_Complex_Series_VecVecs.VecVec(1..nq);
     dim : constant integer32 := Set_Dimension(nvr,idxpar);
@@ -404,10 +424,13 @@ package body Series_Path_Trackers is
     minsize,maxsize,smallest,largest : double_float;
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
+    use Singular_Values_of_Hessians;
+
   begin
     if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
       p.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(p);
+      QuadDobl_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
     else
       p.gamma := gamma;
       prevgamma := p.gamma;
@@ -415,6 +438,7 @@ package body Series_Path_Trackers is
       if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
        then QuadDobl_Reset_Gamma(p.gamma);
       end if;
+      QuadDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
     end if;
     h := QuadDobl_Homotopy.Homotopy_System;
     if idxpar /= 0
@@ -439,7 +463,7 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         Series_and_Trackers.Track_One_Path
-          (file,fhm,fcf,ejm,mlt,ls.all,p,
+          (file,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -449,7 +473,7 @@ package body Series_Path_Trackers is
         put(file,ls.all); new_line(file);
       else
         Series_and_Trackers.Track_One_Path
-          (standard_output,fhm,fcf,ejm,mlt,ls.all,p,
+          (standard_output,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics

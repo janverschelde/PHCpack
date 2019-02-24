@@ -1,3 +1,7 @@
+Sat 23 Feb 2019 : added extra parameters for the Hessian step size criterium
+  to series_and_trackers, series_path_trackers.adb, with updates in
+  drivers_to_series_trackers.
+
 Fri 22 Feb 2019 : new test procedure ts_predstep.adb sets the step based
   on both the closest pole and the nearest solution estimate.
 

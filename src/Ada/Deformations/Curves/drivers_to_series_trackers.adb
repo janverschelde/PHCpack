@@ -2,11 +2,19 @@ with Communications_with_User;           use Communications_with_User;
 with Time_Stamps;
 with Characters_and_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
+with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Jaco_Matrices;
+with Standard_Complex_Hessians;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Jaco_Matrices;
+with DoblDobl_Complex_Hessians;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Jaco_Matrices;
+with QuadDobl_Complex_Hessians;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
@@ -17,6 +25,7 @@ with QuadDobl_Root_Refiners;
 with Standard_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
+with Singular_Values_of_Hessians;
 with Series_and_Homotopies;
 with Series_and_Trackers;
 with Write_Seed_Number;
@@ -117,9 +126,16 @@ package body Drivers_to_Series_Trackers is
       := Standard_Homotopy.Homotopy_System;
     s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,false);
+    jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+
+    use Singular_Values_of_Hessians;
 
   begin
-    Series_and_Trackers.Track_Many_Paths(s,sols,pars);
+    Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
+    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars);
+    Standard_Complex_Jaco_Matrices.Clear(jm);
+    Standard_Complex_Hessians.Clear(hs);
     Standard_CSeries_Poly_Systems.Clear(s);
     Standard_Complex_Poly_Systems.Clear(h);
   end Standard_Track;
@@ -145,12 +161,20 @@ package body Drivers_to_Series_Trackers is
       := Standard_Homotopy.Homotopy_System;
     s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,false);
+    jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+
+    use Singular_Values_of_Hessians;
 
   begin
-    if verbose
-     then Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,true,true);
-     else Series_and_Trackers.Track_Many_Paths(file,s,sols,pars);
+    Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
+    if verbose then
+      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars,true,true);
+    else
+      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars);
     end if;
+    Standard_Complex_Jaco_Matrices.Clear(jm);
+    Standard_Complex_Hessians.Clear(hs);
     Standard_CSeries_Poly_Systems.Clear(s);
     Standard_Complex_Poly_Systems.Clear(h);
   end Standard_Track;
@@ -176,9 +200,16 @@ package body Drivers_to_Series_Trackers is
       := DoblDobl_Homotopy.Homotopy_System;
     s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,false);
+    jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+
+    use Singular_Values_of_Hessians;
 
   begin
-    Series_and_Trackers.Track_Many_Paths(s,sols,pars);
+    DoblDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
+    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars);
+    DoblDobl_Complex_Jaco_Matrices.Clear(jm);
+    DoblDobl_Complex_Hessians.Clear(hs);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
     DoblDobl_Complex_Poly_Systems.Clear(h);
   end DoblDobl_Track;
@@ -204,12 +235,20 @@ package body Drivers_to_Series_Trackers is
       := DoblDobl_Homotopy.Homotopy_System;
     s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,false);
+    jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+
+    use Singular_Values_of_Hessians;
 
   begin
-    if verbose
-     then Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,true,true);
-     else Series_and_Trackers.Track_Many_Paths(file,s,sols,pars);
+    DoblDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
+    if verbose then
+      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars,true,true);
+    else
+      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars);
     end if;
+    DoblDobl_Complex_Jaco_Matrices.Clear(jm);
+    DoblDobl_Complex_Hessians.Clear(hs);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
     DoblDobl_Complex_Poly_Systems.Clear(h);
   end DoblDobl_Track;
@@ -235,9 +274,16 @@ package body Drivers_to_Series_Trackers is
       := QuadDobl_Homotopy.Homotopy_System;
     s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,false);
+    jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+
+    use Singular_Values_of_Hessians;
 
   begin
-    Series_and_Trackers.Track_Many_Paths(s,sols,pars);
+    QuadDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
+    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars);
+    QuadDobl_Complex_Jaco_Matrices.Clear(jm);
+    QuadDobl_Complex_Hessians.Clear(hs);
     QuadDobl_CSeries_Poly_Systems.Clear(s);
     QuadDobl_Complex_Poly_Systems.Clear(h);
   end QuadDobl_Track;
@@ -263,12 +309,20 @@ package body Drivers_to_Series_Trackers is
       := QuadDobl_Homotopy.Homotopy_System;
     s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1,false);
+    jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+
+    use Singular_Values_of_Hessians;
 
   begin
-    if verbose
-     then Series_and_Trackers.Track_Many_Paths(file,s,sols,pars,true,true);
-     else Series_and_Trackers.Track_Many_Paths(file,s,sols,pars);
+    QuadDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
+    if verbose then
+      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars,true,true);
+    else
+      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars);
     end if;
+    QuadDobl_Complex_Jaco_Matrices.Clear(jm);
+    QuadDobl_Complex_Hessians.Clear(hs);
     QuadDobl_CSeries_Poly_Systems.Clear(s);
     QuadDobl_Complex_Poly_Systems.Clear(h);
   end QuadDobl_Track;

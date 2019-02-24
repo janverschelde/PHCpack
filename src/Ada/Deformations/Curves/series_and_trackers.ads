@@ -10,6 +10,12 @@ with QuadDobl_Complex_Solutions;
 with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_VecVecs;
+with Standard_Complex_Jaco_Matrices;
+with Standard_Complex_Hessians;
+with DoblDobl_Complex_Jaco_Matrices;
+with DoblDobl_Complex_Hessians;
+with QuadDobl_Complex_Jaco_Matrices;
+with QuadDobl_Complex_Hessians;
 with Standard_CSeries_Poly_Systems;
 with Standard_CSeries_Poly_SysFun;
 with Standard_CSeries_Jaco_Matrices;
@@ -65,19 +71,25 @@ package Series_and_Trackers is
   --   must have been properly initialized.
 
   procedure Track_One_Path
-              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+              ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float );
   procedure Track_One_Path
-              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float );
   procedure Track_One_Path
-              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
@@ -89,6 +101,8 @@ package Series_and_Trackers is
   --   This version remains silent and does not write any output.
 
   -- ON ENTRY :
+  --   jm       Jacobian matrix for the polynomial homotopy;
+  --   hs       Hessians for all equations in the polynomial homotopy;
   --   hom      a homotopy with series coefficients;
   --   sol      start solution in the homotopy;
   --   pars     values of the parameters and tolerances.
@@ -103,6 +117,8 @@ package Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
+                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -111,6 +127,8 @@ package Series_and_Trackers is
                 verbose : in boolean := false );
   procedure Track_One_Path
               ( file : in file_type;
+                jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -119,6 +137,8 @@ package Series_and_Trackers is
                 verbose : in boolean := false );
   procedure Track_One_Path
               ( file : in file_type;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -133,6 +153,8 @@ package Series_and_Trackers is
 
   -- ON ENTRY :
   --   file     for writing output during the computations;
+  --   jm       Jacobian matrix for the polynomial homotopy;
+  --   hs       Hessians for all equations in the polynomial homotopy;
   --   hom      a homotopy with series coefficients;
   --   sol      start solution in the homotopy;
   --   pars     values of the parameters and tolerances.
@@ -148,7 +170,9 @@ package Series_and_Trackers is
 -- VERSIONS WITH COEFFICIENT-PARAMETER HOMOTOPIES :
 
   procedure Track_One_Path
-              ( fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+              ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat; 
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
@@ -157,7 +181,9 @@ package Series_and_Trackers is
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float );
   procedure Track_One_Path
-              ( fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+              ( jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+                fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
@@ -166,7 +192,9 @@ package Series_and_Trackers is
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float );
   procedure Track_One_Path
-              ( fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+              ( jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+                fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
                 mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
@@ -181,6 +209,8 @@ package Series_and_Trackers is
   --   This version remains silent and does not write any output.
 
   -- ON ENTRY :
+  --   jm       Jacobian matrix for the polynomial homotopy;
+  --   hs       Hessians for all equations in the polynomial homotopy;
   --   fhm      coefficient-parameter homotopy for efficient evaluation,
   --            the series parameter is the continuation parameter;
   --   fcf      coefficient vectors of the homotopy;
@@ -199,6 +229,8 @@ package Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
+                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
                 fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in Standard_Complex_Series_VecVecs.VecVec;
                 ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -210,6 +242,8 @@ package Series_and_Trackers is
                 verbose : in boolean := false );
   procedure Track_One_Path
               ( file : in file_type;
+                jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
                 ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -221,6 +255,8 @@ package Series_and_Trackers is
                 verbose : in boolean := false );
   procedure Track_One_Path
               ( file : in file_type;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -238,6 +274,8 @@ package Series_and_Trackers is
 
   -- ON ENTRY :
   --   file     for writing output during the computations;
+  --   jm       Jacobian matrix for the polynomial homotopy;
+  --   hs       Hessians for all equations in the polynomial homotopy;
   --   fhm      coefficient-parameter homotopy for efficient evaluation,
   --            the series parameter is the continuation parameter;
   --   fcf      coefficient vectors of the homotopy;
@@ -270,15 +308,21 @@ package Series_and_Trackers is
   --   updates their values with the new minimum and maximum step sizes.
 
   procedure Track_Many_Paths
-              ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+              ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters );
   procedure Track_Many_Paths
-              ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters );
   procedure Track_Many_Paths
-              ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+              ( jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters );
 
@@ -289,6 +333,8 @@ package Series_and_Trackers is
   --   The procedures are silent and do not write any output.
 
   -- ON ENTRY :
+  --   jm       Jacobian matrix for the polynomial homotopy;
+  --   hs       Hessians for all equations in the polynomial homotopy;
   --   hom      a homotopy with series coefficients;
   --   sols     start solutions in the homotopy;
   --   pars     values of the parameters and tolerances.
@@ -298,18 +344,24 @@ package Series_and_Trackers is
 
   procedure Track_Many_Paths
               ( file : in file_type;
+                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 monitor,verbose : in boolean := false );
   procedure Track_Many_Paths
               ( file : in file_type;
+                jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 monitor,verbose : in boolean := false );
   procedure Track_Many_Paths
               ( file : in file_type;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -322,6 +374,8 @@ package Series_and_Trackers is
 
   -- ON ENTRY :
   --   file     for output to file;
+  --   jm       Jacobian matrix for the polynomial homotopy;
+  --   hs       Hessians for all equations in the polynomial homotopy;
   --   hom      a homotopy with series coefficients;
   --   sols     start solutions in the homotopy;
   --   pars     values of the parameters and tolerances;
