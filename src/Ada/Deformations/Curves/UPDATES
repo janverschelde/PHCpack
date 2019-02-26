@@ -1,3 +1,8 @@
+Mon 25 Feb 2019 : added functions to series_and_predictors, to wrap the
+  computation of the step size based on the distance to the nearest solution.
+
+Sun 24 Feb 2019 : removed redundant clauses from test_pade_predictors.adb.
+
 Sat 23 Feb 2019 : added extra parameters for the Hessian step size criterium
   to series_and_trackers, series_path_trackers.adb, with updates in
   drivers_to_series_trackers.

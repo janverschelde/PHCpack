@@ -1,5 +1,7 @@
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Mathematical_Functions;
 with Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
@@ -20,6 +22,7 @@ with Complex_Series_and_Polynomials_io;
 with Power_Series_Methods;               use Power_Series_Methods;
 with Series_and_Solutions;
 with Homotopy_Pade_Approximants;
+with Singular_Values_of_Hessians;
 
 package body Series_and_Predictors is
 
@@ -758,6 +761,173 @@ package body Series_and_Predictors is
     res : constant double_float := ratio**pwr;
 
   begin
+    return res;
+  end Step_Distance;
+
+  function Step_Distance
+            ( k : integer32; beta : double_float;
+              jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : Standard_Complex_Solutions.Solution;
+              srv : Standard_Complex_Series_Vectors.Vector;
+              pv : Standard_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float is
+
+    res,eta,nrm : double_float;
+
+  begin
+    eta := Singular_Values_of_Hessians.Standard_Distance(jm.all,hs.all,sol);
+    if verbose
+     then put(" eta : "); put(eta,2); new_line;
+    end if;
+    nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
+    if verbose
+     then put(" nrm : "); put(nrm,2); new_line;
+    end if;
+    res := Step_Distance(k,beta,eta,nrm);
+    if verbose
+     then put("step : "); put(res,2); new_line;
+    end if;
+    return res;
+  end Step_Distance;
+
+  function Step_Distance
+            ( file : file_type; k : integer32; beta : double_float;
+              jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : Standard_Complex_Solutions.Solution;
+              srv : Standard_Complex_Series_Vectors.Vector;
+              pv : Standard_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float is
+
+    res,eta,nrm : double_float;
+
+  begin
+    eta := Singular_Values_of_Hessians.Standard_Distance(jm.all,hs.all,sol);
+    if verbose
+     then put(file," eta : "); put(file,eta,2); new_line(file);
+    end if;
+    nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
+    if verbose
+     then put(file," nrm : "); put(file,nrm,2); new_line(file);
+    end if;
+    res := Step_Distance(k,beta,eta,nrm);
+    if verbose
+     then put(file,"step : "); put(file,res,2); new_line(file);
+    end if;
+    return res;
+  end Step_Distance;
+
+  function Step_Distance
+            ( k : integer32; beta : double_float;
+              jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : DoblDobl_Complex_Solutions.Solution;
+              srv : DoblDobl_Complex_Series_Vectors.Vector;
+              pv : DoblDobl_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float is
+
+    res : double_float;
+    eta,nrm : double_double;
+
+  begin
+    eta := Singular_Values_of_Hessians.DoblDobl_Distance(jm.all,hs.all,sol);
+    if verbose
+     then put(" eta : "); put(eta,2); new_line;
+    end if;
+    nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
+    if verbose
+     then put(" nrm : "); put(nrm,2); new_line;
+    end if;
+    res := Step_Distance(k,beta,hi_part(eta),hi_part(nrm));
+    if verbose
+     then put("step : "); put(res,2); new_line;
+    end if;
+    return res;
+  end Step_Distance;
+
+  function Step_Distance
+            ( file : file_type; k : integer32; beta : double_float;
+              jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : DoblDobl_Complex_Solutions.Solution;
+              srv : DoblDobl_Complex_Series_Vectors.Vector;
+              pv : DoblDobl_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float is
+
+    res : double_float;
+    eta,nrm : double_double;
+
+  begin
+    eta := Singular_Values_of_Hessians.DoblDobl_Distance(jm.all,hs.all,sol);
+    if verbose
+     then put(file," eta : "); put(file,eta,2); new_line(file);
+    end if;
+    nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
+    if verbose
+     then put(file," nrm : "); put(file,nrm,2); new_line(file);
+    end if;
+    res := Step_Distance(k,beta,hi_part(eta),hi_part(nrm));
+    if verbose
+     then put(file,"step : "); put(file,res,2); new_line(file);
+    end if;
+    return res;
+  end Step_Distance;
+
+
+  function Step_Distance
+            ( k : integer32; beta : double_float;
+              jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : QuadDobl_Complex_Solutions.Solution;
+              srv : QuadDobl_Complex_Series_Vectors.Vector;
+              pv : QuadDobl_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float is
+
+    res : double_float;
+    eta,nrm : quad_double;
+
+  begin
+    eta := Singular_Values_of_Hessians.QuadDobl_Distance(jm.all,hs.all,sol);
+    if verbose
+     then put(" eta : "); put(eta,2); new_line;
+    end if;
+    nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
+    if verbose
+     then put(" nrm : "); put(nrm,2); new_line;
+    end if;
+    res := Step_Distance(k,beta,hihi_part(eta),hihi_part(nrm));
+    if verbose
+     then put("step : "); put(res,2); new_line;
+    end if;
+    return res;
+  end Step_Distance;
+
+  function Step_Distance
+            ( file : file_type; k : integer32; beta : double_float;
+              jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : QuadDobl_Complex_Solutions.Solution;
+              srv : QuadDobl_Complex_Series_Vectors.Vector;
+              pv : QuadDobl_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float is
+
+    res : double_float;
+    eta,nrm : quad_double;
+
+  begin
+    eta := Singular_Values_of_Hessians.QuadDobl_Distance(jm.all,hs.all,sol);
+    if verbose
+     then put(file," eta : "); put(file,eta,2); new_line(file);
+    end if;
+    nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
+    if verbose
+     then put(file," nrm : "); put(file,nrm,2); new_line(file);
+    end if;
+    res := Step_Distance(k,beta,hihi_part(eta),hihi_part(nrm));
+    if verbose
+     then put(file,"step : "); put(file,res,2); new_line(file);
+    end if;
     return res;
   end Step_Distance;
 

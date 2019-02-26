@@ -8,6 +8,8 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Jaco_Matrices;
+with Standard_Complex_Hessians;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_VecVecs;
 with Standard_CSeries_Poly_Systems;
@@ -15,6 +17,8 @@ with Standard_CSeries_Poly_SysFun;
 with Standard_CSeries_Jaco_Matrices;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_Jaco_Matrices;
+with DoblDobl_Complex_Hessians;
 with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_VecVecs;
 with DoblDobl_CSeries_Poly_Systems;
@@ -22,11 +26,16 @@ with DoblDobl_CSeries_Poly_SysFun;
 with DoblDobl_CSeries_Jaco_Matrices;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_Jaco_Matrices;
+with QuadDobl_Complex_Hessians;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_VecVecs;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_SysFun;
 with QuadDobl_CSeries_Jaco_Matrices;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Standard_Pade_Approximants;
 with DoblDobl_Pade_Approximants;
 with QuadDobl_Pade_Approximants;
@@ -362,6 +371,70 @@ package Series_and_Predictors is
   --   errnrm is the estimated solution error norm.
   --   The returned value is an estimate for the step size,
   --   based on the estimate to the nearest solution.
+
+  function Step_Distance
+            ( k : integer32; beta : double_float;
+              jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : Standard_Complex_Solutions.Solution;
+              srv : Standard_Complex_Series_Vectors.Vector;
+              pv : Standard_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float;
+  function Step_Distance
+            ( file : in file_type; k : integer32; beta : double_float;
+              jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : Standard_Complex_Solutions.Solution;
+              srv : Standard_Complex_Series_Vectors.Vector;
+              pv : Standard_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float;
+  function Step_Distance
+            ( k : integer32; beta : double_float;
+              jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : DoblDobl_Complex_Solutions.Solution;
+              srv : DoblDobl_Complex_Series_Vectors.Vector;
+              pv : DoblDobl_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float;
+  function Step_Distance
+            ( file : in file_type; k : integer32; beta : double_float;
+              jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : DoblDobl_Complex_Solutions.Solution;
+              srv : DoblDobl_Complex_Series_Vectors.Vector;
+              pv : DoblDobl_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float;
+  function Step_Distance
+            ( k : integer32; beta : double_float;
+              jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : QuadDobl_Complex_Solutions.Solution;
+              srv : QuadDobl_Complex_Series_Vectors.Vector;
+              pv : QuadDobl_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float;
+  function Step_Distance
+            ( file : in file_type; k : integer32; beta : double_float;
+              jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+              sol : QuadDobl_Complex_Solutions.Solution;
+              srv : QuadDobl_Complex_Series_Vectors.Vector;
+              pv : QuadDobl_Pade_Approximants.Pade_Vector;
+              verbose : boolean := false ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the step size set by the distance to the nearest solution,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file   optional file for output (if verbose);
+  --   k      is the maximal degree L+M+2;
+  --   beta   some small factor;
+  --   jm     Jacobian matrix of the polynomial homotopy;
+  --   hs     Hessians of the polynomials in the homotopy;
+  --   sol    the current solution;
+  --   srv    series approximation at the current solution;
+  --   pv     vector of Pade approximants;
+  --   verbose is the verbose flag.
 
   function Predicted_Solution
              ( srv : Standard_Complex_Series_Vectors.Vector;
