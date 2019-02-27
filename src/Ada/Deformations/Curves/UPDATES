@@ -1,3 +1,6 @@
+Tue 26 Feb 2019 : added extra interface functions for the "step_distance"
+  to series_and_predictors, for use in the series_and_trackers.adb.
+
 Mon 25 Feb 2019 : added functions to series_and_predictors, to wrap the
   computation of the step size based on the distance to the nearest solution.
 

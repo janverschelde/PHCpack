@@ -41,6 +41,14 @@ with Series_and_Predictors;
 
 package body Series_and_Trackers is
 
+  function Minimum ( a, b : in double_float ) return double_float is
+  begin
+    if a < b
+     then return a;
+     else return b;
+    end if;
+  end Minimum;
+
   procedure Set_Step
               ( t,step : in out double_float;
                 maxstep,target : in double_float ) is
@@ -142,8 +150,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
@@ -162,11 +171,11 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       Standard_Complex_Series_Vectors.Clear(eva);
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-      end if;
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
+      step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
-     -- exit when (step < pars.minsize); -- wait to check predres
       loop
         loop
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
@@ -185,13 +194,11 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Standard_Complex_Series_Vectors.Clear(srv);
-     -- Standard_CSeries_Poly_Systems.Clear(wrk);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-     -- wrk := Series_and_Homotopies.Shift(hom,-t);
       Series_and_Homotopies.Shift(wrk,-step);
     end loop;
     Standard_Pade_Approximants.Clear(pv);
@@ -253,10 +260,8 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
-      if frp > 0.0 then
-        step := Series_and_Predictors.Cap_Step_Size
-                  (step,hi_part(frp),pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size
+                 (step,hi_part(frp),pars.pbeta);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
@@ -278,9 +283,6 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
-     -- DoblDobl_CSeries_Poly_Systems.Clear(wrk);
-     -- dd_t := create(-t);
-     -- wrk := Series_and_Homotopies.Shift(hom,dd_t);
       dd_step := create(step);
       Series_and_Homotopies.Shift(wrk,-dd_step);
       if t = 1.0 then        -- converged and reached the end
@@ -351,10 +353,8 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
-      if frp > 0.0 then
-        step := Series_and_Predictors.Cap_Step_Size
-                  (step,hihi_part(frp),pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size
+                (step,hihi_part(frp),pars.pbeta);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
@@ -376,9 +376,6 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       QuadDobl_Complex_Series_Vectors.Clear(srv);
-     -- QuadDobl_CSeries_Poly_Systems.Clear(wrk);
-     -- qd_t := create(-t);
-     -- wrk := Series_and_Homotopies.Shift(hom,qd_t);
       qd_step := create(step);
       Series_and_Homotopies.Shift(wrk,-qd_step);
       if t = 1.0 then        -- converged and reached the end
@@ -429,8 +426,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
@@ -460,9 +458,10 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Standard_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
@@ -495,13 +494,11 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       Standard_Complex_Series_Vectors.Clear(srv);
-     -- Standard_CSeries_Poly_Systems.Clear(wrk);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-     -- wrk := Series_and_Homotopies.Shift(hom,-t);
       Series_and_Homotopies.Shift(wrk,-step);
     end loop;
     Standard_Pade_Approximants.Clear(pv);
@@ -576,10 +573,8 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
-      if frp > 0.0 then
-        step := Series_and_Predictors.Cap_Step_Size
-                  (step,hi_part(frp),pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size
+                (step,hi_part(frp),pars.pbeta);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
@@ -613,9 +608,6 @@ package body Series_and_Trackers is
         exit when (step < pars.minsize);
       end loop;
       DoblDobl_Complex_Series_Vectors.Clear(srv);
-     -- DoblDobl_CSeries_Poly_Systems.Clear(wrk);
-     -- dd_t := create(-t);
-     -- wrk := Series_and_Homotopies.Shift(hom,dd_t);
       dd_step := create(step);
       Series_and_Homotopies.Shift(wrk,-dd_step);
       if t = 1.0 then        -- converged and reached the end
@@ -701,10 +693,8 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
-      if frp > 0.0 then
-        step := Series_and_Predictors.Cap_Step_Size
-                  (step,hihi_part(frp),pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size
+                (step,hihi_part(frp),pars.pbeta);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
@@ -794,8 +784,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
@@ -816,11 +807,11 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       Standard_Complex_Series_Vectors.Clear(eva);
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
-     -- exit when (step < pars.minsize); -- wait to check predres
       loop
         loop
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
@@ -907,12 +898,9 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       DoblDobl_Complex_Series_Vectors.Clear(eva);
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size
-                      (step,hi_part(frp),pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size
+                (step,hi_part(frp),pars.pbeta);
       Set_Step(t,step,pars.maxsize,onetarget);
-     -- exit when (step < pars.minsize); -- wait to check predres
       loop
         loop
           dd_step := create(step);
@@ -1004,12 +992,9 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       QuadDobl_Complex_Series_Vectors.Clear(eva);
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size
-                      (step,hihi_part(frp),pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size
+                (step,hihi_part(frp),pars.pbeta);
       Set_Step(t,step,pars.maxsize,onetarget);
-     -- exit when (step < pars.minsize); -- wait to check predres
       loop
         loop
           qd_step := create(step);
@@ -1079,8 +1064,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
@@ -1111,10 +1097,11 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
       Standard_Complex_Series_Vectors.Clear(eva);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
         put(file,"Step size : "); put(file,step,3);
@@ -1227,10 +1214,8 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size
-                      (step,hi_part(frp),pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size
+                (step,hi_part(frp),pars.pbeta);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
@@ -1349,10 +1334,8 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
-      if frp > 0.0
-       then step := Series_and_Predictors.Cap_Step_Size
-                      (step,hihi_part(frp),pars.pbeta);
-      end if;
+      step := Series_and_Predictors.Cap_Step_Size
+                (step,hihi_part(frp),pars.pbeta);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
