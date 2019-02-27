@@ -238,8 +238,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -263,6 +264,10 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Cap_Step_Size
                  (step,hi_part(frp),pars.pbeta);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
+      dd_t := Create(t);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
         loop
@@ -331,8 +336,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -356,6 +362,10 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Cap_Step_Size
                 (step,hihi_part(frp),pars.pbeta);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
+      qd_t := Create(t);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
         loop
@@ -539,8 +549,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -576,6 +587,10 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Cap_Step_Size
                 (step,hi_part(frp),pars.pbeta);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
+      dd_t := Create(t);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
         put(file,"Step size : "); put(file,step,3);
@@ -659,8 +674,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -696,6 +712,10 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Cap_Step_Size
                 (step,hihi_part(frp),pars.pbeta);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
+      qd_t := Create(t);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
         put(file,"Step size : "); put(file,step,3);
@@ -874,8 +894,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -900,6 +921,10 @@ package body Series_and_Trackers is
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       step := Series_and_Predictors.Cap_Step_Size
                 (step,hi_part(frp),pars.pbeta);
+      dd_t := Create(t);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
         loop
@@ -968,8 +993,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -994,6 +1020,10 @@ package body Series_and_Trackers is
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       step := Series_and_Predictors.Cap_Step_Size
                 (step,hihi_part(frp),pars.pbeta);
+      qd_t := Create(t);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
         loop
@@ -1180,8 +1210,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     dd_t,dd_step : double_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -1217,6 +1248,10 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Cap_Step_Size
                 (step,hi_part(frp),pars.pbeta);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
+      dd_t := Create(t);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
         put(file,"Step size : "); put(file,step,3);
@@ -1300,8 +1335,9 @@ package body Series_and_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
+    dbeta : constant double_float := 0.005;
     fail : boolean;
-    t,step : double_float := 0.0;
+    t,step,dstep : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
@@ -1337,6 +1373,10 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Cap_Step_Size
                 (step,hihi_part(frp),pars.pbeta);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
+      qd_t := Create(t);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
+      step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
         put(file,"Step size : "); put(file,step,3);
