@@ -1,3 +1,6 @@
+Thu 28 Feb 2019 : added to homotopy_newton_steps.adb the calculation of the
+  max norm of the solution vector in the stop criterion.
+
 Wed 27 Feb 2019 : applied step_distance also to double double and quad double
   versions in series_and_trackers.adb.  Instead of residual, used the size
   of the update in homotopy_newton_steps.adb and checked the predres against
