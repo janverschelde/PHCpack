@@ -276,7 +276,7 @@ The code used to make the plot (using matplotlib) is below:
            dictsol = strsol2dict(ns)
            xpoints.append(dictsol['x'])
            ypoints.append(dictsol['y'])
-           tval = eval(dictsol['t'].lstrip().split(' ')[0])
+           tval = dictsol['t'].real
            if(tval == 1.0):
                break
        print(ns)
