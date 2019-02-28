@@ -151,6 +151,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
@@ -188,7 +189,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -240,6 +241,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     dd_t,dd_step : double_double;
@@ -283,7 +285,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > pars.alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -339,6 +341,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     qd_t,qd_step : quad_double;
@@ -382,7 +385,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -440,6 +443,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
@@ -500,8 +504,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,pars.corsteps,nbrit,
-           wrk_sol,err,rco,res,fail,verbose);
+          (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -554,6 +557,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     dd_t,dd_step : double_double;
@@ -620,8 +624,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,pars.corsteps,nbrit,
-           wrk_sol,err,rco,res,fail,verbose);
+          (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -680,6 +683,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     qd_t,qd_step : quad_double;
@@ -771,8 +775,7 @@ package body Series_and_Trackers is
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     Homotopy_Newton_Steps.Correct
-      (file,nbq,t,tolres,pars.corsteps,nbrit,
-       wrk_sol,err,rco,res,fail,verbose);
+      (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
@@ -811,6 +814,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
@@ -850,7 +854,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -902,6 +906,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     dd_t,dd_step : double_double;
@@ -946,7 +951,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -1002,6 +1007,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     qd_t,qd_step : quad_double;
@@ -1046,7 +1052,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -1104,6 +1110,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
@@ -1165,8 +1172,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,pars.corsteps,nbrit,
-           wrk_sol,err,rco,res,fail,verbose);
+          (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -1221,6 +1227,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     dd_t,dd_step : double_double;
@@ -1287,8 +1294,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,pars.corsteps,nbrit,
-           wrk_sol,err,rco,res,fail,verbose);
+          (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -1347,6 +1353,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
+    maxit : constant natural32 := 500;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     qd_t,qd_step : quad_double;
@@ -1413,8 +1420,7 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,pars.corsteps,nbrit,
-           wrk_sol,err,rco,res,fail,verbose);
+          (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;

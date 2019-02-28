@@ -117,6 +117,7 @@ package body Homotopy_Newton_Steps is
     prev_err,prev_res,nrm,left : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
+    prev_err100,prev_res100 : double_float;
 
   begin
     fail := true;
@@ -129,7 +130,9 @@ package body Homotopy_Newton_Steps is
       if left <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
+        prev_res100 := 100.0*prev_res;
+        prev_err100 := 100.0*prev_err;
+        if ((res > prev_res100) and (err > prev_err100))
          then nbrit := k; exit;
         end if;
       end if;
@@ -148,6 +151,7 @@ package body Homotopy_Newton_Steps is
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
     solnrm : double_double;
+    prev_err100,prev_res100 : double_float;
 
   begin
     fail := true;
@@ -161,7 +165,9 @@ package body Homotopy_Newton_Steps is
       if left <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
+        prev_res100 := 100.0*prev_res;
+        prev_err100 := 100.0*prev_err;
+        if ((res > prev_res100) and (err > prev_err100))
          then nbrit := k; exit;
         end if;
       end if;
@@ -180,6 +186,7 @@ package body Homotopy_Newton_Steps is
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
     solnrm : quad_double;
+    prev_err100,prev_res100 : double_float;
 
   begin
     fail := true;
@@ -193,7 +200,9 @@ package body Homotopy_Newton_Steps is
       if left <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
+        prev_res100 := 100.0*prev_res;
+        prev_err100 := 100.0*prev_err;
+        if ((res > prev_res100) and (err > prev_err100))
          then nbrit := k; exit;
         end if;
       end if;
@@ -213,6 +222,7 @@ package body Homotopy_Newton_Steps is
     prev_err,prev_res,nrm,left : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
+    prev_err100,prev_res100 : double_float;
 
   begin
     fail := true;
@@ -231,7 +241,9 @@ package body Homotopy_Newton_Steps is
       if left <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
+        prev_res100 := 100.0*prev_res;
+        prev_err100 := 100.0*prev_err;
+        if ((res > prev_res100) and (err > prev_err100))
          then nbrit := k; exit;
         end if;
       end if;
@@ -252,6 +264,7 @@ package body Homotopy_Newton_Steps is
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
     solnrm : double_double;
+    prev_err100,prev_res100 : double_float;
 
   begin
     fail := true;
@@ -271,7 +284,9 @@ package body Homotopy_Newton_Steps is
       if left <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
+        prev_res100 := 100.0*prev_res;
+        prev_err100 := 100.0*prev_err;
+        if ((res > prev_res100) and (err > prev_err100))
          then nbrit := k; exit;
         end if;
       end if;
@@ -292,6 +307,7 @@ package body Homotopy_Newton_Steps is
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
     solnrm : quad_double;
+    prev_err100,prev_res100 : double_float;
 
   begin
     fail := true;
@@ -311,7 +327,9 @@ package body Homotopy_Newton_Steps is
       if left <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
-        if ((res > prev_res) or (err > prev_err))
+        prev_err100 := 100.0*prev_err;
+        prev_res100 := 100.0*prev_res;
+        if ((res > prev_res100) and (err > prev_err100))
          then nbrit := k; exit;
         end if;
       end if;
