@@ -182,7 +182,8 @@ package body Series_and_Trackers is
           predres := Residual_Prediction(wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -276,7 +277,8 @@ package body Series_and_Trackers is
           predres := Residual_Prediction(wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > pars.alpha));
@@ -374,7 +376,8 @@ package body Series_and_Trackers is
           predres := Residual_Prediction(wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -491,7 +494,8 @@ package body Series_and_Trackers is
             put(file,"Step size : "); put(file,step,3);
             put(file," t = "); put(file,t,3);
           end if;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -610,7 +614,8 @@ package body Series_and_Trackers is
             put(file,"Step size : "); put(file,step,3);
             put(file," t = "); put(file,t,3);
           end if;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -735,7 +740,8 @@ package body Series_and_Trackers is
             put(file,"Step size : "); put(file,step,3);
             put(file," t = "); put(file,t,3);
           end if;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step < alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -838,7 +844,8 @@ package body Series_and_Trackers is
           predres := Residual_Prediction(wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -933,7 +940,8 @@ package body Series_and_Trackers is
           predres := Residual_Prediction(wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -1032,7 +1040,8 @@ package body Series_and_Trackers is
           predres := Residual_Prediction(wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -1150,7 +1159,8 @@ package body Series_and_Trackers is
             put(file,"Step size : "); put(file,step,3);
             put(file," t = "); put(file,t,3);
           end if;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -1271,7 +1281,8 @@ package body Series_and_Trackers is
             put(file,"Step size : "); put(file,step,3);
             put(file," t = "); put(file,t,3);
           end if;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -1396,7 +1407,8 @@ package body Series_and_Trackers is
             put(file,"Step size : "); put(file,step,3);
             put(file," t = "); put(file,t,3);
           end if;
-          exit when (step < pars.minsize);
+         -- exit when (step < pars.minsize);
+          exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));

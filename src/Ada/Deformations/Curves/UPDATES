@@ -1,5 +1,7 @@
 Wed 27 Feb 2019 : applied step_distance also to double double and quad double
-  versions in series_and_trackers.adb.
+  versions in series_and_trackers.adb.  Instead of residual, used the size
+  of the update in homotopy_newton_steps.adb and checked the predres against
+  alpha instead of minstep in series_and_trackers.adb.
 
 Tue 26 Feb 2019 : added extra interface functions for the "step_distance"
   to series_and_predictors, for use in the series_and_trackers.adb.

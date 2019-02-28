@@ -114,8 +114,6 @@ package body Homotopy_Newton_Steps is
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean ) is
 
-    use Homotopy_Newton_Steps;
-
     prev_err,prev_res : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
@@ -125,7 +123,8 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       Standard_LU_Newton_Step(nq,cmplxt,sol,err,rco,res);
-      if res <= tolres then -- convergence
+     -- if res <= tolres then -- convergence
+      if err <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         if ((res > prev_res) or (err > prev_err))
@@ -143,8 +142,6 @@ package body Homotopy_Newton_Steps is
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean ) is
 
-    use Homotopy_Newton_Steps;
-
     prev_err,prev_res : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
@@ -154,7 +151,8 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       DoblDobl_LU_Newton_Step(nq,cmplxt,sol,err,rco,res);
-      if res <= tolres then -- convergence
+     -- if res <= tolres then -- convergence
+      if err <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         if ((res > prev_res) or (err > prev_err))
@@ -172,8 +170,6 @@ package body Homotopy_Newton_Steps is
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean ) is
 
-    use Homotopy_Newton_Steps;
-
     prev_err,prev_res : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
@@ -183,7 +179,8 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       QuadDobl_LU_Newton_Step(nq,cmplxt,sol,err,rco,res);
-      if res <= tolres then -- convergence
+     -- if res <= tolres then -- convergence
+      if err <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         if ((res > prev_res) or (err > prev_err))
@@ -203,8 +200,6 @@ package body Homotopy_Newton_Steps is
                 err,rco,res : out double_float; fail : out boolean;
                 verbose : in boolean := false ) is
 
-    use Homotopy_Newton_Steps;
-
     prev_err,prev_res : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
@@ -219,7 +214,8 @@ package body Homotopy_Newton_Steps is
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
-      if res <= tolres then -- convergence
+     -- if res <= tolres then -- convergence
+      if err <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         if ((res > prev_res) or (err > prev_err))
@@ -239,8 +235,6 @@ package body Homotopy_Newton_Steps is
                 err,rco,res : out double_float; fail : out boolean;
                 verbose : in boolean := false ) is
 
-    use Homotopy_Newton_Steps;
-
     prev_err,prev_res : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
@@ -255,7 +249,8 @@ package body Homotopy_Newton_Steps is
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
-      if res <= tolres then -- convergence
+     -- if res <= tolres then -- convergence
+      if err <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         if ((res > prev_res) or (err > prev_err))
@@ -275,8 +270,6 @@ package body Homotopy_Newton_Steps is
                 err,rco,res : out double_float; fail : out boolean;
                 verbose : in boolean := false ) is
 
-    use Homotopy_Newton_Steps;
-
     prev_err,prev_res : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
@@ -291,7 +284,8 @@ package body Homotopy_Newton_Steps is
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
-      if res <= tolres then -- convergence
+     -- if res <= tolres then -- convergence
+      if err <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         if ((res > prev_res) or (err > prev_err))
