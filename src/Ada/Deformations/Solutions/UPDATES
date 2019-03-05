@@ -1,3 +1,6 @@
+Tue 5 Mar 2019 : extended standard_mixed_residual for Laurent polynomials
+  and systems of polynomials, tested by ts_mixres.
+
 Mon 4 Mar 2019 : basic version of computing a new residual in
   standard_mixed_residuals, tested by ts_mixres.
 
