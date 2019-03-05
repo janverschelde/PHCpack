@@ -1,3 +1,6 @@
+Tue 5 Mar 2019 : commented out the obsolescent feature Interface and
+  replace it with Import in system_call.adb, following a compiler warning.
+
 Tue 20 Mar 2018 : fixed formatting error in time_stamps.adb and fixed the
   grammatical singular before the time units.  In time_stamps.adb,
   inserted "wall clock" between the "elapsed" and "time" for clarity.
