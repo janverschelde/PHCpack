@@ -1,3 +1,6 @@
+Mon 4 Mar 2019 : basic version of computing a new residual in
+  standard_mixed_residuals, tested by ts_mixres.
+
 Sun 30 Dec 2018 : extended *_solution_filters* with functions to select the
   start solutions corresponding to failed paths, tested in ts_trasols_io.
   Updated ts_trasols_io, so the start system is written in front of the

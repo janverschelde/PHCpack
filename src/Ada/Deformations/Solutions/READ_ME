@@ -1,4 +1,4 @@
-Solutions of systems and homotopies in PHCv2.4.64
+Solutions of systems and homotopies in PHCv2.4.66
 
 The second release introduced the solution vectors with multiprecision.
 Version 2.3 has an improved Maple interface.
@@ -103,6 +103,9 @@ ts_contab                          : test on frequency tables for solutions
 solution_drops                     : drop a coordinate of a solution
 ts_drops                           : interactive tests on solution drops
 varbprec_complex_solutions         : variable precision solutions
+------------------------------------------------------------------------------
+standard_mixed_residuals           : residuals in stanard double precision
+ts_mixres                          : test on computing residuals
 ------------------------------------------------------------------------------
 
 The standard and multiprecision solutions lists are two separate packages,
