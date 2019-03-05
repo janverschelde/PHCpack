@@ -61,12 +61,12 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
-#GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-#GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+GNATFLAGS=-gnatv -O3 -gnatp -gnatf
+GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
-GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
+#GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+#GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
 
@@ -704,6 +704,9 @@ ts_ptlists:
 ts_trasols_io:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_trasols_io.adb \
               -o $(BIN)/ts_trasols_io
+
+ts_mixres:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mixres.adb -o $(BIN)/ts_mixres
 
 # Test programs for the Deformations/Homotopy library :
 

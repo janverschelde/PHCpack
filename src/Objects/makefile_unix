@@ -664,6 +664,9 @@ ts_trasols_io:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_trasols_io.adb \
               -o $(BIN)/ts_trasols_io
 
+ts_mixres:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mixres.adb -o $(BIN)/ts_mixres
+
 # Test programs for the Deformations/Homotopy library :
 
 ts_drivscal:
