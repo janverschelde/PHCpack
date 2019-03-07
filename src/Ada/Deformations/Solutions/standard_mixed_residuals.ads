@@ -1,9 +1,13 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Laurentials;
+with Standard_Complex_Laur_Functions;
 with Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_SysFun;
 
 package Standard_Mixed_Residuals is
 
@@ -47,6 +51,19 @@ package Standard_Mixed_Residuals is
   function Residual ( pol,abp : Standard_Complex_Laurentials.Poly;
                       z : Vector ) return double_float;
   function Residual ( pol,abp : Standard_Complex_Laur_Systems.Laur_Sys;
+                      z : Vector ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the mixed residual of the polynomial(s) pol at z,
+  --   where abp = AbsVal(pol).
+
+  function Residual ( pol,abp : Standard_Complex_Poly_Functions.Eval_Poly;
+                      z : Vector ) return double_float;
+  function Residual ( pol,abp : Standard_Complex_Laur_Functions.Eval_Poly;
+                      z : Vector ) return double_float;
+  function Residual ( pol,abp : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                      z : Vector ) return double_float;
+  function Residual ( pol,abp : Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
                       z : Vector ) return double_float;
 
   -- DESCRIPTION :

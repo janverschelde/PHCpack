@@ -1,7 +1,5 @@
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_Polar;     use Standard_Complex_Numbers_Polar;
-with Standard_Complex_Poly_Functions;
-with Standard_Complex_Laur_Functions;
 
 package body Standard_Mixed_Residuals is
 
@@ -128,7 +126,35 @@ package body Standard_Mixed_Residuals is
     return res;
   end Residual;
 
+  function Residual ( pol,abp : Standard_Complex_Poly_Functions.Eval_Poly;
+                      z : Vector ) return double_float is
+
+    val : constant Complex_Number
+        := Standard_Complex_Poly_Functions.Eval(pol,z);
+    abz : constant Vector(z'range) := AbsVal(z);
+    avl : constant Complex_Number
+        := Standard_Complex_Poly_Functions.Eval(abp,abz);
+    res : constant double_float := Radius(val)/(Radius(avl) + 1.0);
+
+  begin
+    return res;
+  end Residual;
+
   function Residual ( pol,abp : Standard_Complex_Laurentials.Poly;
+                      z : Vector ) return double_float is
+
+    val : constant Complex_Number
+        := Standard_Complex_Laur_Functions.Eval(pol,z);
+    abz : constant Vector(z'range) := AbsVal(z);
+    avl : constant Complex_Number
+        := Standard_Complex_Laur_Functions.Eval(abp,abz);
+    res : constant double_float := Radius(val)/(Radius(avl) + 1.0);
+
+  begin
+    return res;
+  end Residual;
+
+  function Residual ( pol,abp : Standard_Complex_Laur_Functions.Eval_Poly;
                       z : Vector ) return double_float is
 
     val : constant Complex_Number
@@ -156,7 +182,35 @@ package body Standard_Mixed_Residuals is
     return res;
   end Residual;
 
+  function Residual ( pol,abp : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                      z : Vector ) return double_float is
+
+    len : constant double_float := double_float(pol'last);
+    res : double_float := 0.0;
+
+  begin
+    for i in pol'range loop
+      res := res + Residual(pol(i),abp(i),z);
+    end loop;
+    res := res/len;
+    return res;
+  end Residual;
+
   function Residual ( pol,abp : Standard_Complex_Laur_Systems.Laur_Sys;
+                      z : Vector ) return double_float is
+
+    len : constant double_float := double_float(pol'last);
+    res : double_float := 0.0;
+
+  begin
+    for i in pol'range loop
+      res := res + Residual(pol(i),abp(i),z);
+    end loop;
+    res := res/len;
+    return res;
+  end Residual;
+
+  function Residual ( pol,abp : Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
                       z : Vector ) return double_float is
 
     len : constant double_float := double_float(pol'last);

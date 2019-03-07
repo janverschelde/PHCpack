@@ -104,7 +104,9 @@ solution_drops                     : drop a coordinate of a solution
 ts_drops                           : interactive tests on solution drops
 varbprec_complex_solutions         : variable precision solutions
 ------------------------------------------------------------------------------
-standard_mixed_residuals           : residuals in stanard double precision
+standard_mixed_residuals           : residuals in standard double precision
+dobldobl_mixed_residuals           : residuals in double double precision
+quaddobl_mixed_residuals           : residuals in quad double precision
 ts_mixres                          : test on computing residuals
 ------------------------------------------------------------------------------
 
