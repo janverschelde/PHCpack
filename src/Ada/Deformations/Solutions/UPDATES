@@ -1,3 +1,5 @@
+Thu 7 Mar 2019 : added output to standard_mixed_residuals and ts_mixres.
+
 Wed 6 Mar 2019 : extended standard_mixed_residuals for evaluable forms
   and copied into double double and quad double versions, with more tests
   in ts_mixres.

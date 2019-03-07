@@ -76,7 +76,7 @@ procedure ts_mixres is
     Symbol_Table.Init(nvr);
     put_line("a random polynomial :"); put(pol); new_line;
     put_line("its absolute version :"); put(abp); new_line;
-    res := Standard_Mixed_Residuals.Residual(pol,abp,rpt);
+    res := Standard_Mixed_Residuals.Residual(standard_output,pol,abp,rpt);
     put("The mixed residual : "); put(res); new_line;
   end Standard_Random_Test;
 
@@ -166,7 +166,7 @@ procedure ts_mixres is
   begin
     for i in 1..Length_Of(sols) loop
       ls := Head_Of(tmp);
-      res := Standard_Mixed_Residuals.Residual(p.all,abp,ls.v);
+      res := Standard_Mixed_Residuals.Residual(standard_output,p.all,abp,ls.v);
       put("residual of solution "); put(i,1);
       put(" :"); put(res,3); new_line;
       tmp := Tail_Of(tmp);

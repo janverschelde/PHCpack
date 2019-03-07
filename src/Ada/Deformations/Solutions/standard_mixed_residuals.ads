@@ -1,3 +1,4 @@
+with text_io;                            use text_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Standard_Complex_Polynomials;
@@ -44,9 +45,41 @@ package Standard_Mixed_Residuals is
   --   Returns the polynomials with the same terms as p, but with 
   --   coefficients equal to their absolute values.
 
+  procedure Residual ( pol,abp : in Standard_Complex_Polynomials.Poly;
+                       z : in Vector; abz : out Vector;
+                       vaz,vpz,vap,res : out double_float );
+  procedure Residual ( file : in file_type;
+                       pol,abp : in Standard_Complex_Polynomials.Poly;
+                       z : in Vector; abz : out Vector;
+                       vaz,vpz,vap,res : out double_float );
+
+  -- DESCRIPTION :
+  --   Computes the mixed residual, with the return of all auxiliary values.
+  --   If a file is provided, then one line is written to file.
+
+  -- ON ENTRY :
+  --   pol       a polynomial in several variables;
+  --   abp       the same as pol, but with absolute values of coefficients,
+  --             abp = AbsVal(pol);
+  --   z         values for the variables, z'first = 1, and z'last equals
+  --             the number of variables in pol.
+
+  -- ON RETURN :
+  --   abz       AbsVal(z), radii of the coordinates of z;
+  --   vaz       the 
+  --   vpz       radius of the value of pol at z;
+  --   vap       radius of the value of abp at abz;
+  --   res       the mixed residual is vpz/(vap+1.0).
+
   function Residual ( pol,abp : Standard_Complex_Polynomials.Poly;
                       z : Vector ) return double_float;
+  function Residual ( file : in file_type;
+                      pol,abp : Standard_Complex_Polynomials.Poly;
+                      z : Vector ) return double_float;
   function Residual ( pol,abp : Standard_Complex_Poly_Systems.Poly_Sys;
+                      z : Vector ) return double_float;
+  function Residual ( file : file_type;
+                      pol,abp : Standard_Complex_Poly_Systems.Poly_Sys;
                       z : Vector ) return double_float;
   function Residual ( pol,abp : Standard_Complex_Laurentials.Poly;
                       z : Vector ) return double_float;
@@ -55,7 +88,9 @@ package Standard_Mixed_Residuals is
 
   -- DESCRIPTION :
   --   Returns the mixed residual of the polynomial(s) pol at z,
-  --   where abp = AbsVal(pol).
+  --   where abp = AbsVal(pol).  If a file is provided,
+  --   then one line output is written to the file,
+  --   one line for every polynomial.
 
   function Residual ( pol,abp : Standard_Complex_Poly_Functions.Eval_Poly;
                       z : Vector ) return double_float;
