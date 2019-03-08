@@ -1,3 +1,6 @@
+Fri 8 Mar 2019 : completed adding output file types to the procedures
+  and functions in standard_mixed_residuals.
+
 Thu 7 Mar 2019 : added output to standard_mixed_residuals and ts_mixres.
 
 Wed 6 Mar 2019 : extended standard_mixed_residuals for evaluable forms

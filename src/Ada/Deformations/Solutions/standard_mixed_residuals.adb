@@ -114,6 +114,125 @@ package body Standard_Mixed_Residuals is
     return res;
   end AbsVal;
 
+  procedure Residual ( pol,abp : in Standard_Complex_Polynomials.Poly;
+                       z : in Vector; abz : out Vector;
+                       vaz,vpz,vap,res : out double_float ) is
+
+    val : constant Complex_Number
+        := Standard_Complex_Poly_Functions.Eval(pol,z);
+    avl : Complex_Number;
+
+  begin
+    abz := AbsVal(z);
+    avl := Standard_Complex_Poly_Functions.Eval(abp,abz);
+    vaz := Standard_Complex_Vector_Norms.Max_Norm(abz);
+    vpz := Radius(val);
+    vap := Radius(avl);
+    res := vpz/(vap + 1.0);
+  end Residual;
+
+  procedure Residual ( pol,abp : in Standard_Complex_Poly_Functions.Eval_Poly;
+                       z : in Vector; abz : out Vector;
+                       vaz,vpz,vap,res : out double_float ) is
+
+    val : constant Complex_Number
+        := Standard_Complex_Poly_Functions.Eval(pol,z);
+    avl : Complex_Number;
+
+  begin
+    abz := AbsVal(z);
+    avl := Standard_Complex_Poly_Functions.Eval(abp,abz);
+    vaz := Standard_Complex_Vector_Norms.Max_Norm(abz);
+    vpz := Radius(val);
+    vap := Radius(avl);
+    res := vpz/(vap + 1.0);
+  end Residual;
+
+  procedure Residual ( pol,abp : in Standard_Complex_Laurentials.Poly;
+                       z : in Vector; abz : out Vector;
+                       vaz,vpz,vap,res : out double_float ) is
+
+    val : constant Complex_Number
+        := Standard_Complex_Laur_Functions.Eval(pol,z);
+    avl : Complex_Number;
+
+  begin
+    abz := AbsVal(z);
+    avl := Standard_Complex_Laur_Functions.Eval(abp,abz);
+    vaz := Standard_Complex_Vector_Norms.Max_Norm(abz);
+    vpz := Radius(val);
+    vap := Radius(avl);
+    res := vpz/(vap + 1.0);
+  end Residual;
+
+  procedure Residual ( pol,abp : in Standard_Complex_Laur_Functions.Eval_Poly;
+                       z : in Vector; abz : out Vector;
+                       vaz,vpz,vap,res : out double_float ) is
+
+    val : constant Complex_Number
+        := Standard_Complex_Laur_Functions.Eval(pol,z);
+    avl : Complex_Number;
+
+  begin
+    abz := AbsVal(z);
+    avl := Standard_Complex_Laur_Functions.Eval(abp,abz);
+    vaz := Standard_Complex_Vector_Norms.Max_Norm(abz);
+    vpz := Radius(val);
+    vap := Radius(avl);
+    res := vpz/(vap + 1.0);
+  end Residual;
+
+  procedure Write_Residuals
+              ( file : in file_type;
+                vaz,vpz,vap,res : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Writes the mixed residual res and the auxiliary vaz, vpz, vap
+  --   to the output file.
+
+  begin
+    put(file,"  vaz : "); put(file,vaz,3);
+    put(file,"  vpz : "); put(file,vpz,3);
+    put(file,"  vap : "); put(file,vap,3);
+    put(file,"  res : "); put(file,res,3); new_line(file);
+  end Write_Residuals;
+
+  procedure Residual ( file : in file_type;
+                       pol,abp : in Standard_Complex_Polynomials.Poly;
+                       z : in Vector; abz : out Vector;
+                       vaz,vpz,vap,res : out double_float ) is
+  begin
+    Residual(pol,abp,z,abz,vaz,vpz,vap,res);
+    Write_Residuals(file,vaz,vpz,vap,res);
+  end Residual;
+
+  procedure Residual ( file : in file_type;
+                       pol,abp : in Standard_Complex_Poly_Functions.Eval_Poly;
+                       z : in Vector; abz : out Vector;
+                       vaz,vpz,vap,res : out double_float ) is
+  begin
+    Residual(pol,abp,z,abz,vaz,vpz,vap,res);
+    Write_Residuals(file,vaz,vpz,vap,res);
+  end Residual;
+
+  procedure Residual ( file : in file_type;
+                       pol,abp : in Standard_Complex_Laurentials.Poly;
+                       z : in Vector; abz : out Vector;
+                       vaz,vpz,vap,res : out double_float ) is
+  begin
+    Residual(pol,abp,z,abz,vaz,vpz,vap,res);
+    Write_Residuals(file,vaz,vpz,vap,res);
+  end Residual;
+
+  procedure Residual ( file : in file_type;
+                       pol,abp : in Standard_Complex_Laur_Functions.Eval_Poly;
+                       z : in Vector; abz : out Vector;
+                       vaz,vpz,vap,res : out double_float ) is
+  begin
+    Residual(pol,abp,z,abz,vaz,vpz,vap,res);
+    Write_Residuals(file,vaz,vpz,vap,res);
+  end Residual;
+
   function Residual ( pol,abp : Standard_Complex_Polynomials.Poly;
                       z : Vector ) return double_float is
 
@@ -140,35 +259,6 @@ package body Standard_Mixed_Residuals is
     return res;
   end Residual;
 
-  procedure Residual ( pol,abp : in Standard_Complex_Polynomials.Poly;
-                       z : in Vector; abz : out Vector;
-                       vaz,vpz,vap,res : out double_float ) is
-
-    val : constant Complex_Number
-        := Standard_Complex_Poly_Functions.Eval(pol,z);
-    avl : Complex_Number;
-
-  begin
-    abz := AbsVal(z);
-    avl := Standard_Complex_Poly_Functions.Eval(abp,abz);
-    vaz := Standard_Complex_Vector_Norms.Max_Norm(abz);
-    vpz := Radius(val);
-    vap := Radius(avl);
-    res := vpz/(vap + 1.0);
-  end Residual;
-
-  procedure Residual ( file : in file_type;
-                       pol,abp : in Standard_Complex_Polynomials.Poly;
-                       z : in Vector; abz : out Vector;
-                       vaz,vpz,vap,res : out double_float ) is
-  begin
-    Residual(pol,abp,z,abz,vaz,vpz,vap,res);
-    put(file,"  vaz : "); put(file,vaz,3);
-    put(file,"  vpz : "); put(file,vpz,3);
-    put(file,"  vap : "); put(file,vap,3);
-    put(file,"  res : "); put(file,res,3); new_line(file);
-  end Residual;
-
   function Residual ( pol,abp : Standard_Complex_Poly_Functions.Eval_Poly;
                       z : Vector ) return double_float is
 
@@ -180,6 +270,18 @@ package body Standard_Mixed_Residuals is
     res : constant double_float := Radius(val)/(Radius(avl) + 1.0);
 
   begin
+    return res;
+  end Residual;
+
+  function Residual ( file : file_type;
+                      pol,abp : Standard_Complex_Poly_Functions.Eval_Poly;
+                      z : Vector ) return double_float is
+
+    abz : Vector(z'range);
+    res,vaz,vpz,vap : double_float;
+
+  begin
+    Residual(file,pol,abp,z,abz,vaz,vpz,vap,res);
     return res;
   end Residual;
 
@@ -197,6 +299,18 @@ package body Standard_Mixed_Residuals is
     return res;
   end Residual;
 
+  function Residual ( file : file_type;
+                      pol,abp : Standard_Complex_Laurentials.Poly;
+                      z : Vector ) return double_float is
+
+    abz : Vector(z'range);
+    res,vaz,vpz,vap : double_float;
+
+  begin
+    Residual(file,pol,abp,z,abz,vaz,vpz,vap,res);
+    return res;
+  end Residual;
+
   function Residual ( pol,abp : Standard_Complex_Laur_Functions.Eval_Poly;
                       z : Vector ) return double_float is
 
@@ -208,6 +322,18 @@ package body Standard_Mixed_Residuals is
     res : constant double_float := Radius(val)/(Radius(avl) + 1.0);
 
   begin
+    return res;
+  end Residual;
+
+  function Residual ( file : file_type;
+                      pol,abp : Standard_Complex_Laur_Functions.Eval_Poly;
+                      z : Vector ) return double_float is
+
+    abz : Vector(z'range);
+    res,vaz,vpz,vap : double_float;
+
+  begin
+    Residual(file,pol,abp,z,abz,vaz,vpz,vap,res);
     return res;
   end Residual;
 
@@ -254,6 +380,21 @@ package body Standard_Mixed_Residuals is
     return res;
   end Residual;
 
+  function Residual ( file : file_type;
+                      pol,abp : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                      z : Vector ) return double_float is
+
+    len : constant double_float := double_float(pol'last);
+    res : double_float := 0.0;
+
+  begin
+    for i in pol'range loop
+      res := res + Residual(file,pol(i),abp(i),z);
+    end loop;
+    res := res/len;
+    return res;
+  end Residual;
+
   function Residual ( pol,abp : Standard_Complex_Laur_Systems.Laur_Sys;
                       z : Vector ) return double_float is
 
@@ -268,6 +409,21 @@ package body Standard_Mixed_Residuals is
     return res;
   end Residual;
 
+  function Residual ( file : file_type;
+                      pol,abp : Standard_Complex_Laur_Systems.Laur_Sys;
+                      z : Vector ) return double_float is
+
+    len : constant double_float := double_float(pol'last);
+    res : double_float := 0.0;
+
+  begin
+    for i in pol'range loop
+      res := res + Residual(file,pol(i),abp(i),z);
+    end loop;
+    res := res/len;
+    return res;
+  end Residual;
+
   function Residual ( pol,abp : Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
                       z : Vector ) return double_float is
 
@@ -277,6 +433,21 @@ package body Standard_Mixed_Residuals is
   begin
     for i in pol'range loop
       res := res + Residual(pol(i),abp(i),z);
+    end loop;
+    res := res/len;
+    return res;
+  end Residual;
+
+  function Residual ( file : file_type;
+                      pol,abp : Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
+                      z : Vector ) return double_float is
+
+    len : constant double_float := double_float(pol'last);
+    res : double_float := 0.0;
+
+  begin
+    for i in pol'range loop
+      res := res + Residual(file,pol(i),abp(i),z);
     end loop;
     res := res/len;
     return res;
