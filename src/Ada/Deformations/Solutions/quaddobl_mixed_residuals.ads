@@ -45,6 +45,14 @@ package QuadDobl_Mixed_Residuals is
   --   Returns the polynomials with the same terms as p, but with 
   --   coefficients equal to their absolute values.
 
+  procedure Write_Residuals
+              ( file : in file_type;
+                vaz,vpz,vap,res : in quad_double );
+
+  -- DESCRIPTION :
+  --   Writes the mixed residual res and the auxiliary vaz, vpz, vap
+  --   to the output file.
+
   procedure Residual ( file : in file_type;
                        pol,abp : in QuadDobl_Complex_Polynomials.Poly;
                        z : in Vector; abz : out Vector;

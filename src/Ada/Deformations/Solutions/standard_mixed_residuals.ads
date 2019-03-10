@@ -45,6 +45,14 @@ package Standard_Mixed_Residuals is
   --   Returns the polynomials with the same terms as p, but with 
   --   coefficients equal to their absolute values.
 
+  procedure Write_Residuals
+              ( file : in file_type;
+                vaz,vpz,vap,res : in double_float );
+
+  -- DESCRIPTION :
+  --   Writes the mixed residual res and the auxiliary vaz, vpz, vap
+  --   to the output file.
+
   procedure Residual ( pol,abp : in Standard_Complex_Polynomials.Poly;
                        z : in Vector; abz : out Vector;
                        vaz,vpz,vap,res : out double_float );
