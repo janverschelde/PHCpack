@@ -18,6 +18,18 @@ package Homotopy_Mixed_Residuals is
 --   Computes the mixed residual for the homotopy system in storage,
 --   in double, double double, and quad double precision.
 
+  function Standard_AbsVal_Homotopy
+             return Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+  function DoblDobl_AbsVal_Homotopy
+             return DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+  function QuadDobl_AbsVal_Homotopy
+             return QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+
+  -- DESCRIPTION :
+  --   For the stored homotopy, returns the evaluable form of the
+  --   polynomials in homotopy, with absolute values of the coefficients,
+  --   in double, double double, or quad double precision.
+
   function Residual ( abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                       z : Standard_Complex_Vectors.Vector;
                       t : Standard_Complex_Numbers.Complex_Number )

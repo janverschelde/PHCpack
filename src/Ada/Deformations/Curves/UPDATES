@@ -1,3 +1,6 @@
+Sun 10 Mar 2019 : added the making of the absolute value coefficients
+  polynomials of the homotopy system to homotopy_mixed_residuals.
+
 Sat 9 Mar 2019 : new package homotopy_mixed_residuals to compute the mixed
   residuals for stored homotopies.
 

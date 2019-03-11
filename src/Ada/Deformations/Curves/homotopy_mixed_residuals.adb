@@ -1,10 +1,13 @@
-with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Numbers_Polar;
 with DoblDobl_Complex_Numbers_Polar;
 with QuadDobl_Complex_Numbers_Polar;
 with Standard_Complex_Vector_Norms;
 with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
@@ -13,6 +16,54 @@ with DoblDobl_Mixed_Residuals;
 with QuadDobl_Mixed_Residuals;
 
 package body Homotopy_Mixed_Residuals is
+
+  function Standard_AbsVal_Homotopy
+             return Standard_Complex_Poly_SysFun.Eval_Poly_Sys is
+
+    hom : constant Standard_Complex_Poly_Systems.Poly_Sys
+        := Standard_Homotopy.Homotopy_System;
+    neq : constant integer32 := hom'last;
+    abh : Standard_Complex_Poly_Systems.Poly_Sys(1..neq)
+        := Standard_Mixed_Residuals.AbsVal(hom);
+    res : constant Standard_Complex_Poly_SysFun.Eval_Poly_Sys(1..neq)
+        := Standard_Complex_Poly_SysFun.Create(abh);
+
+  begin
+    Standard_Complex_Poly_Systems.Clear(abh);
+    return res;
+  end Standard_AbsVal_Homotopy;
+
+  function DoblDobl_AbsVal_Homotopy
+             return DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys is
+
+    hom : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+        := DoblDobl_Homotopy.Homotopy_System;
+    neq : constant integer32 := hom'last;
+    abh : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..neq)
+        := DoblDobl_Mixed_Residuals.AbsVal(hom);
+    res : constant DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(1..neq)
+        := DoblDobl_Complex_Poly_SysFun.Create(abh);
+
+  begin
+    DoblDobl_Complex_Poly_Systems.Clear(abh);
+    return res;
+  end DoblDobl_AbsVal_Homotopy;
+
+  function QuadDobl_AbsVal_Homotopy
+             return QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys is
+
+    hom : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+        := QuadDobl_Homotopy.Homotopy_System;
+    neq : constant integer32 := hom'last;
+    abh : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..neq)
+        := QuadDobl_Mixed_Residuals.AbsVal(hom);
+    res : constant QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(1..neq)
+        := QuadDobl_Complex_Poly_SysFun.Create(abh);
+
+  begin
+    QuadDobl_Complex_Poly_Systems.Clear(abh);
+    return res;
+  end QuadDobl_AbsVal_Homotopy;
 
   function Residual ( abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                       z : Standard_Complex_Vectors.Vector;
