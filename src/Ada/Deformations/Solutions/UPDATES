@@ -1,3 +1,6 @@
+Tue 12 Mar 2019 : removed superfluous documentation from the body of
+  quaddobl_mixed_residuals.adb.
+
 Sat 9 Mar 2019 : exposed the Write_Residuals function to the specification
   of the *_mixed_residuals packages.
 

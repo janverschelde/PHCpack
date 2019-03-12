@@ -186,11 +186,6 @@ package body QuadDobl_Mixed_Residuals is
   procedure Write_Residuals
               ( file : in file_type;
                 vaz,vpz,vap,res : in quad_double ) is
-
-  -- DESCRIPTION :
-  --   Writes the mixed residual res and the auxiliary vaz, vpz, vap
-  --   to the output file.
-
   begin
     put(file,"  vaz : "); put(file,vaz,3);
     put(file,"  vpz : "); put(file,vpz,3);
