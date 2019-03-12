@@ -18,6 +18,7 @@ with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
+with Homotopy_Mixed_Residuals;
 
 package body Homotopy_Newton_Steps is
 
@@ -106,6 +107,95 @@ package body Homotopy_Newton_Steps is
     err := hihi_part(QuadDobl_Complex_Vector_Norms.Max_Norm(y));
     y := QuadDobl_Homotopy.Eval(x,qd_t);
     res := hihi_part(QuadDobl_Complex_Vector_Norms.Max_Norm(y));
+  end QuadDobl_LU_Newton_Step;
+
+  procedure Standard_LU_Newton_Step
+              ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float ) is
+
+    nq : constant integer32 := abh'last;
+    y : Standard_Complex_Vectors.Vector(1..nq)
+      := Standard_Homotopy.Eval(x,t);
+    A : Standard_Complex_Matrices.Matrix(1..nq,x'range)
+      := Standard_Homotopy.Diff(x,t);
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2));
+    info : integer32;
+    Anorm : constant double_float := Norm1(A);
+
+  begin
+    Standard_Complex_Vectors.Min(y);
+    lufac(A,A'last(1),ipvt,info);
+    estco(A,A'last(1),ipvt,Anorm,rco);
+    lusolve(A,A'last(1),ipvt,y);
+    Standard_Complex_Vectors.Add(x,y);
+    err := Standard_Complex_Vector_Norms.Max_Norm(y);
+    res := Homotopy_mixed_Residuals.Residual(abh,x,t);
+  end Standard_LU_Newton_Step;
+
+  procedure DoblDobl_LU_Newton_Step
+              ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_float ) is
+
+    use DoblDobl_Complex_Numbers_cv;
+
+    nq : constant integer32 := abh'last;
+    dd_t : constant DoblDobl_Complex_Numbers.Complex_Number
+         := Standard_to_DoblDobl_Complex(t);
+    y : DoblDobl_Complex_Vectors.Vector(1..nq)
+      := DoblDobl_Homotopy.Eval(x,dd_t);
+    A : DoblDobl_Complex_Matrices.Matrix(1..nq,x'range)
+      := DoblDobl_Homotopy.Diff(x,dd_t);
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2));
+    info : integer32;
+    Anorm : constant double_double := Norm1(A);
+    dd_rco,dd_res : double_double;
+
+  begin
+    DoblDobl_Complex_Vectors.Min(y);
+    lufac(A,A'last(1),ipvt,info);
+    estco(A,A'last(1),ipvt,Anorm,dd_rco);
+    rco := hi_part(dd_rco);
+    lusolve(A,A'last(1),ipvt,y);
+    DoblDobl_Complex_Vectors.Add(x,y);
+    err := hi_part(DoblDobl_Complex_Vector_Norms.Max_Norm(y));
+    dd_res := Homotopy_mixed_Residuals.Residual(abh,x,dd_t);
+    res := hi_part(dd_res);
+  end DoblDobl_LU_Newton_Step;
+
+  procedure QuadDobl_LU_Newton_Step
+              ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_float ) is
+
+    use QuadDobl_Complex_Numbers_cv;
+
+    nq : constant integer32 := abh'last;
+    qd_t : constant QuadDobl_Complex_Numbers.Complex_Number
+         := Standard_to_QuadDobl_Complex(t);
+    y : QuadDobl_Complex_Vectors.Vector(1..nq)
+      := QuadDobl_Homotopy.Eval(x,qd_t);
+    A : QuadDobl_Complex_Matrices.Matrix(1..nq,x'range)
+      := QuadDobl_Homotopy.Diff(x,qd_t);
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2));
+    info : integer32;
+    Anorm : constant quad_double := Norm1(A);
+    qd_rco,qd_res : quad_double;
+
+  begin
+    QuadDobl_Complex_Vectors.Min(y);
+    lufac(A,A'last(1),ipvt,info);
+    estco(A,A'last(1),ipvt,Anorm,qd_rco);
+    rco := hihi_part(qd_rco);
+    lusolve(A,A'last(1),ipvt,y);
+    QuadDobl_Complex_Vectors.Add(x,y);
+    err := hihi_part(QuadDobl_Complex_Vector_Norms.Max_Norm(y));
+    qd_res := Homotopy_mixed_Residuals.Residual(abh,x,qd_t);
+    res := hihi_part(qd_res);
   end QuadDobl_LU_Newton_Step;
 
   procedure Correct
