@@ -428,4 +428,199 @@ package body Homotopy_Newton_Steps is
     end loop;
   end Correct;
 
+  procedure Correct
+              ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean ) is
+
+    prev_res : double_float := 1.0;
+    cmplxt : constant Standard_Complex_Numbers.Complex_Number
+           := Standard_Complex_Numbers.Create(t);
+    prev_res100 : double_float;
+
+  begin
+    fail := true;
+    nbrit := maxit;
+    for k in 1..maxit loop
+      Standard_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        prev_res100 := 100.0*prev_res;
+        if (res > prev_res100)
+         then nbrit := k; exit;
+        end if;
+      end if;
+      prev_res := res; -- previous residual
+    end loop;
+  end Correct;
+
+  procedure Correct
+              ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float; 
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean ) is
+
+    prev_res : double_float := 1.0;
+    cmplxt : constant Standard_Complex_Numbers.Complex_Number
+           := Standard_Complex_Numbers.Create(t);
+    prev_res100 : double_float;
+
+  begin
+    fail := true;
+    nbrit := maxit;
+    for k in 1..maxit loop
+      DoblDobl_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        prev_res100 := 100.0*prev_res;
+        if (res > prev_res100)
+         then nbrit := k; exit;
+        end if;
+      end if;
+      prev_res := res; -- previous residual
+    end loop;
+  end Correct;
+
+  procedure Correct
+              ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float; 
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean ) is
+
+    prev_res : double_float := 1.0;
+    cmplxt : constant Standard_Complex_Numbers.Complex_Number
+           := Standard_Complex_Numbers.Create(t);
+    prev_res100 : double_float;
+
+  begin
+    fail := true;
+    nbrit := maxit;
+    for k in 1..maxit loop
+      QuadDobl_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        prev_res100 := 100.0*prev_res;
+        if (res > prev_res100)
+         then nbrit := k; exit;
+        end if;
+      end if;
+      prev_res := res; -- previous residual
+    end loop;
+  end Correct;
+
+  procedure Correct
+              ( file : in file_type;
+                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float; 
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean;
+                verbose : in boolean := false ) is
+
+    prev_res : double_float := 1.0;
+    cmplxt : constant Standard_Complex_Numbers.Complex_Number
+           := Standard_Complex_Numbers.Create(t);
+    prev_res100 : double_float;
+
+  begin
+    fail := true;
+    nbrit := maxit;
+    for k in 1..maxit loop
+      Standard_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
+      if verbose then
+        put(file,"  err :"); put(file,err,3);
+        put(file,"  rco :"); put(file,rco,3);
+        put(file,"  res :"); put(file,res,3); new_line(file);
+      end if;
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        prev_res100 := 100.0*prev_res;
+        if (res > prev_res100)
+         then nbrit := k; exit;
+        end if;
+      end if;
+      prev_res := res; -- previous residual
+    end loop;
+  end Correct;
+
+  procedure Correct
+              ( file : in file_type;
+                abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float; 
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean;
+                verbose : in boolean := false ) is
+
+    prev_res : double_float := 1.0;
+    cmplxt : constant Standard_Complex_Numbers.Complex_Number
+           := Standard_Complex_Numbers.Create(t);
+    prev_res100 : double_float;
+
+  begin
+    fail := true;
+    nbrit := maxit;
+    for k in 1..maxit loop
+      DoblDobl_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
+      if verbose then
+        put(file,"  err :"); put(file,err,3);
+        put(file,"  rco :"); put(file,rco,3);
+        put(file,"  res :"); put(file,res,3); new_line(file);
+      end if;
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        prev_res100 := 100.0*prev_res;
+        if (res > prev_res100)
+         then nbrit := k; exit;
+        end if;
+      end if;
+      prev_res := res; -- previous residual
+    end loop;
+  end Correct;
+
+  procedure Correct
+              ( file : in file_type;
+                abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float; 
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean;
+                verbose : in boolean := false ) is
+
+    prev_res : double_float := 1.0;
+    cmplxt : constant Standard_Complex_Numbers.Complex_Number
+           := Standard_Complex_Numbers.Create(t);
+    prev_res100 : double_float;
+
+  begin
+    fail := true;
+    nbrit := maxit;
+    for k in 1..maxit loop
+      QuadDobl_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
+      if verbose then
+        put(file,"  err :"); put(file,err,3);
+        put(file,"  rco :"); put(file,rco,3);
+        put(file,"  res :"); put(file,res,3); new_line(file);
+      end if;
+      if res <= tolres then -- convergence
+        nbrit := k; fail := false; exit;
+      elsif k > 1 then      -- check for divergence
+        prev_res100 := 100.0*prev_res;
+        if (res > prev_res100)
+         then nbrit := k; exit;
+        end if;
+      end if;
+      prev_res := res; -- previous residual
+    end loop;
+  end Correct;
+
 end Homotopy_Newton_Steps;

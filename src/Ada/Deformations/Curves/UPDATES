@@ -1,3 +1,6 @@
+Wed 13 Mar 2019 : to homotopy_newton_steps, added correctors which compute
+  the mixed residuals for the stored homotopy polynomials.
+
 Mon 11 Mar 2019 : added newton step with mixed residuals to the 
   package homotopy_newton_steps.
 

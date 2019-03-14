@@ -124,7 +124,7 @@ package Homotopy_Newton_Steps is
 
   -- ON RETURN :
   --   nbrit    number of iterations done;
-  --   sol      the correct value for the solution;
+  --   sol      the corrected value for the solution;
   --   err      magnitude of the correction term;
   --   rco      estimate for the inverse condition number;
   --   res      magnitude of the residual;
@@ -165,6 +165,106 @@ package Homotopy_Newton_Steps is
 
   -- ON ENTRY :
   --   file     for writing extra diagnostic output, if verbose;
+  --   t        current value of the continuation parameter;
+  --   tolres   tolerance on the residual, stops when res <= tolres;
+  --   maxit    maximum number of steps to do with Newton's method;
+  --   sol      predicted value for the solution;
+  --   verbose  to indicate that extra output is wanted.
+
+  -- ON RETURN :
+  --   sol      corrected value of the solution;
+  --   nbrit    number of iterations done;
+  --   err      magnitude of the correction term;
+  --   rco      estimate for the inverse condition number;
+  --   res      magnitude of the residual;
+  --   fail     true if tolres was not met within maxit steps,
+  --            and/or Newton's method diverged,
+  --            false if Newton's method converged well.
+
+  procedure Correct
+              ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float;
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean );
+  procedure Correct
+              ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float; 
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean );
+  procedure Correct
+              ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float; 
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to correct the solution, silent version,
+  --   in standard double, double double, or quad double precision,
+  --   with the computation of mixed residuals.
+
+  -- REQUIRED :
+  --   Depending on the double, double double, or quad double precision,
+  --   the corresponding Standard_Homotopy, DoblDobl_Homotopy, or
+  --   QuadDobl_Homotopy must have been properly initialized.
+
+  -- ON ENTRY :
+  --   abh      homotopy polynomials with absolute coefficients;
+  --   t        current value of the continuation parameter;
+  --   tolres   tolerance on the residual, stops when res <= tolres;
+  --   maxit    maximum number of steps done with Newton's method;
+  --   sol      predicted value for the solution.
+
+  -- ON RETURN :
+  --   nbrit    number of iterations done;
+  --   sol      the corrected value for the solution;
+  --   err      magnitude of the correction term;
+  --   rco      estimate for the inverse condition number;
+  --   res      the mixed residual of the solution;
+  --   fail     true if tolres was not met within maxit steps,
+  --            and/or Newton's method diverged,
+  --            false if Newton's method converged well.
+
+  procedure Correct
+              ( file : in file_type;
+                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float; 
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean;
+                verbose : in boolean := false );
+  procedure Correct
+              ( file : in file_type;
+                abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float; 
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean;
+                verbose : in boolean := false );
+  procedure Correct
+              ( file : in file_type;
+                abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t,tolres : in double_float; 
+                maxit : in natural32; nbrit : out natural32;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_float; fail : out boolean;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to correct the solution, verbose version,
+  --   in standard double or double double precision,
+  --   with the computation of mixed residuals.
+
+  -- REQUIRED :
+  --   Depending on the double, double double, or quad double precision,
+  --   the corresponding Standard_Homotopy, DoblDobl_Homotopy, or
+  --   QuadDobl_Homotopy must have been properly initialized.
+
+  -- ON ENTRY :
+  --   file     for writing extra diagnostic output, if verbose;
+  --   abh      homotopy polynomials with absolute coefficients;
   --   t        current value of the continuation parameter;
   --   tolres   tolerance on the residual, stops when res <= tolres;
   --   maxit    maximum number of steps to do with Newton's method;
