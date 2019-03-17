@@ -1,3 +1,6 @@
+Sat 16 Mar 2019 : added making of the absolute value coefficients of the
+  homotopy polynomials to series_path_trackers.adb.
+
 Wed 13 Mar 2019 : to homotopy_newton_steps, added correctors which compute
   the mixed residuals for the stored homotopy polynomials.
 

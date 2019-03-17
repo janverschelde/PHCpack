@@ -10,16 +10,19 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Hessians;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Hessians;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Hessians;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
@@ -42,6 +45,7 @@ with QuadDobl_CSeries_Jaco_Matrices;
 with Singular_Values_of_Hessians;
 with Series_and_Homotopies;
 with Series_and_Trackers;
+with Homotopy_Mixed_Residuals;
 with Homotopy_Series_Readers;
 with Homotopy_Continuation_Parameters_io;
 with Drivers_to_Series_Trackers;         use Drivers_to_Series_Trackers;
@@ -136,6 +140,8 @@ package body Series_Path_Trackers is
     use Standard_Complex_Solutions;
 
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq);
+    abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(1..nq)
+        := Homotopy_Mixed_Residuals.Standard_AbsVal_Homotopy;
     s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq);
     fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
     fcf : Standard_Complex_Series_VecVecs.VecVec(1..nq);
@@ -264,6 +270,8 @@ package body Series_Path_Trackers is
     use DoblDobl_Complex_Solutions;
 
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+    abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(1..nq)
+        := Homotopy_Mixed_Residuals.DoblDobl_AbsVal_Homotopy;
     s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
     jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
     hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
@@ -397,6 +405,8 @@ package body Series_Path_Trackers is
     use QuadDobl_Complex_Solutions;
 
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+    abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(1..nq)
+        := Homotopy_Mixed_Residuals.QuadDobl_AbsVal_Homotopy;
     s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
     jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
     hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
