@@ -1,9 +1,9 @@
 # this is a makefile suitable for Windows platforms,
 # it uses a more basic timing facility
 
-#gpp=g++
-gpp=c:/GNAT/2015/bin/g++
-gcc=c:/GNAT/2015/bin/gcc
+gpp=g++
+# gpp=/cygdrive/c/tools/msys64/mingw64/bin/gcc
+gcc=/cygdrive/c/tools/msys64/mingw64/bin/gcc
 
 # The QD library is compiled in the folder where QD_ROOT refers to.
 # Configure the compilation of the QD library so that the g++ of
@@ -34,7 +34,8 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Basic_Timer \
  -I$(PHCAda)/Root_Counts/Product -I$(PHCAda)/Root_Counts/Binomials \
  -I$(PHCAda)/Root_Counts/Implift -I$(PHCAda)/Root_Counts/Stalift \
  -I$(PHCAda)/Root_Counts/Dynlift -I$(PHCAda)/Root_Counts/Symmetry \
- -I$(PHCAda)/Root_Counts/MixedVol -I$(PHCAda)/Root_Counts/Puiseux \
+ -I$(PHCAda)/Root_Counts/MixedVol -I$(PHCAda)/Root_Counts/DEMiCs \
+ -I$(PHCAda)/Root_Counts/Puiseux \
  -I$(PHCAda)/Schubert/SAGBI -I$(PHCAda)/Schubert/Pieri \
  -I$(PHCAda)/Schubert/Induction \
  -I$(PHCAda)/Components/Samplers -I$(PHCAda)/Components/Interpolators \
@@ -49,19 +50,23 @@ GNAT95FLAGS=-gnat95 -gnatv -O3 -gnatp
 
 # the main executable is phc :
 
-phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o parameter.o lib2path.o
-	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
-	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
-	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
+        inputData.o outputData.o iTest.o fTest.o reltab.o \
+        simplex4phc.o mvc4phc.o demicsrun4phc.o
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_solver.adb
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) dispatch.adb
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatbind dispatch use_c2phc
 	gnatlink dispatch syscon.o solcon.o phcpack.o feedback.o \
-                 pieri_solver.o parameter.o lib2path.o \
-                 lib.a $(QD_LIB)/libqd.a \
+                 pieri_solver.o lib.a \
+                 inputData.o outputData.o iTest.o fTest.o reltab.o \
+                 simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  get_clock.o get_clocks_per_sec.o \
-              -o $(BIN)/phc -lm --LINK=$(gpp)
+              -o $(BIN)/phc -lm \
+--LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive"
 
 # Test program to see if compiler works, "hello world" :
 
@@ -566,6 +571,95 @@ ts_drivsss:
 ts_degcurve:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_degcurve.adb
 	gnatbl -o $(BIN)/ts_degcurve ts_degcurve.ali
+
+# Test programs for the Root_Counts/DEMiCs library :
+
+ts_calldemics:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_calldemics.adb \
+              -o $(BIN)/ts_calldemics
+
+DEMiCs_CFLAGS = -O3 -DNDEBUG
+
+inputData.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+
+iTest.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/iTest.cpp
+
+fTest.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/fTest.cpp
+
+random_windows.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c \
+               $(PHCAda)/Root_Counts/DEMiCs/random_windows.cpp
+
+simplex.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp
+
+reltab.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/reltab.cpp
+
+mvc.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp
+
+main.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/main.cpp
+
+demics_objects = inputData.o iTest.o fTest.o simplex.o reltab.o mvc.o main.o
+
+demics: $(demics_objects)
+	$(gpp) -o $(BIN)/demics $(DEMiCs_CFLAGS) $(demics_objects) -lm
+
+ts_inputData:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/inputData.cpp
+	$(gpp) $(DEMiCs_CFLAGS) -c \
+               $(PHCAda)/Root_Counts/DEMiCs/ts_inputData.cpp
+	$(gpp) -o $(BIN)/ts_inputData $(DEMiCs_CFLAGS) ts_inputData.o \
+                  inputData.o -lm
+
+ts_outdata:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_outdata.adb \
+              -o $(BIN)/ts_outdata
+
+ts_outputData:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	$(gpp) -O2 -Dcompilewgpp=1 \
+               -c $(PHCAda)/Root_Counts/DEMiCs/outputData.cpp
+	$(gpp) -O2 -Dcompilewgpp=1 \
+	       -c $(PHCAda)/Root_Counts/DEMiCs/ts_outputData.cpp
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc ts_outputData.o outputData.o \
+                 -o $(BIN)/ts_outputData -lm --LINK=$(gpp)
+
+outputData.o:
+	$(gpp) -O2 -Dcompilewgpp=1 \
+               -c $(PHCAda)/Root_Counts/DEMiCs/outputData.cpp
+
+simplex4phc.o:
+	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 $(DEMiCS_CFLAGS) \
+            -c $(PHCAda)/Root_Counts/DEMiCs/simplex.cpp -o simplex4phc.o
+
+mvc4phc.o:
+	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 $(DEMiCS_CFLAGS) \
+            -c $(PHCAda)/Root_Counts/DEMiCs/mvc.cpp -o mvc4phc.o
+
+demicsrun4phc.o:
+	$(gpp) -Dcompilewgpp=1 -Dcompile4phc=1 $(DEMiCS_CFLAGS) \
+            -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp -o demicsrun4phc.o
+
+demicsrun.o:
+	$(gpp) $(DEMiCs_CFLAGS) -c $(PHCAda)/Root_Counts/DEMiCs/demicsrun.cpp
+
+ts_demicsrun: inputData.o outputData.o iTest.o fTest.o \
+              simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_demicsrun.adb \
+                 -o ts_demicsrun.o
+	gnatbind ts_demicsrun use_c2phc
+	gnatlink ts_demicsrun inputData.o outputData.o iTest.o fTest.o \
+                 get_clock.o get_clocks_per_sec.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o $(BIN)/ts_demicsrun --LINK=$(gpp) 
 
 # Test programs for SAGBI library in numerical Schubert calculus :
 
