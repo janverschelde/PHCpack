@@ -127,7 +127,8 @@ package body Series_and_Trackers is
   end Residual_Prediction;
 
   procedure Track_One_Path
-              ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
@@ -217,7 +218,8 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
@@ -317,7 +319,8 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
@@ -418,6 +421,7 @@ package body Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
+                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
@@ -532,6 +536,7 @@ package body Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
+                abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
@@ -658,6 +663,7 @@ package body Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
+                abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
@@ -788,7 +794,8 @@ package body Series_and_Trackers is
 -- VERSIONS ON COEFFICIENT-PARAMETER HOMOTOPIES :
 
   procedure Track_One_Path
-              ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
                 fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in Standard_Complex_Series_VecVecs.VecVec;
@@ -880,7 +887,8 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
@@ -981,7 +989,8 @@ package body Series_and_Trackers is
   end Track_One_Path;
 
   procedure Track_One_Path
-              ( jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+              ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
@@ -1083,6 +1092,7 @@ package body Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
+                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
                 fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -1200,6 +1210,7 @@ package body Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
+                abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -1326,6 +1337,7 @@ package body Series_and_Trackers is
 
   procedure Track_One_Path
               ( file : in file_type;
+                abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -1483,6 +1495,7 @@ package body Series_and_Trackers is
 
     use Standard_Complex_Solutions;
 
+    abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
     nvr : constant integer32 := Head_Of(sols).n;
     fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
         := Standard_CSeries_Poly_SysFun.Create(hom);
@@ -1509,7 +1522,7 @@ package body Series_and_Trackers is
       if monitor
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
-      Track_One_Path(file,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
+      Track_One_Path(file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
                      nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
       if verbose then
         Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -1543,6 +1556,7 @@ package body Series_and_Trackers is
 
     use DoblDobl_Complex_Solutions;
 
+    abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -1561,7 +1575,7 @@ package body Series_and_Trackers is
       if monitor
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
-      Track_One_Path(file,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
+      Track_One_Path(file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
                      minsize,maxsize,verbose);
       if verbose then
         Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -1591,6 +1605,7 @@ package body Series_and_Trackers is
 
     use QuadDobl_Complex_Solutions;
 
+    abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -1609,7 +1624,7 @@ package body Series_and_Trackers is
       if monitor
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
-      Track_One_Path(file,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
+      Track_One_Path(file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
                      minsize,maxsize,verbose);
       if verbose then
         Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -1637,6 +1652,7 @@ package body Series_and_Trackers is
 
     use Standard_Complex_Solutions;
 
+    abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -1647,7 +1663,7 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       Track_One_Path
-        (jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
@@ -1661,6 +1677,7 @@ package body Series_and_Trackers is
 
     use DoblDobl_Complex_Solutions;
 
+    abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -1671,7 +1688,7 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       Track_One_Path
-        (jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
@@ -1685,6 +1702,7 @@ package body Series_and_Trackers is
 
     use QuadDobl_Complex_Solutions;
 
+    abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -1695,7 +1713,7 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       Track_One_Path
-        (jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       tmp := Tail_Of(tmp);
     end loop;
   end Track_Many_Paths;
