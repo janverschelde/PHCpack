@@ -1,3 +1,6 @@
+Tue 19 Mar 2019 : added the function formdictlist to the solutions modules
+  in the PHCpy2 and PHCpy3 folders.
+
 Thu 28 Feb 2019 : fixed errors in the documentation for the path trackers.
   Prepared files for version 0.9.3 of phcpy.
 

@@ -93,6 +93,18 @@ def strsol2dict(sol):
         result[var[i]] = val[i]
     return result
 
+def formdictlist(sols):
+    r"""
+    Given in *sols* is a list of strings.
+    Each string in *sols* represents a solution,
+    in the PHCpack format.
+    On return is the list of dictionaries.
+    Each dictionary in the list of return
+    stores each solution of the list *sols*
+    in the dictionary format.
+    """
+    return [strsol2dict(sol) for sol in sols]
+
 def variables(dsol):
     r"""
     Given the dictionary format of a solution in *dsol*,
