@@ -1,3 +1,6 @@
+Tue 19 Mar 2019 : added application to the 'abh' parameter in the body of
+  series_and_trackers.adb.
+
 Mon 18 Mar 2019 : added homotopies with absolute value coefficients to the
   input parameters of series_and_trackers, and then series_path_trackers.adb
   had to be modified as well.

@@ -35,6 +35,7 @@ with Standard_Pade_Approximants;
 with DoblDobl_Pade_Approximants;
 with QuadDobl_Pade_Approximants;
 with Homotopy_Pade_Approximants;
+with Homotopy_Mixed_Residuals;
 with Homotopy_Newton_Steps;
 with Series_and_Homotopies;
 with Series_and_Predictors;
@@ -137,7 +138,7 @@ package body Series_and_Trackers is
                 minsize,maxsize : out double_float ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    nbq : constant integer32 := hom'last;
+   -- nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
@@ -190,7 +191,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+          (abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+         -- (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -209,7 +211,8 @@ package body Series_and_Trackers is
     Standard_CSeries_Poly_Systems.Clear(wrk);
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
     Homotopy_Newton_Steps.Correct
-      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+      (abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+     -- (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -228,7 +231,7 @@ package body Series_and_Trackers is
                 minsize,maxsize : out double_float ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    nbq : constant integer32 := hom'last;
+   -- nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
@@ -287,7 +290,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > pars.alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+          (abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+         -- (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -308,7 +312,8 @@ package body Series_and_Trackers is
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
     Homotopy_Newton_Steps.Correct
-      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+      (abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+     -- (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
@@ -329,7 +334,7 @@ package body Series_and_Trackers is
                 minsize,maxsize : out double_float ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    nbq : constant integer32 := hom'last;
+   -- nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
@@ -388,7 +393,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+          (abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+         -- (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -409,7 +415,8 @@ package body Series_and_Trackers is
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     Homotopy_Newton_Steps.Correct
-      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+      (abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+     -- (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
@@ -432,7 +439,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    nbq : constant integer32 := hom'last;
+   -- nbq : constant integer32 := hom'last;
     nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
@@ -508,7 +515,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+          (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+         -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -526,8 +534,10 @@ package body Series_and_Trackers is
     Standard_Complex_VecVecs.Clear(poles);
     Standard_CSeries_Poly_Systems.Clear(wrk);
     Homotopy_Newton_Steps.Correct
-      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+      (file,abh,1.0,tolres,pars.corsteps,nbrit,
        wrk_sol,err,rco,res,fail,verbose);
+     -- (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+     --  wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -547,7 +557,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    nbq : constant integer32 := hom'last;
+   -- nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- 2;
@@ -629,7 +639,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+          (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+         -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -650,8 +661,10 @@ package body Series_and_Trackers is
     dd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,dd_t);
     Homotopy_Newton_Steps.Correct
-      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+      (file,abh,1.0,tolres,pars.corsteps,nbrit,
        wrk_sol,err,rco,res,fail,verbose);
+     -- (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+     --  wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := DoblDobl_Complex_Numbers.Create(Double_Double_Numbers.Create(t));
     sol.v := wrk_sol;
@@ -674,7 +687,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
-    nbq : constant integer32 := hom'last;
+   -- nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
@@ -756,8 +769,10 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,pars.corsteps,nbrit,
+          (file,abh,t,tolres,pars.corsteps,nbrit,
            wrk_sol,err,rco,res,fail,verbose);
+         -- (file,nbq,t,tolres,pars.corsteps,nbrit,
+         --  wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -781,7 +796,8 @@ package body Series_and_Trackers is
     qd_t := create(-1.0);
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     Homotopy_Newton_Steps.Correct
-      (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+      (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+     -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
@@ -806,7 +822,7 @@ package body Series_and_Trackers is
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float ) is
 
-    nbq : constant integer32 := fhm'last;
+   -- nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
@@ -861,7 +877,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+          (abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+         -- (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -878,7 +895,8 @@ package body Series_and_Trackers is
     Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
     Homotopy_Newton_Steps.Correct
-      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+      (abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+     -- (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -899,7 +917,7 @@ package body Series_and_Trackers is
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float ) is
 
-    nbq : constant integer32 := fhm'last;
+   -- nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- 2;
@@ -959,7 +977,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+          (abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+         -- (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -977,7 +996,8 @@ package body Series_and_Trackers is
     DoblDobl_Pade_Approximants.Clear(pv);
     DoblDobl_Complex_VecVecs.Clear(poles);
     Homotopy_Newton_Steps.Correct
-      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+      (abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+     -- (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     dd_t := Double_Double_Numbers.Create(t);
     sol.t := DoblDobl_Complex_Numbers.Create(dd_t);
@@ -1001,7 +1021,7 @@ package body Series_and_Trackers is
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float ) is
 
-    nbq : constant integer32 := fhm'last;
+   -- nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
@@ -1061,7 +1081,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+          (abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
+         -- (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -1079,7 +1100,8 @@ package body Series_and_Trackers is
     QuadDobl_Pade_Approximants.Clear(pv);
     QuadDobl_Complex_VecVecs.Clear(poles);
     Homotopy_Newton_Steps.Correct
-      (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+      (abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
+     -- (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     qd_t := Quad_Double_Numbers.Create(t);
     sol.t := QuadDobl_Complex_Numbers.Create(qd_t);
@@ -1105,7 +1127,7 @@ package body Series_and_Trackers is
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false ) is
 
-    nbq : constant integer32 := fhm'last;
+   -- nbq : constant integer32 := fhm'last;
     nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
@@ -1182,7 +1204,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+          (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+         -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -1199,8 +1222,10 @@ package body Series_and_Trackers is
     Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
     Homotopy_Newton_Steps.Correct
-      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+      (file,abh,1.0,tolres,pars.corsteps,nbrit,
        wrk_sol,err,rco,res,fail,verbose);
+     -- (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+     --  wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -1223,7 +1248,7 @@ package body Series_and_Trackers is
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false ) is
 
-    nbq : constant integer32 := fhm'last;
+   -- nbq : constant integer32 := fhm'last;
     nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
@@ -1305,7 +1330,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+          (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+         -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -1323,8 +1349,10 @@ package body Series_and_Trackers is
     DoblDobl_Pade_Approximants.Clear(pv);
     DoblDobl_Complex_VecVecs.Clear(poles);
     Homotopy_Newton_Steps.Correct
-      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+      (file,abh,1.0,tolres,pars.corsteps,nbrit,
        wrk_sol,err,rco,res,fail,verbose);
+     -- (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+     --  wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     dd_t := Double_Double_Numbers.Create(t);
     sol.t := DoblDobl_Complex_Numbers.Create(dd_t);
@@ -1350,7 +1378,7 @@ package body Series_and_Trackers is
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false ) is
 
-    nbq : constant integer32 := fhm'last;
+   -- nbq : constant integer32 := fhm'last;
     nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
@@ -1432,7 +1460,8 @@ package body Series_and_Trackers is
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
         Homotopy_Newton_Steps.Correct
-          (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+          (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+         -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -1450,8 +1479,10 @@ package body Series_and_Trackers is
     QuadDobl_Pade_Approximants.Clear(pv);
     QuadDobl_Complex_VecVecs.Clear(poles);
     Homotopy_Newton_Steps.Correct
-      (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+      (file,abh,1.0,tolres,pars.corsteps,nbrit,
        wrk_sol,err,rco,res,fail,verbose);
+     -- (file,nbq,1.0,tolres,pars.corsteps,nbrit,
+     --  wrk_sol,err,rco,res,fail,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     qd_t := Quad_Double_Numbers.Create(t);
     sol.t := QuadDobl_Complex_Numbers.Create(qd_t);
@@ -1495,7 +1526,8 @@ package body Series_and_Trackers is
 
     use Standard_Complex_Solutions;
 
-    abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
+    abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
+        := Homotopy_Mixed_Residuals.Standard_AbsVal_Homotopy;
     nvr : constant integer32 := Head_Of(sols).n;
     fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
         := Standard_CSeries_Poly_SysFun.Create(hom);
@@ -1543,6 +1575,7 @@ package body Series_and_Trackers is
     Standard_Complex_Series_VecVecs.Clear(fcf);
     Standard_CSeries_Jaco_Matrices.Clear(ejm);
     Standard_CSeries_Jaco_Matrices.Clear(mlt);
+    Standard_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
@@ -1556,7 +1589,8 @@ package body Series_and_Trackers is
 
     use DoblDobl_Complex_Solutions;
 
-    abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
+    abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
+        := Homotopy_Mixed_Residuals.DoblDobl_AbsVal_Homotopy;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -1592,6 +1626,7 @@ package body Series_and_Trackers is
       (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
     new_line(file);
     print_times(file,timer,"Tracking in double double precision.");
+    DoblDobl_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
@@ -1605,7 +1640,8 @@ package body Series_and_Trackers is
 
     use QuadDobl_Complex_Solutions;
 
-    abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
+    abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
+        := Homotopy_Mixed_Residuals.QuadDobl_AbsVal_Homotopy;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -1641,6 +1677,7 @@ package body Series_and_Trackers is
       (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
     new_line(file);
     print_times(file,timer,"Tracking in quad double precision.");
+    QuadDobl_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
@@ -1652,7 +1689,8 @@ package body Series_and_Trackers is
 
     use Standard_Complex_Solutions;
 
-    abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
+    abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
+        := Homotopy_Mixed_Residuals.Standard_AbsVal_Homotopy;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -1666,6 +1704,7 @@ package body Series_and_Trackers is
         (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       tmp := Tail_Of(tmp);
     end loop;
+    Standard_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
@@ -1677,7 +1716,8 @@ package body Series_and_Trackers is
 
     use DoblDobl_Complex_Solutions;
 
-    abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
+    abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
+        := Homotopy_Mixed_Residuals.DoblDobl_AbsVal_Homotopy;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -1691,6 +1731,7 @@ package body Series_and_Trackers is
         (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       tmp := Tail_Of(tmp);
     end loop;
+    DoblDobl_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 
   procedure Track_Many_Paths
@@ -1702,7 +1743,8 @@ package body Series_and_Trackers is
 
     use QuadDobl_Complex_Solutions;
 
-    abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range);
+    abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
+        := Homotopy_Mixed_Residuals.QuadDobl_AbsVal_Homotopy;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -1716,6 +1758,7 @@ package body Series_and_Trackers is
         (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       tmp := Tail_Of(tmp);
     end loop;
+    QuadDobl_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 
   procedure Write_Path_Statistics
