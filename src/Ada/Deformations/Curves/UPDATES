@@ -1,6 +1,7 @@
 Wed 20 Mar 2019 : cleared abh in series_path_trackers.adb at the end of a run.
   In series_and_trackers, added functions to compute the predictor residual
-  with mixed residuals.
+  with mixed residuals.  More output in series_and_predictors.adb for
+  information about the series step size criterion.
 
 Tue 19 Mar 2019 : added application to the 'abh' parameter in the body of
   series_and_trackers.adb.

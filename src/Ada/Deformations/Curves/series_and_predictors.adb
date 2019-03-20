@@ -653,7 +653,9 @@ package body Series_and_Predictors is
       arg := 1.0;
     end if;
     if verbose then
-      put(file," arg = "); put(file,arg); new_line(file);
+      put(file," tol = "); put(file,tolres,2);
+      put(file," val = "); put(file,valcff,2);
+      put(file," arg = "); put(file,arg,2); new_line(file);
     end if;
     if ord = 0 then
       res := arg;
@@ -690,7 +692,9 @@ package body Series_and_Predictors is
       arg := 1.0;
     end if;
     if verbose then
-      put(file," arg = "); put(file,arg); new_line(file);
+      put(file," tol = "); put(file,tolres,2);
+      put(file," val = "); put(file,valcff,2);
+      put(file," arg = "); put(file,arg,2); new_line(file);
     end if;
     if ord = 0 then
       res := arg;
@@ -727,7 +731,9 @@ package body Series_and_Predictors is
       arg := 1.0;
     end if;
     if verbose then
-      put(file," arg = "); put(file,arg); new_line(file);
+      put(file," tol = "); put(file,tolres,2);
+      put(file," val = "); put(file,valcff,2);
+      put(file," arg = "); put(file,arg,2); new_line(file);
     end if;
     if ord = 0 then
       res := arg;
