@@ -220,8 +220,9 @@ package body Series_and_Trackers is
       Standard_Complex_Series_Vectors.Clear(eva);
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
-      step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-      step := Minimum(step,dstep);
+     -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+     -- step := Minimum(step,dstep); -- ignore series step
+      step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
         loop
@@ -314,13 +315,15 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
-      step := Series_and_Predictors.Cap_Step_Size
-                 (step,hi_part(frp),pars.pbeta);
+     -- step := Series_and_Predictors.Cap_Step_Size
+     --            (step,hi_part(frp),pars.pbeta); -- ignore series step
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       dd_t := Create(t);
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
-      step := Minimum(step,dstep);
+      step := Series_and_Predictors.Cap_Step_Size
+                 (dstep,hi_part(frp),pars.pbeta);
+     -- step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
         loop
@@ -418,13 +421,15 @@ package body Series_and_Trackers is
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
-      step := Series_and_Predictors.Cap_Step_Size
-                (step,hihi_part(frp),pars.pbeta);
+     -- step := Series_and_Predictors.Cap_Step_Size
+     --           (step,hihi_part(frp),pars.pbeta); -- ignore series step
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       qd_t := Create(t);
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
-      step := Minimum(step,dstep);
+      step := Series_and_Predictors.Cap_Step_Size
+                (dstep,hihi_part(frp),pars.pbeta);
+     -- step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
         loop
@@ -503,7 +508,7 @@ package body Series_and_Trackers is
     dbeta : constant double_float := 0.005;
     maxit : constant natural32 := 500;
     fail : boolean;
-    t,step,dstep : double_float := 0.0;
+    t,step,dstep,pstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
@@ -533,10 +538,21 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
-      step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+     -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+     -- ignore series step
+      if verbose then
+        put(file,"series step : "); put(step,2); 
+      end if;
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
-      step := Minimum(step,dstep);
+      if verbose then
+        put(file,"  Hessian step : "); put(file,dstep,2);
+        pstep := frp*pars.pbeta;
+        put(file,"  pole step : "); put(file,pstep,2);
+        new_line(file);
+      end if;
+      step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
+     -- step := Minimum(step,dstep);
       Standard_Complex_Series_Vectors.Clear(eva);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
@@ -910,10 +926,11 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
       step := pars.sbeta*step;
       Standard_Complex_Series_Vectors.Clear(eva);
-      step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+     -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
-      step := Minimum(step,dstep);
+     -- step := Minimum(step,dstep); -- ignore series step
+      step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
         loop
@@ -1197,7 +1214,7 @@ package body Series_and_Trackers is
     dbeta : constant double_float := 0.005;
     maxit : constant natural32 := 500;
     fail : boolean;
-    t,step,dstep : double_float := 0.0;
+    t,step,dstep,pstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
     onetarget : constant double_float := 1.0;
@@ -1228,11 +1245,20 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
-      step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+      if verbose then
+        put(file,"series step : "); put(file,step,2);
+      end if;
+     -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
       Standard_Complex_Series_Vectors.Clear(eva);
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
-      step := Minimum(step,dstep);
+      if verbose then
+        put(file,"  Hessian step : "); put(file,dstep,2);
+        pstep := frp*pars.pbeta;
+        put(file,"  pole step : "); put(file,pstep,2); new_line(file);
+      end if;
+      step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
+     -- step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
         put(file,"Step size : "); put(file,step,3);
