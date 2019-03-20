@@ -96,6 +96,20 @@ package body Series_and_Trackers is
   end Residual_Prediction;
 
   function Residual_Prediction
+              ( abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : Standard_Complex_Vectors.Vector;
+                t : double_float ) return double_float is
+
+    res : double_float;
+    cmplxt : constant Standard_Complex_Numbers.Complex_Number
+           := Standard_Complex_Numbers.Create(t);
+
+  begin
+    res := Homotopy_mixed_Residuals.Residual(abh,sol,cmplxt);
+    return res;
+  end Residual_Prediction;
+
+  function Residual_Prediction
               ( sol : DoblDobl_Complex_Vectors.Vector;
                 t : double_float ) return double_float is
 
@@ -112,6 +126,21 @@ package body Series_and_Trackers is
   end Residual_Prediction;
 
   function Residual_Prediction
+              ( abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : DoblDobl_Complex_Vectors.Vector;
+                t : double_float ) return double_float is
+
+    res : double_double;
+    ddt : constant double_double := create(t);
+    cmplxt : constant DoblDobl_Complex_Numbers.Complex_Number
+           := DoblDobl_Complex_Numbers.Create(ddt);
+
+  begin
+    res := Homotopy_mixed_Residuals.Residual(abh,sol,cmplxt);
+    return hi_part(res);
+  end Residual_Prediction;
+
+  function Residual_Prediction
               ( sol : QuadDobl_Complex_Vectors.Vector;
                 t : double_float ) return double_float is
 
@@ -124,6 +153,21 @@ package body Series_and_Trackers is
 
   begin
     res := QuadDobl_Complex_Vector_Norms.Max_Norm(val);
+    return hihi_part(res);
+  end Residual_Prediction;
+
+  function Residual_Prediction
+              ( abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : QuadDobl_Complex_Vectors.Vector;
+                t : double_float ) return double_float is
+
+    res : quad_double;
+    qdt : constant quad_double := create(t);
+    cmplxt : constant QuadDobl_Complex_Numbers.Complex_Number
+           := QuadDobl_Complex_Numbers.Create(qdt);
+
+  begin
+    res := Homotopy_mixed_Residuals.Residual(abh,sol,cmplxt);
     return hihi_part(res);
   end Residual_Prediction;
 
@@ -182,7 +226,8 @@ package body Series_and_Trackers is
       loop
         loop
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
          -- exit when (step < pars.minsize);
@@ -281,7 +326,8 @@ package body Series_and_Trackers is
         loop
           dd_step := create(step);
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
          -- exit when (step < pars.minsize);
@@ -384,7 +430,8 @@ package body Series_and_Trackers is
         loop
           qd_step := create(step);
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
          -- exit when (step < pars.minsize);
@@ -499,7 +546,8 @@ package body Series_and_Trackers is
       loop
         loop
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           if verbose
            then put(file,"  residual : "); put(file,predres,3); new_line(file);
           end if;
@@ -623,7 +671,8 @@ package body Series_and_Trackers is
         loop
           dd_step := create(step);
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           if verbose
            then put(file,"  residual : "); put(file,predres,3); new_line(file);
           end if;
@@ -753,7 +802,8 @@ package body Series_and_Trackers is
         loop
           qd_step := create(step);
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           if verbose
            then put(file,"  residual : "); put(file,predres,3); new_line(file);
           end if;
@@ -868,7 +918,8 @@ package body Series_and_Trackers is
       loop
         loop
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
          -- exit when (step < pars.minsize);
@@ -968,7 +1019,8 @@ package body Series_and_Trackers is
         loop
           dd_step := create(step);
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
          -- exit when (step < pars.minsize);
@@ -1072,7 +1124,8 @@ package body Series_and_Trackers is
         loop
           qd_step := create(step);
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
          -- exit when (step < pars.minsize);
@@ -1188,7 +1241,8 @@ package body Series_and_Trackers is
       loop
         loop
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           if verbose
            then put(file,"  residual : "); put(file,predres,3); new_line(file);
           end if;
@@ -1314,7 +1368,8 @@ package body Series_and_Trackers is
         loop
           dd_step := create(step);
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           if verbose
            then put(file,"  residual : "); put(file,predres,3); new_line(file);
           end if;
@@ -1444,7 +1499,8 @@ package body Series_and_Trackers is
         loop
           qd_step := create(step);
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-          predres := Residual_Prediction(wrk_sol,t);
+         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(abh,wrk_sol,t);
           if verbose
            then put(file,"  residual : "); put(file,predres,3); new_line(file);
           end if;

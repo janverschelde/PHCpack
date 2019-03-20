@@ -256,6 +256,7 @@ package body Series_Path_Trackers is
       Write_Conclusion(standard_output,start_moment);
     end if;
     Standard_Complex_Poly_Systems.Clear(h);
+    Standard_Complex_Poly_SysFun.Clear(abh);
     Standard_CSeries_Poly_Systems.Clear(s);
     Standard_CSeries_Poly_SysFun.Clear(fhm);
     Standard_Complex_Series_VecVecs.Clear(fcf);
@@ -391,6 +392,7 @@ package body Series_Path_Trackers is
       Write_Conclusion(standard_output,start_moment);
     end if;
     DoblDobl_Complex_Poly_Systems.Clear(h);
+    DoblDobl_Complex_Poly_SysFun.Clear(abh);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
     DoblDobl_CSeries_Poly_SysFun.Clear(fhm);
     DoblDobl_Complex_Series_VecVecs.Clear(fcf);
@@ -525,6 +527,7 @@ package body Series_Path_Trackers is
       Write_Conclusion(standard_output,start_moment);
     end if;
     QuadDobl_Complex_Poly_Systems.Clear(h);
+    QuadDobl_Complex_Poly_SysFun.Clear(abh);
     QuadDobl_CSeries_Poly_Systems.Clear(s);
     QuadDobl_CSeries_Poly_SysFun.Clear(fhm);
     QuadDobl_Complex_Series_VecVecs.Clear(fcf);

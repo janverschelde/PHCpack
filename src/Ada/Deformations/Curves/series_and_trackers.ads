@@ -73,6 +73,33 @@ package Series_and_Trackers is
   --   the Standard_Homotopy, DoblDobl_Homotopy, or QuadDobl_Homotopy
   --   must have been properly initialized.
 
+  function Residual_Prediction
+              ( abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : Standard_Complex_Vectors.Vector;
+                t : double_float ) return double_float;
+  function Residual_Prediction
+              ( abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : DoblDobl_Complex_Vectors.Vector;
+                t : double_float ) return double_float;
+  function Residual_Prediction
+              ( abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : QuadDobl_Complex_Vectors.Vector;
+                t : double_float ) return double_float;
+
+  -- DESCRIPTION :
+  --   Given a predicted solution and a value for t,
+  --   returns the mixed residual of the solution.
+
+  -- REQUIRED :
+  --   For double, double double, or quad double precision,
+  --   the Standard_Homotopy, DoblDobl_Homotopy, or QuadDobl_Homotopy
+  --   must have been properly initialized.
+
+  -- ON ENTRY :
+  --   abh      homotopy polynomials with absolute value coefficients;
+  --   sol      current solution for the value of t;
+  --   t        current value of the continuation parameter.
+
   procedure Track_One_Path
               ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
