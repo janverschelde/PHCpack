@@ -65,7 +65,17 @@ For the :index:`Windows` operating systems, the
 executable version of phc is in the file ``phc.exe``
 and is available for download in its uncompressed format.
 Using the plain version of phc on a Windows system 
-requires the opening of a command prompt window.
+requires the opening of a command prompt window
+and typing ``phc`` at the prompt.
+To run ``phc`` from any folder, different from the folder where
+you save ``phc.exe``, you have to change the environment variable ``path``.
+On Windows 10, type ``env`` in the Search window and select
+``Edit the system environment variables`` under the ``Settings``.
+After this selection, click on the ``Environment Variables...`` button
+and select ``Path`` from the ``System Variables``.
+Via the ``Edit`` button you can insert the name of the folder where
+you saved the file ``phc.exe``.  Alternatively, you could of course
+save the ``phc.exe`` in a folder which is already on your path.
 
 For :index:`Mac OS X` and :index:`Linux` versions, 
 the executable is tarred and gzipped.
