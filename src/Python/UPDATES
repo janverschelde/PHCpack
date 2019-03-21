@@ -1,3 +1,6 @@
+Thu 21 Mar 2019 : added functions to the solutions module to return the
+  coordinates in Python complex number string representations. 
+
 Wed 20 Mar 2019 : started adding the option dictionary_output to the
   solver module.
 

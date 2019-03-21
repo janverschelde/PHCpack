@@ -35,6 +35,24 @@ def str2complex(scn):
     imagpart = realimag[len(realimag)-1].replace('E', 'e')
     return complex(literal_eval(realpart), literal_eval(imagpart))
 
+def string_complex(scn):
+    r"""
+    The string *scn* contains a complex number,
+    the real and imaginary part separated by spaces.
+    On return is the string representionat of a complex number,
+    in Python format.  The use of this function is for when
+    the coordinates are calculated in higher precision.
+    """
+    stripped = scn.strip()
+    realimag = stripped.split(' ')
+    realpart = realimag[0].replace('E', 'e')
+    imagpart = realimag[len(realimag)-1].replace('E', 'e')
+    if(imagpart[0] == '-'):
+        result = '(' + realpart + imagpart + 'j)'
+    else:
+        result = '(' + realpart + '+' + imagpart + 'j)'
+    return result
+    
 def coordinates(sol):
     r"""
     Returns the coordinates of the solution
@@ -59,6 +77,31 @@ def coordinates(sol):
             vals.append(str2complex(xval[1]))
     return (vard, vals)
 
+def string_coordinates(sol):
+    r"""
+    Returns the coordinates of the solution
+    in the PHCpack solution string *sol*,
+    as a tuple of two lists: (names, values).
+    For each name in names there is a value in values.
+    The list names contains the strings of the variable names.
+    The list values contains the values of the coordinates,
+    represented as strings.  This function is useful for
+    when the coordinates are computed in higher precision.
+    """
+    banner = sol.split("==")
+    data = banner[0]
+    nums = data.split("the solution for t :")
+    firstnums = nums[1]
+    lines = firstnums.split('\n')
+    vard = []
+    vals = []
+    for line in lines:
+        if line != '':
+            xval = line.split(':')
+            vard.append(xval[0].strip())
+            vals.append(string_complex(xval[1]))
+    return (vard, vals)
+
 def endmultiplicity(sol):
     r"""
     Returns the value of t at the end
@@ -75,10 +118,14 @@ def endmultiplicity(sol):
     mval = literal_eval(mstr[1].lstrip())
     return (tval, mval)
 
-def strsol2dict(sol):
+def strsol2dict(sol, precision='d'):
     r"""
     Converts the solution in the string *sol*
     into a dictionary format.
+    By default, the precision of the coordinates is assumed
+    to be double float ('d' on input).
+    If the precision is not 'd', then the coordinates of the solution
+    are returned as Python complex number string representations.
     """
     result = {}
     (tval, mult) = endmultiplicity(sol)
@@ -88,12 +135,15 @@ def strsol2dict(sol):
     result['err'] = err
     result['rco'] = rco
     result['res'] = res
-    (var, val) = coordinates(sol)
+    if(precision == 'd'):
+        (var, val) = coordinates(sol)
+    else:
+        (var, val) = string_coordinates(sol)
     for i in range(len(var)):
         result[var[i]] = val[i]
     return result
 
-def formdictlist(sols):
+def formdictlist(sols, precision='d'):
     r"""
     Given in *sols* is a list of strings.
     Each string in *sols* represents a solution,
@@ -102,8 +152,12 @@ def formdictlist(sols):
     Each dictionary in the list of return
     stores each solution of the list *sols*
     in the dictionary format.
+    By default, the precision of the coordinates is assumed
+    to be double float ('d' on input).
+    If the precision is not 'd', then the coordinates of the solution
+    are returned as Python complex number string representations.
     """
-    return [strsol2dict(sol) for sol in sols]
+    return [strsol2dict(sol, precision) for sol in sols]
 
 def variables(dsol):
     r"""
@@ -155,10 +209,11 @@ def make_solution(sol, vals):
     and in *vals* a list of complex values for the coordinates.
     For example:
 
-    s = make_solution(['x','y'],[1,2])
+    s = make_solution(['x','y'],[(1+2j), 3])
 
     returns the string s to represent the solution with
-    coordinates 1 and 2 for the variables x and y.
+    coordinates (1+2j) and 3 for the variables x and y.
+    The imaginary unit is the Python j instead of i.
     Applying the function coordinates on the result of
     make_solution returns the tuple of arguments given
     on input to **make_solution()**.
