@@ -1,3 +1,6 @@
+Wed 20 Mar 2019 : started adding the option dictionary_output to the
+  solver module.
+
 Tue 19 Mar 2019 : added the function formdictlist to the solutions modules
   in the PHCpy2 and PHCpy3 folders.
 
