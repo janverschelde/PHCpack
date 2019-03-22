@@ -181,7 +181,7 @@ def dobldobl_solve(pols, verbose=True, tasks=0, dictionary_output=False):
     sols = load_dobldobl_solutions()
     if dictionary_output:
         from solutions import formdictlist
-        return formdictlist(sols)
+        return formdictlist(sols, 'dd')
     else:
         return sols
 
@@ -222,7 +222,7 @@ def quaddobl_solve(pols, verbose=True, tasks=0, dictionary_output=False):
     sols = load_quaddobl_solutions()
     if dictionary_output:
         from solutions import formdictlist
-        return formdictlist(sols)
+        return formdictlist(sols, 'qd')
     else:
         return sols
 
@@ -242,7 +242,8 @@ def solve_checkin(pols, msg):
         print 'Either correct the input, or use phcpy.factor.solve'
         print 'to solve polynomial systems that are not square.'
 
-def solve(pols, verbose=True, tasks=0, precision='d', checkin=True):
+def solve(pols, verbose=True, tasks=0, precision='d', checkin=True, \
+    dictionary_output=False):
     r"""
     Calls the blackbox solver to compute all isolated solutions.
     To compute all solutions, also the positive dimensional solution sets,
@@ -261,6 +262,8 @@ def solve(pols, verbose=True, tasks=0, precision='d', checkin=True):
     *qd*: quad double precision (1.2e-63 or 2^(-209)).
 
     If *checkin* (by default), the input *pols* is checked for being square.
+    If *dictionary_output*, then on return is a list of dictionaries,
+    else the returned list is a list of strings.
     """
     if checkin:
         errmsg = 'The blackbox solver accepts only square systems,'
@@ -270,11 +273,11 @@ def solve(pols, verbose=True, tasks=0, precision='d', checkin=True):
             print 'The number of tasks must be a nonnegative integer.'
             return None
     if(precision == 'd'):
-        return standard_solve(pols, verbose, tasks)
+        return standard_solve(pols, verbose, tasks, dictionary_output)
     elif(precision == 'dd'):
-        return dobldobl_solve(pols, verbose, tasks)
+        return dobldobl_solve(pols, verbose, tasks, dictionary_output)
     elif(precision == 'qd'):
-        return quaddobl_solve(pols, verbose, tasks)
+        return quaddobl_solve(pols, verbose, tasks, dictionary_output)
     else:
         print 'wrong level of precision, use d, dd, or qd'
 
