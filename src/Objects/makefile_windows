@@ -1281,6 +1281,14 @@ lib2path.o:
 
 # Test programs for the Tasking :
 
+corecount.o:
+	gcc -c $(PHCAda)/Tasking/corecountwindows.c -o corecount.o
+
+ts_corecount: corecount.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_corecount.adb
+	gnatbind ts_corecount
+	gnatlink ts_corecount corecount.o -o $(BIN)/ts_corecount
+
 ts_tasking:
 	gnatmake -o $(BIN)/ts_tasking  $(INCLULIBS) $(GNATFLAGS) ts_tasking.adb
 

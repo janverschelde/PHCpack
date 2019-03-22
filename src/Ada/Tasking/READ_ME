@@ -30,6 +30,7 @@ mixed volume computation.
 file name                         : short description
 -------------------------------------------------------------------------------
 corecount.c                       : to get the number of cores
+corecountwindows.c                : version of corecount for Windows
 number_of_cores                   : wraps the C function in corecount
 ts_corecount                      : prints the number of cores
 -------------------------------------------------------------------------------

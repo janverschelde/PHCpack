@@ -1,5 +1,6 @@
 Fri 22 Mar 2019 : new function number_of_cores, tested by ts_corecount,
   uses corecount.c to return the number of available cores.
+  Added version for windows in corecountwindows.c.
 
 Sat 2 Feb 2019 : added simple test on handling ctrl+c interrupt.
 
