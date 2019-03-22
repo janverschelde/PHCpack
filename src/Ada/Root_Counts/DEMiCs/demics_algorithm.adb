@@ -163,7 +163,7 @@ package body DEMiCs_Algorithm is
     lst : constant Interfaces.C.size_T := Interfaces.C.size_T(mix'last-1);
     res : C_Integer_Array(0..lst);
     supidx : integer32 := sup'first;
-    mixidx : integer32 := mix'first;
+    mixidx : integer32 := mix'first-1; -- bug fix 03/22/19, added -1
 
     use Lists_of_Integer_Vectors;
 

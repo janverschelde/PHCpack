@@ -1,3 +1,6 @@
+Fri 22 Mar 2019 : replaced srandom() by srand() and random() by rand() in
+  reltab.cpp, simplex.cpp, and mvc.cpp.  Fixed bug in demics_algorithm.adb.
+
 Thu 27 Sep 2018 : used the function lrint() in simplex.cpp to round to
   the nearest integer before converting to a long int.
 

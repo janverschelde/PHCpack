@@ -152,7 +152,7 @@ void reltab::get_init_triData ( int lab, int idx )
    nbN = constNum + Dim;
    nfN = Dim;
 
-   srandom(4);
+   srand(4); // srandom(4);
    for(i = 0; i < constNum; i++)
    {
       val[i] = (double) rand() / (double) RAND_MAX;
@@ -231,7 +231,7 @@ void reltab::get_init_squData
    nbN = constNum + Dim;
    nfN = Dim;
 
-   srandom(4);
+   srand(4); // srandom(4);
    for(i = 0; i < constNum_a; i++)
    {
       nbIdx[i] = reTermS_a + i; 

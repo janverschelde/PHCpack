@@ -1572,7 +1572,7 @@ void mvc::initCheck ( int depth, ftData& Data )
       trNeg[i] = new int [Dim];
       assert(trNeg[i]);
    }
-   srandom(12);
+   srand(12); // srandom(12);
    for(i = 0; i < termSet[sn] - 1; i++)
    {
       val[i] = (double) rand() / (double) RAND_MAX;

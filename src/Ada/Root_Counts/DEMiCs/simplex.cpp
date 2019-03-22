@@ -340,7 +340,7 @@ void simplex::initialize_with_lifting
    nIdx = new int [2 * tmp_nDim];
    assert(nIdx);
   
-   srandom(seedNum);
+   srand(seedNum); // srandom(seedNum);
    Rand_Max = 2;  
 
    for(i = 1; i < 30; i++) Rand_Max *= 2;
@@ -523,7 +523,7 @@ void simplex::allocateAndIni
    nIdx = new int [2 * tmp_nDim];
    assert(nIdx);
   
-   srandom(seedNum);
+   srand(seedNum); // srandom(seedNum);
    Rand_Max = 2;  
 
    for(i = 1; i < 30; i++) Rand_Max *= 2;
@@ -531,7 +531,8 @@ void simplex::allocateAndIni
 
    for(i = 0; i < termSumNum; i++)
    {
-      lifting[i] =  (double) random() / Rand_Max*10;
+      // lifting[i] = (double) random() / Rand_Max*10;
+      lifting[i] = (double) rand() / Rand_Max*10;
    }
    Supp = new supportSet* [supN + 1];
    assert(Supp);
@@ -2502,19 +2503,19 @@ void simplex::calElem ( int idx )
    {
       if(lower == SMALLDOUBLE && upper == BIGDOUBLE)
       {
-         srandom(2);
+         srand(2); // srandom(2);
          delta = (double) rand() / (double) RAND_MAX;
       }
       else if(lower == SMALLDOUBLE && upper < BIGDOUBLE)
       {
-         srandom(3);
+         srand(3); // srandom(3);
          randNum = (double) rand() / (double) RAND_MAX;
 
          delta = upper - randNum / 2;
       }
       else if(lower > SMALLDOUBLE && upper == BIGDOUBLE)
       {
-         srandom(4);
+         srand(4); // srandom(4);
          randNum = (double) rand() / (double) RAND_MAX;
 
          delta = lower + randNum / 2;
