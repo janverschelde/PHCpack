@@ -2729,6 +2729,14 @@ ts_pathpars:
 
 # Test programs for the Tasking :
 
+corecount.o:
+	gcc -c $(PHCAda)/Tasking/corecount.c
+
+ts_corecount: corecount.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_corecount.adb
+	gnatbind ts_corecount
+	gnatlink ts_corecount corecount.o -o $(BIN)/ts_corecount
+
 ts_mtmatvec:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtmatvec.adb \
               -o $(BIN)/ts_mtmatvec

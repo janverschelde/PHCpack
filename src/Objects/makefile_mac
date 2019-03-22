@@ -61,12 +61,12 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
-GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+# GNATFLAGS=-gnatv -O3 -gnatp -gnatf
+# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
-#GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-#GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
+GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
 
@@ -2235,6 +2235,14 @@ ts_pathpars:
                  -o $(BIN)/ts_pathpars
 
 # Test programs for the Tasking :
+
+corecount.o:
+	gcc -c $(PHCAda)/Tasking/corecount.c -o corecount.o
+
+ts_corecount: corecount.o
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_corecount.adb
+	gnatbind ts_corecount
+	gnatlink ts_corecount corecount.o -o $(BIN)/ts_corecount
 
 ts_mtmatvec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmatvec.adb \
