@@ -1,4 +1,4 @@
-Multitasking linear algebra, evaluation and path tracking in PHCv2.4.65
+Multitasking linear algebra, evaluation and path tracking in PHCv2.4.66
 
 This directory is entirely new in release 2.3.45 of PHCpack.
 Tasks in Ada are mapped to kernel threads.
@@ -28,6 +28,10 @@ mixed volume computation.
 
 -------------------------------------------------------------------------------
 file name                         : short description
+-------------------------------------------------------------------------------
+corecount.c                       : to get the number of cores
+number_of_cores                   : wraps the C function in corecount
+ts_corecount                      : prints the number of cores
 -------------------------------------------------------------------------------
 multitasking                      : exports generic task creation
 ts_tasking                        : basic test on task creation
