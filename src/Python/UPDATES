@@ -1,3 +1,6 @@
+Sat 23 Mar 2019 : improved the make_solution function of the solutions
+  module, adding also a function numerals.
+
 Thu 21 Mar 2019 : added functions to the solutions module to return the
   coordinates in Python complex number string representations. 
   To the solve functions in the solver modules of python2 and python3

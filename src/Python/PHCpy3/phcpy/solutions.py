@@ -172,6 +172,14 @@ def variables(dsol):
     solkeys.remove('res')
     return solkeys
 
+def numerals(dsol):
+    r"""
+    Given the dictionary format of a solution *dsol*,
+    returns the list of numeric values of the variables in the solution.
+    """
+    names = variables(dsol) 
+    return [dsol[name] for name in names]
+
 def evaluate_polynomial(pol, dsol):
     r"""
     Evaluates the polynomial *pol* at the solution
@@ -202,11 +210,12 @@ def evaluate(pols, dsol):
         result.append(evaluate_polynomial(pol, dsol))
     return result
 
-def make_solution(sol, vals):
+def make_solution(names, values, \
+    err=0.0, rco=1.0, res=0.0, tval=0, multiplicity=1):
     r"""
     Makes the string representation in PHCpack format
-    with in *sol* a list of strings for the variables names
-    and in *vals* a list of complex values for the coordinates.
+    with in *names* a list of strings for the variables names
+    and in *values* a list of (complex) values for the coordinates.
     For example: 
 
     s = make_solution(['x','y'],[(1+2j), 3])
@@ -214,25 +223,53 @@ def make_solution(sol, vals):
     returns the string s to represent the solution with
     coordinates (1+2j) and 3 for the variables x and y.
     The imaginary unit is the Python j instead of i.
+    Other arguments for this function are
+
+    1. *err* is the magnitude of an update, or the forward error,
+
+    2. *rco* is the estimate for the inverse condition number,
+
+    3. *res* is the value of the residual, or backward error,
+
+    4. *tval* is the value for the continuation parameter t,
+
+    5. *multiplicity* is the multiplicity of the solution.
+
+    For those above arguments, default values are provided.
     Applying the function coordinates on the result of
     make_solution returns the tuple of arguments given
     on input to **make_solution()**.
     """
-    result = 't : 0.0 0.0\nm : 1\n'
+    if isinstance(tval, complex):
+        (tre, tim) = (tval.real, tval.imag)
+    elif isinstance(tval, float):
+        (tre, tim) = (tval, 0.0)
+    elif isinstance(tval, int):
+        (tre, tim) = (tval, 0.0)
+    else:
+        print('wrong type for the value of the continuation parameter t')
+        return ""
+    result = 't : %.15E  %.15E\n' % (tre, tim)
+    mstr = 'm : %d\n' % multiplicity
+    result = result + mstr
     result = result + 'the solution for t :\n'
-    for k in range(len(sol)):
-        result = result + ' ' + sol[k] + ' : '
-        if isinstance(vals[k], complex):
-            c_re = '%.15E' % vals[k].real
-            c_im = '%.15E' % vals[k].imag
+    for k in range(len(names)):
+        result = result + ' ' + names[k] + ' : '
+        if isinstance(values[k], complex):
+            c_re = '%.15E' % values[k].real
+            c_im = '%.15E' % values[k].imag
             result = result + c_re + '  ' + c_im + '\n'
-        elif isinstance(vals[k], float):
-            flt = '%.15E' % vals[k]
+        elif isinstance(values[k], float):
+            flt = '%.15E' % values[k]
             result = result + flt + '  ' + '0.0' + '\n'
-        elif isinstance(vals[k], int):
-            i = '%.15E' % vals[k]
+        elif isinstance(values[k], int):
+            i = '%.15E' % values[k]
             result = result + i + '  ' + '0.0' + '\n'
-    result = result + '== err : 0.0 = rco : 1.0 = res : 0.0 =='
+        else:
+            print('wrong type for coordinate value')
+            return result
+    lastline = '== err : %.3E = rco : %.3e = res : %.3E ==' % (err, rco, res)
+    result = result + lastline
     return result
 
 def is_real(sol, tol):
