@@ -84,7 +84,7 @@ CCLINKER    = $(CCC)
 
 phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o \
      inputData.o outputData.o iTest.o fTest.o reltab.o \
-     simplex4phc.o mvc4phc.o demicsrun4phc.o
+     simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -93,7 +93,7 @@ phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o \
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind dispatch use_c2phc
 	gnatlink dispatch syscon.o solcon.o phcpack.o feedback.o \
-                 pieri_solver.o parameter.o lib2path.o \
+                 pieri_solver.o parameter.o lib2path.o corecount.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  lib.a $(QD_LIB)/libqd.a \
