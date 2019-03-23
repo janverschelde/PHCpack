@@ -38,6 +38,7 @@ with Complex_Polynomial_Matrices;        use Complex_Polynomial_Matrices;
 with Complex_Polynomial_Matrices_io;     use Complex_Polynomial_Matrices_io;
 with Verify_Solution_Maps;
 with C_to_Ada_Arrays;                    use C_to_Ada_Arrays;
+with Number_of_Cores;
 with Write_Seed_Number;
 
 with Standard_Natural_Numbers_io;
@@ -189,28 +190,13 @@ procedure Dispatch is
     option := res;
   end Read_Next_Option;
 
-  function Number_of_Tasks ( i : integer32 ) return natural32 is
-
-  -- DESCRIPTION :
-  --   Returns the number of tasks of the i-th argument on the command line.
-
-  -- REQUIRED :
-  --   The i-th argument is a string starting with "-t"
-  --   and followed by a natural number.
-
-    s : constant string := Unix_Command_Line.Argument(integer(i));
-    res : constant natural32 := Convert(s(3..s'last));
-
-  begin
-    return res;
-  end Number_of_Tasks;
-
   function Number_of_Tasks return natural32 is
 
   -- DESCRIPTION :
   --   Returns the number of tasks of the argument -t on the command line.
-  --   If there is no argument -t, then 0 is returned.
+  --   If there is no argument -t, then the number of cores is returned.
 
+    cnt : integer32 := Number_of_Cores;
     res : natural32 := 0;
 
   begin
@@ -218,8 +204,15 @@ procedure Dispatch is
       declare
         s : constant string := Unix_Command_Line.Argument(i);
       begin
-        if s(2) = 't'
-         then res := Convert(s(3..s'last)); exit;
+        if s(2) = 't' then
+          if s(3..s'last) = "" then -- no number of cores provided
+            if cnt > 0
+             then res := natural32(cnt);
+            end if;
+          else
+            res := Convert(s(3..s'last));
+          end if;
+          exit;
         end if;
       end;
     end loop;
@@ -491,7 +484,6 @@ procedure Dispatch is
         case o3 is
           when 't' =>
             declare
-             -- nt : constant natural := Number_of_Tasks(3);
               nt : constant natural32 := Number_of_Tasks;
             begin
               babldmvc(nt,infile,outfile);
@@ -500,7 +492,6 @@ procedure Dispatch is
         end case;
       when 't' =>
         declare
-         -- nt : constant natural := Number_of_Tasks(2);
           nt : constant natural32 := Number_of_Tasks;
           ns : constant string := Convert(integer32(nt));
         begin
@@ -539,7 +530,6 @@ procedure Dispatch is
         end if;
       when 't'
         => declare
-            -- nt : constant natural := Number_of_Tasks(2);
              nt : constant natural32 := Number_of_Tasks;
              ns : constant string := Convert(integer32(nt));
            begin
@@ -679,7 +669,6 @@ procedure Dispatch is
   -- DESCRIPTION :
   --   For multitasking, when the first option o1 = 't'.
 
-   -- nt : constant natural := Number_of_Tasks(1);
     nt : constant natural32 := Number_of_Tasks;
     ns : constant string := Convert(integer32(nt));
     bbprc : constant natural32 := Scan_Precision('b');
