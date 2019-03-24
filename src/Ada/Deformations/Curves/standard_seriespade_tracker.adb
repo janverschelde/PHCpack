@@ -5,6 +5,7 @@ with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Poly_SysFun;
 with Standard_CSeries_Poly_Systems;
 with Standard_Homotopy;
 with Standard_Pade_Approximants_io;
@@ -13,6 +14,7 @@ with Series_and_Homotopies;
 with Series_and_Predictors;
 with Series_and_Trackers;
 with Homotopy_Newton_Steps;
+with Homotopy_Mixed_Residuals;
 
 package body Standard_SeriesPade_Tracker is
 
@@ -23,6 +25,7 @@ package body Standard_SeriesPade_Tracker is
   idxpar : integer32; -- index of continuation parameter, 0 if artificial
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : Standard_CSeries_Poly_Systems.Link_to_Poly_Sys;
+  abh : Standard_Complex_Poly_SysFun.Link_to_Eval_Poly_Sys;
   current_poles : Standard_Complex_VecVecs.Link_to_VecVec;
   current : Link_to_Solution;
   current_servec : Standard_Complex_Series_Vectors.Link_to_Vector;
@@ -67,6 +70,8 @@ package body Standard_SeriesPade_Tracker is
   begin
     idxpar := 0; -- artificial-parameter homotopy
     Standard_Homotopy.Create(p.all,q.all,tpow,gamma);
+    abh := new Standard_Complex_Poly_SysFun.Eval_Poly_Sys'
+                 (Homotopy_Mixed_Residuals.Standard_AbsVal_Homotopy);
     nbeqs := p'last;
     nbvar := integer32(Number_of_Unknowns(p(p'first)));
    -- series homotopy is define when initializing the solution
@@ -77,6 +82,8 @@ package body Standard_SeriesPade_Tracker is
   begin
     idxpar := idx;
     Standard_Homotopy.Create(h.all,idx);
+    abh := new Standard_Complex_Poly_SysFun.Eval_Poly_Sys'
+                 (Homotopy_Mixed_Residuals.Standard_AbsVal_Homotopy);
     nbeqs := h'last;
     nbvar := integer32(Number_of_Unknowns(h(h'first))) - 1;
     Initialize_Series_and_Approximants;
@@ -187,11 +194,11 @@ package body Standard_SeriesPade_Tracker is
   begin
     if verbose then
       Homotopy_Newton_Steps.Correct
-        (standard_output,nbeqs,t,homconpars.tolres,homconpars.corsteps,nbrit,
+        (standard_output,abh.all,t,homconpars.tolres,homconpars.corsteps,nbrit,
          current.v,current.err,current.rco,current.res,fail,true);
     else
       Homotopy_Newton_Steps.Correct
-        (nbeqs,t,homconpars.tolres,homconpars.corsteps,nbrit,
+        (abh.all,t,homconpars.tolres,homconpars.corsteps,nbrit,
          current.v,current.err,current.rco,current.res,fail);
     end if;
   end Correct;
@@ -262,6 +269,7 @@ package body Standard_SeriesPade_Tracker is
   begin
     Homotopy_Continuation_Parameters.Clear(homconpars);
     Standard_CSeries_Poly_Systems.Clear(htp);
+    Standard_Complex_Poly_SysFun.Clear(abh);
     Standard_Complex_VecVecs.Deep_Clear(current_poles);
     Standard_Complex_Series_Vectors.Clear(current_servec);
     Standard_Pade_Approximants.Clear(current_padvec);

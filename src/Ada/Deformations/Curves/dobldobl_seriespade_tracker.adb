@@ -8,6 +8,7 @@ with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
 with DoblDobl_Complex_Polynomials;       use DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_CSeries_Poly_Systems;
 with DoblDobl_Homotopy;
 with DoblDobl_Pade_Approximants_io;
@@ -16,6 +17,7 @@ with Series_and_Homotopies;
 with Series_and_Predictors;
 with Series_and_Trackers;
 with Homotopy_Newton_Steps;
+with Homotopy_Mixed_Residuals;
 
 package body DoblDobl_SeriesPade_Tracker is
 
@@ -26,6 +28,7 @@ package body DoblDobl_SeriesPade_Tracker is
   idxpar : integer32; -- index of the continuation parameter, 0 if artificial
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : DoblDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
+  abh : DoblDobl_Complex_Poly_SysFun.Link_to_Eval_Poly_Sys;
   current_poles : DoblDobl_Complex_VecVecs.Link_to_VecVec;
   current : Link_to_Solution;
   current_servec : DoblDobl_Complex_Series_Vectors.Link_to_Vector;
@@ -73,6 +76,8 @@ package body DoblDobl_SeriesPade_Tracker is
   begin
     idxpar := 0;
     DoblDobl_Homotopy.Create(p.all,q.all,tpow,dd_gamma);
+    abh := new DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys'
+                 (Homotopy_Mixed_Residuals.DoblDobl_AbsVal_Homotopy);
     nbeqs := p'last;
     nbvar := integer32(Number_of_Unknowns(p(p'first)));
    -- definition of series homotopy is done with Init of the solution
@@ -83,6 +88,8 @@ package body DoblDobl_SeriesPade_Tracker is
   begin
     idxpar := idx;
     DoblDobl_Homotopy.Create(h.all,idx);
+    abh := new DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys'
+                 (Homotopy_Mixed_Residuals.DoblDobl_AbsVal_Homotopy);
     nbeqs := h'last;
     nbvar := integer32(Number_of_Unknowns(h(h'first))) - 1;
     Initialize_Series_and_Approximants;
@@ -201,11 +208,11 @@ package body DoblDobl_SeriesPade_Tracker is
   begin
     if verbose then
       Homotopy_Newton_Steps.Correct
-        (standard_output,nbeqs,t,homconpars.tolres,homconpars.corsteps,nbrit,
+        (standard_output,abh.all,t,homconpars.tolres,homconpars.corsteps,nbrit,
          current.v,err,rco,res,fail,true);
     else
       Homotopy_Newton_Steps.Correct
-        (nbeqs,t,homconpars.tolres,homconpars.corsteps,nbrit,
+        (abh.all,t,homconpars.tolres,homconpars.corsteps,nbrit,
          current.v,err,rco,res,fail);
     end if;
     current.err := Double_Double_Numbers.Create(err);
@@ -280,6 +287,7 @@ package body DoblDobl_SeriesPade_Tracker is
   begin
     Homotopy_Continuation_Parameters.Clear(homconpars);
     DoblDobl_CSeries_Poly_Systems.Clear(htp);
+    DoblDobl_Complex_Poly_SysFun.Clear(abh);
     DoblDobl_Complex_VecVecs.Deep_Clear(current_poles);
     DoblDobl_Complex_Series_Vectors.Clear(current_servec);
     DoblDobl_Pade_Approximants.Clear(current_padvec);

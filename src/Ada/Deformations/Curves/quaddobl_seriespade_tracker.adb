@@ -8,6 +8,7 @@ with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Polynomials;       use QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_Homotopy;
 with QuadDobl_Pade_Approximants_io;
@@ -16,6 +17,7 @@ with Series_and_Homotopies;
 with Series_and_Predictors;
 with Series_and_Trackers;
 with Homotopy_Newton_Steps;
+with Homotopy_Mixed_Residuals;
 
 package body QuadDobl_SeriesPade_Tracker is
 
@@ -26,6 +28,7 @@ package body QuadDobl_SeriesPade_Tracker is
   idxpar : integer32; -- index of the continuation parameter, 0 if artificial
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : QuadDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
+  abh : QuadDobl_Complex_Poly_SysFun.Link_to_Eval_Poly_Sys;
   current_poles : QuadDobl_Complex_VecVecs.Link_to_VecVec;
   current : Link_to_Solution;
   current_servec : QuadDobl_Complex_Series_Vectors.Link_to_Vector;
@@ -73,6 +76,8 @@ package body QuadDobl_SeriesPade_Tracker is
   begin
     idxpar := 0;
     QuadDobl_Homotopy.Create(p.all,q.all,tpow,qd_gamma);
+    abh := new QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys'
+                 (Homotopy_Mixed_Residuals.QuadDobl_AbsVal_Homotopy);
     nbeqs := p'last;
     nbvar := integer32(Number_of_Unknowns(p(p'first)));
    -- Init of solution defines the series homotopy 
@@ -83,6 +88,8 @@ package body QuadDobl_SeriesPade_Tracker is
   begin
     idxpar := idx;
     QuadDobl_Homotopy.Create(h.all,idx);
+    abh := new QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys'
+                 (Homotopy_Mixed_Residuals.QuadDobl_AbsVal_Homotopy);
     nbeqs := h'last;
     nbvar := integer32(Number_of_Unknowns(h(h'first))) - 1;
     Initialize_Series_and_Approximants;
@@ -280,6 +287,7 @@ package body QuadDobl_SeriesPade_Tracker is
   begin
     Homotopy_Continuation_Parameters.Clear(homconpars);
     QuadDobl_CSeries_Poly_Systems.Clear(htp);
+    QuadDobl_Complex_Poly_SysFun.Clear(abh);
     QuadDobl_Complex_VecVecs.Deep_Clear(current_poles);
     QuadDobl_Complex_Series_Vectors.Clear(current_servec);
     QuadDobl_Pade_Approximants.Clear(current_padvec);
