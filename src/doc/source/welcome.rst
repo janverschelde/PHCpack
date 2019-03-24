@@ -700,6 +700,10 @@ global optimization, and computational physics:
    edited by J. Heer, T. Ropinski, and J. van Wijk, pages 24-33,
    Computer Graphics Forum, Wiley & Sons Ltd., 2017.
 
+#. Nida Obatake, Anne Shiu, Xiaoxian Tang, and Angelica Torres:
+   **Oscillations and bistability in a model of ERK regulation**.
+   arXiv:1903.02617 
+
 #. M. Oskarsson, A. Zisserman and K. Astrom:
    **Minimal Projective Reconstruction for combinations of Points
    and Lines in Three Views**.
@@ -897,7 +901,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-109. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+110. Ali Baharev, Ferenc Domes, Arnold Neumaier:
      **A robust approach for finding all well-separated solutions of
      sparse systems of nonlinear equations**.
      *Numerical Algorithms* 76:163-189, 2017.
@@ -1002,7 +1006,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-131. Bo Dong, Bo Yu, and Yan Yu:
+132. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -1021,7 +1025,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-134. B. Sturmfels:
+135. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
