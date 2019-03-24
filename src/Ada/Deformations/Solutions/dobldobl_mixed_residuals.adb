@@ -1,6 +1,5 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
-with DoblDobl_Complex_Numbers;           use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_Polar;     use DoblDobl_Complex_Numbers_Polar;
 with DoblDobl_Complex_Vector_Norms;
 
@@ -115,6 +114,36 @@ package body DoblDobl_Mixed_Residuals is
     return res;
   end AbsVal;
 
+  function Residual ( val,avl : Complex_Number ) return double_double is
+
+    vpz : constant double_double := Radius(val);
+    vap : constant double_double := Radius(avl);
+    res : constant double_double := vpz/(vap+1.0);
+
+  begin
+    return res;
+  end Residual;
+
+  procedure Residual ( val,avl : in Complex_Number;
+                       vpz,vap,res : out double_double ) is
+  begin
+    vpz := Radius(val);
+    vap := Radius(avl);
+    res := vpz/(vap+1.0);
+  end Residual;
+
+  function Residual ( val,avl : Vector ) return double_double is
+
+    res : double_double := create(0.0);
+    len : constant double_float := double_float(val'length);
+
+  begin
+    for i in val'range loop
+      res := res + Residual(val(i),avl(i));
+    end loop;
+    return (res/len);
+  end Residual;
+
   procedure Residual ( pol,abp : in DoblDobl_Complex_Polynomials.Poly;
                        z : in Vector; abz : out Vector;
                        vaz,vpz,vap,res : out double_double ) is
@@ -127,9 +156,7 @@ package body DoblDobl_Mixed_Residuals is
     abz := AbsVal(z);
     avl := DoblDobl_Complex_Poly_Functions.Eval(abp,abz);
     vaz := DoblDobl_Complex_Vector_Norms.Max_Norm(abz);
-    vpz := Radius(val);
-    vap := Radius(avl);
-    res := vpz/(vap + 1.0);
+    Residual(val,avl,vpz,vap,res);
   end Residual;
 
   procedure Residual ( pol,abp : in DoblDobl_Complex_Poly_Functions.Eval_Poly;
@@ -144,9 +171,7 @@ package body DoblDobl_Mixed_Residuals is
     abz := AbsVal(z);
     avl := DoblDobl_Complex_Poly_Functions.Eval(abp,abz);
     vaz := DoblDobl_Complex_Vector_Norms.Max_Norm(abz);
-    vpz := Radius(val);
-    vap := Radius(avl);
-    res := vpz/(vap + 1.0);
+    Residual(val,avl,vpz,vap,res);
   end Residual;
 
   procedure Residual ( pol,abp : in DoblDobl_Complex_Laurentials.Poly;
@@ -161,9 +186,7 @@ package body DoblDobl_Mixed_Residuals is
     abz := AbsVal(z);
     avl := DoblDobl_Complex_Laur_Functions.Eval(abp,abz);
     vaz := DoblDobl_Complex_Vector_Norms.Max_Norm(abz);
-    vpz := Radius(val);
-    vap := Radius(avl);
-    res := vpz/(vap + 1.0);
+    Residual(val,avl,vpz,vap,res);
   end Residual;
 
   procedure Residual ( pol,abp : in DoblDobl_Complex_Laur_Functions.Eval_Poly;
@@ -178,9 +201,7 @@ package body DoblDobl_Mixed_Residuals is
     abz := AbsVal(z);
     avl := DoblDobl_Complex_Laur_Functions.Eval(abp,abz);
     vaz := DoblDobl_Complex_Vector_Norms.Max_Norm(abz);
-    vpz := Radius(val);
-    vap := Radius(avl);
-    res := vpz/(vap + 1.0);
+    Residual(val,avl,vpz,vap,res);
   end Residual;
 
   procedure Write_Residuals

@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Functions;
@@ -44,6 +45,37 @@ package Standard_Mixed_Residuals is
   -- DESCRIPTION :
   --   Returns the polynomials with the same terms as p, but with 
   --   coefficients equal to their absolute values.
+
+  function Residual ( val,avl : Complex_Number ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the mixed residual, given in val the value of a polynomial
+  --   and in avl the value of the same polynomial with absolute coefficients
+  --   at the root with absolute coordinates.
+
+  function Residual ( val,avl : Vector ) return double_float;
+
+  -- DESCRIPTION :
+  --   Given in val the value of a polynomial system at a point and
+  --   given in avl the value of the same system with absolute value
+  --   coefficient at the point with absolute coordinates,
+  --   returns the average of the mixed residuals of the components.
+
+  procedure Residual ( val,avl : in Complex_Number;
+                       vpz,vap,res : out double_float );
+
+  -- DESCRIPTION :
+  --   Evaluates the formula for the mixed residual.
+
+  -- ON ENTRY :
+  --   val      value of a polynomial at a point;   
+  --   avl      value of the same polynmial with absolute coefficients,
+  --            at the point with absolute coordinates.
+
+  -- ON RETURN :
+  --   vpz      the radius of the number val;
+  --   vap      the radius of the number avl;
+  --   res      the value of vpz/(vap+1.0), the mixed residual.
 
   procedure Write_Residuals
               ( file : in file_type;

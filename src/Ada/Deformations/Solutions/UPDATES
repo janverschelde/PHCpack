@@ -1,3 +1,6 @@
+Sun 24 Mar 2019 : added functions and procedures to *mixed_residuals to
+  evaluate the formulas for the mixed residuals directly, given evaluations.
+
 Tue 12 Mar 2019 : removed superfluous documentation from the body of
   quaddobl_mixed_residuals.adb.
 

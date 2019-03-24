@@ -1,5 +1,4 @@
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_Polar;     use Standard_Complex_Numbers_Polar;
 with Standard_Complex_Vector_Norms;
 
@@ -114,6 +113,36 @@ package body Standard_Mixed_Residuals is
     return res;
   end AbsVal;
 
+  function Residual ( val,avl : Complex_Number ) return double_float is
+
+    vpz : constant double_float := Radius(val);
+    vap : constant double_float := Radius(avl);
+    res : constant double_float := vpz/(vap+1.0);
+
+  begin
+    return res;
+  end Residual;
+
+  procedure Residual ( val,avl : in Complex_Number;
+                       vpz,vap,res : out double_float ) is
+  begin
+    vpz := Radius(val);
+    vap := Radius(avl);
+    res := vpz/(vap+1.0);
+  end Residual;
+
+  function Residual ( val,avl : Vector ) return double_float is
+
+    res : double_float := 0.0;
+    len : constant double_float := double_float(val'length);
+
+  begin
+    for i in val'range loop
+      res := res + Residual(val(i),avl(i));
+    end loop;
+    return (res/len);
+  end Residual;
+
   procedure Residual ( pol,abp : in Standard_Complex_Polynomials.Poly;
                        z : in Vector; abz : out Vector;
                        vaz,vpz,vap,res : out double_float ) is
@@ -126,9 +155,7 @@ package body Standard_Mixed_Residuals is
     abz := AbsVal(z);
     avl := Standard_Complex_Poly_Functions.Eval(abp,abz);
     vaz := Standard_Complex_Vector_Norms.Max_Norm(abz);
-    vpz := Radius(val);
-    vap := Radius(avl);
-    res := vpz/(vap + 1.0);
+    Residual(val,avl,vpz,vap,res);
   end Residual;
 
   procedure Residual ( pol,abp : in Standard_Complex_Poly_Functions.Eval_Poly;
@@ -143,9 +170,7 @@ package body Standard_Mixed_Residuals is
     abz := AbsVal(z);
     avl := Standard_Complex_Poly_Functions.Eval(abp,abz);
     vaz := Standard_Complex_Vector_Norms.Max_Norm(abz);
-    vpz := Radius(val);
-    vap := Radius(avl);
-    res := vpz/(vap + 1.0);
+    Residual(val,avl,vpz,vap,res);
   end Residual;
 
   procedure Residual ( pol,abp : in Standard_Complex_Laurentials.Poly;
@@ -160,9 +185,7 @@ package body Standard_Mixed_Residuals is
     abz := AbsVal(z);
     avl := Standard_Complex_Laur_Functions.Eval(abp,abz);
     vaz := Standard_Complex_Vector_Norms.Max_Norm(abz);
-    vpz := Radius(val);
-    vap := Radius(avl);
-    res := vpz/(vap + 1.0);
+    Residual(val,avl,vpz,vap,res);
   end Residual;
 
   procedure Residual ( pol,abp : in Standard_Complex_Laur_Functions.Eval_Poly;
@@ -177,9 +200,7 @@ package body Standard_Mixed_Residuals is
     abz := AbsVal(z);
     avl := Standard_Complex_Laur_Functions.Eval(abp,abz);
     vaz := Standard_Complex_Vector_Norms.Max_Norm(abz);
-    vpz := Radius(val);
-    vap := Radius(avl);
-    res := vpz/(vap + 1.0);
+    Residual(val,avl,vpz,vap,res);
   end Residual;
 
   procedure Write_Residuals
