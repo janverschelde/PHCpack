@@ -269,6 +269,11 @@ package QuadDobl_Root_Refiners is
                 x : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double );
   procedure QuadDobl_Newton_Step
+              ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double );
+  procedure QuadDobl_Newton_Step
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
@@ -277,9 +282,11 @@ package QuadDobl_Root_Refiners is
   -- DESCRIPTION :
   --   Does one Newton step in quad double complex arithmetic,
   --   using LU for f'last = x'last and SVD for f'last > x'last.
+  --   If the parameter abh is present, the res is the mixed residual.
 
   -- ON ENTRY :
   --   f        evaluable form of a (Laurent) polynomial system;
+  --   abh      homotopy polynomials with absolute coefficients;
   --   jf       Jacobian matrix of f;
   --   x        current approximate solution.
 
@@ -287,7 +294,8 @@ package QuadDobl_Root_Refiners is
   --   x        updated approximate solution;
   --   err      norm of the update vector;
   --   rco      estimate for the inverse condition number;
-  --   res      residual, norm of the function value.
+  --   res      residual, norm of the function value, if abh absent,
+  --            otherwise, res is the mixed residual, if abh is present.
 
   procedure QuadDobl_Newton_Step
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;

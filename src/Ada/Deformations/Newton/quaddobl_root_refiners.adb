@@ -423,6 +423,18 @@ package body QuadDobl_Root_Refiners is
   end QuadDobl_Newton_Step;
 
   procedure QuadDobl_Newton_Step
+              ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double ) is
+  begin
+    if f'last > x'last
+     then QuadDobl_SVD_Newton_Step(f,abh,jf,x,err,rco,res);
+     else QuadDobl_LU_Newton_Step(f,abh,jf,x,err,rco,res);
+    end if;
+  end QuadDobl_Newton_Step;
+
+  procedure QuadDobl_Newton_Step
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
@@ -538,6 +550,46 @@ package body QuadDobl_Root_Refiners is
       end if;
     end loop;
   end Silent_Newton;
+
+-- MIXED RESIDUAL VERSIONS :
+
+  procedure Silent_Newton
+              ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Solutions.Solution;
+                epsxa,epsfa : in double_float; numit : in out natural32;
+                max : in natural32; fail : out boolean ) is
+  begin
+    fail := true;
+    while numit < max loop
+      numit := numit + 1;
+      QuadDobl_Newton_Step(f,abh,jf,x.v,x.err,x.rco,x.res);
+      if (x.err < epsxa) or (x.res < epsfa)
+       then fail := false; exit;
+      end if;
+    end loop;
+  end Silent_Newton;
+
+  procedure Reporting_Newton
+              ( file : in file_type;
+                f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Solutions.Solution;
+                epsxa,epsfa : in double_float; numit : in out natural32;
+                max : in natural32; fail : out boolean ) is
+  begin
+    fail := true;
+    while numit < max loop
+      numit := numit + 1;
+      QuadDobl_Newton_Step(f,abh,jf,x.v,x.err,x.rco,x.res);
+      Write_Diagnostics(file,numit,x.err,x.rco,x.res);
+      if (x.err < epsxa) or (x.res < epsfa)
+       then fail := false; exit;
+      end if;
+    end loop;
+  end Reporting_Newton;
+
+-- REFINING A LIST OF SOLUTIONS :
 
   procedure QuadDobl_Root_Refiner
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
@@ -1643,8 +1695,113 @@ package body QuadDobl_Root_Refiners is
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  deflate : in out boolean; wout : in boolean ) is
+
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Jaco_Matrices;
+    use QuadDobl_Multiple_Solutions;
+    use Monomial_Hashing;
+    use QuadDobl_Jacobian_Trees;
+    
+    nbequ : constant integer32 := p'last;
+    nbvar : constant integer32 := Head_Of(sols).n;
+    f : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,1..nbvar) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nbvar) := Create(jm);
+    tolrnk : constant double_float := 100.0*tolsing;
+    order : constant integer32 := 3;
+    nv : Standard_Natural_Vectors.Vector(0..order);
+    nq : Standard_Natural_Vectors.Vector(0..order);
+    R1 : Standard_Natural_Vectors.Vector(1..order);
+    monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
+    nd : Link_to_Eval_Node;
+    backup : Solution(nbvar);
+    merge : boolean := false; -- to merge clustered solutions
+    nb,numb,nbdef : natural32 := 0;
+    nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
+    t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
+                      := QuadDobl_Condition_Tables.Create(30); 
+    fail,infty : boolean;
+    seed : integer32 := 1234567;
+    h1,h2 : QuadDobl_Complex_Vectors.Vector(1..nbvar);
+    pl : Point_List;
+    initres : quad_double;
+    solsptr : Solution_List := sols;
+    ls : Link_to_Solution;
+    cnt : natural32 := 0;
+    len : constant natural32 := Length_Of(sols);
+
   begin
-    null;
+    QuadDobl_Random_Vectors.Random_Vector(seed,h1);
+    QuadDobl_Random_Vectors.Random_Vector(seed,h2);
+    if deflate then
+      declare
+      begin
+        nv(0) := natural32(nbvar); nq(0) := natural32(nbequ); R1(1) := 0;
+        Create_Remember_Derivatives(jm,order,nd);
+        monkeys := Monomial_Keys(natural32(order),nv(0));
+      exception
+        when others =>
+          put_line("The system is too large to apply deflation.");
+          deflate := false;
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,len,1); put(file," "); put(file,nbvar,1); new_line(file);
+    Standard_Complex_Solutions_io.put_bar(file);
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr);
+      nb := 0; cnt := cnt + 1;
+      initres := ls.res; -- ls.res := Sum_Norm(Eval(f,ls.v));
+      infty := At_Infinity(ls.all,false,1.0E+8);
+      if not infty and ls.res < 0.1 and ls.err < 0.1 then
+        if deflate then
+          backup := ls.all;
+          Reporting_Deflate(file,wout,max,f,jf,ls,order,
+                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+         -- reinstate Newton after deflation
+          if wout
+           then Reporting_Newton(file,f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
+           else Silent_Newton(f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
+          end if;
+          if fail and backup.res < ls.res then
+            ls.all := backup;
+            Silent_Newton(f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
+          end if;
+        elsif wout then
+          Reporting_Newton(file,f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
+        else
+          Silent_Newton(f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
+        end if;
+        numit := numit + nb;
+      else
+        fail := true;
+      end if;
+      Multiplicity(h1,h2,pl,ls,cnt,sols,fail,infty,deflate,tolsing,epsxa);
+      Write_Info(file,ls.all,initres,cnt,nb,nbdef,fail,infty);
+      Write_Type(file,ls,fail,infty,tolsing,nbfail,nbinfty,
+                 nbreal,nbcomp,nbreg,nbsing);
+      QuadDobl_Condition_Tables.Update_Corrector(t_err,ls.all);
+      QuadDobl_Condition_Tables.Update_Condition(t_rco,ls.all);
+      QuadDobl_Condition_Tables.Update_Residuals(t_res,ls.all);
+      if not fail and deflate
+       then merge := merge and (ls.m > 1);
+      end if;
+      solsptr := Tail_Of(solsptr);
+    end loop;
+    Write_Global_Info
+      (file,len,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+    QuadDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
+    if deflate then
+      Standard_Natural64_VecVecs.Clear(monkeys);
+      QuadDobl_Jacobian_Trees.Clear(nd);
+      if merge then
+        Merge_Multiple_Solutions(sols,tolsing);
+      end if;
+    else
+      Clear(jm); -- otherwise crash after Clear(nd)
+    end if;
+    Clear(pl); Clear(f); Clear(jf);
   end Reporting_Root_Refiner;
 
 end QuadDobl_Root_Refiners;

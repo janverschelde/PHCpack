@@ -1,3 +1,6 @@
+Mon 25 Mar 2019 : completed addition of mixed residual computations in the
+  root refiners, in dobldobl_root_refiners.adb and quaddobl_root_refiners.a*.
+
 Sun 24 Mar 2019 : added mixed residual computations to the root refiners
   in the {standard,dobldobl,quaddobl}_root_refiners packages.
 
