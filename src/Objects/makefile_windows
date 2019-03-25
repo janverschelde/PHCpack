@@ -52,7 +52,7 @@ GNAT95FLAGS=-gnat95 -gnatv -O3 -gnatp
 
 phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
         inputData.o outputData.o iTest.o fTest.o reltab.o \
-        simplex4phc.o mvc4phc.o demicsrun4phc.o
+        simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -64,7 +64,7 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
                  pieri_solver.o lib.a \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
-                 get_clock.o get_clocks_per_sec.o \
+                 get_clock.o get_clocks_per_sec.o corecount.o \
               -o $(BIN)/phc -lm \
 --LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive"
 
