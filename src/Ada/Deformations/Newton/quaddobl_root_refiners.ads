@@ -146,15 +146,22 @@ package QuadDobl_Root_Refiners is
                 jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double );
+  procedure QuadDobl_SVD_Newton_Step
+              ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double );
 
   -- DESCRPTION :
   --   Does one Newton step in quad double complex arithmetic,
   --   using the Singular Value Decomposition to compute the update to x
   --   and for the inverse condition number rco.
   --   Applies the method of Gauss-Newton, valid for f'last >= x'last.
+  --   If the parameter abh is present, then res is the mixed residual.
 
   -- ON ENTRY :
   --   f        evaluable form of a (Laurent) polynomial system;
+  --   abh      homotopy polynmials with absolute value coefficients;
   --   jf       Jacobian matrix of f;
   --   x        current approximate solution.
 
@@ -162,7 +169,8 @@ package QuadDobl_Root_Refiners is
   --   x        updated approximate solution;
   --   err      norm of the update vector;
   --   rco      estimate for the inverse condition number;
-  --   res      residual, norm of the function value.
+  --   res      residual, norm of the function value, if abh is absent,
+  --            otherwise, res is the mixed residual.
 
   procedure QuadDobl_LU_Newton_Step
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -174,16 +182,23 @@ package QuadDobl_Root_Refiners is
                 jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out quad_double );
+  procedure QuadDobl_LU_Newton_Step
+              ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double );
 
   -- DESCRIPTION :
   --   Does one Newton step in quad double complex arithmetic,
   --   using LU factorization to compute the update to x,
   --   and to estimate the inverse of the condition number rco.
+  --   If the parameter abh is present, then res is the mixed residual.
 
   -- REQUIRED : f'last = x'last.
 
   -- ON ENTRY :
   --   f        evaluable form of a (Laurent) polynomial system;
+  --   abh      homotopy polynomials with absolute value coefficients;
   --   jf       Jacobian matrix of f;
   --   x        current approximate solution.
 
@@ -191,7 +206,8 @@ package QuadDobl_Root_Refiners is
   --   x        updated approximate solution;
   --   err      norm of the update vector;
   --   rco      estimate for the inverse condition number;
-  --   res      residual, norm of the function value.
+  --   res      residual, norm of the function value, if abh is absent,
+  --            otherwise, res is the mixed residual.
 
   procedure QuadDobl_SVD_Newton_Step
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -618,5 +634,38 @@ package QuadDobl_Root_Refiners is
   --   refs     list that does not include the path failures;
   --   numit    number of iterations spent on refining x;
   --   deflate  set to false if system is too large.
+
+-- REFINEMENT with mixed residuals :
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                 sols : in out Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean; wout : in boolean );
+
+  -- DESCRIPTION :
+  --   Refines the roots in sols for the system p, computing mixed residuals
+  --   with the absolute coefficient homotopy polynomials in abh.
+
+  -- ON ENTRY :
+  --   file      file for writing diagnostics on;
+  --   p         a polynomial system;
+  --   abh       homotopy polynomials with absolute coefficients;
+  --   sols      the start solutions;
+  --   epsxa     maximum absolute error on the zero;
+  --   epsfa     maximum absolute value for the residue;
+  --   tolsing   tolerance on inverse condition number for singular solution;
+  --   numit     the number of iterations, to be initialized with zero;
+  --   max       maximum number of iterations per zero;
+  --   deflate   if true, apply deflation to singular solutions;
+  --   wout      has to be true when intermediate output is wanted.
+
+  -- ON RETURN :
+  --   sols      a list of computed solutions;
+  --   numit     the number of iterations;
+  --   deflate   if set to false, then the system was too large to deflate.
 
 end QuadDobl_Root_Refiners;

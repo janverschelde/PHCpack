@@ -1,3 +1,6 @@
+Sun 24 Mar 2019 : added mixed residual computations to the root refiners
+  in the {standard,dobldobl,quaddobl}_root_refiners packages.
+
 Fri 31 Aug 2018 : reinstated the application of Newton's method after
   deflation in standard_root_refiners.adb.  Reinstated also Gauss-Newton
   in standard_root_refiners.adb after deflation, also fixed the

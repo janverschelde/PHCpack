@@ -2,10 +2,11 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Natural64_VecVecs;
-with QuadDobl_Random_Vectors;            use QuadDobl_Random_Vectors;
+with QuadDobl_Random_Vectors;
 with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Matrices;          use QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
@@ -17,6 +18,7 @@ with QuadDobl_Solution_Diagnostics;      use QuadDobl_Solution_Diagnostics;
 with QuadDobl_Condition_Tables;
 with QuadDobl_Condition_Report;
 with QuadDobl_Multiple_Solutions;
+with QuadDobl_Mixed_Residuals;
 with Handle_Underflow_Gracefully;
 with Monomial_Hashing;
 with QuadDobl_Jacobian_Trees;
@@ -183,6 +185,47 @@ package body QuadDobl_Root_Refiners is
   end QuadDobl_SVD_Newton_Step;
 
   procedure QuadDobl_SVD_Newton_Step
+              ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double ) is
+
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Jaco_Matrices;
+
+    y : QuadDobl_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,x'range) := eval(jf,x);
+    n : constant integer32 := f'last;
+    p : constant integer32 := x'last;
+    dx : QuadDobl_Complex_Vectors.Vector(1..p);
+    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    sv : QuadDobl_Complex_Vectors.Vector(1..mm);
+    e : QuadDobl_Complex_Vectors.Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+    xt : QuadDobl_Complex_Vectors.Vector(x'first..x'last+1);
+    ay : QuadDobl_Complex_Vectors.Vector(abh'range);
+    qd_one : constant quad_double := create(1.0);
+    one : constant QuadDobl_Complex_Numbers.Complex_Number
+        := QuadDobl_Complex_Numbers.Create(qd_one);
+
+  begin
+    QuadDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
+    rco := QuadDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
+    QuadDobl_Complex_Vectors.Min(y);
+    dx := QuadDobl_Complex_Singular_Values.Solve(u,v,sv,y);
+    QuadDobl_Complex_Vectors.Add(x,dx);
+    err := Max_Norm(dx);
+    y := eval(f,x); -- res := Max_Norm(y);
+    xt(x'range) := QuadDobl_Mixed_Residuals.AbsVal(x);
+    xt(xt'last) := one;
+    ay := Eval(abh,xt);
+    res := QuadDobl_Mixed_Residuals.Residual(y,ay);
+  end QuadDobl_SVD_Newton_Step;
+
+  procedure QuadDobl_SVD_Newton_Step
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
@@ -239,6 +282,40 @@ package body QuadDobl_Root_Refiners is
     err := Max_Norm(y);
     y := eval(f,x);
     res := Max_Norm(y);
+  end QuadDobl_LU_Newton_Step;
+
+  procedure QuadDobl_LU_Newton_Step
+              ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys; 
+                jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double ) is
+
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Jaco_Matrices;
+
+    y : QuadDobl_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,f'range) := eval(jf,x);
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2));
+    info : integer32;
+    Anorm : constant quad_double := Norm1(A);
+    xt : QuadDobl_Complex_Vectors.Vector(x'first..x'last+1);
+    ay : QuadDobl_Complex_Vectors.Vector(abh'range);
+    qd_one : constant quad_double := create(1.0);
+    one : constant QuadDobl_Complex_Numbers.Complex_Number
+        := QuadDobl_Complex_Numbers.Create(qd_one);
+
+  begin
+    QuadDobl_Complex_Vectors.Min(y);
+    lufac(A,A'last(1),ipvt,info);
+    estco(A,A'last(1),ipvt,Anorm,rco);
+    lusolve(A,A'last(1),ipvt,y);
+    QuadDobl_Complex_Vectors.Add(x,y);
+    err := Max_Norm(y);
+    y := eval(f,x); -- res := Max_Norm(y);
+    xt(x'range) := QuadDobl_Mixed_Residuals.AbsVal(x);
+    xt(xt'last) := one;
+    ay := Eval(abh,xt);
+    res := QuadDobl_Mixed_Residuals.Residual(y,ay);
   end QuadDobl_LU_Newton_Step;
 
   procedure QuadDobl_LU_Newton_Step
@@ -495,7 +572,6 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
-    use QuadDobl_Complex_Solutions;
 
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
@@ -519,7 +595,6 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Jacobian_Circuits;
-    use QuadDobl_Complex_Solutions;
 
     f : Eval_Poly_Sys(p'range) := Create(p);
     jf : Circuit := Create(p);
@@ -549,9 +624,7 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
-    use QuadDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -593,9 +666,7 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
-    use QuadDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -641,9 +712,7 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
-    use QuadDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -685,9 +754,7 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
-    use QuadDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -735,9 +802,7 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
-    use QuadDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -803,9 +868,7 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
-    use QuadDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -875,9 +938,7 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
-    use QuadDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -943,9 +1004,7 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
-    use QuadDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -1023,7 +1082,6 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Jaco_Matrices;
     use QuadDobl_Deflation_Methods;
-    use QuadDobl_Deflation_Trees_io;
 
     k : integer32 := 0;
     rank,m : natural32;
@@ -1152,7 +1210,6 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
-    use QuadDobl_Complex_Solutions;
     use QuadDobl_Multiple_Solutions;
     use Monomial_Hashing;
     use QuadDobl_Jacobian_Trees;
@@ -1247,7 +1304,6 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
-    use QuadDobl_Complex_Solutions;
     use QuadDobl_Multiple_Solutions;
     use Monomial_Hashing;
     use QuadDobl_Jacobian_Trees;
@@ -1348,7 +1404,6 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
-    use QuadDobl_Complex_Solutions;
     use QuadDobl_Multiple_Solutions;
     use Monomial_Hashing;
     use QuadDobl_Jacobian_Trees;
@@ -1466,7 +1521,6 @@ package body QuadDobl_Root_Refiners is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
-    use QuadDobl_Complex_Solutions;
     use QuadDobl_Multiple_Solutions;
     use Monomial_Hashing;
     use QuadDobl_Jacobian_Trees;
@@ -1577,6 +1631,20 @@ package body QuadDobl_Root_Refiners is
       Clear(jm); -- otherwise crash after Clear(nd)
     end if;
     Clear(pl); Clear(f); Clear(jf);
+  end Reporting_Root_Refiner;
+
+-- REFINEMENT with mixed residuals :
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                 sols : in out Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean; wout : in boolean ) is
+  begin
+    null;
   end Reporting_Root_Refiner;
 
 end QuadDobl_Root_Refiners;

@@ -289,14 +289,12 @@ package Standard_Root_Refiners is
                  zero : in out Solution; epsxa,epsfa : in double_float; 
                  numit : in out natural32; max : in natural32;
                  fail : out boolean );
-
   procedure Silent_Newton 
                ( p_eval : in Eval_Laur_Sys;
                  j_eval : in Standard_Complex_Laur_Jacomats.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in double_float; 
                  numit : in out natural32; max : in natural32;
                  fail : out boolean );
-
   procedure Silent_Newton 
                ( p_eval : in Standard_Complex_Poly_SysFun.Evaluator;
                  j_eval : in Standard_Complex_Jaco_Matrices.Evaluator;
@@ -310,14 +308,12 @@ package Standard_Root_Refiners is
                  zero : in out Solution; epsxa,epsfa : in double_float;
                  numit : in out natural32; max : in natural32;
                  fail : out boolean );
-
   procedure Reporting_Newton
                ( file : in file_type; p_eval : in Eval_Laur_Sys;
                  j_eval : in Standard_Complex_Laur_Jacomats.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in double_float;
                  numit : in out natural32; max : in natural32;
                  fail : out boolean );
-
   procedure Reporting_Newton
                ( file : in file_type;
                  p_eval : in Standard_Complex_Poly_SysFun.Evaluator;
@@ -349,6 +345,26 @@ package Standard_Root_Refiners is
   --   orders    estimated orders of multiplicities, if estord was on;
   --   numit     number of iterations performed;
   --   fail      is true when the desired precision is not reached.
+
+-- MIXED RESIDUAL VERSIONS :
+
+  procedure Silent_Newton
+               ( p_eval,abh : in Eval_Poly_Sys;
+                 j_eval : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                 zero : in out Solution; epsxa,epsfa : in double_float; 
+                 numit : in out natural32; max : in natural32;
+                 fail : out boolean );
+  procedure Reporting_Newton
+               ( file : in file_type; p_eval,abh : in Eval_Poly_Sys;
+                 j_eval : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                 zero : in out Solution; epsxa,epsfa : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 fail : out boolean );
+
+  -- DESCRIPTION :
+  --   The mixed residual is computed as stop criterion in Newton's method.
+  --   Compared to the other Silent_Newton procedures, the extra parameter
+  --   abh holds the absolute value coefficient homotopy polynomials.
 
 -- APPLICATION OF NEWTON's METHOD ON A LIST OF SOLUTIONS.
 --   The silent versions simply perform the calculations.  
@@ -458,6 +474,38 @@ package Standard_Root_Refiners is
   -- ON RETURN :
   --   sols      a list of computed solutions;
   --   refsols   only those solutions which satisfy the given accuracy;
+  --   numit     the number of iterations;
+  --   deflate   if set to false, then the system was too large to deflate.
+
+-- REFINEMENT with mixed residuals :
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in Poly_Sys; abh : in Eval_Poly_Sys;
+                 sols : in out Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean; wout : in boolean );
+
+  -- DESCRIPTION :
+  --   Refines the roots in sols for the system p, computing mixed residuals
+  --   with the absolute coefficient homotopy polynomials in abh.
+
+  -- ON ENTRY :
+  --   file      file for writing diagnostics on;
+  --   p         a polynomial system;
+  --   abh       homotopy polynomials with absolute coefficients;
+  --   sols      the start solutions;
+  --   epsxa     maximum absolute error on the zero;
+  --   epsfa     maximum absolute value for the residue;
+  --   tolsing   tolerance on inverse condition number for singular solution;
+  --   numit     the number of iterations, to be initialized with zero;
+  --   max       maximum number of iterations per zero;
+  --   deflate   if true, apply deflation to singular solutions;
+  --   wout      has to be true when intermediate output is wanted.
+
+  -- ON RETURN :
+  --   sols      a list of computed solutions;
   --   numit     the number of iterations;
   --   deflate   if set to false, then the system was too large to deflate.
 

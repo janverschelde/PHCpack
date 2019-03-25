@@ -2,6 +2,7 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with DoblDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Natural64_VecVecs;
@@ -17,6 +18,7 @@ with DoblDobl_Solution_Diagnostics;      use DoblDobl_Solution_Diagnostics;
 with DoblDobl_Condition_Tables;
 with DoblDobl_Condition_Report;
 with DoblDobl_Multiple_Solutions;
+with DoblDobl_Mixed_Residuals;
 with Handle_Underflow_Gracefully;
 with Monomial_Hashing;
 with DoblDobl_Jacobian_Trees;
@@ -183,6 +185,47 @@ package body DoblDobl_Root_Refiners is
   end DoblDobl_SVD_Newton_Step;
 
   procedure DoblDobl_SVD_Newton_Step
+              ( f,abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_double ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+
+    y : DoblDobl_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,x'range) := eval(jf,x);
+    n : constant integer32 := f'last;
+    p : constant integer32 := x'last;
+    dx : DoblDobl_Complex_Vectors.Vector(1..p);
+    mm : constant integer32 := DoblDobl_Complex_Singular_Values.Min0(n+1,p);
+    sv : DoblDobl_Complex_Vectors.Vector(1..mm);
+    e : DoblDobl_Complex_Vectors.Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+    xt : DoblDobl_Complex_Vectors.Vector(x'first..x'last+1);
+    ay : DoblDobl_Complex_Vectors.Vector(abh'range);
+    dd_one : constant double_double := create(1.0);
+    one : constant DoblDobl_Complex_Numbers.Complex_Number
+        := DoblDobl_Complex_Numbers.Create(dd_one);
+
+  begin
+    DoblDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
+    rco := DoblDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
+    DoblDobl_Complex_Vectors.Min(y);
+    dx := DoblDobl_Complex_Singular_Values.Solve(u,v,sv,y);
+    DoblDobl_Complex_Vectors.Add(x,dx);
+    err := Max_Norm(dx);
+    y := eval(f,x); -- res := Max_Norm(y);
+    xt(x'range) := DoblDobl_Mixed_Residuals.AbsVal(x);
+    xt(xt'last) := one;
+    ay := Eval(abh,xt);
+    res := DoblDobl_Mixed_Residuals.Residual(y,ay);
+  end DoblDobl_SVD_Newton_Step;
+
+  procedure DoblDobl_SVD_Newton_Step
               ( f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in DoblDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out DoblDobl_Complex_Vectors.Vector;
@@ -239,6 +282,40 @@ package body DoblDobl_Root_Refiners is
     err := Max_Norm(y);
     y := eval(f,x);
     res := Max_Norm(y);
+  end DoblDobl_LU_Newton_Step;
+
+  procedure DoblDobl_LU_Newton_Step
+              ( f,abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_double ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+
+    y : DoblDobl_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,f'range) := eval(jf,x);
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2));
+    info : integer32;
+    Anorm : constant double_double := Norm1(A);
+    xt : DoblDobl_Complex_Vectors.Vector(x'first..x'last+1);
+    ay : DoblDobl_Complex_Vectors.Vector(abh'range);
+    dd_one : constant double_double := create(1.0);
+    one : constant DoblDobl_Complex_Numbers.Complex_Number
+        := DoblDobl_Complex_Numbers.create(dd_one);
+
+  begin
+    DoblDobl_Complex_Vectors.Min(y);
+    lufac(A,A'last(1),ipvt,info);
+    estco(A,A'last(1),ipvt,Anorm,rco);
+    lusolve(A,A'last(1),ipvt,y);
+    DoblDobl_Complex_Vectors.Add(x,y);
+    err := Max_Norm(y);
+    y := eval(f,x); -- res := Max_Norm(y);
+    xt(x'range) := DoblDobl_Mixed_Residuals.AbsVal(x);
+    xt(xt'last) := one;
+    ay := Eval(abh,xt);
+    res := DoblDobl_Mixed_Residuals.Residual(y,ay);
   end DoblDobl_LU_Newton_Step;
 
   procedure DoblDobl_SVD_Newton_Step
@@ -342,6 +419,18 @@ package body DoblDobl_Root_Refiners is
     if f'last > x'last
      then DoblDobl_SVD_Newton_Step(f,jf,x,err,rco,res);
      else DoblDobl_LU_Newton_Step(f,jf,x,err,rco,res);
+    end if;
+  end DoblDobl_Newton_Step;
+
+  procedure DoblDobl_Newton_Step
+              ( f,abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_double ) is
+  begin
+    if f'last > x'last
+     then DoblDobl_SVD_Newton_Step(f,abh,jf,x,err,rco,res);
+     else DoblDobl_LU_Newton_Step(f,abh,jf,x,err,rco,res);
     end if;
   end DoblDobl_Newton_Step;
 
@@ -482,6 +571,44 @@ package body DoblDobl_Root_Refiners is
     end loop;
   end Reporting_Newton;
 
+-- MIXED RESIDUAL VERSIONS :
+
+  procedure Silent_Newton
+              ( f,abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Solutions.Solution;
+                epsxa,epsfa : in double_float; numit : in out natural32;
+                max : in natural32; fail : out boolean ) is
+  begin
+    fail := true;
+    while numit < max loop
+      numit := numit + 1;
+      DoblDobl_Newton_Step(f,abh,jf,x.v,x.err,x.rco,x.res);
+      if (x.err < epsxa) or (x.res < epsfa)
+       then fail := false; exit;
+      end if;
+    end loop;
+  end Silent_Newton;
+
+  procedure Reporting_Newton
+              ( file : in file_type;
+                f,abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Solutions.Solution;
+                epsxa,epsfa : in double_float; numit : in out natural32;
+                max : in natural32; fail : out boolean ) is
+  begin
+    fail := true;
+    while numit < max loop
+      numit := numit + 1;
+      DoblDobl_Newton_Step(f,abh,jf,x.v,x.err,x.rco,x.res);
+      Write_Diagnostics(file,numit,x.err,x.rco,x.res);
+      if (x.err < epsxa) or (x.res < epsfa)
+       then fail := false; exit;
+      end if;
+    end loop;
+  end Reporting_Newton;
+
 -- REFINING A LIST OF SOLUTIONS :
 
   procedure DoblDobl_Root_Refiner
@@ -517,7 +644,6 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Laur_SysFun;
     use DoblDobl_Complex_Laur_JacoMats;
-    use DoblDobl_Complex_Solutions;
 
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
@@ -543,7 +669,6 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Jacobian_Circuits;
-    use DoblDobl_Complex_Solutions;
 
     f : Eval_Poly_Sys(p'range) := Create(p);
     jf : Circuit := Create(p);
@@ -573,7 +698,6 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Jaco_Matrices;
-    use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
@@ -617,7 +741,6 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Jaco_Matrices;
-    use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
@@ -665,7 +788,6 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Laur_SysFun;
     use DoblDobl_Complex_Laur_JacoMats;
-    use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
@@ -709,9 +831,7 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Laur_SysFun;
     use DoblDobl_Complex_Laur_JacoMats;
-    use DoblDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -759,9 +879,7 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Jaco_Matrices;
-    use DoblDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -827,9 +945,7 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Jaco_Matrices;
-    use DoblDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -899,9 +1015,7 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Laur_SysFun;
     use DoblDobl_Complex_Laur_JacoMats;
-    use DoblDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -967,9 +1081,7 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Laur_SysFun;
     use DoblDobl_Complex_Laur_JacoMats;
-    use DoblDobl_Complex_Solutions;
     
-    n : constant integer32 := p'last;
     nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..nv) := Create(p);
@@ -1047,7 +1159,6 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Jaco_Matrices;
     use DoblDobl_Deflation_Methods;
-    use DoblDobl_Deflation_Trees_io;
 
     k : integer32 := 0;
     rank,m : natural32;
@@ -1176,7 +1287,6 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Jaco_Matrices;
-    use DoblDobl_Complex_Solutions;
     use DoblDobl_Multiple_Solutions;
     use Monomial_Hashing;
     use DoblDobl_Jacobian_Trees;
@@ -1271,7 +1381,6 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Jaco_Matrices;
-    use DoblDobl_Complex_Solutions;
     use DoblDobl_Multiple_Solutions;
     use Monomial_Hashing;
     use DoblDobl_Jacobian_Trees;
@@ -1372,7 +1481,6 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Jaco_Matrices;
-    use DoblDobl_Complex_Solutions;
     use DoblDobl_Multiple_Solutions;
     use Monomial_Hashing;
     use DoblDobl_Jacobian_Trees;
@@ -1490,7 +1598,6 @@ package body DoblDobl_Root_Refiners is
 
     use DoblDobl_Complex_Poly_SysFun;
     use DoblDobl_Complex_Jaco_Matrices;
-    use DoblDobl_Complex_Solutions;
     use DoblDobl_Multiple_Solutions;
     use Monomial_Hashing;
     use DoblDobl_Jacobian_Trees;
@@ -1601,6 +1708,20 @@ package body DoblDobl_Root_Refiners is
       Clear(jm); -- otherwise crash after Clear(nd)
     end if;
     Clear(pl); Clear(f); Clear(jf);
+  end Reporting_Root_Refiner;
+
+-- REFINEMENT with mixed residuals :
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                 sols : in out Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean; wout : in boolean ) is
+  begin
+    null;
   end Reporting_Root_Refiner;
 
 end DoblDobl_Root_Refiners;
