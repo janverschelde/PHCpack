@@ -239,7 +239,7 @@ package body Series_Path_Trackers is
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,0,timer);
       if idxpar = 0
-       then Refine_Roots(file,nq,sols);
+       then Refine_Roots(file,abh,sols); -- Refine_Roots(file,nq,sols);
       end if;
       Write_Conclusion(file,start_moment);
     else
@@ -250,8 +250,9 @@ package body Series_Path_Trackers is
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,0,timer);
-      if idxpar = 0
-       then Refine_Roots(standard_output,nq,sols);
+      if idxpar = 0 then
+        -- Refine_Roots(standard_output,nq,sols);
+        Refine_Roots(standard_output,abh,sols);
       end if;
       Write_Conclusion(standard_output,start_moment);
     end if;
@@ -375,7 +376,7 @@ package body Series_Path_Trackers is
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,1,timer);
       if idxpar = 0
-       then Refine_Roots(file,nq,sols);
+       then Refine_Roots(file,abh,sols); -- Refine_Roots(file,nq,sols);
       end if;
       Write_Conclusion(file,start_moment);
     else
@@ -386,8 +387,9 @@ package body Series_Path_Trackers is
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,1,timer);
-      if idxpar = 0
-       then Refine_Roots(standard_output,nq,sols);
+      if idxpar = 0 then
+        -- Refine_Roots(standard_output,nq,sols);
+        Refine_Roots(standard_output,abh,sols);
       end if;
       Write_Conclusion(standard_output,start_moment);
     end if;
@@ -510,7 +512,7 @@ package body Series_Path_Trackers is
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(file,p.numdeg,p.dendeg,2,timer);
       if idxpar = 0
-       then Refine_Roots(file,nq,sols);
+       then Refine_Roots(file,abh,sols); -- Refine_Roots(file,nq,sols);
       end if;
       Write_Conclusion(file,start_moment);
     else
@@ -521,8 +523,9 @@ package body Series_Path_Trackers is
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Write_Timer(standard_output,p.numdeg,p.dendeg,2,timer);
-      if idxpar = 0
-       then Refine_Roots(standard_output,nq,sols);
+      if idxpar = 0 then
+        -- Refine_Roots(standard_output,nq,sols);
+        Refine_Roots(standard_output,abh,sols);
       end if;
       Write_Conclusion(standard_output,start_moment);
     end if;

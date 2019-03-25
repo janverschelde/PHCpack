@@ -436,4 +436,67 @@ package body Drivers_to_Series_Trackers is
       (file,p,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
   end Refine_Roots;
 
+  procedure Refine_Roots
+              ( file : in file_type;
+                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Root_Refining_Parameters,Standard_Root_Refiners;
+
+    p : constant Standard_Complex_Poly_Systems.Poly_Sys(abh'range)
+      := Standard_Homotopy.Target_System;
+    epsxa,epsfa,tolsing : double_float;
+    numit,maxit : natural32 := 0;
+    deflate,wout : boolean;
+
+  begin
+    Standard_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    deflate := false;
+    Reporting_Root_Refiner
+      (file,p,abh,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+  end Refine_Roots;
+
+  procedure Refine_Roots
+              ( file : in file_type;
+                abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(abh'range)
+      := DoblDobl_Homotopy.Target_System;
+    epsxa,epsfa,tolsing : double_float;
+    numit,maxit : natural32 := 0;
+    deflate,wout : boolean;
+
+    use Root_Refining_Parameters,DoblDobl_Root_Refiners;
+
+  begin
+    DoblDobl_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    deflate := false;
+    Reporting_Root_Refiner
+      (file,p,abh,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+  end Refine_Roots;
+
+  procedure Refine_Roots
+              ( file : in file_type;
+                abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use Root_Refining_Parameters,QuadDobl_Root_Refiners;
+
+    p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(abh'range)
+      := QuadDobl_Homotopy.Target_System;
+    epsxa,epsfa,tolsing : double_float;
+    numit,maxit : natural32 := 0;
+    deflate,wout : boolean;
+
+  begin
+    QuadDobl_Default_Root_Refining_Parameters
+      (epsxa,epsfa,tolsing,maxit,deflate,wout);
+    deflate := false;
+    Reporting_Root_Refiner
+      (file,p,abh,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+  end Refine_Roots;
+
 end Drivers_to_Series_trackers;

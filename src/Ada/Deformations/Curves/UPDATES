@@ -1,5 +1,7 @@
 Sun 24 Mar 2019 : added mixed residuals corrector to the step-by-step run
   of the series-Pade tracker in *seriespade_tracker.adb.
+  Updated the drivers_to_series_trackers and series_path_trackers.adb
+  to pass the absolute coefficient homotopy polynomials to the refiners.
 
 Wed 20 Mar 2019 : cleared abh in series_path_trackers.adb at the end of a run.
   In series_and_trackers, added functions to compute the predictor residual

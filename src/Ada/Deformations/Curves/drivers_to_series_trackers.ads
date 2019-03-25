@@ -4,6 +4,9 @@ with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
+with Standard_Complex_Poly_SysFun;
+with DoblDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Poly_SysFun;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -140,5 +143,30 @@ package Drivers_to_Series_Trackers is
   procedure Refine_Roots
               ( file : in file_type; nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Runs the root refiners on the solutions in the list sols,
+  --   where the nq is the number of equations.
+  --   Output is written to the file.
+
+  procedure Refine_Roots
+              ( file : in file_type;
+                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Refine_Roots
+              ( file : in file_type;
+                abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Refine_Roots
+              ( file : in file_type;
+                abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Runs the root refiners on the solutions in the list sols,
+  --   where the nq is the number of equations.
+  --   Output is written to the file.
+  --   The mixed residuals are computed, evaluating the solutions
+  --   at the homotopy polynomials with positive coefficients in abh.
 
 end Drivers_to_Series_Trackers;
