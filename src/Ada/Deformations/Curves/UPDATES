@@ -1,3 +1,6 @@
+Tue 26 Mar 2019 : toggled of the series step size also for double double
+  and quad double precision in series_and_trackers.adb.
+
 Mon 25 Mar 2019 : modified the homotopy_newton_steps.adb to have the stop
   criterion for the convergence to involve the err as well.
 
