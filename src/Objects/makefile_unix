@@ -100,7 +100,7 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o parameter.o lib2path.o \
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatbind dispatch use_c2phc
 	gnatlink dispatch syscon.o solcon.o phcpack.o feedback.o \
-                 pieri_solver.o parameter.o lib2path.o \
+                 pieri_solver.o parameter.o lib2path.o corecount.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  lib.a $(QD_LIB)/libqd.a \
