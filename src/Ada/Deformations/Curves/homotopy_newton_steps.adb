@@ -204,7 +204,8 @@ package body Homotopy_Newton_Steps is
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean ) is
 
-    prev_err,prev_res,nrm,left : double_float := 1.0;
+    prev_err,prev_res : double_float := 1.0;
+   -- nrm,left : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
     prev_err100,prev_res100 : double_float;
@@ -214,10 +215,10 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       Standard_LU_Newton_Step(nq,cmplxt,sol,err,rco,res);
-      nrm := Standard_Complex_Vector_Norms.Max_Norm(sol);
+     -- nrm := Standard_Complex_Vector_Norms.Max_Norm(sol);
      -- if res <= tolres then -- convergence
-      left := err/(nrm+1.0);
-      if left <= tolres then
+     -- left := err/(nrm+1.0);
+      if err <= tolres and res <= tolres then -- convergence
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;
@@ -237,10 +238,11 @@ package body Homotopy_Newton_Steps is
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean ) is
 
-    prev_err,prev_res,nrm,left : double_float := 1.0;
+    prev_err,prev_res : double_float := 1.0;
+   -- nrm,left : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
-    solnrm : double_double;
+   -- solnrm : double_double;
     prev_err100,prev_res100 : double_float;
 
   begin
@@ -248,11 +250,11 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       DoblDobl_LU_Newton_Step(nq,cmplxt,sol,err,rco,res);
-      solnrm := DoblDobl_Complex_Vector_Norms.Max_Norm(sol);
-      nrm := hi_part(solnrm);
+     -- solnrm := DoblDobl_Complex_Vector_Norms.Max_Norm(sol);
+     -- nrm := hi_part(solnrm);
      -- if res <= tolres then -- convergence
-      left := err/(nrm+1.0);
-      if left <= tolres then
+     -- left := err/(nrm+1.0);
+      if err <= tolres and res <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;
@@ -272,10 +274,11 @@ package body Homotopy_Newton_Steps is
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean ) is
 
-    prev_err,prev_res,nrm,left : double_float := 1.0;
+    prev_err,prev_res : double_float := 1.0;
+   -- nrm,left : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
-    solnrm : quad_double;
+   -- solnrm : quad_double;
     prev_err100,prev_res100 : double_float;
 
   begin
@@ -283,11 +286,11 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       QuadDobl_LU_Newton_Step(nq,cmplxt,sol,err,rco,res);
-      solnrm := QuadDobl_Complex_Vector_Norms.Max_Norm(sol);
-      nrm := hihi_part(solnrm);
+     -- solnrm := QuadDobl_Complex_Vector_Norms.Max_Norm(sol);
+     -- nrm := hihi_part(solnrm);
      -- if res <= tolres then -- convergence
-      left := err/(nrm+1.0);
-      if left <= tolres then
+     -- left := err/(nrm+1.0);
+      if err <= tolres and res <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;
@@ -309,7 +312,8 @@ package body Homotopy_Newton_Steps is
                 err,rco,res : out double_float; fail : out boolean;
                 verbose : in boolean := false ) is
 
-    prev_err,prev_res,nrm,left : double_float := 1.0;
+    prev_err,prev_res : double_float := 1.0;
+   -- nrm,left : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
     prev_err100,prev_res100 : double_float;
@@ -319,16 +323,16 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       Standard_LU_Newton_Step(nq,cmplxt,sol,err,rco,res);
-      nrm := Standard_Complex_Vector_Norms.Max_Norm(sol);
+     -- nrm := Standard_Complex_Vector_Norms.Max_Norm(sol);
       if verbose then
-        put(file,"  nrm :"); put(file,nrm,3);
+       -- put(file,"  nrm :"); put(file,nrm,3);
         put(file,"  err :"); put(file,err,3);
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
      -- if res <= tolres then -- convergence
-      left := err/(nrm+1.0);
-      if left <= tolres then
+     -- left := err/(nrm+1.0);
+      if err <= tolres and res <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;
@@ -350,10 +354,11 @@ package body Homotopy_Newton_Steps is
                 err,rco,res : out double_float; fail : out boolean;
                 verbose : in boolean := false ) is
 
-    prev_err,prev_res,nrm,left : double_float := 1.0;
+    prev_err,prev_res : double_float := 1.0;
+   -- nrm,left : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
-    solnrm : double_double;
+   -- solnrm : double_double;
     prev_err100,prev_res100 : double_float;
 
   begin
@@ -361,17 +366,17 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       DoblDobl_LU_Newton_Step(nq,cmplxt,sol,err,rco,res);
-      solnrm := DoblDobl_Complex_Vector_Norms.Max_Norm(sol);
-      nrm := hi_part(solnrm);
+     -- solnrm := DoblDobl_Complex_Vector_Norms.Max_Norm(sol);
+     -- nrm := hi_part(solnrm);
       if verbose then
-        put(file,"  nrm :"); put(file,nrm,3);
+       -- put(file,"  nrm :"); put(file,nrm,3);
         put(file,"  err :"); put(file,err,3);
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
      -- if res <= tolres then -- convergence
-      left := err/(nrm+1.0);
-      if left <= tolres then
+     -- left := err/(nrm+1.0);
+      if err <= tolres and err <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;
@@ -393,10 +398,11 @@ package body Homotopy_Newton_Steps is
                 err,rco,res : out double_float; fail : out boolean;
                 verbose : in boolean := false ) is
 
-    prev_err,prev_res,nrm,left : double_float := 1.0;
+    prev_err,prev_res : double_float := 1.0;
+   -- nrm,left : double_float := 1.0;
     cmplxt : constant Standard_Complex_Numbers.Complex_Number
            := Standard_Complex_Numbers.Create(t);
-    solnrm : quad_double;
+   -- solnrm : quad_double;
     prev_err100,prev_res100 : double_float;
 
   begin
@@ -404,17 +410,17 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       QuadDobl_LU_Newton_Step(nq,cmplxt,sol,err,rco,res);
-      solnrm := QuadDobl_Complex_Vector_Norms.Max_Norm(sol);
-      nrm := hihi_part(solnrm);
+     -- solnrm := QuadDobl_Complex_Vector_Norms.Max_Norm(sol);
+     -- nrm := hihi_part(solnrm);
       if verbose then
-        put(file,"  nrm :"); put(file,nrm,3);
+       -- put(file,"  nrm :"); put(file,nrm,3);
         put(file,"  err :"); put(file,err,3);
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
      -- if res <= tolres then -- convergence
-      left := err/(nrm+1.0);
-      if left <= tolres then
+     -- left := err/(nrm+1.0);
+      if err <= tolres and res <= tolres then
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_err100 := 100.0*prev_err;
@@ -445,7 +451,7 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       Standard_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
-      if res <= tolres then -- convergence
+      if err <= tolres and res <= tolres then -- convergence
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;
@@ -474,7 +480,7 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       DoblDobl_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
-      if res <= tolres then -- convergence
+      if err <= tolres and res <= tolres then -- convergence
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;
@@ -503,7 +509,7 @@ package body Homotopy_Newton_Steps is
     nbrit := maxit;
     for k in 1..maxit loop
       QuadDobl_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
-      if res <= tolres then -- convergence
+      if err <= tolres and res <= tolres then -- convergence
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;
@@ -539,7 +545,7 @@ package body Homotopy_Newton_Steps is
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
-      if res <= tolres then -- convergence
+      if err <= tolres and res <= tolres then -- convergence
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;
@@ -575,7 +581,7 @@ package body Homotopy_Newton_Steps is
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
-      if res <= tolres then -- convergence
+      if err <= tolres and res <= tolres then -- convergence
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;
@@ -611,7 +617,7 @@ package body Homotopy_Newton_Steps is
         put(file,"  rco :"); put(file,rco,3);
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
-      if res <= tolres then -- convergence
+      if err <= tolres and res <= tolres then -- convergence
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
         prev_res100 := 100.0*prev_res;

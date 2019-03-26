@@ -1,3 +1,6 @@
+Mon 25 Mar 2019 : modified the homotopy_newton_steps.adb to have the stop
+  criterion for the convergence to involve the err as well.
+
 Sun 24 Mar 2019 : added mixed residuals corrector to the step-by-step run
   of the series-Pade tracker in *seriespade_tracker.adb.
   Updated the drivers_to_series_trackers and series_path_trackers.adb
