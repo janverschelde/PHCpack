@@ -16,6 +16,12 @@ void finalize ( void );
  *   if the finalized flag was zero.
  *   Nothing happens if the finalized flag equals one. */
 
+static PyObject *py2c_corecount
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of cores available for multithreading. */
+
 /* The wrapping of functions with prototypes in phcpack.h starts here. */
 
 static PyObject *py2c_PHCpack_version_string

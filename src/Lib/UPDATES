@@ -1,3 +1,6 @@
+Wed 27 Mar 2019 : added the function py2c_corecount to phcpy2c.h,
+  phcpy2c2.c and phcpy2c3.c to export the number of cores to the Python user.
+
 Sun 20 Jan 2019 : extra jobs in solcon, modifications in lib_padcon.c.
   Extra jobs in padcon to initialize natural parameter homotopy for
   a step-by-step Pade continuation, tested by lib_padcon.

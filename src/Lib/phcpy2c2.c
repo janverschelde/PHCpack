@@ -3,6 +3,7 @@
 #include <Python.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "phcpack.h"
 #include "unisolvers.h"
 #include "giftwrappers.h"
@@ -57,6 +58,16 @@ void finalize ( void )
       g_ada_finalized = 1;
       g_ada_initialized = 0;
    }
+}
+
+static PyObject *py2c_corecount
+ ( PyObject *self, PyObject *args )
+{
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   int number_of_cores = sysconf(_SC_NPROCESSORS_ONLN);
+
+   return Py_BuildValue("i", number_of_cores);
 }
 
 /* The wrapping of functions in phcpack.h starts from here. */
@@ -9155,6 +9166,8 @@ static PyObject *py2c_ade_manypaths_qd_pars ( PyObject *self, PyObject *args )
 
 static PyMethodDef phcpy2c_methods[] = 
 {
+   {"py2c_corecount", py2c_corecount, METH_VARARGS,
+    "Returns the number of cores available for multithreading."},
    {"py2c_PHCpack_version_string", py2c_PHCpack_version_string, METH_VARARGS,
     "Returns the version string of PHCpack.\n The version string is 40 characters long."},
    {"py2c_set_seed", py2c_set_seed, METH_VARARGS, 
