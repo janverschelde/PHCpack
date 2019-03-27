@@ -78,11 +78,26 @@ package Series_and_Trackers is
                 sol : Standard_Complex_Vectors.Vector;
                 t : double_float ) return double_float;
   function Residual_Prediction
+              ( file : file_type;
+                abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : Standard_Complex_Vectors.Vector;
+                t : double_float ) return double_float;
+  function Residual_Prediction
               ( abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 sol : DoblDobl_Complex_Vectors.Vector;
                 t : double_float ) return double_float;
   function Residual_Prediction
+              ( file : file_type;
+                abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : DoblDobl_Complex_Vectors.Vector;
+                t : double_float ) return double_float;
+  function Residual_Prediction
               ( abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : QuadDobl_Complex_Vectors.Vector;
+                t : double_float ) return double_float;
+  function Residual_Prediction
+              ( file : file_type;
+                abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 sol : QuadDobl_Complex_Vectors.Vector;
                 t : double_float ) return double_float;
 
@@ -96,6 +111,7 @@ package Series_and_Trackers is
   --   must have been properly initialized.
 
   -- ON ENTRY :
+  --   file     for extra output on the residual computation;
   --   abh      homotopy polynomials with absolute value coefficients;
   --   sol      current solution for the value of t;
   --   t        current value of the continuation parameter.

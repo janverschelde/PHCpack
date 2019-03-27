@@ -13,6 +13,7 @@ with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
+with Standard_Complex_Singular_Values;   use Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with Standard_Homotopy;
@@ -133,6 +134,36 @@ package body Homotopy_Newton_Steps is
     err := Standard_Complex_Vector_Norms.Max_Norm(y);
     res := Homotopy_mixed_Residuals.Residual(abh,x,t);
   end Standard_LU_Newton_Step;
+
+  procedure Standard_SVD_Newton_Step
+              ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float ) is
+
+    nq : constant integer32 := abh'last;
+    y : Standard_Complex_Vectors.Vector(1..nq)
+      := Standard_Homotopy.Eval(x,t);
+    A : Standard_Complex_Matrices.Matrix(1..nq,x'range)
+      := Standard_Homotopy.Diff(x,t);
+    u : Standard_Complex_Matrices.Matrix(y'range,y'range);
+    v : Standard_Complex_Matrices.Matrix(x'range,x'range);
+    p : constant integer32 := x'length;
+    m : constant integer32 := Min0(integer32(nq)+1,p);
+    e : Standard_Complex_Vectors.Vector(1..p);
+    s : Standard_Complex_Vectors.Vector(1..m);
+    info : integer32;
+    dx : Standard_Complex_Vectors.Vector(x'range);
+
+  begin
+    SVD(A,nq,p,s,e,u,v,11,info);
+    rco := Inverse_Condition_Number(s);
+    Standard_Complex_Vectors.Min(y);
+    dx := Solve(u,v,s,y);
+    err := Standard_Complex_Vector_Norms.Max_Norm(dx);
+    Standard_Complex_Vectors.Add(x,dx);
+    res := Homotopy_mixed_Residuals.Residual(abh,x,t);
+  end Standard_SVD_Newton_Step;
 
   procedure DoblDobl_LU_Newton_Step
               ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -434,6 +465,8 @@ package body Homotopy_Newton_Steps is
     end loop;
   end Correct;
 
+-- CORRECTORS WITH MIXED RESIDUALS :
+
   procedure Correct
               ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 t,tolres : in double_float;
@@ -450,7 +483,8 @@ package body Homotopy_Newton_Steps is
     fail := true;
     nbrit := maxit;
     for k in 1..maxit loop
-      Standard_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
+     -- Standard_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
+      Standard_SVD_Newton_Step(abh,cmplxt,sol,err,rco,res);
       if err <= tolres and res <= tolres then -- convergence
         nbrit := k; fail := false; exit;
       elsif k > 1 then      -- check for divergence
@@ -539,7 +573,8 @@ package body Homotopy_Newton_Steps is
     fail := true;
     nbrit := maxit;
     for k in 1..maxit loop
-      Standard_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
+     -- Standard_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
+      Standard_SVD_Newton_Step(abh,cmplxt,sol,err,rco,res);
       if verbose then
         put(file,"  err :"); put(file,err,3);
         put(file,"  rco :"); put(file,rco,3);

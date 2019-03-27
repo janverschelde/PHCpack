@@ -110,6 +110,21 @@ package body Series_and_Trackers is
   end Residual_Prediction;
 
   function Residual_Prediction
+              ( file : file_type;
+                abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : Standard_Complex_Vectors.Vector;
+                t : double_float ) return double_float is
+
+    res : double_float;
+    cmplxt : constant Standard_Complex_Numbers.Complex_Number
+           := Standard_Complex_Numbers.Create(t);
+
+  begin
+    res := Homotopy_mixed_Residuals.Residual(file,abh,sol,cmplxt);
+    return res;
+  end Residual_Prediction;
+
+  function Residual_Prediction
               ( sol : DoblDobl_Complex_Vectors.Vector;
                 t : double_float ) return double_float is
 
@@ -141,6 +156,22 @@ package body Series_and_Trackers is
   end Residual_Prediction;
 
   function Residual_Prediction
+              ( file : file_type;
+                abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : DoblDobl_Complex_Vectors.Vector;
+                t : double_float ) return double_float is
+
+    res : double_double;
+    ddt : constant double_double := create(t);
+    cmplxt : constant DoblDobl_Complex_Numbers.Complex_Number
+           := DoblDobl_Complex_Numbers.Create(ddt);
+
+  begin
+    res := Homotopy_mixed_Residuals.Residual(file,abh,sol,cmplxt);
+    return hi_part(res);
+  end Residual_Prediction;
+
+  function Residual_Prediction
               ( sol : QuadDobl_Complex_Vectors.Vector;
                 t : double_float ) return double_float is
 
@@ -168,6 +199,22 @@ package body Series_and_Trackers is
 
   begin
     res := Homotopy_mixed_Residuals.Residual(abh,sol,cmplxt);
+    return hihi_part(res);
+  end Residual_Prediction;
+
+  function Residual_Prediction
+              ( file : file_type;
+                abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                sol : QuadDobl_Complex_Vectors.Vector;
+                t : double_float ) return double_float is
+
+    res : quad_double;
+    qdt : constant quad_double := create(t);
+    cmplxt : constant QuadDobl_Complex_Numbers.Complex_Number
+           := QuadDobl_Complex_Numbers.Create(qdt);
+
+  begin
+    res := Homotopy_mixed_Residuals.Residual(file,abh,sol,cmplxt);
     return hihi_part(res);
   end Residual_Prediction;
 
@@ -531,9 +578,7 @@ package body Series_and_Trackers is
       if verbose then
         put(file,"Smallest pole radius :");
         put(file,frp,3); new_line(file);
-        if Standard_Complex_Numbers.REAL_PART(cfp) >= 0.0
-         then put(file,"Closest pole :"); put(file,cfp); new_line(file);
-        end if;
+        put(file,"Closest pole :"); put(file,cfp); new_line(file);
       end if;
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
@@ -664,9 +709,7 @@ package body Series_and_Trackers is
       if verbose then
         put(file,"Smallest pole radius : ");
         put(file,frp,3); new_line(file);
-        if DoblDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
-         then put(file,"Closest pole : "); put(file,cfp); new_line(file);
-        end if;
+        put(file,"Closest pole : "); put(file,cfp); new_line(file);
       end if;
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
@@ -795,9 +838,7 @@ package body Series_and_Trackers is
       if verbose then
         put(file,"Smallest pole radius : ");
         put(file,frp,3); new_line(file);
-        if QuadDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
-         then put(file,"Closest pole : "); put(file,cfp); new_line(file);
-        end if;
+        put(file,"Closest pole : "); put(file,cfp); new_line(file);
       end if;
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
@@ -1202,10 +1243,10 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
    -- nbq : constant integer32 := fhm'last;
-    nit : constant integer32 := integer32(pars.corsteps+2);
+    nit : constant integer32 := 3*integer32(pars.corsteps);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg +2; -- + 1; -- + 2;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
@@ -1216,7 +1257,7 @@ package body Series_and_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := 0.005;
-    maxit : constant natural32 := 500;
+    maxit : constant natural32 := 10;
     fail : boolean;
     t,step,dstep,pstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
@@ -1236,15 +1277,13 @@ package body Series_and_Trackers is
       if verbose then
         put(file,"Step "); put(file,k,1); put(file," : ");
       end if;
-      Series_and_Predictors.Newton_Prediction -- verbose flag set to false
-        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
+      Series_and_Predictors.Newton_Prediction -- verbose flag set
+        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,verbose);
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
         put(file,"Smallest pole radius :");
         put(file,frp,3); new_line(file);
-        if Standard_Complex_Numbers.REAL_PART(cfp) >= 0.0
-         then put(file,"Closest pole :"); put(file,cfp); new_line(file);
-        end if;
+        put(file,"Closest pole :"); put(file,cfp); new_line(file);
       end if;
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
@@ -1272,9 +1311,11 @@ package body Series_and_Trackers is
         loop
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
          -- predres := Residual_Prediction(wrk_sol,t);
-          predres := Residual_Prediction(abh,wrk_sol,t);
-          if verbose
-           then put(file,"  residual : "); put(file,predres,3); new_line(file);
+          if not verbose then
+            predres := Residual_Prediction(abh,wrk_sol,t);
+          else
+            predres := Residual_Prediction(file,abh,wrk_sol,t);
+            put(file,"  residual : "); put(file,predres,3); new_line(file);
           end if;
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
@@ -1290,6 +1331,12 @@ package body Series_and_Trackers is
         Homotopy_Newton_Steps.Correct
           (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
          -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
+        if verbose then
+          if fail
+           then put_line(file,"The correct stage failed.");
+           else put_line(file,"The correct stage succeeded.");
+          end if;
+        end if;
         nbrcorrs := nbrcorrs + nbrit;
         exit when (not fail);
         step := step/2.0; cntfail := cntfail + 1;
@@ -1375,9 +1422,7 @@ package body Series_and_Trackers is
       if verbose then
         put(file,"Smallest pole radius :");
         put(file,frp,3); new_line(file);
-        if DoblDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
-         then put(file,"Closest pole : "); put(file,cfp); new_line(file);
-        end if;
+        put(file,"Closest pole : "); put(file,cfp); new_line(file);
       end if;
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
@@ -1407,9 +1452,11 @@ package body Series_and_Trackers is
           dd_step := create(step);
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,dd_step);
          -- predres := Residual_Prediction(wrk_sol,t);
-          predres := Residual_Prediction(abh,wrk_sol,t);
-          if verbose
-           then put(file,"  residual : "); put(file,predres,3); new_line(file);
+          if not verbose then
+            predres := Residual_Prediction(abh,wrk_sol,t);
+          else
+            predres := Residual_Prediction(file,abh,wrk_sol,t);
+            put(file,"  residual : "); put(file,predres,3); new_line(file);
           end if;
           exit when (predres <= alpha);
           t := t - step; step := step/2.0; t := t + step;
@@ -1514,9 +1561,7 @@ package body Series_and_Trackers is
       if verbose then
         put(file,"Smallest pole radius :");
         put(file,frp,3); new_line(file);
-        if QuadDobl_Complex_Numbers.REAL_PART(cfp) >= 0.0
-         then put(file,"Closest pole :"); put(file,cfp); new_line(file);
-        end if;
+        put(file,"Closest pole :"); put(file,cfp); new_line(file);
       end if;
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
