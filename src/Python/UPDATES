@@ -1,3 +1,7 @@
+Thu 28 Mar 2019 : added gamma constant as optional parameter to initialize
+  the homotopies in the step-by-step path trackers in the trackers module,
+  which changed the file tracker.py both in the PHCpy2 and PHCpy3 folders.
+
 Sat 23 Mar 2019 : improved the make_solution function of the solutions
   module, adding also a function numerals.
 

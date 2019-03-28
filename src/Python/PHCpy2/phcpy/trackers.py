@@ -43,7 +43,7 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     from phcpy.interface import store_standard_solutions
     from phcpy.interface import load_standard_solutions
     from phcpy.solver import number_of_symbols
-    dim = number_of_symbols(start)
+    dim = number_of_symbols(start) 
     store_standard_system(target, nbvar=dim)
     py2c_copy_standard_container_to_target_system()
     store_standard_system(start, nbvar=dim)
@@ -637,12 +637,17 @@ def track(target, start, sols, precision='d', decimals=80, gamma=0, tasks=0):
         print 'wrong argument for precision'
         return None
 
-def initialize_standard_tracker(target, start, fixedgamma=True):
+def initialize_standard_tracker(target, start, fixedgamma=True, \
+    regamma=0.0, imgamma=0.0):
     r"""
     Initializes a path tracker with a generator for a *target*
     and *start* system given in standard double precision.
     If *fixedgamma*, then gamma will be a fixed default value,
-    otherwise, a random complex constant for gamma is generated.
+    otherwise, a random complex constant for gamma is generated,
+    but only if *regamma* and *imgamma* are both equal to 0.0.
+    If not *fixedgamma* and moreover: *regamma* and *imgamma* are not
+    both zero, then the complex number with real part in *regamma*
+    and imaginary part in *imgamma* will be the gamma constant.
     """
     from phcpy.phcpy2c2 import py2c_copy_standard_container_to_target_system
     from phcpy.phcpy2c2 import py2c_copy_standard_container_to_start_system
@@ -653,16 +658,21 @@ def initialize_standard_tracker(target, start, fixedgamma=True):
     store_standard_system(start)
     py2c_copy_standard_container_to_start_system()
     if fixedgamma:
-        return py2c_initialize_standard_homotopy(1)
+        return py2c_initialize_standard_homotopy(1, regamma, imgamma)
     else:
-        return py2c_initialize_standard_homotopy(0)
+        return py2c_initialize_standard_homotopy(0, regamma, imgamma)
 
-def initialize_dobldobl_tracker(target, start, fixedgamma=True):
-    """
+def initialize_dobldobl_tracker(target, start, fixedgamma=True, \
+    regamma=0.0, imgamma=0.0):
+    r"""
     Initializes a path tracker with a generator for a target
     and start system given in double double precision.
-    If fixedgamma, then gamma will be a fixed default value,
-    otherwise, a random complex constant for gamma is generated.
+    If *fixedgamma*, then gamma will be a fixed default value,
+    otherwise, a random complex constant for gamma is generated,
+    but only if *regamma* and *imgamma* are both equal to 0.0.
+    If not *fixedgamma* and moreover: *regamma* and *imgamma* are not
+    both zero, then the complex number with real part in *regamma*
+    and imaginary part in *imgamma* will be the gamma constant.
     """
     from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_target_system
     from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_start_system
@@ -673,16 +683,21 @@ def initialize_dobldobl_tracker(target, start, fixedgamma=True):
     store_dobldobl_system(start)
     py2c_copy_dobldobl_container_to_start_system()
     if fixedgamma:
-        return py2c_initialize_dobldobl_homotopy(1)
+        return py2c_initialize_dobldobl_homotopy(1, regamma, imgamma)
     else:
-        return py2c_initialize_dobldobl_homotopy(0)
+        return py2c_initialize_dobldobl_homotopy(0, regamma, imgamma)
 
-def initialize_quaddobl_tracker(target, start, fixedgamma=True):
+def initialize_quaddobl_tracker(target, start, fixedgamma=True, \
+    regamma=0.0, imgamma=0.0):
     r"""
     Initializes a path tracker with a generator for a *target*
     and *start* system given in quad double precision.
     If *fixedgamma*, then gamma will be a fixed default value,
-    otherwise, a random complex constant for gamma is generated.
+    otherwise, a random complex constant for gamma is generated,
+    but only if *regamma* and *imgamma* are both equal to 0.0.
+    If not *fixedgamma* and moreover: *regamma* and *imgamma* are not
+    both zero, then the complex number with real part in *regamma*
+    and imaginary part in *imgamma* will be the gamma constant.
     """
     from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_target_system
     from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_start_system
@@ -693,9 +708,9 @@ def initialize_quaddobl_tracker(target, start, fixedgamma=True):
     store_quaddobl_system(start)
     py2c_copy_quaddobl_container_to_start_system()
     if fixedgamma:
-        return py2c_initialize_quaddobl_homotopy(1)
+        return py2c_initialize_quaddobl_homotopy(1, regamma, imgamma)
     else:
-        return py2c_initialize_quaddobl_homotopy(0)
+        return py2c_initialize_quaddobl_homotopy(0, regamma, imgamma)
 
 def initialize_multprec_tracker(target, start, fixedgamma=True, decimals=100):
     r"""
