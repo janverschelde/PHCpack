@@ -1,3 +1,5 @@
+Wed 27 Mar 2019 : adjusted use_nxtsol.adb for passing of the gamma constant.
+
 Mon 21 Jan 2019 : bug fix in assignments_in_ada_and_c.adb, modifications in
   use_syscon.adb, use_solcon.adb, use_track.adb, use_series.adb, 
   use_padcon.adb, use_c2phc4c.adb, and use_c2phc.adb.

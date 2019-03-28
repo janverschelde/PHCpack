@@ -2,7 +2,12 @@ with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
 with String_Splitters;                  use String_Splitters;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Poly_Systems;
 --with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
@@ -47,9 +52,23 @@ function use_nxtsol ( job : integer32;
    -- new_line;
    -- put_line("The target system : "); put(target.all);
    -- put_line("The start system : "); put(start.all);
-    if fixed = 1
-     then Standard_Path_Tracker.Init(target,start,true);
-     else Standard_Path_Tracker.Init(target,start,false);
+    if fixed = 1 then
+      Standard_Path_Tracker.Init(target,start,true);
+    else
+      declare
+        v_c : constant C_Double_Array
+            := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(2));
+        regamma : constant double_float := double_float(v_c(v_c'first));
+        imgamma : constant double_float := double_float(v_c(v_c'first+1));
+        gamma : Standard_Complex_Numbers.Complex_Number;
+      begin
+        if regamma = 0.0 and imgamma = 0.0 then
+          Standard_Path_Tracker.Init(target,start,false);
+        else
+          gamma := Standard_Complex_Numbers.Create(regamma,imgamma);
+          Standard_Path_Tracker.Init(target,start,gamma,2,0);
+        end if;
+      end;
     end if;
     return 0;
   exception
@@ -68,9 +87,26 @@ function use_nxtsol ( job : integer32;
    -- new_line;
    -- put_line("The target system : "); put(target.all);
    -- put_line("The start system : "); put(start.all);
-    if fixed = 1
-     then DoblDobl_Path_Tracker.Init(target,start,true);
-     else DoblDobl_Path_Tracker.Init(target,start,false);
+    if fixed = 1 then
+      DoblDobl_Path_Tracker.Init(target,start,true);
+    else
+      declare
+        v_c : constant C_Double_Array
+            := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(2));
+        regamma : constant double_float := double_float(v_c(v_c'first));
+        imgamma : constant double_float := double_float(v_c(v_c'first+1));
+        gamma : DoblDobl_Complex_Numbers.Complex_Number;
+        dd_regamma,dd_imgamma : double_double;
+      begin
+        if regamma = 0.0 and imgamma = 0.0 then
+          DoblDobl_Path_Tracker.Init(target,start,false);
+        else
+          dd_regamma := create(regamma);
+          dd_imgamma := create(imgamma);
+          gamma := DoblDobl_Complex_Numbers.Create(dd_regamma,dd_imgamma);
+          DoblDobl_Path_Tracker.Init(target,start,gamma,2,0);
+        end if;
+      end;
     end if;
     return 0;
   exception
@@ -89,9 +125,26 @@ function use_nxtsol ( job : integer32;
    -- new_line;
    -- put_line("The target system : "); put(target.all);
    -- put_line("The start system : "); put(start.all);
-    if fixed = 1
-     then QuadDobl_Path_Tracker.Init(target,start,true);
-     else QuadDobl_Path_Tracker.Init(target,start,false);
+    if fixed = 1 then
+      QuadDobl_Path_Tracker.Init(target,start,true);
+    else
+      declare
+        v_c : constant C_Double_Array
+            := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(2));
+        regamma : constant double_float := double_float(v_c(v_c'first));
+        imgamma : constant double_float := double_float(v_c(v_c'first+1));
+        gamma : QuadDobl_Complex_Numbers.Complex_Number;
+        qd_regamma,qd_imgamma : quad_double;
+      begin
+        if regamma = 0.0 and imgamma = 0.0 then
+          QuadDobl_Path_Tracker.Init(target,start,false);
+        else
+          qd_regamma := create(regamma);
+          qd_imgamma := create(imgamma);
+          gamma := QuadDobl_Complex_Numbers.Create(qd_regamma,qd_imgamma);
+          QuadDobl_Path_Tracker.Init(target,start,gamma,2,0);
+        end if;
+      end;
     end if;
     return 0;
   exception
@@ -350,7 +403,7 @@ function use_nxtsol ( job : integer32;
 
   begin
    -- put_line("inside use_nxtsol, calling get_current ...");
-    sol := Varbprec_Path_Tracker.get_current;
+   -- sol := Varbprec_Path_Tracker.get_current;
    -- put_line("inside use_nxtsol, calling get_next ...");
     sol := Varbprec_Path_Tracker.get_next(want,maxprc,maxitr,otp);
    -- put_line("The solution returned : ");
