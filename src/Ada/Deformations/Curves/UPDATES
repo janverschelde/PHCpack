@@ -1,3 +1,8 @@
+Thu 28 Mar 2019 : fixed a bug in series_and_trackers.adb, allowing for
+  smaller step sizes than alpha, ignored corrector failures, and toggled
+  off the Hessian step size, for path 155 of cyclic 11-roots which takes
+  large values for some specific gamma value.
+
 Tue 26 Mar 2019 : toggled of the series step size also for double double
   and quad double precision in series_and_trackers.adb.
   Added Newton step with SVD to homotopy_newton_steps and made numerous

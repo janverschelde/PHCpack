@@ -269,6 +269,7 @@ package body Series_and_Trackers is
                  (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
      -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
      -- step := Minimum(step,dstep); -- ignore series step
+      dstep := pars.maxsize; -- ignore Hessian step size
       step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
@@ -368,6 +369,7 @@ package body Series_and_Trackers is
       dd_t := Create(t);
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
+      dstep := pars.maxsize; -- ignore Hessian step size
       step := Series_and_Predictors.Cap_Step_Size
                  (dstep,hi_part(frp),pars.pbeta);
      -- step := Minimum(step,dstep);
@@ -474,6 +476,7 @@ package body Series_and_Trackers is
       qd_t := Create(t);
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
+      dstep := pars.maxsize; -- ignore Hessian step
       step := Series_and_Predictors.Cap_Step_Size
                 (dstep,hihi_part(frp),pars.pbeta);
      -- step := Minimum(step,dstep);
@@ -596,6 +599,7 @@ package body Series_and_Trackers is
         put(file,"  pole step : "); put(file,pstep,2);
         new_line(file);
       end if;
+      dstep := pars.maxsize; -- ignore Hessian step
       step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
      -- step := Minimum(step,dstep);
       Standard_Complex_Series_Vectors.Clear(eva);
@@ -720,6 +724,7 @@ package body Series_and_Trackers is
       dd_t := Create(t);
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
+      dstep := pars.maxsize; -- ignore Hessian step
       step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
@@ -843,12 +848,14 @@ package body Series_and_Trackers is
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
       step := pars.sbeta*step;
+      step := pars.maxsize; -- ignore series step
       step := Series_and_Predictors.Cap_Step_Size
                 (step,hihi_part(frp),pars.pbeta);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       qd_t := Create(t);
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
+      dstep := pars.maxsize; -- ignore Hessian step
       step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
@@ -971,6 +978,7 @@ package body Series_and_Trackers is
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
      -- step := Minimum(step,dstep); -- ignore series step
+      dstep := pars.maxsize; -- ignore Hessian step
       step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
       Set_Step(t,step,pars.maxsize,onetarget);
       loop
@@ -1072,6 +1080,7 @@ package body Series_and_Trackers is
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
      -- step := Minimum(step,dstep); -- ignore series step
+      dstep := pars.maxsize; -- ignore Hessian step
       step := Series_and_Predictors.Cap_Step_Size
                 (dstep,hi_part(frp),pars.pbeta);
       Set_Step(t,step,pars.maxsize,onetarget);
@@ -1179,6 +1188,7 @@ package body Series_and_Trackers is
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
      -- step := Minimum(step,dstep); -- ignore series step
+      dstep := pars.maxsize; -- ignore Hessian step
       step := Series_and_Predictors.Cap_Step_Size
                 (dstep,hihi_part(frp),pars.pbeta);
       Set_Step(t,step,pars.maxsize,onetarget);
@@ -1243,7 +1253,7 @@ package body Series_and_Trackers is
                 verbose : in boolean := false ) is
 
    -- nbq : constant integer32 := fhm'last;
-    nit : constant integer32 := 3*integer32(pars.corsteps);
+    nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg +2; -- + 1; -- + 2;
@@ -1277,8 +1287,8 @@ package body Series_and_Trackers is
       if verbose then
         put(file,"Step "); put(file,k,1); put(file," : ");
       end if;
-      Series_and_Predictors.Newton_Prediction -- verbose flag set
-        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,verbose);
+      Series_and_Predictors.Newton_Prediction -- no verbose flag set
+        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
       Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
       if verbose then
         put(file,"Smallest pole radius :");
@@ -1301,6 +1311,7 @@ package body Series_and_Trackers is
         put(file,"  pole step : "); put(file,pstep,2); new_line(file);
       end if;
      -- step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
+      dstep := pars.maxsize; -- ignore Hessian step
       step := Minimum(dstep,pstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
@@ -1310,11 +1321,13 @@ package body Series_and_Trackers is
       loop
         loop
           wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-         -- predres := Residual_Prediction(wrk_sol,t);
+          predres := Residual_Prediction(wrk_sol,t);
           if not verbose then
-            predres := Residual_Prediction(abh,wrk_sol,t);
+            predres := Residual_Prediction(wrk_sol,t);
+           -- predres := Residual_Prediction(abh,wrk_sol,t);
           else
-            predres := Residual_Prediction(file,abh,wrk_sol,t);
+            predres := Residual_Prediction(wrk_sol,t);
+           -- predres := Residual_Prediction(file,abh,wrk_sol,t);
             put(file,"  residual : "); put(file,predres,3); new_line(file);
           end if;
           exit when (predres <= alpha);
@@ -1323,8 +1336,8 @@ package body Series_and_Trackers is
             put(file,"Step size : "); put(file,step,3);
             put(file," t = "); put(file,t,3);
           end if;
-         -- exit when (step < pars.minsize);
-          exit when (step <= alpha);
+          exit when (step < pars.minsize);
+         -- exit when (step <= alpha);
         end loop;
         Update_Step_Sizes(minsize,maxsize,step);
         exit when ((step < pars.minsize) and (predres > alpha));
@@ -1333,7 +1346,7 @@ package body Series_and_Trackers is
          -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,verbose);
         if verbose then
           if fail
-           then put_line(file,"The correct stage failed.");
+           then put_line(file,"The correct stage failed."); fail := false;
            else put_line(file,"The correct stage succeeded.");
           end if;
         end if;
@@ -1441,6 +1454,7 @@ package body Series_and_Trackers is
         pstep := hi_part(frp)*pars.pbeta;
         put(file,"  pole step : "); put(file,pstep,2); new_line(file);
       end if;
+      dstep := pars.maxsize; -- ignore Hessian step
       step := Minimum(dstep,pstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
@@ -1580,6 +1594,7 @@ package body Series_and_Trackers is
         pstep := hihi_part(frp)*pars.pbeta;
         put(file,"  pole step : "); put(file,pstep,2); new_line(file);
       end if;
+      dstep := pars.maxsize; -- ignore Hessian step
       step := Minimum(dstep,pstep);
       Set_Step(t,step,pars.maxsize,onetarget);
       if verbose then
