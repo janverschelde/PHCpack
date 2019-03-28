@@ -6194,7 +6194,13 @@ static PyObject *py2c_initialize_standard_homotopy
  *   There is one integer number on input to be considered as a boolean,
  *   as an indicator whether a fixed gamma constant will be used.
  *   Before calling this routine the target and start system must
- *   be copied over from the standard systems container. */
+ *   be copied over from the standard systems container. 
+ *   The two other input parameters are two doubles: the real and imaginary
+ *   part of the gamma constant.  If the integer parameter equals zero and
+ *   if the two input doubles are not both zero, then the input gamma constant
+ *   will be used, otherwise, if the two input doubles are zero and the first
+ *   integer parameter is zero as well, then a random gamma constant will 
+ *   be generated. */
 
 static PyObject *py2c_initialize_dobldobl_homotopy
  ( PyObject *self, PyObject *args );
@@ -6205,7 +6211,13 @@ static PyObject *py2c_initialize_dobldobl_homotopy
  *   There is one integer number on input to be considered as a boolean,
  *   as an indicator whether a fixed gamma constant will be used.
  *   Before calling this routine the target and start system must
- *   be copied over from the dobldobl systems container. */
+ *   be copied over from the dobldobl systems container.
+ *   The two other input parameters are two doubles: the real and imaginary
+ *   part of the gamma constant.  If the integer parameter equals zero and
+ *   if the two input doubles are not both zero, then the input gamma constant
+ *   will be used, otherwise, if the two input doubles are zero and the first
+ *   integer parameter is zero as well, then a random gamma constant will 
+ *   be generated. */
 
 static PyObject *py2c_initialize_quaddobl_homotopy
  ( PyObject *self, PyObject *args );
@@ -6216,7 +6228,13 @@ static PyObject *py2c_initialize_quaddobl_homotopy
  *   There is one integer number on input to be considered as a boolean,
  *   as an indicator whether a fixed gamma constant will be used.
  *   Before calling this routine the target and start system must
- *   be copied over from the quaddobl systems container. */
+ *   be copied over from the quaddobl systems container.
+ *   The two other input parameters are two doubles: the real and imaginary
+ *   part of the gamma constant.  If the integer parameter equals zero and
+ *   if the two input doubles are not both zero, then the input gamma constant
+ *   will be used, otherwise, if the two input doubles are zero and the first
+ *   integer parameter is zero as well, then a random gamma constant will 
+ *   be generated. */
 
 static PyObject *py2c_initialize_multprec_homotopy
  ( PyObject *self, PyObject *args );

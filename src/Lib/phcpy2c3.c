@@ -8691,10 +8691,11 @@ static PyObject *py2c_initialize_standard_homotopy
  ( PyObject *self, PyObject *args )
 {
    int fail,fixed;
+   double regamma,imgamma;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&fixed)) return NULL;
-   fail = initialize_standard_homotopy(fixed);
+   if(!PyArg_ParseTuple(args,"idd",&fixed,&regamma,&imgamma)) return NULL;
+   fail = initialize_standard_homotopy(fixed,regamma,imgamma);
    return Py_BuildValue("i",fail);
 }
 
@@ -8702,10 +8703,11 @@ static PyObject *py2c_initialize_dobldobl_homotopy
  ( PyObject *self, PyObject *args )
 {
    int fail,fixed;
+   double regamma,imgamma;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&fixed)) return NULL;
-   fail = initialize_dobldobl_homotopy(fixed);
+   if(!PyArg_ParseTuple(args,"idd",&fixed,&regamma,&imgamma)) return NULL;
+   fail = initialize_dobldobl_homotopy(fixed,regamma,imgamma);
    return Py_BuildValue("i",fail);
 }
 
@@ -8713,10 +8715,11 @@ static PyObject *py2c_initialize_quaddobl_homotopy
  ( PyObject *self, PyObject *args )
 {
    int fail,fixed;
+   double regamma,imgamma;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&fixed)) return NULL;
-   fail = initialize_quaddobl_homotopy(fixed);
+   if(!PyArg_ParseTuple(args,"idd",&fixed,&regamma,&imgamma)) return NULL;
+   fail = initialize_quaddobl_homotopy(fixed,regamma,imgamma);
    return Py_BuildValue("i",fail);
 }
 
@@ -10946,13 +10949,13 @@ static PyMethodDef phcpy2c3_methods[] =
     "Clears the pool for systems in quad double precision."},
    {"py2c_initialize_standard_homotopy", py2c_initialize_standard_homotopy,
      METH_VARARGS,
-    "Initializes the homotopy to track a path with a generator,\n using standard double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the standard systems container."},
+    "Initializes the homotopy to track a path with a generator,\n using standard double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the standard systems container.\n The two other input parameters are two doubles: the real and imaginary part\n of the gamma constant.  If the integer parameter equals zero and if the two\n input doubles are not both zero, then the input gamma constant will be used,\n otherwise, if the two input doubles are zero and the first integer parameter\n is zero as well, then a random gamma constant will be generated."},
    {"py2c_initialize_dobldobl_homotopy", py2c_initialize_dobldobl_homotopy,
      METH_VARARGS,
-    "Initializes the homotopy to track a path with a generator,\n using double double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the dobldobl systems container."},
+    "Initializes the homotopy to track a path with a generator,\n using double double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the dobldobl systems container.\n The two other input parameters are two doubles: the real and imaginary part\n of the gamma constant.  If the integer parameter equals zero and if the two\n input doubles are not both zero, then the input gamma constant will be used,\n otherwise, if the two input doubles are zero and the first integer parameter\n is zero as well, then a random gamma constant will be generated."},
    {"py2c_initialize_quaddobl_homotopy", py2c_initialize_quaddobl_homotopy,
      METH_VARARGS,
-    "Initializes the homotopy to track a path with a generator,\n using quad double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the quaddobl systems container."},
+    "Initializes the homotopy to track a path with a generator,\n using quad double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the quaddobl systems container.\n The two other input parameters are two doubles: the real and imaginary part\n of the gamma constant.  If the integer parameter equals zero and if the two\n input doubles are not both zero, then the input gamma constant will be used,\n otherwise, if the two input doubles are zero and the first integer parameter\n is zero as well, then a random gamma constant will be generated."},
    {"py2c_initialize_multprec_homotopy", py2c_initialize_multprec_homotopy,
      METH_VARARGS,
     "Initializes the homotopy to track a path with a generator,\n using arbitrary multiprecision arithmetic.\n There is are two integer numbers on input:\n 1) one to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used; and\n 2) the number of decimal places in the working precision.\n Before calling this routine the target and start system must\n be copied over from the multprec systems container."},
