@@ -17,32 +17,47 @@ extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c );
 extern void adafinal( void );
 #endif
 
-int initialize_standard_homotopy ( int fixed_gamma );
+int initialize_standard_homotopy
+ ( int fixed_gamma, double regamma, double imgamma );
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in standard double precision
  *   in the PHCpack containers and initializes the homotopy for tracking
  *   in standard double complex arithmetic. 
  *   If fixed_gamma equals 1 (true), then gamma will be a fixed default,
- *   otherwise, a new random complex constant for gamma is generated. */
+ *   otherwise, a new random complex constant for gamma is generated,
+ *   but only if regamma and imgamma are both zero.
+ *   If fixed_gamma is not 1 and regamma or imgamma is nonzero,
+ *   then the value of the complex number defined by regamma and imgamma
+ *   will define the gamma constant in the homotopy. */
 
-int initialize_dobldobl_homotopy ( int fixed_gamma );
+int initialize_dobldobl_homotopy
+ ( int fixed_gamma, double regamma, double imgamma );
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in double double precision
  *   in the PHCpack containers and initializes the homotopy for tracking
  *   in double double complex arithmetic.
  *   If fixed_gamma equals 1 (true), then gamma will be a fixed default,
- *   otherwise, a new random complex constant for gamma is generated. */
+ *   otherwise, a new random complex constant for gamma is generated,
+ *   but only if regamma and imgamma are both zero.
+ *   If fixed_gamma is not 1 and regamma or imgamma is nonzero,
+ *   then the value of the complex number defined by regamma and imgamma
+ *   will define the gamma constant in the homotopy. */
 
-int initialize_quaddobl_homotopy ( int fixed_gamma );
+int initialize_quaddobl_homotopy
+ ( int fixed_gamma, double regamma, double imgamma );
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in quad double precision
  *   in the PHCpack containers and initializes the homotopy for tracking
  *   in quad double complex arithmetic.
  *   If fixed_gamma equals 1 (true), then gamma will be a fixed default,
- *   otherwise, a new random complex constant for gamma is generated. */
+ *   otherwise, a new random complex constant for gamma is generated,
+ *   but only if regamma and imgamma are both zero.
+ *   If fixed_gamma is not 1 and regamma or imgamma is nonzero,
+ *   then the value of the complex number defined by regamma and imgamma
+ *   will define the gamma constant in the homotopy. */
 
 int initialize_multprec_homotopy ( int fixed_gamma, int decimals );
 /*

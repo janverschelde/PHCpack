@@ -4,30 +4,42 @@
 #include <stdio.h>
 #include "next_track.h"
 
-int initialize_standard_homotopy ( int fixed_gamma )
+int initialize_standard_homotopy
+ ( int fixed_gamma, double regamma, double imgamma )
 {
    int fail,*b;
-   double *c;
+   double c[2];
+
+   c[0] = regamma;
+   c[1] = imgamma;
 
    fail = _ada_use_c2phc4c(500,&fixed_gamma,b,c);
 
    return fail;
 }
 
-int initialize_dobldobl_homotopy ( int fixed_gamma )
+int initialize_dobldobl_homotopy
+ ( int fixed_gamma, double regamma, double imgamma )
 {
    int fail,*b;
-   double *c;
+   double c[2];
+
+   c[0] = regamma;
+   c[1] = imgamma;
 
    fail = _ada_use_c2phc4c(501,&fixed_gamma,b,c);
 
    return fail;
 }
 
-int initialize_quaddobl_homotopy ( int fixed_gamma )
+int initialize_quaddobl_homotopy
+ ( int fixed_gamma, double regamma, double imgamma )
 {
    int fail,*b;
-   double *c;
+   double c[2];
+
+   c[0] = regamma;
+   c[1] = imgamma;
 
    fail = _ada_use_c2phc4c(502,&fixed_gamma,b,c);
 

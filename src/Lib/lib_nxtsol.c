@@ -16,6 +16,12 @@ int prompt_for_precision ( void );
  *   0 for standard double precision, 1 for double double precision,
  *   and 2 for quad double precision. */
 
+int prompt_for_gamma ( double *regamma, double *imgamma );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for the real and imaginary part of a complex number,
+ *   returned in the parameters regamma and imgamma. */
+
 int call_initialize_standard_homotopy ( int *index );
 /*
  * DESCRIPTION :
@@ -175,9 +181,19 @@ int prompt_for_precision ( void )
    return answer;
 }
 
+int prompt_for_gamma ( double *regamma, double *imgamma )
+{
+   printf("Give the real part : "); scanf("%lf", regamma);
+   printf("Give the imaginary part : "); scanf("%lf", imgamma);
+
+   return 0;
+}
+
 int call_initialize_standard_homotopy ( int *index )
 {
    int fail,len,fixed;
+   double regamma = 0.0;
+   double imgamma = 0.0;
 
    fail = read_target_system_without_solutions();
    fail = read_standard_start_system();
@@ -186,7 +202,8 @@ int call_initialize_standard_homotopy ( int *index )
    printf("Number of start solutions : %d\n",len);
    printf("-> give index of solution : "); scanf("%d",index);
    printf("Fixed gamma constant ? (1 = yes/0 = no) "); scanf("%d",&fixed);
-   fail = initialize_standard_homotopy(fixed);
+   if(fixed != 1) fail = prompt_for_gamma(&regamma,&imgamma);
+   fail = initialize_standard_homotopy(fixed,regamma,imgamma);
    fail = initialize_standard_solution(*index);
 
    return fail;
@@ -195,6 +212,8 @@ int call_initialize_standard_homotopy ( int *index )
 int call_initialize_dobldobl_homotopy ( int *index )
 {
    int fail,len,fixed;
+   double regamma = 0.0;
+   double imgamma = 0.0;
 
    fail = read_dobldobl_target_system(); /* no _without_solutions ! */
    fail = read_dobldobl_start_system();
@@ -203,7 +222,8 @@ int call_initialize_dobldobl_homotopy ( int *index )
    printf("Number of start solutions : %d\n",len);
    printf("-> give index of solution : "); scanf("%d",index);
    printf("Fixed gamma constant ? (1 = yes/0 = no) "); scanf("%d",&fixed);
-   fail = initialize_dobldobl_homotopy(fixed);
+   if(fixed != 1) fail = prompt_for_gamma(&regamma,&imgamma);
+   fail = initialize_dobldobl_homotopy(fixed,regamma,imgamma);
    fail = initialize_dobldobl_solution(*index);
 
    return fail;
@@ -212,6 +232,8 @@ int call_initialize_dobldobl_homotopy ( int *index )
 int call_initialize_quaddobl_homotopy ( int *index )
 {
    int fail,len,fixed;
+   double regamma = 0.0;
+   double imgamma = 0.0;
 
    fail = read_quaddobl_target_system(); /* no _without_solutions ! */
    fail = read_quaddobl_start_system();
@@ -220,7 +242,8 @@ int call_initialize_quaddobl_homotopy ( int *index )
    printf("Number of start solutions : %d\n",len);
    printf("-> give index of solution : "); scanf("%d",index);
    printf("Fixed gamma constant ? (1 = yes/0 = no) "); scanf("%d",&fixed);
-   fail = initialize_quaddobl_homotopy(fixed);
+   if(fixed != 1) fail = prompt_for_gamma(&regamma,&imgamma);
+   fail = initialize_quaddobl_homotopy(fixed,regamma,imgamma);
    fail = initialize_quaddobl_solution(*index);
 
    return fail;
