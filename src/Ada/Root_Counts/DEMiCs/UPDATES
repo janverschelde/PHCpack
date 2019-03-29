@@ -1,3 +1,6 @@
+Fri 29 Mar 2019 : commented out the #include <sys/times.h> in global.h
+  as this was a problem for the mingw compiler.
+
 Fri 22 Mar 2019 : replaced srandom() by srand() and random() by rand() in
   reltab.cpp, simplex.cpp, and mvc.cpp.  Fixed bug in demics_algorithm.adb.
 
