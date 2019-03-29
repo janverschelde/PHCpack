@@ -227,6 +227,8 @@ the m-homogeneous and linear-product degree bounds are not computed,
 because the polyhedral homotopies are applied with pipelining,
 interlacing the production of the mixed cells on one thread
 with the solving of a random coefficient system with the other threads.
+To run on all available cores, call as ``phc -b -t``,
+omitting the number of tasks.
 
 The focus on ``-b`` is on isolated solutions.
 For a numerical irreducible decomposition of all solutions,
@@ -671,7 +673,11 @@ On :index:`multicore` computers,
 the solution of a random coefficient system
 with :index:`polyhedral homotopies` runs in parallel when calling phc with
 the option ``-t``.  For example, ``phc -m -t8`` will run the
-polyhedral path trackers with 8 tasks.  Since version 2.4.06,
+polyhedral path trackers with 8 tasks. 
+To run on all available cores, call as ``phc -m -t``,
+omitting the number of tasks.
+
+Since version 2.4.06,
 the mixed volume computation by the MixedVol algorithm
 (option 4 of ``phc -m``) is interlaced with the path tracking 
 in a heterogenous pipelined application of :index:`multitasking`.
@@ -1113,6 +1119,8 @@ makes that the blackbox solver uses 4 threads to solve the system.
 If there are at least 4 computational cores available,
 then the solver may finish its computations up to 4 times faster
 than a sequential run.
+To run on all available cores, call as ``phc -b -t``,
+omitting the number of tasks.
 
 With the time command, we can compare the wall clock time between
 a sequential run and a run with 16 tasks:
