@@ -4,7 +4,7 @@ package body Greeting_Banners is
 
   function Version return string is
 
-    res : constant string := "PHCv2.4.65 released 2019-02-28";
+    res : constant string := "PHCv2.4.66 released 2019-03-29";
 
   begin
     return res;
@@ -134,6 +134,7 @@ package body Greeting_Banners is
     put_line("To offset the extra cost of higher precision arithmetic,");
     put_line("multitasking can be applied, e.g.: as in phc -b4 -t8");
     put_line("to solve a system in quad double precision with 8 tasks.");
+    put_line("To use all available cores, type phc -b -t, without the #tasks.");
     new_line;
     put_line("The focus of phc -b is on isolated solutions and on systems");
     put_line("with as many equations as unknowns.  For more general systems"); 
@@ -412,6 +413,7 @@ package body Greeting_Banners is
     put_line("which has the same Newton polytopes as the start system.");
     put_line("If combined with '-t', followed by the number of tasks,");
     put_line("then multithreading is applied to solve the start system.");
+    put_line("To use all available cores, type phc -m -t, without the #tasks.");
   end help4mixvol;
 
   procedure help4symbols is
@@ -544,6 +546,7 @@ package body Greeting_Banners is
   procedure help4tasking is
   begin
     put_line("phc -t# computes with # tasks, for shared memory parallelism.");
+    put_line("To use all available cores, type phc -t, without the #tasks.");
     new_line;
     put_line("Because the solution paths in a polynomial homotopy can be");
     put_line("tracked independently from each other, the problem of tracking");

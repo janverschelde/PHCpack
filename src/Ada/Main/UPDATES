@@ -1,3 +1,6 @@
+Fri 29 Mar 2019 : updated greeting_banners for version 2.4.66 and added
+  some documentation lines on the use of all available cores.
+
 Sat 23 Mar 2019 : in dispatch.adb, used number of cores if the user does
   not provide the number of tasks at the command line.
 
