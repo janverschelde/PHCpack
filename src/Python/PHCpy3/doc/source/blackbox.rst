@@ -105,6 +105,15 @@ Other options of the solver are
    result in a speedup of close to a factor 4 if ``tasks=4`` is
    given as input argument of ``solve.``
 
+   If you do not know how many cores are available on your computer,
+   or if you want to double check, then you can obtain the number
+   of available cores as follows.
+
+   ::
+
+       >>> from phcpy.phcpy2c3 import py2c_corecount
+       >>> py2c_corecount()
+
 2. **precision**: by default the ``precision`` is set to ``d`` for
    standard hardware double precision.  While this precision may suffice,
    the blackbox solver supports two additional levels of precision:

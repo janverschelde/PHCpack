@@ -101,11 +101,20 @@ Below is a step-by-step installation procedure.
 
 2. Since version 0.6.4, the code depends on the quad double library QDlib,
    available at <http://crd-legacy.lbl.gov/~dhbailey/mpdist>.
+   Version 2.3.17 is available at <https://github.com/scibuilder/QD>.
 
    On Linux systems, make sure to compile and install the library
    with the option -fPIC.  When configuring, run configure as
    ``./configure CXX=/usr/bin/g++ CXXFLAGS='-fPIC -O3'`` to set the flags
    of the c++ compiler.
+
+   If you rather would not (or cannot) install QDlib, then it is possible
+   to compile the library in your home directory.  All you need is to be
+   aware of the location of the header files for the include statement
+   and you need the ``qdlib.a`` file for linking.
+   For an example, consider the makefile for Windows computers.
+   The ``makefile_windows`` builds ``phc.exe`` with the QD library
+   compiled in a home directory, not installed on the system.
 
 3. The source code directory of PHCpack contains the directory ``Objects``,
    a directory with file ``makefile`` in it.

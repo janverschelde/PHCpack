@@ -289,11 +289,19 @@ The code used to make the plot (using matplotlib) is below:
    fig.canvas.draw()
    ans = raw_input('hit return to exit')
 
-With *False* in
-*initialize_standard_tracker(p, q, False)*
-the option to generate a fixed gamma constant was turned off,
+With ``False`` in
+``initialize_standard_tracker(p, q, False)``
+the option to generate a fixed gamma constant is turned off,
 so rerunning the same code will generate other random constants
 and produce different plots.
+
+To set the value of the gamma constant to a specific value,
+e.g.: ``(-0.853618933016554-0.52089799116111j)``, do the following.
+
+::
+
+    gamma = (-0.853618933016554-0.52089799116111j)
+    initialize_standard_tracker(target, start, False, gamma.real, gamma.imag)
 
 solving with polyhedral homotopies
 ----------------------------------
