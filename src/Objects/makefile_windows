@@ -1,18 +1,32 @@
-# this is a makefile suitable for Windows platforms,
-# it uses a more basic timing facility
+# This is a makefile suitable for Windows 10 platforms,
+# it uses a more basic timing facility.
+# The makefile works for cygwin, but cygwin is only used in the making
+# of the executable "phc.exe".
+# The makefile defines the instructions for "make phc"
+# to build the executable "phc.exe" which is statically linked.
+# A Windows 10 users can then run "phc.exe" in a command prompt window,
+# cygwin is not needed for phc to run on Windows.
 
 gpp=g++
 # gpp=/cygdrive/c/tools/msys64/mingw64/bin/gcc
 gcc=/cygdrive/c/tools/msys64/mingw64/bin/gcc
 
 # The QD library is compiled in the folder where QD_ROOT refers to.
-# Configure the compilation of the QD library so that the g++ of
-# the gnu-ada compiler distribution is used.  Therefore do
-# ./configure CXX=c:/GNAT/2015/bin/g++
-# for the correct 'make' in the compilation of the QD library.
+# The QD library needs to be downloaded separately and installed in
+# the folder ../QD.
+# For the installation of QD do the following steps:
+# 0/ ./configure CXX=g++ FC=gfortran
+# 1/ cd src
+#    make
+# 2/ For some reason, libtool did not work.  Instead do
+#    ar cru -o libqd.a c_dd.o c_qd.o dd_real.o dd_const.o fpu.o qd_real.o qd_const.o util.o bits.o
+# ranlib libqd.a
+#   
+# The QD_ROOT and QD_LIB definitions below are used to locate
+# the include files and the libqd.a.
 
-QD_ROOT=../qd-2.3.14
-QD_LIB=../qd-2.3.14/src/.libs
+QD_ROOT=../QD/qd-2.3.17
+QD_LIB=../QD/qd-2.3.17/src/
 PHCAda=../Ada
 PHCLib=../LIB
 MPILib=../MPI
@@ -52,7 +66,8 @@ GNAT95FLAGS=-gnat95 -gnatv -O3 -gnatp
 
 phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
         inputData.o outputData.o iTest.o fTest.o reltab.o \
-        simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o
+        simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o \
+        parameter.o lib2path.o
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -61,11 +76,11 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatbind dispatch use_c2phc
 	gnatlink dispatch syscon.o solcon.o phcpack.o feedback.o \
-                 pieri_solver.o lib.a \
+                 pieri_solver.o lib.a parameter.o lib2path.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  get_clock.o get_clocks_per_sec.o corecount.o \
-              -o $(BIN)/phc -lm \
+                 $(QD_LIB)/libqd.a -o $(BIN)/phc -lm \
 --LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive"
 
 # Test program to see if compiler works, "hello world" :
