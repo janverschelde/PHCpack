@@ -1,3 +1,5 @@
+Fri 29 Mar 2019 : prepared files for version 0.9.4 of phcpy.
+
 Thu 28 Mar 2019 : added gamma constant as optional parameter to initialize
   the homotopies in the step-by-step path trackers in the trackers module,
   which changed the file tracker.py both in the PHCpy2 and PHCpy3 folders.
