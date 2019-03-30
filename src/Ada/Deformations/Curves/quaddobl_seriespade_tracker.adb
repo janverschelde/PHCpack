@@ -203,17 +203,18 @@ package body QuadDobl_SeriesPade_Tracker is
     t : constant double_float
       := hihi_part(QuadDobl_Complex_Numbers.REAL_PART(current.t));
     nbrit : natural32 := 0;
+    extra : constant natural32 := homconpars.corsteps;
     err,rco,res : double_float;
 
   begin
     if verbose then
       Homotopy_Newton_Steps.Correct
         (standard_output,nbeqs,t,homconpars.tolres,homconpars.corsteps,nbrit,
-         current.v,err,rco,res,fail,true);
+         current.v,err,rco,res,fail,extra,true);
     else
       Homotopy_Newton_Steps.Correct
         (nbeqs,t,homconpars.tolres,homconpars.corsteps,nbrit,
-         current.v,err,rco,res,fail);
+         current.v,err,rco,res,fail,extra);
     end if;
     current.err := Quad_Double_Numbers.Create(err);
     current.rco := Quad_Double_Numbers.Create(rco);

@@ -121,17 +121,20 @@ package Homotopy_Newton_Steps is
               ( nq : in integer32; t,tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
-                err,rco,res : out double_float; fail : out boolean );
+                err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0 );
   procedure Correct
               ( nq : in integer32; t,tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
-                err,rco,res : out double_float; fail : out boolean );
+                err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0 );
   procedure Correct
               ( nq : in integer32; t,tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out double_float; fail : out boolean );
+                err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method to correct the solution, silent version,
@@ -147,7 +150,8 @@ package Homotopy_Newton_Steps is
   --   t        current value of the continuation parameter;
   --   tolres   tolerance on the residual, stops when res <= tolres;
   --   maxit    maximum number of steps done with Newton's method;
-  --   sol      predicted value for the solution.
+  --   sol      predicted value for the solution;
+  --   extra    number of extra steps done as long as err goes down.
 
   -- ON RETURN :
   --   nbrit    number of iterations done;
@@ -165,6 +169,7 @@ package Homotopy_Newton_Steps is
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := false );
   procedure Correct
               ( file : in file_type;
@@ -172,6 +177,7 @@ package Homotopy_Newton_Steps is
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := false );
   procedure Correct
               ( file : in file_type;
@@ -179,6 +185,7 @@ package Homotopy_Newton_Steps is
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -196,6 +203,7 @@ package Homotopy_Newton_Steps is
   --   tolres   tolerance on the residual, stops when res <= tolres;
   --   maxit    maximum number of steps to do with Newton's method;
   --   sol      predicted value for the solution;
+  --   extra    number of extra steps done as long as err goes down.
   --   verbose  to indicate that extra output is wanted.
 
   -- ON RETURN :
@@ -213,19 +221,22 @@ package Homotopy_Newton_Steps is
                 t,tolres : in double_float;
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
-                err,rco,res : out double_float; fail : out boolean );
+                err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0 );
   procedure Correct
               ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 t,tolres : in double_float; 
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
-                err,rco,res : out double_float; fail : out boolean );
+                err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0 );
   procedure Correct
               ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 t,tolres : in double_float; 
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out double_float; fail : out boolean );
+                err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method to correct the solution, silent version,
@@ -242,6 +253,7 @@ package Homotopy_Newton_Steps is
   --   t        current value of the continuation parameter;
   --   tolres   tolerance on the residual, stops when res <= tolres;
   --   maxit    maximum number of steps done with Newton's method;
+  --   extra    number of extra steps done as long as err goes down.
   --   sol      predicted value for the solution.
 
   -- ON RETURN :
@@ -261,6 +273,7 @@ package Homotopy_Newton_Steps is
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := false );
   procedure Correct
               ( file : in file_type;
@@ -269,6 +282,7 @@ package Homotopy_Newton_Steps is
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := false );
   procedure Correct
               ( file : in file_type;
@@ -277,6 +291,7 @@ package Homotopy_Newton_Steps is
                 maxit : in natural32; nbrit : out natural32;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
                 err,rco,res : out double_float; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -296,6 +311,7 @@ package Homotopy_Newton_Steps is
   --   tolres   tolerance on the residual, stops when res <= tolres;
   --   maxit    maximum number of steps to do with Newton's method;
   --   sol      predicted value for the solution;
+  --   extra    number of extra steps done as long as err goes down.
   --   verbose  to indicate that extra output is wanted.
 
   -- ON RETURN :

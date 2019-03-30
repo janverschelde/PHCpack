@@ -1,3 +1,7 @@
+Sat 20 Mar 2019 : to the correctors in homotopy_newton_steps, added the 
+  extra parameter, to allow for possible extra corrector steps.
+  This changed series_and_trackers.adb and *seriespade_tracker.adb.
+
 Thu 28 Mar 2019 : fixed a bug in series_and_trackers.adb, allowing for
   smaller step sizes than alpha, ignored corrector failures, and toggled
   off the Hessian step size, for path 155 of cyclic 11-roots which takes
