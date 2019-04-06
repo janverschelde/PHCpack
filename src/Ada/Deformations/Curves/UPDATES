@@ -1,3 +1,6 @@
+Sat 6 Apr 2019 : in black_box_univariate_solvers.adb, set the t-value in
+  the returned solutions to 0.0 instead of to 1.0.
+
 Sat 20 Mar 2019 : to the correctors in homotopy_newton_steps, added the 
   extra parameter, to allow for possible extra corrector steps.
   This changed series_and_trackers.adb and *seriespade_tracker.adb.

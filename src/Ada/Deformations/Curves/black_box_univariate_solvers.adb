@@ -19,7 +19,6 @@ with Multprec_Complex_Vectors_io;      use Multprec_Complex_Vectors_io;
 with Standard_Random_Vectors;          use Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;          use DoblDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;          use QuadDobl_Random_Vectors;
-with Multprec_Random_Vectors;          use Multprec_Random_Vectors;
 with Multprec_Complex_Vector_Tools;
 with Standard_Complex_Polynomials_io;  use Standard_Complex_Polynomials_io;
 with DoblDobl_Complex_Polynomials_io;  use DoblDobl_Complex_Polynomials_io;
@@ -47,7 +46,7 @@ package body Black_Box_Univariate_Solvers is
     sol : Solution(1);
 
   begin
-    sol.t := Standard_Complex_Numbers.Create(1.0);
+    sol.t := Standard_Complex_Numbers.Create(0.0);
     sol.m := 1;
     sol.v(1) := z;
     sol.err := 0.0;
@@ -67,7 +66,7 @@ package body Black_Box_Univariate_Solvers is
     sol : Solution(1);
 
   begin
-    sol.t := DoblDobl_Complex_Numbers.Create(integer(1));
+    sol.t := DoblDobl_Complex_Numbers.Create(integer(0));
     sol.m := 1;
     sol.v(1) := z;
     sol.err := Double_Double_Numbers.create(0.0);
@@ -87,7 +86,7 @@ package body Black_Box_Univariate_Solvers is
     sol : Solution(1);
 
   begin
-    sol.t := QuadDobl_Complex_Numbers.Create(integer(1));
+    sol.t := QuadDobl_Complex_Numbers.Create(integer(0));
     sol.m := 1;
     sol.v(1) := z;
     sol.err := Quad_Double_Numbers.create(0.0);
@@ -107,7 +106,7 @@ package body Black_Box_Univariate_Solvers is
     sol : Solution(1);
 
   begin
-    sol.t := Multprec_Complex_Numbers.Create(integer(1));
+    sol.t := Multprec_Complex_Numbers.Create(integer(0));
     sol.m := 1;
     Multprec_Complex_Numbers.Copy(z,sol.v(1));
     sol.err := Multprec_Floating_Numbers.create(0.0);
@@ -129,7 +128,7 @@ package body Black_Box_Univariate_Solvers is
 
   begin
     for i in z'range loop
-      sol.t := Standard_Complex_Numbers.Create(1.0);
+      sol.t := Standard_Complex_Numbers.Create(0.0);
       sol.m := 1;
       sol.v(1) := z(i);
       sol.err := err(i);
@@ -152,7 +151,7 @@ package body Black_Box_Univariate_Solvers is
 
   begin
     for i in z'range loop
-      sol.t := DoblDobl_Complex_Numbers.Create(integer(1));
+      sol.t := DoblDobl_Complex_Numbers.Create(integer(0));
       sol.m := 1;
       sol.v(1) := z(i);
       sol.err := Double_Double_Numbers.create(err(i));
@@ -175,7 +174,7 @@ package body Black_Box_Univariate_Solvers is
 
   begin
     for i in z'range loop
-      sol.t := QuadDobl_Complex_Numbers.Create(integer(1));
+      sol.t := QuadDobl_Complex_Numbers.Create(integer(0));
       sol.m := 1;
       sol.v(1) := z(i);
       sol.err := Quad_Double_Numbers.create(err(i));
@@ -198,7 +197,7 @@ package body Black_Box_Univariate_Solvers is
 
   begin
     for i in z'range loop
-      sol.t := Multprec_Complex_Numbers.Create(integer(1));
+      sol.t := Multprec_Complex_Numbers.Create(integer(0));
       sol.m := 1;
       Multprec_Complex_Numbers.Copy(z(i),sol.v(1));
       Multprec_Floating_Numbers.Copy(err(i),sol.err);
@@ -427,7 +426,7 @@ package body Black_Box_Univariate_Solvers is
               return Multprec_Complex_Vectors.Vector is
 
     res : Multprec_Complex_Vectors.Vector(first..last);
-    stc : Standard_Complex_Vectors.Vector(first..last)
+    stc : constant Standard_Complex_Vectors.Vector(first..last)
         := Random_Vector(first,last);
     mpre,mpim : Multprec_Floating_Numbers.Floating_Number;
 
@@ -470,6 +469,7 @@ package body Black_Box_Univariate_Solvers is
     Silent_Durand_Kerner(cp,z,r,max,eps,nb,fail);
     Newton(cp,dcp,z,err,rco,res);
     sols := Create_Solution_List(z,err,rco,res);
+    Multprec_Floating_Numbers.Clear(eps);
     Multprec_Complex_Vectors.Clear(z);
     Multprec_Complex_Vectors.Clear(r);
   end Multprec_Find_Roots;
@@ -582,6 +582,7 @@ package body Black_Box_Univariate_Solvers is
     Write_Results(file,nb,z,r);
     Newton(cp,dcp,z,err,rco,res);
     sols := Create_Solution_List(z,err,rco,res);
+    Multprec_Floating_Numbers.Clear(eps);
     Multprec_Complex_Vectors.Clear(z);
     Multprec_Complex_Vectors.Clear(r);
   end Multprec_Find_Roots;
