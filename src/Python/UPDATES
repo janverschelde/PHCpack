@@ -1,3 +1,6 @@
+Sun 7 Apr 2019 : added the script wilkinson.py to the examples folder of
+  PHCpy2, to run a polynomial homotopy on the Wilkinson polynomials.
+
 Fri 29 Mar 2019 : prepared files for version 0.9.4 of phcpy.
 
 Thu 28 Mar 2019 : added gamma constant as optional parameter to initialize
