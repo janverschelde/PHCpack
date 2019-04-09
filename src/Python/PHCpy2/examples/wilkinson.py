@@ -46,7 +46,11 @@ def track(pol):
     if(ans == 'y'):
         sols = standard_next_track([pol], startpol, startsols, True)
     else:
-        sols = standard_track([pol], startpol, startsols)
+        sols = standard_track([pol], startpol, startsols, \
+                              filename="/tmp/outoftrack", verbose=True)
+    print 'the computed solutions :'
+    for sol in sols:
+        print sol
 
 def main():
     """

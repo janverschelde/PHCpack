@@ -1,3 +1,5 @@
+Tue 9 Apr 2019 : to wilkinson.py added print of solutions at the end.
+
 Sun 7 Apr 2019 : added the script wilkinson.py to the examples folder of
   PHCpy2, to run a polynomial homotopy on the Wilkinson polynomials.
 
