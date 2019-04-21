@@ -25,15 +25,6 @@ procedure Driver_for_Winding_Numbers
              ( file : in file_type; p : in Poly_Sys;
                sols : in out Solution_List ) is
 
-  ls : String_Splitters.Link_to_Array_of_Strings := null;
-  infile : file_type;
-  timer : timing_widget;
-  pp,q : Poly_Sys(p'range);
-  proj : boolean := false;
-  target : Complex_Number;
-  ans : character;
-  oc,deci,max_wc : natural32 := 0;
-
   procedure Write_Statistics_and_Condition
                 ( file : in file_type; i : in integer32;
                   nstep,nfail,niter,nsyst : in natural32;
@@ -84,52 +75,70 @@ procedure Driver_for_Winding_Numbers
 
   begin
     for i in sa'range loop
-      if AbsVal(Create(1.0) - sa(i).sol.t) > epslop
-       then
-         CCont2(file,sa(i),target,tol,epslop,wc,mwc,sum,allsum,false,pen,cen);
-         sa(i).sol.m := integer32(wc);
-         sa(i).sol.v := allsum;
-         sa(i).sol.t := target;
-         Write_Statistics_and_Condition
-           (file,i,sa(i).nstep,sa(i).nfail,sa(i).niter,sa(i).nsyst,sa(i).rcond);
-         put(file,sa(i).sol.all);
+      if AbsVal(Create(1.0) - sa(i).sol.t) > epslop then
+        CCont2(file,sa(i),target,tol,epslop,wc,mwc,sum,allsum,false,pen,cen);
+        sa(i).sol.m := integer32(wc);
+        sa(i).sol.v := allsum;
+        sa(i).sol.t := target;
+        Write_Statistics_and_Condition
+          (file,i,sa(i).nstep,sa(i).nfail,sa(i).niter,sa(i).nsyst,sa(i).rcond);
+        put(file,sa(i).sol.all);
       end if;
     end loop;
     Clear(sols);
     sols := Shallow_Create(sa);
   end Winding_Numbers;
 
+  procedure Main is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the parameters,
+  --   constructs the homotopy and then tracks the paths.
+
+    ls : String_Splitters.Link_to_Array_of_Strings := null;
+    infile : file_type;
+    timer : timing_widget;
+    pp,q : Poly_Sys(p'range);
+    proj : boolean := false;
+    target : Complex_Number;
+    ans : character;
+    oc,deci,max_wc : natural32 := 0;
+
+  begin
+   -- READING MAXIMUM WINDING NUMBER :
+    new_line;
+    put("Give the maximum winding number : "); Read_Natural(max_wc);
+   -- READING THE START SYSTEM :
+    new_line;
+    put_line("Reading the name of the file for start system.");
+    Read_Name_and_Open_File(infile); get(infile,q);
+    new_line;
+    put_line(file,"THE START SYSTEM :");
+    new_line(file); put(file,q); new_line(file);
+   -- CONSTRUCTING THE HOMOTOPY AND TUNING OF PARAMETERS :
+    Copy(p,pp);
+    Driver_for_Homotopy_Construction(file,ls,pp,q,sols,target,deci);
+    proj := (Number_of_Unknowns(q(q'first)) > natural32(q'last));
+    Driver_for_Continuation_Parameters(file);
+    new_line;
+    put("Do you want intermediate output during continuation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Driver_for_Process_io(file,oc);
+    end if;
+   -- COMPUTATION OF WINDING NUMBERS :
+    new_line;
+    put_line("No more input desired.  Computing winding numbers ...");
+    put_line("The program can now run in the background.");
+    new_line;
+    tstart(timer);
+    Winding_Numbers(file,sols,proj,target,max_wc);
+    tstop(timer);
+    new_line(file);
+    print_times(file,timer,"computation of winding numbers");
+    new_line(file);
+  end Main;
+
 begin
- -- READING MAXIMUM WINDING NUMBER :
-  new_line;
-  put("Give the maximum winding number : "); Read_Natural(max_wc);
- -- READING THE START SYSTEM :
-  new_line;
-  put_line("Reading the name of the file for start system.");
-  Read_Name_and_Open_File(infile); get(infile,q);
-  new_line;
-  put_line(file,"THE START SYSTEM :");
-  new_line(file); put(file,q); new_line(file);
- -- CONSTRUCTING THE HOMOTOPY AND TUNING OF PARAMETERS :
-  Copy(p,pp);
-  Driver_for_Homotopy_Construction(file,ls,pp,q,sols,target,deci);
-  proj := (Number_of_Unknowns(q(q'first)) > natural32(q'last));
-  Driver_for_Continuation_Parameters(file);
-  new_line;
-  put("Do you want intermediate output during continuation ? (y/n) ");
-  Ask_Yes_or_No(ans);
-  if ans = 'y'
-   then Driver_for_Process_io(file,oc);
-  end if;
- -- COMPUTATION OF WINDING NUMBERS :
-  new_line;
-  put_line("No more input desired.  Computing winding numbers ...");
-  put_line("The program can now run in the background.");
-  new_line;
-  tstart(timer);
-  Winding_Numbers(file,sols,proj,target,max_wc);
-  tstop(timer);
-  new_line(file);
-  print_times(file,timer,"computation of winding numbers");
-  new_line(file);
+  Main;
 end Driver_for_Winding_Numbers;

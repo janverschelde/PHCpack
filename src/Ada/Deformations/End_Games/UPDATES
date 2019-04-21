@@ -1,3 +1,5 @@
+Sun 21 Apr 2019 : reformatted code in driver_for_winding_numbers.adb.
+
 Mon 29 Feb 2016 : drivers_for_path_directions.adb changed for added
   parameter in dobldobl_incfix_continuation.
 

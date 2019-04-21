@@ -1,4 +1,4 @@
-Polyhedral end games for polynomial homotopies in PHCv2.4.13
+Polyhedral end games for polynomial homotopies in PHCv2.4.67
 
 This directory was isolated in version 2.3.75 for clarity.
 New in release 2.3 is Newton's method with deflation for singularities
