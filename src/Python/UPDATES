@@ -1,3 +1,6 @@
+Wed 8 May 2019 : improved the pylint score of the solutions module for
+  the Python3 version.
+
 Tue 9 Apr 2019 : to wilkinson.py added print of solutions at the end.
 
 Sun 7 Apr 2019 : added the script wilkinson.py to the examples folder of

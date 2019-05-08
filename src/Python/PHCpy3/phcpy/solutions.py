@@ -1,5 +1,5 @@
 """
-The module solutions exports functions to convert list of 
+The module solutions exports functions to convert list of
 PHCpack solution strings into Python dictionaries.
 """
 
@@ -47,7 +47,7 @@ def string_complex(scn):
     realimag = stripped.split(' ')
     realpart = realimag[0].replace('E', 'e')
     imagpart = realimag[len(realimag)-1].replace('E', 'e')
-    if(imagpart[0] == '-'):
+    if imagpart[0] == '-':
         result = '(' + realpart + imagpart + 'j)'
     else:
         result = '(' + realpart + '+' + imagpart + 'j)'
@@ -135,12 +135,12 @@ def strsol2dict(sol, precision='d'):
     result['err'] = err
     result['rco'] = rco
     result['res'] = res
-    if(precision == 'd'):
+    if precision == 'd':
         (var, val) = coordinates(sol)
     else:
         (var, val) = string_coordinates(sol)
-    for i in range(len(var)):
-        result[var[i]] = val[i]
+    for idx, name in enumerate(var):
+        result[name] = val[idx]
     return result
 
 def formdictlist(sols, precision='d'):
@@ -177,7 +177,7 @@ def numerals(dsol):
     Given the dictionary format of a solution *dsol*,
     returns the list of numeric values of the variables in the solution.
     """
-    names = variables(dsol) 
+    names = variables(dsol)
     return [dsol[name] for name in names]
 
 def evaluate_polynomial(pol, dsol):
@@ -185,17 +185,15 @@ def evaluate_polynomial(pol, dsol):
     Evaluates the polynomial *pol* at the solution
     dictionary *dsol* by string substitution.
     """
-    from ast import literal_eval
     varsd = variables(dsol)
     rpol = pol
     rpol = rpol.replace('i', 'j')
     rpol = rpol.replace('E', 'e')
     rpol = rpol.replace('^', '**')
-    j = complex(0, 1) # j is used in literal_eval(result)
     for varname in varsd:
         xre = '%+.17f' % dsol[varname].real
         xim = '%+.17f' % dsol[varname].imag
-        value = '(' + xre + xim + '*j)'
+        value = '(' + xre + xim + 'j)'
         rpol = rpol.replace(varname, value)
     result = rpol[:-1]
     return eval(result)
@@ -216,7 +214,7 @@ def make_solution(names, values, \
     Makes the string representation in PHCpack format
     with in *names* a list of strings for the variables names
     and in *values* a list of (complex) values for the coordinates.
-    For example: 
+    For example:
 
     s = make_solution(['x','y'],[(1+2j), 3])
 
@@ -253,17 +251,17 @@ def make_solution(names, values, \
     mstr = 'm : %d\n' % multiplicity
     result = result + mstr
     result = result + 'the solution for t :\n'
-    for k in range(len(names)):
-        result = result + ' ' + names[k] + ' : '
-        if isinstance(values[k], complex):
-            c_re = '%.15E' % values[k].real
-            c_im = '%.15E' % values[k].imag
+    for idx, name in enumerate(names):
+        result = result + ' ' + name + ' : '
+        if isinstance(values[idx], complex):
+            c_re = '%.15E' % values[idx].real
+            c_im = '%.15E' % values[idx].imag
             result = result + c_re + '  ' + c_im + '\n'
-        elif isinstance(values[k], float):
-            flt = '%.15E' % values[k]
+        elif isinstance(values[idx], float):
+            flt = '%.15E' % values[idx]
             result = result + flt + '  ' + '0.0' + '\n'
-        elif isinstance(values[k], int):
-            i = '%.15E' % values[k]
+        elif isinstance(values[idx], int):
+            i = '%.15E' % values[idx]
             result = result + i + '  ' + '0.0' + '\n'
         else:
             print('wrong type for coordinate value')
@@ -278,7 +276,7 @@ def is_real(sol, tol):
     to the given tolerance *tol*: if the absolute value of the imaginary
     part of all coordinates are less than *tol*.
     """
-    (vars, vals) = coordinates(sol)
+    (_, vals) = coordinates(sol)
     for value in vals:
         if abs(value.imag) > tol:
             return False
@@ -380,14 +378,14 @@ def filter_zero_coordinates(sols, varname, tol, oper):
 
 def is_vanishing(sol, tol):
     r"""
-    Given in *sol* is a solution string and 
+    Given in *sol* is a solution string and
     *tol* is the tolerance on the residual.
     Returns True if the residual of *sol*
     is less than or equal to *tol*.
     Returns False otherwise.
     """
     dgn = diagnostics(sol)
-    return (dgn[2] <= tol)
+    return dgn[2] <= tol
 
 def filter_vanishing(sols, tol):
     r"""
