@@ -1,5 +1,5 @@
 """
-The module solution exports function to convert list of PHCpack 
+The module solution exports function to convert list of PHCpack
 solution strings into Python dictionaries.
 """
 
@@ -52,7 +52,7 @@ def string_complex(scn):
     else:
         result = '(' + realpart + '+' + imagpart + 'j)'
     return result
-    
+
 def coordinates(sol):
     r"""
     Returns the coordinates of the solution
@@ -177,7 +177,7 @@ def numerals(dsol):
     Given the dictionary format of a solution *dsol*,
     returns the list of numeric values of the variables in the solution.
     """
-    names = variables(dsol) 
+    names = variables(dsol)
     return [dsol[name] for name in names]
 
 def evaluate_polynomial(pol, dsol):
@@ -185,17 +185,16 @@ def evaluate_polynomial(pol, dsol):
     Evaluates the polynomial *pol* at the solution
     dictionary *dsol* by string substitution.
     """
-    from ast import literal_eval
+    j = complex(0, 1) # needed for the eval()
     varsd = variables(dsol)
     rpol = pol
     rpol = rpol.replace('i', 'j')
     rpol = rpol.replace('E', 'e')
     rpol = rpol.replace('^', '**')
-    j = complex(0, 1) # j is used in eval(result)
     for varname in varsd:
         xre = '%+.17f' % dsol[varname].real
         xim = '%+.17f' % dsol[varname].imag
-        value = '(' + xre + xim + '*j)'
+        value = '(' + xre + xim + '*1j)'
         rpol = rpol.replace(varname, value)
     result = rpol[:-1]
     return eval(result)
@@ -278,7 +277,7 @@ def is_real(sol, tol):
     to the given tolerance tol: if the absolute value of the imaginary
     part of all coordinates are less than *tol*.
     """
-    (vars, vals) = coordinates(sol)
+    (_, vals) = coordinates(sol)
     for value in vals:
         if abs(value.imag) > tol:
             return False
@@ -380,7 +379,7 @@ def filter_zero_coordinates(sols, varname, tol, oper):
 
 def is_vanishing(sol, tol):
     r"""
-    Given in *sol* is a solution string and 
+    Given in *sol* is a solution string and
     *tol* is the tolerance on the residual.
     Returns True if the residual of *sol*
     is less than or equal to *tol*.
@@ -406,9 +405,9 @@ def test():
     solves it, converts the solutions,
     and then sums the multiplicities.
     """
-    import solver
-    pols = solver.random_trinomials()
-    sols = solver.solve(pols)
+    from phcpy.solver import random_trinomials, solve
+    pols = random_trinomials()
+    sols = solve(pols)
     dsols = [strsol2dict(sol) for sol in sols]
     mult = 0
     s0d = strsol2dict(sols[0])

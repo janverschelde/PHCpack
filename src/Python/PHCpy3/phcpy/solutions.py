@@ -185,6 +185,7 @@ def evaluate_polynomial(pol, dsol):
     Evaluates the polynomial *pol* at the solution
     dictionary *dsol* by string substitution.
     """
+    j = complex(0, 1) # needed for eval(result) in test()
     varsd = variables(dsol)
     rpol = pol
     rpol = rpol.replace('i', 'j')
