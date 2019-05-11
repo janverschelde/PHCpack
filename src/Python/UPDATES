@@ -1,3 +1,6 @@
+Sat 11 May 2019 : prompted user for verbose option in the test_solve()
+  of the factor module, both for python2 and python3.
+
 Wed 8 May 2019 : improved the pylint score of the solutions module for
   the Python3 version.  Also imported the python2 solutions module and
   added the j = complex(0, 1) definition back in for the test().

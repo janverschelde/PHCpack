@@ -728,11 +728,16 @@ def test_solve():
     """
     Runs a test on the solve() function.
     """
-    pols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
-            '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
-            '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
-            '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
-    deco = solve(4, 3, pols)
+    testpols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
+                '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
+                '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
+                '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
+    ans = input('Verbose ? (y/n) ')
+    vrb = (ans == 'y')
+    deco = solve(nvr=4, dim=3, pols=testpols, verbose=vrb)
+    if not vrb:
+        print('the decomposition :')
+        write_decomposition(deco)
 
 def test_polysys_solve():
     """

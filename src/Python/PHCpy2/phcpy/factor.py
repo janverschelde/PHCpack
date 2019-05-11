@@ -455,12 +455,12 @@ def write_decomposition(deco):
     for dim in dims:
         if dim > 0:
             (pols, sols, fact) = deco[dim]
-            print('the factorization at dimension', dim, \
-                ' #components :', len(fact))
+            print 'the factorization at dimension', dim, \
+                ' #components :', len(fact)
             print(fact)
         else:
             (pols, sols) = deco[dim]
-            print('the number of isolated solutions :', len(sols))
+            print 'the number of isolated solutions :', len(sols)
 
 def solve(nvr, dim, pols, islaurent=False, \
     precision='d', tasks=0, nbloops=20, \
@@ -728,11 +728,16 @@ def test_solve():
     """
     Runs a test on the solve() function.
     """
-    pols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
-            '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
-            '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
-            '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
-    deco = solve(4, 3, pols)
+    testpols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
+                '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
+                '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
+                '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
+    ans = raw_input('Verbose ? (y/n) ')
+    vrb = (ans == 'y')
+    deco = solve(nvr=4, dim=3, pols=testpols, verbose=vrb)
+    if not vrb:
+        print 'the decomposition :'
+        write_decomposition(deco)
 
 def test_polysys_solve():
     """
