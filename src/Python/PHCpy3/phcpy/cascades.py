@@ -490,11 +490,13 @@ def test_run_cascade():
     """
     Runs the cascade on a list of polynomials.
     """
-    pols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
-            '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
-            '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
-            '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
-    deco = run_cascade(4, 3, pols)
+    testpols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
+                '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
+                '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
+                '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
+    ans = input('Verbose ? (y/n) ')
+    vrb = (ans == 'y')
+    deco = run_cascade(nvr=4, dim=3, pols=testpols, verbose=vrb)
     dims = list(deco.keys())
     dims.sort(reverse=True)
     for dim in dims:
