@@ -1,3 +1,6 @@
+Sat 11 May 2019 : fixed bug in phcpy2c2.c in py2c_witset_standard_ismember,
+  one too few input integer declared.
+
 Thu 28 Mar 2019 : added the real and imaginary parts of the gamma parameter
   to initialize the homotopy in next_track, in phcpy2c.h, phcpy2c2.c, and
   phcpy2c3.c to improve the Python first step-by-step tracker.

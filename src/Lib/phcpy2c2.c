@@ -6873,7 +6873,7 @@ static PyObject *py2c_witset_standard_ismember
    char *p;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
+   if(!PyArg_ParseTuple(args,"iiiiidds",&v,&nbtasks,&n,&d,&m,&r,&h,&p))
       return NULL;
    fail = standard_homotopy_ismember(v,n,d,m,p,r,h,&onp,&ins,nbtasks);
 
