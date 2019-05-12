@@ -943,7 +943,7 @@ function use_solcon ( job : integer32;
    -- put_line("The string received in Job 38 : "); put_line(sv);
     Standard_Solution_Strings.Parse(sv,ind,nv,sol,fail);
    -- put_line("The parsed solution : ");
-    Standard_Complex_Solutions_io.put(sol);
+   -- Standard_Complex_Solutions_io.put(sol);
     if fail then
      -- put_line("Failure occurred !");
       return 208;
