@@ -591,6 +591,12 @@ global optimization, and computational physics:
    *American Institute of Aeronautics and Astronautics Guidance, Navigation,
    and Control Conference*, Toronto, Canada, 02-05 August 2010.
 
+#. Yoni Kasten, Meirav Galun, Ronen Basri:
+   **Resultant Based Incremental Recovery of Camera Pose from Pairwise 
+   Matches**.
+   *2019 IEEE Winter Conference on Applications of Computer Vision (WACV)*,
+   Waikoloa Village, HI, USA, 7-11 January 2019, pages 1080-1088, IEEE 2019.
+
 #. Dimitra Kosta and Kaie Kubjas:
    **Maximum Likelihood Estimation of Symmetric Group-Based Models 
    via Numerical Algebraic Geometry**.
@@ -901,7 +907,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-110. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+111. Ali Baharev, Ferenc Domes, Arnold Neumaier:
      **A robust approach for finding all well-separated solutions of
      sparse systems of nonlinear equations**.
      *Numerical Algorithms* 76:163-189, 2017.
@@ -1006,7 +1012,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-132. Bo Dong, Bo Yu, and Yan Yu:
+133. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -1025,7 +1031,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-135. B. Sturmfels:
+136. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
