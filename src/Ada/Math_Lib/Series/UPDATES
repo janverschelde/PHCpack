@@ -1,3 +1,6 @@
+Sun 12 May 2019 : new package standard_complex_series_transforms to
+  transform series so their coefficients are bounded by one in modulus.
+
 Fri 4 Jan 2019 : added deep_clear to standard_cseries_vector_functions,
   and also to the dobldobl and quaddobl versions.
 

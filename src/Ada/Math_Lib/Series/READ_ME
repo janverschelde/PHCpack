@@ -1,4 +1,4 @@
-Truncated power series with complex coefficients for PHCv2.4.63
+Truncated power series with complex coefficients for PHCv2.4.67
 
 Similar to Taylor series approximations for general functions,
 we can approximate roots of polynomials in a parameter by series.
@@ -45,6 +45,7 @@ quaddobl_complex_series_norms      : conjugates and norms of quaddobl series
 standard_complex_series_functions  : evaluate and shift standard series
 dobldobl_complex_series_functions  : evaluate and shift dobldobl series
 quaddobl_complex_series_functions  : evaluate and shift quaddobl series
+standard_complex_series_transforms : coefficient modulus transformations
 ts_cseries                         : test on 3rd version of series
 ------------------------------------------------------------------------------
 standard_complex_series_ring       : ring of series in double precision
