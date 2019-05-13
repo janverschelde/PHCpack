@@ -1,3 +1,6 @@
+Mon 13 May 2019 : added double double and quad double versions of the
+  packages to compute coefficient modulus transforms on series.
+
 Sun 12 May 2019 : new package standard_complex_series_transforms to
   transform series so their coefficients are bounded by one in modulus.
 

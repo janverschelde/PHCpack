@@ -1,22 +1,22 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
-with Standard_Complex_Series;           use Standard_Complex_Series;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Series;           use DoblDobl_Complex_Series;
 
-package Standard_Complex_Series_Transforms is
+package DoblDobl_Complex_Series_Transforms is
 
 -- DESCRIPTION :
 --   If the coefficients of a series s(t) grow too large,
 --   then with the transform t = c*t, for the proper value of c,
 --   the coefficients of s(c*t) become all smaller in modulus than one.
---   The operations, which run in standard double precision, 
+--   The operations, which run in double double precision, 
 --   compute the proper value of the factor c and then
 --   transform the coefficient of the series 
 --   so all coefficients have modulus one or less.
 
   procedure Maximum_Coefficient_Modulus
               ( s : in Series;
-                idx : out integer32; maxcff : out double_float );
+                idx : out integer32; maxcff : out double_double );
 
   -- DESCRIPTION :
   --   Gives a series of degree s.deg > 1, returns the index of the
@@ -34,7 +34,7 @@ package Standard_Complex_Series_Transforms is
 
   procedure Coefficient_Modulus_Transform
               ( s : in out Series;
-                idx : in integer32; maxcff : in double_float );
+                idx : in integer32; maxcff : in double_double );
 
   -- DESCRIPTION :
   --   Transforms the coefficients of the series s using the index idx
@@ -49,12 +49,12 @@ package Standard_Complex_Series_Transforms is
   --   s        coefficients of power k are divided by c^k,
   --            where c = maxcff**(1.0/idx).
 
-  function Scale ( s : Standard_Complex_Series.Series;
-                   c : double_float )
-                 return Standard_Complex_Series.Series;
-  function Scale ( s : Standard_Complex_Series.Series;
+  function Scale ( s : DoblDobl_Complex_Series.Series;
+                   c : double_double )
+                 return DoblDobl_Complex_Series.Series;
+  function Scale ( s : DoblDobl_Complex_Series.Series;
                    c : Complex_Number )
-                 return Standard_Complex_Series.Series;
+                 return DoblDobl_Complex_Series.Series;
 
   -- DESCRIPTION :
   --   Returns the series s(c*t).
@@ -65,4 +65,4 @@ package Standard_Complex_Series_Transforms is
   --   Transforms the coefficients in s so their modulus is one or less,
   --   using the procedure Coefficient_Modulus_Transform.
 
-end Standard_Complex_Series_Transforms;
+end DoblDobl_Complex_Series_Transforms;

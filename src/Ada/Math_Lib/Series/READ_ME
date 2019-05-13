@@ -46,6 +46,8 @@ standard_complex_series_functions  : evaluate and shift standard series
 dobldobl_complex_series_functions  : evaluate and shift dobldobl series
 quaddobl_complex_series_functions  : evaluate and shift quaddobl series
 standard_complex_series_transforms : coefficient modulus transformations
+dobldobl_complex_series_transforms : dd coefficient modulus transformations
+quaddobl_complex_series_transforms : qd coefficient modulus transformations
 ts_cseries                         : test on 3rd version of series
 ------------------------------------------------------------------------------
 standard_complex_series_ring       : ring of series in double precision

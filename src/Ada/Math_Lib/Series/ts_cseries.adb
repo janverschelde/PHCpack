@@ -37,6 +37,9 @@ with DoblDobl_Complex_Series_Norms;
 with DoblDobl_Complex_Series_Functions;
 with QuadDobl_Complex_Series_Norms;
 with QuadDobl_Complex_Series_Functions;
+with Standard_Complex_Series_Transforms;
+with DoblDobl_Complex_Series_Transforms;
+with QuadDobl_Complex_Series_Transforms;
 
 procedure ts_cseries is
 
@@ -885,6 +888,93 @@ procedure ts_cseries is
     put("ls**"); put(pwr,1); put_line(" :"); put(ls);
   end QuadDobl_Test_Power;
 
+  procedure Standard_Test_Transform ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the coefficient modulus transform on series of the given degree,
+  --   in standard double precision.
+
+    use Standard_Complex_Series;
+    use Standard_Complex_Series_Transforms;
+
+    s : constant Series(degree)
+      := Standard_Complex_Random_Series.Random_Series(degree);
+    c : double_float := 0.0;
+    sc : Series(degree);
+    idx : integer32;
+    mxc : double_float;
+
+  begin
+    put_line("a random series s :"); put(s);
+    put("Give a double float : "); get(c);
+    put("-> your constant c : "); put(c); new_line;
+    sc := Standard_Complex_Series_Transforms.Scale(s,c);
+    put_line("the series s scaled by c, s(c*t) :"); put(sc);
+    Maximum_Coefficient_Modulus(sc,idx,mxc);
+    put("the index : "); put(idx,1);
+    put("  maximum modulus : "); put(mxc); new_line;
+    Coefficient_Modulus_Transform(sc,idx,mxc);
+    put_line("the transformed series :"); put(sc);
+  end Standard_Test_Transform;
+
+  procedure DoblDobl_Test_Transform ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the coefficient modulus transform on series of the given degree,
+  --   in double double precision.
+
+    use DoblDobl_Complex_Series;
+    use DoblDobl_Complex_Series_Transforms;
+
+    s : constant Series(degree)
+      := DoblDobl_Complex_Random_Series.Random_Series(degree);
+    c : double_double := create(0.0);
+    sc : Series(degree);
+    idx : integer32;
+    mxc : double_double;
+
+  begin
+    put_line("a random series s :"); put(s);
+    put("Give a double double : "); get(c);
+    put("-> your constant c : "); put(c); new_line;
+    sc := DoblDobl_Complex_Series_Transforms.Scale(s,c);
+    put_line("the series s scaled by c, s(c*t) :"); put(sc);
+    Maximum_Coefficient_Modulus(sc,idx,mxc);
+    put("the index : "); put(idx,1);
+    put("  maximum modulus : "); put(mxc); new_line;
+    Coefficient_Modulus_Transform(sc,idx,mxc);
+    put_line("the transformed series :"); put(sc);
+  end DoblDobl_Test_Transform;
+
+  procedure QuadDobl_Test_Transform ( degree : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the coefficient modulus transform on series of the given degree,
+  --   in quad double precision.
+
+    use QuadDobl_Complex_Series;
+    use QuadDobl_Complex_Series_Transforms;
+
+    s : constant Series(degree)
+      := QuadDobl_Complex_Random_Series.Random_Series(degree);
+    c : quad_double := create(0.0);
+    sc : Series(degree);
+    idx : integer32;
+    mxc : quad_double;
+
+  begin
+    put_line("a random series s :"); put(s);
+    put("Give a quad double : "); get(c);
+    put("-> your constant c : "); put(c); new_line;
+    sc := QuadDobl_Complex_Series_Transforms.Scale(s,c);
+    put_line("the series s scaled by c, s(c*t) :"); put(sc);
+    Maximum_Coefficient_Modulus(sc,idx,mxc);
+    put("the index : "); put(idx,1);
+    put("  maximum modulus : "); put(mxc); new_line;
+    Coefficient_Modulus_Transform(sc,idx,mxc);
+    put_line("the transformed series :"); put(sc);
+  end QuadDobl_Test_Transform;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -905,8 +995,9 @@ procedure ts_cseries is
     put_line("  6. test the norm of a series");
     put_line("  7. test shift of series parameter");
     put_line("  8. test computation of powers");
+    put_line("  9. test coefficient modulus transforms");
     put("Type 0, 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
-    Ask_Alternative(ans,"012345678");
+    Ask_Alternative(ans,"0123456789");
     if ans /= '0' then
       new_line;
       put("Give the degree of the series : "); get(degree);
@@ -931,6 +1022,7 @@ procedure ts_cseries is
           when '6' => Standard_Test_Norm(degree);
           when '7' => Standard_Test_Shift(degree);
           when '8' => Standard_Test_Power(degree);
+          when '9' => Standard_Test_Transform(degree);
           when others => null;
         end case;
       when '1' => 
@@ -944,6 +1036,7 @@ procedure ts_cseries is
           when '6' => DoblDobl_Test_Norm(degree);
           when '7' => DoblDobl_Test_Shift(degree);
           when '8' => DoblDobl_Test_Power(degree);
+          when '9' => DoblDobl_Test_Transform(degree);
           when others => null;
         end case;
       when '2' =>
@@ -957,6 +1050,7 @@ procedure ts_cseries is
           when '6' => QuadDobl_Test_Norm(degree);
           when '7' => QuadDobl_Test_Shift(degree);
           when '8' => QuadDobl_Test_Power(degree);
+          when '9' => QuadDobl_Test_Transform(degree);
           when others => null;
         end case;
       when others => null;

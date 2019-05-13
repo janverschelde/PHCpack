@@ -1,5 +1,4 @@
 with Standard_Mathematical_Functions;
-with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_Polar;
 
 package body Standard_Complex_Series_Transforms is
@@ -26,7 +25,6 @@ package body Standard_Complex_Series_Transforms is
                 idx : in integer32; maxcff : in double_float ) is
 
     use Standard_Mathematical_Functions;
-    use Standard_Complex_Numbers;
 
     epn : constant double_float := 1.0/double_float(idx);
     fac : constant double_float := maxcff**epn;
@@ -34,10 +32,37 @@ package body Standard_Complex_Series_Transforms is
 
   begin
     for k in 1..s.deg loop
-      s.cff(k) := s.cff(k)/fac;
+      s.cff(k) := s.cff(k)/divfac;
       divfac := fac*divfac;
     end loop;
   end Coefficient_Modulus_Transform;
+
+
+  function Scale ( s : Standard_Complex_Series.Series;
+                   c : double_float )
+                 return Standard_Complex_Series.Series is
+
+    nc : constant Complex_Number := create(c);
+
+  begin
+    return Scale(s,nc);
+  end Scale;
+
+  function Scale ( s : Standard_Complex_Series.Series;
+                   c : Complex_Number )
+                 return Standard_Complex_Series.Series is
+
+    res : Standard_Complex_Series.Series(s.deg);
+    fac : Complex_Number := c;
+
+  begin
+    res.cff(0) := s.cff(0);
+    for k in 1..s.deg loop
+      res.cff(k) := fac*s.cff(k);
+      fac := fac*c;
+    end loop;
+    return res;
+  end Scale;
 
   procedure Transform ( s : in out Series ) is
 
