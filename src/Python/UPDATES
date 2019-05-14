@@ -1,5 +1,6 @@
 Tue 14 May 2019 : extended the python2 version of the curves module with an
   interactive step-by-step loop on a parameter homotopy, tested on hyperbola.
+  Also extended the python3 version of the curves module in a similar way.
 
 Sat 11 May 2019 : prompted user for verbose option in the test_solve()
   of the factor module, both for python2 and python3.  Also added a prompt

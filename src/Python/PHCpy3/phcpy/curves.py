@@ -951,6 +951,178 @@ def quaddobl_next_track(target, start, sols, verbose=False):
                 print('poles:', quaddobl_poles(dim))
     return result
 
+def standard_next_loop(hom, idx, sols, verbose=False):
+    """
+    Runs the series-Pade tracker step by step in double precision.
+    On input is a natural parameter homotopy with solutions.
+    The *hom* is a list of strings representing the polynomials
+    of the natural parameter homotopy.
+    The *idx* is the index of the variable in hom which is
+    the continuation parameter.
+    The *sols* is a list of strings representing start solutions.
+    The start solutions do *not* contain the value of the continuation
+    parameter, which is assumed to be equal to zero.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If verbose, then extra output is written.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    from phcpy.solver import number_of_symbols
+    result = []
+    dim = number_of_symbols(hom) - 1
+    standard_set_parameter_homotopy(hom, idx,verbose)
+    idx = 0
+    for sol in sols:
+        idx = idx + 1
+        print('tracking solution path', idx, '...')
+        standard_set_solution(dim, sol, verbose)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                standard_predict_correct(verbose)
+                sol = standard_get_solution(verbose)
+                print(sol)
+                (tval, step) = (standard_t_value(), standard_step_size())
+                frp = standard_pole_radius()
+                print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
+                cfp = standard_closest_pole()
+                print('closest pole : ', cfp)
+                print('the series:', standard_series_coefficients(dim))
+                print('Pade vector:', standard_pade_vector(dim))
+                print('poles:', standard_poles(dim))
+    return result
+
+def dobldobl_next_loop(hom, idx, sols, verbose=False):
+    """
+    Runs the series-Pade tracker step by step in double double precision.
+    On input is a natural parameter homotopy with solutions.
+    The *hom* is a list of strings representing the polynomials
+    of the natural parameter homotopy.
+    The *idx* is the index of the variable in hom which is
+    the continuation parameter.
+    The *sols* is a list of strings representing start solutions.
+    The start solutions do *not* contain the value of the continuation
+    parameter, which is assumed to be equal to zero.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If verbose, then extra output is written.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    from phcpy.solver import number_of_symbols
+    result = []
+    dim = number_of_symbols(hom) - 1
+    dobldobl_set_parameter_homotopy(hom, idx,verbose)
+    idx = 0
+    for sol in sols:
+        idx = idx + 1
+        print('tracking solution path', idx, '...')
+        dobldobl_set_solution(dim, sol, verbose)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                dobldobl_predict_correct(verbose)
+                sol = dobldobl_get_solution(verbose)
+                print(sol)
+                (tval, step) = (dobldobl_t_value(), dobldobl_step_size())
+                frp = dobldobl_pole_radius()
+                print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
+                cfp = dobldobl_closest_pole()
+                print('closest pole : ', cfp)
+                print('the series:', dobldobl_series_coefficients(dim))
+                print('Pade vector:', dobldobl_pade_vector(dim))
+                print('poles:', dobldobl_poles(dim))
+    return result
+
+def quaddobl_next_loop(hom, idx, sols, verbose=False):
+    """
+    Runs the series-Pade tracker step by step in quad double precision.
+    On input is a natural parameter homotopy with solutions.
+    The *hom* is a list of strings representing the polynomials
+    of the natural parameter homotopy.
+    The *idx* is the index of the variable in hom which is
+    the continuation parameter.
+    The *sols* is a list of strings representing start solutions.
+    The start solutions do *not* contain the value of the continuation
+    parameter, which is assumed to be equal to zero.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If verbose, then extra output is written.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    from phcpy.solver import number_of_symbols
+    result = []
+    dim = number_of_symbols(hom) - 1
+    quaddobl_set_parameter_homotopy(hom, idx,verbose)
+    idx = 0
+    for sol in sols:
+        idx = idx + 1
+        print('tracking solution path', idx, '...')
+        quaddobl_set_solution(dim, sol, verbose)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                quaddobl_predict_correct(verbose)
+                sol = quaddobl_get_solution(verbose)
+                print(sol)
+                (tval, step) = (quaddobl_t_value(), quaddobl_step_size())
+                frp = quaddobl_pole_radius()
+                print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
+                cfp = quaddobl_closest_pole()
+                print('closest pole : ', cfp)
+                print('the series:', quaddobl_series_coefficients(dim))
+                print('Pade vector:', quaddobl_pade_vector(dim))
+                print('poles:', quaddobl_poles(dim))
+    return result
+
+def test_hyperbola(precision='d'):
+    """
+    Tests the step-by-step Pade tracker on a hyperbola,
+    by default in double precision (when precision equals 'd').
+    Other supported precisions are double double ('dd')
+    and quad double ('qd').
+    """
+    from math import sqrt
+    from phcpy.curves import tune_homotopy_continuation_parameters
+    from phcpy.solutions import make_solution
+    tune_homotopy_continuation_parameters()
+    par = 0.1
+    xtp = ['x^2 - (t - 0.5)^2 - 0.01;']
+    # print 'initializing the homotopy :', xtp[0]
+    # standard_set_parameter_homotopy(hom=xtp, idx=2, verbose=True)
+    solx = sqrt(4*par**2+1)/2
+    print('\nvalue of the first start solution :', solx)
+    sol1 = make_solution(['x'], [solx])
+    print('the first start solution :\n', sol1)
+    sol2 = make_solution(['x'], [-solx])
+    print('the second start solution :\n', sol2)
+    # standard_set_solution(nvar=1, sol=sol1, verbose=True)
+    # standard_predict_correct(verbose=True)
+    ans = input('Verbose ? (y/n) ')
+    vrb = (ans == 'y')
+    if precision == 'd':
+        print('tracking in double precision ...')
+        standard_next_loop(xtp, 2, [sol1, sol2], vrb)
+    elif precision == 'dd':
+        print('tracking in double double precision ...')
+        dobldobl_next_loop(xtp, 2, [sol1, sol2], vrb)
+    elif precision == 'qd':
+        print('tracking in quad double precision ...')
+        quaddobl_next_loop(xtp, 2, [sol1, sol2], vrb)
+    else:
+        print('wrong value for the precision')
+
 def test_simple_track(precision='d'):
     """
     Tunes the parameters and runs a simple test on the trackers.
@@ -1012,5 +1184,6 @@ def test_next_track(precision='d'):
         print(sol)
 
 if __name__ == "__main__":
+    test_hyperbola()
     test_next_track()
     test_simple_track('qd')
