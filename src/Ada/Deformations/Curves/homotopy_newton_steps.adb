@@ -251,7 +251,7 @@ package body Homotopy_Newton_Steps is
      -- if res <= tolres then -- convergence
      -- left := err/(nrm+1.0);
       if err <= tolres and res <= tolres then -- convergence
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -293,7 +293,7 @@ package body Homotopy_Newton_Steps is
      -- if res <= tolres then -- convergence
      -- left := err/(nrm+1.0);
       if err <= tolres and res <= tolres then
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -335,7 +335,7 @@ package body Homotopy_Newton_Steps is
      -- if res <= tolres then -- convergence
      -- left := err/(nrm+1.0);
       if err <= tolres and res <= tolres then
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -383,7 +383,7 @@ package body Homotopy_Newton_Steps is
      -- if res <= tolres then -- convergence
      -- left := err/(nrm+1.0);
       if err <= tolres and res <= tolres then
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -433,7 +433,7 @@ package body Homotopy_Newton_Steps is
      -- if res <= tolres then -- convergence
      -- left := err/(nrm+1.0);
       if err <= tolres and err <= tolres then
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -483,7 +483,7 @@ package body Homotopy_Newton_Steps is
      -- if res <= tolres then -- convergence
      -- left := err/(nrm+1.0);
       if err <= tolres and res <= tolres then
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -523,7 +523,7 @@ package body Homotopy_Newton_Steps is
      -- Standard_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
       Standard_SVD_Newton_Step(abh,cmplxt,sol,err,rco,res);
       if err <= tolres and res <= tolres then -- convergence
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -560,7 +560,7 @@ package body Homotopy_Newton_Steps is
     for k in 1..maxit+extra loop
       DoblDobl_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
       if err <= tolres and res <= tolres then -- convergence
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -597,7 +597,7 @@ package body Homotopy_Newton_Steps is
     for k in 1..maxit+extra loop
       QuadDobl_LU_Newton_Step(abh,cmplxt,sol,err,rco,res);
       if err <= tolres and res <= tolres then -- convergence
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -642,7 +642,7 @@ package body Homotopy_Newton_Steps is
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
       if err <= tolres and res <= tolres then -- convergence
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -686,7 +686,7 @@ package body Homotopy_Newton_Steps is
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
       if err <= tolres and res <= tolres then -- convergence
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
@@ -730,7 +730,7 @@ package body Homotopy_Newton_Steps is
         put(file,"  res :"); put(file,res,3); new_line(file);
       end if;
       if err <= tolres and res <= tolres then -- convergence
-        if extra = 0
+        if extra = 0 or (err = 0.0) or (res = 0.0) or (k = maxit+extra)
          then nbrit := k; fail := false; exit;
         end if;
       elsif k > 1 then      -- check for divergence
