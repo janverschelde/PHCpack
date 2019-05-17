@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.66 contains
+The public distribution for PHCpack version 2.4.67 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -29,6 +29,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.67 on 2019-05-17 : bug fixes for extra iterations for phc -u
 release 2.4.66 on 2019-03-29 : improved phc -u, -t, full windows 10 version
 release 2.4.65 on 2019-02-28 : improved phc -u for high degrees
 release 2.4.64 on 2019-01-21 : basic parallel series-Pade continuation
