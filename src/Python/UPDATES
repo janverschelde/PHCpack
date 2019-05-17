@@ -1,4 +1,6 @@
 Fri 17 May 2019 : prepared files for version 0.9.5 of phcpy.
+  Updated the step-by-step trackers in curves to print the previous
+  t value with the printing of series, Pade approximants and poles.
 
 Tue 14 May 2019 : extended the python2 version of the curves module with an
   interactive step-by-step loop on a parameter homotopy, tested on hyperbola.
