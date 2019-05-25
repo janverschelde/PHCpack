@@ -1,3 +1,6 @@
+Sat 25 May 2019 : replaced deprecated 'silent' option by 'verbose' in the
+  solve() called in the tropism module, for both python2 and python3.
+
 Fri 17 May 2019 : prepared files for version 0.9.5 of phcpy.
   Updated the step-by-step trackers in curves to print the previous
   t value with the printing of series, Pade approximants and poles.

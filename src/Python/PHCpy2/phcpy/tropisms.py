@@ -439,7 +439,7 @@ def test(precision='d'):
     start = ['x + (-5.89219623474258E-02 - 9.98262591883082E-01*i)*y^2' \
          + ' + ( 5.15275165825429E-01 + 8.57024797472965E-01*i)*x*y;', \
         'x+(-9.56176913648087E-01 - 2.92789531586119E-01*i);']
-    startsols = solve(start, silent=True)
+    startsols = solve(start, verbose=False)
     print 'computed', len(startsols), 'start solutions'
     from phcpy.tuning import order_endgame_extrapolator_set as set
     set(4)
@@ -475,4 +475,4 @@ def test(precision='d'):
     # tune(interactive=True)
 
 if __name__ == "__main__":
-    test('dd')
+    test('d')
