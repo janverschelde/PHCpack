@@ -1008,7 +1008,7 @@ def quad_double_crude_track(target, start, sols, gamma=0, verbose=True):
     py2c_quaddobl_crude_tracker(int(verbose))
     return load_quaddobl_solutions()
 
-def test_track(silent=True, precision='d', decimals=80):
+def test_track(verbose=True, precision='d', decimals=80):
     """
     Tests the path tracking on a small random system.
     Two random trinomials are generated and random constants
@@ -1030,7 +1030,7 @@ def test_track(silent=True, precision='d', decimals=80):
     rtwo = real_pols[1][:-1] + ('%+.17f' % u(-1, +1)) + ';'
     start = [qone, qtwo]
     target = [rone, rtwo]
-    start_sols = solve(start, silent)
+    start_sols = solve(start, verbose)
     sols = track(target, start, start_sols, precision, decimals)
     mixvol = mixed_volume(target)
     print 'mixed volume of the target is', mixvol

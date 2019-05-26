@@ -1,3 +1,6 @@
+Sun 26 May 2019 : in the trackers module, replaced silent by verbose in
+  the test_track(), both for python2 and python3.
+
 Sat 25 May 2019 : replaced deprecated 'silent' option by 'verbose' in the
   solve() called in the tropism module, for both python2 and python3.
 
